@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources  xmlns:tools="http://schemas.android.com/tools">
+	<color name="colorPrimaryStax" tools:override="true">#1E232A</color>
+	<color name="colorPrimaryDarkStax" tools:override="true">#1E232A</color>
+	<color name="colorAccentStax" tools:override="true">#B1B2B6</color>
+	<color name="colorGrey">#B1B2B6</color>
+	<color name="colorWhite" tools:override="true">#FFFFFF</color>
+
+</resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="HoverTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+		<item name="android:windowActionBar">true</item>
+		<item name="android:windowContentTransitions">true</item>
+		<!-- Customize your theme here. -->
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorAccent">@color/colorAccent</item>
+
+		<item name="hover_primaryColor">@color/colorPrimaryDark</item>
+		<item name="hover_textColor">@color/colorPureWhite</item>
+		<item name="hover_textColorTitle">@color/colorHoverWhite</item>
+		<item name="hover_pinEntryColor">@color/colorPureWhite</item>
+
+		<item name="hover_pinTheme">@style/PinButtonTheme</item>
+		<item name="hover_posTheme">@style/PosButtonTheme</item>
+	</style>
+</resources>

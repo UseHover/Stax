@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+	<item
+	    android:id="@+id/navigation_home"
+	    android:icon="@drawable/account_balance_wallet"
+	    android:title="@string/title_home" />
+
+	<item
+	    android:id="@+id/navigation_buyAirtime"
+	    android:icon="@drawable/phone_callback"
+	    android:title="@string/title_buyAirtime" />
+
+	<item
+	    android:id="@+id/navigation_moveMoney"
+	    android:icon="@drawable/payments"
+	    android:title="@string/title_moveMoney" />
+
+	<item
+	    android:id="@+id/navigation_security"
+	    android:icon="@drawable/lock"
+	    android:title="@string/title_security" />
+
+</menu>
