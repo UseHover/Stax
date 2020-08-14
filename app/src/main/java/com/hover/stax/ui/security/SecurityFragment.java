@@ -1,25 +1,22 @@
 package com.hover.stax.ui.security;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CheckedTextView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.hover.stax.R;
-import com.hover.stax.interfaces.CustomOnClickListener;
 import com.hover.stax.models.StaxServicesModel;
-import com.hover.stax.repo.DataRepo;
+import com.hover.stax.ui.chooseService.ChooseServicesActivity;
 import com.hover.stax.utils.UIHelper;
 
 import java.util.ArrayList;
@@ -32,6 +29,10 @@ public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup c
 	securityViewModel = new ViewModelProvider(this).get(SecurityViewModel.class);
 	View root = inflater.inflate(R.layout.fragment_security, container, false);
 	securityViewModel.loadServices();
+
+	root.findViewById(R.id.removePinsButtonId).setOnClickListener(view->{
+		startActivity(new Intent(getActivity(), ChooseServicesActivity.class));
+	});
 
 	AppCompatSpinner spinner = root.findViewById(R.id.defaultAccountSpinner);
 

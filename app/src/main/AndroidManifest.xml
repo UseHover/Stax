@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hover.stax">
 
+	<uses-permission android:name="android.permission.INTERNET"/>
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+	<uses-permission android:name="android.permission.CALL_PHONE"/>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
 	<application
 	    android:allowBackup="true"
 	    android:icon="@mipmap/ic_launcher"
@@ -20,7 +25,7 @@
 			</intent-filter>
 		</activity>
 		<activity android:name=".ui.onboard.SplashScreenActivity" />
-		<activity android:name=".ui.PermissionScreenActivity" />
+		<activity android:name=".ui.permission.PermissionScreenActivity" />
 		<activity android:name=".ui.chooseService.ChooseServicesActivity" />
 	</application>
 
