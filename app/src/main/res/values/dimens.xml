@@ -2,4 +2,18 @@
 	<!-- Default screen margins, per the Android Design guidelines. -->
 	<dimen name="activity_horizontal_margin">16dp</dimen>
 	<dimen name="activity_vertical_margin">16dp</dimen>
+	<dimen name="text_16">17sp</dimen>
+	<dimen name="text_21">22sp</dimen>
+	<dimen name="text_14">15sp</dimen>
+	<dimen name="text_13">14sp</dimen>
+	<dimen name="editText_box_margin_horiz">21dp</dimen>
+	<dimen name="editText_box_margin_vert">13dp</dimen>
+	<dimen name="editText_stroke_size">2dp</dimen>
+	<dimen name="editText_initial_stroke">1dp</dimen>
+	<dimen name="editText_corner">2dp</dimen>
+	<dimen name="editText_inter_spacing">32dp</dimen>
+	<dimen name="spacing32">32dp</dimen>
+	<dimen name="actionTextSize">22sp</dimen>
+	<dimen name="actionRightSideTextSize">15sp</dimen>
+	<dimen name="actDetailsStatusMarginLeft">42dp</dimen>
 </resources>

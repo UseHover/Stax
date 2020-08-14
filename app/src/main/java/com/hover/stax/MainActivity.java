@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.hover.stax.ui.chooseService.ChooseServicesActivity;
 import com.hover.stax.ui.onboard.SplashScreenActivity;
 
 import androidx.appcompat.app.AppCompatActivity;

@@ -1,0 +1,43 @@
+package com.hover.stax.ui;
+
+import android.Manifest;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.hover.sdk.permissions.PermissionActivity;
+import com.hover.stax.R;
+import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
+
+public class PermissionScreenActivity extends AppCompatActivity {
+private final int PERMISSION_REQ_CODE = 201;
+@Override
+protected void onCreate(@Nullable Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
+	setContentView(R.layout.permissions_activity);
+
+	findViewById(R.id.permission_button).setOnClickListener(view-> {
+		if(!Utils.deviceHasPermissions(this, new String[]{ Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE})) {
+			startActivityForResult(new Intent(this, PermissionActivity.class), PERMISSION_REQ_CODE);
+		}
+	});
+}
+
+@Override
+protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+	super.onActivityResult(requestCode, resultCode, data);
+	if(requestCode == PERMISSION_REQ_CODE) {
+		if(resultCode != RESULT_OK) {
+			UIHelper.flashMessage(this, getCurrentFocus(), getResources().getString(R.string.permission_failure));
+		}
+		else {
+			UIHelper.flashMessage(this, getCurrentFocus(), getResources().getString(R.string.permission_success));
+			finish();
+		}
+	}
+}
+}

@@ -20,6 +20,8 @@
 			</intent-filter>
 		</activity>
 		<activity android:name=".ui.onboard.SplashScreenActivity" />
+		<activity android:name=".ui.PermissionScreenActivity" />
+		<activity android:name=".ui.chooseService.ChooseServicesActivity" />
 	</application>
 
 </manifest>

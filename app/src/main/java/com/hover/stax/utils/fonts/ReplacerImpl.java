@@ -68,13 +68,13 @@ public class ReplacerImpl implements Replacer {
 
         if(Build.VERSION.SDK_INT >= 21) {
             Map<String, Typeface> fontsMap = new HashMap<>();
-            fontsMap.put("sans-serif", FontReplacer.defaultFont);
-            fontsMap.put("sans-serif-bold", FontReplacer.boldFont);
-            fontsMap.put("sans-serif-italic", FontReplacer.italicFont);
-            fontsMap.put("sans-serif-light", FontReplacer.lightFont);
-            fontsMap.put("sans-serif-condensed", FontReplacer.condensedFont);
-            fontsMap.put("sans-serif-thin", FontReplacer.thinFont);
-            fontsMap.put("sans-serif-medium", FontReplacer.mediumFont);
+            fontsMap.put("font-normal", FontReplacer.defaultFont);
+            fontsMap.put("font-bold", FontReplacer.boldFont);
+            fontsMap.put("font-italic", FontReplacer.italicFont);
+            fontsMap.put("font-light", FontReplacer.lightFont);
+            fontsMap.put("font-condensed", FontReplacer.condensedFont);
+            fontsMap.put("font-thin", FontReplacer.thinFont);
+            fontsMap.put("font-medium", FontReplacer.mediumFont);
 
             try {
                 Field defaultFont = Typeface.class.getDeclaredField("sSystemFontMap");

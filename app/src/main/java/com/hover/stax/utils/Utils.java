@@ -4,9 +4,14 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Build;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.util.Log;
+import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -16,6 +21,12 @@ import com.hover.stax.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -98,5 +109,43 @@ public static boolean deviceHasPermissions(Context context, String[] permissions
 		}
 	}
 	return true;
+}
+
+public static void saveImageLocally(Bitmap b, String imageName, Context context) {
+	FileOutputStream foStream;
+	try {
+		foStream = context.openFileOutput(imageName, Context.MODE_PRIVATE);
+		b.compress(Bitmap.CompressFormat.PNG, 100, foStream);
+		foStream.close();
+	} catch (Exception e) {
+		Log.d("saveImage", "Exception 2, Something went wrong!");
+		e.printStackTrace();
+	}
+}
+
+public static Bitmap loadImageBitmap(String imageName, Context context) {
+	Bitmap bitmap = null;
+	FileInputStream fiStream;
+	try {
+		fiStream    = context.openFileInput(imageName);
+		bitmap      = BitmapFactory.decodeStream(fiStream);
+		fiStream.close();
+	} catch (Exception e) {
+		Log.d("saveImage", "Exception 3, Something went wrong!");
+		e.printStackTrace();
+	}
+	return bitmap;
+}
+
+public static Bitmap downloadImageBitmap(String sUrl) {
+	Bitmap bitmap = null;
+	try {
+		InputStream inputStream = new URL(sUrl).openStream();   // Download Image from URL
+		bitmap = BitmapFactory.decodeStream(inputStream);       // Decode Bitmap
+		inputStream.close();
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+	return bitmap;
 }
 }

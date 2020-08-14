@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="65dp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginTop="16dp"
+
+    >
+
+	<de.hdodenhof.circleimageview.CircleImageView
+	    android:layout_width="55dp"
+	    android:layout_height="55dp"
+	    android:scaleType="centerCrop"
+	    android:layout_centerHorizontal="true"
+	    android:id="@+id/service_item_image_id"
+	    android:src="@drawable/mtn_logo"
+	    />
+
+	<de.hdodenhof.circleimageview.CircleImageView
+	    android:layout_width="65dp"
+	    android:layout_height="55dp"
+	    android:src="@drawable/ic_brightness_1_black_24dp"
+	    android:layout_centerHorizontal="true"
+	    android:visibility="visible"
+	    app:civ_border_overlay="true"
+	    app:civ_border_width="6dp"
+	    app:civ_border_color="#DD838385"
+	    android:scaleType="centerCrop"
+	    android:id="@+id/checked_service_frame"
+	    />
+
+
+	<ImageView
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:layout_centerHorizontal="true"
+	    android:id="@+id/checked_service_tick"
+	    android:layout_marginTop="@dimen/activity_horizontal_margin"
+	    android:visibility="gone"
+	    android:src="@drawable/ic_check_circle_green_24dp"
+	    />
+	<TextView
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:id="@+id/service_item_name_id"
+	    android:layout_below="@id/service_item_image_id"
+	    android:textAlignment="center"
+	    android:textColor="@color/colorWhiteV2"
+	    android:textSize="@dimen/text_13"
+	    />
+
+</RelativeLayout>

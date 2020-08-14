@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources  xmlns:tools="http://schemas.android.com/tools">
-	<color name="colorPrimaryStax" tools:override="true">#1E232A</color>
-	<color name="colorPrimaryDarkStax" tools:override="true">#1E232A</color>
-	<color name="colorAccentStax" tools:override="true">#B1B2B6</color>
+	<color name="colorPrimaryStax">#1E232A</color>
+	<color name="colorPrimaryDarkStax">#1E232A</color>
+	<color name="colorAccentStax">#B1B2B6</color>
 	<color name="colorGrey">#B1B2B6</color>
-	<color name="colorWhite" tools:override="true">#FFFFFF</color>
+	<color name="colorWhiteV2">#F1F1F4</color>
+	<color name="mediumGrey">#838385</color>
+	<color name="colorWhite">#FFFFFF</color>
+	<color name="bright_red">#FF0028</color>
 
 </resources>

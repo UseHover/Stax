@@ -7,4 +7,23 @@
 
 	<string name="custom_font_error">Cannot set custom font</string>
 	<string name="custom_font_err_msg">At least one default font must be set</string>
+
+	<string name="permission_showup_text">Heads up:\n\n We need permission to access your contacts and use your accessibility services so that we can do dope USSD magic for you.</string>
+	<string name="turn_on_permission">Turn on permissions</string>
+	<string name="permission_failure">You did not allow all permissions</string>
+	<string name="permission_success">All permissions allowed successfully</string>
+	<string name="choose_your_services">Choose your services</string>
+	<string name="done">Done</string>
+	
+	<string name="your_sims">Your SIMs</string>
+	<string name="other_services_in">Other services in </string>
+	<string name="all_services">All services</string>
+
+	<string name="security">Security</string>
+	<string name="remove_pin_from_device">Remove PINs from device</string>
+	<string name="remove_pins">Remove PINs</string>
+	<string name="default_account">Default account</string>
+	<string name="default_account_desc">Defaults accounts will show up first when you move money.</string>
+	<string name="about_our_security">About our security</string>
+	<string name="about_our_security_content">Hover’s Android SDK is a development kit meeting the criteria of 740.17(b)(3) (i) security classification of the United States Bureau of Industry and Security. This software uses HTTPS for server communication; symmetric key RSA encryption to temporarily store the user’s credentials on their own device using Android Keystore; and code obfuscation using DRM (Dexguard).</string>
 </resources>

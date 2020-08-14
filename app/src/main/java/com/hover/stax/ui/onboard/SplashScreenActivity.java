@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.hover.stax.MainActivity;
 import com.hover.stax.R;
+import com.hover.stax.ui.PermissionScreenActivity;
 
 public class SplashScreenActivity extends AppCompatActivity {
 @Override
