@@ -15,8 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.hover.stax.R;
-import com.hover.stax.models.StaxServicesModel;
-import com.hover.stax.ui.chooseService.ChooseServicesActivity;
+import com.hover.stax.models.StaxServiceModel;
+import com.hover.stax.ui.chooseService.choose.ChooseServicesActivity;
 import com.hover.stax.utils.UIHelper;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup c
 
 	securityViewModel.getServicesForDefaultAccount().observe(getViewLifecycleOwner(), staxServicesModels -> {
 		ArrayList<String> staxServiceNames = new ArrayList<>();
-		for(StaxServicesModel model : staxServicesModels) {
+		for(StaxServiceModel model : staxServicesModels) {
 			staxServiceNames.add(model.getServiceName());
 		}
 		UIHelper.loadSpinnerItems(staxServiceNames, spinner, getContext());

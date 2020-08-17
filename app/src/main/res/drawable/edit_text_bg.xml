@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--  res/drawable/rounded_edittext.xml -->
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:state_pressed="true">
+		<shape android:shape="rectangle" android:padding="10dp">
+
+			<solid android:color="@color/colorPrimaryDark"/>
+			<stroke android:width="@dimen/editText_stroke_size" android:color="@color/colorPureWhite"/>
+			<corners android:radius="@dimen/editText_corner" />
+
+		</shape>
+
+	</item> <!-- pressed -->
+
+	<item android:state_activated="true">
+		<shape android:shape="rectangle" android:padding="10dp">
+
+			<solid android:color="@color/colorPrimaryDark"/>
+			<stroke android:width="@dimen/editText_stroke_size" android:color="@color/bright_red"/>
+			<corners android:radius="@dimen/editText_corner" />
+
+		</shape>
+	</item>
+
+
+	<item android:state_focused="true">
+		<shape android:shape="rectangle" android:padding="10dp">
+
+			<solid android:color="@color/colorPrimaryDark"/>
+			<stroke android:width="@dimen/editText_stroke_size" android:color="@color/colorPureWhite"/>
+			<corners android:radius="@dimen/editText_corner" />
+
+		</shape>
+	</item> <!-- focused -->
+
+	<item android:state_activated="false">
+		<shape android:shape="rectangle" android:padding="10dp">
+
+			<solid android:color="@color/colorPrimaryDark"/>
+			<stroke android:width="@dimen/editText_initial_stroke"
+					android:dashGap="3dp"
+					android:color="@color/colorGrey"/>
+			<corners android:radius="@dimen/editText_corner" />
+
+		</shape>
+	</item>
+
+	<item>
+		<shape android:shape="rectangle" android:padding="10dp">
+
+			<solid android:color="@color/colorPrimaryDark"/>
+			<stroke android:width="@dimen/editText_initial_stroke"
+					android:dashGap="3dp"
+					android:color="@color/colorGrey"/>
+			<corners android:radius="@dimen/editText_corner" />
+
+		</shape>
+	</item> <!-- default -->
+</selector>
+

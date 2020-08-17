@@ -2,19 +2,19 @@ package com.hover.stax.models;
 
 import android.graphics.Bitmap;
 
-public class StaxServicesModel {
+public class StaxServiceModel {
 private String serviceId, serviceName;
 private Bitmap serviceLogo;
 private Boolean isAdded;
 
-public StaxServicesModel(String serviceId, String serviceName, Bitmap serviceLogo, boolean isAdded) {
+public StaxServiceModel(String serviceId, String serviceName, Bitmap serviceLogo, boolean isAdded) {
 	this.serviceId = serviceId;
 	this.serviceName = serviceName;
 	this.serviceLogo = serviceLogo;
 	this.isAdded = isAdded;
 }
 
-public StaxServicesModel(String serviceId, String serviceName) {
+public StaxServiceModel(String serviceId, String serviceName) {
 	this.serviceId = serviceId;
 	this.serviceName = serviceName;
 }

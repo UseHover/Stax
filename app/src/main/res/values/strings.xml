@@ -14,10 +14,14 @@
 	<string name="permission_success">All permissions allowed successfully</string>
 	<string name="choose_your_services">Choose your services</string>
 	<string name="done">Done</string>
+	<string name="cancel">Cancel</string>
+	<string name="continueText">Continue</string>
 	
 	<string name="your_sims">Your SIMs</string>
 	<string name="other_services_in">Other services in </string>
 	<string name="all_services">All services</string>
+
+	<string name="input_label">Input label</string>
 
 	<string name="security">Security</string>
 	<string name="remove_pin_from_device">Remove PINs from device</string>
@@ -26,4 +30,5 @@
 	<string name="default_account_desc">Defaults accounts will show up first when you move money.</string>
 	<string name="about_our_security">About our security</string>
 	<string name="about_our_security_content">Hover’s Android SDK is a development kit meeting the criteria of 740.17(b)(3) (i) security classification of the United States Bureau of Industry and Security. This software uses HTTPS for server communication; symmetric key RSA encryption to temporarily store the user’s credentials on their own device using Android Keystore; and code obfuscation using DRM (Dexguard).</string>
+	<string name="choose_pin_description">You can remove your PINs from Bundas at any time. All PINs are secured with XYZ encryption and blablabla to ensure your information is always protected.</string>
 </resources>

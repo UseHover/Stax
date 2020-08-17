@@ -1,23 +1,22 @@
-package com.hover.stax.ui.chooseService;
+package com.hover.stax.ui.chooseService.choose;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.GridLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
-import com.hover.stax.adapters.ChooseServiceViewModel;
 import com.hover.stax.adapters.ChooseServicesAdapters;
 import com.hover.stax.enums.Service_category;
 import com.hover.stax.enums.Service_in_list_status;
 import com.hover.stax.interfaces.CustomOnClickListener;
-import com.hover.stax.repo.DataRepo;
+import com.hover.stax.database.ConvertRawDatabaseDataToModels;
+import com.hover.stax.ui.chooseService.pin.ServicesPinActivity;
 import com.hover.stax.utils.UIHelper;
 
 public class ChooseServicesActivity extends AppCompatActivity implements CustomOnClickListener {
@@ -32,13 +31,13 @@ protected void onCreate(@Nullable Bundle savedInstanceState) {
 
 	TextView otherServicesText = findViewById(R.id.other_services_in);
 	TextView doneText = findViewById(R.id.choose_serves_done);
-	otherServicesText.append(" "+ new DataRepo().getSimCountry());
+	otherServicesText.append(" "+ new ConvertRawDatabaseDataToModels().getSimCountry());
 
 	int textColorAdded = getResources().getColor(R.color.mediumGrey);
 	int textColorNotAdded = getResources().getColor(R.color.colorWhiteV2);
 
 	UIHelper.setTextUnderline(doneText, getResources().getString(R.string.done));
-	doneText.setOnClickListener(view->finish());
+	doneText.setOnClickListener(view->startActivity(new Intent(this, ServicesPinActivity.class)));
 
 
 	ChooseServiceViewModel serviceViewModel = new ViewModelProvider(this).get(ChooseServiceViewModel.class);
@@ -90,20 +89,20 @@ public void customClickListener(Object... data) {
 	if(category == Service_category.YOUR_SIM) {
 		servicesAdapters_yourSim.updateSelectStatus(newStatus, position);
 
-		boolean tapRequestStatus = new DataRepo().addServiceToUserCatalogue(newStatus, serviceId);
+		boolean tapRequestStatus = new ConvertRawDatabaseDataToModels().addServiceToUserCatalogue(newStatus, serviceId);
 		if(!tapRequestStatus) servicesAdapters_yourSim.resetSelectStatus(position);
 
 	}
 	else if(category == Service_category.IN_COUNTRY) {
 		servicesAdapters_inYourCountry.updateSelectStatus(newStatus, position);
 
-		boolean tapRequestStatus = new DataRepo().addServiceToUserCatalogue(newStatus, serviceId);
+		boolean tapRequestStatus = new ConvertRawDatabaseDataToModels().addServiceToUserCatalogue(newStatus, serviceId);
 		if(!tapRequestStatus) servicesAdapters_inYourCountry.resetSelectStatus(position);
 	}
 	else {
 		servicesAdapters_allServices.updateSelectStatus(newStatus, position);
 
-		boolean tapRequestStatus = new DataRepo().addServiceToUserCatalogue(newStatus, serviceId);
+		boolean tapRequestStatus = new ConvertRawDatabaseDataToModels().addServiceToUserCatalogue(newStatus, serviceId);
 		if(!tapRequestStatus) servicesAdapters_allServices.resetSelectStatus(position);
 	}
 }

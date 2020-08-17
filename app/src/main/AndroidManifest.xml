@@ -26,7 +26,8 @@
 		</activity>
 		<activity android:name=".ui.onboard.SplashScreenActivity" />
 		<activity android:name=".ui.permission.PermissionScreenActivity" />
-		<activity android:name=".ui.chooseService.ChooseServicesActivity" />
+		<activity android:name=".ui.chooseService.choose.ChooseServicesActivity" />
+		<activity android:name=".ui.chooseService.pin.ServicesPinActivity" />
 	</application>
 
 </manifest>

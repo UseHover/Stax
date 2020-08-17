@@ -1,6 +1,5 @@
 package com.hover.stax.adapters;
 
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,21 +13,19 @@ import com.hover.stax.R;
 import com.hover.stax.enums.Service_category;
 import com.hover.stax.enums.Service_in_list_status;
 import com.hover.stax.interfaces.CustomOnClickListener;
-import com.hover.stax.models.StaxServicesModel;
-import com.hover.stax.utils.UIHelper;
-import com.hover.stax.utils.Utils;
+import com.hover.stax.models.StaxServiceModel;
 
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChooseServicesAdapters  extends RecyclerView.Adapter<ChooseServicesAdapters.ChooseServicesViewHolder> {
-	private ArrayList<StaxServicesModel> servicesModelArrayList;
+	private ArrayList<StaxServiceModel> servicesModelArrayList;
 	private CustomOnClickListener customOnClickListener;
 	private Service_category service_category;
 	private int textColorAdded, textColorNotAdded;
 
-public ChooseServicesAdapters(ArrayList<StaxServicesModel> servicesModelArrayList, CustomOnClickListener customOnClickListener, Service_category service_category, int colorAdded, int colorNotAdded) {
+public ChooseServicesAdapters(ArrayList<StaxServiceModel> servicesModelArrayList, CustomOnClickListener customOnClickListener, Service_category service_category, int colorAdded, int colorNotAdded) {
 	this.servicesModelArrayList = servicesModelArrayList;
 	this.customOnClickListener = customOnClickListener;
 	this.service_category = service_category;
@@ -58,11 +55,11 @@ public ChooseServicesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, in
 
 @Override
 public void onBindViewHolder(@NonNull ChooseServicesViewHolder holder, int position) {
-	StaxServicesModel staxServicesModel = servicesModelArrayList.get(position);
+	StaxServiceModel staxServiceModel = servicesModelArrayList.get(position);
 	//holder.serviceLogo.setImageBitmap(staxServicesModel.getServiceLogo());
-	holder.serviceName.setText(staxServicesModel.getServiceName());
+	holder.serviceName.setText(staxServiceModel.getServiceName());
 
-	if(staxServicesModel.getAdded()) {
+	if(staxServiceModel.getAdded()) {
 	holder.shadowFrame.setVisibility(View.VISIBLE);
 	holder.checkIcon.setVisibility(View.VISIBLE);
 	holder.serviceName.setTextColor(textColorAdded);
@@ -75,8 +72,8 @@ public void onBindViewHolder(@NonNull ChooseServicesViewHolder holder, int posit
 
 	holder.itemView.setOnClickListener(view-> {
 		customOnClickListener.customClickListener(
-				staxServicesModel.getServiceId(),
-				(staxServicesModel.getAdded()) ? Service_in_list_status.REMOVE_FROM_LIST : Service_in_list_status.ADD_TO_LIST,
+				staxServiceModel.getServiceId(),
+				(staxServiceModel.getAdded()) ? Service_in_list_status.REMOVE_FROM_LIST : Service_in_list_status.ADD_TO_LIST,
 				position,
 				service_category);
 	});
