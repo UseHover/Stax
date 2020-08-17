@@ -20,15 +20,9 @@ public class MoveMoneyFragment extends Fragment {
 private MoveMoneyViewModel moveMoneyViewModel;
 
 public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-	moveMoneyViewModel = new ViewModelProvider(this).get(MoveMoneyViewModel.class);
 	View root = inflater.inflate(R.layout.fragment_movemoney, container, false);
-	final TextView textView = root.findViewById(R.id.text_notifications);
-	moveMoneyViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-		@Override
-		public void onChanged(@Nullable String s) {
-			textView.setText(s);
-		}
-	});
+
+
 	return root;
 }
 }

@@ -16,7 +16,6 @@ import com.hover.stax.database.ConvertRawDatabaseDataToModels;
 import com.hover.stax.interfaces.VariableEditinterface;
 import com.hover.stax.utils.UIHelper;
 
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
