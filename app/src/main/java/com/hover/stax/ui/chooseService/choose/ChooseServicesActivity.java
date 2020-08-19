@@ -1,109 +1,109 @@
 package com.hover.stax.ui.chooseService.choose;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hover.sdk.api.Hover;
+import com.hover.sdk.sims.SimInfo;
 import com.hover.stax.R;
-import com.hover.stax.adapters.ChooseServicesAdapters;
-import com.hover.stax.enums.Service_category;
-import com.hover.stax.enums.Service_in_list_status;
-import com.hover.stax.interfaces.CustomOnClickListener;
+import com.hover.stax.adapters.InstitutionsAdapter;
+import com.hover.stax.institutions.Institution;
+import com.hover.stax.institutions.InstitutionViewModel;
 import com.hover.stax.database.ConvertRawDatabaseDataToModels;
 import com.hover.stax.ui.chooseService.pin.ServicesPinActivity;
-import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.PermissionUtils;
 
-public class ChooseServicesActivity extends AppCompatActivity implements CustomOnClickListener {
-private ChooseServicesAdapters servicesAdapters_yourSim;
-private ChooseServicesAdapters servicesAdapters_inYourCountry;
-ChooseServicesAdapters servicesAdapters_allServices;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-@Override
-protected void onCreate(@Nullable Bundle savedInstanceState) {
-	super.onCreate(savedInstanceState);
-	setContentView(R.layout.choose_services);
+public class ChooseServicesActivity extends AppCompatActivity implements InstitutionsAdapter.SelectListener {
 
-	TextView otherServicesText = findViewById(R.id.other_services_in);
-	TextView doneText = findViewById(R.id.choose_serves_done);
-	otherServicesText.append(" "+ new ConvertRawDatabaseDataToModels().getSimCountry());
+	List<String> countryList;
+	List<String> hniList;
 
-	int textColorAdded = getResources().getColor(R.color.mediumGrey);
-	int textColorNotAdded = getResources().getColor(R.color.colorWhiteV2);
+	@Override
+	protected void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-	UIHelper.setTextUnderline(doneText, getResources().getString(R.string.done));
-	doneText.setOnClickListener(view->startActivity(new Intent(this, ServicesPinActivity.class)));
+		if (!PermissionUtils.hasPhonePerm(this))
+			PermissionUtils.requestPhonePerms(this, 0);
 
+		setContentView(R.layout.choose_services);
+		findViewById(R.id.choose_serves_done).setOnClickListener(view -> startActivity(new Intent(this, ServicesPinActivity.class)));
 
-	ChooseServiceViewModel serviceViewModel = new ViewModelProvider(this).get(ChooseServiceViewModel.class);
-	serviceViewModel.getServicesBasedOnSim_liveData();
-	serviceViewModel.getServicesBasedOnCountry_liveData();
-	serviceViewModel.getAllServices_liveData();
+		InstitutionViewModel viewModel = new ViewModelProvider(this).get(InstitutionViewModel.class);
+		((TextView) findViewById(R.id.other_services_in))
+			.append(" " + new ConvertRawDatabaseDataToModels().getSimCountry());
 
-	serviceViewModel.loadServicesBasedOnSim().observe(this, staxServicesModels -> {
-		RecyclerView servicesBySimRecyclerView = findViewById(R.id.choose_service_recycler_yourSIMS);
-		GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false);
-		servicesBySimRecyclerView.setHasFixedSize(true);
-		servicesBySimRecyclerView.setLayoutManager(gridLayoutManager);
-
-
-		servicesAdapters_yourSim = new ChooseServicesAdapters(staxServicesModels, this, Service_category.YOUR_SIM, textColorAdded, textColorNotAdded);
-		servicesBySimRecyclerView.setAdapter(servicesAdapters_yourSim);
-	});
-
-	serviceViewModel.loadServicesBasedOnCountry().observe(this, staxServicesModels -> {
-		RecyclerView servicesByCountryRecyclerView = findViewById(R.id.choose_service_recycler_inCountry);
-		GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false);
-		servicesByCountryRecyclerView.setHasFixedSize(true);
-		servicesByCountryRecyclerView.setLayoutManager(gridLayoutManager);
-
-		servicesAdapters_inYourCountry = new ChooseServicesAdapters(staxServicesModels, this, Service_category.IN_COUNTRY, textColorAdded, textColorNotAdded);
-		servicesByCountryRecyclerView.setAdapter(servicesAdapters_inYourCountry);
-	});
-
-	serviceViewModel.loadAllServices().observe(this, staxServicesModels -> {
-		RecyclerView allServicesRecyclerView = findViewById(R.id.choose_service_recycler_allservices);
-		GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false);
-		allServicesRecyclerView.setHasFixedSize(true);
-		allServicesRecyclerView.setLayoutManager(gridLayoutManager);
-
-		servicesAdapters_allServices = new ChooseServicesAdapters(staxServicesModels, this, Service_category.ALL_SERVICES, textColorAdded, textColorNotAdded);
-		allServicesRecyclerView.setAdapter(servicesAdapters_allServices);
-	});
-
-
-}
-
-@Override
-public void customClickListener(Object... data) {
-	String serviceId = (String )data[0];
-	Service_in_list_status newStatus = (Service_in_list_status) data[1];
-	int position = (int) data[2];
-	Service_category category = (Service_category) data[3];
-
-	if(category == Service_category.YOUR_SIM) {
-		servicesAdapters_yourSim.updateSelectStatus(newStatus, position);
-
-		boolean tapRequestStatus = new ConvertRawDatabaseDataToModels().addServiceToUserCatalogue(newStatus, serviceId);
-		if(!tapRequestStatus) servicesAdapters_yourSim.resetSelectStatus(position);
-
+		getHnis(viewModel);
+		getCountries(viewModel);
+		addInstitutions(viewModel);
 	}
-	else if(category == Service_category.IN_COUNTRY) {
-		servicesAdapters_inYourCountry.updateSelectStatus(newStatus, position);
 
-		boolean tapRequestStatus = new ConvertRawDatabaseDataToModels().addServiceToUserCatalogue(newStatus, serviceId);
-		if(!tapRequestStatus) servicesAdapters_inYourCountry.resetSelectStatus(position);
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		if (PermissionUtils.permissionsGranted(grantResults)) {
+			Hover.updateSimInfo(this);
+		}
 	}
-	else {
-		servicesAdapters_allServices.updateSelectStatus(newStatus, position);
 
-		boolean tapRequestStatus = new ConvertRawDatabaseDataToModels().addServiceToUserCatalogue(newStatus, serviceId);
-		if(!tapRequestStatus) servicesAdapters_allServices.resetSelectStatus(position);
+	private void getCountries(InstitutionViewModel viewModel) {
+		List<SimInfo> sims = viewModel.getSims();
+		if (countryList == null) countryList = new ArrayList<>();
+		for (SimInfo sim: sims) {
+			if (!countryList.contains(sim.getCountryIso()))
+				countryList.add(sim.getCountryIso());
+		}
 	}
-}
+
+	private void getHnis(InstitutionViewModel viewModel) {
+		List<SimInfo> sims = viewModel.getSims();
+		if (hniList == null) hniList = new ArrayList<>();
+		for (SimInfo sim: sims) {
+			if (!hniList.contains(sim.getOSReportedHni()))
+				hniList.add(sim.getOSReportedHni());
+		}
+	}
+
+	private void addInstitutions(InstitutionViewModel viewModel) {
+		viewModel.getSimInstitutions("63902").observe(this, institutions -> {
+			addGrid(findViewById(R.id.choose_service_recycler_yourSIMS), institutions);
+		});
+
+		viewModel.getCountryInstitutions("ke").observe(this, institutions -> {
+			addGrid(findViewById(R.id.choose_service_recycler_inCountry), institutions);
+		});
+
+		viewModel.getInstitutions().observe(this, institutions -> {
+			addGrid(findViewById(R.id.choose_service_recycler_allservices), institutions);
+		});
+	}
+
+	private void addGrid(RecyclerView view, List<Institution> institutions) {
+		GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false);
+		view.setHasFixedSize(true);
+		view.setLayoutManager(gridLayoutManager);
+		view.setAdapter(new InstitutionsAdapter(institutions, new ArrayList<>(), this));
+	}
+
+	public void onSelect(int id) {
+		Log.e(TAG, "Not error! It clicked.");
+	}
 }

@@ -1,0 +1,4 @@
+<resources>
+	<string name="custom_font_error">Cannot set custom font</string>
+	<string name="custom_font_err_msg">At least one default font must be set</string>
+</resources>
