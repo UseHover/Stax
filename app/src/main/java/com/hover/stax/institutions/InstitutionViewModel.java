@@ -17,33 +17,38 @@ public class InstitutionViewModel extends AndroidViewModel {
 
 	private DatabaseRepo repo;
 
-	private List<SimInfo> sims;
+	private MutableLiveData<List<SimInfo>> sims;
 
 	private LiveData<List<Institution>> institutions;
 	private LiveData<List<Institution>> simInstitutions;
 	private LiveData<List<Institution>> countryInstitutions;
-	private final MutableLiveData<List<Institution>> selected = new MutableLiveData<>();
+	private MutableLiveData<List<Integer>> selected = new MutableLiveData<>();
 
 	public InstitutionViewModel(Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
-		institutions = repo.getAll();
-		sims = Hover.getPresentSims(application);
+		loadInstitutions();
+		loadSims(application);
 	}
 
-	public LiveData<List<Institution>> getInstitutions() {
-		if (institutions == null) {
-			institutions = new MutableLiveData<>();
-			loadInstitutions();
-		}
-		return institutions;
-	}
+	LiveData<List<Institution>> getInstitutions() { return institutions; }
+
+	public MutableLiveData<List<SimInfo>> getSims() { return sims; }
 
 	private void loadInstitutions() {
+		if (institutions == null) {
+			institutions = new MutableLiveData<>();
+		}
 		institutions = repo.getAll();
 	}
+	private void loadSims(Application application) {
+		if (sims == null) {
+			sims = new MutableLiveData<>();
+		}
+		sims.setValue(Hover.getPresentSims(application));
+	}
 
-	public LiveData<List<Institution>> getCountryInstitutions(String country) {
+	LiveData<List<Institution>> getCountryInstitutions(String country) {
 		if (countryInstitutions == null) {
 			countryInstitutions = new MutableLiveData<>();
 		}
@@ -62,22 +67,26 @@ public class InstitutionViewModel extends AndroidViewModel {
 		return countryInstitutions;
 	}
 
-	public LiveData<List<Institution>> getSimInstitutions(String simHni) {
+	LiveData<List<Institution>> getSimInstitutions(String simHni) {
 		if (simInstitutions == null) {
 			simInstitutions = new MutableLiveData<>();
 		}
 		return simInstitutions;
 	}
 
-	public List<SimInfo> getSims() { return sims; }
-
-	public LiveData<List<Institution>> getSelected() {
+	public LiveData<List<Integer>> getSelected() {
+		if (selected == null) {
+			selected = new MutableLiveData<>();
+		}
 		return selected;
 	}
 
-	public void select(Institution inst) {
-		List<Institution> list = selected.getValue();
-		list.add(inst);
+	public void setSelected(int id) {
+		List<Integer> list = selected.getValue() != null ? selected.getValue() : new ArrayList<>();
+		if (list.contains(id))
+			list.remove((Integer) id);
+		else
+			list.add(id);
 		selected.setValue(list);
 	}
 

@@ -57,6 +57,10 @@ public class Institution {
 	@ColumnInfo(name = "secondary_color_hex")
 	public String secondaryColorHex;
 
+	@NonNull
+	@ColumnInfo(name = "selected", defaultValue = "false")
+	public boolean selected;
+
 	@ColumnInfo(name = "pin")
 	public String pin;
 }

@@ -25,10 +25,15 @@ public class InstitutionsAdapter extends RecyclerView.Adapter<InstitutionsAdapte
 
 	private final SelectListener selectListener;
 
-	public InstitutionsAdapter(List<Institution> institutionList, List<Integer> selected_ids, SelectListener listener) {
+	public InstitutionsAdapter(List<Institution> institutionList, SelectListener listener) {
 		this.institutions = institutionList;
-		this.selected = selected_ids;
 		this.selectListener = listener;
+		selected = new ArrayList<>();
+	}
+
+	public void updateSelected(List<Integer> ids) {
+		selected = ids;
+		notifyDataSetChanged();
 	}
 
 	@NonNull
@@ -67,12 +72,12 @@ public class InstitutionsAdapter extends RecyclerView.Adapter<InstitutionsAdapte
 
 		@Override
 		public void onClick(View v) {
-			selectListener.onSelect(Integer.parseInt(id.getText().toString()));
+			selectListener.onTap(Integer.parseInt(id.getText().toString()));
 		}
 	}
 
 	public interface SelectListener  {
-		void onSelect(int institutionId);
+		void onTap(int institutionId);
 	}
 
 	@Override

@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.hover.stax.R;
 import com.hover.stax.models.StaxServiceModel;
-import com.hover.stax.ui.chooseService.choose.ChooseServicesActivity;
+import com.hover.stax.institutions.InstitutionsActivity;
 import com.hover.stax.utils.UIHelper;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup c
 	securityViewModel.loadServices();
 
 	root.findViewById(R.id.removePinsButtonId).setOnClickListener(view->{
-		startActivity(new Intent(getActivity(), ChooseServicesActivity.class));
+		startActivity(new Intent(getActivity(), InstitutionsActivity.class));
 	});
 
 	AppCompatSpinner spinner = root.findViewById(R.id.defaultAccountSpinner);

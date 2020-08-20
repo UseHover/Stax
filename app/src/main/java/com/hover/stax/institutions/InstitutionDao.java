@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -15,6 +16,9 @@ public interface InstitutionDao {
 	@Query("SELECT * FROM institutions")
 	LiveData<List<Institution>> getAll();
 
+	@Query("SELECT * FROM institutions WHERE selected = :selected")
+	LiveData<List<Institution>> getSelected(boolean selected);
+
 	@Query("SELECT * FROM institutions WHERE country_alpha2 = :countryAlpha2")
 	LiveData<List<Institution>> getByCountry(String countryAlpha2);
 
@@ -24,10 +28,10 @@ public interface InstitutionDao {
 	@Query("SELECT * FROM institutions WHERE id = :id LIMIT 1")
 	Institution getInstitution(String id);
 
-	@Insert
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	void insertAll(Institution... institutions);
 
-	@Insert
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	void insert(Institution institution);
 
 	@Update

@@ -55,12 +55,10 @@ public class UpdateInstitutionsWorker extends Worker {
 
 	@Override
 	public Worker.Result doWork() {
-		Log.e(TAG, "doing work");
 		try {
 			Log.v(TAG, "Downloading institutions...");
 			JSONObject institutionsJson = downloadInstitutions(getUrl());
 			JSONArray data = institutionsJson.getJSONArray("data");
-			Log.i(TAG, "result: " + data);
 			for (int j = 0; j < data.length(); j++) {
 				institutionDao.insert(new Institution(data.getJSONObject(j).getJSONObject("attributes")));
 			}

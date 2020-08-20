@@ -1,4 +1,4 @@
-package com.hover.stax.ui.chooseService.choose;
+package com.hover.stax.institutions;
 
 import android.Manifest;
 import android.app.Activity;
@@ -32,8 +32,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ChooseServicesActivity extends AppCompatActivity implements InstitutionsAdapter.SelectListener {
+public class InstitutionsActivity extends AppCompatActivity implements InstitutionsAdapter.SelectListener {
+	public final static String TAG = "ChooseServicesActivity";
 
+	InstitutionViewModel instViewModel;
 	List<String> countryList;
 	List<String> hniList;
 
@@ -47,13 +49,11 @@ public class ChooseServicesActivity extends AppCompatActivity implements Institu
 		setContentView(R.layout.choose_services);
 		findViewById(R.id.choose_serves_done).setOnClickListener(view -> startActivity(new Intent(this, ServicesPinActivity.class)));
 
-		InstitutionViewModel viewModel = new ViewModelProvider(this).get(InstitutionViewModel.class);
-		((TextView) findViewById(R.id.other_services_in))
-			.append(" " + new ConvertRawDatabaseDataToModels().getSimCountry());
+		instViewModel = new ViewModelProvider(this).get(InstitutionViewModel.class);
 
-		getHnis(viewModel);
-		getCountries(viewModel);
-		addInstitutions(viewModel);
+		getHnis();
+		getCountries();
+		addInstitutions();
 	}
 
 	@Override
@@ -64,17 +64,20 @@ public class ChooseServicesActivity extends AppCompatActivity implements Institu
 		}
 	}
 
-	private void getCountries(InstitutionViewModel viewModel) {
-		List<SimInfo> sims = viewModel.getSims();
-		if (countryList == null) countryList = new ArrayList<>();
-		for (SimInfo sim: sims) {
-			if (!countryList.contains(sim.getCountryIso()))
-				countryList.add(sim.getCountryIso());
-		}
+	private void getCountries() {
+		instViewModel.getSims().observe(this, sims -> {
+			if (countryList == null) countryList = new ArrayList<>();
+			for (SimInfo sim: sims) {
+				if (!countryList.contains(sim.getCountryIso()))
+					countryList.add(sim.getCountryIso());
+			}
+			if (countryList.size() > 0)
+				((TextView) findViewById(R.id.other_services_in)).setText(getString(R.string.country_section, countryList.get(0)));
+		});
 	}
 
-	private void getHnis(InstitutionViewModel viewModel) {
-		List<SimInfo> sims = viewModel.getSims();
+	private void getHnis() {
+		List<SimInfo> sims = instViewModel.getSims().getValue();
 		if (hniList == null) hniList = new ArrayList<>();
 		for (SimInfo sim: sims) {
 			if (!hniList.contains(sim.getOSReportedHni()))
@@ -82,16 +85,16 @@ public class ChooseServicesActivity extends AppCompatActivity implements Institu
 		}
 	}
 
-	private void addInstitutions(InstitutionViewModel viewModel) {
-		viewModel.getSimInstitutions("63902").observe(this, institutions -> {
+	private void addInstitutions() {
+		instViewModel.getSimInstitutions("63902").observe(this, institutions -> {
 			addGrid(findViewById(R.id.choose_service_recycler_yourSIMS), institutions);
 		});
 
-		viewModel.getCountryInstitutions("ke").observe(this, institutions -> {
+		instViewModel.getCountryInstitutions("ke").observe(this, institutions -> {
 			addGrid(findViewById(R.id.choose_service_recycler_inCountry), institutions);
 		});
 
-		viewModel.getInstitutions().observe(this, institutions -> {
+		instViewModel.getInstitutions().observe(this, institutions -> {
 			addGrid(findViewById(R.id.choose_service_recycler_allservices), institutions);
 		});
 	}
@@ -100,10 +103,12 @@ public class ChooseServicesActivity extends AppCompatActivity implements Institu
 		GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false);
 		view.setHasFixedSize(true);
 		view.setLayoutManager(gridLayoutManager);
-		view.setAdapter(new InstitutionsAdapter(institutions, new ArrayList<>(), this));
+		InstitutionsAdapter instAdapter = new InstitutionsAdapter(institutions, this);
+		view.setAdapter(instAdapter);
+		instViewModel.getSelected().observe(this, instAdapter::updateSelected);
 	}
 
-	public void onSelect(int id) {
-		Log.e(TAG, "Not error! It clicked.");
+	public void onTap(int id) {
+		instViewModel.setSelected(id);
 	}
 }

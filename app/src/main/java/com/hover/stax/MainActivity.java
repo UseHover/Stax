@@ -7,8 +7,7 @@ import android.view.View;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hover.sdk.api.Hover;
 import com.hover.stax.institutions.UpdateInstitutionsWorker;
-import com.hover.stax.ui.chooseService.choose.ChooseServicesActivity;
-import com.hover.stax.ui.onboard.SplashScreenActivity;
+import com.hover.stax.institutions.InstitutionsActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -49,6 +48,6 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	public void addServices(View view) {
-		startActivity(new Intent(this, ChooseServicesActivity.class));
+		startActivity(new Intent(this, InstitutionsActivity.class));
 	}
 }

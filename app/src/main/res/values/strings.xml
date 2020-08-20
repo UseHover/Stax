@@ -13,10 +13,10 @@
 	<string name="continueText">Continue</string>
 
 	<string name="balances">Balances</string>
-	<string name="choose_your_services">Choose your services</string>
-	<string name="your_sims">Your SIMs</string>
-	<string name="other_services_in">Other services in </string>
-	<string name="all_services">All services</string>
+	<string name="choose_institutions_title">Choose your services</string>
+	<string name="sims_section">Your SIMs</string>
+	<string name="country_section">Services in %1$s</string>
+	<string name="all_section">All services</string>
 
 	<string name="permission_showup_text">Heads up:\n\n We need permission to access your contacts and use your accessibility services so that we can do dope USSD magic for you.</string>
 	<string name="turn_on_permission">Turn on permissions</string>
