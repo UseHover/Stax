@@ -1,8 +1,11 @@
 package com.hover.stax.channels;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,6 +20,7 @@ import com.hover.sdk.sims.SimInfo;
 import com.hover.stax.R;
 import com.hover.stax.ui.chooseService.pin.ServicesPinActivity;
 import com.hover.stax.utils.PermissionUtils;
+import com.hover.stax.utils.UIHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,15 +29,13 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 	public final static String TAG = "ChannelsActivity";
 
 	ChannelViewModel channelViewModel;
-	List<String> countryList;
+	List<String> simCountryList;
 	List<String> simHniList;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.choose_channels);
-		findViewById(R.id.choose_serves_done).setOnClickListener(view -> startActivity(new Intent(this, ServicesPinActivity.class)));
-
 		channelViewModel = new ViewModelProvider(this).get(ChannelViewModel.class);
 
 		if (!PermissionUtils.hasPhonePerm(this))
@@ -45,6 +47,7 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 		getHnis();
 		getCountries();
 		addChannels();
+		watchSelected();
 	}
 
 	@Override
@@ -58,13 +61,11 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 
 	private void getCountries() {
 		channelViewModel.getSims().observe(this, sims -> {
-			countryList = new ArrayList<>();
+			simCountryList = new ArrayList<>();
 			for (SimInfo sim: sims) {
-				if (!countryList.contains(sim.getCountryIso()))
-					countryList.add(sim.getCountryIso());
+				if (!simCountryList.contains(sim.getCountryIso().toUpperCase()))
+					simCountryList.add(sim.getCountryIso().toUpperCase());
 			}
-			if (countryList.size() > 0)
-				((TextView) findViewById(R.id.other_services_in)).setText(getString(R.string.country_section, countryList.get(0).toUpperCase()));
 		});
 	}
 
@@ -80,19 +81,38 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 
 	private void addChannels() {
 		channelViewModel.getChannels().observe(this, channels -> {
-			addGrid(findViewById(R.id.choose_service_recycler_yourSIMS), getSimChannels(channels));
-			addGrid(findViewById(R.id.choose_service_recycler_inCountry), getCountryChannels(channels));
-			addGrid(findViewById(R.id.choose_service_recycler_allservices), channels);
+			addGrid(getString(R.string.sims_section), getSimChannels(channels));
+			for (String countryAlpha2: simCountryList)
+				addGrid(getString(R.string.country_section, countryAlpha2.toUpperCase()), getCountryChannels(countryAlpha2, channels));
+			addGrid(getString(R.string.all_section), channels);
 		});
 	}
 
-	private void addGrid(RecyclerView view, List<Channel> channels) {
+	private void addGrid(String sectionTitle, List<Channel> channels) {
+		LayoutInflater inflater = (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View section = inflater.inflate(R.layout.channel_grid, null);
+		((TextView) section.findViewById(R.id.section_title)).setText(sectionTitle);
 		GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false);
+		ChannelsAdapter instAdapter = new ChannelsAdapter(channels, this);
+
+		RecyclerView view = section.findViewById(R.id.section_recycler);
 		view.setHasFixedSize(true);
 		view.setLayoutManager(gridLayoutManager);
-		ChannelsAdapter instAdapter = new ChannelsAdapter(channels, this);
 		view.setAdapter(instAdapter);
+		((LinearLayout) findViewById(R.id.section_wrapper)).addView(section);
 		channelViewModel.getSelected().observe(this, instAdapter::updateSelected);
+	}
+
+	private void watchSelected() {
+		channelViewModel.getSelected().observe(this, this::onDone);
+	}
+
+	private void onDone(List<Integer> ids) {
+		if (ids.size() > 0) {
+			findViewById(R.id.choose_serves_done).setOnClickListener(view -> startActivity(new Intent(ChannelsActivity.this, ServicesPinActivity.class)));
+		} else {
+			findViewById(R.id.choose_serves_done).setOnClickListener(view -> UIHelper.flashMessage(ChannelsActivity.this, getString(R.string.no_selection_error)));
+		}
 	}
 
 	// Filtering the main list here is probably not faster than a second DB query in view model
@@ -107,11 +127,12 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 		}
 		return simChannels;
 	}
+
 	// Filtering the main list here is probably not faster than a second DB query in view model
-	private List<Channel> getCountryChannels(List<Channel> channels) {
+	private List<Channel> getCountryChannels(String countryAlpha2, List<Channel> channels) {
 		List<Channel> countryChannels = new ArrayList<>();
 		for (int i = 0; i < channels.size(); i++) {
-			if (countryList.contains(channels.get(i).countryAlpha2.toLowerCase()))
+			if (countryAlpha2.equals(channels.get(i).countryAlpha2.toUpperCase()))
 				countryChannels.add(channels.get(i));
 		}
 		return countryChannels;

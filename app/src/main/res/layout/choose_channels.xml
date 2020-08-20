@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryStax">
 
-	<LinearLayout
+	<LinearLayout android:id="@+id/section_wrapper"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:orientation="vertical">
@@ -25,72 +25,15 @@
 			    android:fontFamily="font-medium"
 			    android:textColor="@color/colorWhiteV2" />
 
-			<TextView
+			<TextView android:id="@+id/choose_serves_done"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
-			    android:id="@+id/choose_serves_done"
 			    android:textSize="@dimen/text_13"
 			    android:paddingStart="@dimen/activity_vertical_margin"
 			    android:paddingEnd="0dp"
 			    android:fontFamily="font-medium"
 			    android:textColor="@color/colorWhiteV2"
-			    />
+				android:text="@string/done" />
 		</LinearLayout>
-
-
-		<TextView
-		    android:layout_marginTop="@dimen/spacing32"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:textColor="@color/colorWhite"
-		    android:textSize="@dimen/text_13"
-		    android:paddingHorizontal="@dimen/activity_horizontal_margin"
-		    android:fontFamily="font-medium"
-		    android:text="@string/sims_section"/>
-
-
-		<androidx.recyclerview.widget.RecyclerView
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:minHeight="100dp"
-		    android:id="@+id/choose_service_recycler_yourSIMS"
-		    />
-
-			<TextView
-			    android:layout_marginTop="@dimen/spacing32"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:textColor="@color/colorWhite"
-			    android:textSize="@dimen/text_13"
-			    android:id="@+id/other_services_in"
-			    android:paddingHorizontal="@dimen/activity_horizontal_margin"
-			    android:fontFamily="font-medium"
-			    android:text="@string/country_section"/>
-
-
-			<androidx.recyclerview.widget.RecyclerView
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:minHeight="100dp"
-			    android:id="@+id/choose_service_recycler_inCountry"
-			    />
-
-
-			<TextView
-			    android:layout_marginTop="@dimen/spacing32"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:textColor="@color/colorWhite"
-			    android:textSize="@dimen/text_13"
-			    android:fontFamily="font-medium"
-			    android:paddingHorizontal="@dimen/activity_horizontal_margin"
-			    android:text="@string/all_section"/>
-
-
-			<androidx.recyclerview.widget.RecyclerView
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:minHeight="100dp"
-			    android:id="@+id/choose_service_recycler_allservices" />
 	</LinearLayout>
 </androidx.core.widget.NestedScrollView>

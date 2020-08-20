@@ -11,6 +11,7 @@
 	<string name="done"><u>Done</u></string>
 	<string name="cancel">Cancel</string>
 	<string name="continueText">Continue</string>
+	<string name="no_selection_error">You must select at least 1 service.</string>
 
 	<string name="balances">Balances</string>
 	<string name="choose_institutions_title">Choose your services</string>
