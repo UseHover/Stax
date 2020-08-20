@@ -6,8 +6,8 @@ import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hover.sdk.api.Hover;
-import com.hover.stax.institutions.UpdateInstitutionsWorker;
-import com.hover.stax.institutions.InstitutionsActivity;
+import com.hover.stax.channels.UpdateChannelsWorker;
+import com.hover.stax.channels.ChannelsActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
 //		}
 
 		WorkManager wm = WorkManager.getInstance(this);
-		wm.beginUniqueWork("Institutions", ExistingWorkPolicy.KEEP, UpdateInstitutionsWorker.makeWork()).enqueue();
-		wm.enqueueUniquePeriodicWork(UpdateInstitutionsWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, UpdateInstitutionsWorker.makeToil());
+		wm.beginUniqueWork("Institutions", ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue();
+		wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, UpdateChannelsWorker.makeToil());
 
 		setContentView(R.layout.activity_main);
 		BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -48,6 +48,6 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	public void addServices(View view) {
-		startActivity(new Intent(this, InstitutionsActivity.class));
+		startActivity(new Intent(this, ChannelsActivity.class));
 	}
 }

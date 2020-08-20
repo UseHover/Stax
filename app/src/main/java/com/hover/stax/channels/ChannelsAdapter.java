@@ -1,4 +1,4 @@
-package com.hover.stax.adapters;
+package com.hover.stax.channels;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,24 +9,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hover.sdk.sims.SimInfo;
 import com.hover.stax.R;
-import com.hover.stax.enums.Service_in_list_status;
-import com.hover.stax.institutions.Institution;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class InstitutionsAdapter extends RecyclerView.Adapter<InstitutionsAdapter.InstitutionViewHolder> {
-	private List<Institution> institutions;
+public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.ChannelViewHolder> {
+	private List<Channel> channels;
 	private List<Integer> selected;
 
 	private final SelectListener selectListener;
 
-	public InstitutionsAdapter(List<Institution> institutionList, SelectListener listener) {
-		this.institutions = institutionList;
+	public ChannelsAdapter(List<Channel> channelList, SelectListener listener) {
+		this.channels = channelList;
 		this.selectListener = listener;
 		selected = new ArrayList<>();
 	}
@@ -38,28 +35,28 @@ public class InstitutionsAdapter extends RecyclerView.Adapter<InstitutionsAdapte
 
 	@NonNull
 	@Override
-	public InstitutionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+	public ChannelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.choose_service_item, parent, false);
-		return new InstitutionViewHolder(view);
+		return new ChannelViewHolder(view);
 	}
 
 	@Override
-	public void onBindViewHolder(@NonNull InstitutionViewHolder holder, int position) {
-		Institution institution = institutions.get(position);
+	public void onBindViewHolder(@NonNull ChannelViewHolder holder, int position) {
+		Channel channel = channels.get(position);
 
-		holder.id.setText(Integer.toString(institution.id));
-		holder.name.setText(institution.name);
-		//holder.serviceLogo.setImageBitmap(institution.logo);
-		holder.shadowFrame.setVisibility(selected.contains(institution.id) ? View.VISIBLE : View.GONE);
-		holder.checkIcon.setVisibility(selected.contains(institution.id) ? View.VISIBLE : View.GONE);
+		holder.id.setText(Integer.toString(channel.id));
+		holder.name.setText(channel.name + " " + channel.countryAlpha2);
+		//holder.serviceLogo.setImageBitmap(channel.logo);
+		holder.shadowFrame.setVisibility(selected.contains(channel.id) ? View.VISIBLE : View.GONE);
+		holder.checkIcon.setVisibility(selected.contains(channel.id) ? View.VISIBLE : View.GONE);
 	}
 
-	class InstitutionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+	class ChannelViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		TextView name, id;
 		CircleImageView logo, shadowFrame;
 		ImageView checkIcon;
 
-		InstitutionViewHolder(@NonNull View itemView) {
+		ChannelViewHolder(@NonNull View itemView) {
 			super(itemView);
 			id = itemView.findViewById(R.id.service_item_id);
 			name = itemView.findViewById(R.id.service_item_name_id);
@@ -77,12 +74,12 @@ public class InstitutionsAdapter extends RecyclerView.Adapter<InstitutionsAdapte
 	}
 
 	public interface SelectListener  {
-		void onTap(int institutionId);
+		void onTap(int channelId);
 	}
 
 	@Override
 	public int getItemCount() {
-		if (institutions != null) return institutions.size();
+		if (channels != null) return channels.size();
 		else return 0;
 	}
 

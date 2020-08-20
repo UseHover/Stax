@@ -1,4 +1,4 @@
-package com.hover.stax.institutions;
+package com.hover.stax.channels;
 
 import android.content.Context;
 import android.util.Log;
@@ -25,26 +25,26 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class UpdateInstitutionsWorker extends Worker {
-	public final static String TAG = "UpdateInstsWorker";
+public class UpdateChannelsWorker extends Worker {
+	public final static String TAG = "UpdateChannelsWorker";
 
 	private final OkHttpClient client = new OkHttpClient();
-	private final InstitutionDao institutionDao;
+	private final ChannelDao channelDao;
 	private String errorMsg = null;
 
-	public UpdateInstitutionsWorker(@NonNull Context context, @NonNull WorkerParameters params) {
+	public UpdateChannelsWorker(@NonNull Context context, @NonNull WorkerParameters params) {
 		super(context, params);
-		institutionDao = AppDatabase.getInstance(context).institutionDao();
+		channelDao = AppDatabase.getInstance(context).channelDao();
 	}
 
 	public static PeriodicWorkRequest makeToil() {
-		return new PeriodicWorkRequest.Builder(UpdateInstitutionsWorker.class, 24, TimeUnit.HOURS)
+		return new PeriodicWorkRequest.Builder(UpdateChannelsWorker.class, 24, TimeUnit.HOURS)
 			       .setConstraints(netConstraint())
 			       .build();
 	}
 
 	public static OneTimeWorkRequest makeWork() {
-		return new OneTimeWorkRequest.Builder(UpdateInstitutionsWorker.class)
+		return new OneTimeWorkRequest.Builder(UpdateChannelsWorker.class)
 			       .setConstraints(netConstraint())
 			       .build();
 	}
@@ -56,28 +56,28 @@ public class UpdateInstitutionsWorker extends Worker {
 	@Override
 	public Worker.Result doWork() {
 		try {
-			Log.v(TAG, "Downloading institutions...");
-			JSONObject institutionsJson = downloadInstitutions(getUrl());
-			JSONArray data = institutionsJson.getJSONArray("data");
+			Log.v(TAG, "Downloading channels...");
+			JSONObject channelsJson = downloadChannels(getUrl());
+			JSONArray data = channelsJson.getJSONArray("data");
 			for (int j = 0; j < data.length(); j++) {
-				institutionDao.insert(new Institution(data.getJSONObject(j).getJSONObject("attributes")));
+				channelDao.insert(new Channel(data.getJSONObject(j).getJSONObject("attributes")));
 			}
-			Log.i(TAG, "Successfully downloaded and saved institutions.");
+			Log.i(TAG, "Successfully downloaded and saved channels.");
 			return Result.success();
 		} catch (JSONException | NullPointerException e) {
-			Log.e(TAG, "Error parsing institution data.", e);
+			Log.e(TAG, "Error parsing channel data.", e);
 			return Result.failure();
 		} catch (IOException e) {
-			Log.e(TAG, "Timeout downloading institution data, will try again.", e);
+			Log.e(TAG, "Timeout downloading channel data, will try again.", e);
 			return Result.retry();
 		}
 	}
 
 	private String getUrl() {
-		return getApplicationContext().getString(R.string.root_url) + getApplicationContext().getString(R.string.institutions_endpoint);
+		return getApplicationContext().getString(R.string.root_url) + getApplicationContext().getString(R.string.channels_endpoint);
 	}
 
-	private JSONObject downloadInstitutions(String url) throws IOException, JSONException {
+	private JSONObject downloadChannels(String url) throws IOException, JSONException {
 		Request request = new Request.Builder().url(url).build();
 		Response response = client.newCall(request).execute();
 		JSONObject data = new JSONObject(response.body().string());

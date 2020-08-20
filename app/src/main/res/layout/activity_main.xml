@@ -10,6 +10,9 @@
 		android:layout_height="wrap_content"
 		app:layout_constraintTop_toTopOf="parent"
 		app:layout_constraintLeft_toLeftOf="parent"
+		android:textColor="@color/colorWhiteV2"
+		android:textSize="@dimen/text_21"
+		android:fontFamily="font-medium"
 		android:text="@string/balances" />
 
 	<Button
@@ -17,6 +20,8 @@
 		android:layout_height="wrap_content"
 		app:layout_constraintTop_toTopOf="parent"
 		app:layout_constraintLeft_toRightOf="@+id/title"
+		android:background="@color/colorPrimaryStax"
+		android:textColor="@color/colorWhiteV2"
 		android:text="+"
 		android:onClick="addServices"/>
 

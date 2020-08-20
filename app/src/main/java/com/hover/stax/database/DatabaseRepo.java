@@ -3,39 +3,37 @@ package com.hover.stax.database;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.room.Database;
 
-import com.hover.stax.institutions.Institution;
-import com.hover.stax.institutions.InstitutionDao;
+import com.hover.stax.channels.Channel;
+import com.hover.stax.channels.ChannelDao;
 
 import java.util.List;
 
 public class DatabaseRepo {
-	private InstitutionDao institutionDao;
-	private LiveData<List<Institution>> allInstitutions;
-	private LiveData<List<Institution>> selectedInstitutions;
+	private ChannelDao channelDao;
+	private LiveData<List<Channel>> allChannels;
+	private LiveData<List<Channel>> selectedChannels;
 
 	public DatabaseRepo(Application application) {
 		AppDatabase db = AppDatabase.getInstance(application);
-		institutionDao = db.institutionDao();
-		allInstitutions = institutionDao.getAll();
-		selectedInstitutions = institutionDao.getSelected(true);
+		channelDao = db.channelDao();
+		allChannels = channelDao.getAll();
+		selectedChannels = channelDao.getSelected(true);
 	}
 
 	// Room executes all queries on a separate thread.
 	// Observed LiveData will notify the observer when the data has changed.
-	public LiveData<List<Institution>> getAll() {
-		return allInstitutions;
+	public LiveData<List<Channel>> getAll() {
+		return allChannels;
 	}
 
-	public LiveData<List<Institution>> getSelected() {
-		return selectedInstitutions;
+	public LiveData<List<Channel>> getSelected() {
+		return selectedChannels;
 	}
 
-	void insert(Institution institution) {
+	void insert(Channel channel) {
 		AppDatabase.databaseWriteExecutor.execute(() -> {
-			institutionDao.insert(institution);
+			channelDao.insert(channel);
 		});
 	}
 }
