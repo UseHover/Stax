@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 //		}
 
 		WorkManager wm = WorkManager.getInstance(this);
-		wm.beginUniqueWork("Institutions", ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue();
+		wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue();
 		wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, UpdateChannelsWorker.makeToil());
 
 		setContentView(R.layout.activity_main);

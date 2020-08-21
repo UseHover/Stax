@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.WorkManager;
 
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.sims.SimInfo;
@@ -35,6 +37,7 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		WorkManager.getInstance(this).beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue();
 		setContentView(R.layout.choose_channels);
 		channelViewModel = new ViewModelProvider(this).get(ChannelViewModel.class);
 
@@ -81,6 +84,7 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 
 	private void addChannels() {
 		channelViewModel.getChannels().observe(this, channels -> {
+			((LinearLayout) findViewById(R.id.section_wrapper)).removeAllViews();
 			addGrid(getString(R.string.sims_section), getSimChannels(channels));
 			for (String countryAlpha2: simCountryList)
 				addGrid(getString(R.string.country_section, countryAlpha2.toUpperCase()), getCountryChannels(countryAlpha2, channels));

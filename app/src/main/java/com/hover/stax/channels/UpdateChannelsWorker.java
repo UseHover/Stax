@@ -28,6 +28,7 @@ import okhttp3.Response;
 public class UpdateChannelsWorker extends Worker {
 	public final static String TAG = "UpdateChannelsWorker";
 
+	public static String CHANNELS_WORK_ID = "CHANNELS";
 	private final OkHttpClient client = new OkHttpClient();
 	private final ChannelDao channelDao;
 	private String errorMsg = null;

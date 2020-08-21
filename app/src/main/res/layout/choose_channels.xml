@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryStax">
 
-	<LinearLayout android:id="@+id/section_wrapper"
+	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:orientation="vertical">
@@ -34,6 +34,12 @@
 			    android:fontFamily="font-medium"
 			    android:textColor="@color/colorWhiteV2"
 				android:text="@string/done" />
+		</LinearLayout>
+
+		<LinearLayout android:id="@+id/section_wrapper"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical">
 		</LinearLayout>
 	</LinearLayout>
 </androidx.core.widget.NestedScrollView>
