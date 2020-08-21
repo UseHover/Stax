@@ -4,12 +4,14 @@ import android.content.Context;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -43,6 +45,13 @@ public static void loadSpinnerItems(ArrayList<String> entries, AppCompatSpinner 
 
 	adapter.setDropDownViewResource(R.layout.spinner_items);
 	spinner.setAdapter(adapter);
+}
+
+public static void updateSpinnerTextColor(AdapterView<?> parent, Context context) {
+	AppCompatTextView textView = (AppCompatTextView) parent.getChildAt(0);
+	if(textView !=null){
+		textView.setTextColor(context.getResources().getColor(R.color.colorWhite));
+	}
 }
 
 public static void setTextUnderline(TextView textView, String cs) {

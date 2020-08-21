@@ -21,7 +21,7 @@
 	<string name="other_services_in">Other services in </string>
 	<string name="all_services">All services</string>
 
-	<string name="input_label">Input label</string>
+	<string name="input_label">Ksh</string>
 
 	<string name="security">Security</string>
 	<string name="remove_pin_from_device">Remove PINs from device</string>
@@ -36,4 +36,15 @@
 	<string name="between_services">Between services</string>
 	<string name="to_someone_else">To someone else</string>
 	<string name="request_money">Request money</string>
+	<string name="from">From</string>
+	<string name="to">To</string>
+	<string name="amount">Amount</string>
+	<string name="add_a_message">Add a message</string>
+	<string name="when">When</string>
+	<string name="frequency">Frequency</string>
+	<string name="until">Until</string>
+	<string name="number_of_transactions">Number of transactions</string>
+	<string name="fees">Fees</string>
+	<string name="choose_a_service_to_calculate">Choose a service to calculate your fees</string>
+	<string name="total">Total</string>
 </resources>

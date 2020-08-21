@@ -8,5 +8,6 @@
 	<color name="mediumGrey">#838385</color>
 	<color name="colorWhite">#FFFFFF</color>
 	<color name="bright_red">#FF0028</color>
+	<color name="dividerColor">#333333</color>
 
 </resources>

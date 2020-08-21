@@ -19,7 +19,7 @@
 	    />
 
 	<TextView
-	    android:layout_width="wrap_content"
+	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:text="@string/between_services"
 	    android:textColor="@color/colorWhiteV2"
@@ -30,11 +30,11 @@
 	
 	<View
 	    android:layout_width="match_parent"
-	    android:layout_height="0.1dp"
-	    android:background="@color/colorGrey"/>
+	    android:layout_height="1.2dp"
+	    android:background="@color/dividerColor"/>
 
 	<TextView
-	    android:layout_width="wrap_content"
+	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:text="@string/to_someone_else"
 	    android:textColor="@color/colorWhiteV2"
@@ -45,11 +45,11 @@
 
 	<View
 	    android:layout_width="match_parent"
-	    android:layout_height="0.1dp"
-	    android:background="@color/colorGrey"/>
+	    android:layout_height="1.2dp"
+	    android:background="@color/dividerColor"/>
 
 	<TextView
-	    android:layout_width="wrap_content"
+	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:text="@string/request_money"
 	    android:id="@+id/requestMoneyText"
@@ -60,6 +60,6 @@
 
 	<View
 	    android:layout_width="match_parent"
-	    android:layout_height="0.1dp"
-	    android:background="@color/colorGrey"/>
+	    android:layout_height="1.2dp"
+	    android:background="@color/dividerColor"/>
 </LinearLayout>

@@ -7,6 +7,7 @@
 	<dimen name="movemMoneyItemsTextSize">35sp</dimen>
 	<dimen name="text_14">15sp</dimen>
 	<dimen name="text_13">14sp</dimen>
+	<dimen name="spacing8">8dp</dimen>
 	<dimen name="editText_box_margin_horiz">21dp</dimen>
 	<dimen name="editText_box_margin_vert">13dp</dimen>
 	<dimen name="editText_stroke_size">2dp</dimen>
