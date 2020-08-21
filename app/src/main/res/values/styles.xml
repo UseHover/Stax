@@ -1,7 +1,5 @@
 <resources>
-	<!-- Base application theme. -->
 	<style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-		<!-- Customize your theme here. -->
 		<item name="colorPrimary">@color/colorPrimaryStax</item>
 		<item name="colorPrimaryDark">@color/colorPrimaryDarkStax</item>
 		<item name="colorAccent">@color/colorAccentStax</item>
@@ -9,14 +7,12 @@
 		<item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
 		<item name="materialCalendarFullscreenTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen</item>
 		<item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar</item>
-
 	</style>
 
 	<style name="myHoverTheme" parent="@style/HoverTheme.Base" />
 
 	<style name="HoverTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
 		<item name="android:windowActionBar">true</item>
-		<!-- Customize your theme here. -->
 		<item name="colorPrimary">@color/colorPrimaryStax</item>
 		<item name="colorPrimaryDark">@color/colorPrimaryDarkStax</item>
 		<item name="colorAccent">@color/colorAccentStax</item>

@@ -30,7 +30,7 @@
 		    android:paddingEnd="0dp"
 		    android:fontFamily="font-medium"
 		    android:textColor="@color/colorWhiteV2"
-		    />
+			android:text="@string/cancel"/>
 	</LinearLayout>
 
 	<TextView
@@ -46,19 +46,18 @@
 	    android:layout_height="wrap_content"
 	    android:layout_marginTop="@dimen/activity_vertical_margin"
 	    android:padding="@dimen/activity_vertical_margin"
-	    android:id="@+id/pin_recyclerView"
-	    />
+	    android:id="@+id/pin_recyclerView" />
 
-	<Button
+	<Button android:id="@+id/continuePinButton"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:paddingHorizontal="@dimen/spacing32"
 	    android:text="@string/continueText"
-	    android:id="@+id/continuePinButton"
 	    android:textAllCaps="false"
+		android:fontFamily="font-medium"
 	    android:layout_gravity="end"
 	    android:layout_marginEnd="@dimen/activity_horizontal_margin"
-	    android:fontFamily="font-medium"
-	    />
+		android:textColor="@color/colorPrimaryDarkStax"
+		android:background="@color/colorWhiteV2"/>
 
 </LinearLayout>

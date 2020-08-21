@@ -20,7 +20,7 @@ import androidx.work.WorkManager;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.sims.SimInfo;
 import com.hover.stax.R;
-import com.hover.stax.ui.chooseService.pin.ServicesPinActivity;
+import com.hover.stax.pins.PinsActivity;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
 
@@ -85,14 +85,14 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 	private void addChannels() {
 		channelViewModel.getChannels().observe(this, channels -> {
 			((LinearLayout) findViewById(R.id.section_wrapper)).removeAllViews();
-			addGrid(getString(R.string.sims_section), getSimChannels(channels));
+			addSection(getString(R.string.sims_section), getSimChannels(channels));
 			for (String countryAlpha2: simCountryList)
-				addGrid(getString(R.string.country_section, countryAlpha2.toUpperCase()), getCountryChannels(countryAlpha2, channels));
-			addGrid(getString(R.string.all_section), channels);
+				addSection(getString(R.string.country_section, countryAlpha2.toUpperCase()), getCountryChannels(countryAlpha2, channels));
+			addSection(getString(R.string.all_section), channels);
 		});
 	}
 
-	private void addGrid(String sectionTitle, List<Channel> channels) {
+	private void addSection(String sectionTitle, List<Channel> channels) {
 		LayoutInflater inflater = (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View section = inflater.inflate(R.layout.channel_grid, null);
 		((TextView) section.findViewById(R.id.section_title)).setText(sectionTitle);
@@ -104,19 +104,24 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 		view.setLayoutManager(gridLayoutManager);
 		view.setAdapter(instAdapter);
 		((LinearLayout) findViewById(R.id.section_wrapper)).addView(section);
-		channelViewModel.getSelected().observe(this, instAdapter::updateSelected);
+		channelViewModel.getPendingSelected().observe(this, instAdapter::updateSelected);
 	}
 
 	private void watchSelected() {
-		channelViewModel.getSelected().observe(this, this::onDone);
+		channelViewModel.getPendingSelected().observe(this, this::onDone);
 	}
 
 	private void onDone(List<Integer> ids) {
 		if (ids.size() > 0) {
-			findViewById(R.id.choose_serves_done).setOnClickListener(view -> startActivity(new Intent(ChannelsActivity.this, ServicesPinActivity.class)));
+			findViewById(R.id.choose_serves_done).setOnClickListener(view -> saveAndContinue());
 		} else {
 			findViewById(R.id.choose_serves_done).setOnClickListener(view -> UIHelper.flashMessage(ChannelsActivity.this, getString(R.string.no_selection_error)));
 		}
+	}
+
+	private void saveAndContinue() {
+		channelViewModel.saveSelected();
+		startActivity(new Intent(ChannelsActivity.this, PinsActivity.class));
 	}
 
 	// Filtering the main list here is probably not faster than a second DB query in view model

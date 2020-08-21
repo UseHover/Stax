@@ -3,6 +3,7 @@ package com.hover.stax.database;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
@@ -34,6 +35,12 @@ public class DatabaseRepo {
 	void insert(Channel channel) {
 		AppDatabase.databaseWriteExecutor.execute(() -> {
 			channelDao.insert(channel);
+		});
+	}
+
+	public void update(Channel channel) {
+		AppDatabase.databaseWriteExecutor.execute(() -> {
+			channelDao.update(channel);
 		});
 	}
 }

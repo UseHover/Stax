@@ -77,11 +77,7 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.Channe
 		void onTap(int channelId);
 	}
 
-	@Override
-	public int getItemCount() {
-		if (channels != null) return channels.size();
-		else return 0;
-	}
+	@Override public int getItemCount() { return channels == null ? 0 : channels.size(); }
 
 	@Override public long getItemId(int position) {
 		return position;
