@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.hover.sdk.permissions.PermissionActivity;
 import com.hover.stax.R;
+import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
@@ -21,7 +22,7 @@ protected void onCreate(@Nullable Bundle savedInstanceState) {
 	setContentView(R.layout.permissions_activity);
 
 	findViewById(R.id.permission_button).setOnClickListener(view-> {
-		if(!Utils.deviceHasPermissions(this, new String[]{ Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE})) {
+		if (!PermissionUtils.has(new String[]{ Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE}, this)) {
 			startActivityForResult(new Intent(this, PermissionActivity.class), PERMISSION_REQ_CODE);
 		}
 	});

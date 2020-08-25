@@ -15,37 +15,37 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.hover.stax.R;
-import com.hover.stax.models.StaxServiceModel;
-import com.hover.stax.ui.chooseService.choose.ChooseServicesActivity;
+import com.hover.stax.channels.Channel;
+import com.hover.stax.channels.ChannelsActivity;
+import com.hover.stax.pins.PinsViewModel;
 import com.hover.stax.utils.UIHelper;
 
 import java.util.ArrayList;
 
 public class SecurityFragment extends Fragment  {
-	private SecurityViewModel securityViewModel;
+	private PinsViewModel securityViewModel;
 @Nullable
 @Override
 public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-	securityViewModel = new ViewModelProvider(this).get(SecurityViewModel.class);
+	securityViewModel = new ViewModelProvider(this).get(PinsViewModel.class);
 	View root = inflater.inflate(R.layout.fragment_security, container, false);
-	securityViewModel.loadServices();
 
 	root.findViewById(R.id.removePinsButtonId).setOnClickListener(view->{
-		startActivity(new Intent(getActivity(), ChooseServicesActivity.class));
+		startActivity(new Intent(getActivity(), ChannelsActivity.class));
 	});
 
 	AppCompatSpinner spinner = root.findViewById(R.id.defaultAccountSpinner);
 
-	securityViewModel.getServicesForDefaultAccount().observe(getViewLifecycleOwner(), staxServicesModels -> {
+	securityViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), staxServicesModels -> {
 		ArrayList<String> staxServiceNames = new ArrayList<>();
-		for(StaxServiceModel model : staxServicesModels) {
-			staxServiceNames.add(model.getServiceName());
+		for(Channel model : staxServicesModels) {
+			staxServiceNames.add(model.name);
 		}
 		UIHelper.loadSpinnerItems(staxServiceNames, spinner, getContext());
 		spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				securityViewModel.setNewDefaultAccount(position);
+				securityViewModel.setDefaultAccount((int) id);
 				AppCompatTextView textView = (AppCompatTextView) parent.getChildAt(0);
 				if(textView !=null){
 					textView.setTextColor(getResources().getColor(R.color.colorWhite));

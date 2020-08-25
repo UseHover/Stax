@@ -2,35 +2,39 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hover.stax">
 
-	<uses-permission android:name="android.permission.INTERNET"/>
-	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-	<uses-permission android:name="android.permission.CALL_PHONE"/>
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-	<application
-	    android:allowBackup="true"
-	    android:icon="@mipmap/ic_launcher"
-	    android:label="@string/app_name"
-	    android:roundIcon="@mipmap/ic_launcher_round"
-	    android:supportsRtl="true"
-	    android:name=".ApplicationInstance"
-	    android:theme="@style/myHoverTheme">
-		<activity
-		    android:name=".MainActivity"
-		    android:label="@string/app_name">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
+    <application
+        android:name=".ApplicationInstance"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/myHoverTheme">
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity>
-		<activity android:name=".ui.onboard.SplashScreenActivity" />
-		<activity android:name=".ui.permission.PermissionScreenActivity" />
-		<activity android:name=".ui.chooseService.choose.ChooseServicesActivity" />
-		<activity android:name=".ui.chooseService.pin.ServicesPinActivity" />
-		<activity android:name=".ui.moveMoney.toSomeoneEsle.ToSomeElseActivity" />
-		<activity android:name=".ui.moveMoney.requestMoney.RequestMoneyActivity" />
-		<activity android:name=".ui.moveMoney.betweenServices.BetweenServicesActivity" />
-	</application>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.onboard.SplashScreenActivity" />
+        <activity android:name=".ui.permission.PermissionScreenActivity" />
+        <activity android:name=".channels.ChannelsActivity" />
+        <activity android:name=".pins.PinsActivity" />
+        <activity android:name=".ui.moveMoney.toSomeoneEsle.ToSomeElseActivity" />
+        <activity android:name=".ui.moveMoney.requestMoney.RequestMoneyActivity" />
+        <activity android:name=".ui.moveMoney.betweenServices.BetweenServicesActivity" />
+
+        <meta-data
+            android:name="com.hover.ApiKey"
+            android:value="a9705c7fdda2d9d23bc6b77751c948a2" />
+    </application>
 
 </manifest>
