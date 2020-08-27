@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryStax"
+    android:background="@color/colorPrimary"
     android:padding="@dimen/activity_vertical_margin"
     tools:context=".ui.security.SecurityFragment">
 
@@ -19,7 +19,7 @@
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:text="@string/security"
-		    android:textColor="@color/colorWhiteV2"
+		    android:textColor="@color/offWhite"
 		    android:textSize="@dimen/text_21"
 		    android:fontFamily="font-medium"
 		    />
@@ -28,7 +28,7 @@
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:text="@string/remove_pin_from_device"
-		    android:textColor="@color/colorWhiteV2"
+		    android:textColor="@color/offWhite"
 		    android:layout_marginTop="@dimen/spacing32"
 		    android:fontFamily="font-medium"
 		    android:textSize="@dimen/text_13"
@@ -43,7 +43,7 @@
 		    android:textAllCaps="false"
 		    android:fontFamily="font-medium"
 		    android:textSize="@dimen/text_13"
-		    android:textColor="@color/colorWhiteV2"
+		    android:textColor="@color/offWhite"
 		    android:layout_marginTop="@dimen/activity_vertical_margin"
 		    android:paddingHorizontal="32dp"
 		    />
@@ -53,7 +53,7 @@
 		    android:layout_height="wrap_content"
 		    android:text="@string/default_account"
 		    android:layout_marginTop="32dp"
-		    android:textColor="@color/colorWhiteV2"
+		    android:textColor="@color/offWhite"
 		    android:textSize="@dimen/text_13"
 		    android:fontFamily="font-medium"
 		    />
@@ -72,14 +72,14 @@
 		    android:layout_height="wrap_content"
 		    android:text="@string/default_account_desc"
 		    android:layout_marginTop="8dp"
-		    android:textColor="@color/colorWhiteV2"
+		    android:textColor="@color/offWhite"
 		    />
 		<TextView
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:text="@string/about_our_security"
 		    android:layout_marginTop="@dimen/spacing32"
-		    android:textColor="@color/colorWhiteV2"
+		    android:textColor="@color/offWhite"
 		    android:textSize="@dimen/text_13"
 		    android:fontFamily="font-medium"
 		    />
@@ -89,7 +89,7 @@
 		    android:text="@string/about_our_security_content"
 		    android:layout_marginTop="8dp"
 		    android:lineSpacingExtra="4.5dp"
-		    android:textColor="@color/colorWhiteV2"
+		    android:textColor="@color/offWhite"
 		    />
 
 

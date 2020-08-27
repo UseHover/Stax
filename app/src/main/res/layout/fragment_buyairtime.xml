@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryStax"
+    android:background="@color/colorPrimary"
     tools:context=".ui.buyAirtime.BuyAirtimeFragment">
 
 	<TextView
@@ -16,7 +16,7 @@
 	    android:layout_marginEnd="8dp"
 	    android:textAlignment="center"
 	    android:textSize="20sp"
-	    android:textColor="@color/colorGrey"
+	    android:textColor="@color/grey"
 	    app:layout_constraintBottom_toBottomOf="parent"
 	    app:layout_constraintEnd_toEndOf="parent"
 	    app:layout_constraintStart_toStartOf="parent"
