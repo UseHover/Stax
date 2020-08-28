@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryStax"
     android:padding="@dimen/activity_vertical_margin"
-    tools:context=".ui.security.SecurityFragment">
+    tools:context=".security.SecurityFragment">
 
 	<LinearLayout
 	    android:layout_width="match_parent"

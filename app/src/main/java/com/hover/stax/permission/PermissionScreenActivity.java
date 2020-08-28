@@ -1,9 +1,8 @@
-package com.hover.stax.ui.permission;
+package com.hover.stax.permission;
 
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +11,6 @@ import com.hover.sdk.permissions.PermissionActivity;
 import com.hover.stax.R;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
-import com.hover.stax.utils.Utils;
 
 public class PermissionScreenActivity extends AppCompatActivity {
 private final int PERMISSION_REQ_CODE = 201;

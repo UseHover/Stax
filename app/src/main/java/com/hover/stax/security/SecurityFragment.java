@@ -1,4 +1,4 @@
-package com.hover.stax.ui.security;
+package com.hover.stax.security;
 
 import android.content.Intent;
 import android.os.Bundle;

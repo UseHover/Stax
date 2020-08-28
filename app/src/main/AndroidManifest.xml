@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.onboard.SplashScreenActivity" />
-        <activity android:name=".ui.permission.PermissionScreenActivity" />
+        <activity android:name=".permission.PermissionScreenActivity" />
         <activity android:name=".channels.ChannelsActivity" />
         <activity android:name=".pins.PinsActivity" />
         <activity android:name=".moveMoney.toSomeoneEsle.ToSomeElseActivity" />
