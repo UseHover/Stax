@@ -4,7 +4,7 @@
     android:id="@+id/spinnerItemId"
     android:textColor="@drawable/spinner_state_selector"
     android:textSize="@dimen/text_13"
-    android:background="@color/colorPrimaryStax"
+    android:background="@color/colorPrimary"
     android:singleLine="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

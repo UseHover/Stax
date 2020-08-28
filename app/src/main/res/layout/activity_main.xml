@@ -5,7 +5,7 @@
 	android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-	android:background="@color/colorPrimaryStax">
+	android:background="@color/colorPrimary">
 
 	<!--
 	<androidx.appcompat.widget.Toolbar android:id="@+id/toolbar"
@@ -16,8 +16,8 @@
 		<TextView android:id="@+id/title"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
-			android:textColor="@color/colorWhiteV2"
-			android:background="@color/colorPrimaryDarkStax"
+			android:textColor="@color/offWhite"
+			android:background="@color/colorPrimaryDark"
 			android:textSize="@dimen/text_21"
 			android:text="@string/balances" />
 
@@ -27,8 +27,8 @@
 			app:layout_constraintTop_toTopOf="parent"
 			app:layout_constraintLeft_toRightOf="@+id/title"
 			app:layout_constraintBottom_toBottomOf="@+id/title"
-			android:background="@color/colorPrimaryStax"
-			android:textColor="@color/colorWhiteV2"
+			android:background="@color/colorPrimary"
+			android:textColor="@color/offWhite"
 			android:text="+"
 			android:onClick="addServices"/>
 	</androidx.appcompat.widget.Toolbar> -->
@@ -53,7 +53,7 @@
 	    android:layout_height="wrap_content"
 	    android:layout_marginStart="0dp"
 	    android:layout_marginEnd="0dp"
-	    android:background="@color/colorPrimaryStax"
+	    android:background="@color/colorPrimary"
 	    app:itemIconTint="@color/bottomnav_component_color"
 	    app:itemTextColor="@color/bottomnav_component_color"
 	    app:layout_constraintBottom_toBottomOf="parent"

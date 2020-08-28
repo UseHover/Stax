@@ -51,7 +51,11 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     def sdk_version = "1.6.3"
-    implementation "com.hover:android-sdk:$sdk_version"
+    releaseImplementation "com.hover:android-sdk:$sdk_version"
+    debugImplementation project(":hover.sdk")
+    debugImplementation 'com.android.volley:volley:1.1.1'
+    debugImplementation 'com.google.android.gms:play-services-analytics:16.0.7'
+    debugImplementation 'io.sentry:sentry-android:1.7.21'
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 }

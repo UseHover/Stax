@@ -8,7 +8,7 @@
 		android:layout_marginTop="@dimen/spacing32"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textColor="@color/colorWhite"
+		android:textColor="@color/white"
 		android:textSize="@dimen/text_13"
 		android:paddingHorizontal="@dimen/activity_horizontal_margin"
 		android:fontFamily="font-medium"

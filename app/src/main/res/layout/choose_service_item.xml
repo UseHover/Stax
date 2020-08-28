@@ -47,7 +47,7 @@
 	    android:id="@+id/service_item_name_id"
 	    android:layout_below="@id/service_item_image_id"
 	    android:textAlignment="center"
-	    android:textColor="@color/colorWhiteV2"
+	    android:textColor="@color/offWhite"
 	    android:textSize="@dimen/text_13"
 	    />
 	<TextView
@@ -55,7 +55,7 @@
 		android:layout_height="wrap_content"
 		android:id="@+id/service_item_id"
 		android:textAlignment="center"
-		android:textColor="@color/colorWhiteV2"
+		android:textColor="@color/offWhite"
 		android:textSize="@dimen/text_13"
 		android:visibility="gone"
 		/>

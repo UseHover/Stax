@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryStax"
+    android:background="@color/colorPrimary"
     android:orientation="vertical">
 
 	<LinearLayout
@@ -19,7 +19,7 @@
 		    android:textSize="@dimen/text_21"
 		    android:layout_weight="1"
 		    android:fontFamily="font-medium"
-		    android:textColor="@color/colorWhiteV2"/>
+		    android:textColor="@color/offWhite"/>
 
 		<TextView
 		    android:layout_width="wrap_content"
@@ -29,7 +29,7 @@
 		    android:paddingStart="@dimen/activity_vertical_margin"
 		    android:paddingEnd="0dp"
 		    android:fontFamily="font-medium"
-		    android:textColor="@color/colorWhiteV2"
+		    android:textColor="@color/offWhite"
 			android:text="@string/cancel"/>
 	</LinearLayout>
 
@@ -37,7 +37,7 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:text="@string/choose_pin_description"
-	    android:textColor="@color/colorWhiteV2"
+	    android:textColor="@color/offWhite"
 	    android:paddingHorizontal="@dimen/activity_horizontal_margin"
 	    />
 
@@ -57,7 +57,7 @@
 		android:fontFamily="font-medium"
 	    android:layout_gravity="end"
 	    android:layout_marginEnd="@dimen/activity_horizontal_margin"
-		android:textColor="@color/colorPrimaryDarkStax"
-		android:background="@color/colorWhiteV2"/>
+		android:textColor="@color/colorPrimaryDark"
+		android:background="@color/offWhite"/>
 
 </LinearLayout>

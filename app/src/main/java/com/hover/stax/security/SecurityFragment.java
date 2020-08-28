@@ -54,7 +54,7 @@ public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup c
 
 				AppCompatTextView textView = (AppCompatTextView) parent.getChildAt(0);
 				if(textView !=null){
-					textView.setTextColor(getResources().getColor(R.color.colorWhite));
+					textView.setTextColor(getResources().getColor(R.color.white));
 				}
 
 			}

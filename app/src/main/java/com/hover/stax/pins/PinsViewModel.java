@@ -41,9 +41,7 @@ public class PinsViewModel extends AndroidViewModel {
 
 		for (Channel channel: updatedChannels) {
 			if (channel.pin != null) {
-				Log.d("PIN A: ", channel.pin);
 				channel.pin = KeyStoreExecutor.createNewKey(channel.pin, c);
-				Log.d("PIN B: ", channel.pin);
 
 				repo.update(channel);
 			}
