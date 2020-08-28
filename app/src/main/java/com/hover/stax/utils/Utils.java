@@ -137,4 +137,11 @@ public class Utils {
 		}
 		return bitmap;
 	}
+public static String getPackage(Context c) {
+	try {
+		return c.getApplicationContext().getPackageName();
+	} catch (NullPointerException e) {
+		return "fail";
+	}
+}
 }

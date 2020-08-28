@@ -16,7 +16,7 @@ public interface ChannelDao {
 	@Query("SELECT * FROM channels")
 	LiveData<List<Channel>> getAll();
 
-	@Query("SELECT * FROM channels WHERE selected = :selected")
+	@Query("SELECT * FROM channels WHERE selected = :selected ORDER BY defaultAccount DESC")
 	LiveData<List<Channel>> getSelected(boolean selected);
 
 	@Query("SELECT * FROM channels WHERE country_alpha2 = :countryAlpha2")
@@ -28,10 +28,10 @@ public interface ChannelDao {
 	@Query("SELECT * FROM channels WHERE id = :id LIMIT 1")
 	Channel getChannel(String id);
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	void insertAll(Channel... channels);
 
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	void insert(Channel channel);
 
 	@Update

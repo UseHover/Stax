@@ -1,23 +1,18 @@
-package com.hover.stax.ui.moveMoney;
+package com.hover.stax.moveMoney;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.hover.stax.R;
-import com.hover.stax.ui.moveMoney.betweenServices.BetweenServicesActivity;
-import com.hover.stax.ui.moveMoney.requestMoney.RequestMoneyActivity;
-import com.hover.stax.ui.moveMoney.toSomeoneEsle.ToSomeElseActivity;
+import com.hover.stax.moveMoney.betweenServices.BetweenServicesActivity;
+import com.hover.stax.moveMoney.requestMoney.RequestMoneyActivity;
+import com.hover.stax.moveMoney.toSomeoneEsle.ToSomeElseActivity;
 
 public class MoveMoneyFragment extends Fragment {
 

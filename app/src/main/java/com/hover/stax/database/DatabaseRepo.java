@@ -1,9 +1,9 @@
 package com.hover.stax.database;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
@@ -32,15 +32,14 @@ public class DatabaseRepo {
 		return selectedChannels;
 	}
 
-	void insert(Channel channel) {
-		AppDatabase.databaseWriteExecutor.execute(() -> {
-			channelDao.insert(channel);
-		});
+
+	public void insert(Channel channel) {
+		AppDatabase.databaseWriteExecutor.execute(() -> channelDao.insert(channel));
 	}
 
 	public void update(Channel channel) {
-		AppDatabase.databaseWriteExecutor.execute(() -> {
-			channelDao.update(channel);
-		});
+		Log.d("PIN UPDATE", "its an Repo");
+		AppDatabase.databaseWriteExecutor.execute(() -> channelDao.update(channel));
 	}
+
 }

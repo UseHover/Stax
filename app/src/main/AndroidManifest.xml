@@ -28,9 +28,10 @@
         <activity android:name=".ui.permission.PermissionScreenActivity" />
         <activity android:name=".channels.ChannelsActivity" />
         <activity android:name=".pins.PinsActivity" />
-        <activity android:name=".ui.moveMoney.toSomeoneEsle.ToSomeElseActivity" />
-        <activity android:name=".ui.moveMoney.requestMoney.RequestMoneyActivity" />
-        <activity android:name=".ui.moveMoney.betweenServices.BetweenServicesActivity" />
+        <activity android:name=".moveMoney.toSomeoneEsle.ToSomeElseActivity" />
+        <activity android:name=".moveMoney.requestMoney.RequestMoneyActivity" />
+        <activity android:name=".moveMoney.betweenServices.BetweenServicesActivity" />
+        <activity android:name=".moveMoney.ClickedMoveMoneyActivity" />
 
         <meta-data
             android:name="com.hover.ApiKey"

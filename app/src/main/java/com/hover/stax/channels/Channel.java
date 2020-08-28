@@ -61,6 +61,10 @@ public class Channel {
 	@ColumnInfo(name = "selected", defaultValue = "false")
 	public boolean selected;
 
+	@NonNull
+	@ColumnInfo(name = "defaultAccount", defaultValue = "false")
+	public boolean defaultAccount;
+
 	@ColumnInfo(name = "pin")
 	public String pin;
 }

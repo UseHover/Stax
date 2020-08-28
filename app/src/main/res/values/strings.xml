@@ -25,6 +25,7 @@
 	<string name="permission_success">All permissions allowed successfully</string>
 
 	<string name="input_label">Input label</string>
+	<string name="pin_input_hint">Enter PIN</string>
 
 	<string name="security">Security</string>
 	<string name="remove_pin_from_device">Remove PINs from device</string>
@@ -39,4 +40,8 @@
 	<string name="between_services">Between services</string>
 	<string name="to_someone_else">To someone else</string>
 	<string name="request_money">Request money</string>
+
+	<string name="to">To</string>
+	<string name="from">From</string>
+	<string name="amount">Amount</string>
 </resources>

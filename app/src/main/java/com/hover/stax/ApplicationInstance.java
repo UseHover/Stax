@@ -21,7 +21,6 @@ public class ApplicationInstance extends Application {
 		replacer.setThinFont("Barlow-Thin.ttf");
 		replacer.applyFont();
 		context = this;
-
 	}
 
 	public static Context getContext() {

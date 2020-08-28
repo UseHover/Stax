@@ -20,7 +20,7 @@
 
 	<fragment
 	    android:id="@+id/navigation_moveMoney"
-	    android:name="com.hover.stax.ui.moveMoney.MoveMoneyFragment"
+	    android:name="com.hover.stax.moveMoney.MoveMoneyFragment"
 	    android:label="@string/title_moveMoney"
 	    tools:layout="@layout/fragment_movemoney" />
 

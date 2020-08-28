@@ -1,5 +1,6 @@
 package com.hover.stax;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -13,5 +14,14 @@ public class ExampleUnitTest {
 @Test
 public void addition_isCorrect() {
 	assertEquals(4, 2 + 2);
+}
+
+@Test
+public void test_encryption() {
+	String value = "1234";
+	BlowfishEncyption blowfishEncyption = new BlowfishEncyption();
+	byte[] pin = blowfishEncyption.encrypt(value);
+
+	Assert.assertEquals(value, blowfishEncyption.decrypt(pin));
 }
 }

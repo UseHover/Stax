@@ -4,6 +4,7 @@
 	<dimen name="activity_vertical_margin">16dp</dimen>
 	<dimen name="text_16">17sp</dimen>
 	<dimen name="text_21">22sp</dimen>
+	<dimen name="spacing8">8dp</dimen>
 	<dimen name="movemMoneyItemsTextSize">35sp</dimen>
 	<dimen name="text_14">15sp</dimen>
 	<dimen name="text_13">14sp</dimen>

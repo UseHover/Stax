@@ -2,6 +2,7 @@ package com.hover.stax.pins;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -22,9 +22,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public  class PinEntryAdapter extends  RecyclerView.Adapter<PinEntryAdapter.PinEntryViewHolder> {
     private List<Channel> channels;
 
-    public PinEntryAdapter(List<Channel> channels) {
+    PinEntryAdapter(List<Channel> channels) {
         this.channels = channels;
     }
+
+    List<Channel> retrieveChannels() {return channels;}
 
     @NonNull
     @Override
@@ -39,9 +41,13 @@ public  class PinEntryAdapter extends  RecyclerView.Adapter<PinEntryAdapter.PinE
 
         holder.view.setTag(channel.id);
         holder.labelView.setText(channel.name);
+        Log.d("PIN SET",  channel.pin == null ? "null" : channel.pin);
         //holder.circleImageView.setImageBitmap(logo);
 //        holder.circleImageView.setVisibility(View.VISIBLE);
 
+        if(channel.pin !=null && !channel.pin.isEmpty()) {
+            holder.editView.setHint("XXXX");
+        }
         holder.editView.addTextChangedListener(new TextWatcher() {
             @Override public void afterTextChanged(Editable s) { }
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -51,7 +57,7 @@ public  class PinEntryAdapter extends  RecyclerView.Adapter<PinEntryAdapter.PinE
         });
     }
 
-    class PinEntryViewHolder extends  RecyclerView.ViewHolder {
+    static class PinEntryViewHolder extends  RecyclerView.ViewHolder {
         final TextView labelView;
         final CircleImageView circleImageView;
         final EditText editView;

@@ -1,13 +1,17 @@
 package com.hover.stax.pins;
 
 import android.app.Application;
+import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.hover.stax.ApplicationInstance;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.DatabaseRepo;
+import com.hover.stax.database.KeyStoreExecutor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,16 +37,20 @@ public class PinsViewModel extends AndroidViewModel {
 		channels = repo.getSelected();
 	}
 
-	public void savePins() {
-		List<Channel> selectedChannels = channels.getValue() != null ? channels.getValue() : new ArrayList<>();
-		for (Channel channel: selectedChannels) {
+	void savePins(List<Channel> updatedChannels, Context c) {
+
+		for (Channel channel: updatedChannels) {
 			if (channel.pin != null) {
+				Log.d("PIN A: ", channel.pin);
+				channel.pin = KeyStoreExecutor.createNewKey(channel.pin, c);
+				Log.d("PIN B: ", channel.pin);
+
 				repo.update(channel);
 			}
 		}
 	}
 
-	public void setDefaultAccount(int channelId) {
-
+	public void setDefaultAccount(Channel channel) {
+		repo.update(channel);
 	}
 }

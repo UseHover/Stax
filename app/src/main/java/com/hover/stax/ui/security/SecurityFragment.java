@@ -36,16 +36,22 @@ public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup c
 
 	AppCompatSpinner spinner = root.findViewById(R.id.defaultAccountSpinner);
 
-	securityViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), staxServicesModels -> {
-		ArrayList<String> staxServiceNames = new ArrayList<>();
-		for(Channel model : staxServicesModels) {
-			staxServiceNames.add(model.name);
+	securityViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
+		ArrayList<String> channelNames = new ArrayList<>();
+		for(Channel model : channels) {
+			channelNames.add(model.name);
 		}
-		UIHelper.loadSpinnerItems(staxServiceNames, spinner, getContext());
+		UIHelper.loadSpinnerItems(channelNames, spinner, getContext());
 		spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				securityViewModel.setDefaultAccount((int) id);
+				//0 is always be the default account, so need to set for 0.
+				if(position !=0) {
+					Channel newDefaultChannel = channels.get(position);
+					newDefaultChannel.defaultAccount = true;
+					securityViewModel.setDefaultAccount(newDefaultChannel);
+				}
+
 				AppCompatTextView textView = (AppCompatTextView) parent.getChildAt(0);
 				if(textView !=null){
 					textView.setTextColor(getResources().getColor(R.color.colorWhite));
