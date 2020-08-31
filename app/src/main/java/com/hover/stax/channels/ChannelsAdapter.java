@@ -33,6 +33,7 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.Channe
 		notifyDataSetChanged();
 	}
 
+
 	@NonNull
 	@Override
 	public ChannelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -48,8 +49,8 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.Channe
 		holder.name.setText(channel.name + " " + channel.countryAlpha2);
 		//holder.serviceLogo.setImageBitmap(channel.logo);
 
-		holder.shadowFrame.setVisibility(selected.contains(channel.id) || channel.selected ? View.VISIBLE : View.GONE);
-		holder.checkIcon.setVisibility(selected.contains(channel.id) || channel.selected ? View.VISIBLE : View.GONE);
+		holder.shadowFrame.setVisibility(selected.contains(channel.id)? View.VISIBLE : View.GONE);
+		holder.checkIcon.setVisibility(selected.contains(channel.id) ? View.VISIBLE : View.GONE);
 
 	}
 

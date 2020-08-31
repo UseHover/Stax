@@ -86,6 +86,7 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 
 	private void addChannels() {
 		channelViewModel.getChannels().observe(this, channels -> {
+			channelViewModel.loadInitiallySelectedChannels(channels);
 			((LinearLayout) findViewById(R.id.section_wrapper)).removeAllViews();
 			//YourSIM
 			addSection(getString(R.string.sims_section), Utils.getSimChannels(channels, simHniList));

@@ -46,8 +46,8 @@ public class DatabaseRepo {
 
 	public List<HoverAction> getActionsWithBalanceType() {
 		String balance = "balance";
-		String filter = " = '" + balance + "'";
-		return Hover.getActions(balance, ApplicationInstance.getContext());
+		String filter = "transaction_type = '" + balance + "'";
+		return Hover.getActions(filter, ApplicationInstance.getContext());
 	}
 
 }

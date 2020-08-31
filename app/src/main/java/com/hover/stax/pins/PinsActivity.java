@@ -73,12 +73,14 @@ public class PinsActivity extends AppCompatActivity {
 private void runAction(boolean firstTime) {
 		BalanceModel balanceModel = balanceModelList.get(actionRunCounter);
 	HoverParameters.Builder builder = new HoverParameters.Builder(this);
+
 	builder.request(balanceModel.getActionId());
-//	builder.setEnvironment(Apis.getCurrentEnv());
+	builder.setEnvironment(HoverParameters.DEBUG_ENV);
 	builder.style(R.style.myHoverTheme);
 //        builder.initialProcessingMessage(getResources().getString(R.string.transaction_coming_up));
 	builder.finalMsgDisplayTime(2000);
-	builder.extra("pin", KeyStoreExecutor.decrypt(balanceModel.getEncryptedPin(),this));
+	Log.d("sweet", "pin is: "+balanceModel.getEncryptedPin());
+	builder.extra("pin",balanceModel.getEncryptedPin() );
 
 	if(firstTime) actionRunCounter = actionRunCounter + 1;
 	Intent i = builder.buildIntent();
@@ -89,7 +91,7 @@ private void runAction(boolean firstTime) {
 @Override
 protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 	super.onActivityResult(requestCode, resultCode, data);
-	if (requestCode == RUN_ALL_RESULT && resultCode == RESULT_OK) {
+	if (requestCode == RUN_ALL_RESULT) {
 		if(actionRunCounter  < balanceModelList.size()) {
 			new Handler().postDelayed(() -> {
 				runAction(false);

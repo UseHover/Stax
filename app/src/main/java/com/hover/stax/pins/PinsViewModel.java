@@ -73,11 +73,17 @@ public class PinsViewModel extends AndroidViewModel {
 			for (Channel channel : selectedChannelInSIM) {
 				for (HoverAction action : balanceActions) {
 					if (action.channelId == channel.id) {
-						balanceModelList.add(new BalanceModel(channel.name, action.id, channel.pin));
+						String pin = KeyStoreExecutor.decrypt(channel.pin,ApplicationInstance.getContext());
+
+						Log.d("sweet", "what is pin? : "+pin);
+						balanceModelList.add(new BalanceModel(channel.name, action.id, pin));
+
 					}
 				}
 			}
 		}
+
+
 
 		balances.postValue(balanceModelList);
 	}

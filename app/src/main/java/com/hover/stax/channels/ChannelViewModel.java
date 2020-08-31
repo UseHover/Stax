@@ -40,6 +40,16 @@ public class ChannelViewModel extends AndroidViewModel {
 		channels = repo.getAll();
 		getPendingSelected();
 	}
+	void loadInitiallySelectedChannels(List<Channel> channels) {
+		List<Integer> ls = new ArrayList<>();
+		for(Channel channel: channels) {
+			if(channel.selected) ls.add(channel.id);
+		}
+		selected.postValue(ls);
+
+	}
+
+
 
 	public LiveData<List<Integer>> getPendingSelected() {
 		if (selected == null) {
