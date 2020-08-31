@@ -5,6 +5,9 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import com.hover.sdk.actions.HoverAction;
+import com.hover.sdk.api.Hover;
+import com.hover.stax.ApplicationInstance;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
 
@@ -38,8 +41,13 @@ public class DatabaseRepo {
 	}
 
 	public void update(Channel channel) {
-		Log.d("PIN UPDATE", "its an Repo");
 		AppDatabase.databaseWriteExecutor.execute(() -> channelDao.update(channel));
+	}
+
+	public List<HoverAction> getActionsWithBalanceType() {
+		String balance = "balance";
+		String filter = " = '" + balance + "'";
+		return Hover.getActions(balance, ApplicationInstance.getContext());
 	}
 
 }

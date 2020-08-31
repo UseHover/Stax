@@ -3,6 +3,7 @@ package com.hover.stax.channels;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -23,6 +24,7 @@ import com.hover.stax.R;
 import com.hover.stax.pins.PinsActivity;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +88,7 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 		channelViewModel.getChannels().observe(this, channels -> {
 			((LinearLayout) findViewById(R.id.section_wrapper)).removeAllViews();
 			//YourSIM
-			addSection(getString(R.string.sims_section), getSimChannels(channels));
+			addSection(getString(R.string.sims_section), Utils.getSimChannels(channels, simHniList));
 			//COUNTRIES
 			for (String countryAlpha2: simCountryList){
 				addSection(getString(R.string.country_section, countryAlpha2.toUpperCase()), getCountryChannels(countryAlpha2, channels));
@@ -126,19 +128,6 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 	private void saveAndContinue() {
 		channelViewModel.saveSelected();
 		startActivity(new Intent(ChannelsActivity.this, PinsActivity.class));
-	}
-
-	// Filtering the main list here is probably not faster than a second DB query in view model
-	private List<Channel> getSimChannels(List<Channel> channels) {
-		List<Channel> simChannels = new ArrayList<>();
-		for (int i = 0; i < channels.size(); i++) {
-			String[] hniArr = channels.get(i).hniList.split(",");
-			for (int l = 0; l < hniArr.length; l++) {
-				if (simHniList.contains(hniArr[l]))
-					simChannels.add(channels.get(i));
-			}
-		}
-		return simChannels;
 	}
 
 	// Filtering the main list here is probably not faster than a second DB query in view model

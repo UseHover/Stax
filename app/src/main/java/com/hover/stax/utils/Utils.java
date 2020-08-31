@@ -16,7 +16,9 @@ import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
+import com.hover.sdk.sims.SimInfo;
 import com.hover.stax.R;
+import com.hover.stax.channels.Channel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +37,11 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class Utils {
+
+	public static String stripHniString(String hni) {
+		return hni.replace("[", "").replace("]", "").replace("\"", "");
+	}
+
 	public static String formatDate(long timestamp) {
 		String pattern = "HH:mm:ss (z) MMM dd, yyyy";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, Locale.getDefault());
@@ -143,5 +150,18 @@ public static String getPackage(Context c) {
 	} catch (NullPointerException e) {
 		return "fail";
 	}
+}
+
+public static List<Channel> getSimChannels(List<Channel> channels, List<String> simHniList) {
+	List<Channel> simChannels = new ArrayList<>();
+	for (int i = 0; i < channels.size(); i++) {
+		String[] hniArr = channels.get(i).hniList.split(",");
+		for (int l = 0; l < hniArr.length; l++) {
+			Log.d("CUS_", "data hni: "+ Utils.stripHniString(hniArr[l]));
+			if (simHniList.contains(Utils.stripHniString(hniArr[l])))
+				simChannels.add(channels.get(i));
+		}
+	}
+	return simChannels;
 }
 }

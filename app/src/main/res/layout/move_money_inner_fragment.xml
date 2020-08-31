@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryStax"
+    android:background="@color/colorPrimary"
     android:padding="@dimen/activity_vertical_margin"
     >
 
@@ -17,7 +17,7 @@
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:text="@string/moveMoney"
-		    android:textColor="@color/colorWhiteV2"
+		    android:textColor="@color/white"
 		    android:textSize="@dimen/text_21"
 		    android:fontFamily="font-medium"
 		    android:padding="@dimen/activity_horizontal_margin"
@@ -27,7 +27,7 @@
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:text="@string/from"
-		    android:textColor="@color/colorWhiteV2"
+		    android:textColor="@color/white"
 		    android:fontFamily="font-medium"
 		    android:layout_marginTop="@dimen/activity_vertical_margin"
 		    />
@@ -45,7 +45,7 @@
 		    android:layout_height="wrap_content"
 		    android:text="@string/to"
 		    android:layout_marginTop="@dimen/activity_vertical_margin"
-		    android:textColor="@color/colorWhiteV2"
+		    android:textColor="@color/white"
 		    android:fontFamily="font-medium"
 		    />
 
@@ -63,7 +63,7 @@
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:text="@string/amount"
-		    android:textColor="@color/colorWhiteV2"
+		    android:textColor="@color/white"
 		    android:layout_marginTop="@dimen/activity_vertical_margin"
 		    android:fontFamily="font-medium"
 		    />
@@ -84,7 +84,7 @@
 		    android:id="@+id/bs_amountId"
 		    android:autofillHints="email_hint"
 		    android:inputType="textEmailAddress"
-		    android:textColor="@color/colorWhiteV2"
+		    android:textColor="@color/white"
 		    android:background="@drawable/edit_text_bg"/>
 	</LinearLayout>
 
