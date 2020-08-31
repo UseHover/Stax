@@ -6,22 +6,55 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     android:padding="@dimen/activity_horizontal_margin"
+    android:orientation="vertical"
     tools:context=".home.HomeFragment">
 
-	<TextView
-	    android:id="@+id/text_balances"
-	    android:layout_width="wrap_content"
+	<LinearLayout
+	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:text="Balances"
-	    android:textColor="@color/offWhite"
-	    android:textSize="@dimen/text_21"
-	    android:gravity="center"
-	    android:drawablePadding="@dimen/activity_horizontal_margin"
-	    android:drawableEnd="@drawable/ic_add_circle_outline_black_24dp"
-	    />
-	<TextView
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	    android:layout_gravity="center_vertical"
+	    >
+		<TextView
+		    android:id="@+id/text_balances"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/balances"
+		    android:textColor="@color/offWhite"
+		    android:textSize="@dimen/text_21"
+		    android:layout_gravity="start"
+		    android:gravity="start"
+		    android:drawablePadding="@dimen/spacing8"
+		    android:drawableEnd="@drawable/ic_add_circle_outline_black_24dp"
 
+		    />
+
+
+		<TextView
+		    android:layout_width="0dp"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:text="timeAgo"
+		    android:textAlignment="viewEnd"
+		    android:layout_gravity="center_vertical"
+		    android:gravity="end"
+		    android:drawableEnd="@drawable/ic_refresh_white_24dp"
+		    android:drawablePadding="@dimen/spacing8"
+		    android:textColor="@color/offWhite"
+		    />
+	</LinearLayout>
+
+	<TextView
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="@string/add_new_balance"
+	    android:textColor="@color/offWhite"
+	    android:textSize="@dimen/text_13"
 	    />
+
+	<androidx.recyclerview.widget.RecyclerView
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:id="@+id/balances_recyclerView"/>
+
 </LinearLayout>

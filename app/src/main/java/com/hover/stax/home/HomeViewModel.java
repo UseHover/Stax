@@ -52,7 +52,7 @@ public void getBalanceFunction() {
 		for(Channel channel : selectedChannelInSIM) {
 			for(HoverAction action: balanceActions) {
 				if(action.channelId == channel.id) {
-					balanceModelList.add(new BalanceModel(channel.name, action.id));
+					balanceModelList.add(new BalanceModel(channel.name, action.id, channel.pin));
 				}
 			}
 		}

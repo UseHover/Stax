@@ -18,6 +18,7 @@
 	<string name="sims_section">Your SIMs</string>
 	<string name="country_section">Services in %1$s</string>
 	<string name="all_section">All services</string>
+	<string name="add_new_balance">Add a new balance to view it here</string>
 
 	<string name="permission_showup_text">Heads up:\n\n We need permission to access your contacts and use your accessibility services so that we can do dope USSD magic for you.</string>
 	<string name="turn_on_permission">Turn on permissions</string>
@@ -44,4 +45,22 @@
 	<string name="to">To</string>
 	<string name="from">From</string>
 	<string name="amount">Amount</string>
+
+
+
+
+	<string name="timeago_ago">%1$s ago</string>
+	<string name="timeago_from_now">%1$s from now</string>
+
+	<string name="timeago_secondes">less than a minute</string>
+	<string name="timeago_minute">about a minute</string>
+	<string name="timeago_minutes">%1$d minutes</string>
+	<string name="timeago_hour">about an hour</string>
+	<string name="timeago_hours">about %1$d hours</string>
+	<string name="timeago_day">a day</string>
+	<string name="timeago_days">%1$d days</string>
+	<string name="timeago_month">about a month</string>
+	<string name="timeago_months">%1$d months</string>
+	<string name="timeago_year">about a year</string>
+	<string name="timeago_years">%1$d years</string>
 </resources>

@@ -57,7 +57,7 @@
 		android:fontFamily="font-medium"
 	    android:layout_gravity="end"
 	    android:layout_marginEnd="@dimen/activity_horizontal_margin"
-		android:textColor="@color/colorPrimaryDark"
+		android:textColor="@color/white"
 		android:background="@color/offWhite"/>
 
 </LinearLayout>
