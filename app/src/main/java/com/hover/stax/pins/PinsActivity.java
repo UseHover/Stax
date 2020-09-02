@@ -79,8 +79,8 @@ private void runAction(boolean firstTime) {
 	builder.style(R.style.myHoverTheme);
 //        builder.initialProcessingMessage(getResources().getString(R.string.transaction_coming_up));
 	builder.finalMsgDisplayTime(2000);
-	Log.d("sweet", "pin is: "+balanceModel.getEncryptedPin());
-	builder.extra("pin",balanceModel.getEncryptedPin() );
+	Log.d("sweet", "pin is: "+balanceModel.getChannel().pin);
+	builder.extra("pin",balanceModel.getChannel().pin );
 
 	if(firstTime) actionRunCounter = actionRunCounter + 1;
 	Intent i = builder.buildIntent();

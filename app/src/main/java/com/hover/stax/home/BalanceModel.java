@@ -1,34 +1,26 @@
 package com.hover.stax.home;
 
-public class BalanceModel {
-	private String channelName;
-	private String actionId;
-	private String encryptedPin;
+import com.hover.stax.channels.Channel;
 
-public BalanceModel(String channelName, String actionId, String encryptedPin) {
-	this.channelName = channelName;
+public class BalanceModel {
+	private String actionId;
+	private Channel channel;
+
+public BalanceModel(String actionId, Channel channel) {
+	this.channel = channel;
 	this.actionId = actionId;
-	this.encryptedPin = encryptedPin;
 }
 
 public BalanceModel() {
 
 }
 
-public String getEncryptedPin() {
-	return encryptedPin;
+public Channel getChannel() {
+	return channel;
 }
 
-public void setEncryptedPin(String encryptedPin) {
-	this.encryptedPin = encryptedPin;
-}
-
-public String getChannelName() {
-	return channelName;
-}
-
-public void setChannelName(String channelName) {
-	this.channelName = channelName;
+public void setChannel(Channel channel) {
+	this.channel = channel;
 }
 
 public String getActionId() {

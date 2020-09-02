@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.chauthai.swipereveallayout.SwipeRevealLayout
+    android:layout_width="match_parent"
+    android:layout_height="65dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:mode="same_level"
+    app:dragEdge="right"
+    android:background="@color/colorPrimary"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<!-- Your secondary layout here -->
+	<FrameLayout
+	    android:layout_width="wrap_content"
+	    android:layout_height="65dp"
+	    android:id="@+id/balanced_swiped_layout">
+		<LinearLayout
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:paddingHorizontal="@dimen/activity_vertical_margin"
+		    android:paddingVertical="@dimen/spacing8"
+		    android:orientation="vertical">
+			<TextView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="timeAgo"
+			    android:textSize="10sp"
+			    android:textColor="@color/offWhite"
+			    android:drawablePadding="4dp"
+			    android:layout_gravity="end"
+			    android:gravity="end"
+			    android:id="@+id/balance_timeAgo"
+			    android:drawableStart="@drawable/ic_refresh_white_10dp"/>
+
+			<LinearLayout
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:orientation="horizontal">
+
+			<TextView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:id="@+id/balance_currency"
+			    android:textColor="@color/offWhite"
+			    android:layout_marginEnd="@dimen/spacing8"
+			    android:textSize="10sp"/>
+			<TextView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:textSize="30sp"
+			    android:textStyle="bold"
+			    android:textColor="@color/offWhite"
+			    android:id="@+id/balance_amount"/>
+			</LinearLayout>
+		</LinearLayout>
+	</FrameLayout>
+
+	<!-- Your main layout here -->
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="65dp"
+	    android:orientation="vertical">
+		<View
+		    android:layout_width="match_parent"
+		    android:layout_height="0.1dp"
+		    android:background="@color/darkGrey"/>
+		<LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="center_vertical"
+			android:padding="@dimen/activity_horizontal_margin"
+		    android:layout_weight="1"
+		    android:orientation="horizontal">
+			<TextView
+			    android:layout_width="0dp"
+			    android:layout_height="wrap_content"
+			    android:id="@+id/balance_channel"
+			    android:layout_gravity="center_vertical"
+			    android:gravity="center_vertical"
+			    android:textColor="@color/offWhite"
+			    android:textSize="@dimen/text_13"
+			    android:layout_weight="1"
+			    android:text="Channel name"/>
+
+			<ImageView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:src="@drawable/ic_apps_white_24dp"/>
+		</LinearLayout>
+		<View
+		    android:layout_width="match_parent"
+		    android:layout_height="0.1dp"
+		    android:background="@color/darkGrey"/>
+	</LinearLayout>
+
+</com.chauthai.swipereveallayout.SwipeRevealLayout>

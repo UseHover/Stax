@@ -3,10 +3,14 @@ package com.hover.stax.utils;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
 import androidx.core.app.ActivityCompat;
+
+import com.hover.stax.ApplicationInstance;
+import com.hover.stax.channels.ChannelsActivity;
 
 public class PermissionUtils {
 
@@ -36,5 +40,9 @@ public class PermissionUtils {
 			if (result != PackageManager.PERMISSION_GRANTED) { return false; }
 		}
 		return grantResults.length > 0;
+	}
+
+	public static boolean hasRequiredPermissions() {
+		return  PermissionUtils.has(new String[]{ Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE}, ApplicationInstance.getContext());
 	}
 }

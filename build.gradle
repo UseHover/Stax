@@ -22,6 +22,7 @@ allprojects {
         jcenter()
         maven { url "http://maven.usehover.com/releases" }
         maven { url "http://maven.usehover.com/snapshots" }
+        maven { url 'https://jitpack.io' }
     }
 }
 

@@ -1,15 +1,23 @@
 package com.hover.stax.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -60,4 +68,23 @@ public class UIHelper {
 		}
 
 	}
+
+	static public void setTextColoredDrawable(TextView textView, int drawable, int color) {
+		Drawable unwrappedDrawable = AppCompatResources.getDrawable(ApplicationInstance.getContext(), drawable);
+		assert unwrappedDrawable != null;
+		Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
+		DrawableCompat.setTint(wrappedDrawable, color);
+		textView.setCompoundDrawablesWithIntrinsicBounds(wrappedDrawable, null, null, null);
+	}
+
+public static void changeStatusBarColor(final Activity activity, final int color) {
+	if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+		return;
+
+	final Window window = activity.getWindow();
+	window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+	window.setStatusBarColor(color);
+}
+
 }

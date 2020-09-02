@@ -8,6 +8,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hover.sdk.api.Hover;
 import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.channels.ChannelsActivity;
+import com.hover.stax.ui.onboard.SplashScreenActivity;
+import com.hover.stax.utils.UIHelper;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -27,10 +29,11 @@ public class MainActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		Hover.initialize(this);
 
-//		if (GO_TO_SPLASH_SCREEN) {
-//			startActivity(new Intent(this, SplashScreenActivity.class));
-//			finishAffinity();
-//		}
+
+		if (GO_TO_SPLASH_SCREEN) {
+			startActivity(new Intent(this, SplashScreenActivity.class));
+			finishAffinity();
+		}
 
 		WorkManager wm = WorkManager.getInstance(this);
 		wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue();
