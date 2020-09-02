@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.utils.TimeAgo;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
@@ -42,7 +43,8 @@ BalanceModel balanceModel = balanceModelList.get(position);
 	Channel channel = balanceModel.getChannel();
 
 holder.channelName.setText(balanceModel.getChannel().name);
-holder.amount.setText("4000");
+holder.amount.setText(Utils.formatAmount(balanceModel.getBalanceValue()));
+holder.timeAgo.setText(balanceModel.getTimeStamp() > 0 ? TimeAgo.timeAgo(ApplicationInstance.getContext(), balanceModel.getTimeStamp()) : "Refresh");
 holder.currency.setText(ApplicationInstance.getCurrency(channel.countryAlpha2));
 
 holder.balanced_swiped_layout.setBackgroundColor(Color.parseColor(balanceModel.getChannel().primaryColorHex));

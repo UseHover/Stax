@@ -53,4 +53,7 @@ public class MainActivity extends AppCompatActivity {
 	public void addServices(View view) {
 		startActivity(new Intent(this, ChannelsActivity.class));
 	}
+
 }
+
+

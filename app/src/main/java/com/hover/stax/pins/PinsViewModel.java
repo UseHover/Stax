@@ -74,7 +74,7 @@ public class PinsViewModel extends AndroidViewModel {
 				for (HoverAction action : balanceActions) {
 					if (action.channelId == channel.id) {
 						channel.pin = KeyStoreExecutor.decrypt(channel.pin,ApplicationInstance.getContext());
-						balanceModelList.add(new BalanceModel(action.id, channel));
+						balanceModelList.add(new BalanceModel(action.id, channel, "null", 0));
 
 					}
 				}

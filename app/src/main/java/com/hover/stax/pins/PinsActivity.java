@@ -41,10 +41,6 @@ public class PinsActivity extends AppCompatActivity {
 
 		RecyclerView pinRecyclerView = findViewById(R.id.pin_recyclerView);
 		channelViewModel.getSelectedChannels().observe(this, channels -> {
-
-			for(Channel c: channels) {
-				Log.d("SWEET", c.pin == null ? "null" : c.pin);
-			}
 			pinRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(this));
 			pinRecyclerView.setHasFixedSize(true);
 			pinEntryAdapter = new PinEntryAdapter(channels);
@@ -54,12 +50,8 @@ public class PinsActivity extends AppCompatActivity {
 
 		channelViewModel.getBalances().observe(this, balanceModels -> {
 		if(balanceModels.size()> 0) {
-			Log.d("SWEET", "running of action can be initiated");
 			balanceModelList = balanceModels;
 			runAction(true);
-		}
-		else {
-			Log.d("SWEET", "cant run yet");
 		}
 		});
 
@@ -75,7 +67,7 @@ private void runAction(boolean firstTime) {
 	HoverParameters.Builder builder = new HoverParameters.Builder(this);
 
 	builder.request(balanceModel.getActionId());
-	builder.setEnvironment(HoverParameters.DEBUG_ENV);
+	builder.setEnvironment(HoverParameters.PROD_ENV);
 	builder.style(R.style.myHoverTheme);
 //        builder.initialProcessingMessage(getResources().getString(R.string.transaction_coming_up));
 	builder.finalMsgDisplayTime(2000);

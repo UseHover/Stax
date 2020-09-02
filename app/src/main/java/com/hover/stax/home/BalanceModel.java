@@ -5,14 +5,34 @@ import com.hover.stax.channels.Channel;
 public class BalanceModel {
 	private String actionId;
 	private Channel channel;
+	private String balanceValue;
+	private Long timeStamp;
 
-public BalanceModel(String actionId, Channel channel) {
+public BalanceModel(String actionId, Channel channel, String balanceValue, long timeStamp) {
 	this.channel = channel;
 	this.actionId = actionId;
+	this.balanceValue = balanceValue;
+	this.timeStamp =timeStamp;
 }
 
 public BalanceModel() {
 
+}
+
+public String getBalanceValue() {
+	return balanceValue;
+}
+
+public void setBalanceValue(String balanceValue) {
+	this.balanceValue = balanceValue;
+}
+
+public Long getTimeStamp() {
+	return timeStamp;
+}
+
+public void setTimeStamp(Long timeStamp) {
+	this.timeStamp = timeStamp;
 }
 
 public Channel getChannel() {

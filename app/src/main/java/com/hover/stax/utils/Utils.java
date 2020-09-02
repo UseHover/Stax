@@ -31,6 +31,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -165,6 +166,17 @@ public static List<Channel> getSimChannels(List<Channel> channels, List<String> 
 		}
 	}
 	return simChannels;
+}
+
+public static String formatAmount(String number) {
+		try{
+			double amount = Double.parseDouble(number);
+			DecimalFormat formatter = new DecimalFormat("#,###.00");
+			return formatter.format(amount);
+		}
+		catch (Exception e) {
+			return number;
+		}
 }
 
 }

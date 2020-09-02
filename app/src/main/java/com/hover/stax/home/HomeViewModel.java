@@ -9,11 +9,14 @@ import androidx.lifecycle.MutableLiveData;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.sims.SimInfo;
+import com.hover.sdk.transactions.Transaction;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.database.KeyStoreExecutor;
 import com.hover.stax.utils.Utils;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,8 +63,21 @@ public void getBalanceFunction(List<Channel> channels) {
 		for (Channel channel : selectedChannelInSIM) {
 			for (HoverAction action : balanceActions) {
 				if (action.channelId == channel.id) {
-					String pin = KeyStoreExecutor.decrypt(channel.pin,ApplicationInstance.getContext());
-					balanceModelList.add(new BalanceModel(action.id, channel));
+					if(channel.pin.length() > 30) channel.pin = KeyStoreExecutor.decrypt(channel.pin,ApplicationInstance.getContext());
+
+					List<Transaction> transactionList = Hover.getTransactionsByActionId(action.id, ApplicationInstance.getContext());
+					String balanceValue = "NaN";
+					long timeStamp = 0;
+					if(transactionList.size()> 0) {
+						Transaction mostRecentTransaction = transactionList.get(0);
+						timeStamp = mostRecentTransaction.updatedTimestamp;
+						try {
+							balanceValue = mostRecentTransaction.parsed_variables.getString("balance");
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+					balanceModelList.add(new BalanceModel(action.id, channel, balanceValue, timeStamp ));
 
 				}
 			}

@@ -20,6 +20,7 @@ protected void onCreate(@Nullable Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	if (PermissionUtils.hasRequiredPermissions()) {
 		startActivity(new Intent(this, ChannelsActivity.class));
+		finish();
 	}
 	setContentView(R.layout.permissions_activity);
 
@@ -40,6 +41,7 @@ protected void onActivityResult(int requestCode, int resultCode, @Nullable Inten
 		else {
 			UIHelper.flashMessage(this, getCurrentFocus(), getResources().getString(R.string.permission_success));
 			startActivity(new Intent(this, ChannelsActivity.class));
+			finish();
 		}
 	}
 }
