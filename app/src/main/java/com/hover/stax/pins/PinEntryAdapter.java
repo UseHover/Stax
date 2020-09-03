@@ -26,7 +26,7 @@ public  class PinEntryAdapter extends  RecyclerView.Adapter<PinEntryAdapter.PinE
         this.channels = channels;
     }
 
-    List<Channel> retrieveChannels() {return channels;}
+    List<Channel> retrieveChannels() { return channels; }
 
     @NonNull
     @Override

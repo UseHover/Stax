@@ -3,32 +3,23 @@ package com.hover.stax.utils;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Build;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 
-import com.blongho.country_data.Currency;
-import com.blongho.country_data.World;
-import com.hover.sdk.sims.SimInfo;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -147,36 +138,36 @@ public class Utils {
 		}
 		return bitmap;
 	}
-public static String getPackage(Context c) {
-	try {
-		return c.getApplicationContext().getPackageName();
-	} catch (NullPointerException e) {
-		return "fail";
-	}
-}
 
-public static List<Channel> getSimChannels(List<Channel> channels, List<String> simHniList) {
-	List<Channel> simChannels = new ArrayList<>();
-	for (int i = 0; i < channels.size(); i++) {
-		String[] hniArr = channels.get(i).hniList.split(",");
-		for (int l = 0; l < hniArr.length; l++) {
-			Log.d("CUS_", "data hni: "+ Utils.stripHniString(hniArr[l]));
-			if (simHniList.contains(Utils.stripHniString(hniArr[l])))
-				simChannels.add(channels.get(i));
+	public static String getPackage(Context c) {
+		try {
+			return c.getApplicationContext().getPackageName();
+		} catch (NullPointerException e) {
+			return "fail";
 		}
 	}
-	return simChannels;
-}
 
-public static String formatAmount(String number) {
-		try{
-			double amount = Double.parseDouble(number);
-			DecimalFormat formatter = new DecimalFormat("#,###.00");
-			return formatter.format(amount);
+	public static List<Channel> getSimChannels(List<Channel> channels, List<String> simHniList) {
+		List<Channel> simChannels = new ArrayList<>();
+		for (int i = 0; i < channels.size(); i++) {
+			String[] hniArr = channels.get(i).hniList.split(",");
+			for (int l = 0; l < hniArr.length; l++) {
+				Log.d("CUS_", "data hni: "+ Utils.stripHniString(hniArr[l]));
+				if (simHniList.contains(Utils.stripHniString(hniArr[l])))
+					simChannels.add(channels.get(i));
+			}
 		}
-		catch (Exception e) {
-			return number;
-		}
-}
+		return simChannels;
+	}
 
+	public static String formatAmount(String number) {
+			try{
+				double amount = Double.parseDouble(number);
+				DecimalFormat formatter = new DecimalFormat("#,###.00");
+				return formatter.format(amount);
+			}
+			catch (Exception e) {
+				return number;
+			}
+	}
 }

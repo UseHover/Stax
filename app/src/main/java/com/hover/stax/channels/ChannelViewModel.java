@@ -26,12 +26,12 @@ public class ChannelViewModel extends AndroidViewModel {
 		super(application);
 		repo = new DatabaseRepo(application);
 		loadChannels();
-		loadSims(application);
+		loadSims();
 	}
 
 	LiveData<List<Channel>> getChannels() { return channels; }
 
-	public MutableLiveData<List<SimInfo>> getSims() { return sims; }
+	MutableLiveData<List<SimInfo>> getSims() { return sims; }
 
 	private void loadChannels() {
 		if (channels == null) {
@@ -51,21 +51,21 @@ public class ChannelViewModel extends AndroidViewModel {
 
 
 
-	public LiveData<List<Integer>> getPendingSelected() {
+	LiveData<List<Integer>> getPendingSelected() {
 		if (selected == null) {
 			selected = new MutableLiveData<>();
 		}
 		return selected;
 	}
 
-	private void loadSims(Application application) {
+	private void loadSims() {
 		if (sims == null) {
 			sims = new MutableLiveData<>();
 		}
-		sims.setValue(Hover.getPresentSims(application));
+		sims.setValue(repo.getSims());
 	}
 
-	public void setSelected(int id) {
+	void setSelected(int id) {
 		List<Integer> list = selected.getValue() != null ? selected.getValue() : new ArrayList<>();
 		if (list.contains(id))
 			list.remove((Integer) id);
@@ -74,7 +74,7 @@ public class ChannelViewModel extends AndroidViewModel {
 		selected.setValue(list);
 	}
 
-	public void saveSelected() {
+	void saveSelected() {
 		List<Channel> allChannels = channels.getValue() != null ? channels.getValue() : new ArrayList<>();
 		for (Channel channel: allChannels) {
 			if (selected.getValue().contains((Integer) channel.id)) {

@@ -19,13 +19,15 @@ public abstract class AppDatabase extends RoomDatabase {
 	static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
 	private static volatile AppDatabase INSTANCE;
+
 	public abstract ChannelDao channelDao();
 
 	public static AppDatabase getInstance(Context context) {
 		if (INSTANCE == null) {
 			synchronized (AppDatabase.class) {
 				if (INSTANCE == null) {
-					INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "stax.db").build();
+					INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "stax.db")
+			           .build();
 				}
 			}
 		}

@@ -27,17 +27,16 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Hover.initialize(this);
 
+		Hover.initialize(this);
+		WorkManager wm = WorkManager.getInstance(this);
+		wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue();
+		wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, UpdateChannelsWorker.makeToil());
 
 		if (GO_TO_SPLASH_SCREEN) {
 			startActivity(new Intent(this, SplashScreenActivity.class));
 			finishAffinity();
 		}
-
-		WorkManager wm = WorkManager.getInstance(this);
-		wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue();
-		wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, UpdateChannelsWorker.makeToil());
 
 		setContentView(R.layout.activity_main);
 		BottomNavigationView navView = findViewById(R.id.nav_view);

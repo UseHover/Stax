@@ -12,6 +12,7 @@ import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.sims.SimInfo;
 import com.hover.stax.ApplicationInstance;
+import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.database.KeyStoreExecutor;
@@ -35,7 +36,7 @@ public class PinsViewModel extends AndroidViewModel {
 	}
 
 	public LiveData<List<Channel>> getSelectedChannels() { return channels; }
-	public LiveData<List<BalanceModel>> getBalances() {return balances;}
+	public LiveData<List<BalanceModel>> getBalances() { return balances; }
 
 	private void loadSelectedChannels() {
 		if (channels == null) {
@@ -57,33 +58,16 @@ public class PinsViewModel extends AndroidViewModel {
 			}
 		}
 
-		List<HoverAction> balanceActions = repo.getActionsWithBalanceType();
 		ArrayList<BalanceModel> balanceModelList = new ArrayList<>();
-
-		if ( balanceActions != null) {
-			List<String> simHniList = new ArrayList<>();
-			for (SimInfo sim : Hover.getPresentSims(ApplicationInstance.getContext())) {
-				if (!simHniList.contains(sim.getOSReportedHni()))
-					simHniList.add(sim.getOSReportedHni());
-			}
-
-			List<Channel> selectedChannelInSIM = Utils.getSimChannels(updatedChannels, simHniList);
-
-
-			for (Channel channel : selectedChannelInSIM) {
-				for (HoverAction action : balanceActions) {
-					if (action.channelId == channel.id) {
-						channel.pin = KeyStoreExecutor.decrypt(channel.pin,ApplicationInstance.getContext());
-						balanceModelList.add(new BalanceModel(action.id, channel, "null", 0));
-
-					}
-				}
+		for (Channel channel : updatedChannels) {
+			Action action = repo.getActions(channel.id, "balance").getValue().get(0);
+			if (Hover.isActionSimPresent(action.public_id, getApplication())) {
+				channel.pin = KeyStoreExecutor.decrypt(channel.pin, ApplicationInstance.getContext());
+				balanceModelList.add(new BalanceModel(action.public_id, channel, "null", 0));
 			}
 		}
 
-
-
-		balances.postValue(balanceModelList);
+		balances.setValue(balanceModelList);
 	}
 
 	public void setDefaultAccount(Channel channel) {
