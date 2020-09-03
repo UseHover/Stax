@@ -90,7 +90,6 @@ public class PinsActivity extends AppCompatActivity {
 			}
 			else if(actionRunCounter == balanceModelList.size()) {
 				//Important to set runCounter back to zero when completed.
-				MainActivity.GO_TO_SPLASH_SCREEN = false;
 				startActivity(new Intent(this, MainActivity.class));
 			}
 		}
