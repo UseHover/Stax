@@ -9,7 +9,9 @@
 	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:padding="@dimen/activity_horizontal_margin"
+	    android:paddingStart="@dimen/activity_horizontal_margin"
+	    android:paddingTop="@dimen/activity_horizontal_margin"
+	    android:paddingBottom="@dimen/activity_horizontal_margin"
 	    android:orientation="horizontal">
 
 		<TextView
@@ -27,7 +29,7 @@
 		    android:id="@+id/choose_serves_cancel"
 		    android:textSize="@dimen/text_13"
 		    android:paddingStart="@dimen/activity_vertical_margin"
-		    android:paddingEnd="0dp"
+		    android:paddingEnd="16dp"
 		    android:fontFamily="font-medium"
 		    android:textColor="@color/offWhite"
 			android:text="@string/cancel"/>

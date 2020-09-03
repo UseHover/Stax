@@ -12,8 +12,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.database.KeyStoreExecutor;
 
 import java.util.List;
 
@@ -41,13 +43,10 @@ public  class PinEntryAdapter extends  RecyclerView.Adapter<PinEntryAdapter.PinE
 
         holder.view.setTag(channel.id);
         holder.labelView.setText(channel.name);
-        Log.d("PIN SET",  channel.pin == null ? "null" : channel.pin);
         //holder.circleImageView.setImageBitmap(logo);
 //        holder.circleImageView.setVisibility(View.VISIBLE);
 
-        if(channel.pin !=null && !channel.pin.isEmpty()) {
-            holder.editView.setHint("XXXX");
-        }
+
         holder.editView.addTextChangedListener(new TextWatcher() {
             @Override public void afterTextChanged(Editable s) { }
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -55,6 +54,10 @@ public  class PinEntryAdapter extends  RecyclerView.Adapter<PinEntryAdapter.PinE
                 channel.pin = s.toString();
             }
         });
+
+        if(channel.pin !=null && !channel.pin.isEmpty()) {
+            holder.editView.setText(KeyStoreExecutor.decrypt(channel.pin, ApplicationInstance.getContext()));
+        }
     }
 
     static class PinEntryViewHolder extends  RecyclerView.ViewHolder {
