@@ -31,6 +31,10 @@
 	<string name="security">Security</string>
 	<string name="remove_pin_from_device">Remove PINs from device</string>
 	<string name="remove_pins">Remove PINs</string>
+	<string name="remove_pins_dialog_message">Are you sure you want to remove all your pins? You\'d have to manually enter them for each transaction later</string>
+	<string name="remove_pin_successful">PIN removed successfully</string>
+	<string name="yes">Yes</string>
+	<string name="no">No</string>
 	<string name="default_account">Default account</string>
 	<string name="default_account_desc">Defaults accounts will show up first when you move money.</string>
 	<string name="about_our_security">About our security</string>

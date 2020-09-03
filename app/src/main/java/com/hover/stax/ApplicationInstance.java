@@ -39,8 +39,8 @@ public void setupCurrency() {
 	}
 }
 
-public static String getCurrency(String alphaCurrency) {
-		return currencyMap.get(alphaCurrency);
+public static String getCurrency(String alphaCountry) {
+		return currencyMap.get(alphaCountry);
 }
 
 	public static Context getContext() {

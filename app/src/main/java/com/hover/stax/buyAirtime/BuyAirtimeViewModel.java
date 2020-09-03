@@ -1,4 +1,4 @@
-package com.hover.stax.ui.buyAirtime;
+package com.hover.stax.buyAirtime;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

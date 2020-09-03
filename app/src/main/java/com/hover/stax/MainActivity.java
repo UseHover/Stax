@@ -8,8 +8,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hover.sdk.api.Hover;
 import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.channels.ChannelsActivity;
-import com.hover.stax.ui.onboard.SplashScreenActivity;
-import com.hover.stax.utils.UIHelper;
+import com.hover.stax.onboard.SplashScreenActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;

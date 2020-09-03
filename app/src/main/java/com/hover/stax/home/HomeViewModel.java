@@ -63,7 +63,7 @@ public void getBalanceFunction(List<Channel> channels) {
 		for (Channel channel : selectedChannelInSIM) {
 			for (HoverAction action : balanceActions) {
 				if (action.channelId == channel.id) {
-					if(channel.pin.length() > 30) channel.pin = KeyStoreExecutor.decrypt(channel.pin,ApplicationInstance.getContext());
+					if(channel.pin!=null && channel.pin.length() > 30) channel.pin = KeyStoreExecutor.decrypt(channel.pin,ApplicationInstance.getContext());
 
 					List<Transaction> transactionList = Hover.getTransactionsByActionId(action.id, ApplicationInstance.getContext());
 					String balanceValue = "NaN";

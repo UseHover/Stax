@@ -1,5 +1,6 @@
 package com.hover.stax.security;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,11 +10,13 @@ import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
@@ -30,9 +33,7 @@ public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup c
 	securityViewModel = new ViewModelProvider(this).get(PinsViewModel.class);
 	View root = inflater.inflate(R.layout.fragment_security, container, false);
 
-	root.findViewById(R.id.removePinsButtonId).setOnClickListener(view->{
-		startActivity(new Intent(getActivity(), ChannelsActivity.class));
-	});
+
 
 	AppCompatSpinner spinner = root.findViewById(R.id.defaultAccountSpinner);
 
@@ -65,6 +66,25 @@ public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup c
 			}
 		});
 
+
+		root.findViewById(R.id.removePinsButtonId).setOnClickListener(view->{
+			AlertDialog.Builder builder = new AlertDialog.Builder(getContext() !=null ? getContext(): ApplicationInstance.getContext());
+			builder.setTitle(getContext().getResources().getString(R.string.remove_pins));
+			builder.setMessage(getContext().getResources().getString(R.string.remove_pins_dialog_message));
+			builder.setPositiveButton(getContext().getResources().getString(R.string.yes), (dialog, which) -> {
+				securityViewModel.clearAllPins(channels);
+				dialog.dismiss();
+				dialog.cancel();
+				UIHelper.flashMessage(getContext(), getContext().getResources().getString(R.string.remove_pin_successful));
+			});
+			builder.setNegativeButton(getContext().getResources().getString(R.string.no), (dialog, which) -> {
+				dialog.dismiss();
+				dialog.cancel();
+			});
+
+			builder.show();
+
+		});
 
 	});
 	return  root;

@@ -14,7 +14,7 @@
 
 	<fragment
 	    android:id="@+id/navigation_buyAirtime"
-	    android:name="com.hover.stax.ui.buyAirtime.BuyAirtimeFragment"
+	    android:name="com.hover.stax.buyAirtime.BuyAirtimeFragment"
 	    android:label="@string/title_buyAirtime"
 	    tools:layout="@layout/fragment_buyairtime" />
 

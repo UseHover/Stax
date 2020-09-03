@@ -99,7 +99,7 @@ private void runAction(boolean firstTime) {
 	if(balanceModelList.size()>0) {
 		BalanceModel balanceModel = balanceModelList.get(actionRunCounter);
 
-		HoverParameters.Builder builder = new HoverParameters.Builder(ApplicationInstance.getContext());
+		HoverParameters.Builder builder = new HoverParameters.Builder(getContext());
 
 		builder.request(balanceModel.getActionId());
 		builder.setEnvironment(HoverParameters.PROD_ENV);
@@ -123,7 +123,18 @@ private void setEmptyView(boolean status) {
 @Override
 public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 	super.onActivityResult(requestCode, resultCode, data);
-	if(requestCode == RUN_ALL_RESULT)
-	Log.d("SWEET", "Return statement is here");
+	if(requestCode == RUN_ALL_RESULT) {
+		if(actionRunCounter  < balanceModelList.size()) {
+			new Handler().postDelayed(() -> {
+				runAction(false);
+				actionRunCounter = actionRunCounter + 1;
+			}, 3000);
+		}
+		else if(actionRunCounter == balanceModelList.size()) {
+			//Important to set runCounter back to zero when completed.
+			actionRunCounter = 0;
+			homeViewModel.getBalanceFunction(channelList);
+		}
+	}
 }
 }

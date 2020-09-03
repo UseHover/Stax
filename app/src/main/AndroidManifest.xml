@@ -24,7 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.onboard.SplashScreenActivity" />
+        <activity android:name=".onboard.SplashScreenActivity" />
         <activity android:name=".permission.PermissionScreenActivity" />
         <activity android:name=".channels.ChannelsActivity" />
         <activity android:name=".pins.PinsActivity" />

@@ -86,6 +86,12 @@ public class PinsViewModel extends AndroidViewModel {
 		balances.postValue(balanceModelList);
 	}
 
+	public void clearAllPins(List<Channel> channels) {
+		for(Channel channel: channels) {
+			channel.pin = null;
+			repo.update(channel);
+		}
+	}
 	public void setDefaultAccount(Channel channel) {
 		repo.update(channel);
 	}

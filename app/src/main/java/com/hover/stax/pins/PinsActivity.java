@@ -48,7 +48,7 @@ public class PinsActivity extends AppCompatActivity {
 			pinRecyclerView.setAdapter(pinEntryAdapter);
 		});
 
-		channelViewModel.getBalances().observe(this, balanceModels -> {
+		channelViewModel.getBalances().observe(PinsActivity.this, balanceModels -> {
 		if(balanceModels.size()> 0) {
 			balanceModelList = balanceModels;
 			runAction(true);

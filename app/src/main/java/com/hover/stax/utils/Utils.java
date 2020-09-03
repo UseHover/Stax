@@ -160,7 +160,6 @@ public static List<Channel> getSimChannels(List<Channel> channels, List<String> 
 	for (int i = 0; i < channels.size(); i++) {
 		String[] hniArr = channels.get(i).hniList.split(",");
 		for (int l = 0; l < hniArr.length; l++) {
-			Log.d("CUS_", "data hni: "+ Utils.stripHniString(hniArr[l]));
 			if (simHniList.contains(Utils.stripHniString(hniArr[l])))
 				simChannels.add(channels.get(i));
 		}

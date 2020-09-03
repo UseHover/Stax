@@ -1,4 +1,4 @@
-package com.hover.stax.ui.buyAirtime;
+package com.hover.stax.buyAirtime;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

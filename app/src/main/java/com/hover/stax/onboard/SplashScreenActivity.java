@@ -1,4 +1,4 @@
-package com.hover.stax.ui.onboard;
+package com.hover.stax.onboard;
 
 import android.content.Intent;
 import android.os.Bundle;
