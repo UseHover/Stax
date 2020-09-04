@@ -6,12 +6,10 @@ import android.content.Context;
 
 import com.blongho.country_data.Currency;
 import com.blongho.country_data.World;
-import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.fonts.FontReplacer;
 import com.hover.stax.utils.fonts.Replacer;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class ApplicationInstance extends Application {
 	@SuppressLint("StaticFieldLeak")
@@ -31,19 +29,20 @@ public class ApplicationInstance extends Application {
 		setupCurrency();
 
 	}
-public void setupCurrency() {
-	World.init(getApplicationContext());
-	currencyMap = new HashMap<>();
-	for(Currency currency: World.getAllCurrencies()) {
-		currencyMap.put(currency.getCountry(), currency.getCode());
-	}
-}
 
-public static String getCurrency(String alphaCurrency) {
-		return currencyMap.get(alphaCurrency);
-}
+	public void setupCurrency() {
+		World.init(getApplicationContext());
+		currencyMap = new HashMap<>();
+		for (Currency currency : World.getAllCurrencies()) {
+			currencyMap.put(currency.getCountry(), currency.getCode());
+		}
+	}
+
+	public static String getCurrency(String alphaCountry) {
+		return currencyMap.get(alphaCountry);
+	}
 
 	public static Context getContext() {
-	return context;
-}
+		return context;
+	}
 }

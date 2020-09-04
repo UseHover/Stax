@@ -2,7 +2,6 @@ package com.hover.stax.pins;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -68,6 +67,13 @@ public class PinsViewModel extends AndroidViewModel {
 		}
 
 		balances.setValue(balanceModelList);
+	}
+
+	public void clearAllPins(List<Channel> channels) {
+		for (Channel channel : channels) {
+			channel.pin = null;
+			repo.update(channel);
+		}
 	}
 
 	public void setDefaultAccount(Channel channel) {

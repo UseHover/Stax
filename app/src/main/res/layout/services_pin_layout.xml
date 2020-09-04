@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
@@ -9,7 +8,9 @@
 	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:padding="@dimen/activity_horizontal_margin"
+	    android:paddingStart="@dimen/activity_horizontal_margin"
+	    android:paddingTop="@dimen/activity_horizontal_margin"
+	    android:paddingBottom="@dimen/activity_horizontal_margin"
 	    android:orientation="horizontal">
 
 		<TextView
@@ -19,7 +20,7 @@
 		    android:textSize="@dimen/text_21"
 		    android:layout_weight="1"
 		    android:fontFamily="font-medium"
-		    android:textColor="@color/offWhite"/>
+		    android:textColor="@color/offWhite" />
 
 		<TextView
 		    android:layout_width="wrap_content"
@@ -27,10 +28,10 @@
 		    android:id="@+id/choose_serves_cancel"
 		    android:textSize="@dimen/text_13"
 		    android:paddingStart="@dimen/activity_vertical_margin"
-		    android:paddingEnd="0dp"
+		    android:paddingEnd="16dp"
 		    android:fontFamily="font-medium"
 		    android:textColor="@color/offWhite"
-			android:text="@string/cancel"/>
+		    android:text="@string/cancel" />
 	</LinearLayout>
 
 	<TextView
@@ -38,8 +39,7 @@
 	    android:layout_height="wrap_content"
 	    android:text="@string/choose_pin_description"
 	    android:textColor="@color/offWhite"
-	    android:paddingHorizontal="@dimen/activity_horizontal_margin"
-	    />
+	    android:paddingHorizontal="@dimen/activity_horizontal_margin" />
 
 	<androidx.recyclerview.widget.RecyclerView
 	    android:layout_width="match_parent"
@@ -48,16 +48,16 @@
 	    android:padding="@dimen/activity_vertical_margin"
 	    android:id="@+id/pin_recyclerView" />
 
-	<Button android:id="@+id/continuePinButton"
+	<Button
+	    android:id="@+id/continuePinButton"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:paddingHorizontal="@dimen/spacing32"
 	    android:text="@string/continueText"
 	    android:textAllCaps="false"
-		android:fontFamily="font-medium"
+	    android:fontFamily="font-medium"
 	    android:layout_gravity="end"
 	    android:layout_marginEnd="@dimen/activity_horizontal_margin"
-		android:textColor="@color/white"
-		android:background="@color/offWhite"/>
+	    android:background="@color/offWhite" />
 
 </LinearLayout>

@@ -40,14 +40,14 @@ public class UpdateChannelsWorker extends Worker {
 
 	public static PeriodicWorkRequest makeToil() {
 		return new PeriodicWorkRequest.Builder(UpdateChannelsWorker.class, 24, TimeUnit.HOURS)
-			       .setConstraints(netConstraint())
-			       .build();
+					   .setConstraints(netConstraint())
+					   .build();
 	}
 
 	public static OneTimeWorkRequest makeWork() {
 		return new OneTimeWorkRequest.Builder(UpdateChannelsWorker.class)
-			       .setConstraints(netConstraint())
-			       .build();
+					   .setConstraints(netConstraint())
+					   .build();
 	}
 
 	public static Constraints netConstraint() {

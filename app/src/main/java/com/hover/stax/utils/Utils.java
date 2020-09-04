@@ -56,7 +56,7 @@ public class Utils {
 	}
 
 	public static String nullToString(Object value) {
-		if(value == null) return  "None";
+		if (value == null) return "None";
 		else return value.toString();
 	}
 
@@ -69,33 +69,38 @@ public class Utils {
 		}
 		return list;
 	}
-	static public  Object nonNullDateRange(Object value) {
-		if(value == null) return 0;
+
+	static public Object nonNullDateRange(Object value) {
+		if (value == null) return 0;
 		else return value;
 	}
 
 	@SuppressLint({"HardwareIds", "MissingPermission"})
 	public static String getDeviceId(Context c) {
 		try {
-			if (PermissionUtils.has(new String[]{ Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE}, c)) {
+			if (PermissionUtils.has(new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE}, c)) {
 				String id = null;
 				if (Build.VERSION.SDK_INT < 29) {
 					try {
 						id = ((TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-					} catch (Exception ignored) {}
+					} catch (Exception ignored) {
+					}
 				}
-				if (id == null) { id = Settings.Secure.getString(c.getContentResolver(), Settings.Secure.ANDROID_ID); }
+				if (id == null) {
+					id = Settings.Secure.getString(c.getContentResolver(), Settings.Secure.ANDROID_ID);
+				}
 				return id;
 			}
-		} catch (SecurityException ignored) {  }
+		} catch (SecurityException ignored) {
+		}
 		return c.getString(R.string.hsdk_unknown_device_id);
 	}
 
 
 	public static String[] convertNormalJSONArrayToStringArray(JSONArray arr) throws JSONException {
-		if(arr == null) return new String[]{};
+		if (arr == null) return new String[]{};
 		String[] list = new String[arr.length()];
-		for(int i = 0; i < arr.length(); i++){
+		for (int i = 0; i < arr.length(); i++) {
 			list[i] = arr.getString(i);
 		}
 		return list;
@@ -117,8 +122,8 @@ public class Utils {
 		Bitmap bitmap = null;
 		FileInputStream fiStream;
 		try {
-			fiStream    = context.openFileInput(imageName);
-			bitmap      = BitmapFactory.decodeStream(fiStream);
+			fiStream = context.openFileInput(imageName);
+			bitmap = BitmapFactory.decodeStream(fiStream);
 			fiStream.close();
 		} catch (Exception e) {
 			Log.d("saveImage", "Exception 3, Something went wrong!");
@@ -152,7 +157,6 @@ public class Utils {
 		for (int i = 0; i < channels.size(); i++) {
 			String[] hniArr = channels.get(i).hniList.split(",");
 			for (int l = 0; l < hniArr.length; l++) {
-				Log.d("CUS_", "data hni: "+ Utils.stripHniString(hniArr[l]));
 				if (simHniList.contains(Utils.stripHniString(hniArr[l])))
 					simChannels.add(channels.get(i));
 			}
@@ -161,13 +165,12 @@ public class Utils {
 	}
 
 	public static String formatAmount(String number) {
-			try{
-				double amount = Double.parseDouble(number);
-				DecimalFormat formatter = new DecimalFormat("#,###.00");
-				return formatter.format(amount);
-			}
-			catch (Exception e) {
-				return number;
-			}
+		try {
+			double amount = Double.parseDouble(number);
+			DecimalFormat formatter = new DecimalFormat("#,###.00");
+			return formatter.format(amount);
+		} catch (Exception e) {
+			return number;
+		}
 	}
 }

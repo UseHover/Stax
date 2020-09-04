@@ -1,8 +1,6 @@
 package com.hover.stax.home;
 
-import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +8,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.ApplicationInstance;
@@ -61,23 +57,26 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 	}
 
 	static class BalanceViewHolder extends RecyclerView.ViewHolder {
-			private TextView channelName, timeAgo, currency, amount;
-			private FrameLayout balanced_swiped_layout;
-			public BalanceViewHolder(@NonNull View itemView) {
-				super(itemView);
-				channelName = itemView.findViewById(R.id.balance_channel);
-				timeAgo = itemView.findViewById(R.id.balance_timeAgo);
-				currency = itemView.findViewById(R.id.balance_currency);
-				amount = itemView.findViewById(R.id.balance_amount);
-				balanced_swiped_layout = itemView.findViewById(R.id.balanced_swiped_layout);
-			}
-		}
+		private TextView channelName, timeAgo, currency, amount;
+		private FrameLayout balanced_swiped_layout;
 
-	@Override public long getItemId(int position) {
+		public BalanceViewHolder(@NonNull View itemView) {
+			super(itemView);
+			channelName = itemView.findViewById(R.id.balance_channel);
+			timeAgo = itemView.findViewById(R.id.balance_timeAgo);
+			currency = itemView.findViewById(R.id.balance_currency);
+			amount = itemView.findViewById(R.id.balance_amount);
+			balanced_swiped_layout = itemView.findViewById(R.id.balanced_swiped_layout);
+		}
+	}
+
+	@Override
+	public long getItemId(int position) {
 		return position;
 	}
 
-	@Override public int getItemViewType(int position) {
-	return position;
-}
+	@Override
+	public int getItemViewType(int position) {
+		return position;
+	}
 }

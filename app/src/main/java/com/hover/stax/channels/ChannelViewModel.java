@@ -29,7 +29,9 @@ public class ChannelViewModel extends AndroidViewModel {
 		loadSims();
 	}
 
-	LiveData<List<Channel>> getChannels() { return channels; }
+	LiveData<List<Channel>> getChannels() {
+		return channels;
+	}
 
 	MutableLiveData<List<SimInfo>> getSims() { return sims; }
 
@@ -40,16 +42,15 @@ public class ChannelViewModel extends AndroidViewModel {
 		channels = repo.getAll();
 		getPendingSelected();
 	}
+
 	void loadInitiallySelectedChannels(List<Channel> channels) {
 		List<Integer> ls = new ArrayList<>();
-		for(Channel channel: channels) {
-			if(channel.selected) ls.add(channel.id);
+		for (Channel channel : channels) {
+			if (channel.selected) ls.add(channel.id);
 		}
 		selected.postValue(ls);
 
 	}
-
-
 
 	LiveData<List<Integer>> getPendingSelected() {
 		if (selected == null) {
@@ -76,8 +77,8 @@ public class ChannelViewModel extends AndroidViewModel {
 
 	void saveSelected() {
 		List<Channel> allChannels = channels.getValue() != null ? channels.getValue() : new ArrayList<>();
-		for (Channel channel: allChannels) {
-			if (selected.getValue().contains((Integer) channel.id)) {
+		for (Channel channel : allChannels) {
+			if (selected.getValue().contains(channel.id)) {
 				channel.selected = true;
 				repo.update(channel);
 			}

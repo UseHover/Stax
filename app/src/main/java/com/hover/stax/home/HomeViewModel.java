@@ -27,7 +27,6 @@ public class HomeViewModel extends AndroidViewModel {
 	private MutableLiveData<List<BalanceModel>> balances;
 
 	private final LiveData<List<Action>> actions;
-
 	private DatabaseRepo repo;
 
 
@@ -52,7 +51,6 @@ public class HomeViewModel extends AndroidViewModel {
 		return actions;
 	}
 
-
 	public void getBalanceFunction(List<Channel> channels) {
 		List<HoverAction> balanceActions = repo.getActionsWithBalanceType();
 		ArrayList<BalanceModel> balanceModelList = new ArrayList<>();
@@ -68,16 +66,15 @@ public class HomeViewModel extends AndroidViewModel {
 
 
 			for (Channel channel : selectedChannelInSIM) {
-
-
 				for (HoverAction action : balanceActions) {
 					if (action.channelId == channel.id) {
-						if(channel.pin.length() > 30) channel.pin = KeyStoreExecutor.decrypt(channel.pin,ApplicationInstance.getContext());
+						if (channel.pin != null && channel.pin.length() > 30) 
+							channel.pin = KeyStoreExecutor.decrypt(channel.pin,ApplicationInstance.getContext());
 
 						List<Transaction> transactionList = Hover.getTransactionsByActionId(action.id, ApplicationInstance.getContext());
 						String balanceValue = "NaN";
 						long timeStamp = 0;
-						if(transactionList.size()> 0) {
+						if (transactionList.size() > 0) {
 							Transaction mostRecentTransaction = transactionList.get(0);
 							timeStamp = mostRecentTransaction.updatedTimestamp;
 							try {
@@ -86,7 +83,7 @@ public class HomeViewModel extends AndroidViewModel {
 								e.printStackTrace();
 							}
 						}
-						balanceModelList.add(new BalanceModel(action.id, channel, balanceValue, timeStamp ));
+						balanceModelList.add(new BalanceModel(action.id, channel, balanceValue, timeStamp));
 
 					}
 				}

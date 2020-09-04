@@ -12,7 +12,7 @@ public class BalanceModel {
 		this.channel = channel;
 		this.actionId = actionId;
 		this.balanceValue = balanceValue;
-		this.timeStamp =timeStamp;
+		this.timeStamp = timeStamp;
 	}
 
 	public BalanceModel() {
@@ -48,6 +48,6 @@ public class BalanceModel {
 	}
 
 	public void setActionId(String actionId) {
-	this.actionId = actionId;
-}
+		this.actionId = actionId;
+	}
 }

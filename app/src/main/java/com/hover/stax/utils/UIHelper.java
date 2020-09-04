@@ -2,7 +2,6 @@ package com.hover.stax.utils;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.SpannableString;
@@ -25,15 +24,16 @@ import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class UIHelper {
 
 	private static final int INITIAL_ITEMS_FETCH = 30;
+
 	public static void flashMessage(Context context, @Nullable View view, String message) {
 		if (view == null) flashMessage(context, message);
 		else Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
 	}
+
 	public static void flashMessage(Context context, String message) {
 		if (context == null) context = ApplicationInstance.getContext();
 		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
@@ -43,7 +43,7 @@ public class UIHelper {
 		LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
 		linearLayoutManager.setInitialPrefetchItemCount(INITIAL_ITEMS_FETCH);
 		linearLayoutManager.setSmoothScrollbarEnabled(true);
-		return  linearLayoutManager;
+		return linearLayoutManager;
 	}
 
 	public static void loadSpinnerItems(ArrayList<String> entries, AppCompatSpinner spinner, Context context) {
@@ -57,9 +57,9 @@ public class UIHelper {
 		SpannableString content = new SpannableString(cs);
 		content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
 		content.setSpan(android.graphics.Typeface.BOLD, 0, content.length(), 0);
-		try{
+		try {
 			textView.setText(content);
-		}catch (Exception e) {
+		} catch (Exception e) {
 			//Avoid error due to threading based on users aggressive clicks.
 			//I.e when user types in the search, it waits for 1.5secs to update the textView,
 			//During this 1.5sec if user goes away from the screen it can through an error called:
@@ -77,14 +77,15 @@ public class UIHelper {
 		textView.setCompoundDrawablesWithIntrinsicBounds(wrappedDrawable, null, null, null);
 	}
 
-public static void changeStatusBarColor(final Activity activity, final int color) {
-	if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-		return;
+	public static void changeStatusBarColor(final Activity activity, final int color) {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+			return;
 
-	final Window window = activity.getWindow();
-	window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-	window.setStatusBarColor(color);
-}
+		final Window window = activity.getWindow();
+		window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+			window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+		window.setStatusBarColor(color);
+	}
 
 }

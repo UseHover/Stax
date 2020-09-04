@@ -31,10 +31,10 @@ final public class KeyStoreExecutor {
 //		new Thread(new Runnable() {
 //			@Override
 //			public void run() {
-				String encryptedPin = encrypt(value, c);
-				if (encryptedPin == null)
-					encryptedPin = encrypt(value, c); // Try again then give up
-				return encryptedPin;
+		String encryptedPin = encrypt(value, c);
+		if (encryptedPin == null)
+			encryptedPin = encrypt(value, c); // Try again then give up
+		return encryptedPin;
 //			}
 //		}).start();
 	}
@@ -57,7 +57,7 @@ final public class KeyStoreExecutor {
 		} catch (Exception e) {
 			if (c != null) {
 			}
-			Log.println( Log.ERROR,TAG, c.getString(com.hover.sdk.R.string.hsdk_log_pin_encrypt_err));
+			Log.println(Log.ERROR, TAG, c.getString(com.hover.sdk.R.string.hsdk_log_pin_encrypt_err));
 		}
 		return null;
 	}
@@ -80,7 +80,7 @@ final public class KeyStoreExecutor {
 
 			return new String(bytes, 0, bytes.length, "UTF-8");
 		} catch (Exception e) {
-			Log.println( Log.ERROR,TAG, c.getString(com.hover.sdk.R.string.hsdk_log_pin_decrypt_err));
+			Log.println(Log.ERROR, TAG, c.getString(com.hover.sdk.R.string.hsdk_log_pin_decrypt_err));
 		}
 		return null;
 	}
@@ -97,7 +97,8 @@ final public class KeyStoreExecutor {
 				if (!forDecrypt && count == 0)
 					generateKeyPair(c);
 				count++;
-			} catch (NullPointerException | UnrecoverableKeyException ignored) { } // seems to be bug in keystore that throws chain == null
+			} catch (NullPointerException | UnrecoverableKeyException ignored) {
+			} // seems to be bug in keystore that throws chain == null
 			if (privateKeyEntry == null && count < 4) {
 				SystemClock.sleep(250); // No idea if or why this would help...
 			}
@@ -117,20 +118,22 @@ final public class KeyStoreExecutor {
 				Calendar end = Calendar.getInstance();
 				end.add(Calendar.YEAR, 1);
 				KeyPairGeneratorSpec spec = new KeyPairGeneratorSpec.Builder(c)
-						.setAlias(getAlias(c))
-						.setSubject(new X500Principal("CN=" + getAlias(c) + ", O=Android Authority"))
-						.setSerialNumber(BigInteger.ONE)
-						.setStartDate(start.getTime())
-						.setEndDate(end.getTime())
-						.build();
+													.setAlias(getAlias(c))
+													.setSubject(new X500Principal("CN=" + getAlias(c) + ", O=Android Authority"))
+													.setSerialNumber(BigInteger.ONE)
+													.setStartDate(start.getTime())
+													.setEndDate(end.getTime())
+													.build();
 				KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA", "AndroidKeyStore");
 				generator.initialize(spec);
 				generator.generateKeyPair();
 			}
 		} catch (Exception e) {
-			Log.println( Log.ERROR,TAG, c.getString(com.hover.sdk.R.string.hsdk_log_keystore_err));
+			Log.println(Log.ERROR, TAG, c.getString(com.hover.sdk.R.string.hsdk_log_keystore_err));
 		}
 	}
 
-	private static String getAlias(Context c) { return "hsdk_" + Utils.getPackage(c) + "_standard"; }
+	private static String getAlias(Context c) {
+		return "hsdk_" + Utils.getPackage(c) + "_standard";
+	}
 }

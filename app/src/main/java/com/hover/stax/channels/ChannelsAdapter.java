@@ -49,7 +49,7 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.Channe
 		holder.name.setText(channel.name + " " + channel.countryAlpha2);
 		//holder.serviceLogo.setImageBitmap(channel.logo);
 
-		holder.shadowFrame.setVisibility(selected.contains(channel.id)? View.VISIBLE : View.GONE);
+		holder.shadowFrame.setVisibility(selected.contains(channel.id) ? View.VISIBLE : View.GONE);
 		holder.checkIcon.setVisibility(selected.contains(channel.id) ? View.VISIBLE : View.GONE);
 
 	}
@@ -76,17 +76,22 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.Channe
 		}
 	}
 
-	public interface SelectListener  {
+	public interface SelectListener {
 		void onTap(int channelId);
 	}
 
-	@Override public int getItemCount() { return channels == null ? 0 : channels.size(); }
+	@Override
+	public int getItemCount() {
+		return channels == null ? 0 : channels.size();
+	}
 
-	@Override public long getItemId(int position) {
+	@Override
+	public long getItemId(int position) {
 		return position;
 	}
 
-	@Override public int getItemViewType(int position) {
+	@Override
+	public int getItemViewType(int position) {
 		return position;
 	}
 }

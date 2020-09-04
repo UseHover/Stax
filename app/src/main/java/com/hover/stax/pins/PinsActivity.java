@@ -3,7 +3,6 @@ package com.hover.stax.pins;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,8 +43,8 @@ public class PinsActivity extends AppCompatActivity {
 			pinRecyclerView.setAdapter(pinEntryAdapter);
 		});
 
-		channelViewModel.getBalances().observe(this, balanceModels -> {
-			if(balanceModels.size()> 0) {
+		channelViewModel.getBalances().observe(PinsActivity.this, balanceModels -> {
+			if (balanceModels.size() > 0) {
 				balanceModelList = balanceModels;
 				runAction(true);
 			}
@@ -65,12 +64,11 @@ public class PinsActivity extends AppCompatActivity {
 		builder.request(balanceModel.getActionId());
 		builder.setEnvironment(HoverParameters.PROD_ENV);
 		builder.style(R.style.myHoverTheme);
-	//        builder.initialProcessingMessage(getResources().getString(R.string.transaction_coming_up));
+//        builder.initialProcessingMessage(getResources().getString(R.string.transaction_coming_up));
 		builder.finalMsgDisplayTime(2000);
-		Log.d("sweet", "pin is: "+balanceModel.getChannel().pin);
-		builder.extra("pin",balanceModel.getChannel().pin );
+		builder.extra("pin", balanceModel.getChannel().pin);
 
-		if(firstTime) actionRunCounter = actionRunCounter + 1;
+		if (firstTime) actionRunCounter = actionRunCounter + 1;
 		Intent i = builder.buildIntent();
 		startActivityForResult(i, RUN_ALL_RESULT);
 
@@ -80,15 +78,13 @@ public class PinsActivity extends AppCompatActivity {
 	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == RUN_ALL_RESULT) {
-			if(actionRunCounter  < balanceModelList.size()) {
+			if (actionRunCounter < balanceModelList.size()) {
 				new Handler().postDelayed(() -> {
 					runAction(false);
 					actionRunCounter = actionRunCounter + 1;
 				}, 2000);
 
-
-			}
-			else if(actionRunCounter == balanceModelList.size()) {
+			} else if (actionRunCounter == balanceModelList.size()) {
 				//Important to set runCounter back to zero when completed.
 				startActivity(new Intent(this, MainActivity.class));
 			}
