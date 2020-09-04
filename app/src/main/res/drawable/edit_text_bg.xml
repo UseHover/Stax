@@ -6,7 +6,7 @@
 		<shape android:shape="rectangle" android:padding="10dp">
 
 			<solid android:color="@color/colorPrimaryDark"/>
-			<stroke android:width="@dimen/editText_stroke_size" android:color="@color/colorPureWhite"/>
+			<stroke android:width="@dimen/editText_stroke_size" android:color="@color/white"/>
 			<corners android:radius="@dimen/editText_corner" />
 
 		</shape>
@@ -28,7 +28,7 @@
 		<shape android:shape="rectangle" android:padding="10dp">
 
 			<solid android:color="@color/colorPrimaryDark"/>
-			<stroke android:width="@dimen/editText_stroke_size" android:color="@color/colorPureWhite"/>
+			<stroke android:width="@dimen/editText_stroke_size" android:color="@color/white"/>
 			<corners android:radius="@dimen/editText_corner" />
 
 		</shape>
@@ -40,7 +40,7 @@
 			<solid android:color="@color/colorPrimaryDark"/>
 			<stroke android:width="@dimen/editText_initial_stroke"
 					android:dashGap="3dp"
-					android:color="@color/colorGrey"/>
+					android:color="@color/grey"/>
 			<corners android:radius="@dimen/editText_corner" />
 
 		</shape>
@@ -52,7 +52,7 @@
 			<solid android:color="@color/colorPrimaryDark"/>
 			<stroke android:width="@dimen/editText_initial_stroke"
 					android:dashGap="3dp"
-					android:color="@color/colorGrey"/>
+					android:color="@color/grey"/>
 			<corners android:radius="@dimen/editText_corner" />
 
 		</shape>

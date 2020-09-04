@@ -1,24 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryStax"
-    tools:context=".ui.home.HomeFragment">
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    tools:context=".home.HomeFragment">
 
-	<TextView
-	    android:id="@+id/text_home"
+	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:layout_marginStart="8dp"
-	    android:layout_marginTop="8dp"
-	    android:layout_marginEnd="8dp"
-	    android:textAlignment="center"
-	    android:textSize="20sp"
-	    android:textColor="@color/colorGrey"
-	    app:layout_constraintBottom_toBottomOf="parent"
-	    app:layout_constraintEnd_toEndOf="parent"
-	    app:layout_constraintStart_toStartOf="parent"
-	    app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+	    android:orientation="horizontal"
+	    android:padding="@dimen/activity_horizontal_margin"
+	    android:layout_gravity="center_vertical">
+
+		<TextView
+		    android:id="@+id/text_balances"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/balances"
+		    android:textColor="@color/offWhite"
+		    android:textSize="@dimen/text_21"
+		    android:textStyle="bold"
+		    android:layout_gravity="start"
+		    android:gravity="start"
+		    android:drawablePadding="@dimen/spacing8"
+		    android:drawableEnd="@drawable/ic_add_circle_outline_black_24dp"
+
+		    />
+
+
+		<TextView
+		    android:layout_width="0dp"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:text="timeAgo"
+		    android:textAlignment="viewEnd"
+		    android:layout_gravity="center_vertical"
+		    android:gravity="end"
+		    android:drawableEnd="@drawable/ic_refresh_white_24dp"
+		    android:drawablePadding="@dimen/spacing8"
+		    android:textColor="@color/offWhite"
+		    android:id="@+id/homeTimeAgo" />
+	</LinearLayout>
+
+	<TextView
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="@string/add_new_balance"
+	    android:textColor="@color/offWhite"
+	    android:textSize="@dimen/text_13"
+	    android:paddingHorizontal="@dimen/activity_horizontal_margin"
+	    android:id="@+id/homeBalanceDesc" />
+
+	<androidx.recyclerview.widget.RecyclerView
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:id="@+id/balances_recyclerView" />
+
+
+	<TextView
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="@string/transactions"
+	    android:textColor="@color/offWhite"
+	    android:textSize="@dimen/text_21"
+	    android:textStyle="bold"
+	    android:layout_marginTop="@dimen/activity_vertical_margin"
+	    android:padding="@dimen/activity_horizontal_margin" />
+
+</LinearLayout>

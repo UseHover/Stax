@@ -14,8 +14,7 @@
 	    android:scaleType="centerCrop"
 	    android:layout_centerHorizontal="true"
 	    android:id="@+id/service_item_image_id"
-	    android:src="@drawable/mtn_logo"
-	    />
+	    android:src="@drawable/mtn_logo" />
 
 	<de.hdodenhof.circleimageview.CircleImageView
 	    android:layout_width="65dp"
@@ -27,8 +26,7 @@
 	    app:civ_border_width="6dp"
 	    app:civ_border_color="#DD838385"
 	    android:scaleType="centerCrop"
-	    android:id="@+id/checked_service_frame"
-	    />
+	    android:id="@+id/checked_service_frame" />
 
 
 	<ImageView
@@ -39,16 +37,24 @@
 	    android:id="@+id/checked_service_tick"
 	    android:layout_marginTop="@dimen/activity_horizontal_margin"
 	    android:visibility="gone"
-	    android:src="@drawable/ic_check_circle_green_24dp"
-	    />
+	    android:src="@drawable/ic_check_circle_green_24dp" />
+
 	<TextView
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:id="@+id/service_item_name_id"
 	    android:layout_below="@id/service_item_image_id"
 	    android:textAlignment="center"
-	    android:textColor="@color/colorWhiteV2"
+	    android:textColor="@color/offWhite"
+	    android:textSize="@dimen/text_13" />
+
+	<TextView
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:id="@+id/service_item_id"
+	    android:textAlignment="center"
+	    android:textColor="@color/offWhite"
 	    android:textSize="@dimen/text_13"
-	    />
+	    android:visibility="gone" />
 
 </RelativeLayout>

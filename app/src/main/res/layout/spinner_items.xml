@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CheckedTextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/spinnerItemId"
     android:textColor="@drawable/spinner_state_selector"
     android:textSize="@dimen/text_13"
-    android:background="@color/colorPrimaryStax"
+    android:background="@color/colorPrimary"
     android:singleLine="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/activity_vertical_margin"
-    android:ellipsize="marquee"/>
+    android:ellipsize="marquee" />

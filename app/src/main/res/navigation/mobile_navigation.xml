@@ -8,25 +8,25 @@
 
 	<fragment
 	    android:id="@+id/navigation_home"
-	    android:name="com.hover.stax.ui.home.HomeFragment"
+	    android:name="com.hover.stax.home.HomeFragment"
 	    android:label="@string/title_home"
 	    tools:layout="@layout/fragment_home" />
 
 	<fragment
 	    android:id="@+id/navigation_buyAirtime"
-	    android:name="com.hover.stax.ui.buyAirtime.BuyAirtimeFragment"
+	    android:name="com.hover.stax.buyAirtime.BuyAirtimeFragment"
 	    android:label="@string/title_buyAirtime"
 	    tools:layout="@layout/fragment_buyairtime" />
 
 	<fragment
 	    android:id="@+id/navigation_moveMoney"
-	    android:name="com.hover.stax.ui.moveMoney.MoveMoneyFragment"
+	    android:name="com.hover.stax.moveMoney.MoveMoneyFragment"
 	    android:label="@string/title_moveMoney"
 	    tools:layout="@layout/fragment_movemoney" />
 
 	<fragment
 	    android:id="@+id/navigation_security"
-	    android:name="com.hover.stax.ui.security.SecurityFragment"
+	    android:name="com.hover.stax.security.SecurityFragment"
 	    android:label="@string/title_security"
 	    tools:layout="@layout/fragment_security" />
 </navigation>

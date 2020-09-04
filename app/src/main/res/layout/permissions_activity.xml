@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_centerInParent="true"
     android:padding="@dimen/activity_horizontal_margin"
-    android:background="@color/colorPrimaryStax"
+    android:background="@color/colorPrimary"
     android:layout_gravity="center"
-    android:gravity="center"
-    >
+    android:gravity="center">
 
 	<TextView
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:textColor="@color/colorWhite"
+	    android:textColor="@color/white"
 	    android:text="@string/permission_showup_text"
 	    android:fontFamily="font-medium"
-	    android:textSize="@dimen/text_21"
-	    />
+	    android:textSize="@dimen/text_21" />
 
 
 	<Button
@@ -31,6 +28,6 @@
 	    android:fontFamily="font-medium"
 	    android:textSize="@dimen/text_13"
 	    android:paddingHorizontal="@dimen/activity_horizontal_margin"
-	    android:layout_gravity="end"/>
+	    android:layout_gravity="end" />
 
 </LinearLayout>

@@ -1,41 +1,53 @@
 <resources>
 	<string name="app_name">Stax</string>
+	<string name="root_url" translatable="false">https://stage.usehover.com/api/</string>
+	<string name="channels_endpoint" translatable="false">channels?published=true</string>
+
 	<string name="title_home">Home</string>
 	<string name="title_buyAirtime">Buy Airtime</string>
 	<string name="title_moveMoney">Move Money</string>
 	<string name="title_security">Security</string>
 
-	<string name="custom_font_error">Cannot set custom font</string>
-	<string name="custom_font_err_msg">At least one default font must be set</string>
+	<string name="done"><u>Done</u></string>
+	<string name="cancel"><u>Cancel</u></string>
+	<string name="continueText">Continue</string>
+	<string name="no_selection_error">You must select at least 1 service.</string>
+
+	<string name="balances">Balances</string>
+	<string name="choose_institutions_title">Choose your services</string>
+	<string name="sims_section">Your SIMs</string>
+	<string name="country_section">Services in %1$s</string>
+	<string name="all_section">All services</string>
+	<string name="add_new_balance">Add a new balance to view it here</string>
+
+	<string name="transactions">Transactions</string>
 
 	<string name="permission_showup_text">Heads up:\n\n We need permission to access your contacts and use your accessibility services so that we can do dope USSD magic for you.</string>
 	<string name="turn_on_permission">Turn on permissions</string>
 	<string name="permission_failure">You did not allow all permissions</string>
 	<string name="permission_success">All permissions allowed successfully</string>
-	<string name="choose_your_services">Choose your services</string>
-	<string name="done">Done</string>
-	<string name="cancel">Cancel</string>
-	<string name="continueText">Continue</string>
-	
-	<string name="your_sims">Your SIMs</string>
-	<string name="other_services_in">Other services in </string>
-	<string name="all_services">All services</string>
 
-	<string name="input_label">Ksh</string>
+	<string name="input_label">Input label</string>
+	<string name="pin_input_hint">Enter PIN</string>
 
 	<string name="security">Security</string>
 	<string name="remove_pin_from_device">Remove PINs from device</string>
 	<string name="remove_pins">Remove PINs</string>
+	<string name="remove_pins_dialog_message">Are you sure you want to remove all your pins? You\'d have to manually enter them for each transaction later</string>
+	<string name="remove_pin_successful">PIN removed successfully</string>
+	<string name="yes">Yes</string>
+	<string name="no">No</string>
 	<string name="default_account">Default account</string>
 	<string name="default_account_desc">Defaults accounts will show up first when you move money.</string>
 	<string name="about_our_security">About our security</string>
 	<string name="about_our_security_content">Hover’s Android SDK is a development kit meeting the criteria of 740.17(b)(3) (i) security classification of the United States Bureau of Industry and Security. This software uses HTTPS for server communication; symmetric key RSA encryption to temporarily store the user’s credentials on their own device using Android Keystore; and code obfuscation using DRM (Dexguard).</string>
-	<string name="choose_pin_description">You can remove your PINs from Bundas at any time. All PINs are secured with XYZ encryption and blablabla to ensure your information is always protected.</string>
+	<string name="choose_pin_description">You can remove your PINs from Stax at any time. All PINs are secured with XYZ encryption and blablabla to ensure your information is always protected.</string>
 
 	<string name="moveMoney">Move money</string>
 	<string name="between_services">Between services</string>
 	<string name="to_someone_else">To someone else</string>
 	<string name="request_money">Request money</string>
+
 	<string name="from">From</string>
 	<string name="to">To</string>
 	<string name="amount">Amount</string>
@@ -47,4 +59,22 @@
 	<string name="fees">Fees</string>
 	<string name="choose_a_service_to_calculate">Choose a service to calculate your fees</string>
 	<string name="total">Total</string>
+
+
+
+
+	<string name="timeago_ago">%1$s ago</string>
+	<string name="timeago_from_now">%1$s from now</string>
+
+	<string name="timeago_secondes">less than a minute</string>
+	<string name="timeago_minute">about a minute</string>
+	<string name="timeago_minutes">%1$d minutes</string>
+	<string name="timeago_hour">about an hour</string>
+	<string name="timeago_hours">about %1$d hours</string>
+	<string name="timeago_day">a day</string>
+	<string name="timeago_days">%1$d days</string>
+	<string name="timeago_month">about a month</string>
+	<string name="timeago_months">%1$d months</string>
+	<string name="timeago_year">about a year</string>
+	<string name="timeago_years">%1$d years</string>
 </resources>

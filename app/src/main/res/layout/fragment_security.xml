@@ -1,39 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryStax"
+    android:background="@color/colorPrimary"
     android:padding="@dimen/activity_vertical_margin"
-    tools:context=".ui.security.SecurityFragment">
+    tools:context=".security.SecurityFragment">
 
 	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-	    android:orientation="vertical"
-	    >
+	    android:orientation="vertical">
 
 		<TextView
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:text="@string/security"
-		    android:textColor="@color/colorWhiteV2"
+		    android:textColor="@color/offWhite"
 		    android:textSize="@dimen/text_21"
-		    android:fontFamily="font-medium"
-		    />
+		    android:fontFamily="font-medium" />
 
 		<TextView
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:text="@string/remove_pin_from_device"
-		    android:textColor="@color/colorWhiteV2"
+		    android:textColor="@color/offWhite"
 		    android:layout_marginTop="@dimen/spacing32"
 		    android:fontFamily="font-medium"
 		    android:textSize="@dimen/text_13"
-		    android:textAlignment="textStart"
-		    />
+		    android:textAlignment="textStart" />
+
 		<Button
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
@@ -43,20 +39,18 @@
 		    android:textAllCaps="false"
 		    android:fontFamily="font-medium"
 		    android:textSize="@dimen/text_13"
-		    android:textColor="@color/colorWhiteV2"
+		    android:textColor="@color/offWhite"
 		    android:layout_marginTop="@dimen/activity_vertical_margin"
-		    android:paddingHorizontal="32dp"
-		    />
+		    android:paddingHorizontal="32dp" />
 
 		<TextView
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:text="@string/default_account"
 		    android:layout_marginTop="32dp"
-		    android:textColor="@color/colorWhiteV2"
+		    android:textColor="@color/offWhite"
 		    android:textSize="@dimen/text_13"
-		    android:fontFamily="font-medium"
-		    />
+		    android:fontFamily="font-medium" />
 
 		<androidx.appcompat.widget.AppCompatSpinner
 		    android:layout_width="match_parent"
@@ -64,33 +58,31 @@
 		    android:layout_marginTop="@dimen/activity_vertical_margin"
 		    android:background="@drawable/spinner_bg"
 		    android:padding="@dimen/activity_vertical_margin"
-		    android:id="@+id/defaultAccountSpinner"
-		    />
+		    android:id="@+id/defaultAccountSpinner" />
 
 		<TextView
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:text="@string/default_account_desc"
 		    android:layout_marginTop="8dp"
-		    android:textColor="@color/colorWhiteV2"
-		    />
+		    android:textColor="@color/offWhite" />
+
 		<TextView
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:text="@string/about_our_security"
 		    android:layout_marginTop="@dimen/spacing32"
-		    android:textColor="@color/colorWhiteV2"
+		    android:textColor="@color/offWhite"
 		    android:textSize="@dimen/text_13"
-		    android:fontFamily="font-medium"
-		    />
+		    android:fontFamily="font-medium" />
+
 		<TextView
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:text="@string/about_our_security_content"
 		    android:layout_marginTop="8dp"
 		    android:lineSpacingExtra="4.5dp"
-		    android:textColor="@color/colorWhiteV2"
-		    />
+		    android:textColor="@color/offWhite" />
 
 
 	</LinearLayout>
