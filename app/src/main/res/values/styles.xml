@@ -18,6 +18,11 @@
 		<item name="colorAccent">@color/colorAccent</item>
 	</style>
 
+	<style name="SplashTheme" parent="HoverTheme.Base">
+		<item name="android:windowActionBar">false</item>
+		<item name="android:windowBackground">@drawable/splash_background</item>
+	</style>
+
 	<style name="PinButtonThemeStax" parent="Widget.AppCompat.Button.Borderless">
 		<item name="android:textColor">@color/white</item>
 		<item name="android:textSize">24sp</item>

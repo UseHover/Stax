@@ -40,7 +40,6 @@ public class PinsActivity extends AppCompatActivity {
 			pinRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(this));
 			pinRecyclerView.setHasFixedSize(true);
 			pinEntryAdapter = new PinEntryAdapter(channels);
-
 			pinRecyclerView.setAdapter(pinEntryAdapter);
 		});
 
@@ -60,7 +59,7 @@ public class PinsActivity extends AppCompatActivity {
 
 	private void runAction(boolean firstTime) {
 		BalanceModel balanceModel = balanceModelList.get(actionRunCounter);
-		HoverParameters.Builder builder = new HoverParameters.Builder(this);
+		HoverParameters.Builder builder = new HoverParameters.Builder(PinsActivity.this);
 
 		builder.request(balanceModel.getActionId());
 		builder.setEnvironment(HoverParameters.PROD_ENV);
@@ -85,10 +84,8 @@ public class PinsActivity extends AppCompatActivity {
 					actionRunCounter = actionRunCounter + 1;
 				}, 2000);
 
-
 			} else if (actionRunCounter == balanceModelList.size()) {
 				//Important to set runCounter back to zero when completed.
-				MainActivity.GO_TO_SPLASH_SCREEN = false;
 				startActivity(new Intent(this, MainActivity.class));
 			}
 		}
