@@ -2,7 +2,6 @@ package com.hover.stax.pins;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -34,8 +33,13 @@ public class PinsViewModel extends AndroidViewModel {
 		loadSelectedChannels();
 	}
 
-	public LiveData<List<Channel>> getSelectedChannels() { return channels; }
-	public LiveData<List<BalanceModel>> getBalances() {return balances;}
+	public LiveData<List<Channel>> getSelectedChannels() {
+		return channels;
+	}
+
+	public LiveData<List<BalanceModel>> getBalances() {
+		return balances;
+	}
 
 	private void loadSelectedChannels() {
 		if (channels == null) {
@@ -60,7 +64,7 @@ public class PinsViewModel extends AndroidViewModel {
 		List<HoverAction> balanceActions = repo.getActionsWithBalanceType();
 		ArrayList<BalanceModel> balanceModelList = new ArrayList<>();
 
-		if ( balanceActions != null) {
+		if (balanceActions != null) {
 			List<String> simHniList = new ArrayList<>();
 			for (SimInfo sim : Hover.getPresentSims(ApplicationInstance.getContext())) {
 				if (!simHniList.contains(sim.getOSReportedHni()))
@@ -73,7 +77,7 @@ public class PinsViewModel extends AndroidViewModel {
 			for (Channel channel : selectedChannelInSIM) {
 				for (HoverAction action : balanceActions) {
 					if (action.channelId == channel.id) {
-						channel.pin = KeyStoreExecutor.decrypt(channel.pin,ApplicationInstance.getContext());
+						channel.pin = KeyStoreExecutor.decrypt(channel.pin, ApplicationInstance.getContext());
 						balanceModelList.add(new BalanceModel(action.id, channel, "null", 0));
 
 					}
@@ -82,16 +86,16 @@ public class PinsViewModel extends AndroidViewModel {
 		}
 
 
-
 		balances.postValue(balanceModelList);
 	}
 
 	public void clearAllPins(List<Channel> channels) {
-		for(Channel channel: channels) {
+		for (Channel channel : channels) {
 			channel.pin = null;
 			repo.update(channel);
 		}
 	}
+
 	public void setDefaultAccount(Channel channel) {
 		repo.update(channel);
 	}

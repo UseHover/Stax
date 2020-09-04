@@ -1,7 +1,6 @@
 package com.hover.stax.database;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -26,7 +25,7 @@ public class DatabaseRepo {
 	}
 
 	// Room executes all queries on a separate thread.
-	// Observed LiveData will notify the observer when the data has changed.
+// Observed LiveData will notify the observer when the data has changed.
 	public LiveData<List<Channel>> getAll() {
 		return allChannels;
 	}

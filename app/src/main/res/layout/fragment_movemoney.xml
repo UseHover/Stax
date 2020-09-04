@@ -14,8 +14,7 @@
 	    android:textColor="@color/offWhite"
 	    android:textSize="@dimen/text_21"
 	    android:fontFamily="font-medium"
-	    android:padding="@dimen/activity_horizontal_margin"
-	    />
+	    android:padding="@dimen/activity_horizontal_margin" />
 
 	<TextView
 	    android:layout_width="wrap_content"
@@ -24,13 +23,12 @@
 	    android:textColor="@color/offWhite"
 	    android:id="@+id/betweenServicesText"
 	    android:textSize="@dimen/movemMoneyItemsTextSize"
-	    android:padding="@dimen/activity_horizontal_margin"
-	    />
-	
+	    android:padding="@dimen/activity_horizontal_margin" />
+
 	<View
 	    android:layout_width="match_parent"
 	    android:layout_height="0.1dp"
-	    android:background="@color/grey"/>
+	    android:background="@color/grey" />
 
 	<TextView
 	    android:layout_width="wrap_content"
@@ -39,13 +37,12 @@
 	    android:textColor="@color/offWhite"
 	    android:id="@+id/toSomeElseText"
 	    android:textSize="@dimen/movemMoneyItemsTextSize"
-	    android:padding="@dimen/activity_horizontal_margin"
-	    />
+	    android:padding="@dimen/activity_horizontal_margin" />
 
 	<View
 	    android:layout_width="match_parent"
 	    android:layout_height="0.1dp"
-	    android:background="@color/grey"/>
+	    android:background="@color/grey" />
 
 	<TextView
 	    android:layout_width="wrap_content"
@@ -54,11 +51,10 @@
 	    android:id="@+id/requestMoneyText"
 	    android:textColor="@color/offWhite"
 	    android:textSize="@dimen/movemMoneyItemsTextSize"
-	    android:padding="@dimen/activity_horizontal_margin"
-	    />
+	    android:padding="@dimen/activity_horizontal_margin" />
 
 	<View
 	    android:layout_width="match_parent"
 	    android:layout_height="0.1dp"
-	    android:background="@color/grey"/>
+	    android:background="@color/grey" />
 </LinearLayout>

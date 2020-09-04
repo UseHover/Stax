@@ -16,19 +16,19 @@ import com.hover.stax.R;
 
 public class BuyAirtimeFragment extends Fragment {
 
-private BuyAirtimeViewModel buyAirtimeViewModel;
+	private BuyAirtimeViewModel buyAirtimeViewModel;
 
-public View onCreateView(@NonNull LayoutInflater inflater,
-						 ViewGroup container, Bundle savedInstanceState) {
-	buyAirtimeViewModel = new ViewModelProvider(this).get(BuyAirtimeViewModel.class);
-	View root = inflater.inflate(R.layout.fragment_buyairtime, container, false);
-	final TextView textView = root.findViewById(R.id.text_dashboard);
-	buyAirtimeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-		@Override
-		public void onChanged(@Nullable String s) {
-			textView.setText(s);
-		}
-	});
-	return root;
-}
+	public View onCreateView(@NonNull LayoutInflater inflater,
+							 ViewGroup container, Bundle savedInstanceState) {
+		buyAirtimeViewModel = new ViewModelProvider(this).get(BuyAirtimeViewModel.class);
+		View root = inflater.inflate(R.layout.fragment_buyairtime, container, false);
+		final TextView textView = root.findViewById(R.id.text_dashboard);
+		buyAirtimeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+			@Override
+			public void onChanged(@Nullable String s) {
+				textView.setText(s);
+			}
+		});
+		return root;
+	}
 }

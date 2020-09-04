@@ -14,6 +14,6 @@
 	    android:gravity="center"
 	    android:textStyle="bold"
 	    android:textColor="@color/white"
-	    android:text="Stax"/>
+	    android:text="Stax" />
 
 </FrameLayout>

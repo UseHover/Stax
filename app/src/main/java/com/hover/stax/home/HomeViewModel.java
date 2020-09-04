@@ -22,67 +22,71 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeViewModel extends AndroidViewModel {
-private LiveData<List<Channel>> selectedChannels;
-private MutableLiveData<List<BalanceModel>> balances;
+	private LiveData<List<Channel>> selectedChannels;
+	private MutableLiveData<List<BalanceModel>> balances;
 
-private DatabaseRepo repo;
-
-
-public HomeViewModel(Application application) {
-	super(application);
-	repo = new DatabaseRepo(application);
-	balances = new MutableLiveData<>();
-	selectedChannels = new MutableLiveData<>();
-	selectedChannels = repo.getSelected();
+	private DatabaseRepo repo;
 
 
-	balances.setValue(new ArrayList<>());
-
-}
-
-public  LiveData<List<Channel>> loadChannels() {return selectedChannels; }
-public LiveData<List<BalanceModel>> loadBalance() {
-	return balances;
-}
+	public HomeViewModel(Application application) {
+		super(application);
+		repo = new DatabaseRepo(application);
+		balances = new MutableLiveData<>();
+		selectedChannels = new MutableLiveData<>();
+		selectedChannels = repo.getSelected();
 
 
-public void getBalanceFunction(List<Channel> channels) {
-	List<HoverAction> balanceActions = repo.getActionsWithBalanceType();
-	ArrayList<BalanceModel> balanceModelList = new ArrayList<>();
+		balances.setValue(new ArrayList<>());
 
-	if ( balanceActions != null) {
-		List<String> simHniList = new ArrayList<>();
-		for (SimInfo sim : Hover.getPresentSims(ApplicationInstance.getContext())) {
-			if (!simHniList.contains(sim.getOSReportedHni()))
-				simHniList.add(sim.getOSReportedHni());
-		}
+	}
 
-		List<Channel> selectedChannelInSIM = Utils.getSimChannels(channels, simHniList);
+	public LiveData<List<Channel>> loadChannels() {
+		return selectedChannels;
+	}
+
+	public LiveData<List<BalanceModel>> loadBalance() {
+		return balances;
+	}
 
 
-		for (Channel channel : selectedChannelInSIM) {
-			for (HoverAction action : balanceActions) {
-				if (action.channelId == channel.id) {
-					if(channel.pin!=null && channel.pin.length() > 30) channel.pin = KeyStoreExecutor.decrypt(channel.pin,ApplicationInstance.getContext());
+	public void getBalanceFunction(List<Channel> channels) {
+		List<HoverAction> balanceActions = repo.getActionsWithBalanceType();
+		ArrayList<BalanceModel> balanceModelList = new ArrayList<>();
 
-					List<Transaction> transactionList = Hover.getTransactionsByActionId(action.id, ApplicationInstance.getContext());
-					String balanceValue = "NaN";
-					long timeStamp = 0;
-					if(transactionList.size()> 0) {
-						Transaction mostRecentTransaction = transactionList.get(0);
-						timeStamp = mostRecentTransaction.updatedTimestamp;
-						try {
-							balanceValue = mostRecentTransaction.parsed_variables.getString("balance");
-						} catch (JSONException e) {
-							e.printStackTrace();
+		if (balanceActions != null) {
+			List<String> simHniList = new ArrayList<>();
+			for (SimInfo sim : Hover.getPresentSims(ApplicationInstance.getContext())) {
+				if (!simHniList.contains(sim.getOSReportedHni()))
+					simHniList.add(sim.getOSReportedHni());
+			}
+
+			List<Channel> selectedChannelInSIM = Utils.getSimChannels(channels, simHniList);
+
+
+			for (Channel channel : selectedChannelInSIM) {
+				for (HoverAction action : balanceActions) {
+					if (action.channelId == channel.id) {
+						if (channel.pin != null && channel.pin.length() > 30)
+							channel.pin = KeyStoreExecutor.decrypt(channel.pin, ApplicationInstance.getContext());
+
+						List<Transaction> transactionList = Hover.getTransactionsByActionId(action.id, ApplicationInstance.getContext());
+						String balanceValue = "NaN";
+						long timeStamp = 0;
+						if (transactionList.size() > 0) {
+							Transaction mostRecentTransaction = transactionList.get(0);
+							timeStamp = mostRecentTransaction.updatedTimestamp;
+							try {
+								balanceValue = mostRecentTransaction.parsed_variables.getString("balance");
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
 						}
-					}
-					balanceModelList.add(new BalanceModel(action.id, channel, balanceValue, timeStamp ));
+						balanceModelList.add(new BalanceModel(action.id, channel, balanceValue, timeStamp));
 
+					}
 				}
 			}
 		}
-	}
 
 		balances.postValue(balanceModelList);
 	}

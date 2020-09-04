@@ -3,7 +3,6 @@ package com.hover.stax.channels;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -67,7 +66,7 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 	private void getCountries() {
 		channelViewModel.getSims().observe(this, sims -> {
 			simCountryList = new ArrayList<>();
-			for (SimInfo sim: sims) {
+			for (SimInfo sim : sims) {
 				if (!simCountryList.contains(sim.getCountryIso().toUpperCase()))
 					simCountryList.add(sim.getCountryIso().toUpperCase());
 			}
@@ -77,7 +76,7 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 	private void getHnis() {
 		channelViewModel.getSims().observe(this, sims -> {
 			simHniList = new ArrayList<>();
-			for (SimInfo sim: sims) {
+			for (SimInfo sim : sims) {
 				if (!simHniList.contains(sim.getOSReportedHni()))
 					simHniList.add(sim.getOSReportedHni());
 			}
@@ -91,7 +90,7 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 			//YourSIM
 			addSection(getString(R.string.sims_section), Utils.getSimChannels(channels, simHniList));
 			//COUNTRIES
-			for (String countryAlpha2: simCountryList){
+			for (String countryAlpha2 : simCountryList) {
 				addSection(getString(R.string.country_section, countryAlpha2.toUpperCase()), getCountryChannels(countryAlpha2, channels));
 			}
 			//ALL SERVICES
@@ -100,7 +99,7 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 	}
 
 	private void addSection(String sectionTitle, List<Channel> channels) {
-		LayoutInflater inflater = (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View section = inflater.inflate(R.layout.channel_grid, null);
 		((TextView) section.findViewById(R.id.section_title)).setText(sectionTitle);
 		GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false);

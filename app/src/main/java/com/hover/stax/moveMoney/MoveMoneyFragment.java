@@ -16,20 +16,20 @@ import com.hover.stax.moveMoney.toSomeoneEsle.ToSomeElseActivity;
 
 public class MoveMoneyFragment extends Fragment {
 
-public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-	View root = inflater.inflate(R.layout.fragment_movemoney, container, false);
-	root.findViewById(R.id.betweenServicesText).setOnClickListener(view-> {
-	startActivity(new Intent(getActivity(), BetweenServicesActivity.class));
-	});
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View root = inflater.inflate(R.layout.fragment_movemoney, container, false);
+		root.findViewById(R.id.betweenServicesText).setOnClickListener(view -> {
+			startActivity(new Intent(getActivity(), BetweenServicesActivity.class));
+		});
 
-	root.findViewById(R.id.toSomeElseText).setOnClickListener(view-> {
-	startActivity(new Intent(getActivity(), ToSomeElseActivity.class));
-	});
+		root.findViewById(R.id.toSomeElseText).setOnClickListener(view -> {
+			startActivity(new Intent(getActivity(), ToSomeElseActivity.class));
+		});
 
-	root.findViewById(R.id.requestMoneyText).setOnClickListener(view-> {
-	startActivity(new Intent(getActivity(), RequestMoneyActivity.class));
-	});
+		root.findViewById(R.id.requestMoneyText).setOnClickListener(view -> {
+			startActivity(new Intent(getActivity(), RequestMoneyActivity.class));
+		});
 
-	return root;
-}
+		return root;
+	}
 }

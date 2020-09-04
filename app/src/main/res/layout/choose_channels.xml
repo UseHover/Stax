@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_horizontal_margin"
@@ -26,7 +25,8 @@
 			    android:fontFamily="font-medium"
 			    android:textColor="@color/offWhite" />
 
-			<TextView android:id="@+id/choose_serves_done"
+			<TextView
+			    android:id="@+id/choose_serves_done"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
 			    android:textSize="@dimen/text_13"
@@ -34,13 +34,13 @@
 			    android:paddingEnd="0dp"
 			    android:fontFamily="font-medium"
 			    android:textColor="@color/offWhite"
-				android:text="@string/done" />
+			    android:text="@string/done" />
 		</LinearLayout>
 
-		<LinearLayout android:id="@+id/section_wrapper"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:orientation="vertical">
-		</LinearLayout>
+		<LinearLayout
+		    android:id="@+id/section_wrapper"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:orientation="vertical"></LinearLayout>
 	</LinearLayout>
 </androidx.core.widget.NestedScrollView>
