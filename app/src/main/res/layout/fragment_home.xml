@@ -58,7 +58,6 @@
 	    android:layout_height="wrap_content"
 	    android:id="@+id/balances_recyclerView" />
 
-
 	<TextView
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
@@ -67,6 +66,6 @@
 	    android:textSize="@dimen/text_21"
 	    android:textStyle="bold"
 	    android:layout_marginTop="@dimen/activity_vertical_margin"
-	    android:padding="@dimen/activity_horizontal_margin" />
-
+	    android:padding="@dimen/activity_horizontal_margin"
+		android:visibility="gone"/>
 </LinearLayout>

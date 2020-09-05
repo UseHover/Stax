@@ -99,18 +99,20 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 	}
 
 	private void addSection(String sectionTitle, List<Channel> channels) {
-		LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View section = inflater.inflate(R.layout.channel_grid, null);
-		((TextView) section.findViewById(R.id.section_title)).setText(sectionTitle);
-		GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false);
-		ChannelsAdapter instAdapter = new ChannelsAdapter(channels, this);
+		if (channels.size() > 0) {
+			LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View section = inflater.inflate(R.layout.channel_grid, null);
+			((TextView) section.findViewById(R.id.section_title)).setText(sectionTitle);
+			GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false);
+			ChannelsAdapter channelsAdapter = new ChannelsAdapter(channels, this);
 
-		RecyclerView view = section.findViewById(R.id.section_recycler);
-		view.setHasFixedSize(true);
-		view.setLayoutManager(gridLayoutManager);
-		view.setAdapter(instAdapter);
-		((LinearLayout) findViewById(R.id.section_wrapper)).addView(section);
-		channelViewModel.getPendingSelected().observe(this, instAdapter::updateSelected);
+			RecyclerView view = section.findViewById(R.id.section_recycler);
+			view.setHasFixedSize(true);
+			view.setLayoutManager(gridLayoutManager);
+			view.setAdapter(channelsAdapter);
+			((LinearLayout) findViewById(R.id.section_wrapper)).addView(section);
+			channelViewModel.getPendingSelected().observe(this, channelsAdapter::updateSelected);
+		}
 	}
 
 	private void watchSelected() {

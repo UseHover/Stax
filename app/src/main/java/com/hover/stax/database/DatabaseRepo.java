@@ -57,18 +57,19 @@ public class DatabaseRepo {
 		return Hover.getPresentSims(ApplicationInstance.getContext());
 	}
 
+	public LiveData<Action> getAction(String public_id) {
+		return actionDao.getAction(public_id);
+	}
+
 	public LiveData<List<Action>> getActions(int channelId, String type) {
 		return actionDao.getActions(channelId, type);
+	}
+
+	public LiveData<List<Action>> getActions(int[] channelIds, String type) {
+		return actionDao.getActions(channelIds, type);
 	}
 
 	public LiveData<List<Action>> getActions() {
 		return actionDao.getAll();
 	}
-
-	public List<HoverAction> getActionsWithBalanceType() {
-		String balance = "balance";
-		String filter = "transaction_type = '" + balance + "'";
-		return Hover.getActions(filter, ApplicationInstance.getContext());
-	}
-
 }

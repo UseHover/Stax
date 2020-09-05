@@ -22,12 +22,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PinEntryAdapter extends RecyclerView.Adapter<PinEntryAdapter.PinEntryViewHolder> {
 	private List<Channel> channels;
+	private UpdateListener updateListener;
 
-	PinEntryAdapter(List<Channel> channels) {
+	PinEntryAdapter(List<Channel> channels, UpdateListener listener) {
 		this.channels = channels;
+		this.updateListener = listener;
 	}
-
-    List<Channel> retrieveChannels() { return channels; }
 
 	@NonNull
 	@Override
@@ -47,23 +47,20 @@ public class PinEntryAdapter extends RecyclerView.Adapter<PinEntryAdapter.PinEnt
 
 
 		holder.editView.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void afterTextChanged(Editable s) {
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				channel.pin = s.toString();
+			@Override public void afterTextChanged(Editable s) {}
+			@Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+			@Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+				updateListener.onUpdate(channel.id, s.toString());
 			}
 		});
 
 		if (channel.pin != null && !channel.pin.isEmpty()) {
 			holder.editView.setText(KeyStoreExecutor.decrypt(channel.pin, ApplicationInstance.getContext()));
 		}
+	}
+
+	public interface UpdateListener {
+		void onUpdate(int id, String pin);
 	}
 
 	static class PinEntryViewHolder extends RecyclerView.ViewHolder {

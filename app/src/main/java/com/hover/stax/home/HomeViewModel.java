@@ -1,10 +1,13 @@
 package com.hover.stax.home;
 
 import android.app.Application;
+import android.content.Context;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
@@ -19,77 +22,43 @@ import com.hover.stax.utils.Utils;
 
 import org.json.JSONException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HomeViewModel extends AndroidViewModel {
-	private LiveData<List<Channel>> selectedChannels;
-	private MutableLiveData<List<BalanceModel>> balances;
+	private LiveData<List<Channel>> selectedChannels = new MutableLiveData<>();
+	private LiveData<List<Action>> balanceActions;
+//		= Transformations.switchMap(selectedChannels, this::loadBalanceActions);
 
-	private final LiveData<List<Action>> actions;
 	private DatabaseRepo repo;
-
 
 	public HomeViewModel(Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
-		balances = new MutableLiveData<>();
-		selectedChannels = new MutableLiveData<>();
 		selectedChannels = repo.getSelected();
-
-		actions = repo.getActions();
-
-		balances.setValue(new ArrayList<>());
-
+		balanceActions = Transformations.switchMap(selectedChannels, this::loadBalanceActions);
 	}
 
-	public  LiveData<List<Channel>> loadChannels() {return selectedChannels; }
-	public LiveData<List<BalanceModel>> loadBalance() {
-		return balances;
-	}
-	public LiveData<List<Action>> loadActions() {
-		return actions;
-	}
+	public LiveData<List<Channel>> getSelectedChannels() { return selectedChannels; }
 
-	public void getBalanceFunction(List<Channel> channels) {
-		List<HoverAction> balanceActions = repo.getActionsWithBalanceType();
-		ArrayList<BalanceModel> balanceModelList = new ArrayList<>();
-
-		if ( balanceActions != null) {
-			List<String> simHniList = new ArrayList<>();
-			for (SimInfo sim : Hover.getPresentSims(ApplicationInstance.getContext())) {
-				if (!simHniList.contains(sim.getOSReportedHni()))
-					simHniList.add(sim.getOSReportedHni());
-			}
-
-			List<Channel> selectedChannelInSIM = Utils.getSimChannels(channels, simHniList);
-
-
-			for (Channel channel : selectedChannelInSIM) {
-				for (HoverAction action : balanceActions) {
-					if (action.channelId == channel.id) {
-						if (channel.pin != null && channel.pin.length() > 30) 
-							channel.pin = KeyStoreExecutor.decrypt(channel.pin,ApplicationInstance.getContext());
-
-						List<Transaction> transactionList = Hover.getTransactionsByActionId(action.id, ApplicationInstance.getContext());
-						String balanceValue = "NaN";
-						long timeStamp = 0;
-						if (transactionList.size() > 0) {
-							Transaction mostRecentTransaction = transactionList.get(0);
-							timeStamp = mostRecentTransaction.updatedTimestamp;
-							try {
-								balanceValue = mostRecentTransaction.parsed_variables.getString("balance");
-							} catch (NullPointerException | JSONException e) {
-								e.printStackTrace();
-							}
-						}
-						balanceModelList.add(new BalanceModel(action.id, channel, balanceValue, timeStamp));
-
-					}
-				}
-			}
+	public Channel getChannel(int id) {
+		List<Channel> allChannels = selectedChannels.getValue() != null ? selectedChannels.getValue() : new ArrayList<>();
+		for (Channel channel : allChannels) {
+			if (channel.id == id) { return channel; }
 		}
-
-		balances.postValue(balanceModelList);
+		return null;
 	}
+
+	public LiveData<List<Action>> loadBalanceActions(List<Channel> channelList) {
+		int[] ids = new int[channelList.size()];
+		for (int c = 0; c < channelList.size(); c++) {
+			ids[c] = channelList.get(c).id;
+		}
+		return repo.getActions(ids, "balance");
+	}
+
+	public LiveData<List<Action>> getBalanceActions() { return balanceActions; }
+
+	public Action getAction(String public_id) { return repo.getAction(public_id).getValue(); }
 }
