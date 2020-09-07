@@ -1,43 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.hover.stax">
+	package="com.hover.stax">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+	<uses-permission android:name="android.permission.CALL_PHONE" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <application
-        android:name=".ApplicationInstance"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/myHoverTheme">
+	<application
+		android:name=".ApplicationInstance"
+		android:allowBackup="true"
+		android:icon="@mipmap/ic_launcher"
+		android:label="@string/app_name"
+		android:roundIcon="@mipmap/ic_launcher_round"
+		android:supportsRtl="true"
+		android:theme="@style/myHoverTheme">
+		<receiver
+			android:name=".hover.TransactionReceiver"
+			android:enabled="true"
+			android:exported="false"></receiver>
 
-        <activity
-            android:name=".onboard.SplashScreenActivity"
-            android:label="@string/app_name"
-            android:theme="@style/SplashTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+		<activity
+			android:name=".onboard.SplashScreenActivity"
+			android:label="@string/app_name"
+			android:theme="@style/SplashTheme">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
 
-        <activity android:name=".MainActivity" android:label="@string/app_name" />
-        <activity android:name=".permission.PermissionScreenActivity" />
-        <activity android:name=".channels.ChannelsActivity" />
-        <activity android:name=".pins.PinsActivity" />
-        <activity android:name=".moveMoney.toSomeoneEsle.ToSomeElseActivity" />
-        <activity android:name=".moveMoney.requestMoney.RequestMoneyActivity" />
-        <activity android:name=".moveMoney.betweenServices.BetweenServicesActivity" />
-        <activity android:name=".moveMoney.ClickedMoveMoneyActivity" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity
+			android:name=".MainActivity"
+			android:label="@string/app_name" />
+		<activity android:name=".permission.PermissionScreenActivity" />
+		<activity android:name=".channels.ChannelsActivity" />
+		<activity android:name=".pins.PinsActivity" />
+		<activity android:name=".moveMoney.toSomeoneEsle.ToSomeElseActivity" />
+		<activity android:name=".moveMoney.requestMoney.RequestMoneyActivity" />
+		<activity android:name=".moveMoney.betweenServices.BetweenServicesActivity" />
+		<activity android:name=".moveMoney.ClickedMoveMoneyActivity" />
 
-        <meta-data
-            android:name="com.hover.ApiKey"
-            android:value="1335646a78bb2b1157304be1510641f6" />
-    </application>
+		<meta-data
+			android:name="com.hover.ApiKey"
+			android:value="1335646a78bb2b1157304be1510641f6" />
+	</application>
 
 </manifest>

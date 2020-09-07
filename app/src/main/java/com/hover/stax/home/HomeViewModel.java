@@ -29,7 +29,6 @@ import java.util.List;
 public class HomeViewModel extends AndroidViewModel {
 	private LiveData<List<Channel>> selectedChannels = new MutableLiveData<>();
 	private LiveData<List<Action>> balanceActions;
-//		= Transformations.switchMap(selectedChannels, this::loadBalanceActions);
 
 	private DatabaseRepo repo;
 
@@ -40,6 +39,14 @@ public class HomeViewModel extends AndroidViewModel {
 		balanceActions = Transformations.switchMap(selectedChannels, this::loadBalanceActions);
 	}
 
+	public LiveData<List<Action>> loadBalanceActions(List<Channel> channelList) {
+		int[] ids = new int[channelList.size()];
+		for (int c = 0; c < channelList.size(); c++) {
+			ids[c] = channelList.get(c).id;
+		}
+		return repo.getActions(ids, "balance");
+	}
+
 	public LiveData<List<Channel>> getSelectedChannels() { return selectedChannels; }
 
 	public Channel getChannel(int id) {
@@ -48,14 +55,6 @@ public class HomeViewModel extends AndroidViewModel {
 			if (channel.id == id) { return channel; }
 		}
 		return null;
-	}
-
-	public LiveData<List<Action>> loadBalanceActions(List<Channel> channelList) {
-		int[] ids = new int[channelList.size()];
-		for (int c = 0; c < channelList.size(); c++) {
-			ids[c] = channelList.get(c).id;
-		}
-		return repo.getActions(ids, "balance");
 	}
 
 	public LiveData<List<Action>> getBalanceActions() { return balanceActions; }
