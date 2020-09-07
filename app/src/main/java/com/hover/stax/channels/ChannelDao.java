@@ -25,7 +25,7 @@ public interface ChannelDao {
 //	MutableLiveData<List<Channel>> getByHniList(String[] hniList);
 
 	@Query("SELECT * FROM channels WHERE id = :id LIMIT 1")
-	Channel getChannel(String id);
+	Channel getChannel(int id);
 
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	void insertAll(Channel... channels);

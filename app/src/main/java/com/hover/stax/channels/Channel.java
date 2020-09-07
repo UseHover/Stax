@@ -67,4 +67,10 @@ public class Channel {
 
 	@ColumnInfo(name = "pin")
 	public String pin;
+
+	@ColumnInfo(name = "latestBalance")
+	public String latestBalance;
+
+	@ColumnInfo(name = "latestBalanceTimestamp", defaultValue = "CURRENT_TIMESTAMP")
+	public Long latestBalanceTimestamp;
 }

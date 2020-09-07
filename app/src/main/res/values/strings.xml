@@ -51,9 +51,17 @@
 	<string name="to_someone_else">To someone else</string>
 	<string name="request_money">Request money</string>
 
-	<string name="to">To</string>
 	<string name="from">From</string>
+	<string name="to">To</string>
 	<string name="amount">Amount</string>
+	<string name="add_a_message">Add a message</string>
+	<string name="when">When</string>
+	<string name="frequency">Frequency</string>
+	<string name="until">Until</string>
+	<string name="number_of_transactions">Number of transactions</string>
+	<string name="fees">Fees</string>
+	<string name="choose_a_service_to_calculate">Choose a service to calculate your fees</string>
+	<string name="total">Total</string>
 
 	<string-array name="choose_account_initial"><item>Choose an account</item></string-array>
 	<string-array name="choose_airtimeTo_options">
