@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
+import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.utils.TimeAgo;
 import com.hover.stax.utils.UIHelper;
@@ -20,10 +21,10 @@ import com.hover.stax.utils.Utils;
 import java.util.List;
 
 public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceViewHolder> {
-	private List<BalanceModel> balanceModelList;
+	private List<Channel> channels;
 
-	public BalanceAdapter(List<BalanceModel> balanceModelList) {
-		this.balanceModelList = balanceModelList;
+	public BalanceAdapter(List<Channel> channels) {
+		this.channels = channels;
 	}
 
 	@NonNull
@@ -35,15 +36,15 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 
 	@Override
 	public void onBindViewHolder(@NonNull BalanceViewHolder holder, int position) {
-		BalanceModel balanceModel = balanceModelList.get(position);
-		Channel channel = balanceModel.getChannel();
+		Channel channel = channels.get(position);
 
-		holder.channelName.setText(balanceModel.getChannel().name);
-		holder.amount.setText(Utils.formatAmount(balanceModel.getBalanceValue()));
-		holder.timeAgo.setText(balanceModel.getTimeStamp() > 0 ? TimeAgo.timeAgo(ApplicationInstance.getContext(), balanceModel.getTimeStamp()) : "Refresh");
+		holder.channelName.setText(channel.name);
+		holder.amount.setText(Utils.formatAmount(channel.latestBalance));
+		holder.timeAgo.setText(channel.latestBalanceTimestamp != null && channel.latestBalanceTimestamp > 0 ?
+            TimeAgo.timeAgo(ApplicationInstance.getContext(), channel.latestBalanceTimestamp) : "Refresh");
 		holder.currency.setText(ApplicationInstance.getCurrency(channel.countryAlpha2));
 
-		holder.balanced_swiped_layout.setBackgroundColor(Color.parseColor(balanceModel.getChannel().primaryColorHex));
+		holder.balanced_swiped_layout.setBackgroundColor(Color.parseColor(channel.primaryColorHex));
 		holder.currency.setTextColor(Color.parseColor(channel.secondaryColorHex));
 		holder.timeAgo.setTextColor(Color.parseColor(channel.secondaryColorHex));
 		holder.amount.setTextColor(Color.parseColor(channel.secondaryColorHex));
@@ -52,7 +53,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 
 	@Override
 	public int getItemCount() {
-		return balanceModelList == null ? 0 : balanceModelList.size();
+		return channels == null ? 0 : channels.size();
 	}
 
 	static class BalanceViewHolder extends RecyclerView.ViewHolder {

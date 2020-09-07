@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:padding="@dimen/activity_vertical_margin"
+    >
+
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical"
+	    >
+
+		<TextView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:text="@string/moveMoney"
+		    android:textColor="@color/offWhite"
+		    android:textSize="@dimen/text_21"
+		    android:fontFamily="font-medium"
+		    android:padding="@dimen/activity_horizontal_margin"
+		    />
+
+		<TextView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:text="@string/from"
+		    android:textColor="@color/offWhite"
+		    android:fontFamily="font-medium"
+		    android:layout_marginTop="@dimen/activity_vertical_margin"
+		    />
+
+		<androidx.appcompat.widget.AppCompatSpinner
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginTop="@dimen/spacing8"
+		    android:background="@drawable/spinner_bg"
+		    android:padding="@dimen/activity_vertical_margin"
+		    android:id="@+id/bs_from"
+		    />
+		<TextView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:text="@string/to"
+		    android:layout_marginTop="@dimen/activity_vertical_margin"
+		    android:textColor="@color/offWhite"
+		    android:fontFamily="font-medium"
+		    />
+
+		<androidx.appcompat.widget.AppCompatSpinner
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginTop="@dimen/spacing8"
+		    android:background="@drawable/spinner_bg"
+		    android:padding="@dimen/activity_vertical_margin"
+		    android:id="@+id/bs_to"
+		    />
+
+
+		<TextView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:text="@string/amount"
+		    android:textColor="@color/offWhite"
+		    android:layout_marginTop="@dimen/activity_vertical_margin"
+		    android:fontFamily="font-medium"
+		    />
+
+		<EditText
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:paddingLeft="@dimen/editText_box_margin_horiz"
+		    android:paddingStart="@dimen/editText_box_margin_horiz"
+		    android:paddingEnd="@dimen/editText_box_margin_horiz"
+		    android:paddingRight="@dimen/editText_box_margin_horiz"
+		    android:paddingTop="@dimen/editText_box_margin_vert"
+		    android:paddingBottom="@dimen/editText_box_margin_vert"
+		    android:hint="@string/input_label"
+		    android:textColorHint="@color/colorTextHint"
+		    android:layout_marginTop="8dp"
+		    android:maxLines="1"
+		    android:id="@+id/bs_amountId"
+		    android:autofillHints="email_hint"
+		    android:inputType="textEmailAddress"
+		    android:textColor="@color/offWhite"
+		    android:background="@drawable/edit_text_bg"/>
+	</LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

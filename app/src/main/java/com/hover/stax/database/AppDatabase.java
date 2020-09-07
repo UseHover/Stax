@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-@Database(entities = {Channel.class}, version = 2)
+@Database(entities = {Channel.class}, version = 3)
 public abstract class AppDatabase extends RoomDatabase {
 	private static final int NUMBER_OF_THREADS = 4;
 	static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -26,7 +26,9 @@ public abstract class AppDatabase extends RoomDatabase {
 		if (INSTANCE == null) {
 			synchronized (AppDatabase.class) {
 				if (INSTANCE == null) {
-					INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "stax.db").build();
+					INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "stax.db")
+					   .fallbackToDestructiveMigration()
+			           .build();
 				}
 			}
 		}

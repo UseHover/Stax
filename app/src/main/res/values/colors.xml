@@ -9,5 +9,6 @@
 	<color name="darkGrey">#777777</color>
 	<color name="white">#FFFFFF</color>
 	<color name="bright_red">#FF0028</color>
+	<color name="dividerColor">#333333</color>
 
 </resources>
