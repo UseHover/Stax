@@ -5,6 +5,7 @@
 
 	<string name="title_home">Home</string>
 	<string name="title_buyAirtime">Buy Airtime</string>
+	<string name="topup_airtime">Top up Airtime</string>
 	<string name="title_moveMoney">Move Money</string>
 	<string name="title_security">Security</string>
 
@@ -29,6 +30,8 @@
 
 	<string name="input_label">Input label</string>
 	<string name="pin_input_hint">Enter PIN</string>
+	<string name="recipient_phone">Recipient Phone number</string>
+	<string name="enter_recipient_phone">Enter Phone number</string>
 
 	<string name="security">Security</string>
 	<string name="remove_pin_from_device">Remove PINs from device</string>
@@ -52,6 +55,12 @@
 	<string name="from">From</string>
 	<string name="amount">Amount</string>
 
+	<string-array name="choose_account_initial"><item>Choose an account</item></string-array>
+	<string-array name="choose_airtimeTo_options">
+		<item>Airtime to self</item>
+		<item>Someone in my contact</item>
+		<item>Manually enter phone number</item>
+	</string-array>
 
 
 

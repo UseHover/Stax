@@ -38,7 +38,6 @@
 	    android:paddingRight="@dimen/editText_box_margin_horiz"
 	    android:paddingTop="@dimen/editText_box_margin_vert"
 	    android:paddingBottom="@dimen/editText_box_margin_vert"
-
 	    android:hint="@string/pin_input_hint"
 	    android:textColorHint="@color/darkGrey"
 	    android:layout_marginTop="8dp"
