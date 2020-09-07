@@ -2,6 +2,7 @@ package com.hover.stax.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,19 +14,24 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hover.sdk.api.HoverParameters;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
+import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.database.KeyStoreExecutor;
 import com.hover.stax.permission.PermissionScreenActivity;
 import com.hover.stax.utils.TimeAgo;
 import com.hover.stax.utils.UIHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
 
 	private HomeViewModel homeViewModel;
 	private RecyclerView recyclerView;
+	private List<String> toRun, hasRun;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_home, container, false);
@@ -52,15 +58,49 @@ public class HomeFragment extends Fragment {
 	}
 
 	private void setMeta(View view, List<Channel> channels) {
+		TextView homeTimeAgo = view.findViewById(R.id.homeTimeAgo);
 		long mostRecentTimestamp = 0;
 		for (Channel c: channels) {
 			if (c.latestBalanceTimestamp != null && c.latestBalanceTimestamp > mostRecentTimestamp)
 			mostRecentTimestamp = c.latestBalanceTimestamp;
 		}
-		((TextView) view.findViewById(R.id.homeTimeAgo))
-			.setText(mostRecentTimestamp > 0 ? TimeAgo.timeAgo(ApplicationInstance.getContext(), mostRecentTimestamp) : "Refresh");
+		homeTimeAgo.setText(mostRecentTimestamp > 0 ? TimeAgo.timeAgo(ApplicationInstance.getContext(), mostRecentTimestamp) : "Refresh");
+		homeTimeAgo.setOnClickListener(view2-> runAllBalances());
 
 		view.findViewById(R.id.homeTimeAgo).setVisibility(channels.size() > 0 ? View.VISIBLE : View.GONE);
 		view.findViewById(R.id.homeBalanceDesc).setVisibility(channels.size() > 0 ? View.GONE : View.VISIBLE);
+
+
+	}
+
+	private void runAllBalances() {
+		homeViewModel.getBalanceActions().observe(getViewLifecycleOwner(), actions -> {
+			Log.e("Main", actions.toString());
+			toRun = new ArrayList<>(actions.size());
+			hasRun = new ArrayList<>();
+			for (int a = 0; a < actions.size(); a++) {
+				toRun.add(actions.get(a).public_id);
+			}
+			makeHoverCall(actions.get(0), 0);
+		});
+	}
+	private void makeHoverCall(Action action, int runId) {
+		HoverParameters.Builder builder = new HoverParameters.Builder(getContext());
+		builder.request(action.public_id);
+//			builder.setEnvironment(HoverParameters.PROD_ENV);
+		builder.style(R.style.myHoverTheme);
+		builder.finalMsgDisplayTime(2000);
+		builder.extra("pin", KeyStoreExecutor.decrypt(homeViewModel.getChannel(action.channel_id).pin, ApplicationInstance.getContext()));
+		Intent i = builder.buildIntent();
+		startActivityForResult(i, runId);
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		hasRun.add(data.getStringExtra("action_id"));
+		if (toRun.size() > hasRun.size()) {
+			makeHoverCall(homeViewModel.getAction(toRun.get(requestCode + 1)), requestCode + 1);
+		}
 	}
 }
