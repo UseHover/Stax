@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
 
 	private void runAllBalances() {
 		homeViewModel.getBalanceActions().observe(this, actions -> {
-			Log.e("Main", actions.toString());
 			toRun = new ArrayList<>(actions.size());
 			hasRun = new ArrayList<>();
 			for (int a = 0; a < actions.size(); a++) {
