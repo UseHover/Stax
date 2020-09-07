@@ -59,5 +59,8 @@ public class HomeViewModel extends AndroidViewModel {
 
 	public LiveData<List<Action>> getBalanceActions() { return balanceActions; }
 
-	public Action getAction(String public_id) { return repo.getAction(public_id); }
+	public LiveData<List<Action>> getBalanceAction(int channel_id) {
+		return repo.getActions(channel_id, "balance");
+	}
+
 }

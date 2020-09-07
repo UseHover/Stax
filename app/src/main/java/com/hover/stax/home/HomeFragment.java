@@ -20,6 +20,7 @@ import com.hover.stax.MainActivity;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.channels.ChannelsAdapter;
 import com.hover.stax.database.KeyStoreExecutor;
 import com.hover.stax.permission.PermissionScreenActivity;
 import com.hover.stax.utils.TimeAgo;
@@ -52,7 +53,7 @@ public class HomeFragment extends Fragment {
 		recyclerView.setHasFixedSize(true);
 
 		homeViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
-			recyclerView.setAdapter(new BalanceAdapter(channels));
+			recyclerView.setAdapter(new BalanceAdapter(channels, (MainActivity) getActivity()));
 			setMeta(view, channels);
 		});
 	}
@@ -65,7 +66,7 @@ public class HomeFragment extends Fragment {
 			mostRecentTimestamp = c.latestBalanceTimestamp;
 		}
 		homeTimeAgo.setText(mostRecentTimestamp > 0 ? TimeAgo.timeAgo(ApplicationInstance.getContext(), mostRecentTimestamp) : "Refresh");
-		homeTimeAgo.setOnClickListener(view2-> ((MainActivity) getActivity()).startRun());
+		homeTimeAgo.setOnClickListener(view2-> ((MainActivity) getActivity()).runAllBalances());
 
 		view.findViewById(R.id.homeTimeAgo).setVisibility(channels.size() > 0 ? View.VISIBLE : View.GONE);
 		view.findViewById(R.id.homeBalanceDesc).setVisibility(channels.size() > 0 ? View.GONE : View.VISIBLE);

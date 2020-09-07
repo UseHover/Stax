@@ -86,6 +86,12 @@
 			    android:layout_weight="1"
 			    android:text="Channel name" />
 
+			<TextView android:id="@+id/channel_id"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Channel ID"
+				android:visibility="gone" />
+
 			<ImageView
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"

@@ -21,14 +21,16 @@ import com.hover.stax.actions.Action;
 import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.database.KeyStoreExecutor;
+import com.hover.stax.home.BalanceAdapter;
 import com.hover.stax.home.BalanceModel;
 import com.hover.stax.home.HomeViewModel;
 import com.hover.stax.onboard.SplashScreenActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BalanceAdapter.RefreshListener {
 
 	final public static String CHECK_ALL_BALANCES = "CHECK_ALL";
 
@@ -62,18 +64,22 @@ public class MainActivity extends AppCompatActivity {
 
 	private void shouldRun(Intent intent) {
 		if (intent.getAction() != null && intent.getAction().equals(CHECK_ALL_BALANCES))
-			startRun();
+			runAllBalances();
 	}
 
-	public void startRun() {
+	public void runAllBalances() {
 		hasRun = new ArrayList<>();
-		runAllBalances();
+		homeViewModel.getBalanceActions().observe(this, actions -> {
+			toRun = actions;
+			chooseRun(0);
+		});
 	}
 
-	private void runAllBalances() {
-		homeViewModel.getBalanceActions().observe(this, actions -> {
-			toRun = new ArrayList<>(actions.size());
-			toRun.addAll(actions);
+	@Override
+	public void onTap(int channel_id) {
+		hasRun = new ArrayList<>();
+		homeViewModel.getBalanceAction(channel_id).observe(this, actions -> {
+			toRun = actions;
 			chooseRun(0);
 		});
 	}

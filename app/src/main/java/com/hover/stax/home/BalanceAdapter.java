@@ -18,13 +18,17 @@ import com.hover.stax.utils.TimeAgo;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
+import java.sql.Ref;
 import java.util.List;
 
 public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceViewHolder> {
 	private List<Channel> channels;
 
-	public BalanceAdapter(List<Channel> channels) {
+	private final RefreshListener refreshListener;
+
+	public BalanceAdapter(List<Channel> channels, RefreshListener listener) {
 		this.channels = channels;
+		this.refreshListener = listener;
 	}
 
 	@NonNull
@@ -39,6 +43,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 		Channel channel = channels.get(position);
 
 		holder.channelName.setText(channel.name);
+		holder.channelId.setText(Integer.toString(channel.id));
 		holder.amount.setText(Utils.formatAmount(channel.latestBalance));
 		holder.timeAgo.setText(channel.latestBalanceTimestamp != null && channel.latestBalanceTimestamp > 0 ?
             TimeAgo.timeAgo(ApplicationInstance.getContext(), channel.latestBalanceTimestamp) : "Refresh");
@@ -51,23 +56,35 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 		UIHelper.setTextColoredDrawable(holder.timeAgo, R.drawable.ic_refresh_white_10dp, Color.parseColor(channel.secondaryColorHex));
 	}
 
-	@Override
-	public int getItemCount() {
-		return channels == null ? 0 : channels.size();
-	}
-
-	static class BalanceViewHolder extends RecyclerView.ViewHolder {
-		private TextView channelName, timeAgo, currency, amount;
+	class BalanceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+		private TextView channelName, channelId, timeAgo, currency, amount;
 		private FrameLayout balanced_swiped_layout;
 
 		public BalanceViewHolder(@NonNull View itemView) {
 			super(itemView);
 			channelName = itemView.findViewById(R.id.balance_channel);
+			channelId = itemView.findViewById(R.id.channel_id);
 			timeAgo = itemView.findViewById(R.id.balance_timeAgo);
+			timeAgo.setOnClickListener(this);
 			currency = itemView.findViewById(R.id.balance_currency);
 			amount = itemView.findViewById(R.id.balance_amount);
 			balanced_swiped_layout = itemView.findViewById(R.id.balanced_swiped_layout);
 		}
+
+		@Override
+		public void onClick(View v) {
+			if (refreshListener != null)
+				refreshListener.onTap(Integer.parseInt(channelId.getText().toString()));
+		}
+	}
+
+	public interface RefreshListener {
+		void onTap(int channelId);
+	}
+
+	@Override
+	public int getItemCount() {
+		return channels == null ? 0 : channels.size();
 	}
 
 	@Override
