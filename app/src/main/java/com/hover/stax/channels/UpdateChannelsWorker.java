@@ -61,7 +61,7 @@ public class UpdateChannelsWorker extends Worker {
 			JSONObject channelsJson = downloadChannels(getUrl());
 			JSONArray data = channelsJson.getJSONArray("data");
 			for (int j = 0; j < data.length(); j++) {
-				channelDao.insert(new Channel(data.getJSONObject(j).getJSONObject("attributes")));
+				channelDao.insert(new Channel(data.getJSONObject(j).getJSONObject("attributes"), getApplicationContext().getString(R.string.root_url)));
 			}
 			Log.i(TAG, "Successfully downloaded and saved channels.");
 			return Result.success();
@@ -75,7 +75,7 @@ public class UpdateChannelsWorker extends Worker {
 	}
 
 	private String getUrl() {
-		return getApplicationContext().getString(R.string.root_url) + getApplicationContext().getString(R.string.channels_endpoint);
+		return getApplicationContext().getString(R.string.api_url) + getApplicationContext().getString(R.string.channels_endpoint);
 	}
 
 	private JSONObject downloadChannels(String url) throws IOException, JSONException {
@@ -83,6 +83,5 @@ public class UpdateChannelsWorker extends Worker {
 		Response response = client.newCall(request).execute();
 		JSONObject data = new JSONObject(response.body().string());
 		return data;
-//		return data.getJSONArray("attributes");
 	}
 }

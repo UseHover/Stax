@@ -13,12 +13,13 @@ import org.json.JSONObject;
 @Entity(tableName = "channels")
 public class Channel {
 
-	public Channel(JSONObject jsonObject) {
+	public Channel(JSONObject jsonObject, String rootUrl) {
 		try {
 			this.id = jsonObject.getInt("id");
 			this.name = jsonObject.getString("name");
 			this.countryAlpha2 = jsonObject.getString("country_alpha2").toUpperCase();
 			this.hniList = jsonObject.getString("hni_list");
+			this.logoUrl = rootUrl + jsonObject.getString("logo_url");
 			this.primaryColorHex = jsonObject.getString("primary_color_hex");
 			this.secondaryColorHex = jsonObject.getString("secondary_color_hex");
 		} catch (JSONException e) {
@@ -47,13 +48,19 @@ public class Channel {
 	@ColumnInfo(name = "country_alpha2")
 	public String countryAlpha2;
 
+	@NonNull
 	@ColumnInfo(name = "hni_list")
 	public String hniList;
+
+	@NonNull
+	@ColumnInfo(name = "logo_url")
+	public String logoUrl;
 
 	@NonNull
 	@ColumnInfo(name = "primary_color_hex")
 	public String primaryColorHex;
 
+	@NonNull
 	@ColumnInfo(name = "secondary_color_hex")
 	public String secondaryColorHex;
 

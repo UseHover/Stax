@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,6 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.Channe
 		notifyDataSetChanged();
 	}
 
-
 	@NonNull
 	@Override
 	public ChannelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -47,8 +47,7 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.Channe
 
 		holder.id.setText(Integer.toString(channel.id));
 		holder.name.setText(channel.name + " " + channel.countryAlpha2);
-		//holder.serviceLogo.setImageBitmap(channel.logo);
-
+		Picasso.get().load(channel.logoUrl).into(holder.logo);
 		holder.shadowFrame.setVisibility(selected.contains(channel.id) ? View.VISIBLE : View.GONE);
 		holder.checkIcon.setVisibility(selected.contains(channel.id) ? View.VISIBLE : View.GONE);
 
