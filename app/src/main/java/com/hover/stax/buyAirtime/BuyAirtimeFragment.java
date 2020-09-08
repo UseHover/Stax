@@ -250,6 +250,7 @@ public class BuyAirtimeFragment extends Fragment {
 												String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 												UIHelper.flashMessage(getContext(),getView(), "Selected:     "+name+" - "+ phoneNumber);
 												recipientEdit.setText(phoneNumber);
+												settingsForAirtimeForOthers();
 											}
 											phones.close();
 										} else UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectContactErrorMessage));// ShowError
