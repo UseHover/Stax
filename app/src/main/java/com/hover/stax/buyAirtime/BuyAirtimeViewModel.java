@@ -1,11 +1,14 @@
 package com.hover.stax.buyAirtime;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.DatabaseRepo;
@@ -19,7 +22,6 @@ import java.util.List;
 
 public class BuyAirtimeViewModel extends AndroidViewModel {
 
-	private LiveData<List<Action>> airtimeActions;
 	private LiveData<List<Channel>> selectedChannels;
 	private DatabaseRepo repo;
 
@@ -31,24 +33,25 @@ public class BuyAirtimeViewModel extends AndroidViewModel {
 			selectedChannels = new MutableLiveData<>();
 		}
 		selectedChannels = repo.getSelected();
-		airtimeActions = new MutableLiveData<>();
+
 	}
 
 	LiveData<List<Channel>> getSelectedChannels(){return selectedChannels;}
-	LiveData<List<Action>> getAirtimeActions() {return airtimeActions;}
-	void setAirtimeActions(int tappedChannelId) { airtimeActions = repo.getActions(tappedChannelId, "airtime");}
-	AirtimeActionModel getAirtimeActionIds(List<Action> actionList) {
+	LiveData<List<Action>> getAirtimeActions(int tappedChannelId) { return repo.getActions(tappedChannelId, "airtime");}
+
+	AirtimeActionModel getAirtimeActionModel(List<Action> actionList) {
 		AirtimeActionModel airtimeActionModel = new AirtimeActionModel();
 		if(actionList.size() > 0) {
 			for(Action action : actionList) {
 				String custom_steps = action.custom_steps;
-				boolean isSelf = false;
+				boolean isSelf = true;
 				try {
 					JSONArray jsonArray = new JSONArray(custom_steps);
 					for(int i=0; i<jsonArray.length(); i++) {
 						JSONObject object =  jsonArray.getJSONObject(i);
 						if(object.get("value").equals("recipientNumber")) {
-							isSelf = true;
+							Log.d("ACTIONS: ", "RECIPIENT FOUND");
+							isSelf = false;
 							break;
 						}
 					}
@@ -60,6 +63,7 @@ public class BuyAirtimeViewModel extends AndroidViewModel {
 			}
 
 		}
+		Log.d("ACTIONS: ", "TAKEN OTHERS IS: "+airtimeActionModel.getToOthersActionId());
 		return airtimeActionModel;
 	}
 

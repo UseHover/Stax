@@ -63,12 +63,20 @@
 	<string name="choose_a_service_to_calculate">Choose a service to calculate your fees</string>
 	<string name="total">Total</string>
 
-	<string-array name="choose_account_initial"><item>Choose an account</item></string-array>
-	<string-array name="choose_airtimeTo_options">
-		<item>Airtime to self</item>
-		<item>Someone in my contact</item>
-		<item>Manually enter phone number</item>
+	<string name="choose_account_initial">Choose an account</string>
+	<string-array name="choose_account_initial_array">
+		<item>choose_account_initial</item>
 	</string-array>
+	<string name="airtimeToSelf">Airtime to self</string>
+	<string name="airtimeMyContact">Someone in my contact</string>
+	<string name="airtimeElse">Manually enter phone number</string>
+	<string name="addAService">+ Add a service</string>
+
+	<string name="enterRecipientNumberError">Please enter recipient number"</string>
+	<string name="enterAnotherOptionError">Please try another option</string>
+	<string name="enterAmountError">Please enter amount</string>
+	<string name="selectServiceError">"Please select a service"</string>
+	<string name="selectContactErrorMessage">There was a problem selecting from your contact, please try again</string>
 
 
 

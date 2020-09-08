@@ -1,7 +1,11 @@
 package com.hover.stax.buyAirtime;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,12 +24,14 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.hover.sdk.api.HoverParameters;
+import com.hover.sdk.permissions.PermissionActivity;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.KeyStoreExecutor;
 import com.hover.stax.permission.PermissionScreenActivity;
+import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
 
 import java.util.ArrayList;
@@ -37,6 +43,9 @@ public class BuyAirtimeFragment extends Fragment {
 	private BuyAirtimeViewModel buyAirtimeViewModel;
 	private AppCompatSpinner spinnerTo;
 	private AppCompatSpinner spinnerFrom;
+	private TextView recipientLabel;
+	private EditText recipientEdit;
+
 	private List<Integer> fromChannelIdList;
 	private List<String> encryptedPins;
 	private String selectedChannelEncryptedPin = null;
@@ -44,6 +53,8 @@ public class BuyAirtimeFragment extends Fragment {
 	private String finalChosenActionId;
 	private boolean airtimeIsToSelf = true;
 	private String recipientNumber;
+	private final int READ_CONTACT = 202;
+	private final int PERMISSION_REQ_CODE = 201;
 
 
 	public View onCreateView(@NonNull LayoutInflater inflater,
@@ -51,8 +62,8 @@ public class BuyAirtimeFragment extends Fragment {
 		buyAirtimeViewModel = new ViewModelProvider(this).get(BuyAirtimeViewModel.class);
 		View root = inflater.inflate(R.layout.fragment_buyairtime, container, false);
 		EditText amountEdit = root.findViewById(R.id.airtimeAmountEditId);
-		TextView recipientLabel = root.findViewById(R.id.airtime_recipientLabel);
-		EditText recipientEdit = root.findViewById(R.id.airtimeToEditId);
+		recipientLabel = root.findViewById(R.id.airtime_recipientLabel);
+		recipientEdit = root.findViewById(R.id.airtimeToEditId);
 		airtimeActionModel = new AirtimeActionModel();
 		spinnerTo = root.findViewById(R.id.toSpinner);
 		spinnerFrom = root.findViewById(R.id.fromSpinner);
@@ -66,29 +77,22 @@ public class BuyAirtimeFragment extends Fragment {
 		buyAirtimeViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
 
 			ArrayList<String> channelNames = new ArrayList<>();
-			channelNames.add("Choose an account");
+			channelNames.add(getResources().getString(R.string.choose_account_initial));
 			fromChannelIdList.add(0);
 			encryptedPins.add(null);
-			for (Channel model : channels) {
+
+			for (Channel model: channels) {
 				channelNames.add(model.name);
 				encryptedPins.add(model.pin);
 				fromChannelIdList.add(model.id);
 			}
-			channelNames.add("+ Add a service");
+			channelNames.add(getResources().getString(R.string.addAService));
 			fromChannelIdList.add(0);
 			encryptedPins.add(null);
 			UIHelper.loadSpinnerItems(channelNames, spinnerFrom, getContext());
 
 		});
 
-		buyAirtimeViewModel.getAirtimeActions().observe(getViewLifecycleOwner(), actionList -> {
-			Log.d("ACTIONS: ", "START CHECKING ACTIONS");
-			for(Action action : actionList) {
-				Log.d("ACTIONS: ", "my action "+action.public_id);
-			}
-			this.airtimeActionModel = buyAirtimeViewModel.getAirtimeActionIds(actionList);
-
-		});
 
 
 		spinnerFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -104,7 +108,10 @@ public class BuyAirtimeFragment extends Fragment {
 					else {
 						int tappedChannelId = fromChannelIdList.get(position);
 						selectedChannelEncryptedPin = encryptedPins.get(position);
-						buyAirtimeViewModel.setAirtimeActions(tappedChannelId);
+						buyAirtimeViewModel.getAirtimeActions(tappedChannelId).observe(getViewLifecycleOwner(), actionList -> {
+							airtimeActionModel = buyAirtimeViewModel.getAirtimeActionModel(actionList);
+						});
+
 					}
 				} else finalChosenActionId = null;
 			}
@@ -140,18 +147,17 @@ public class BuyAirtimeFragment extends Fragment {
 					}
 
 				}
-				else {
-					airtimeIsToSelf = false;
-					recipientEdit.setVisibility(View.VISIBLE);
-					recipientLabel.setVisibility(View.VISIBLE);
-
-					if(airtimeActionModel.getToOthersActionId() !=null && !airtimeActionModel.getToOthersActionId().isEmpty()) {
-						finalChosenActionId = airtimeActionModel.getToOthersActionId();
+				else if(position == 1) {
+					if(PermissionUtils.hasContactPermission()) {
+						Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+						startActivityForResult(contactPickerIntent,READ_CONTACT);
+					} else {
+						startActivityForResult(new Intent(getContext(), PermissionActivity.class), PERMISSION_REQ_CODE);
 					}
-					else UIHelper.flashMessage(getContext(), "Please try another option");
 				}
-
-
+				else {
+					settingsForAirtimeForOthers();
+				}
 
 			}
 
@@ -161,27 +167,39 @@ public class BuyAirtimeFragment extends Fragment {
 			}
 		});
 
+
+
 		root.findViewById(R.id.buyAirtimeContinueButton).setOnClickListener(view3->{
 			if(finalChosenActionId != null) {
 			String amount = amountEdit.getText().toString();
-			if(recipientEdit == null) {
 				recipientNumber = recipientEdit.getText().toString();
-			}
 				if(TextUtils.getTrimmedLength(amount) > 0) {
 					if(!airtimeIsToSelf ) {
-						if(TextUtils.getTrimmedLength(recipientNumber) > 0 ) { }
-						else UIHelper.flashMessage(getContext(), "Please enter recipient number and amount");
+						if(TextUtils.getTrimmedLength(recipientNumber) > 0 ) { makeHoverCall(finalChosenActionId, amount);}
+						else UIHelper.flashMessage(getContext(), getResources().getString(R.string.enterRecipientNumberError));
 					}
 
-					else {}
+					else {makeHoverCall(finalChosenActionId, amount);}
 				}
-				else UIHelper.flashMessage(getContext(), "Please enter amount");
-			}else UIHelper.flashMessage(getContext(), "Please select a service");
+				else UIHelper.flashMessage(getContext(), getResources().getString(R.string.enterAmountError));
+			}else UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectServiceError));
 		});
 
 
 		return root;
 	}
+
+	private void settingsForAirtimeForOthers() {
+		airtimeIsToSelf = false;
+		recipientEdit.setVisibility(View.VISIBLE);
+		recipientLabel.setVisibility(View.VISIBLE);
+
+		if(airtimeActionModel.getToOthersActionId() !=null && !airtimeActionModel.getToOthersActionId().isEmpty()) {
+			finalChosenActionId = airtimeActionModel.getToOthersActionId();
+		}
+		else UIHelper.flashMessage(getContext(), getResources().getString(R.string.enterAnotherOptionError));
+	}
+
 
 	private void makeHoverCall(String actionId, String amount) {
 		HoverParameters.Builder builder = new HoverParameters.Builder(getContext());
@@ -199,15 +217,60 @@ public class BuyAirtimeFragment extends Fragment {
 
 	private void loadInitialSpinners() {
 		ArrayList<String> fromInit = new ArrayList<>();
-		fromInit.add("Choose an account");
-		fromInit.add("+  Add a service");
+		fromInit.add(getResources().getString(R.string.choose_account_initial));
+		fromInit.add(getResources().getString(R.string.addAService));
 		UIHelper.loadSpinnerItems(fromInit, spinnerFrom, getContext());
 
 		ArrayList<String> fromTo = new ArrayList<>();
-		fromTo.add("Airtime to self");
-		fromTo.add("Someone in my contact");
-		fromTo.add("Manually enter phone number");
+		fromTo.add(getResources().getString(R.string.airtimeToSelf));
+		fromTo.add(getResources().getString(R.string.airtimeMyContact));
+		fromTo.add(getResources().getString(R.string.airtimeElse));
 		UIHelper.loadSpinnerItems(fromTo, spinnerTo, getContext());
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+				if (requestCode == READ_CONTACT && resultCode == Activity.RESULT_OK) {
+					Uri contactData = data.getData();
+					if(contactData !=null && getContext() !=null) {
+						Cursor cur =  getContext().getContentResolver().query(contactData, null, null, null, null);
+						if(cur!=null) {
+							if (cur.getCount() > 0) {// thats mean some resutl has been found
+								if(cur.moveToNext()) {
+									String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+									String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+
+									if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+
+										Cursor phones = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null,ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = "+ id,null, null);
+										if (phones !=null) {
+											while (phones.moveToNext()) {
+												String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+												UIHelper.flashMessage(getContext(),getView(), "Selected:     "+name+" - "+ phoneNumber);
+												recipientEdit.setText(phoneNumber);
+											}
+											phones.close();
+										} else UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectContactErrorMessage));// ShowError
+
+									}
+
+								}
+							}
+							cur.close();
+						} else UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectContactErrorMessage));///error
+
+					}
+					else UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectContactErrorMessage));///showError
+
+
+				}
+				else if(requestCode == PERMISSION_REQ_CODE && resultCode == Activity.RESULT_OK) {
+					Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+					startActivityForResult(contactPickerIntent,READ_CONTACT);
+				}
+
 	}
 }
 
