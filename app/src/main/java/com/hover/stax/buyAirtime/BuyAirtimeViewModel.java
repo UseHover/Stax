@@ -36,7 +36,9 @@ public class BuyAirtimeViewModel extends AndroidViewModel {
 
 	LiveData<List<Channel>> getSelectedChannels(){return selectedChannels;}
 	LiveData<List<Action>> getAirtimeActions() {return airtimeActions;}
+
 	void setAirtimeActions(int tappedChannelId) { airtimeActions = repo.getActions(tappedChannelId, "airtime");}
+
 	AirtimeActionModel getAirtimeActionIds(List<Action> actionList) {
 		AirtimeActionModel airtimeActionModel = new AirtimeActionModel();
 		if(actionList.size() > 0) {

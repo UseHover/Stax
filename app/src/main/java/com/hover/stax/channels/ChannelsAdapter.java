@@ -44,13 +44,11 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.Channe
 	@Override
 	public void onBindViewHolder(@NonNull ChannelViewHolder holder, int position) {
 		Channel channel = channels.get(position);
-
 		holder.id.setText(Integer.toString(channel.id));
 		holder.name.setText(channel.name + " " + channel.countryAlpha2);
 		Picasso.get().load(channel.logoUrl).into(holder.logo);
 		holder.shadowFrame.setVisibility(selected.contains(channel.id) ? View.VISIBLE : View.GONE);
 		holder.checkIcon.setVisibility(selected.contains(channel.id) ? View.VISIBLE : View.GONE);
-
 	}
 
 	class ChannelViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
