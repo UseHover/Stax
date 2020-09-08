@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.hover.stax.ApplicationInstance;
+import com.hover.stax.R;
 
 import java.util.ArrayList;
 
@@ -48,7 +49,8 @@ public class UIHelper {
 	}
 
 	public static void loadSpinnerItems(ArrayList<String> entries, AppCompatSpinner spinner, Context context) {
-		ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, entries);
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.spinner_items, entries);
+		spinner.setAdapter(adapter);
 	}
 
 	static public void setTextColoredDrawable(TextView textView, int drawable, int color) {

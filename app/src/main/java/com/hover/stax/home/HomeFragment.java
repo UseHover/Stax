@@ -44,9 +44,7 @@ public class HomeFragment extends Fragment {
 		homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
 
 		final TextView textView = view.findViewById(R.id.text_balances);
-		textView.setOnClickListener(v -> {
-			startActivity(new Intent(getActivity(), PermissionScreenActivity.class));
-		});
+		textView.setOnClickListener(v -> startActivity(new Intent(getActivity(), PermissionScreenActivity.class)));
 
 		recyclerView = view.findViewById(R.id.balances_recyclerView);
 		recyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));

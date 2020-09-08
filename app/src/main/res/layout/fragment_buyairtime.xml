@@ -41,7 +41,7 @@
 		    android:layout_marginTop="@dimen/activity_vertical_margin"
 		    android:entries="@array/choose_account_initial"
 		    android:background="@drawable/spinner_bg"
-		    android:padding="@dimen/activity_vertical_margin"
+		    android:padding="1dp"
 		    android:id="@+id/fromSpinner" />
 
 
@@ -59,8 +59,8 @@
 		    android:layout_height="wrap_content"
 		    android:layout_marginTop="@dimen/activity_vertical_margin"
 		    android:entries="@array/choose_airtimeTo_options"
+		    android:padding="1dp"
 		    android:background="@drawable/spinner_bg"
-		    android:padding="@dimen/activity_vertical_margin"
 		    android:id="@+id/toSpinner" />
 
 		<TextView
@@ -127,6 +127,7 @@
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:text="@string/continueText"
+		    android:id="@+id/buyAirtimeContinueButton"
 		    android:background="@drawable/edit_text_bg"
 		    android:textColor="@color/offWhite"
 		    android:textAllCaps="false"

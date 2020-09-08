@@ -58,7 +58,7 @@
 		    android:layout_marginTop="@dimen/activity_vertical_margin"
 		    android:entries="@array/choose_account_initial"
 		    android:background="@drawable/spinner_bg"
-		    android:padding="@dimen/activity_vertical_margin"
+		    android:padding="1dp"
 		    android:id="@+id/defaultAccountSpinner" />
 
 		<TextView
