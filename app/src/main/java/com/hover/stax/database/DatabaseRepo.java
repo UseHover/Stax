@@ -20,6 +20,7 @@ public class DatabaseRepo {
 
 	private LiveData<List<Channel>> allChannels;
 	private LiveData<List<Channel>> selectedChannels;
+	private Channel defaultChannel;
 
 	public DatabaseRepo(Application application) {
 		AppDatabase db = AppDatabase.getInstance(application);
@@ -42,10 +43,9 @@ public class DatabaseRepo {
 		return allChannels;
 	}
 
-	public LiveData<List<Channel>> getSelected() {
-		return selectedChannels;
-	}
+	public LiveData<List<Channel>> getSelected() { return selectedChannels; }
 
+	public LiveData<Channel> getDefault() { return channelDao.getDefault(); }
 
 	public void insert(Channel channel) {
 		AppDatabase.databaseWriteExecutor.execute(() -> channelDao.insert(channel));

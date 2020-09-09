@@ -13,6 +13,8 @@ import org.json.JSONObject;
 @Entity(tableName = "channels")
 public class Channel {
 
+	public Channel(String addChannel) { this.id = -1; this.name = addChannel; }
+
 	public Channel(JSONObject jsonObject, String rootUrl) {
 		try {
 			this.id = jsonObject.getInt("id");
@@ -80,4 +82,9 @@ public class Channel {
 
 	@ColumnInfo(name = "latestBalanceTimestamp", defaultValue = "CURRENT_TIMESTAMP")
 	public Long latestBalanceTimestamp;
+
+	@Override
+	public String toString() {
+		return name;
+	}
 }

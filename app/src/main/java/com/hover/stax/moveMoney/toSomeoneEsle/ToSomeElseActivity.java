@@ -115,7 +115,7 @@ public class ToSomeElseActivity extends AppCompatActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (requestCode == READ_CONTACT && resultCode == Activity.RESULT_OK) {
-			StaxContactModel staxContactModel = UIHelper.getContactInfo(data, getCurrentFocus());
+			StaxContactModel staxContactModel = new StaxContactModel(data);
 			if (staxContactModel != null) {
 				UIHelper.flashMessage(this, getCurrentFocus(), "Selected:     " + staxContactModel.getName() + " - " + staxContactModel.getPhoneNumber());
 				String phone = staxContactModel.getPhoneNumber();

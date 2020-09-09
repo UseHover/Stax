@@ -95,11 +95,13 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (hasRun == null) {
-			hasRun = new ArrayList<>();
+		if (requestCode < 100) { // Some fragments use request codes in in the 100's for unrelated stuff
+			if (hasRun == null) {
+				hasRun = new ArrayList<>();
+			}
+			hasRun.add(data.getStringExtra("action_id"));
+			chooseRun(requestCode + 1);
 		}
-		hasRun.add(data.getStringExtra("action_id"));
-		chooseRun(requestCode + 1);
 	}
 }
 

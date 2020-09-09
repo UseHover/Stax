@@ -31,8 +31,8 @@
 
 	<string name="input_label">Input label</string>
 	<string name="pin_input_hint">Enter PIN</string>
-	<string name="recipient_phone">Recipient Phone number</string>
-	<string name="enter_recipient_phone">Enter Phone number</string>
+	<string name="recipient_phone">Recipient phone number</string>
+	<string name="enter_recipient_phone">Enter phone number</string>
 
 	<string name="security">Security</string>
 	<string name="remove_pin_from_device">Remove PINs from device</string>
@@ -68,16 +68,17 @@
 	<string-array name="choose_account_initial_array">
 		<item>choose_account_initial</item>
 	</string-array>
-	<string name="airtimeToSelf">Airtime to self</string>
-	<string name="airtimeMyContact">Someone in my contact</string>
-	<string name="airtimeElse">Manually enter phone number</string>
+	<string name="airtime_self">Myself</string>
+	<string name="airtime_other">Someone else</string>
 	<string name="addAService">+ Add a service</string>
 
 	<string name="enterRecipientNumberError">Please enter recipient number"</string>
 	<string name="enterAnotherOptionError">Please try another option</string>
 	<string name="enterAmountError">Please enter amount</string>
 	<string name="selectServiceError">"Please select a service"</string>
+	<string name="contact_perm_error">You must grant the read contacts permission to choose a number from your address book.</string>
 	<string name="selectContactErrorMessage">There was a problem selecting from your contact, please try again</string>
+	<string name="no_airtime_action_error">Can\'t transfer airtime using this service. Choose a difference service or contact Stax for support.</string>
 
 
 

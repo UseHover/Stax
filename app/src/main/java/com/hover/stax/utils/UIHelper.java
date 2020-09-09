@@ -72,43 +72,4 @@ public class UIHelper {
 			window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 		window.setStatusBarColor(color);
 	}
-
-	public static StaxContactModel getContactInfo(Intent data, View view) {
-		Uri contactData = data.getData();
-		if (contactData != null) {
-			Cursor cur = ApplicationInstance.getContext().getContentResolver().query(contactData, null, null, null, null);
-			if (cur != null) {
-				if (cur.getCount() > 0) {
-					if (cur.moveToNext()) {
-						String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-						String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-
-						if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-
-							Cursor phones = ApplicationInstance.getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id, null, null);
-							if (phones != null) {
-								StaxContactModel staxContactModel = new StaxContactModel();
-								while (phones.moveToNext()) {
-									String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-
-									staxContactModel.setName(name);
-									staxContactModel.setPhoneNumber(phoneNumber);
-
-								}
-								phones.close();
-								return staxContactModel;
-							} else return null;// ShowError
-
-						}
-
-					}
-				}
-				cur.close();
-			} else return null;///error
-
-		} else return null;
-
-		return null;
-	}
-
 }
