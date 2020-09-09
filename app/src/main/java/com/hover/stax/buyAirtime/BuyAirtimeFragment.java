@@ -2,12 +2,9 @@ package com.hover.stax.buyAirtime;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,18 +13,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.hover.sdk.api.HoverParameters;
 import com.hover.sdk.permissions.PermissionActivity;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.KeyStoreExecutor;
 import com.hover.stax.models.StaxContactModel;
@@ -36,7 +30,6 @@ import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class BuyAirtimeFragment extends Fragment {
@@ -74,7 +67,6 @@ public class BuyAirtimeFragment extends Fragment {
 		loadInitialSpinners();
 
 
-
 		buyAirtimeViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
 
 			ArrayList<String> channelNames = new ArrayList<>();
@@ -82,7 +74,7 @@ public class BuyAirtimeFragment extends Fragment {
 			fromChannelIdList.add(0);
 			encryptedPins.add(null);
 
-			for (Channel model: channels) {
+			for (Channel model : channels) {
 				channelNames.add(model.name);
 				encryptedPins.add(model.pin);
 				fromChannelIdList.add(model.id);
@@ -95,7 +87,6 @@ public class BuyAirtimeFragment extends Fragment {
 		});
 
 
-
 		spinnerFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -105,7 +96,8 @@ public class BuyAirtimeFragment extends Fragment {
 				}
 
 				if (position != 0) {
-					if(position == fromChannelIdList.size() - 1) startActivity(new Intent(getActivity(), PermissionScreenActivity.class));
+					if (position == fromChannelIdList.size() - 1)
+						startActivity(new Intent(getActivity(), PermissionScreenActivity.class));
 					else {
 						int tappedChannelId = fromChannelIdList.get(position);
 						selectedChannelEncryptedPin = encryptedPins.get(position);
@@ -124,7 +116,6 @@ public class BuyAirtimeFragment extends Fragment {
 		});
 
 
-
 		spinnerTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -133,13 +124,13 @@ public class BuyAirtimeFragment extends Fragment {
 					textView.setTextColor(getResources().getColor(R.color.white));
 				}
 
-				if(position == 0) {
+				if (position == 0) {
 					airtimeIsToSelf = true;
 					recipientEdit.setVisibility(View.GONE);
 					recipientLabel.setVisibility(View.GONE);
 
 
-					if(airtimeActionModel.getToSelfActionId() !=null && !airtimeActionModel.getToSelfActionId().isEmpty()) {
+					if (airtimeActionModel.getToSelfActionId() != null && !airtimeActionModel.getToSelfActionId().isEmpty()) {
 						finalChosenActionId = airtimeActionModel.getToSelfActionId();
 					} else {
 						finalChosenActionId = airtimeActionModel.getToOthersActionId();
@@ -147,16 +138,14 @@ public class BuyAirtimeFragment extends Fragment {
 						recipientLabel.setVisibility(View.VISIBLE);
 					}
 
-				}
-				else if(position == 1) {
-					if(PermissionUtils.hasContactPermission()) {
+				} else if (position == 1) {
+					if (PermissionUtils.hasContactPermission()) {
 						Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-						startActivityForResult(contactPickerIntent,READ_CONTACT);
+						startActivityForResult(contactPickerIntent, READ_CONTACT);
 					} else {
 						startActivityForResult(new Intent(getContext(), PermissionActivity.class), PERMISSION_REQ_CODE);
 					}
-				}
-				else {
+				} else {
 					settingsForAirtimeForOthers();
 				}
 
@@ -169,21 +158,23 @@ public class BuyAirtimeFragment extends Fragment {
 		});
 
 
-
-		root.findViewById(R.id.buyAirtimeContinueButton).setOnClickListener(view3->{
-			if(finalChosenActionId != null) {
-			String amount = amountEdit.getText().toString();
+		root.findViewById(R.id.buyAirtimeContinueButton).setOnClickListener(view3 -> {
+			if (finalChosenActionId != null) {
+				String amount = amountEdit.getText().toString();
 				recipientNumber = recipientEdit.getText().toString();
-				if(TextUtils.getTrimmedLength(amount) > 0) {
-					if(!airtimeIsToSelf ) {
-						if(TextUtils.getTrimmedLength(recipientNumber) > 0 ) { makeHoverCall(finalChosenActionId, amount);}
-						else UIHelper.flashMessage(getContext(), getResources().getString(R.string.enterRecipientNumberError));
+				if (TextUtils.getTrimmedLength(amount) > 0) {
+					if (!airtimeIsToSelf) {
+						if (TextUtils.getTrimmedLength(recipientNumber) > 0) {
+							makeHoverCall(finalChosenActionId, amount);
+						} else
+							UIHelper.flashMessage(getContext(), getResources().getString(R.string.enterRecipientNumberError));
+					} else {
+						makeHoverCall(finalChosenActionId, amount);
 					}
-
-					else {makeHoverCall(finalChosenActionId, amount);}
-				}
-				else UIHelper.flashMessage(getContext(), getResources().getString(R.string.enterAmountError));
-			}else UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectServiceError));
+				} else
+					UIHelper.flashMessage(getContext(), getResources().getString(R.string.enterAmountError));
+			} else
+				UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectServiceError));
 		});
 
 
@@ -195,10 +186,10 @@ public class BuyAirtimeFragment extends Fragment {
 		recipientEdit.setVisibility(View.VISIBLE);
 		recipientLabel.setVisibility(View.VISIBLE);
 
-		if(airtimeActionModel.getToOthersActionId() !=null && !airtimeActionModel.getToOthersActionId().isEmpty()) {
+		if (airtimeActionModel.getToOthersActionId() != null && !airtimeActionModel.getToOthersActionId().isEmpty()) {
 			finalChosenActionId = airtimeActionModel.getToOthersActionId();
-		}
-		else UIHelper.flashMessage(getContext(), getResources().getString(R.string.enterAnotherOptionError));
+		} else
+			UIHelper.flashMessage(getContext(), getResources().getString(R.string.enterAnotherOptionError));
 	}
 
 
@@ -233,20 +224,19 @@ public class BuyAirtimeFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-				if (requestCode == READ_CONTACT && resultCode == Activity.RESULT_OK) {
-					StaxContactModel staxContactModel = UIHelper.getContactInfo(data, getView());
-					if(staxContactModel !=null) {
-						UIHelper.flashMessage(getContext(),getView(), "Selected:     "+staxContactModel.getName()+" - "+ staxContactModel.getPhoneNumber());
-						recipientEdit.setText(staxContactModel.getPhoneNumber());
-						settingsForAirtimeForOthers();
-					}
-					else UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectContactErrorMessage));///showError
+		if (requestCode == READ_CONTACT && resultCode == Activity.RESULT_OK) {
+			StaxContactModel staxContactModel = UIHelper.getContactInfo(data, getView());
+			if (staxContactModel != null) {
+				UIHelper.flashMessage(getContext(), getView(), "Selected:     " + staxContactModel.getName() + " - " + staxContactModel.getPhoneNumber());
+				recipientEdit.setText(staxContactModel.getPhoneNumber());
+				settingsForAirtimeForOthers();
+			} else
+				UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectContactErrorMessage));///showError
 
-				}
-				else if(requestCode == PERMISSION_REQ_CODE && resultCode == Activity.RESULT_OK) {
-					Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-					startActivityForResult(contactPickerIntent,READ_CONTACT);
-				}
+		} else if (requestCode == PERMISSION_REQ_CODE && resultCode == Activity.RESULT_OK) {
+			Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+			startActivityForResult(contactPickerIntent, READ_CONTACT);
+		}
 
 	}
 }

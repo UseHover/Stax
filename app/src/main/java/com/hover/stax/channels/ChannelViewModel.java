@@ -32,7 +32,9 @@ public class ChannelViewModel extends AndroidViewModel {
 		return channels;
 	}
 
-	MutableLiveData<List<SimInfo>> getSims() { return sims; }
+	MutableLiveData<List<SimInfo>> getSims() {
+		return sims;
+	}
 
 	private void loadChannels() {
 		if (channels == null) {

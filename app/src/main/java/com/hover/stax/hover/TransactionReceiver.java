@@ -4,10 +4,6 @@ import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.Handler;
-import android.os.SystemClock;
-import android.util.Log;
 
 import com.hover.sdk.utils.Utils;
 import com.hover.stax.actions.Action;
@@ -32,7 +28,9 @@ public class TransactionReceiver extends BroadcastReceiver {
 						channel.latestBalance = parsed_variables.get("balance");
 						if (parsed_variables.containsKey("update_timestamp") && parsed_variables.get("update_timestamp") != null) {
 							channel.latestBalanceTimestamp = Long.parseLong(parsed_variables.get("update_timestamp"));
-						} else { channel.latestBalanceTimestamp = Utils.now(); }
+						} else {
+							channel.latestBalanceTimestamp = Utils.now();
+						}
 						repo.update(channel);
 					}
 				}).start();

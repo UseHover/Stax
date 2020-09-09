@@ -9,10 +9,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
 import android.view.View;
-
 import android.view.Window;
 import android.view.WindowManager;
-
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,9 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.AppCompatSpinner;
-
 import androidx.core.graphics.drawable.DrawableCompat;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -79,18 +75,18 @@ public class UIHelper {
 
 	public static StaxContactModel getContactInfo(Intent data, View view) {
 		Uri contactData = data.getData();
-		if(contactData !=null) {
-			Cursor cur =  ApplicationInstance.getContext().getContentResolver().query(contactData, null, null, null, null);
-			if(cur!=null) {
+		if (contactData != null) {
+			Cursor cur = ApplicationInstance.getContext().getContentResolver().query(contactData, null, null, null, null);
+			if (cur != null) {
 				if (cur.getCount() > 0) {
-					if(cur.moveToNext()) {
+					if (cur.moveToNext()) {
 						String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
 						String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 
 						if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
 
-							Cursor phones = ApplicationInstance.getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null,ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = "+ id,null, null);
-							if (phones !=null) {
+							Cursor phones = ApplicationInstance.getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id, null, null);
+							if (phones != null) {
 								StaxContactModel staxContactModel = new StaxContactModel();
 								while (phones.moveToNext()) {
 									String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
@@ -100,18 +96,17 @@ public class UIHelper {
 
 								}
 								phones.close();
-								return  staxContactModel;
-							} else return  null;// ShowError
+								return staxContactModel;
+							} else return null;// ShowError
 
 						}
 
 					}
 				}
 				cur.close();
-			} else return  null;///error
+			} else return null;///error
 
-		}
-		else return null;
+		} else return null;
 
 		return null;
 	}

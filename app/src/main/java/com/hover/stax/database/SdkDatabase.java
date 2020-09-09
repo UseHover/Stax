@@ -24,8 +24,8 @@ public abstract class SdkDatabase extends RoomDatabase {
 			synchronized (SdkDatabase.class) {
 				if (INSTANCE == null) {
 					INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SdkDatabase.class, "hoversdktransactions.db")
-						               .addMigrations(MIGRATION_37_38)
-						               .build();
+									   .addMigrations(MIGRATION_37_38)
+									   .build();
 				}
 			}
 		}
@@ -34,6 +34,7 @@ public abstract class SdkDatabase extends RoomDatabase {
 
 	static final Migration MIGRATION_37_38 = new Migration(37, 38) {
 		@Override
-		public void migrate(SupportSQLiteDatabase database) { }
+		public void migrate(SupportSQLiteDatabase database) {
+		}
 	};
 }

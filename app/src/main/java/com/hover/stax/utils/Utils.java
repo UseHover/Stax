@@ -158,7 +158,7 @@ public class Utils {
 			String[] hniArr = channels.get(i).hniList.split(",");
 			for (int l = 0; l < hniArr.length; l++) {
 				if (simHniList.contains(Utils.stripHniString(hniArr[l])))
-					if(!simChannels.contains(channels.get(i))) simChannels.add(channels.get(i));
+					if (!simChannels.contains(channels.get(i))) simChannels.add(channels.get(i));
 			}
 		}
 		return simChannels;
