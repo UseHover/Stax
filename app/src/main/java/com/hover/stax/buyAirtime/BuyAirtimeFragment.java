@@ -30,6 +30,7 @@ import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.KeyStoreExecutor;
+import com.hover.stax.models.StaxContactModel;
 import com.hover.stax.permission.PermissionScreenActivity;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
@@ -233,38 +234,13 @@ public class BuyAirtimeFragment extends Fragment {
 		super.onActivityResult(requestCode, resultCode, data);
 
 				if (requestCode == READ_CONTACT && resultCode == Activity.RESULT_OK) {
-					Uri contactData = data.getData();
-					if(contactData !=null && getContext() !=null) {
-						Cursor cur =  getContext().getContentResolver().query(contactData, null, null, null, null);
-						if(cur!=null) {
-							if (cur.getCount() > 0) {// thats mean some resutl has been found
-								if(cur.moveToNext()) {
-									String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-									String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-
-									if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-
-										Cursor phones = getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null,ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = "+ id,null, null);
-										if (phones !=null) {
-											while (phones.moveToNext()) {
-												String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-												UIHelper.flashMessage(getContext(),getView(), "Selected:     "+name+" - "+ phoneNumber);
-												recipientEdit.setText(phoneNumber);
-												settingsForAirtimeForOthers();
-											}
-											phones.close();
-										} else UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectContactErrorMessage));// ShowError
-
-									}
-
-								}
-							}
-							cur.close();
-						} else UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectContactErrorMessage));///error
-
+					StaxContactModel staxContactModel = UIHelper.getContactInfo(data, getView());
+					if(staxContactModel !=null) {
+						UIHelper.flashMessage(getContext(),getView(), "Selected:     "+staxContactModel.getName()+" - "+ staxContactModel.getPhoneNumber());
+						recipientEdit.setText(staxContactModel.getPhoneNumber());
+						settingsForAirtimeForOthers();
 					}
 					else UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectContactErrorMessage));///showError
-
 
 				}
 				else if(requestCode == PERMISSION_REQ_CODE && resultCode == Activity.RESULT_OK) {

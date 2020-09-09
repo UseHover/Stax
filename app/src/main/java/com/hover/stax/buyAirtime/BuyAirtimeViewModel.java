@@ -50,7 +50,6 @@ public class BuyAirtimeViewModel extends AndroidViewModel {
 					for(int i=0; i<jsonArray.length(); i++) {
 						JSONObject object =  jsonArray.getJSONObject(i);
 						if(object.get("value").equals("recipientNumber")) {
-							Log.d("ACTIONS: ", "RECIPIENT FOUND");
 							isSelf = false;
 							break;
 						}
@@ -63,7 +62,6 @@ public class BuyAirtimeViewModel extends AndroidViewModel {
 			}
 
 		}
-		Log.d("ACTIONS: ", "TAKEN OTHERS IS: "+airtimeActionModel.getToOthersActionId());
 		return airtimeActionModel;
 	}
 
