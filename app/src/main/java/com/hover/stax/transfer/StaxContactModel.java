@@ -1,4 +1,4 @@
-package com.hover.stax.models;
+package com.hover.stax.transfer;
 
 import android.content.Intent;
 import android.database.Cursor;

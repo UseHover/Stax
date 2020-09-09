@@ -53,7 +53,7 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:paddingHorizontal="@dimen/spacing32"
-	    android:text="@string/continueText"
+	    android:text="@string/continue_text"
 	    android:textAllCaps="false"
 	    android:fontFamily="font-medium"
 	    android:layout_gravity="end"

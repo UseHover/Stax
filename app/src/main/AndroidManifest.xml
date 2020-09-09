@@ -18,7 +18,7 @@
 		android:theme="@style/myHoverTheme">
 
 		<activity
-			android:name=".onboard.SplashScreenActivity"
+			android:name=".SplashScreenActivity"
 			android:label="@string/app_name"
 			android:theme="@style/SplashTheme">
 			<intent-filter>
@@ -28,14 +28,11 @@
 			</intent-filter>
 		</activity>
 		<activity
-			android:name=".MainActivity"
+			android:name=".home.MainActivity"
 			android:label="@string/app_name" />
-		<activity android:name=".permission.PermissionScreenActivity" />
+		<activity android:name=".security.PermissionScreenActivity" />
 		<activity android:name=".channels.ChannelsActivity" />
-		<activity android:name=".pins.PinsActivity" />
-		<activity android:name=".moveMoney.toSomeoneEsle.ToSomeElseActivity" />
-		<activity android:name=".moveMoney.requestMoney.RequestMoneyActivity" />
-		<activity android:name=".moveMoney.betweenServices.BetweenServicesActivity" />
+		<activity android:name=".security.PinsActivity" />
 
 		<receiver
 			android:name=".hover.TransactionReceiver"

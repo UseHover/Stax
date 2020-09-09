@@ -1,4 +1,4 @@
-package com.hover.stax.pins;
+package com.hover.stax.security;
 
 import android.app.Application;
 import android.content.Context;

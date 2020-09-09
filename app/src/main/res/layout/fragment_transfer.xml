@@ -7,26 +7,23 @@
     android:layout_height="match_parent"
     android:padding="@dimen/activity_vertical_margin"
     android:background="@color/colorPrimary"
-    tools:context=".buyAirtime.BuyAirtimeFragment">
+    tools:context=".transfer.TransferFragment">
 
 	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-	    android:orientation="vertical"
-	    >
+	    android:orientation="vertical" >
 
-		<TextView
-		    android:id="@+id/text_balances"
+		<TextView android:id="@+id/transfer_title"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:text="@string/topup_airtime"
 		    android:textColor="@color/offWhite"
 		    android:textSize="@dimen/text_21"
 		    android:textStyle="bold"
 		    android:layout_gravity="start"
 		    android:gravity="start"
 		    android:layout_marginBottom="@dimen/spacing32"
-		    />
+			android:text="@string/title_p2p"/>
 
 		<TextView
 		    android:layout_width="wrap_content"
@@ -121,7 +118,8 @@
 			    android:text="@string/amount"
 			    android:textColor="@color/offWhite"
 			    android:textSize="@dimen/text_13" />
-			<EditText android:id="@+id/airtimeAmountEditId"
+
+			<EditText android:id="@+id/amount_input"
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
 			    android:paddingLeft="@dimen/editText_box_margin_horiz"
@@ -140,11 +138,10 @@
 			    android:layout_weight="1"
 			    android:background="@drawable/edit_text_bg" />
 
-			<Button
+			<Button android:id="@+id/confirm_button"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
-			    android:text="@string/continueText"
-			    android:id="@+id/buyAirtimeContinueButton"
+			    android:text="@string/continue_text"
 			    android:background="@drawable/edit_text_bg"
 			    android:textColor="@color/offWhite"
 			    android:textAllCaps="false"
@@ -158,7 +155,7 @@
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/activity_vertical_margin"
 			android:textAlignment="center"
-			android:text="@string/no_airtime_action_error"
+			android:text="@string/no_p2p_action_error"
 			android:textColor="@color/offWhite"
 			android:textSize="@dimen/text_13"
 			android:visibility="gone"/>

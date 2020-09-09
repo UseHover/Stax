@@ -1,4 +1,4 @@
-package com.hover.stax.buyAirtime;
+package com.hover.stax.transfer;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatSpinner;
@@ -27,27 +28,28 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelAdapter;
 import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.database.KeyStoreExecutor;
-import com.hover.stax.models.StaxContactModel;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
 
-public class BuyAirtimeFragment extends Fragment {
-
-	private BuyAirtimeViewModel buyAirtimeViewModel;
+public class TransferFragment extends Fragment {
+	private String transferType;
+	private TransferViewModel transferViewModel;
 	private AppCompatSpinner spinnerTo;
 	private AppCompatSpinner spinnerFrom;
 	private View detailsBlock;
 	private View recipientBlock;
 	private EditText recipientInput;
 	private ImageButton contactButton;
-	private View pageError;
+	private TextView pageError;
 	EditText amountInput;
 
 	final public static int READ_CONTACT = 201;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		buyAirtimeViewModel = new ViewModelProvider(this).get(BuyAirtimeViewModel.class);
-		View root = inflater.inflate(R.layout.fragment_buyairtime, container, false);
+		transferType = getArguments() != null ? getArguments().getString(Action.TRANSACTION_TYPE) : Action.P2P;
+		transferViewModel = new ViewModelProvider(this).get(TransferViewModel.class);
+		transferViewModel.setType(transferType);
+		View root = inflater.inflate(R.layout.fragment_transfer, container, false);
 
 		initView(root);
 		startListeners();
@@ -59,28 +61,40 @@ public class BuyAirtimeFragment extends Fragment {
 	}
 
 	private void initView(View root) {
+		((TextView) root.findViewById(R.id.transfer_title)).setText(getTitle());
 		spinnerTo = root.findViewById(R.id.toSpinner);
 		spinnerFrom = root.findViewById(R.id.fromSpinner);
 		detailsBlock = root.findViewById(R.id.details_block);
 		recipientBlock = root.findViewById(R.id.recipient_block);
 		recipientInput = root.findViewById(R.id.recipient_number);
-		amountInput = root.findViewById(R.id.airtimeAmountEditId);
+		amountInput = root.findViewById(R.id.amount_input);
 		contactButton = root.findViewById(R.id.contact_button);
 		pageError = root.findViewById(R.id.error_message);
+		pageError.setText(getError());
+	}
+
+	private String getTitle() {
+		if (transferType.equals(Action.AIRTIME)) return getString(R.string.title_airtime);
+		else return getString(R.string.title_p2p);
+	}
+
+	private String getError() {
+		if (transferType.equals(Action.AIRTIME)) return getString(R.string.no_airtime_action_error);
+		else return getString(R.string.no_p2p_action_error);
 	}
 
 	private void startListeners() {
-		buyAirtimeViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
+		transferViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
 			channels.add(new Channel(getResources().getString(R.string.addAService)));
 			ChannelAdapter adapter = new ChannelAdapter(getActivity(), R.layout.spinner_items, channels);
 			spinnerFrom.setAdapter(adapter);
 		});
 
-		buyAirtimeViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
+		transferViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
 			if (actions != null && actions.size() > 0) {
 				detailsBlock.setVisibility(View.VISIBLE);
 				pageError.setVisibility(View.GONE);
-				buyAirtimeViewModel.setActiveAction(actions.get(0));
+				transferViewModel.setActiveAction(actions.get(0));
 			} else {
 				detailsBlock.setVisibility(View.GONE);
 				pageError.setVisibility(View.VISIBLE);
@@ -98,7 +112,7 @@ public class BuyAirtimeFragment extends Fragment {
 				if (channel.id == -1)
 					startActivity(new Intent(getActivity(), ChannelsActivity.class));
 				else
-					buyAirtimeViewModel.setActiveChannel(channel);
+					transferViewModel.setActiveChannel(channel);
 			}
 
 			@Override
@@ -109,7 +123,7 @@ public class BuyAirtimeFragment extends Fragment {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				Action action = (Action) spinnerTo.getItemAtPosition(position);
-				buyAirtimeViewModel.setActiveAction(action);
+				transferViewModel.setActiveAction(action);
 				recipientBlock.setVisibility(action.requiresRecipient() ? View.VISIBLE : View.GONE);
 			}
 
@@ -130,18 +144,16 @@ public class BuyAirtimeFragment extends Fragment {
 	}
 
 	private void onSubmit(View root) {
-		root.findViewById(R.id.buyAirtimeContinueButton).setOnClickListener(view3 -> {
-			if (buyAirtimeViewModel.getActiveAction() != null) {
-				String amount = amountInput.getText().toString();
+		root.findViewById(R.id.confirm_button).setOnClickListener(view3 -> {
+			if (transferViewModel.getActiveAction() != null) {
 				if (TextUtils.getTrimmedLength(amountInput.getText().toString()) > 0) {
-					if (buyAirtimeViewModel.getActiveAction().requiresRecipient()) {
-						String recipientNumber = recipientInput.getText().toString();
-						if (TextUtils.getTrimmedLength(recipientNumber) > 0) {
-							makeHoverCall(buyAirtimeViewModel.getActiveAction());
+					if (transferViewModel.getActiveAction().requiresRecipient()) {
+						if (TextUtils.getTrimmedLength(recipientInput.getText().toString()) > 0) {
+							makeHoverCall(transferViewModel.getActiveAction());
 						} else
 							UIHelper.flashMessage(getContext(), getResources().getString(R.string.enterRecipientNumberError));
 					} else {
-						makeHoverCall(buyAirtimeViewModel.getActiveAction());
+						makeHoverCall(transferViewModel.getActiveAction());
 					}
 				} else
 					UIHelper.flashMessage(getContext(), getResources().getString(R.string.enterAmountError));
@@ -155,10 +167,11 @@ public class BuyAirtimeFragment extends Fragment {
 		builder.request(action.public_id);
 		//builder.setEnvironment(HoverParameters.PROD_ENV);
 		builder.style(R.style.myHoverTheme);
-		builder.extra("recipientNumber", recipientInput.getText().toString());
-		builder.extra("amount", amountInput.getText().toString());
 		builder.finalMsgDisplayTime(2000);
-		builder.extra("pin", KeyStoreExecutor.decrypt(buyAirtimeViewModel.getActiveChannel().getValue().pin, ApplicationInstance.getContext()));
+		builder.extra(Action.PHONE_KEY, recipientInput.getText().toString());
+		builder.extra(Action.ACCOUNT_KEY, recipientInput.getText().toString());
+		builder.extra(Action.AMOUNT_KEY, amountInput.getText().toString());
+		builder.extra(Action.PIN_KEY, KeyStoreExecutor.decrypt(transferViewModel.getActiveChannel().getValue().pin, ApplicationInstance.getContext()));
 		Intent i = builder.buildIntent();
 		int AIRTIME_RUN = 203;
 		startActivityForResult(i, AIRTIME_RUN);
@@ -169,8 +182,7 @@ public class BuyAirtimeFragment extends Fragment {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == READ_CONTACT && resultCode == Activity.RESULT_OK) {
 			StaxContactModel staxContactModel = new StaxContactModel(data);
-			if (staxContactModel != null) {
-				UIHelper.flashMessage(getContext(), getView(), "Selected:     " + staxContactModel.getName() + " - " + staxContactModel.getPhoneNumber());
+			if (staxContactModel.getPhoneNumber() != null) {
 				recipientInput.setText(staxContactModel.getPhoneNumber());
 			} else
 				UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectContactErrorMessage));

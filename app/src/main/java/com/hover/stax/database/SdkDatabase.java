@@ -12,7 +12,7 @@ import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionDao;
 
 // This is a readonly database for accessing the DB created by SQL in the SDK
-@Database(entities = {Action.class}, version = 38)
+@Database(entities = {Action.class}, version = 39)
 public abstract class SdkDatabase extends RoomDatabase {
 
 	private static volatile SdkDatabase INSTANCE;
@@ -24,7 +24,7 @@ public abstract class SdkDatabase extends RoomDatabase {
 			synchronized (SdkDatabase.class) {
 				if (INSTANCE == null) {
 					INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SdkDatabase.class, "hoversdktransactions.db")
-									   .addMigrations(MIGRATION_37_38)
+									   .addMigrations(MIGRATION_38_39)
 									   .build();
 				}
 			}
@@ -32,7 +32,7 @@ public abstract class SdkDatabase extends RoomDatabase {
 		return INSTANCE;
 	}
 
-	static final Migration MIGRATION_37_38 = new Migration(37, 38) {
+	static final Migration MIGRATION_38_39 = new Migration(38, 39) {
 		@Override
 		public void migrate(SupportSQLiteDatabase database) {
 		}

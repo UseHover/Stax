@@ -1,4 +1,4 @@
-package com.hover.stax.pins;
+package com.hover.stax.security;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -33,7 +33,7 @@ public class PinEntryAdapter extends RecyclerView.Adapter<PinEntryAdapter.PinEnt
 	@NonNull
 	@Override
 	public PinEntryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.variables_items, parent, false);
+		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.pin_entry_item, parent, false);
 		return new PinEntryViewHolder(view);
 	}
 

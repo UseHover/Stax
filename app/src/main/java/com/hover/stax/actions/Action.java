@@ -10,6 +10,7 @@ import androidx.room.PrimaryKey;
 
 import com.hover.sdk.parsers.ParserHelper;
 import com.hover.stax.R;
+import com.hover.stax.transfer.TransferFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,8 +23,9 @@ import java.util.List;
 // since the SDK does not currently use Room
 @Entity(tableName = "hsdk_actions")
 public class Action {
-	private final static String STEP_IS_PARAM = "is_param", STEP_VALUE = "value",
-        PIN_KEY = "pin", AMOUNT_KEY = "amount";
+	public final static String TRANSACTION_TYPE = "transaction_type", P2P = "p2p", AIRTIME = "airtime", ME2ME = "me2me", C2B = "c2b";
+	public final static String STEP_IS_PARAM = "is_param", STEP_VALUE = "value",
+        PIN_KEY = "pin", AMOUNT_KEY = "amount", PHONE_KEY = "phone", ACCOUNT_KEY = "account";
 
 	@PrimaryKey
 	@ColumnInfo(name = "_id")
@@ -47,6 +49,13 @@ public class Action {
 
 	@ColumnInfo(name = "to_institution_id")
 	public Integer to_institution_id;
+
+	@NonNull
+	@ColumnInfo(name = "from_institution_name")
+	public String from_institution_name;
+
+	@ColumnInfo(name = "to_institution_name")
+	public String to_institution_name;
 
 	@NonNull
 	@ColumnInfo(name = "network_name")
@@ -79,7 +88,9 @@ public class Action {
 
 	@Override
 	public String toString() {
-		if (requiresRecipient())
+		if (transaction_type.equals(P2P) || transaction_type.equals(ME2ME) || transaction_type.equals(C2B))
+			return to_institution_name;
+		if (requiresRecipient()) // airtime
 			return "Someone else";
 		else
 			return "Myself";

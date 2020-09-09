@@ -14,10 +14,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.ApplicationInstance;
-import com.hover.stax.MainActivity;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.permission.PermissionScreenActivity;
+import com.hover.stax.security.PermissionScreenActivity;
 import com.hover.stax.utils.TimeAgo;
 import com.hover.stax.utils.UIHelper;
 

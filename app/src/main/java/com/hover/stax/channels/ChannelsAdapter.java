@@ -37,7 +37,7 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.Channe
 	@NonNull
 	@Override
 	public ChannelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.choose_service_item, parent, false);
+		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.choose_channel_item, parent, false);
 		return new ChannelViewHolder(view);
 	}
 

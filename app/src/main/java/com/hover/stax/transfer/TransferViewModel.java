@@ -1,4 +1,4 @@
-package com.hover.stax.buyAirtime;
+package com.hover.stax.transfer;
 
 import android.app.Application;
 
@@ -13,23 +13,26 @@ import com.hover.stax.database.DatabaseRepo;
 
 import java.util.List;
 
-public class BuyAirtimeViewModel extends AndroidViewModel {
+public class TransferViewModel extends AndroidViewModel {
 
+	private String type = Action.P2P;
 	private LiveData<List<Channel>> selectedChannels;
-	private LiveData<List<Action>> airtimeActions;
+	private LiveData<List<Action>> filteredActions;
 
 	private MutableLiveData<Channel> activeChannel = new MutableLiveData<>();
 	private Action activeAction;
 
 	private DatabaseRepo repo;
 
-	public BuyAirtimeViewModel(Application application) {
+	public TransferViewModel(Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
 		loadSelected();
 		loadDefault();
-		airtimeActions = Transformations.switchMap(getActiveChannel(), this::loadActions);
+		filteredActions = Transformations.switchMap(getActiveChannel(), this::loadActions);
 	}
+
+	void setType(String transaction_type) { type = transaction_type; }
 
 	private void loadSelected() {
 		if (selectedChannels == null) {
@@ -51,7 +54,7 @@ public class BuyAirtimeViewModel extends AndroidViewModel {
 
 	public LiveData<List<Action>> loadActions(Channel channel) {
 		if (channel != null)
-			return repo.getActions(channel.id, "airtime");
+			return repo.getActions(channel.id, type);
 		else return null;
 	}
 
@@ -59,7 +62,7 @@ public class BuyAirtimeViewModel extends AndroidViewModel {
 		return selectedChannels;
 	}
 
-	LiveData<List<Action>> getActions() { return airtimeActions; }
+	LiveData<List<Action>> getActions() { return filteredActions; }
 
 	void setActiveAction(Action action) { activeAction = action; }
 

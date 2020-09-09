@@ -1,4 +1,4 @@
-package com.hover.stax;
+package com.hover.stax.home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,8 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hover.sdk.api.HoverParameters;
+import com.hover.stax.ApplicationInstance;
+import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.database.KeyStoreExecutor;
 import com.hover.stax.home.BalanceAdapter;

@@ -20,7 +20,7 @@ import androidx.work.WorkManager;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.sims.SimInfo;
 import com.hover.stax.R;
-import com.hover.stax.pins.PinsActivity;
+import com.hover.stax.security.PinsActivity;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
