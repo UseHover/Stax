@@ -24,6 +24,7 @@ public abstract class SdkDatabase extends RoomDatabase {
 			synchronized (SdkDatabase.class) {
 				if (INSTANCE == null) {
 					INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SdkDatabase.class, "hoversdktransactions.db")
+									   .allowMainThreadQueries()
 									   .addMigrations(MIGRATION_37_38)
 									   .build();
 				}

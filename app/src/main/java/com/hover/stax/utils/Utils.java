@@ -12,8 +12,10 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.models.StaxDate;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,6 +27,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -173,4 +176,58 @@ public class Utils {
 			return number;
 		}
 	}
-}
+
+	public static String getTransactionTypeFullString(String transType) {
+		String string = "Others";
+		switch (transType) {
+			case "airtime":  string = ApplicationInstance.getContext().getResources().getString(R.string.topup_airtime);
+			break;
+			case "p2p": string = ApplicationInstance.getContext().getResources().getString(R.string.to_someone_else);
+			break;
+			case "me2me": string = ApplicationInstance.getContext().getResources().getString(R.string.between_services);
+			break;
+		}
+		return string;
+	}
+
+	public static StaxDate getStaxDate(long timestamp) {
+		StaxDate staxDate = new StaxDate();
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(timestamp);
+		staxDate.setMonth(monthFromId(cal.get(Calendar.MONTH)));
+		staxDate.setDayOfMonth(String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
+		staxDate.setYear(String.valueOf(cal.get(Calendar.YEAR)));
+		return staxDate;
+	}
+
+	private static String monthFromId(int id) {
+		String month = "";
+		switch (id) {
+			case 0 : month = "January";
+			break;
+			case 1: month = "February";
+			break;
+			case 2: month = "March";
+			break;
+			case 3: month = "April";
+			break;
+			case 4: month = "May";
+			break;
+			case 5: month = "June";
+			break;
+			case 6: month = "July";
+			break;
+			case 7: month = "August";
+			break;
+			case 8: month = "September";
+			break;
+			case 9: month = "October";
+			break;
+			case 10: month = "November";
+			break;
+			case 11: month = "December";
+			break;
+		}
+		return  month;
+	}
+  }
