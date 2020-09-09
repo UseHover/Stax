@@ -15,6 +15,7 @@ import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.KeyStoreExecutor;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -42,8 +43,8 @@ public class PinEntryAdapter extends RecyclerView.Adapter<PinEntryAdapter.PinEnt
 
 		holder.view.setTag(channel.id);
 		holder.labelView.setText(channel.name);
-		//holder.circleImageView.setImageBitmap(logo);
-//        holder.circleImageView.setVisibility(View.VISIBLE);
+		Picasso.get().load(channel.logoUrl).into(holder.circleImageView);
+        holder.circleImageView.setVisibility(View.VISIBLE);
 
 
 		holder.editView.addTextChangedListener(new TextWatcher() {
