@@ -25,7 +25,9 @@ public class PinsViewModel extends AndroidViewModel {
 		loadSelectedChannels();
 	}
 
-	public LiveData<List<Channel>> getSelectedChannels() { return channels; }
+	public LiveData<List<Channel>> getSelectedChannels() {
+		return channels;
+	}
 
 	private void loadSelectedChannels() {
 		if (channels == null) {

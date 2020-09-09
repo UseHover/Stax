@@ -26,12 +26,14 @@ public class PermissionUtils {
 	public static boolean hasPhonePerm(Context c) {
 		return Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
 					   (c.checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED &&
-								c.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED);
+								c.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
+								&& c.checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED);
 	}
 
 	public static void requestPhonePerms(Activity act, int requestCode) {
-		ActivityCompat.requestPermissions(act, new String[]{Manifest.permission.CALL_PHONE, Manifest.permission.READ_PHONE_STATE}, requestCode);
+		ActivityCompat.requestPermissions(act, new String[]{Manifest.permission.CALL_PHONE, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_CONTACTS}, requestCode);
 	}
+
 
 	public static boolean permissionsGranted(int[] grantResults) {
 		for (int result : grantResults) {
@@ -43,6 +45,10 @@ public class PermissionUtils {
 	}
 
 	public static boolean hasRequiredPermissions() {
-		return PermissionUtils.has(new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE}, ApplicationInstance.getContext());
+		return PermissionUtils.has(new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE, Manifest.permission.READ_CONTACTS}, ApplicationInstance.getContext());
+	}
+
+	public static boolean hasContactPermission() {
+		return PermissionUtils.has(new String[]{Manifest.permission.READ_CONTACTS}, ApplicationInstance.getContext());
 	}
 }

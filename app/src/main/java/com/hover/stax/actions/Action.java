@@ -11,7 +11,7 @@ import androidx.room.PrimaryKey;
 public class Action {
 
 	@PrimaryKey
-    @ColumnInfo(name = "_id")
+	@ColumnInfo(name = "_id")
 	public int id;
 
 	@NonNull

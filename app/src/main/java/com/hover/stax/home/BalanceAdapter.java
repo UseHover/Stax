@@ -12,13 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.utils.TimeAgo;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
-import java.sql.Ref;
 import java.util.List;
 
 public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceViewHolder> {
@@ -46,7 +44,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 		holder.channelId.setText(Integer.toString(channel.id));
 		holder.amount.setText(Utils.formatAmount(channel.latestBalance));
 		holder.timeAgo.setText(channel.latestBalanceTimestamp != null && channel.latestBalanceTimestamp > 0 ?
-            TimeAgo.timeAgo(ApplicationInstance.getContext(), channel.latestBalanceTimestamp) : "Refresh");
+									   TimeAgo.timeAgo(ApplicationInstance.getContext(), channel.latestBalanceTimestamp) : "Refresh");
 		holder.currency.setText(ApplicationInstance.getCurrency(channel.countryAlpha2));
 
 		holder.balanced_swiped_layout.setBackgroundColor(Color.parseColor(channel.primaryColorHex));

@@ -2,9 +2,6 @@ package com.hover.stax;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,19 +12,13 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.hover.sdk.api.Hover;
 import com.hover.sdk.api.HoverParameters;
 import com.hover.stax.actions.Action;
-import com.hover.stax.channels.ChannelsActivity;
-import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.database.KeyStoreExecutor;
 import com.hover.stax.home.BalanceAdapter;
-import com.hover.stax.home.BalanceModel;
 import com.hover.stax.home.HomeViewModel;
-import com.hover.stax.onboard.SplashScreenActivity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements BalanceAdapter.RefreshListener {
@@ -104,7 +95,9 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (hasRun == null) { hasRun = new ArrayList<>(); }
+		if (hasRun == null) {
+			hasRun = new ArrayList<>();
+		}
 		hasRun.add(data.getStringExtra("action_id"));
 		chooseRun(requestCode + 1);
 	}

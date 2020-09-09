@@ -3,9 +3,7 @@ package com.hover.stax.database;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
-import androidx.room.Database;
 
-import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.sims.SimInfo;
 import com.hover.stax.ApplicationInstance;
