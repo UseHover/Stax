@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.pins.PinsViewModel;
 import com.hover.stax.utils.UIHelper;
 
 import java.util.ArrayList;

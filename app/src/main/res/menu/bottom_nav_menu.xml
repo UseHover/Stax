@@ -5,21 +5,21 @@
 	<item
 	    android:id="@+id/navigation_home"
 	    android:icon="@drawable/account_balance_wallet"
-	    android:title="@string/title_home" />
+	    android:title="@string/nav_home" />
 
 	<item
 	    android:id="@+id/navigation_buyAirtime"
 	    android:icon="@drawable/phone_callback"
-	    android:title="@string/title_buyAirtime" />
+	    android:title="@string/nav_airtime" />
 
 	<item
 	    android:id="@+id/navigation_moveMoney"
 	    android:icon="@drawable/payments"
-	    android:title="@string/title_moveMoney" />
+	    android:title="@string/nav_money" />
 
 	<item
 	    android:id="@+id/navigation_security"
 	    android:icon="@drawable/lock"
-	    android:title="@string/title_security" />
+	    android:title="@string/nav_security" />
 
 </menu>

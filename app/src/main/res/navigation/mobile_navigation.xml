@@ -9,24 +9,34 @@
 	<fragment
 	    android:id="@+id/navigation_home"
 	    android:name="com.hover.stax.home.HomeFragment"
-	    android:label="@string/title_home"
+	    android:label="@string/nav_home"
 	    tools:layout="@layout/fragment_home" />
 
 	<fragment
 	    android:id="@+id/navigation_buyAirtime"
-	    android:name="com.hover.stax.buyAirtime.BuyAirtimeFragment"
-	    android:label="@string/title_buyAirtime"
-	    tools:layout="@layout/fragment_buyairtime" />
+	    android:name="com.hover.stax.transfer.TransferFragment"
+	    android:label="@string/nav_airtime"
+	    tools:layout="@layout/fragment_transfer" >
+		<argument
+			android:name="transaction_type"
+			app:argType="string"
+			android:defaultValue='airtime' />
+	</fragment>
 
 	<fragment
 	    android:id="@+id/navigation_moveMoney"
-	    android:name="com.hover.stax.moveMoney.MoveMoneyFragment"
-	    android:label="@string/title_moveMoney"
-	    tools:layout="@layout/fragment_movemoney" />
+	    android:name="com.hover.stax.transfer.TransferFragment"
+	    android:label="@string/nav_money"
+	    tools:layout="@layout/fragment_transfer" >
+		<argument
+			android:name="transaction_type"
+			app:argType="string"
+			android:defaultValue='p2p' />
+	</fragment>
 
 	<fragment
 	    android:id="@+id/navigation_security"
 	    android:name="com.hover.stax.security.SecurityFragment"
-	    android:label="@string/title_security"
+	    android:label="@string/nav_security"
 	    tools:layout="@layout/fragment_security" />
 </navigation>

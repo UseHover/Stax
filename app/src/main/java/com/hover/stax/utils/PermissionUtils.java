@@ -30,8 +30,16 @@ public class PermissionUtils {
 								&& c.checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED);
 	}
 
+	public static boolean hasContactPerm(Context c) {
+		return Build.VERSION.SDK_INT < Build.VERSION_CODES.M || c.checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
+	}
+
 	public static void requestPhonePerms(Activity act, int requestCode) {
-		ActivityCompat.requestPermissions(act, new String[]{Manifest.permission.CALL_PHONE, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_CONTACTS}, requestCode);
+		ActivityCompat.requestPermissions(act, new String[]{Manifest.permission.CALL_PHONE, Manifest.permission.READ_PHONE_STATE}, requestCode);
+	}
+
+	public static void requestContactPerms(Activity act, int requestCode) {
+		ActivityCompat.requestPermissions(act, new String[]{Manifest.permission.READ_CONTACTS}, requestCode);
 	}
 
 

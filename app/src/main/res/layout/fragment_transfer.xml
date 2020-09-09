@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_vertical_margin"
+    android:background="@color/colorPrimary"
+    tools:context=".transfer.TransferFragment">
+
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical" >
+
+		<TextView android:id="@+id/transfer_title"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textColor="@color/offWhite"
+		    android:textSize="@dimen/text_21"
+		    android:textStyle="bold"
+		    android:layout_gravity="start"
+		    android:gravity="start"
+		    android:layout_marginBottom="@dimen/spacing32"
+			android:text="@string/title_p2p"/>
+
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textAlignment="center"
+		    android:text="@string/from"
+		    android:textColor="@color/offWhite"
+		    android:textSize="@dimen/text_13" />
+		<androidx.appcompat.widget.AppCompatSpinner
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginTop="@dimen/activity_vertical_margin"
+		    android:background="@drawable/spinner_bg"
+		    android:padding="1dp"
+		    android:id="@+id/fromSpinner" />
+
+		<LinearLayout  android:id="@+id/details_block"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+
+			<TextView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:textAlignment="center"
+			    android:text="@string/to"
+			    android:layout_marginTop="@dimen/activity_vertical_margin"
+			    android:textColor="@color/offWhite"
+			    android:textSize="@dimen/text_13" />
+			<androidx.appcompat.widget.AppCompatSpinner
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_marginTop="@dimen/activity_vertical_margin"
+			    android:padding="1dp"
+			    android:background="@drawable/spinner_bg"
+			    android:id="@+id/toSpinner" />
+
+			<LinearLayout android:id="@+id/recipient_block"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:visibility="gone">
+
+				<TextView
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:text="@string/recipient_phone"
+				    android:layout_marginTop="@dimen/activity_vertical_margin"
+				    android:textColor="@color/offWhite"
+				    android:textSize="@dimen/text_13" />
+
+				<RelativeLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="@dimen/activity_vertical_margin"
+					android:orientation="horizontal">
+
+					<EditText android:id="@+id/recipient_number"
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+						android:layout_alignParentLeft="true"
+						android:layout_toLeftOf="@+id/contact_button"
+					    android:paddingLeft="@dimen/editText_box_margin_horiz"
+					    android:paddingStart="@dimen/editText_box_margin_horiz"
+					    android:paddingEnd="@dimen/editText_box_margin_horiz"
+					    android:paddingRight="@dimen/editText_box_margin_horiz"
+					    android:paddingTop="@dimen/editText_box_margin_vert"
+					    android:paddingBottom="@dimen/editText_box_margin_vert"
+					    android:hint="@string/enter_recipient_phone"
+					    android:textColorHint="@color/darkGrey"
+					    android:maxLines="1"
+					    android:inputType="phone"
+					    android:textColor="@color/offWhite"
+					    android:background="@drawable/edit_text_bg" />
+
+					<ImageButton android:id="@+id/contact_button"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginStart="25dp"
+						android:layout_alignParentEnd="true"
+						android:layout_centerVertical="true"
+						android:src="@drawable/ic_contacts"
+						android:background="@color/transparent"/>
+				</RelativeLayout>
+			</LinearLayout>
+
+			<TextView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_marginTop="@dimen/activity_vertical_margin"
+			    android:textAlignment="center"
+			    android:text="@string/amount"
+			    android:textColor="@color/offWhite"
+			    android:textSize="@dimen/text_13" />
+
+			<EditText android:id="@+id/amount_input"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:paddingLeft="@dimen/editText_box_margin_horiz"
+			    android:paddingStart="@dimen/editText_box_margin_horiz"
+			    android:paddingEnd="@dimen/editText_box_margin_horiz"
+			    android:paddingRight="@dimen/editText_box_margin_horiz"
+			    android:paddingTop="@dimen/editText_box_margin_vert"
+			    android:paddingBottom="@dimen/editText_box_margin_vert"
+			    android:hint="@string/amount"
+			    android:textColorHint="@color/darkGrey"
+			    android:layout_marginTop="@dimen/activity_vertical_margin"
+			    android:maxLines="1"
+			    android:autofillHints="email_hint"
+			    android:inputType="number"
+			    android:textColor="@color/offWhite"
+			    android:layout_weight="1"
+			    android:background="@drawable/edit_text_bg" />
+
+			<Button android:id="@+id/confirm_button"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/continue_text"
+			    android:background="@drawable/edit_text_bg"
+			    android:textColor="@color/offWhite"
+			    android:textAllCaps="false"
+			    android:layout_marginTop="@dimen/spacing32"
+			    android:layout_gravity="end"
+			    android:paddingHorizontal="@dimen/activity_vertical_margin"/>
+		</LinearLayout>
+
+		<TextView android:id="@+id/error_message"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/activity_vertical_margin"
+			android:textAlignment="center"
+			android:text="@string/no_p2p_action_error"
+			android:textColor="@color/offWhite"
+			android:textSize="@dimen/text_13"
+			android:visibility="gone"/>
+
+	</LinearLayout>
+</androidx.core.widget.NestedScrollView>
