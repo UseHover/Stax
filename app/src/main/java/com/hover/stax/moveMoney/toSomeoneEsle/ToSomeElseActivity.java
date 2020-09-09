@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.view.View;
+import android.widget.AdapterView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.hover.sdk.permissions.PermissionActivity;
@@ -15,6 +18,7 @@ import com.hover.stax.R;
 import com.hover.stax.buyAirtime.BuyAirtimeViewModel;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.models.StaxContactModel;
+import com.hover.stax.permission.PermissionScreenActivity;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
 
@@ -57,6 +61,30 @@ public class ToSomeElseActivity extends AppCompatActivity {
 			fromChannelIdList.add(0);
 			encryptedPins.add(null);
 			UIHelper.loadSpinnerItems(channelNames, spinnerFrom, ToSomeElseActivity.this);
+		});
+
+		spinnerFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				AppCompatTextView textView = (AppCompatTextView) parent.getChildAt(0);
+				if (textView != null) {
+					textView.setTextColor(getResources().getColor(R.color.white));
+				}
+
+				if (position != 0) {
+					if (position == fromChannelIdList.size() - 1)
+						startActivity(new Intent(ToSomeElseActivity.this, PermissionScreenActivity.class));
+					else {
+						int tappedChannelId = fromChannelIdList.get(position);
+
+					}
+				} //Add else later
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+
+			}
 		});
 
 		findViewById(R.id.pickContact).setOnClickListener(view->{
