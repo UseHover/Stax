@@ -36,7 +36,6 @@
 		<activity android:name=".moveMoney.toSomeoneEsle.ToSomeElseActivity" />
 		<activity android:name=".moveMoney.requestMoney.RequestMoneyActivity" />
 		<activity android:name=".moveMoney.betweenServices.BetweenServicesActivity" />
-		<activity android:name=".moveMoney.ClickedMoveMoneyActivity" />
 
 		<receiver
 			android:name=".hover.TransactionReceiver"

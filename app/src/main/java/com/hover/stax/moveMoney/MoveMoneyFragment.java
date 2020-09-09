@@ -13,13 +13,15 @@ import com.hover.stax.R;
 import com.hover.stax.moveMoney.betweenServices.BetweenServicesActivity;
 import com.hover.stax.moveMoney.requestMoney.RequestMoneyActivity;
 import com.hover.stax.moveMoney.toSomeoneEsle.ToSomeElseActivity;
+import com.hover.stax.utils.UIHelper;
 
 public class MoveMoneyFragment extends Fragment {
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_movemoney, container, false);
 		root.findViewById(R.id.betweenServicesText).setOnClickListener(view -> {
-			startActivity(new Intent(getActivity(), BetweenServicesActivity.class));
+			UIHelper.flashMessage(getContext(), "This feature is coming in next update");
+
 		});
 
 		root.findViewById(R.id.toSomeElseText).setOnClickListener(view -> {
@@ -27,7 +29,7 @@ public class MoveMoneyFragment extends Fragment {
 		});
 
 		root.findViewById(R.id.requestMoneyText).setOnClickListener(view -> {
-			startActivity(new Intent(getActivity(), RequestMoneyActivity.class));
+			UIHelper.flashMessage(getContext(), "This feature is coming in next update");
 		});
 
 		return root;

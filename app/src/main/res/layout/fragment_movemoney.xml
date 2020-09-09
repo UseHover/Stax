@@ -19,20 +19,6 @@
 	<TextView
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:text="@string/between_services"
-	    android:textColor="@color/offWhite"
-	    android:id="@+id/betweenServicesText"
-	    android:textSize="@dimen/movemMoneyItemsTextSize"
-	    android:padding="@dimen/activity_horizontal_margin" />
-
-	<View
-	    android:layout_width="match_parent"
-	    android:layout_height="0.1dp"
-	    android:background="@color/grey" />
-
-	<TextView
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
 	    android:text="@string/to_someone_else"
 	    android:textColor="@color/offWhite"
 	    android:id="@+id/toSomeElseText"
@@ -47,9 +33,25 @@
 	<TextView
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
+	    android:text="@string/between_services"
+	    android:textColor="@color/darkGrey"
+	    android:id="@+id/betweenServicesText"
+	    android:textSize="@dimen/movemMoneyItemsTextSize"
+	    android:padding="@dimen/activity_horizontal_margin" />
+
+	<View
+	    android:layout_width="match_parent"
+	    android:layout_height="0.1dp"
+	    android:background="@color/grey" />
+
+
+
+	<TextView
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
 	    android:text="@string/request_money"
 	    android:id="@+id/requestMoneyText"
-	    android:textColor="@color/offWhite"
+	    android:textColor="@color/darkGrey"
 	    android:textSize="@dimen/movemMoneyItemsTextSize"
 	    android:padding="@dimen/activity_horizontal_margin" />
 
