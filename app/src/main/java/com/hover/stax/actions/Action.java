@@ -5,9 +5,14 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.hover.sdk.parsers.ParserHelper;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 // This Entity reads the SDK's database, so the fields below have to match the SDK's SQL definition EXACTLY
 // since the SDK does not currently use Room
@@ -98,5 +103,19 @@ public class Action {
 			}
 		} catch (JSONException e) {}
 		return false;
+	}
+
+	public List<String> getRequiredParams() {
+		List<String> params = new ArrayList<>();
+		try {
+			JSONArray steps = new JSONArray(custom_steps);
+			for (int s = 0; s < steps.length(); s++) {
+				JSONObject step = steps.optJSONObject(s);
+				if (step != null && Boolean.TRUE.equals(step.optBoolean(STEP_IS_PARAM))) {
+					params.add(step.optString(STEP_VALUE));
+				}
+			}
+		} catch (JSONException e) {}
+		return params;
 	}
 }

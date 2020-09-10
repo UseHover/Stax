@@ -20,6 +20,7 @@ import com.hover.stax.actions.Action;
 import com.hover.stax.database.KeyStoreExecutor;
 import com.hover.stax.home.BalanceAdapter;
 import com.hover.stax.home.HomeViewModel;
+import com.hover.stax.hover.HoverCaller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,20 +83,8 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 
 	private void chooseRun(int index) {
 		if (toRun != null && toRun.size() > hasRun.size()) {
-			makeHoverCall(toRun.get(index), index);
+			new HoverCaller.Builder(toRun.get(index), homeViewModel.getChannel(toRun.get(index).channel_id),this, index).build();
 		}
-	}
-
-	private void makeHoverCall(Action action, int runId) {
-		HoverParameters.Builder builder = new HoverParameters.Builder(this);
-		builder.request(action.public_id);
-//		builder.setEnvironment(HoverParameters.TEST_ENV);
-		builder.style(R.style.myHoverTheme);
-		builder.finalMsgDisplayTime(2000);
-		builder.extra("pin", KeyStoreExecutor.decrypt(homeViewModel.getChannel(action.channel_id).pin, ApplicationInstance.getContext()));
-		Intent i = builder.buildIntent();
-		Amplitude.getInstance().logEvent(getString(R.string.start_load_screen));
-		startActivityForResult(i, runId);
 	}
 
 	@Override

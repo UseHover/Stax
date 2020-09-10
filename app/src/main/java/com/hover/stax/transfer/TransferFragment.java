@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.amplitude.api.Amplitude;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import com.hover.sdk.api.HoverParameters;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.ApplicationInstance;
@@ -31,10 +35,14 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.database.KeyStoreExecutor;
 import com.hover.stax.home.MainActivity;
+import com.hover.stax.hover.HoverCaller;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 
 public class TransferFragment extends Fragment {
+	private static final String TAG = "TransferFragment";
+
 	private String transferType;
 	private TransferViewModel transferViewModel;
 	private AppCompatSpinner spinnerTo;
@@ -170,18 +178,12 @@ public class TransferFragment extends Fragment {
 
 	private void makeHoverCall(Action action) {
 		Amplitude.getInstance().logEvent(getString(R.string.finish_screen, transferType));
-		HoverParameters.Builder builder = new HoverParameters.Builder(getContext());
-		builder.request(action.public_id);
-//		builder.setEnvironment(HoverParameters.TEST_ENV);
-		builder.style(R.style.myHoverTheme);
-		builder.finalMsgDisplayTime(2000);
-		builder.extra(Action.PHONE_KEY, recipientInput.getText().toString());
-		builder.extra(Action.ACCOUNT_KEY, recipientInput.getText().toString());
-		builder.extra(Action.AMOUNT_KEY, amountInput.getText().toString());
-		builder.extra(Action.PIN_KEY, KeyStoreExecutor.decrypt(transferViewModel.getActiveChannel().getValue().pin, ApplicationInstance.getContext()));
-		Intent i = builder.buildIntent();
-		Amplitude.getInstance().logEvent(getString(R.string.start_load_screen));
-		startActivityForResult(i, MainActivity.TRANSFER_REQUEST);
+		new HoverCaller.Builder(action, transferViewModel.getActiveChannel().getValue(),
+				getActivity(), MainActivity.TRANSFER_REQUEST, this)
+			.extra(Action.PHONE_KEY, recipientInput.getText().toString())
+			.extra(Action.ACCOUNT_KEY, recipientInput.getText().toString())
+			.extra(Action.AMOUNT_KEY, amountInput.getText().toString())
+			.build();
 	}
 
 	@Override
@@ -191,7 +193,7 @@ public class TransferFragment extends Fragment {
 			StaxContactModel staxContactModel = new StaxContactModel(data);
 			if (staxContactModel.getPhoneNumber() != null) {
 				Amplitude.getInstance().logEvent(getString(R.string.contact_select_success));
-				recipientInput.setText(staxContactModel.getPhoneNumber());
+				recipientInput.setText(Utils.normalizePhoneNumber(staxContactModel.getPhoneNumber(), transferViewModel.getActiveChannel().getValue().countryAlpha2));
 			} else {
 				Amplitude.getInstance().logEvent(getString(R.string.contact_select_error));
 				UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectContactErrorMessage));
