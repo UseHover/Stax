@@ -44,8 +44,11 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:2.2.5"
     androidTestImplementation "androidx.room:room-testing:2.2.5"
 
+    implementation 'com.amplitude:android-sdk:2.23.2'
     implementation "com.squareup.okhttp3:okhttp:4.8.1"
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
@@ -57,8 +60,4 @@ dependencies {
     debugImplementation 'com.android.volley:volley:1.1.1'
     debugImplementation 'com.google.android.gms:play-services-analytics:16.0.7'
     debugImplementation 'io.sentry:sentry-android:1.7.21'
-
-    implementation 'de.hdodenhof:circleimageview:3.1.0'
-    implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
-    implementation 'com.github.blongho:worldCountryData:1.5'
 }

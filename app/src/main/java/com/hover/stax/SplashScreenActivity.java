@@ -9,6 +9,7 @@ import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.WorkManager;
 
+import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.channels.UpdateChannelsWorker;
@@ -18,6 +19,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		Amplitude.getInstance().initialize(this, "9275a8bd8ab3037bd1f8e072f83548d3").enableForegroundTracking(getApplication());
 		Hover.initialize(this);
 		Hover.setBranding("Stax", R.mipmap.ic_launcher, this);
 		WorkManager wm = WorkManager.getInstance(this);

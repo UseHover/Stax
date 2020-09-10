@@ -6,11 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -19,17 +19,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.HoverParameters;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
-import com.hover.stax.actions.ActionAdapter;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.channels.ChannelAdapter;
 import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.database.KeyStoreExecutor;
 import com.hover.stax.home.MainActivity;
@@ -54,6 +52,8 @@ public class TransferFragment extends Fragment {
 		transferType = getArguments() != null ? getArguments().getString(Action.TRANSACTION_TYPE) : Action.P2P;
 		transferViewModel = new ViewModelProvider(this).get(TransferViewModel.class);
 		transferViewModel.setType(transferType);
+		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, transferType));
+
 		View root = inflater.inflate(R.layout.fragment_transfer, container, false);
 
 		initView(root);
@@ -91,7 +91,7 @@ public class TransferFragment extends Fragment {
 	private void startListeners() {
 		transferViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
 			channels.add(new Channel(getResources().getString(R.string.addAService)));
-			ChannelAdapter adapter = new ChannelAdapter(getActivity(), R.layout.spinner_items, channels);
+			ArrayAdapter<Channel> adapter = new ArrayAdapter(getActivity(), R.layout.spinner_items, channels);
 			spinnerFrom.setAdapter(adapter);
 		});
 
@@ -104,7 +104,7 @@ public class TransferFragment extends Fragment {
 				detailsBlock.setVisibility(View.GONE);
 				pageError.setVisibility(View.VISIBLE);
 			}
-			ActionAdapter adapter = new ActionAdapter(getActivity(), R.layout.spinner_items, actions);
+			ArrayAdapter<Action> adapter = new ArrayAdapter(getActivity(), R.layout.spinner_items, actions);
 			spinnerTo.setAdapter(adapter);
 		});
 	}
@@ -139,6 +139,7 @@ public class TransferFragment extends Fragment {
 
 	private void createContactSelector() {
 		contactButton.setOnClickListener(view -> {
+			Amplitude.getInstance().logEvent(getString(R.string.try_contact_select));
 			if (PermissionUtils.hasContactPermission()) {
 				Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
 				startActivityForResult(contactPickerIntent, READ_CONTACT);
@@ -168,9 +169,10 @@ public class TransferFragment extends Fragment {
 	}
 
 	private void makeHoverCall(Action action) {
+		Amplitude.getInstance().logEvent(getString(R.string.finish_screen, transferType));
 		HoverParameters.Builder builder = new HoverParameters.Builder(getContext());
 		builder.request(action.public_id);
-		//builder.setEnvironment(HoverParameters.PROD_ENV);
+//		builder.setEnvironment(HoverParameters.TEST_ENV);
 		builder.style(R.style.myHoverTheme);
 		builder.finalMsgDisplayTime(2000);
 		builder.extra(Action.PHONE_KEY, recipientInput.getText().toString());
@@ -178,6 +180,7 @@ public class TransferFragment extends Fragment {
 		builder.extra(Action.AMOUNT_KEY, amountInput.getText().toString());
 		builder.extra(Action.PIN_KEY, KeyStoreExecutor.decrypt(transferViewModel.getActiveChannel().getValue().pin, ApplicationInstance.getContext()));
 		Intent i = builder.buildIntent();
+		Amplitude.getInstance().logEvent(getString(R.string.start_load_screen));
 		startActivityForResult(i, MainActivity.TRANSFER_REQUEST);
 	}
 
@@ -187,10 +190,14 @@ public class TransferFragment extends Fragment {
 		if (requestCode == READ_CONTACT && resultCode == Activity.RESULT_OK) {
 			StaxContactModel staxContactModel = new StaxContactModel(data);
 			if (staxContactModel.getPhoneNumber() != null) {
+				Amplitude.getInstance().logEvent(getString(R.string.contact_select_success));
 				recipientInput.setText(staxContactModel.getPhoneNumber());
-			} else
+			} else {
+				Amplitude.getInstance().logEvent(getString(R.string.contact_select_error));
 				UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectContactErrorMessage));
+			}
 		} else if (requestCode == MainActivity.TRANSFER_REQUEST) {
+			Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
 			NavHostFragment.findNavController(this).navigate(R.id.navigation_home);
 		};
 	}
@@ -199,9 +206,11 @@ public class TransferFragment extends Fragment {
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		if (requestCode == READ_CONTACT && PermissionHelper.permissionsGranted(grantResults)) {
+			Amplitude.getInstance().logEvent(getString(R.string.contact_perm_success));
 			Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
 			startActivityForResult(contactPickerIntent, READ_CONTACT);
 		} else {
+			Amplitude.getInstance().logEvent(getString(R.string.contact_perm_denied));
 			UIHelper.flashMessage(getContext(), getResources().getString(R.string.contact_perm_error));
 		}
 	}

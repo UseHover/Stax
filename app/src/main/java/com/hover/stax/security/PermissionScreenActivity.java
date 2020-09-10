@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.amplitude.api.Amplitude;
 import com.hover.sdk.permissions.PermissionActivity;
 import com.hover.stax.R;
 import com.hover.stax.channels.ChannelsActivity;
@@ -26,6 +27,7 @@ public class PermissionScreenActivity extends AppCompatActivity {
 
 		findViewById(R.id.permission_button).setOnClickListener(view -> {
 			if (!PermissionUtils.hasRequiredPermissions()) {
+				Amplitude.getInstance().logEvent(getString(R.string.request_permissions));
 				startActivityForResult(new Intent(this, PermissionActivity.class), PERMISSION_REQ_CODE);
 			}
 		});
@@ -36,8 +38,10 @@ public class PermissionScreenActivity extends AppCompatActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == PERMISSION_REQ_CODE) {
 			if (resultCode != RESULT_OK) {
+				Amplitude.getInstance().logEvent(getString(R.string.denied_sdk_permissions));
 				UIHelper.flashMessage(this, getCurrentFocus(), getResources().getString(R.string.permission_failure));
 			} else {
+				Amplitude.getInstance().logEvent(getString(R.string.granted_sdk_permissions));
 				UIHelper.flashMessage(this, getCurrentFocus(), getResources().getString(R.string.permission_success));
 				startActivity(new Intent(this, ChannelsActivity.class));
 				finish();

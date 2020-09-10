@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amplitude.api.Amplitude;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
@@ -37,8 +38,10 @@ public class HomeFragment extends Fragment{
 		homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
 
 		transactionHistoryRecyclerView = view.findViewById(R.id.transaction_history_recyclerView);
-		final TextView textView = view.findViewById(R.id.text_balances);
-		textView.setOnClickListener(v -> startActivity(new Intent(getActivity(), PermissionScreenActivity.class)));
+		view.findViewById(R.id.balances_header).setOnClickListener(v -> {
+			Amplitude.getInstance().logEvent(getString(R.string.click_add_account));
+			startActivity(new Intent(getActivity(), PermissionScreenActivity.class));
+		});
 
 		recyclerView = view.findViewById(R.id.balances_recyclerView);
 		recyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
@@ -66,7 +69,10 @@ public class HomeFragment extends Fragment{
 				mostRecentTimestamp = c.latestBalanceTimestamp;
 		}
 		homeTimeAgo.setText(mostRecentTimestamp > 0 ? DateUtils.timeAgo(ApplicationInstance.getContext(), mostRecentTimestamp) : "Refresh");
-		homeTimeAgo.setOnClickListener(view2 -> ((MainActivity) getActivity()).runAllBalances());
+		homeTimeAgo.setOnClickListener(view2 -> {
+			Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_all));
+			((MainActivity) getActivity()).runAllBalances();
+		});
 
 		view.findViewById(R.id.homeTimeAgo).setVisibility(channels.size() > 0 ? View.VISIBLE : View.GONE);
 		view.findViewById(R.id.homeBalanceDesc).setVisibility(channels.size() > 0 ? View.GONE : View.VISIBLE);

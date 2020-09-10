@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.WorkManager;
 
+import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.sims.SimInfo;
 import com.hover.stax.R;
@@ -24,6 +25,9 @@ import com.hover.stax.security.PinsActivity;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,6 +125,9 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 
 	private void onDone(List<Integer> ids) {
 		if (ids.size() > 0) {
+			JSONObject event = new JSONObject();
+			try { event.put(getString(R.string.account_select_count_key), ids.size()); } catch (JSONException ignored) {}
+			Amplitude.getInstance().logEvent(getString(R.string.finished_account_select), event);
 			findViewById(R.id.choose_serves_done).setOnClickListener(view -> saveAndContinue());
 		} else {
 			findViewById(R.id.choose_serves_done).setOnClickListener(view -> UIHelper.flashMessage(ChannelsActivity.this, getString(R.string.no_selection_error)));

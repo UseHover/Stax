@@ -11,6 +11,7 @@
 
 	<string name="done"><u>Done</u></string>
 	<string name="cancel"><u>Cancel</u></string>
+	<string name="skip"><u>Skip</u></string>
 	<string name="continue_text">Continue</string>
 	<string name="no_selection_error">You must select at least 1 service.</string>
 

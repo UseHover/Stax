@@ -20,6 +20,7 @@ public class Channel {
 			this.id = jsonObject.getInt("id");
 			this.name = jsonObject.getString("name");
 			this.countryAlpha2 = jsonObject.getString("country_alpha2").toUpperCase();
+			this.currency = jsonObject.getString("currency");
 			this.hniList = jsonObject.getString("hni_list");
 			this.logoUrl = rootUrl + jsonObject.getString("logo_url");
 			this.primaryColorHex = jsonObject.getString("primary_color_hex");
@@ -49,6 +50,10 @@ public class Channel {
 	@NonNull
 	@ColumnInfo(name = "country_alpha2")
 	public String countryAlpha2;
+
+	@NonNull
+	@ColumnInfo(name = "currency")
+	public String currency;
 
 	@NonNull
 	@ColumnInfo(name = "hni_list")
