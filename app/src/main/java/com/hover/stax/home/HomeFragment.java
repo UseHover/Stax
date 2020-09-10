@@ -13,15 +13,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hover.sdk.api.Hover;
-import com.hover.sdk.transactions.Transaction;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.security.PermissionScreenActivity;
-import com.hover.stax.utils.TimeAgo;
+import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
-import com.hover.stax.utils.interfaces.CustomOnClickListener;
 
 import java.util.List;
 
@@ -38,6 +35,7 @@ public class HomeFragment extends Fragment{
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+
 		transactionHistoryRecyclerView = view.findViewById(R.id.transaction_history_recyclerView);
 		final TextView textView = view.findViewById(R.id.text_balances);
 		textView.setOnClickListener(v -> startActivity(new Intent(getActivity(), PermissionScreenActivity.class)));
@@ -51,16 +49,13 @@ public class HomeFragment extends Fragment{
 			setMeta(view, channels);
 		});
 
-		homeViewModel.getTransactions().observe(getViewLifecycleOwner(), transactions -> {
-			homeViewModel.getTransactionModels(transactions).observe(getViewLifecycleOwner(), staxTransactionModels -> {
-				transactionHistoryRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-				transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactionModels));
-			});
+		homeViewModel.getStaxTranssactions().observe(getViewLifecycleOwner(), staxTransactions -> {
+			transactionHistoryRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
+			transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions));
+			view.findViewById(R.id.transactionsLabel).setVisibility(staxTransactions.size() > 0 ? View.VISIBLE : View.GONE);
 		});
 
-
-
-
+		homeViewModel.updateTransactions();
 	}
 
 	private void setMeta(View view, List<Channel> channels) {
@@ -70,14 +65,13 @@ public class HomeFragment extends Fragment{
 			if (c.latestBalanceTimestamp != null && c.latestBalanceTimestamp > mostRecentTimestamp)
 				mostRecentTimestamp = c.latestBalanceTimestamp;
 		}
-		homeTimeAgo.setText(mostRecentTimestamp > 0 ? TimeAgo.timeAgo(ApplicationInstance.getContext(), mostRecentTimestamp) : "Refresh");
+		homeTimeAgo.setText(mostRecentTimestamp > 0 ? DateUtils.timeAgo(ApplicationInstance.getContext(), mostRecentTimestamp) : "Refresh");
 		homeTimeAgo.setOnClickListener(view2 -> ((MainActivity) getActivity()).runAllBalances());
 
 		view.findViewById(R.id.homeTimeAgo).setVisibility(channels.size() > 0 ? View.VISIBLE : View.GONE);
 		view.findViewById(R.id.homeBalanceDesc).setVisibility(channels.size() > 0 ? View.GONE : View.VISIBLE);
 
 		transactionHistoryRecyclerView.setVisibility(channels.size() > 0 ? View.VISIBLE : View.GONE);
-		view.findViewById(R.id.transactionsLabel).setVisibility(channels.size() > 0 ? View.VISIBLE : View.GONE);
 	}
 
 }

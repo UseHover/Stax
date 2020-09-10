@@ -39,45 +39,6 @@ public class Utils {
 		return hni.replace("[", "").replace("]", "").replace("\"", "");
 	}
 
-	public static String formatDate(long timestamp) {
-		String pattern = "HH:mm:ss (z) MMM dd, yyyy";
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, Locale.getDefault());
-		return simpleDateFormat.format(timestamp);
-	}
-
-	public static String formatDateV2(@Nullable long timestamp) {
-
-		String pattern = "MMM dd";
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, Locale.getDefault());
-		return simpleDateFormat.format(timestamp);
-	}
-
-	public static String formatDateV3(long timestamp) {
-		String pattern = "MMM dd, yyyy";
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, Locale.getDefault());
-		return simpleDateFormat.format(timestamp);
-	}
-
-	public static String nullToString(Object value) {
-		if (value == null) return "None";
-		else return value.toString();
-	}
-
-	public static List<?> removeDuplicatesFromList(List<?> list) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-			list = list.stream().distinct().collect(Collectors.toList());
-		} else {
-			LinkedHashSet<Object> hashSet = new LinkedHashSet<>(list);
-			list = new ArrayList<>(hashSet);
-		}
-		return list;
-	}
-
-	static public Object nonNullDateRange(Object value) {
-		if (value == null) return 0;
-		else return value;
-	}
-
 	@SuppressLint({"HardwareIds", "MissingPermission"})
 	public static String getDeviceId(Context c) {
 		try {
@@ -99,53 +60,6 @@ public class Utils {
 		return c.getString(R.string.hsdk_unknown_device_id);
 	}
 
-
-	public static String[] convertNormalJSONArrayToStringArray(JSONArray arr) throws JSONException {
-		if (arr == null) return new String[]{};
-		String[] list = new String[arr.length()];
-		for (int i = 0; i < arr.length(); i++) {
-			list[i] = arr.getString(i);
-		}
-		return list;
-	}
-
-	public static void saveImageLocally(Bitmap b, String imageName, Context context) {
-		FileOutputStream foStream;
-		try {
-			foStream = context.openFileOutput(imageName, Context.MODE_PRIVATE);
-			b.compress(Bitmap.CompressFormat.PNG, 100, foStream);
-			foStream.close();
-		} catch (Exception e) {
-			Log.d("saveImage", "Exception 2, Something went wrong!");
-			e.printStackTrace();
-		}
-	}
-
-	public static Bitmap loadImageBitmap(String imageName, Context context) {
-		Bitmap bitmap = null;
-		FileInputStream fiStream;
-		try {
-			fiStream = context.openFileInput(imageName);
-			bitmap = BitmapFactory.decodeStream(fiStream);
-			fiStream.close();
-		} catch (Exception e) {
-			Log.d("saveImage", "Exception 3, Something went wrong!");
-			e.printStackTrace();
-		}
-		return bitmap;
-	}
-
-	public static Bitmap downloadImageBitmap(String sUrl) {
-		Bitmap bitmap = null;
-		try {
-			InputStream inputStream = new URL(sUrl).openStream();   // Download Image from URL
-			bitmap = BitmapFactory.decodeStream(inputStream);       // Decode Bitmap
-			inputStream.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return bitmap;
-	}
 
 	public static String getPackage(Context c) {
 		try {
@@ -176,58 +90,4 @@ public class Utils {
 			return number;
 		}
 	}
-
-	public static String getTransactionTypeFullString(String transType) {
-		String string = "Others";
-		switch (transType) {
-			case "airtime":  string = ApplicationInstance.getContext().getResources().getString(R.string.topup_airtime);
-			break;
-			case "p2p": string = ApplicationInstance.getContext().getResources().getString(R.string.to_someone_else);
-			break;
-			case "me2me": string = ApplicationInstance.getContext().getResources().getString(R.string.between_services);
-			break;
-		}
-		return string;
-	}
-
-	public static StaxDate getStaxDate(long timestamp) {
-		StaxDate staxDate = new StaxDate();
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(timestamp);
-		staxDate.setMonth(monthFromId(cal.get(Calendar.MONTH)));
-		staxDate.setDayOfMonth(String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
-		staxDate.setYear(String.valueOf(cal.get(Calendar.YEAR)));
-		return staxDate;
-	}
-
-	private static String monthFromId(int id) {
-		String month = "";
-		switch (id) {
-			case 0 : month = "January";
-			break;
-			case 1: month = "February";
-			break;
-			case 2: month = "March";
-			break;
-			case 3: month = "April";
-			break;
-			case 4: month = "May";
-			break;
-			case 5: month = "June";
-			break;
-			case 6: month = "July";
-			break;
-			case 7: month = "August";
-			break;
-			case 8: month = "September";
-			break;
-			case 9: month = "October";
-			break;
-			case 10: month = "November";
-			break;
-			case 11: month = "December";
-			break;
-		}
-		return  month;
-	}
-  }
+}

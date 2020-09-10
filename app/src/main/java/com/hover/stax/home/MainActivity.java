@@ -26,6 +26,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements BalanceAdapter.RefreshListener {
 
 	final public static String CHECK_ALL_BALANCES = "CHECK_ALL";
+	final public static int TRANSFER_REQUEST = 203;
 
 	private HomeViewModel homeViewModel;
 	private static List<Action> toRun;

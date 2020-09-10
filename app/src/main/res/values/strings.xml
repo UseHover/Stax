@@ -51,6 +51,9 @@
 	<string name="title_me2me">Move money between accounts</string>
 	<string name="title_request">Request money</string>
 
+	<string name="transaction_descrip_airtime">%1$s sent airtime to %2$s</string>
+	<string name="transaction_descrip_money">From %1$s to %2$s</string>
+
 	<string name="from">From</string>
 	<string name="to">To</string>
 	<string name="amount">Amount</string>
@@ -82,7 +85,6 @@
 
 	<string name="timeago_ago">%1$s ago</string>
 	<string name="timeago_from_now">%1$s from now</string>
-
 	<string name="timeago_secondes">less than a minute</string>
 	<string name="timeago_minute">about a minute</string>
 	<string name="timeago_minutes">%1$d minutes</string>

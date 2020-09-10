@@ -6,29 +6,16 @@ import com.hover.stax.R;
 
 import java.util.Date;
 
-public class TimeAgo {
-
-	private TimeAgo() {
-		// Nothing
-	}
-
-	public static String timeUntil(Context context, final Date date) {
-		return timeUntil(context, date.getTime());
-	}
-
-	public static String timeAgo(Context context, final Date date) {
-		return timeAgo(context, date.getTime());
-	}
-
+public class DateUtils {
 	public static String timeUntil(Context context, final long millis) {
-		return time(context, millis - System.currentTimeMillis());
+		return humanFriendlyTime(context, millis - System.currentTimeMillis());
 	}
 
 	public static String timeAgo(Context context, final long millis) {
-		return time(context, System.currentTimeMillis() - millis);
+		return humanFriendlyTime(context, System.currentTimeMillis() - millis);
 	}
 
-	private static String time(Context context, long diffMillis) {
+	private static String humanFriendlyTime(Context context, long diffMillis) {
 		double seconds = Math.abs(diffMillis) / 1000;
 		double minutes = seconds / 60;
 		double hours = minutes / 60;
@@ -67,4 +54,20 @@ public class TimeAgo {
 		}
 	}
 
+	public static String monthNumToName(int number) {
+		switch (number) {
+			case 0 : return "January";
+			case 1: return "February";
+			case 2: return "March";
+			case 3: return "April";
+			case 4: return "May";
+			case 5: return "June";
+			case 6: return "July";
+			case 7: return "August";
+			case 8: return "September";
+			case 9: return "October";
+			case 10: return "November";
+			default: return "December";
+		}
+	}
 }

@@ -19,7 +19,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 
 		Hover.initialize(this);
-		Hover.setBranding("Stax", R.drawable.ic_launcher_foreground, this);
+		Hover.setBranding("Stax", R.mipmap.ic_launcher, this);
 		WorkManager wm = WorkManager.getInstance(this);
 		wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue();
 		wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, UpdateChannelsWorker.makeToil());

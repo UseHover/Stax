@@ -27,9 +27,8 @@ public abstract class AppDatabase extends RoomDatabase {
 			synchronized (AppDatabase.class) {
 				if (INSTANCE == null) {
 					INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "stax.db")
-									   .allowMainThreadQueries()
-									   .fallbackToDestructiveMigration()
-									   .build();
+					   .fallbackToDestructiveMigration()
+					   .build();
 				}
 			}
 		}

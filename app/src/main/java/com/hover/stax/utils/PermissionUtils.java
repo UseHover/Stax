@@ -42,7 +42,6 @@ public class PermissionUtils {
 		ActivityCompat.requestPermissions(act, new String[]{Manifest.permission.READ_CONTACTS}, requestCode);
 	}
 
-
 	public static boolean permissionsGranted(int[] grantResults) {
 		for (int result : grantResults) {
 			if (result != PackageManager.PERMISSION_GRANTED) {

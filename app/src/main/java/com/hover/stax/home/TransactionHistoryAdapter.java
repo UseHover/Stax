@@ -9,15 +9,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
-import com.hover.stax.utils.interfaces.CustomOnClickListener;
 
 import java.util.List;
 
 public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionHistoryAdapter.HistoryViewHolder> {
-	private List<StaxTransactionModel> transactionModelList;
+	private List<StaxTransaction> transactionList;
 
-	TransactionHistoryAdapter(List<StaxTransactionModel> transactionModelList) {
-		this.transactionModelList = transactionModelList;
+	TransactionHistoryAdapter(List<StaxTransaction> transactions) {
+		this.transactionList = transactions;
 	}
 
 	@NonNull
@@ -29,20 +28,21 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 
 	@Override
 	public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
-	StaxTransactionModel model = transactionModelList.get(position);
-	holder.content.setText("From "+model.getChannelName()+" to "+model.getToTransactionType());
-	holder.amount.setText(model.getAmount());
-	holder.date.setVisibility(model.isShowDate() ? View.VISIBLE : View.GONE);
-	holder.date.setText(model.getStaxDate().getMonth()+" "+model.getStaxDate().getDayOfMonth());
+		StaxTransaction t = transactionList.get(position);
+		holder.content.setText(t.getDescription());
+		holder.amount.setText(t.getAmount());
+		holder.date.setVisibility(t.isShowDate() ? View.VISIBLE : View.GONE);
+		holder.date.setText(t.getStaxDate().getMonth() + " " + t.getStaxDate().getDayOfMonth());
 	}
 
 	@Override
 	public int getItemCount() {
-		return transactionModelList !=null ? transactionModelList.size() : 0;
+		return transactionList != null ? transactionList.size() : 0;
 	}
 
 	static class HistoryViewHolder extends RecyclerView.ViewHolder {
 		private TextView  content, amount, date;
+
 		HistoryViewHolder(@NonNull View itemView) {
 			super(itemView);
 			content = itemView.findViewById(R.id.trans_content);

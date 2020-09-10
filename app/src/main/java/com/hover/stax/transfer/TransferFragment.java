@@ -1,10 +1,12 @@
 package com.hover.stax.transfer;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.hover.sdk.api.HoverParameters;
 import com.hover.sdk.permissions.PermissionHelper;
@@ -28,6 +32,7 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelAdapter;
 import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.database.KeyStoreExecutor;
+import com.hover.stax.home.MainActivity;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
 
@@ -138,7 +143,7 @@ public class TransferFragment extends Fragment {
 				Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
 				startActivityForResult(contactPickerIntent, READ_CONTACT);
 			} else {
-				PermissionUtils.requestContactPerms(getActivity(), READ_CONTACT);
+				requestPermissions(new String[]{ Manifest.permission.READ_CONTACTS }, READ_CONTACT);
 			}
 		});
 	}
@@ -173,8 +178,7 @@ public class TransferFragment extends Fragment {
 		builder.extra(Action.AMOUNT_KEY, amountInput.getText().toString());
 		builder.extra(Action.PIN_KEY, KeyStoreExecutor.decrypt(transferViewModel.getActiveChannel().getValue().pin, ApplicationInstance.getContext()));
 		Intent i = builder.buildIntent();
-		int AIRTIME_RUN = 203;
-		startActivityForResult(i, AIRTIME_RUN);
+		startActivityForResult(i, MainActivity.TRANSFER_REQUEST);
 	}
 
 	@Override
@@ -186,7 +190,9 @@ public class TransferFragment extends Fragment {
 				recipientInput.setText(staxContactModel.getPhoneNumber());
 			} else
 				UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectContactErrorMessage));
-		}
+		} else if (requestCode == MainActivity.TRANSFER_REQUEST) {
+			NavHostFragment.findNavController(this).navigate(R.id.navigation_home);
+		};
 	}
 
 	@Override
