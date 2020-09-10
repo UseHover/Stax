@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1098235122453",
+    "firebase_url": "https://stax-bf03d.firebaseio.com",
+    "project_id": "stax-bf03d",
+    "storage_bucket": "stax-bf03d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1098235122453:android:f826f5d2d92f3b61d20f1c",
+        "android_client_info": {
+          "package_name": "com.hover.stax"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1098235122453-vegqvhklnofu5careh3fltdu5bdv9dmu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-F4OUKVGvPDCUMLqNblp_YuYYvb3Xkjg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1098235122453-vegqvhklnofu5careh3fltdu5bdv9dmu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

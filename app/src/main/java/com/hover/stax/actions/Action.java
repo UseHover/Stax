@@ -1,23 +1,13 @@
 package com.hover.stax.actions;
 
-import android.util.Log;
-import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.hover.sdk.parsers.ParserHelper;
-import com.hover.stax.R;
-import com.hover.stax.transfer.TransferFragment;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 // This Entity reads the SDK's database, so the fields below have to match the SDK's SQL definition EXACTLY
 // since the SDK does not currently use Room
