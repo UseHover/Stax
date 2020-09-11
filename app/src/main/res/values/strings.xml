@@ -32,7 +32,8 @@
 	<string name="input_label">Input label</string>
 	<string name="pin_input_hint">Enter PIN</string>
 	<string name="recipient_phone">Recipient phone number</string>
-	<string name="enter_recipient_phone">Enter phone number</string>
+	<string name="recipient_account">Recipient account number</string>
+	<string name="recipient_hint">Enter number</string>
 
 	<string name="security">Security</string>
 	<string name="remove_pin_from_device">Remove PINs from device</string>

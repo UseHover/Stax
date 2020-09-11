@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,19 +22,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.amplitude.api.Amplitude;
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
-import com.hover.sdk.api.HoverParameters;
 import com.hover.sdk.permissions.PermissionHelper;
-import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
-import com.hover.stax.database.KeyStoreExecutor;
 import com.hover.stax.home.MainActivity;
-import com.hover.stax.hover.HoverCaller;
+import com.hover.stax.hover.HoverSession;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -49,6 +42,7 @@ public class TransferFragment extends Fragment {
 	private AppCompatSpinner spinnerFrom;
 	private View detailsBlock;
 	private View recipientBlock;
+	private TextView recipientLabel;
 	private EditText recipientInput;
 	private ImageButton contactButton;
 	private TextView pageError;
@@ -79,6 +73,7 @@ public class TransferFragment extends Fragment {
 		spinnerFrom = root.findViewById(R.id.fromSpinner);
 		detailsBlock = root.findViewById(R.id.details_block);
 		recipientBlock = root.findViewById(R.id.recipient_block);
+		recipientLabel = root.findViewById(R.id.recipient_label);
 		recipientInput = root.findViewById(R.id.recipient_number);
 		amountInput = root.findViewById(R.id.amount_input);
 		contactButton = root.findViewById(R.id.contact_button);
@@ -137,12 +132,19 @@ public class TransferFragment extends Fragment {
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				Action action = (Action) spinnerTo.getItemAtPosition(position);
 				transferViewModel.setActiveAction(action);
-				recipientBlock.setVisibility(action.requiresRecipient() ? View.VISIBLE : View.GONE);
+				updateView(action);
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) { }
 		});
+	}
+
+	private void updateView(Action action) {
+		recipientBlock.setVisibility(action.requiresRecipient() ? View.VISIBLE : View.GONE);
+		if (action.getRequiredParams().contains(Action.ACCOUNT_KEY)) {
+			recipientLabel.setText(getString(R.string.recipient_account));
+		} else { recipientLabel.setText(getString(R.string.recipient_phone)); }
 	}
 
 	private void createContactSelector() {
@@ -178,12 +180,12 @@ public class TransferFragment extends Fragment {
 
 	private void makeHoverCall(Action action) {
 		Amplitude.getInstance().logEvent(getString(R.string.finish_screen, transferType));
-		new HoverCaller.Builder(action, transferViewModel.getActiveChannel().getValue(),
+		new HoverSession.Builder(action, transferViewModel.getActiveChannel().getValue(),
 				getActivity(), MainActivity.TRANSFER_REQUEST, this)
 			.extra(Action.PHONE_KEY, recipientInput.getText().toString())
 			.extra(Action.ACCOUNT_KEY, recipientInput.getText().toString())
 			.extra(Action.AMOUNT_KEY, amountInput.getText().toString())
-			.build();
+			.run();
 	}
 
 	@Override

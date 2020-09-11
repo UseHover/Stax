@@ -21,14 +21,14 @@ import org.json.JSONObject;
 import java.util.Iterator;
 import java.util.List;
 
-final public class HoverCaller {
+final public class HoverSession {
 	private final static String TAG = "HoverCaller";
 
 	private Fragment frag;
 	private Channel channel;
 	private int requestCode;
 
-	private HoverCaller(Builder b) {
+	private HoverSession(Builder b) {
 		frag = b.fragment;
 		channel = b.channel;
 		requestCode = b.requestCode;
@@ -99,15 +99,15 @@ final public class HoverCaller {
 			fragment = frag;
 		}
 
-		public HoverCaller.Builder extra(String key, String value) {
+		public HoverSession.Builder extra(String key, String value) {
 			try {
 				extras.put(key, value);
 			} catch (JSONException e) { Log.e(TAG, "Failed to add extra"); }
 			return this;
 		}
 
-		public HoverCaller build() {
-			return new HoverCaller(this);
+		public HoverSession run() {
+			return new HoverSession(this);
 		}
 	}
 }

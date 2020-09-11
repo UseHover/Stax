@@ -13,14 +13,9 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.amplitude.api.Amplitude;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.hover.sdk.api.HoverParameters;
-import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
-import com.hover.stax.database.KeyStoreExecutor;
-import com.hover.stax.home.BalanceAdapter;
-import com.hover.stax.home.HomeViewModel;
-import com.hover.stax.hover.HoverCaller;
+import com.hover.stax.hover.HoverSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 
 	private void chooseRun(int index) {
 		if (toRun != null && toRun.size() > hasRun.size()) {
-			new HoverCaller.Builder(toRun.get(index), homeViewModel.getChannel(toRun.get(index).channel_id),this, index).build();
+			new HoverSession.Builder(toRun.get(index), homeViewModel.getChannel(toRun.get(index).channel_id),this, index).run();
 		}
 	}
 

@@ -6,6 +6,8 @@
 	<string name="click_add_account">Clicked add account</string>
 	<string name="finished_account_select">Finished account select</string>
 	<string name="account_select_count_key">chosen_account_count</string>
+	<string name="skipped_pin_entry">Skipped pin entry</string>
+	<string name="completed_pin_entry">Saved pins</string>
 	<string name="request_permissions">Asking for all SDK permissions</string>
 	<string name="granted_sdk_permissions">Granted all SDK permissions</string>
 	<string name="denied_sdk_permissions">Denied SDK permissions</string>

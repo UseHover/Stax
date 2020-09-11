@@ -1,7 +1,11 @@
 package com.hover.stax.home;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
@@ -20,10 +25,11 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.security.PermissionScreenActivity;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
-public class HomeFragment extends Fragment{
+public class HomeFragment extends Fragment {
 
 	private HomeViewModel homeViewModel;
 	private RecyclerView recyclerView, transactionHistoryRecyclerView;
@@ -58,6 +64,7 @@ public class HomeFragment extends Fragment{
 			view.findViewById(R.id.transactionsLabel).setVisibility(staxTransactions.size() > 0 ? View.VISIBLE : View.GONE);
 		});
 
+		LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(transactionReceiver, new IntentFilter(Utils.getPackage(getActivity()) + ".TRANSACTION_UPDATE"));
 		homeViewModel.updateTransactions();
 	}
 
@@ -80,4 +87,21 @@ public class HomeFragment extends Fragment{
 		transactionHistoryRecyclerView.setVisibility(channels.size() > 0 ? View.VISIBLE : View.GONE);
 	}
 
+	private final BroadcastReceiver transactionReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(final Context context, final Intent i) {
+			if (homeViewModel != null) { homeViewModel.updateTransactions(); }
+		}
+	};
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		unregisterTransactionReceiver();
+	}
+
+	private void unregisterTransactionReceiver() {
+		try { requireActivity().unregisterReceiver(transactionReceiver);
+		} catch (Exception ignored) { }
+	}
 }
