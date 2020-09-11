@@ -8,7 +8,7 @@
                 android:toDegrees="0">
             <shape android:shape="rectangle" android:padding="10dp">
 
-                <solid android:color="@color/colorMainGrey"/>
+                <solid android:color="@color/grey"/>
                 <corners android:radius="@dimen/editText_corner" />
 
             </shape>
@@ -18,7 +18,7 @@
         <shape android:shape="rectangle" android:padding="10dp">
 
             <solid android:color="@color/colorPrimaryDark"/>
-            <stroke android:width="2dp" android:color="@color/colorMainGrey"/>
+            <stroke android:width="2dp" android:color="@color/grey"/>
             <corners android:radius="@dimen/editText_corner" />
 
         </shape>

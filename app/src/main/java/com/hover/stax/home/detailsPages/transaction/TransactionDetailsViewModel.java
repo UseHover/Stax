@@ -20,6 +20,6 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 
 	LiveData<ArrayList<TransactionDetailsMessagesModel>> loadMessagesModelObs() {return messagesModel; }
 	void getMessagesModels(String transactionId) {
-		messagesModel.postValue(new MessageMethods().getMessagesOfTransactionById(transactionId));
+		messagesModel.postValue(new MessageUtils().getMessagesOfTransactionById(transactionId));
 	}
 }

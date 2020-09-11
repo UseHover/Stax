@@ -43,7 +43,6 @@
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:textColor="@color/white"
-		    android:text="1,000"
 		    android:id="@+id/details_amount"
 		    android:textSize="@dimen/text_21"
 		    android:textStyle="bold"/>
@@ -65,7 +64,6 @@
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
 			    android:textColor="@color/white"
-			    android:text="1,000"
 			    android:id="@+id/details_date"
 			    android:textSize="@dimen/text_21"
 			    android:textStyle="bold"/>
@@ -97,7 +95,6 @@
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:textColor="@color/white"
-				    android:text="1,000"
 				    android:id="@+id/details_network"
 				    android:textSize="@dimen/text_21"
 				    android:textStyle="bold"/>
@@ -119,7 +116,6 @@
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:textColor="@color/white"
-				    android:text="1,000"
 				    android:id="@+id/details_transactionNumber"
 				    android:textSize="@dimen/text_21"
 				    android:textStyle="bold"/>

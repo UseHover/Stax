@@ -14,7 +14,7 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageMethods {
+public class MessageUtils {
 	private Transaction getTransactionByTransId(String transId) {return Hover.getTransaction(transId, ApplicationInstance.getContext());}
 	private MessageLog getSMSMessageByUUID(String uuid) {return Hover.getSMSMessageByUUID(uuid, ApplicationInstance.getContext());}
 	private HoverAction getSingleActionByIdActionId(String actionId) {return Hover.getAction(actionId, ApplicationInstance.getContext());}

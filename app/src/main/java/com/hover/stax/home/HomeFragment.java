@@ -16,13 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.home.detailsPages.transaction.TransactionDetailsActivity;
 import com.hover.stax.security.PermissionScreenActivity;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 
 import java.util.List;
 
-public class HomeFragment extends Fragment{
+public class HomeFragment extends Fragment implements TransactionHistoryAdapter.SelectListener{
 
 	private HomeViewModel homeViewModel;
 	private RecyclerView recyclerView, transactionHistoryRecyclerView;
@@ -51,7 +52,7 @@ public class HomeFragment extends Fragment{
 
 		homeViewModel.getStaxTranssactions().observe(getViewLifecycleOwner(), staxTransactions -> {
 			transactionHistoryRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-			transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions));
+			transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions, this));
 			view.findViewById(R.id.transactionsLabel).setVisibility(staxTransactions.size() > 0 ? View.VISIBLE : View.GONE);
 		});
 
@@ -74,4 +75,10 @@ public class HomeFragment extends Fragment{
 		transactionHistoryRecyclerView.setVisibility(channels.size() > 0 ? View.VISIBLE : View.GONE);
 	}
 
+	@Override
+	public void onTap(StaxTransaction transaction) {
+	Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
+	intent.putExtra("staxTransaction", transaction);
+	startActivity(intent);
+	}
 }

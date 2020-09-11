@@ -14,9 +14,11 @@ import java.util.List;
 
 public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionHistoryAdapter.HistoryViewHolder> {
 	private List<StaxTransaction> transactionList;
+	private final SelectListener selectListener;
 
-	TransactionHistoryAdapter(List<StaxTransaction> transactions) {
+	TransactionHistoryAdapter(List<StaxTransaction> transactions, SelectListener selectListener) {
 		this.transactionList = transactions;
+		this.selectListener = selectListener;
 	}
 
 	@NonNull
@@ -33,6 +35,9 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 		holder.amount.setText(t.getAmount());
 		holder.date.setVisibility(t.isShowDate() ? View.VISIBLE : View.GONE);
 		holder.date.setText(t.getStaxDate().getMonth() + " " + t.getStaxDate().getDayOfMonth());
+		holder.itemView.setOnClickListener(view->{
+			selectListener.onTap(t);
+		});
 	}
 
 	@Override
@@ -40,7 +45,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 		return transactionList != null ? transactionList.size() : 0;
 	}
 
-	static class HistoryViewHolder extends RecyclerView.ViewHolder {
+	static class HistoryViewHolder extends RecyclerView.ViewHolder  {
 		private TextView  content, amount, date;
 
 		HistoryViewHolder(@NonNull View itemView) {
@@ -49,6 +54,11 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 			amount = itemView.findViewById(R.id.trans_amount);
 			date = itemView.findViewById(R.id.trans_date);
 		}
+
+	}
+
+	public interface SelectListener {
+		void onTap(StaxTransaction transaction);
 	}
 
 	@Override
