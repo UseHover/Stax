@@ -2,6 +2,7 @@ package com.hover.stax.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,22 +12,20 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.amplitude.api.Amplitude;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.hover.sdk.api.HoverParameters;
-import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
-import com.hover.stax.database.KeyStoreExecutor;
-import com.hover.stax.home.BalanceAdapter;
-import com.hover.stax.home.HomeViewModel;
+import com.hover.stax.hover.HoverSession;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements BalanceAdapter.RefreshListener {
+	final public static String TAG = "MainActivity";
 
 	final public static String CHECK_ALL_BALANCES = "CHECK_ALL";
-	final public static int TRANSFER_REQUEST = 203;
+	final public static int ADD_SERVICE = 200, TRANSFER_REQUEST = 203;
 
 	private HomeViewModel homeViewModel;
 	private static List<Action> toRun;
@@ -46,19 +45,6 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 		NavigationUI.setupWithNavController(navView, navController);
 
 		homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-
-		shouldRun(getIntent());
-	}
-
-	@Override
-	protected void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
-		shouldRun(intent);
-	}
-
-	private void shouldRun(Intent intent) {
-		if (intent.getAction() != null && intent.getAction().equals(CHECK_ALL_BALANCES))
-			runAllBalances();
 	}
 
 	public void runAllBalances() {
@@ -72,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 	@Override
 	public void onTap(int channel_id) {
 		hasRun = new ArrayList<>();
+		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_single));
 		homeViewModel.getBalanceAction(channel_id).observe(this, actions -> {
 			toRun = actions;
 			chooseRun(0);
@@ -80,30 +67,23 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 
 	private void chooseRun(int index) {
 		if (toRun != null && toRun.size() > hasRun.size()) {
-			makeHoverCall(toRun.get(index), index);
+			new HoverSession.Builder(toRun.get(index), homeViewModel.getChannel(toRun.get(index).channel_id),this, index)
+				.finalScreenTime(0).run();
 		}
-	}
-
-	private void makeHoverCall(Action action, int runId) {
-		HoverParameters.Builder builder = new HoverParameters.Builder(this);
-		builder.request(action.public_id);
-//			builder.setEnvironment(HoverParameters.PROD_ENV);
-		builder.style(R.style.myHoverTheme);
-		builder.finalMsgDisplayTime(2000);
-		builder.extra("pin", KeyStoreExecutor.decrypt(homeViewModel.getChannel(action.channel_id).pin, ApplicationInstance.getContext()));
-		Intent i = builder.buildIntent();
-		startActivityForResult(i, runId);
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
 		if (requestCode < 100) { // Some fragments use request codes in in the 100's for unrelated stuff
 			if (hasRun == null) {
 				hasRun = new ArrayList<>();
 			}
 			hasRun.add(data.getStringExtra("action_id"));
 			chooseRun(requestCode + 1);
+		} else if (requestCode == ADD_SERVICE) {
+			runAllBalances();
 		}
 	}
 }

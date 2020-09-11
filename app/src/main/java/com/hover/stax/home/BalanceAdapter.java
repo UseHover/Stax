@@ -45,7 +45,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 		holder.amount.setText(Utils.formatAmount(channel.latestBalance));
 		holder.timeAgo.setText(channel.latestBalanceTimestamp != null && channel.latestBalanceTimestamp > 0 ?
 									   DateUtils.timeAgo(ApplicationInstance.getContext(), channel.latestBalanceTimestamp) : "Refresh");
-		holder.currency.setText(ApplicationInstance.getCurrency(channel.countryAlpha2));
+		holder.currency.setText(channel.currency);
 
 		holder.balanced_swiped_layout.setBackgroundColor(Color.parseColor(channel.primaryColorHex));
 		holder.currency.setTextColor(Color.parseColor(channel.secondaryColorHex));

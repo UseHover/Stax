@@ -1,6 +1,5 @@
 package com.hover.stax.security;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -8,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hover.stax.home.MainActivity;
+import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.utils.UIHelper;
 
@@ -16,7 +15,6 @@ public class PinsActivity extends AppCompatActivity implements PinEntryAdapter.U
 
 	private PinsViewModel pinViewModel;
 	private PinEntryAdapter pinEntryAdapter;
-
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,13 +30,17 @@ public class PinsActivity extends AppCompatActivity implements PinEntryAdapter.U
 			pinRecyclerView.setAdapter(pinEntryAdapter);
 		});
 
-		findViewById(R.id.choose_serves_cancel).setOnClickListener(view -> finish());
+		findViewById(R.id.choose_serves_cancel).setOnClickListener(view -> {
+			Amplitude.getInstance().logEvent(getString(R.string.skipped_pin_entry));
+			setResult(RESULT_CANCELED);
+			finish();
+		});
 
 		findViewById(R.id.continuePinButton).setOnClickListener(view -> {
+			Amplitude.getInstance().logEvent(getString(R.string.completed_pin_entry));
 			pinViewModel.savePins(this);
-			Intent i = new Intent(this, MainActivity.class);
-			i.setAction(MainActivity.CHECK_ALL_BALANCES);
-			startActivity(i);
+			setResult(RESULT_OK);
+			finish();
 		});
 	}
 

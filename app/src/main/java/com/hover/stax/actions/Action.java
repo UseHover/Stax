@@ -1,16 +1,11 @@
 package com.hover.stax.actions;
 
-import android.util.Log;
-import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.hover.sdk.parsers.ParserHelper;
-import com.hover.stax.R;
-import com.hover.stax.transfer.TransferFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -108,5 +103,19 @@ public class Action {
 			}
 		} catch (JSONException e) {}
 		return false;
+	}
+
+	public List<String> getRequiredParams() {
+		List<String> params = new ArrayList<>();
+		try {
+			JSONArray steps = new JSONArray(custom_steps);
+			for (int s = 0; s < steps.length(); s++) {
+				JSONObject step = steps.optJSONObject(s);
+				if (step != null && Boolean.TRUE.equals(step.optBoolean(STEP_IS_PARAM))) {
+					params.add(step.optString(STEP_VALUE));
+				}
+			}
+		} catch (JSONException e) {}
+		return params;
 	}
 }

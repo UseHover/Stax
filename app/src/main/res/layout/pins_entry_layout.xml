@@ -31,7 +31,7 @@
 		    android:paddingEnd="16dp"
 		    android:fontFamily="font-medium"
 		    android:textColor="@color/offWhite"
-		    android:text="@string/cancel" />
+		    android:text="@string/skip" />
 	</LinearLayout>
 
 	<TextView
