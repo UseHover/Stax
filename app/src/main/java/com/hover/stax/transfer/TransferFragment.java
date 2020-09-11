@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,13 +94,17 @@ public class TransferFragment extends Fragment {
 
 	private void startListeners() {
 		transferViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
-			channels.add(new Channel(getResources().getString(R.string.addAService)));
+			if (channels.size() == 0) { channels.add(new Channel(-1, getResources().getString(R.string.choose_service_hint))); }
+			channels.add(new Channel(-2, getResources().getString(R.string.add_service)));
 			ArrayAdapter<Channel> adapter = new ArrayAdapter(getActivity(), R.layout.spinner_items, channels);
 			spinnerFrom.setAdapter(adapter);
 		});
 
 		transferViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
-			if (actions != null && actions.size() > 0) {
+			if (transferViewModel.getActiveChannel().getValue() == null || transferViewModel.getActiveChannel().getValue().id == -1) {
+				detailsBlock.setVisibility(View.GONE);
+				pageError.setVisibility(View.GONE);
+			} else if (actions != null && actions.size() > 0) {
 				detailsBlock.setVisibility(View.VISIBLE);
 				pageError.setVisibility(View.GONE);
 				transferViewModel.setActiveAction(actions.get(0));
@@ -117,7 +122,7 @@ public class TransferFragment extends Fragment {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				Channel channel = (Channel) spinnerFrom.getItemAtPosition(position);
-				if (channel.id == -1)
+				if (channel.id == -2)
 					startActivity(new Intent(getActivity(), ChannelsActivity.class));
 				else
 					transferViewModel.setActiveChannel(channel);

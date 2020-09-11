@@ -22,7 +22,7 @@ import com.amplitude.api.Amplitude;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.security.PermissionScreenActivity;
+import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -46,7 +46,7 @@ public class HomeFragment extends Fragment {
 		transactionHistoryRecyclerView = view.findViewById(R.id.transaction_history_recyclerView);
 		view.findViewById(R.id.balances_header).setOnClickListener(v -> {
 			Amplitude.getInstance().logEvent(getString(R.string.click_add_account));
-			startActivity(new Intent(getActivity(), PermissionScreenActivity.class));
+			startActivityForResult(new Intent(getActivity(), ChannelsActivity.class), MainActivity.ADD_SERVICE);
 		});
 
 		recyclerView = view.findViewById(R.id.balances_recyclerView);

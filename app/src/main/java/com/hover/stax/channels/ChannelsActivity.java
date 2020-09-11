@@ -19,7 +19,6 @@ import androidx.work.WorkManager;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
-import com.hover.sdk.sims.SimInfo;
 import com.hover.stax.R;
 import com.hover.stax.security.PinsActivity;
 import com.hover.stax.utils.PermissionUtils;
@@ -36,8 +35,6 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 	public final static String TAG = "ChannelsActivity";
 
 	ChannelViewModel channelViewModel;
-	List<String> simCountryList;
-	List<String> simHniList;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,13 +48,6 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 		else init();
 	}
 
-	private void init() {
-		getHnis();
-		getCountries();
-		addChannels();
-		watchSelected();
-	}
-
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -67,68 +57,81 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 		}
 	}
 
-	private void getCountries() {
-		channelViewModel.getSims().observe(this, sims -> {
-			simCountryList = new ArrayList<>();
-			for (SimInfo sim : sims) {
-				if (!simCountryList.contains(sim.getCountryIso().toUpperCase()))
-					simCountryList.add(sim.getCountryIso().toUpperCase());
-			}
-		});
-	}
-
-	private void getHnis() {
-		channelViewModel.getSims().observe(this, sims -> {
-			simHniList = new ArrayList<>();
-			for (SimInfo sim : sims) {
-				if (!simHniList.contains(sim.getOSReportedHni()))
-					simHniList.add(sim.getOSReportedHni());
-			}
-		});
+	private void init() {
+		addChannels();
+		watchSelected();
 	}
 
 	private void addChannels() {
-		channelViewModel.getChannels().observe(this, channels -> {
-			channelViewModel.loadInitiallySelectedChannels(channels);
-			((LinearLayout) findViewById(R.id.section_wrapper)).removeAllViews();
-			//YourSIM
-			addSection(getString(R.string.sims_section), Utils.getSimChannels(channels, simHniList));
-			//COUNTRIES
-			for (String countryAlpha2 : simCountryList) {
-				addSection(getString(R.string.country_section, countryAlpha2.toUpperCase()), getCountryChannels(countryAlpha2, channels));
+		channelViewModel.getSimChannels().observe(this, channels -> {
+			if (channels.size() > 0)
+				fillSection(findViewById(R.id.sim_section), getString(R.string.sims_section), channels);
+			else
+				findViewById(R.id.sim_section).setVisibility(View.GONE);
+		});
+
+		channelViewModel.getCountryChannels().observe(this, channels -> {
+			((LinearLayout) findViewById(R.id.country_wrapper)).removeAllViews();
+			if (channels.size() == 0 || channelViewModel.simCountryList.getValue() == null) return;
+			for (String countryAlpha2 : channelViewModel.simCountryList.getValue()) {
+				addCountrySection(getString(R.string.country_section, countryAlpha2.toUpperCase()), getCountryChannels(countryAlpha2, channels));
 			}
-			//ALL SERVICES
-			addSection(getString(R.string.all_section), channels);
+		});
+
+		channelViewModel.getChannels().observe(this, channels -> {
+			if (channels.size() == 0) {
+				findViewById(R.id.loading_title).setVisibility(View.VISIBLE);
+				findViewById(R.id.section_wrapper).setVisibility(View.GONE);
+			} else {
+				findViewById(R.id.loading_title).setVisibility(View.GONE);
+				findViewById(R.id.section_wrapper).setVisibility(View.VISIBLE);
+				fillSection(findViewById(R.id.all_section), getString(R.string.all_section), channels);
+			}
 		});
 	}
 
-	private void addSection(String sectionTitle, List<Channel> channels) {
+	private void fillSection(View section, String title, List<Channel> channels) {
+		section.setVisibility(View.VISIBLE);
+		((TextView) section.findViewById(R.id.section_title)).setText(title);
+		GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false);
+		ChannelsAdapter channelsAdapter = new ChannelsAdapter(channels, this);
+		RecyclerView view = section.findViewById(R.id.section_recycler);
+		view.setHasFixedSize(true);
+		view.setLayoutManager(gridLayoutManager);
+		view.setAdapter(channelsAdapter);
+		channelViewModel.getSelected().observe(ChannelsActivity.this, channelsAdapter::updateSelected);
+	}
+
+	private void addCountrySection(String sectionTitle, List<Channel> channels) {
 		if (channels.size() > 0) {
 			LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View section = inflater.inflate(R.layout.channel_grid, null);
-			((TextView) section.findViewById(R.id.section_title)).setText(sectionTitle);
-			GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false);
-			ChannelsAdapter channelsAdapter = new ChannelsAdapter(channels, this);
-
-			RecyclerView view = section.findViewById(R.id.section_recycler);
-			view.setHasFixedSize(true);
-			view.setLayoutManager(gridLayoutManager);
-			view.setAdapter(channelsAdapter);
-			((LinearLayout) findViewById(R.id.section_wrapper)).addView(section);
-			channelViewModel.getPendingSelected().observe(this, channelsAdapter::updateSelected);
+			fillSection(section, sectionTitle, channels);
+			((LinearLayout) findViewById(R.id.country_wrapper)).addView(section);
 		}
 	}
 
+	private List<Channel> getCountryChannels(String countryAlpha2, List<Channel> channels) {
+		List<Channel> countryChannels = new ArrayList<>();
+		for (int i = 0; i < channels.size(); i++) {
+			if (countryAlpha2.equals(channels.get(i).countryAlpha2.toUpperCase()))
+				countryChannels.add(channels.get(i));
+		}
+		return countryChannels;
+	}
+
 	private void watchSelected() {
-		channelViewModel.getPendingSelected().observe(this, this::onDone);
+		channelViewModel.getSelected().observe(this, this::onDone);
 	}
 
 	private void onDone(List<Integer> ids) {
 		if (ids.size() > 0) {
-			JSONObject event = new JSONObject();
-			try { event.put(getString(R.string.account_select_count_key), ids.size()); } catch (JSONException ignored) {}
-			Amplitude.getInstance().logEvent(getString(R.string.finished_account_select), event);
-			findViewById(R.id.choose_serves_done).setOnClickListener(view -> saveAndContinue());
+			findViewById(R.id.choose_serves_done).setOnClickListener(view -> {
+				JSONObject event = new JSONObject();
+				try { event.put(getString(R.string.account_select_count_key), ids.size()); } catch (JSONException ignored) {}
+				Amplitude.getInstance().logEvent(getString(R.string.finished_account_select), event);
+				saveAndContinue();
+			});
 		} else {
 			findViewById(R.id.choose_serves_done).setOnClickListener(view -> UIHelper.flashMessage(ChannelsActivity.this, getString(R.string.no_selection_error)));
 		}
@@ -137,16 +140,6 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 	private void saveAndContinue() {
 		channelViewModel.saveSelected();
 		startActivity(new Intent(ChannelsActivity.this, PinsActivity.class));
-	}
-
-	// Filtering the main list here is probably not faster than a second DB query in view model
-	private List<Channel> getCountryChannels(String countryAlpha2, List<Channel> channels) {
-		List<Channel> countryChannels = new ArrayList<>();
-		for (int i = 0; i < channels.size(); i++) {
-			if (countryAlpha2.equals(channels.get(i).countryAlpha2.toUpperCase()))
-				countryChannels.add(channels.get(i));
-		}
-		return countryChannels;
 	}
 
 	public void onTap(int id) {

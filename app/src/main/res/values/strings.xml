@@ -19,6 +19,7 @@
 	<string name="transactions">Transactions</string>
 
 	<string name="choose_institutions_title">Choose your services</string>
+	<string name="loading">Loading…</string>
 	<string name="sims_section">Your SIMs</string>
 	<string name="country_section">Services in %1$s</string>
 	<string name="all_section">All services</string>
@@ -68,13 +69,13 @@
 	<string name="choose_a_service_to_calculate">Choose a service to calculate your fees</string>
 	<string name="total">Total</string>
 
-	<string name="choose_account_initial">Choose an account</string>
+	<string name="choose_service_hint">Choose a service</string>
 	<string-array name="choose_account_initial_array">
 		<item>choose_account_initial</item>
 	</string-array>
 	<string name="airtime_self">Myself</string>
 	<string name="airtime_other">Someone else</string>
-	<string name="addAService">+ Add a service</string>
+	<string name="add_service">+ Add a service</string>
 
 	<string name="enterRecipientNumberError">Please enter recipient number"</string>
 	<string name="enterAnotherOptionError">Please try another option</string>
