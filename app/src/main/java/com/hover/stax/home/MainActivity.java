@@ -43,19 +43,6 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 		NavigationUI.setupWithNavController(navView, navController);
 
 		homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-
-		shouldRun(getIntent());
-	}
-
-	@Override
-	protected void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
-		shouldRun(intent);
-	}
-
-	private void shouldRun(Intent intent) {
-		if (intent.getAction() != null && intent.getAction().equals(CHECK_ALL_BALANCES))
-			runAllBalances();
 	}
 
 	public void runAllBalances() {
@@ -92,6 +79,8 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 			}
 			hasRun.add(data.getStringExtra("action_id"));
 			chooseRun(requestCode + 1);
+		} else if (requestCode == ADD_SERVICE) {
+			runAllBalances();
 		}
 	}
 }

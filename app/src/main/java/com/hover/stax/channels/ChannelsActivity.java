@@ -3,6 +3,8 @@ package com.hover.stax.channels;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -23,7 +25,6 @@ import com.hover.stax.R;
 import com.hover.stax.security.PinsActivity;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
-import com.hover.stax.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,6 +55,12 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 		if (PermissionUtils.permissionsGranted(grantResults)) {
 			Hover.updateSimInfo(this);
 			init();
+			new Handler().postDelayed(() -> { // This is dumb, need to add SimInfo to Room
+				if (channelViewModel != null) {
+					channelViewModel.loadSims();
+				}
+			}, 5000);
+
 		}
 	}
 
@@ -64,17 +71,19 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 
 	private void addChannels() {
 		channelViewModel.getSimChannels().observe(this, channels -> {
-			if (channels.size() > 0)
+			if (channels.size() > 0) {
+				findViewById(R.id.sim_section).setVisibility(View.VISIBLE);
 				fillSection(findViewById(R.id.sim_section), getString(R.string.sims_section), channels);
-			else
+			} else
 				findViewById(R.id.sim_section).setVisibility(View.GONE);
 		});
 
 		channelViewModel.getCountryChannels().observe(this, channels -> {
 			((LinearLayout) findViewById(R.id.country_wrapper)).removeAllViews();
-			if (channels.size() == 0 || channelViewModel.simCountryList.getValue() == null) return;
-			for (String countryAlpha2 : channelViewModel.simCountryList.getValue()) {
-				addCountrySection(getString(R.string.country_section, countryAlpha2.toUpperCase()), getCountryChannels(countryAlpha2, channels));
+			if (channels.size() > 0 && channelViewModel.simCountryList.getValue() != null) {
+				for (String countryAlpha2 : channelViewModel.simCountryList.getValue()) {
+					addCountrySection(getString(R.string.country_section, countryAlpha2.toUpperCase()), getCountryChannels(countryAlpha2, channels));
+				}
 			}
 		});
 
@@ -137,12 +146,28 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 		}
 	}
 
-	private void saveAndContinue() {
-		channelViewModel.saveSelected();
-		startActivity(new Intent(ChannelsActivity.this, PinsActivity.class));
-	}
-
 	public void onTap(int id) {
 		channelViewModel.setSelected(id);
+	}
+
+	private void saveAndContinue() {
+		channelViewModel.saveSelected();
+		startActivityForResult(new Intent(ChannelsActivity.this, PinsActivity.class), 0);
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		setResult(RESULT_OK, addReturnData(new Intent()));
+		finish();
+	}
+
+	private Intent addReturnData(Intent i) {
+		if (channelViewModel.getSelected().getValue() != null) {
+			Bundle bundle = new Bundle();
+			bundle.putIntegerArrayList("selected", new ArrayList<>(channelViewModel.getSelected().getValue()));
+			i.putExtra("selected", bundle);
+		}
+		return i;
 	}
 }

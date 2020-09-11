@@ -73,18 +73,6 @@ public class Utils {
 		}
 	}
 
-	public static List<Channel> getSimChannels(List<Channel> channels, List<String> simHniList) {
-		List<Channel> simChannels = new ArrayList<>();
-		for (int i = 0; i < channels.size(); i++) {
-			String[] hniArr = channels.get(i).hniList.split(",");
-			for (int l = 0; l < hniArr.length; l++) {
-				if (simHniList.contains(Utils.stripHniString(hniArr[l])))
-					if (!simChannels.contains(channels.get(i))) simChannels.add(channels.get(i));
-			}
-		}
-		return simChannels;
-	}
-
 	public static String formatAmount(String number) {
 		try {
 			double amount = Double.parseDouble(number);

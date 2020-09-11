@@ -1,6 +1,7 @@
 package com.hover.stax.channels;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.lifecycle.AndroidViewModel;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChannelViewModel extends AndroidViewModel {
+	public final static String TAG = "ChannelViewModel";
 
 	private DatabaseRepo repo;
 
@@ -76,7 +78,7 @@ public class ChannelViewModel extends AndroidViewModel {
 
 	LiveData<List<Integer>> getSelected() { return selected; }
 
-	private void loadSims() {
+	void loadSims() {
 		if (sims == null) {
 			sims = new MutableLiveData<>();
 		}

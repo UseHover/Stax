@@ -46,7 +46,7 @@ public class HomeFragment extends Fragment {
 		transactionHistoryRecyclerView = view.findViewById(R.id.transaction_history_recyclerView);
 		view.findViewById(R.id.balances_header).setOnClickListener(v -> {
 			Amplitude.getInstance().logEvent(getString(R.string.click_add_account));
-			startActivityForResult(new Intent(getActivity(), ChannelsActivity.class), MainActivity.ADD_SERVICE);
+			requireActivity().startActivityForResult(new Intent(getActivity(), ChannelsActivity.class), MainActivity.ADD_SERVICE);
 		});
 
 		recyclerView = view.findViewById(R.id.balances_recyclerView);
