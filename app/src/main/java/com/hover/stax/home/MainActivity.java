@@ -2,6 +2,7 @@ package com.hover.stax.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements BalanceAdapter.RefreshListener {
+	final public static String TAG = "MainActivity";
 
 	final public static String CHECK_ALL_BALANCES = "CHECK_ALL";
 	final public static int ADD_SERVICE = 200, TRANSFER_REQUEST = 203;
@@ -65,7 +67,8 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 
 	private void chooseRun(int index) {
 		if (toRun != null && toRun.size() > hasRun.size()) {
-			new HoverSession.Builder(toRun.get(index), homeViewModel.getChannel(toRun.get(index).channel_id),this, index).run();
+			new HoverSession.Builder(toRun.get(index), homeViewModel.getChannel(toRun.get(index).channel_id),this, index)
+				.finalScreenTime(0).run();
 		}
 	}
 

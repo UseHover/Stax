@@ -21,7 +21,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
 		Amplitude.getInstance().initialize(this, "9275a8bd8ab3037bd1f8e072f83548d3").enableForegroundTracking(getApplication());
 		Hover.initialize(this);
-		Hover.setBranding("Stax", R.mipmap.ic_launcher, this);
+		Hover.setBranding("Stax", R.mipmap.fullsize_logo, this);
 		WorkManager wm = WorkManager.getInstance(this);
 		wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue();
 		wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, UpdateChannelsWorker.makeToil());

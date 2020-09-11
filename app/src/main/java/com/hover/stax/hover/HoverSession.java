@@ -26,12 +26,13 @@ final public class HoverSession {
 
 	private Fragment frag;
 	private Channel channel;
-	private int requestCode;
+	private int requestCode, finalScreenTime;
 
 	private HoverSession(Builder b) {
 		frag = b.fragment;
 		channel = b.channel;
 		requestCode = b.requestCode;
+		finalScreenTime = b.finalScreenTime;
 		HoverParameters.Builder builder = getBasicBuilder(b);
 		addExtras(builder, b.extras, b.action);
 		addPin(builder, b.action);
@@ -43,7 +44,7 @@ final public class HoverSession {
 		builder.request(b.action.public_id);
 //		builder.setEnvironment(HoverParameters.TEST_ENV);
 		builder.style(R.style.myHoverTheme);
-		builder.finalMsgDisplayTime(2000);
+		builder.finalMsgDisplayTime(finalScreenTime);
 		return builder;
 	}
 
@@ -83,7 +84,7 @@ final public class HoverSession {
 		private Channel channel;
 		private Action action;
 		private JSONObject extras;
-		private int requestCode;
+		private int requestCode, finalScreenTime = 2000;
 
 		public Builder(Action a, Channel c, Activity act, int code) {
 			if (a == null) throw new IllegalArgumentException("Context must not be null");
@@ -103,6 +104,11 @@ final public class HoverSession {
 			try {
 				extras.put(key, value);
 			} catch (JSONException e) { Log.e(TAG, "Failed to add extra"); }
+			return this;
+		}
+
+		public HoverSession.Builder finalScreenTime(int ms) {
+			finalScreenTime = ms;
 			return this;
 		}
 
