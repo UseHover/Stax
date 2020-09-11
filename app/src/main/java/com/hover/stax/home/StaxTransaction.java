@@ -1,6 +1,8 @@
 package com.hover.stax.home;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.hover.sdk.transactions.Transaction;
@@ -14,7 +16,7 @@ import org.json.JSONException;
 
 import java.util.Calendar;
 
-public class StaxTransaction {
+public class StaxTransaction implements Parcelable {
 	private String description, amount, uuid, actionId;
 	private StaxDate staxDate;
 	private boolean showDate = false;
@@ -29,6 +31,40 @@ public class StaxTransaction {
 		String concatenatedDate = staxDate.getYear()+staxDate.getMonth()+staxDate.getDayOfMonth();
 		if (!lastTime.equals(concatenatedDate)) showDate = true;
 	}
+
+	protected StaxTransaction(Parcel in) {
+		description = in.readString();
+		amount = in.readString();
+		uuid = in.readString();
+		actionId = in.readString();
+		showDate = in.readByte() != 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(description);
+		dest.writeString(amount);
+		dest.writeString(uuid);
+		dest.writeString(actionId);
+		dest.writeByte((byte) (showDate ? 1 : 0));
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	public static final Creator<StaxTransaction> CREATOR = new Creator<StaxTransaction>() {
+		@Override
+		public StaxTransaction createFromParcel(Parcel in) {
+			return new StaxTransaction(in);
+		}
+
+		@Override
+		public StaxTransaction[] newArray(int size) {
+			return new StaxTransaction[size];
+		}
+	};
 
 	private String setDescription(Transaction t, Context c) {
 		String recipient;
@@ -49,7 +85,7 @@ public class StaxTransaction {
 		}
 	}
 
-	public String getDateString() { return staxDate.getYear()+staxDate.getMonth()+staxDate.getDayOfMonth(); }
+	public String getDateString() { return staxDate.getYear()+"/"+staxDate.getMonth()+"/"+staxDate.getDayOfMonth(); }
 
 	private static StaxDate convertToStaxDate(long timestamp) {
 		StaxDate staxDate = new StaxDate();
@@ -73,5 +109,13 @@ public class StaxTransaction {
 
 	public String getAmount() {
 		return amount;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public String getActionId() {
+		return actionId;
 	}
 }

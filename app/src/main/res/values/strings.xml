@@ -74,6 +74,12 @@
 	<string name="airtime_other">Someone else</string>
 	<string name="addAService">+ Add a service</string>
 
+	<string name="transactionDetails">Transaction details</string>
+	<string name="date">Date</string>
+	<string name="network">Network</string>
+	<string name="transactionNumber">Transaction number</string>
+	<string name="message">Message</string>
+
 	<string name="enterRecipientNumberError">Please enter recipient number"</string>
 	<string name="enterAnotherOptionError">Please try another option</string>
 	<string name="enterAmountError">Please enter amount</string>

@@ -60,6 +60,14 @@ public class Utils {
 		return c.getString(R.string.hsdk_unknown_device_id);
 	}
 
+	public static String[] convertNormalJSONArrayToStringArray(JSONArray arr) throws JSONException {
+		if(arr == null) return new String[]{};
+		String[] list = new String[arr.length()];
+		for(int i = 0; i < arr.length(); i++){
+			list[i] = arr.getString(i);
+		}
+		return list;
+	}
 
 	public static String getPackage(Context c) {
 		try {

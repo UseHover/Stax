@@ -33,6 +33,7 @@
 		<activity android:name=".security.PermissionScreenActivity" />
 		<activity android:name=".channels.ChannelsActivity" />
 		<activity android:name=".security.PinsActivity" />
+		<activity android:name=".home.detailsPages.transaction.TransactionDetailsActivity" />
 
 		<receiver
 			android:name=".hover.TransactionReceiver"

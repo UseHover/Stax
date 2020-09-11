@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@color/colorPrimaryDark"
+        android:layout_width="match_parent"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        android:layout_height="wrap_content">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="200dp"
+            android:textColor="@color/colorHoverWhite"
+            android:layout_gravity="end"
+            android:gravity="start"
+            android:textSize="@dimen/text_14"
+            android:textAlignment="textStart"
+            android:paddingEnd="26dp"
+            android:paddingStart="16dp"
+            android:paddingVertical="10dp"
+            android:background="@drawable/bubble_right"
+            android:id="@+id/message_enteredValue"
+            android:layout_alignParentEnd="true"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="250dp"
+            android:textColor="@color/colorHoverWhite"
+            android:layout_gravity="end"
+            android:gravity="start"
+            android:textAlignment="textStart"
+            android:paddingStart="26dp"
+            android:paddingEnd="16dp"
+            android:textSize="@dimen/text_14"
+            android:paddingVertical="10dp"
+            android:background="@drawable/bubble_left"
+            android:id="@+id/message_content"
+            android:layout_below="@id/message_enteredValue"
+            android:layout_marginTop="8dp"
+            android:layout_alignParentStart="true"/>
+
+</RelativeLayout>
