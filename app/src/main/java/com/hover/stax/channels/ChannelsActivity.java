@@ -71,10 +71,9 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 
 	private void addChannels() {
 		channelViewModel.getSimChannels().observe(this, channels -> {
-			if (channels.size() > 0) {
-				findViewById(R.id.sim_section).setVisibility(View.VISIBLE);
+			if (channels.size() > 0)
 				fillSection(findViewById(R.id.sim_section), getString(R.string.sims_section), channels);
-			} else
+			else
 				findViewById(R.id.sim_section).setVisibility(View.GONE);
 		});
 
