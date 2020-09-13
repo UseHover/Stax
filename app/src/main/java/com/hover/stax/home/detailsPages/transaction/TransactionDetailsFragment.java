@@ -36,6 +36,7 @@ public class TransactionDetailsFragment extends Fragment {
 		messagesRecyclerView.setHasFixedSize(true);
 
 		view.findViewById(R.id.backText).setOnClickListener(view2->{
+			if(getActivity() !=null)
 			getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 		});
 
@@ -54,8 +55,7 @@ public class TransactionDetailsFragment extends Fragment {
 				if(staxTransaction !=null) {
 					amountText.setText(staxTransaction.getAmount());
 					StaxDate staxDate = staxTransaction.getStaxDate();
-
-					dateText.setText(staxDate.getMonth()+"/"+staxDate.getDayOfMonth()+"/"+staxDate.getYear());
+					if(staxDate !=null) dateText.setText(String.valueOf(staxDate.getMonth()+"/"+staxDate.getDayOfMonth()+"/"+staxDate.getYear()));
 					transactionNumberText.setText(staxTransaction.getUuid());
 					networkName.setText(staxTransaction.getNetworkName());
 

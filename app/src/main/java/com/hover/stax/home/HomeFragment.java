@@ -94,6 +94,7 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	@Override
 	public void onTap(String transactionId) {
 		if(getActivity() !=null) {
+			Amplitude.getInstance().logEvent(getString(R.string.clicked_transaction_item));
 			Fragment fragment = new TransactionDetailsFragment();
 			Bundle bundle = new Bundle();
 			bundle.putString("id", transactionId);

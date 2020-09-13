@@ -22,4 +22,5 @@
 	<string name="contact_perm_denied">Denied contact permission</string>
 	<string name="contact_select_success">Successfully choose contact</string>
 	<string name="contact_select_error">Choose contact error</string>
+	<string name="clicked_transaction_item">Clicked transaction item to view full transaction details</string>
 </resources>
