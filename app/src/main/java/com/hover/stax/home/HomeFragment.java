@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,15 +23,15 @@ import com.amplitude.api.Amplitude;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.home.detailsPages.transaction.TransactionDetailsFragment;
 import com.hover.stax.channels.ChannelsActivity;
+import com.hover.stax.home.detailsPages.transaction.TransactionDetailsFragment;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
-public class HomeFragment extends Fragment implements TransactionHistoryAdapter.SelectListener{
+public class HomeFragment extends Fragment implements TransactionHistoryAdapter.SelectListener {
 
 	private HomeViewModel homeViewModel;
 	private RecyclerView recyclerView, transactionHistoryRecyclerView;
@@ -68,7 +67,7 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		});
 
 		LocalBroadcastManager.getInstance(requireActivity())
-			.registerReceiver(transactionReceiver, new IntentFilter(Utils.getPackage(getActivity()) + ".TRANSACTION_UPDATE"));
+				.registerReceiver(transactionReceiver, new IntentFilter(Utils.getPackage(getActivity()) + ".TRANSACTION_UPDATE"));
 		homeViewModel.updateTransactions();
 	}
 
@@ -93,7 +92,7 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 
 	@Override
 	public void onTap(String transactionId) {
-		if(getActivity() !=null) {
+		if (getActivity() != null) {
 			Amplitude.getInstance().logEvent(getString(R.string.clicked_transaction_item));
 			Fragment fragment = new TransactionDetailsFragment();
 			Bundle bundle = new Bundle();
@@ -101,30 +100,34 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 			fragment.setArguments(bundle);
 			FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-			fragmentTransaction.add(((ViewGroup)getView().getParent()).getId(), fragment);
+			fragmentTransaction.add(((ViewGroup) getView().getParent()).getId(), fragment);
 			fragmentTransaction.addToBackStack("transaction_id");
 			fragmentTransaction.commit();
 		}
 
 
-
-}
+	}
 
 
 	private final BroadcastReceiver transactionReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(final Context context, final Intent i) {
-			if (homeViewModel != null) { homeViewModel.updateTransactions(); }
+			if (homeViewModel != null) {
+				homeViewModel.updateTransactions();
+			}
 		}
 	};
 
 	@Override
-	public void onDestroy(){
+	public void onDestroy() {
 		super.onDestroy();
 		unregisterTransactionReceiver();
 	}
 
 	private void unregisterTransactionReceiver() {
-		try { requireActivity().unregisterReceiver(transactionReceiver);
-		} catch (Exception ignored) { }
-	}}
+		try {
+			requireActivity().unregisterReceiver(transactionReceiver);
+		} catch (Exception ignored) {
+		}
+	}
+}

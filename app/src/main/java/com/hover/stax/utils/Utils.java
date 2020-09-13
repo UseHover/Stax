@@ -3,38 +3,20 @@ package com.hover.stax.utils;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
-
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
-import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
-import com.hover.stax.channels.Channel;
-import com.hover.stax.models.StaxDate;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.URL;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
 
 public class Utils {
 	private final static String TAG = "Utils";
@@ -65,9 +47,9 @@ public class Utils {
 	}
 
 	public static String[] convertNormalJSONArrayToStringArray(JSONArray arr) throws JSONException {
-		if(arr == null) return new String[]{};
+		if (arr == null) return new String[]{};
 		String[] list = new String[arr.length()];
-		for(int i = 0; i < arr.length(); i++){
+		for (int i = 0; i < arr.length(); i++) {
 			list[i] = arr.getString(i);
 		}
 		return list;
@@ -96,9 +78,11 @@ public class Utils {
 		String number = value;
 		try {
 			Phonenumber.PhoneNumber phone = phoneUtil.parse(value, country);
-			number = phoneUtil.formatNumberForMobileDialing(phone, country,false);
+			number = phoneUtil.formatNumberForMobileDialing(phone, country, false);
 			Log.e(TAG, "Normalized number: " + number);
-		} catch (NumberParseException e) { Log.e(TAG, "error formating number", e); }
+		} catch (NumberParseException e) {
+			Log.e(TAG, "error formating number", e);
+		}
 		return number;
 	}
 }

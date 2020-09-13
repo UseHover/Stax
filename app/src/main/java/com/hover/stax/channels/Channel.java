@@ -13,7 +13,10 @@ import org.json.JSONObject;
 @Entity(tableName = "channels")
 public class Channel {
 
-	public Channel(int _id, String addChannel) { this.id = _id; this.name = addChannel; }
+	public Channel(int _id, String addChannel) {
+		this.id = _id;
+		this.name = addChannel;
+	}
 
 	public Channel(JSONObject jsonObject, String rootUrl) {
 		try {

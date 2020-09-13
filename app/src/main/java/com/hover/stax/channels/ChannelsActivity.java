@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -136,7 +135,10 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 		if (ids.size() > 0) {
 			findViewById(R.id.choose_serves_done).setOnClickListener(view -> {
 				JSONObject event = new JSONObject();
-				try { event.put(getString(R.string.account_select_count_key), ids.size()); } catch (JSONException ignored) {}
+				try {
+					event.put(getString(R.string.account_select_count_key), ids.size());
+				} catch (JSONException ignored) {
+				}
 				Amplitude.getInstance().logEvent(getString(R.string.finished_account_select), event);
 				saveAndContinue();
 			});

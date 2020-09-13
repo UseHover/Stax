@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,7 +93,9 @@ public class TransferFragment extends Fragment {
 
 	private void startListeners() {
 		transferViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
-			if (channels.size() == 0) { channels.add(new Channel(-1, getResources().getString(R.string.choose_service_hint))); }
+			if (channels.size() == 0) {
+				channels.add(new Channel(-1, getResources().getString(R.string.choose_service_hint)));
+			}
 			channels.add(new Channel(-2, getResources().getString(R.string.add_service)));
 			ArrayAdapter<Channel> adapter = new ArrayAdapter(getActivity(), R.layout.spinner_items, channels);
 			spinnerFrom.setAdapter(adapter);
@@ -129,7 +130,8 @@ public class TransferFragment extends Fragment {
 			}
 
 			@Override
-			public void onNothingSelected(AdapterView<?> parent) { }
+			public void onNothingSelected(AdapterView<?> parent) {
+			}
 		});
 
 		spinnerTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -141,7 +143,8 @@ public class TransferFragment extends Fragment {
 			}
 
 			@Override
-			public void onNothingSelected(AdapterView<?> parent) { }
+			public void onNothingSelected(AdapterView<?> parent) {
+			}
 		});
 	}
 
@@ -149,7 +152,9 @@ public class TransferFragment extends Fragment {
 		recipientBlock.setVisibility(action.requiresRecipient() ? View.VISIBLE : View.GONE);
 		if (action.getRequiredParams().contains(Action.ACCOUNT_KEY)) {
 			recipientLabel.setText(getString(R.string.recipient_account));
-		} else { recipientLabel.setText(getString(R.string.recipient_phone)); }
+		} else {
+			recipientLabel.setText(getString(R.string.recipient_phone));
+		}
 	}
 
 	private void createContactSelector() {
@@ -159,7 +164,7 @@ public class TransferFragment extends Fragment {
 				Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
 				startActivityForResult(contactPickerIntent, READ_CONTACT);
 			} else {
-				requestPermissions(new String[]{ Manifest.permission.READ_CONTACTS }, READ_CONTACT);
+				requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, READ_CONTACT);
 			}
 		});
 	}
@@ -187,10 +192,10 @@ public class TransferFragment extends Fragment {
 		Amplitude.getInstance().logEvent(getString(R.string.finish_screen, transferType));
 		new HoverSession.Builder(action, transferViewModel.getActiveChannel().getValue(),
 				getActivity(), MainActivity.TRANSFER_REQUEST, this)
-			.extra(Action.PHONE_KEY, recipientInput.getText().toString())
-			.extra(Action.ACCOUNT_KEY, recipientInput.getText().toString())
-			.extra(Action.AMOUNT_KEY, amountInput.getText().toString())
-			.run();
+				.extra(Action.PHONE_KEY, recipientInput.getText().toString())
+				.extra(Action.ACCOUNT_KEY, recipientInput.getText().toString())
+				.extra(Action.AMOUNT_KEY, amountInput.getText().toString())
+				.run();
 	}
 
 	@Override
@@ -208,7 +213,7 @@ public class TransferFragment extends Fragment {
 		} else if (requestCode == MainActivity.TRANSFER_REQUEST) {
 			Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
 			NavHostFragment.findNavController(this).navigate(R.id.navigation_home);
-		};
+		}
 	}
 
 	@Override

@@ -5,8 +5,6 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.hover.sdk.parsers.ParserHelper;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +18,7 @@ import java.util.List;
 public class Action {
 	public final static String TRANSACTION_TYPE = "transaction_type", P2P = "p2p", AIRTIME = "airtime", ME2ME = "me2me", C2B = "c2b", BALANCE = "balance";
 	public final static String STEP_IS_PARAM = "is_param", STEP_VALUE = "value",
-        PIN_KEY = "pin", AMOUNT_KEY = "amount", PHONE_KEY = "phone", ACCOUNT_KEY = "account";
+			PIN_KEY = "pin", AMOUNT_KEY = "amount", PHONE_KEY = "phone", ACCOUNT_KEY = "account";
 
 	@PrimaryKey
 	@ColumnInfo(name = "_id")
@@ -97,11 +95,12 @@ public class Action {
 			for (int s = 0; s < steps.length(); s++) {
 				JSONObject step = steps.optJSONObject(s);
 				if (step != null && Boolean.TRUE.equals(step.optBoolean(STEP_IS_PARAM)) &&
-					    !step.optString(STEP_VALUE).equals(PIN_KEY) && !step.optString(STEP_VALUE).equals(AMOUNT_KEY)) {
+							!step.optString(STEP_VALUE).equals(PIN_KEY) && !step.optString(STEP_VALUE).equals(AMOUNT_KEY)) {
 					return true;
 				}
 			}
-		} catch (JSONException e) {}
+		} catch (JSONException e) {
+		}
 		return false;
 	}
 
@@ -115,7 +114,8 @@ public class Action {
 					params.add(step.optString(STEP_VALUE));
 				}
 			}
-		} catch (JSONException e) {}
+		} catch (JSONException e) {
+		}
 		return params;
 	}
 }

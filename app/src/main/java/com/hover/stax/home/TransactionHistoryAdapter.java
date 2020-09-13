@@ -35,7 +35,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 		holder.amount.setText(t.getAmount());
 		holder.date.setVisibility(t.isShowDate() ? View.VISIBLE : View.GONE);
 		holder.date.setText(t.getStaxDate().getMonth() + " " + t.getStaxDate().getDayOfMonth());
-		holder.itemView.setOnClickListener(view->{
+		holder.itemView.setOnClickListener(view -> {
 			selectListener.onTap(t.getUuid());
 		});
 	}
@@ -45,8 +45,8 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 		return transactionList != null ? transactionList.size() : 0;
 	}
 
-	static class HistoryViewHolder extends RecyclerView.ViewHolder  {
-		private TextView  content, amount, date;
+	static class HistoryViewHolder extends RecyclerView.ViewHolder {
+		private TextView content, amount, date;
 
 		HistoryViewHolder(@NonNull View itemView) {
 			super(itemView);

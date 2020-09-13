@@ -1,9 +1,7 @@
 package com.hover.stax.channels;
 
 import android.app.Application;
-import android.util.Log;
 
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
@@ -11,9 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
 import com.hover.sdk.sims.SimInfo;
-import com.hover.sdk.transactions.Transaction;
 import com.hover.stax.database.DatabaseRepo;
-import com.hover.stax.home.StaxTransaction;
 import com.hover.stax.utils.Utils;
 
 import java.util.ArrayList;
@@ -50,7 +46,9 @@ public class ChannelViewModel extends AndroidViewModel {
 		countryChannels.addSource(simCountryList, this::onCountryUpdate);
 	}
 
-	LiveData<List<Channel>> getChannels() { return allChannels; }
+	LiveData<List<Channel>> getChannels() {
+		return allChannels;
+	}
 
 	private void loadChannels() {
 		if (allChannels == null) {
@@ -72,11 +70,15 @@ public class ChannelViewModel extends AndroidViewModel {
 		for (Channel channel : channels) {
 			if (channel.selected) ls.add(channel.id);
 		}
-		if (selected.getValue() != null) { ls.addAll(selected.getValue()); }
+		if (selected.getValue() != null) {
+			ls.addAll(selected.getValue());
+		}
 		selected.setValue(ls);
 	}
 
-	LiveData<List<Integer>> getSelected() { return selected; }
+	LiveData<List<Integer>> getSelected() {
+		return selected;
+	}
 
 	void loadSims() {
 		if (sims == null) {
@@ -107,8 +109,13 @@ public class ChannelViewModel extends AndroidViewModel {
 		return liveData;
 	}
 
-	private void onChannelsUpdateHnis(List<Channel> channels) { updateSimChannels(channels, simHniList.getValue()); }
-	private void onSimUpdate(List<String> hniList) { updateSimChannels(allChannels.getValue(), hniList); }
+	private void onChannelsUpdateHnis(List<Channel> channels) {
+		updateSimChannels(channels, simHniList.getValue());
+	}
+
+	private void onSimUpdate(List<String> hniList) {
+		updateSimChannels(allChannels.getValue(), hniList);
+	}
 
 	public void updateSimChannels(List<Channel> channels, List<String> hniList) {
 		if (channels == null || hniList == null) return;
@@ -125,16 +132,23 @@ public class ChannelViewModel extends AndroidViewModel {
 		simChannels.setValue(simChanneList);
 	}
 
-	public LiveData<List<Channel>> getSimChannels() { return simChannels; }
+	public LiveData<List<Channel>> getSimChannels() {
+		return simChannels;
+	}
 
-	private void onChannelsUpdateCountries(List<Channel> channels) { updateCountryChannels(channels, simCountryList.getValue()); }
-	private void onCountryUpdate(List<String> countryList) { updateCountryChannels(allChannels.getValue(), countryList); }
+	private void onChannelsUpdateCountries(List<Channel> channels) {
+		updateCountryChannels(channels, simCountryList.getValue());
+	}
+
+	private void onCountryUpdate(List<String> countryList) {
+		updateCountryChannels(allChannels.getValue(), countryList);
+	}
 
 	public void updateCountryChannels(List<Channel> channels, List<String> countryList) {
 		if (channels == null || countryList == null) return;
 		List<Channel> countryChannelList = new ArrayList<>();
 		for (int i = 0; i < channels.size(); i++) {
-			for (String country: countryList) {
+			for (String country : countryList) {
 				if (country.equals(channels.get(i).countryAlpha2.toUpperCase()))
 					countryChannelList.add(channels.get(i));
 			}
@@ -142,7 +156,9 @@ public class ChannelViewModel extends AndroidViewModel {
 		countryChannels.setValue(countryChannelList);
 	}
 
-	public LiveData<List<Channel>> getCountryChannels() { return countryChannels; }
+	public LiveData<List<Channel>> getCountryChannels() {
+		return countryChannels;
+	}
 
 	void setSelected(int id) {
 		List<Integer> list = selected.getValue() != null ? selected.getValue() : new ArrayList<>();

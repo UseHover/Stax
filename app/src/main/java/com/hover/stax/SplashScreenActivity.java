@@ -11,8 +11,8 @@ import androidx.work.WorkManager;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
-import com.hover.stax.home.MainActivity;
 import com.hover.stax.channels.UpdateChannelsWorker;
+import com.hover.stax.home.MainActivity;
 
 public class SplashScreenActivity extends AppCompatActivity {
 	@Override

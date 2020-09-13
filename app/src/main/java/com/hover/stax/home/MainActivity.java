@@ -2,7 +2,6 @@ package com.hover.stax.home;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -67,8 +66,8 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 
 	private void chooseRun(int index) {
 		if (toRun != null && toRun.size() > hasRun.size()) {
-			new HoverSession.Builder(toRun.get(index), homeViewModel.getChannel(toRun.get(index).channel_id),this, index)
-				.finalScreenTime(0).run();
+			new HoverSession.Builder(toRun.get(index), homeViewModel.getChannel(toRun.get(index).channel_id), this, index)
+					.finalScreenTime(0).run();
 		}
 	}
 

@@ -32,7 +32,9 @@ public class TransferViewModel extends AndroidViewModel {
 		filteredActions = Transformations.switchMap(getActiveChannel(), this::loadActions);
 	}
 
-	void setType(String transaction_type) { type = transaction_type; }
+	void setType(String transaction_type) {
+		type = transaction_type;
+	}
 
 	private void loadSelected() {
 		if (selectedChannels == null) {
@@ -48,9 +50,13 @@ public class TransferViewModel extends AndroidViewModel {
 		activeChannel.setValue(repo.getDefault().getValue());
 	}
 
-	void setActiveChannel(Channel c) { activeChannel.setValue(c); }
+	void setActiveChannel(Channel c) {
+		activeChannel.setValue(c);
+	}
 
-	LiveData<Channel> getActiveChannel() { return activeChannel; }
+	LiveData<Channel> getActiveChannel() {
+		return activeChannel;
+	}
 
 	public LiveData<List<Action>> loadActions(Channel channel) {
 		if (channel != null)
@@ -62,9 +68,15 @@ public class TransferViewModel extends AndroidViewModel {
 		return selectedChannels;
 	}
 
-	LiveData<List<Action>> getActions() { return filteredActions; }
+	LiveData<List<Action>> getActions() {
+		return filteredActions;
+	}
 
-	void setActiveAction(Action action) { activeAction = action; }
+	void setActiveAction(Action action) {
+		activeAction = action;
+	}
 
-	Action getActiveAction() { return activeAction; }
+	Action getActiveAction() {
+		return activeAction;
+	}
 }

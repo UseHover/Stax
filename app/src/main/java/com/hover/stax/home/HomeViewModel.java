@@ -41,7 +41,9 @@ public class HomeViewModel extends AndroidViewModel {
 		staxTransactions = Transformations.switchMap(transactions, this::getTransactionModels);
 	}
 
-	public void updateTransactions() { transactions.setValue(Hover.getAllTransactions(getApplication())); }
+	public void updateTransactions() {
+		transactions.setValue(Hover.getAllTransactions(getApplication()));
+	}
 
 	LiveData<List<StaxTransaction>> getTransactionModels(List<Transaction> transactionList) {
 		List<StaxTransaction> staxTransactions = new ArrayList<>();
@@ -52,7 +54,9 @@ public class HomeViewModel extends AndroidViewModel {
 					StaxTransaction staxTransaction = new StaxTransaction(transaction, lastTime, getApplication());
 					lastTime = staxTransaction.getDateString();
 					staxTransactions.add(staxTransaction);
-				} catch (JSONException e) { Log.e(TAG, "Error parsing transaction", e); }
+				} catch (JSONException e) {
+					Log.e(TAG, "Error parsing transaction", e);
+				}
 			}
 		}
 		MutableLiveData<List<StaxTransaction>> modeLiveData = new MutableLiveData<>();

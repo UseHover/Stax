@@ -60,8 +60,12 @@ final public class HoverSession {
 	}
 
 	private String parseExtra(String key, String value, List<String> requiredExtras) {
-		if (value == null || !requiredExtras.contains(key)) { return null; }
-		if (key.equals(Action.PHONE_KEY)) { return Utils.normalizePhoneNumber(value, channel.countryAlpha2); }
+		if (value == null || !requiredExtras.contains(key)) {
+			return null;
+		}
+		if (key.equals(Action.PHONE_KEY)) {
+			return Utils.normalizePhoneNumber(value, channel.countryAlpha2);
+		}
 		return value;
 	}
 
@@ -103,7 +107,9 @@ final public class HoverSession {
 		public HoverSession.Builder extra(String key, String value) {
 			try {
 				extras.put(key, value);
-			} catch (JSONException e) { Log.e(TAG, "Failed to add extra"); }
+			} catch (JSONException e) {
+				Log.e(TAG, "Failed to add extra");
+			}
 			return this;
 		}
 

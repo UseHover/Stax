@@ -43,9 +43,13 @@ public class DatabaseRepo {
 		return allChannels;
 	}
 
-	public LiveData<List<Channel>> getSelected() { return selectedChannels; }
+	public LiveData<List<Channel>> getSelected() {
+		return selectedChannels;
+	}
 
-	public LiveData<Channel> getDefault() { return channelDao.getDefault(); }
+	public LiveData<Channel> getDefault() {
+		return channelDao.getDefault();
+	}
 
 	public void insert(Channel channel) {
 		AppDatabase.databaseWriteExecutor.execute(() -> channelDao.insert(channel));

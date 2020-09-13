@@ -23,10 +23,14 @@ public class StaxContactModel {
 					if (phones != null && phones.moveToNext()) {
 						phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 					}
-					if (phones != null) { phones.close(); }
+					if (phones != null) {
+						phones.close();
+					}
 				}
 			}
-			if (cur != null) { cur.close(); }
+			if (cur != null) {
+				cur.close();
+			}
 		}
 	}
 

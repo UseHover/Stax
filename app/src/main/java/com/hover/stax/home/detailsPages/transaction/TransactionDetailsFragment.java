@@ -1,7 +1,6 @@
 package com.hover.stax.home.detailsPages.transaction;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,19 +8,18 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
-import com.hover.stax.home.StaxTransaction;
 import com.hover.stax.models.StaxDate;
 import com.hover.stax.utils.UIHelper;
 
 public class TransactionDetailsFragment extends Fragment {
 	private Bundle bundle;
+
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		bundle = getArguments();
 		return inflater.inflate(R.layout.transaction_details_layout, container, false);
@@ -35,9 +33,9 @@ public class TransactionDetailsFragment extends Fragment {
 		messagesRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(ApplicationInstance.getContext()));
 		messagesRecyclerView.setHasFixedSize(true);
 
-		view.findViewById(R.id.backText).setOnClickListener(view2->{
-			if(getActivity() !=null)
-			getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+		view.findViewById(R.id.backText).setOnClickListener(view2 -> {
+			if (getActivity() != null)
+				getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 		});
 
 		TextView amountText = view.findViewById(R.id.details_amount);
@@ -47,23 +45,25 @@ public class TransactionDetailsFragment extends Fragment {
 
 
 		TransactionDetailsViewModel transactionDetailsViewModel = new ViewModelProvider(this).get(TransactionDetailsViewModel.class);
-		if(bundle !=null) {
+		if (bundle != null) {
 			String transUUID = bundle.getString("id");
 			transactionDetailsViewModel.getMessagesModels(transUUID);
 
-			transactionDetailsViewModel.loadStaxTransaction().observe(getViewLifecycleOwner(), staxTransaction-> {
-				if(staxTransaction !=null) {
+			transactionDetailsViewModel.loadStaxTransaction().observe(getViewLifecycleOwner(), staxTransaction -> {
+				if (staxTransaction != null) {
 					amountText.setText(staxTransaction.getAmount());
 					StaxDate staxDate = staxTransaction.getStaxDate();
-					if(staxDate !=null) dateText.setText(String.valueOf(staxDate.getMonth()+"/"+staxDate.getDayOfMonth()+"/"+staxDate.getYear()));
+					if (staxDate != null)
+						dateText.setText(staxDate.getMonth() + "/" + staxDate.getDayOfMonth() + "/" + staxDate.getYear());
 					transactionNumberText.setText(staxTransaction.getUuid());
 					networkName.setText(staxTransaction.getNetworkName());
 
 				}
 			});
 
-			transactionDetailsViewModel.loadMessagesModelObs().observe(getViewLifecycleOwner(), model->{
-				if(model !=null) messagesRecyclerView.setAdapter(new TransactionMessagesRecyclerAdapter(model));
+			transactionDetailsViewModel.loadMessagesModelObs().observe(getViewLifecycleOwner(), model -> {
+				if (model != null)
+					messagesRecyclerView.setAdapter(new TransactionMessagesRecyclerAdapter(model));
 			});
 		}
 

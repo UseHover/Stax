@@ -1,8 +1,6 @@
 package com.hover.stax.home;
 
 import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
 
 import com.hover.sdk.transactions.Transaction;
@@ -29,7 +27,7 @@ public class StaxTransaction {
 		description = setDescription(sdkTrans, c);
 		staxDate = convertToStaxDate(sdkTrans.updatedTimestamp);
 
-		String concatenatedDate = staxDate.getYear()+staxDate.getMonth()+staxDate.getDayOfMonth();
+		String concatenatedDate = staxDate.getYear() + staxDate.getMonth() + staxDate.getDayOfMonth();
 		if (!lastTime.equals(concatenatedDate)) showDate = true;
 	}
 
@@ -52,7 +50,9 @@ public class StaxTransaction {
 		}
 	}
 
-	public String getDateString() { return staxDate.getYear()+"/"+staxDate.getMonth()+"/"+staxDate.getDayOfMonth(); }
+	public String getDateString() {
+		return staxDate.getYear() + "/" + staxDate.getMonth() + "/" + staxDate.getDayOfMonth();
+	}
 
 	private static StaxDate convertToStaxDate(long timestamp) {
 		StaxDate staxDate = new StaxDate();
@@ -68,7 +68,9 @@ public class StaxTransaction {
 		return staxDate;
 	}
 
-	public String getDescription() { return description; }
+	public String getDescription() {
+		return description;
+	}
 
 	public boolean isShowDate() {
 		return showDate;
