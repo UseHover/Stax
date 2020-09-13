@@ -16,10 +16,11 @@ import org.json.JSONException;
 
 import java.util.Calendar;
 
-public class StaxTransaction implements Parcelable {
+public class StaxTransaction {
 	private String description, amount, uuid, actionId;
 	private StaxDate staxDate;
 	private boolean showDate = false;
+	private String networkName;
 
 	public StaxTransaction(Transaction sdkTrans, String lastTime, Context c) throws JSONException {
 		uuid = sdkTrans.uuid;
@@ -31,40 +32,6 @@ public class StaxTransaction implements Parcelable {
 		String concatenatedDate = staxDate.getYear()+staxDate.getMonth()+staxDate.getDayOfMonth();
 		if (!lastTime.equals(concatenatedDate)) showDate = true;
 	}
-
-	protected StaxTransaction(Parcel in) {
-		description = in.readString();
-		amount = in.readString();
-		uuid = in.readString();
-		actionId = in.readString();
-		showDate = in.readByte() != 0;
-	}
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(description);
-		dest.writeString(amount);
-		dest.writeString(uuid);
-		dest.writeString(actionId);
-		dest.writeByte((byte) (showDate ? 1 : 0));
-	}
-
-	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-	public static final Creator<StaxTransaction> CREATOR = new Creator<StaxTransaction>() {
-		@Override
-		public StaxTransaction createFromParcel(Parcel in) {
-			return new StaxTransaction(in);
-		}
-
-		@Override
-		public StaxTransaction[] newArray(int size) {
-			return new StaxTransaction[size];
-		}
-	};
 
 	private String setDescription(Transaction t, Context c) {
 		String recipient;
@@ -117,5 +84,13 @@ public class StaxTransaction implements Parcelable {
 
 	public String getActionId() {
 		return actionId;
+	}
+
+	public String getNetworkName() {
+		return networkName;
+	}
+
+	public void setNetworkName(String networkName) {
+		this.networkName = networkName;
 	}
 }

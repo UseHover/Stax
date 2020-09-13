@@ -10,13 +10,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.home.detailsPages.transaction.TransactionDetailsActivity;
+import com.hover.stax.home.detailsPages.transaction.TransactionDetailsFragment;
 import com.hover.stax.security.PermissionScreenActivity;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
@@ -76,9 +78,18 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	}
 
 	@Override
-	public void onTap(StaxTransaction transaction) {
-	Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
-	intent.putExtra("staxTransaction", transaction);
-	startActivity(intent);
+	public void onTap(String transactionId) {
+		if(getActivity() !=null) {
+			Fragment fragment = new TransactionDetailsFragment();
+			Bundle bundle = new Bundle();
+			bundle.putString("id", transactionId);
+			fragment.setArguments(bundle);
+			FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+			fragmentTransaction.add(((ViewGroup)getView().getParent()).getId(), fragment);
+			fragmentTransaction.addToBackStack("transaction_id");
+			fragmentTransaction.commit();
+		}
+
 	}
 }

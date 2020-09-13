@@ -36,7 +36,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 		holder.date.setVisibility(t.isShowDate() ? View.VISIBLE : View.GONE);
 		holder.date.setText(t.getStaxDate().getMonth() + " " + t.getStaxDate().getDayOfMonth());
 		holder.itemView.setOnClickListener(view->{
-			selectListener.onTap(t);
+			selectListener.onTap(t.getUuid());
 		});
 	}
 
@@ -58,7 +58,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 	}
 
 	public interface SelectListener {
-		void onTap(StaxTransaction transaction);
+		void onTap(String transactionUUID);
 	}
 
 	@Override

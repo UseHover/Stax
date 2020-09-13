@@ -19,13 +19,15 @@
 	    android:textColor="@color/offWhite"
 	    android:drawableStart="@drawable/ic_arrow_back_offwhite_24dp"
 	    android:drawablePadding="@dimen/activity_vertical_margin"
+	    android:id="@+id/backText"
 	    android:text="@string/transactionDetails"/>
 
 
 	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:orientation="horizontal">
+	    android:orientation="horizontal"
+	    android:baselineAligned="false">
 
 	<LinearLayout
 	    android:layout_width="0dp"
@@ -140,6 +142,7 @@
 		    android:layout_marginTop="@dimen/activity_vertical_margin"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
+		    android:layout_marginBottom="@dimen/spacing32"
 		    app:layout_behavior="@string/appbar_scrolling_view_behavior"
 		    android:id="@+id/transac_messages_recyclerView"/>
 	</LinearLayout>
