@@ -11,6 +11,7 @@
 
 	<string name="done"><u>Done</u></string>
 	<string name="cancel"><u>Cancel</u></string>
+	<string name="skip"><u>Skip</u></string>
 	<string name="continue_text">Continue</string>
 	<string name="no_selection_error">You must select at least 1 service.</string>
 
@@ -18,6 +19,7 @@
 	<string name="transactions">Transactions</string>
 
 	<string name="choose_institutions_title">Choose your services</string>
+	<string name="loading">Loading…</string>
 	<string name="sims_section">Your SIMs</string>
 	<string name="country_section">Services in %1$s</string>
 	<string name="all_section">All services</string>
@@ -31,7 +33,8 @@
 	<string name="input_label">Input label</string>
 	<string name="pin_input_hint">Enter PIN</string>
 	<string name="recipient_phone">Recipient phone number</string>
-	<string name="enter_recipient_phone">Enter phone number</string>
+	<string name="recipient_account">Recipient account number</string>
+	<string name="recipient_hint">Enter number</string>
 
 	<string name="security">Security</string>
 	<string name="remove_pin_from_device">Remove PINs from device</string>
@@ -66,13 +69,13 @@
 	<string name="choose_a_service_to_calculate">Choose a service to calculate your fees</string>
 	<string name="total">Total</string>
 
-	<string name="choose_account_initial">Choose an account</string>
+	<string name="choose_service_hint">Choose a service</string>
 	<string-array name="choose_account_initial_array">
 		<item>choose_account_initial</item>
 	</string-array>
 	<string name="airtime_self">Myself</string>
 	<string name="airtime_other">Someone else</string>
-	<string name="addAService">+ Add a service</string>
+	<string name="add_service">+ Add a service</string>
 
 	<string name="transactionDetails">Transaction details</string>
 	<string name="date">Date</string>

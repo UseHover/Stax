@@ -67,7 +67,7 @@
 				android:orientation="vertical"
 				android:visibility="gone">
 
-				<TextView
+				<TextView android:id="@+id/recipient_label"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:text="@string/recipient_phone"
@@ -92,7 +92,7 @@
 					    android:paddingRight="@dimen/editText_box_margin_horiz"
 					    android:paddingTop="@dimen/editText_box_margin_vert"
 					    android:paddingBottom="@dimen/editText_box_margin_vert"
-					    android:hint="@string/enter_recipient_phone"
+					    android:hint="@string/recipient_hint"
 					    android:textColorHint="@color/darkGrey"
 					    android:maxLines="1"
 					    android:inputType="phone"

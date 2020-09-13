@@ -4,4 +4,8 @@
 	<item>
 		<bitmap android:gravity="center" android:src="@mipmap/stax" />
 	</item>
+
+	<item android:bottom="55dp" android:gravity="bottom">
+		<bitmap android:gravity="center" android:src="@mipmap/disclaimer" />
+	</item>
 </layer-list>

@@ -54,6 +54,7 @@ public class TransactionDetailsFragment extends Fragment {
 				if(staxTransaction !=null) {
 					amountText.setText(staxTransaction.getAmount());
 					StaxDate staxDate = staxTransaction.getStaxDate();
+
 					dateText.setText(staxDate.getMonth()+"/"+staxDate.getDayOfMonth()+"/"+staxDate.getYear());
 					transactionNumberText.setText(staxTransaction.getUuid());
 					networkName.setText(staxTransaction.getNetworkName());
