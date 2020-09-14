@@ -26,6 +26,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    bundle {
+        language {
+            //Ensures all language string resources is bundled in the aab.
+            enableSplit = false
+        }
+    }
 }
 
 dependencies {
