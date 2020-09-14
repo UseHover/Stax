@@ -7,6 +7,10 @@ import com.hover.stax.R;
 import java.util.Date;
 
 public class DateUtils {
+	public static long now() {
+		return new Date().getTime();
+	}
+
 	public static String timeUntil(Context context, final long millis) {
 		return humanFriendlyTime(context, millis - System.currentTimeMillis());
 	}
