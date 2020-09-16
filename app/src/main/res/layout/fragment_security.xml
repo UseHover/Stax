@@ -86,5 +86,22 @@
 		    android:textColor="@color/offWhite" />
 
 
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/select_language"
+		    android:layout_marginTop="32dp"
+		    android:textColor="@color/offWhite"
+		    android:textSize="@dimen/text_13"
+		    android:fontFamily="font-medium" />
+
+		<androidx.appcompat.widget.AppCompatSpinner
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginTop="@dimen/activity_vertical_margin"
+		    android:background="@drawable/spinner_bg"
+		    android:padding="1dp"
+		    android:id="@+id/selectLanguageSpinner" />
+
 	</LinearLayout>
 </androidx.core.widget.NestedScrollView>

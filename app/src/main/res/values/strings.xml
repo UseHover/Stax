@@ -1,8 +1,19 @@
 <resources>
-	<string name="app_name">Stax</string>
+	<string name="app_name" translatable="false">Stax</string>
 	<string name="root_url" translatable="false">https://stage.usehover.com</string>
 	<string name="api_url" translatable="false">https://stage.usehover.com/api</string>
 	<string name="channels_endpoint" translatable="false">/channels?published=true</string>
+	<string name="select_language">Select language</string>
+	<string-array name="supported_languages">
+		<item>English</item>
+		<item>French</item>
+	</string-array>
+	<string-array name="supported_languages_code">
+		<item>EN</item>
+		<item>FR</item>
+		<item>SW</item>
+	</string-array>
+
 
 	<string name="nav_home">Home</string>
 	<string name="nav_airtime">Buy Airtime</string>

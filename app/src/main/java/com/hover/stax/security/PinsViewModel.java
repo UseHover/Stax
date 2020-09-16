@@ -2,17 +2,24 @@ package com.hover.stax.security;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.hover.stax.ApplicationInstance;
+import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.database.KeyStoreExecutor;
+import com.yariksoffice.lingver.Lingver;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class PinsViewModel extends AndroidViewModel {
 

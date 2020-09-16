@@ -17,11 +17,14 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.gms.common.util.Strings;
 import com.google.android.material.snackbar.Snackbar;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Set;
 
 public class UIHelper {
 
@@ -49,6 +52,11 @@ public class UIHelper {
 		spinner.setAdapter(adapter);
 	}
 
+	public static void loadSpinnerItems(Set<String> entries, AppCompatSpinner spinner, Context context) {
+		ArrayList<String> strings = new ArrayList<>(entries);
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.spinner_items, strings);
+		spinner.setAdapter(adapter);
+	}
 	static public void setTextColoredDrawable(TextView textView, int drawable, int color) {
 		Drawable unwrappedDrawable = AppCompatResources.getDrawable(ApplicationInstance.getContext(), drawable);
 		assert unwrappedDrawable != null;

@@ -1,5 +1,6 @@
 package com.hover.stax.security;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +18,15 @@ import androidx.lifecycle.ViewModelProvider;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.home.MainActivity;
+import com.hover.stax.language.LanguageViewModel;
 import com.hover.stax.utils.UIHelper;
+import com.yariksoffice.lingver.Lingver;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class SecurityFragment extends Fragment {
 	private PinsViewModel securityViewModel;
@@ -31,7 +38,37 @@ public class SecurityFragment extends Fragment {
 		View root = inflater.inflate(R.layout.fragment_security, container, false);
 
 
+
 		AppCompatSpinner spinner = root.findViewById(R.id.defaultAccountSpinner);
+		AppCompatSpinner languageSpinner = root.findViewById(R.id.selectLanguageSpinner);
+
+
+		LanguageViewModel languageViewModel = new ViewModelProvider(this).get(LanguageViewModel.class);
+		languageViewModel.loadLanguages().observe(getViewLifecycleOwner(), languageMap -> {
+			UIHelper.loadSpinnerItems(languageMap.keySet(), languageSpinner, getContext());
+			languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+				@Override
+				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+					if(position !=0) {
+						String text = languageSpinner.getSelectedItem().toString();
+						String language = languageMap.get(text);
+						if(language !=null) {
+							Lingver.getInstance().setLocale(ApplicationInstance.getContext(), language);
+							Intent intent = new Intent(getActivity(), MainActivity.class);
+							intent.putExtra(MainActivity.SETTINGS_EXTRA, true);
+							startActivity(intent);
+							if(getActivity()!=null) getActivity().finish();
+						}
+					}
+				}
+
+				@Override
+				public void onNothingSelected(AdapterView<?> parent) {
+
+				}
+			});
+		});
+
 
 		securityViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
 			ArrayList<String> channelNames = new ArrayList<>();

@@ -22,6 +22,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements BalanceAdapter.RefreshListener {
 	final public static String TAG = "MainActivity";
+	final public static String SETTINGS_EXTRA = "Settings";
+
 
 	final public static String CHECK_ALL_BALANCES = "CHECK_ALL";
 	final public static int ADD_SERVICE = 200, TRANSFER_REQUEST = 203;
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 		NavigationUI.setupWithNavController(navView, navController);
 
 		homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+
+		if(getIntent().getBooleanExtra(SETTINGS_EXTRA, false)) navController.navigate(R.id.navigation_security);
 	}
 
 	public void runAllBalances() {

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="select_language">Choisir la langue</string>
+
+	<string name="nav_home">Accueil</string>
+	<string name="nav_airtime">Temps d\'antenne</string>
+	<string name="nav_money">Déplacer de l\'argent</string>
+	<string name="nav_security">Sécurité</string>
+
+	<string name="done"><u>Terminé</u></string>
+	<string name="cancel"><u>Annuler</u></string>
+	<string name="skip"><u>Sauter</u></string>
+	<string name="continue_text">Continuer</string>
+	<string name="no_selection_error">Vous devez sélectionner au moins 1 service.</string>
+
+	<string name="balances">Soldes</string>
+	<string name="transactions">Transactions</string>
+
+	<string name="choose_institutions_title">Choisissez vos services</string>
+	<string name="loading">Chargement…</string>
+	<string name="sims_section">Vos SIM</string>
+	<string name="country_section">Services en %1$s</string>
+	<string name="all_section">Tous les services</string>
+	<string name="add_new_balance">Ajoutez un nouveau solde pour le voir ici</string>
+
+	<string name="permission_showup_text">La tête haute:\n\n Nous avons besoin d\'une autorisation pour accéder à vos contacts et utiliser vos services d\'accessibilité afin que nous puissions faire de la magie USSD pour vous.</string>
+	<string name="turn_on_permission">Activer les autorisations</string>
+	<string name="permission_failure">Vous n\'avez pas autorisé toutes les autorisations</string>
+	<string name="permission_success">Toutes les autorisations sont autorisées avec succès</string>
+
+	<string name="input_label">Libellé d\'entrée</string>
+	<string name="pin_input_hint">Entrez le code PIN</string>
+	<string name="recipient_phone">Numéro de téléphone du destinataire</string>
+	<string name="recipient_account">Numéro de compte du destinataire</string>
+	<string name="recipient_hint">Entrer un nombre</string>
+
+	<string name="security">Sécurité</string>
+	<string name="remove_pin_from_device">Supprimer les codes PIN de l\'appareil</string>
+	<string name="remove_pins">Supprimer les codes PIN</string>
+	<string name="remove_pins_dialog_message">Voulez-vous vraiment supprimer toutes vos épingles? Vous devrez les saisir manuellement pour chaque transaction ultérieurement</string>
+	<string name="remove_pin_successful">PIN supprimé avec succès</string>
+	<string name="yes">Oui</string>
+	<string name="no">Non</string>
+	<string name="default_account">Compte par défaut</string>
+	<string name="default_account_desc">Les comptes par défaut s\'affichent en premier lorsque vous transférez de l\'argent.</string>
+	<string name="about_our_security">À propos de notre sécurité</string>
+	<string name="about_our_security_content">Le SDK Android de Hover est un kit de développement répondant aux critères de la classification de sécurité 740.17 (b) (3) (i) du Bureau of Industry and Security des États-Unis. Ce logiciel utilise HTTPS pour la communication avec le serveur; chiffrement RSA à clé symétrique pour stocker temporairement les informations d\'identification de l\'utilisateur sur son propre appareil à l\'aide d\'Android Keystore; et obfuscation de code à l\'aide de DRM (Dexguard).</string>
+	<string name="choose_pin_description">Vous pouvez supprimer vos codes PIN de Stax à tout moment. Tous les codes PIN sont sécurisés et cryptés avec Google Keystore pour garantir que vos informations sont toujours protégées</string>
+
+	<string name="title_airtime">Recharger le temps d\'antenne</string>
+	<string name="title_p2p">Transférer de l\'argent à quelqu\'un d\'autre</string>
+	<string name="title_me2me">Transférer de l\'argent entre les comptes</string>
+	<string name="title_request">Demande de l\'argent</string>
+
+	<string name="transaction_descrip_airtime">%1$s a envoyé du temps d\'antenne à %2$s</string>
+	<string name="transaction_descrip_money">De %1$s À %2$s</string>
+
+	<string name="from">De</string>
+	<string name="to">À</string>
+	<string name="amount">Montante</string>
+	<string name="add_a_message">Ajouter un message</string>
+	<string name="when">Quand</string>
+	<string name="frequency">La fréquence</string>
+	<string name="until">Jusqu\'à ce que</string>
+	<string name="number_of_transactions">Nombre de transactions</string>
+	<string name="fees">Honoraires</string>
+	<string name="choose_a_service_to_calculate">Choisissez un service pour calculer vos frais</string>
+	<string name="total">Totale</string>
+
+	<string name="choose_service_hint">Choisissez un service</string>
+	<string-array name="choose_account_initial_array">
+		<item>Choose_account_initial</item>
+	</string-array>
+	<string name="airtime_self">Moi même</string>
+	<string name="airtime_other">Quelqu\'un d\'autre</string>
+	<string name="add_service">+ Ajouter un service</string>
+
+	<string name="transactionDetails">Détails de la transaction</string>
+	<string name="date">Date</string>
+	<string name="network">Réseau</string>
+	<string name="transactionNumber">Numéro de transaction</string>
+	<string name="message">Message</string>
+
+	<string name="enterRecipientNumberError">Veuillez saisir le numéro du destinataire</string>
+	<string name="enterAnotherOptionError">Veuillez essayer une autre option</string>
+	<string name="enterAmountError">Veuillez saisir le montant</string>
+	<string name="selectServiceError">Veuillez sélectionner un service</string>
+	<string name="contact_perm_error">Vous devez autoriser les contacts de lecture à choisir un numéro dans votre carnet d\'adresses.</string>
+	<string name="selectContactErrorMessage">Un problème est survenu lors de la sélection de votre contact, veuillez réessayer</string>
+	<string name="no_p2p_action_error">Impossible d\'envoyer de l\'argent avec ce service. Choisissez un service différent ou contactez l\'assistance.</string>
+	<string name="no_airtime_action_error">Impossible de transférer du temps d\'antenne à l\'aide de ce service. Choisissez un service différent ou contactez l\'assistance.</string>
+
+	<string name="timeago_ago">%1$s depuis</string>
+	<string name="timeago_from_now">%1$s from now</string>
+	<string name="timeago_secondes">moins d\'une minute</string>
+	<string name="timeago_minute">environ une minute</string>
+	<string name="timeago_minutes">%1$d minutes</string>
+	<string name="timeago_hour">environ une heure</string>
+	<string name="timeago_hours">à propos %1$d heures</string>
+	<string name="timeago_day">un jour</string>
+	<string name="timeago_days">%1$d journées</string>
+	<string name="timeago_month">environ un mois</string>
+	<string name="timeago_months">%1$d mois</string>
+	<string name="timeago_year">à peu près un an</string>
+	<string name="timeago_years">%1$d années</string>
+</resources>

@@ -6,8 +6,10 @@ import android.content.Context;
 
 import com.hover.stax.utils.fonts.FontReplacer;
 import com.hover.stax.utils.fonts.Replacer;
+import com.yariksoffice.lingver.Lingver;
 
 import java.util.HashMap;
+import java.util.Locale;
 
 public class ApplicationInstance extends Application {
 	@SuppressLint("StaticFieldLeak")
@@ -24,6 +26,7 @@ public class ApplicationInstance extends Application {
 		replacer.setThinFont("Barlow-Thin.ttf");
 		replacer.applyFont();
 		context = this;
+		Lingver.init(this, Locale.getDefault());
 	}
 
 	public static Context getContext() {
