@@ -5,10 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.hover.sdk.utils.Utils;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.DatabaseRepo;
+import com.hover.stax.utils.DateUtils;
 
 import java.util.HashMap;
 
@@ -29,7 +29,7 @@ public class TransactionReceiver extends BroadcastReceiver {
 						if (parsed_variables.containsKey("update_timestamp") && parsed_variables.get("update_timestamp") != null) {
 							channel.latestBalanceTimestamp = Long.parseLong(parsed_variables.get("update_timestamp"));
 						} else {
-							channel.latestBalanceTimestamp = Utils.now();
+							channel.latestBalanceTimestamp = DateUtils.now();
 						}
 						repo.update(channel);
 					}

@@ -37,6 +37,7 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	private RecyclerView recyclerView, transactionHistoryRecyclerView;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.nav_home)));
 		return inflater.inflate(R.layout.fragment_home, container, false);
 	}
 
