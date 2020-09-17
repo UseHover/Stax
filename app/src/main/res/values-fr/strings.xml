@@ -103,4 +103,9 @@
 	<string name="timeago_months">%1$d mois</string>
 	<string name="timeago_year">à peu près un an</string>
 	<string name="timeago_years">%1$d années</string>
+
+	<string name="auth_title">Security check</string>
+	<string name="auth_subTitle">Authenticate</string>
+	<string name="auth_desc">Authenticate with your fingerprint</string>
+	<string name="auth_cancel">Cancel</string>
 </resources>

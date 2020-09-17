@@ -3,8 +3,11 @@ package com.hover.stax.home;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricConstants;
+import androidx.biometric.BiometricPrompt;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -16,6 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.hover.HoverSession;
+import com.hover.stax.security.BiometricFingerprint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +54,30 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 		if(getIntent().getBooleanExtra(SETTINGS_EXTRA, false)) navController.navigate(R.id.navigation_security);
 	}
 
+	private BiometricPrompt.AuthenticationCallback authenticationCallback = new BiometricPrompt.AuthenticationCallback() {
+		@Override
+		public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+			super.onAuthenticationError(errorCode, errString);
+			if(errorCode == BiometricConstants.ERROR_NO_BIOMETRICS) {
+				Amplitude.getInstance().logEvent(getString(R.string.biometrics_not_matched));
+				chooseRun(0);
+			}else Amplitude.getInstance().logEvent(getString(R.string.biometrics_not_setup));
+		}
+
+		@Override
+		public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+			super.onAuthenticationSucceeded(result);
+			Amplitude.getInstance().logEvent(getString(R.string.biometrics_succeeded));
+			chooseRun(0);
+		}
+
+		@Override
+		public void onAuthenticationFailed() {
+			super.onAuthenticationFailed();
+			Amplitude.getInstance().logEvent(getString(R.string.biometrics_failed));
+		}
+	};
+
 	public void runAllBalances() {
 		hasRun = new ArrayList<>();
 		homeViewModel.getBalanceActions().observe(this, actions -> {
@@ -64,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_single));
 		homeViewModel.getBalanceAction(channel_id).observe(this, actions -> {
 			toRun = actions;
-			chooseRun(0);
+			new BiometricFingerprint().startFingerPrint(this, authenticationCallback);
 		});
 	}
 

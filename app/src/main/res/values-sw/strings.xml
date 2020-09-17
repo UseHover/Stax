@@ -104,4 +104,9 @@
 	<string name="timeago_months">%1$d miezi</string>
 	<string name="timeago_year">karibu mwaka</string>
 	<string name="timeago_years">%1$d miaka</string>
+
+	<string name="auth_title">Security check</string>
+	<string name="auth_subTitle">Authenticate</string>
+	<string name="auth_desc">Authenticate with your fingerprint</string>
+	<string name="auth_cancel">Cancel</string>
 </resources>

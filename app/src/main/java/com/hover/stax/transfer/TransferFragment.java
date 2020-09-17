@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.biometric.BiometricConstants;
+import androidx.biometric.BiometricPrompt;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
@@ -29,6 +31,7 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.hover.HoverSession;
+import com.hover.stax.security.BiometricFingerprint;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -169,17 +172,40 @@ public class TransferFragment extends Fragment {
 		});
 	}
 
+	private BiometricPrompt.AuthenticationCallback authenticationCallback = new BiometricPrompt.AuthenticationCallback() {
+		@Override
+		public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+			super.onAuthenticationError(errorCode, errString);
+			if(errorCode == BiometricConstants.ERROR_NO_BIOMETRICS) {
+				Amplitude.getInstance().logEvent(getString(R.string.biometrics_not_matched));
+				makeHoverCall(transferViewModel.getActiveAction());
+			} else Amplitude.getInstance().logEvent(getString(R.string.biometrics_not_setup));
+		}
+
+		@Override
+		public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+			super.onAuthenticationSucceeded(result);
+			Amplitude.getInstance().logEvent(getString(R.string.biometrics_succeeded));
+			makeHoverCall(transferViewModel.getActiveAction());
+		}
+
+		@Override
+		public void onAuthenticationFailed() {
+			super.onAuthenticationFailed();
+			Amplitude.getInstance().logEvent(getString(R.string.biometrics_failed));
+		}
+	};
 	private void onSubmit(View root) {
 		root.findViewById(R.id.confirm_button).setOnClickListener(view3 -> {
 			if (transferViewModel.getActiveAction() != null) {
 				if (TextUtils.getTrimmedLength(amountInput.getText().toString()) > 0) {
 					if (transferViewModel.getActiveAction().requiresRecipient()) {
 						if (TextUtils.getTrimmedLength(recipientInput.getText().toString()) > 0) {
-							makeHoverCall(transferViewModel.getActiveAction());
+							new BiometricFingerprint().startFingerPrint(getActivity(), authenticationCallback);
 						} else
 							UIHelper.flashMessage(getContext(), getResources().getString(R.string.enterRecipientNumberError));
 					} else {
-						makeHoverCall(transferViewModel.getActiveAction());
+						new BiometricFingerprint().startFingerPrint(getActivity(), authenticationCallback);
 					}
 				} else
 					UIHelper.flashMessage(getContext(), getResources().getString(R.string.enterAmountError));

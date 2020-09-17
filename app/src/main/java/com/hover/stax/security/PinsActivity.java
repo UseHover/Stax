@@ -2,8 +2,11 @@ package com.hover.stax.security;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricConstants;
+import androidx.biometric.BiometricPrompt;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,12 +40,41 @@ public class PinsActivity extends AppCompatActivity implements PinEntryAdapter.U
 		});
 
 		findViewById(R.id.continuePinButton).setOnClickListener(view -> {
-			Amplitude.getInstance().logEvent(getString(R.string.completed_pin_entry));
-			pinViewModel.savePins(this);
-			setResult(RESULT_OK);
-			finish();
+			new BiometricFingerprint().startFingerPrint(this, authenticationCallback);
+
 		});
 	}
+	void doSavePins() {
+		Amplitude.getInstance().logEvent(getString(R.string.completed_pin_entry));
+		pinViewModel.savePins(this);
+		setResult(RESULT_OK);
+		finish();
+	}
+
+	private BiometricPrompt.AuthenticationCallback authenticationCallback = new BiometricPrompt.AuthenticationCallback() {
+		@Override
+		public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+			super.onAuthenticationError(errorCode, errString);
+			if(errorCode == BiometricConstants.ERROR_NO_BIOMETRICS) {
+				Amplitude.getInstance().logEvent(getString(R.string.biometrics_not_matched));
+				doSavePins();
+			} else Amplitude.getInstance().logEvent(getString(R.string.biometrics_not_setup));
+		}
+
+		@Override
+		public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+			super.onAuthenticationSucceeded(result);
+			Amplitude.getInstance().logEvent(getString(R.string.biometrics_succeeded));
+			doSavePins();
+
+		}
+
+		@Override
+		public void onAuthenticationFailed() {
+			super.onAuthenticationFailed();
+			Amplitude.getInstance().logEvent(getString(R.string.biometrics_failed));
+		}
+	};
 
 	public void onUpdate(int id, String pin) {
 		pinViewModel.setPin(id, pin);
