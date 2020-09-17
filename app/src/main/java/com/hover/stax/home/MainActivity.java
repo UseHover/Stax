@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 		hasRun = new ArrayList<>();
 		homeViewModel.getBalanceActions().observe(this, actions -> {
 			toRun = actions;
-			chooseRun(0);
+			new BiometricFingerprint().startFingerPrint(this, authenticationCallback);
 		});
 	}
 

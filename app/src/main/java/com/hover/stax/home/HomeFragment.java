@@ -81,6 +81,7 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		homeTimeAgo.setText(mostRecentTimestamp > 0 ? DateUtils.timeAgo(ApplicationInstance.getContext(), mostRecentTimestamp) : "Refresh");
 		homeTimeAgo.setOnClickListener(view2 -> {
 			Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_all));
+
 			((MainActivity) getActivity()).runAllBalances();
 		});
 
