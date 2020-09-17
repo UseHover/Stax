@@ -29,7 +29,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 		wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue();
 		wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, UpdateChannelsWorker.makeToil());
 
-		if(Utils.getSharedPrefs(ApplicationInstance.getContext()).getInt(LANGUAGE_CHECK, 0) == 2)
+		if(Utils.getSharedPrefs(ApplicationInstance.getContext()).getInt(LANGUAGE_CHECK, 0) == 1)
 			startActivity(new Intent(this, MainActivity.class));
 		else
 			startActivity(new Intent(this, SelectLanguageActivity.class));
