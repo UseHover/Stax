@@ -9,9 +9,9 @@
 		<item>French</item>
 	</string-array>
 	<string-array name="supported_languages_code">
-		<item>EN</item>
-		<item>FR</item>
-		<item>SW</item>
+		<item>en</item>
+		<item>fr</item>
+		<item>sw</item>
 	</string-array>
 
 

@@ -29,4 +29,7 @@
 	<string name="biometrics_succeeded" translatable="false">Biometrics successful</string>
 	<string name="biometrics_not_matched" translatable="false">Biometrics available but not matched</string>
 
+	<string name="viewing_language_screen" translatable="false">Viewing language list screen</string>
+	<string name="selected_language" translatable="false">Selected language: %1$s</string>
+
 </resources>

@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.amplitude.api.Amplitude;
 import com.hover.sdk.utils.Utils;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
@@ -36,6 +37,7 @@ public class SelectLanguageActivity extends AppCompatActivity {
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.language_select_layout);
+		Amplitude.getInstance().logEvent(getString(R.string.viewing_language_screen));
 
 		languageCode = Lingver.getInstance().getLanguage();
 		final RadioGroup radioGrp = findViewById(R.id.languageRadioGroup);
@@ -58,7 +60,7 @@ public class SelectLanguageActivity extends AppCompatActivity {
 				radioButton.setTypeface(font);
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) radioButton.setButtonTintList(colorStateList);
-				if(langCodes.toLowerCase().equals(languageCode.toLowerCase()))
+				if(langCodes.equals(languageCode))
 					radioButton.setChecked(true);
 				else radioButton.setChecked(false);
 				radioGrp.addView(radioButton);
@@ -77,9 +79,8 @@ public class SelectLanguageActivity extends AppCompatActivity {
 		//create radio buttons
 
 
-
-
 		findViewById(R.id.continueLanguageButton).setOnClickListener(v -> {
+			Amplitude.getInstance().logEvent(getString(R.string.selected_language, languageCode));
 			Utils.saveInt(SplashScreenActivity.LANGUAGE_CHECK, 1, ApplicationInstance.getContext());
 			startActivity(new Intent(this, MainActivity.class));
 			finish();

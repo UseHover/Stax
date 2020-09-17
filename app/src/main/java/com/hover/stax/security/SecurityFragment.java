@@ -15,6 +15,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.amplitude.api.Amplitude;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
@@ -53,6 +54,7 @@ public class SecurityFragment extends Fragment {
 						String text = languageSpinner.getSelectedItem().toString();
 						String language = languageMap.get(text);
 						if(language !=null) {
+							Amplitude.getInstance().logEvent(getString(R.string.selected_language, language));
 							Lingver.getInstance().setLocale(ApplicationInstance.getContext(), language);
 							Intent intent = new Intent(getActivity(), MainActivity.class);
 							intent.putExtra(MainActivity.SETTINGS_EXTRA, true);
