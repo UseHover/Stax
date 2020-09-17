@@ -51,7 +51,7 @@ public class StaxTransaction {
 	}
 
 	public String getDateString() {
-		return staxDate.getYear() + "/" + staxDate.getMonth() + "/" + staxDate.getDayOfMonth();
+		return staxDate.getYear() + staxDate.getMonth() +  staxDate.getDayOfMonth();
 	}
 
 	private static StaxDate convertToStaxDate(long timestamp) {
