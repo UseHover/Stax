@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
-import com.hover.stax.models.StaxDate;
 import com.hover.stax.utils.UIHelper;
 
 public class TransactionDetailsFragment extends Fragment {
@@ -51,12 +50,12 @@ public class TransactionDetailsFragment extends Fragment {
 
 			transactionDetailsViewModel.loadStaxTransaction().observe(getViewLifecycleOwner(), staxTransaction -> {
 				if (staxTransaction != null) {
-					amountText.setText(staxTransaction.getAmount());
-					StaxDate staxDate = staxTransaction.getStaxDate();
-					if (staxDate != null)
-						dateText.setText(staxDate.getMonth() + "/" + staxDate.getDayOfMonth() + "/" + staxDate.getYear());
-					transactionNumberText.setText(staxTransaction.getUuid());
-					networkName.setText(staxTransaction.getNetworkName());
+//					amountText.setText(staxTransaction.getAmount());
+//					StaxDate staxDate = staxTransaction.getStaxDate();
+//					if (staxDate != null)
+//						dateText.setText(staxDate.getMonth() + "/" + staxDate.getDayOfMonth() + "/" + staxDate.getYear());
+//					transactionNumberText.setText(staxTransaction.getUuid());
+//					networkName.setText(staxTransaction.getNetworkName());
 
 				}
 			});

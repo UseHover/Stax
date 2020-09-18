@@ -15,7 +15,7 @@ import com.hover.sdk.sims.SimInfo;
 import com.hover.sdk.sms.MessageLog;
 import com.hover.sdk.transactions.Transaction;
 import com.hover.stax.ApplicationInstance;
-import com.hover.stax.home.StaxTransaction;
+import com.hover.stax.transactions.StaxTransaction;
 import com.hover.stax.utils.Utils;
 
 import org.json.JSONException;
@@ -65,21 +65,21 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 
 
 	private void setupStaxTransaction(Transaction transaction) {
-		try {
-			String lastTime = "";
-			StaxTransaction staxTransaction = new StaxTransaction(transaction, lastTime, getApplication());
-			staxTransaction.setNetworkName("Not in SIM slot");
-			List<SimInfo> sims = Hover.getPresentSims(ApplicationInstance.getContext());
-			for (SimInfo sim : sims) {
-				if (sim.getOSReportedHni().equals(transaction.networkHni)) {
-					staxTransaction.setNetworkName(sim.getNetworkOperatorName());
-				}
-			}
-			staxTransactionMutableLiveData.setValue(staxTransaction);
+//		try {
+//			String lastTime = "";
+//			StaxTransaction staxTransaction = new StaxTransaction(transaction, lastTime, getApplication());
+//			staxTransaction.setNetworkName("Not in SIM slot");
+//			List<SimInfo> sims = Hover.getPresentSims(ApplicationInstance.getContext());
+//			for (SimInfo sim : sims) {
+//				if (sim.getOSReportedHni().equals(transaction.networkHni)) {
+//					staxTransaction.setNetworkName(sim.getNetworkOperatorName());
+//				}
+//			}
+//			staxTransactionMutableLiveData.setValue(staxTransaction);
 
-		} catch (JSONException e) {
-			Log.e(TAG, "Error parsing transaction", e);
-		}
+//		} catch (JSONException e) {
+//			Log.e(TAG, "Error parsing transaction", e);
+//		}
 	}
 
 	private ArrayList<TransactionDetailsMessagesModel> getMessagesOfTransactionById(String transactionId) {

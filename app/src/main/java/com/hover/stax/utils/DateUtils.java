@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.hover.stax.R;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class DateUtils {
@@ -17,6 +18,15 @@ public class DateUtils {
 
 	public static String timeAgo(Context context, final long millis) {
 		return humanFriendlyTime(context, System.currentTimeMillis() - millis);
+	}
+
+	public static String humanFriendlyDate(long timestamp) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(timestamp);
+		String date = monthNumToName(cal.get(Calendar.MONTH));
+		date += " " + cal.get(Calendar.DAY_OF_MONTH);
+		date += " " + cal.get(Calendar.YEAR);
+		return date;
 	}
 
 	private static String humanFriendlyTime(Context context, long diffMillis) {

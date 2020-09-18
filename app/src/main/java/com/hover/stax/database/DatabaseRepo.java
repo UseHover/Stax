@@ -10,6 +10,8 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
 import com.hover.stax.sims.Sim;
 import com.hover.stax.sims.SimDao;
+import com.hover.stax.transactions.StaxTransaction;
+import com.hover.stax.transactions.TransactionDao;
 
 import java.util.List;
 
@@ -17,6 +19,7 @@ public class DatabaseRepo {
 	private ChannelDao channelDao;
 	private ActionDao actionDao;
 	private SimDao simDao;
+	private TransactionDao transactionDao;
 
 	private LiveData<List<Channel>> allChannels;
 	private LiveData<List<Channel>> selectedChannels;
@@ -25,6 +28,7 @@ public class DatabaseRepo {
 	public DatabaseRepo(Application application) {
 		AppDatabase db = AppDatabase.getInstance(application);
 		channelDao = db.channelDao();
+		transactionDao = db.transactionDao();
 
 		SdkDatabase sdkDb = SdkDatabase.getInstance(application);
 		actionDao = sdkDb.actionDao();
@@ -76,5 +80,21 @@ public class DatabaseRepo {
 
 	public LiveData<List<Action>> getActions() {
 		return actionDao.getAll();
+	}
+
+	public LiveData<List<StaxTransaction>> getCompleteTransferTransactions() {
+		return transactionDao.getSucceededNonBalance();
+	}
+
+	public StaxTransaction getTransaction(String uuid) {
+		return transactionDao.getTransaction(uuid);
+	}
+
+	public void insert(StaxTransaction transaction) {
+		AppDatabase.databaseWriteExecutor.execute(() -> transactionDao.insert(transaction));
+	}
+
+	public void update(StaxTransaction transaction) {
+		AppDatabase.databaseWriteExecutor.execute(() -> transactionDao.update(transaction));
 	}
 }

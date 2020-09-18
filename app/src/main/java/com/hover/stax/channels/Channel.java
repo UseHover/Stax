@@ -7,8 +7,12 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.hover.stax.utils.DateUtils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
 
 @Entity(tableName = "channels")
 public class Channel {
@@ -90,6 +94,15 @@ public class Channel {
 
 	@ColumnInfo(name = "latestBalanceTimestamp", defaultValue = "CURRENT_TIMESTAMP")
 	public Long latestBalanceTimestamp;
+
+	public void updateBalance(HashMap<String, String> parsed_variables) {
+		latestBalance = parsed_variables.get("balance");
+		if (parsed_variables.containsKey("update_timestamp") && parsed_variables.get("update_timestamp") != null) {
+			latestBalanceTimestamp = Long.parseLong(parsed_variables.get("update_timestamp"));
+		} else {
+			latestBalanceTimestamp = DateUtils.now();
+		}
+	}
 
 	@Override
 	public String toString() {
