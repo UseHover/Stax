@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.hover.stax.R;
 
+import java.util.Date;
+
 public class DateUtils {
 	public static long now() {
 		return new Date().getTime();

@@ -1,6 +1,7 @@
 package com.hover.stax.channels;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -8,8 +9,8 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
-import com.hover.sdk.sims.SimInfo;
 import com.hover.stax.database.DatabaseRepo;
+import com.hover.stax.sims.Sim;
 import com.hover.stax.utils.Utils;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class ChannelViewModel extends AndroidViewModel {
 
 	private DatabaseRepo repo;
 
-	private MutableLiveData<List<SimInfo>> sims;
+	private LiveData<List<Sim>> sims;
 	LiveData<List<String>> simHniList = new MutableLiveData<>();
 	LiveData<List<String>> simCountryList = new MutableLiveData<>();
 
@@ -84,25 +85,25 @@ public class ChannelViewModel extends AndroidViewModel {
 		if (sims == null) {
 			sims = new MutableLiveData<>();
 		}
-		sims.setValue(repo.getSims());
+		sims = repo.getSims();
 	}
 
-	private LiveData<List<String>> getHnis(List<SimInfo> sims) {
+	private LiveData<List<String>> getHnis(List<Sim> sims) {
 		List<String> hniList = new ArrayList<>();
-		for (SimInfo sim : sims) {
-			if (!hniList.contains(sim.getOSReportedHni()))
-				hniList.add(sim.getOSReportedHni());
+		for (Sim sim : sims) {
+			if (!hniList.contains(sim.hni))
+				hniList.add(sim.hni);
 		}
 		MutableLiveData<List<String>> liveData = new MutableLiveData<>();
 		liveData.setValue(hniList);
 		return liveData;
 	}
 
-	private LiveData<List<String>> getSimCountries(List<SimInfo> sims) {
+	private LiveData<List<String>> getSimCountries(List<Sim> sims) {
 		List<String> countries = new ArrayList<>();
-		for (SimInfo sim : sims) {
-			if (!countries.contains(sim.getCountryIso().toUpperCase()))
-				countries.add(sim.getCountryIso().toUpperCase());
+		for (Sim sim : sims) {
+			if (!countries.contains(sim.country_iso.toUpperCase()))
+				countries.add(sim.country_iso.toUpperCase());
 		}
 		MutableLiveData<List<String>> liveData = new MutableLiveData<>();
 		liveData.setValue(countries);

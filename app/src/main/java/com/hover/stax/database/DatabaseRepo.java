@@ -4,19 +4,19 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
-import com.hover.sdk.api.Hover;
-import com.hover.sdk.sims.SimInfo;
-import com.hover.stax.ApplicationInstance;
 import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionDao;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
+import com.hover.stax.sims.Sim;
+import com.hover.stax.sims.SimDao;
 
 import java.util.List;
 
 public class DatabaseRepo {
 	private ChannelDao channelDao;
 	private ActionDao actionDao;
+	private SimDao simDao;
 
 	private LiveData<List<Channel>> allChannels;
 	private LiveData<List<Channel>> selectedChannels;
@@ -28,6 +28,7 @@ public class DatabaseRepo {
 
 		SdkDatabase sdkDb = SdkDatabase.getInstance(application);
 		actionDao = sdkDb.actionDao();
+		simDao = sdkDb.simDao();
 
 		allChannels = channelDao.getAll();
 		selectedChannels = channelDao.getSelected(true);
@@ -59,9 +60,7 @@ public class DatabaseRepo {
 		AppDatabase.databaseWriteExecutor.execute(() -> channelDao.update(channel));
 	}
 
-	public List<SimInfo> getSims() {
-		return Hover.getPresentSims(ApplicationInstance.getContext());
-	}
+	public LiveData<List<Sim>> getSims() { return simDao.getPresent(); }
 
 	public Action getAction(String public_id) {
 		return actionDao.getAction(public_id);
