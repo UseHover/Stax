@@ -19,8 +19,8 @@ import java.util.HashMap;
 @Entity(tableName = "stax_transactions")
 public class StaxTransaction {
 
-	@PrimaryKey
-	@ColumnInfo(name = "_id")
+	@PrimaryKey(autoGenerate = true)
+	@NonNull
 	public int id;
 
 	@NonNull
@@ -72,6 +72,7 @@ public class StaxTransaction {
 		channel_id = data.getIntExtra(TransactionContract.COLUMN_CHANNEL_ID, -1);
 		status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
 		initiated_at = data.getLongExtra(TransactionContract.COLUMN_REQUEST_TIMESTAMP, DateUtils.now());
+		updated_at = initiated_at;
 
 		HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS);
 		if (extras.containsKey(Action.AMOUNT_KEY))
@@ -106,5 +107,10 @@ public class StaxTransaction {
 			default:
 				return "Other";
 		}
+	}
+
+	@Override
+	public String toString() {
+		return description;
 	}
 }

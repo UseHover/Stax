@@ -39,4 +39,13 @@
 	    android:name="com.hover.stax.security.SecurityFragment"
 	    android:label="@string/nav_security"
 	    tools:layout="@layout/fragment_security" />
+
+	<fragment
+		android:id="@+id/transactionDetailsFragment"
+		android:name="com.hover.stax.home.detailsPages.transaction.TransactionDetailsFragment"
+		android:label="TransactionDetailsFragment" >
+		<argument
+			android:name="uuid"
+			app:argType="string" />
+	</fragment>
 </navigation>

@@ -11,9 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
@@ -21,7 +20,6 @@ import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
-import com.hover.stax.home.detailsPages.transaction.TransactionDetailsFragment;
 import com.hover.stax.transactions.TransactionHistoryAdapter;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
@@ -44,7 +42,6 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		super.onViewCreated(view, savedInstanceState);
 		homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
 
-		transactionHistoryRecyclerView = view.findViewById(R.id.transaction_history_recyclerView);
 		view.findViewById(R.id.balances_header).setOnClickListener(v -> {
 			Amplitude.getInstance().logEvent(getString(R.string.click_add_account));
 			requireActivity().startActivityForResult(new Intent(getActivity(), ChannelsActivity.class), MainActivity.ADD_SERVICE);
@@ -59,10 +56,11 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 			setMeta(view, channels);
 		});
 
+		transactionHistoryRecyclerView = view.findViewById(R.id.transaction_history_recyclerView);
+		transactionHistoryRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 		homeViewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
 			Log.e(TAG, "transaction count: " + staxTransactions);
-			transactionHistoryRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-			transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions, this));
+			transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions, HomeFragment.this));
 			view.findViewById(R.id.transactionsLabel).setVisibility(staxTransactions.size() > 0 ? View.VISIBLE : View.GONE);
 		});
 	}
@@ -85,18 +83,9 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	}
 
 	@Override
-	public void onTap(String transactionId) {
-		if (getActivity() != null) {
-			Amplitude.getInstance().logEvent(getString(R.string.clicked_transaction_item));
-			Fragment fragment = new TransactionDetailsFragment();
-			Bundle bundle = new Bundle();
-			bundle.putString("id", transactionId);
-			fragment.setArguments(bundle);
-			FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-			fragmentTransaction.add(((ViewGroup) getView().getParent()).getId(), fragment);
-			fragmentTransaction.addToBackStack("transaction_id");
-			fragmentTransaction.commit();
-		}
+	public void onTap(String uuid) {
+		Bundle bundle = new Bundle();
+		bundle.putString("uuid", uuid);
+		NavHostFragment.findNavController(this).navigate(R.id.transactionDetailsFragment, bundle);
 	}
 }

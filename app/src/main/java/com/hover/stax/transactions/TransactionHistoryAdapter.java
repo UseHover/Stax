@@ -1,5 +1,6 @@
 package com.hover.stax.transactions;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +21,13 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 	public TransactionHistoryAdapter(List<StaxTransaction> transactions, SelectListener selectListener) {
 		this.transactionList = transactions;
 		this.selectListener = selectListener;
+		Log.e("Adapter", "constructing.");
 	}
 
 	@NonNull
 	@Override
 	public HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+		Log.e("Adapter", "creating.");
 		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.transaction_list_item, parent, false);
 		return new HistoryViewHolder(view);
 	}
@@ -32,6 +35,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 	@Override
 	public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
 		StaxTransaction t = transactionList.get(position);
+		Log.e("Adapter", "binding. " + position);
 		holder.content.setText(t.description);
 		holder.amount.setText(t.amount);
 		holder.date.setVisibility(shouldShowDate(t, position) ? View.VISIBLE : View.GONE);
@@ -65,7 +69,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 	}
 
 	public interface SelectListener {
-		void onTap(String transactionUUID);
+		void onTap(String uuid);
 	}
 
 	@Override
