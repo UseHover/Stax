@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amplitude.api.Amplitude;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
@@ -28,6 +29,7 @@ public class TransactionDetailsFragment extends Fragment {
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		viewModel = new ViewModelProvider(this).get(TransactionDetailsViewModel.class);
 		viewModel.setTransaction(getArguments().getString(TransactionContract.COLUMN_UUID));
+		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.nav_transaction)));
 		return inflater.inflate(R.layout.transaction_details_layout, container, false);
 	}
 
