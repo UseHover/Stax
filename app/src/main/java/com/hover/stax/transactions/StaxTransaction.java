@@ -14,6 +14,7 @@ import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.utils.DateUtils;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 @Entity(tableName = "stax_transactions")
@@ -76,7 +77,7 @@ public class StaxTransaction {
 
 		HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS);
 		if (extras.containsKey(Action.AMOUNT_KEY))
-			amount = extras.get(Action.AMOUNT_KEY);
+			amount = formatAmount(extras.get(Action.AMOUNT_KEY));
 		if (extras.containsKey(Action.PHONE_KEY))
 			recipient = extras.get(Action.PHONE_KEY);
 		else if (extras.containsKey(Action.ACCOUNT_KEY))
@@ -92,7 +93,7 @@ public class StaxTransaction {
 
 		HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES);
 		if (extras.containsKey(Action.FEE_KEY))
-			fee = extras.get(Action.FEE_KEY);
+			fee = formatAmount(extras.get(Action.FEE_KEY));
 	}
 
 	String generateDescription(Action action, Context c) {
@@ -107,6 +108,12 @@ public class StaxTransaction {
 			default:
 				return "Other";
 		}
+	}
+
+	private String formatAmount(String amount) {
+		DecimalFormat df = new DecimalFormat("0.00");
+		df.setMaximumFractionDigits(2);
+		return df.format(Integer.valueOf(amount));
 	}
 
 	@Override
