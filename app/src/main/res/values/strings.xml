@@ -8,6 +8,7 @@
 	<string name="nav_airtime">Buy Airtime</string>
 	<string name="nav_money">Move Money</string>
 	<string name="nav_security">Security</string>
+	<string name="nav_transaction">Transaction Detail</string>
 
 	<string name="done"><u>Done</u></string>
 	<string name="cancel"><u>Cancel</u></string>
@@ -77,7 +78,6 @@
 	<string name="airtime_other">Someone else</string>
 	<string name="add_service">+ Add a service</string>
 
-	<string name="transactionDetails">Transaction details</string>
 	<string name="date">Date</string>
 	<string name="network">Network</string>
 	<string name="transactionNumber">Transaction number</string>

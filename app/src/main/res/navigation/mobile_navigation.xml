@@ -42,7 +42,7 @@
 
 	<fragment
 		android:id="@+id/transactionDetailsFragment"
-		android:name="com.hover.stax.home.detailsPages.transaction.TransactionDetailsFragment"
+		android:name="com.hover.stax.transactions.TransactionDetailsFragment"
 		android:label="TransactionDetailsFragment" >
 		<argument
 			android:name="uuid"

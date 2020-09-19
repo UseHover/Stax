@@ -70,6 +70,10 @@ public class DatabaseRepo {
 		return actionDao.getAction(public_id);
 	}
 
+	public LiveData<Action> getLiveAction(String public_id) {
+		return actionDao.getLiveAction(public_id);
+	}
+
 	public LiveData<List<Action>> getActions(int channelId, String type) {
 		return actionDao.getActions(channelId, type);
 	}
@@ -88,6 +92,10 @@ public class DatabaseRepo {
 
 	public StaxTransaction getTransaction(String uuid) {
 		return transactionDao.getTransaction(uuid);
+	}
+
+	public LiveData<StaxTransaction> getLiveTransaction(String uuid) {
+		return transactionDao.getLiveTransaction(uuid);
 	}
 
 	public void insert(StaxTransaction transaction) {

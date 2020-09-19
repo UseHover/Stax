@@ -29,7 +29,7 @@ public class DateUtils {
 		return date;
 	}
 
-	private static String humanFriendlyTime(Context context, long diffMillis) {
+	public static String humanFriendlyTime(Context context, long diffMillis) {
 		double seconds = Math.abs(diffMillis) / 1000;
 		double minutes = seconds / 60;
 		double hours = minutes / 60;

@@ -37,8 +37,8 @@ import com.hover.stax.utils.Utils;
 public class TransferFragment extends Fragment {
 	private static final String TAG = "TransferFragment";
 
-	private String transferType;
 	private TransferViewModel transferViewModel;
+	private String transferType;
 	private AppCompatSpinner spinnerTo;
 	private AppCompatSpinner spinnerFrom;
 	private View detailsBlock;

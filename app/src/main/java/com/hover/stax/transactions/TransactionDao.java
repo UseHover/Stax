@@ -22,6 +22,9 @@ public interface TransactionDao {
 	@Query("SELECT * FROM stax_transactions WHERE uuid = :uuid LIMIT 1")
 	StaxTransaction getTransaction(String uuid);
 
+	@Query("SELECT * FROM stax_transactions WHERE uuid = :uuid LIMIT 1")
+	LiveData<StaxTransaction> getLiveTransaction(String uuid);
+
 	@Insert
 	void insert(StaxTransaction transaction);
 

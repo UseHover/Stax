@@ -3,6 +3,7 @@ package com.hover.stax.home;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -93,6 +94,16 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 		} else if (requestCode == ADD_SERVICE) {
 			runAllBalances();
 		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				onBackPressed();
+				return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }
 

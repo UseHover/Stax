@@ -16,6 +16,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
+import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
@@ -59,7 +60,6 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		transactionHistoryRecyclerView = view.findViewById(R.id.transaction_history_recyclerView);
 		transactionHistoryRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 		homeViewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
-			Log.e(TAG, "transaction count: " + staxTransactions);
 			transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions, HomeFragment.this));
 			view.findViewById(R.id.transactionsLabel).setVisibility(staxTransactions.size() > 0 ? View.VISIBLE : View.GONE);
 		});
@@ -85,7 +85,7 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	@Override
 	public void onTap(String uuid) {
 		Bundle bundle = new Bundle();
-		bundle.putString("uuid", uuid);
+		bundle.putString(TransactionContract.COLUMN_UUID, uuid);
 		NavHostFragment.findNavController(this).navigate(R.id.transactionDetailsFragment, bundle);
 	}
 }
