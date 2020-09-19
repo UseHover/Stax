@@ -67,24 +67,27 @@ public class StaxTransaction {
 	public StaxTransaction() {}
 
 	public StaxTransaction(Intent data, Action action, Context c) {
-		uuid = data.getStringExtra(TransactionContract.COLUMN_UUID);
-		action_id = data.getStringExtra(TransactionContract.COLUMN_ACTION_ID);
-		transaction_type = data.getStringExtra(TransactionContract.COLUMN_TYPE);
-		channel_id = data.getIntExtra(TransactionContract.COLUMN_CHANNEL_ID, -1);
-		status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
-		initiated_at = data.getLongExtra(TransactionContract.COLUMN_REQUEST_TIMESTAMP, DateUtils.now());
-		updated_at = initiated_at;
+		if (data.hasExtra(TransactionContract.COLUMN_UUID) && data.getStringExtra(TransactionContract.COLUMN_UUID) != null) {
+			uuid = data.getStringExtra(TransactionContract.COLUMN_UUID);
+			action_id = data.getStringExtra(TransactionContract.COLUMN_ACTION_ID);
+			transaction_type = data.getStringExtra(TransactionContract.COLUMN_TYPE);
+			channel_id = data.getIntExtra(TransactionContract.COLUMN_CHANNEL_ID, -1);
+			status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
+			initiated_at = data.getLongExtra(TransactionContract.COLUMN_REQUEST_TIMESTAMP, DateUtils.now());
+			updated_at = initiated_at;
 
-		HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS);
-		if (extras.containsKey(Action.AMOUNT_KEY))
-			amount = formatAmount(extras.get(Action.AMOUNT_KEY));
-		if (extras.containsKey(Action.PHONE_KEY))
-			recipient = extras.get(Action.PHONE_KEY);
-		else if (extras.containsKey(Action.ACCOUNT_KEY))
-			recipient = extras.get(Action.ACCOUNT_KEY);
-
-		if (transaction_type != null)
-			description = generateDescription(action, c);
+			HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS);
+			if (extras != null) {
+				if (extras.containsKey(Action.AMOUNT_KEY))
+					amount = formatAmount(extras.get(Action.AMOUNT_KEY));
+				if (extras.containsKey(Action.PHONE_KEY))
+					recipient = extras.get(Action.PHONE_KEY);
+				else if (extras.containsKey(Action.ACCOUNT_KEY))
+					recipient = extras.get(Action.ACCOUNT_KEY);
+			}
+			if (transaction_type != null)
+				description = generateDescription(action, c);
+		}
 	}
 
 	public void update(Intent data) {
