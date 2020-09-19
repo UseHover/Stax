@@ -3,7 +3,6 @@ package com.hover.stax.channels;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -51,19 +50,12 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		if (PermissionUtils.permissionsGranted(grantResults)) {
-			Hover.updateSimInfo(this);
+		if (PermissionUtils.permissionsGranted(grantResults))
 			init();
-			new Handler().postDelayed(() -> { // This is dumb, need to add SimInfo to Room
-				if (channelViewModel != null) {
-					channelViewModel.loadSims();
-				}
-			}, 5000);
-
-		}
 	}
 
 	private void init() {
+		Hover.updateSimInfo(this);
 		addChannels();
 		watchSelected();
 	}

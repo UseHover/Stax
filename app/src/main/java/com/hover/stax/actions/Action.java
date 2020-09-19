@@ -18,7 +18,7 @@ import java.util.List;
 public class Action {
 	public final static String TRANSACTION_TYPE = "transaction_type", P2P = "p2p", AIRTIME = "airtime", ME2ME = "me2me", C2B = "c2b", BALANCE = "balance";
 	public final static String STEP_IS_PARAM = "is_param", STEP_VALUE = "value",
-			PIN_KEY = "pin", AMOUNT_KEY = "amount", PHONE_KEY = "phone", ACCOUNT_KEY = "account";
+			PIN_KEY = "pin", AMOUNT_KEY = "amount", PHONE_KEY = "phone", ACCOUNT_KEY = "account", FEE_KEY = "fee";
 
 	@PrimaryKey
 	@ColumnInfo(name = "_id")

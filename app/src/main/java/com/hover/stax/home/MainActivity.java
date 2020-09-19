@@ -2,6 +2,8 @@ package com.hover.stax.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,7 +12,9 @@ import androidx.biometric.BiometricConstants;
 import androidx.biometric.BiometricPrompt;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavHost;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -106,7 +110,13 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
+		Log.e(TAG, "Activity result. request code: " + requestCode);
+		if (requestCode == MainActivity.TRANSFER_REQUEST || requestCode < 100) {
+			Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
+			homeViewModel.saveTransaction(data, this);
+			Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_home);
+		}
+
 		if (requestCode < 100) { // Some fragments use request codes in in the 100's for unrelated stuff
 			if (hasRun == null) {
 				hasRun = new ArrayList<>();
@@ -116,6 +126,16 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 		} else if (requestCode == ADD_SERVICE) {
 			runAllBalances();
 		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				onBackPressed();
+				return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }
 

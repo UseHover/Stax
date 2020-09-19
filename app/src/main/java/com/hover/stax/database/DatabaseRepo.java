@@ -4,19 +4,22 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
-import com.hover.sdk.api.Hover;
-import com.hover.sdk.sims.SimInfo;
-import com.hover.stax.ApplicationInstance;
 import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionDao;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
+import com.hover.stax.sims.Sim;
+import com.hover.stax.sims.SimDao;
+import com.hover.stax.transactions.StaxTransaction;
+import com.hover.stax.transactions.TransactionDao;
 
 import java.util.List;
 
 public class DatabaseRepo {
 	private ChannelDao channelDao;
 	private ActionDao actionDao;
+	private SimDao simDao;
+	private TransactionDao transactionDao;
 
 	private LiveData<List<Channel>> allChannels;
 	private LiveData<List<Channel>> selectedChannels;
@@ -25,9 +28,11 @@ public class DatabaseRepo {
 	public DatabaseRepo(Application application) {
 		AppDatabase db = AppDatabase.getInstance(application);
 		channelDao = db.channelDao();
+		transactionDao = db.transactionDao();
 
 		SdkDatabase sdkDb = SdkDatabase.getInstance(application);
 		actionDao = sdkDb.actionDao();
+		simDao = sdkDb.simDao();
 
 		allChannels = channelDao.getAll();
 		selectedChannels = channelDao.getSelected(true);
@@ -59,12 +64,14 @@ public class DatabaseRepo {
 		AppDatabase.databaseWriteExecutor.execute(() -> channelDao.update(channel));
 	}
 
-	public List<SimInfo> getSims() {
-		return Hover.getPresentSims(ApplicationInstance.getContext());
-	}
+	public LiveData<List<Sim>> getSims() { return simDao.getPresent(); }
 
 	public Action getAction(String public_id) {
 		return actionDao.getAction(public_id);
+	}
+
+	public LiveData<Action> getLiveAction(String public_id) {
+		return actionDao.getLiveAction(public_id);
 	}
 
 	public LiveData<List<Action>> getActions(int channelId, String type) {
@@ -77,5 +84,25 @@ public class DatabaseRepo {
 
 	public LiveData<List<Action>> getActions() {
 		return actionDao.getAll();
+	}
+
+	public LiveData<List<StaxTransaction>> getCompleteTransferTransactions() {
+		return transactionDao.getNonBalance();
+	}
+
+	public StaxTransaction getTransaction(String uuid) {
+		return transactionDao.getTransaction(uuid);
+	}
+
+	public LiveData<StaxTransaction> getLiveTransaction(String uuid) {
+		return transactionDao.getLiveTransaction(uuid);
+	}
+
+	public void insert(StaxTransaction transaction) {
+		AppDatabase.databaseWriteExecutor.execute(() -> transactionDao.insert(transaction));
+	}
+
+	public void update(StaxTransaction transaction) {
+		AppDatabase.databaseWriteExecutor.execute(() -> transactionDao.update(transaction));
 	}
 }

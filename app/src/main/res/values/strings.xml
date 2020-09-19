@@ -20,6 +20,7 @@
 	<string name="nav_airtime">Buy Airtime</string>
 	<string name="nav_money">Move Money</string>
 	<string name="nav_security">Security</string>
+	<string name="nav_transaction">Transaction Detail</string>
 
 	<string name="done"><u>Done</u></string>
 	<string name="cancel"><u>Cancel</u></string>
@@ -59,7 +60,7 @@
 	<string name="default_account_desc">Defaults accounts will show up first when you move money.</string>
 	<string name="about_our_security">About our security</string>
 	<string name="about_our_security_content">Hover’s Android SDK is a development kit meeting the criteria of 740.17(b)(3) (i) security classification of the United States Bureau of Industry and Security. This software uses HTTPS for server communication; symmetric key RSA encryption to temporarily store the user’s credentials on their own device using Android Keystore; and code obfuscation using DRM (Dexguard).</string>
-	<string name="choose_pin_description">You can remove your PINs from Stax at any time. All PINs are secured and encrypted with Google Keystore to ensure your information is always protected</string>
+	<string name="choose_pin_description">You can remove your PINs from Stax at any time. All PINs are secured with RSA encryption in the Android Keystore. They are never sent over the internet in any form.</string>
 
 	<string name="title_airtime">Top up airtime</string>
 	<string name="title_p2p">Move money to someone else</string>
@@ -89,7 +90,6 @@
 	<string name="airtime_other">Someone else</string>
 	<string name="add_service">+ Add a service</string>
 
-	<string name="transactionDetails">Transaction details</string>
 	<string name="date">Date</string>
 	<string name="network">Network</string>
 	<string name="transactionNumber">Transaction number</string>

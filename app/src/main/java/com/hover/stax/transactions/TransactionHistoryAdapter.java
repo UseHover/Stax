@@ -1,5 +1,6 @@
-package com.hover.stax.home;
+package com.hover.stax.transactions;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
+import com.hover.stax.utils.DateUtils;
 
 import java.util.List;
 
@@ -16,7 +18,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 	private List<StaxTransaction> transactionList;
 	private final SelectListener selectListener;
 
-	TransactionHistoryAdapter(List<StaxTransaction> transactions, SelectListener selectListener) {
+	public TransactionHistoryAdapter(List<StaxTransaction> transactions, SelectListener selectListener) {
 		this.transactionList = transactions;
 		this.selectListener = selectListener;
 	}
@@ -31,13 +33,19 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 	@Override
 	public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
 		StaxTransaction t = transactionList.get(position);
-		holder.content.setText(t.getDescription());
-		holder.amount.setText(t.getAmount());
-		holder.date.setVisibility(t.isShowDate() ? View.VISIBLE : View.GONE);
-		holder.date.setText(t.getStaxDate().getMonth() + " " + t.getStaxDate().getDayOfMonth());
+		holder.content.setText(t.description);
+		holder.amount.setText(t.amount);
+		holder.date.setVisibility(shouldShowDate(t, position) ? View.VISIBLE : View.GONE);
+		holder.date.setText(DateUtils.humanFriendlyDate(t.initiated_at));
 		holder.itemView.setOnClickListener(view -> {
-			selectListener.onTap(t.getUuid());
+			selectListener.onTap(t.uuid);
 		});
+	}
+
+	private boolean shouldShowDate(StaxTransaction t, int position) {
+		return position == 0 ||
+			    !DateUtils.humanFriendlyDate(transactionList.get(position - 1).initiated_at)
+				    .equals(DateUtils.humanFriendlyDate(t.initiated_at));
 	}
 
 	@Override
@@ -58,7 +66,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 	}
 
 	public interface SelectListener {
-		void onTap(String transactionUUID);
+		void onTap(String uuid);
 	}
 
 	@Override

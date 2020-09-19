@@ -12,13 +12,13 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:orientation="horizontal"
-	    android:padding="@dimen/activity_horizontal_margin"
 	    android:layout_gravity="center_vertical">
 
 		<TextView
 		    android:id="@+id/balances_header"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
+			android:padding="@dimen/activity_horizontal_margin"
 		    android:text="@string/balances"
 		    android:textColor="@color/offWhite"
 		    android:textSize="@dimen/text_21"
@@ -26,15 +26,14 @@
 		    android:layout_gravity="start"
 		    android:gravity="start"
 		    android:drawablePadding="@dimen/spacing8"
-		    android:drawableEnd="@drawable/ic_add_circle_outline_black_24dp"
-
-		    />
+		    android:drawableEnd="@drawable/ic_add_circle_outline_black_24dp" />
 
 
 		<TextView
 		    android:layout_width="0dp"
 		    android:layout_height="wrap_content"
 		    android:layout_weight="1"
+			android:padding="@dimen/activity_horizontal_margin"
 		    android:text="timeAgo"
 		    android:textAlignment="viewEnd"
 		    android:layout_gravity="center_vertical"
@@ -73,6 +72,5 @@
 	<androidx.recyclerview.widget.RecyclerView
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:visibility="gone"
 	    android:id="@+id/transaction_history_recyclerView"/>
 </LinearLayout>

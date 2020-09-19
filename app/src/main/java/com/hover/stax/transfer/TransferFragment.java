@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,8 +40,8 @@ import com.hover.stax.utils.Utils;
 public class TransferFragment extends Fragment {
 	private static final String TAG = "TransferFragment";
 
-	private String transferType;
 	private TransferViewModel transferViewModel;
+	private String transferType;
 	private AppCompatSpinner spinnerTo;
 	private AppCompatSpinner spinnerFrom;
 	private View detailsBlock;
@@ -217,7 +218,7 @@ public class TransferFragment extends Fragment {
 	private void makeHoverCall(Action action) {
 		Amplitude.getInstance().logEvent(getString(R.string.finish_screen, transferType));
 		new HoverSession.Builder(action, transferViewModel.getActiveChannel().getValue(),
-				getActivity(), MainActivity.TRANSFER_REQUEST, this)
+				getActivity(), MainActivity.TRANSFER_REQUEST)
 				.extra(Action.PHONE_KEY, recipientInput.getText().toString())
 				.extra(Action.ACCOUNT_KEY, recipientInput.getText().toString())
 				.extra(Action.AMOUNT_KEY, amountInput.getText().toString())
@@ -236,9 +237,6 @@ public class TransferFragment extends Fragment {
 				Amplitude.getInstance().logEvent(getString(R.string.contact_select_error));
 				UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectContactErrorMessage));
 			}
-		} else if (requestCode == MainActivity.TRANSFER_REQUEST) {
-			Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
-			NavHostFragment.findNavController(this).navigate(R.id.navigation_home);
 		}
 	}
 

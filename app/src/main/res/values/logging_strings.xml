@@ -22,7 +22,6 @@
 	<string name="contact_perm_denied" translatable="false">Denied contact permission</string>
 	<string name="contact_select_success" translatable="false">Successfully choose contact</string>
 	<string name="contact_select_error" translatable="false">Choose contact error</string>
-	<string name="clicked_transaction_item" translatable="false">Clicked transaction item to view full transaction details</string>
 
 	<string name="biometrics_not_setup" translatable="false">Biometrics not setup in device therefore allowed to continue</string>
 	<string name="biometrics_failed" translatable="false">Biometrics failed</string>
@@ -31,5 +30,4 @@
 
 	<string name="viewing_language_screen" translatable="false">Viewing language list screen</string>
 	<string name="selected_language" translatable="false">Selected language: %1$s</string>
-
 </resources>

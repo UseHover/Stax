@@ -35,6 +35,7 @@ public class SecurityFragment extends Fragment {
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.nav_security)));
 		securityViewModel = new ViewModelProvider(this).get(PinsViewModel.class);
 		View root = inflater.inflate(R.layout.fragment_security, container, false);
 

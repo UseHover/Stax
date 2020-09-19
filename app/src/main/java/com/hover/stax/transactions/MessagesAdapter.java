@@ -1,4 +1,4 @@
-package com.hover.stax.home.detailsPages.transaction;
+package com.hover.stax.transactions;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,14 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class TransactionMessagesRecyclerAdapter extends RecyclerView.Adapter<TransactionMessagesRecyclerAdapter.TransactionMessageViewHolder> {
+public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.TransactionMessageViewHolder> {
 
-	private ArrayList<TransactionDetailsMessagesModel> messagesModelArrayList;
+	private List<UssdCallResponse> messagesList;
 
-	TransactionMessagesRecyclerAdapter(ArrayList<TransactionDetailsMessagesModel> messagesModelArrayList) {
-		this.messagesModelArrayList = messagesModelArrayList;
+	MessagesAdapter(List<UssdCallResponse> messagesList) {
+		this.messagesList = messagesList;
 	}
 
 	@NonNull
@@ -29,15 +29,15 @@ public class TransactionMessagesRecyclerAdapter extends RecyclerView.Adapter<Tra
 
 	@Override
 	public void onBindViewHolder(@NonNull TransactionMessageViewHolder holder, int position) {
-		TransactionDetailsMessagesModel model = messagesModelArrayList.get(position);
+		UssdCallResponse model = messagesList.get(position);
 
-		if (!model.getEnteredValue().isEmpty()) {
-			if (model.getEnteredValue().equals("(pin)")) {
-				holder.enteredValueText.setText("....");
-				holder.enteredValueText.setTextSize(60);
-			} else holder.enteredValueText.setText(model.getEnteredValue());
-		} else holder.enteredValueText.setVisibility(View.GONE);
-		holder.messageContentText.setText(model.getMessageContent());
+		if (!model.enteredValue.isEmpty())
+			holder.enteredValueText.setText(model.enteredValue);
+		else holder.enteredValueText.setVisibility(View.GONE);
+
+		if (!model.responseMessage.isEmpty())
+			holder.messageContentText.setText(model.responseMessage);
+		else holder.messageContentText.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -52,8 +52,8 @@ public class TransactionMessagesRecyclerAdapter extends RecyclerView.Adapter<Tra
 
 	@Override
 	public int getItemCount() {
-		if (messagesModelArrayList == null) return 0;
-		return messagesModelArrayList.size();
+		if (messagesList == null) return 0;
+		return messagesList.size();
 	}
 
 	static class TransactionMessageViewHolder extends RecyclerView.ViewHolder {

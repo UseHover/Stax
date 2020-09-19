@@ -4,7 +4,14 @@ import android.content.Context;
 
 import com.hover.stax.R;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class DateUtils {
+	public static long now() {
+		return new Date().getTime();
+	}
+
 	public static String timeUntil(Context context, final long millis) {
 		return humanFriendlyTime(context, millis - System.currentTimeMillis());
 	}
@@ -13,7 +20,16 @@ public class DateUtils {
 		return humanFriendlyTime(context, System.currentTimeMillis() - millis);
 	}
 
-	private static String humanFriendlyTime(Context context, long diffMillis) {
+	public static String humanFriendlyDate(long timestamp) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(timestamp);
+		String date = monthNumToName(cal.get(Calendar.MONTH));
+		date += " " + cal.get(Calendar.DAY_OF_MONTH);
+		date += " " + cal.get(Calendar.YEAR);
+		return date;
+	}
+
+	public static String humanFriendlyTime(Context context, long diffMillis) {
 		double seconds = Math.abs(diffMillis) / 1000;
 		double minutes = seconds / 60;
 		double hours = minutes / 60;

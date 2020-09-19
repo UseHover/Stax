@@ -1,149 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorPrimary"
-    android:padding="@dimen/activity_horizontal_margin"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_height="match_parent"
+	android:layout_width="match_parent"
+	android:layout_marginBottom="@dimen/large_margin"
+	android:orientation="vertical"
+    android:background="@color/colorPrimary">
 
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:orientation="vertical"
-	    >
-
-	<TextView
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:textSize="@dimen/text_21"
-	    android:textColor="@color/offWhite"
-	    android:drawableStart="@drawable/ic_arrow_back_offwhite_24dp"
-	    android:drawablePadding="@dimen/activity_vertical_margin"
-	    android:id="@+id/backText"
-	    android:text="@string/transactionDetails"/>
-
-
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"
-	    android:baselineAligned="false">
-
-	<LinearLayout
-	    android:layout_width="0dp"
-	    android:layout_height="wrap_content"
-	    android:layout_weight="1"
-	    android:layout_marginTop="@dimen/spacing32"
-	    android:orientation="vertical">
+	<androidx.appcompat.widget.Toolbar android:id="@+id/toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:navigationIcon="?attr/homeAsUpIndicator"
+		android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
 
 		<TextView
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:textColor="@color/offWhite"
-		    android:text="@string/amount"/>
-		<TextView
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:textColor="@color/white"
-		    android:id="@+id/details_amount"
-		    android:textSize="@dimen/text_21"
-		    android:textStyle="bold"/>
-	</LinearLayout>
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:padding="@dimen/small_margin"
+			android:textSize="@dimen/text_21"
+			android:textColor="@color/offWhite"
+			android:text="@string/nav_transaction" />
+
+	</androidx.appcompat.widget.Toolbar>
+
+	<androidx.core.widget.NestedScrollView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/activity_horizontal_margin" >
 
 		<LinearLayout
-		    android:layout_width="0dp"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:layout_marginTop="@dimen/spacing32"
-		    android:orientation="vertical">
-
-			<TextView
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:textColor="@color/offWhite"
-			    android:text="@string/date"/>
-			<TextView
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:textColor="@color/white"
-			    android:id="@+id/details_date"
-			    android:textSize="@dimen/text_21"
-			    android:textStyle="bold"/>
-		</LinearLayout>
-
-	</LinearLayout>
-
-
-
-
-		<LinearLayout
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:orientation="horizontal">
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
 
 			<LinearLayout
-			    android:layout_width="0dp"
+			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
-			    android:layout_weight="1"
-			    android:layout_marginTop="@dimen/activity_vertical_margin"
-			    android:orientation="vertical">
+			    android:orientation="horizontal"
+			    android:baselineAligned="false">
 
-				<TextView
-				    android:layout_width="wrap_content"
+				<LinearLayout
+				    android:layout_width="0dp"
 				    android:layout_height="wrap_content"
-				    android:textColor="@color/offWhite"
-				    android:text="@string/network"/>
-				<TextView
-				    android:layout_width="wrap_content"
+				    android:layout_weight="1"
+				    android:layout_marginTop="@dimen/spacing32"
+				    android:orientation="vertical">
+
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:textColor="@color/offWhite"
+					    android:text="@string/amount"/>
+
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:textColor="@color/white"
+					    android:id="@+id/details_amount"
+					    android:textSize="@dimen/text_21"
+					    android:textStyle="bold"/>
+				</LinearLayout>
+
+				<LinearLayout
+				    android:layout_width="0dp"
 				    android:layout_height="wrap_content"
-				    android:textColor="@color/white"
-				    android:id="@+id/details_network"
-				    android:textSize="@dimen/text_21"
-				    android:textStyle="bold"/>
+				    android:layout_weight="1"
+				    android:layout_marginTop="@dimen/spacing32"
+				    android:orientation="vertical">
+
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:textColor="@color/offWhite"
+					    android:text="@string/date"/>
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:textColor="@color/white"
+					    android:id="@+id/details_date"
+					    android:textSize="@dimen/text_21"
+					    android:textStyle="bold"/>
+				</LinearLayout>
+
 			</LinearLayout>
-
 			<LinearLayout
-			    android:layout_width="0dp"
+			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
-			    android:layout_weight="1"
-			    android:layout_marginTop="@dimen/activity_vertical_margin"
-			    android:orientation="vertical">
+			    android:orientation="horizontal">
 
-				<TextView
-				    android:layout_width="wrap_content"
+				<LinearLayout
+				    android:layout_width="0dp"
 				    android:layout_height="wrap_content"
-				    android:textColor="@color/offWhite"
-				    android:text="@string/transactionNumber"/>
-				<TextView
-				    android:layout_width="wrap_content"
+				    android:layout_weight="1"
+				    android:layout_marginTop="@dimen/activity_vertical_margin"
+				    android:orientation="vertical">
+
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:textColor="@color/offWhite"
+					    android:text="@string/network"/>
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:textColor="@color/white"
+					    android:id="@+id/details_network"
+					    android:textSize="@dimen/text_21"
+					    android:textStyle="bold"/>
+				</LinearLayout>
+
+				<LinearLayout
+				    android:layout_width="0dp"
 				    android:layout_height="wrap_content"
-				    android:textColor="@color/white"
-				    android:id="@+id/details_transactionNumber"
-				    android:textSize="@dimen/text_21"
-				    android:textStyle="bold"/>
+				    android:layout_weight="1"
+				    android:layout_marginTop="@dimen/activity_vertical_margin"
+				    android:orientation="vertical">
+
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:textColor="@color/offWhite"
+					    android:text="@string/transactionNumber"/>
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:textColor="@color/white"
+					    android:id="@+id/details_transactionNumber"
+					    android:textSize="@dimen/text_21"
+					    android:textStyle="bold"/>
+				</LinearLayout>
+
 			</LinearLayout>
+
+			<TextView
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:text="@string/message"
+			    android:layout_marginTop="@dimen/spacing32"
+			    android:textColor="@color/offWhite" />
+			<View
+			    android:layout_width="match_parent"
+			    android:layout_height="0.1dp"
+			    android:layout_marginTop="8dp"
+			    android:background="@color/offWhite" />
+
+			<androidx.recyclerview.widget.RecyclerView
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:id="@+id/convo_recyclerView" />
+
+			<androidx.recyclerview.widget.RecyclerView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:id="@+id/sms_recyclerView" />
 
 		</LinearLayout>
-
-		<TextView
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:text="@string/message"
-		    android:layout_marginTop="@dimen/spacing32"
-		    android:textColor="@color/offWhite"
-		    />
-		<View
-		    android:layout_width="match_parent"
-		    android:layout_height="0.1dp"
-		    android:layout_marginTop="8dp"
-		    android:background="@color/offWhite"/>
-
-		<androidx.recyclerview.widget.RecyclerView
-		    android:layout_marginTop="@dimen/activity_vertical_margin"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_marginBottom="@dimen/spacing32"
-		    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-		    android:id="@+id/transac_messages_recyclerView"/>
-	</LinearLayout>
-</androidx.core.widget.NestedScrollView>
+	</androidx.core.widget.NestedScrollView>
+</LinearLayout>

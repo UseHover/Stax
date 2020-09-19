@@ -14,6 +14,9 @@ public interface ActionDao {
 	@Query("SELECT * FROM hsdk_actions WHERE server_id = :public_id LIMIT 1")
 	Action getAction(String public_id);
 
+	@Query("SELECT * FROM hsdk_actions WHERE server_id = :public_id LIMIT 1")
+	LiveData<Action> getLiveAction(String public_id);
+
 	@Query("SELECT * FROM hsdk_actions WHERE from_institution_id = :institution_id")
 	LiveData<List<Action>> getByFromInstitution(int institution_id);
 
