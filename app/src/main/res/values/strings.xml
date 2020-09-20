@@ -4,23 +4,18 @@
 	<string name="api_url" translatable="false">https://stage.usehover.com/api</string>
 	<string name="channels_endpoint" translatable="false">/channels?published=true</string>
 	<string name="select_language">Select language</string>
-	<string-array name="supported_languages">
-		<item>English</item>
-		<item>French</item>
-	</string-array>
 	<string-array name="supported_languages_code">
 		<item>en</item>
 		<item>fr</item>
 		<item>sw</item>
 	</string-array>
 
-
-
 	<string name="nav_home">Home</string>
 	<string name="nav_airtime">Buy Airtime</string>
 	<string name="nav_money">Move Money</string>
 	<string name="nav_security">Security</string>
 	<string name="nav_transaction">Transaction Detail</string>
+	<string name="nav_language">Language Choice</string>
 
 	<string name="done"><u>Done</u></string>
 	<string name="cancel"><u>Cancel</u></string>

@@ -1,4 +1,4 @@
-package com.hover.stax.language;
+package com.hover.stax.languages;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -6,13 +6,11 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
@@ -20,26 +18,20 @@ import com.hover.sdk.utils.Utils;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.SplashScreenActivity;
-import com.hover.stax.home.HomeViewModel;
 import com.hover.stax.home.MainActivity;
-import com.hover.stax.home.detailsPages.transaction.TransactionDetailsViewModel;
 import com.hover.stax.utils.fonts.FontReplacer;
-import com.hover.stax.utils.fonts.Replacer;
-import com.hover.stax.utils.fonts.ReplacerImpl;
 import com.yariksoffice.lingver.Lingver;
 
-import java.util.Locale;
-import java.util.Map;
-
 public class SelectLanguageActivity extends AppCompatActivity {
-	String languageCode = null;
+	String selectedCode = null;
+
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.language_select_layout);
-		Amplitude.getInstance().logEvent(getString(R.string.viewing_language_screen));
+		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.nav_language)));
 
-		languageCode = Lingver.getInstance().getLanguage();
+		selectedCode = Lingver.getInstance().getLanguage();
 		final RadioGroup radioGrp = findViewById(R.id.languageRadioGroup);
 
 		ColorStateList colorStateList = new ColorStateList(
@@ -48,39 +40,35 @@ public class SelectLanguageActivity extends AppCompatActivity {
 		);
 
 		LanguageViewModel languageViewModel = new ViewModelProvider(this).get(LanguageViewModel.class);
-		languageViewModel.loadLanguages().observe(this, stringStringMap -> {
-			for (String langCodes: stringStringMap.values() ) {
+		languageViewModel.loadLanguages().observe(this, languages -> {
+			for (Lang language: languages) {
 				RadioButton radioButton = new RadioButton(this);
-				radioButton.setText(new Locale(langCodes).getDisplayLanguage());
-				radioButton.setTag(langCodes);
+				radioButton.setText(language.name);
 				radioButton.setTextColor(Color.WHITE);
 				radioButton.setHighlightColor(Color.WHITE);
 				radioButton.setTextSize(16);
+				radioButton.setTag(language.code);
 				Typeface font = FontReplacer.getDefaultFont();
 				radioButton.setTypeface(font);
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) radioButton.setButtonTintList(colorStateList);
-				if(langCodes.equals(languageCode))
+				if (language.code.equals(selectedCode))
 					radioButton.setChecked(true);
 				else radioButton.setChecked(false);
 				radioGrp.addView(radioButton);
 			}
 
-
-			//set listener to radio button group
 			radioGrp.setOnCheckedChangeListener((group, checkedId) -> {
 				int checkedRadioButtonId = radioGrp.getCheckedRadioButtonId();
 				RadioButton radioBtn = findViewById(checkedRadioButtonId);
-				languageCode = radioBtn.getTag().toString();
-				Lingver.getInstance().setLocale(ApplicationInstance.getContext(), languageCode);
+				selectedCode = radioBtn.getTag().toString();
+				Lingver.getInstance().setLocale(ApplicationInstance.getContext(), selectedCode);
 				recreate();
 			});
 		});
-		//create radio buttons
-
 
 		findViewById(R.id.continueLanguageButton).setOnClickListener(v -> {
-			Amplitude.getInstance().logEvent(getString(R.string.selected_language, languageCode));
+			Amplitude.getInstance().logEvent(getString(R.string.selected_language, selectedCode));
 			Utils.saveInt(SplashScreenActivity.LANGUAGE_CHECK, 1, ApplicationInstance.getContext());
 			startActivity(new Intent(this, MainActivity.class));
 			finish();

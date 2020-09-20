@@ -31,9 +31,10 @@
 		<activity
 			android:name=".home.MainActivity"
 			android:label="@string/app_name" />
+
+		<activity android:name=".languages.SelectLanguageActivity" />
 		<activity android:name=".channels.ChannelsActivity" />
 		<activity android:name=".security.PinsActivity" />
-		<activity android:name=".language.SelectLanguageActivity" />
 
 		<receiver
 			android:name=".hover.TransactionReceiver"

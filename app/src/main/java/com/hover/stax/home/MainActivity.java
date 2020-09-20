@@ -24,14 +24,13 @@ import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.security.BiometricFingerprint;
+import com.hover.stax.security.SecurityFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements BalanceAdapter.RefreshListener {
 	final public static String TAG = "MainActivity";
-	final public static String SETTINGS_EXTRA = "Settings";
-
 
 	final public static String CHECK_ALL_BALANCES = "CHECK_ALL";
 	final public static int ADD_SERVICE = 200, TRANSFER_REQUEST = 203;
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 
 		homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
-		if(getIntent().getBooleanExtra(SETTINGS_EXTRA, false)) navController.navigate(R.id.navigation_security);
+		if (getIntent().getBooleanExtra(SecurityFragment.LANG_CHANGE, false)) navController.navigate(R.id.navigation_security);
 	}
 
 	private BiometricPrompt.AuthenticationCallback authenticationCallback = new BiometricPrompt.AuthenticationCallback() {
@@ -110,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_CANCELED) return;
 		Log.e(TAG, "Activity result. request code: " + requestCode);
 		if (requestCode == MainActivity.TRANSFER_REQUEST || requestCode < 100) {
 			Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
