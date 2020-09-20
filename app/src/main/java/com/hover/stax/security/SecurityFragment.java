@@ -50,7 +50,6 @@ public class SecurityFragment extends Fragment {
 		languageViewModel.loadLanguages().observe(getViewLifecycleOwner(), languages -> {
 			ArrayAdapter<Lang> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_items, languages);
 			languageSpinner.setAdapter(adapter);
-			Log.e("SecFrag", "selected: " + Lingver.getInstance().getLanguage());
 			languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 				@Override
 				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -58,7 +57,7 @@ public class SecurityFragment extends Fragment {
 						String code = languages.get(position).code;
 						if (code != null) {
 							Amplitude.getInstance().logEvent(getString(R.string.selected_language, code));
-							Lingver.getInstance().setLocale(ApplicationInstance.getContext(), code);
+							Lingver.getInstance().setLocale(getContext(), code);
 							restart();
 						}
 					}

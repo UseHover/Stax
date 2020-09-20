@@ -47,11 +47,6 @@ public class UIHelper {
 		return linearLayoutManager;
 	}
 
-	public static void loadSpinnerItems(Set<String> entries, AppCompatSpinner spinner, Context context) {
-		ArrayList<String> strings = new ArrayList<>(entries);
-		ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.spinner_items, strings);
-		spinner.setAdapter(adapter);
-	}
 	static public void setTextColoredDrawable(TextView textView, int drawable, int color) {
 		Drawable unwrappedDrawable = AppCompatResources.getDrawable(ApplicationInstance.getContext(), drawable);
 		assert unwrappedDrawable != null;

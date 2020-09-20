@@ -1,4 +1,4 @@
-package com.hover.stax.transfer;
+package com.hover.stax.transfers;
 
 import android.Manifest;
 import android.app.Activity;
@@ -17,12 +17,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.biometric.BiometricConstants;
-import androidx.biometric.BiometricPrompt;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.permissions.PermissionHelper;
@@ -32,12 +30,12 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.hover.HoverSession;
-import com.hover.stax.security.BiometricFingerprint;
+import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
-public class TransferFragment extends Fragment {
+public class TransferFragment extends Fragment implements BiometricChecker.AuthListener {
 	private static final String TAG = "TransferFragment";
 
 	private TransferViewModel transferViewModel;
@@ -173,40 +171,17 @@ public class TransferFragment extends Fragment {
 		});
 	}
 
-	private BiometricPrompt.AuthenticationCallback authenticationCallback = new BiometricPrompt.AuthenticationCallback() {
-		@Override
-		public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
-			super.onAuthenticationError(errorCode, errString);
-			if(errorCode == BiometricConstants.ERROR_NO_BIOMETRICS) {
-				Amplitude.getInstance().logEvent(getString(R.string.biometrics_not_matched));
-				makeHoverCall(transferViewModel.getActiveAction());
-			} else Amplitude.getInstance().logEvent(getString(R.string.biometrics_not_setup));
-		}
-
-		@Override
-		public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
-			super.onAuthenticationSucceeded(result);
-			Amplitude.getInstance().logEvent(getString(R.string.biometrics_succeeded));
-			makeHoverCall(transferViewModel.getActiveAction());
-		}
-
-		@Override
-		public void onAuthenticationFailed() {
-			super.onAuthenticationFailed();
-			Amplitude.getInstance().logEvent(getString(R.string.biometrics_failed));
-		}
-	};
 	private void onSubmit(View root) {
 		root.findViewById(R.id.confirm_button).setOnClickListener(view3 -> {
 			if (transferViewModel.getActiveAction() != null) {
 				if (TextUtils.getTrimmedLength(amountInput.getText().toString()) > 0) {
 					if (transferViewModel.getActiveAction().requiresRecipient()) {
 						if (TextUtils.getTrimmedLength(recipientInput.getText().toString()) > 0) {
-							new BiometricFingerprint().startFingerPrint(getActivity(), authenticationCallback);
+							authenticate();
 						} else
 							UIHelper.flashMessage(getContext(), getResources().getString(R.string.enterRecipientNumberError));
 					} else {
-						new BiometricFingerprint().startFingerPrint(getActivity(), authenticationCallback);
+						authenticate();
 					}
 				} else
 					UIHelper.flashMessage(getContext(), getResources().getString(R.string.enterAmountError));
@@ -215,9 +190,23 @@ public class TransferFragment extends Fragment {
 		});
 	}
 
-	private void makeHoverCall(Action action) {
+	private void authenticate() {
+		new BiometricChecker(this, (AppCompatActivity) getActivity()).startAuthentication();
+	}
+
+	@Override
+	public void onAuthError(String error) {
+		Log.e(TAG, error);
+	}
+
+	@Override
+	public void onAuthSuccess() {
+		makeHoverCall();
+	}
+
+	private void makeHoverCall() {
 		Amplitude.getInstance().logEvent(getString(R.string.finish_screen, transferType));
-		new HoverSession.Builder(action, transferViewModel.getActiveChannel().getValue(),
+		new HoverSession.Builder(transferViewModel.getActiveAction(), transferViewModel.getActiveChannel().getValue(),
 				getActivity(), MainActivity.TRANSFER_REQUEST)
 				.extra(Action.PHONE_KEY, recipientInput.getText().toString())
 				.extra(Action.ACCOUNT_KEY, recipientInput.getText().toString())
