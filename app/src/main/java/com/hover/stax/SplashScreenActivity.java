@@ -11,10 +11,13 @@ import androidx.work.WorkManager;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
+import com.hover.sdk.utils.Utils;
 import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.home.MainActivity;
+import com.hover.stax.languages.SelectLanguageActivity;
 
 public class SplashScreenActivity extends AppCompatActivity {
+	final public static String LANGUAGE_CHECK = "Language";
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -26,7 +29,10 @@ public class SplashScreenActivity extends AppCompatActivity {
 		wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue();
 		wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, UpdateChannelsWorker.makeToil());
 
-		startActivity(new Intent(this, MainActivity.class));
+		if (Utils.getSharedPrefs(ApplicationInstance.getContext()).getInt(LANGUAGE_CHECK, 0) == 1)
+			startActivity(new Intent(this, MainActivity.class));
+		else
+			startActivity(new Intent(this, SelectLanguageActivity.class));
 		finish();
 	}
 }

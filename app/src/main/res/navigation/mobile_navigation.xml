@@ -14,7 +14,7 @@
 
 	<fragment
 	    android:id="@+id/navigation_buyAirtime"
-	    android:name="com.hover.stax.transfer.TransferFragment"
+	    android:name="com.hover.stax.transfers.TransferFragment"
 	    android:label="@string/nav_airtime"
 	    tools:layout="@layout/fragment_transfer" >
 		<argument
@@ -25,7 +25,7 @@
 
 	<fragment
 	    android:id="@+id/navigation_moveMoney"
-	    android:name="com.hover.stax.transfer.TransferFragment"
+	    android:name="com.hover.stax.transfers.TransferFragment"
 	    android:label="@string/nav_money"
 	    tools:layout="@layout/fragment_transfer" >
 		<argument

@@ -1,4 +1,4 @@
-package com.hover.stax.transfer;
+package com.hover.stax.transfers;
 
 import android.Manifest;
 import android.app.Activity;
@@ -17,10 +17,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.permissions.PermissionHelper;
@@ -30,11 +30,12 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.hover.HoverSession;
+import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
-public class TransferFragment extends Fragment {
+public class TransferFragment extends Fragment implements BiometricChecker.AuthListener {
 	private static final String TAG = "TransferFragment";
 
 	private TransferViewModel transferViewModel;
@@ -176,11 +177,11 @@ public class TransferFragment extends Fragment {
 				if (TextUtils.getTrimmedLength(amountInput.getText().toString()) > 0) {
 					if (transferViewModel.getActiveAction().requiresRecipient()) {
 						if (TextUtils.getTrimmedLength(recipientInput.getText().toString()) > 0) {
-							makeHoverCall(transferViewModel.getActiveAction());
+							authenticate();
 						} else
 							UIHelper.flashMessage(getContext(), getResources().getString(R.string.enterRecipientNumberError));
 					} else {
-						makeHoverCall(transferViewModel.getActiveAction());
+						authenticate();
 					}
 				} else
 					UIHelper.flashMessage(getContext(), getResources().getString(R.string.enterAmountError));
@@ -189,9 +190,23 @@ public class TransferFragment extends Fragment {
 		});
 	}
 
-	private void makeHoverCall(Action action) {
+	private void authenticate() {
+		new BiometricChecker(this, (AppCompatActivity) getActivity()).startAuthentication();
+	}
+
+	@Override
+	public void onAuthError(String error) {
+		Log.e(TAG, error);
+	}
+
+	@Override
+	public void onAuthSuccess() {
+		makeHoverCall();
+	}
+
+	private void makeHoverCall() {
 		Amplitude.getInstance().logEvent(getString(R.string.finish_screen, transferType));
-		new HoverSession.Builder(action, transferViewModel.getActiveChannel().getValue(),
+		new HoverSession.Builder(transferViewModel.getActiveAction(), transferViewModel.getActiveChannel().getValue(),
 				getActivity(), MainActivity.TRANSFER_REQUEST)
 				.extra(Action.PHONE_KEY, recipientInput.getText().toString())
 				.extra(Action.ACCOUNT_KEY, recipientInput.getText().toString())

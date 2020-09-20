@@ -17,11 +17,14 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.gms.common.util.Strings;
 import com.google.android.material.snackbar.Snackbar;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Set;
 
 public class UIHelper {
 
@@ -42,11 +45,6 @@ public class UIHelper {
 		linearLayoutManager.setInitialPrefetchItemCount(INITIAL_ITEMS_FETCH);
 		linearLayoutManager.setSmoothScrollbarEnabled(true);
 		return linearLayoutManager;
-	}
-
-	public static void loadSpinnerItems(ArrayList<String> entries, AppCompatSpinner spinner, Context context) {
-		ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.spinner_items, entries);
-		spinner.setAdapter(adapter);
 	}
 
 	static public void setTextColoredDrawable(TextView textView, int drawable, int color) {

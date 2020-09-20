@@ -9,9 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.NavHost;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -20,11 +18,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.hover.HoverSession;
+import com.hover.stax.security.BiometricChecker;
+import com.hover.stax.security.SecurityFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements BalanceAdapter.RefreshListener {
+public class MainActivity extends AppCompatActivity implements BalanceAdapter.RefreshListener, BiometricChecker.AuthListener {
 	final public static String TAG = "MainActivity";
 
 	final public static String CHECK_ALL_BALANCES = "CHECK_ALL";
@@ -48,13 +48,15 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 		NavigationUI.setupWithNavController(navView, navController);
 
 		homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+
+		if (getIntent().getBooleanExtra(SecurityFragment.LANG_CHANGE, false)) navController.navigate(R.id.navigation_security);
 	}
 
 	public void runAllBalances() {
 		hasRun = new ArrayList<>();
 		homeViewModel.getBalanceActions().observe(this, actions -> {
 			toRun = actions;
-			chooseRun(0);
+			new BiometricChecker(this, this).startAuthentication();
 		});
 	}
 
@@ -64,8 +66,20 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_single));
 		homeViewModel.getBalanceAction(channel_id).observe(this, actions -> {
 			toRun = actions;
-			chooseRun(0);
+			new BiometricChecker(this, this).startAuthentication();
 		});
+	}
+
+	@Override
+	public void onAuthError(String error) {
+		Log.e(TAG, "error: " + error);
+		chooseRun(0);
+	}
+
+	@Override
+	public void onAuthSuccess() {
+		Log.e(TAG, "success");
+		chooseRun(0);
 	}
 
 	private void chooseRun(int index) {
@@ -78,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_CANCELED) return;
 		Log.e(TAG, "Activity result. request code: " + requestCode);
 		if (requestCode == MainActivity.TRANSFER_REQUEST || requestCode < 100) {
 			Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));

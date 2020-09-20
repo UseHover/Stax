@@ -2,8 +2,11 @@ package com.hover.stax.security;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricConstants;
+import androidx.biometric.BiometricPrompt;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,6 +44,7 @@ public class PinsActivity extends AppCompatActivity implements PinEntryAdapter.U
 			pinViewModel.savePins(this);
 			setResult(RESULT_OK);
 			finish();
+
 		});
 	}
 

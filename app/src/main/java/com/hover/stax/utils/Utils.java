@@ -3,6 +3,7 @@ package com.hover.stax.utils;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
@@ -20,6 +21,7 @@ import java.text.DecimalFormat;
 
 public class Utils {
 	private final static String TAG = "Utils";
+
 
 	public static String stripHniString(String hni) {
 		return hni.replace("[", "").replace("]", "").replace("\"", "");
