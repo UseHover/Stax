@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_CANCELED) return;
-		Log.e(TAG, "Activity result. request code: " + requestCode);
 		if (requestCode == MainActivity.TRANSFER_REQUEST || requestCode < 100) {
 			Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
 			homeViewModel.saveTransaction(data, this);

@@ -2,14 +2,21 @@ package com.hover.stax.channels;
 
 import android.app.Application;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.hover.stax.R;
 import com.hover.stax.database.DatabaseRepo;
+import com.hover.stax.home.MainActivity;
 import com.hover.stax.sims.Sim;
 import com.hover.stax.utils.Utils;
 
@@ -176,6 +183,8 @@ public class ChannelViewModel extends AndroidViewModel {
 			if (selected.getValue().contains(channel.id)) {
 				channel.selected = true;
 				repo.update(channel);
+				FirebaseMessaging.getInstance().subscribeToTopic(channel.id + "");
+				FirebaseMessaging.getInstance().subscribeToTopic(channel.countryAlpha2);
 			}
 		}
 	}

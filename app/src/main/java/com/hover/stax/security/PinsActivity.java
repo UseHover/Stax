@@ -45,9 +45,9 @@ public class PinsActivity extends AppCompatActivity implements PinEntryAdapter.U
 
 		findViewById(R.id.continuePinButton).setOnClickListener(skipListener);
 
-		if (!((KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardSecure())
-			Snackbar.make(findViewById(R.id.root), R.string.insecure_warning, Snackbar.LENGTH_LONG)
-				.setAction(R.string.skip, skipListener).show();
+//		if (!((KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardSecure())
+//			Snackbar.make(findViewById(R.id.root), R.string.insecure_warning)
+//				.setAction(R.string.skip, skipListener).show();
 //		else
 //			UIHelper.flashMessage(this, "Device is secure");
 	}
