@@ -23,13 +23,19 @@ import com.hover.stax.R;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class TransactionDetailsFragment extends Fragment {
 	private TransactionDetailsViewModel viewModel;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		viewModel = new ViewModelProvider(this).get(TransactionDetailsViewModel.class);
 		viewModel.setTransaction(getArguments().getString(TransactionContract.COLUMN_UUID));
-		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.nav_transaction)));
+		JSONObject data = new JSONObject();
+		try { data.put("uuid", getArguments().getString(TransactionContract.COLUMN_UUID));
+		} catch (JSONException e) { }
+		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.nav_transaction)), data);
 		return inflater.inflate(R.layout.transaction_details_layout, container, false);
 	}
 

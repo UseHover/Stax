@@ -1,6 +1,9 @@
 package com.hover.stax.security;
 
+import android.app.KeyguardManager;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
+import com.google.android.material.snackbar.Snackbar;
 import com.hover.stax.R;
 import com.hover.stax.utils.UIHelper;
 
@@ -39,14 +43,24 @@ public class PinsActivity extends AppCompatActivity implements PinEntryAdapter.U
 			finish();
 		});
 
-		findViewById(R.id.continuePinButton).setOnClickListener(view -> {
+		findViewById(R.id.continuePinButton).setOnClickListener(skipListener);
+
+		if (!((KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardSecure())
+			Snackbar.make(findViewById(R.id.root), R.string.insecure_warning, Snackbar.LENGTH_LONG)
+				.setAction(R.string.skip, skipListener).show();
+//		else
+//			UIHelper.flashMessage(this, "Device is secure");
+	}
+
+	private View.OnClickListener skipListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View view) {
 			Amplitude.getInstance().logEvent(getString(R.string.completed_pin_entry));
-			pinViewModel.savePins(this);
+			pinViewModel.savePins(PinsActivity.this);
 			setResult(RESULT_OK);
 			finish();
-
-		});
-	}
+       }
+   };
 
 	public void onUpdate(int id, String pin) {
 		pinViewModel.setPin(id, pin);

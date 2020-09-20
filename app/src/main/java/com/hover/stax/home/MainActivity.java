@@ -20,6 +20,7 @@ import com.hover.stax.actions.Action;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.security.SecurityFragment;
+import com.hover.stax.utils.UIHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,8 +57,8 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 		hasRun = new ArrayList<>();
 		homeViewModel.getBalanceActions().observe(this, actions -> {
 			toRun = actions;
-			new BiometricChecker(this, this).startAuthentication();
 		});
+		new BiometricChecker(this, this).startAuthentication();
 	}
 
 	@Override
@@ -66,19 +67,17 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_single));
 		homeViewModel.getBalanceAction(channel_id).observe(this, actions -> {
 			toRun = actions;
-			new BiometricChecker(this, this).startAuthentication();
 		});
+		new BiometricChecker(this, this).startAuthentication();
 	}
 
 	@Override
 	public void onAuthError(String error) {
 		Log.e(TAG, "error: " + error);
-		chooseRun(0);
 	}
 
 	@Override
 	public void onAuthSuccess() {
-		Log.e(TAG, "success");
 		chooseRun(0);
 	}
 
