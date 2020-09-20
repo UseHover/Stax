@@ -64,7 +64,7 @@ public class DatabaseRepo {
 		AppDatabase.databaseWriteExecutor.execute(() -> channelDao.update(channel));
 	}
 
-	public LiveData<List<Sim>> getSims() { return simDao.getPresent(); }
+	public List<Sim> getSims() { return simDao.getPresent(); }
 
 	public Action getAction(String public_id) {
 		return actionDao.getAction(public_id);
