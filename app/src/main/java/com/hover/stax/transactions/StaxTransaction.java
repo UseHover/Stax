@@ -110,7 +110,7 @@ public class StaxTransaction {
 			case Action.AIRTIME:
 				String sender = action.from_institution_name+" ";
 				Log.e("STAX", (action.from_institution_name.equals("null") + ""));
-				setStartAndEndPosForInstitution(1, sender);
+				setStartAndEndPosForInstitution(0, sender);
 				return c.getString(R.string.transaction_descrip_airtime, sender, ((recipient == null || recipient.equals("")) ? "myself" : recipient));
 			case Action.P2P:
 				setStartAndEndPosForInstitution(1, action.from_institution_name);
