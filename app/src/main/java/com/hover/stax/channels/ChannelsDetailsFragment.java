@@ -51,13 +51,19 @@ public class ChannelsDetailsFragment extends Fragment implements TransactionHist
 					((TextView) view.findViewById(R.id.spentThisMonthContent)).setText(Utils.formatAmountV2(thisMonth));
 					((TextView) view.findViewById(R.id.channel_name)).setText(channel.name);
 
+					double spentDiff = 0;
+					if(lastMonth !=null) {
+						 spentDiff = thisMonth - lastMonth;
+					}
+
+					String suffix = getResources().getString(R.string.more_than_last_month);
+					if(String.valueOf(spentDiff).contains("-")) suffix = getResources().getString(R.string.less_than_last_month);
+					String fullString = Utils.formatAmountV2(spentDiff) +" "+ suffix;
+					((TextView) view.findViewById(R.id.spentDifference)).setText(fullString);
+
 				});
 			});
 		});
-
-
-
-
 
 			viewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
 					transactionHistoryRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
