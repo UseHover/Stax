@@ -95,6 +95,16 @@ public class Channel {
 	@ColumnInfo(name = "latestBalanceTimestamp", defaultValue = "CURRENT_TIMESTAMP")
 	public Long latestBalanceTimestamp;
 
+	public String spentThisMonth, spentDifferenceToLastMonth;
+
+	public void setSpentThisMonth(String spentThisMonth) {
+		this.spentThisMonth = spentThisMonth;
+	}
+
+	public void setSpentDifferenceToLastMonth(String spentDifferenceToLastMonth) {
+		this.spentDifferenceToLastMonth = spentDifferenceToLastMonth;
+	}
+
 	public void updateBalance(HashMap<String, String> parsed_variables) {
 		latestBalance = parsed_variables.get("balance");
 		if (parsed_variables.containsKey("update_timestamp") && parsed_variables.get("update_timestamp") != null) {

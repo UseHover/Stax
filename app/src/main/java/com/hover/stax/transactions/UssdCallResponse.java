@@ -21,12 +21,15 @@ public class UssdCallResponse {
 		ArrayList<UssdCallResponse> convo = new ArrayList<>();
 		int i = 0;
 		while (i == 0 || t.enteredValues.opt(i - 1) != null || t.ussdMessages.opt(i) != null) {
-			UssdCallResponse tm = null;
-			if (i == 0)
-				 tm = new UssdCallResponse(a.root_code, t.ussdMessages.optString(i));
-			else tm = new UssdCallResponse(t.enteredValues.optString(i - 1), t.ussdMessages.optString(i));
-			convo.add(tm);
-			i++;
+			try{
+				UssdCallResponse tm = null;
+				if (i == 0)
+					tm = new UssdCallResponse(a.root_code, t.ussdMessages.optString(i));
+				else tm = new UssdCallResponse(t.enteredValues.optString(i - 1), t.ussdMessages.optString(i));
+				convo.add(tm);
+				i++;
+			}catch (Exception ignored) {}
+
 		}
 		return convo;
 	}

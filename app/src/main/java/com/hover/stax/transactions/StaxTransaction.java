@@ -13,6 +13,9 @@ import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.utils.DateUtils;
+import com.hover.stax.utils.Utils;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -70,6 +73,12 @@ public class StaxTransaction {
 	@ColumnInfo(name = "fromInstitutionEndPos")
 	public int fromInstitutionEndPos;
 
+	@ColumnInfo(name = "month")
+	public int month;
+
+	@ColumnInfo(name = "year")
+	public int year;
+
 	public StaxTransaction() {}
 
 	public StaxTransaction(Intent data, Action action, Context c) {
@@ -81,11 +90,12 @@ public class StaxTransaction {
 			status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
 			initiated_at = data.getLongExtra(TransactionContract.COLUMN_REQUEST_TIMESTAMP, DateUtils.now());
 			updated_at = initiated_at;
+			setMonthAndYear(updated_at);
 
 			HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS);
 			if (extras != null) {
 				if (extras.containsKey(Action.AMOUNT_KEY))
-					amount = formatAmount(extras.get(Action.AMOUNT_KEY));
+					amount = Utils.formatAmountV2((extras.get(Action.AMOUNT_KEY)));
 				if (extras.containsKey(Action.PHONE_KEY))
 					recipient = extras.get(Action.PHONE_KEY);
 				else if (extras.containsKey(Action.ACCOUNT_KEY))
@@ -99,13 +109,19 @@ public class StaxTransaction {
 	public void update(Intent data) {
 		status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
 		updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, DateUtils.now());
+		setMonthAndYear(updated_at);
 
 		HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES);
 		if (extras.containsKey(Action.FEE_KEY))
-			fee = formatAmount(extras.get(Action.FEE_KEY));
+			fee = Utils.formatAmountV2(extras.get(Action.FEE_KEY));
+	}
+	private void setMonthAndYear(long timestamp) {
+		StaxDate staxDate = DateUtils.getStaxDate(timestamp);
+		month = staxDate.getMonth();
+		year = staxDate.getYear();
 	}
 
-	String generateDescription(Action action, Context c) {
+	private String generateDescription(Action action, Context c) {
 		switch (transaction_type) {
 			case Action.AIRTIME:
 				String sender = action.from_institution_name+" ";
@@ -129,14 +145,10 @@ public class StaxTransaction {
 		else fromInstitutionEndPos = startPos;
 	}
 
-	private String formatAmount(String amount) {
-		DecimalFormat df = new DecimalFormat("0.00");
-		df.setMaximumFractionDigits(2);
-		return df.format(Integer.valueOf(amount));
-	}
 
 
 
+	@NotNull
 	@Override
 	public String toString() {
 		return description;

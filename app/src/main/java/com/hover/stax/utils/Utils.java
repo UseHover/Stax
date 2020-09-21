@@ -75,6 +75,17 @@ public class Utils {
 		}
 	}
 
+	public static String formatAmountV2(String amount) {
+		DecimalFormat df = new DecimalFormat("0.00");
+		df.setMaximumFractionDigits(2);
+		return df.format(Integer.valueOf(amount));
+	}
+	public static String formatAmountV2(double amount) {
+		DecimalFormat df = new DecimalFormat("0.00");
+		df.setMaximumFractionDigits(2);
+		return df.format(amount);
+	}
+
 	public static String normalizePhoneNumber(String value, String country) {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 		String number = value;

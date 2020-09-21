@@ -3,6 +3,7 @@ package com.hover.stax.utils;
 import android.content.Context;
 
 import com.hover.stax.R;
+import com.hover.stax.transactions.StaxDate;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -27,6 +28,17 @@ public class DateUtils {
 		date += " " + cal.get(Calendar.DAY_OF_MONTH);
 		date += " " + cal.get(Calendar.YEAR);
 		return date;
+	}
+
+	public static StaxDate getStaxDate(long timestamp) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(timestamp);
+		return new StaxDate(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR));
+	}
+
+	public static StaxDate getPreviousMonthDate(int currentMonth, int currentYear) {
+		if (currentMonth == 0) return  new StaxDate(0, currentYear -1);
+		else return new StaxDate(currentMonth -1, currentYear);
 	}
 
 	public static String humanFriendlyTime(Context context, long diffMillis) {
@@ -67,6 +79,8 @@ public class DateUtils {
 			return context.getString(R.string.timeago_ago, time);
 		}
 	}
+
+
 
 	public static String monthNumToName(int number) {
 		switch (number) {

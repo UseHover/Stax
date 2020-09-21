@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +22,7 @@ import com.hover.stax.R;
 import com.hover.stax.transactions.TransactionDetailsFragment;
 import com.hover.stax.transactions.TransactionHistoryAdapter;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 
 public class ChannelsDetailsFragment extends Fragment implements TransactionHistoryAdapter.SelectListener {
 	private RecyclerView transactionHistoryRecyclerView;
@@ -41,6 +43,21 @@ public class ChannelsDetailsFragment extends Fragment implements TransactionHist
 		super.onViewCreated(view, savedInstanceState);
 		((AppCompatActivity) getActivity()).setSupportActionBar(view.findViewById(R.id.toolbar));
 		transactionHistoryRecyclerView = view.findViewById(R.id.transaction_history_recyclerView);
+
+		viewModel.getThisMonthSpentLiveData().observe(getViewLifecycleOwner(), thisMonth -> {
+			viewModel.getLastMonthSpentLiveData().observe(getViewLifecycleOwner(), lastMonth -> {
+				viewModel.getChannel().observe(getViewLifecycleOwner(), channel -> {
+					((TextView) view.findViewById(R.id.details_balance)).setText(channel.latestBalance);
+					((TextView) view.findViewById(R.id.spentThisMonthContent)).setText(Utils.formatAmountV2(thisMonth));
+					((TextView) view.findViewById(R.id.channel_name)).setText(channel.name);
+
+				});
+			});
+		});
+
+
+
+
 
 			viewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
 					transactionHistoryRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));

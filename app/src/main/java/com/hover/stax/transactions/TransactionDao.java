@@ -28,6 +28,10 @@ public interface TransactionDao {
 	@Query("SELECT * FROM stax_transactions WHERE uuid = :uuid LIMIT 1")
 	LiveData<StaxTransaction> getLiveTransaction(String uuid);
 
+	@Query("SELECT SUM(amount) as total FROM stax_transactions WHERE month=:month AND year =:year AND channel_id =:channelId")
+	LiveData<Double> getTotalAmount(int channelId, int month, int year);
+
+
 	@Insert
 	void insert(StaxTransaction transaction);
 
