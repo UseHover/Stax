@@ -35,7 +35,7 @@ public abstract class SdkDatabase extends RoomDatabase {
 		return INSTANCE;
 	}
 
-	static final Migration MIGRATION_40_41 = new Migration(40, 401) {
+	static final Migration MIGRATION_40_41 = new Migration(40, 41) {
 		@Override
 		public void migrate(SupportSQLiteDatabase database) {
 		}
