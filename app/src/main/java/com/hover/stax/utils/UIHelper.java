@@ -93,7 +93,9 @@ public class UIHelper {
 				}
 			}
 			else {
-				ss.setSpan(new MyClickableSpan(ClickType.TRANSACTION, clickListener), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+				try {
+					ss.setSpan(new MyClickableSpan(ClickType.TRANSACTION, clickListener), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+				}catch (Exception ignored){};
 			}
 			start += item.length()+1;//comma and space in the original text ;)
 
