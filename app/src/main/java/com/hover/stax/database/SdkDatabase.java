@@ -28,7 +28,6 @@ public abstract class SdkDatabase extends RoomDatabase {
 				if (INSTANCE == null) {
 					INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SdkDatabase.class, "hoversdktransactions.db")
 									   .addMigrations(MIGRATION_40_41)
-									   .fallbackToDestructiveMigration()
 									   .build();
 				}
 			}
