@@ -61,19 +61,47 @@
 					    android:id="@+id/details_balance"
 					    android:textSize="@dimen/text_21"
 					    android:textStyle="bold"/>
-
-					<TextView
-					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
-					    android:textColor="@color/offWhite"
-					    android:layout_marginTop="@dimen/activity_vertical_margin"
-					    android:text="@string/spent_this_month"/>
-
+				</LinearLayout>
 					<LinearLayout
-					    android:layout_width="match_parent"
+					    android:layout_width="0dp"
 					    android:layout_height="wrap_content"
-					    android:orientation="horizontal"
-						>
+					    android:layout_weight="1"
+					    android:orientation="vertical">
+
+						<TextView
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+						    android:textColor="@color/offWhite"
+						    android:visibility="gone"
+						    android:text="@string/date"/>
+						<TextView
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+						    android:textColor="@color/white"
+						    android:id="@+id/details_date"
+						    android:textSize="@dimen/text_21"
+						    android:textStyle="bold"/>
+					</LinearLayout>
+
+
+
+
+			</LinearLayout>
+				<TextView
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:textColor="@color/offWhite"
+				    android:layout_marginTop="@dimen/activity_vertical_margin"
+				    android:paddingHorizontal="@dimen/activity_horizontal_margin"
+				    android:text="@string/spent_this_month"/>
+
+				<LinearLayout
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:orientation="horizontal"
+				    android:paddingVertical="@dimen/spacing8"
+				    android:paddingHorizontal="@dimen/activity_horizontal_margin"
+				    >
 					<TextView
 					    android:layout_width="wrap_content"
 					    android:layout_height="wrap_content"
@@ -82,69 +110,43 @@
 					    android:textSize="@dimen/text_21"
 					    android:textStyle="bold"/>
 
-						<TextView
-						    android:layout_marginStart="@dimen/spacing8"
-						    android:layout_width="wrap_content"
-						    android:layout_height="wrap_content"
-						    android:id="@+id/spentDifference"
-						    android:textColor="@color/offWhite" />
-					</LinearLayout>
-
 					<TextView
+					    android:layout_marginStart="@dimen/spacing8"
 					    android:layout_width="wrap_content"
 					    android:layout_height="wrap_content"
-					    android:textColor="@color/offWhite"
-					    android:visibility="gone"
-					    android:layout_marginTop="@dimen/activity_vertical_margin"
-					    android:text="@string/earned_this_month"/>
-
-					<LinearLayout
-					    android:layout_width="match_parent"
-					    android:layout_height="wrap_content"
-					    android:orientation="horizontal"
-					    android:visibility="gone"
-					    >
-						<TextView
-						    android:layout_width="wrap_content"
-						    android:layout_height="wrap_content"
-						    android:textColor="@color/white"
-						    android:id="@+id/earnedThisMonthContent"
-						    android:textSize="@dimen/text_21"
-						    android:textStyle="bold"/>
-
-						<TextView
-						    android:layout_marginStart="@dimen/spacing8"
-						    android:layout_width="wrap_content"
-						    android:layout_height="wrap_content"
-						    android:textColor="@color/offWhite"
-						    android:text="@string/less_than_last_month"/>
-					</LinearLayout>
+					    android:id="@+id/spentDifference"
+					    android:textColor="@color/offWhite" />
 				</LinearLayout>
 
-				<LinearLayout
-				    android:layout_width="0dp"
+				<TextView
+				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
-				    android:layout_weight="1"
-				    android:layout_marginTop="@dimen/spacing32"
-				    android:orientation="vertical">
+				    android:textColor="@color/offWhite"
+				    android:visibility="gone"
+				    android:layout_marginTop="@dimen/activity_vertical_margin"
+				    android:text="@string/earned_this_month"/>
 
-					<TextView
-					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
-					    android:textColor="@color/offWhite"
-					    android:visibility="gone"
-					    android:text="@string/date"/>
+				<LinearLayout
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:orientation="horizontal"
+				    android:visibility="gone"
+				    >
 					<TextView
 					    android:layout_width="wrap_content"
 					    android:layout_height="wrap_content"
 					    android:textColor="@color/white"
-					    android:id="@+id/details_date"
+					    android:id="@+id/earnedThisMonthContent"
 					    android:textSize="@dimen/text_21"
 					    android:textStyle="bold"/>
+
+					<TextView
+					    android:layout_marginStart="@dimen/spacing8"
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:textColor="@color/offWhite"
+					    android:text="@string/less_than_last_month"/>
 				</LinearLayout>
-
-
-			</LinearLayout>
 
 			<TextView
 			    android:layout_width="match_parent"
@@ -158,13 +160,15 @@
 			    android:layout_height="0.1dp"
 			    android:layout_marginTop="8dp"
 			    android:layout_marginBottom="@dimen/activity_vertical_margin"
+			    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
 			    android:background="@color/offWhite" />
 
 			<androidx.recyclerview.widget.RecyclerView
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
 			    android:id="@+id/transaction_history_recyclerView" />
+			</LinearLayout>
 
-		</LinearLayout>
+
 	</androidx.core.widget.NestedScrollView>
 </LinearLayout>
