@@ -48,4 +48,13 @@
 			android:name="uuid"
 			app:argType="string" />
 	</fragment>
+
+	<fragment
+	    android:id="@+id/channelsDetailsFragment"
+	    android:name="com.hover.stax.channels.ChannelsDetailsFragment"
+	    android:label="ChannelsDetailsFragment" >
+		<argument
+		    android:name="channel_id"
+		    app:argType="integer" />
+	</fragment>
 </navigation>

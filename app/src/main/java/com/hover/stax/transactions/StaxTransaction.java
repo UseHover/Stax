@@ -64,6 +64,12 @@ public class StaxTransaction {
 	@ColumnInfo(name = "recipient")
 	public String recipient;
 
+	@ColumnInfo(name = "fromInstitutionStartPos")
+	public int fromInstitutionStartPos;
+
+	@ColumnInfo(name = "fromInstitutionEndPos")
+	public int fromInstitutionEndPos;
+
 	public StaxTransaction() {}
 
 	public StaxTransaction(Intent data, Action action, Context c) {
@@ -102,15 +108,25 @@ public class StaxTransaction {
 	String generateDescription(Action action, Context c) {
 		switch (transaction_type) {
 			case Action.AIRTIME:
+				String sender = action.from_institution_name+" ";
 				Log.e("STAX", (action.from_institution_name.equals("null") + ""));
-				return c.getString(R.string.transaction_descrip_airtime, action.from_institution_name, ((recipient == null || recipient.equals("")) ? "myself" : recipient));
+				setStartAndEndPosForInstitution(1, sender);
+				return c.getString(R.string.transaction_descrip_airtime, sender, ((recipient == null || recipient.equals("")) ? "myself" : recipient));
 			case Action.P2P:
+				setStartAndEndPosForInstitution(1, action.from_institution_name);
 				return c.getString(R.string.transaction_descrip_money, action.to_institution_name, recipient);
 			case Action.ME2ME:
+				setStartAndEndPosForInstitution(1, action.from_institution_name);
 				return c.getString(R.string.transaction_descrip_money, action.from_institution_name, action.to_institution_name);
 			default:
 				return "Other";
 		}
+	}
+
+	private void setStartAndEndPosForInstitution(int startPos, String institutionName) {
+		fromInstitutionStartPos = startPos;
+		if(institutionName.split(" ").length > 1) fromInstitutionEndPos = startPos + institutionName.split(" ").length;
+		else fromInstitutionEndPos = startPos;
 	}
 
 	private String formatAmount(String amount) {
@@ -118,6 +134,8 @@ public class StaxTransaction {
 		df.setMaximumFractionDigits(2);
 		return df.format(Integer.valueOf(amount));
 	}
+
+
 
 	@Override
 	public String toString() {

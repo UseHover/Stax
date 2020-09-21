@@ -90,6 +90,10 @@ public class DatabaseRepo {
 		return transactionDao.getNonBalance();
 	}
 
+	public LiveData<List<StaxTransaction>> getCompleteTransferTransactionsByChannelId(int channelId) {
+		return transactionDao.getChannelTransactions(channelId);
+	}
+
 	public StaxTransaction getTransaction(String uuid) {
 		return transactionDao.getTransaction(uuid);
 	}

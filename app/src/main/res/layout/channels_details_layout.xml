@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:layout_marginBottom="@dimen/large_margin"
+    android:orientation="vertical"
+    android:background="@color/colorPrimary">
+
+	<androidx.appcompat.widget.Toolbar
+	    android:id="@+id/toolbar"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    app:navigationIcon="?attr/homeAsUpIndicator"
+	    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+
+		<TextView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:padding="@dimen/small_margin"
+		    android:textSize="@dimen/text_21"
+		    android:id="@+id/channel_name"
+		    android:textColor="@color/offWhite"
+		    android:text="@string/nav_account_detail" />
+
+	</androidx.appcompat.widget.Toolbar>
+
+	<androidx.core.widget.NestedScrollView
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:paddingVertical="@dimen/activity_horizontal_margin" >
+
+		<LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="vertical">
+
+			<LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:paddingHorizontal="@dimen/activity_horizontal_margin"
+			    android:orientation="horizontal"
+			    android:baselineAligned="false">
+
+				<LinearLayout
+				    android:layout_width="0dp"
+				    android:layout_height="wrap_content"
+				    android:layout_weight="1"
+				    android:orientation="vertical">
+
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:textColor="@color/offWhite"
+					    android:text="@string/balance"/>
+
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:textColor="@color/white"
+					    android:id="@+id/details_balance"
+					    android:textSize="@dimen/text_21"
+					    android:textStyle="bold"/>
+
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:textColor="@color/offWhite"
+					    android:layout_marginTop="@dimen/activity_vertical_margin"
+					    android:text="@string/spent_this_month"/>
+
+					<LinearLayout
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+					    android:orientation="horizontal"
+						>
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:textColor="@color/white"
+					    android:id="@+id/spentThisMonthContent"
+					    android:textSize="@dimen/text_21"
+					    android:textStyle="bold"/>
+
+						<TextView
+						    android:layout_marginStart="@dimen/spacing8"
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+						    android:textColor="@color/offWhite" />
+					</LinearLayout>
+
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:textColor="@color/offWhite"
+					    android:visibility="gone"
+					    android:layout_marginTop="@dimen/activity_vertical_margin"
+					    android:text="@string/earned_this_month"/>
+
+					<LinearLayout
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+					    android:orientation="horizontal"
+					    android:visibility="gone"
+					    >
+						<TextView
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+						    android:textColor="@color/white"
+						    android:id="@+id/earnedThisMonthContent"
+						    android:textSize="@dimen/text_21"
+						    android:textStyle="bold"/>
+
+						<TextView
+						    android:layout_marginStart="@dimen/spacing8"
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+						    android:textColor="@color/offWhite"
+						    android:text="@string/less_than_last_month"/>
+					</LinearLayout>
+				</LinearLayout>
+
+				<LinearLayout
+				    android:layout_width="0dp"
+				    android:layout_height="wrap_content"
+				    android:layout_weight="1"
+				    android:layout_marginTop="@dimen/spacing32"
+				    android:orientation="vertical">
+
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:textColor="@color/offWhite"
+					    android:visibility="gone"
+					    android:text="@string/date"/>
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:textColor="@color/white"
+					    android:id="@+id/details_date"
+					    android:textSize="@dimen/text_21"
+					    android:textStyle="bold"/>
+				</LinearLayout>
+
+
+			</LinearLayout>
+
+			<TextView
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:text="@string/transactions"
+			    android:layout_marginTop="@dimen/spacing32"
+			    android:paddingHorizontal="@dimen/activity_horizontal_margin"
+			    android:textColor="@color/offWhite" />
+			<View
+			    android:layout_width="match_parent"
+			    android:layout_height="0.1dp"
+			    android:layout_marginTop="8dp"
+			    android:layout_marginBottom="@dimen/activity_vertical_margin"
+			    android:background="@color/offWhite" />
+
+			<androidx.recyclerview.widget.RecyclerView
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:id="@+id/transaction_history_recyclerView" />
+
+		</LinearLayout>
+	</androidx.core.widget.NestedScrollView>
+</LinearLayout>

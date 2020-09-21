@@ -26,12 +26,12 @@ allprojects {
         maven { url 'https://jitpack.io' }
         maven {
             url 'https://pro.maven.usehover.com/snapshots'
-            credentials {
+           /* credentials {
                 username project.HoverUsername
                 password project.HoverPassword
             }
             authentication { basic(BasicAuthentication) }
-            content { includeGroup "com.hover" }
+            content { includeGroup "com.hover" } */
         }
     }
 }

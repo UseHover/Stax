@@ -16,6 +16,7 @@
 	<string name="nav_security">Security</string>
 	<string name="nav_transaction">Transaction Detail</string>
 	<string name="nav_language">Language Choice</string>
+	<string name="nav_account_detail">Account Detail</string>
 
 	<string name="done"><u>Done</u></string>
 	<string name="cancel"><u>Cancel</u></string>
@@ -24,6 +25,11 @@
 	<string name="no_selection_error">You must select at least 1 service.</string>
 
 	<string name="balances">Balances</string>
+	<string name="balance">Balance</string>
+	<string name="spent_this_month">Spent this month</string>
+	<string name="earned_this_month">Earned this month</string>
+	<string name="more_than_last_month">more than last month</string>
+	<string name="less_than_last_month">less than last month</string>
 	<string name="transactions">Transactions</string>
 
 	<string name="choose_institutions_title">Choose your services</string>
@@ -62,7 +68,7 @@
 	<string name="title_me2me">Move money between accounts</string>
 	<string name="title_request">Request money</string>
 
-	<string name="transaction_descrip_airtime">%1$s sent airtime to %2$s</string>
+	<string name="transaction_descrip_airtime">Data %1$ssent airtime to %2$s</string>
 	<string name="transaction_descrip_money">From %1$s to %2$s</string>
 
 	<string name="from">From</string>

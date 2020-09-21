@@ -16,6 +16,9 @@ public interface TransactionDao {
 	@Query("SELECT * FROM stax_transactions WHERE transaction_type != 'balance'")
 	LiveData<List<StaxTransaction>> getNonBalance();
 
+	@Query("SELECT * FROM stax_transactions WHERE channel_id = :channelId AND transaction_type != 'balance'")
+	LiveData<List<StaxTransaction>> getChannelTransactions(int channelId);
+
 	@Query("SELECT * FROM stax_transactions WHERE transaction_type != 'balance' AND status = 'succeeded'")
 	LiveData<List<StaxTransaction>> getSucceededNonBalance();
 
