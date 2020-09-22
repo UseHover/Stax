@@ -68,7 +68,7 @@
 	<string name="title_me2me">Move money between accounts</string>
 	<string name="title_request">Request money</string>
 
-	<string name="transaction_descrip_airtime">%1$ssent airtime to %2$s</string>
+	<string name="transaction_descrip_airtime">%1$s sent airtime to %2$s</string>
 	<string name="transaction_descrip_money">From %1$s to %2$s</string>
 
 	<string name="from">From</string>

@@ -6,32 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
 
-	<!--
-	<androidx.appcompat.widget.Toolbar android:id="@+id/toolbar"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		app:layout_constraintTop_toTopOf="parent" >
-
-		<TextView android:id="@+id/title"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:textColor="@color/offWhite"
-			android:background="@color/colorPrimaryDark"
-			android:textSize="@dimen/text_21"
-			android:text="@string/balances" />
-
-		<Button android:id="@+id/add_btn"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintLeft_toRightOf="@+id/title"
-			app:layout_constraintBottom_toBottomOf="@+id/title"
-			android:background="@color/colorPrimary"
-			android:textColor="@color/offWhite"
-			android:text="+"
-			android:onClick="addServices"/>
-	</androidx.appcompat.widget.Toolbar> -->
-
 	<fragment
 	    android:id="@+id/nav_host_fragment"
 	    android:name="androidx.navigation.fragment.NavHostFragment"

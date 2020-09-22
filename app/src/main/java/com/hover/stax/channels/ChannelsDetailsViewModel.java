@@ -1,61 +1,74 @@
 package com.hover.stax.channels;
 
 import android.app.Application;
-import android.content.Intent;
-import android.graphics.Color;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextPaint;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
-import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
-import com.hover.sdk.api.Hover;
-import com.hover.sdk.transactions.Transaction;
 import com.hover.stax.database.DatabaseRepo;
-import com.hover.stax.transactions.StaxDate;
 import com.hover.stax.transactions.StaxTransaction;
-import com.hover.stax.utils.DateUtils;
-import com.hover.stax.utils.Utils;
+import com.hover.stax.transactions.UssdCallResponse;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 public class ChannelsDetailsViewModel extends AndroidViewModel {
-	private LiveData<List<StaxTransaction>> staxTransactions;
 	private DatabaseRepo repo;
-	private LiveData<Channel> channelMutableLiveData;
-	private LiveData<Double> thisMonthSpentLiveData;
-	private LiveData<Double> lastMonthSpentLiveData;
+
+	private MutableLiveData<Channel> channel;
+	private MutableLiveData<List<StaxTransaction>> transactions;
+	private LiveData<Double> spentThisMonth;
+	private LiveData<Double> spendingDiff;
 
 	public ChannelsDetailsViewModel(@NonNull Application application) {
 		super(application);
-		channelMutableLiveData = new MutableLiveData<>();
+		channel = new MutableLiveData<>();
+		transactions = new MutableLiveData<>();
 		repo = new DatabaseRepo(application);
 
-	}
-	void setStaxTransactions(int channelId) {
-		staxTransactions = repo.getCompleteTransferTransactionsByChannelId(channelId);
-		StaxDate staxDate = DateUtils.getStaxDate(new Date().getTime());
-		thisMonthSpentLiveData = repo.getSpentAmount(channelId, staxDate.getMonth(), staxDate.getYear());
-		StaxDate lastMonth = DateUtils.getPreviousMonthDate(staxDate.getMonth(), staxDate.getYear());
-		lastMonthSpentLiveData = repo.getSpentAmount(channelId, lastMonth.getMonth(), lastMonth.getYear());
-		channelMutableLiveData = repo.getChannelV2(channelId);
+		spentThisMonth = Transformations.switchMap(channel, this::getThisMonth);
+		spendingDiff = Transformations.switchMap(spentThisMonth, this::calcDiff);
 	}
 
-	LiveData<Double> getThisMonthSpentLiveData() {return  thisMonthSpentLiveData; }
-	LiveData<Double> getLastMonthSpentLiveData() {return  lastMonthSpentLiveData; }
-	LiveData<List<StaxTransaction>> getStaxTransactions() { return staxTransactions; }
-	LiveData<Channel> getChannel() { return channelMutableLiveData;}
+	void setChannel(int channelId) {
+		new Thread(() -> {
+			channel.postValue(repo.getChannel(channelId));
+			transactions.postValue(repo.getCompleteTransferTransactionsByChannelId(channelId).getValue());
+		}).start();
+	}
+
+	LiveData<Channel> getChannel() { return channel;}
+
+	LiveData<List<StaxTransaction>> getStaxTransactions() { return transactions; }
+
+	LiveData<Double> getThisMonth(Channel channel) {
+		Calendar c = Calendar.getInstance();
+		c.get(Calendar.MONTH);
+		return repo.getSpentAmount(channel.id, c.get(Calendar.MONTH), c.get(Calendar.YEAR));
+	}
+
+	LiveData<Double> getSpentThisMonth() {return spentThisMonth; }
+
+	private LiveData<Double> calcDiff(Double thisMonthAmount) {
+		if (thisMonthAmount == null || channel.getValue() == null) return null;
+		Calendar c = Calendar.getInstance();
+		int month = c.get(Calendar.MONTH) - 1;
+		int year = c.get(Calendar.YEAR);
+		if (month == 0) {
+			month = 12;
+			year = year - 1;
+		}
+
+		Double lastMonthAmount = repo.getSpentAmount(channel.getValue().id, month, year).getValue();
+		MutableLiveData<Double> liveData = new MutableLiveData<>();
+		liveData.setValue(thisMonthAmount - (lastMonthAmount != null ? lastMonthAmount : 0));
+		return liveData;
+	}
+	LiveData<Double> getDiff() {return spendingDiff; }
 }
 
 

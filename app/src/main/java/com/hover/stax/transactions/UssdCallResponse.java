@@ -20,12 +20,14 @@ public class UssdCallResponse {
 	static List<UssdCallResponse> generateConvo(Transaction t, Action a) {
 		ArrayList<UssdCallResponse> convo = new ArrayList<>();
 		int i = 0;
-		while (i == 0 || t.enteredValues.opt(i - 1) != null || t.ussdMessages.opt(i) != null) {
+		while (i == 0 || (t.enteredValues != null && t.enteredValues.opt(i - 1) != null) || (t.ussdMessages != null && t.ussdMessages.opt(i) != null)) {
 
 			UssdCallResponse tm = null;
 			if (i == 0)
-				 tm = new UssdCallResponse(a.root_code, t.ussdMessages.optString(i));
-			else tm = new UssdCallResponse(t.enteredValues.optString(i - 1), t.ussdMessages.optString(i));
+				 tm = new UssdCallResponse(a.root_code, t.ussdMessages != null ? t.ussdMessages.optString(i) : null);
+			else
+				tm = new UssdCallResponse(t.enteredValues != null ? t.enteredValues.optString(i - 1) : null,
+					t.ussdMessages != null ? t.ussdMessages.optString(i) : null);
 			convo.add(tm);
 			i++;
 		}

@@ -11,8 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,7 +21,6 @@ import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
-import com.hover.stax.channels.ChannelsDetailsFragment;
 import com.hover.stax.transactions.TransactionHistoryAdapter;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
@@ -63,6 +60,7 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		transactionHistoryRecyclerView = view.findViewById(R.id.transaction_history_recyclerView);
 		transactionHistoryRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 		homeViewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
+			Log.e(TAG, "transaction count: " + staxTransactions.size());
 			transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions, HomeFragment.this));
 			view.findViewById(R.id.transactionsLabel).setVisibility(staxTransactions.size() > 0 ? View.VISIBLE : View.GONE);
 		});
@@ -91,12 +89,5 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		Bundle bundle = new Bundle();
 		bundle.putString(TransactionContract.COLUMN_UUID, uuid);
 		NavHostFragment.findNavController(this).navigate(R.id.transactionDetailsFragment, bundle);
-	}
-
-	@Override
-	public void onTapChannel(int channelId) {
-		Bundle bundle = new Bundle();
-		bundle.putInt(TransactionContract.COLUMN_CHANNEL_ID, channelId);
-		NavHostFragment.findNavController(this).navigate(R.id.channelsDetailsFragment, bundle);
 	}
 }

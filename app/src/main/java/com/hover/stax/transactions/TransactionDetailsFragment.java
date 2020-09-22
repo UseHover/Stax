@@ -22,6 +22,7 @@ import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +32,6 @@ public class TransactionDetailsFragment extends Fragment {
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		viewModel = new ViewModelProvider(this).get(TransactionDetailsViewModel.class);
-		viewModel.setTransaction(getArguments().getString(TransactionContract.COLUMN_UUID));
 		JSONObject data = new JSONObject();
 		try { data.put("uuid", getArguments().getString(TransactionContract.COLUMN_UUID));
 		} catch (JSONException e) { }
@@ -47,7 +47,7 @@ public class TransactionDetailsFragment extends Fragment {
 		viewModel.getTransaction().observe(getViewLifecycleOwner(), transaction -> {
 			if (transaction != null) {
 				((TextView) view.findViewById(R.id.details_transactionNumber)).setText(transaction.uuid);
-				((TextView) view.findViewById(R.id.details_amount)).setText(transaction.amount);
+				((TextView) view.findViewById(R.id.details_amount)).setText(Utils.formatAmount(transaction.amount));
 				((TextView) view.findViewById(R.id.details_date)).setText(DateUtils.humanFriendlyDate(transaction.initiated_at));
 			}
 		});
@@ -75,5 +75,7 @@ public class TransactionDetailsFragment extends Fragment {
 				smsView.setAdapter(new MessagesAdapter(smses));
 			}
 		});
+
+		viewModel.setTransaction(getArguments().getString(TransactionContract.COLUMN_UUID));
 	}
 }

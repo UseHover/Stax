@@ -22,11 +22,11 @@ import java.util.List;
 public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceViewHolder> {
 	private List<Channel> channels;
 
-	private final RefreshListener refreshListener;
+	private final BalanceListener balanceListener;
 
-	public BalanceAdapter(List<Channel> channels, RefreshListener listener) {
+	public BalanceAdapter(List<Channel> channels, BalanceListener listener) {
 		this.channels = channels;
-		this.refreshListener = listener;
+		this.balanceListener = listener;
 	}
 
 	@NonNull
@@ -42,7 +42,8 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 
 		holder.channelName.setText(channel.name);
 		holder.channelId.setText(Integer.toString(channel.id));
-		holder.amount.setText(Utils.formatAmount(channel.latestBalance));
+		if (channel.latestBalance != null)
+			holder.amount.setText(Utils.formatAmount(channel.latestBalance));
 		holder.timeAgo.setText(channel.latestBalanceTimestamp != null && channel.latestBalanceTimestamp > 0 ?
 									   DateUtils.timeAgo(ApplicationInstance.getContext(), channel.latestBalanceTimestamp) : "Refresh");
 		holder.currency.setText(channel.currency);
@@ -61,6 +62,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 		public BalanceViewHolder(@NonNull View itemView) {
 			super(itemView);
 			channelName = itemView.findViewById(R.id.balance_channel);
+			channelName.setOnClickListener(this);
 			channelId = itemView.findViewById(R.id.channel_id);
 			timeAgo = itemView.findViewById(R.id.balance_timeAgo);
 			timeAgo.setOnClickListener(this);
@@ -71,13 +73,16 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 
 		@Override
 		public void onClick(View v) {
-			if (refreshListener != null)
-				refreshListener.onTap(Integer.parseInt(channelId.getText().toString()));
+			if (balanceListener != null && v.getId() == R.id.balance_channel)
+				balanceListener.onTapDetail(Integer.parseInt(channelId.getText().toString()));
+			else if (balanceListener != null)
+				balanceListener.onTapRefresh(Integer.parseInt(channelId.getText().toString()));
 		}
 	}
 
-	public interface RefreshListener {
-		void onTap(int channelId);
+	public interface BalanceListener {
+		void onTapRefresh(int channelId);
+		void onTapDetail(int channelId);
 	}
 
 	@Override

@@ -10,22 +10,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.amplitude.api.Amplitude;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.security.SecurityFragment;
-import com.hover.stax.utils.UIHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements BalanceAdapter.RefreshListener, BiometricChecker.AuthListener {
+public class MainActivity extends AppCompatActivity implements BalanceAdapter.BalanceListener, BiometricChecker.AuthListener {
 	final public static String TAG = "MainActivity";
 
 	final public static String CHECK_ALL_BALANCES = "CHECK_ALL";
@@ -58,17 +59,26 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Re
 		homeViewModel.getBalanceActions().observe(this, actions -> {
 			toRun = actions;
 		});
-		new BiometricChecker(this, this).startAuthentication();
+		chooseRun(0);
+//		new BiometricChecker(this, this).startAuthentication();
 	}
 
 	@Override
-	public void onTap(int channel_id) {
+	public void onTapRefresh(int channel_id) {
 		hasRun = new ArrayList<>();
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_single));
 		homeViewModel.getBalanceAction(channel_id).observe(this, actions -> {
 			toRun = actions;
 		});
-		new BiometricChecker(this, this).startAuthentication();
+		chooseRun(0);
+//		new BiometricChecker(this, this).startAuthentication();
+	}
+
+	@Override
+	public void onTapDetail(int channel_id) {
+		Bundle bundle = new Bundle();
+		bundle.putInt(TransactionContract.COLUMN_CHANNEL_ID, channel_id);
+		Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.channelsDetailsFragment, bundle);
 	}
 
 	@Override

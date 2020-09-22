@@ -41,7 +41,7 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 		action = new MutableLiveData<>();
 		messages = new MediatorLiveData<>();
 
-		action = Transformations.switchMap(transaction, this::loadAction);
+		action = Transformations.switchMap(transaction, t -> repo.getLiveAction(t.action_id));
 		messages = Transformations.switchMap(action, this::loadMessages);
 		sms = Transformations.switchMap(transaction, this::loadSms);
 	}
@@ -51,8 +51,6 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 	}
 
 	LiveData<StaxTransaction> getTransaction() { return transaction; }
-
-	LiveData<Action> loadAction(StaxTransaction t) { return repo.getLiveAction(t.action_id); }
 
 	LiveData<Action> getAction() { return action; }
 
