@@ -58,9 +58,8 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 		hasRun = new ArrayList<>();
 		homeViewModel.getBalanceActions().observe(this, actions -> {
 			toRun = actions;
+			chooseRun(0);
 		});
-		chooseRun(0);
-//		new BiometricChecker(this, this).startAuthentication();
 	}
 
 	@Override
@@ -69,9 +68,8 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_single));
 		homeViewModel.getBalanceAction(channel_id).observe(this, actions -> {
 			toRun = actions;
+			chooseRun(0);
 		});
-		chooseRun(0);
-//		new BiometricChecker(this, this).startAuthentication();
 	}
 
 	@Override
@@ -88,14 +86,20 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 
 	@Override
 	public void onAuthSuccess() {
-		chooseRun(0);
+		run(0);
 	}
 
 	private void chooseRun(int index) {
 		if (toRun != null && toRun.size() > hasRun.size()) {
-			new HoverSession.Builder(toRun.get(index), homeViewModel.getChannel(toRun.get(index).channel_id), this, index)
-					.finalScreenTime(0).run();
+			if (index == 0)
+				new BiometricChecker(this, this).startAuthentication();
+			else run(index);
 		}
+	}
+
+	private void run(int index) {
+		new HoverSession.Builder(toRun.get(index), homeViewModel.getChannel(toRun.get(index).channel_id), this, index)
+			.finalScreenTime(0).run();
 	}
 
 	@Override

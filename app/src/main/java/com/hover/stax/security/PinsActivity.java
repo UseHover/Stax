@@ -43,7 +43,7 @@ public class PinsActivity extends AppCompatActivity implements PinEntryAdapter.U
 			finish();
 		});
 
-		findViewById(R.id.continuePinButton).setOnClickListener(skipListener);
+		findViewById(R.id.continuePinButton).setOnClickListener(continueListener);
 
 //		if (!((KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardSecure())
 //			Snackbar.make(findViewById(R.id.root), R.string.insecure_warning)
@@ -52,7 +52,7 @@ public class PinsActivity extends AppCompatActivity implements PinEntryAdapter.U
 //			UIHelper.flashMessage(this, "Device is secure");
 	}
 
-	private View.OnClickListener skipListener = new View.OnClickListener() {
+	private View.OnClickListener continueListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View view) {
 			Amplitude.getInstance().logEvent(getString(R.string.completed_pin_entry));

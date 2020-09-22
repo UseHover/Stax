@@ -48,7 +48,7 @@ public class PinsViewModel extends AndroidViewModel {
 	void savePins(Context c) {
 		List<Channel> selectedChannels = channels.getValue() != null ? channels.getValue() : new ArrayList<>();
 		for (Channel channel : selectedChannels) {
-			if (channel.pin != null) {
+			if (channel.pin != null && !channel.pin.isEmpty()) {
 				channel.pin = KeyStoreExecutor.createNewKey(channel.pin, c);
 				repo.update(channel);
 			}
