@@ -1,5 +1,6 @@
 package com.hover.stax.database;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
@@ -40,25 +41,15 @@ public class DatabaseRepo {
 
 	// Room executes all queries on a separate thread.
 // Observed LiveData will notify the observer when the data has changed.
-	public Channel getChannel(int id) {
-		return channelDao.getChannel(id);
-	}
+	public Channel getChannel(int id) { return channelDao.getChannel(id); }
 
-	public LiveData<List<Channel>> getAll() {
-		return allChannels;
-	}
+	public LiveData<Channel> getLiveChannel(int id) { return channelDao.getLiveChannel(id); }
 
-	public LiveData<List<Channel>> getSelected() {
-		return selectedChannels;
-	}
+	public LiveData<List<Channel>> getAll() { return allChannels; }
 
-	public LiveData<Channel> getDefault() {
-		return channelDao.getDefault();
-	}
+	public LiveData<List<Channel>> getSelected() { return selectedChannels; }
 
-	public void insert(Channel channel) {
-		AppDatabase.databaseWriteExecutor.execute(() -> channelDao.insert(channel));
-	}
+	public LiveData<Channel> getDefault() { return channelDao.getDefault();	}
 
 	public void update(Channel channel) {
 		AppDatabase.databaseWriteExecutor.execute(() -> channelDao.update(channel));
@@ -86,23 +77,24 @@ public class DatabaseRepo {
 		return actionDao.getAll();
 	}
 
-	public LiveData<List<StaxTransaction>> getCompleteTransferTransactions() {
-		return transactionDao.getSucceededNonBalance();
+	public List<StaxTransaction> getTransactions() {
+		return transactionDao.getAll();
 	}
 
-	public LiveData<List<StaxTransaction>> getCompleteTransferTransactionsByChannelId(int channelId) {
-		return transactionDao.getChannelTransactions(channelId);
+	public LiveData<List<StaxTransaction>> getCompleteTransferTransactions() {
+		return transactionDao.getCompleteTransfers();
 	}
+
+	public LiveData<List<StaxTransaction>> getCompleteTransferTransactions(int channelId) {
+		return transactionDao.getCompleteTransfers(channelId);
+	}
+	@SuppressLint("DefaultLocale")
 	public LiveData<Double> getSpentAmount(int channelId, int month, int year) {
-		return transactionDao.getTotalAmount(channelId, String.valueOf(month), String.valueOf(year));
+		return transactionDao.getTotalAmount(channelId, String.format("%02d", month), String.valueOf(year));
 	}
 
 	public StaxTransaction getTransaction(String uuid) {
 		return transactionDao.getTransaction(uuid);
-	}
-
-	public LiveData<StaxTransaction> getLiveTransaction(String uuid) {
-		return transactionDao.getLiveTransaction(uuid);
 	}
 
 	public void insert(StaxTransaction transaction) {

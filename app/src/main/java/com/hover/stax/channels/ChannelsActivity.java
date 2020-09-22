@@ -33,14 +33,14 @@ import java.util.List;
 public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapter.SelectListener {
 	public final static String TAG = "ChannelsActivity";
 
-	ChannelViewModel channelViewModel;
+	ChannelListViewModel channelViewModel;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		WorkManager.getInstance(this).beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue();
 		setContentView(R.layout.choose_channels);
-		channelViewModel = new ViewModelProvider(this).get(ChannelViewModel.class);
+		channelViewModel = new ViewModelProvider(this).get(ChannelListViewModel.class);
 
 		if (!PermissionUtils.hasPhonePerm(this))
 			PermissionUtils.requestPhonePerms(this, 0);

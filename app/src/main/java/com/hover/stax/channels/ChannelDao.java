@@ -31,8 +31,7 @@ public interface ChannelDao {
 	Channel getChannel(int id);
 
 	@Query("SELECT * FROM channels WHERE id = :id LIMIT 1")
-	LiveData<Channel> getChannelV2(int id);
-
+	LiveData<Channel> getLiveChannel(int id);
 
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	void insertAll(Channel... channels);

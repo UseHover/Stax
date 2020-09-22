@@ -22,7 +22,7 @@ public class TransactionReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		DatabaseRepo repo = new DatabaseRepo((Application) context.getApplicationContext());
 		updateBalance(repo, intent);
-		updateTransaction(repo, intent);
+		updateTransaction(repo, intent, context);
 	}
 
 	private void updateBalance(DatabaseRepo repo, Intent intent) {
@@ -39,11 +39,18 @@ public class TransactionReceiver extends BroadcastReceiver {
 		}
 	}
 
-	private void updateTransaction(DatabaseRepo repo, Intent intent) {
+	private void updateTransaction(DatabaseRepo repo, Intent intent, Context c) {
 		new Thread(() -> {
 			StaxTransaction t = repo.getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID));
-			t.update(intent);
-			repo.update(t);
+			if (t == null) {
+				Action a = repo.getAction(intent.getStringExtra("action_id"));
+				t = new StaxTransaction(intent, a, c);
+				t.update(intent);
+				repo.insert(t);
+			} else {
+				t.update(intent);
+				repo.update(t);
+			}
 		}).start();
 	}
 }

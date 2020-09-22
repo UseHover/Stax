@@ -51,7 +51,7 @@
 
 	<fragment
 	    android:id="@+id/channelsDetailsFragment"
-	    android:name="com.hover.stax.channels.ChannelsDetailsFragment"
+	    android:name="com.hover.stax.channels.ChannelDetailFragment"
 	    android:label="ChannelsDetailsFragment" >
 		<argument
 		    android:name="channel_id"

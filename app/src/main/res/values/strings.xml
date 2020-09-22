@@ -96,7 +96,7 @@
 	<string name="date">Date</string>
 	<string name="network">Network</string>
 	<string name="transactionNumber">Transaction number</string>
-	<string name="message">Message</string>
+	<string name="message">Messages</string>
 
 	<string name="enterRecipientNumberError">Please enter recipient number"</string>
 	<string name="enterAnotherOptionError">Please try another option</string>

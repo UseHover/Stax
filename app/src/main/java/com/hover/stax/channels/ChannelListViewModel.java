@@ -22,7 +22,7 @@ import com.hover.stax.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChannelViewModel extends AndroidViewModel {
+public class ChannelListViewModel extends AndroidViewModel {
 	public final static String TAG = "ChannelViewModel";
 
 	private DatabaseRepo repo;
@@ -36,7 +36,7 @@ public class ChannelViewModel extends AndroidViewModel {
 	private MediatorLiveData<List<Channel>> simChannels;
 	private MediatorLiveData<List<Channel>> countryChannels;
 
-	public ChannelViewModel(Application application) {
+	public ChannelListViewModel(Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
 		loadChannels();

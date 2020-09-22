@@ -60,7 +60,6 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		transactionHistoryRecyclerView = view.findViewById(R.id.transaction_history_recyclerView);
 		transactionHistoryRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 		homeViewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
-			Log.e(TAG, "transaction count: " + staxTransactions.size());
 			transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions, HomeFragment.this));
 			view.findViewById(R.id.transactionsLabel).setVisibility(staxTransactions.size() > 0 ? View.VISIBLE : View.GONE);
 		});

@@ -21,15 +21,14 @@ import com.hover.stax.transactions.TransactionHistoryAdapter;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
-public class ChannelsDetailsFragment extends Fragment implements TransactionHistoryAdapter.SelectListener {
+public class ChannelDetailFragment extends Fragment implements TransactionHistoryAdapter.SelectListener {
 	private RecyclerView transactionHistoryRecyclerView;
-	private ChannelsDetailsViewModel viewModel;
+	private ChannelDetailViewModel viewModel;
 
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		viewModel = new ViewModelProvider(requireActivity()).get(ChannelsDetailsViewModel.class);
-		viewModel.setChannel(getArguments().getInt(TransactionContract.COLUMN_CHANNEL_ID));
+		viewModel = new ViewModelProvider(requireActivity()).get(ChannelDetailViewModel.class);
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.nav_account_detail)));
 		return inflater.inflate(R.layout.channels_details_layout, container, false);
 	}
@@ -51,15 +50,10 @@ public class ChannelsDetailsFragment extends Fragment implements TransactionHist
 		});
 
 		viewModel.getSpentThisMonth().observe(getViewLifecycleOwner(), thisMonth -> {
-			((TextView) view.findViewById(R.id.spentThisMonthContent)).setText(Utils.formatAmount(thisMonth));
+			((TextView) view.findViewById(R.id.spentThisMonthContent)).setText(Utils.formatAmount(thisMonth != null ? thisMonth : 0));
 		});
 
-		viewModel.getDiff().observe(getViewLifecycleOwner(), diff -> {
-			String suffix = getResources().getString(R.string.more_than_last_month);
-			if (String.valueOf(diff).contains("-")) suffix = getResources().getString(R.string.less_than_last_month);
-			String fullString = Utils.formatAmount(diff) + " " + suffix;
-			((TextView) view.findViewById(R.id.spentDifference)).setText(String.valueOf(diff));
-		});
+		viewModel.setChannel(getArguments().getInt(TransactionContract.COLUMN_CHANNEL_ID));
 	}
 
 	@Override
