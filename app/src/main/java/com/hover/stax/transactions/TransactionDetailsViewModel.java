@@ -42,8 +42,8 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 		messages = new MediatorLiveData<>();
 
 		action = Transformations.switchMap(transaction, t -> repo.getLiveAction(t.action_id));
-		messages = Transformations.switchMap(action, this::loadMessages);
-		sms = Transformations.switchMap(transaction, this::loadSms);
+		messages = Transformations.map(action, this::loadMessages);
+		sms = Transformations.map(transaction, this::loadSms);
 	}
 
 	void setTransaction(String uuid) {
@@ -54,17 +54,15 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 
 	LiveData<Action> getAction() { return action; }
 
-	MutableLiveData<List<UssdCallResponse>> loadMessages(Action a) {
+	List<UssdCallResponse> loadMessages(Action a) {
 		if (transaction.getValue() == null || a == null) return null;
 		List<UssdCallResponse> ussds = UssdCallResponse.generateConvo(Hover.getTransaction(transaction.getValue().uuid, getApplication()), a);
-		MutableLiveData<List<UssdCallResponse>> liveData = new MutableLiveData<>();
-		liveData.setValue(ussds);
-		return liveData;
+		return ussds;
 	}
 
 	LiveData<List<UssdCallResponse>> getMessages() { return messages; }
 
-	MutableLiveData<List<UssdCallResponse>> loadSms(StaxTransaction t) {
+	List<UssdCallResponse> loadSms(StaxTransaction t) {
 		if (t == null) return null;
 		Transaction transaction = Hover.getTransaction(t.uuid, getApplication());
 		if (transaction.smsHits == null) return null;
@@ -73,9 +71,7 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 			MessageLog sms = getSMSMessageByUUID(transaction.smsHits.optString(i));
 			smses.add(new UssdCallResponse(null, sms.msg));
 		}
-		MutableLiveData<List<UssdCallResponse>> liveData = new MutableLiveData<>();
-		liveData.setValue(smses);
-		return liveData;
+		return smses;
 	}
 
 	LiveData<List<UssdCallResponse>> getSms() { return sms; }

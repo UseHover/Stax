@@ -31,7 +31,7 @@ public class ChannelsDetailsViewModel extends AndroidViewModel {
 		repo = new DatabaseRepo(application);
 
 		spentThisMonth = Transformations.switchMap(channel, this::getThisMonth);
-		spendingDiff = Transformations.switchMap(spentThisMonth, this::calcDiff);
+		spendingDiff = Transformations.map(spentThisMonth, this::calcDiff);
 	}
 
 	void setChannel(int channelId) {
@@ -53,7 +53,7 @@ public class ChannelsDetailsViewModel extends AndroidViewModel {
 
 	LiveData<Double> getSpentThisMonth() {return spentThisMonth; }
 
-	private LiveData<Double> calcDiff(Double thisMonthAmount) {
+	private Double calcDiff(Double thisMonthAmount) {
 		if (thisMonthAmount == null || channel.getValue() == null) return null;
 		Calendar c = Calendar.getInstance();
 		int month = c.get(Calendar.MONTH) - 1;
@@ -64,9 +64,7 @@ public class ChannelsDetailsViewModel extends AndroidViewModel {
 		}
 
 		Double lastMonthAmount = repo.getSpentAmount(channel.getValue().id, month, year).getValue();
-		MutableLiveData<Double> liveData = new MutableLiveData<>();
-		liveData.setValue(thisMonthAmount - (lastMonthAmount != null ? lastMonthAmount : 0));
-		return liveData;
+		return thisMonthAmount - (lastMonthAmount != null ? lastMonthAmount : 0);
 	}
 	LiveData<Double> getDiff() {return spendingDiff; }
 }

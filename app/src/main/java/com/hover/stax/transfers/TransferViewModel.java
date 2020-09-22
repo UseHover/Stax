@@ -29,7 +29,7 @@ public class TransferViewModel extends AndroidViewModel {
 		repo = new DatabaseRepo(application);
 		loadSelected();
 		loadDefault();
-		filteredActions = Transformations.switchMap(getActiveChannel(), this::loadActions);
+		filteredActions = Transformations.switchMap(activeChannel, this::loadActions);
 	}
 
 	void setType(String transaction_type) {
@@ -61,7 +61,7 @@ public class TransferViewModel extends AndroidViewModel {
 	public LiveData<List<Action>> loadActions(Channel channel) {
 		if (channel != null)
 			return repo.getActions(channel.id, type);
-		else return null;
+		else return new MutableLiveData<>();
 	}
 
 	LiveData<List<Channel>> getSelectedChannels() {

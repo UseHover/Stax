@@ -41,8 +41,8 @@ public class ChannelViewModel extends AndroidViewModel {
 		repo = new DatabaseRepo(application);
 		loadChannels();
 		loadSims();
-		simHniList = Transformations.switchMap(sims, this::getHnis);
-		simCountryList = Transformations.switchMap(sims, this::getSimCountries);
+		simHniList = Transformations.map(sims, this::getHnis);
+		simCountryList = Transformations.map(sims, this::getSimCountries);
 
 		simChannels = new MediatorLiveData<>();
 		simChannels.addSource(allChannels, this::onChannelsUpdateHnis);
@@ -103,28 +103,28 @@ public class ChannelViewModel extends AndroidViewModel {
 		}
 	};
 
-	private LiveData<List<String>> getHnis(List<Sim> sims) {
+	private List<String> getHnis(List<Sim> sims) {
 		if (sims == null) return null;
 		List<String> hniList = new ArrayList<>();
 		for (Sim sim : sims) {
-			if (!hniList.contains(sim.hni))
+			if (!hniList.contains(sim.hni)) {
+				FirebaseMessaging.getInstance().subscribeToTopic("sim-" + sim.hni);
 				hniList.add(sim.hni);
+			}
 		}
-		MutableLiveData<List<String>> liveData = new MutableLiveData<>();
-		liveData.setValue(hniList);
-		return liveData;
+		return hniList;
 	}
 
-	private LiveData<List<String>> getSimCountries(List<Sim> sims) {
+	private List<String> getSimCountries(List<Sim> sims) {
 		if (sims == null) return null;
 		List<String> countries = new ArrayList<>();
 		for (Sim sim : sims) {
-			if (!countries.contains(sim.country_iso.toUpperCase()))
+			if (!countries.contains(sim.country_iso.toUpperCase())) {
 				countries.add(sim.country_iso.toUpperCase());
+				FirebaseMessaging.getInstance().subscribeToTopic(sim.country_iso);
+			}
 		}
-		MutableLiveData<List<String>> liveData = new MutableLiveData<>();
-		liveData.setValue(countries);
-		return liveData;
+		return countries;
 	}
 
 	private void onChannelsUpdateHnis(List<Channel> channels) {
@@ -193,8 +193,7 @@ public class ChannelViewModel extends AndroidViewModel {
 			if (selected.getValue().contains(channel.id)) {
 				channel.selected = true;
 				repo.update(channel);
-				FirebaseMessaging.getInstance().subscribeToTopic(channel.id + "");
-				FirebaseMessaging.getInstance().subscribeToTopic(channel.countryAlpha2);
+				FirebaseMessaging.getInstance().subscribeToTopic("channel-" + channel.id);
 			}
 		}
 	}
