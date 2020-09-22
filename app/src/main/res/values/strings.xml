@@ -122,6 +122,6 @@
 	<string name="auth_title">Security check</string>
 	<string name="auth_subTitle">Authenticate</string>
 	<string name="auth_desc">Authenticate with your fingerprint</string>
-	<string name="auth_cancel">Cancel</string>
+	<string name="insecure_warning">Your device does not have a lockscreen enabled. Keep your money secure by entering PIN for every transaction.</string>
 
 </resources>

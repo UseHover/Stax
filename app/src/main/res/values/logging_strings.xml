@@ -3,6 +3,7 @@
 	<string name="custom_font_err_msg" translatable="false">At least one default font must be set</string>
 
 	<!--	Amplitude log events -->
+	<string name="selected_language" translatable="false">Selected language</string>
 	<string name="click_add_account" translatable="false">Clicked add account</string>
 	<string name="finished_account_select" translatable="false">Finished account select</string>
 	<string name="account_select_count_key" translatable="false">chosen_account_count</string>
@@ -22,11 +23,7 @@
 	<string name="contact_perm_denied" translatable="false">Denied contact permission</string>
 	<string name="contact_select_success" translatable="false">Successfully choose contact</string>
 	<string name="contact_select_error" translatable="false">Choose contact error</string>
-
-	<string name="biometrics_not_setup" translatable="false">Biometrics not setup in device therefore allowed to continue</string>
-	<string name="biometrics_failed" translatable="false">Biometrics failed</string>
-	<string name="biometrics_succeeded" translatable="false">Biometrics successful</string>
-	<string name="biometrics_not_matched" translatable="false">Biometrics available but not matched</string>
-
-	<string name="selected_language" translatable="false">Selected language: %1$s</string>
+	<string name="biometrics_not_setup" translatable="false">Device auth not setup</string>
+	<string name="biometrics_failed" translatable="false">Device auth failed</string>
+	<string name="biometrics_succeeded" translatable="false">Device auth successful</string>
 </resources>

@@ -75,7 +75,7 @@ public class HomeViewModel extends AndroidViewModel {
 	public void saveTransaction(Intent data, Context c) {
 		new Thread(() -> {
 			StaxTransaction t = new StaxTransaction(data, repo.getAction(data.getStringExtra(TransactionContract.COLUMN_ACTION_ID)), c);
-			repo.insert(t);
+			if (t.uuid != null) { repo.insert(t); }
 		}).start();
 	}
 

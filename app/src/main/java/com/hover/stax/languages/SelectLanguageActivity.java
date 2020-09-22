@@ -22,6 +22,9 @@ import com.hover.stax.home.MainActivity;
 import com.hover.stax.utils.fonts.FontReplacer;
 import com.yariksoffice.lingver.Lingver;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class SelectLanguageActivity extends AppCompatActivity {
 	String selectedCode = null;
 
@@ -68,7 +71,10 @@ public class SelectLanguageActivity extends AppCompatActivity {
 		});
 
 		findViewById(R.id.continueLanguageButton).setOnClickListener(v -> {
-			Amplitude.getInstance().logEvent(getString(R.string.selected_language, selectedCode));
+			JSONObject data = new JSONObject();
+			try { data.put("language", selectedCode);
+			} catch (JSONException e) { }
+			Amplitude.getInstance().logEvent(getString(R.string.selected_language), data);
 			Utils.saveInt(SplashScreenActivity.LANGUAGE_CHECK, 1, ApplicationInstance.getContext());
 			startActivity(new Intent(this, MainActivity.class));
 			finish();

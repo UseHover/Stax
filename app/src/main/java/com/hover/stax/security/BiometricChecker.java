@@ -1,5 +1,6 @@
 package com.hover.stax.security;
 
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.util.Log;
 
@@ -16,6 +17,10 @@ import com.amplitude.api.Amplitude;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 
+import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG;
+import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK;
+import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
+
 
 public class BiometricChecker extends BiometricPrompt.AuthenticationCallback {
 	private AppCompatActivity a;
@@ -27,29 +32,29 @@ public class BiometricChecker extends BiometricPrompt.AuthenticationCallback {
 	}
 
 	public void startAuthentication() {
-		BiometricManager biometricManager = BiometricManager.from(a);
-		if (biometricManager.canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS) {
-			Executor newExecutor = Executors.newSingleThreadExecutor();
-			final BiometricPrompt myBiometricPrompt = new BiometricPrompt(a, newExecutor, this);
+		if (!((KeyguardManager) a.getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardSecure()) {
+			listener.onAuthSuccess();
+			return;
+		}
 
-			final BiometricPrompt.PromptInfo promptInfo =
-					new BiometricPrompt.PromptInfo.Builder()
-							.setTitle(ApplicationInstance.getContext().getResources().getString(R.string.auth_title))
-							.setSubtitle(ApplicationInstance.getContext().getResources().getString(R.string.auth_subTitle))
-							.setDescription(ApplicationInstance.getContext().getResources().getString(R.string.auth_desc))
-							.setDeviceCredentialAllowed(true)
-							.build();
+		Executor newExecutor = Executors.newSingleThreadExecutor();
+		final BiometricPrompt myBiometricPrompt = new BiometricPrompt(a, newExecutor, this);
 
-			myBiometricPrompt.authenticate(promptInfo);
-		} else onAuthenticationError(BiometricConstants.ERROR_NO_BIOMETRICS, "");
+		final BiometricPrompt.PromptInfo promptInfo =
+				new BiometricPrompt.PromptInfo.Builder()
+						.setTitle(ApplicationInstance.getContext().getResources().getString(R.string.auth_title))
+						.setSubtitle(ApplicationInstance.getContext().getResources().getString(R.string.auth_subTitle))
+						.setDescription(ApplicationInstance.getContext().getResources().getString(R.string.auth_desc))
+						.setAllowedAuthenticators(BIOMETRIC_STRONG | BIOMETRIC_WEAK | DEVICE_CREDENTIAL)
+						.build();
+
+		myBiometricPrompt.authenticate(promptInfo);
 	}
 
 	@Override
 	public void onAuthenticationError(int errorCode, @NonNull CharSequence error) {
 		super.onAuthenticationError(errorCode, error);
-		Log.e("Bio", "Received auth error. code: " + errorCode);
 		if (errorCode == BiometricConstants.ERROR_NO_BIOMETRICS) {
-			Amplitude.getInstance().logEvent(a.getString(R.string.biometrics_not_matched));
 			listener.onAuthError(error.toString());
 		} else Amplitude.getInstance().logEvent(a.getString(R.string.biometrics_not_setup));
 	}

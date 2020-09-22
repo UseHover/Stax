@@ -12,7 +12,7 @@ public interface SimDao {
 	LiveData<List<Sim>> getAll();
 
 	@Query("SELECT * FROM hsdk_sims WHERE slot_idx != -1")
-	LiveData<List<Sim>> getPresent();
+	List<Sim> getPresent();
 
 	@Query("SELECT * FROM hsdk_sims WHERE imsi LIKE :hni")
 	LiveData<List<Sim>> getByHni(String hni);

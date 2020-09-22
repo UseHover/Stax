@@ -1,6 +1,11 @@
 package com.hover.stax.channels;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.SystemClock;
 import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
@@ -8,7 +13,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.hover.sdk.sims.MultiSimTelephonyWorker;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.sims.Sim;
 import com.hover.stax.utils.Utils;
@@ -21,7 +29,7 @@ public class ChannelViewModel extends AndroidViewModel {
 
 	private DatabaseRepo repo;
 
-	private LiveData<List<Sim>> sims;
+	private MutableLiveData<List<Sim>> sims;
 	LiveData<List<String>> simHniList = new MutableLiveData<>();
 	LiveData<List<String>> simCountryList = new MutableLiveData<>();
 
@@ -85,10 +93,20 @@ public class ChannelViewModel extends AndroidViewModel {
 		if (sims == null) {
 			sims = new MutableLiveData<>();
 		}
-		sims = repo.getSims();
+		new Thread(() -> sims.postValue(repo.getSims())).start();
+		LocalBroadcastManager.getInstance(getApplication())
+			.registerReceiver(simReceiver, new IntentFilter(MultiSimTelephonyWorker.action(getApplication())));
 	}
 
+	private final BroadcastReceiver simReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			new Thread(() -> sims.postValue(repo.getSims())).start();
+		}
+	};
+
 	private LiveData<List<String>> getHnis(List<Sim> sims) {
+		if (sims == null) return null;
 		List<String> hniList = new ArrayList<>();
 		for (Sim sim : sims) {
 			if (!hniList.contains(sim.hni))
@@ -100,6 +118,7 @@ public class ChannelViewModel extends AndroidViewModel {
 	}
 
 	private LiveData<List<String>> getSimCountries(List<Sim> sims) {
+		if (sims == null) return null;
 		List<String> countries = new ArrayList<>();
 		for (Sim sim : sims) {
 			if (!countries.contains(sim.country_iso.toUpperCase()))
@@ -176,7 +195,16 @@ public class ChannelViewModel extends AndroidViewModel {
 			if (selected.getValue().contains(channel.id)) {
 				channel.selected = true;
 				repo.update(channel);
+				FirebaseMessaging.getInstance().subscribeToTopic(channel.id + "");
+				FirebaseMessaging.getInstance().subscribeToTopic(channel.countryAlpha2);
 			}
 		}
+	}
+
+	@Override
+	protected void onCleared() {
+		try { LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(simReceiver);
+		} catch (Exception ignored) { }
+		super.onCleared();
 	}
 }
