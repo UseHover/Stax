@@ -87,7 +87,7 @@ public class DatabaseRepo {
 	}
 
 	public LiveData<List<StaxTransaction>> getCompleteTransferTransactions() {
-		return transactionDao.getNonBalance();
+		return transactionDao.getSucceededNonBalance();
 	}
 
 	public LiveData<List<StaxTransaction>> getCompleteTransferTransactionsByChannelId(int channelId) {

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.actions.Action;
@@ -43,6 +44,6 @@ public class TransactionReceiver extends BroadcastReceiver {
 			StaxTransaction t = repo.getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID));
 			t.update(intent);
 			repo.update(t);
-		});
+		}).start();
 	}
 }
