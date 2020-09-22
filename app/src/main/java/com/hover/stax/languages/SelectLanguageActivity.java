@@ -71,10 +71,7 @@ public class SelectLanguageActivity extends AppCompatActivity {
 		});
 
 		findViewById(R.id.continueLanguageButton).setOnClickListener(v -> {
-			JSONObject data = new JSONObject();
-			try { data.put("language", selectedCode);
-			} catch (JSONException e) { }
-			Amplitude.getInstance().logEvent(getString(R.string.selected_language), data);
+			Lang.LogChange(selectedCode, SelectLanguageActivity.this);
 			Utils.saveInt(SplashScreenActivity.LANGUAGE_CHECK, 1, ApplicationInstance.getContext());
 			startActivity(new Intent(this, MainActivity.class));
 			finish();

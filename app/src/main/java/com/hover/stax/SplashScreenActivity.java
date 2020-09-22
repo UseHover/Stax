@@ -22,7 +22,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Amplitude.getInstance().initialize(this, "9275a8bd8ab3037bd1f8e072f83548d3").enableForegroundTracking(getApplication());
+		Amplitude.getInstance().initialize(this, getString(R.string.amp)).enableForegroundTracking(getApplication());
 		Hover.initialize(this);
 		Hover.setBranding("Stax", R.mipmap.fullsize_logo, this);
 		WorkManager wm = WorkManager.getInstance(this);

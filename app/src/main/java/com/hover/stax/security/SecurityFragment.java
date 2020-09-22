@@ -24,6 +24,7 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.languages.Lang;
 import com.hover.stax.languages.LanguageViewModel;
+import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.utils.UIHelper;
 import com.yariksoffice.lingver.Lingver;
 
@@ -56,7 +57,7 @@ public class SecurityFragment extends Fragment {
 					if (position != 0) {
 						String code = languages.get(position).code;
 						if (code != null) {
-							Amplitude.getInstance().logEvent(getString(R.string.selected_language, code));
+							Lang.LogChange(code, getActivity());
 							Lingver.getInstance().setLocale(getContext(), code);
 							restart();
 						}

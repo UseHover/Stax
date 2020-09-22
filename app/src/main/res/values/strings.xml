@@ -3,6 +3,8 @@
 	<string name="root_url" translatable="false">https://stage.usehover.com</string>
 	<string name="api_url" translatable="false">https://stage.usehover.com/api</string>
 	<string name="channels_endpoint" translatable="false">/channels?published=true</string>
+	<string name="amp" translatable="false" public="false">e3b51457136ad623213ade89a42a288f</string>
+
 	<string name="select_language">Select language</string>
 	<string-array name="supported_languages_code">
 		<item>en</item>
