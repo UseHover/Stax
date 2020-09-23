@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 	public void runAllBalances(View view) {
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_all));
 		runCount = allBalanceActions.size();
-		prepareRun(allBalanceActions.get(0), 0);
+		if(allBalanceActions.size() > 0) prepareRun(allBalanceActions.get(0), 0);
 	}
 
 	private void prepareRun(Action a, int i) {
