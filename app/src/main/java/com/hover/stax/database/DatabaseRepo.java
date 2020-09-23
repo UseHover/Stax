@@ -65,15 +65,19 @@ public class DatabaseRepo {
 		return actionDao.getLiveAction(public_id);
 	}
 
-	public LiveData<List<Action>> getActions(int channelId, String type) {
+	public LiveData<List<Action>> getLiveActions(int channelId, String type) {
+		return actionDao.getLiveActions(channelId, type);
+	}
+
+	public List<Action> getActions(int channelId, String type) {
 		return actionDao.getActions(channelId, type);
 	}
 
-	public LiveData<List<Action>> getActions(int[] channelIds, String type) {
+	public LiveData<List<Action>> getLiveActions(int[] channelIds, String type) {
 		return actionDao.getActions(channelIds, type);
 	}
 
-	public LiveData<List<Action>> getActions() {
+	public LiveData<List<Action>> getLiveActions() {
 		return actionDao.getAll();
 	}
 

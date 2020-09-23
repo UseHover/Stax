@@ -4,13 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -22,6 +22,7 @@ import com.hover.stax.actions.Action;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.security.SecurityFragment;
+import com.hover.stax.utils.UIHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +34,9 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 	final public static int ADD_SERVICE = 200, TRANSFER_REQUEST = 203;
 
 	private HomeViewModel homeViewModel;
-	private static List<Action> toRun;
-	private static List<String> hasRun;
+	private static List<Action> allBalanceActions;
+	private static Action toRun = null;
+	private static int index, runCount = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,26 +52,12 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 		NavigationUI.setupWithNavController(navView, navController);
 
 		homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+		homeViewModel.getBalanceActions().observe(this, actions -> {
+			if (actions != null)
+				allBalanceActions = actions;
+		});
 
 		if (getIntent().getBooleanExtra(SecurityFragment.LANG_CHANGE, false)) navController.navigate(R.id.navigation_security);
-	}
-
-	public void runAllBalances() {
-		hasRun = new ArrayList<>();
-		homeViewModel.getBalanceActions().observe(this, actions -> {
-			toRun = actions;
-			chooseRun(0);
-		});
-	}
-
-	@Override
-	public void onTapRefresh(int channel_id) {
-		hasRun = new ArrayList<>();
-		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_single));
-		homeViewModel.getBalanceAction(channel_id).observe(this, actions -> {
-			toRun = actions;
-			chooseRun(0);
-		});
 	}
 
 	@Override
@@ -80,25 +68,46 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 	}
 
 	@Override
+	public void onTapRefresh(int channel_id) {
+		runCount = 0;
+		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_single));
+		for (Action action: allBalanceActions)
+			if (action.channel_id == channel_id) {
+				prepareRun(action, 0);
+				return;
+			}
+	}
+
+	public void runAllBalances(View view) {
+		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_all));
+		runCount = allBalanceActions.size();
+		prepareRun(allBalanceActions.get(0), 0);
+	}
+
+	private void prepareRun(Action a, int i) {
+		if (allBalanceActions == null || allBalanceActions.size() == 0) {
+			UIHelper.flashMessage(this, "Error, no balance actions found.");
+			return;
+		}
+		index = i;
+		toRun = a;
+		if (index == 0)
+			new BiometricChecker(this, this).startAuthentication();
+		else run(toRun, index);
+	}
+
+	@Override
 	public void onAuthError(String error) {
 		Log.e(TAG, "error: " + error);
 	}
 
 	@Override
 	public void onAuthSuccess() {
-		run(0);
+		run(toRun, index);
 	}
 
-	private void chooseRun(int index) {
-		if (toRun != null && toRun.size() > hasRun.size()) {
-			if (index == 0)
-				new BiometricChecker(this, this).startAuthentication();
-			else run(index);
-		}
-	}
-
-	private void run(int index) {
-		new HoverSession.Builder(toRun.get(index), homeViewModel.getChannel(toRun.get(index).channel_id), this, index)
+	private void run(Action action, int index) {
+		new HoverSession.Builder(action, homeViewModel.getChannel(action.channel_id), this, index)
 			.finalScreenTime(0).run();
 	}
 
@@ -112,14 +121,12 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 			Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_home);
 		}
 
-		if (requestCode < 100) { // Some fragments use request codes in in the 100's for unrelated stuff
-			if (hasRun == null) {
-				hasRun = new ArrayList<>();
-			}
-			hasRun.add(data.getStringExtra("action_id"));
-			chooseRun(requestCode + 1);
+		if (requestCode < 100) {
+			index++;
+			if (index < runCount)
+				prepareRun(allBalanceActions.get(index), index);
 		} else if (requestCode == ADD_SERVICE) {
-			runAllBalances();
+			runAllBalances(null);
 		}
 	}
 

@@ -3,7 +3,6 @@ package com.hover.stax.home;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -32,6 +31,7 @@ public class HomeViewModel extends AndroidViewModel {
 	public HomeViewModel(Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
+		if (selectedChannels == null) { selectedChannels = new MutableLiveData<>(); }
 		selectedChannels = repo.getSelected();
 		balanceActions = Transformations.switchMap(selectedChannels, this::loadBalanceActions);
 
@@ -46,10 +46,11 @@ public class HomeViewModel extends AndroidViewModel {
 		for (int c = 0; c < channelList.size(); c++) {
 			ids[c] = channelList.get(c).id;
 		}
-		return repo.getActions(ids, Action.BALANCE);
+		return repo.getLiveActions(ids, Action.BALANCE);
 	}
 
 	public LiveData<List<Channel>> getSelectedChannels() {
+		if (selectedChannels == null) { selectedChannels = new MutableLiveData<>(); }
 		return selectedChannels;
 	}
 
@@ -64,10 +65,11 @@ public class HomeViewModel extends AndroidViewModel {
 	}
 
 	public LiveData<List<Action>> getBalanceActions() {
+		if (balanceActions == null) { balanceActions = new MutableLiveData<>(); }
 		return balanceActions;
 	}
 
-	public LiveData<List<Action>> getBalanceAction(int channel_id) {
+	public List<Action> getBalanceActions(int channel_id) {
 		return repo.getActions(channel_id, Action.BALANCE);
 	}
 

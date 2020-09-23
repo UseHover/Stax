@@ -60,7 +60,7 @@ public class TransferViewModel extends AndroidViewModel {
 
 	public LiveData<List<Action>> loadActions(Channel channel) {
 		if (channel != null)
-			return repo.getActions(channel.id, type);
+			return repo.getLiveActions(channel.id, type);
 		else return new MutableLiveData<>();
 	}
 

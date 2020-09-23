@@ -24,7 +24,10 @@ public interface ActionDao {
 	LiveData<List<Action>> getByToInstitution(int institution_id);
 
 	@Query("SELECT * FROM hsdk_actions WHERE channel_id = :channel_id AND transaction_type = :transaction_type")
-	LiveData<List<Action>> getActions(int channel_id, String transaction_type);
+	LiveData<List<Action>> getLiveActions(int channel_id, String transaction_type);
+
+	@Query("SELECT * FROM hsdk_actions WHERE channel_id = :channel_id AND transaction_type = :transaction_type")
+	List<Action> getActions(int channel_id, String transaction_type);
 
 	@Query("SELECT * FROM hsdk_actions WHERE channel_id IN (:channel_ids) AND transaction_type = :transaction_type")
 	LiveData<List<Action>> getActions(int[] channel_ids, String transaction_type);
