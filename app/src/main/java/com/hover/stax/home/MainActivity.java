@@ -2,6 +2,7 @@ package com.hover.stax.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,11 +54,25 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 
 		homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 		homeViewModel.getBalanceActions().observe(this, actions -> {
-			if (actions != null)
+			if (actions != null) {
 				allBalanceActions = actions;
+				Log.d("CYCLER", "updated actions here");
+			}
 		});
 
 		if (getIntent().getBooleanExtra(SecurityFragment.LANG_CHANGE, false)) navController.navigate(R.id.navigation_security);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.d("CYCLE","ON PAUSE CALLED");
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d("CYCLE","ON RESUME CALLED");
 	}
 
 	@Override
@@ -81,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 	public void runAllBalances(View view) {
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_all));
 		runCount = allBalanceActions.size();
+		Log.d("CYCLER", "called run action");
 		if(allBalanceActions.size() > 0) prepareRun(allBalanceActions.get(0), 0);
 	}
 
@@ -126,8 +142,9 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 			if (index < runCount)
 				prepareRun(allBalanceActions.get(index), index);
 		} else if (requestCode == ADD_SERVICE) {
+			//ADDED THIS BECAUSE runAllBalances gets called first before actions is being updated from view model observer
+				new Handler().postDelayed(() -> runAllBalances(null), 700);
 
-			runAllBalances(null);
 		}
 	}
 

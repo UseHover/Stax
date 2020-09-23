@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 
 @Database(entities = {Channel.class, StaxTransaction.class}, version = 8)
 public abstract class AppDatabase extends RoomDatabase {
-	private static final int NUMBER_OF_THREADS = 4;
+	private static final int NUMBER_OF_THREADS = 8;
 	static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
 	private static volatile AppDatabase INSTANCE;

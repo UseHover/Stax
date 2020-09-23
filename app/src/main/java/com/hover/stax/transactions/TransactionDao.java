@@ -35,6 +35,6 @@ public interface TransactionDao {
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	void insert(StaxTransaction transaction);
 
-	@Update
+	@Update (onConflict = OnConflictStrategy.REPLACE)
 	void update(StaxTransaction transaction);
 }
