@@ -35,7 +35,7 @@ public class TransactionDetailsFragment extends Fragment {
 		JSONObject data = new JSONObject();
 		try { data.put("uuid", getArguments().getString(TransactionContract.COLUMN_UUID));
 		} catch (JSONException e) { }
-		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.nav_transaction)), data);
+		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_transaction)), data);
 		return inflater.inflate(R.layout.transaction_details_layout, container, false);
 	}
 

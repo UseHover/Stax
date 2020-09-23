@@ -22,9 +22,6 @@ import com.hover.stax.home.MainActivity;
 import com.hover.stax.utils.fonts.FontReplacer;
 import com.yariksoffice.lingver.Lingver;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class SelectLanguageActivity extends AppCompatActivity {
 	String selectedCode = null;
 
@@ -32,7 +29,7 @@ public class SelectLanguageActivity extends AppCompatActivity {
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.language_select_layout);
-		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.nav_language)));
+		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_language)));
 
 		selectedCode = Lingver.getInstance().getLanguage();
 		final RadioGroup radioGrp = findViewById(R.id.languageRadioGroup);

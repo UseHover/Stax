@@ -29,7 +29,7 @@ public class ChannelDetailFragment extends Fragment implements TransactionHistor
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		viewModel = new ViewModelProvider(requireActivity()).get(ChannelDetailViewModel.class);
-		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.nav_account_detail)));
+		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_channel)));
 		return inflater.inflate(R.layout.channels_details_layout, container, false);
 	}
 

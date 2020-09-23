@@ -24,11 +24,8 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.languages.Lang;
 import com.hover.stax.languages.LanguageViewModel;
-import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.utils.UIHelper;
 import com.yariksoffice.lingver.Lingver;
-
-import org.intellij.lang.annotations.Language;
 
 public class SecurityFragment extends Fragment {
 	final public static String LANG_CHANGE = "Settings";
@@ -36,7 +33,7 @@ public class SecurityFragment extends Fragment {
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.nav_security)));
+		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_security)));
 		View root = inflater.inflate(R.layout.fragment_security, container, false);
 		setUpChooseLang(root);
 		PinsViewModel securityViewModel = new ViewModelProvider(this).get(PinsViewModel.class);

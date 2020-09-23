@@ -17,6 +17,11 @@
 	<string name="refresh_balance_single" translatable="false">Clicked refresh single balance</string>
 	<string name="refresh_balance_all" translatable="false">Clicked refresh all balances</string>
 	<string name="visit_screen" translatable="false">Visited %1$s screen</string>
+	<string name="visit_language" translatable="false">Language Choice</string>
+	<string name="visit_security" translatable="false">Security</string>
+	<string name="visit_transaction" translatable="false">Transaction Detail</string>
+	<string name="visit_channel" translatable="false">Channel Detail</string>
+	<string name="visit_home" translatable="false">Home</string>
 	<string name="finish_screen" translatable="false">Completed submission %1$s transfer</string>
 	<string name="try_contact_select" translatable="false">Visited contact select screen</string>
 	<string name="contact_perm_success" translatable="false">Completed grant contacts permissions</string>
