@@ -34,22 +34,28 @@ public class Utils {
 		}
 	}
 
-	public static Double getAmount(String amount) {
-		return Double.parseDouble(amount);
-	}
-
 	public static String formatAmount(String number) {
-		return formatAmount(getAmount(number));
-	}
-	public static String formatAmount(Double number) {
 		try {
-			DecimalFormat formatter = new DecimalFormat("#,##0.00");
-			formatter.setMaximumFractionDigits(2);
-			return formatter.format(number);
+			double amount = Double.parseDouble(number);
+			DecimalFormat formatter = new DecimalFormat("#,###.00");
+			return formatter.format(amount);
 		} catch (Exception e) {
-			return String.valueOf(number);
+			return number;
 		}
 	}
+
+	public static String formatAmountV2(String amount) {
+		DecimalFormat df = new DecimalFormat("0.00");
+		df.setMaximumFractionDigits(2);
+		return df.format(Integer.valueOf(amount));
+	}
+	public static String formatAmountV2(double amount) {
+		DecimalFormat df = new DecimalFormat("0.00");
+		df.setMaximumFractionDigits(2);
+		return df.format(amount);
+	}
+
+	public static Double getAmount(String amount) {return Double.valueOf(formatAmountV2(amount));}
 
 	public static String normalizePhoneNumber(String value, String country) {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();

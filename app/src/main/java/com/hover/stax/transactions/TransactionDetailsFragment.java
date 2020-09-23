@@ -47,7 +47,7 @@ public class TransactionDetailsFragment extends Fragment {
 		viewModel.getTransaction().observe(getViewLifecycleOwner(), transaction -> {
 			if (transaction != null) {
 				((TextView) view.findViewById(R.id.details_transactionNumber)).setText(transaction.uuid);
-				((TextView) view.findViewById(R.id.details_amount)).setText(Utils.formatAmount(transaction.amount));
+				((TextView) view.findViewById(R.id.details_amount)).setText(Utils.formatAmountV2(transaction.amount));
 				((TextView) view.findViewById(R.id.details_date)).setText(DateUtils.humanFriendlyDate(transaction.initiated_at));
 			}
 		});

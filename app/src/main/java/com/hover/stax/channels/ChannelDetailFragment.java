@@ -50,7 +50,7 @@ public class ChannelDetailFragment extends Fragment implements TransactionHistor
 		});
 
 		viewModel.getSpentThisMonth().observe(getViewLifecycleOwner(), thisMonth -> {
-			((TextView) view.findViewById(R.id.spentThisMonthContent)).setText(Utils.formatAmount(thisMonth != null ? thisMonth : 0));
+			((TextView) view.findViewById(R.id.spentThisMonthContent)).setText(Utils.formatAmountV2(thisMonth != null ? thisMonth : 0));
 		});
 
 		viewModel.setChannel(getArguments().getInt(TransactionContract.COLUMN_CHANNEL_ID));
