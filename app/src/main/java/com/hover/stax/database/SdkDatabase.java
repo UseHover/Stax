@@ -22,7 +22,7 @@ public abstract class SdkDatabase extends RoomDatabase {
 	public abstract ActionDao actionDao();
 	public abstract SimDao simDao();
 
-	public static SdkDatabase getInstance(Context context) {
+	public static synchronized SdkDatabase getInstance(Context context) {
 		if (INSTANCE == null) {
 			synchronized (SdkDatabase.class) {
 				if (INSTANCE == null) {

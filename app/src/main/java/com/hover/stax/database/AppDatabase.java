@@ -27,7 +27,7 @@ public abstract class AppDatabase extends RoomDatabase {
 	public abstract ChannelDao channelDao();
 	public abstract TransactionDao transactionDao();
 
-	public static AppDatabase getInstance(Context context) {
+	public static synchronized AppDatabase getInstance(Context context) {
 		if (INSTANCE == null) {
 			synchronized (AppDatabase.class) {
 				if (INSTANCE == null) {
