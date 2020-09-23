@@ -11,10 +11,10 @@ import androidx.work.WorkManager;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
-import com.hover.sdk.utils.Utils;
 import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.languages.SelectLanguageActivity;
+import com.hover.stax.utils.Utils;
 
 public class SplashScreenActivity extends AppCompatActivity {
 	final public static String LANGUAGE_CHECK = "Language";

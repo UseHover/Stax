@@ -22,6 +22,23 @@ import java.text.DecimalFormat;
 public class Utils {
 	private final static String TAG = "Utils";
 
+	private static final String SHARED_PREFS = "staxprefs";
+
+	public static SharedPreferences getSharedPrefs(Context context) {
+		return context.getSharedPreferences(getPackage(context) + SHARED_PREFS, Context.MODE_PRIVATE);
+	}
+
+	public static void saveString(String key, String value, Context c) {
+		SharedPreferences.Editor editor = getSharedPrefs(c).edit();
+		editor.putString(key, value);
+		editor.commit();
+	}
+	public static void saveInt(String key, int value, Context c) {
+		SharedPreferences.Editor editor = getSharedPrefs(c).edit();
+		editor.putInt(key, value);
+		editor.commit();
+	}
+
 	public static String stripHniString(String hni) {
 		return hni.replace("[", "").replace("]", "").replace("\"", "");
 	}

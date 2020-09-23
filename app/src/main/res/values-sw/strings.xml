@@ -76,7 +76,6 @@
 	<string name="airtime_other">Mtu mwingine</string>
 	<string name="add_service">+ Ongeza huduma</string>
 
-	<string name="transactionDetails">Maelezo ya manunuzi</string>
 	<string name="date">Tarehe</string>
 	<string name="network">Mtandao</string>
 	<string name="transactionNumber">Nambari ya shughuli</string>
@@ -108,5 +107,4 @@
 	<string name="auth_title">Security check</string>
 	<string name="auth_subTitle">Authenticate</string>
 	<string name="auth_desc">Authenticate with your fingerprint</string>
-	<string name="auth_cancel">Cancel</string>
 </resources>
