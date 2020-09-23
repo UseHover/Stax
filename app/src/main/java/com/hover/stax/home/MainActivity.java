@@ -126,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 			if (index < runCount)
 				prepareRun(allBalanceActions.get(index), index);
 		} else if (requestCode == ADD_SERVICE) {
+
 			runAllBalances(null);
 		}
 	}

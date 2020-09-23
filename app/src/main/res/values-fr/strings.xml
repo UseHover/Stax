@@ -7,11 +7,22 @@
 	<string name="nav_money">Déplacer de l\'argent</string>
 	<string name="nav_security">Sécurité</string>
 
+	<string name="nav_transaction">Détail de la transaction</string>
+	<string name="nav_language">Choix de la langue</string>
+	<string name="nav_account_detail">Détail du compte</string>
+
 	<string name="done"><u>Terminé</u></string>
 	<string name="cancel"><u>Annuler</u></string>
 	<string name="skip"><u>Sauter</u></string>
 	<string name="continue_text">Continuer</string>
 	<string name="no_selection_error">Vous devez sélectionner au moins 1 service.</string>
+
+	<string name="balance">Équilibre</string>
+	<string name="spent_this_month">Passé ce mois</string>
+	<string name="earned_this_month">Gagné ce mois</string>
+	<string name="more_than_last_month">plus que le mois dernier</string>
+	<string name="less_than_last_month">moins que le mois dernier</string>
+
 
 	<string name="balances">Soldes</string>
 	<string name="transactions">Transactions</string>
@@ -107,5 +118,7 @@
 	<string name="auth_title">Security check</string>
 	<string name="auth_subTitle">Authenticate</string>
 	<string name="auth_desc">Authenticate with your fingerprint</string>
-	<string name="auth_cancel">Cancel</string>
+	<string name="insecure_warning">Votre appareil n\'a pas d\'écran de verrouillage activé. Protégez votre argent en entrant un code PIN pour chaque transaction.</string>
+
+	<string name="auth_cancel">Annuler</string>
 </resources>

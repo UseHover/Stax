@@ -32,7 +32,7 @@ public interface TransactionDao {
 	@Query("SELECT SUM(amount) as total FROM stax_transactions WHERE strftime('%m', initiated_at/1000, 'unixepoch') = :month AND strftime('%Y', initiated_at/1000, 'unixepoch') = :year AND channel_id = :channelId")
 	LiveData<Double> getTotalAmount(int channelId, String month, String year);
 
-	@Insert(onConflict = OnConflictStrategy.IGNORE)
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	void insert(StaxTransaction transaction);
 
 	@Update

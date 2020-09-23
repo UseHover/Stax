@@ -7,6 +7,10 @@
 	<string name="nav_airtime">Wakati wa maongezi</string>
 	<string name="nav_money">Songa Pesa</string>
 	<string name="nav_security">Usalama</string>
+	<string name="nav_transaction">Maelezo ya Ununuzi</string>
+	<string name="nav_language">Chaguo la Lugha</string>
+	<string name="nav_account_detail">Maelezo ya Akaunti</string>
+
 
 	<string name="done"><u>Imefanywa</u></string>
 	<string name="cancel"><u>Ghairi</u></string>
@@ -16,6 +20,12 @@
 
 	<string name="balances">Mizani</string>
 	<string name="transactions">Miamala</string>
+
+	<string name="balance">chini ya mwezi uliopita</string>
+	<string name="spent_this_month">Alitumia mwezi huu</string>
+	<string name="earned_this_month">Imepatikana mwezi huu</string>
+	<string name="more_than_last_month">zaidi ya mwezi uliopita</string>
+	<string name="less_than_last_month">chini ya mwezi uliopita</string>
 
 	<string name="choose_institutions_title">Chagua huduma zako</string>
 	<string name="loading">Inapakia…</string>
@@ -108,5 +118,7 @@
 	<string name="auth_title">Security check</string>
 	<string name="auth_subTitle">Authenticate</string>
 	<string name="auth_desc">Authenticate with your fingerprint</string>
-	<string name="auth_cancel">Cancel</string>
+	<string name="insecure_warning">Kifaa chako hakina skrini iliyofungwa. Weka pesa zako salama kwa kuingiza PIN kwa kila shughuli.</string>
+
+	<string name="auth_cancel">Ghairi</string>
 </resources>
