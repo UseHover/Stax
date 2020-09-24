@@ -14,11 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
-import com.hover.sdk.utils.Utils;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.SplashScreenActivity;
 import com.hover.stax.home.MainActivity;
+import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.fonts.FontReplacer;
 import com.yariksoffice.lingver.Lingver;
 

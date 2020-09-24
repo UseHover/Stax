@@ -14,7 +14,6 @@ import androidx.lifecycle.Transformations;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.hover.sdk.sims.MultiSimTelephonyWorker;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.sims.Sim;
 import com.hover.stax.utils.Utils;
@@ -93,7 +92,7 @@ public class ChannelListViewModel extends AndroidViewModel {
 		}
 		new Thread(() -> sims.postValue(repo.getSims())).start();
 		LocalBroadcastManager.getInstance(getApplication())
-			.registerReceiver(simReceiver, new IntentFilter(MultiSimTelephonyWorker.action(getApplication())));
+			.registerReceiver(simReceiver, new IntentFilter(Utils.getPackage(getApplication()) + ".NEW_SIM_INFO_ACTION"));
 	}
 
 	private final BroadcastReceiver simReceiver = new BroadcastReceiver() {

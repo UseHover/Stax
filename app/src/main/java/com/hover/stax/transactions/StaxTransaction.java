@@ -7,6 +7,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.hover.sdk.transactions.TransactionContract;
@@ -17,10 +18,9 @@ import com.hover.stax.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 
-@Entity(tableName = "stax_transactions")
+@Entity(tableName = "stax_transactions", indices = { @Index(value = {"uuid"}, unique = true) })
 public class StaxTransaction {
 
 	@PrimaryKey(autoGenerate = true)

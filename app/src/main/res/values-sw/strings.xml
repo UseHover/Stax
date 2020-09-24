@@ -21,6 +21,7 @@
 	<string name="balances">Mizani</string>
 	<string name="transactions">Miamala</string>
 
+
 	<string name="balance">chini ya mwezi uliopita</string>
 	<string name="spent_this_month">Alitumia mwezi huu</string>
 	<string name="earned_this_month">Imepatikana mwezi huu</string>
@@ -35,8 +36,8 @@
 	<string name="add_new_balance">Ongeza salio mpya kuiona hapa</string>
 
 	<string name="permission_showup_text">Vichwa juu:\n\n Tunahitaji ruhusa ya kufikia anwani zako na kutumia huduma zako za ufikiaji ili tuweze kukufanyia uchawi wa USSD.</string>
-<string name="turn_on_permission">Washa ruhusa</string>
-<string name="permission_failure">Haukuruhusu ruhusa zote</string>
+	<string name="turn_on_permission">Washa ruhusa</string>
+	<string name="permission_failure">Haukuruhusu ruhusa zote</string>
 	<string name="permission_success">Ruhusa zote zinaruhusiwa</string>
 
 	<string name="input_label">Lebo ya kuingiza</string>
@@ -86,7 +87,6 @@
 	<string name="airtime_other">Mtu mwingine</string>
 	<string name="add_service">+ Ongeza huduma</string>
 
-	<string name="transactionDetails">Maelezo ya manunuzi</string>
 	<string name="date">Tarehe</string>
 	<string name="network">Mtandao</string>
 	<string name="transactionNumber">Nambari ya shughuli</string>
@@ -119,6 +119,4 @@
 	<string name="auth_subTitle">Authenticate</string>
 	<string name="auth_desc">Authenticate with your fingerprint</string>
 	<string name="insecure_warning">Kifaa chako hakina skrini iliyofungwa. Weka pesa zako salama kwa kuingiza PIN kwa kila shughuli.</string>
-
-	<string name="auth_cancel">Ghairi</string>
 </resources>

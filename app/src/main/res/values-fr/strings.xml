@@ -86,7 +86,6 @@
 	<string name="airtime_other">Quelqu\'un d\'autre</string>
 	<string name="add_service">+ Ajouter un service</string>
 
-	<string name="transactionDetails">Détails de la transaction</string>
 	<string name="date">Date</string>
 	<string name="network">Réseau</string>
 	<string name="transactionNumber">Numéro de transaction</string>
@@ -119,6 +118,4 @@
 	<string name="auth_subTitle">Authenticate</string>
 	<string name="auth_desc">Authenticate with your fingerprint</string>
 	<string name="insecure_warning">Votre appareil n\'a pas d\'écran de verrouillage activé. Protégez votre argent en entrant un code PIN pour chaque transaction.</string>
-
-	<string name="auth_cancel">Annuler</string>
 </resources>
