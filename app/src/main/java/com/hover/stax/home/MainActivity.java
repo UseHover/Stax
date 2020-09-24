@@ -56,23 +56,10 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 		homeViewModel.getBalanceActions().observe(this, actions -> {
 			if (actions != null) {
 				allBalanceActions = actions;
-				Log.d("CYCLER", "updated actions here");
 			}
 		});
 
 		if (getIntent().getBooleanExtra(SecurityFragment.LANG_CHANGE, false)) navController.navigate(R.id.navigation_security);
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		Log.d("CYCLE","ON PAUSE CALLED");
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		Log.d("CYCLE","ON RESUME CALLED");
 	}
 
 	@Override
@@ -86,6 +73,10 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 	public void onTapRefresh(int channel_id) {
 		runCount = 0;
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_single));
+		if (allBalanceActions == null || allBalanceActions.size() == 0) {
+			UIHelper.flashMessage(this, "Error, no balance actions found.");
+			return;
+		}
 		for (Action action: allBalanceActions)
 			if (action.channel_id == channel_id) {
 				prepareRun(action, 0);
@@ -95,16 +86,15 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 
 	public void runAllBalances(View view) {
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_all));
-		runCount = allBalanceActions.size();
-		Log.d("CYCLER", "called run action");
-		if(allBalanceActions.size() > 0) prepareRun(allBalanceActions.get(0), 0);
-	}
-
-	private void prepareRun(Action a, int i) {
 		if (allBalanceActions == null || allBalanceActions.size() == 0) {
 			UIHelper.flashMessage(this, "Error, no balance actions found.");
 			return;
 		}
+		runCount = allBalanceActions.size();
+		prepareRun(allBalanceActions.get(0), 0);
+	}
+
+	private void prepareRun(Action a, int i) {
 		index = i;
 		toRun = a;
 		if (index == 0)
@@ -139,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 
 		if (requestCode < 100) {
 			index++;
-			if (index < runCount)
+			if (index < runCount && allBalanceActions != null && allBalanceActions.size() > index)
 				prepareRun(allBalanceActions.get(index), index);
 		} else if (requestCode == ADD_SERVICE) {
 			//ADDED THIS BECAUSE runAllBalances gets called first before actions is being updated from view model observer

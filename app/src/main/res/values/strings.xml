@@ -33,7 +33,6 @@
 	<string name="more_than_last_month">more than last month</string>
 	<string name="less_than_last_month">less than last month</string>
 	<string name="transactions">Transactions</string>
-	<string name="transactionDetails">Transaction details</string>
 
 	<string name="choose_institutions_title">Choose your services</string>
 	<string name="loading">Loading…</string>
@@ -127,5 +126,4 @@
 	<string name="auth_desc">Authenticate with your fingerprint</string>
 
 	<string name="insecure_warning">Your device does not have a lockscreen enabled. Keep your money secure by entering PIN for every transaction.</string>
-	<string name="auth_cancel">Cancel</string>
 </resources>

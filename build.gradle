@@ -5,7 +5,7 @@ buildscript {
         
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.1'
+        classpath 'com.android.tools.build:gradle:4.0.1'
         classpath 'com.google.gms:google-services:4.3.3'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.3.0'
     }
@@ -20,12 +20,12 @@ allprojects {
         maven { url "http://maven.usehover.com/snapshots" }
         maven {
             url 'https://pro.maven.usehover.com/snapshots'
-           /* credentials {
+            credentials {
                 username project.HoverUsername
                 password project.HoverPassword
             }
             authentication { basic(BasicAuthentication) }
-            content { includeGroup "com.hover" } */
+            content { includeGroup "com.hover" }
         }
     }
 }

@@ -52,27 +52,19 @@ public class Utils {
 	}
 
 	public static String formatAmount(String number) {
+		return formatAmount(getAmount(number));
+	}
+	public static String formatAmount(Double number) {
 		try {
-			double amount = Double.parseDouble(number);
-			DecimalFormat formatter = new DecimalFormat("#,###.00");
-			return formatter.format(amount);
+			DecimalFormat formatter = new DecimalFormat("#,##0.00");
+			formatter.setMaximumFractionDigits(2);
+			return formatter.format(number);
 		} catch (Exception e) {
-			return number;
+			return String.valueOf(number);
 		}
 	}
 
-	public static String formatAmountV2(String amount) {
-		DecimalFormat df = new DecimalFormat("0.00");
-		df.setMaximumFractionDigits(2);
-		return df.format(Integer.valueOf(amount));
-	}
-	public static String formatAmountV2(double amount) {
-		DecimalFormat df = new DecimalFormat("0.00");
-		df.setMaximumFractionDigits(2);
-		return df.format(amount);
-	}
-
-	public static Double getAmount(String amount) {return Double.valueOf(formatAmountV2(amount));}
+	public static Double getAmount(String amount) { return Double.valueOf(amount); }
 
 	public static String normalizePhoneNumber(String value, String country) {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
