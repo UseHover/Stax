@@ -64,7 +64,7 @@ public class Utils {
 		}
 	}
 
-	public static Double getAmount(String amount) { return Double.valueOf(amount); }
+	public static Double getAmount(String amount) { return Double.parseDouble(amount.replaceAll(",", "")); }
 
 	public static String normalizePhoneNumber(String value, String country) {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
