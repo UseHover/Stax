@@ -191,7 +191,7 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 	}
 
 	private void authenticate() {
-		new BiometricChecker(this, (AppCompatActivity) getActivity()).startAuthentication();
+		new BiometricChecker(this, (AppCompatActivity) getActivity()).startAuthentication(transferViewModel.getActiveAction());
 	}
 
 	@Override
@@ -200,13 +200,13 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 	}
 
 	@Override
-	public void onAuthSuccess() {
-		makeHoverCall();
+	public void onAuthSuccess(Action act) {
+		makeHoverCall(act);
 	}
 
-	private void makeHoverCall() {
+	private void makeHoverCall(Action act) {
 		Amplitude.getInstance().logEvent(getString(R.string.finish_screen, transferType));
-		new HoverSession.Builder(transferViewModel.getActiveAction(), transferViewModel.getActiveChannel().getValue(),
+		new HoverSession.Builder(act, transferViewModel.getActiveChannel().getValue(),
 				getActivity(), MainActivity.TRANSFER_REQUEST)
 				.extra(Action.PHONE_KEY, recipientInput.getText().toString())
 				.extra(Action.ACCOUNT_KEY, recipientInput.getText().toString())

@@ -9,6 +9,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -28,16 +29,12 @@ import com.hover.stax.utils.UIHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements BalanceAdapter.BalanceListener, BiometricChecker.AuthListener {
+public class MainActivity extends AppCompatActivity implements HomeViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener {
 	final public static String TAG = "MainActivity";
 
-	final public static String CHECK_ALL_BALANCES = "CHECK_ALL";
 	final public static int ADD_SERVICE = 200, TRANSFER_REQUEST = 203;
 
 	private HomeViewModel homeViewModel;
-	private static List<Action> allBalanceActions;
-	private static Action toRun = null;
-	private static int index, runCount = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,11 +51,9 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 		NavigationUI.setupWithNavController(navView, navController);
 
 		homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-		homeViewModel.getBalanceActions().observe(this, actions -> {
-			if (actions != null) {
-				allBalanceActions = actions;
-			}
-		});
+		homeViewModel.setListener(this);
+		homeViewModel.getBalanceActions().observe(this, actions -> Log.e(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
+		homeViewModel.getToRun().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
 
 		if (getIntent().getBooleanExtra(SecurityFragment.LANG_CHANGE, false)) navController.navigate(R.id.navigation_security);
 	}
@@ -72,35 +67,25 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 
 	@Override
 	public void onTapRefresh(int channel_id) {
-		runCount = 0;
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_single));
-		if (allBalanceActions == null || allBalanceActions.size() == 0) {
-			UIHelper.flashMessage(this, "Error, no balance actions found.");
-			return;
-		}
-		for (Action action: allBalanceActions)
-			if (action.channel_id == channel_id) {
-				prepareRun(action, 0);
-				return;
-			}
+		homeViewModel.setRunning(channel_id);
 	}
 
 	public void runAllBalances(View view) {
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_all));
-		if (allBalanceActions == null || allBalanceActions.size() == 0) {
-			UIHelper.flashMessage(this, "Error, no balance actions found.");
-			return;
-		}
-		runCount = allBalanceActions.size();
-		prepareRun(allBalanceActions.get(0), 0);
+		homeViewModel.setRunning();
 	}
 
-	private void prepareRun(Action a, int i) {
-		index = i;
-		toRun = a;
-		if (index == 0)
-			new BiometricChecker(this, this).startAuthentication();
-		else run(toRun, index);
+	@Override
+	public void startRun(Action a, int i) {
+		if (i == 0)
+			new BiometricChecker(this, this).startAuthentication(a);
+		else run(a, i);
+	}
+
+	private void run(Action action, int index) {
+		new HoverSession.Builder(action, homeViewModel.getChannel(action.channel_id), this, index)
+			.finalScreenTime(0).run();
 	}
 
 	@Override
@@ -109,13 +94,8 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 	}
 
 	@Override
-	public void onAuthSuccess() {
-		run(toRun, index);
-	}
-
-	private void run(Action action, int index) {
-		new HoverSession.Builder(action, homeViewModel.getChannel(action.channel_id), this, index)
-			.finalScreenTime(0).run();
+	public void onAuthSuccess(Action act) {
+		run(act, 0);
 	}
 
 	@Override
@@ -129,13 +109,9 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 		}
 
 		if (requestCode < 100) {
-			index++;
-			if (index < runCount && allBalanceActions != null && allBalanceActions.size() > index)
-				prepareRun(allBalanceActions.get(index), index);
+			homeViewModel.setRan(requestCode);
 		} else if (requestCode == ADD_SERVICE) {
-			//ADDED THIS BECAUSE runAllBalances gets called first before actions is being updated from view model observer
-				new Handler().postDelayed(() -> runAllBalances(null), 700);
-
+			homeViewModel.setRunning();
 		}
 	}
 
