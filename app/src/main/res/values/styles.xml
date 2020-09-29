@@ -11,11 +11,15 @@
 
 	<style name="myHoverTheme" parent="@style/HoverTheme.Base" />
 
-	<style name="HoverTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+	<style name="HoverTheme.Base" parent="Theme.MaterialComponents">
 		<item name="android:windowActionBar">true</item>
 		<item name="colorPrimary">@color/colorPrimary</item>
 		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
 		<item name="colorAccent">@color/colorAccent</item>
+	</style>
+
+	<style name="TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+		<item name="android:paddingBottom">8dp</item>
 	</style>
 
 	<style name="SplashTheme" parent="HoverTheme.Base">

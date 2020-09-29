@@ -36,9 +36,8 @@ public class SelectLanguageActivity extends AppCompatActivity {
 
 		ColorStateList colorStateList = new ColorStateList(
 				new int[][]{new int[]{android.R.attr.state_enabled}},
-				new int[] {getResources().getColor(R.color.offWhite)}
+				new int[] {getResources().getColor(R.color.colorAccent)}
 		);
-
 		LanguageViewModel languageViewModel = new ViewModelProvider(this).get(LanguageViewModel.class);
 		languageViewModel.loadLanguages().observe(this, languages -> {
 			for (Lang language: languages) {
@@ -47,6 +46,8 @@ public class SelectLanguageActivity extends AppCompatActivity {
 				radioButton.setTextColor(Color.WHITE);
 				radioButton.setHighlightColor(Color.WHITE);
 				radioButton.setTextSize(16);
+				radioButton.setHeight(75);
+				radioButton.setPadding(16, 0, 0, 0);
 				radioButton.setTag(language.code);
 				Typeface font = FontReplacer.getDefaultFont();
 				radioButton.setTypeface(font);

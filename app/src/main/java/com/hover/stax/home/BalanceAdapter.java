@@ -48,11 +48,11 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 									   DateUtils.timeAgo(ApplicationInstance.getContext(), channel.latestBalanceTimestamp) : "Refresh");
 		holder.currency.setText(channel.currency);
 
-		holder.balanced_swiped_layout.setBackgroundColor(Color.parseColor(channel.primaryColorHex));
-		holder.currency.setTextColor(Color.parseColor(channel.secondaryColorHex));
-		holder.timeAgo.setTextColor(Color.parseColor(channel.secondaryColorHex));
-		holder.amount.setTextColor(Color.parseColor(channel.secondaryColorHex));
-		UIHelper.setTextColoredDrawable(holder.timeAgo, R.drawable.ic_refresh_white_10dp, Color.parseColor(channel.secondaryColorHex));
+		try{holder.balanced_swiped_layout.setBackgroundColor(Color.parseColor(channel.primaryColorHex));} catch (Exception ignored){};
+		try{holder.currency.setTextColor(Color.parseColor(channel.secondaryColorHex)); }catch (Exception ignored){};
+		try{holder.timeAgo.setTextColor(Color.parseColor(channel.secondaryColorHex));}catch (Exception ignored) {};
+		try{holder.amount.setTextColor(Color.parseColor(channel.secondaryColorHex));} catch (Exception ignored){};
+		try{UIHelper.setTextColoredDrawable(holder.timeAgo, R.drawable.ic_refresh_white_10dp, Color.parseColor(channel.secondaryColorHex));} catch (Exception e){};
 	}
 
 	class BalanceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

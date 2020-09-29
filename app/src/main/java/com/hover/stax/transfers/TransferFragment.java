@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
+import com.google.android.material.textfield.TextInputEditText;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
@@ -48,7 +49,7 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 	private EditText recipientInput;
 	private ImageButton contactButton;
 	private TextView pageError;
-	EditText amountInput;
+	TextInputEditText amountInput;
 
 	final public static int READ_CONTACT = 201;
 

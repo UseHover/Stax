@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		homeViewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
 
 			transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions, HomeFragment.this));
-			view.findViewById(R.id.transactionsLabel).setVisibility(staxTransactions.size() > 0 ? View.VISIBLE : View.GONE);
+			view.findViewById(R.id.no_history).setVisibility(staxTransactions.size() > 0 ? View.GONE : View.VISIBLE);
 		});
 	}
 
@@ -75,7 +75,6 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		}
 		homeTimeAgo.setText(mostRecentTimestamp > 0 ? DateUtils.timeAgo(ApplicationInstance.getContext(), mostRecentTimestamp) : "Refresh");
 		view.findViewById(R.id.homeTimeAgo).setVisibility(channels.size() > 0 ? View.VISIBLE : View.GONE);
-		view.findViewById(R.id.homeBalanceDesc).setVisibility(channels.size() > 0 ? View.GONE : View.VISIBLE);
 	}
 
 	@Override

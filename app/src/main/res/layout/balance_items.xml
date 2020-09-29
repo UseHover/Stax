@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     app:mode="same_level"
     app:dragEdge="right"
-    android:background="@color/colorPrimary"
+    app:barrierMargin="0dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<!-- Your secondary layout here -->
@@ -70,8 +70,8 @@
 		    android:layout_height="wrap_content"
 		    android:layout_gravity="center_vertical"
 		    android:paddingVertical="@dimen/activity_horizontal_margin"
-		    android:paddingStart="@dimen/activity_horizontal_margin"
 		    android:layout_weight="1"
+		    android:background="@color/cardViewColor"
 		    android:orientation="horizontal">
 
 			<TextView
@@ -81,7 +81,9 @@
 			    android:layout_gravity="center_vertical"
 			    android:gravity="center_vertical"
 			    android:textColor="@color/offWhite"
-			    android:textSize="@dimen/text_13"
+			    android:textSize="@dimen/text_16"
+			    android:paddingStart="@dimen/activity_vertical_margin"
+			    android:paddingEnd="0dp"
 			    android:layout_weight="1"
 			    android:text="Channel name" />
 
@@ -94,7 +96,8 @@
 			<ImageView
 			    android:layout_width="wrap_content"
 			    android:layout_height="24dp"
-				android:layout_gravity="center"
+				android:layout_gravity="right"
+			    android:layout_marginEnd="-12dp"
 			    android:src="@drawable/drag" />
 		</LinearLayout>
 

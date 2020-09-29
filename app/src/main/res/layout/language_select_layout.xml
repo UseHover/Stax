@@ -2,17 +2,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="@dimen/activity_horizontal_margin"
     android:background="@color/colorPrimary">
+
+	<com.hover.stax.utils.customViews.StaxCardView
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	   >
+		<LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:background="@color/cardViewColor"
+		    android:padding="@dimen/activity_vertical_margin"
+		    android:orientation="vertical">
+
+
 
 	<TextView
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:text="@string/select_language"
-	    android:textSize="@dimen/text_21"
-	    android:fontFamily="font-medium"
-	    android:layout_marginBottom="@dimen/spacing32"
+	    android:textSize="@dimen/text_13"
+	    android:textAllCaps="true"
+	    android:layout_gravity="end"
+	    android:gravity="end"
+	    android:fontFamily="font-bold"
+	    android:layout_marginBottom="@dimen/activity_vertical_margin"
 	    android:textColor="@color/offWhite" />
 
 
@@ -25,12 +42,16 @@
 	    android:id="@+id/continueLanguageButton"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:paddingHorizontal="@dimen/spacing32"
 	    android:text="@string/continue_text"
+	    android:paddingHorizontal="@dimen/spacing32"
 	    android:textAllCaps="false"
 	    android:fontFamily="font-medium"
 	    android:layout_gravity="end"
+	    android:gravity="center"
+	    android:textSize="@dimen/text_16"
 	    android:layout_marginTop="@dimen/spacing32"
-	    android:layout_marginEnd="@dimen/activity_horizontal_margin"
-	    android:background="@color/offWhite" />
+	    android:textColor="@color/offWhite"
+	    android:background="@drawable/button_bg" />
+		</LinearLayout>
+	</com.hover.stax.utils.customViews.StaxCardView>
 </LinearLayout>

@@ -5,7 +5,7 @@
 	<string name="channels_endpoint" translatable="false">/channels?published=true</string>
 	<string name="amp" translatable="false" public="false">e3b51457136ad623213ade89a42a288f</string>
 
-	<string name="select_language">Select language</string>
+	<string name="select_language">Choose a language</string>
 	<string-array name="supported_languages_code">
 		<item>en</item>
 		<item>fr</item>
@@ -25,6 +25,12 @@
 	<string name="skip"><u>Skip</u></string>
 	<string name="continue_text">Continue</string>
 	<string name="no_selection_error">You must select at least 1 service.</string>
+	<string name="add_accounts">Add accounts</string>
+	<string name="history">History</string>
+	<string name="no_history_yet">No history yet</string>
+	<string name="transfer">Transfer</string>
+
+
 
 	<string name="balances">Balances</string>
 	<string name="balance">Balance</string>
