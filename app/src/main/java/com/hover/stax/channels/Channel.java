@@ -23,7 +23,7 @@ public class Channel {
 	}
 
 	public Channel(JSONObject jsonObject, String rootUrl) {
-		this.update(jsonObject, rootUrl);
+		update(jsonObject, rootUrl);
 	}
 
 	public Channel(int id, String name, String countryAlpha2, String hniList, String primaryColorHex, String secondaryColorHex) {
@@ -35,16 +35,16 @@ public class Channel {
 		this.secondaryColorHex = secondaryColorHex;
 	}
 
-	public Channel update(JSONObject jsonObject, String rootUrl) {
+	Channel update(JSONObject jsonObject, String rootUrl) {
 		try {
-			this.id = jsonObject.getInt("id");
-			this.name = jsonObject.getString("name");
-			this.countryAlpha2 = jsonObject.getString("country_alpha2").toUpperCase();
-			this.currency = jsonObject.getString("currency");
-			this.hniList = jsonObject.getString("hni_list");
-			this.logoUrl = rootUrl + jsonObject.getString("logo_url");
-			this.primaryColorHex = jsonObject.getString("primary_color_hex");
-			this.secondaryColorHex = jsonObject.getString("secondary_color_hex");
+			id = jsonObject.getInt("id");
+			name = jsonObject.getString("name");
+			countryAlpha2 = jsonObject.getString("country_alpha2").toUpperCase();
+			currency = jsonObject.getString("currency");
+			hniList = jsonObject.getString("hni_list");
+			logoUrl = rootUrl + jsonObject.getString("logo_url");
+			primaryColorHex = jsonObject.getString("primary_color_hex");
+			secondaryColorHex = jsonObject.getString("secondary_color_hex");
 		} catch (JSONException e) {
 			Log.d("exception", e.getMessage());
 		}

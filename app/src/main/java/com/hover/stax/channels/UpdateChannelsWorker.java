@@ -62,7 +62,7 @@ public class UpdateChannelsWorker extends Worker {
 			JSONArray data = channelsJson.getJSONArray("data");
 			for (int j = 0; j < data.length(); j++) {
 				Channel channel = channelDao.getChannel(data.getJSONObject(j).getJSONObject("attributes").getInt("id"));
-				if (channel != null) {
+				if (channel == null) {
 					channel = new Channel(data.getJSONObject(j).getJSONObject("attributes"), getApplicationContext().getString(R.string.root_url));
 					channelDao.insert(channel);
 				} else
