@@ -12,7 +12,7 @@ import java.util.List;
 
 @Dao
 public interface ChannelDao {
-	@Query("SELECT * FROM channels")
+	@Query("SELECT * FROM channels ORDER BY country_alpha2, name")
 	LiveData<List<Channel>> getAll();
 
 	@Query("SELECT * FROM channels WHERE selected = :selected ORDER BY defaultAccount DESC")
@@ -26,6 +26,9 @@ public interface ChannelDao {
 
 //	@Query("SELECT * FROM channels WHERE hni_list IN :hniList")
 //	MutableLiveData<List<Channel>> getByHniList(String[] hniList);
+
+	@Query("SELECT EXISTS(SELECT id FROM channels WHERE id = :id LIMIT 1)")
+	Boolean exists(int id);
 
 	@Query("SELECT * FROM channels WHERE id = :id LIMIT 1")
 	Channel getChannel(int id);

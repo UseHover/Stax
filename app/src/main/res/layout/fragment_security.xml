@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     android:padding="@dimen/activity_vertical_margin"
+	android:layout_marginBottom="55dp"
     tools:context=".security.SecurityFragment">
 
 	<LinearLayout
