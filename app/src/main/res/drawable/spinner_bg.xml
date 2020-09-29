@@ -11,7 +11,7 @@
 
 				<solid android:color="@color/colorPrimary"/>
 				<stroke android:width="@dimen/editText_stroke_size" android:color="@color/white"/>
-				<corners android:radius="@dimen/editText_corner" />
+				<corners android:radius="0dp"  />
 
 			</shape>
 
