@@ -27,9 +27,6 @@ public interface ChannelDao {
 //	@Query("SELECT * FROM channels WHERE hni_list IN :hniList")
 //	MutableLiveData<List<Channel>> getByHniList(String[] hniList);
 
-	@Query("SELECT EXISTS(SELECT id FROM channels WHERE id = :id LIMIT 1)")
-	Boolean exists(int id);
-
 	@Query("SELECT * FROM channels WHERE id = :id LIMIT 1")
 	Channel getChannel(int id);
 

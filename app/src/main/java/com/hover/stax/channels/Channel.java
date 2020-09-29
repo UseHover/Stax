@@ -23,6 +23,19 @@ public class Channel {
 	}
 
 	public Channel(JSONObject jsonObject, String rootUrl) {
+		this.update(jsonObject, rootUrl);
+	}
+
+	public Channel(int id, String name, String countryAlpha2, String hniList, String primaryColorHex, String secondaryColorHex) {
+		this.id = id;
+		this.name = name;
+		this.countryAlpha2 = countryAlpha2;
+		this.hniList = hniList;
+		this.primaryColorHex = primaryColorHex;
+		this.secondaryColorHex = secondaryColorHex;
+	}
+
+	public Channel update(JSONObject jsonObject, String rootUrl) {
 		try {
 			this.id = jsonObject.getInt("id");
 			this.name = jsonObject.getString("name");
@@ -35,15 +48,7 @@ public class Channel {
 		} catch (JSONException e) {
 			Log.d("exception", e.getMessage());
 		}
-	}
-
-	public Channel(int id, String name, String countryAlpha2, String hniList, String primaryColorHex, String secondaryColorHex) {
-		this.id = id;
-		this.name = name;
-		this.countryAlpha2 = countryAlpha2;
-		this.hniList = hniList;
-		this.primaryColorHex = primaryColorHex;
-		this.secondaryColorHex = secondaryColorHex;
+		return this;
 	}
 
 	@PrimaryKey
