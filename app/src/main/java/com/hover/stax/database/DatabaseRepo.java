@@ -4,11 +4,15 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
 
 import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionDao;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
+import com.hover.stax.requests.Request;
+import com.hover.stax.requests.RequestDao;
+import com.hover.stax.scheduled.ScheduleDao;
 import com.hover.stax.sims.Sim;
 import com.hover.stax.sims.SimDao;
 import com.hover.stax.transactions.StaxTransaction;
@@ -19,6 +23,8 @@ import java.util.List;
 public class DatabaseRepo {
 	private ChannelDao channelDao;
 	private ActionDao actionDao;
+	private RequestDao requestDao;
+	private ScheduleDao scheduleDao;
 	private SimDao simDao;
 	private TransactionDao transactionDao;
 
@@ -30,6 +36,8 @@ public class DatabaseRepo {
 		AppDatabase db = AppDatabase.getInstance(application);
 		channelDao = db.channelDao();
 		transactionDao = db.transactionDao();
+		requestDao = db.requestDao();
+		scheduleDao = db.scheduleDao();
 
 		SdkDatabase sdkDb = SdkDatabase.getInstance(application);
 		actionDao = sdkDb.actionDao();

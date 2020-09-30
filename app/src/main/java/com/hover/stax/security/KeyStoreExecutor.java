@@ -1,4 +1,4 @@
-package com.hover.stax.database;
+package com.hover.stax.security;
 
 import android.content.Context;
 import android.os.SystemClock;

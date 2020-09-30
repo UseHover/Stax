@@ -10,6 +10,10 @@ import androidx.room.Transaction;
 
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
+import com.hover.stax.requests.Request;
+import com.hover.stax.requests.RequestDao;
+import com.hover.stax.scheduled.Schedule;
+import com.hover.stax.scheduled.ScheduleDao;
 import com.hover.stax.transactions.StaxTransaction;
 import com.hover.stax.transactions.TransactionDao;
 
@@ -17,7 +21,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-@Database(entities = {Channel.class, StaxTransaction.class}, version = 8)
+@Database(entities = {Channel.class, StaxTransaction.class, Request.class, Schedule.class}, version = 9)
 public abstract class AppDatabase extends RoomDatabase {
 	private static final int NUMBER_OF_THREADS = 8;
 	static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -26,6 +30,8 @@ public abstract class AppDatabase extends RoomDatabase {
 
 	public abstract ChannelDao channelDao();
 	public abstract TransactionDao transactionDao();
+	public abstract RequestDao requestDao();
+	public abstract ScheduleDao scheduleDao();
 
 	public static synchronized AppDatabase getInstance(Context context) {
 		if (INSTANCE == null) {
