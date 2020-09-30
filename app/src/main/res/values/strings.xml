@@ -51,8 +51,8 @@
 
 	<string name="choose_institutions_title">Choose your services</string>
 	<string name="loading">Loading…</string>
-	<string name="sims_section">Your SIMs</string>
-	<string name="country_section">Services in %1$s</string>
+	<string name="sims_section">ADD SIM ACCOUNTS</string>
+	<string name="country_section">Other accounts in (%1$s)</string>
 	<string name="all_section">All services</string>
 	<string name="add_new_balance">Add a new balance to view it here</string>
 
