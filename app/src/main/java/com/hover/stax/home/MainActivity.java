@@ -79,19 +79,21 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 		List<RFACLabelItem> items = new ArrayList<>();
 		items.add(new RFACLabelItem<Integer>()
 						  .setLabel(getResources().getString(R.string.transfer))
-						  .setLabelSizeSp(16)
+						  .setLabelSizeSp(21)
+						  .setLabelColor(getResources().getColor(R.color.colorAccentDark))
 						  .setWrapper(0)
 		);
 		items.add(new RFACLabelItem<Integer>()
 						  .setLabel(getResources().getString(R.string.nav_airtime))
-						  .setLabelSizeSp(16)
+						  .setLabelSizeSp(21)
+						  .setLabelColor(getResources().getColor(R.color.colorAccentDark))
 						  .setWrapper(1)
 		);
-		items.add(new RFACLabelItem<Integer>()
+		/*items.add(new RFACLabelItem<Integer>()
 						  .setLabel(getResources().getString(R.string.title_request))
-						  .setLabelSizeSp(16)
-						  .setWrapper(2)
-		);
+						  .setLabelSizeSp(21)
+						  .setWrapper(2)); */
+
 
 		rfaContent.setItems(items);
 
@@ -99,7 +101,8 @@ public class MainActivity extends AppCompatActivity implements BalanceAdapter.Ba
 		RapidFloatingActionLayout rfaLayout = findViewById(R.id.container);
 
 		rfaLayout.setIsContentAboveLayout(true);
-		rfaLayout.setFrameAlpha(0.8f);
+		rfaLayout.setFrameAlpha(0.92f);
+
 		rfaLayout.setFrameColor(getResources().getColor(R.color.cardViewColor));
 		rfaLayout.setDisableContentDefaultAnimation(true);
 

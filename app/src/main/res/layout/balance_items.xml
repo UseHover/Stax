@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     app:mode="same_level"
     app:dragEdge="right"
-    app:barrierMargin="0dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<!-- Your secondary layout here -->
@@ -17,7 +16,7 @@
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:paddingHorizontal="@dimen/activity_vertical_margin"
-		    android:paddingVertical="@dimen/spacing8"
+		    android:paddingVertical="2dp"
 		    android:orientation="vertical">
 
 			<TextView
@@ -29,6 +28,7 @@
 			    android:drawablePadding="4dp"
 			    android:layout_gravity="end"
 			    android:gravity="end"
+			    android:fontFamily="font-normal"
 			    android:id="@+id/balance_timeAgo"
 			    android:drawableStart="@drawable/ic_refresh_white_10dp" />
 
@@ -42,6 +42,7 @@
 				    android:layout_height="wrap_content"
 				    android:textColor="@color/offWhite"
 				    android:layout_marginEnd="@dimen/spacing8"
+				    android:fontFamily="font-normal"
 				    android:textSize="10sp" />
 
 				<TextView android:id="@+id/balance_amount"
@@ -49,6 +50,7 @@
 				    android:layout_height="wrap_content"
 				    android:textSize="30sp"
 				    android:textStyle="bold"
+				    android:fontFamily="font-normal"
 				    android:textColor="@color/offWhite" />
 			</LinearLayout>
 		</LinearLayout>
@@ -70,8 +72,8 @@
 		    android:layout_height="wrap_content"
 		    android:layout_gravity="center_vertical"
 		    android:paddingVertical="@dimen/activity_horizontal_margin"
+		    android:paddingStart="@dimen/activity_horizontal_margin"
 		    android:layout_weight="1"
-		    android:background="@color/cardViewColor"
 		    android:orientation="horizontal">
 
 			<TextView
@@ -81,9 +83,8 @@
 			    android:layout_gravity="center_vertical"
 			    android:gravity="center_vertical"
 			    android:textColor="@color/offWhite"
+			    android:fontFamily="font-normal"
 			    android:textSize="@dimen/text_16"
-			    android:paddingStart="@dimen/activity_vertical_margin"
-			    android:paddingEnd="0dp"
 			    android:layout_weight="1"
 			    android:text="Channel name" />
 
@@ -96,8 +97,7 @@
 			<ImageView
 			    android:layout_width="wrap_content"
 			    android:layout_height="24dp"
-				android:layout_gravity="right"
-			    android:layout_marginEnd="-12dp"
+				android:layout_gravity="center"
 			    android:src="@drawable/drag" />
 		</LinearLayout>
 

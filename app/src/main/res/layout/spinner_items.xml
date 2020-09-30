@@ -5,6 +5,7 @@
     android:textSize="@dimen/text_21"
     android:background="@color/cardViewColor"
     android:padding="13dp"
+    android:fontFamily="font-normal"
     android:singleLine="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
