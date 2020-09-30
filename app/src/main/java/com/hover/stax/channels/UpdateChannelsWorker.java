@@ -61,7 +61,12 @@ public class UpdateChannelsWorker extends Worker {
 			JSONObject channelsJson = downloadChannels(getUrl());
 			JSONArray data = channelsJson.getJSONArray("data");
 			for (int j = 0; j < data.length(); j++) {
-				channelDao.insert(new Channel(data.getJSONObject(j).getJSONObject("attributes"), getApplicationContext().getString(R.string.root_url)));
+				Channel channel = channelDao.getChannel(data.getJSONObject(j).getJSONObject("attributes").getInt("id"));
+				if (channel == null) {
+					channel = new Channel(data.getJSONObject(j).getJSONObject("attributes"), getApplicationContext().getString(R.string.root_url));
+					channelDao.insert(channel);
+				} else
+					channelDao.update(channel.update(data.getJSONObject(j).getJSONObject("attributes"), getApplicationContext().getString(R.string.root_url)));
 			}
 			Log.i(TAG, "Successfully downloaded and saved channels.");
 			return Result.success();
