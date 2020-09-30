@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/activity_vertical_margin"
+
     android:background="@color/colorPrimary"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     tools:context=".transfers.TransferFragment">
@@ -23,80 +23,246 @@
 	    card_view:cardElevation="10dp"
 	    card_view:cardPreventCornerOverlap="true"
 	    card_view:cardCornerRadius="0dp">
-	<LinearLayout
+
+	<RelativeLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:orientation="horizontal"
-	    android:paddingVertical="@dimen/spacing8"
+	    android:paddingVertical="@dimen/activity_vertical_margin"
 	    android:paddingHorizontal="@dimen/activity_vertical_margin"
 	    android:background="@color/cardViewColor"
+	    android:gravity="center_vertical"
 	    android:layout_gravity="center_vertical">
+
 
 		<ImageView
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:src="@drawable/ic_arrow_back_offwhite_24dp"
-		    android:layout_gravity="start|center"
-		    android:gravity="start|center"
+		    android:layout_gravity="start"
+		    android:gravity="start"
+		    android:id="@+id/backButton"
+		    android:layout_alignParentStart="true"
+		    android:layout_marginEnd="@dimen/spacing32"
 		    />
 
 		<TextView
-		    android:layout_width="match_parent"
+		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:text="@string/transfer"
+		    android:layout_marginStart="@dimen/spacing32"
 		    android:textSize="@dimen/text_13"
 		    android:textAllCaps="true"
+		    android:layout_alignParentEnd="true"
 		    android:layout_gravity="end|center_vertical"
 		    android:gravity="end|center_vertical"
 		    android:fontFamily="font-bold"
-		    android:layout_marginBottom="@dimen/activity_vertical_margin"
+		    android:id="@+id/transfer_title"
 		    android:textColor="@color/offWhite" />
 
-	</LinearLayout>
-	</androidx.cardview.widget.CardView>
 
-
-
-		<TextView android:id="@+id/transfer_title"
+		<TextView
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
+		    android:id="@+id/amountLabel"
+		    android:text="@string/amount"
 		    android:textColor="@color/offWhite"
+		    android:textSize="@dimen/text_16"
+		    android:layout_below="@id/backButton"
+		    android:layout_marginTop="@dimen/activity_vertical_margin"
+		    />
+
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/amountValue"
+		    android:textColor="@color/white"
 		    android:textSize="@dimen/text_21"
-		    android:textStyle="bold"
-		    android:layout_gravity="start"
-		    android:gravity="start"
-		    android:layout_marginBottom="@dimen/spacing32"
-			android:text="@string/title_p2p"/>
+		    android:layout_alignParentEnd="true"
+		    android:layout_gravity="end|center_vertical"
+		    android:gravity="end|center_vertical"
+		    android:layout_below="@id/backButton"
+		    android:layout_marginTop="@dimen/activity_vertical_margin"
+		    />
+
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/fromLabel"
+		    android:text="@string/from"
+		    android:textColor="@color/offWhite"
+		    android:textSize="@dimen/text_16"
+		    android:layout_below="@id/amountValue"
+		    android:layout_marginTop="@dimen/activity_vertical_margin"
+		    />
+
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/fromValue"
+		    android:textColor="@color/white"
+		    android:textSize="@dimen/text_21"
+		    android:layout_alignParentEnd="true"
+		    android:layout_gravity="end|center_vertical"
+		    android:gravity="end|center_vertical"
+		    android:layout_below="@id/amountValue"
+		    android:layout_marginTop="@dimen/activity_vertical_margin"
+		    />
+
 
 
 
 		<RelativeLayout
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
+		    android:id="@+id/toLayout"
+		    android:layout_below="@id/fromValue"
 		    android:layout_marginTop="@dimen/activity_vertical_margin"
 		    >
 
-			<androidx.appcompat.widget.AppCompatSpinner
+			<TextView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:id="@+id/toNetworkLabel"
+			    android:text="@string/toNetwork"
+			    android:textColor="@color/offWhite"
+			    android:textSize="@dimen/text_16"
+			    android:visibility="gone"
+			    android:layout_marginBottom="@dimen/activity_vertical_margin"
+			    />
+
+			<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/toNetworkValue"
+			    android:visibility="gone"
+		    android:textColor="@color/white"
+		    android:textSize="@dimen/text_21"
+		    android:layout_alignParentEnd="true"
+		    android:layout_gravity="end|center_vertical"
+		    android:gravity="end|center_vertical"
+		android:layout_marginBottom="@dimen/activity_vertical_margin"
+		    />
+
+
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/toNumberLabel"
+		    android:text="@string/number"
+		    android:textColor="@color/offWhite"
+		    android:textSize="@dimen/text_16"
+		    android:layout_below="@id/toNetworkValue"
+		    />
+
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/toNumberValue"
+		    android:textColor="@color/white"
+		    android:textSize="@dimen/text_21"
+		    android:layout_alignParentEnd="true"
+		    android:layout_gravity="end|center_vertical"
+		    android:gravity="end|center_vertical"
+		    android:layout_below="@id/toNetworkValue"
+		    />
+		</RelativeLayout>
+
+		<RelativeLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:paddingVertical="@dimen/activity_vertical_margin"
+		    android:background="@color/cardViewColor"
+		    android:layout_gravity="center_vertical"
+		    android:id="@+id/amountStageCardView"
+		    android:layout_below="@id/toLayout"
+		    >
+
+			<EditText android:id="@+id/amount_input"
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
+			    android:paddingLeft="@dimen/editText_box_margin_horiz"
+			    android:paddingStart="@dimen/editText_box_margin_horiz"
+			    android:paddingEnd="@dimen/editText_box_margin_horiz"
+			    android:paddingRight="@dimen/editText_box_margin_horiz"
+			    android:paddingTop="@dimen/activity_vertical_margin"
+			    android:paddingBottom="@dimen/activity_vertical_margin"
+			    android:textColorHint="@color/darkGrey"
 			    android:layout_marginTop="@dimen/activity_vertical_margin"
-			    android:background="@drawable/spinner_bg"
-			    android:padding="1dp"
-			    android:id="@+id/fromSpinner" />
+			    android:maxLines="1"
+			    android:textSize="@dimen/text_21"
+			    android:autofillHints="email_hint"
+			    android:inputType="number"
+			    android:textColor="@color/offWhite"
+			    android:background="@drawable/edit_text_bg" />
 			<TextView
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
 			    android:layout_marginStart="10dp"
 			    android:layout_marginTop="7dp"
-			    android:text="@string/from"
+			    android:text="@string/how_much_money"
 			    android:paddingHorizontal="@dimen/spacing8"
-			    android:background="@color/colorPrimary"
+			    android:background="@color/cardViewColor"
 			    android:textColor="@color/offWhite"
 			    android:textSize="@dimen/text_16" />
 		</RelativeLayout>
+	</RelativeLayout>
+	</androidx.cardview.widget.CardView>
 
 
 
+
+
+
+	<androidx.cardview.widget.CardView
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:padding="1dp"
+	    card_view:cardUseCompatPadding="true"
+	    card_view:cardElevation="10dp"
+	    android:id="@+id/fromStageCardView"
+	    card_view:cardPreventCornerOverlap="true"
+	    card_view:cardCornerRadius="0dp">
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:paddingVertical="@dimen/activity_vertical_margin"
+	    android:paddingHorizontal="@dimen/activity_vertical_margin"
+	    android:background="@color/cardViewColor"
+	    android:layout_gravity="center_vertical">
+
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/from_this_account"
+		    android:layout_marginStart="@dimen/spacing32"
+		    android:textSize="@dimen/text_13"
+		    android:textAllCaps="true"
+		    android:layout_gravity="end|center_vertical"
+		    android:gravity="end|center_vertical"
+		    android:fontFamily="font-bold"
+		    android:textColor="@color/offWhite" />
+
+		<RadioGroup
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginTop="@dimen/activity_vertical_margin"
+		    android:id="@+id/fromRadioGroup"/>
+
+		<TextView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/add_new_account"
+		    android:textColor="@color/colorAccent"
+		    android:text="@string/add_an_account"
+		    android:textSize="@dimen/text_16"
+		    android:fontFamily="font-medium"
+		    android:padding="@dimen/activity_vertical_margin"/>
+
+
+	</LinearLayout>
+	</androidx.cardview.widget.CardView>
 
 
 
@@ -105,6 +271,36 @@
 			android:layout_height="wrap_content"
 			android:orientation="vertical">
 
+			<androidx.cardview.widget.CardView
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:padding="1dp"
+			    android:id="@+id/toStageCardView"
+			    card_view:cardUseCompatPadding="true"
+			    card_view:cardElevation="10dp"
+			    card_view:cardPreventCornerOverlap="true"
+			    card_view:cardCornerRadius="0dp">
+			<LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="vertical"
+			    android:paddingVertical="@dimen/activity_vertical_margin"
+			    android:paddingHorizontal="@dimen/activity_vertical_margin"
+			    android:background="@color/cardViewColor"
+			    android:layout_gravity="center_vertical">
+
+
+				<TextView
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:text="@string/to_this_receiver"
+				    android:layout_marginStart="@dimen/spacing32"
+				    android:textSize="@dimen/text_13"
+				    android:textAllCaps="true"
+				    android:layout_gravity="end|center_vertical"
+				    android:gravity="end|center_vertical"
+				    android:fontFamily="font-bold"
+				    android:textColor="@color/offWhite" />
 
 
 			<RelativeLayout
@@ -117,7 +313,7 @@
 				    android:layout_width="match_parent"
 				    android:layout_height="wrap_content"
 				    android:layout_marginTop="@dimen/activity_vertical_margin"
-				    android:padding="1dp"
+				    android:padding="3dp"
 				    android:background="@drawable/spinner_bg"
 				    android:id="@+id/toSpinner" />
 				<TextView
@@ -127,7 +323,7 @@
 				    android:layout_marginTop="7dp"
 				    android:text="@string/to"
 				    android:paddingHorizontal="@dimen/spacing8"
-				    android:background="@color/colorPrimary"
+				    android:background="@color/cardViewColor"
 				    android:textColor="@color/offWhite"
 				    android:textSize="@dimen/text_16" />
 			</RelativeLayout>
@@ -141,18 +337,10 @@
 				android:visibility="gone">
 
 
-
-				<RelativeLayout
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_marginTop="@dimen/activity_vertical_margin"
-					android:orientation="horizontal">
-
-
 					<RelativeLayout
 					    android:layout_width="match_parent"
 					    android:layout_height="wrap_content"
-					    android:layout_toStartOf="@+id/contact_button"
+					    android:layout_marginTop="@dimen/activity_vertical_margin"
 					    >
 
 						<EditText android:id="@+id/recipient_number"
@@ -161,8 +349,8 @@
 						    android:layout_alignParentLeft="true"
 						    android:paddingLeft="@dimen/editText_box_margin_horiz"
 						    android:paddingStart="@dimen/editText_box_margin_horiz"
-						    android:paddingEnd="@dimen/editText_box_margin_horiz"
-						    android:paddingRight="@dimen/editText_box_margin_horiz"
+						    android:paddingEnd="50dp"
+						    android:paddingRight="50dp"
 						    android:paddingTop="@dimen/activity_vertical_margin"
 						    android:paddingBottom="@dimen/activity_vertical_margin"
 						    android:textColorHint="@color/darkGrey"
@@ -180,61 +368,25 @@
 						    android:id="@+id/recipient_label"
 						    android:text="@string/recipient_phone"
 						    android:paddingHorizontal="@dimen/spacing8"
-						    android:background="@color/colorPrimary"
+						    android:background="@color/cardViewColor"
 						    android:textColor="@color/offWhite"
 						    android:textSize="@dimen/text_16" />
+
+						<ImageButton android:id="@+id/contact_button"
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+						    android:layout_marginEnd="@dimen/activity_vertical_margin"
+						    android:layout_alignParentEnd="true"
+						    android:layout_centerVertical="true"
+						    android:layout_marginTop="@dimen/spacing32"
+						    android:src="@drawable/ic_contacts"
+						    android:background="@color/transparent"/>
 					</RelativeLayout>
 
 
-					<ImageButton android:id="@+id/contact_button"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_marginStart="25dp"
-						android:layout_alignParentEnd="true"
-						android:layout_centerVertical="true"
-						android:src="@drawable/ic_contacts"
-						android:background="@color/transparent"/>
-				</RelativeLayout>
+		</LinearLayout>
 			</LinearLayout>
-
-
-
-			<RelativeLayout
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:layout_marginTop="@dimen/activity_vertical_margin"
-			    android:layout_weight="1"
-			    >
-
-				<EditText android:id="@+id/amount_input"
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"
-				    android:paddingLeft="@dimen/editText_box_margin_horiz"
-				    android:paddingStart="@dimen/editText_box_margin_horiz"
-				    android:paddingEnd="@dimen/editText_box_margin_horiz"
-				    android:paddingRight="@dimen/editText_box_margin_horiz"
-				    android:paddingTop="@dimen/activity_vertical_margin"
-				    android:paddingBottom="@dimen/activity_vertical_margin"
-				    android:textColorHint="@color/darkGrey"
-				    android:layout_marginTop="@dimen/activity_vertical_margin"
-				    android:maxLines="1"
-				    android:textSize="@dimen/text_21"
-				    android:autofillHints="email_hint"
-				    android:inputType="number"
-				    android:textColor="@color/offWhite"
-
-				    android:background="@drawable/edit_text_bg" />
-				<TextView
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:layout_marginStart="10dp"
-				    android:layout_marginTop="7dp"
-				    android:text="@string/amount"
-				    android:paddingHorizontal="@dimen/spacing8"
-				    android:background="@color/colorPrimary"
-				    android:textColor="@color/offWhite"
-				    android:textSize="@dimen/text_16" />
-			</RelativeLayout>
+			</androidx.cardview.widget.CardView>
 
 
 
@@ -242,12 +394,15 @@
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
 			    android:text="@string/continue_text"
-			    android:background="@drawable/edit_text_bg"
-			    android:textColor="@color/offWhite"
+			    android:background="@drawable/button_bg_colored"
+			    android:textColor="@color/colorPrimary"
 			    android:textAllCaps="false"
 			    android:layout_marginTop="@dimen/spacing32"
 			    android:layout_gravity="end"
-			    android:paddingHorizontal="@dimen/activity_vertical_margin"/>
+			    android:fontFamily="font-medium"
+			    android:textSize="@dimen/text_16"
+			    android:layout_marginHorizontal="@dimen/activity_vertical_margin"
+			    android:paddingHorizontal="@dimen/spacing32"/>
 		</LinearLayout>
 
 		<TextView android:id="@+id/error_message"

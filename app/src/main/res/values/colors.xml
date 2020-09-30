@@ -2,7 +2,7 @@
 <resources  xmlns:tools="http://schemas.android.com/tools">
 	<color name="colorPrimary" tools:override="true">#1E232A</color>
 	<color name="colorPrimaryDark" tools:override="true">#1E232A</color>
-	<color name="colorAccent" tools:override="true">#0093E7</color>
+	<color name="colorAccent" tools:override="true">#39CBFC</color>
 	<color name="colorAccentDark">#0093E7</color>
 	<color name="cardViewColor">#252C33</color>
 	<color name="buttonColor">#414D59</color>

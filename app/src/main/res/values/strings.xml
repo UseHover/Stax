@@ -26,9 +26,16 @@
 	<string name="continue_text">Continue</string>
 	<string name="no_selection_error">You must select at least 1 service.</string>
 	<string name="add_accounts">Add accounts</string>
+	<string name="add_an_account">+ Add an account</string>
 	<string name="history">History</string>
 	<string name="no_history_yet">No history yet</string>
 	<string name="transfer">Transfer</string>
+	<string name="number">Number</string>
+	<string name="toNetwork">To network</string>
+	<string name="how_much_money">How much money?</string>
+	<string name="to_who">Receiver</string>
+	<string name="from_this_account">From this account</string>
+	<string name="to_this_receiver">To this receiver</string>
 
 
 
@@ -60,14 +67,14 @@
 
 	<string name="security">Security</string>
 	<string name="remove_pin_from_device">Remove PINs from device</string>
-	<string name="remove_pins">Remove PINs</string>
-	<string name="remove_pins_dialog_message">Are you sure you want to remove all your pins? You\'d have to manually enter them for each transaction later</string>
+	<string name="remove_pins">Remove all PINs now</string>
+	<string name="remove_pins_dialog_message">You can add your PINs to Stax again at any time.</string>
 	<string name="remove_pin_successful">PIN removed successfully</string>
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
-	<string name="default_account">Default account</string>
+	<string name="default_account">Accounts</string>
 	<string name="default_account_desc">Defaults accounts will show up first when you move money.</string>
-	<string name="about_our_security">About our security</string>
+	<string name="about_our_security">Secure with Stax</string>
 	<string name="about_our_security_content">Hover’s Android SDK is a development kit meeting the criteria of 740.17(b)(3) (i) security classification of the United States Bureau of Industry and Security. This software uses HTTPS for server communication; symmetric key RSA encryption to temporarily store the user’s credentials on their own device using Android Keystore; and code obfuscation using DRM (Dexguard).</string>
 	<string name="choose_pin_description">You can remove your PINs from Stax at any time. All PINs are secured with RSA encryption in the Android Keystore. They are never sent over the internet in any form.</string>
 
