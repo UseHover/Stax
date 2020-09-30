@@ -51,7 +51,7 @@
 		    android:layout_height="wrap_content"
 		    android:text="@string/transfer"
 		    android:layout_marginStart="@dimen/spacing32"
-		    android:textSize="@dimen/text_13"
+		    android:textSize="@dimen/text_16"
 		    android:textAllCaps="true"
 		    android:layout_alignParentEnd="true"
 		    android:layout_gravity="end|center_vertical"
@@ -237,7 +237,7 @@
 		    android:layout_height="wrap_content"
 		    android:text="@string/from_this_account"
 		    android:layout_marginStart="@dimen/spacing32"
-		    android:textSize="@dimen/text_13"
+		    android:textSize="@dimen/text_16"
 		    android:textAllCaps="true"
 		    android:layout_gravity="end|center_vertical"
 		    android:gravity="end|center_vertical"
@@ -295,7 +295,7 @@
 				    android:layout_height="wrap_content"
 				    android:text="@string/to_this_receiver"
 				    android:layout_marginStart="@dimen/spacing32"
-				    android:textSize="@dimen/text_13"
+				    android:textSize="@dimen/text_16"
 				    android:textAllCaps="true"
 				    android:layout_gravity="end|center_vertical"
 				    android:gravity="end|center_vertical"
@@ -412,7 +412,7 @@
 			android:textAlignment="center"
 			android:text="@string/no_p2p_action_error"
 			android:textColor="@color/offWhite"
-			android:textSize="@dimen/text_13"
+			android:textSize="@dimen/text_16"
 			android:visibility="gone"/>
 
 	</LinearLayout>
