@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorPrimary"
+    android:padding="@dimen/spacing8"
     tools:context=".security.SecurityFragment">
 
 	<LinearLayout

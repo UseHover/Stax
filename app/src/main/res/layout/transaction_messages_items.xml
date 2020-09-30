@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/cardViewColor"
         android:layout_width="match_parent"
         android:paddingHorizontal="16dp"
         android:paddingVertical="8dp"
@@ -11,7 +11,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxWidth="200dp"
-            android:textColor="@color/colorHoverWhite"
+            android:textColor="@color/offWhite"
             android:layout_gravity="end"
             android:gravity="start"
             android:textSize="@dimen/text_14"
@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxWidth="250dp"
-            android:textColor="@color/colorHoverWhite"
+            android:textColor="@color/offWhite"
             android:layout_gravity="end"
             android:gravity="start"
             android:textAlignment="textStart"
