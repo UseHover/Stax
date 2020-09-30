@@ -21,6 +21,7 @@ public class TransferViewModel extends AndroidViewModel {
 
 	private MutableLiveData<Channel> activeChannel = new MutableLiveData<>();
 	private Action activeAction;
+	private MutableLiveData<InputStage> inputStageMutableLiveData = new MutableLiveData<>();
 
 	private DatabaseRepo repo;
 
@@ -30,7 +31,11 @@ public class TransferViewModel extends AndroidViewModel {
 		loadSelected();
 		loadDefault();
 		filteredActions = Transformations.switchMap(activeChannel, this::loadActions);
+		inputStageMutableLiveData.setValue(InputStage.AMOUNT);
 	}
+
+	void setInputStage(InputStage stage) {inputStageMutableLiveData.postValue(stage);}
+	LiveData<InputStage> stageLiveData() {return inputStageMutableLiveData;}
 
 	void setType(String transaction_type) {
 		type = transaction_type;

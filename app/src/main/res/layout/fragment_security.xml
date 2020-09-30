@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorPrimary"
-    android:padding="@dimen/activity_vertical_margin"
+    android:paddingHorizontal="@dimen/spacing8"
 	android:layout_marginBottom="55dp"
     tools:context=".security.SecurityFragment">
 
@@ -13,23 +14,105 @@
 	    android:layout_height="match_parent"
 	    android:orientation="vertical">
 
-		<TextView
+
+		<androidx.cardview.widget.CardView
 		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    card_view:cardUseCompatPadding="true"
+		    card_view:cardElevation="10dp"
+		    card_view:cardPreventCornerOverlap="true"
+		    card_view:cardCornerRadius="0dp">
+			<LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="vertical"
+			    android:paddingVertical="@dimen/activity_vertical_margin"
+			    android:paddingHorizontal="@dimen/activity_vertical_margin"
+			    android:background="@color/cardViewColor"
+			    android:layout_gravity="center_vertical">
+
+				<TextView
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:text="@string/account"
+				    android:textColor="@color/offWhite"
+				    android:textSize="@dimen/text_16"
+				    android:layout_gravity="end"
+				    android:gravity="end"
+				    android:textAllCaps="true"
+				    android:fontFamily="font-medium" />
+
+				<RelativeLayout
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:layout_marginTop="@dimen/activity_vertical_margin"
+				    >
+
+					<androidx.appcompat.widget.AppCompatSpinner
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+					    android:layout_marginTop="@dimen/activity_vertical_margin"
+					    android:entries="@array/choose_account_initial_array"
+					    android:background="@drawable/spinner_bg"
+					    android:padding="3dp"
+					    android:id="@+id/defaultAccountSpinner" />
+
+
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:layout_marginStart="10dp"
+					    android:layout_marginTop="7dp"
+					    android:text="@string/default_account"
+					    android:fontFamily="font-normal"
+					    android:paddingHorizontal="@dimen/spacing8"
+					    android:background="@color/cardViewColor"
+					    android:textColor="@color/offWhite"
+					    android:textSize="@dimen/text_16" />
+				</RelativeLayout>
+
+
+
+				<TextView
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:text="@string/default_account_desc"
+				    android:layout_marginTop="8dp"
+				    android:fontFamily="font-normal"
+				    android:textColor="@color/offWhite" />
+
+			</LinearLayout>
+		</androidx.cardview.widget.CardView>
+
+
+
+
+	<androidx.cardview.widget.CardView
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    card_view:cardUseCompatPadding="true"
+	    card_view:cardElevation="10dp"
+	    card_view:cardPreventCornerOverlap="true"
+	    card_view:cardCornerRadius="0dp">
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:paddingVertical="@dimen/activity_vertical_margin"
+	    android:paddingHorizontal="@dimen/activity_vertical_margin"
+	    android:background="@color/cardViewColor"
+	    android:layout_gravity="center_vertical">
+
+		<TextView
+		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:text="@string/security"
 		    android:textColor="@color/offWhite"
-		    android:textSize="@dimen/text_21"
+		    android:textSize="@dimen/text_16"
+		    android:layout_gravity="end"
+		    android:gravity="end"
+		    android:textAllCaps="true"
 		    android:fontFamily="font-medium" />
-
-		<TextView
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:text="@string/remove_pin_from_device"
-		    android:textColor="@color/offWhite"
-		    android:layout_marginTop="@dimen/spacing32"
-		    android:fontFamily="font-medium"
-		    android:textSize="@dimen/text_13"
-		    android:textAlignment="textStart" />
 
 		<Button
 		    android:layout_width="wrap_content"
@@ -39,7 +122,7 @@
 		    android:id="@+id/removePinsButtonId"
 		    android:textAllCaps="false"
 		    android:fontFamily="font-medium"
-		    android:textSize="@dimen/text_13"
+		    android:textSize="@dimen/text_16"
 		    android:textColor="@color/offWhite"
 		    android:layout_marginTop="@dimen/activity_vertical_margin"
 		    android:paddingHorizontal="32dp" />
@@ -47,35 +130,11 @@
 		<TextView
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:text="@string/default_account"
-		    android:layout_marginTop="32dp"
-		    android:textColor="@color/offWhite"
-		    android:textSize="@dimen/text_13"
-		    android:fontFamily="font-medium" />
-
-		<androidx.appcompat.widget.AppCompatSpinner
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_marginTop="@dimen/activity_vertical_margin"
-		    android:entries="@array/choose_account_initial_array"
-		    android:background="@drawable/spinner_bg"
-		    android:padding="1dp"
-		    android:id="@+id/defaultAccountSpinner" />
-
-		<TextView
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:text="@string/default_account_desc"
-		    android:layout_marginTop="8dp"
-		    android:textColor="@color/offWhite" />
-
-		<TextView
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
 		    android:text="@string/about_our_security"
 		    android:layout_marginTop="@dimen/spacing32"
 		    android:textColor="@color/offWhite"
-		    android:textSize="@dimen/text_13"
+		    android:textSize="@dimen/text_16"
+		    android:textStyle="bold"
 		    android:fontFamily="font-medium" />
 
 		<TextView
@@ -83,26 +142,70 @@
 		    android:layout_height="wrap_content"
 		    android:text="@string/about_our_security_content"
 		    android:layout_marginTop="8dp"
+		    android:fontFamily="font-normal"
+		    android:textSize="@dimen/text_16"
 		    android:lineSpacingExtra="4.5dp"
 		    android:textColor="@color/offWhite" />
 
+	</LinearLayout>
+	</androidx.cardview.widget.CardView>
+
+
+
+	<androidx.cardview.widget.CardView
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    card_view:cardUseCompatPadding="true"
+	    card_view:cardElevation="10dp"
+	    card_view:cardPreventCornerOverlap="true"
+	    card_view:cardCornerRadius="0dp">
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:paddingVertical="@dimen/activity_vertical_margin"
+	    android:paddingHorizontal="@dimen/activity_vertical_margin"
+	    android:background="@color/cardViewColor"
+	    android:layout_gravity="center_vertical">
 
 		<TextView
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:text="@string/select_language"
-		    android:layout_marginTop="32dp"
+		    android:text="@string/language"
 		    android:textColor="@color/offWhite"
-		    android:textSize="@dimen/text_13"
+		    android:textSize="@dimen/text_16"
+		    android:textAllCaps="true"
+		    android:layout_gravity="end"
+		    android:gravity="end"
 		    android:fontFamily="font-medium" />
 
-		<androidx.appcompat.widget.AppCompatSpinner
+		<RelativeLayout
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_marginTop="@dimen/activity_vertical_margin"
-		    android:background="@drawable/spinner_bg"
-		    android:padding="1dp"
-		    android:id="@+id/selectLanguageSpinner" />
+		    >
+
+			<androidx.appcompat.widget.AppCompatSpinner
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_marginTop="@dimen/activity_vertical_margin"
+			    android:background="@drawable/spinner_bg"
+			    android:padding="3dp"
+			    android:id="@+id/selectLanguageSpinner" />
+			<TextView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_marginStart="10dp"
+			    android:layout_marginTop="7dp"
+			    android:text="@string/select_language"
+			    android:paddingHorizontal="@dimen/spacing8"
+			    android:background="@color/cardViewColor"
+			    android:textColor="@color/offWhite"
+			    android:textSize="@dimen/text_16" />
+		</RelativeLayout>
+
+	</LinearLayout>
+	</androidx.cardview.widget.CardView>
 
 	</LinearLayout>
 </androidx.core.widget.NestedScrollView>

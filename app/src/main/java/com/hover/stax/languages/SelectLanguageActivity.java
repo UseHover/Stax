@@ -18,6 +18,7 @@ import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.SplashScreenActivity;
 import com.hover.stax.home.MainActivity;
+import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.fonts.FontReplacer;
 import com.yariksoffice.lingver.Lingver;
@@ -34,10 +35,6 @@ public class SelectLanguageActivity extends AppCompatActivity {
 		selectedCode = Lingver.getInstance().getLanguage();
 		final RadioGroup radioGrp = findViewById(R.id.languageRadioGroup);
 
-		ColorStateList colorStateList = new ColorStateList(
-				new int[][]{new int[]{android.R.attr.state_enabled}},
-				new int[] {getResources().getColor(R.color.offWhite)}
-		);
 
 		LanguageViewModel languageViewModel = new ViewModelProvider(this).get(LanguageViewModel.class);
 		languageViewModel.loadLanguages().observe(this, languages -> {
@@ -47,11 +44,13 @@ public class SelectLanguageActivity extends AppCompatActivity {
 				radioButton.setTextColor(Color.WHITE);
 				radioButton.setHighlightColor(Color.WHITE);
 				radioButton.setTextSize(16);
+				radioButton.setHeight(75);
+				radioButton.setPadding(16, 0, 0, 0);
 				radioButton.setTag(language.code);
 				Typeface font = FontReplacer.getDefaultFont();
 				radioButton.setTypeface(font);
 
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) radioButton.setButtonTintList(colorStateList);
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) radioButton.setButtonTintList(UIHelper.radioGroupColorState());
 				if (language.code.equals(selectedCode))
 					radioButton.setChecked(true);
 				else radioButton.setChecked(false);

@@ -3,6 +3,9 @@ package com.hover.stax.transfers;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
@@ -14,11 +17,15 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -30,10 +37,21 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.hover.HoverSession;
+import com.hover.stax.languages.Lang;
 import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.utils.fonts.FontReplacer;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.hover.stax.transfers.InputStage.AMOUNT;
+import static com.hover.stax.transfers.InputStage.FROM_ACCOUNT;
+import static com.hover.stax.transfers.InputStage.REVIEW;
+import static com.hover.stax.transfers.InputStage.SEND;
+import static com.hover.stax.transfers.InputStage.TO_NETWORK;
 
 public class TransferFragment extends Fragment implements BiometricChecker.AuthListener {
 	private static final String TAG = "TransferFragment";
@@ -41,14 +59,26 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 	private TransferViewModel transferViewModel;
 	private String transferType;
 	private AppCompatSpinner spinnerTo;
-	private AppCompatSpinner spinnerFrom;
 	private View detailsBlock;
 	private View recipientBlock;
 	private TextView recipientLabel;
 	private EditText recipientInput;
 	private ImageButton contactButton;
 	private TextView pageError;
-	EditText amountInput;
+	private EditText amountInput;
+	private InputStage nextInputStage = AMOUNT;
+	private InputStage previousInputStage = null;
+	private RelativeLayout amountStageView;
+	private CardView fromStageStageView;
+	private CardView toStageView;
+	private String networkLabelString;
+	private RadioGroup fromRadioGroup;
+	private List <Channel> fromChannels;
+
+
+
+
+	private TextView amountLabel, amountValue, fromLabel, fromValue, toNetworkValue, toNetworkLabel, numberLabel, numberValue;
 
 	final public static int READ_CONTACT = 201;
 
@@ -62,17 +92,31 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 
 		initView(root);
 		startListeners();
-		setUpSpinners();
+		setUpSpinners(root);
 		createContactSelector();
 		onSubmit(root);
+		handleInputStageChanges();
+		handleBackButton(root);
 
 		return root;
 	}
 
+	private void handleBackButton(View root) {
+		root.findViewById(R.id.backButton).setOnClickListener(v -> {
+			if(previousInputStage !=null) transferViewModel.setInputStage(previousInputStage);
+			else if(getActivity() !=null) getActivity().onBackPressed();
+		});
+	}
+	private void handleInputStageChanges() {
+		transferViewModel.stageLiveData().observe(getViewLifecycleOwner(), this::updateStageViews);
+	}
+
+
+
 	private void initView(View root) {
-		((TextView) root.findViewById(R.id.transfer_title)).setText(getTitle());
+		((TextView) root.findViewById(R.id.transfer_title)).setText(getTitleAndSetNetworkLabel());
 		spinnerTo = root.findViewById(R.id.toSpinner);
-		spinnerFrom = root.findViewById(R.id.fromSpinner);
+		fromRadioGroup= root.findViewById(R.id.fromRadioGroup);
 		detailsBlock = root.findViewById(R.id.details_block);
 		recipientBlock = root.findViewById(R.id.recipient_block);
 		recipientLabel = root.findViewById(R.id.recipient_label);
@@ -80,12 +124,137 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 		amountInput = root.findViewById(R.id.amount_input);
 		contactButton = root.findViewById(R.id.contact_button);
 		pageError = root.findViewById(R.id.error_message);
+		amountValue = root.findViewById(R.id.amountValue);
+		amountLabel = root.findViewById(R.id.amountLabel);
+		fromLabel = root.findViewById(R.id.fromLabel);
+		fromValue = root.findViewById(R.id.fromValue);
+		toNetworkLabel = root.findViewById(R.id.toNetworkLabel);
+		toNetworkValue = root.findViewById(R.id.toNetworkValue);
+		numberLabel = root.findViewById(R.id.toNumberLabel);
+		numberValue = root.findViewById(R.id.toNumberValue);
+		amountStageView = root.findViewById(R.id.amountStageCardView);
+		toStageView = root.findViewById(R.id.toStageCardView);
+		fromStageStageView = root.findViewById(R.id.fromStageCardView);
+
 		pageError.setText(getError());
+		toNetworkLabel.setText(networkLabelString);
 	}
 
-	private String getTitle() {
-		if (transferType.equals(Action.AIRTIME)) return getString(R.string.title_airtime);
-		else return getString(R.string.title_p2p);
+	private void amountView(int visibility) {
+		amountLabel.setVisibility(visibility);
+		amountValue.setVisibility(visibility);
+		if(recipientInput.getText() !=null) amountValue.setText(amountInput.getText().toString());
+	}
+	private void fromView(int visibility) {
+		fromLabel.setVisibility(visibility);
+		fromValue.setVisibility(visibility);
+	}
+	private void toNetworkView(int visibility) {
+		toNetworkLabel.setVisibility(visibility);
+		toNetworkValue.setVisibility(visibility);
+	}
+	private void numberView(int visibility) {
+		numberValue.setVisibility(visibility);
+		numberLabel.setVisibility(visibility);
+		if(recipientInput.getText() !=null) numberValue.setText(recipientInput.getText().toString());
+	}
+
+	private void setToStageView(int visibility) {
+		toStageView.setVisibility(visibility);
+	}
+	private void setFromStageStageView(int v) {
+		fromStageStageView.setVisibility(v);
+	}
+	private void setAmountStageView(int v) {
+		amountStageView.setVisibility(v);
+	}
+
+
+
+
+	private void updateStageViews(InputStage stage) {
+
+		switch (stage) {
+			case AMOUNT:
+				amountView(View.GONE);
+				fromView(View.GONE);
+				toNetworkView(View.GONE);
+				numberView(View.GONE);
+
+				setAmountStageView(View.VISIBLE);
+				setToStageView(View.GONE);
+				setFromStageStageView(View.GONE);
+
+				nextInputStage = FROM_ACCOUNT;
+				previousInputStage = null;
+
+				break;
+			case FROM_ACCOUNT:
+
+				amountView(View.VISIBLE);
+				fromView(View.GONE);
+				toNetworkView(View.GONE);
+				numberView(View.GONE);
+
+				setAmountStageView(View.GONE);
+				setFromStageStageView(View.VISIBLE);
+				setToStageView(View.GONE);
+
+				nextInputStage = TO_NETWORK;
+				previousInputStage = AMOUNT;
+				break;
+			case TO_NETWORK:
+				amountView(View.VISIBLE);
+				fromView(View.VISIBLE);
+				toNetworkView(View.GONE);
+				numberView(View.GONE);
+
+				setAmountStageView(View.GONE);
+				setFromStageStageView(View.GONE);
+				setToStageView(View.VISIBLE);
+
+				nextInputStage = REVIEW;
+				previousInputStage = FROM_ACCOUNT;
+				break;
+			case TO_NUMBER:
+				amountView(View.VISIBLE);
+				fromView(View.VISIBLE);
+				toNetworkView(View.VISIBLE);
+				numberView(View.GONE);
+
+				setAmountStageView(View.GONE);
+				setFromStageStageView(View.GONE);
+				setToStageView(View.VISIBLE);
+
+				nextInputStage = REVIEW;
+				previousInputStage = FROM_ACCOUNT;
+				break;
+			default: //REVIEW STAGE
+				amountView(View.VISIBLE);
+				fromView(View.VISIBLE);
+				toNetworkView(View.VISIBLE);
+				numberView(View.VISIBLE);
+
+				setAmountStageView(View.GONE);
+				setToStageView(View.GONE);
+				setFromStageStageView(View.GONE);
+				nextInputStage = SEND;
+				previousInputStage = TO_NETWORK;
+				break;
+		}
+	}
+
+
+
+	private String getTitleAndSetNetworkLabel() {
+		if (transferType.equals(Action.AIRTIME)) {
+			networkLabelString = getString(R.string.to_who);
+			return getString(R.string.title_airtime);
+		}
+		else {
+			networkLabelString = getString(R.string.toNetwork);
+			return getString(R.string.transfer);
+		}
 	}
 
 	private String getError() {
@@ -95,12 +264,28 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 
 	private void startListeners() {
 		transferViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
-			if (channels.size() == 0) {
-				channels.add(new Channel(-1, getResources().getString(R.string.choose_service_hint)));
+
+			fromChannels = new ArrayList<>();
+			fromRadioGroup.removeAllViews();
+
+			for (int i=0; i<channels.size(); i++) {
+				Channel channel = channels.get(i);
+				fromChannels.add(i, channel);
+				RadioButton radioButton = new RadioButton(getActivity());
+				radioButton.setText(channel.name);
+				radioButton.setTextColor(Color.WHITE);
+				radioButton.setHighlightColor(Color.WHITE);
+				radioButton.setTextSize(18);
+				radioButton.setHeight(75);
+				radioButton.setPadding(16, 0, 0, 0);
+				radioButton.setTag(i);
+				Typeface font = FontReplacer.getLightFont();
+				radioButton.setTypeface(font);
+
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) radioButton.setButtonTintList(UIHelper.radioGroupColorState());
+
+				fromRadioGroup.addView(radioButton);
 			}
-			channels.add(new Channel(-2, getResources().getString(R.string.add_service)));
-			ArrayAdapter<Channel> adapter = new ArrayAdapter(getActivity(), R.layout.spinner_items, channels);
-			spinnerFrom.setAdapter(adapter);
 		});
 
 		transferViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
@@ -115,26 +300,37 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 				detailsBlock.setVisibility(View.GONE);
 				pageError.setVisibility(View.VISIBLE);
 			}
+
 			ArrayAdapter<Action> adapter = new ArrayAdapter(getActivity(), R.layout.spinner_items, actions);
 			spinnerTo.setAdapter(adapter);
 		});
 	}
 
-	private void setUpSpinners() {
-		spinnerFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				Channel channel = (Channel) spinnerFrom.getItemAtPosition(position);
-				if (channel.id == -2)
-					startActivity(new Intent(getActivity(), ChannelsActivity.class));
-				else
-					transferViewModel.setActiveChannel(channel);
-			}
+	private void setUpSpinners(View root) {
 
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
+		fromRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+
+			if(fromChannels!=null && fromChannels.size() > 0) {
+				int checkedRadioButtonId = fromRadioGroup.getCheckedRadioButtonId();
+				RadioButton radioBtn = root.findViewById(checkedRadioButtonId);
+				if(radioBtn!=null) {
+					int id = Integer.parseInt(radioBtn.getTag().toString());
+					Channel channel = fromChannels.get(id);
+					if(channel !=null) {
+						transferViewModel.setActiveChannel(channel);
+						fromValue.setText(channel.name);
+					}
+				}
 			}
 		});
+
+		TextView addNewAccount = root.findViewById(R.id.add_new_account);
+		UIHelper.setTextUnderline(addNewAccount, getString(R.string.add_an_account));
+
+		root.findViewById(R.id.add_new_account).setOnClickListener(view->{
+			startActivity(new Intent(getActivity(), ChannelsActivity.class));
+		});
+
 
 		spinnerTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
@@ -142,6 +338,7 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 				Action action = (Action) spinnerTo.getItemAtPosition(position);
 				transferViewModel.setActiveAction(action);
 				updateView(action);
+				toNetworkValue.setText(spinnerTo.getSelectedItem().toString());
 			}
 
 			@Override
@@ -173,7 +370,13 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 
 	private void onSubmit(View root) {
 		root.findViewById(R.id.confirm_button).setOnClickListener(view3 -> {
-			if (transferViewModel.getActiveAction() != null) {
+
+
+			if(nextInputStage != SEND) {
+
+				transferViewModel.setInputStage(nextInputStage);
+
+			}else if (transferViewModel.getActiveAction() != null) {
 				if (TextUtils.getTrimmedLength(amountInput.getText().toString()) > 0) {
 					if (transferViewModel.getActiveAction().requiresRecipient()) {
 						if (TextUtils.getTrimmedLength(recipientInput.getText().toString()) > 0) {

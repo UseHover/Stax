@@ -1,159 +1,225 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:layout_height="match_parent"
-	android:layout_width="match_parent"
-	android:layout_marginBottom="@dimen/large_margin"
-	android:orientation="vertical"
-	android:background="@color/colorPrimary">
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:background="@color/colorPrimary"
+    android:layout_width="match_parent"
+    android:padding="@dimen/activity_vertical_margin"
+    android:layout_height="wrap_content">
+	<LinearLayout
+	    android:layout_height="match_parent"
+	    android:layout_width="match_parent"
+	    android:orientation="vertical"
+	    >
 
-	<androidx.appcompat.widget.Toolbar android:id="@+id/toolbar"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		app:navigationIcon="?attr/homeAsUpIndicator"
-		android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+		<androidx.cardview.widget.CardView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    card_view:cardUseCompatPadding="true"
+		    card_view:cardElevation="10dp"
+		    card_view:cardPreventCornerOverlap="true"
+		    card_view:cardCornerRadius="0dp">
+
+			<LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:background="@color/cardViewColor"
+			    android:orientation="vertical">
+				<androidx.appcompat.widget.Toolbar
+				    android:id="@+id/toolbar"
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:background="@color/cardViewColor"
+				    app:navigationIcon="?attr/homeAsUpIndicator"
+				    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+				    >
+
+					<TextView
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+					    android:padding="@dimen/small_margin"
+					    android:textSize="@dimen/text_16"
+					    android:gravity="end"
+					    android:textAllCaps="true"
+					    android:fontFamily="font-medium"
+					    android:textColor="@color/offWhite"
+					    android:text="@string/nav_transaction" />
+
+				</androidx.appcompat.widget.Toolbar>
+
+
+
+
+				<LinearLayout
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:padding="@dimen/activity_vertical_margin"
+				    android:orientation="vertical">
+
+
+					<LinearLayout
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+					    android:layout_marginTop="@dimen/activity_vertical_margin"
+					    android:orientation="horizontal">
+
+						<TextView
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+						    android:textColor="@color/offWhite"
+						    android:textSize="@dimen/text_16"
+						    android:layout_gravity="center_vertical"
+						    android:gravity="center_vertical"
+						    android:text="@string/amount"/>
+
+						<TextView
+						    android:layout_width="0dp"
+						    android:layout_height="wrap_content"
+						    android:layout_weight="1"
+						    android:layout_gravity="end"
+						    android:gravity="end"
+						    android:fontFamily="font-normal"
+						    android:layout_marginStart="@dimen/spacing32"
+						    android:textColor="@color/white"
+						    android:id="@+id/details_amount"
+						    android:textSize="@dimen/text_21"
+						    />
+					</LinearLayout>
+
+					<LinearLayout
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+					    android:layout_marginTop="@dimen/activity_vertical_margin"
+					    android:orientation="horizontal">
+
+						<TextView
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+						    android:textColor="@color/offWhite"
+						    android:textSize="@dimen/text_16"
+						    android:layout_gravity="center_vertical"
+						    android:gravity="center_vertical"
+						    android:text="@string/date"/>
+						<TextView
+						    android:layout_width="0dp"
+						    android:layout_height="wrap_content"
+						    android:layout_weight="1"
+						    android:layout_gravity="end"
+						    android:gravity="end"
+						    android:fontFamily="font-normal"
+						    android:layout_marginStart="@dimen/spacing32"
+						    android:textColor="@color/white"
+						    android:id="@+id/details_date"
+						    android:textSize="@dimen/text_21"
+						    />
+					</LinearLayout>
+
+
+
+
+					<LinearLayout
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+					    android:layout_marginTop="@dimen/activity_vertical_margin"
+					    android:orientation="horizontal">
+
+						<TextView
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+						    android:textColor="@color/offWhite"
+						    android:textSize="@dimen/text_16"
+						    android:layout_gravity="center_vertical"
+						    android:gravity="center_vertical"
+						    android:text="@string/network"/>
+						<TextView
+						    android:layout_width="0dp"
+						    android:layout_height="wrap_content"
+						    android:layout_gravity="end"
+						    android:gravity="end"
+						    android:textColor="@color/white"
+						    android:layout_weight="1"
+						    android:fontFamily="font-normal"
+						    android:layout_marginStart="@dimen/spacing32"
+						    android:id="@+id/details_network"
+						    android:textSize="@dimen/text_21" />
+					</LinearLayout>
+
+					<LinearLayout
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+					    android:layout_marginTop="@dimen/activity_vertical_margin"
+					    android:orientation="horizontal">
+
+						<TextView
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+						    android:textColor="@color/offWhite"
+						    android:textSize="@dimen/text_16"
+						    android:layout_gravity="center_vertical"
+						    android:gravity="center_vertical"
+						    android:text="@string/transactionNumber"/>
+						<TextView
+						    android:layout_width="0dp"
+						    android:layout_height="wrap_content"
+						    android:layout_gravity="end"
+						    android:gravity="end"
+						    android:fontFamily="font-normal"
+						    android:textColor="@color/white"
+						    android:id="@+id/details_transactionNumber"
+						    android:textSize="@dimen/text_21"
+						    android:layout_weight="1"
+						    android:layout_marginStart="@dimen/spacing32" />
+					</LinearLayout>
+				</LinearLayout>
+			</LinearLayout>
+		</androidx.cardview.widget.CardView>
+
+
+
+	<androidx.cardview.widget.CardView
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    card_view:cardUseCompatPadding="true"
+	    card_view:cardElevation="10dp"
+	    android:layout_marginTop="@dimen/spacing32"
+	    card_view:cardPreventCornerOverlap="true"
+	    card_view:cardCornerRadius="0dp">
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:paddingVertical="@dimen/activity_vertical_margin"
+	    android:paddingHorizontal="@dimen/activity_vertical_margin"
+	    android:background="@color/cardViewColor"
+	    android:layout_gravity="center_vertical">
 
 		<TextView
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:padding="@dimen/small_margin"
-			android:textSize="@dimen/text_21"
-			android:textColor="@color/offWhite"
-			android:text="@string/nav_transaction" />
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:padding="@dimen/small_margin"
+		    android:textSize="@dimen/text_16"
+		    android:gravity="end"
+		    android:layout_gravity="end"
+		    android:textAllCaps="true"
+		    android:fontFamily="font-medium"
+		    android:textColor="@color/offWhite"
+		    android:text="@string/message" />
 
-	</androidx.appcompat.widget.Toolbar>
 
-	<androidx.core.widget.NestedScrollView
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:padding="@dimen/activity_horizontal_margin" >
+		<androidx.recyclerview.widget.RecyclerView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/convo_recyclerView" />
 
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="vertical">
+		<androidx.recyclerview.widget.RecyclerView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/sms_recyclerView" />
+	</LinearLayout>
+	</androidx.cardview.widget.CardView>
 
-			<LinearLayout
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:orientation="horizontal"
-			    android:baselineAligned="false">
 
-				<LinearLayout
-				    android:layout_width="0dp"
-				    android:layout_height="wrap_content"
-				    android:layout_weight="1"
-				    android:layout_marginTop="@dimen/spacing32"
-				    android:orientation="vertical">
+	</LinearLayout>
 
-					<TextView
-					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
-					    android:textColor="@color/offWhite"
-					    android:text="@string/amount"/>
-
-					<TextView
-					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
-					    android:textColor="@color/white"
-					    android:id="@+id/details_amount"
-					    android:textSize="@dimen/text_21"
-					    android:textStyle="bold"/>
-				</LinearLayout>
-
-				<LinearLayout
-				    android:layout_width="0dp"
-				    android:layout_height="wrap_content"
-				    android:layout_weight="1"
-				    android:layout_marginTop="@dimen/spacing32"
-				    android:orientation="vertical">
-
-					<TextView
-					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
-					    android:textColor="@color/offWhite"
-					    android:text="@string/date"/>
-					<TextView
-					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
-					    android:textColor="@color/white"
-					    android:id="@+id/details_date"
-					    android:textSize="@dimen/text_21"
-					    android:textStyle="bold"/>
-				</LinearLayout>
-
-			</LinearLayout>
-			<LinearLayout
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:orientation="horizontal">
-
-				<LinearLayout
-				    android:layout_width="0dp"
-				    android:layout_height="wrap_content"
-				    android:layout_weight="1"
-				    android:layout_marginTop="@dimen/activity_vertical_margin"
-				    android:orientation="vertical">
-
-					<TextView
-					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
-					    android:textColor="@color/offWhite"
-					    android:text="@string/network"/>
-					<TextView
-					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
-					    android:textColor="@color/white"
-					    android:id="@+id/details_network"
-					    android:textSize="@dimen/text_21"
-					    android:textStyle="bold"/>
-				</LinearLayout>
-
-				<LinearLayout
-				    android:layout_width="0dp"
-				    android:layout_height="wrap_content"
-				    android:layout_weight="1"
-				    android:layout_marginTop="@dimen/activity_vertical_margin"
-				    android:orientation="vertical">
-
-					<TextView
-					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
-					    android:textColor="@color/offWhite"
-					    android:text="@string/transactionNumber"/>
-					<TextView
-					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
-					    android:textColor="@color/white"
-					    android:id="@+id/details_transactionNumber"
-					    android:textSize="@dimen/text_21"
-					    android:textStyle="bold"/>
-				</LinearLayout>
-
-			</LinearLayout>
-
-			<TextView
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:text="@string/message"
-			    android:layout_marginTop="@dimen/spacing32"
-			    android:textColor="@color/offWhite" />
-			<View
-			    android:layout_width="match_parent"
-			    android:layout_height="0.1dp"
-			    android:layout_marginTop="8dp"
-			    android:background="@color/offWhite" />
-
-			<androidx.recyclerview.widget.RecyclerView
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:id="@+id/convo_recyclerView" />
-
-			<androidx.recyclerview.widget.RecyclerView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:id="@+id/sms_recyclerView" />
-
-		</LinearLayout>
-	</androidx.core.widget.NestedScrollView>
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>
