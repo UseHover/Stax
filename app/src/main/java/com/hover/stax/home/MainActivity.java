@@ -77,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements HomeViewModel.Run
 		items.add(new RFACLabelItem<Integer>()
 						  .setLabel(getResources().getString(R.string.nav_airtime))
 						  .setLabelSizeSp(21)
+						  //.setDrawable(getResources().getDrawable(R.drawable.drag))
+							//.setIconNormalColor(getResources().getColor(R.color.colorAccent))
 						  .setLabelColor(getResources().getColor(R.color.colorAccentDark))
 						  .setWrapper(1)
 		);

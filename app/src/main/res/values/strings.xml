@@ -16,9 +16,9 @@
 	<string name="nav_airtime">Buy Airtime</string>
 	<string name="nav_money">Move Money</string>
 	<string name="nav_security">Security</string>
-	<string name="nav_transaction">Transaction Detail</string>
+	<string name="nav_transaction">Transaction Details</string>
 	<string name="nav_language">Language Choice</string>
-	<string name="nav_account_detail">Account Detail</string>
+	<string name="nav_account_detail">Account Details</string>
 
 	<string name="done"><u>Done</u></string>
 	<string name="cancel"><u>Cancel</u></string>

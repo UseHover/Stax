@@ -200,9 +200,9 @@
 			    android:paddingHorizontal="@dimen/spacing8"
 			    android:background="@color/cardViewColor"
 			    android:textColor="@color/offWhite"
+			    android:fontFamily="font-normal"
 			    android:textSize="@dimen/text_16" />
 		</RelativeLayout>
-
 	</LinearLayout>
 	</androidx.cardview.widget.CardView>
 
