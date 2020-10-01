@@ -29,7 +29,6 @@ import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RFACLabelItem
 import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RapidFloatingActionContentLabelList;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements HomeViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener, RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener {
 	final public static String TAG = "MainActivity";
