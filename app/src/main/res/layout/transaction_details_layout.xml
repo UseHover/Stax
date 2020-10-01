@@ -38,7 +38,7 @@
 					<TextView
 					    android:layout_width="match_parent"
 					    android:layout_height="wrap_content"
-					    android:padding="@dimen/small_margin"
+					    android:padding="@dimen/margin_8"
 					    android:textSize="@dimen/text_16"
 					    android:gravity="end"
 					    android:textAllCaps="true"
@@ -197,7 +197,7 @@
 		<TextView
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:padding="@dimen/small_margin"
+		    android:padding="@dimen/margin_8"
 		    android:textSize="@dimen/text_16"
 		    android:gravity="end"
 		    android:layout_gravity="end"

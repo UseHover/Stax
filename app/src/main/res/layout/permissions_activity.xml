@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_centerInParent="true"
-    android:padding="@dimen/activity_horizontal_margin"
+    android:padding="@dimen/margin_16"
     android:background="@color/colorPrimary"
     android:layout_gravity="center"
     android:gravity="center">
@@ -27,7 +27,7 @@
 	    android:id="@+id/permission_button"
 	    android:fontFamily="font-medium"
 	    android:textSize="@dimen/text_13"
-	    android:paddingHorizontal="@dimen/activity_horizontal_margin"
+	    android:paddingHorizontal="@dimen/margin_16"
 	    android:layout_gravity="end" />
 
 </LinearLayout>

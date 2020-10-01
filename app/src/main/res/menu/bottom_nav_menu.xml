@@ -4,13 +4,13 @@
 
 	<item
 	    android:id="@+id/navigation_home"
-	    android:icon="@drawable/ic_home_grey_24dp"
+	    android:icon="@drawable/ic_home"
 	    app:showAsAction="always"
 	    android:title="@string/nav_home" />
 
 	<item
 	    android:id="@+id/navigation_security"
-	    android:icon="@drawable/ic_settings_offwhite_24dp"
+	    android:icon="@drawable/ic_settings"
 
 	    app:showAsAction="always"
 	    android:title="@string/nav_security" />

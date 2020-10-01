@@ -1,6 +1,7 @@
 package com.hover.stax.transfers;
 
 import android.app.Application;
+import android.content.Context;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -10,6 +11,7 @@ import androidx.lifecycle.Transformations;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.DatabaseRepo;
+import com.hover.stax.scheduled.Schedule;
 
 import java.util.List;
 
@@ -23,6 +25,9 @@ public class TransferViewModel extends AndroidViewModel {
 	private Action activeAction;
 	private MutableLiveData<InputStage> inputStageMutableLiveData = new MutableLiveData<>();
 
+	private MutableLiveData<Boolean> futureDated = new MutableLiveData<>();
+	private MutableLiveData<Long> futureDate = new MutableLiveData<>();
+
 	private DatabaseRepo repo;
 
 	public TransferViewModel(Application application) {
@@ -32,6 +37,8 @@ public class TransferViewModel extends AndroidViewModel {
 		loadDefault();
 		filteredActions = Transformations.switchMap(activeChannel, this::loadActions);
 		inputStageMutableLiveData.setValue(InputStage.AMOUNT);
+		futureDated.setValue(false);
+		futureDate.setValue(null);
 	}
 
 	void setInputStage(InputStage stage) {inputStageMutableLiveData.postValue(stage);}
@@ -83,5 +90,19 @@ public class TransferViewModel extends AndroidViewModel {
 
 	Action getActiveAction() {
 		return activeAction;
+	}
+
+	void setIsFutureDated(boolean isFuture) { futureDated.setValue(isFuture); }
+	LiveData<Boolean> getIsFuture() {
+		return futureDated;
+	}
+	void setFutureDate(Long date) { futureDate.setValue(date); }
+	LiveData<Long> getFutureDate() {
+		return futureDate;
+	}
+
+	void schedule(String recipient, String amount) {
+		Schedule s = new Schedule(activeAction, futureDate.getValue(), recipient, amount, getApplication());
+		repo.insert(s);
 	}
 }

@@ -26,10 +26,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.cardview.widget.CardView;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.amplitude.api.Amplitude;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
@@ -37,13 +42,14 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.hover.HoverSession;
-import com.hover.stax.languages.Lang;
 import com.hover.stax.security.BiometricChecker;
+import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.fonts.FontReplacer;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +63,8 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 	private static final String TAG = "TransferFragment";
 
 	private TransferViewModel transferViewModel;
+	private List<Channel> fromChannels;
+
 	private String transferType;
 	private AppCompatSpinner spinnerTo;
 	private View detailsBlock;
@@ -73,10 +81,7 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 	private CardView toStageView;
 	private String networkLabelString;
 	private RadioGroup fromRadioGroup;
-	private List <Channel> fromChannels;
-
-
-
+	private MaterialDatePicker<Long> datePicker;
 
 	private TextView amountLabel, amountValue, fromLabel, fromValue, toNetworkValue, toNetworkLabel, numberLabel, numberValue;
 
@@ -91,8 +96,8 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 		View root = inflater.inflate(R.layout.fragment_transfer, container, false);
 
 		initView(root);
-		startListeners();
-		setUpSpinners(root);
+		startObservers(root);
+		setUpListeners(root);
 		createContactSelector();
 		onSubmit(root);
 		handleInputStageChanges();
@@ -110,8 +115,6 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 	private void handleInputStageChanges() {
 		transferViewModel.stageLiveData().observe(getViewLifecycleOwner(), this::updateStageViews);
 	}
-
-
 
 	private void initView(View root) {
 		((TextView) root.findViewById(R.id.transfer_title)).setText(getTitleAndSetNetworkLabel());
@@ -138,6 +141,12 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 
 		pageError.setText(getError());
 		toNetworkLabel.setText(networkLabelString);
+
+		CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
+		constraintsBuilder.setStart(DateUtils.now() + DateUtils.DAY);
+		datePicker = MaterialDatePicker.Builder.datePicker()
+						 .setCalendarConstraints(constraintsBuilder.build()).build();
+		datePicker.addOnPositiveButtonClickListener(unixTime -> transferViewModel.setFutureDate(unixTime));
 	}
 
 	private void amountView(int visibility) {
@@ -169,11 +178,7 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 		amountStageView.setVisibility(v);
 	}
 
-
-
-
 	private void updateStageViews(InputStage stage) {
-
 		switch (stage) {
 			case AMOUNT:
 				amountView(View.GONE);
@@ -244,8 +249,6 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 		}
 	}
 
-
-
 	private String getTitleAndSetNetworkLabel() {
 		if (transferType.equals(Action.AIRTIME)) {
 			networkLabelString = getString(R.string.to_who);
@@ -262,7 +265,7 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 		else return getString(R.string.no_p2p_action_error);
 	}
 
-	private void startListeners() {
+	private void startObservers(View root) {
 		transferViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
 
 			fromChannels = new ArrayList<>();
@@ -304,19 +307,25 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 			ArrayAdapter<Action> adapter = new ArrayAdapter(getActivity(), R.layout.spinner_items, actions);
 			spinnerTo.setAdapter(adapter);
 		});
+
+		transferViewModel.getIsFuture().observe(getViewLifecycleOwner(), isFuture -> root.findViewById(R.id.date).setVisibility(isFuture ? View.VISIBLE : View.GONE));
+		transferViewModel.getFutureDate().observe(getViewLifecycleOwner(), futureDate ->
+            ((TextView) root.findViewById(R.id.date)).setText(futureDate != null ? DateUtils.humanFriendlyDate(futureDate) : getString(R.string.date)));
 	}
 
-	private void setUpSpinners(View root) {
+	private void setUpListeners(View root) {
+		((SwitchMaterial) root.findViewById(R.id.futureSwitch)).setOnCheckedChangeListener((view, isChecked) -> transferViewModel.setIsFutureDated(isChecked));
+		root.findViewById(R.id.date).setOnClickListener(view -> datePicker.show(getActivity().getSupportFragmentManager(), datePicker.toString()));
 
 		fromRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
 
-			if(fromChannels!=null && fromChannels.size() > 0) {
+			if (fromChannels != null && fromChannels.size() > 0) {
 				int checkedRadioButtonId = fromRadioGroup.getCheckedRadioButtonId();
 				RadioButton radioBtn = root.findViewById(checkedRadioButtonId);
-				if(radioBtn!=null) {
+				if (radioBtn != null) {
 					int id = Integer.parseInt(radioBtn.getTag().toString());
 					Channel channel = fromChannels.get(id);
-					if(channel !=null) {
+					if (channel != null) {
 						transferViewModel.setActiveChannel(channel);
 						fromValue.setText(channel.name);
 					}
@@ -327,10 +336,8 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 		TextView addNewAccount = root.findViewById(R.id.add_new_account);
 		UIHelper.setTextUnderline(addNewAccount, getString(R.string.add_an_account));
 
-		root.findViewById(R.id.add_new_account).setOnClickListener(view->{
-			startActivity(new Intent(getActivity(), ChannelsActivity.class));
-		});
-
+		root.findViewById(R.id.add_new_account).setOnClickListener(view ->
+			startActivity(new Intent(getActivity(), ChannelsActivity.class)));
 
 		spinnerTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
@@ -342,8 +349,7 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 			}
 
 			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-			}
+			public void onNothingSelected(AdapterView<?> parent) { }
 		});
 	}
 
@@ -371,26 +377,31 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 	private void onSubmit(View root) {
 		root.findViewById(R.id.confirm_button).setOnClickListener(view3 -> {
 
-
-			if(nextInputStage != SEND) {
-
+			if (nextInputStage != SEND) {
 				transferViewModel.setInputStage(nextInputStage);
-
-			}else if (transferViewModel.getActiveAction() != null) {
+			} else if (transferViewModel.getActiveAction() != null) {
 				if (TextUtils.getTrimmedLength(amountInput.getText().toString()) > 0) {
 					if (transferViewModel.getActiveAction().requiresRecipient()) {
 						if (TextUtils.getTrimmedLength(recipientInput.getText().toString()) > 0) {
-							authenticate();
+							submit();
 						} else
 							UIHelper.flashMessage(getContext(), getResources().getString(R.string.enterRecipientNumberError));
 					} else {
-						authenticate();
+						submit();
 					}
 				} else
 					UIHelper.flashMessage(getContext(), getResources().getString(R.string.enterAmountError));
 			} else
 				UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectServiceError));
 		});
+	}
+
+	private void submit() {
+		if (transferViewModel.getIsFuture().getValue() && transferViewModel.getFutureDate().getValue() != null) {
+			transferViewModel.schedule(recipientInput.getText().toString(), amountInput.getText().toString());
+			UIHelper.flashMessage(getContext(), getView(), getString(R.string.schedule_created, DateUtils.humanFriendlyDate(transferViewModel.getFutureDate().getValue())));
+			NavHostFragment.findNavController(this).navigate(R.id.navigation_home);
+		} else authenticate();
 	}
 
 	private void authenticate() {

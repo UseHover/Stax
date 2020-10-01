@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	app:cardElevation="10dp"
+	app:cardCornerRadius="5dp"
+	app:cardUseCompatPadding="true"
+	app:cardPreventCornerOverlap="true"
+	android:id="@+id/futureCard" >
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/margin_13"
+		android:background="@color/cardViewColor"
+		android:orientation="vertical">
+
+		<LinearLayout android:id="@+id/futureToggle"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingVertical="@dimen/margin_8"
+			android:gravity="center_vertical"
+			android:orientation="horizontal" >
+
+			<com.google.android.material.switchmaterial.SwitchMaterial
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/futureSwitch" />
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingStart="@dimen/margin_8"
+				android:textSize="@dimen/text_16"
+				android:textColor="@color/offWhite"
+				android:text="@string/send_future" />
+		</LinearLayout>
+
+		<TextView android:id="@+id/date"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/margin_13"
+			android:paddingStart="@dimen/margin_13"
+			android:paddingEnd="@dimen/margin_21"
+			android:paddingVertical="@dimen/margin_16"
+			android:textColorHint="@color/darkGrey"
+			android:maxLines="1"
+			android:fontFamily="font-normal"
+			android:inputType="date"
+			android:textColor="@color/offWhite"
+			android:textSize="@dimen/text_21"
+			android:background="@drawable/edit_text_bg"
+			android:drawableEnd="@drawable/ic_calendar"
+			android:text="@string/date"
+			android:visibility="visible"/>
+	</LinearLayout>
+
+</androidx.cardview.widget.CardView>

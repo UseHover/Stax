@@ -104,6 +104,9 @@
 	<string name="fees">Fees</string>
 	<string name="choose_a_service_to_calculate">Choose a service to calculate your fees</string>
 	<string name="total">Total</string>
+	<string name="send_future">Send in the future</string>
+	<string name="send_repeat">Repeat transaction</string>
+	<string name="schedule_created">Transfer scheduled. We will remind you to make a transfer on %1$s</string>
 
 	<string name="choose_service_hint">Choose a service</string>
 	<string-array name="choose_account_initial_array">

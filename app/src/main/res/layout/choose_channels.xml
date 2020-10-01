@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/margin_16"
     android:background="@color/colorPrimary">
 
 	<TextView android:id="@+id/loading_title"
@@ -13,7 +13,7 @@
 		android:layout_height="wrap_content"
 		android:textColor="@color/white"
 		android:textSize="@dimen/text_13"
-		android:paddingHorizontal="@dimen/activity_horizontal_margin"
+		android:paddingHorizontal="@dimen/margin_16"
 		android:fontFamily="font-medium"
 		android:text="@string/loading" />
 
@@ -21,7 +21,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
 	    android:layout_weight="1"
-		android:paddingBottom="@dimen/activity_horizontal_margin">
+		android:paddingBottom="@dimen/margin_16">
 
 		<LinearLayout android:id="@+id/section_wrapper"
 			android:layout_width="match_parent"

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="@dimen/activity_horizontal_margin"
+    android:padding="@dimen/margin_16"
     android:background="@color/colorPrimary">
 
 	<com.hover.stax.utils.customViews.StaxCardView

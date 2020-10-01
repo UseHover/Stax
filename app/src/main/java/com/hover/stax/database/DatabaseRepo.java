@@ -114,4 +114,8 @@ public class DatabaseRepo {
 	public LiveData<List<Schedule>> getFutureTransactions() {
 		return scheduleDao.getFuture();
 	}
+
+	public void insert(Schedule schedule) {
+		AppDatabase.databaseWriteExecutor.execute(() -> scheduleDao.insert(schedule));
+	}
 }

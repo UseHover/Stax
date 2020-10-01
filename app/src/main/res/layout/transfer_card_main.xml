@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_marginTop="@dimen/margin_5"
+	android:layout_marginBottom="@dimen/margin_16"
+	android:padding="1dp"
+	app:cardUseCompatPadding="true"
+	app:cardElevation="10dp"
+	app:cardPreventCornerOverlap="true"
+	app:cardCornerRadius="5dp">
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:padding="@dimen/margin_13"
+		android:background="@color/cardViewColor"
+		android:gravity="center_vertical"
+		android:layout_gravity="center_vertical">
+
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/ic_arrow_back"
+			android:layout_gravity="start"
+			android:gravity="start"
+			android:id="@+id/backButton"
+			android:layout_alignParentStart="true"
+			android:layout_marginEnd="@dimen/spacing32" />
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/transfer"
+			android:layout_marginStart="@dimen/spacing32"
+			android:textSize="@dimen/text_16"
+			android:textAllCaps="true"
+			android:layout_alignParentEnd="true"
+			android:layout_gravity="end|center_vertical"
+			android:gravity="end|center_vertical"
+			android:fontFamily="font-bold"
+			android:id="@+id/transfer_title"
+			android:textColor="@color/offWhite" />
+
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/amountLabel"
+			android:text="@string/amount"
+			android:textColor="@color/offWhite"
+			android:textSize="@dimen/text_16"
+			android:fontFamily="font-normal"
+			android:layout_below="@id/backButton"
+			android:layout_marginTop="@dimen/activity_vertical_margin"
+			/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/amountValue"
+			android:textColor="@color/white"
+			android:textSize="@dimen/text_21"
+			android:fontFamily="font-normal"
+			android:layout_alignParentEnd="true"
+			android:layout_gravity="end|center_vertical"
+			android:gravity="end|center_vertical"
+			android:layout_below="@id/backButton"
+			android:layout_marginTop="@dimen/activity_vertical_margin"
+			/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/fromLabel"
+			android:text="@string/from"
+			android:textColor="@color/offWhite"
+			android:textSize="@dimen/text_16"
+			android:fontFamily="font-normal"
+			android:layout_below="@id/amountValue"
+			android:layout_marginTop="@dimen/activity_vertical_margin"
+			/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/fromValue"
+			android:textColor="@color/white"
+			android:textSize="@dimen/text_21"
+			android:fontFamily="font-normal"
+			android:layout_alignParentEnd="true"
+			android:layout_gravity="end|center_vertical"
+			android:gravity="end|center_vertical"
+			android:layout_below="@id/amountValue"
+			android:layout_marginTop="@dimen/activity_vertical_margin"
+			/>
+
+
+
+
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/toLayout"
+			android:layout_below="@id/fromValue"
+			android:layout_marginTop="@dimen/activity_vertical_margin"
+			>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/toNetworkLabel"
+				android:text="@string/toNetwork"
+				android:textColor="@color/offWhite"
+				android:textSize="@dimen/text_16"
+				android:visibility="gone"
+				android:fontFamily="font-normal"
+				android:layout_marginBottom="@dimen/activity_vertical_margin"
+				/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/toNetworkValue"
+				android:visibility="gone"
+				android:textColor="@color/white"
+				android:textSize="@dimen/text_21"
+				android:fontFamily="font-normal"
+				android:layout_alignParentEnd="true"
+				android:layout_gravity="end|center_vertical"
+				android:gravity="end|center_vertical"
+				android:layout_marginBottom="@dimen/activity_vertical_margin"
+				/>
+
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/toNumberLabel"
+				android:text="@string/number"
+				android:textColor="@color/offWhite"
+				android:textSize="@dimen/text_16"
+				android:fontFamily="font-normal"
+				android:layout_below="@id/toNetworkValue"
+				/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/toNumberValue"
+				android:textColor="@color/white"
+				android:textSize="@dimen/text_21"
+				android:fontFamily="font-normal"
+				android:layout_alignParentEnd="true"
+				android:layout_gravity="end|center_vertical"
+				android:gravity="end|center_vertical"
+				android:layout_below="@id/toNetworkValue"
+				/>
+		</RelativeLayout>
+
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingVertical="@dimen/activity_vertical_margin"
+			android:background="@color/cardViewColor"
+			android:layout_gravity="center_vertical"
+			android:id="@+id/amountStageCardView"
+			android:layout_below="@id/toLayout"
+			>
+
+			<EditText android:id="@+id/amount_input"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="@dimen/margin_21"
+				android:paddingStart="@dimen/margin_21"
+				android:paddingEnd="@dimen/margin_21"
+				android:paddingRight="@dimen/margin_21"
+				android:paddingTop="@dimen/activity_vertical_margin"
+				android:paddingBottom="@dimen/activity_vertical_margin"
+				android:textColorHint="@color/darkGrey"
+				android:layout_marginTop="@dimen/activity_vertical_margin"
+				android:maxLines="1"
+				android:textSize="@dimen/text_21"
+				android:fontFamily="font-normal"
+				android:autofillHints="email_hint"
+				android:inputType="number"
+				android:textColor="@color/offWhite"
+				android:background="@drawable/edit_text_bg" />
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="10dp"
+				android:layout_marginTop="7dp"
+				android:text="@string/how_much_money"
+				android:fontFamily="font-normal"
+				android:paddingHorizontal="@dimen/spacing8"
+				android:background="@color/cardViewColor"
+				android:textColor="@color/offWhite"
+				android:textSize="@dimen/text_16" />
+		</RelativeLayout>
+	</RelativeLayout>
+</androidx.cardview.widget.CardView>

@@ -114,7 +114,7 @@
 	</androidx.cardview.widget.CardView>
 
 	<include android:id="@+id/scheduled_card"
-		layout="@layout/card_future" />
+		layout="@layout/home_card_future" />
 
 	<androidx.cardview.widget.CardView
 	    android:layout_width="match_parent"
