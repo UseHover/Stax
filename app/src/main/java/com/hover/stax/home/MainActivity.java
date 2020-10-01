@@ -2,14 +2,12 @@ package com.hover.stax.home;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -24,10 +22,6 @@ import com.hover.stax.actions.Action;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.security.SecurityFragment;
-import com.hover.stax.utils.UIHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements HomeViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener {
 	final public static String TAG = "MainActivity";
