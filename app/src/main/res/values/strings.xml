@@ -39,7 +39,11 @@
 	<string name="language">Language</string>
 	<string name="account">Account</string>
 
-
+	<string name="future_transactions">Future Transactions</string>
+	<string name="daily">Every day</string>
+	<string name="weekly">Every week</string>
+	<string name="biweekly">Every 2 weeks</string>
+	<string name="monthly">Every month</string>
 
 	<string name="balances">Balances</string>
 	<string name="balance">Balance</string>

@@ -21,8 +21,8 @@ import com.hover.stax.utils.UIHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeViewModel extends AndroidViewModel {
-	private final String TAG = "HomeViewModel";
+public class BalancesViewModel extends AndroidViewModel {
+	private final String TAG = "BalancesViewModel";
 
 	private final int ALL = -1, NONE = 0;
 
@@ -34,9 +34,7 @@ public class HomeViewModel extends AndroidViewModel {
 	private MutableLiveData<Integer> runFlag;
 	private MediatorLiveData<List<Action>> toRun;
 
-	private LiveData<List<StaxTransaction>> transactions;
-
-	public HomeViewModel(Application application) {
+	public BalancesViewModel(Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
 		if (selectedChannels == null) { selectedChannels = new MutableLiveData<>(); }
@@ -48,14 +46,9 @@ public class HomeViewModel extends AndroidViewModel {
 		toRun = new MediatorLiveData<>();
 		toRun.addSource(runFlag, this::onSetRunning);
 		toRun.addSource(balanceActions, this::onSetBalanceActions);
-
-		transactions = new MutableLiveData<>();
-		transactions = repo.getCompleteTransferTransactions();
 	}
 
 	void setListener(RunBalanceListener l) { listener = l; }
-
-	public LiveData<List<StaxTransaction>> getStaxTransactions() { return transactions; }
 
 	public LiveData<List<Action>> getToRun() { return toRun; }
 
@@ -131,13 +124,6 @@ public class HomeViewModel extends AndroidViewModel {
 			toRun.setValue(new ArrayList<>());
 			runFlag.setValue(NONE);
 		}
-	}
-
-	public void saveTransaction(Intent data, Context c) {
-		new Thread(() -> {
-			StaxTransaction t = new StaxTransaction(data, repo.getAction(data.getStringExtra(TransactionContract.COLUMN_ACTION_ID)), c);
-			if (t.uuid != null) { repo.insert(t); }
-		}).start();
 	}
 
 	public interface RunBalanceListener {

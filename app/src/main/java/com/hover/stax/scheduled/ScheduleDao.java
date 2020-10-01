@@ -14,6 +14,10 @@ public interface ScheduleDao {
 	@Query("SELECT * FROM schedules")
 	LiveData<List<Schedule>> getAll();
 
+	@Query("SELECT * FROM schedules WHERE end_date > UNIX_TIMESTAMP() ORDER BY frequency")
+	LiveData<List<Schedule.
+		             >> getFuture();
+
 	@Query("SELECT * FROM schedules WHERE id = :id")
 	LiveData<Schedule> get(int id);
 

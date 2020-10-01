@@ -57,7 +57,7 @@ public class ChannelDetailFragment extends Fragment implements TransactionHistor
 	}
 
 	@Override
-	public void onTap(String uuid) {
+	public void viewTransactionDetail(String uuid) {
 		Bundle bundle = new Bundle();
 		bundle.putString(TransactionContract.COLUMN_UUID, uuid);
 		NavHostFragment.findNavController(this).navigate(R.id.transactionDetailsFragment, bundle);

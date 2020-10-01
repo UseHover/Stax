@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:padding="1dp"
+	app:cardUseCompatPadding="true"
+	app:cardElevation="10dp"
+	app:cardPreventCornerOverlap="true"
+	app:cardCornerRadius="5dp">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/cardViewColor"
+		android:padding="@dimen/activity_vertical_margin"
+		android:orientation="vertical">
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/future_transactions"
+			android:textSize="@dimen/text_16"
+			android:textAllCaps="true"
+			android:layout_gravity="end"
+			android:gravity="end"
+			android:textStyle="bold"
+			android:fontFamily="font-bold"
+			android:layout_marginBottom="@dimen/activity_vertical_margin"
+			android:textColor="@color/offWhite" />
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/scheduled_recyclerView" />
+	</LinearLayout>
+
+</androidx.cardview.widget.CardView>

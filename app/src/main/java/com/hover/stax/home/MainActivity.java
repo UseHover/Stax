@@ -22,6 +22,7 @@ import com.hover.stax.actions.Action;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.security.SecurityFragment;
+import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
@@ -29,13 +30,14 @@ import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RFACLabelItem
 import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RapidFloatingActionContentLabelList;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements HomeViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener, RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener {
+public class MainActivity extends AppCompatActivity implements BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener, RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener {
 	final public static String TAG = "MainActivity";
 
 	final public static int ADD_SERVICE = 200, TRANSFER_REQUEST = 203;
 
-	private HomeViewModel homeViewModel;
+	private BalancesViewModel balancesViewModel;
 	private RapidFloatingActionHelper rfabHelper;
 
 	@Override
@@ -55,10 +57,10 @@ public class MainActivity extends AppCompatActivity implements HomeViewModel.Run
 
 		setupFloatingButton();
 
-		homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-		homeViewModel.setListener(this);
-		homeViewModel.getBalanceActions().observe(this, actions -> Log.e(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
-		homeViewModel.getToRun().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
+		balancesViewModel = new ViewModelProvider(this).get(BalancesViewModel.class);
+		balancesViewModel.setListener(this);
+		balancesViewModel.getBalanceActions().observe(this, actions -> Log.e(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
+		balancesViewModel.getToRun().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
 
 		if (getIntent().getBooleanExtra(SecurityFragment.LANG_CHANGE, false)) navController.navigate(R.id.navigation_security);
 	}
@@ -119,12 +121,12 @@ public class MainActivity extends AppCompatActivity implements HomeViewModel.Run
 	@Override
 	public void onTapRefresh(int channel_id) {
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_single));
-		homeViewModel.setRunning(channel_id);
+		balancesViewModel.setRunning(channel_id);
 	}
 
 	public void runAllBalances(View view) {
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_all));
-		homeViewModel.setRunning();
+		balancesViewModel.setRunning();
 	}
 
 	@Override
@@ -135,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements HomeViewModel.Run
 	}
 
 	private void run(Action action, int index) {
-		new HoverSession.Builder(action, homeViewModel.getChannel(action.channel_id), this, index)
+		new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), this, index)
 			.finalScreenTime(0).run();
 	}
 
@@ -155,14 +157,14 @@ public class MainActivity extends AppCompatActivity implements HomeViewModel.Run
 		if (resultCode == RESULT_CANCELED) return;
 		if (requestCode == MainActivity.TRANSFER_REQUEST || requestCode < 100) {
 			Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
-			homeViewModel.saveTransaction(data, this);
+			new ViewModelProvider(this).get(TransactionHistoryViewModel.class).saveTransaction(data, this);
 			Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_home);
 		}
 
 		if (requestCode < 100) {
-			homeViewModel.setRan(requestCode);
+			balancesViewModel.setRan(requestCode);
 		} else if (requestCode == ADD_SERVICE) {
-			homeViewModel.setRunning();
+			balancesViewModel.setRunning();
 		}
 	}
 

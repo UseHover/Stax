@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
-import androidx.room.Dao;
 
 import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionDao;
@@ -12,6 +11,7 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
 import com.hover.stax.requests.Request;
 import com.hover.stax.requests.RequestDao;
+import com.hover.stax.scheduled.Schedule;
 import com.hover.stax.scheduled.ScheduleDao;
 import com.hover.stax.sims.Sim;
 import com.hover.stax.sims.SimDao;
@@ -30,7 +30,6 @@ public class DatabaseRepo {
 
 	private LiveData<List<Channel>> allChannels;
 	private LiveData<List<Channel>> selectedChannels;
-	private Channel defaultChannel;
 
 	public DatabaseRepo(Application application) {
 		AppDatabase db = AppDatabase.getInstance(application);
@@ -47,8 +46,7 @@ public class DatabaseRepo {
 		selectedChannels = channelDao.getSelected(true);
 	}
 
-	// Room executes all queries on a separate thread.
-// Observed LiveData will notify the observer when the data has changed.
+	// Channels
 	public Channel getChannel(int id) { return channelDao.getChannel(id); }
 
 	public LiveData<Channel> getLiveChannel(int id) { return channelDao.getLiveChannel(id); }
@@ -63,8 +61,10 @@ public class DatabaseRepo {
 		AppDatabase.databaseWriteExecutor.execute(() -> channelDao.update(channel));
 	}
 
+	// SIMs
 	public List<Sim> getSims() { return simDao.getPresent(); }
 
+	// Actions
 	public Action getAction(String public_id) {
 		return actionDao.getAction(public_id);
 	}
@@ -77,18 +77,11 @@ public class DatabaseRepo {
 		return actionDao.getLiveActions(channelId, type);
 	}
 
-	public List<Action> getActions(int channelId, String type) {
-		return actionDao.getActions(channelId, type);
-	}
-
 	public LiveData<List<Action>> getLiveActions(int[] channelIds, String type) {
 		return actionDao.getActions(channelIds, type);
 	}
 
-	public LiveData<List<Action>> getLiveActions() {
-		return actionDao.getAll();
-	}
-
+	// Transactions
 	public List<StaxTransaction> getTransactions() {
 		return transactionDao.getAll();
 	}
@@ -115,5 +108,10 @@ public class DatabaseRepo {
 
 	public void update(StaxTransaction transaction) {
 		AppDatabase.databaseWriteExecutor.execute(() -> transactionDao.update(transaction));
+	}
+
+	// Scheduled
+	public LiveData<List<Schedule>> getFutureTransactions() {
+		return scheduleDao.getFuture();
 	}
 }
