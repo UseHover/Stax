@@ -84,7 +84,7 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 			} else {
 				findViewById(R.id.loading_title).setVisibility(View.GONE);
 				findViewById(R.id.section_wrapper).setVisibility(View.VISIBLE);
-				//fillSection(findViewById(R.id.all_section), getString(R.string.all_section), channels);
+				fillSection(findViewById(R.id.all_section), getString(R.string.all_section), channels);
 			}
 		});
 	}

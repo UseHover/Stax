@@ -1,7 +1,6 @@
 package com.hover.stax.transfers;
 
 import android.app.Application;
-import android.content.Context;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -11,7 +10,7 @@ import androidx.lifecycle.Transformations;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.DatabaseRepo;
-import com.hover.stax.scheduled.Schedule;
+import com.hover.stax.schedules.Schedule;
 
 import java.util.List;
 

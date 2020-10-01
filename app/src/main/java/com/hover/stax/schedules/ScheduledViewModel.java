@@ -1,4 +1,4 @@
-package com.hover.stax.scheduled;
+package com.hover.stax.schedules;
 
 import android.app.Application;
 

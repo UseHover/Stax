@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 
 		balancesViewModel = new ViewModelProvider(this).get(BalancesViewModel.class);
 		balancesViewModel.setListener(this);
-		balancesViewModel.getBalanceActions().observe(this, actions -> Log.e(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
+		balancesViewModel.getBalanceActions().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
 		balancesViewModel.getToRun().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
 
 		if (getIntent().getBooleanExtra(SecurityFragment.LANG_CHANGE, false)) navController.navigate(R.id.navigation_security);

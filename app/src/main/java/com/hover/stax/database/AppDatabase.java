@@ -2,24 +2,21 @@ package com.hover.stax.database;
 
 import android.content.Context;
 
-import androidx.room.Dao;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.room.Transaction;
 
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
 import com.hover.stax.requests.Request;
 import com.hover.stax.requests.RequestDao;
-import com.hover.stax.scheduled.Schedule;
-import com.hover.stax.scheduled.ScheduleDao;
+import com.hover.stax.schedules.Schedule;
+import com.hover.stax.schedules.ScheduleDao;
 import com.hover.stax.transactions.StaxTransaction;
 import com.hover.stax.transactions.TransactionDao;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 
 @Database(entities = {Channel.class, StaxTransaction.class, Request.class, Schedule.class}, version = 10)
 public abstract class AppDatabase extends RoomDatabase {

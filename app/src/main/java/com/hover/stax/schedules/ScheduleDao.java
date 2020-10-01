@@ -1,4 +1,4 @@
-package com.hover.stax.scheduled;
+package com.hover.stax.schedules;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -14,7 +14,7 @@ public interface ScheduleDao {
 	@Query("SELECT * FROM schedules")
 	LiveData<List<Schedule>> getAll();
 
-	@Query("SELECT * FROM schedules WHERE end_date > datetime('now', 'unixepoch') ORDER BY frequency")
+	@Query("SELECT * FROM schedules WHERE start_date > strftime('%s','now') ORDER BY frequency, start_date")
 	LiveData<List<Schedule>> getFuture();
 
 	@Query("SELECT * FROM schedules WHERE id = :id")

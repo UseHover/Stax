@@ -1,23 +1,16 @@
-package com.hover.stax.scheduled;
+package com.hover.stax.schedules;
 
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
-import com.hover.stax.utils.DateUtils;
-import com.hover.stax.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
 
 @Entity(tableName = "schedules")
 public class Schedule {

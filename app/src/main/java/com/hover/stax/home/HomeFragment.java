@@ -2,6 +2,7 @@ package com.hover.stax.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,8 @@ import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
-import com.hover.stax.scheduled.ScheduledAdapter;
-import com.hover.stax.scheduled.ScheduledViewModel;
+import com.hover.stax.schedules.ScheduledAdapter;
+import com.hover.stax.schedules.ScheduledViewModel;
 import com.hover.stax.transactions.TransactionHistoryAdapter;
 import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.utils.DateUtils;
@@ -35,7 +36,6 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	private BalancesViewModel balancesViewModel;
 	private ScheduledViewModel futureViewModel;
 	private TransactionHistoryViewModel transactionsViewModel;
-	private RecyclerView recyclerView, transactionHistoryRecyclerView;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_home)));
@@ -54,7 +54,7 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	}
 
 	private void setUpBalances(View view) {
-		recyclerView = view.findViewById(R.id.balances_recyclerView);
+		RecyclerView recyclerView = view.findViewById(R.id.balances_recyclerView);
 		recyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 		recyclerView.setHasFixedSize(true);
 
@@ -70,22 +70,23 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	}
 
 	private void setUpFuture(View view) {
-		recyclerView = view.findViewById(R.id.scheduled_recyclerView);
+		RecyclerView recyclerView = view.findViewById(R.id.scheduled_recyclerView);
 		recyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 		recyclerView.setHasFixedSize(true);
 
 		futureViewModel.getScheduled().observe(getViewLifecycleOwner(), schedules -> {
+			Log.e(TAG, "Found some schedules: " + schedules.size());
 			recyclerView.setAdapter(new ScheduledAdapter(schedules, this));
 			view.findViewById(R.id.scheduled_card).setVisibility(schedules != null && schedules.size() > 0 ? View.VISIBLE : View.GONE);
 		});
 	}
 
 	private void setUpHistory(View view) {
-		transactionHistoryRecyclerView = view.findViewById(R.id.transaction_history_recyclerView);
-		transactionHistoryRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
+		RecyclerView rv = view.findViewById(R.id.transaction_history_recyclerView);
+		rv.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 
 		transactionsViewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
-			transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions, HomeFragment.this));
+			rv.setAdapter(new TransactionHistoryAdapter(staxTransactions, HomeFragment.this));
 			view.findViewById(R.id.no_history).setVisibility(staxTransactions.size() > 0 ? View.GONE : View.VISIBLE);
 		});
 	}
