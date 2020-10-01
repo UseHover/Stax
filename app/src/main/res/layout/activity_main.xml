@@ -56,7 +56,7 @@
 	    android:fontFamily="font-normal"
 	    android:padding="8dp"
 	    rfab:rfab_size="normal"
-	    rfab:rfab_drawable="@drawable/account_balance_wallet"
+	    rfab:rfab_drawable="@drawable/payment_icon_foreground"
 	    rfab:rfab_color_normal="@color/colorAccent"
 	    rfab:rfab_color_pressed="@color/colorAccentDark"
 	    rfab:rfab_shadow_radius="3dp"
