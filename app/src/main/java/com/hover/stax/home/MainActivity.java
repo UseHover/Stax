@@ -23,6 +23,7 @@ import com.hover.stax.hover.HoverSession;
 import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.security.SecurityFragment;
 import com.hover.stax.transactions.TransactionHistoryViewModel;
+import com.hover.stax.transfers.TransferActivity;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
@@ -44,14 +45,12 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-
 		setContentView(R.layout.activity_main);
 		BottomNavigationView navView = findViewById(R.id.nav_view);
 		// Passing each menu ID as a set of Ids because each
 		// menu should be considered as top level destinations.
 		AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-				R.id.navigation_home, R.id.navigation_buyAirtime, R.id.navigation_moveMoney, R.id.navigation_security)
-														  .build();
+				R.id.navigation_home, R.id.navigation_security).build();
 		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 		NavigationUI.setupWithNavController(navView, navController);
 
@@ -181,12 +180,15 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 	@Override
 	public void onRFACItemLabelClick(int position, RFACLabelItem item) {
 		switch (position) {
-			case 0: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_moveMoney);
+			case 0:
+				startActivity(new Intent(this, TransferActivity.class));
 			break;
-			case 1: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_buyAirtime);
+			case 1:
+				startActivity(new Intent(this, TransferActivity.class));
 			break;
 			case 2: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_security);
 			break;
+			default: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_home);
 		}
 		rfabHelper.toggleContent();
 	}

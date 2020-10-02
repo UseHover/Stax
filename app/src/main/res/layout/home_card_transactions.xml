@@ -7,16 +7,29 @@
 	<TextView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/future_transactions"
+		android:text="@string/history"
 		android:textSize="@dimen/text_13"
 		android:textAllCaps="true"
 		android:textAlignment="viewEnd"
 		android:fontFamily="font-bold"
-		android:layout_marginBottom="@dimen/margin_21" />
+		android:layout_marginBottom="@dimen/margin_21"
+		android:textColor="@color/offWhite" />
 
 	<androidx.recyclerview.widget.RecyclerView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:id="@+id/scheduled_recyclerView" />
+		android:id="@+id/transaction_history_recyclerView"/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/margin_8"
+		android:layout_marginTop="@dimen/margin_21"
+		android:text="@string/no_history_yet"
+		android:fontFamily="font-regular"
+		android:textColor="@color/offWhite"
+		android:textSize="@dimen/text_16"
+		android:visibility="gone"
+		android:id="@+id/no_history"/>
 
 </com.hover.stax.views.StaxCardView>

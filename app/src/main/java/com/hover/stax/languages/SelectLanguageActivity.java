@@ -1,7 +1,6 @@
 package com.hover.stax.languages;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -29,7 +28,7 @@ public class SelectLanguageActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.language_select_layout);
+		setContentView(R.layout.activity_language);
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_language)));
 
 		selectedCode = Lingver.getInstance().getLanguage();

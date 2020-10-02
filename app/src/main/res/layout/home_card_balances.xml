@@ -7,16 +7,29 @@
 	<TextView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/future_transactions"
+		android:text="@string/balances"
 		android:textSize="@dimen/text_13"
 		android:textAllCaps="true"
 		android:textAlignment="viewEnd"
 		android:fontFamily="font-bold"
-		android:layout_marginBottom="@dimen/margin_21" />
+		android:layout_marginBottom="@dimen/margin_21"
+		android:textColor="@color/offWhite" />
 
 	<androidx.recyclerview.widget.RecyclerView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:id="@+id/scheduled_recyclerView" />
+		android:id="@+id/balances_recyclerView" />
 
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+			<Button
+				android:id="@+id/balances_header"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/add_accounts"
+				android:layout_alignParentEnd="true"
+				style="@style/StaxButton"
+				android:fontFamily="font-medium" />
+	</RelativeLayout>
 </com.hover.stax.views.StaxCardView>

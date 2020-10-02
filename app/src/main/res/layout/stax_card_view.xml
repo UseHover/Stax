@@ -1,10 +1,24 @@
-<androidx.cardview.widget.CardView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="1dp"
-    card_view:cardUseCompatPadding="true"
-    card_view:cardElevation="10dp"
-    card_view:cardPreventCornerOverlap="true"
-    card_view:cardCornerRadius="0dp"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"/>
+<FrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+
+	<androidx.cardview.widget.CardView
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+		android:layout_marginHorizontal="@dimen/margin_13"
+		android:layout_marginTop="@dimen/margin_5"
+		android:layout_marginBottom="@dimen/margin_16"
+	    android:padding="1dp"
+		app:cardElevation="10dp"
+		app:cardCornerRadius="5dp"
+		app:cardBackgroundColor="@color/cardViewColor">
+
+		<LinearLayout android:id="@+id/content"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:padding="@dimen/margin_13"
+			android:background="@color/cardViewColor"
+			android:orientation="vertical" />
+	</androidx.cardview.widget.CardView>
+</FrameLayout>
