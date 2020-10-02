@@ -435,7 +435,7 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		if (requestCode == READ_CONTACT && PermissionHelper.permissionsGranted(grantResults)) {
+		if (requestCode == READ_CONTACT && new PermissionHelper(getContext()).permissionsGranted(grantResults)) {
 			Amplitude.getInstance().logEvent(getString(R.string.contact_perm_success));
 			Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
 			startActivityForResult(contactPickerIntent, READ_CONTACT);

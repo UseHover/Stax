@@ -22,6 +22,7 @@ import com.hover.stax.actions.Action;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.security.SecurityFragment;
+
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
