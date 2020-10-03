@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--  res/drawable/rounded_edittext.xml -->
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:state_pressed="true">
+		<shape android:shape="rectangle" android:padding="10dp">
+
+			<solid android:color="@color/cardViewColor"/>
+			<corners android:radius="@dimen/editText_corner" />
+
+		</shape>
+
+	</item> <!-- pressed -->
+
+
+	<item android:state_pressed="false">
+		<shape android:shape="rectangle" android:padding="10dp">
+
+			<solid android:color="@color/buttonColor"/>
+			<corners android:radius="5dp" />
+
+		</shape>
+	</item> <!-- default -->
+</selector>
+

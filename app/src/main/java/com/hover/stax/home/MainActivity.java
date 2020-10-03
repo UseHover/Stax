@@ -23,16 +23,27 @@ import com.hover.stax.hover.HoverSession;
 import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.security.SecurityFragment;
 
-public class MainActivity extends AppCompatActivity implements HomeViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener {
+import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
+import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
+import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
+import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RFACLabelItem;
+import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RapidFloatingActionContentLabelList;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements HomeViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener, RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener {
 	final public static String TAG = "MainActivity";
 
 	final public static int ADD_SERVICE = 200, TRANSFER_REQUEST = 203;
 
 	private HomeViewModel homeViewModel;
+	private RapidFloatingActionHelper rfabHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 
 		setContentView(R.layout.activity_main);
 		BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -44,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements HomeViewModel.Run
 		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 		NavigationUI.setupWithNavController(navView, navController);
 
+		setupFloatingButton();
+
 		homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 		homeViewModel.setListener(this);
 		homeViewModel.getBalanceActions().observe(this, actions -> Log.e(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
@@ -51,6 +64,52 @@ public class MainActivity extends AppCompatActivity implements HomeViewModel.Run
 
 		if (getIntent().getBooleanExtra(SecurityFragment.LANG_CHANGE, false)) navController.navigate(R.id.navigation_security);
 	}
+
+	void setupFloatingButton() {
+		RapidFloatingActionContentLabelList rfaContent = new RapidFloatingActionContentLabelList(this);
+		rfaContent.setOnRapidFloatingActionContentLabelListListener(this);
+		List<RFACLabelItem> items = new ArrayList<>();
+		items.add(new RFACLabelItem<Integer>()
+						  .setLabel(getResources().getString(R.string.transfer))
+						  .setLabelSizeSp(21)
+						  .setLabelColor(getResources().getColor(R.color.colorAccentDark))
+						  .setWrapper(0)
+		);
+		items.add(new RFACLabelItem<Integer>()
+						  .setLabel(getResources().getString(R.string.nav_airtime))
+						  .setLabelSizeSp(21)
+						  //.setDrawable(getResources().getDrawable(R.drawable.drag))
+							//.setIconNormalColor(getResources().getColor(R.color.colorAccent))
+						  .setLabelColor(getResources().getColor(R.color.colorAccentDark))
+						  .setWrapper(1)
+		);
+		/*items.add(new RFACLabelItem<Integer>()
+						  .setLabel(getResources().getString(R.string.title_request))
+						  .setLabelSizeSp(21)
+						  .setWrapper(2)); */
+
+
+		rfaContent.setItems(items);
+
+		RapidFloatingActionButton rfaBtn = findViewById(R.id.activity_main_rfab);
+		RapidFloatingActionLayout rfaLayout = findViewById(R.id.container);
+
+		rfaLayout.setIsContentAboveLayout(true);
+		rfaLayout.setFrameAlpha(0.92f);
+
+		rfaLayout.setFrameColor(getResources().getColor(R.color.cardViewColor));
+		rfaLayout.setDisableContentDefaultAnimation(true);
+
+
+		rfabHelper = new RapidFloatingActionHelper(
+				this,
+				rfaLayout,
+				rfaBtn,
+				rfaContent
+		).build();
+	}
+
+
 
 	@Override
 	public void onTapDetail(int channel_id) {
@@ -117,6 +176,24 @@ public class MainActivity extends AppCompatActivity implements HomeViewModel.Run
 				return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onRFACItemLabelClick(int position, RFACLabelItem item) {
+		switch (position) {
+			case 0: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_moveMoney);
+			break;
+			case 1: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_buyAirtime);
+			break;
+			case 2: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_security);
+			break;
+		}
+		rfabHelper.toggleContent();
+	}
+
+	@Override
+	public void onRFACItemIconClick(int position, RFACLabelItem item) {
+		rfabHelper.toggleContent();
 	}
 }
 

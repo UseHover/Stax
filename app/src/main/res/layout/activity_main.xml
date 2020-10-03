@@ -1,35 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:rfal="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    rfal:rfal_frame_alpha="0.15"
     android:background="@color/colorPrimary">
 
-	<fragment
-	    android:id="@+id/nav_host_fragment"
-	    android:name="androidx.navigation.fragment.NavHostFragment"
+	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-	    app:defaultNavHost="true"
-	    app:layout_constraintBottom_toTopOf="@id/nav_view"
-	    app:layout_constraintLeft_toLeftOf="parent"
-	    app:layout_constraintRight_toRightOf="parent"
-	    app:navGraph="@navigation/mobile_navigation" />
+	    android:orientation="vertical">
+		<fragment
+		    android:id="@+id/nav_host_fragment"
+		    android:name="androidx.navigation.fragment.NavHostFragment"
+		    android:layout_width="match_parent"
+		    android:layout_height="0dp"
+		    app:defaultNavHost="true"
+		    android:layout_weight="1"
+		    app:layout_constraintLeft_toLeftOf="parent"
+		    app:layout_constraintRight_toRightOf="parent"
+		    app:navGraph="@navigation/mobile_navigation" />
 
-	<com.google.android.material.bottomnavigation.BottomNavigationView
-	    android:id="@+id/nav_view"
-	    android:layout_width="0dp"
+
+
+		<com.google.android.material.bottomnavigation.BottomNavigationView
+		    android:id="@+id/nav_view"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginStart="0dp"
+		    android:layout_marginEnd="0dp"
+		    android:layout_marginTop="0.2dp"
+		    android:background="@color/cardViewColor"
+		    app:itemIconTint="@drawable/nav_color_state"
+		    app:itemTextColor="@color/bottomnav_component_color"
+		    app:layout_constraintBottom_toBottomOf="parent"
+		    app:layout_constraintLeft_toLeftOf="parent"
+		    app:layout_constraintRight_toRightOf="parent"
+		    app:labelVisibilityMode="unlabeled"
+		    app:menu="@menu/bottom_nav_menu" />
+	</LinearLayout>
+
+
+
+	<com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton
+	    xmlns:rfab="http://schemas.android.com/apk/res-auto"
+	    android:id="@+id/activity_main_rfab"
+	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_marginStart="0dp"
-	    android:layout_marginEnd="0dp"
-	    android:background="@color/colorPrimary"
-	    app:itemIconTint="@color/bottomnav_component_color"
-	    app:itemTextColor="@color/bottomnav_component_color"
-	    app:layout_constraintBottom_toBottomOf="parent"
-	    app:layout_constraintLeft_toLeftOf="parent"
-	    app:layout_constraintRight_toRightOf="parent"
-	    app:labelVisibilityMode="labeled"
-	    app:menu="@menu/bottom_nav_menu" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+	    android:layout_alignParentEnd="true"
+	    android:layout_alignParentBottom="true"
+	    android:layout_marginEnd="16dp"
+	    android:layout_marginBottom="28dp"
+	    android:fontFamily="font-normal"
+	    android:padding="8dp"
+	    rfab:rfab_size="normal"
+	    rfab:rfab_drawable="@drawable/payment_icon_foreground"
+	    rfab:rfab_color_normal="@color/colorAccent"
+	    rfab:rfab_color_pressed="@color/colorAccentDark"
+	    rfab:rfab_shadow_radius="3dp"
+	    rfab:rfab_shadow_color="@color/colorPrimaryDark"
+	    rfab:rfab_shadow_dx="1dp"
+	    rfab:rfab_shadow_dy="1.5dp"
+	    />
+</com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout>

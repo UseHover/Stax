@@ -5,7 +5,7 @@
 	<item android:state_pressed="true">
 		<shape android:shape="rectangle" android:padding="10dp">
 
-			<solid android:color="@color/colorPrimaryDark"/>
+			<solid android:color="@color/cardViewColor"/>
 			<stroke android:width="@dimen/editText_stroke_size" android:color="@color/white"/>
 			<corners android:radius="@dimen/editText_corner" />
 
@@ -16,7 +16,7 @@
 	<item android:state_activated="true">
 		<shape android:shape="rectangle" android:padding="10dp">
 
-			<solid android:color="@color/colorPrimaryDark"/>
+			<solid android:color="@color/cardViewColor"/>
 			<stroke android:width="@dimen/editText_stroke_size" android:color="@color/bright_red"/>
 			<corners android:radius="@dimen/editText_corner" />
 
@@ -27,7 +27,7 @@
 	<item android:state_focused="true">
 		<shape android:shape="rectangle" android:padding="10dp">
 
-			<solid android:color="@color/colorPrimaryDark"/>
+			<solid android:color="@color/cardViewColor"/>
 			<stroke android:width="@dimen/editText_stroke_size" android:color="@color/white"/>
 			<corners android:radius="@dimen/editText_corner" />
 
@@ -37,10 +37,8 @@
 	<item android:state_activated="false">
 		<shape android:shape="rectangle" android:padding="10dp">
 
-			<solid android:color="@color/colorPrimaryDark"/>
-			<stroke android:width="@dimen/editText_initial_stroke"
-					android:dashGap="3dp"
-					android:color="@color/grey"/>
+			<solid android:color="@color/cardViewColor"/>
+			<stroke android:width="@dimen/editText_initial_stroke" android:dashGap="3dp" android:color="@color/grey"/>
 			<corners android:radius="@dimen/editText_corner" />
 
 		</shape>
@@ -49,7 +47,7 @@
 	<item>
 		<shape android:shape="rectangle" android:padding="10dp">
 
-			<solid android:color="@color/colorPrimaryDark"/>
+			<solid android:color="@color/cardViewColor"/>
 			<stroke android:width="@dimen/editText_initial_stroke"
 					android:dashGap="3dp"
 					android:color="@color/grey"/>
