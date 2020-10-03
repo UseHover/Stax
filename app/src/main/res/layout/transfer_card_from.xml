@@ -1,52 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:padding="1dp"
-	app:cardUseCompatPadding="true"
-	app:cardElevation="10dp"
-	android:id="@+id/fromStageCardView"
-	app:cardPreventCornerOverlap="true"
-	app:cardCornerRadius="0dp">
+	app:title="@string/from_this_account">
 
-	<LinearLayout
+	<RadioGroup
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:orientation="vertical"
-		android:paddingVertical="@dimen/activity_vertical_margin"
-		android:paddingHorizontal="@dimen/activity_vertical_margin"
-		android:background="@color/cardViewColor"
-		android:layout_gravity="center_vertical">
+		android:layout_marginTop="@dimen/activity_vertical_margin"
+		android:id="@+id/fromRadioGroup"/>
 
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/from_this_account"
-			android:layout_marginStart="@dimen/spacing32"
-			android:textSize="@dimen/text_16"
-			android:textAllCaps="true"
-			android:layout_gravity="end|center_vertical"
-			android:gravity="end|center_vertical"
-			android:fontFamily="font-bold"
-			android:textColor="@color/offWhite" />
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/add_new_account"
+		android:textColor="@color/colorAccent"
+		android:text="@string/add_an_account"
+		android:textSize="@dimen/text_16"
+		android:fontFamily="font-medium"
+		android:padding="@dimen/activity_vertical_margin"/>
 
-		<RadioGroup
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/activity_vertical_margin"
-			android:id="@+id/fromRadioGroup"/>
-
-		<TextView
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:id="@+id/add_new_account"
-			android:textColor="@color/colorAccent"
-			android:text="@string/add_an_account"
-			android:textSize="@dimen/text_16"
-			android:fontFamily="font-medium"
-			android:padding="@dimen/activity_vertical_margin"/>
-
-
-	</LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.hover.stax.views.StaxCardView>

@@ -19,6 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.security.SecurityFragment;
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 		items.add(new RFACLabelItem<Integer>()
 						  .setLabel(getResources().getString(R.string.transfer))
 						  .setLabelSizeSp(21)
-						  .setLabelColor(getResources().getColor(R.color.colorAccentDark))
+						  .setLabelColor(getResources().getColor(R.color.colorAccent))
 						  .setWrapper(0)
 		);
 		items.add(new RFACLabelItem<Integer>()
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 						  .setLabelSizeSp(21)
 						  //.setDrawable(getResources().getDrawable(R.drawable.drag))
 							//.setIconNormalColor(getResources().getColor(R.color.colorAccent))
-						  .setLabelColor(getResources().getColor(R.color.colorAccentDark))
+						  .setLabelColor(getResources().getColor(R.color.colorAccent))
 						  .setWrapper(1)
 		);
 		/*items.add(new RFACLabelItem<Integer>()
@@ -108,7 +109,10 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 		).build();
 	}
 
-
+	public void addAccount(View view) {
+		Amplitude.getInstance().logEvent(getString(R.string.click_add_account));
+		startActivityForResult(new Intent(this, ChannelsActivity.class), MainActivity.ADD_SERVICE);
+	}
 
 	@Override
 	public void onTapDetail(int channel_id) {

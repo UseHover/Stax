@@ -77,8 +77,8 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 	private InputStage nextInputStage = AMOUNT;
 	private InputStage previousInputStage = null;
 	private RelativeLayout amountStageView;
-	private CardView fromStageStageView;
-	private CardView toStageView;
+	private View fromStageStageView;
+	private View toStageView;
 	private String networkLabelString;
 	private RadioGroup fromRadioGroup;
 	private MaterialDatePicker<Long> datePicker;

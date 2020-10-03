@@ -39,7 +39,7 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		WorkManager.getInstance(this).beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue();
-		setContentView(R.layout.choose_channels);
+		setContentView(R.layout.activity_channels);
 		channelViewModel = new ViewModelProvider(this).get(ChannelListViewModel.class);
 
 		if (!PermissionUtils.hasPhonePerm(this))
@@ -62,10 +62,14 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 
 	private void addChannels() {
 		channelViewModel.getSimChannels().observe(this, channels -> {
-			if (channels.size() > 0)
-				fillSection(findViewById(R.id.sim_section), getString(R.string.sims_section), channels);
-			else
-				findViewById(R.id.sim_section).setVisibility(View.GONE);
+			if (channels.size() > 0) {
+				findViewById(R.id.sim_card).setVisibility(View.VISIBLE);
+				findViewById(R.id.all_card).setVisibility(View.GONE);
+				fillSection(findViewById(R.id.sim_card), getString(R.string.sims_section), channels);
+			} else {
+				findViewById(R.id.sim_card).setVisibility(View.GONE);
+				findViewById(R.id.all_card).setVisibility(View.VISIBLE);
+			}
 		});
 
 		channelViewModel.getCountryChannels().observe(this, channels -> {
@@ -78,23 +82,16 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 		});
 
 		channelViewModel.getChannels().observe(this, channels -> {
-			if (channels.size() == 0) {
-				findViewById(R.id.loading_title).setVisibility(View.VISIBLE);
-				findViewById(R.id.section_wrapper).setVisibility(View.GONE);
-			} else {
-				findViewById(R.id.loading_title).setVisibility(View.GONE);
-				findViewById(R.id.section_wrapper).setVisibility(View.VISIBLE);
-				fillSection(findViewById(R.id.all_section), getString(R.string.all_section), channels);
-			}
+			fillSection(findViewById(R.id.all_card), getString(R.string.all_section), channels);
 		});
 	}
 
-	private void fillSection(View section, String title, List<Channel> channels) {
-		section.setVisibility(View.VISIBLE);
-		((TextView) section.findViewById(R.id.section_title)).setText(title);
+	private void fillSection(View card, String title, List<Channel> channels) {
+		if (channels.size() == 0) { title = getString(R.string.loading); }
+		((TextView) card.findViewById(R.id.title)).setText(title);
 		GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false);
 		ChannelsAdapter channelsAdapter = new ChannelsAdapter(channels, this);
-		RecyclerView view = section.findViewById(R.id.section_recycler);
+		RecyclerView view = card.findViewById(R.id.section_recycler);
 		view.setHasFixedSize(true);
 		view.setLayoutManager(gridLayoutManager);
 		view.setAdapter(channelsAdapter);
@@ -104,7 +101,7 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 	private void addCountrySection(String sectionTitle, List<Channel> channels) {
 		if (channels.size() > 0) {
 			LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View section = inflater.inflate(R.layout.channel_grid, null);
+			View section = inflater.inflate(R.layout.channel_card_grid, null);
 			fillSection(section, sectionTitle, channels);
 			((LinearLayout) findViewById(R.id.country_wrapper)).addView(section);
 		}

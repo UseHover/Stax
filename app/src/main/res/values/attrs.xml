@@ -1,0 +1,5 @@
+<resources>
+	<declare-styleable name="StaxCardView">
+		<attr name="title" format="string" />
+	</declare-styleable>
+</resources>

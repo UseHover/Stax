@@ -62,11 +62,6 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 			recyclerView.setAdapter(new BalanceAdapter(channels, (MainActivity) getActivity()));
 			setMeta(view, channels);
 		});
-
-		view.findViewById(R.id.balances_header).setOnClickListener(v -> {
-			Amplitude.getInstance().logEvent(getString(R.string.click_add_account));
-			requireActivity().startActivityForResult(new Intent(getActivity(), ChannelsActivity.class), MainActivity.ADD_SERVICE);
-		});
 	}
 
 	private void setUpFuture(View view) {

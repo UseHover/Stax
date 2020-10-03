@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:layout_marginTop="@dimen/margin_5"
-	android:layout_marginBottom="@dimen/margin_16"
-	android:padding="1dp"
-	app:cardUseCompatPadding="true"
-	app:cardElevation="10dp"
-	app:cardPreventCornerOverlap="true"
-	app:cardCornerRadius="5dp">
+	android:layout_height="wrap_content">
 
 	<RelativeLayout
 		android:layout_width="match_parent"
@@ -167,8 +160,7 @@
 			android:background="@color/cardViewColor"
 			android:layout_gravity="center_vertical"
 			android:id="@+id/amountStageCardView"
-			android:layout_below="@id/toLayout"
-			>
+			android:layout_below="@id/toLayout">
 
 			<EditText android:id="@+id/amount_input"
 				android:layout_width="match_parent"
@@ -201,4 +193,4 @@
 				android:textSize="@dimen/text_16" />
 		</RelativeLayout>
 	</RelativeLayout>
-</androidx.cardview.widget.CardView>
+</com.hover.stax.views.StaxCardView>

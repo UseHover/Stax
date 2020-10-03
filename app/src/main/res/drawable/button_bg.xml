@@ -2,16 +2,16 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:state_pressed="true">
 		<shape android:shape="rectangle" android:padding="@dimen/margin_13">
+			<corners android:radius="5dip" />
 			<solid android:color="@color/buttonColor"/>
-			<corners android:radius="5dp" />
 		</shape>
 	</item>
 
 
 	<item android:state_pressed="false">
 		<shape android:shape="rectangle" android:padding="@dimen/margin_13">
+			<corners android:radius="5dip" />
 			<solid android:color="@color/buttonColor"/>
-			<corners android:radius="5dp" />
 		</shape>
 	</item>
 </selector>

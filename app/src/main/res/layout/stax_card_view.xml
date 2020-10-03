@@ -8,7 +8,7 @@
 	    android:layout_height="wrap_content"
 		android:layout_marginHorizontal="@dimen/margin_13"
 		android:layout_marginTop="@dimen/margin_5"
-		android:layout_marginBottom="@dimen/margin_16"
+		android:layout_marginBottom="@dimen/margin_21"
 	    android:padding="1dp"
 		app:cardElevation="10dp"
 		app:cardCornerRadius="5dp"
@@ -19,6 +19,19 @@
 			android:layout_height="wrap_content"
 			android:padding="@dimen/margin_13"
 			android:background="@color/cardViewColor"
-			android:orientation="vertical" />
+			android:orientation="vertical" >
+
+			<TextView android:id="@+id/title"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/balances"
+				android:textSize="@dimen/text_13"
+				android:textAllCaps="true"
+				android:textAlignment="viewEnd"
+				android:fontFamily="font-bold"
+				android:layout_marginBottom="@dimen/margin_21"
+				android:textColor="@color/offWhite" />
+
+		</LinearLayout>
 	</androidx.cardview.widget.CardView>
 </FrameLayout>

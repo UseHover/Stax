@@ -1,42 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:padding="1dp"
-	android:id="@+id/toStageCardView"
-	app:cardUseCompatPadding="true"
-	app:cardElevation="10dp"
-	app:cardPreventCornerOverlap="true"
-	app:cardCornerRadius="0dp">
-
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:orientation="vertical"
-		android:paddingVertical="@dimen/activity_vertical_margin"
-		android:paddingHorizontal="@dimen/activity_vertical_margin"
-		android:background="@color/cardViewColor"
-		android:layout_gravity="center_vertical">
-
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/to_this_receiver"
-			android:layout_marginStart="@dimen/spacing32"
-			android:textSize="@dimen/text_16"
-			android:textAllCaps="true"
-			android:layout_gravity="end|center_vertical"
-			android:gravity="end|center_vertical"
-			android:fontFamily="font-bold"
-			android:textColor="@color/offWhite" />
-
+	app:title="@string/to_this_receiver">
 
 		<RelativeLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/activity_vertical_margin"
-			>
+			android:layout_marginTop="@dimen/activity_vertical_margin" >
 
 			<androidx.appcompat.widget.AppCompatSpinner
 				android:layout_width="match_parent"
@@ -115,5 +87,4 @@
 					android:background="@color/transparent"/>
 			</RelativeLayout>
 		</LinearLayout>
-	</LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.hover.stax.views.StaxCardView>

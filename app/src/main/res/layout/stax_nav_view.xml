@@ -48,7 +48,7 @@
 		app:rfab_size="normal"
 		app:rfab_drawable="@drawable/payment_icon_foreground"
 		app:rfab_color_normal="@color/colorAccent"
-		app:rfab_color_pressed="@color/colorAccentDark"
+		app:rfab_color_pressed="@color/colorAccent"
 		app:rfab_shadow_radius="3dp"
 		app:rfab_shadow_color="@color/colorPrimaryDark"
 		app:rfab_shadow_dx="1dp"

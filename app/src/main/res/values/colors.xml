@@ -3,7 +3,6 @@
 	<color name="colorPrimary" tools:override="true">#292E35</color>
 	<color name="colorPrimaryDark" tools:override="true">#1E232A</color>
 	<color name="colorAccent" tools:override="true">#39CBFC</color>
-	<color name="colorAccentDark">#0093E7</color>
 	<color name="cardViewColor">#292E35</color>
 	<color name="buttonColor">#3A3E45</color>
 	<color name="grey">#B1B2B6</color>

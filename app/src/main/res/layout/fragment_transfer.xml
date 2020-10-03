@@ -15,14 +15,16 @@
 
 		<include layout="@layout/transfer_card_main" />
 
-		<include layout="@layout/transfer_card_from" />
+		<include layout="@layout/transfer_card_from"
+			android:id="@+id/fromStageCardView" />
 
 		<LinearLayout  android:id="@+id/details_block"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:orientation="vertical">
 
-			<include layout="@layout/transfer_card_to" />
+			<include layout="@layout/transfer_card_to"
+				android:id="@+id/toStageCardView" />
 
 			<Button android:id="@+id/confirm_button"
 			    android:layout_width="wrap_content"
