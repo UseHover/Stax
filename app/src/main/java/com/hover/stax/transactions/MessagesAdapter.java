@@ -1,5 +1,6 @@
 package com.hover.stax.transactions;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Transa
 	@Override
 	public void onBindViewHolder(@NonNull TransactionMessageViewHolder holder, int position) {
 		UssdCallResponse model = messagesList.get(position);
-
 		if (!model.enteredValue.isEmpty())
 			holder.enteredValueText.setText(model.enteredValue);
 		else holder.enteredValueText.setVisibility(View.GONE);

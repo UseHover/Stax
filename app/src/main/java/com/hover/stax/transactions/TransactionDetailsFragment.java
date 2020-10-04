@@ -28,6 +28,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class TransactionDetailsFragment extends Fragment {
+	final public static String TAG = "TransDetailsFragment";
+
 	private TransactionDetailsViewModel viewModel;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,10 +44,10 @@ public class TransactionDetailsFragment extends Fragment {
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		((AppCompatActivity) getActivity()).setSupportActionBar(view.findViewById(R.id.toolbar));
 
 		viewModel.getTransaction().observe(getViewLifecycleOwner(), transaction -> {
 			if (transaction != null) {
+				((TextView) view.findViewById(R.id.title)).setText(transaction.description);
 				((TextView) view.findViewById(R.id.details_transactionNumber)).setText(transaction.uuid);
 				((TextView) view.findViewById(R.id.details_amount)).setText(Utils.formatAmount(transaction.amount));
 				((TextView) view.findViewById(R.id.details_date)).setText(DateUtils.humanFriendlyDate(transaction.initiated_at));
@@ -62,7 +64,9 @@ public class TransactionDetailsFragment extends Fragment {
 		messagesView.setLayoutManager(UIHelper.setMainLinearManagers(ApplicationInstance.getContext()));
 		messagesView.setHasFixedSize(true);
 		viewModel.getMessages().observe(getViewLifecycleOwner(), ussdCallResponses -> {
+			Log.e(TAG, "messages: " + ussdCallResponses);
 			if (ussdCallResponses != null) {
+				Log.e(TAG, "non-null messages: " + ussdCallResponses);
 				messagesView.setAdapter(new MessagesAdapter(ussdCallResponses));
 			}
 		});
@@ -71,6 +75,7 @@ public class TransactionDetailsFragment extends Fragment {
 		smsView.setLayoutManager(UIHelper.setMainLinearManagers(ApplicationInstance.getContext()));
 		smsView.setHasFixedSize(true);
 		viewModel.getSms().observe(getViewLifecycleOwner(), smses -> {
+			Log.e(TAG, "sms: " + smses);
 			if (smses != null) {
 				smsView.setAdapter(new MessagesAdapter(smses));
 			}

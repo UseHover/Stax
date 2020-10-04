@@ -88,7 +88,7 @@
 
 	<string name="date">Date</string>
 	<string name="network">Réseau</string>
-	<string name="transactionNumber">Numéro de transaction</string>
+	<string name="transactionId">Numéro de transaction</string>
 	<string name="message">Message</string>
 
 	<string name="enterRecipientNumberError">Veuillez saisir le numéro du destinataire</string>

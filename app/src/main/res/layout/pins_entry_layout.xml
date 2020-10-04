@@ -1,64 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+	android:layout_marginTop="@dimen/margin_13"
     android:orientation="vertical"
 	android:id="@+id/root">
 
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:paddingStart="@dimen/margin_16"
-	    android:paddingTop="@dimen/margin_16"
-	    android:paddingBottom="@dimen/margin_16"
-	    android:orientation="horizontal">
+	<com.hover.stax.views.StaxCardView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:title="@string/pin_input_hint" >
 
 		<TextView
-		    android:layout_width="0dp"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/margin_34"
+			android:layout_marginStart="@dimen/margin_5"
+			android:text="@string/pin_step_description"
+			android:textColor="@color/offWhite" />
+
+		<TextView
+		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-		    android:text="@string/choose_institutions_title"
-		    android:textSize="@dimen/text_21"
-		    android:layout_weight="1"
-		    android:fontFamily="font-medium"
+			android:layout_marginStart="@dimen/margin_5"
+		    android:text="@string/pin_security_description"
 		    android:textColor="@color/offWhite" />
 
-		<TextView
-		    android:layout_width="wrap_content"
+		<androidx.recyclerview.widget.RecyclerView
+		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-		    android:id="@+id/choose_serves_cancel"
-		    android:textSize="@dimen/text_13"
-		    android:paddingStart="@dimen/activity_vertical_margin"
-		    android:paddingEnd="16dp"
-		    android:fontFamily="font-medium"
-		    android:textColor="@color/offWhite"
-		    android:text="@string/skip" />
-	</LinearLayout>
+		    android:id="@+id/pin_recyclerView" />
 
-	<TextView
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:text="@string/choose_pin_description"
-	    android:textColor="@color/offWhite"
-	    android:paddingHorizontal="@dimen/margin_16" />
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/margin_21">
 
-	<androidx.recyclerview.widget.RecyclerView
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_marginTop="@dimen/activity_vertical_margin"
-	    android:padding="@dimen/activity_vertical_margin"
-	    android:id="@+id/pin_recyclerView" />
+			<androidx.appcompat.widget.AppCompatButton
+				android:id="@+id/cancel_button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_toStartOf="@id/continue_button"
+				android:text="@string/cancel"
+				style="@style/StaxButton"
+				android:fontFamily="font-medium"
+				android:elevation="0dp"
+				android:backgroundTint="@color/cardViewColor" />
 
-	<Button
-	    android:id="@+id/continuePinButton"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:paddingHorizontal="@dimen/spacing32"
-	    android:text="@string/continue_text"
-	    android:textAllCaps="false"
-	    android:fontFamily="font-medium"
-	    android:layout_gravity="end"
-	    android:layout_marginEnd="@dimen/margin_16"
-	    android:background="@color/offWhite" />
+			<androidx.appcompat.widget.AppCompatButton
+				android:id="@+id/continue_button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/margin_21"
+				android:text="@string/continue_text"
+				android:layout_alignParentEnd="true"
+				style="@style/StaxButton"
+				android:fontFamily="font-medium" />
+		</RelativeLayout>
 
+	</com.hover.stax.views.StaxCardView>
 </LinearLayout>

@@ -20,9 +20,9 @@
 	<string name="nav_language">Language Choice</string>
 	<string name="nav_account_detail">Account Details</string>
 
-	<string name="done"><u>Done</u></string>
-	<string name="cancel"><u>Cancel</u></string>
-	<string name="skip"><u>Skip</u></string>
+	<string name="done">Done</string>
+	<string name="cancel">Cancel</string>
+	<string name="skip">Skip</string>
 	<string name="continue_text">Continue</string>
 	<string name="no_selection_error">You must select at least 1 service.</string>
 	<string name="add_accounts">Add accounts</string>
@@ -47,10 +47,9 @@
 
 	<string name="balances">Balances</string>
 	<string name="balance">Balance</string>
-	<string name="spent_this_month">Spent this month</string>
-	<string name="earned_this_month">Earned this month</string>
-	<string name="more_than_last_month">more than last month</string>
-	<string name="less_than_last_month">less than last month</string>
+	<string name="money_out">Money out this month</string>
+	<string name="money_in">Money in this month</string>
+	<string name="fees_description">Fees paid to %1$s this year</string>
 	<string name="transactions">Transactions</string>
 
 	<string name="choose_institutions_title">Choose your services</string>
@@ -66,7 +65,7 @@
 	<string name="permission_success">All permissions allowed successfully</string>
 
 	<string name="input_label">Input label</string>
-	<string name="pin_input_hint">Enter PIN</string>
+	<string name="pin_input_hint">PIN entry</string>
 	<string name="recipient_phone">Recipient phone number</string>
 	<string name="recipient_account">Recipient account number</string>
 	<string name="recipient_hint">Enter number</string>
@@ -83,7 +82,8 @@
 	<string name="default_account_desc">Default account will show up first when you move money.</string>
 	<string name="about_our_security">Secure with Stax</string>
 	<string name="about_our_security_content">Hover’s Android SDK is a development kit meeting the criteria of 740.17(b)(3) (i) security classification of the United States Bureau of Industry and Security. This software uses HTTPS for server communication; symmetric key RSA encryption to temporarily store the user’s credentials on their own device using Android Keystore; and code obfuscation using DRM (Dexguard).</string>
-	<string name="choose_pin_description">You can remove your PINs from Stax at any time. All PINs are secured with RSA encryption in the Android Keystore. They are never sent over the internet in any form.</string>
+	<string name="pin_step_description">One last step: we need your account PINs to complete tasks and keep balances up to date.</string>
+	<string name="pin_security_description">PINs are encrypted and never leave your device. You can delete PINs from Stax at any time.</string>
 
 	<string name="title_airtime">Top up airtime</string>
 	<string name="title_p2p">Move money to someone else</string>
@@ -118,7 +118,7 @@
 
 	<string name="date">Date</string>
 	<string name="network">Network</string>
-	<string name="transactionNumber">Transaction number</string>
+	<string name="transactionId">Transaction ID</string>
 	<string name="message">Messages</string>
 
 	<string name="enterRecipientNumberError">Please enter recipient number"</string>

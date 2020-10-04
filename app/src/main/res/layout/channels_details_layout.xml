@@ -1,163 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:layout_marginBottom="@dimen/large_margin"
-    android:orientation="vertical"
-    android:background="@color/colorPrimary">
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_marginTop="@dimen/margin_13">
 
-	<androidx.appcompat.widget.Toolbar
-	    android:id="@+id/toolbar"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    app:navigationIcon="?attr/homeAsUpIndicator"
-	    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
 
-		<TextView
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:padding="@dimen/margin_8"
-		    android:textSize="@dimen/text_21"
-		    android:id="@+id/channel_name"
-		    android:textColor="@color/offWhite"
-		    android:text="@string/nav_account_detail" />
+		<com.hover.stax.views.StaxCardView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:title="@string/nav_account_detail">
 
-	</androidx.appcompat.widget.Toolbar>
+			<TableLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content">
 
-	<androidx.core.widget.NestedScrollView
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:paddingVertical="@dimen/margin_16" >
-
-		<LinearLayout
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:orientation="vertical">
-
-			<LinearLayout
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:paddingHorizontal="@dimen/margin_16"
-			    android:orientation="horizontal"
-			    android:baselineAligned="false">
-
-				<LinearLayout
-				    android:layout_width="0dp"
-				    android:layout_height="wrap_content"
-				    android:layout_weight="1"
-				    android:orientation="vertical">
-
+				<TableRow android:layout_marginVertical="@dimen/margin_21">
 					<TextView
-					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
-					    android:textColor="@color/offWhite"
-					    android:text="@string/balance"/>
+						android:layout_weight="1"
+						android:textColor="@color/offWhite"
+						android:textSize="@dimen/text_16"
+						android:text="@string/balance"/>
 
+					<TextView android:id="@+id/details_balance"
+						android:textAlignment="viewEnd"
+						android:textColor="@color/offWhite"
+						android:textSize="@dimen/text_21"
+						android:textStyle="bold"/>
+				</TableRow>
+
+				<TableRow android:layout_marginVertical="@dimen/margin_21">
 					<TextView
-					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
-					    android:textColor="@color/white"
-					    android:id="@+id/details_balance"
-					    android:textSize="@dimen/text_21"
-					    android:textStyle="bold"/>
-				</LinearLayout>
-				<LinearLayout
-				    android:layout_width="0dp"
-				    android:layout_height="wrap_content"
-				    android:layout_weight="1"
-				    android:orientation="vertical">
+						android:layout_weight="1"
+						android:textColor="@color/offWhite"
+						android:textSize="@dimen/text_16"
+						android:text="@string/money_out"/>
 
+					<TextView android:id="@+id/details_money_out"
+						android:textAlignment="viewEnd"
+						android:textColor="@color/offWhite"
+						android:textSize="@dimen/text_21"
+						android:textStyle="bold"/>
+				</TableRow>
+
+				<TableRow android:layout_marginVertical="@dimen/margin_21">
 					<TextView
-					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
-					    android:textColor="@color/offWhite"
-					    android:visibility="gone"
-					    android:text="@string/date"/>
-					<TextView
-					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
-					    android:textColor="@color/white"
-					    android:id="@+id/details_date"
-					    android:textSize="@dimen/text_21"
-					    android:textStyle="bold"/>
-				</LinearLayout>
-			</LinearLayout>
-				<TextView
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:textColor="@color/offWhite"
-				    android:layout_marginTop="@dimen/activity_vertical_margin"
-				    android:paddingHorizontal="@dimen/margin_16"
-				    android:text="@string/spent_this_month"/>
+						android:layout_weight="1"
+						android:textColor="@color/offWhite"
+						android:textSize="@dimen/text_16"
+						android:text="@string/money_in"/>
 
-				<LinearLayout
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"
-				    android:orientation="horizontal"
-				    android:paddingVertical="@dimen/spacing8"
-				    android:paddingHorizontal="@dimen/margin_16"
-				    >
-					<TextView
-					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
-					    android:textColor="@color/white"
-					    android:id="@+id/spentThisMonthContent"
-					    android:textSize="@dimen/text_21"
-					    android:textStyle="bold"/>
-				</LinearLayout>
+					<TextView android:id="@+id/details_money_in"
+						android:textAlignment="viewEnd"
+						android:textColor="@color/offWhite"
+						android:textSize="@dimen/text_21"
+						android:textStyle="bold"/>
+				</TableRow>
 
-				<TextView
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:textColor="@color/offWhite"
-				    android:visibility="gone"
-				    android:layout_marginTop="@dimen/activity_vertical_margin"
-				    android:text="@string/earned_this_month"/>
+				<TableRow android:layout_marginVertical="@dimen/margin_21">
+					<TextView android:id="@+id/fees_description"
+						android:layout_weight="1"
+						android:textColor="@color/offWhite"
+						android:textSize="@dimen/text_16"
+						android:text="@string/fees_description"/>
 
-				<LinearLayout
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"
-				    android:orientation="horizontal"
-				    android:visibility="gone"
-				    >
-					<TextView
-					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
-					    android:textColor="@color/white"
-					    android:id="@+id/earnedThisMonthContent"
-					    android:textSize="@dimen/text_21"
-					    android:textStyle="bold"/>
+					<TextView android:id="@+id/details_fees"
+						android:textAlignment="viewEnd"
+						android:textColor="@color/offWhite"
+						android:textSize="@dimen/text_21"
+						android:textStyle="bold"/>
+				</TableRow>
+			</TableLayout>
+		</com.hover.stax.views.StaxCardView>
 
-					<TextView
-					    android:layout_marginStart="@dimen/spacing8"
-					    android:layout_width="wrap_content"
-					    android:layout_height="wrap_content"
-					    android:textColor="@color/offWhite"
-					    android:text="@string/less_than_last_month"/>
-				</LinearLayout>
-
-			<TextView
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:text="@string/transactions"
-			    android:layout_marginTop="@dimen/spacing32"
-			    android:paddingHorizontal="@dimen/margin_16"
-			    android:textColor="@color/offWhite" />
-			<View
-			    android:layout_width="match_parent"
-			    android:layout_height="0.1dp"
-			    android:layout_marginTop="8dp"
-			    android:layout_marginBottom="@dimen/activity_vertical_margin"
-			    android:layout_marginHorizontal="@dimen/margin_16"
-			    android:background="@color/offWhite" />
+		<com.hover.stax.views.StaxCardView
+			android:id="@+id/history_card"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:title="@string/history">
 
 			<androidx.recyclerview.widget.RecyclerView
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:id="@+id/transaction_history_recyclerView" />
-			</LinearLayout>
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:id="@+id/transaction_history_recyclerView" />
+		</com.hover.stax.views.StaxCardView>
 
-
-	</androidx.core.widget.NestedScrollView>
-</LinearLayout>
+	</LinearLayout>
+</androidx.core.widget.NestedScrollView>

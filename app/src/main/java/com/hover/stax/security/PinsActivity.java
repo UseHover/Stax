@@ -37,13 +37,13 @@ public class PinsActivity extends AppCompatActivity implements PinEntryAdapter.U
 			pinRecyclerView.setAdapter(pinEntryAdapter);
 		});
 
-		findViewById(R.id.choose_serves_cancel).setOnClickListener(view -> {
+		findViewById(R.id.cancel_button).setOnClickListener(view -> {
 			Amplitude.getInstance().logEvent(getString(R.string.skipped_pin_entry));
 			setResult(RESULT_CANCELED);
 			finish();
 		});
 
-		findViewById(R.id.continuePinButton).setOnClickListener(continueListener);
+		findViewById(R.id.continue_button).setOnClickListener(continueListener);
 
 //		if (!((KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardSecure())
 //			Snackbar.make(findViewById(R.id.root), R.string.insecure_warning)

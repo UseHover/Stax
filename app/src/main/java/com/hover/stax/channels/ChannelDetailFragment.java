@@ -36,21 +36,22 @@ public class ChannelDetailFragment extends Fragment implements TransactionHistor
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		((AppCompatActivity) getActivity()).setSupportActionBar(view.findViewById(R.id.toolbar));
 		transactionHistoryRecyclerView = view.findViewById(R.id.transaction_history_recyclerView);
 
 		viewModel.getChannel().observe(getViewLifecycleOwner(), channel -> {
-			((TextView) view.findViewById(R.id.channel_name)).setText(channel.name);
+			((TextView) view.findViewById(R.id.title)).setText(channel.name);
+			((TextView) view.findViewById(R.id.fees_description)).setText(getString(R.string.fees_description, channel.name));
 			((TextView) view.findViewById(R.id.details_balance)).setText(channel.latestBalance);
 		});
 
 		viewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
+			if (staxTransactions == null || staxTransactions.size() == 0) { view.findViewById(R.id.history_card).setVisibility(View.GONE); }
 			transactionHistoryRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 			transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions, this));
 		});
 
 		viewModel.getSpentThisMonth().observe(getViewLifecycleOwner(), thisMonth -> {
-			((TextView) view.findViewById(R.id.spentThisMonthContent)).setText(Utils.formatAmount(thisMonth != null ? thisMonth : 0));
+			((TextView) view.findViewById(R.id.details_money_out)).setText(Utils.formatAmount(thisMonth != null ? thisMonth : 0));
 		});
 
 		viewModel.setChannel(getArguments().getInt(TransactionContract.COLUMN_CHANNEL_ID));

@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_CANCELED) return;
+		if (resultCode == RESULT_CANCELED) { return; }
 		if (requestCode == MainActivity.TRANSFER_REQUEST || requestCode < 100) {
 			Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
 			new ViewModelProvider(this).get(TransactionHistoryViewModel.class).saveTransaction(data, this);
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 
 		if (requestCode < 100) {
 			balancesViewModel.setRan(requestCode);
-		} else if (requestCode == ADD_SERVICE) {
+		} else if (requestCode == ADD_SERVICE && resultCode == RESULT_OK) {
 			balancesViewModel.setRunning();
 		}
 	}

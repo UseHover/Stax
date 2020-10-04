@@ -89,7 +89,7 @@
 
 	<string name="date">Tarehe</string>
 	<string name="network">Mtandao</string>
-	<string name="transactionNumber">Nambari ya shughuli</string>
+	<string name="transactionId">Nambari ya shughuli</string>
 	<string name="message">Ujumbe</string>
 
 	<string name="enterRecipientNumberError">Tafadhali ingiza nambari ya mpokeaji</string>
