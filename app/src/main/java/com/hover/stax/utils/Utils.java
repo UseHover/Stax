@@ -12,11 +12,13 @@ import android.util.Log;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.hover.sdk.utils.AnalyticsSingleton;
 import com.hover.stax.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 
 public class Utils {
@@ -77,5 +79,21 @@ public class Utils {
 			Log.e(TAG, "error formating number", e);
 		}
 		return number;
+	}
+
+	public static boolean usingDebugVariant(Context c) {
+		return (Boolean) getBuildConfigValue(c, "DEBUG");
+	}
+	@SuppressWarnings("SameParameterValue")
+	private static Object getBuildConfigValue(Context context, String fieldName) {
+		try {
+			Class<?> clazz = Class.forName(getPackage(context) + ".BuildConfig");
+			Field field = clazz.getField(fieldName);
+			return field.get(null);
+		} catch (Exception e) {
+			AnalyticsSingleton.capture(context, e);
+			Log.d(TAG, "Error getting build config value", e);
+		}
+		return false;
 	}
 }

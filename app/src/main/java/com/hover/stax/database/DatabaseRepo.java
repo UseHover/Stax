@@ -113,12 +113,16 @@ public class DatabaseRepo {
 
 	// Scheduled
 	public LiveData<List<Schedule>> getFutureTransactions() {
-		return scheduleDao.getFuture();
+		return scheduleDao.getLiveFuture();
 	}
 
 	public Schedule getSchedule(int id) { return scheduleDao.get(id); }
 
 	public void insert(Schedule schedule) {
 		AppDatabase.databaseWriteExecutor.execute(() -> scheduleDao.insert(schedule));
+	}
+
+	public void delete(Schedule schedule) {
+		AppDatabase.databaseWriteExecutor.execute(() -> scheduleDao.delete(schedule));
 	}
 }

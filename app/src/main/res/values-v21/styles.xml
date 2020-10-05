@@ -50,4 +50,23 @@
 		<item name="textAllCaps">false</item>
 		<item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlayExtended</item>
 	</style>
+
+	<style name="StaxDialog" parent="Theme.MaterialComponents.Dialog.Alert">
+		<item name="android:textColor">@color/offWhite</item>
+		<item name="android:headerDividersEnabled">false</item>
+		<item name="android:background">@color/cardViewColor</item>
+		<item name="titleTextColor">@color/offWhite</item>
+		<item name="android:buttonBarNegativeButtonStyle">@style/StaxDialogButtonNeg</item>
+		<item name="android:buttonBarPositiveButtonStyle">@style/StaxDialogButtonPos</item>
+		<item name="android:buttonStyle">@style/StaxButton</item>
+		<item name="buttonStyle">@style/StaxButton</item>
+	</style>
+
+	<style name="StaxDialogButtonPos" parent="StaxButton">
+		<item name="android:backgroundTint">@color/bright_red</item>
+	</style>
+
+	<style name="StaxDialogButtonNeg" parent="StaxButton">
+		<item name="android:backgroundTint">@color/buttonColor</item>
+	</style>
 </resources>

@@ -1,20 +1,28 @@
 package com.hover.stax.schedules;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.WorkManager;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.utils.DateUtils;
+import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
 import org.json.JSONException;
@@ -40,21 +48,51 @@ public class ScheduleDetailFragment extends Fragment {
 
 		viewModel.getSchedule().observe(getViewLifecycleOwner(), schedule -> {
 			if (schedule != null) {
-				((TextView) view.findViewById(R.id.title)).setText(schedule.description);
-				((TextView) view.findViewById(R.id.details_amount)).setText(Utils.formatAmount(schedule.amount));
-				((TextView) view.findViewById(R.id.details_date)).setText(DateUtils.humanFriendlyDate(schedule.start_date));
-
-				view.findViewById(R.id.frequencyRow).setVisibility(schedule.frequency.equals(Schedule.ONCE) ? View.GONE : View.VISIBLE);
-				((TextView) view.findViewById(R.id.details_frequency)).setText(schedule.humanFrequency(getContext()));
-
-				view.findViewById(R.id.endRow).setVisibility(schedule.frequency.equals(Schedule.ONCE) ? View.GONE : View.VISIBLE);
-				((TextView) view.findViewById(R.id.details_end)).setText(DateUtils.humanFriendlyDate(schedule.end_date));
-
-				view.findViewById(R.id.reasonRow).setVisibility(schedule.reason == null || schedule.reason.isEmpty() ? View.GONE : View.VISIBLE);
-				((TextView) view.findViewById(R.id.details_reason)).setText(schedule.reason);
+				setUpSummary(view, schedule);
+				setUpTestBtn(view, schedule);
 			}
 		});
 
 		viewModel.setSchedule(getArguments().getInt("id"));
+	}
+
+	private void setUpSummary(View view, Schedule schedule) {
+		((TextView) view.findViewById(R.id.title)).setText(schedule.description);
+		((TextView) view.findViewById(R.id.details_amount)).setText(Utils.formatAmount(schedule.amount));
+		((TextView) view.findViewById(R.id.details_date)).setText(DateUtils.humanFriendlyDate(schedule.start_date));
+
+		view.findViewById(R.id.frequencyRow).setVisibility(schedule.frequency.equals(Schedule.ONCE) ? View.GONE : View.VISIBLE);
+		((TextView) view.findViewById(R.id.details_frequency)).setText(schedule.humanFrequency(getContext()));
+
+		view.findViewById(R.id.endRow).setVisibility(schedule.frequency.equals(Schedule.ONCE) ? View.GONE : View.VISIBLE);
+		((TextView) view.findViewById(R.id.details_end)).setText(DateUtils.humanFriendlyDate(schedule.end_date));
+
+		view.findViewById(R.id.reasonRow).setVisibility(schedule.reason == null || schedule.reason.isEmpty() ? View.GONE : View.VISIBLE);
+		((TextView) view.findViewById(R.id.details_reason)).setText(schedule.reason);
+
+		((Button) view.findViewById(R.id.cancel_btn)).setOnClickListener((View.OnClickListener) btn -> showConfirmDialog());
+	}
+
+	private void showConfirmDialog() {
+		AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.StaxDialog))
+			.setTitle(R.string.cancel_future_head)
+			.setMessage(R.string.cancel_future_msg)
+			.setNegativeButton(R.string.back, (DialogInterface.OnClickListener) (dialog, whichButton) -> {})
+			.setPositiveButton(R.string.cancel_future_btn, (DialogInterface.OnClickListener) (dialog, whichButton) -> {
+				viewModel.deleteSchedule();
+				UIHelper.flashMessage(getContext(), getString(R.string.cancel_future_success));
+				NavHostFragment.findNavController(ScheduleDetailFragment.this).navigate(R.id.navigation_home);
+			}).create();
+		alertDialog.show();
+	}
+
+	private void setUpTestBtn(View view, Schedule schedule) {
+		view.findViewById(R.id.test_btn).setVisibility(Utils.usingDebugVariant(getContext()) ? View.VISIBLE : View.GONE);
+		((Button) view.findViewById(R.id.test_btn)).setOnClickListener((View.OnClickListener) btn -> {
+			WorkManager.getInstance(getContext())
+				.beginUniqueWork("TEST", ExistingWorkPolicy.REPLACE, ScheduleWorker.makeWork()).enqueue();
+			if (!schedule.isScheduledForToday())
+				UIHelper.flashMessage(getContext(), "Shouldn't show notification, not scheduled for today.");
+		});
 	}
 }

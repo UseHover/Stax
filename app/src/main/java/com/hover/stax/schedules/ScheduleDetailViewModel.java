@@ -28,4 +28,8 @@ public class ScheduleDetailViewModel extends AndroidViewModel {
 		if (schedule == null) { return new MutableLiveData<>(); }
 		return schedule;
 	}
+
+	void deleteSchedule() {
+		repo.delete(schedule.getValue());
+	}
 }

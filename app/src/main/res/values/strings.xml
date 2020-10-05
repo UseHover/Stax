@@ -17,6 +17,7 @@
 	<string name="nav_money">Move Money</string>
 	<string name="nav_security">Security</string>
 	<string name="nav_transaction">Transaction Details</string>
+	<string name="nav_schedule">Schedule Details</string>
 	<string name="nav_language">Language Choice</string>
 	<string name="nav_account_detail">Account Details</string>
 
@@ -27,6 +28,8 @@
 	<string name="no_selection_error">You must select at least 1 service.</string>
 	<string name="add_accounts">Add accounts</string>
 	<string name="edit">Edit</string>
+	<string name="back">Back</string>
+	<string name="test">Test</string>
 	<string name="add_an_account"><u>+ Add an account</u></string>
 	<string name="history">History</string>
 	<string name="no_history_yet">No history yet</string>
@@ -94,9 +97,6 @@
 	<string name="title_me2me">Move money between accounts</string>
 	<string name="title_request">Request money</string>
 
-	<string name="transaction_descrip_airtime">%1$s sent airtime to %2$s</string>
-	<string name="transaction_descrip_money">From %1$s to %2$s</string>
-
 	<string name="from">From</string>
 	<string name="to">To</string>
 	<string name="to_network">To network</string>
@@ -155,9 +155,25 @@
 	<string name="timeago_year">about a year</string>
 	<string name="timeago_years">%1$d years</string>
 
+	<string name="transaction_descrip_airtime">%1$s sent airtime to %2$s</string>
+	<string name="schedule_descrip_airtime">buy airtime with %1$s for %2$s</string>
+	<string name="transaction_descrip_money">from %1$s to %2$s</string>
+
+	<string name="notify_transfer">It\'s time to transfer money %1$s with Stax.</string>
+	<string name="notify_transfer_cta">Transfer now</string>
+	<string name="notify_request">It\'s time to send a request to %1$s with Stax.</string>
+	<string name="notify_request_cta">Send request</string>
+	<string name="notify_airtime">It\'s time to buy airtime with Stax.</string>
+	<string name="notify_airtime_cta">Buy airtime</string>
+
 	<string name="auth_title">Security check</string>
 	<string name="auth_subTitle">Authenticate</string>
 	<string name="auth_desc">Authenticate with your fingerprint</string>
+
+	<string name="cancel_future_head">Cancel future transaction</string>
+	<string name="cancel_future_btn">Cancel transactions</string>
+	<string name="cancel_future_msg">This will cancel future transactions. You can re-schedule the transactions at any time.</string>
+	<string name="cancel_future_success">Future transactions canceled.</string>
 
 	<string name="insecure_warning">Your device does not have a lockscreen enabled. Keep your money secure by entering PIN for every transaction.</string>
 	<string name="title_activity_some">SomeActivity</string>

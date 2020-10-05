@@ -13,6 +13,9 @@ import com.hover.stax.utils.DateUtils;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @Entity(tableName = "schedules")
 public class Schedule {
 	public final static String ONCE = "4once", DAILY = "0daily", WEEKLY = "1weekly", BIWEEKLY = "2biweekly", MONTHLY = "3monthly";
@@ -72,7 +75,7 @@ public class Schedule {
 	private String generateDescription(Action action, Context c) {
 		switch (type) {
 			case Action.AIRTIME:
-				return c.getString(R.string.transaction_descrip_airtime, action.from_institution_name, ((recipient == null || recipient.equals("")) ? "myself" : recipient));
+				return c.getString(R.string.schedule_descrip_airtime, action.from_institution_name, ((recipient == null || recipient.equals("")) ? "myself" : recipient));
 			case Action.P2P:
 				return c.getString(R.string.transaction_descrip_money, action.to_institution_name, recipient);
 			case Action.ME2ME:
@@ -90,6 +93,31 @@ public class Schedule {
 			case Schedule.MONTHLY: return c.getString(R.string.monthly);
 			default: return DateUtils.humanFriendlyDate(start_date);
 		}
+	}
+
+	String title(Context c) {
+		switch(type) {
+			case Action.P2P:
+			case Action.ME2ME: return c.getString(R.string.notify_transfer_cta);
+			case Action.AIRTIME: return c.getString(R.string.notify_airtime_cta);
+			default: return null;
+		}
+	}
+
+	String notificationMsg(Context c) {
+		switch(type) {
+			case Action.P2P:
+			case Action.ME2ME: return c.getString(R.string.notify_transfer, description);
+			case Action.AIRTIME: return c.getString(R.string.notify_airtime);
+			default: return null;
+		}
+	}
+
+	boolean isScheduledForToday() {
+		Date scheduledDate = new Date(start_date);
+		Date today = new Date(DateUtils.now());
+		SimpleDateFormat comparisonFormat =  new SimpleDateFormat("MM dd yyyy");
+		return comparisonFormat.format(scheduledDate).equals(comparisonFormat.format(today));
 	}
 
 	@NotNull
