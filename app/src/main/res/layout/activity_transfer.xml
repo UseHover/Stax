@@ -1,9 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/fragment_container"
-	android:name="com.hover.stax.transfers.TransferFragment"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	tools:layout="@layout/fragment_transfer"/>
+	tools:context=".transfers.TransferActivity">
+
+	<fragment
+		android:id="@+id/fragment_container"
+		android:name="com.hover.stax.transfers.TransferFragment"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		tools:layout="@layout/fragment_transfer"/>
+
+	<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+		android:id="@+id/fab"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginVertical="@dimen/margin_13"
+		android:layout_marginHorizontal="@dimen/margin_26"
+		android:layout_gravity="end|bottom"
+		style="@style/StaxButtonColored"
+		android:text="@string/continue_text"
+		android:fontFamily="font-medium"
+		android:onClick="onContinue"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

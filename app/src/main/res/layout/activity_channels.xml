@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-	android:layout_marginTop="@dimen/margin_8"
-    android:orientation="vertical">
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".transfers.SomeActivity">
 
 	<androidx.core.widget.NestedScrollView
 		android:layout_width="match_parent"
@@ -34,8 +35,9 @@
 	<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton android:id="@+id/choose_serves_done"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
+		android:layout_margin="@dimen/margin_13"
 		android:layout_gravity="end|bottom"
 		style="@style/StaxButtonColored"
 	    android:text="@string/continue_text"
 	    android:fontFamily="font-medium" />
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

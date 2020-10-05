@@ -16,6 +16,7 @@
 	<dimen name="margin_16">16dp</dimen>
 	<dimen name="margin_21">21dp</dimen>
 	<dimen name="margin_24">24dp</dimen>
+	<dimen name="margin_26">26dp</dimen>
 	<dimen name="margin_34">34dp</dimen>
 	<dimen name="editText_stroke_size">2dp</dimen>
 	<dimen name="editText_initial_stroke">1dp</dimen>
@@ -25,4 +26,5 @@
 	<dimen name="actionTextSize">22sp</dimen>
 	<dimen name="actionRightSideTextSize">15sp</dimen>
 	<dimen name="actDetailsStatusMarginLeft">42dp</dimen>
+	<dimen name="fab_margin">16dp</dimen>
 </resources>

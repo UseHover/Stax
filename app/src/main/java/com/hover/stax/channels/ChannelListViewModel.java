@@ -188,9 +188,11 @@ public class ChannelListViewModel extends AndroidViewModel {
 
 	void saveSelected() {
 		List<Channel> saveChannels = allChannels.getValue() != null ? allChannels.getValue() : new ArrayList<>();
-		for (Channel channel : saveChannels) {
+		for (int i = 0; i < saveChannels.size(); i++) {
+			Channel channel = saveChannels.get(i);
 			if (selected.getValue().contains(channel.id)) {
 				channel.selected = true;
+				if (i == 0) channel.defaultAccount = true;
 				repo.update(channel);
 				FirebaseMessaging.getInstance().subscribeToTopic("channel-" + channel.id);
 			}

@@ -18,7 +18,7 @@ import java.util.List;
 public class Action {
 	public final static String TRANSACTION_TYPE = "transaction_type", P2P = "p2p", AIRTIME = "airtime", ME2ME = "me2me", C2B = "c2b", BALANCE = "balance";
 	public final static String STEP_IS_PARAM = "is_param", STEP_VALUE = "value",
-			PIN_KEY = "pin", AMOUNT_KEY = "amount", PHONE_KEY = "phone", ACCOUNT_KEY = "account", FEE_KEY = "fee";
+			PIN_KEY = "pin", AMOUNT_KEY = "amount", PHONE_KEY = "phone", ACCOUNT_KEY = "account", FEE_KEY = "fee", REASON_KEY = "reason";
 
 	@PrimaryKey
 	@ColumnInfo(name = "_id")
@@ -90,17 +90,22 @@ public class Action {
 	}
 
 	public boolean requiresRecipient() {
+		return requiresInput(ACCOUNT_KEY) || requiresInput(PHONE_KEY);
+	}
+
+	public boolean requiresReason() {
+		return requiresInput(REASON_KEY);
+	}
+
+	private boolean requiresInput(String key) {
 		try {
 			JSONArray steps = new JSONArray(custom_steps);
 			for (int s = 0; s < steps.length(); s++) {
 				JSONObject step = steps.optJSONObject(s);
-				if (step != null && Boolean.TRUE.equals(step.optBoolean(STEP_IS_PARAM)) &&
-							!step.optString(STEP_VALUE).equals(PIN_KEY) && !step.optString(STEP_VALUE).equals(AMOUNT_KEY)) {
+				if (step != null && Boolean.TRUE.equals(step.optBoolean(STEP_IS_PARAM)) && step.optString(STEP_VALUE).equals(key))
 					return true;
-				}
 			}
-		} catch (JSONException e) {
-		}
+		} catch (JSONException e) { }
 		return false;
 	}
 

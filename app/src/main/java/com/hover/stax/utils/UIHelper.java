@@ -61,13 +61,6 @@ public class UIHelper {
 		textView.setCompoundDrawablesWithIntrinsicBounds(wrappedDrawable, null, null, null);
 	}
 
-	static public ColorStateList radioGroupColorState(){
-		return  new ColorStateList(
-				new int[][]{new int[]{android.R.attr.state_enabled}},
-				new int[] {ApplicationInstance.getContext().getResources().getColor(R.color.colorAccent)}
-		);
-	}
-
 	public static void setTextUnderline(TextView textView, String cs) {
 		SpannableString content = new SpannableString(cs);
 		content.setSpan(new UnderlineSpan(), 0, content.length(), 0);

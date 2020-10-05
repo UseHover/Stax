@@ -1,4 +1,5 @@
 <resources>
+
 	<style name="StaxTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
 		<item name="colorPrimary">@color/colorPrimary</item>
 		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -6,13 +7,17 @@
 
 		<item name="android:windowActionBar">false</item>
 		<item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
-		<item name="materialCalendarFullscreenTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen</item>
-		<item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar</item>
+		<item name="materialCalendarFullscreenTheme">
+			@style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen
+		</item>
+		<item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar
+		</item>
 
 		<item name="android:textColor">@color/offWhite</item>
 		<item name="android:buttonStyle">@style/StaxButton</item>
 		<item name="buttonStyle">@style/StaxButton</item>
 		<item name="android:windowBackground">@color/colorPrimaryDark</item>
+		<item name="android:fitsSystemWindows">true</item>
 	</style>
 
 	<style name="StaxHoverTheme" parent="StaxTheme" />
@@ -52,6 +57,26 @@
 		<item name="cornerFamily">rounded</item>
 		<item name="cornerSize">5dp</item>
 	</style>
+
+	<style name="StaxLabeledInput" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+		<item name="boxStrokeColor">@color/offWhite</item>
+		<item name="android:textColorHint">@color/offWhite</item>
+		<item name="hintTextColor">@color/offWhite</item>
+		<item name="android:textColor">@color/offWhite</item>
+		<item name="android:textSize">@dimen/text_16</item>
+	</style>
+
+	<style name="StaxLabeledDropdown" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+		<item name="boxStrokeColor">@color/offWhite</item>
+		<item name="android:textColorHint">@color/offWhite</item>
+		<item name="hintTextColor">@color/offWhite</item>
+		<item name="android:textColor">@color/offWhite</item>
+		<item name="android:textSize">@dimen/text_16</item>
+	</style>
+
+	<style name="StaxTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+	<style name="StaxTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
 
 

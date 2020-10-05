@@ -21,6 +21,16 @@
 			android:background="@color/cardViewColor"
 			android:orientation="vertical" >
 
+			<ImageView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:src="@drawable/ic_arrow_back"
+				android:layout_gravity="start"
+				android:gravity="start"
+				android:id="@+id/backButton"
+				android:visibility="gone"
+				android:layout_marginEnd="@dimen/spacing32" />
+
 			<TextView android:id="@+id/title"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"

@@ -4,57 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+	android:layout_marginTop="@dimen/margin_13"
     tools:context=".transfers.TransferFragment">
 
 	<LinearLayout
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-		android:layout_margin="@dimen/margin_16"
+	    android:layout_height="wrap_content"
 	    android:orientation="vertical" >
 
-		<include layout="@layout/transfer_card_main" />
+		<include layout="@layout/transfer_card_summary"
+			android:id="@+id/summaryCard"
+			android:visibility="gone" />
 
-		<include layout="@layout/transfer_card_from"
-			android:id="@+id/fromStageCardView" />
+		<include layout="@layout/transfer_card_amount"
+			android:id="@+id/amountCard" />
 
-		<LinearLayout  android:id="@+id/details_block"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="vertical">
+		<include layout="@layout/transfer_card_from_channel"
+			android:id="@+id/fromAccountCard" />
 
-			<include layout="@layout/transfer_card_to"
-				android:id="@+id/toStageCardView" />
+		<include layout="@layout/transfer_card_network"
+			android:id="@+id/networkCard" />
 
-			<Button android:id="@+id/confirm_button"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:text="@string/continue_text"
-			    android:background="@drawable/button_bg_colored"
-			    android:textColor="@color/colorPrimary"
-			    android:textAllCaps="false"
-			    android:layout_marginTop="@dimen/spacing32"
-			    android:layout_gravity="end"
-			    android:fontFamily="font-medium"
-			    android:textSize="@dimen/text_16"
-			    android:layout_marginHorizontal="@dimen/activity_vertical_margin"
-			    android:paddingHorizontal="@dimen/spacing32"/>
-		</LinearLayout>
+		<include layout="@layout/transfer_card_recipient"
+			android:id="@+id/recipientCard" />
 
-		<include layout="@layout/transfer_card_future" />
+		<include layout="@layout/transfer_card_reason"
+			android:id="@+id/reasonCard" />
 
-		<include layout="@layout/transfer_card_repeat" />
+		<include layout="@layout/transfer_card_future"
+			android:id="@+id/futureCard" />
 
-		<TextView android:id="@+id/error_message"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/activity_vertical_margin"
-			android:textAlignment="center"
-	        android:fontFamily="font-normal"
-			android:text="@string/no_p2p_action_error"
-			android:textColor="@color/offWhite"
-			android:textSize="@dimen/text_16"
-			android:visibility="gone"/>
+		<include layout="@layout/transfer_card_repeat"
+			android:id="@+id/repeatCard" />
+
+		<include layout="@layout/transfer_card_error"
+			android:id="@+id/errorCard"
+			android:visibility="gone" />
 
 	</LinearLayout>
 </androidx.core.widget.NestedScrollView>

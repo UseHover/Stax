@@ -26,16 +26,19 @@
 	<string name="continue_text">Continue</string>
 	<string name="no_selection_error">You must select at least 1 service.</string>
 	<string name="add_accounts">Add accounts</string>
-	<string name="add_an_account">+ Add an account</string>
+	<string name="edit">Edit</string>
+	<string name="add_an_account"><u>+ Add an account</u></string>
 	<string name="history">History</string>
 	<string name="no_history_yet">No history yet</string>
 	<string name="transfer">Transfer</string>
+	<string name="transfer_now">Transfer now</string>
 	<string name="number">Number</string>
 	<string name="toNetwork">To network</string>
 	<string name="how_much_money">How much money?</string>
 	<string name="to_who">Receiver</string>
 	<string name="from_this_account">From this account</string>
-	<string name="to_this_receiver">To this receiver</string>
+	<string name="to_this_network">To this network</string>
+	<string name="to_this_number">To this number</string>
 	<string name="language">Language</string>
 	<string name="accounts">Accounts</string>
 
@@ -69,6 +72,7 @@
 	<string name="recipient_phone">Recipient phone number</string>
 	<string name="recipient_account">Recipient account number</string>
 	<string name="recipient_hint">Enter number</string>
+	<string name="optional_message">Enter message (optional)</string>
 
 	<string name="security">Security</string>
 	<string name="remove_pin_from_device">Remove PINs from device</string>
@@ -95,6 +99,7 @@
 
 	<string name="from">From</string>
 	<string name="to">To</string>
+	<string name="to_network">To network</string>
 	<string name="amount">Amount</string>
 	<string name="add_a_message">Add a message</string>
 	<string name="when">When</string>
@@ -104,6 +109,7 @@
 	<string name="fees">Fees</string>
 	<string name="choose_a_service_to_calculate">Choose a service to calculate your fees</string>
 	<string name="total">Total</string>
+	<string name="schedule">Schedule</string>
 	<string name="send_future">Send in the future</string>
 	<string name="send_repeat">Repeat transaction</string>
 	<string name="schedule_created">Transfer scheduled. We will remind you to make a transfer on %1$s</string>
@@ -119,12 +125,14 @@
 	<string name="date">Date</string>
 	<string name="network">Network</string>
 	<string name="transactionId">Transaction ID</string>
-	<string name="message">Messages</string>
+	<string name="message">Message</string>
+	<string name="messages">Messages</string>
 
-	<string name="enterRecipientNumberError">Please enter recipient number"</string>
+	<string name="error">Error</string>
+	<string name="enterRecipientError">Please enter recipient number"</string>
 	<string name="enterAnotherOptionError">Please try another option</string>
 	<string name="enterAmountError">Please enter amount</string>
-	<string name="selectServiceError">"Please select a service"</string>
+	<string name="selectServiceError">Please select a service</string>
 	<string name="contact_perm_error">You must grant the read contacts permission to choose a number from your address book.</string>
 	<string name="selectContactErrorMessage">There was a problem selecting from your contact, please try again</string>
 	<string name="no_p2p_action_error">Can\'t send money using this service. Choose a difference service or contact support.</string>
@@ -149,4 +157,13 @@
 	<string name="auth_desc">Authenticate with your fingerprint</string>
 
 	<string name="insecure_warning">Your device does not have a lockscreen enabled. Keep your money secure by entering PIN for every transaction.</string>
+	<string name="title_activity_some">SomeActivity</string>
+	<!-- Strings used for fragments for navigation -->
+	<string name="first_fragment_label">First Fragment</string>
+	<string name="second_fragment_label">Second Fragment</string>
+	<string name="next">Next</string>
+	<string name="previous">Previous</string>
+
+	<string name="hello_first_fragment">Hello first fragment</string>
+	<string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 </resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatRadioButton
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:paddingHorizontal="@dimen/margin_13"
+	android:layout_marginTop="@dimen/margin_21"
+	android:fontFamily="font-normal"
+	android:buttonTint="@color/radio_color_list"
+	android:textColor="@color/offWhite"
+	android:textSize="@dimen/text_16"
+	android:textColorHighlight="@color/offWhite"
+	android:text="@string/visit_channel" />

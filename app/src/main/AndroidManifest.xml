@@ -17,7 +17,6 @@
 		android:roundIcon="@mipmap/ic_launcher_round"
 		android:supportsRtl="true"
 		android:theme="@style/StaxTheme">
-		<activity android:name=".transfers.TransferActivity"></activity>
 
 		<activity
 			android:name=".SplashScreenActivity"
@@ -38,6 +37,10 @@
 		<activity android:name=".languages.SelectLanguageActivity" />
 		<activity android:name=".channels.ChannelsActivity" />
 		<activity android:name=".security.PinsActivity" />
+
+		<activity android:name=".transfers.TransferActivity"
+			android:theme="@style/StaxTheme"
+			android:windowSoftInputMode="stateVisible|adjustResize" />
 
 		<receiver
 			android:name=".hover.TransactionReceiver"

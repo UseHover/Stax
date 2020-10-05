@@ -81,7 +81,7 @@
 		<com.hover.stax.views.StaxCardView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			app:title="@string/message">
+			app:title="@string/messages">
 
 			<androidx.recyclerview.widget.RecyclerView
 			    android:layout_width="match_parent"

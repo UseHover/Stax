@@ -8,7 +8,6 @@
 	<RadioGroup
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/activity_vertical_margin"
 		android:id="@+id/fromRadioGroup"/>
 
 	<TextView
@@ -19,6 +18,6 @@
 		android:text="@string/add_an_account"
 		android:textSize="@dimen/text_16"
 		android:fontFamily="font-medium"
-		android:padding="@dimen/activity_vertical_margin"/>
+		android:layout_marginBottom="@dimen/margin_8"/>
 
 </com.hover.stax.views.StaxCardView>
