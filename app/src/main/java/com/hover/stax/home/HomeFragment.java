@@ -108,6 +108,6 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	public void viewScheduledDetail(int id) {
 		Bundle bundle = new Bundle();
 		bundle.putInt("id", id);
-		NavHostFragment.findNavController(this).navigate(R.id.transactionDetailsFragment, bundle);
+		NavHostFragment.findNavController(this).navigate(R.id.scheduleDetailsFragment, bundle);
 	}
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	app:title="@string/to_this_number">
@@ -25,7 +26,8 @@
 				android:textColor="@color/offWhite"
 				android:textCursorDrawable="@null"
 				android:inputType="number"
-				android:id="@+id/recipient_input"/>
+				android:id="@+id/recipient_input"
+				tools:ignore="RtlSymmetry" />
 		</com.google.android.material.textfield.TextInputLayout>
 
 		<ImageButton android:id="@+id/contact_button"

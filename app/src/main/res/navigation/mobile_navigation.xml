@@ -27,6 +27,15 @@
 	</fragment>
 
 	<fragment
+		android:id="@+id/scheduleDetailsFragment"
+		android:name="com.hover.stax.schedules.ScheduleDetailFragment"
+		android:label="ScheduleDetailFragment" >
+		<argument
+			android:name="id"
+			app:argType="integer" />
+	</fragment>
+
+	<fragment
 	    android:id="@+id/channelsDetailsFragment"
 	    android:name="com.hover.stax.channels.ChannelDetailFragment"
 	    android:label="ChannelsDetailsFragment" >

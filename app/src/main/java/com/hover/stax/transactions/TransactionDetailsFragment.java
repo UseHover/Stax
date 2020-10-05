@@ -5,13 +5,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,12 +30,12 @@ public class TransactionDetailsFragment extends Fragment {
 	private TransactionDetailsViewModel viewModel;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		viewModel = new ViewModelProvider(this).get(TransactionDetailsViewModel.class);
+		viewModel = new ViewModelProvider(requireActivity()).get(TransactionDetailsViewModel.class);
 		JSONObject data = new JSONObject();
 		try { data.put("uuid", getArguments().getString(TransactionContract.COLUMN_UUID));
 		} catch (JSONException e) { }
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_transaction)), data);
-		return inflater.inflate(R.layout.transaction_details_layout, container, false);
+		return inflater.inflate(R.layout.fragment_transaction, container, false);
 	}
 
 	@Override
@@ -55,6 +52,7 @@ public class TransactionDetailsFragment extends Fragment {
 		});
 
 		viewModel.getAction().observe(getViewLifecycleOwner(), action -> {
+			Log.e(TAG, "action updated: " + action);
 			if (action != null) {
 				((TextView) view.findViewById(R.id.details_network)).setText(action.network_name);
 			}

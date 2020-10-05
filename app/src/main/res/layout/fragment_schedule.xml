@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_marginTop="@dimen/margin_13">
+
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:orientation="vertical">
+
+		<com.hover.stax.views.StaxCardView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:title="@string/nav_transaction">
+
+			<TableLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content">
+
+				<TableRow android:layout_marginTop="@dimen/margin_24">
+					<TextView
+						android:textColor="@color/offWhite"
+						android:textSize="@dimen/text_16"
+						android:text="@string/amount"/>
+
+					<TextView android:id="@+id/details_amount"
+						android:layout_weight="1"
+						android:textAlignment="viewEnd"
+						android:fontFamily="font-normal"
+						android:textColor="@color/offWhite"
+						android:textSize="@dimen/text_21" />
+				</TableRow>
+
+				<TableRow android:layout_marginTop="@dimen/margin_24">
+					<TextView
+						android:textColor="@color/offWhite"
+						android:textSize="@dimen/text_16"
+						android:text="@string/date"/>
+
+					<TextView android:id="@+id/details_date"
+						android:layout_weight="1"
+						android:textAlignment="viewEnd"
+						android:fontFamily="font-normal"
+						android:textColor="@color/offWhite"
+						android:textSize="@dimen/text_21" />
+				</TableRow>
+
+				<TableRow android:id="@+id/frequencyRow" android:layout_marginTop="@dimen/margin_24">
+					<TextView
+						android:textColor="@color/offWhite"
+						android:textSize="@dimen/text_16"
+						android:text="@string/how_often"/>
+
+					<TextView android:id="@+id/details_frequency"
+						android:layout_weight="1"
+						android:textAlignment="viewEnd"
+						android:fontFamily="font-normal"
+						android:textColor="@color/offWhite"
+						android:textSize="@dimen/text_21" />
+				</TableRow>
+
+				<TableRow android:id="@+id/endRow" android:layout_marginTop="@dimen/margin_24">
+					<TextView
+						android:textColor="@color/offWhite"
+						android:textSize="@dimen/text_16"
+						android:text="@string/end_date"/>
+
+					<TextView android:id="@+id/details_end"
+						android:layout_weight="1"
+						android:textAlignment="viewEnd"
+						android:fontFamily="font-normal"
+						android:textColor="@color/offWhite"
+						android:textSize="@dimen/text_21" />
+				</TableRow>
+
+				<TableRow android:id="@+id/reasonRow" android:layout_marginTop="@dimen/margin_24">
+					<TextView
+						android:textColor="@color/offWhite"
+						android:textSize="@dimen/text_16"
+						android:text="@string/note"/>
+
+					<TextView android:id="@+id/details_reason"
+						android:layout_weight="1"
+						android:textAlignment="viewEnd"
+						android:fontFamily="font-normal"
+						android:textColor="@color/offWhite"
+						android:textSize="@dimen/text_21" />
+				</TableRow>
+			</TableLayout>
+		</com.hover.stax.views.StaxCardView>
+	</LinearLayout>
+</androidx.core.widget.NestedScrollView>

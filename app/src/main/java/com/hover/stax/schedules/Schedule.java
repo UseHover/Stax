@@ -9,6 +9,7 @@ import androidx.room.PrimaryKey;
 
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.utils.DateUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -78,6 +79,16 @@ public class Schedule {
 				return c.getString(R.string.transaction_descrip_money, action.from_institution_name, action.to_institution_name);
 			default:
 				return "Other";
+		}
+	}
+
+	String humanFrequency(Context c) {
+		switch(frequency) {
+			case Schedule.DAILY: return c.getString(R.string.daily);
+			case Schedule.WEEKLY: return c.getString(R.string.weekly);
+			case Schedule.BIWEEKLY: return c.getString(R.string.biweekly);
+			case Schedule.MONTHLY: return c.getString(R.string.monthly);
+			default: return DateUtils.humanFriendlyDate(start_date);
 		}
 	}
 

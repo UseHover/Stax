@@ -123,7 +123,10 @@
 	<string name="add_service">+ Add a service</string>
 
 	<string name="date">Date</string>
+	<string name="end_date">End date</string>
 	<string name="network">Network</string>
+	<string name="how_often">How often?</string>
+	<string name="note">Note</string>
 	<string name="transactionId">Transaction ID</string>
 	<string name="message">Message</string>
 	<string name="messages">Messages</string>

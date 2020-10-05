@@ -18,7 +18,7 @@ public interface ScheduleDao {
 	LiveData<List<Schedule>> getFuture();
 
 	@Query("SELECT * FROM schedules WHERE id = :id")
-	LiveData<Schedule> get(int id);
+	Schedule get(int id);
 
 	@Insert
 	void insert(Schedule schedule);

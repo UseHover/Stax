@@ -116,6 +116,8 @@ public class DatabaseRepo {
 		return scheduleDao.getFuture();
 	}
 
+	public Schedule getSchedule(int id) { return scheduleDao.get(id); }
+
 	public void insert(Schedule schedule) {
 		AppDatabase.databaseWriteExecutor.execute(() -> scheduleDao.insert(schedule));
 	}
