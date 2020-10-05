@@ -5,46 +5,60 @@
     android:layout_marginTop="32dp"
     android:orientation="vertical">
 
-	<LinearLayout
+
+	<RelativeLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:orientation="horizontal">
+	    android:paddingVertical="0dp"
+	    android:background="@color/cardViewColor"
+	    android:id="@+id/amountStageCardView"
+	    >
+
+		<EditText
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:paddingLeft="60dp"
+		    android:paddingStart="60dp"
+		    android:paddingEnd="@dimen/editText_box_margin_horiz"
+		    android:paddingRight="@dimen/editText_box_margin_horiz"
+		    android:paddingTop="18dp"
+		    android:paddingBottom="18dp"
+		    android:hint="@string/pin_input_hint"
+		    android:textColorHint="@color/darkGrey"
+		    android:layout_marginTop="8dp"
+		    android:maxLines="1"
+		    android:id="@+id/variableEditId"
+		    android:autofillHints="email_hint"
+		    android:inputType="numberPassword"
+		    android:textColor="@color/offWhite"
+		    android:background="@drawable/edit_text_bg" />
+
+
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="top"
+		    android:id="@+id/variable_label_id"
+		    android:background="@color/cardViewColor"
+		    android:textColor="@color/offWhite"
+		    android:layout_marginStart="10dp"
+		    android:textSize="@dimen/text_16"
+		    android:layout_marginTop="-8dp"
+		    android:paddingHorizontal="@dimen/spacing8"
+		    android:fontFamily="font-normal"
+		    android:textStyle="bold" />
 
 		<de.hdodenhof.circleimageview.CircleImageView
 		    android:layout_width="30dp"
 		    android:layout_height="30dp"
 		    android:scaleType="centerCrop"
+		    android:layout_below="@id/variable_label_id"
+		    android:layout_marginHorizontal="@dimen/activity_vertical_margin"
 		    android:src="@drawable/mtn_logo"
 		    android:id="@+id/variable_logo"
-		    android:visibility="gone"
-		    android:layout_marginEnd="8dp" />
+		    android:visibility="visible"
+		    />
 
-		<TextView
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_gravity="center_vertical"
-		    android:id="@+id/variable_label_id"
-		    android:textColor="@color/offWhite"
-		    android:textSize="@dimen/text_16"
-		    android:textStyle="bold" />
-	</LinearLayout>
+	</RelativeLayout>
 
-	<EditText
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:paddingLeft="@dimen/editText_box_margin_horiz"
-	    android:paddingStart="@dimen/editText_box_margin_horiz"
-	    android:paddingEnd="@dimen/editText_box_margin_horiz"
-	    android:paddingRight="@dimen/editText_box_margin_horiz"
-	    android:paddingTop="@dimen/editText_box_margin_vert"
-	    android:paddingBottom="@dimen/editText_box_margin_vert"
-	    android:hint="@string/pin_input_hint"
-	    android:textColorHint="@color/darkGrey"
-	    android:layout_marginTop="8dp"
-	    android:maxLines="1"
-	    android:id="@+id/variableEditId"
-	    android:autofillHints="email_hint"
-	    android:inputType="numberPassword"
-	    android:textColor="@color/offWhite"
-	    android:background="@drawable/edit_text_bg" />
 </LinearLayout>

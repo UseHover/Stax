@@ -2,34 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-	android:orientation="vertical"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_horizontal_margin"
     android:background="@color/colorPrimary">
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:orientation="horizontal">
-
-		<TextView
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:text="@string/choose_institutions_title"
-			android:textSize="@dimen/text_21"
-			android:padding="@dimen/activity_horizontal_margin"
-			android:layout_weight="1"
-			android:fontFamily="font-medium"
-			android:textColor="@color/offWhite" />
-
-		<TextView android:id="@+id/choose_serves_done"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textSize="@dimen/text_13"
-			android:padding="@dimen/activity_horizontal_margin"
-			android:fontFamily="font-medium"
-			android:textColor="@color/offWhite"
-			android:text="@string/done" />
-	</LinearLayout>
+	<TextView
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/choose_institutions_title"
+	    android:textSize="@dimen/text_21"
+	    android:padding="@dimen/activity_horizontal_margin"
+	    android:fontFamily="font-medium"
+	    android:textColor="@color/offWhite" />
 
 	<TextView android:id="@+id/loading_title"
 		android:layout_marginTop="@dimen/spacing32"
@@ -43,8 +28,10 @@
 
 	<androidx.core.widget.NestedScrollView
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
+		android:layout_height="0dp"
+	    android:layout_weight="1"
 		android:paddingBottom="@dimen/activity_horizontal_margin">
+
 
 		<LinearLayout android:id="@+id/section_wrapper"
 			android:layout_width="match_parent"
@@ -52,14 +39,59 @@
 			android:orientation="vertical"
 			android:visibility="gone">
 
-			<include android:id="@+id/sim_section" layout="@layout/channel_grid" />
+			<androidx.cardview.widget.CardView
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:padding="1dp"
+			    card_view:cardUseCompatPadding="true"
+			    card_view:cardElevation="10dp"
+			    android:layout_margin="@dimen/spacing8"
+			    card_view:cardPreventCornerOverlap="true"
+			    card_view:cardCornerRadius="0dp">
+				<include android:id="@+id/sim_section"
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    layout="@layout/channel_grid" />
+			</androidx.cardview.widget.CardView>
 
+
+			<androidx.cardview.widget.CardView
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:padding="1dp"
+			    card_view:cardUseCompatPadding="true"
+			    card_view:cardElevation="10dp"
+			    android:layout_marginHorizontal="@dimen/spacing8"
+			    android:layout_marginBottom="@dimen/activity_vertical_margin"
+			    card_view:cardPreventCornerOverlap="true"
+			    card_view:cardCornerRadius="0dp">
 			<LinearLayout android:id="@+id/country_wrapper"
 				android:layout_width="match_parent"
+			    	android:background="@color/cardViewColor"
 				android:layout_height="match_parent"
 				android:orientation="vertical" />
+			</androidx.cardview.widget.CardView>
 
-			<include android:id="@+id/all_section" layout="@layout/channel_grid" />
+			<include android:id="@+id/all_section"
+			    android:visibility="gone"
+			    layout="@layout/channel_grid" />
+
+
 		</LinearLayout>
 	</androidx.core.widget.NestedScrollView>
+	<Button
+	    android:id="@+id/choose_serves_done"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="@string/continue_text"
+	    android:paddingHorizontal="@dimen/spacing32"
+	    android:layout_marginHorizontal="@dimen/activity_vertical_margin"
+	    android:textAllCaps="false"
+	    android:fontFamily="font-medium"
+	    android:layout_gravity="end"
+	    android:gravity="center"
+	    android:textSize="@dimen/text_16"
+	    android:layout_marginTop="@dimen/spacing32"
+	    android:textColor="@color/colorPrimary"
+	    android:background="@drawable/button_bg_colored" />
 </LinearLayout>
