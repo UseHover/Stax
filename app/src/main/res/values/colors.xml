@@ -14,4 +14,5 @@
 	<color name="dividerColor">#333333</color>
 	<color name="transparent">#00000000</color>
 
+	<color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/offWhite</color>
 </resources>

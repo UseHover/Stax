@@ -5,34 +5,38 @@
 	android:layout_height="wrap_content"
 	app:title="@string/to_this_number">
 
-	<com.google.android.material.textfield.TextInputLayout
-		android:id="@+id/recipientEntry"
+	<RelativeLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:hint="@string/recipient_phone"
-		style="@style/StaxLabeledInput"
-		android:visibility="gone">
+		android:layout_height="wrap_content">
 
-		<com.google.android.material.textfield.TextInputEditText
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/recipientEntry"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:padding="@dimen/margin_13"
-			android:textSize="@dimen/text_21"
-			android:textColor="@color/offWhite"
-			android:textCursorDrawable="@null"
-			android:inputType="number"
-			android:id="@+id/recipient_number"/>
+			android:hint="@string/recipient_phone"
+			style="@style/StaxLabeledInput">
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:padding="@dimen/margin_13"
+				android:paddingEnd="@dimen/margin_68"
+				android:textSize="@dimen/text_21"
+				android:textColor="@color/offWhite"
+				android:textCursorDrawable="@null"
+				android:inputType="number"
+				android:id="@+id/recipient_input"/>
+		</com.google.android.material.textfield.TextInputLayout>
 
 		<ImageButton android:id="@+id/contact_button"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginEnd="@dimen/activity_vertical_margin"
+			android:layout_marginTop="@dimen/margin_21"
+			android:layout_marginEnd="@dimen/margin_24"
 			android:layout_alignParentEnd="true"
-			android:layout_centerVertical="true"
-			android:layout_marginTop="@dimen/spacing32"
 			android:src="@drawable/ic_contacts"
 			android:background="@color/transparent"/>
-	</com.google.android.material.textfield.TextInputLayout>
+	</RelativeLayout>
 
 
 </com.hover.stax.views.StaxCardView>

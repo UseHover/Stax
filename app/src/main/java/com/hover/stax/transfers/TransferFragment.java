@@ -9,8 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
@@ -18,7 +18,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -26,6 +25,7 @@ import com.amplitude.api.Amplitude;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.textfield.TextInputLayout;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
@@ -46,7 +46,7 @@ public class TransferFragment extends Fragment {
 	private String transferType;
 	private EditText amountInput;
 	private RadioGroup fromRadioGroup;
-	private AppCompatSpinner spinnerNetwork;
+	private AutoCompleteTextView networkDropdown;
 	private com.google.android.material.textfield.TextInputLayout recipientEntry;
 	private EditText recipientInput;
 	private ImageButton contactButton;
@@ -84,9 +84,9 @@ public class TransferFragment extends Fragment {
 
 		amountInput = root.findViewById(R.id.amount_input);
 		fromRadioGroup = root.findViewById(R.id.fromRadioGroup);
-		spinnerNetwork = root.findViewById(R.id.networkSpinner);
+		networkDropdown = root.findViewById(R.id.networkDropdown);
 		recipientEntry = root.findViewById(R.id.recipientEntry);
-		recipientInput = root.findViewById(R.id.recipient_number);
+		recipientInput = root.findViewById(R.id.recipient_input);
 		contactButton = root.findViewById(R.id.contact_button);
 		reasonInput = root.findViewById(R.id.reason_input);
 
@@ -96,8 +96,24 @@ public class TransferFragment extends Fragment {
 	}
 
 	private void startObservers(View root) {
-		transferViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
-			if (channels != null) createChannelSelector(channels);
+		transferViewModel.getStage().observe(getViewLifecycleOwner(), this::updateVariableValues);
+		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> amountValue.setText(Utils.formatAmount(amount)));
+		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> toNetworkValue.setText(action.toString()));
+		transferViewModel.getRecipient().observe(getViewLifecycleOwner(), recipient -> recipientValue.setText(recipient));
+		transferViewModel.getReason().observe(getViewLifecycleOwner(), reason -> reasonValue.setText(reason));
+
+		transferViewModel.getIsFuture().observe(getViewLifecycleOwner(), isFuture -> root.findViewById(R.id.dateInput).setVisibility(isFuture ? View.VISIBLE : View.GONE));
+		transferViewModel.getFutureDate().observe(getViewLifecycleOwner(), futureDate -> {
+			((TextView) root.findViewById(R.id.dateInput)).setText(futureDate != null ? DateUtils.humanFriendlyDate(futureDate) : getString(R.string.date));
+			((TextView) root.findViewById(R.id.dateValue)).setText(futureDate != null ? DateUtils.humanFriendlyDate(futureDate) : getString(R.string.date));
+		});
+
+		transferViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
+			if (actions == null || actions.size() == 0) return;
+			Log.e(TAG, "action update, channel: " + transferViewModel.getActiveChannel().getValue());
+			ArrayAdapter<Action> adapter = new ArrayAdapter<>(requireActivity(), R.layout.stax_spinner_item, actions);
+			networkDropdown.setAdapter(adapter);
+			networkDropdown.setText(networkDropdown.getAdapter().getItem(0).toString(), false);
 		});
 
 		transferViewModel.getActiveChannel().observe(getViewLifecycleOwner(), c -> {
@@ -108,21 +124,8 @@ public class TransferFragment extends Fragment {
 			}
 		});
 
-		transferViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
-			Log.e(TAG, "action update, channel: " + transferViewModel.getActiveChannel().getValue());
-			ArrayAdapter<Action> adapter = new ArrayAdapter<>(requireActivity(), R.layout.spinner_items, actions);
-			spinnerNetwork.setAdapter(adapter);
-		});
-
-		transferViewModel.getStage().observe(getViewLifecycleOwner(), this::updateVariableValues);
-		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> amountValue.setText(Utils.formatAmount(amount)));
-		transferViewModel.getRecipient().observe(getViewLifecycleOwner(), recipient -> recipientValue.setText(recipient));
-		transferViewModel.getReason().observe(getViewLifecycleOwner(), reason -> reasonValue.setText(reason));
-
-		transferViewModel.getIsFuture().observe(getViewLifecycleOwner(), isFuture -> root.findViewById(R.id.dateInput).setVisibility(isFuture ? View.VISIBLE : View.GONE));
-		transferViewModel.getFutureDate().observe(getViewLifecycleOwner(), futureDate -> {
-			((TextView) root.findViewById(R.id.dateInput)).setText(futureDate != null ? DateUtils.humanFriendlyDate(futureDate) : getString(R.string.date));
-			((TextView) root.findViewById(R.id.dateValue)).setText(futureDate != null ? DateUtils.humanFriendlyDate(futureDate) : getString(R.string.date));
+		transferViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
+			if (channels != null) createChannelSelector(channels);
 		});
 	}
 
@@ -146,6 +149,7 @@ public class TransferFragment extends Fragment {
 				if (validates(amountInput, R.string.enterAmountError))
 					transferViewModel.setAmount(amountInput.getText().toString());
 				break;
+			case TO_NUMBER: recipientInput.requestFocus(); break;
 			case REASON:
 				if (validates(recipientInput, R.string.enterRecipientError))
 					transferViewModel.setRecipient(recipientInput.getText().toString());
@@ -161,7 +165,7 @@ public class TransferFragment extends Fragment {
 
 	private boolean validates(EditText input, int errorMsg) {
 		if (input.getText().toString().isEmpty()) {
-			UIHelper.flashMessage(getContext(), getString(errorMsg));
+			((TextInputLayout) input.getParent().getParent()).setError(getString(errorMsg));
 			transferViewModel.goToPrevStage();
 			return false;
 		}
@@ -172,17 +176,11 @@ public class TransferFragment extends Fragment {
 		fromRadioGroup.setOnCheckedChangeListener((group, checkedId) -> transferViewModel.setActiveChannel(checkedId));
 		root.findViewById(R.id.add_new_account).setOnClickListener(view -> startActivity(new Intent(getActivity(), ChannelsActivity.class)));
 
-		spinnerNetwork.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				Action action = (Action) spinnerNetwork.getItemAtPosition(position);
-				transferViewModel.setActiveAction(action);
-				setRecipientHint(action);
-				toNetworkValue.setText(spinnerNetwork.getSelectedItem().toString());
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) { }
+		networkDropdown.setOnItemClickListener((adapterView, view, pos, id) -> {
+			Action action = (Action) adapterView.getItemAtPosition(pos);
+			transferViewModel.setActiveAction(action);
+			setRecipientHint(action);
+			toNetworkValue.setText(action.toString());
 		});
 
 		((SwitchMaterial) root.findViewById(R.id.futureSwitch)).setOnCheckedChangeListener((view, isChecked) -> transferViewModel.setIsFutureDated(isChecked));
@@ -190,7 +188,6 @@ public class TransferFragment extends Fragment {
 	}
 
 	private void setRecipientHint(Action action) {
-		recipientEntry.setVisibility(action.requiresRecipient() ? View.VISIBLE : View.GONE);
 		if (action.getRequiredParams().contains(Action.ACCOUNT_KEY)) {
 			recipientEntry.setHint(getString(R.string.recipient_account));
 		} else {

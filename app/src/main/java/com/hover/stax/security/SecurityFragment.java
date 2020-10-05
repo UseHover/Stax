@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,19 +17,15 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.home.HomeFragment;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.languages.Lang;
 import com.hover.stax.languages.LanguageViewModel;
-import com.hover.stax.transactions.TransactionHistoryAdapter;
 import com.hover.stax.utils.UIHelper;
 import com.yariksoffice.lingver.Lingver;
 
@@ -58,7 +53,7 @@ public class SecurityFragment extends Fragment {
 		AppCompatSpinner languageSpinner = root.findViewById(R.id.selectLanguageSpinner);
 		LanguageViewModel languageViewModel = new ViewModelProvider(this).get(LanguageViewModel.class);
 		languageViewModel.loadLanguages().observe(getViewLifecycleOwner(), languages -> {
-			ArrayAdapter<Lang> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_items, languages);
+			ArrayAdapter<Lang> adapter = new ArrayAdapter<>(getContext(), R.layout.stax_spinner_item, languages);
 			languageSpinner.setAdapter(adapter);
 			languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 				@Override
@@ -99,7 +94,7 @@ public class SecurityFragment extends Fragment {
 
 	private void showAccounts(List<Channel> channels, View root) {
 		ListView lv = root.findViewById(R.id.accounts_list);
-		ArrayAdapter<Channel> adapter = new ArrayAdapter<>(requireActivity(), R.layout.spinner_items, channels);
+		ArrayAdapter<Channel> adapter = new ArrayAdapter<>(requireActivity(), R.layout.stax_spinner_item, channels);
 		lv.setAdapter(adapter);
 		lv.setOnItemClickListener((arg0, arg1, position, arg3) -> goToAccountDetail(channels.get(position).id));
 		UIHelper.fixListViewHeight(lv);
@@ -113,7 +108,7 @@ public class SecurityFragment extends Fragment {
 
 	private void createDefaultSelector(List<Channel> channels, View root, PinsViewModel securityViewModel) {
 		AppCompatSpinner spinner = root.findViewById(R.id.defaultAccountSpinner);
-		ArrayAdapter<Channel> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_items, channels);
+		ArrayAdapter<Channel> adapter = new ArrayAdapter<>(getContext(), R.layout.stax_spinner_item, channels);
 		spinner.setAdapter(adapter);
 		spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override

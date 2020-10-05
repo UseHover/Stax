@@ -3,6 +3,7 @@ package com.hover.stax.transfers;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -36,9 +37,10 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		transferViewModel = new ViewModelProvider(this).get(TransferViewModel.class);
-		transferViewModel.getActiveChannel().observe(this, channel -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
-		transferViewModel.getActions().observe(this, this::onUpdateActions);
 		transferViewModel.getActiveAction().observe(this, action -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
+		transferViewModel.getActions().observe(this, this::onUpdateActions);
+		transferViewModel.getActiveChannel().observe(this, channel -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
+
 		transferViewModel.getStage().observe(this, this::onUpdateStage);
 		transferViewModel.getIsFuture().observe(this, isFuture -> onUpdateStage(transferViewModel.getStage().getValue()));
 		transferViewModel.getFutureDate().observe(this, date -> onUpdateStage(transferViewModel.getStage().getValue()));
@@ -65,7 +67,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		if (transferViewModel.getIsFuture().getValue() != null && transferViewModel.getIsFuture().getValue() && transferViewModel.getFutureDate().getValue() != null) {
 			transferViewModel.schedule();
 			UIHelper.flashMessage(this, findViewById(R.id.root), getString(R.string.schedule_created, DateUtils.humanFriendlyDate(transferViewModel.getFutureDate().getValue())));
-//			NavHostFragment.findNavController(this).navigate(R.id.navigation_home);
+			startActivity(new Intent(this, MainActivity.class));
 		} else authenticate();
 	}
 
@@ -90,6 +92,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 			.extra(Action.PHONE_KEY, transferViewModel.getRecipient().getValue())
 			.extra(Action.ACCOUNT_KEY, transferViewModel.getRecipient().getValue())
 			.extra(Action.AMOUNT_KEY, transferViewModel.getAmount().getValue())
+			.extra(Action.REASON_KEY, transferViewModel.getReason().getValue())
 			.run();
 	}
 
@@ -102,6 +105,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 			findViewById(R.id.summaryCard).setVisibility(View.GONE);
 			findViewById(R.id.errorCard).setVisibility(View.VISIBLE);
 		} else {
+			Log.e(TAG, "setting active action: " + actions.get(0));
 			findViewById(R.id.summaryCard).setVisibility(View.VISIBLE);
 			findViewById(R.id.errorCard).setVisibility(View.GONE);
 			transferViewModel.setActiveAction(actions.get(0));
@@ -109,7 +113,6 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void onUpdateStage(InputStage stage) {
-		Log.e(TAG, "current stage: " + stage);
 		findViewById(R.id.summaryCard).setVisibility(stage.compareTo(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.amountRow).setVisibility(stage.compareTo(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.fromRow).setVisibility(stage.compareTo(FROM_ACCOUNT) > 0 ? View.VISIBLE : View.GONE);
@@ -129,14 +132,15 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void setFab(InputStage stage) {
-		Log.e(TAG, "updateing fab");
 		ExtendedFloatingActionButton fab = ((ExtendedFloatingActionButton) findViewById(R.id.fab));
 		if (stage.compareTo(REVIEW) == 0) {
 			if (transferViewModel.getIsFuture().getValue() != null && transferViewModel.getIsFuture().getValue()) {
 				fab.setVisibility(transferViewModel.getFutureDate().getValue() == null ? View.GONE : View.VISIBLE);
 				fab.setText(getString(R.string.schedule));
-			} else
+			} else {
+				fab.setVisibility(View.VISIBLE);
 				fab.setText(getString(R.string.transfer_now));
+			}
 		} else {
 			fab.setVisibility(View.VISIBLE);
 			fab.setText(R.string.continue_text);

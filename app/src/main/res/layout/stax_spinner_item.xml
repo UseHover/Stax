@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.AppCompatTextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/spinnerItemId"
     android:textColor="@drawable/spinner_state_selector"
     android:textSize="@dimen/text_16"
     android:background="@color/cardViewColor"
-    android:paddingHorizontal="@dimen/margin_13"
-	android:paddingVertical="@dimen/margin_21"
+    android:padding="@dimen/margin_13"
+	android:paddingEnd="@dimen/margin_34"
     android:fontFamily="font-normal"
     android:singleLine="true"
     android:layout_width="match_parent"

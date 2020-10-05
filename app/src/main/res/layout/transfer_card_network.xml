@@ -11,13 +11,17 @@
 		android:layout_height="wrap_content"
 		android:hint="@string/network">
 
-		<androidx.appcompat.widget.AppCompatSpinner
+		<AutoCompleteTextView
+			android:id="@+id/networkDropdown"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/activity_vertical_margin"
-			android:padding="3dp"
-			android:background="@drawable/spinner_bg"
-			android:id="@+id/networkSpinner" />
+			android:padding="@dimen/margin_13"
+			android:dropDownWidth="wrap_content"
+			android:background="@null"
+			android:editable="false"
+			android:textSize="@dimen/text_21"
+			android:textColor="@color/offWhite"
+			android:textCursorDrawable="@null" />
 
 	</com.google.android.material.textfield.TextInputLayout>
 </com.hover.stax.views.StaxCardView>
