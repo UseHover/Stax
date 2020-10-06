@@ -47,6 +47,7 @@
 	<string name="requests_sent">Your money has been sent successfully</string>
 
 	<string name="request_money_sms_template" translatable="false">Hello, I\'m using Stax to request money from you. Amount: %1$s. Message: %2$s. www.joinstax.com</string>
+	<string name="sms_notice_description">* Your money request will be through SMS to ensure fast and safe delivery even with no internet connection</string>
 
 
 

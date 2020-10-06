@@ -318,6 +318,18 @@
 				</LinearLayout>
 			</androidx.cardview.widget.CardView>
 
+			<TextView
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:text="@string/sms_notice_description"
+			    android:textColor="@color/grey"
+			    android:textSize="@dimen/text_13"
+			    android:id="@+id/sms_notice"
+			    android:visibility="gone"
+			    android:layout_marginHorizontal="@dimen/activity_vertical_margin"
+			    android:fontFamily="font-normal"
+			    />
+
 		</LinearLayout>
 
 	</androidx.core.widget.NestedScrollView>

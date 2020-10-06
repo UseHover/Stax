@@ -44,7 +44,7 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 	private RequestStage nextInputStage = RequestStage.ENTER_RECIPIENT;
 	private RequestStage previousInputStage = null;
 
-	private TextView fromWhoLabel, fromWhoValue, amountLabel, amountValue, messageLabel, messageValue;
+	private TextView fromWhoLabel, fromWhoValue, amountLabel, amountValue, messageLabel, messageValue, sms_notice;
 	private EditText amountInput, messageInput;
 	private Button addSomeElse;
 
@@ -82,6 +82,7 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 		amountInput = view.findViewById(R.id.amount_input);
 		messageInput = view.findViewById(R.id.message_input);
 		addSomeElse = view.findViewById(R.id.add_someoneElse_button);
+		sms_notice = view.findViewById(R.id.sms_notice);
 
 		fromWhoInputRecyclerView = view.findViewById(R.id.fromWhoRecyclerView);
 		fromWhoInputRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
@@ -90,9 +91,7 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 		handleBackButton(view);
 		handleContinueButton(view);
 
-		addSomeElse.setOnClickListener(v -> {
-			requestViewModel.addRequest();
-		});
+		addSomeElse.setOnClickListener(v -> { requestViewModel.addRequest(); });
 
 	}
 
@@ -219,6 +218,8 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 				previousInputStage = null;
 				nextInputStage = RequestStage.AMOUNT;
 
+				sms_notice.setVisibility(View.GONE);
+
 				break;
 			case AMOUNT:
 				setFromWhoReview(View.VISIBLE);
@@ -231,6 +232,8 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 
 				previousInputStage = RequestStage.ENTER_RECIPIENT;
 				nextInputStage = RequestStage.MESSAGE;
+
+				sms_notice.setVisibility(View.GONE);
 				break;
 			case MESSAGE:
 				setFromWhoReview(View.VISIBLE);
@@ -244,6 +247,8 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 
 				previousInputStage = RequestStage.AMOUNT;
 				nextInputStage = RequestStage.REVIEW;
+
+				sms_notice.setVisibility(View.GONE);
 				break;
 			case REVIEW:
 				setFromWhoReview(View.VISIBLE);
@@ -257,6 +262,8 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 
 				previousInputStage = RequestStage.MESSAGE;
 				nextInputStage = RequestStage.SEND;
+
+				sms_notice.setVisibility(View.VISIBLE);
 				break;
 		}
 	}
