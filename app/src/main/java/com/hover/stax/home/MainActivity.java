@@ -21,10 +21,13 @@ import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.hover.HoverSession;
+import com.hover.stax.schedules.Schedule;
 import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.security.SecurityFragment;
 import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.transfers.TransferActivity;
+import com.hover.stax.utils.DateUtils;
+import com.hover.stax.utils.UIHelper;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
@@ -37,7 +40,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener, RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener {
 	final public static String TAG = "MainActivity";
 
-	final public static int ADD_SERVICE = 200, TRANSFER_REQUEST = 203;
+	final public static int ADD_SERVICE = 200;
 
 	private BalancesViewModel balancesViewModel;
 	private RapidFloatingActionHelper rfabHelper;
@@ -157,17 +160,24 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_CANCELED) { return; }
-		if (requestCode == MainActivity.TRANSFER_REQUEST || requestCode < 100) {
-			Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
-			new ViewModelProvider(this).get(TransactionHistoryViewModel.class).saveTransaction(data, this);
-			Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_home);
-		}
 
-		if (requestCode < 100) {
+		if ((requestCode == TransferActivity.TRANSFER_REQUEST || requestCode < 100) && resultCode == RESULT_OK)
+			onProbableHoverCall(data);
+
+		if (requestCode < 100) { // Balance call
 			balancesViewModel.setRan(requestCode);
 		} else if (requestCode == ADD_SERVICE && resultCode == RESULT_OK) {
 			balancesViewModel.setRunning();
+		}
+	}
+
+	private void onProbableHoverCall(Intent data) {
+		if (data.getAction().equals(TransferActivity.TRANSFERED)) {
+			Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
+			new ViewModelProvider(this).get(TransactionHistoryViewModel.class).saveTransaction(data, this);
+		} else if (data.getAction().equals(TransferActivity.SCHEDULED)) {
+			UIHelper.flashMessage(this, findViewById(R.id.content),
+				getString(R.string.schedule_created, DateUtils.humanFriendlyDate(data.getIntExtra(Schedule.DATE_KEY, 0))));
 		}
 	}
 
@@ -184,17 +194,18 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 	@Override
 	public void onRFACItemLabelClick(int position, RFACLabelItem item) {
 		switch (position) {
-			case 0:
-				startActivity(new Intent(this, TransferActivity.class));
-			break;
-			case 1:
-				startActivity(new Intent(this, TransferActivity.class));
-			break;
-			case 2: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_security);
-			break;
+			case 0: startTransfer(Action.P2P); break;
+			case 1: startTransfer(Action.AIRTIME); break;
+			case 2: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_security); break;
 			default: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_home);
 		}
 		rfabHelper.toggleContent();
+	}
+
+	private void startTransfer(String type) {
+		Intent i = new Intent(this, TransferActivity.class);
+		i.setAction(type);
+		startActivityForResult(i, TransferActivity.TRANSFER_REQUEST);
 	}
 
 	@Override

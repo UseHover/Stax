@@ -70,7 +70,6 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		recyclerView.setHasFixedSize(true);
 
 		futureViewModel.getScheduled().observe(getViewLifecycleOwner(), schedules -> {
-			Log.e(TAG, "Found some schedules: " + schedules.size());
 			recyclerView.setAdapter(new ScheduledAdapter(schedules, this));
 			view.findViewById(R.id.scheduled_card).setVisibility(schedules != null && schedules.size() > 0 ? View.VISIBLE : View.GONE);
 		});

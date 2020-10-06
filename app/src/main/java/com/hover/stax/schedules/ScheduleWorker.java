@@ -14,12 +14,10 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.hover.stax.R;
+import com.hover.stax.actions.Action;
 import com.hover.stax.database.AppDatabase;
 import com.hover.stax.transfers.TransferActivity;
-import com.hover.stax.utils.DateUtils;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -52,10 +50,6 @@ public class ScheduleWorker extends Worker {
 	}
 
 	private void notifyUser(Schedule s) {
-		Intent intent = new Intent(getApplicationContext(), TransferActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
-
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "DEFAULT")
 			.setSmallIcon(R.drawable.ic_stax)
 			.setContentTitle(s.title(getApplicationContext()))
@@ -63,10 +57,18 @@ public class ScheduleWorker extends Worker {
 			.setStyle(new NotificationCompat.BigTextStyle().bigText(s.notificationMsg(getApplicationContext())))
 			.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 			.setCategory(NotificationCompat.CATEGORY_REMINDER)
-			.setContentIntent(pendingIntent)
+			.setContentIntent(createTransferIntent(s))
 			.setAutoCancel(true);
 
 		NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
 		notificationManager.notify(s.id, builder.build());
+	}
+
+	private PendingIntent createTransferIntent(Schedule s) {
+		Intent intent = new Intent(getApplicationContext(), TransferActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		intent.setAction(s.type);
+		intent.putExtra(Schedule.SCHEDULE_ID, s.id);
+		return PendingIntent.getActivity(getApplicationContext(), TransferActivity.SCHEDULED_REQUEST, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 }

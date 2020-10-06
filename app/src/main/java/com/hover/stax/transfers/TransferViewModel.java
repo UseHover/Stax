@@ -1,6 +1,9 @@
 package com.hover.stax.transfers;
 
 import android.app.Application;
+import android.content.Context;
+import android.renderscript.ScriptGroup;
+import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -8,6 +11,8 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
+import com.amplitude.api.Amplitude;
+import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.DatabaseRepo;
@@ -19,16 +24,15 @@ public class TransferViewModel extends AndroidViewModel {
 
 	private String type = Action.P2P;
 	private LiveData<List<Channel>> selectedChannels;
-	private LiveData<List<Action>> filteredActions;
+	private MutableLiveData<InputStage> inputStage = new MutableLiveData<>();
 
 	private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
+	private LiveData<List<Action>> filteredActions;
 	private MutableLiveData<Action> activeAction = new MutableLiveData<>();
 
-	private MutableLiveData<InputStage> inputStage = new MutableLiveData<>();
 	private MutableLiveData<String> amount = new MutableLiveData<>();
 	private MutableLiveData<String> recipient = new MutableLiveData<>();
 	private MutableLiveData<String> reason = new MutableLiveData<>();
-
 	private MutableLiveData<Boolean> futureDated = new MutableLiveData<>();
 	private MutableLiveData<Long> futureDate = new MutableLiveData<>();
 
@@ -45,39 +49,6 @@ public class TransferViewModel extends AndroidViewModel {
 		futureDate.setValue(null);
 	}
 
-	void goToNextStage() {
-		InputStage next = inputStage.getValue() != null ? inputStage.getValue().next() : InputStage.AMOUNT;
-		if (next.compareTo(InputStage.REASON) == 0 && !activeAction.getValue().requiresReason())
-			next = next.next();
-		inputStage.postValue(next);
-	}
-	void goToPrevStage() { inputStage.postValue(inputStage.getValue() != null ? inputStage.getValue().prev() : InputStage.AMOUNT);}
-	LiveData<InputStage> getStage() {
-		if (inputStage == null) { inputStage = new MutableLiveData<>(); inputStage.setValue(InputStage.AMOUNT);}
-		return inputStage;
-	}
-
-	void setAmount(String a) { amount.postValue(a); }
-	LiveData<String> getAmount() {
-		if (amount == null) { amount = new MutableLiveData<>(); }
-		return amount;
-	}
-
-	void setRecipient(String r) { recipient.postValue(r); }
-	LiveData<String> getRecipient() {
-		if (recipient == null) { recipient = new MutableLiveData<>(); }
-		return recipient;
-	}
-
-	void setReason(String r) { reason.postValue(r); }
-	LiveData<String> getReason() {
-		if (reason == null) { reason = new MutableLiveData<>(); reason.setValue(" "); }
-		return reason;
-	}
-
-	void setType(String transaction_type) { type = transaction_type; }
-	String getType() { return type; }
-
 	private void loadSelected() {
 		if (selectedChannels == null) {
 			selectedChannels = new MutableLiveData<>();
@@ -89,6 +60,9 @@ public class TransferViewModel extends AndroidViewModel {
 		if (activeChannel == null) { activeChannel = new MediatorLiveData<>(); }
 		activeChannel.addSource(repo.getDefault(), c -> activeChannel.setValue(c));
 	}
+
+	void setType(String transaction_type) { type = transaction_type; }
+	String getType() { return type; }
 
 	void setActiveChannel(int channel_id) {
 		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0) { return; }
@@ -120,6 +94,57 @@ public class TransferViewModel extends AndroidViewModel {
 		return activeAction;
 	}
 
+	void setStage(InputStage stage) { inputStage.setValue(stage); }
+	void goToNextStage() {
+		InputStage next = inputStage.getValue() != null ? inputStage.getValue().next() : InputStage.AMOUNT;
+		next = validateNext(next);
+		inputStage.postValue(next);
+	}
+
+	private InputStage validateNext(InputStage next) {
+		if (!canStayAt(next)) { next = validateNext(next.next()); }
+		return next;
+	}
+
+	boolean goToPrevStage() {
+		if (inputStage.getValue() != null || inputStage.getValue().compareTo(InputStage.AMOUNT) == 0) return false;
+		boolean canGoBack = canStayAt(inputStage.getValue().prev());
+		if (canGoBack) { inputStage.postValue(inputStage.getValue().prev()); }
+		return canGoBack;
+	}
+
+	private boolean canStayAt(InputStage stage) {
+		switch (stage) {
+			case TO_NETWORK: return filteredActions.getValue() != null && (filteredActions.getValue().size() > 1 || filteredActions.getValue().get(0).hasToInstitution());
+			case TO_NUMBER: return activeAction.getValue() != null && activeAction.getValue().requiresRecipient();
+			case REASON: return activeAction.getValue() != null && activeAction.getValue().requiresReason();
+			default: return true;
+		}
+	}
+
+	LiveData<InputStage> getStage() {
+		if (inputStage == null) { inputStage = new MutableLiveData<>(); inputStage.setValue(InputStage.AMOUNT);}
+		return inputStage;
+	}
+
+	void setAmount(String a) { amount.postValue(a); }
+	LiveData<String> getAmount() {
+		if (amount == null) { amount = new MutableLiveData<>(); }
+		return amount;
+	}
+
+	void setRecipient(String r) { recipient.postValue(r); }
+	LiveData<String> getRecipient() {
+		if (recipient == null) { recipient = new MutableLiveData<>(); }
+		return recipient;
+	}
+
+	void setReason(String r) { reason.postValue(r); }
+	LiveData<String> getReason() {
+		if (reason == null) { reason = new MutableLiveData<>(); reason.setValue(" "); }
+		return reason;
+	}
+
 	void setIsFutureDated(boolean isFuture) { futureDated.setValue(isFuture); }
 	LiveData<Boolean> getIsFuture() {
 		if (futureDated == null) { futureDated = new MutableLiveData<>(); futureDated.setValue(false);}
@@ -131,7 +156,9 @@ public class TransferViewModel extends AndroidViewModel {
 		return futureDate;
 	}
 
-	void schedule() {
+	void schedule(Context c) {
+		Amplitude.getInstance().logEvent(c.getString(R.string.scheduled_transaction, type));
+		Log.e("VM", "Scheduling, active action: " + activeAction.getValue().public_id);
 		Schedule s = new Schedule(activeAction.getValue(), futureDate.getValue(), recipient.getValue(), amount.getValue(), getApplication());
 		repo.insert(s);
 	}

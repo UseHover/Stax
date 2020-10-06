@@ -61,8 +61,6 @@ public class TransferFragment extends Fragment {
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		transferType = getArguments() != null ? getArguments().getString(Action.TRANSACTION_TYPE) : Action.P2P;
 		transferViewModel = new ViewModelProvider(requireActivity()).get(TransferViewModel.class);
-		transferViewModel.setType(transferType);
-		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, transferType));
 
 		View root = inflater.inflate(R.layout.fragment_transfer, container, false);
 
@@ -75,6 +73,8 @@ public class TransferFragment extends Fragment {
 	}
 
 	private void initView(View root) {
+		((TextView) root.findViewById(R.id.title)).setText(
+			getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.buy_airtime : R.string.transfer));
 		amountValue = root.findViewById(R.id.amountValue);
 		fromValue = root.findViewById(R.id.fromValue);
 		toNetworkValue = root.findViewById(R.id.toNetworkValue);
@@ -97,10 +97,19 @@ public class TransferFragment extends Fragment {
 
 	private void startObservers(View root) {
 		transferViewModel.getStage().observe(getViewLifecycleOwner(), this::updateVariableValues);
-		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> amountValue.setText(Utils.formatAmount(amount)));
-		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> toNetworkValue.setText(action.toString()));
-		transferViewModel.getRecipient().observe(getViewLifecycleOwner(), recipient -> recipientValue.setText(recipient));
-		transferViewModel.getReason().observe(getViewLifecycleOwner(), reason -> reasonValue.setText(reason));
+		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> {
+			amountInput.setText(amount);
+			amountValue.setText(Utils.formatAmount(amount));
+		});
+		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> { if (action != null) toNetworkValue.setText(action.toString()); });
+		transferViewModel.getRecipient().observe(getViewLifecycleOwner(), recipient -> {
+			recipientInput.setText(recipient);
+			recipientValue.setText(recipient);
+		});
+		transferViewModel.getReason().observe(getViewLifecycleOwner(), reason -> {
+			reasonInput.setText(reason);
+			reasonValue.setText(reason);
+		});
 
 		transferViewModel.getIsFuture().observe(getViewLifecycleOwner(), isFuture -> root.findViewById(R.id.dateInput).setVisibility(isFuture ? View.VISIBLE : View.GONE));
 		transferViewModel.getFutureDate().observe(getViewLifecycleOwner(), futureDate -> {
@@ -153,11 +162,11 @@ public class TransferFragment extends Fragment {
 			case REASON:
 				if (validates(recipientInput, R.string.enterRecipientError))
 					transferViewModel.setRecipient(recipientInput.getText().toString());
+				reasonInput.requestFocus();
 				break;
 			case REVIEW:
-				if (transferViewModel.getActiveAction().getValue().requiresReason()) {
-					transferViewModel.setReason(reasonInput.getText().toString().isEmpty() ? " " : reasonInput.getText().toString());
-				} else if (validates(recipientInput, R.string.enterRecipientError))
+				transferViewModel.setReason(reasonInput.getText().toString().isEmpty() ? " " : reasonInput.getText().toString());
+				if (validates(recipientInput, R.string.enterRecipientError))
 					transferViewModel.setRecipient(recipientInput.getText().toString());
 				break;
 		}
@@ -165,9 +174,10 @@ public class TransferFragment extends Fragment {
 
 	private boolean validates(EditText input, int errorMsg) {
 		if (input.getText().toString().isEmpty()) {
-			((TextInputLayout) input.getParent().getParent()).setError(getString(errorMsg));
-			transferViewModel.goToPrevStage();
-			return false;
+			boolean canGoBack = transferViewModel.goToPrevStage();
+			if (canGoBack)
+				((TextInputLayout) input.getParent().getParent()).setError(getString(errorMsg));
+			return !canGoBack;
 		}
 		return true;
 	}
@@ -245,7 +255,7 @@ public class TransferFragment extends Fragment {
 
 	private void setErrorText() {
 		TextView errorMsgView = errorCard.findViewById(R.id.error_message);
-		if (transferType.equals(Action.AIRTIME)) errorMsgView.setText(getString(R.string.no_airtime_action_error));
+		if (transferViewModel.getType().equals(Action.AIRTIME)) errorMsgView.setText(getString(R.string.no_airtime_action_error));
 		else errorMsgView.setText(getString(R.string.no_p2p_action_error));
 	}
 }

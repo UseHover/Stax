@@ -1,7 +1,7 @@
 package com.hover.stax.transfers;
 
 enum InputStage {
-	AMOUNT, FROM_ACCOUNT, TO_NETWORK, TO_NUMBER, REASON, REVIEW, SEND;
+	AMOUNT, FROM_ACCOUNT, TO_NETWORK, TO_NUMBER, REASON, REVIEW, REVIEW_DIRECT;
 
 	private static InputStage[] vals = values();
 

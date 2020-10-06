@@ -36,7 +36,9 @@
 
 		<activity android:name=".languages.SelectLanguageActivity" />
 		<activity android:name=".channels.ChannelsActivity" />
-		<activity android:name=".security.PinsActivity" />
+
+		<activity android:name=".security.PinsActivity"
+			android:windowSoftInputMode="stateVisible|adjustResize" />
 
 		<activity android:name=".transfers.TransferActivity"
 			android:theme="@style/StaxTheme"

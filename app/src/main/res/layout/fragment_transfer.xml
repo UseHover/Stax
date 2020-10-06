@@ -13,8 +13,7 @@
 	    android:orientation="vertical" >
 
 		<include layout="@layout/transfer_card_summary"
-			android:id="@+id/summaryCard"
-			android:visibility="gone" />
+			android:id="@+id/summaryCard" />
 
 		<include layout="@layout/transfer_card_amount"
 			android:id="@+id/amountCard" />
@@ -35,7 +34,8 @@
 			android:id="@+id/futureCard" />
 
 		<include layout="@layout/transfer_card_repeat"
-			android:id="@+id/repeatCard" />
+			android:id="@+id/repeatCard"
+			android:visibility="gone" />
 
 		<include layout="@layout/transfer_card_error"
 			android:id="@+id/errorCard"

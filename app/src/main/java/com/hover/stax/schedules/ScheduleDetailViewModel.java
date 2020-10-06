@@ -6,6 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
+
+import com.hover.stax.actions.Action;
 import com.hover.stax.database.DatabaseRepo;
 
 public class ScheduleDetailViewModel extends AndroidViewModel {
@@ -13,20 +16,32 @@ public class ScheduleDetailViewModel extends AndroidViewModel {
 
 	private DatabaseRepo repo;
 	private MutableLiveData<Schedule> schedule;
+	private LiveData<Action> action;
 
 	public ScheduleDetailViewModel(@NonNull Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
 		schedule = new MutableLiveData<>();
+		action = Transformations.switchMap(schedule, this::loadAction);
 	}
 
-	void setSchedule(int id) {
+	public void setSchedule(int id) {
 		new Thread(() -> schedule.postValue(repo.getSchedule(id))).start();
 	}
 
-	LiveData<Schedule> getSchedule() {
+	public LiveData<Schedule> getSchedule() {
 		if (schedule == null) { return new MutableLiveData<>(); }
 		return schedule;
+	}
+
+	private LiveData<Action> loadAction(Schedule s) {
+		if (s != null) { return repo.getLiveAction(s.action_id); }
+		return new MutableLiveData<>();
+	}
+
+	public LiveData<Action> getAction() {
+		if (action == null) { action = new MutableLiveData<>(); }
+		return action;
 	}
 
 	void deleteSchedule() {

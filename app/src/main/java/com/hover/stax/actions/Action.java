@@ -5,6 +5,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -79,15 +80,18 @@ public class Action {
 	@ColumnInfo(name = "root_code")
 	public String root_code;
 
+	@NotNull
 	@Override
 	public String toString() {
 		if (transaction_type.equals(P2P) || transaction_type.equals(ME2ME) || transaction_type.equals(C2B))
-			return to_institution_name;
+			return to_institution_name != null && !to_institution_name.equals("null") ? to_institution_name : "Phone number";
 		if (requiresRecipient()) // airtime
 			return "Someone else";
 		else
 			return "Myself";
 	}
+
+	public boolean hasToInstitution() { return to_institution_name != null && !to_institution_name.equals("null"); }
 
 	public boolean requiresRecipient() {
 		return requiresInput(ACCOUNT_KEY) || requiresInput(PHONE_KEY);

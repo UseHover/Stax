@@ -18,7 +18,8 @@ import java.util.Date;
 
 @Entity(tableName = "schedules")
 public class Schedule {
-	public final static String ONCE = "4once", DAILY = "0daily", WEEKLY = "1weekly", BIWEEKLY = "2biweekly", MONTHLY = "3monthly";
+	public final static String ONCE = "4once", DAILY = "0daily", WEEKLY = "1weekly", BIWEEKLY = "2biweekly", MONTHLY = "3monthly",
+		SCHEDULE_ID = "schedule_id", DATE_KEY = "date";
 
 	@PrimaryKey(autoGenerate = true)
 	@NonNull
@@ -32,6 +33,7 @@ public class Schedule {
 	@ColumnInfo(name = "channel_id")
 	public int channel_id;
 
+	@NonNull
 	@ColumnInfo(name = "action_id")
 	public String action_id;
 
@@ -64,6 +66,7 @@ public class Schedule {
 	public Schedule(Action action, Long date, String r, String a, Context c) {
 		type = action.transaction_type;
 		channel_id = action.channel_id;
+		action_id = action.public_id;
 		start_date = date;
 		end_date = date;
 		recipient = r;
@@ -77,7 +80,7 @@ public class Schedule {
 			case Action.AIRTIME:
 				return c.getString(R.string.schedule_descrip_airtime, action.from_institution_name, ((recipient == null || recipient.equals("")) ? "myself" : recipient));
 			case Action.P2P:
-				return c.getString(R.string.transaction_descrip_money, action.to_institution_name, recipient);
+				return c.getString(R.string.transaction_descrip_money, action.from_institution_name, recipient);
 			case Action.ME2ME:
 				return c.getString(R.string.transaction_descrip_money, action.from_institution_name, action.to_institution_name);
 			default:
