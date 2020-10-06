@@ -113,7 +113,7 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 				SmsManager smsManager = SmsManager.getDefault();
 				String content = getContext().getString(R.string.request_money_sms_template, amountValue.getText(), messageValue.getText());
 				for (String phone : phones) {
-					smsManager.sendTextMessage(phone, null, content, null, null);
+					if(phone.trim().length() > 5) smsManager.sendTextMessage(phone, null, content, null, null);
 				}
 
 				startActivity(new Intent(getActivity(), ProcessingActivity.class));
