@@ -30,6 +30,17 @@ public class Request {
 	public String matched_transaction_uuid;
 
 	@NonNull
+	@ColumnInfo(name = "tag")
+	public int tag;
+
+	@NonNull
 	@ColumnInfo(name = "date_sent", defaultValue = "CURRENT_TIMESTAMP")
 	public Long date_sent;
+
+	public Request(int tag) {
+		this.tag = tag;
+	}
+
+	public Request() {
+	}
 }

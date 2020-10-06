@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:background="@color/colorPrimary"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    tools:context=".transfers.TransferFragment">
+
+
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical" >
+
+
+	<androidx.cardview.widget.CardView
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:padding="1dp"
+	    card_view:cardUseCompatPadding="true"
+	    card_view:cardElevation="10dp"
+	    card_view:cardPreventCornerOverlap="true"
+	    card_view:cardCornerRadius="0dp">
+
+	<RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	    android:paddingVertical="@dimen/activity_vertical_margin"
+	    android:paddingHorizontal="@dimen/activity_vertical_margin"
+	    android:background="@color/cardViewColor"
+	    android:gravity="center_vertical"
+	    android:layout_gravity="center_vertical">
+
+
+	<ImageView
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:src="@drawable/ic_arrow_back_offwhite_24dp"
+	    android:layout_gravity="start"
+	    android:gravity="start"
+	    android:id="@+id/backButton"
+	    android:layout_alignParentStart="true"
+	    android:layout_marginEnd="@dimen/spacing32"
+	    />
+
+	<TextView
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="@string/title_request"
+	    android:layout_marginStart="@dimen/spacing32"
+	    android:textSize="@dimen/text_16"
+	    android:textAllCaps="true"
+	    android:layout_alignParentEnd="true"
+	    android:layout_gravity="end|center_vertical"
+	    android:gravity="end|center_vertical"
+	    android:fontFamily="font-bold"
+	    android:id="@+id/transfer_title"
+	    android:textColor="@color/offWhite" />
+
+
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/amountLabel"
+		    android:text="@string/amount"
+		    android:textColor="@color/offWhite"
+		    android:textSize="@dimen/text_16"
+		    android:fontFamily="font-normal"
+		    android:layout_below="@id/backButton"
+		    android:layout_marginTop="@dimen/activity_vertical_margin"
+		    />
+
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/amountValue"
+		    android:textColor="@color/white"
+		    android:textSize="@dimen/text_21"
+		    android:fontFamily="font-normal"
+		    android:layout_alignParentEnd="true"
+		    android:layout_gravity="end|center_vertical"
+		    android:gravity="end|center_vertical"
+		    android:layout_below="@id/backButton"
+		    android:layout_marginTop="@dimen/activity_vertical_margin"
+		    />
+
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/messageLabel"
+		    android:text="@string/from_who"
+		    android:textColor="@color/offWhite"
+		    android:textSize="@dimen/text_16"
+		    android:fontFamily="font-normal"
+		    android:layout_below="@id/amountValue"
+		    android:layout_marginTop="@dimen/activity_vertical_margin"
+		    />
+
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/messageValue"
+		    android:textColor="@color/white"
+		    android:textSize="@dimen/text_21"
+		    android:fontFamily="font-normal"
+		    android:layout_alignParentEnd="true"
+		    android:layout_gravity="end|center_vertical"
+		    android:gravity="end|center_vertical"
+		    android:layout_below="@id/amountValue"
+		    android:layout_marginTop="@dimen/activity_vertical_margin"
+		    />
+
+
+		<androidx.recyclerview.widget.RecyclerView
+		    android:layout_width="wrap_content"
+		    android:layout_height="match_parent"
+		    android:layout_below="@id/messageLabel"
+		    android:background="@color/cardViewColor"
+		    android:id="@+id/fromWhoRecyclerView"/>
+
+
+		<Button
+		    android:id="@+id/add_someoneElse_button"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/add_someone"
+		    android:paddingHorizontal="@dimen/spacing32"
+		    android:textAllCaps="false"
+		    android:fontFamily="font-medium"
+		    android:layout_gravity="end"
+		    android:layout_alignParentEnd="true"
+		    android:gravity="center"
+		    android:layout_below="@id/fromWhoRecyclerView"
+		    android:textSize="@dimen/text_16"
+		    android:layout_marginTop="@dimen/spacing32"
+		    android:textColor="@color/offWhite"
+		    android:background="@drawable/button_bg" />
+	</RelativeLayout>
+	</androidx.cardview.widget.CardView>
+
+		<Button android:id="@+id/continue_request_button"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/continue_text"
+		    android:background="@drawable/button_bg_colored"
+		    android:textColor="@color/colorPrimary"
+		    android:textAllCaps="false"
+		    android:layout_marginTop="@dimen/spacing32"
+		    android:layout_gravity="end"
+		    android:fontFamily="font-medium"
+		    android:textSize="@dimen/text_16"
+		    android:layout_marginHorizontal="@dimen/activity_vertical_margin"
+		    android:paddingHorizontal="@dimen/spacing32"/>
+	</LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

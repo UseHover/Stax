@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/cardViewColor"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<EditText android:id="@+id/recipient_number"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:paddingLeft="@dimen/editText_box_margin_horiz"
+	    android:paddingStart="@dimen/editText_box_margin_horiz"
+	    android:paddingEnd="50dp"
+	    android:paddingRight="50dp"
+	    android:paddingTop="@dimen/activity_vertical_margin"
+	    android:paddingBottom="@dimen/activity_vertical_margin"
+	    android:textColorHint="@color/darkGrey"
+	    android:maxLines="1"
+	    android:fontFamily="font-normal"
+	    android:inputType="phone"
+	    android:layout_marginTop="@dimen/activity_vertical_margin"
+	    android:textColor="@color/offWhite"
+	    android:textSize="@dimen/text_21"
+	    android:background="@drawable/edit_text_bg" />
+	<TextView
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_marginStart="10dp"
+	    android:layout_marginTop="7dp"
+	    android:id="@+id/recipient_label"
+	    android:fontFamily="font-normal"
+	    android:text="@string/from_who"
+	    android:paddingHorizontal="@dimen/spacing8"
+	    android:background="@color/cardViewColor"
+	    android:textColor="@color/offWhite"
+	    android:textSize="@dimen/text_16" />
+
+	<ImageButton android:id="@+id/contact_button"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_marginEnd="@dimen/activity_vertical_margin"
+	    android:layout_alignParentEnd="true"
+	    android:layout_centerVertical="true"
+	    android:layout_marginTop="@dimen/spacing32"
+	    android:src="@drawable/ic_contacts"
+	    android:background="@color/transparent"/>
+</RelativeLayout>

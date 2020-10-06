@@ -80,10 +80,10 @@ public class MainActivity extends AppCompatActivity implements HomeViewModel.Run
 						  .setLabelColor(getResources().getColor(R.color.colorAccentDark))
 						  .setWrapper(1)
 		);
-		/*items.add(new RFACLabelItem<Integer>()
+		items.add(new RFACLabelItem<Integer>()
 						  .setLabel(getResources().getString(R.string.title_request))
 						  .setLabelSizeSp(21)
-						  .setWrapper(2)); */
+						  .setWrapper(2));
 
 
 		rfaContent.setItems(items);
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements HomeViewModel.Run
 			break;
 			case 1: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_buyAirtime);
 			break;
-			case 2: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_security);
+			case 2: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_request);
 			break;
 		}
 		rfabHelper.toggleContent();
