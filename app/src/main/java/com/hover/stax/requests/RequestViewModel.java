@@ -53,9 +53,20 @@ public class RequestViewModel extends AndroidViewModel {
 	void updateRequestRecipientNoUISync(int tag, String recipient) {
 		Request request = rqL.get(tag);
 		request.recipient = recipient;
-		requestList.postValue(rqL);
 	}
 
-	public LiveData<RequestStage> getStage() {return requestStage;}
-	public LiveData<List<Request>> getIntendingRequests() {return requestList;}
+	void updateRequestAmount(String amount) {
+		for(Request request : rqL) {
+			request.amount = amount;
+		}
+	}
+	void updateRequestMessage(String message) {
+		for(Request request : rqL) {
+			request.message = message;
+		}
+	}
+
+	void setRequestStage(RequestStage stage) {requestStage.postValue(stage);}
+	LiveData<RequestStage> getStage() {return requestStage;}
+	LiveData<List<Request>> getIntendingRequests() {return requestList;}
 }

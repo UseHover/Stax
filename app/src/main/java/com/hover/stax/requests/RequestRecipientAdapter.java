@@ -1,9 +1,7 @@
 package com.hover.stax.requests;
 
 import android.text.Editable;
-import android.text.Layout;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +15,12 @@ import com.hover.stax.R;
 
 import java.util.List;
 
-public class RequestFromWhoInputAdapter extends RecyclerView.Adapter<RequestFromWhoInputAdapter.RequestFromWhoInputViewHolder> {
+public class RequestRecipientAdapter extends RecyclerView.Adapter<RequestRecipientAdapter.RequestFromWhoInputViewHolder> {
 
 	private List<Request> requestList;
 	private ContactClickListener contactClickListener;
 
-	public RequestFromWhoInputAdapter(List<Request> requestList, ContactClickListener contactClickListener) {
+	public RequestRecipientAdapter(List<Request> requestList, ContactClickListener contactClickListener) {
 		this.requestList = requestList;
 		this.contactClickListener = contactClickListener;
 	}

@@ -5,14 +5,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,16 +28,25 @@ import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
+import java.util.List;
+
 import static com.hover.stax.transfers.TransferFragment.READ_CONTACT;
 
-public class RequestFragment extends Fragment implements RequestFromWhoInputAdapter.ContactClickListener {
+public class RequestFragment extends Fragment implements RequestRecipientAdapter.ContactClickListener {
 
 	private RequestViewModel requestViewModel;
 	private int stage;
 	private int recentClickedTag;
 
 	private RecyclerView fromWhoInputRecyclerView;
-	private RequestFromWhoInputAdapter requestFromWhoInputAdapter;
+	private RequestRecipientAdapter requestRecipientAdapter;
+	private CardView amountStage, messageStage;
+	private RequestStage nextInputStage = RequestStage.ENTER_RECIPIENT;
+	private RequestStage previousInputStage = null;
+
+	private TextView fromWhoLabel, fromWhoValue, amountLabel, amountValue, messageLabel, messageValue;
+	private EditText amountInput, messageInput;
+	Button addSomeElse;
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,20 +61,86 @@ public class RequestFragment extends Fragment implements RequestFromWhoInputAdap
 
 		requestViewModel.getIntendingRequests().observe(getViewLifecycleOwner(), requests -> {
 
-				requestFromWhoInputAdapter = new RequestFromWhoInputAdapter(requests, RequestFragment.this);
-				fromWhoInputRecyclerView.setAdapter(requestFromWhoInputAdapter);
+				requestRecipientAdapter = new RequestRecipientAdapter(requests, RequestFragment.this);
+				fromWhoInputRecyclerView.setAdapter(requestRecipientAdapter);
 
 		});
 	}
 
 	private void init(View view) {
+		amountStage = view.findViewById(R.id.amountStageCardView);
+		messageStage = view.findViewById(R.id.messageStageCardView);
+		fromWhoLabel = view.findViewById(R.id.fromWhoLabel);
+		fromWhoValue = view.findViewById(R.id.fromWhoValue);
+		amountLabel = view.findViewById(R.id.amountLabel);
+		amountValue = view.findViewById(R.id.amountValue);
+		messageLabel = view.findViewById(R.id.messageLabel);
+		messageValue = view.findViewById(R.id.messageValue);
+		amountInput = view.findViewById(R.id.amount_input);
+		messageInput = view.findViewById(R.id.message_input);
+		addSomeElse = view.findViewById(R.id.add_someoneElse_button);
+
 		fromWhoInputRecyclerView = view.findViewById(R.id.fromWhoRecyclerView);
 		fromWhoInputRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 
+		handleRequestStages();
+		handleBackButton(view);
+		handleContinueButton(view);
 
-
-		view.findViewById(R.id.add_someoneElse_button).setOnClickListener(v -> {
+		addSomeElse.setOnClickListener(v -> {
 			requestViewModel.addRequest();
+		});
+
+	}
+
+	private void handleBackButton(View root) {
+		root.findViewById(R.id.backButton).setOnClickListener(v -> {
+			if(previousInputStage !=null) requestViewModel.setRequestStage(previousInputStage);
+			else if(getActivity() !=null) getActivity().onBackPressed();
+		});
+	}
+
+	private void handleRequestStages() {
+		requestViewModel.getStage().observe(getViewLifecycleOwner(), this::updateStage);
+	}
+
+	private void handleContinueButton(View view) {
+		view.findViewById(R.id.continue_request_button).setOnClickListener(v -> {
+			if(nextInputStage == RequestStage.SEND) {
+
+			}
+			else {
+				requestViewModel.setRequestStage(nextInputStage);
+
+				if(nextInputStage == RequestStage.AMOUNT) {
+					List<Request> requests = requestViewModel.getIntendingRequests().getValue();
+					if(requests !=null) {
+						StringBuilder string = new StringBuilder();
+						for(Request request : requests) {
+							string.append(", ").append(request.recipient);
+						}
+						String finalizedString = string.toString().replaceFirst(",", "");
+						fromWhoValue.setText(finalizedString);
+					}
+
+
+
+				}
+
+
+				else if(nextInputStage == RequestStage.MESSAGE) {
+					if(TextUtils.getTrimmedLength(amountInput.getText()) > 0) {
+						amountValue.setText(Utils.formatAmount(amountInput.getText().toString()));
+						requestViewModel.updateRequestAmount(amountInput.getText().toString());
+					}
+				}
+				else if(nextInputStage == RequestStage.REVIEW) {
+					if(TextUtils.getTrimmedLength(messageInput.getText())> 0) {
+						messageValue.setText(messageInput.getText().toString());
+						requestViewModel.updateRequestMessage(messageInput.getText().toString());
+					}
+				}
+			}
 		});
 	}
 
@@ -78,6 +157,89 @@ public class RequestFragment extends Fragment implements RequestFromWhoInputAdap
 				Amplitude.getInstance().logEvent(getString(R.string.contact_select_error));
 				UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectContactErrorMessage));
 			}
+		}
+	}
+
+	private void setRecipientInputViewStage(int v) {
+		fromWhoInputRecyclerView.setVisibility(v);
+		addSomeElse.setVisibility(v);
+	}
+	private void setAmountStage(int v) {
+		amountStage.setVisibility(v);
+	}
+	private void setMessageStage(int v) {
+		messageStage.setVisibility(v);
+	}
+
+	private void setAmountReview(int v) {
+		amountLabel.setVisibility(v);
+		amountValue.setVisibility(v);
+	}
+	private void setMessageReview(int v) {
+		messageLabel.setVisibility(v);
+		messageValue.setVisibility(v);
+	}
+
+	private void setFromWhoReview(int v) {
+		fromWhoLabel.setVisibility(v);
+		fromWhoValue.setVisibility(v);
+
+	}
+
+	private void updateStage(RequestStage stage) {
+		switch (stage) {
+			case ENTER_RECIPIENT:
+				setFromWhoReview(View.GONE);
+				setAmountReview(View.GONE);
+				setMessageReview(View.GONE);
+
+
+				setRecipientInputViewStage(View.VISIBLE);
+				setAmountStage(View.GONE);
+				setMessageStage(View.GONE);
+
+				previousInputStage = null;
+				 nextInputStage = RequestStage.AMOUNT;
+
+				break;
+			case AMOUNT:
+				setFromWhoReview(View.VISIBLE);
+				setAmountReview(View.GONE);
+				setMessageReview(View.GONE);
+
+				setRecipientInputViewStage(View.GONE);
+				setAmountStage(View.VISIBLE);
+				setMessageStage(View.GONE);
+
+				previousInputStage = RequestStage.ENTER_RECIPIENT;
+				nextInputStage = RequestStage.MESSAGE;
+				break;
+			case MESSAGE:
+				setFromWhoReview(View.VISIBLE);
+				setAmountReview(View.VISIBLE);
+				setMessageReview(View.GONE);
+
+
+				setRecipientInputViewStage(View.GONE);
+				setAmountStage(View.GONE);
+				setMessageStage(View.VISIBLE);
+
+				previousInputStage = RequestStage.AMOUNT;
+				nextInputStage = RequestStage.REVIEW;
+				break;
+			case REVIEW:
+				setFromWhoReview(View.VISIBLE);
+				setAmountReview(View.VISIBLE);
+				setMessageReview(View.VISIBLE);
+
+
+				setRecipientInputViewStage(View.GONE);
+				setAmountStage(View.GONE);
+				setMessageStage(View.GONE);
+
+				previousInputStage = RequestStage.MESSAGE;
+				nextInputStage = RequestStage.SEND;
+				break;
 		}
 	}
 
