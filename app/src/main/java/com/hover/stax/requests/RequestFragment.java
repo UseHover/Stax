@@ -49,6 +49,7 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 	private Button addSomeElse;
 
 	private final static int SEND_SMS = 202;
+	private final static int SEND_SMS_FOREGROUND = 203;
 
 	@Nullable
 	@Override
@@ -106,12 +107,17 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 		requestViewModel.getStage().observe(getViewLifecycleOwner(), this::updateStage);
 	}
 
-	private void sendRequest() {
+
+
+	private void sendRequest(boolean inBackground) {
 		if (PermissionUtils.hasContactPermission()) {
+			String content = getContext().getString(R.string.request_money_sms_template, amountValue.getText(), messageValue.getText());
+
+			if(inBackground) {
 			try {
 				String[] phones = fromWhoValue.getText().toString().split(",");
 				SmsManager smsManager = SmsManager.getDefault();
-				String content = getContext().getString(R.string.request_money_sms_template, amountValue.getText(), messageValue.getText());
+
 				for (String phone : phones) {
 					if(phone.trim().length() > 5) smsManager.sendTextMessage(phone, null, content, null, null);
 				}
@@ -120,6 +126,17 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 			} catch (Exception ex) {
 				UIHelper.flashMessage(getContext(), ex.getMessage());
 				ex.printStackTrace();
+			}}
+			else {
+				String phones = fromWhoValue.getText().toString().replace(", ",";");
+				phones  = phones.replace("null;", "");
+				phones= phones.replace("null", "");
+
+				Intent i = new Intent(android.content.Intent.ACTION_VIEW);
+				i.putExtra("address", phones);
+				i.putExtra("sms_body", content);
+				i.setType("vnd.android-dir/mms-sms");
+				startActivityForResult(i, SEND_SMS_FOREGROUND);
 			}
 		} else requestPermissions(new String[]{Manifest.permission.SEND_SMS}, SEND_SMS);
 	}
@@ -128,10 +145,8 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 		view.findViewById(R.id.continue_request_button).setOnClickListener(v -> {
 			if (nextInputStage == RequestStage.SEND) {
 				requestViewModel.saveCopyToDatabase();
-				sendRequest();
+				sendRequest(false);
 			} else {
-				requestViewModel.setRequestStage(nextInputStage);
-
 				if (nextInputStage == RequestStage.AMOUNT) {
 					List<Request> requests = requestViewModel.getIntendingRequests().getValue();
 					if (requests != null) {
@@ -140,15 +155,28 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 							string.append(", ").append(request.recipient);
 						}
 						String finalizedString = string.toString().replaceFirst(",", "");
-						fromWhoValue.setText(finalizedString);
+						finalizedString  = finalizedString.replace("null,", "");
+						finalizedString = finalizedString.replace("null", "");
+
+						if(finalizedString.trim().length() > 5) {
+							requestViewModel.setRequestStage(nextInputStage);
+							fromWhoValue.setText(finalizedString);
+						}
+						else {
+							UIHelper.flashMessage(getContext(), getContext().getResources().getString(R.string.empty_recipient_error_msg));
+						}
 					}
 
 				} else if (nextInputStage == RequestStage.MESSAGE) {
+					requestViewModel.setRequestStage(nextInputStage);
+
 					if (TextUtils.getTrimmedLength(amountInput.getText()) > 0) {
 						amountValue.setText(Utils.formatAmount(amountInput.getText().toString()));
 						requestViewModel.updateRequestAmount(amountInput.getText().toString());
 					}
 				} else if (nextInputStage == RequestStage.REVIEW) {
+					requestViewModel.setRequestStage(nextInputStage);
+
 					if (TextUtils.getTrimmedLength(messageInput.getText()) > 0) {
 						messageValue.setText(messageInput.getText().toString());
 						requestViewModel.updateRequestMessage(messageInput.getText().toString());
@@ -263,7 +291,7 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 				previousInputStage = RequestStage.MESSAGE;
 				nextInputStage = RequestStage.SEND;
 
-				sms_notice.setVisibility(View.VISIBLE);
+				sms_notice.setVisibility(View.GONE);
 				break;
 		}
 	}
@@ -284,7 +312,7 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 
 		if (requestCode == SEND_SMS && new PermissionHelper().permissionsGranted(grantResults)) {
 			Amplitude.getInstance().logEvent(getString(R.string.sms_perm_success));
-			sendRequest();
+			sendRequest(false);
 		} else {
 			Amplitude.getInstance().logEvent(getString(R.string.sms_perm_denied));
 			UIHelper.flashMessage(getContext(), getResources().getString(R.string.send_sms_perm_error));

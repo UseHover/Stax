@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.hover.stax.database.DatabaseRepo;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class RequestViewModel extends AndroidViewModel {
@@ -70,6 +71,7 @@ public class RequestViewModel extends AndroidViewModel {
 
 	void saveCopyToDatabase() {
 		for (Request request : rqL) {
+			request.date_sent = new Date().getTime();
 			repo.insert(request);
 		}
 	}
