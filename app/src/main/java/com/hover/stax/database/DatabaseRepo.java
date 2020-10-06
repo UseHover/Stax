@@ -29,7 +29,6 @@ public class DatabaseRepo {
 
 	private LiveData<List<Channel>> allChannels;
 	private LiveData<List<Channel>> selectedChannels;
-	private LiveData<Channel> defaultChannel;
 
 	public DatabaseRepo(Application application) {
 		AppDatabase db = AppDatabase.getInstance(application);
@@ -44,7 +43,6 @@ public class DatabaseRepo {
 
 		allChannels = channelDao.getAll();
 		selectedChannels = channelDao.getSelected(true);
-		defaultChannel = channelDao.getLiveDefault();
 	}
 
 	// Channels
@@ -55,8 +53,6 @@ public class DatabaseRepo {
 	public LiveData<List<Channel>> getAll() { return allChannels; }
 
 	public LiveData<List<Channel>> getSelected() { return selectedChannels; }
-
-	public LiveData<Channel> getDefault() { return defaultChannel; }
 
 	public void update(Channel channel) {
 		AppDatabase.databaseWriteExecutor.execute(() -> channelDao.update(channel));

@@ -38,6 +38,9 @@ import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
+import static com.hover.stax.transfers.InputStage.AMOUNT;
+import static com.hover.stax.transfers.InputStage.RECIPIENT;
+
 public class TransferFragment extends Fragment {
 	private static final String TAG = "TransferFragment";
 
@@ -63,7 +66,6 @@ public class TransferFragment extends Fragment {
 		transferViewModel = new ViewModelProvider(requireActivity()).get(TransferViewModel.class);
 
 		View root = inflater.inflate(R.layout.fragment_transfer, container, false);
-
 		initView(root);
 		startObservers(root);
 		setUpListeners(root);
@@ -101,7 +103,6 @@ public class TransferFragment extends Fragment {
 			amountInput.setText(amount);
 			amountValue.setText(Utils.formatAmount(amount));
 		});
-		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> { if (action != null) toNetworkValue.setText(action.toString()); });
 		transferViewModel.getRecipient().observe(getViewLifecycleOwner(), recipient -> {
 			recipientInput.setText(recipient);
 			recipientValue.setText(recipient);
@@ -119,14 +120,15 @@ public class TransferFragment extends Fragment {
 
 		transferViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
 			if (actions == null || actions.size() == 0) return;
-			Log.e(TAG, "action update, channel: " + transferViewModel.getActiveChannel().getValue());
 			ArrayAdapter<Action> adapter = new ArrayAdapter<>(requireActivity(), R.layout.stax_spinner_item, actions);
 			networkDropdown.setAdapter(adapter);
 			networkDropdown.setText(networkDropdown.getAdapter().getItem(0).toString(), false);
 		});
 
+		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action ->
+			{ if (action != null) toNetworkValue.setText(action.toString()); });
+
 		transferViewModel.getActiveChannel().observe(getViewLifecycleOwner(), c -> {
-			Log.e(TAG, "active channel: " + c);
 			if (c != null) {
 				fromValue.setText(c.name);
 				fromRadioGroup.check(c.id);
@@ -145,7 +147,6 @@ public class TransferFragment extends Fragment {
 			RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.stax_radio_button, null);
 			radioButton.setText(c.name);
 			radioButton.setId(c.id);
-			Log.e(TAG, "active channel " + transferViewModel.getActiveChannel().getValue());
 			if (transferViewModel.getActiveChannel().getValue() != null && transferViewModel.getActiveChannel().getValue().id == c.id)
 				radioButton.setChecked(true);
 			fromRadioGroup.addView(radioButton);
@@ -155,26 +156,29 @@ public class TransferFragment extends Fragment {
 	private void updateVariableValues(InputStage stage) {
 		switch (stage) {
 			case FROM_ACCOUNT:
-				if (validates(amountInput, R.string.enterAmountError))
+				if (validates(amountInput, AMOUNT, R.string.enterAmountError))
 					transferViewModel.setAmount(amountInput.getText().toString());
 				break;
-			case TO_NUMBER: recipientInput.requestFocus(); break;
+			case RECIPIENT:
+				if (validates(amountInput, AMOUNT, R.string.enterAmountError))
+					transferViewModel.setAmount(amountInput.getText().toString());
+				recipientInput.requestFocus(); break;
 			case REASON:
-				if (validates(recipientInput, R.string.enterRecipientError))
+				if (validates(recipientInput, RECIPIENT, R.string.enterRecipientError))
 					transferViewModel.setRecipient(recipientInput.getText().toString());
 				reasonInput.requestFocus();
 				break;
 			case REVIEW:
 				transferViewModel.setReason(reasonInput.getText().toString().isEmpty() ? " " : reasonInput.getText().toString());
-				if (validates(recipientInput, R.string.enterRecipientError))
+				if (validates(recipientInput, RECIPIENT, R.string.enterRecipientError))
 					transferViewModel.setRecipient(recipientInput.getText().toString());
 				break;
 		}
 	}
 
-	private boolean validates(EditText input, int errorMsg) {
+	private boolean validates(EditText input, InputStage stage, int errorMsg) {
 		if (input.getText().toString().isEmpty()) {
-			boolean canGoBack = transferViewModel.goToPrevStage();
+			boolean canGoBack = transferViewModel.goToStage(stage);
 			if (canGoBack)
 				((TextInputLayout) input.getParent().getParent()).setError(getString(errorMsg));
 			return !canGoBack;

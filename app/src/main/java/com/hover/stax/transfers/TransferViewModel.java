@@ -2,7 +2,6 @@ package com.hover.stax.transfers;
 
 import android.app.Application;
 import android.content.Context;
-import android.renderscript.ScriptGroup;
 import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
@@ -23,12 +22,12 @@ import java.util.List;
 public class TransferViewModel extends AndroidViewModel {
 
 	private String type = Action.P2P;
-	private LiveData<List<Channel>> selectedChannels;
+	private LiveData<List<Channel>> selectedChannels = new MutableLiveData<>();
 	private MutableLiveData<InputStage> inputStage = new MutableLiveData<>();
 
 	private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
-	private LiveData<List<Action>> filteredActions;
-	private MutableLiveData<Action> activeAction = new MutableLiveData<>();
+	private LiveData<List<Action>> filteredActions = new MutableLiveData<>();
+	private MediatorLiveData<Action> activeAction = new MediatorLiveData<>();
 
 	private MutableLiveData<String> amount = new MutableLiveData<>();
 	private MutableLiveData<String> recipient = new MutableLiveData<>();
@@ -41,28 +40,23 @@ public class TransferViewModel extends AndroidViewModel {
 	public TransferViewModel(Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
-		loadSelected();
-		loadDefault();
+
+		selectedChannels = repo.getSelected();
+		activeChannel.addSource(selectedChannels, this::findActiveChannel);
 		filteredActions = Transformations.switchMap(activeChannel, this::loadActions);
+		activeAction.addSource(filteredActions, this::findActiveAction);
+
 		inputStage.setValue(InputStage.AMOUNT);
 		futureDated.setValue(false);
 		futureDate.setValue(null);
 	}
 
-	private void loadSelected() {
-		if (selectedChannels == null) {
-			selectedChannels = new MutableLiveData<>();
-		}
-		selectedChannels = repo.getSelected();
-	}
-
-	private void loadDefault() {
-		if (activeChannel == null) { activeChannel = new MediatorLiveData<>(); }
-		activeChannel.addSource(repo.getDefault(), c -> activeChannel.setValue(c));
-	}
-
 	void setType(String transaction_type) { type = transaction_type; }
 	String getType() { return type; }
+
+	private void findActiveChannel(List<Channel> channels) {
+		if (channels != null && channels.size() > 0) { activeChannel.setValue(channels.get(0)); }
+	}
 
 	void setActiveChannel(int channel_id) {
 		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0) { return; }
@@ -76,21 +70,19 @@ public class TransferViewModel extends AndroidViewModel {
 
 	public LiveData<List<Action>> loadActions(Channel channel) {
 		if (channel != null)
-			return repo.getLiveActions(channel.id, type);
-		else return new MutableLiveData<>();
-	}
-
-	LiveData<List<Channel>> getSelectedChannels() {
-		return selectedChannels;
-	}
-
-	LiveData<List<Action>> getActions() {
+			filteredActions = repo.getLiveActions(channel.id, type);
 		return filteredActions;
 	}
 
+	LiveData<List<Channel>> getSelectedChannels() { return selectedChannels; }
+	LiveData<List<Action>> getActions() { return filteredActions; }
+
+	private void findActiveAction(List<Action> actions) {
+		if (actions != null && actions.size() > 0) { activeAction.setValue(actions.get(0)); }
+	}
 	void setActiveAction(Action action) { activeAction.setValue(action); }
 	LiveData<Action> getActiveAction() {
-		if (activeAction == null) { activeAction = new MutableLiveData<>(); }
+		if (activeAction == null) { activeAction = new MediatorLiveData<>(); }
 		return activeAction;
 	}
 
@@ -106,17 +98,17 @@ public class TransferViewModel extends AndroidViewModel {
 		return next;
 	}
 
-	boolean goToPrevStage() {
-		if (inputStage.getValue() != null || inputStage.getValue().compareTo(InputStage.AMOUNT) == 0) return false;
-		boolean canGoBack = canStayAt(inputStage.getValue().prev());
-		if (canGoBack) { inputStage.postValue(inputStage.getValue().prev()); }
+	boolean goToStage(InputStage stage) {
+		if (stage == null) return false;
+		boolean canGoBack = canStayAt(stage);
+		if (canGoBack) { inputStage.postValue(stage); }
 		return canGoBack;
 	}
 
 	private boolean canStayAt(InputStage stage) {
 		switch (stage) {
-			case TO_NETWORK: return filteredActions.getValue() != null && (filteredActions.getValue().size() > 1 || filteredActions.getValue().get(0).hasToInstitution());
-			case TO_NUMBER: return activeAction.getValue() != null && activeAction.getValue().requiresRecipient();
+			case TO_NETWORK: return filteredActions.getValue() != null && filteredActions.getValue().size() > 0 && (filteredActions.getValue().size() > 1 || filteredActions.getValue().get(0).hasToInstitution());
+			case RECIPIENT: return activeAction.getValue() != null && activeAction.getValue().requiresRecipient();
 			case REASON: return activeAction.getValue() != null && activeAction.getValue().requiresReason();
 			default: return true;
 		}
@@ -158,7 +150,6 @@ public class TransferViewModel extends AndroidViewModel {
 
 	void schedule(Context c) {
 		Amplitude.getInstance().logEvent(c.getString(R.string.scheduled_transaction, type));
-		Log.e("VM", "Scheduling, active action: " + activeAction.getValue().public_id);
 		Schedule s = new Schedule(activeAction.getValue(), futureDate.getValue(), recipient.getValue(), amount.getValue(), getApplication());
 		repo.insert(s);
 	}
