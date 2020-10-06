@@ -1,22 +1,11 @@
 package com.hover.stax.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextPaint;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,10 +47,10 @@ public class UIHelper {
 		textView.setCompoundDrawablesWithIntrinsicBounds(wrappedDrawable, null, null, null);
 	}
 
-	static public ColorStateList radioGroupColorState(){
-		return  new ColorStateList(
+	static public ColorStateList radioGroupColorState() {
+		return new ColorStateList(
 				new int[][]{new int[]{android.R.attr.state_enabled}},
-				new int[] {ApplicationInstance.getContext().getResources().getColor(R.color.colorAccent)}
+				new int[]{ApplicationInstance.getContext().getResources().getColor(R.color.colorAccent)}
 		);
 	}
 
@@ -69,8 +58,10 @@ public class UIHelper {
 		SpannableString content = new SpannableString(cs);
 		content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
 		content.setSpan(android.graphics.Typeface.BOLD, 0, content.length(), 0);
-		try {textView.setText(content); }
-		catch (Exception ignored) { }
+		try {
+			textView.setText(content);
+		} catch (Exception ignored) {
+		}
 
 	}
 }

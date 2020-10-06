@@ -1,7 +1,6 @@
 package com.hover.stax.languages;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -38,7 +37,7 @@ public class SelectLanguageActivity extends AppCompatActivity {
 
 		LanguageViewModel languageViewModel = new ViewModelProvider(this).get(LanguageViewModel.class);
 		languageViewModel.loadLanguages().observe(this, languages -> {
-			for (Lang language: languages) {
+			for (Lang language : languages) {
 				RadioButton radioButton = new RadioButton(this);
 				radioButton.setText(language.name);
 				radioButton.setTextColor(Color.WHITE);
@@ -50,7 +49,8 @@ public class SelectLanguageActivity extends AppCompatActivity {
 				Typeface font = FontReplacer.getDefaultFont();
 				radioButton.setTypeface(font);
 
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) radioButton.setButtonTintList(UIHelper.radioGroupColorState());
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+					radioButton.setButtonTintList(UIHelper.radioGroupColorState());
 				if (language.code.equals(selectedCode))
 					radioButton.setChecked(true);
 				else radioButton.setChecked(false);

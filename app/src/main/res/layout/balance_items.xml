@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.chauthai.swipereveallayout.SwipeRevealLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:mode="same_level"
     app:dragEdge="right"
@@ -37,7 +37,8 @@
 			    android:layout_height="wrap_content"
 			    android:orientation="horizontal">
 
-				<TextView android:id="@+id/balance_currency"
+				<TextView
+				    android:id="@+id/balance_currency"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:textColor="@color/offWhite"
@@ -45,7 +46,8 @@
 				    android:fontFamily="font-normal"
 				    android:textSize="10sp" />
 
-				<TextView android:id="@+id/balance_amount"
+				<TextView
+				    android:id="@+id/balance_amount"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:textSize="30sp"
@@ -88,16 +90,17 @@
 			    android:layout_weight="1"
 			    android:text="Channel name" />
 
-			<TextView android:id="@+id/channel_id"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="Channel ID"
-				android:visibility="gone" />
+			<TextView
+			    android:id="@+id/channel_id"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="Channel ID"
+			    android:visibility="gone" />
 
 			<ImageView
 			    android:layout_width="wrap_content"
 			    android:layout_height="24dp"
-				android:layout_gravity="center"
+			    android:layout_gravity="center"
 			    android:src="@drawable/drag" />
 		</LinearLayout>
 

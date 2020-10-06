@@ -2,21 +2,19 @@ package com.hover.stax.security;
 
 import android.app.KeyguardManager;
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricConstants;
-import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
-
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG;
 import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK;
@@ -77,6 +75,7 @@ public class BiometricChecker extends BiometricPrompt.AuthenticationCallback {
 
 	public interface AuthListener {
 		void onAuthError(String error);
+
 		void onAuthSuccess(Action action);
 	}
 }

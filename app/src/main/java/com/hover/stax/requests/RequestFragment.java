@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +36,6 @@ import static com.hover.stax.transfers.TransferFragment.READ_CONTACT;
 public class RequestFragment extends Fragment implements RequestRecipientAdapter.ContactClickListener {
 
 	private RequestViewModel requestViewModel;
-	private int stage;
 	private int recentClickedTag;
 
 	private RecyclerView fromWhoInputRecyclerView;
@@ -46,7 +46,10 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 
 	private TextView fromWhoLabel, fromWhoValue, amountLabel, amountValue, messageLabel, messageValue;
 	private EditText amountInput, messageInput;
-	Button addSomeElse;
+	private Button addSomeElse;
+
+	private final static int SEND_SMS = 202;
+
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -61,8 +64,8 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 
 		requestViewModel.getIntendingRequests().observe(getViewLifecycleOwner(), requests -> {
 
-				requestRecipientAdapter = new RequestRecipientAdapter(requests, RequestFragment.this);
-				fromWhoInputRecyclerView.setAdapter(requestRecipientAdapter);
+			requestRecipientAdapter = new RequestRecipientAdapter(requests, RequestFragment.this);
+			fromWhoInputRecyclerView.setAdapter(requestRecipientAdapter);
 
 		});
 	}
@@ -95,8 +98,8 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 
 	private void handleBackButton(View root) {
 		root.findViewById(R.id.backButton).setOnClickListener(v -> {
-			if(previousInputStage !=null) requestViewModel.setRequestStage(previousInputStage);
-			else if(getActivity() !=null) getActivity().onBackPressed();
+			if (previousInputStage != null) requestViewModel.setRequestStage(previousInputStage);
+			else if (getActivity() != null) getActivity().onBackPressed();
 		});
 	}
 
@@ -104,38 +107,50 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 		requestViewModel.getStage().observe(getViewLifecycleOwner(), this::updateStage);
 	}
 
+	private void sendRequest() {
+		if (PermissionUtils.hasContactPermission()) {
+			try {
+				String[] phones = fromWhoValue.getText().toString().split(",");
+				SmsManager smsManager = SmsManager.getDefault();
+				String content = getContext().getString(R.string.request_money_sms_template, amountValue.getText(), messageValue.getText());
+				for (String phone : phones) {
+					smsManager.sendTextMessage(phone, null, content, null, null);
+				}
+
+				startActivity(new Intent(getActivity(), ProcessingActivity.class));
+			} catch (Exception ex) {
+				UIHelper.flashMessage(getContext(), ex.getMessage());
+				ex.printStackTrace();
+			}
+		} else requestPermissions(new String[]{Manifest.permission.SEND_SMS}, SEND_SMS);
+	}
+
 	private void handleContinueButton(View view) {
 		view.findViewById(R.id.continue_request_button).setOnClickListener(v -> {
-			if(nextInputStage == RequestStage.SEND) {
-
-			}
-			else {
+			if (nextInputStage == RequestStage.SEND) {
+				requestViewModel.saveCopyToDatabase();
+				sendRequest();
+			} else {
 				requestViewModel.setRequestStage(nextInputStage);
 
-				if(nextInputStage == RequestStage.AMOUNT) {
+				if (nextInputStage == RequestStage.AMOUNT) {
 					List<Request> requests = requestViewModel.getIntendingRequests().getValue();
-					if(requests !=null) {
+					if (requests != null) {
 						StringBuilder string = new StringBuilder();
-						for(Request request : requests) {
+						for (Request request : requests) {
 							string.append(", ").append(request.recipient);
 						}
 						String finalizedString = string.toString().replaceFirst(",", "");
 						fromWhoValue.setText(finalizedString);
 					}
 
-
-
-				}
-
-
-				else if(nextInputStage == RequestStage.MESSAGE) {
-					if(TextUtils.getTrimmedLength(amountInput.getText()) > 0) {
+				} else if (nextInputStage == RequestStage.MESSAGE) {
+					if (TextUtils.getTrimmedLength(amountInput.getText()) > 0) {
 						amountValue.setText(Utils.formatAmount(amountInput.getText().toString()));
 						requestViewModel.updateRequestAmount(amountInput.getText().toString());
 					}
-				}
-				else if(nextInputStage == RequestStage.REVIEW) {
-					if(TextUtils.getTrimmedLength(messageInput.getText())> 0) {
+				} else if (nextInputStage == RequestStage.REVIEW) {
+					if (TextUtils.getTrimmedLength(messageInput.getText()) > 0) {
 						messageValue.setText(messageInput.getText().toString());
 						requestViewModel.updateRequestMessage(messageInput.getText().toString());
 					}
@@ -164,9 +179,11 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 		fromWhoInputRecyclerView.setVisibility(v);
 		addSomeElse.setVisibility(v);
 	}
+
 	private void setAmountStage(int v) {
 		amountStage.setVisibility(v);
 	}
+
 	private void setMessageStage(int v) {
 		messageStage.setVisibility(v);
 	}
@@ -175,6 +192,7 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 		amountLabel.setVisibility(v);
 		amountValue.setVisibility(v);
 	}
+
 	private void setMessageReview(int v) {
 		messageLabel.setVisibility(v);
 		messageValue.setVisibility(v);
@@ -199,7 +217,7 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 				setMessageStage(View.GONE);
 
 				previousInputStage = null;
-				 nextInputStage = RequestStage.AMOUNT;
+				nextInputStage = RequestStage.AMOUNT;
 
 				break;
 			case AMOUNT:
@@ -254,6 +272,15 @@ public class RequestFragment extends Fragment implements RequestRecipientAdapter
 		} else {
 			Amplitude.getInstance().logEvent(getString(R.string.contact_perm_denied));
 			UIHelper.flashMessage(getContext(), getResources().getString(R.string.contact_perm_error));
+		}
+
+
+		if (requestCode == SEND_SMS && new PermissionHelper().permissionsGranted(grantResults)) {
+			Amplitude.getInstance().logEvent(getString(R.string.sms_perm_success));
+			sendRequest();
+		} else {
+			Amplitude.getInstance().logEvent(getString(R.string.sms_perm_denied));
+			UIHelper.flashMessage(getContext(), getResources().getString(R.string.send_sms_perm_error));
 		}
 	}
 

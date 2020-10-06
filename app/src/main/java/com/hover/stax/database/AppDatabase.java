@@ -2,11 +2,9 @@ package com.hover.stax.database;
 
 import android.content.Context;
 
-import androidx.room.Dao;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.room.Transaction;
 
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
@@ -29,8 +27,11 @@ public abstract class AppDatabase extends RoomDatabase {
 	private static volatile AppDatabase INSTANCE;
 
 	public abstract ChannelDao channelDao();
+
 	public abstract TransactionDao transactionDao();
+
 	public abstract RequestDao requestDao();
+
 	public abstract ScheduleDao scheduleDao();
 
 	public static synchronized AppDatabase getInstance(Context context) {

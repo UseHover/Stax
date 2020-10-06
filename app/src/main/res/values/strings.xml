@@ -43,6 +43,10 @@
 	<string name="add_someone">Add someone else</string>
 	<string name="message_request">Message</string>
 	<string name="message_option">Message (Optional)</string>
+	<string name="send_sms_perm_error">You must grant the send sms permission to be able to send your money request through SMS.</string>
+	<string name="requests_sent">Your money has been sent successfully</string>
+
+	<string name="request_money_sms_template" translatable="false">Hello, I\'m using Stax to request money from you. Amount: %1$s. Message: %2$s. www.joinstax.com</string>
 
 
 

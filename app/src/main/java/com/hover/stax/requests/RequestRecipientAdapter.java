@@ -41,9 +41,16 @@ public class RequestRecipientAdapter extends RecyclerView.Adapter<RequestRecipie
 		editText.setTag(request.tag);
 		editText.setText(request.recipient);
 		editText.addTextChangedListener(new TextWatcher() {
-			@Override public void afterTextChanged(Editable s) { }
-			@Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-			@Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				contactClickListener.onEditText(request.tag, s.toString());
 			}
 		});
@@ -52,12 +59,15 @@ public class RequestRecipientAdapter extends RecyclerView.Adapter<RequestRecipie
 	}
 
 	@Override
-	public int getItemCount() { return requestList !=null ? requestList.size() : 0; }
+	public int getItemCount() {
+		return requestList != null ? requestList.size() : 0;
+	}
 
 	static class RequestFromWhoInputViewHolder extends RecyclerView.ViewHolder {
 
 		private EditText editText;
-		private ImageButton  contactButton;
+		private ImageButton contactButton;
+
 		RequestFromWhoInputViewHolder(@NonNull View itemView) {
 			super(itemView);
 			editText = itemView.findViewById(R.id.recipient_number);
@@ -67,6 +77,7 @@ public class RequestRecipientAdapter extends RecyclerView.Adapter<RequestRecipie
 
 	interface ContactClickListener {
 		void onClick(int tag);
+
 		void onEditText(int tag, String content);
 	}
 

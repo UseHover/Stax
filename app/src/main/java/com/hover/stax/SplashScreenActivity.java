@@ -18,6 +18,7 @@ import com.hover.stax.utils.Utils;
 
 public class SplashScreenActivity extends AppCompatActivity {
 	final public static String LANGUAGE_CHECK = "Language";
+
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

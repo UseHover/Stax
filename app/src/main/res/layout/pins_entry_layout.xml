@@ -17,76 +17,77 @@
 	    card_view:cardPreventCornerOverlap="true"
 	    card_view:cardCornerRadius="0dp">
 
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:padding="@dimen/activity_vertical_margin"
-	    android:background="@color/cardViewColor"
-	    android:orientation="vertical">
-		<TextView
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_gravity="end"
-		    android:text="@string/choose_institutions_title"
-		    android:textSize="@dimen/text_16"
-		    android:textAllCaps="true"
-		    android:layout_marginBottom="@dimen/activity_vertical_margin"
-		    android:fontFamily="font-medium"
-		    android:textColor="@color/offWhite" />
-
-
-	<TextView
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:text="@string/choose_pin_description"
-	    android:textColor="@color/offWhite"
-	    android:textSize="@dimen/text_16"
-	    android:lineSpacingExtra="4.5dp" />
-
-	<androidx.recyclerview.widget.RecyclerView
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_marginTop="@dimen/activity_vertical_margin"
-	    android:id="@+id/pin_recyclerView" />
-
 		<LinearLayout
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-		    android:layout_gravity="end"
-		    android:gravity="end"
-		    android:layout_marginTop="@dimen/spacing32"
-		    android:orientation="horizontal">
+		    android:padding="@dimen/activity_vertical_margin"
+		    android:background="@color/cardViewColor"
+		    android:orientation="vertical">
 
 			<TextView
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
-			    android:id="@+id/choose_serves_cancel"
+			    android:layout_gravity="end"
+			    android:text="@string/choose_institutions_title"
 			    android:textSize="@dimen/text_16"
-			    android:paddingStart="@dimen/activity_vertical_margin"
-			    android:paddingEnd="16dp"
-			    android:layout_gravity="center_vertical"
+			    android:textAllCaps="true"
+			    android:layout_marginBottom="@dimen/activity_vertical_margin"
 			    android:fontFamily="font-medium"
-			    android:textColor="@color/offWhite"
-			    android:layout_marginEnd="@dimen/spacing32"
-			    android:text="@string/skip" />
+			    android:textColor="@color/offWhite" />
 
-			<Button
-			    android:id="@+id/continuePinButton"
-			    android:layout_width="wrap_content"
+
+			<TextView
+			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
-			    android:text="@string/continue_text"
-			    android:paddingHorizontal="@dimen/spacing32"
-			    android:textAllCaps="false"
-			    android:fontFamily="font-medium"
-			    android:layout_gravity="center_vertical"
-			    android:gravity="center"
-			    android:textSize="@dimen/text_16"
+			    android:text="@string/choose_pin_description"
 			    android:textColor="@color/offWhite"
-			    android:background="@drawable/button_bg" />
+			    android:textSize="@dimen/text_16"
+			    android:lineSpacingExtra="4.5dp" />
+
+			<androidx.recyclerview.widget.RecyclerView
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_marginTop="@dimen/activity_vertical_margin"
+			    android:id="@+id/pin_recyclerView" />
+
+			<LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_gravity="end"
+			    android:gravity="end"
+			    android:layout_marginTop="@dimen/spacing32"
+			    android:orientation="horizontal">
+
+				<TextView
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:id="@+id/choose_serves_cancel"
+				    android:textSize="@dimen/text_16"
+				    android:paddingStart="@dimen/activity_vertical_margin"
+				    android:paddingEnd="16dp"
+				    android:layout_gravity="center_vertical"
+				    android:fontFamily="font-medium"
+				    android:textColor="@color/offWhite"
+				    android:layout_marginEnd="@dimen/spacing32"
+				    android:text="@string/skip" />
+
+				<Button
+				    android:id="@+id/continuePinButton"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:text="@string/continue_text"
+				    android:paddingHorizontal="@dimen/spacing32"
+				    android:textAllCaps="false"
+				    android:fontFamily="font-medium"
+				    android:layout_gravity="center_vertical"
+				    android:gravity="center"
+				    android:textSize="@dimen/text_16"
+				    android:textColor="@color/offWhite"
+				    android:background="@drawable/button_bg" />
+
+			</LinearLayout>
+
 
 		</LinearLayout>
-
-
-	</LinearLayout>
 	</androidx.cardview.widget.CardView>
 </LinearLayout>

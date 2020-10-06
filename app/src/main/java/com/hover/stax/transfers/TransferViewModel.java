@@ -34,8 +34,13 @@ public class TransferViewModel extends AndroidViewModel {
 		inputStageMutableLiveData.setValue(InputStage.AMOUNT);
 	}
 
-	void setInputStage(InputStage stage) {inputStageMutableLiveData.postValue(stage);}
-	LiveData<InputStage> stageLiveData() {return inputStageMutableLiveData;}
+	void setInputStage(InputStage stage) {
+		inputStageMutableLiveData.postValue(stage);
+	}
+
+	LiveData<InputStage> stageLiveData() {
+		return inputStageMutableLiveData;
+	}
 
 	void setType(String transaction_type) {
 		type = transaction_type;

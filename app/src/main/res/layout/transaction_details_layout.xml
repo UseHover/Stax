@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/tools"
     android:background="@color/colorPrimary"
     android:layout_width="match_parent"
     android:padding="@dimen/activity_vertical_margin"
     android:layout_height="wrap_content">
+
 	<LinearLayout
 	    android:layout_height="match_parent"
 	    android:layout_width="match_parent"
-	    android:orientation="vertical"
-	    >
+	    android:orientation="vertical">
 
 		<androidx.cardview.widget.CardView
 		    android:layout_width="match_parent"
@@ -26,14 +25,14 @@
 			    android:layout_height="wrap_content"
 			    android:background="@color/cardViewColor"
 			    android:orientation="vertical">
+
 				<androidx.appcompat.widget.Toolbar
 				    android:id="@+id/toolbar"
 				    android:layout_width="match_parent"
 				    android:layout_height="wrap_content"
 				    android:background="@color/cardViewColor"
 				    app:navigationIcon="?attr/homeAsUpIndicator"
-				    android:theme="@style/ThemeOverlay.AppCompat.Dark"
-				    >
+				    android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
 					<TextView
 					    android:layout_width="match_parent"
@@ -47,8 +46,6 @@
 					    android:text="@string/nav_transaction" />
 
 				</androidx.appcompat.widget.Toolbar>
-
-
 
 
 				<LinearLayout
@@ -71,7 +68,7 @@
 						    android:textSize="@dimen/text_16"
 						    android:layout_gravity="center_vertical"
 						    android:gravity="center_vertical"
-						    android:text="@string/amount"/>
+						    android:text="@string/amount" />
 
 						<TextView
 						    android:layout_width="0dp"
@@ -83,8 +80,7 @@
 						    android:layout_marginStart="@dimen/spacing32"
 						    android:textColor="@color/white"
 						    android:id="@+id/details_amount"
-						    android:textSize="@dimen/text_21"
-						    />
+						    android:textSize="@dimen/text_21" />
 					</LinearLayout>
 
 					<LinearLayout
@@ -100,7 +96,8 @@
 						    android:textSize="@dimen/text_16"
 						    android:layout_gravity="center_vertical"
 						    android:gravity="center_vertical"
-						    android:text="@string/date"/>
+						    android:text="@string/date" />
+
 						<TextView
 						    android:layout_width="0dp"
 						    android:layout_height="wrap_content"
@@ -111,11 +108,8 @@
 						    android:layout_marginStart="@dimen/spacing32"
 						    android:textColor="@color/white"
 						    android:id="@+id/details_date"
-						    android:textSize="@dimen/text_21"
-						    />
+						    android:textSize="@dimen/text_21" />
 					</LinearLayout>
-
-
 
 
 					<LinearLayout
@@ -131,7 +125,8 @@
 						    android:textSize="@dimen/text_16"
 						    android:layout_gravity="center_vertical"
 						    android:gravity="center_vertical"
-						    android:text="@string/network"/>
+						    android:text="@string/network" />
+
 						<TextView
 						    android:layout_width="0dp"
 						    android:layout_height="wrap_content"
@@ -158,7 +153,8 @@
 						    android:textSize="@dimen/text_16"
 						    android:layout_gravity="center_vertical"
 						    android:gravity="center_vertical"
-						    android:text="@string/transactionNumber"/>
+						    android:text="@string/transactionNumber" />
+
 						<TextView
 						    android:layout_width="0dp"
 						    android:layout_height="wrap_content"
@@ -176,48 +172,48 @@
 		</androidx.cardview.widget.CardView>
 
 
-
-	<androidx.cardview.widget.CardView
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    card_view:cardUseCompatPadding="true"
-	    card_view:cardElevation="10dp"
-	    android:layout_marginTop="@dimen/spacing32"
-	    card_view:cardPreventCornerOverlap="true"
-	    card_view:cardCornerRadius="0dp">
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical"
-	    android:paddingVertical="@dimen/activity_vertical_margin"
-	    android:paddingHorizontal="@dimen/activity_vertical_margin"
-	    android:background="@color/cardViewColor"
-	    android:layout_gravity="center_vertical">
-
-		<TextView
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:padding="@dimen/small_margin"
-		    android:textSize="@dimen/text_16"
-		    android:gravity="end"
-		    android:layout_gravity="end"
-		    android:textAllCaps="true"
-		    android:fontFamily="font-medium"
-		    android:textColor="@color/offWhite"
-		    android:text="@string/message" />
-
-
-		<androidx.recyclerview.widget.RecyclerView
+		<androidx.cardview.widget.CardView
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-		    android:id="@+id/convo_recyclerView" />
+		    card_view:cardUseCompatPadding="true"
+		    card_view:cardElevation="10dp"
+		    android:layout_marginTop="@dimen/spacing32"
+		    card_view:cardPreventCornerOverlap="true"
+		    card_view:cardCornerRadius="0dp">
 
-		<androidx.recyclerview.widget.RecyclerView
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:id="@+id/sms_recyclerView" />
-	</LinearLayout>
-	</androidx.cardview.widget.CardView>
+			<LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="vertical"
+			    android:paddingVertical="@dimen/activity_vertical_margin"
+			    android:paddingHorizontal="@dimen/activity_vertical_margin"
+			    android:background="@color/cardViewColor"
+			    android:layout_gravity="center_vertical">
+
+				<TextView
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:padding="@dimen/small_margin"
+				    android:textSize="@dimen/text_16"
+				    android:gravity="end"
+				    android:layout_gravity="end"
+				    android:textAllCaps="true"
+				    android:fontFamily="font-medium"
+				    android:textColor="@color/offWhite"
+				    android:text="@string/message" />
+
+
+				<androidx.recyclerview.widget.RecyclerView
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:id="@+id/convo_recyclerView" />
+
+				<androidx.recyclerview.widget.RecyclerView
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:id="@+id/sms_recyclerView" />
+			</LinearLayout>
+		</androidx.cardview.widget.CardView>
 
 
 	</LinearLayout>

@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
 import com.hover.stax.utils.DateUtils;
-import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
 import java.util.List;
@@ -45,8 +44,8 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 
 	private boolean shouldShowDate(StaxTransaction t, int position) {
 		return position == 0 ||
-			    !DateUtils.humanFriendlyDate(transactionList.get(position - 1).initiated_at)
-				    .equals(DateUtils.humanFriendlyDate(t.initiated_at));
+					   !DateUtils.humanFriendlyDate(transactionList.get(position - 1).initiated_at)
+								.equals(DateUtils.humanFriendlyDate(t.initiated_at));
 	}
 
 	@Override

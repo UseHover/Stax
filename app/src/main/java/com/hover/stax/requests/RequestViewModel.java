@@ -19,6 +19,7 @@ public class RequestViewModel extends AndroidViewModel {
 	private List<Request> rqL;
 	private MutableLiveData<RequestStage> requestStage;
 	private int addCounter = 0;
+
 	public RequestViewModel(@NonNull Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
@@ -56,17 +57,32 @@ public class RequestViewModel extends AndroidViewModel {
 	}
 
 	void updateRequestAmount(String amount) {
-		for(Request request : rqL) {
+		for (Request request : rqL) {
 			request.amount = amount;
 		}
 	}
+
 	void updateRequestMessage(String message) {
-		for(Request request : rqL) {
+		for (Request request : rqL) {
 			request.message = message;
 		}
 	}
 
-	void setRequestStage(RequestStage stage) {requestStage.postValue(stage);}
-	LiveData<RequestStage> getStage() {return requestStage;}
-	LiveData<List<Request>> getIntendingRequests() {return requestList;}
+	void saveCopyToDatabase() {
+		for (Request request : rqL) {
+			repo.insert(request);
+		}
+	}
+
+	void setRequestStage(RequestStage stage) {
+		requestStage.postValue(stage);
+	}
+
+	LiveData<RequestStage> getStage() {
+		return requestStage;
+	}
+
+	LiveData<List<Request>> getIntendingRequests() {
+		return requestList;
+	}
 }

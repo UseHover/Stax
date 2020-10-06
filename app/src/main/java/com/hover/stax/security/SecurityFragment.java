@@ -2,7 +2,6 @@ package com.hover.stax.security;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +61,8 @@ public class SecurityFragment extends Fragment {
 				}
 
 				@Override
-				public void onNothingSelected(AdapterView<?> parent) { }
+				public void onNothingSelected(AdapterView<?> parent) {
+				}
 			});
 		});
 	}
@@ -95,7 +95,8 @@ public class SecurityFragment extends Fragment {
 				}
 
 				@Override
-				public void onNothingSelected(AdapterView<?> parent) { }
+				public void onNothingSelected(AdapterView<?> parent) {
+				}
 			});
 		});
 	}

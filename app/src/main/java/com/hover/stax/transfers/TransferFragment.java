@@ -37,7 +37,6 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.hover.HoverSession;
-import com.hover.stax.languages.Lang;
 import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
@@ -73,9 +72,7 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 	private CardView toStageView;
 	private String networkLabelString;
 	private RadioGroup fromRadioGroup;
-	private List <Channel> fromChannels;
-
-
+	private List<Channel> fromChannels;
 
 
 	private TextView amountLabel, amountValue, fromLabel, fromValue, toNetworkValue, toNetworkLabel, numberLabel, numberValue;
@@ -103,20 +100,20 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 
 	private void handleBackButton(View root) {
 		root.findViewById(R.id.backButton).setOnClickListener(v -> {
-			if(previousInputStage !=null) transferViewModel.setInputStage(previousInputStage);
-			else if(getActivity() !=null) getActivity().onBackPressed();
+			if (previousInputStage != null) transferViewModel.setInputStage(previousInputStage);
+			else if (getActivity() != null) getActivity().onBackPressed();
 		});
 	}
+
 	private void handleInputStageChanges() {
 		transferViewModel.stageLiveData().observe(getViewLifecycleOwner(), this::updateStageViews);
 	}
 
 
-
 	private void initView(View root) {
 		((TextView) root.findViewById(R.id.transfer_title)).setText(getTitleAndSetNetworkLabel());
 		spinnerTo = root.findViewById(R.id.toSpinner);
-		fromRadioGroup= root.findViewById(R.id.fromRadioGroup);
+		fromRadioGroup = root.findViewById(R.id.fromRadioGroup);
 		detailsBlock = root.findViewById(R.id.details_block);
 		recipientBlock = root.findViewById(R.id.recipient_block);
 		recipientLabel = root.findViewById(R.id.recipient_label);
@@ -143,33 +140,37 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 	private void amountView(int visibility) {
 		amountLabel.setVisibility(visibility);
 		amountValue.setVisibility(visibility);
-		if(recipientInput.getText() !=null) amountValue.setText(amountInput.getText().toString());
+		if (recipientInput.getText() != null) amountValue.setText(amountInput.getText().toString());
 	}
+
 	private void fromView(int visibility) {
 		fromLabel.setVisibility(visibility);
 		fromValue.setVisibility(visibility);
 	}
+
 	private void toNetworkView(int visibility) {
 		toNetworkLabel.setVisibility(visibility);
 		toNetworkValue.setVisibility(visibility);
 	}
+
 	private void numberView(int visibility) {
 		numberValue.setVisibility(visibility);
 		numberLabel.setVisibility(visibility);
-		if(recipientInput.getText() !=null) numberValue.setText(recipientInput.getText().toString());
+		if (recipientInput.getText() != null)
+			numberValue.setText(recipientInput.getText().toString());
 	}
 
 	private void setToStageView(int visibility) {
 		toStageView.setVisibility(visibility);
 	}
+
 	private void setFromStageStageView(int v) {
 		fromStageStageView.setVisibility(v);
 	}
+
 	private void setAmountStageView(int v) {
 		amountStageView.setVisibility(v);
 	}
-
-
 
 
 	private void updateStageViews(InputStage stage) {
@@ -245,13 +246,11 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 	}
 
 
-
 	private String getTitleAndSetNetworkLabel() {
 		if (transferType.equals(Action.AIRTIME)) {
 			networkLabelString = getString(R.string.to_who);
 			return getString(R.string.title_airtime);
-		}
-		else {
+		} else {
 			networkLabelString = getString(R.string.toNetwork);
 			return getString(R.string.transfer);
 		}
@@ -268,7 +267,7 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 			fromChannels = new ArrayList<>();
 			fromRadioGroup.removeAllViews();
 
-			for (int i=0; i<channels.size(); i++) {
+			for (int i = 0; i < channels.size(); i++) {
 				Channel channel = channels.get(i);
 				fromChannels.add(i, channel);
 				RadioButton radioButton = new RadioButton(getActivity());
@@ -282,7 +281,8 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 				Typeface font = FontReplacer.getLightFont();
 				radioButton.setTypeface(font);
 
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) radioButton.setButtonTintList(UIHelper.radioGroupColorState());
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+					radioButton.setButtonTintList(UIHelper.radioGroupColorState());
 
 				fromRadioGroup.addView(radioButton);
 			}
@@ -310,13 +310,13 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 
 		fromRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
 
-			if(fromChannels!=null && fromChannels.size() > 0) {
+			if (fromChannels != null && fromChannels.size() > 0) {
 				int checkedRadioButtonId = fromRadioGroup.getCheckedRadioButtonId();
 				RadioButton radioBtn = root.findViewById(checkedRadioButtonId);
-				if(radioBtn!=null) {
+				if (radioBtn != null) {
 					int id = Integer.parseInt(radioBtn.getTag().toString());
 					Channel channel = fromChannels.get(id);
-					if(channel !=null) {
+					if (channel != null) {
 						transferViewModel.setActiveChannel(channel);
 						fromValue.setText(channel.name);
 					}
@@ -327,7 +327,7 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 		TextView addNewAccount = root.findViewById(R.id.add_new_account);
 		UIHelper.setTextUnderline(addNewAccount, getString(R.string.add_an_account));
 
-		root.findViewById(R.id.add_new_account).setOnClickListener(view->{
+		root.findViewById(R.id.add_new_account).setOnClickListener(view -> {
 			startActivity(new Intent(getActivity(), ChannelsActivity.class));
 		});
 
@@ -372,11 +372,11 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 		root.findViewById(R.id.confirm_button).setOnClickListener(view3 -> {
 
 
-			if(nextInputStage != SEND) {
+			if (nextInputStage != SEND) {
 
 				transferViewModel.setInputStage(nextInputStage);
 
-			}else if (transferViewModel.getActiveAction() != null) {
+			} else if (transferViewModel.getActiveAction() != null) {
 				if (TextUtils.getTrimmedLength(amountInput.getText().toString()) > 0) {
 					if (transferViewModel.getActiveAction().requiresRecipient()) {
 						if (TextUtils.getTrimmedLength(recipientInput.getText().toString()) > 0) {

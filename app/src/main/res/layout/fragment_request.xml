@@ -1,330 +1,329 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
 
-<androidx.core.widget.NestedScrollView
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1"
-    android:background="@color/colorPrimary"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    tools:context=".transfers.TransferFragment">
+	<androidx.core.widget.NestedScrollView android:layout_width="match_parent"
+	    android:layout_height="0dp"
+	    android:layout_weight="1"
+	    android:background="@color/colorPrimary"
+	    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+	    tools:context=".transfers.TransferFragment">
 
 
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:orientation="vertical" >
-
-
-	<androidx.cardview.widget.CardView
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:padding="1dp"
-	    card_view:cardUseCompatPadding="true"
-	    card_view:cardElevation="10dp"
-	    card_view:cardPreventCornerOverlap="true"
-	    card_view:cardCornerRadius="0dp">
-
-	<RelativeLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"
-	    android:paddingVertical="@dimen/activity_vertical_margin"
-	    android:paddingHorizontal="@dimen/activity_vertical_margin"
-	    android:background="@color/cardViewColor"
-	    android:gravity="center_vertical"
-	    android:layout_gravity="center_vertical">
-
-
-	<ImageView
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:src="@drawable/ic_arrow_back_offwhite_24dp"
-	    android:layout_gravity="start"
-	    android:gravity="start"
-	    android:id="@+id/backButton"
-	    android:layout_alignParentStart="true"
-	    android:layout_marginEnd="@dimen/spacing32"
-	    />
-
-	<TextView
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="@string/title_request"
-	    android:layout_marginStart="@dimen/spacing32"
-	    android:textSize="@dimen/text_16"
-	    android:textAllCaps="true"
-	    android:layout_alignParentEnd="true"
-	    android:layout_gravity="end|center_vertical"
-	    android:gravity="end|center_vertical"
-	    android:fontFamily="font-bold"
-	    android:id="@+id/transfer_title"
-	    android:textColor="@color/offWhite" />
-
-		<TextView
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:id="@+id/fromWhoLabel"
-		    android:text="@string/from_who"
-		    android:textColor="@color/offWhite"
-		    android:textSize="@dimen/text_16"
-		    android:fontFamily="font-normal"
-		    android:layout_below="@id/backButton"
-		    android:layout_marginTop="@dimen/activity_vertical_margin"
-		    />
-
-		<TextView
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:id="@+id/fromWhoValue"
-		    android:textColor="@color/white"
-		    android:textSize="@dimen/text_21"
-		    android:fontFamily="font-normal"
-		    android:layout_alignParentEnd="true"
-		    android:layout_gravity="end|center_vertical"
-		    android:gravity="end|center_vertical"
-		    android:layout_below="@id/backButton"
-		    android:layout_marginTop="@dimen/activity_vertical_margin"
-		    />
-
-		<TextView
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:id="@+id/amountLabel"
-		    android:text="@string/amount"
-		    android:textColor="@color/offWhite"
-		    android:textSize="@dimen/text_16"
-		    android:fontFamily="font-normal"
-		    android:layout_below="@id/fromWhoLabel"
-		    android:layout_marginTop="@dimen/activity_vertical_margin"
-		    />
-
-		<TextView
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:id="@+id/amountValue"
-		    android:textColor="@color/white"
-		    android:textSize="@dimen/text_21"
-		    android:fontFamily="font-normal"
-		    android:layout_alignParentEnd="true"
-		    android:layout_gravity="end|center_vertical"
-		    android:gravity="end|center_vertical"
-		    android:layout_below="@id/fromWhoValue"
-		    android:layout_marginTop="@dimen/spacing8"
-		    />
-
-		<TextView
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:id="@+id/messageLabel"
-		    android:text="@string/message_request"
-		    android:textColor="@color/offWhite"
-		    android:textSize="@dimen/text_16"
-		    android:fontFamily="font-normal"
-		    android:layout_below="@id/amountValue"
-		    android:layout_marginTop="@dimen/spacing8"
-		    />
-
-		<TextView
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:id="@+id/messageValue"
-		    android:textColor="@color/white"
-		    android:textSize="@dimen/text_21"
-		    android:fontFamily="font-normal"
-		    android:layout_alignParentEnd="true"
-		    android:layout_gravity="end|center_vertical"
-		    android:gravity="end|center_vertical"
-		    android:layout_below="@id/amountValue"
-		    android:layout_marginTop="@dimen/spacing8"
-		    />
-
-
-		<androidx.recyclerview.widget.RecyclerView
-		    android:layout_width="wrap_content"
+		<LinearLayout
+		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
-		    android:layout_below="@id/messageLabel"
-		    android:background="@color/cardViewColor"
-		    android:layout_marginTop="@dimen/spacing8"
-		    android:id="@+id/fromWhoRecyclerView"/>
+		    android:orientation="vertical">
 
 
-		<Button
-		    android:id="@+id/add_someoneElse_button"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:text="@string/add_someone"
-		    android:paddingHorizontal="@dimen/spacing32"
-		    android:textAllCaps="false"
-		    android:fontFamily="font-medium"
-		    android:layout_gravity="end"
-		    android:layout_alignParentEnd="true"
-		    android:gravity="center"
-		    android:layout_below="@id/fromWhoRecyclerView"
-		    android:textSize="@dimen/text_16"
-		    android:layout_marginTop="@dimen/spacing32"
-		    android:textColor="@color/offWhite"
-		    android:background="@drawable/button_bg" />
-	</RelativeLayout>
-	</androidx.cardview.widget.CardView>
-
-
-
-		<androidx.cardview.widget.CardView
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:padding="1dp"
-		    card_view:cardUseCompatPadding="true"
-		    card_view:cardElevation="10dp"
-		    card_view:cardPreventCornerOverlap="true"
-		    android:id="@+id/amountStageCardView"
-		    card_view:cardCornerRadius="0dp">
-
-
-			<LinearLayout
+			<androidx.cardview.widget.CardView
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
-			    android:background="@color/cardViewColor"
-			    android:padding="@dimen/activity_vertical_margin"
-			    android:orientation="vertical">
-
-				<TextView
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:text="@string/amount"
-				    android:layout_marginStart="@dimen/spacing32"
-				    android:textSize="@dimen/text_16"
-				    android:textAllCaps="true"
-				    android:layout_gravity="end|center_vertical"
-				    android:gravity="end|center_vertical"
-				    android:fontFamily="font-bold"
-				    android:textColor="@color/offWhite" />
-
-			<RelativeLayout
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:paddingVertical="@dimen/activity_vertical_margin"
-			    android:layout_gravity="center_vertical"
-			    >
-
-				<EditText android:id="@+id/amount_input"
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"
-				    android:paddingLeft="@dimen/editText_box_margin_horiz"
-				    android:paddingStart="@dimen/editText_box_margin_horiz"
-				    android:paddingEnd="@dimen/editText_box_margin_horiz"
-				    android:paddingRight="@dimen/editText_box_margin_horiz"
-				    android:paddingTop="@dimen/activity_vertical_margin"
-				    android:paddingBottom="@dimen/activity_vertical_margin"
-				    android:textColorHint="@color/darkGrey"
-				    android:layout_marginTop="@dimen/activity_vertical_margin"
-				    android:maxLines="1"
-				    android:textSize="@dimen/text_21"
-				    android:fontFamily="font-normal"
-				    android:autofillHints="email_hint"
-				    android:inputType="number"
-				    android:textColor="@color/offWhite"
-				    android:background="@drawable/edit_text_bg" />
-				<TextView
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:layout_marginStart="10dp"
-				    android:layout_marginTop="7dp"
-				    android:text="@string/how_much_money_optional"
-				    android:fontFamily="font-normal"
-				    android:paddingHorizontal="@dimen/spacing8"
-				    android:background="@color/cardViewColor"
-				    android:textColor="@color/offWhite"
-				    android:textSize="@dimen/text_16" />
-			</RelativeLayout>
-			</LinearLayout>
-		</androidx.cardview.widget.CardView>
-
-
-
-
-		<androidx.cardview.widget.CardView
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:padding="1dp"
-		    card_view:cardUseCompatPadding="true"
-		    card_view:cardElevation="10dp"
-		    card_view:cardPreventCornerOverlap="true"
-		    android:id="@+id/messageStageCardView"
-		    card_view:cardCornerRadius="0dp">
-
-
-			<LinearLayout
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:background="@color/cardViewColor"
-			    android:padding="@dimen/activity_vertical_margin"
-			    android:orientation="vertical">
-
-				<TextView
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:text="@string/message_request"
-				    android:layout_marginStart="@dimen/spacing32"
-				    android:textSize="@dimen/text_16"
-				    android:textAllCaps="true"
-				    android:layout_gravity="end|center_vertical"
-				    android:gravity="end|center_vertical"
-				    android:fontFamily="font-bold"
-				    android:textColor="@color/offWhite" />
+			    android:padding="1dp"
+			    card_view:cardUseCompatPadding="true"
+			    card_view:cardElevation="10dp"
+			    card_view:cardPreventCornerOverlap="true"
+			    card_view:cardCornerRadius="0dp">
 
 				<RelativeLayout
 				    android:layout_width="match_parent"
 				    android:layout_height="wrap_content"
-				    android:minHeight="120dp"
+				    android:orientation="horizontal"
 				    android:paddingVertical="@dimen/activity_vertical_margin"
-				    android:layout_gravity="center_vertical"
-				    >
+				    android:paddingHorizontal="@dimen/activity_vertical_margin"
+				    android:background="@color/cardViewColor"
+				    android:gravity="center_vertical"
+				    android:layout_gravity="center_vertical">
 
-					<EditText android:id="@+id/message_input"
-					    android:layout_width="match_parent"
+
+					<ImageView
+					    android:layout_width="wrap_content"
 					    android:layout_height="wrap_content"
-					    android:paddingLeft="@dimen/editText_box_margin_horiz"
-					    android:paddingStart="@dimen/editText_box_margin_horiz"
-					    android:paddingEnd="@dimen/editText_box_margin_horiz"
-					    android:paddingRight="@dimen/editText_box_margin_horiz"
-					    android:paddingTop="@dimen/activity_vertical_margin"
-					    android:paddingBottom="@dimen/activity_vertical_margin"
-					    android:textColorHint="@color/darkGrey"
-					    android:layout_marginTop="@dimen/activity_vertical_margin"
-					    android:maxLines="1"
-					    android:minHeight="110dp"
-					    android:textSize="@dimen/text_21"
-					    android:fontFamily="font-normal"
-					    android:autofillHints="email_hint"
-					    android:inputType="text"
-					    android:textColor="@color/offWhite"
-					    android:background="@drawable/edit_text_bg" />
+					    android:src="@drawable/ic_arrow_back_offwhite_24dp"
+					    android:layout_gravity="start"
+					    android:gravity="start"
+					    android:id="@+id/backButton"
+					    android:layout_alignParentStart="true"
+					    android:layout_marginEnd="@dimen/spacing32" />
+
 					<TextView
 					    android:layout_width="wrap_content"
 					    android:layout_height="wrap_content"
-					    android:layout_marginStart="10dp"
-					    android:layout_marginTop="7dp"
-					    android:text="@string/message_option"
-					    android:fontFamily="font-normal"
-					    android:paddingHorizontal="@dimen/spacing8"
-					    android:background="@color/cardViewColor"
+					    android:text="@string/title_request"
+					    android:layout_marginStart="@dimen/spacing32"
+					    android:textSize="@dimen/text_16"
+					    android:textAllCaps="true"
+					    android:layout_alignParentEnd="true"
+					    android:layout_gravity="end|center_vertical"
+					    android:gravity="end|center_vertical"
+					    android:fontFamily="font-bold"
+					    android:id="@+id/transfer_title"
+					    android:textColor="@color/offWhite" />
+
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:id="@+id/fromWhoLabel"
+					    android:text="@string/from_who"
 					    android:textColor="@color/offWhite"
-					    android:textSize="@dimen/text_16" />
+					    android:textSize="@dimen/text_16"
+					    android:fontFamily="font-normal"
+					    android:layout_below="@id/backButton"
+					    android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:id="@+id/fromWhoValue"
+					    android:textColor="@color/white"
+					    android:textSize="@dimen/text_21"
+					    android:fontFamily="font-normal"
+					    android:layout_alignParentEnd="true"
+					    android:layout_gravity="end|center_vertical"
+					    android:gravity="end|center_vertical"
+					    android:layout_below="@id/backButton"
+					    android:layout_marginStart="@dimen/activity_vertical_margin"
+					    android:layout_toEndOf="@id/fromWhoLabel"
+					    android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:id="@+id/amountLabel"
+					    android:text="@string/amount"
+					    android:textColor="@color/offWhite"
+					    android:textSize="@dimen/text_16"
+					    android:fontFamily="font-normal"
+					    android:layout_below="@id/fromWhoLabel"
+					    android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:id="@+id/amountValue"
+					    android:textColor="@color/white"
+					    android:textSize="@dimen/text_21"
+					    android:fontFamily="font-normal"
+					    android:layout_alignParentEnd="true"
+					    android:layout_gravity="end|center_vertical"
+					    android:gravity="end|center_vertical"
+					    android:layout_below="@id/fromWhoValue"
+					    android:layout_toEndOf="@id/amountLabel"
+					    android:layout_marginStart="@dimen/activity_vertical_margin"
+					    android:layout_marginTop="@dimen/spacing8" />
+
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:id="@+id/messageLabel"
+					    android:text="@string/message_request"
+					    android:textColor="@color/offWhite"
+					    android:textSize="@dimen/text_16"
+					    android:fontFamily="font-normal"
+					    android:layout_below="@id/amountValue"
+					    android:layout_marginTop="@dimen/spacing8" />
+
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:id="@+id/messageValue"
+					    android:textColor="@color/white"
+					    android:textSize="@dimen/text_21"
+					    android:fontFamily="font-normal"
+					    android:layout_alignParentEnd="true"
+					    android:layout_gravity="end|center_vertical"
+					    android:gravity="end|center_vertical"
+					    android:layout_below="@id/amountValue"
+					    android:layout_marginTop="@dimen/spacing8"
+					    android:layout_toEndOf="@id/messageLabel"
+					    android:layout_marginStart="@dimen/activity_vertical_margin" />
+
+
+					<androidx.recyclerview.widget.RecyclerView
+					    android:layout_width="wrap_content"
+					    android:layout_height="match_parent"
+					    android:layout_below="@id/messageLabel"
+					    android:background="@color/cardViewColor"
+					    android:layout_marginTop="@dimen/spacing8"
+					    android:id="@+id/fromWhoRecyclerView" />
+
+
+					<Button
+					    android:id="@+id/add_someoneElse_button"
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:text="@string/add_someone"
+					    android:paddingHorizontal="@dimen/spacing32"
+					    android:textAllCaps="false"
+					    android:fontFamily="font-medium"
+					    android:layout_gravity="end"
+					    android:layout_alignParentEnd="true"
+					    android:gravity="center"
+					    android:layout_below="@id/fromWhoRecyclerView"
+					    android:textSize="@dimen/text_16"
+					    android:layout_marginTop="@dimen/spacing32"
+					    android:textColor="@color/offWhite"
+					    android:background="@drawable/button_bg" />
 				</RelativeLayout>
-			</LinearLayout>
-		</androidx.cardview.widget.CardView>
+			</androidx.cardview.widget.CardView>
 
-	</LinearLayout>
 
-</androidx.core.widget.NestedScrollView>
-	<Button android:id="@+id/continue_request_button"
+			<androidx.cardview.widget.CardView
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:padding="1dp"
+			    card_view:cardUseCompatPadding="true"
+			    card_view:cardElevation="10dp"
+			    card_view:cardPreventCornerOverlap="true"
+			    android:id="@+id/amountStageCardView"
+			    card_view:cardCornerRadius="0dp">
+
+
+				<LinearLayout
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:background="@color/cardViewColor"
+				    android:padding="@dimen/activity_vertical_margin"
+				    android:orientation="vertical">
+
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:text="@string/amount"
+					    android:layout_marginStart="@dimen/spacing32"
+					    android:textSize="@dimen/text_16"
+					    android:textAllCaps="true"
+					    android:layout_gravity="end|center_vertical"
+					    android:gravity="end|center_vertical"
+					    android:fontFamily="font-bold"
+					    android:textColor="@color/offWhite" />
+
+					<RelativeLayout
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+					    android:paddingVertical="@dimen/activity_vertical_margin"
+					    android:layout_gravity="center_vertical">
+
+						<EditText
+						    android:id="@+id/amount_input"
+						    android:layout_width="match_parent"
+						    android:layout_height="wrap_content"
+						    android:paddingLeft="@dimen/editText_box_margin_horiz"
+						    android:paddingStart="@dimen/editText_box_margin_horiz"
+						    android:paddingEnd="@dimen/editText_box_margin_horiz"
+						    android:paddingRight="@dimen/editText_box_margin_horiz"
+						    android:paddingTop="@dimen/activity_vertical_margin"
+						    android:paddingBottom="@dimen/activity_vertical_margin"
+						    android:textColorHint="@color/darkGrey"
+						    android:layout_marginTop="@dimen/activity_vertical_margin"
+						    android:maxLines="1"
+						    android:textSize="@dimen/text_21"
+						    android:fontFamily="font-normal"
+						    android:autofillHints="email_hint"
+						    android:inputType="number"
+						    android:textColor="@color/offWhite"
+						    android:background="@drawable/edit_text_bg" />
+
+						<TextView
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+						    android:layout_marginStart="10dp"
+						    android:layout_marginTop="7dp"
+						    android:text="@string/how_much_money_optional"
+						    android:fontFamily="font-normal"
+						    android:paddingHorizontal="@dimen/spacing8"
+						    android:background="@color/cardViewColor"
+						    android:textColor="@color/offWhite"
+						    android:textSize="@dimen/text_16" />
+					</RelativeLayout>
+				</LinearLayout>
+			</androidx.cardview.widget.CardView>
+
+
+			<androidx.cardview.widget.CardView
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:padding="1dp"
+			    card_view:cardUseCompatPadding="true"
+			    card_view:cardElevation="10dp"
+			    card_view:cardPreventCornerOverlap="true"
+			    android:id="@+id/messageStageCardView"
+			    card_view:cardCornerRadius="0dp">
+
+
+				<LinearLayout
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:background="@color/cardViewColor"
+				    android:padding="@dimen/activity_vertical_margin"
+				    android:orientation="vertical">
+
+					<TextView
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:text="@string/message_request"
+					    android:layout_marginStart="@dimen/spacing32"
+					    android:textSize="@dimen/text_16"
+					    android:textAllCaps="true"
+					    android:layout_gravity="end|center_vertical"
+					    android:gravity="end|center_vertical"
+					    android:fontFamily="font-bold"
+					    android:textColor="@color/offWhite" />
+
+					<RelativeLayout
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+					    android:minHeight="120dp"
+					    android:paddingVertical="@dimen/activity_vertical_margin"
+					    android:layout_gravity="center_vertical">
+
+						<EditText
+						    android:id="@+id/message_input"
+						    android:layout_width="match_parent"
+						    android:layout_height="wrap_content"
+						    android:paddingLeft="@dimen/editText_box_margin_horiz"
+						    android:paddingStart="@dimen/editText_box_margin_horiz"
+						    android:paddingEnd="@dimen/editText_box_margin_horiz"
+						    android:paddingRight="@dimen/editText_box_margin_horiz"
+						    android:paddingTop="@dimen/activity_vertical_margin"
+						    android:paddingBottom="@dimen/activity_vertical_margin"
+						    android:textColorHint="@color/darkGrey"
+						    android:layout_marginTop="@dimen/activity_vertical_margin"
+						    android:maxLines="6"
+						    android:maxLength="110"
+						    android:minHeight="110dp"
+						    android:textSize="@dimen/text_21"
+						    android:fontFamily="font-normal"
+						    android:autofillHints="email_hint"
+						    android:inputType="text"
+						    android:textColor="@color/offWhite"
+						    android:background="@drawable/edit_text_bg" />
+
+						<TextView
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+						    android:layout_marginStart="10dp"
+						    android:layout_marginTop="7dp"
+						    android:text="@string/message_option"
+						    android:fontFamily="font-normal"
+						    android:paddingHorizontal="@dimen/spacing8"
+						    android:background="@color/cardViewColor"
+						    android:textColor="@color/offWhite"
+						    android:textSize="@dimen/text_16" />
+					</RelativeLayout>
+				</LinearLayout>
+			</androidx.cardview.widget.CardView>
+
+		</LinearLayout>
+
+	</androidx.core.widget.NestedScrollView>
+
+	<Button
+	    android:id="@+id/continue_request_button"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:text="@string/continue_text"
@@ -337,5 +336,5 @@
 	    android:textSize="@dimen/text_16"
 	    android:layout_marginBottom="46dp"
 	    android:layout_marginHorizontal="@dimen/activity_vertical_margin"
-	    android:paddingHorizontal="@dimen/spacing32"/>
+	    android:paddingHorizontal="@dimen/spacing32" />
 </LinearLayout>

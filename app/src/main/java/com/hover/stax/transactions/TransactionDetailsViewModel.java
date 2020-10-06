@@ -1,7 +1,6 @@
 package com.hover.stax.transactions;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -10,16 +9,12 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
-import com.google.android.gms.common.util.ArrayUtils;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.sms.MessageLog;
 import com.hover.sdk.transactions.Transaction;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.actions.Action;
 import com.hover.stax.database.DatabaseRepo;
-import com.hover.stax.utils.Utils;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,9 +45,13 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 		new Thread(() -> transaction.postValue(repo.getTransaction(uuid))).start();
 	}
 
-	LiveData<StaxTransaction> getTransaction() { return transaction; }
+	LiveData<StaxTransaction> getTransaction() {
+		return transaction;
+	}
 
-	LiveData<Action> getAction() { return action; }
+	LiveData<Action> getAction() {
+		return action;
+	}
 
 	List<UssdCallResponse> loadMessages(Action a) {
 		if (transaction.getValue() == null || a == null) return null;
@@ -60,7 +59,9 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 		return ussds;
 	}
 
-	LiveData<List<UssdCallResponse>> getMessages() { return messages; }
+	LiveData<List<UssdCallResponse>> getMessages() {
+		return messages;
+	}
 
 	List<UssdCallResponse> loadSms(StaxTransaction t) {
 		if (t == null) return null;
@@ -74,7 +75,9 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 		return smses;
 	}
 
-	LiveData<List<UssdCallResponse>> getSms() { return sms; }
+	LiveData<List<UssdCallResponse>> getSms() {
+		return sms;
+	}
 
 	private MessageLog getSMSMessageByUUID(String uuid) {
 		return Hover.getSMSMessageByUUID(uuid, ApplicationInstance.getContext());

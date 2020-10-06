@@ -58,10 +58,11 @@ public class MainActivity extends AppCompatActivity implements HomeViewModel.Run
 
 		homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 		homeViewModel.setListener(this);
-		homeViewModel.getBalanceActions().observe(this, actions -> Log.e(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
-		homeViewModel.getToRun().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
+		homeViewModel.getBalanceActions().observe(this, actions -> Log.e(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel"));
+		homeViewModel.getToRun().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel"));
 
-		if (getIntent().getBooleanExtra(SecurityFragment.LANG_CHANGE, false)) navController.navigate(R.id.navigation_security);
+		if (getIntent().getBooleanExtra(SecurityFragment.LANG_CHANGE, false))
+			navController.navigate(R.id.navigation_security);
 	}
 
 	void setupFloatingButton() {
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements HomeViewModel.Run
 		items.add(new RFACLabelItem<Integer>()
 						  .setLabel(getResources().getString(R.string.title_request))
 						  .setLabelSizeSp(21)
+						  .setLabelColor(getResources().getColor(R.color.colorAccentDark))
 						  .setWrapper(2));
 
 
@@ -105,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements HomeViewModel.Run
 				rfaContent
 		).build();
 	}
-
 
 
 	@Override
@@ -135,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements HomeViewModel.Run
 
 	private void run(Action action, int index) {
 		new HoverSession.Builder(action, homeViewModel.getChannel(action.channel_id), this, index)
-			.finalScreenTime(0).run();
+				.finalScreenTime(0).run();
 	}
 
 	@Override
@@ -178,12 +179,15 @@ public class MainActivity extends AppCompatActivity implements HomeViewModel.Run
 	@Override
 	public void onRFACItemLabelClick(int position, RFACLabelItem item) {
 		switch (position) {
-			case 0: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_moveMoney);
-			break;
-			case 1: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_buyAirtime);
-			break;
-			case 2: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_request);
-			break;
+			case 0:
+				Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_moveMoney);
+				break;
+			case 1:
+				Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_buyAirtime);
+				break;
+			case 2:
+				Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_request);
+				break;
 		}
 		rfabHelper.toggleContent();
 	}

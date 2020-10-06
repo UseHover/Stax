@@ -11,10 +11,10 @@ import com.hover.stax.R;
 public class StaxCardView extends CardView {
 
 
-    public StaxCardView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        LayoutInflater inflater;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.stax_card_view, this);
-    }
+	public StaxCardView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		LayoutInflater inflater;
+		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		inflater.inflate(R.layout.stax_card_view, this);
+	}
 }

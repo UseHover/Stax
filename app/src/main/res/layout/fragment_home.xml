@@ -1,160 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".home.HomeFragment"
-    android:background="@color/colorPrimary"
-    >
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/fragment_home_id"
-    android:padding="@dimen/spacing8">
+    android:background="@color/colorPrimary">
 
-	<androidx.cardview.widget.CardView
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:padding="1dp"
-	    card_view:cardUseCompatPadding="true"
-	    card_view:cardElevation="10dp"
-	    card_view:cardPreventCornerOverlap="true"
-	    card_view:cardCornerRadius="0dp">
 	<LinearLayout
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"
-	    android:paddingVertical="@dimen/spacing8"
-	    android:paddingHorizontal="@dimen/activity_vertical_margin"
-	    android:background="@color/cardViewColor"
-	    android:layout_gravity="center_vertical">
+	    android:layout_height="match_parent"
+	    android:orientation="vertical"
+	    android:id="@+id/fragment_home_id"
+	    android:padding="@dimen/spacing8">
 
-		<ImageView
-		    android:layout_width="80dp"
-		    android:layout_height="40dp"
-		    android:src="@drawable/stax_slim"
-		    android:layout_gravity="start|center"
-		    android:gravity="start|center"
-		     />
-
-
-		<TextView
-		    android:layout_width="0dp"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:text="timeAgo"
-		    android:textAlignment="viewEnd"
-		    android:layout_gravity="center_vertical"
-		    android:gravity="center|end"
-		    android:fontFamily="font-normal"
-		    android:drawableEnd="@drawable/ic_refresh_white_24dp"
-		    android:drawablePadding="@dimen/spacing8"
-		    android:textColor="@color/offWhite"
-		    android:id="@+id/homeTimeAgo"
-		    android:onClick="runAllBalances"
-		    tools:ignore="OnClick" />
-	</LinearLayout>
-	</androidx.cardview.widget.CardView>
-
-
-	<androidx.cardview.widget.CardView
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:padding="1dp"
-	    card_view:cardUseCompatPadding="true"
-	    card_view:cardElevation="10dp"
-	    card_view:cardPreventCornerOverlap="true"
-	    card_view:cardCornerRadius="0dp">
-	    <LinearLayout
-		  android:layout_width="match_parent"
-		  android:layout_height="wrap_content"
-		  android:background="@color/cardViewColor"
-		  android:paddingVertical="@dimen/activity_vertical_margin"
-		  android:orientation="vertical">
-
-		    <TextView
-			  android:layout_width="match_parent"
-			  android:layout_height="wrap_content"
-			  android:text="@string/balances"
-			  android:textSize="@dimen/text_16"
-			  android:textAllCaps="true"
-			  android:layout_gravity="end"
-			  android:gravity="end"
-			  android:textStyle="bold"
-			  android:layout_marginHorizontal="@dimen/activity_vertical_margin"
-			  android:fontFamily="font-bold"
-			  android:layout_marginBottom="@dimen/activity_vertical_margin"
-			  android:textColor="@color/offWhite" />
-
-		    <androidx.recyclerview.widget.RecyclerView
-			  android:layout_width="match_parent"
-			  android:layout_height="wrap_content"
-			  android:id="@+id/balances_recyclerView" />
-
-		    <Button
-			  android:id="@+id/balances_header"
-			  android:layout_width="wrap_content"
-			  android:layout_height="wrap_content"
-			  android:text="@string/add_accounts"
-			  android:layout_marginHorizontal="@dimen/activity_vertical_margin"
-			  android:paddingHorizontal="@dimen/spacing32"
-			  android:textAllCaps="false"
-			  android:fontFamily="font-medium"
-			  android:layout_gravity="end"
-			  android:gravity="center"
-			  android:textSize="@dimen/text_16"
-			  android:layout_marginTop="@dimen/spacing32"
-			  android:textColor="@color/offWhite"
-			  android:background="@drawable/button_bg" />
-	    </LinearLayout>
-
-	</androidx.cardview.widget.CardView>
-
-
-	<androidx.cardview.widget.CardView
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:padding="1dp"
-	    card_view:cardUseCompatPadding="true"
-	    card_view:cardElevation="10dp"
-	    card_view:cardPreventCornerOverlap="true"
-	    card_view:cardCornerRadius="0dp">
-		<LinearLayout
+		<androidx.cardview.widget.CardView
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-		    android:background="@color/cardViewColor"
-		    android:padding="@dimen/activity_vertical_margin"
-		    android:orientation="vertical">
-			<TextView
+		    android:padding="1dp"
+		    card_view:cardUseCompatPadding="true"
+		    card_view:cardElevation="10dp"
+		    card_view:cardPreventCornerOverlap="true"
+		    card_view:cardCornerRadius="0dp">
+
+			<LinearLayout
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
-			    android:text="@string/history"
-			    android:textSize="@dimen/text_16"
-			    android:textAllCaps="true"
-			    android:layout_gravity="end"
-			    android:gravity="end"
-			    android:fontFamily="font-bold"
-			    android:layout_marginBottom="@dimen/activity_vertical_margin"
-			    android:textColor="@color/offWhite" />
+			    android:orientation="horizontal"
+			    android:paddingVertical="@dimen/spacing8"
+			    android:paddingHorizontal="@dimen/activity_vertical_margin"
+			    android:background="@color/cardViewColor"
+			    android:layout_gravity="center_vertical">
 
-		<androidx.recyclerview.widget.RecyclerView
+				<ImageView
+				    android:layout_width="80dp"
+				    android:layout_height="40dp"
+				    android:src="@drawable/stax_slim"
+				    android:layout_gravity="start|center"
+				    android:gravity="start|center" />
+
+
+				<TextView
+				    android:layout_width="0dp"
+				    android:layout_height="wrap_content"
+				    android:layout_weight="1"
+				    android:text="timeAgo"
+				    android:textAlignment="viewEnd"
+				    android:layout_gravity="center_vertical"
+				    android:gravity="center|end"
+				    android:fontFamily="font-normal"
+				    android:drawableEnd="@drawable/ic_refresh_white_24dp"
+				    android:drawablePadding="@dimen/spacing8"
+				    android:textColor="@color/offWhite"
+				    android:id="@+id/homeTimeAgo"
+				    android:onClick="runAllBalances"
+				    tools:ignore="OnClick" />
+			</LinearLayout>
+		</androidx.cardview.widget.CardView>
+
+
+		<androidx.cardview.widget.CardView
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-		    android:id="@+id/transaction_history_recyclerView"/>
+		    android:padding="1dp"
+		    card_view:cardUseCompatPadding="true"
+		    card_view:cardElevation="10dp"
+		    card_view:cardPreventCornerOverlap="true"
+		    card_view:cardCornerRadius="0dp">
 
-		<TextView
-		    android:layout_width="wrap_content"
+			<LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:background="@color/cardViewColor"
+			    android:paddingVertical="@dimen/activity_vertical_margin"
+			    android:orientation="vertical">
+
+				<TextView
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:text="@string/balances"
+				    android:textSize="@dimen/text_16"
+				    android:textAllCaps="true"
+				    android:layout_gravity="end"
+				    android:gravity="end"
+				    android:textStyle="bold"
+				    android:layout_marginHorizontal="@dimen/activity_vertical_margin"
+				    android:fontFamily="font-bold"
+				    android:layout_marginBottom="@dimen/activity_vertical_margin"
+				    android:textColor="@color/offWhite" />
+
+				<androidx.recyclerview.widget.RecyclerView
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:id="@+id/balances_recyclerView" />
+
+				<Button
+				    android:id="@+id/balances_header"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:text="@string/add_accounts"
+				    android:layout_marginHorizontal="@dimen/activity_vertical_margin"
+				    android:paddingHorizontal="@dimen/spacing32"
+				    android:textAllCaps="false"
+				    android:fontFamily="font-medium"
+				    android:layout_gravity="end"
+				    android:gravity="center"
+				    android:textSize="@dimen/text_16"
+				    android:layout_marginTop="@dimen/spacing32"
+				    android:textColor="@color/offWhite"
+				    android:background="@drawable/button_bg" />
+			</LinearLayout>
+
+		</androidx.cardview.widget.CardView>
+
+
+		<androidx.cardview.widget.CardView
+		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-		    android:text="@string/no_history_yet"
-		    android:fontFamily="font-medium"
-		    android:textColor="@color/offWhite"
-		    android:textSize="@dimen/text_16"
-		    android:visibility="gone"
-		    android:id="@+id/no_history"/>
-		</LinearLayout>
-	</androidx.cardview.widget.CardView>
-</LinearLayout>
+		    android:padding="1dp"
+		    card_view:cardUseCompatPadding="true"
+		    card_view:cardElevation="10dp"
+		    card_view:cardPreventCornerOverlap="true"
+		    card_view:cardCornerRadius="0dp">
+
+			<LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:background="@color/cardViewColor"
+			    android:padding="@dimen/activity_vertical_margin"
+			    android:orientation="vertical">
+
+				<TextView
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:text="@string/history"
+				    android:textSize="@dimen/text_16"
+				    android:textAllCaps="true"
+				    android:layout_gravity="end"
+				    android:gravity="end"
+				    android:fontFamily="font-bold"
+				    android:layout_marginBottom="@dimen/activity_vertical_margin"
+				    android:textColor="@color/offWhite" />
+
+				<androidx.recyclerview.widget.RecyclerView
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:id="@+id/transaction_history_recyclerView" />
+
+				<TextView
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:text="@string/no_history_yet"
+				    android:fontFamily="font-medium"
+				    android:textColor="@color/offWhite"
+				    android:textSize="@dimen/text_16"
+				    android:visibility="gone"
+				    android:id="@+id/no_history" />
+			</LinearLayout>
+		</androidx.cardview.widget.CardView>
+	</LinearLayout>
 </androidx.core.widget.NestedScrollView>
