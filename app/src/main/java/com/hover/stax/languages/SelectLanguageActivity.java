@@ -1,6 +1,7 @@
 package com.hover.stax.languages;
 
 import android.content.Intent;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.widget.RadioButton;
@@ -37,7 +38,6 @@ public class SelectLanguageActivity extends AppCompatActivity {
 				RadioButton radioButton = (RadioButton) LayoutInflater.from(this).inflate(R.layout.stax_radio_button, null);
 				radioButton.setText(language.name);
 				radioButton.setTag(language.code);
-
 				if (language.code.equals(selectedCode))
 					radioButton.setChecked(true);
 				else radioButton.setChecked(false);

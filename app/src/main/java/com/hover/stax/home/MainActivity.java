@@ -67,7 +67,8 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 		balancesViewModel.getBalanceActions().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
 		balancesViewModel.getToRun().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
 
-		if (getIntent().getBooleanExtra(SecurityFragment.LANG_CHANGE, false)) navController.navigate(R.id.navigation_security);
+		if (getIntent().getBooleanExtra(SecurityFragment.LANG_CHANGE, false))
+			navController.navigate(R.id.navigation_security);
 	}
 
 	void setupFloatingButton() {
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 			.setLabelColor(getResources().getColor(R.color.offWhite))
 			.setIconNormalColor(R.color.cardViewColor)
 			.setLabelBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.cardViewColor)))
+			.setWrapper(0)
 		);
 		items.add(new RFACLabelItem<Integer>()
 			.setLabel(getResources().getString(R.string.nav_airtime))
@@ -88,6 +90,12 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 			.setLabelBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.cardViewColor)))
 			.setWrapper(1)
 		);
+		items.add(new RFACLabelItem<Integer>()
+			.setLabel(getResources().getString(R.string.title_request))
+			.setLabelSizeSp(21)
+			.setLabelColor(getResources().getColor(R.color.offWhite))
+			.setLabelBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.cardViewColor)))
+			.setWrapper(2));
 
 
 		rfaContent.setItems(items);
@@ -186,7 +194,8 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 		switch (position) {
 			case 0: startTransfer(Action.P2P); break;
 			case 1: startTransfer(Action.AIRTIME); break;
-			case 2: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_security); break;
+			case 2: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_request); break;
+			case 3: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_security); break;
 			default: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_home);
 		}
 		rfabHelper.toggleContent();

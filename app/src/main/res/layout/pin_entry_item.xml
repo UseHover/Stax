@@ -5,10 +5,12 @@
     android:layout_marginTop="@dimen/margin_21"
     android:orientation="vertical">
 
-	<LinearLayout
+	<RelativeLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:orientation="horizontal">
+	    android:paddingVertical="0dp"
+	    android:background="@color/cardViewColor"
+	    android:id="@+id/amountStageCardView">
 
 		<de.hdodenhof.circleimageview.CircleImageView
 		    android:layout_width="30dp"
@@ -22,12 +24,16 @@
 		<TextView
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:layout_gravity="center_vertical"
+		    android:layout_gravity="top"
 		    android:id="@+id/variable_label_id"
+		    android:background="@color/cardViewColor"
 		    android:textColor="@color/offWhite"
+		    android:layout_marginStart="10dp"
 		    android:textSize="@dimen/text_16"
+		    android:layout_marginTop="-8dp"
+		    android:paddingHorizontal="@dimen/spacing8"
+		    android:fontFamily="font-normal"
 		    android:textStyle="bold" />
-	</LinearLayout>
 
 	<EditText
 	    android:layout_width="match_parent"
@@ -47,4 +53,5 @@
 	    android:inputType="numberPassword"
 	    android:textColor="@color/offWhite"
 	    android:background="@drawable/edit_text_bg" />
+	</RelativeLayout>
 </LinearLayout>

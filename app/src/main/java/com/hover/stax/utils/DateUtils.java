@@ -70,7 +70,6 @@ public class DateUtils {
 	}
 
 
-
 	public static String monthNumToName(int number) {
 		switch (number) {
 			case 0:

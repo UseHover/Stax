@@ -20,6 +20,7 @@ public abstract class SdkDatabase extends RoomDatabase {
 	private static volatile SdkDatabase INSTANCE;
 
 	public abstract ActionDao actionDao();
+
 	public abstract SimDao simDao();
 
 	public static synchronized SdkDatabase getInstance(Context context) {

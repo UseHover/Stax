@@ -29,6 +29,8 @@
 	<string name="finished_scheduled_transaction" translatable="false">Completed scheduled %1$s transfer</string>
 	<string name="try_contact_select" translatable="false">Visited contact select screen</string>
 	<string name="contact_perm_success" translatable="false">Completed grant contacts permissions</string>
+	<string name="sms_perm_success" translatable="false">Completed grant send SMS permission</string>
+	<string name="sms_perm_denied" translatable="false">Denied send SMS permission</string>
 	<string name="contact_perm_denied" translatable="false">Denied contact permission</string>
 	<string name="contact_select_success" translatable="false">Completed choosing contact</string>
 	<string name="contact_select_error" translatable="false">Choose contact error</string>

@@ -1,7 +1,6 @@
 package com.hover.stax.transactions;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +31,10 @@ public class TransactionDetailsFragment extends Fragment {
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		viewModel = new ViewModelProvider(requireActivity()).get(TransactionDetailsViewModel.class);
 		JSONObject data = new JSONObject();
-		try { data.put("uuid", getArguments().getString(TransactionContract.COLUMN_UUID));
-		} catch (JSONException e) { }
+		try {
+			data.put("uuid", getArguments().getString(TransactionContract.COLUMN_UUID));
+		} catch (JSONException e) {
+		}
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_transaction)), data);
 		return inflater.inflate(R.layout.fragment_transaction, container, false);
 	}

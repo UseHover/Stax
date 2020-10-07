@@ -9,6 +9,7 @@ import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionDao;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
+import com.hover.stax.requests.Request;
 import com.hover.stax.requests.RequestDao;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDao;
@@ -48,11 +49,17 @@ public class DatabaseRepo {
 	// Channels
 	public Channel getChannel(int id) { return channelDao.getChannel(id); }
 
-	public LiveData<Channel> getLiveChannel(int id) { return channelDao.getLiveChannel(id); }
+	public LiveData<Channel> getLiveChannel(int id) {
+		return channelDao.getLiveChannel(id);
+	}
 
-	public LiveData<List<Channel>> getAll() { return allChannels; }
+	public LiveData<List<Channel>> getAll() {
+		return allChannels;
+	}
 
-	public LiveData<List<Channel>> getSelected() { return selectedChannels; }
+	public LiveData<List<Channel>> getSelected() {
+		return selectedChannels;
+	}
 
 	public void update(Channel channel) {
 		AppDatabase.databaseWriteExecutor.execute(() -> channelDao.update(channel));
@@ -90,6 +97,7 @@ public class DatabaseRepo {
 	public LiveData<List<StaxTransaction>> getCompleteTransferTransactions(int channelId) {
 		return transactionDao.getCompleteTransfers(channelId);
 	}
+
 	@SuppressLint("DefaultLocale")
 	public LiveData<Double> getSpentAmount(int channelId, int month, int year) {
 		return transactionDao.getTotalAmount(channelId, String.format("%02d", month), String.valueOf(year));
@@ -106,6 +114,10 @@ public class DatabaseRepo {
 
 	public void insert(StaxTransaction transaction) {
 		AppDatabase.databaseWriteExecutor.execute(() -> transactionDao.insert(transaction));
+	}
+
+	public void insert(Request request) {
+		AppDatabase.databaseWriteExecutor.execute(() -> requestDao.insert(request));
 	}
 
 	public void update(StaxTransaction transaction) {

@@ -35,7 +35,9 @@ public class ChannelDetailViewModel extends AndroidViewModel {
 	}
 
 	void setChannel(int channelId) {
-		new Thread(() -> { id.postValue(channelId); }).start();
+		new Thread(() -> {
+			id.postValue(channelId);
+		}).start();
 	}
 
 	LiveData<Double> loadSpentThisMonth(int id) {
@@ -49,17 +51,23 @@ public class ChannelDetailViewModel extends AndroidViewModel {
 	}
 
 	LiveData<Channel> getChannel() {
-		if (channel == null) { channel = new MutableLiveData<>(); }
+		if (channel == null) {
+			channel = new MutableLiveData<>();
+		}
 		return channel;
 	}
 
 	LiveData<List<StaxTransaction>> getStaxTransactions() {
-		if (transactions == null) { transactions = new MutableLiveData<>(); }
+		if (transactions == null) {
+			transactions = new MutableLiveData<>();
+		}
 		return transactions;
 	}
 
 	LiveData<Double> getSpentThisMonth() {
-		if (spentThisMonth == null) { spentThisMonth = new MutableLiveData<>(); }
+		if (spentThisMonth == null) {
+			spentThisMonth = new MutableLiveData<>();
+		}
 		return spentThisMonth;
 	}
 

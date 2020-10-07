@@ -44,10 +44,10 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 		if (channel.latestBalance != null)
 			holder.amount.setText(Utils.formatAmount(channel.latestBalance));
 
-		try{holder.balanced_swiped_layout.setBackgroundColor(Color.parseColor(channel.primaryColorHex));} catch (Exception ignored){};
-//		try{holder.refreshButton.setImageTintList(Color.parseColor(channel.secondaryColorHex));}catch (Exception ignored) {};
-		try{holder.amount.setTextColor(Color.parseColor(channel.secondaryColorHex));} catch (Exception ignored){};
-		try{UIHelper.setColoredDrawable(holder.refreshButton, R.drawable.ic_refresh_white_24dp, Color.parseColor(channel.secondaryColorHex));} catch (Exception e){};
+		holder.balanced_swiped_layout.setBackgroundColor(Color.parseColor(channel.primaryColorHex));
+//		holder.refreshButton.setImageTintList(Color.parseColor(channel.secondaryColorHex));
+		holder.amount.setTextColor(Color.parseColor(channel.secondaryColorHex));
+		UIHelper.setColoredDrawable(holder.refreshButton, R.drawable.ic_refresh_white_24dp, Color.parseColor(channel.secondaryColorHex));
 	}
 
 	class BalanceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -77,6 +77,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 
 	public interface BalanceListener {
 		void onTapRefresh(int channelId);
+
 		void onTapDetail(int channelId);
 	}
 

@@ -43,4 +43,12 @@
 		    android:name="channel_id"
 		    app:argType="integer" />
 	</fragment>
+
+
+
+	<fragment
+	    android:id="@+id/navigation_request"
+	    android:name="com.hover.stax.requests.RequestFragment"
+	    android:label="Request Fragment" />
+
 </navigation>

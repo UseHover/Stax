@@ -20,7 +20,9 @@ public class Lang {
 	}
 
 	@Override
-	public String toString() { return name; }
+	public String toString() {
+		return name;
+	}
 
 	@Override
 	public boolean equals(Object other) {
@@ -31,8 +33,10 @@ public class Lang {
 
 	public static void LogChange(String code, Context c) {
 		JSONObject data = new JSONObject();
-		try { data.put("language", code);
-		} catch (JSONException ignored) { }
+		try {
+			data.put("language", code);
+		} catch (JSONException ignored) {
+		}
 		Amplitude.getInstance().logEvent(c.getString(R.string.selected_language), data);
 	}
 }

@@ -3,7 +3,6 @@ package com.hover.stax.home;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -37,8 +36,13 @@ public class BalancesViewModel extends AndroidViewModel {
 	public BalancesViewModel(Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
-		if (selectedChannels == null) { selectedChannels = new MutableLiveData<>(); }
-		if (runFlag == null) { runFlag = new MutableLiveData<>(); runFlag.setValue(NONE); }
+		if (selectedChannels == null) {
+			selectedChannels = new MutableLiveData<>();
+		}
+		if (runFlag == null) {
+			runFlag = new MutableLiveData<>();
+			runFlag.setValue(NONE);
+		}
 
 		selectedChannels = repo.getSelected();
 		balanceActions = Transformations.switchMap(selectedChannels, this::loadBalanceActions);
@@ -48,12 +52,16 @@ public class BalancesViewModel extends AndroidViewModel {
 		toRun.addSource(balanceActions, this::onSetBalanceActions);
 	}
 
-	void setListener(RunBalanceListener l) { listener = l; }
+	void setListener(RunBalanceListener l) {
+		listener = l;
+	}
 
 	public LiveData<List<Action>> getToRun() { return toRun; }
 
 	public LiveData<List<Channel>> getSelectedChannels() {
-		if (selectedChannels == null) { selectedChannels = new MutableLiveData<>(); }
+		if (selectedChannels == null) {
+			selectedChannels = new MutableLiveData<>();
+		}
 		return selectedChannels;
 	}
 
@@ -65,7 +73,9 @@ public class BalancesViewModel extends AndroidViewModel {
 		return repo.getLiveActions(ids, Action.BALANCE);
 	}
 
-	public LiveData<List<Action>> getBalanceActions() { return balanceActions; }
+	public LiveData<List<Action>> getBalanceActions() {
+		return balanceActions;
+	}
 
 	public Channel getChannel(int id) {
 		List<Channel> allChannels = selectedChannels.getValue() != null ? selectedChannels.getValue() : new ArrayList<>();
@@ -77,14 +87,19 @@ public class BalancesViewModel extends AndroidViewModel {
 		return null;
 	}
 
-	void setRunning(int channel_id) { runFlag.setValue(channel_id); }
+	void setRunning(int channel_id) {
+		runFlag.setValue(channel_id);
+	}
 
-	void setRunning() { runFlag.setValue(ALL); }
+	void setRunning() {
+		runFlag.setValue(ALL);
+	}
 
 	private void onSetRunning(Integer flag) {
 		if (flag == null) return;
-		if (flag == NONE) { toRun.setValue(new ArrayList<>()); }
-		else if (flag == ALL) startRun(balanceActions.getValue());
+		if (flag == NONE) {
+			toRun.setValue(new ArrayList<>());
+		} else if (flag == ALL) startRun(balanceActions.getValue());
 		else startRun(getChannelActions(flag));
 	}
 
@@ -97,7 +112,7 @@ public class BalancesViewModel extends AndroidViewModel {
 	private List<Action> getChannelActions(int flag) {
 		List list = new ArrayList<Action>();
 		if (balanceActions.getValue() == null || balanceActions.getValue().size() == 0) return list;
-		for (Action action: balanceActions.getValue()) {
+		for (Action action : balanceActions.getValue()) {
 			if (action.channel_id == flag)
 				list.add(action);
 		}
@@ -107,7 +122,7 @@ public class BalancesViewModel extends AndroidViewModel {
 	void startRun(List<Action> actions) {
 		if (actions == null || actions.size() == 0) return;
 		toRun.setValue(actions);
-		runNext(actions,0);
+		runNext(actions, 0);
 	}
 
 	private void runNext(List<Action> actions, int index) {

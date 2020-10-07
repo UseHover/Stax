@@ -27,7 +27,7 @@ public class ChannelListViewModel extends AndroidViewModel {
 	private DatabaseRepo repo;
 
 	private MutableLiveData<List<Sim>> sims;
-	LiveData<List<String>> simHniList = new MutableLiveData<>();
+	private LiveData<List<String>> simHniList = new MutableLiveData<>();
 	LiveData<List<String>> simCountryList = new MutableLiveData<>();
 
 	private LiveData<List<Channel>> allChannels;
@@ -92,7 +92,7 @@ public class ChannelListViewModel extends AndroidViewModel {
 		}
 		new Thread(() -> sims.postValue(repo.getSims())).start();
 		LocalBroadcastManager.getInstance(getApplication())
-			.registerReceiver(simReceiver, new IntentFilter(Utils.getPackage(getApplication()) + ".NEW_SIM_INFO_ACTION"));
+				.registerReceiver(simReceiver, new IntentFilter(Utils.getPackage(getApplication()) + ".NEW_SIM_INFO_ACTION"));
 	}
 
 	private final BroadcastReceiver simReceiver = new BroadcastReceiver() {
@@ -134,7 +134,7 @@ public class ChannelListViewModel extends AndroidViewModel {
 		updateSimChannels(allChannels.getValue(), hniList);
 	}
 
-	public void updateSimChannels(List<Channel> channels, List<String> hniList) {
+	private void updateSimChannels(List<Channel> channels, List<String> hniList) {
 		if (channels == null || hniList == null) return;
 		List<Channel> simChanneList = new ArrayList<>();
 		for (int i = 0; i < channels.size(); i++) {
@@ -149,7 +149,7 @@ public class ChannelListViewModel extends AndroidViewModel {
 		simChannels.setValue(simChanneList);
 	}
 
-	public LiveData<List<Channel>> getSimChannels() {
+	LiveData<List<Channel>> getSimChannels() {
 		return simChannels;
 	}
 
@@ -161,7 +161,7 @@ public class ChannelListViewModel extends AndroidViewModel {
 		updateCountryChannels(allChannels.getValue(), countryList);
 	}
 
-	public void updateCountryChannels(List<Channel> channels, List<String> countryList) {
+	private void updateCountryChannels(List<Channel> channels, List<String> countryList) {
 		if (channels == null || countryList == null) return;
 		List<Channel> countryChannelList = new ArrayList<>();
 		for (int i = 0; i < channels.size(); i++) {
@@ -173,7 +173,7 @@ public class ChannelListViewModel extends AndroidViewModel {
 		countryChannels.setValue(countryChannelList);
 	}
 
-	public LiveData<List<Channel>> getCountryChannels() {
+	LiveData<List<Channel>> getCountryChannels() {
 		return countryChannels;
 	}
 
@@ -201,8 +201,10 @@ public class ChannelListViewModel extends AndroidViewModel {
 
 	@Override
 	protected void onCleared() {
-		try { LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(simReceiver);
-		} catch (Exception ignored) { }
+		try {
+			LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(simReceiver);
+		} catch (Exception ignored) {
+		}
 		super.onCleared();
 	}
 }

@@ -1,20 +1,14 @@
 package com.hover.stax.security;
 
-import android.app.KeyguardManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.biometric.BiometricConstants;
-import androidx.biometric.BiometricPrompt;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
-import com.google.android.material.snackbar.Snackbar;
 import com.hover.stax.R;
 import com.hover.stax.utils.UIHelper;
 
@@ -59,8 +53,8 @@ public class PinsActivity extends AppCompatActivity implements PinEntryAdapter.U
 			pinViewModel.savePins(PinsActivity.this);
 			setResult(RESULT_OK);
 			finish();
-       }
-   };
+		}
+	};
 
 	public void onUpdate(int id, String pin) {
 		pinViewModel.setPin(id, pin);

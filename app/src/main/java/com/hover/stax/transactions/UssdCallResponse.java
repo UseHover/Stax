@@ -1,7 +1,5 @@
 package com.hover.stax.transactions;
 
-import android.util.Log;
-
 import com.hover.sdk.transactions.Transaction;
 import com.hover.stax.actions.Action;
 
@@ -13,7 +11,9 @@ public class UssdCallResponse {
 
 	public UssdCallResponse(String sent, String response) {
 		enteredValue = sent != null ? sent : "";
-		if (enteredValue.equals("(pin)")) { this.enteredValue = "****"; }
+		if (enteredValue.equals("(pin)")) {
+			this.enteredValue = "****";
+		}
 		responseMessage = response != null ? response : "";
 	}
 
@@ -24,10 +24,10 @@ public class UssdCallResponse {
 
 			UssdCallResponse tm = null;
 			if (i == 0)
-				 tm = new UssdCallResponse(a.root_code, t.ussdMessages != null ? t.ussdMessages.optString(i) : null);
+				tm = new UssdCallResponse(a.root_code, t.ussdMessages != null ? t.ussdMessages.optString(i) : null);
 			else
 				tm = new UssdCallResponse(t.enteredValues != null ? t.enteredValues.optString(i - 1) : null,
-					t.ussdMessages != null ? t.ussdMessages.optString(i) : null);
+						t.ussdMessages != null ? t.ussdMessages.optString(i) : null);
 			convo.add(tm);
 			i++;
 		}

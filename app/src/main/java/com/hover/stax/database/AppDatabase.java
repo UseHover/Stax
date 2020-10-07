@@ -26,8 +26,11 @@ public abstract class AppDatabase extends RoomDatabase {
 	private static volatile AppDatabase INSTANCE;
 
 	public abstract ChannelDao channelDao();
+
 	public abstract TransactionDao transactionDao();
+
 	public abstract RequestDao requestDao();
+
 	public abstract ScheduleDao scheduleDao();
 
 	public static synchronized AppDatabase getInstance(Context context) {

@@ -1,7 +1,6 @@
 package com.hover.stax.transactions;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -10,16 +9,12 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
-import com.google.android.gms.common.util.ArrayUtils;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.sms.MessageLog;
 import com.hover.sdk.transactions.Transaction;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.actions.Action;
 import com.hover.stax.database.DatabaseRepo;
-import com.hover.stax.utils.Utils;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +46,9 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 		new Thread(() -> transaction.postValue(repo.getTransaction(uuid))).start();
 	}
 
-	LiveData<StaxTransaction> getTransaction() { return transaction; }
+	LiveData<StaxTransaction> getTransaction() {
+		return transaction;
+	}
 
 	LiveData<Action> getAction() {
 		if (action == null) { action = new MutableLiveData<>(); }
