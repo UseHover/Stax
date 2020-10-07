@@ -35,9 +35,9 @@ import java.util.ArrayList;
 import static android.view.View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION;
 import static com.hover.stax.requests.RequestStage.RECIPIENT;
 
-public class RequestFragment extends Fragment {
+public class NewRequestFragment extends Fragment {
 
-	private RequestViewModel requestViewModel;
+	private NewRequestViewModel requestViewModel;
 
 	private LinearLayout recipientInputList, recipientValueList;
 	private RelativeLayout firstRecipient;
@@ -48,7 +48,7 @@ public class RequestFragment extends Fragment {
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		requestViewModel = new ViewModelProvider(requireActivity()).get(RequestViewModel.class);
+		requestViewModel = new ViewModelProvider(requireActivity()).get(NewRequestViewModel.class);
 		View view = inflater.inflate(R.layout.fragment_request, container, false);
 		init(view);
 		startObservers(view);

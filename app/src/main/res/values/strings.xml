@@ -18,12 +18,14 @@
 	<string name="nav_security">Security</string>
 	<string name="nav_transaction">Transaction Details</string>
 	<string name="nav_schedule">Schedule Details</string>
+	<string name="nav_request">Request Details</string>
 	<string name="nav_language">Language Choice</string>
 	<string name="nav_account_detail">Account Details</string>
 
 	<string name="done">Done</string>
 	<string name="cancel">Cancel</string>
 	<string name="skip">Skip</string>
+	<string name="resend">Resend</string>
 	<string name="continue_text">Continue</string>
 	<string name="no_selection_error">You must select at least 1 service.</string>
 	<string name="add_accounts">Add accounts</string>
@@ -173,6 +175,7 @@
 	<string name="transaction_descrip_airtime">%1$s sent airtime to %2$s</string>
 	<string name="schedule_descrip_airtime">buy airtime with %1$s for %2$s</string>
 	<string name="transaction_descrip_money">from %1$s to %2$s</string>
+	<string name="request_descrip">Request from %1$s</string>
 
 	<string name="notify_transfer">It\'s time to transfer money %1$s with Stax.</string>
 	<string name="notify_transfer_cta">Transfer now</string>
@@ -189,6 +192,11 @@
 	<string name="cancel_future_btn">Cancel transactions</string>
 	<string name="cancel_future_msg">This will cancel future transactions. You can re-schedule the transactions at any time.</string>
 	<string name="cancel_future_success">Future transactions canceled.</string>
+
+	<string name="cancel_request_head">Cancel request</string>
+	<string name="cancel_request_btn">Cancel request</string>
+	<string name="cancel_request_msg">This will cancel this request. You can re-request money from someone else at any time.</string>
+	<string name="cancel_request_success">Request canceled.</string>
 
 	<string name="insecure_warning">Your device does not have a lockscreen enabled. Keep your money secure by entering PIN for every transaction.</string>
 	<string name="title_activity_some">SomeActivity</string>

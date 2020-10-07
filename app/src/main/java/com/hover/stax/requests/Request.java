@@ -1,9 +1,14 @@
 package com.hover.stax.requests;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import com.hover.stax.R;
+import com.hover.stax.utils.DateUtils;
 
 @Entity(tableName = "requests")
 public class Request {
@@ -28,6 +33,7 @@ public class Request {
 	@ColumnInfo(name = "matched_transaction_uuid")
 	public String matched_transaction_uuid;
 
+	@NonNull
 	@ColumnInfo(name = "date_sent", defaultValue = "CURRENT_TIMESTAMP")
 	public Long date_sent;
 
@@ -37,5 +43,10 @@ public class Request {
 		recipient = r;
 		amount = a;
 		note = n;
+		date_sent = DateUtils.now();
+	}
+
+	public String getDescription(Context c) {
+		return c.getString(R.string.request_descrip, recipient);
 	}
 }

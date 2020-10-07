@@ -2,9 +2,7 @@ package com.hover.stax.requests;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -25,7 +23,6 @@ import static com.hover.stax.requests.RequestStage.NOTE;
 import static com.hover.stax.requests.RequestStage.RECIPIENT;
 import static com.hover.stax.requests.RequestStage.REVIEW;
 import static com.hover.stax.requests.RequestStage.REVIEW_DIRECT;
-import static java.net.Proxy.Type.HTTP;
 
 public class RequestActivity extends AppCompatActivity {
 	final public static String TAG = "TransferActivity";
@@ -33,7 +30,7 @@ public class RequestActivity extends AppCompatActivity {
 	private final static int SEND_SMS = 302;
 	private final static int SEND_SMS_FOREGROUND = 303;
 
-	private RequestViewModel requestViewModel;
+	private NewRequestViewModel requestViewModel;
 	private ScheduleDetailViewModel scheduleViewModel = null;
 
 	private boolean allowSchedule = true;
@@ -41,7 +38,7 @@ public class RequestActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestViewModel = new ViewModelProvider(this).get(RequestViewModel.class);
+		requestViewModel = new ViewModelProvider(this).get(NewRequestViewModel.class);
 		startObservers();
 		checkIntent();
 		setContentView(R.layout.activity_request);
@@ -59,7 +56,7 @@ public class RequestActivity extends AppCompatActivity {
 		if (getIntent().hasExtra(Schedule.SCHEDULE_ID))
 			createFromSchedule(getIntent().getIntExtra(Schedule.SCHEDULE_ID, -1));
 		else
-			Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_request)));
+			Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_new_request)));
 	}
 
 	private void createFromSchedule(int schedule_id) {

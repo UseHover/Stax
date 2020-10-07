@@ -12,7 +12,7 @@ import com.hover.stax.database.DatabaseRepo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RequestViewModel extends AndroidViewModel {
+public class NewRequestViewModel extends AndroidViewModel {
 
 	private DatabaseRepo repo;
 	private MutableLiveData<RequestStage> requestStage = new MutableLiveData<>();
@@ -23,7 +23,7 @@ public class RequestViewModel extends AndroidViewModel {
 	private MutableLiveData<Boolean> futureDated = new MutableLiveData<>();
 	private MutableLiveData<Long> futureDate = new MutableLiveData<>();
 
-	public RequestViewModel(@NonNull Application application) {
+	public NewRequestViewModel(@NonNull Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
 
