@@ -56,7 +56,7 @@
 	<string name="default_account_desc">Les comptes par défaut s\'affichent en premier lorsque vous transférez de l\'argent.</string>
 	<string name="about_our_security">À propos de notre sécurité</string>
 	<string name="about_our_security_content">Le SDK Android de Hover est un kit de développement répondant aux critères de la classification de sécurité 740.17 (b) (3) (i) du Bureau of Industry and Security des États-Unis. Ce logiciel utilise HTTPS pour la communication avec le serveur; chiffrement RSA à clé symétrique pour stocker temporairement les informations d\'identification de l\'utilisateur sur son propre appareil à l\'aide d\'Android Keystore; et obfuscation de code à l\'aide de DRM (Dexguard).</string>
-	<string name="choose_pin_description">Vous pouvez supprimer vos codes PIN de Stax à tout moment. Tous les codes PIN sont sécurisés et cryptés avec Google Keystore pour garantir que vos informations sont toujours protégées</string>
+	<string name="choose_pin_description">Une dernière étape: nous avons besoin des codes PIN de votre compte pour effectuer des tâches et maintenir vos soldes à jour. Les codes PIN sont cryptés et ne quittent jamais votre appareil. Vous pouvez supprimer les codes PIN de Stax à tout moment. Apprendre encore plus.</string>
 
 	<string name="title_airtime">Recharger le temps d\'antenne</string>
 	<string name="title_p2p">Transférer de l\'argent à quelqu\'un d\'autre</string>
@@ -88,10 +88,10 @@
 
 	<string name="date">Date</string>
 	<string name="network">Réseau</string>
-	<string name="transactionNumber">Numéro de transaction</string>
-	<string name="message">Message</string>
+	<string name="transactionId">Numéro de transaction</string>
+	<string name="messages">Message</string>
 
-	<string name="enterRecipientNumberError">Veuillez saisir le numéro du destinataire</string>
+	<string name="enterRecipientError">Veuillez saisir le numéro du destinataire</string>
 	<string name="enterAnotherOptionError">Veuillez essayer une autre option</string>
 	<string name="enterAmountError">Veuillez saisir le montant</string>
 	<string name="selectServiceError">Veuillez sélectionner un service</string>

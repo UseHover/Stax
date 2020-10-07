@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	app:title="@string/error">
+
+	<TextView android:id="@+id/error_message"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/activity_vertical_margin"
+		android:textAlignment="center"
+		android:fontFamily="font-normal"
+		android:text="@string/no_p2p_action_error"
+		android:textColor="@color/offWhite"
+		android:textSize="@dimen/text_16" />
+
+</com.hover.stax.views.StaxCardView>

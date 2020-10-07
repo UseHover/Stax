@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    android:padding="@dimen/activity_vertical_margin"
+	android:layout_marginTop="@dimen/margin_13"
     tools:context=".security.SecurityFragment">
 
 	<LinearLayout
@@ -12,96 +11,11 @@
 	    android:layout_height="match_parent"
 	    android:orientation="vertical">
 
-		<TextView
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:text="@string/security"
-		    android:textColor="@color/offWhite"
-		    android:textSize="@dimen/text_21"
-		    android:fontFamily="font-medium" />
+		<include layout="@layout/security_card_accounts" />
 
-		<TextView
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:text="@string/remove_pin_from_device"
-		    android:textColor="@color/offWhite"
-		    android:layout_marginTop="@dimen/spacing32"
-		    android:fontFamily="font-medium"
-		    android:textSize="@dimen/text_13"
-		    android:textAlignment="textStart" />
+		<include layout="@layout/security_card_pins" />
 
-		<Button
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:background="@color/bright_red"
-		    android:text="@string/remove_pins"
-		    android:id="@+id/removePinsButtonId"
-		    android:textAllCaps="false"
-		    android:fontFamily="font-medium"
-		    android:textSize="@dimen/text_13"
-		    android:textColor="@color/offWhite"
-		    android:layout_marginTop="@dimen/activity_vertical_margin"
-		    android:paddingHorizontal="32dp" />
-
-		<TextView
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:text="@string/default_account"
-		    android:layout_marginTop="32dp"
-		    android:textColor="@color/offWhite"
-		    android:textSize="@dimen/text_13"
-		    android:fontFamily="font-medium" />
-
-		<androidx.appcompat.widget.AppCompatSpinner
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_marginTop="@dimen/activity_vertical_margin"
-		    android:entries="@array/choose_account_initial_array"
-		    android:background="@drawable/spinner_bg"
-		    android:padding="1dp"
-		    android:id="@+id/defaultAccountSpinner" />
-
-		<TextView
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:text="@string/default_account_desc"
-		    android:layout_marginTop="8dp"
-		    android:textColor="@color/offWhite" />
-
-		<TextView
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:text="@string/about_our_security"
-		    android:layout_marginTop="@dimen/spacing32"
-		    android:textColor="@color/offWhite"
-		    android:textSize="@dimen/text_13"
-		    android:fontFamily="font-medium" />
-
-		<TextView
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:text="@string/about_our_security_content"
-		    android:layout_marginTop="8dp"
-		    android:lineSpacingExtra="4.5dp"
-		    android:textColor="@color/offWhite" />
-
-
-		<TextView
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:text="@string/select_language"
-		    android:layout_marginTop="32dp"
-		    android:textColor="@color/offWhite"
-		    android:textSize="@dimen/text_13"
-		    android:fontFamily="font-medium" />
-
-		<androidx.appcompat.widget.AppCompatSpinner
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_marginTop="@dimen/activity_vertical_margin"
-		    android:background="@drawable/spinner_bg"
-		    android:padding="1dp"
-		    android:id="@+id/selectLanguageSpinner" />
+		<include layout="@layout/security_card_language" />
 
 	</LinearLayout>
 </androidx.core.widget.NestedScrollView>

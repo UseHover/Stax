@@ -19,13 +19,15 @@ public class LanguageViewModel extends ViewModel {
 		languages.setValue(getLanguages());
 	}
 
-	public LiveData<List<Lang>> loadLanguages() { return languages; }
+	public LiveData<List<Lang>> loadLanguages() {
+		return languages;
+	}
 
 	private List<Lang> getLanguages() {
 		String[] languageCodes = ApplicationInstance.getContext().getResources().getStringArray(R.array.supported_languages_code);
 		ArrayList<Lang> langs = new ArrayList<>();
 		langs.add(new Lang(Lingver.getInstance().getLanguage()));
-		for (String code: languageCodes) {
+		for (String code : languageCodes) {
 			Lang toAdd = new Lang(code);
 			if (!langs.contains(toAdd))
 				langs.add(toAdd);

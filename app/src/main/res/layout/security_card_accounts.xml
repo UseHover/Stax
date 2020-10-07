@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	app:title="@string/accounts">
+
+	<ListView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/accounts_list" />
+
+	<androidx.appcompat.widget.AppCompatSpinner
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/margin_21"
+		android:entries="@array/choose_account_initial_array"
+		android:background="@drawable/spinner_bg"
+		android:padding="3dp"
+		android:id="@+id/defaultAccountSpinner" />
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/margin_21">
+		<androidx.appcompat.widget.AppCompatButton
+			android:id="@+id/add_accounts_btn"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/add_accounts"
+			android:layout_alignParentEnd="true"
+			style="@style/StaxButton"
+			android:fontFamily="font-medium"
+			android:onClick="addAccount" />
+	</RelativeLayout>
+
+</com.hover.stax.views.StaxCardView>

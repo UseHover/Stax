@@ -14,12 +14,13 @@ import com.hover.stax.sims.Sim;
 import com.hover.stax.sims.SimDao;
 
 // This is a readonly database for accessing the DB created by SQL in the SDK
-@Database(entities = {Action.class, Sim.class}, version = 41)
+@Database(entities = {Action.class, Sim.class}, version = 41, exportSchema = false)
 public abstract class SdkDatabase extends RoomDatabase {
 
 	private static volatile SdkDatabase INSTANCE;
 
 	public abstract ActionDao actionDao();
+
 	public abstract SimDao simDao();
 
 	public static synchronized SdkDatabase getInstance(Context context) {
@@ -27,8 +28,9 @@ public abstract class SdkDatabase extends RoomDatabase {
 			synchronized (SdkDatabase.class) {
 				if (INSTANCE == null) {
 					INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SdkDatabase.class, "hoversdktransactions.db")
-									   .addMigrations(MIGRATION_40_41)
-									   .build();
+						.setJournalMode(JournalMode.TRUNCATE)
+						.addMigrations(MIGRATION_40_41)
+						.build();
 				}
 			}
 		}

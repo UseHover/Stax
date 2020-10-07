@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-
     app:startDestination="@+id/navigation_home">
 
 	<fragment
@@ -11,28 +10,6 @@
 	    android:name="com.hover.stax.home.HomeFragment"
 	    android:label="@string/nav_home"
 	    tools:layout="@layout/fragment_home" />
-
-	<fragment
-	    android:id="@+id/navigation_buyAirtime"
-	    android:name="com.hover.stax.transfers.TransferFragment"
-	    android:label="@string/nav_airtime"
-	    tools:layout="@layout/fragment_transfer" >
-		<argument
-			android:name="transaction_type"
-			app:argType="string"
-			android:defaultValue='airtime' />
-	</fragment>
-
-	<fragment
-	    android:id="@+id/navigation_moveMoney"
-	    android:name="com.hover.stax.transfers.TransferFragment"
-	    android:label="@string/nav_money"
-	    tools:layout="@layout/fragment_transfer" >
-		<argument
-			android:name="transaction_type"
-			app:argType="string"
-			android:defaultValue='p2p' />
-	</fragment>
 
 	<fragment
 	    android:id="@+id/navigation_security"
@@ -47,6 +24,15 @@
 		<argument
 			android:name="uuid"
 			app:argType="string" />
+	</fragment>
+
+	<fragment
+		android:id="@+id/scheduleDetailsFragment"
+		android:name="com.hover.stax.schedules.ScheduleDetailFragment"
+		android:label="ScheduleDetailFragment" >
+		<argument
+			android:name="id"
+			app:argType="integer" />
 	</fragment>
 
 	<fragment

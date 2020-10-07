@@ -20,10 +20,10 @@ public class ApplicationInstance extends Application {
 	public void onCreate() {
 		super.onCreate();
 		Replacer replacer = FontReplacer.Build(getApplicationContext());
-		replacer.setBoldFont("Barlow-Bold.ttf");
-		replacer.setMediumFont("Barlow-SemiBold.ttf");
-		replacer.setDefaultFont("Barlow-Regular.ttf");
-		replacer.setThinFont("Barlow-Thin.ttf");
+		replacer.setBoldFont("Effra_Heavy.ttf");
+		replacer.setMediumFont("Effra_Medium.ttf");
+		replacer.setDefaultFont("Effra_Regular.ttf");
+		replacer.setThinFont("Effra_Regular.ttf");
 		replacer.applyFont();
 		context = this;
 		Lingver.init(this, Locale.getDefault());

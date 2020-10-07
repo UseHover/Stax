@@ -1,25 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
 
 	<item
 	    android:id="@+id/navigation_home"
-	    android:icon="@drawable/account_balance_wallet"
+	    android:icon="@drawable/ic_home"
+	    app:showAsAction="always"
 	    android:title="@string/nav_home" />
 
 	<item
-	    android:id="@+id/navigation_buyAirtime"
-	    android:icon="@drawable/phone_callback"
-	    android:title="@string/nav_airtime" />
-
-	<item
-	    android:id="@+id/navigation_moveMoney"
-	    android:icon="@drawable/payments"
-	    android:title="@string/nav_money" />
-
-	<item
 	    android:id="@+id/navigation_security"
-	    android:icon="@drawable/lock"
+	    android:icon="@drawable/ic_settings"
+
+	    app:showAsAction="always"
 	    android:title="@string/nav_security" />
+
+	<item
+	    app:showAsAction="always"
+	    android:checkable="false"
+	    android:title="" />
+
+	<item
+
+	    app:showAsAction="always"
+	    android:checkable="false"
+	    android:title="" />
+
+	<item
+
+	    app:showAsAction="always"
+	    android:checkable="false"
+	    android:title="" />
+
+
 
 </menu>

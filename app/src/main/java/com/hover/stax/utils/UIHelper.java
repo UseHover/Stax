@@ -1,20 +1,14 @@
 package com.hover.stax.utils;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextPaint;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,11 +41,37 @@ public class UIHelper {
 		return linearLayoutManager;
 	}
 
-	static public void setTextColoredDrawable(TextView textView, int drawable, int color) {
+	static public void setColoredDrawable(ImageButton imageButton, int drawable, int color) {
 		Drawable unwrappedDrawable = AppCompatResources.getDrawable(ApplicationInstance.getContext(), drawable);
 		assert unwrappedDrawable != null;
 		Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
 		DrawableCompat.setTint(wrappedDrawable, color);
-		textView.setCompoundDrawablesWithIntrinsicBounds(wrappedDrawable, null, null, null);
+		imageButton.setImageDrawable(wrappedDrawable);
+	}
+
+	public static void setTextUnderline(TextView textView, String cs) {
+		SpannableString content = new SpannableString(cs);
+		content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+		content.setSpan(android.graphics.Typeface.BOLD, 0, content.length(), 0);
+		try {textView.setText(content); }
+		catch (Exception ignored) { }
+	}
+
+	public static void fixListViewHeight(ListView listView) {
+		ListAdapter listAdapter = listView.getAdapter();
+		if (listAdapter == null) { return; }
+
+		int totalHeight = 0;
+		int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+		for (int i = 0; i < listAdapter.getCount(); i++) {
+			View listItem = listAdapter.getView(i, null, listView);
+			listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+			totalHeight += listItem.getMeasuredHeight();
+		}
+
+		ViewGroup.LayoutParams params = listView.getLayoutParams();
+		params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+		listView.setLayoutParams(params);
+		listView.requestLayout();
 	}
 }

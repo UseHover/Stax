@@ -5,157 +5,204 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.textfield.TextInputLayout;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
-import com.hover.stax.home.MainActivity;
-import com.hover.stax.hover.HoverSession;
-import com.hover.stax.security.BiometricChecker;
+import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
-public class TransferFragment extends Fragment implements BiometricChecker.AuthListener {
+import java.util.List;
+
+import static com.hover.stax.transfers.InputStage.AMOUNT;
+import static com.hover.stax.transfers.InputStage.RECIPIENT;
+
+public class TransferFragment extends Fragment {
 	private static final String TAG = "TransferFragment";
 
 	private TransferViewModel transferViewModel;
-	private String transferType;
-	private AppCompatSpinner spinnerTo;
-	private AppCompatSpinner spinnerFrom;
-	private View detailsBlock;
-	private View recipientBlock;
-	private TextView recipientLabel;
+
+	private EditText amountInput;
+	private RadioGroup fromRadioGroup;
+	private AutoCompleteTextView networkDropdown;
+	private com.google.android.material.textfield.TextInputLayout recipientEntry;
 	private EditText recipientInput;
 	private ImageButton contactButton;
-	private TextView pageError;
-	EditText amountInput;
+	private EditText reasonInput;
+	private View errorCard;
+	private MaterialDatePicker<Long> datePicker;
+
+	private TextView amountValue, fromValue, toNetworkValue, recipientValue, reasonValue, dateValue;
 
 	final public static int READ_CONTACT = 201;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		transferType = getArguments() != null ? getArguments().getString(Action.TRANSACTION_TYPE) : Action.P2P;
-		transferViewModel = new ViewModelProvider(this).get(TransferViewModel.class);
-		transferViewModel.setType(transferType);
-		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, transferType));
+		transferViewModel = new ViewModelProvider(requireActivity()).get(TransferViewModel.class);
 
 		View root = inflater.inflate(R.layout.fragment_transfer, container, false);
-
 		initView(root);
-		startListeners();
-		setUpSpinners();
+		startObservers(root);
+		setUpListeners(root);
 		createContactSelector();
-		onSubmit(root);
 
 		return root;
 	}
 
 	private void initView(View root) {
-		((TextView) root.findViewById(R.id.transfer_title)).setText(getTitle());
-		spinnerTo = root.findViewById(R.id.toSpinner);
-		spinnerFrom = root.findViewById(R.id.fromSpinner);
-		detailsBlock = root.findViewById(R.id.details_block);
-		recipientBlock = root.findViewById(R.id.recipient_block);
-		recipientLabel = root.findViewById(R.id.recipient_label);
-		recipientInput = root.findViewById(R.id.recipient_number);
+		((TextView) root.findViewById(R.id.title)).setText(
+			getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.buy_airtime : R.string.transfer));
+		amountValue = root.findViewById(R.id.amountValue);
+		fromValue = root.findViewById(R.id.fromValue);
+		toNetworkValue = root.findViewById(R.id.toNetworkValue);
+		recipientValue = root.findViewById(R.id.recipientValue);
+		reasonValue = root.findViewById(R.id.reasonValue);
+		dateValue = root.findViewById(R.id.dateValue);
+
 		amountInput = root.findViewById(R.id.amount_input);
+		fromRadioGroup = root.findViewById(R.id.fromRadioGroup);
+		networkDropdown = root.findViewById(R.id.networkDropdown);
+		recipientEntry = root.findViewById(R.id.recipientEntry);
+		recipientInput = root.findViewById(R.id.recipient_input);
 		contactButton = root.findViewById(R.id.contact_button);
-		pageError = root.findViewById(R.id.error_message);
-		pageError.setText(getError());
+		reasonInput = root.findViewById(R.id.note_input);
+
+		createDatePicker();
+		errorCard = root.findViewById(R.id.errorCard);
+		setErrorText();
 	}
 
-	private String getTitle() {
-		if (transferType.equals(Action.AIRTIME)) return getString(R.string.title_airtime);
-		else return getString(R.string.title_p2p);
-	}
+	private void startObservers(View root) {
+		transferViewModel.getStage().observe(getViewLifecycleOwner(), this::updateVariableValues);
+		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> {
+			amountInput.setText(amount);
+			amountValue.setText(Utils.formatAmount(amount));
+		});
+		transferViewModel.getRecipient().observe(getViewLifecycleOwner(), recipient -> {
+			recipientInput.setText(recipient);
+			recipientValue.setText(recipient);
+		});
+		transferViewModel.getReason().observe(getViewLifecycleOwner(), reason -> {
+			reasonInput.setText(reason);
+			reasonValue.setText(reason);
+		});
 
-	private String getError() {
-		if (transferType.equals(Action.AIRTIME)) return getString(R.string.no_airtime_action_error);
-		else return getString(R.string.no_p2p_action_error);
-	}
-
-	private void startListeners() {
-		transferViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
-			if (channels.size() == 0) {
-				channels.add(new Channel(-1, getResources().getString(R.string.choose_service_hint)));
-			}
-			channels.add(new Channel(-2, getResources().getString(R.string.add_service)));
-			ArrayAdapter<Channel> adapter = new ArrayAdapter(getActivity(), R.layout.spinner_items, channels);
-			spinnerFrom.setAdapter(adapter);
+		transferViewModel.getIsFuture().observe(getViewLifecycleOwner(), isFuture -> root.findViewById(R.id.dateInput).setVisibility(isFuture ? View.VISIBLE : View.GONE));
+		transferViewModel.getFutureDate().observe(getViewLifecycleOwner(), futureDate -> {
+			((TextView) root.findViewById(R.id.dateInput)).setText(futureDate != null ? DateUtils.humanFriendlyDate(futureDate) : getString(R.string.date));
+			((TextView) root.findViewById(R.id.dateValue)).setText(futureDate != null ? DateUtils.humanFriendlyDate(futureDate) : getString(R.string.date));
 		});
 
 		transferViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
-			if (transferViewModel.getActiveChannel().getValue() == null || transferViewModel.getActiveChannel().getValue().id == -1) {
-				detailsBlock.setVisibility(View.GONE);
-				pageError.setVisibility(View.GONE);
-			} else if (actions != null && actions.size() > 0) {
-				detailsBlock.setVisibility(View.VISIBLE);
-				pageError.setVisibility(View.GONE);
-				transferViewModel.setActiveAction(actions.get(0));
-			} else {
-				detailsBlock.setVisibility(View.GONE);
-				pageError.setVisibility(View.VISIBLE);
+			if (actions == null || actions.size() == 0) return;
+			ArrayAdapter<Action> adapter = new ArrayAdapter<>(requireActivity(), R.layout.stax_spinner_item, actions);
+			networkDropdown.setAdapter(adapter);
+			networkDropdown.setText(networkDropdown.getAdapter().getItem(0).toString(), false);
+		});
+
+		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action ->
+			{ if (action != null) toNetworkValue.setText(action.toString()); });
+
+		transferViewModel.getActiveChannel().observe(getViewLifecycleOwner(), c -> {
+			if (c != null) {
+				fromValue.setText(c.name);
+				fromRadioGroup.check(c.id);
 			}
-			ArrayAdapter<Action> adapter = new ArrayAdapter(getActivity(), R.layout.spinner_items, actions);
-			spinnerTo.setAdapter(adapter);
+		});
+
+		transferViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
+			if (channels != null) createChannelSelector(channels);
 		});
 	}
 
-	private void setUpSpinners() {
-		spinnerFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				Channel channel = (Channel) spinnerFrom.getItemAtPosition(position);
-				if (channel.id == -2)
-					startActivity(new Intent(getActivity(), ChannelsActivity.class));
-				else
-					transferViewModel.setActiveChannel(channel);
-			}
+	private void createChannelSelector(List<Channel> channels) {
+		fromRadioGroup.removeAllViews();
 
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-			}
-		});
-
-		spinnerTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				Action action = (Action) spinnerTo.getItemAtPosition(position);
-				transferViewModel.setActiveAction(action);
-				updateView(action);
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-			}
-		});
+		for (Channel c: channels) {
+			RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.stax_radio_button, null);
+			radioButton.setText(c.name);
+			radioButton.setId(c.id);
+			if (transferViewModel.getActiveChannel().getValue() != null && transferViewModel.getActiveChannel().getValue().id == c.id)
+				radioButton.setChecked(true);
+			fromRadioGroup.addView(radioButton);
+		}
 	}
 
-	private void updateView(Action action) {
-		recipientBlock.setVisibility(action.requiresRecipient() ? View.VISIBLE : View.GONE);
+	private void updateVariableValues(InputStage stage) {
+		switch (stage) {
+			case FROM_ACCOUNT:
+				if (validates(amountInput, AMOUNT, R.string.enterAmountError))
+					transferViewModel.setAmount(amountInput.getText().toString());
+				break;
+			case RECIPIENT:
+				if (validates(amountInput, AMOUNT, R.string.enterAmountError))
+					transferViewModel.setAmount(amountInput.getText().toString());
+				recipientInput.requestFocus(); break;
+			case REASON:
+				if (validates(recipientInput, RECIPIENT, R.string.enterRecipientError))
+					transferViewModel.setRecipient(recipientInput.getText().toString());
+				reasonInput.requestFocus();
+				break;
+			case REVIEW:
+				transferViewModel.setReason(reasonInput.getText().toString().isEmpty() ? " " : reasonInput.getText().toString());
+				if (validates(recipientInput, RECIPIENT, R.string.enterRecipientError))
+					transferViewModel.setRecipient(recipientInput.getText().toString());
+				break;
+		}
+	}
+
+	private boolean validates(EditText input, InputStage stage, int errorMsg) {
+		if (input.getText().toString().isEmpty()) {
+			boolean canGoBack = transferViewModel.goToStage(stage);
+			if (canGoBack)
+				((TextInputLayout) input.getParent().getParent()).setError(getString(errorMsg));
+			return !canGoBack;
+		}
+		return true;
+	}
+
+	private void setUpListeners(View root) {
+		fromRadioGroup.setOnCheckedChangeListener((group, checkedId) -> transferViewModel.setActiveChannel(checkedId));
+		root.findViewById(R.id.add_new_account).setOnClickListener(view -> startActivity(new Intent(getActivity(), ChannelsActivity.class)));
+
+		networkDropdown.setOnItemClickListener((adapterView, view, pos, id) -> {
+			Action action = (Action) adapterView.getItemAtPosition(pos);
+			transferViewModel.setActiveAction(action);
+			setRecipientHint(action);
+			toNetworkValue.setText(action.toString());
+		});
+
+		((SwitchMaterial) root.findViewById(R.id.futureSwitch)).setOnCheckedChangeListener((view, isChecked) -> transferViewModel.setIsFutureDated(isChecked));
+		root.findViewById(R.id.dateInput).setOnClickListener(view -> datePicker.show(getActivity().getSupportFragmentManager(), datePicker.toString()));
+	}
+
+	private void setRecipientHint(Action action) {
 		if (action.getRequiredParams().contains(Action.ACCOUNT_KEY)) {
-			recipientLabel.setText(getString(R.string.recipient_account));
+			recipientEntry.setHint(getString(R.string.recipient_account));
 		} else {
-			recipientLabel.setText(getString(R.string.recipient_phone));
+			recipientEntry.setHint(getString(R.string.recipient_phone));
 		}
 	}
 
@@ -169,49 +216,6 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 				requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, READ_CONTACT);
 			}
 		});
-	}
-
-	private void onSubmit(View root) {
-		root.findViewById(R.id.confirm_button).setOnClickListener(view3 -> {
-			if (transferViewModel.getActiveAction() != null) {
-				if (TextUtils.getTrimmedLength(amountInput.getText().toString()) > 0) {
-					if (transferViewModel.getActiveAction().requiresRecipient()) {
-						if (TextUtils.getTrimmedLength(recipientInput.getText().toString()) > 0) {
-							authenticate();
-						} else
-							UIHelper.flashMessage(getContext(), getResources().getString(R.string.enterRecipientNumberError));
-					} else {
-						authenticate();
-					}
-				} else
-					UIHelper.flashMessage(getContext(), getResources().getString(R.string.enterAmountError));
-			} else
-				UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectServiceError));
-		});
-	}
-
-	private void authenticate() {
-		new BiometricChecker(this, (AppCompatActivity) getActivity()).startAuthentication();
-	}
-
-	@Override
-	public void onAuthError(String error) {
-		Log.e(TAG, error);
-	}
-
-	@Override
-	public void onAuthSuccess() {
-		makeHoverCall();
-	}
-
-	private void makeHoverCall() {
-		Amplitude.getInstance().logEvent(getString(R.string.finish_screen, transferType));
-		new HoverSession.Builder(transferViewModel.getActiveAction(), transferViewModel.getActiveChannel().getValue(),
-				getActivity(), MainActivity.TRANSFER_REQUEST)
-				.extra(Action.PHONE_KEY, recipientInput.getText().toString())
-				.extra(Action.ACCOUNT_KEY, recipientInput.getText().toString())
-				.extra(Action.AMOUNT_KEY, amountInput.getText().toString())
-				.run();
 	}
 
 	@Override
@@ -232,7 +236,7 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		if (requestCode == READ_CONTACT && PermissionHelper.permissionsGranted(grantResults)) {
+		if (requestCode == READ_CONTACT && new PermissionHelper(getContext()).permissionsGranted(grantResults)) {
 			Amplitude.getInstance().logEvent(getString(R.string.contact_perm_success));
 			Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
 			startActivityForResult(contactPickerIntent, READ_CONTACT);
@@ -240,6 +244,20 @@ public class TransferFragment extends Fragment implements BiometricChecker.AuthL
 			Amplitude.getInstance().logEvent(getString(R.string.contact_perm_denied));
 			UIHelper.flashMessage(getContext(), getResources().getString(R.string.contact_perm_error));
 		}
+	}
+
+	private void createDatePicker() {
+		CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
+		constraintsBuilder.setStart(DateUtils.now() + DateUtils.DAY);
+		datePicker = MaterialDatePicker.Builder.datePicker()
+			             .setCalendarConstraints(constraintsBuilder.build()).build();
+		datePicker.addOnPositiveButtonClickListener(unixTime -> transferViewModel.setFutureDate(unixTime));
+	}
+
+	private void setErrorText() {
+		TextView errorMsgView = errorCard.findViewById(R.id.error_message);
+		if (transferViewModel.getType().equals(Action.AIRTIME)) errorMsgView.setText(getString(R.string.no_airtime_action_error));
+		else errorMsgView.setText(getString(R.string.no_p2p_action_error));
 	}
 }
 

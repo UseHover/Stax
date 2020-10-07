@@ -17,7 +17,7 @@
     <item android:right="10dp">
         <shape android:shape="rectangle" android:padding="10dp">
 
-            <solid android:color="@color/colorPrimaryDark"/>
+            <solid android:color="@color/cardViewColor"/>
             <stroke android:width="2dp" android:color="@color/grey"/>
             <corners android:radius="@dimen/editText_corner" />
 

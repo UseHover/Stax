@@ -12,14 +12,14 @@ import java.util.List;
 
 @Dao
 public interface ChannelDao {
-	@Query("SELECT * FROM channels")
+	@Query("SELECT * FROM channels ORDER BY country_alpha2, name")
 	LiveData<List<Channel>> getAll();
 
 	@Query("SELECT * FROM channels WHERE selected = :selected ORDER BY defaultAccount DESC")
 	LiveData<List<Channel>> getSelected(boolean selected);
 
-	@Query("SELECT * FROM channels WHERE defaultAccount = 'true' ORDER BY defaultAccount DESC")
-	LiveData<Channel> getDefault();
+	@Query("SELECT * FROM channels WHERE defaultAccount = 'true' LIMIT 1")
+	LiveData<Channel> getLiveDefault();
 
 	@Query("SELECT * FROM channels WHERE country_alpha2 = :countryAlpha2")
 	LiveData<List<Channel>> getByCountry(String countryAlpha2);

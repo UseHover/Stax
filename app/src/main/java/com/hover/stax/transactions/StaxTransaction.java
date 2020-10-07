@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
-@Entity(tableName = "stax_transactions", indices = { @Index(value = {"uuid"}, unique = true) })
+@Entity(tableName = "stax_transactions", indices = {@Index(value = {"uuid"}, unique = true)})
 public class StaxTransaction {
 
 	@PrimaryKey(autoGenerate = true)
@@ -67,7 +67,8 @@ public class StaxTransaction {
 	@ColumnInfo(name = "recipient")
 	public String recipient;
 
-	public StaxTransaction() {}
+	public StaxTransaction() {
+	}
 
 	public StaxTransaction(Intent data, Action action, Context c) {
 		if (data.hasExtra(TransactionContract.COLUMN_UUID) && data.getStringExtra(TransactionContract.COLUMN_UUID) != null) {
@@ -108,7 +109,7 @@ public class StaxTransaction {
 			case Action.AIRTIME:
 				return c.getString(R.string.transaction_descrip_airtime, action.from_institution_name, ((recipient == null || recipient.equals("")) ? "myself" : recipient));
 			case Action.P2P:
-				return c.getString(R.string.transaction_descrip_money, action.to_institution_name, recipient);
+				return c.getString(R.string.transaction_descrip_money, action.from_institution_name, recipient);
 			case Action.ME2ME:
 				return c.getString(R.string.transaction_descrip_money, action.from_institution_name, action.to_institution_name);
 			default:

@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginHorizontal="16dp"
-    android:layout_marginTop="16dp" >
+    android:layout_marginTop="16dp">
 
 	<de.hdodenhof.circleimageview.CircleImageView
 	    android:layout_width="55dp"
@@ -12,12 +12,12 @@
 	    android:scaleType="centerCrop"
 	    android:layout_centerHorizontal="true"
 	    android:id="@+id/service_item_image_id"
-	    android:src="@drawable/mtn_logo" />
+	    android:src="@drawable/ic_grey_circle" />
 
 	<de.hdodenhof.circleimageview.CircleImageView
 	    android:layout_width="65dp"
 	    android:layout_height="55dp"
-	    android:src="@drawable/ic_brightness_1_black_24dp"
+	    android:src="@drawable/ic_grey_circle"
 	    android:layout_centerHorizontal="true"
 	    android:visibility="visible"
 	    app:civ_border_overlay="true"
@@ -33,9 +33,9 @@
 	    android:layout_gravity="center"
 	    android:layout_centerHorizontal="true"
 	    android:id="@+id/checked_service_tick"
-	    android:layout_marginTop="@dimen/activity_horizontal_margin"
+	    android:layout_marginTop="@dimen/margin_16"
 	    android:visibility="gone"
-	    android:src="@drawable/ic_check_circle_green_24dp" />
+	    android:src="@drawable/ic_check" />
 
 	<TextView
 	    android:layout_width="wrap_content"

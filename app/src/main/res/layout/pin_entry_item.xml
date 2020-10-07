@@ -2,19 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="32dp"
+    android:layout_marginTop="@dimen/margin_21"
     android:orientation="vertical">
 
-	<LinearLayout
+	<RelativeLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:orientation="horizontal">
+	    android:paddingVertical="0dp"
+	    android:background="@color/cardViewColor"
+	    android:id="@+id/amountStageCardView">
 
 		<de.hdodenhof.circleimageview.CircleImageView
 		    android:layout_width="30dp"
 		    android:layout_height="30dp"
 		    android:scaleType="centerCrop"
-		    android:src="@drawable/mtn_logo"
+		    android:src="@drawable/ic_grey_circle"
 		    android:id="@+id/variable_logo"
 		    android:visibility="gone"
 		    android:layout_marginEnd="8dp" />
@@ -22,22 +24,26 @@
 		<TextView
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:layout_gravity="center_vertical"
+		    android:layout_gravity="top"
 		    android:id="@+id/variable_label_id"
+		    android:background="@color/cardViewColor"
 		    android:textColor="@color/offWhite"
+		    android:layout_marginStart="10dp"
 		    android:textSize="@dimen/text_16"
+		    android:layout_marginTop="-8dp"
+		    android:paddingHorizontal="@dimen/spacing8"
+		    android:fontFamily="font-normal"
 		    android:textStyle="bold" />
-	</LinearLayout>
 
 	<EditText
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:paddingLeft="@dimen/editText_box_margin_horiz"
-	    android:paddingStart="@dimen/editText_box_margin_horiz"
-	    android:paddingEnd="@dimen/editText_box_margin_horiz"
-	    android:paddingRight="@dimen/editText_box_margin_horiz"
-	    android:paddingTop="@dimen/editText_box_margin_vert"
-	    android:paddingBottom="@dimen/editText_box_margin_vert"
+	    android:paddingLeft="@dimen/margin_21"
+	    android:paddingStart="@dimen/margin_21"
+	    android:paddingEnd="@dimen/margin_21"
+	    android:paddingRight="@dimen/margin_21"
+	    android:paddingTop="@dimen/margin_13"
+	    android:paddingBottom="@dimen/margin_13"
 	    android:hint="@string/pin_input_hint"
 	    android:textColorHint="@color/darkGrey"
 	    android:layout_marginTop="8dp"
@@ -47,4 +53,5 @@
 	    android:inputType="numberPassword"
 	    android:textColor="@color/offWhite"
 	    android:background="@drawable/edit_text_bg" />
+	</RelativeLayout>
 </LinearLayout>

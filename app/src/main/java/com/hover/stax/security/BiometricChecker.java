@@ -2,20 +2,19 @@ package com.hover.stax.security;
 
 import android.app.KeyguardManager;
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricConstants;
-import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
-
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
+import com.hover.stax.actions.Action;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG;
 import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK;
@@ -25,15 +24,17 @@ import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTI
 public class BiometricChecker extends BiometricPrompt.AuthenticationCallback {
 	private AppCompatActivity a;
 	private AuthListener listener;
+	private Action action;
 
 	public BiometricChecker(AuthListener authListener, AppCompatActivity activity) {
 		listener = authListener;
 		a = activity;
 	}
 
-	public void startAuthentication() {
+	public void startAuthentication(Action act) {
+		action = act;
 		if (!((KeyguardManager) a.getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardSecure()) {
-			listener.onAuthSuccess();
+			listener.onAuthSuccess(action);
 			return;
 		}
 
@@ -63,7 +64,7 @@ public class BiometricChecker extends BiometricPrompt.AuthenticationCallback {
 	public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
 		super.onAuthenticationSucceeded(result);
 		Amplitude.getInstance().logEvent(a.getString(R.string.biometrics_succeeded));
-		listener.onAuthSuccess();
+		listener.onAuthSuccess(action);
 	}
 
 	@Override
@@ -74,6 +75,7 @@ public class BiometricChecker extends BiometricPrompt.AuthenticationCallback {
 
 	public interface AuthListener {
 		void onAuthError(String error);
-		void onAuthSuccess();
+
+		void onAuthSuccess(Action action);
 	}
 }
