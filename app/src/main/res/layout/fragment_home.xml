@@ -12,7 +12,7 @@
 	    android:layout_height="match_parent"
 	    android:orientation="vertical"
 	    android:id="@+id/fragment_home_id"
-		android:paddingTop="@dimen/margin_16">
+		android:layout_marginTop="@dimen/margin_13">
 
 		<include layout="@layout/home_card_header" />
 

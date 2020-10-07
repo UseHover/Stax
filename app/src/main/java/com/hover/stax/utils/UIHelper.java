@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -53,12 +54,12 @@ public class UIHelper {
 		return linearLayoutManager;
 	}
 
-	static public void setTextColoredDrawable(TextView textView, int drawable, int color) {
+	static public void setColoredDrawable(ImageButton imageButton, int drawable, int color) {
 		Drawable unwrappedDrawable = AppCompatResources.getDrawable(ApplicationInstance.getContext(), drawable);
 		assert unwrappedDrawable != null;
 		Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
 		DrawableCompat.setTint(wrappedDrawable, color);
-		textView.setCompoundDrawablesWithIntrinsicBounds(wrappedDrawable, null, null, null);
+		imageButton.setImageDrawable(wrappedDrawable);
 	}
 
 	public static void setTextUnderline(TextView textView, String cs) {
