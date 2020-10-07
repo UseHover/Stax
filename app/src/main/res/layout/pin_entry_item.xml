@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="32dp"
+    android:layout_marginTop="@dimen/margin_21"
     android:orientation="vertical">
 
 	<LinearLayout
@@ -14,7 +14,7 @@
 		    android:layout_width="30dp"
 		    android:layout_height="30dp"
 		    android:scaleType="centerCrop"
-		    android:src="@drawable/mtn_logo"
+		    android:src="@drawable/ic_grey_circle"
 		    android:id="@+id/variable_logo"
 		    android:visibility="gone"
 		    android:layout_marginEnd="8dp" />
@@ -32,12 +32,12 @@
 	<EditText
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:paddingLeft="@dimen/editText_box_margin_horiz"
-	    android:paddingStart="@dimen/editText_box_margin_horiz"
-	    android:paddingEnd="@dimen/editText_box_margin_horiz"
-	    android:paddingRight="@dimen/editText_box_margin_horiz"
-	    android:paddingTop="@dimen/editText_box_margin_vert"
-	    android:paddingBottom="@dimen/editText_box_margin_vert"
+	    android:paddingLeft="@dimen/margin_21"
+	    android:paddingStart="@dimen/margin_21"
+	    android:paddingEnd="@dimen/margin_21"
+	    android:paddingRight="@dimen/margin_21"
+	    android:paddingTop="@dimen/margin_13"
+	    android:paddingBottom="@dimen/margin_13"
 	    android:hint="@string/pin_input_hint"
 	    android:textColorHint="@color/darkGrey"
 	    android:layout_marginTop="8dp"

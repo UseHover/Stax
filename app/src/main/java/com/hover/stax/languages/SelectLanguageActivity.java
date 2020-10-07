@@ -1,11 +1,8 @@
 package com.hover.stax.languages;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -18,9 +15,7 @@ import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.SplashScreenActivity;
 import com.hover.stax.home.MainActivity;
-import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
-import com.hover.stax.utils.fonts.FontReplacer;
 import com.yariksoffice.lingver.Lingver;
 
 public class SelectLanguageActivity extends AppCompatActivity {
@@ -29,7 +24,7 @@ public class SelectLanguageActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.language_select_layout);
+		setContentView(R.layout.activity_language);
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_language)));
 
 		selectedCode = Lingver.getInstance().getLanguage();
@@ -39,21 +34,14 @@ public class SelectLanguageActivity extends AppCompatActivity {
 		LanguageViewModel languageViewModel = new ViewModelProvider(this).get(LanguageViewModel.class);
 		languageViewModel.loadLanguages().observe(this, languages -> {
 			for (Lang language: languages) {
-				RadioButton radioButton = new RadioButton(this);
+				RadioButton radioButton = (RadioButton) LayoutInflater.from(this).inflate(R.layout.stax_radio_button, null);
 				radioButton.setText(language.name);
-				radioButton.setTextColor(Color.WHITE);
-				radioButton.setHighlightColor(Color.WHITE);
-				radioButton.setTextSize(16);
-				radioButton.setHeight(75);
-				radioButton.setPadding(16, 0, 0, 0);
 				radioButton.setTag(language.code);
-				Typeface font = FontReplacer.getDefaultFont();
-				radioButton.setTypeface(font);
 
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) radioButton.setButtonTintList(UIHelper.radioGroupColorState());
 				if (language.code.equals(selectedCode))
 					radioButton.setChecked(true);
 				else radioButton.setChecked(false);
+
 				radioGrp.addView(radioButton);
 			}
 

@@ -108,7 +108,7 @@ public class StaxTransaction {
 			case Action.AIRTIME:
 				return c.getString(R.string.transaction_descrip_airtime, action.from_institution_name, ((recipient == null || recipient.equals("")) ? "myself" : recipient));
 			case Action.P2P:
-				return c.getString(R.string.transaction_descrip_money, action.to_institution_name, recipient);
+				return c.getString(R.string.transaction_descrip_money, action.from_institution_name, recipient);
 			case Action.ME2ME:
 				return c.getString(R.string.transaction_descrip_money, action.from_institution_name, action.to_institution_name);
 			default:

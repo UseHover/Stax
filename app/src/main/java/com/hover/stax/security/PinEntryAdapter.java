@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.database.KeyStoreExecutor;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

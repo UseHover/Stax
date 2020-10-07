@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
 import com.hover.stax.utils.DateUtils;
-import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
 import java.util.List;
@@ -34,12 +33,12 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 	@Override
 	public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
 		StaxTransaction t = transactionList.get(position);
-		holder.content.setText(t.description);
-		holder.amount.setText(Utils.formatAmount(t.amount));
+		holder.content.setText(t.description.substring(0, 1).toUpperCase() + t.description.substring(1));
+		holder.amount.setText("-" + Utils.formatAmount(t.amount));
 		holder.date.setVisibility(shouldShowDate(t, position) ? View.VISIBLE : View.GONE);
 		holder.date.setText(DateUtils.humanFriendlyDate(t.initiated_at));
 		holder.itemView.setOnClickListener(view -> {
-			selectListener.onTap(t.uuid);
+			selectListener.viewTransactionDetail(t.uuid);
 		});
 	}
 
@@ -66,7 +65,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 	}
 
 	public interface SelectListener {
-		void onTap(String uuid);
+		void viewTransactionDetail(String uuid);
 	}
 
 	@Override

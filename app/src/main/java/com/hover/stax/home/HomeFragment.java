@@ -21,47 +21,66 @@ import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
+import com.hover.stax.schedules.ScheduledAdapter;
+import com.hover.stax.schedules.ScheduledViewModel;
 import com.hover.stax.transactions.TransactionHistoryAdapter;
+import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 
 import java.util.List;
 
-public class HomeFragment extends Fragment implements TransactionHistoryAdapter.SelectListener {
+public class HomeFragment extends Fragment implements TransactionHistoryAdapter.SelectListener, ScheduledAdapter.SelectListener {
 	final public static String TAG = "HomeFragment";
 
-	private HomeViewModel homeViewModel;
-	private RecyclerView recyclerView, transactionHistoryRecyclerView;
+	private BalancesViewModel balancesViewModel;
+	private ScheduledViewModel futureViewModel;
+	private TransactionHistoryViewModel transactionsViewModel;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_home)));
+		balancesViewModel = new ViewModelProvider(requireActivity()).get(BalancesViewModel.class);
+		futureViewModel = new ViewModelProvider(requireActivity()).get(ScheduledViewModel.class);
+		transactionsViewModel = new ViewModelProvider(requireActivity()).get(TransactionHistoryViewModel.class);
 		return inflater.inflate(R.layout.fragment_home, container, false);
 	}
 
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+		setUpBalances(view);
+		setUpFuture(view);
+		setUpHistory(view);
+	}
 
-		recyclerView = view.findViewById(R.id.balances_recyclerView);
+	private void setUpBalances(View view) {
+		RecyclerView recyclerView = view.findViewById(R.id.balances_recyclerView);
 		recyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 		recyclerView.setHasFixedSize(true);
 
-		homeViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
+		balancesViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
 			recyclerView.setAdapter(new BalanceAdapter(channels, (MainActivity) getActivity()));
 			setMeta(view, channels);
 		});
+	}
 
-		view.findViewById(R.id.balances_header).setOnClickListener(v -> {
-			Amplitude.getInstance().logEvent(getString(R.string.click_add_account));
-			requireActivity().startActivityForResult(new Intent(getActivity(), ChannelsActivity.class), MainActivity.ADD_SERVICE);
+	private void setUpFuture(View view) {
+		RecyclerView recyclerView = view.findViewById(R.id.scheduled_recyclerView);
+		recyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
+		recyclerView.setHasFixedSize(true);
+
+		futureViewModel.getScheduled().observe(getViewLifecycleOwner(), schedules -> {
+			recyclerView.setAdapter(new ScheduledAdapter(schedules, this));
+			view.findViewById(R.id.scheduled_card).setVisibility(schedules != null && schedules.size() > 0 ? View.VISIBLE : View.GONE);
 		});
+	}
 
-		transactionHistoryRecyclerView = view.findViewById(R.id.transaction_history_recyclerView);
-		transactionHistoryRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-		homeViewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
+	private void setUpHistory(View view) {
+		RecyclerView rv = view.findViewById(R.id.transaction_history_recyclerView);
+		rv.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 
-			transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions, HomeFragment.this));
+		transactionsViewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
+			rv.setAdapter(new TransactionHistoryAdapter(staxTransactions, HomeFragment.this));
 			view.findViewById(R.id.no_history).setVisibility(staxTransactions.size() > 0 ? View.GONE : View.VISIBLE);
 		});
 	}
@@ -78,9 +97,16 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	}
 
 	@Override
-	public void onTap(String uuid) {
+	public void viewTransactionDetail(String uuid) {
 		Bundle bundle = new Bundle();
 		bundle.putString(TransactionContract.COLUMN_UUID, uuid);
 		NavHostFragment.findNavController(this).navigate(R.id.transactionDetailsFragment, bundle);
+	}
+
+	@Override
+	public void viewScheduledDetail(int id) {
+		Bundle bundle = new Bundle();
+		bundle.putInt("id", id);
+		NavHostFragment.findNavController(this).navigate(R.id.scheduleDetailsFragment, bundle);
 	}
 }

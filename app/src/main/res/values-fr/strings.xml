@@ -88,10 +88,10 @@
 
 	<string name="date">Date</string>
 	<string name="network">Réseau</string>
-	<string name="transactionNumber">Numéro de transaction</string>
-	<string name="message">Message</string>
+	<string name="transactionId">Numéro de transaction</string>
+	<string name="messages">Message</string>
 
-	<string name="enterRecipientNumberError">Veuillez saisir le numéro du destinataire</string>
+	<string name="enterRecipientError">Veuillez saisir le numéro du destinataire</string>
 	<string name="enterAnotherOptionError">Veuillez essayer une autre option</string>
 	<string name="enterAmountError">Veuillez saisir le montant</string>
 	<string name="selectServiceError">Veuillez sélectionner un service</string>

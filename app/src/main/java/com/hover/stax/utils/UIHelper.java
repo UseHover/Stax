@@ -15,8 +15,12 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageButton;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,19 +54,12 @@ public class UIHelper {
 		return linearLayoutManager;
 	}
 
-	static public void setTextColoredDrawable(TextView textView, int drawable, int color) {
+	static public void setColoredDrawable(ImageButton imageButton, int drawable, int color) {
 		Drawable unwrappedDrawable = AppCompatResources.getDrawable(ApplicationInstance.getContext(), drawable);
 		assert unwrappedDrawable != null;
 		Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
 		DrawableCompat.setTint(wrappedDrawable, color);
-		textView.setCompoundDrawablesWithIntrinsicBounds(wrappedDrawable, null, null, null);
-	}
-
-	static public ColorStateList radioGroupColorState(){
-		return  new ColorStateList(
-				new int[][]{new int[]{android.R.attr.state_enabled}},
-				new int[] {ApplicationInstance.getContext().getResources().getColor(R.color.colorAccent)}
-		);
+		imageButton.setImageDrawable(wrappedDrawable);
 	}
 
 	public static void setTextUnderline(TextView textView, String cs) {
@@ -71,6 +68,23 @@ public class UIHelper {
 		content.setSpan(android.graphics.Typeface.BOLD, 0, content.length(), 0);
 		try {textView.setText(content); }
 		catch (Exception ignored) { }
+	}
 
+	public static void fixListViewHeight(ListView listView) {
+		ListAdapter listAdapter = listView.getAdapter();
+		if (listAdapter == null) { return; }
+
+		int totalHeight = 0;
+		int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+		for (int i = 0; i < listAdapter.getCount(); i++) {
+			View listItem = listAdapter.getView(i, null, listView);
+			listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+			totalHeight += listItem.getMeasuredHeight();
+		}
+
+		ViewGroup.LayoutParams params = listView.getLayoutParams();
+		params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+		listView.setLayoutParams(params);
+		listView.requestLayout();
 	}
 }

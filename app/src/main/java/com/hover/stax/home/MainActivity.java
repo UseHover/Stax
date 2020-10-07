@@ -1,6 +1,7 @@
 package com.hover.stax.home;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -19,10 +20,16 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.hover.HoverSession;
+import com.hover.stax.schedules.Schedule;
 import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.security.SecurityFragment;
 
+import com.hover.stax.transactions.TransactionHistoryViewModel;
+import com.hover.stax.transfers.TransferActivity;
+import com.hover.stax.utils.DateUtils;
+import com.hover.stax.utils.UIHelper;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
@@ -32,35 +39,33 @@ import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RapidFloating
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements HomeViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener, RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener {
+public class MainActivity extends AppCompatActivity implements BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener, RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener {
 	final public static String TAG = "MainActivity";
 
-	final public static int ADD_SERVICE = 200, TRANSFER_REQUEST = 203;
+	final public static int ADD_SERVICE = 200;
 
-	private HomeViewModel homeViewModel;
+	private BalancesViewModel balancesViewModel;
 	private RapidFloatingActionHelper rfabHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-
 		setContentView(R.layout.activity_main);
 		BottomNavigationView navView = findViewById(R.id.nav_view);
 		// Passing each menu ID as a set of Ids because each
 		// menu should be considered as top level destinations.
 		AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-				R.id.navigation_home, R.id.navigation_buyAirtime, R.id.navigation_moveMoney, R.id.navigation_security)
-														  .build();
+				R.id.navigation_home, R.id.navigation_security).build();
 		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 		NavigationUI.setupWithNavController(navView, navController);
 
 		setupFloatingButton();
 
-		homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-		homeViewModel.setListener(this);
-		homeViewModel.getBalanceActions().observe(this, actions -> Log.e(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
-		homeViewModel.getToRun().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
+		balancesViewModel = new ViewModelProvider(this).get(BalancesViewModel.class);
+		balancesViewModel.setListener(this);
+		balancesViewModel.getBalanceActions().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
+		balancesViewModel.getToRun().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
 
 		if (getIntent().getBooleanExtra(SecurityFragment.LANG_CHANGE, false)) navController.navigate(R.id.navigation_security);
 	}
@@ -70,23 +75,19 @@ public class MainActivity extends AppCompatActivity implements HomeViewModel.Run
 		rfaContent.setOnRapidFloatingActionContentLabelListListener(this);
 		List<RFACLabelItem> items = new ArrayList<>();
 		items.add(new RFACLabelItem<Integer>()
-						  .setLabel(getResources().getString(R.string.transfer))
-						  .setLabelSizeSp(21)
-						  .setLabelColor(getResources().getColor(R.color.colorAccentDark))
-						  .setWrapper(0)
+			.setLabel(getResources().getString(R.string.transfer))
+			.setLabelSizeSp(21)
+			.setLabelColor(getResources().getColor(R.color.offWhite))
+			.setIconNormalColor(R.color.cardViewColor)
+			.setLabelBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.cardViewColor)))
 		);
 		items.add(new RFACLabelItem<Integer>()
-						  .setLabel(getResources().getString(R.string.nav_airtime))
-						  .setLabelSizeSp(21)
-						  //.setDrawable(getResources().getDrawable(R.drawable.drag))
-							//.setIconNormalColor(getResources().getColor(R.color.colorAccent))
-						  .setLabelColor(getResources().getColor(R.color.colorAccentDark))
-						  .setWrapper(1)
+			.setLabel(getResources().getString(R.string.nav_airtime))
+			.setLabelSizeSp(21)
+			.setLabelColor(getResources().getColor(R.color.offWhite))
+			.setLabelBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.cardViewColor)))
+			.setWrapper(1)
 		);
-		/*items.add(new RFACLabelItem<Integer>()
-						  .setLabel(getResources().getString(R.string.title_request))
-						  .setLabelSizeSp(21)
-						  .setWrapper(2)); */
 
 
 		rfaContent.setItems(items);
@@ -95,21 +96,16 @@ public class MainActivity extends AppCompatActivity implements HomeViewModel.Run
 		RapidFloatingActionLayout rfaLayout = findViewById(R.id.container);
 
 		rfaLayout.setIsContentAboveLayout(true);
-		rfaLayout.setFrameAlpha(0.92f);
 
 		rfaLayout.setFrameColor(getResources().getColor(R.color.cardViewColor));
-		rfaLayout.setDisableContentDefaultAnimation(true);
-
-
-		rfabHelper = new RapidFloatingActionHelper(
-				this,
-				rfaLayout,
-				rfaBtn,
-				rfaContent
-		).build();
+//		rfaLayout.setDisableContentDefaultAnimation(true);
+		rfabHelper = new RapidFloatingActionHelper(this, rfaLayout, rfaBtn, rfaContent).build();
 	}
 
-
+	public void addAccount(View view) {
+		Amplitude.getInstance().logEvent(getString(R.string.click_add_account));
+		startActivityForResult(new Intent(this, ChannelsActivity.class), MainActivity.ADD_SERVICE);
+	}
 
 	@Override
 	public void onTapDetail(int channel_id) {
@@ -121,12 +117,12 @@ public class MainActivity extends AppCompatActivity implements HomeViewModel.Run
 	@Override
 	public void onTapRefresh(int channel_id) {
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_single));
-		homeViewModel.setRunning(channel_id);
+		balancesViewModel.setRunning(channel_id);
 	}
 
 	public void runAllBalances(View view) {
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_all));
-		homeViewModel.setRunning();
+		balancesViewModel.setRunning();
 	}
 
 	@Override
@@ -137,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements HomeViewModel.Run
 	}
 
 	private void run(Action action, int index) {
-		new HoverSession.Builder(action, homeViewModel.getChannel(action.channel_id), this, index)
+		new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), this, index)
 			.finalScreenTime(0).run();
 	}
 
@@ -154,17 +150,24 @@ public class MainActivity extends AppCompatActivity implements HomeViewModel.Run
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_CANCELED) return;
-		if (requestCode == MainActivity.TRANSFER_REQUEST || requestCode < 100) {
-			Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
-			homeViewModel.saveTransaction(data, this);
-			Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_home);
-		}
 
-		if (requestCode < 100) {
-			homeViewModel.setRan(requestCode);
-		} else if (requestCode == ADD_SERVICE) {
-			homeViewModel.setRunning();
+		if ((requestCode == TransferActivity.TRANSFER_REQUEST || requestCode < 100) && resultCode == RESULT_OK)
+			onProbableHoverCall(data);
+
+		if (requestCode < 100) { // Balance call
+			balancesViewModel.setRan(requestCode);
+		} else if (requestCode == ADD_SERVICE && resultCode == RESULT_OK) {
+			balancesViewModel.setRunning();
+		}
+	}
+
+	private void onProbableHoverCall(Intent data) {
+		if (data.getAction().equals(TransferActivity.TRANSFERED)) {
+			Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
+			new ViewModelProvider(this).get(TransactionHistoryViewModel.class).saveTransaction(data, this);
+		} else if (data.getAction().equals(TransferActivity.SCHEDULED)) {
+			UIHelper.flashMessage(this, findViewById(R.id.content),
+				getString(R.string.schedule_created, DateUtils.humanFriendlyDate(data.getIntExtra(Schedule.DATE_KEY, 0))));
 		}
 	}
 
@@ -181,14 +184,18 @@ public class MainActivity extends AppCompatActivity implements HomeViewModel.Run
 	@Override
 	public void onRFACItemLabelClick(int position, RFACLabelItem item) {
 		switch (position) {
-			case 0: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_moveMoney);
-			break;
-			case 1: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_buyAirtime);
-			break;
-			case 2: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_security);
-			break;
+			case 0: startTransfer(Action.P2P); break;
+			case 1: startTransfer(Action.AIRTIME); break;
+			case 2: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_security); break;
+			default: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_home);
 		}
 		rfabHelper.toggleContent();
+	}
+
+	private void startTransfer(String type) {
+		Intent i = new Intent(this, TransferActivity.class);
+		i.setAction(type);
+		startActivityForResult(i, TransferActivity.TRANSFER_REQUEST);
 	}
 
 	@Override

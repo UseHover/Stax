@@ -31,7 +31,7 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 
 	private MutableLiveData<StaxTransaction> transaction;
 	private LiveData<Action> action;
-	private LiveData<List<UssdCallResponse>> messages;
+	private MediatorLiveData<List<UssdCallResponse>> messages;
 	private LiveData<List<UssdCallResponse>> sms;
 
 	public TransactionDetailsViewModel(@NonNull Application application) {
@@ -42,7 +42,8 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 		messages = new MediatorLiveData<>();
 
 		action = Transformations.switchMap(transaction, t -> repo.getLiveAction(t.action_id));
-		messages = Transformations.map(action, this::loadMessages);
+		messages.addSource(transaction, this::loadMessages);
+		messages.addSource(action, this::loadMessages);
 		sms = Transformations.map(transaction, this::loadSms);
 	}
 
@@ -52,15 +53,22 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 
 	LiveData<StaxTransaction> getTransaction() { return transaction; }
 
-	LiveData<Action> getAction() { return action; }
-
-	List<UssdCallResponse> loadMessages(Action a) {
-		if (transaction.getValue() == null || a == null) return null;
-		List<UssdCallResponse> ussds = UssdCallResponse.generateConvo(Hover.getTransaction(transaction.getValue().uuid, getApplication()), a);
-		return ussds;
+	LiveData<Action> getAction() {
+		if (action == null) { action = new MutableLiveData<>(); }
+		return action;
 	}
 
-	LiveData<List<UssdCallResponse>> getMessages() { return messages; }
+	void loadMessages(StaxTransaction t) { if (action.getValue() != null && t != null) loadMessages(t, action.getValue()); }
+	void loadMessages(Action a) { if (transaction.getValue() != null && a != null) loadMessages(transaction.getValue(), a); }
+	void loadMessages(StaxTransaction t, Action a) {
+		List<UssdCallResponse> ussds = UssdCallResponse.generateConvo(Hover.getTransaction(t.uuid, getApplication()), a);
+		messages.setValue(ussds);
+	}
+
+	LiveData<List<UssdCallResponse>> getMessages() {
+		if (messages == null) { messages = new MediatorLiveData<>(); }
+		return messages;
+	}
 
 	List<UssdCallResponse> loadSms(StaxTransaction t) {
 		if (t == null) return null;
@@ -74,7 +82,10 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 		return smses;
 	}
 
-	LiveData<List<UssdCallResponse>> getSms() { return sms; }
+	LiveData<List<UssdCallResponse>> getSms() {
+		if (messages == null) { messages = new MediatorLiveData<>(); }
+		return sms;
+	}
 
 	private MessageLog getSMSMessageByUUID(String uuid) {
 		return Hover.getSMSMessageByUUID(uuid, ApplicationInstance.getContext());

@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class DateUtils {
+	public final static int DAY = 24 * 60 * 60 * 1000;
 	public static long now() {
 		return new Date().getTime();
 	}

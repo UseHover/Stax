@@ -89,10 +89,10 @@
 
 	<string name="date">Tarehe</string>
 	<string name="network">Mtandao</string>
-	<string name="transactionNumber">Nambari ya shughuli</string>
-	<string name="message">Ujumbe</string>
+	<string name="transactionId">Nambari ya shughuli</string>
+	<string name="messages">Ujumbe</string>
 
-	<string name="enterRecipientNumberError">Tafadhali ingiza nambari ya mpokeaji</string>
+	<string name="enterRecipientError">Tafadhali ingiza nambari ya mpokeaji</string>
 	<string name="enterAnotherOptionError">Tafadhali jaribu chaguo jingine</string>
 	<string name="enterAmountError">Tafadhali ingiza kiasi</string>
 	<string name="selectServiceError">Tafadhali chagua huduma</string>
