@@ -5,8 +5,8 @@
 	android:id="@+id/container"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:background="@color/colorPrimaryDark"
-	tools:rfal_frame_alpha="0.15">
+	app:rfal_frame_color="@color/cardViewColor"
+	app:rfal_frame_alpha="0.1">
 
 	<LinearLayout
 		android:layout_width="match_parent"
@@ -24,10 +24,9 @@
 			android:layout_height="wrap_content"
 			android:layout_marginStart="0dp"
 			android:layout_marginEnd="0dp"
-			android:layout_marginTop="0.2dp"
 			android:background="@color/cardViewColor"
 			app:itemIconTint="@drawable/nav_color_state"
-			app:itemTextColor="@color/bottomnav_component_color"
+			app:itemTextColor="@color/cardViewColor"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintLeft_toLeftOf="parent"
 			app:layout_constraintRight_toRightOf="parent"

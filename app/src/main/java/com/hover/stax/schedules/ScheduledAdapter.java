@@ -32,7 +32,7 @@ public class ScheduledAdapter extends RecyclerView.Adapter<ScheduledAdapter.Sche
 	@Override
 	public void onBindViewHolder(@NonNull ScheduledAdapter.ScheduledViewHolder holder, int position) {
 		Schedule s = scheduleList.get(position);
-		holder.description.setText(s.description);
+		holder.description.setText(s.description.substring(0, 1).toUpperCase() + s.description.substring(1));
 		holder.amount.setText(s.amount != null ? Utils.formatAmount(s.amount) : "none");
 		holder.header.setVisibility(shouldShowDate(s, position) ? View.VISIBLE : View.GONE);
 		holder.header.setText(s.humanFrequency(holder.itemView.getContext()));

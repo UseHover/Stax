@@ -1,6 +1,7 @@
 package com.hover.stax.home;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -73,23 +74,19 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 		rfaContent.setOnRapidFloatingActionContentLabelListListener(this);
 		List<RFACLabelItem> items = new ArrayList<>();
 		items.add(new RFACLabelItem<Integer>()
-						  .setLabel(getResources().getString(R.string.transfer))
-						  .setLabelSizeSp(21)
-						  .setLabelColor(getResources().getColor(R.color.colorAccent))
-						  .setWrapper(0)
+			.setLabel(getResources().getString(R.string.transfer))
+			.setLabelSizeSp(21)
+			.setLabelColor(getResources().getColor(R.color.offWhite))
+			.setIconNormalColor(R.color.cardViewColor)
+			.setLabelBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.cardViewColor)))
 		);
 		items.add(new RFACLabelItem<Integer>()
-						  .setLabel(getResources().getString(R.string.nav_airtime))
-						  .setLabelSizeSp(21)
-						  //.setDrawable(getResources().getDrawable(R.drawable.drag))
-							//.setIconNormalColor(getResources().getColor(R.color.colorAccent))
-						  .setLabelColor(getResources().getColor(R.color.colorAccent))
-						  .setWrapper(1)
+			.setLabel(getResources().getString(R.string.nav_airtime))
+			.setLabelSizeSp(21)
+			.setLabelColor(getResources().getColor(R.color.offWhite))
+			.setLabelBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.cardViewColor)))
+			.setWrapper(1)
 		);
-		/*items.add(new RFACLabelItem<Integer>()
-						  .setLabel(getResources().getString(R.string.title_request))
-						  .setLabelSizeSp(21)
-						  .setWrapper(2)); */
 
 
 		rfaContent.setItems(items);
@@ -98,18 +95,10 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 		RapidFloatingActionLayout rfaLayout = findViewById(R.id.container);
 
 		rfaLayout.setIsContentAboveLayout(true);
-		rfaLayout.setFrameAlpha(0.92f);
 
 		rfaLayout.setFrameColor(getResources().getColor(R.color.cardViewColor));
-		rfaLayout.setDisableContentDefaultAnimation(true);
-
-
-		rfabHelper = new RapidFloatingActionHelper(
-				this,
-				rfaLayout,
-				rfaBtn,
-				rfaContent
-		).build();
+//		rfaLayout.setDisableContentDefaultAnimation(true);
+		rfabHelper = new RapidFloatingActionHelper(this, rfaLayout, rfaBtn, rfaContent).build();
 	}
 
 	public void addAccount(View view) {
