@@ -61,8 +61,12 @@ public class RequestDetailFragment extends Fragment {
 		((LinearLayout) view.findViewById(R.id.recipientValueList)).addView(tv);
 		((TextView) view.findViewById(R.id.dateValue)).setText(DateUtils.humanFriendlyDate(request.date_sent));
 
-		view.findViewById(R.id.amountValue).setVisibility(request.amount == null || request.amount.isEmpty() ? View.GONE : View.VISIBLE);
-		((TextView) view.findViewById(R.id.amountValue)).setText(Utils.formatAmount(request.amount));
+		if (request.amount != null && !request.amount.isEmpty()) {
+			view.findViewById(R.id.amountRow).setVisibility(View.VISIBLE);
+			((TextView) view.findViewById(R.id.amountValue)).setText(Utils.formatAmount(request.amount));
+		} else
+			view.findViewById(R.id.amountRow).setVisibility(View.GONE);
+
 
 		view.findViewById(R.id.noteRow).setVisibility(request.note == null || request.note.isEmpty() ? View.GONE : View.VISIBLE);
 		((TextView) view.findViewById(R.id.noteValue)).setText(request.note);

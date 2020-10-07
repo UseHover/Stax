@@ -83,13 +83,10 @@ public class RequestActivity extends AppCompatActivity {
 	@SuppressLint("NewApi")
 	private void submit() {
 		requestViewModel.saveToDatabase();
-		List<String> phones = requestViewModel.getRecipients().getValue();
-		String amount = requestViewModel.getAmount().getValue() != null ? getString(R.string.amount_detail, Utils.formatAmount(requestViewModel.getAmount().getValue())) : "";
-		String note = requestViewModel.getNote().getValue() != null ? getString(R.string.note_detail, requestViewModel.getNote().getValue()) : "";
 		Intent i = new Intent(android.content.Intent.ACTION_VIEW);
 		i.setType("vnd.android-dir/mms-sms");
-		i.putExtra("address", phones.get(0));
-		i.putExtra("sms_body", getString(R.string.request_money_sms_template, amount, note));
+		i.putExtra("address", requestViewModel.generateRecipientString());
+		i.putExtra("sms_body", requestViewModel.generateSMS(this));
 		startActivityForResult(i, SEND_SMS_FOREGROUND);
 	}
 

@@ -65,8 +65,6 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	private void setUpFuture(View root) {
 		RecyclerView recyclerView = root.findViewById(R.id.scheduled_recyclerView);
 		recyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-		recyclerView.setHasFixedSize(true);
-
 		futureViewModel.getScheduled().observe(getViewLifecycleOwner(), schedules -> {
 			recyclerView.setAdapter(new ScheduledAdapter(schedules, this));
 			setFutureVisible(root, schedules, futureViewModel.getRequests().getValue());
@@ -74,7 +72,6 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 
 		RecyclerView rv = root.findViewById(R.id.requests_recyclerView);
 		rv.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-		rv.setHasFixedSize(true);
 		futureViewModel.getRequests().observe(getViewLifecycleOwner(), requests -> {
 			Log.e(TAG, "found requests: " + requests.size());
 			recyclerView.setAdapter(new RequestsAdapter(requests, this, getContext()));
