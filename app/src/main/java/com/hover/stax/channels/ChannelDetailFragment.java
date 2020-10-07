@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
@@ -30,7 +29,7 @@ public class ChannelDetailFragment extends Fragment implements TransactionHistor
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		viewModel = new ViewModelProvider(requireActivity()).get(ChannelDetailViewModel.class);
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_channel)));
-		return inflater.inflate(R.layout.channels_details_layout, container, false);
+		return inflater.inflate(R.layout.fragment_channel, container, false);
 	}
 
 	@Override
@@ -45,15 +44,18 @@ public class ChannelDetailFragment extends Fragment implements TransactionHistor
 		});
 
 		viewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
-			if (staxTransactions == null || staxTransactions.size() == 0) { view.findViewById(R.id.history_card).setVisibility(View.GONE); }
+			view.findViewById(R.id.no_history).setVisibility(staxTransactions == null || staxTransactions.size() == 0 ? View.VISIBLE : View.GONE);
 			transactionHistoryRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 			transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions, this));
 		});
 
-		viewModel.getSpentThisMonth().observe(getViewLifecycleOwner(), thisMonth -> {
-			((TextView) view.findViewById(R.id.details_money_out)).setText(Utils.formatAmount(thisMonth != null ? thisMonth : 0));
+		viewModel.getSpentThisMonth().observe(getViewLifecycleOwner(), sum -> {
+			((TextView) view.findViewById(R.id.details_money_out)).setText(Utils.formatAmount(sum != null ? sum : 0));
 		});
 
+		viewModel.getFeesThisYear().observe(getViewLifecycleOwner(), sum -> {
+			((TextView) view.findViewById(R.id.details_fees)).setText(Utils.formatAmount(sum != null ? sum : 0));
+		});
 		viewModel.setChannel(getArguments().getInt(TransactionContract.COLUMN_CHANNEL_ID));
 	}
 

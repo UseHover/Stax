@@ -1,5 +1,6 @@
 <resources>
 	<declare-styleable name="StaxCardView">
 		<attr name="title" format="string" />
+		<attr name="showBack" format="string" />
 	</declare-styleable>
 </resources>

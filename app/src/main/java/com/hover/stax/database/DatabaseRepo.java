@@ -95,6 +95,11 @@ public class DatabaseRepo {
 		return transactionDao.getTotalAmount(channelId, String.format("%02d", month), String.valueOf(year));
 	}
 
+	@SuppressLint("DefaultLocale")
+	public LiveData<Double> getFees(int channelId, int year) {
+		return transactionDao.getTotalFees(channelId, String.valueOf(year));
+	}
+
 	public StaxTransaction getTransaction(String uuid) {
 		return transactionDao.getTransaction(uuid);
 	}

@@ -62,7 +62,6 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 	void loadMessages(Action a) { if (transaction.getValue() != null && a != null) loadMessages(transaction.getValue(), a); }
 	void loadMessages(StaxTransaction t, Action a) {
 		List<UssdCallResponse> ussds = UssdCallResponse.generateConvo(Hover.getTransaction(t.uuid, getApplication()), a);
-		Log.e(TAG, "Loading messages: "+ ussds);
 		messages.setValue(ussds);
 	}
 
@@ -73,11 +72,8 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 
 	List<UssdCallResponse> loadSms(StaxTransaction t) {
 		if (t == null) return null;
-		Log.e(TAG, "Loading sms, transaction is non-null");
 		Transaction transaction = Hover.getTransaction(t.uuid, getApplication());
-		Log.e(TAG, "Hover transaction: " + transaction);
 		if (transaction.smsHits == null) return null;
-		Log.e(TAG, "Loading sms, smsHits are non-null");
 		List<UssdCallResponse> smses = new ArrayList<>();
 		for (int i = 0; i < transaction.smsHits.length(); i++) {
 			MessageLog sms = getSMSMessageByUUID(transaction.smsHits.optString(i));

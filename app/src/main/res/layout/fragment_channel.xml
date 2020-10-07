@@ -13,7 +13,8 @@
 		<com.hover.stax.views.StaxCardView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			app:title="@string/nav_account_detail">
+			app:title="@string/nav_account_detail"
+			app:showBack="true">
 
 			<TableLayout
 				android:layout_width="match_parent"
@@ -47,7 +48,7 @@
 						android:textStyle="bold"/>
 				</TableRow>
 
-				<TableRow android:layout_marginVertical="@dimen/margin_21">
+				<TableRow android:layout_marginVertical="@dimen/margin_21" android:visibility="gone">
 					<TextView
 						android:layout_weight="1"
 						android:textColor="@color/offWhite"
@@ -77,17 +78,7 @@
 			</TableLayout>
 		</com.hover.stax.views.StaxCardView>
 
-		<com.hover.stax.views.StaxCardView
-			android:id="@+id/history_card"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			app:title="@string/history">
-
-			<androidx.recyclerview.widget.RecyclerView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:id="@+id/transaction_history_recyclerView" />
-		</com.hover.stax.views.StaxCardView>
+		<include layout="@layout/home_card_transactions" />
 
 	</LinearLayout>
 </androidx.core.widget.NestedScrollView>

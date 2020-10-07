@@ -34,7 +34,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 	public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
 		StaxTransaction t = transactionList.get(position);
 		holder.content.setText(t.description);
-		holder.amount.setText(Utils.formatAmount(t.amount));
+		holder.amount.setText("-" + Utils.formatAmount(t.amount));
 		holder.date.setVisibility(shouldShowDate(t, position) ? View.VISIBLE : View.GONE);
 		holder.date.setText(DateUtils.humanFriendlyDate(t.initiated_at));
 		holder.itemView.setOnClickListener(view -> {

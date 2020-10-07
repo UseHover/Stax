@@ -14,7 +14,8 @@
 		<com.hover.stax.views.StaxCardView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			app:title="@string/nav_transaction">
+			app:title="@string/nav_transaction"
+			app:showBack="true">
 
 			<TableLayout
 			    android:layout_width="match_parent"

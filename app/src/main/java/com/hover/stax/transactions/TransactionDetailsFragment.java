@@ -52,7 +52,6 @@ public class TransactionDetailsFragment extends Fragment {
 		});
 
 		viewModel.getAction().observe(getViewLifecycleOwner(), action -> {
-			Log.e(TAG, "action updated: " + action);
 			if (action != null) {
 				((TextView) view.findViewById(R.id.details_network)).setText(action.network_name);
 			}
@@ -62,21 +61,14 @@ public class TransactionDetailsFragment extends Fragment {
 		messagesView.setLayoutManager(UIHelper.setMainLinearManagers(ApplicationInstance.getContext()));
 		messagesView.setHasFixedSize(true);
 		viewModel.getMessages().observe(getViewLifecycleOwner(), ussdCallResponses -> {
-			Log.e(TAG, "messages: " + ussdCallResponses);
-			if (ussdCallResponses != null) {
-				Log.e(TAG, "non-null messages: " + ussdCallResponses);
-				messagesView.setAdapter(new MessagesAdapter(ussdCallResponses));
-			}
+			if (ussdCallResponses != null) messagesView.setAdapter(new MessagesAdapter(ussdCallResponses));
 		});
 
 		RecyclerView smsView = view.findViewById(R.id.sms_recyclerView);
 		smsView.setLayoutManager(UIHelper.setMainLinearManagers(ApplicationInstance.getContext()));
 		smsView.setHasFixedSize(true);
 		viewModel.getSms().observe(getViewLifecycleOwner(), smses -> {
-			Log.e(TAG, "sms: " + smses);
-			if (smses != null) {
-				smsView.setAdapter(new MessagesAdapter(smses));
-			}
+			if (smses != null) smsView.setAdapter(new MessagesAdapter(smses));
 		});
 
 		viewModel.setTransaction(getArguments().getString(TransactionContract.COLUMN_UUID));
