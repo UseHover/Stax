@@ -36,6 +36,10 @@ public class PermissionUtils {
 		ActivityCompat.requestPermissions(act, new String[]{Manifest.permission.CALL_PHONE, Manifest.permission.READ_PHONE_STATE}, requestCode);
 	}
 
+	public static void requestSendSMSPerms(Activity act, int requestCode) {
+		ActivityCompat.requestPermissions(act, new String[]{ Manifest.permission.SEND_SMS }, requestCode);
+	}
+
 
 	public static boolean permissionsGranted(int[] grantResults) {
 		for (int result : grantResults) {

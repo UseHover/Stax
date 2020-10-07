@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	xmlns:tools="http://schemas.android.com/tools">
+
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/recipientEntry"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="@string/recipient_phone"
+		style="@style/StaxLabeledInput">
+
+		<com.google.android.material.textfield.TextInputEditText
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:padding="@dimen/margin_13"
+			android:paddingEnd="@dimen/margin_68"
+			android:textSize="@dimen/text_21"
+			android:textColor="@color/offWhite"
+			android:textCursorDrawable="@null"
+			android:inputType="number"
+			android:contentDescription="RECIPIENT_INPUT"
+			android:id="@+id/recipient_input"
+			tools:ignore="RtlSymmetry" />
+	</com.google.android.material.textfield.TextInputLayout>
+
+	<ImageButton android:id="@+id/contact_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/margin_21"
+		android:layout_marginEnd="@dimen/margin_24"
+		android:layout_alignParentEnd="true"
+		android:src="@drawable/ic_contacts"
+		android:background="@color/transparent"/>
+</RelativeLayout>

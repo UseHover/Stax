@@ -19,28 +19,23 @@ public class Request {
 	@ColumnInfo(name = "amount")
 	public String amount;
 
-	@ColumnInfo(name = "reason")
-	public String reason;
+	@ColumnInfo(name = "note")
+	public String note;
 
-	@NonNull
 	@ColumnInfo(name = "message")
 	public String message;
 
 	@ColumnInfo(name = "matched_transaction_uuid")
 	public String matched_transaction_uuid;
 
-	@NonNull
-	@ColumnInfo(name = "tag")
-	public int tag;
-
-	@NonNull
 	@ColumnInfo(name = "date_sent", defaultValue = "CURRENT_TIMESTAMP")
 	public Long date_sent;
 
-	public Request(int tag) {
-		this.tag = tag;
-	}
+	public Request() {}
 
-	public Request() {
+	public Request(String r, String a, String n) {
+		recipient = r;
+		amount = a;
+		note = n;
 	}
 }

@@ -45,7 +45,6 @@ public class TransferFragment extends Fragment {
 
 	private TransferViewModel transferViewModel;
 
-	private String transferType;
 	private EditText amountInput;
 	private RadioGroup fromRadioGroup;
 	private AutoCompleteTextView networkDropdown;
@@ -61,7 +60,6 @@ public class TransferFragment extends Fragment {
 	final public static int READ_CONTACT = 201;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		transferType = getArguments() != null ? getArguments().getString(Action.TRANSACTION_TYPE) : Action.P2P;
 		transferViewModel = new ViewModelProvider(requireActivity()).get(TransferViewModel.class);
 
 		View root = inflater.inflate(R.layout.fragment_transfer, container, false);
@@ -89,7 +87,7 @@ public class TransferFragment extends Fragment {
 		recipientEntry = root.findViewById(R.id.recipientEntry);
 		recipientInput = root.findViewById(R.id.recipient_input);
 		contactButton = root.findViewById(R.id.contact_button);
-		reasonInput = root.findViewById(R.id.reason_input);
+		reasonInput = root.findViewById(R.id.note_input);
 
 		createDatePicker();
 		errorCard = root.findViewById(R.id.errorCard);

@@ -22,6 +22,7 @@ import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.hover.HoverSession;
+import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.security.SecurityFragment;
@@ -167,6 +168,9 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 		} else if (requestCode == ADD_SERVICE && resultCode == RESULT_OK) {
 			balancesViewModel.setRunning();
 		}
+
+		if ((requestCode == RequestActivity.REQUEST_REQUEST) && resultCode == RESULT_OK)
+			UIHelper.flashMessage(this, findViewById(R.id.content), getString(R.string.request_sent));
 	}
 
 	private void onProbableHoverCall(Intent data) {
@@ -194,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 		switch (position) {
 			case 0: startTransfer(Action.P2P); break;
 			case 1: startTransfer(Action.AIRTIME); break;
-			case 2: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_request); break;
+			case 2: startActivityForResult(new Intent(this, RequestActivity.class), RequestActivity.REQUEST_REQUEST); break;
 			case 3: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_security); break;
 			default: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_home);
 		}

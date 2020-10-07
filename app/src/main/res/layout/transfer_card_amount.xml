@@ -19,7 +19,7 @@
 			android:textSize="@dimen/text_21"
 			android:textColor="@color/offWhite"
 			android:textCursorDrawable="@null"
-			android:inputType="number"
+			android:inputType="numberDecimal"
 			android:id="@+id/amount_input"/>
 	</com.google.android.material.textfield.TextInputLayout>
 </com.hover.stax.views.StaxCardView>

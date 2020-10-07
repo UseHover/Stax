@@ -10,81 +10,77 @@ import androidx.lifecycle.MutableLiveData;
 import com.hover.stax.database.DatabaseRepo;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class RequestViewModel extends AndroidViewModel {
 
 	private DatabaseRepo repo;
-	private MutableLiveData<List<Request>> requestList;
-	private List<Request> rqL;
-	private MutableLiveData<RequestStage> requestStage;
-	private int addCounter = 0;
+	private MutableLiveData<RequestStage> requestStage = new MutableLiveData<>();
+
+	private MutableLiveData<String> amount = new MutableLiveData<>();
+	private MutableLiveData<List<String>> recipients = new MutableLiveData<>();
+	private MutableLiveData<String> note = new MutableLiveData<>();
+	private MutableLiveData<Boolean> futureDated = new MutableLiveData<>();
+	private MutableLiveData<Long> futureDate = new MutableLiveData<>();
 
 	public RequestViewModel(@NonNull Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
-		rqL = new ArrayList<>();
-		rqL.add(new Request(addCounter));
 
-		requestList = new MutableLiveData<>();
-		requestStage = new MutableLiveData<>();
-		requestStage.setValue(RequestStage.ENTER_RECIPIENT);
-
-		requestList.setValue(rqL);
-
+		requestStage.setValue(RequestStage.RECIPIENT);
+		recipients.setValue(new ArrayList<>());
+		futureDated.setValue(false);
+		futureDate.setValue(null);
 	}
 
-	public void updateStage(RequestStage stage) {
+	LiveData<RequestStage> getStage() { return requestStage; }
+	void setStage(RequestStage stage) { requestStage.setValue(stage); }
+	void goToNextStage() {
+		RequestStage next = requestStage.getValue() != null ? requestStage.getValue().next() : RequestStage.RECIPIENT;
+		requestStage.postValue(next);
+	}
+
+	boolean goToStage(RequestStage stage) {
+		if (stage == null) return false;
 		requestStage.postValue(stage);
+		return true;
 	}
 
-
-	void addRequest() {
-		addCounter = addCounter + 1;
-		rqL.add(addCounter, new Request(addCounter));
-		requestList.postValue(rqL);
+	void setAmount(String a) { amount.postValue(a); }
+	LiveData<String> getAmount() {
+		if (amount == null) { amount = new MutableLiveData<>(); }
+		return amount;
 	}
 
-	void updateRequestRecipient(int tag, String recipient) {
-		Request request = rqL.get(tag);
-		request.recipient = recipient;
-		requestList.postValue(rqL);
+	void addRecipient(String recipient) {
+		List<String> rList = recipients.getValue() != null ? recipients.getValue() : new ArrayList<>();
+		rList.add(recipient);
+		recipients.postValue(rList);
+	}
+	LiveData<List<String>> getRecipients() {
+		if (recipients == null) { recipients = new MutableLiveData<>(); }
+		return recipients;
 	}
 
-	void updateRequestRecipientNoUISync(int tag, String recipient) {
-		Request request = rqL.get(tag);
-		request.recipient = recipient;
+	void setNote(String n) { note.postValue(n); }
+	LiveData<String> getNote() {
+		if (note == null) { note = new MutableLiveData<>(); note.setValue(" "); }
+		return note;
 	}
 
-	void updateRequestAmount(String amount) {
-		for (Request request : rqL) {
-			request.amount = amount;
-		}
+	void setIsFutureDated(boolean isFuture) { futureDated.setValue(isFuture); }
+	LiveData<Boolean> getIsFuture() {
+		if (futureDated == null) { futureDated = new MutableLiveData<>(); futureDated.setValue(false);}
+		return futureDated;
+	}
+	void setFutureDate(Long date) { futureDate.setValue(date); }
+	LiveData<Long> getFutureDate() {
+		if (futureDate == null) { futureDate = new MutableLiveData<>(); }
+		return futureDate;
 	}
 
-	void updateRequestMessage(String message) {
-		for (Request request : rqL) {
-			request.message = message;
-		}
-	}
-
-	void saveCopyToDatabase() {
-		for (Request request : rqL) {
-			request.date_sent = new Date().getTime();
-			repo.insert(request);
-		}
-	}
-
-	void setRequestStage(RequestStage stage) {
-		requestStage.postValue(stage);
-	}
-
-	LiveData<RequestStage> getStage() {
-		return requestStage;
-	}
-
-	LiveData<List<Request>> getIntendingRequests() {
-		return requestList;
+	void saveToDatabase() {
+		for (String recipient : recipients.getValue())
+			repo.insert(new Request(recipient, amount.getValue(), note.getValue()));
 	}
 }

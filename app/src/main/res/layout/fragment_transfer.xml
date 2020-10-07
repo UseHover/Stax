@@ -26,7 +26,7 @@
 		<include layout="@layout/transfer_card_recipient"
 			android:id="@+id/recipientCard" />
 
-		<include layout="@layout/transfer_card_reason"
+		<include layout="@layout/transfer_card_note"
 			android:id="@+id/reasonCard" />
 
 		<include layout="@layout/transfer_card_future"
