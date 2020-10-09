@@ -10,8 +10,8 @@ android {
         applicationId "com.hover.stax"
         minSdkVersion 18
         targetSdkVersion 29
-        versionCode 3
-        versionName "0.3.3"
+        versionCode 4
+        versionName "0.4.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -31,6 +31,9 @@ android {
             //Ensures all language string resources is bundled in the aab.
             enableSplit = false
         }
+    }
+    lintOptions{
+        disable 'MissingTranslation'
     }
 //    buildFeatures.dataBinding = true
 }
@@ -63,13 +66,12 @@ dependencies {
     implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
     implementation "com.github.YarikSOffice:lingver:1.3.0"
     implementation 'com.github.wangjiegulu:rfab:2.0.0'
-    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.21'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    def sdk_version = "1.6.5-stax-alpha03-pro"
+    def sdk_version = "1.6.5-stax-alpha04-pro"
     releaseImplementation "com.hover:android-sdk:$sdk_version"
     debugImplementation project(":hover.sdk")
     debugImplementation 'com.android.volley:volley:1.1.1'

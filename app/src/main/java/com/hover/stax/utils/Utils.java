@@ -7,7 +7,6 @@ import android.util.Log;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
-import com.hover.sdk.utils.AnalyticsSingleton;
 
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
@@ -86,7 +85,6 @@ public class Utils {
 			Field field = clazz.getField(fieldName);
 			return field.get(null);
 		} catch (Exception e) {
-			AnalyticsSingleton.capture(context, e);
 			Log.d(TAG, "Error getting build config value", e);
 		}
 		return false;
