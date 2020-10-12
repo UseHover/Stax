@@ -166,7 +166,7 @@ public class RequestFragment extends Fragment {
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		if (new PermissionHelper(getContext()).permissionsGranted(grantResults)) {
+		if (new PermissionHelper().permissionsGranted(grantResults)) {
 			Amplitude.getInstance().logEvent(getString(R.string.contact_perm_success));
 			Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
 			startActivityForResult(contactPickerIntent, requestCode);
