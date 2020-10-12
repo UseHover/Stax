@@ -1,4 +1,4 @@
-package com.hover.stax.schedules;
+package com.hover.stax.home;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
+import com.hover.stax.schedules.Schedule;
 import com.hover.stax.utils.Utils;
 
 import java.util.List;

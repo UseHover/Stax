@@ -23,10 +23,6 @@
 
 
 	<string name="balance">chini ya mwezi uliopita</string>
-	<string name="spent_this_month">Alitumia mwezi huu</string>
-	<string name="earned_this_month">Imepatikana mwezi huu</string>
-	<string name="more_than_last_month">zaidi ya mwezi uliopita</string>
-	<string name="less_than_last_month">chini ya mwezi uliopita</string>
 
 	<string name="choose_institutions_title">Chagua huduma zako</string>
 	<string name="loading">Inapakia…</string>
@@ -57,7 +53,6 @@
 	<string name="default_account_desc">Akaunti za chaguo-msingi zitaonekana kwanza wakati unahamisha pesa.</string>
 	<string name="about_our_security">Kuhusu usalama wetu</string>
 	<string name="about_our_security_content">Android Hover ya SD ni vifaa vya maendeleo vinavyokidhi vigezo vya 740.17 (b) (3) (i) uainishaji wa usalama wa Ofisi ya Viwanda na Usalama ya Merika. Programu hii hutumia HTTPS kwa mawasiliano ya seva; usimbuaji fiche wa RSA muhimu kuhifadhi kwa muda vitambulisho vya mtumiaji kwenye kifaa chake mwenyewe kwa kutumia Android Keystore; na usimbuaji nambari kwa kutumia DRM (Dexguard).</string>
-	<string name="choose_pin_description">Hatua moja ya mwisho: tunahitaji PIN za akaunti yako ili kukamilisha majukumu na kuweka mizani yako hadi sasa. Pini zimesimbwa kwa njia fiche na haziondoki kwenye kifaa chako. Unaweza kufuta PIN kutoka kwa Stax wakati wowote. Jifunze zaidi.</string>
 
 	<string name="title_airtime">Ongeza muda wa maongezi</string>
 	<string name="title_p2p">Hamisha pesa kwa mtu mwingine</string>

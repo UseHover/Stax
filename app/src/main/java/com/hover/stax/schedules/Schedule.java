@@ -88,7 +88,7 @@ public class Schedule {
 		}
 	}
 
-	String humanFrequency(Context c) {
+	public String humanFrequency(Context c) {
 		switch(frequency) {
 			case Schedule.DAILY: return c.getString(R.string.daily);
 			case Schedule.WEEKLY: return c.getString(R.string.weekly);

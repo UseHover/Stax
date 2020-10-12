@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
 
 import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionDao;
@@ -116,15 +117,11 @@ public class DatabaseRepo {
 		AppDatabase.databaseWriteExecutor.execute(() -> transactionDao.insert(transaction));
 	}
 
-	public void insert(Request request) {
-		AppDatabase.databaseWriteExecutor.execute(() -> requestDao.insert(request));
-	}
-
 	public void update(StaxTransaction transaction) {
 		AppDatabase.databaseWriteExecutor.execute(() -> transactionDao.update(transaction));
 	}
 
-	// Scheduled
+	// Schedules
 	public LiveData<List<Schedule>> getFutureTransactions() {
 		return scheduleDao.getLiveFuture();
 	}
@@ -138,4 +135,20 @@ public class DatabaseRepo {
 	public void delete(Schedule schedule) {
 		AppDatabase.databaseWriteExecutor.execute(() -> scheduleDao.delete(schedule));
 	}
+
+	// Requests
+	public LiveData<List<Request>> getRequests() {
+		return requestDao.getUnmatched();
+	}
+
+	public Request getRequest(int id) { return requestDao.get(id); }
+
+	public void insert(Request request) {
+		AppDatabase.databaseWriteExecutor.execute(() -> requestDao.insert(request));
+	}
+
+	public void delete(Request request) {
+		AppDatabase.databaseWriteExecutor.execute(() -> requestDao.delete(request));
+	}
+
 }

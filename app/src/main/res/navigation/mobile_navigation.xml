@@ -36,6 +36,15 @@
 	</fragment>
 
 	<fragment
+		android:id="@+id/requestDetailsFragment"
+		android:name="com.hover.stax.requests.RequestDetailFragment"
+		android:label="RequestDetailFragment" >
+		<argument
+			android:name="id"
+			app:argType="integer" />
+	</fragment>
+
+	<fragment
 	    android:id="@+id/channelsDetailsFragment"
 	    android:name="com.hover.stax.channels.ChannelDetailFragment"
 	    android:label="ChannelsDetailsFragment" >

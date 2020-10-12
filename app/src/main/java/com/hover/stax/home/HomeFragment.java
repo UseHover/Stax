@@ -1,7 +1,7 @@
 package com.hover.stax.home;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +19,8 @@ import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.channels.ChannelsActivity;
-import com.hover.stax.schedules.ScheduledAdapter;
-import com.hover.stax.schedules.ScheduledViewModel;
+import com.hover.stax.requests.Request;
+import com.hover.stax.schedules.Schedule;
 import com.hover.stax.transactions.TransactionHistoryAdapter;
 import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.utils.DateUtils;
@@ -29,17 +28,17 @@ import com.hover.stax.utils.UIHelper;
 
 import java.util.List;
 
-public class HomeFragment extends Fragment implements TransactionHistoryAdapter.SelectListener, ScheduledAdapter.SelectListener {
+public class HomeFragment extends Fragment implements TransactionHistoryAdapter.SelectListener, ScheduledAdapter.SelectListener, RequestsAdapter.SelectListener {
 	final public static String TAG = "HomeFragment";
 
 	private BalancesViewModel balancesViewModel;
-	private ScheduledViewModel futureViewModel;
+	private FutureViewModel futureViewModel;
 	private TransactionHistoryViewModel transactionsViewModel;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_home)));
 		balancesViewModel = new ViewModelProvider(requireActivity()).get(BalancesViewModel.class);
-		futureViewModel = new ViewModelProvider(requireActivity()).get(ScheduledViewModel.class);
+		futureViewModel = new ViewModelProvider(requireActivity()).get(FutureViewModel.class);
 		transactionsViewModel = new ViewModelProvider(requireActivity()).get(TransactionHistoryViewModel.class);
 		return inflater.inflate(R.layout.fragment_home, container, false);
 	}
@@ -63,15 +62,26 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		});
 	}
 
-	private void setUpFuture(View view) {
-		RecyclerView recyclerView = view.findViewById(R.id.scheduled_recyclerView);
+	private void setUpFuture(View root) {
+		RecyclerView recyclerView = root.findViewById(R.id.scheduled_recyclerView);
 		recyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-		recyclerView.setHasFixedSize(true);
-
 		futureViewModel.getScheduled().observe(getViewLifecycleOwner(), schedules -> {
 			recyclerView.setAdapter(new ScheduledAdapter(schedules, this));
-			view.findViewById(R.id.scheduled_card).setVisibility(schedules != null && schedules.size() > 0 ? View.VISIBLE : View.GONE);
+			setFutureVisible(root, schedules, futureViewModel.getRequests().getValue());
 		});
+
+		RecyclerView rv = root.findViewById(R.id.requests_recyclerView);
+		rv.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
+		futureViewModel.getRequests().observe(getViewLifecycleOwner(), requests -> {
+			Log.e(TAG, "found requests: " + requests.size());
+			recyclerView.setAdapter(new RequestsAdapter(requests, this, getContext()));
+			setFutureVisible(root, futureViewModel.getScheduled().getValue(), requests);
+		});
+	}
+
+	private void setFutureVisible(View root, List<Schedule> schedules, List<Request> requests) {
+		boolean visible = (schedules != null && schedules.size() > 0) || (requests != null && requests.size() > 0);
+		root.findViewById(R.id.scheduled_card).setVisibility(visible ? View.VISIBLE : View.GONE);
 	}
 
 	private void setUpHistory(View view) {
@@ -107,5 +117,12 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		Bundle bundle = new Bundle();
 		bundle.putInt("id", id);
 		NavHostFragment.findNavController(this).navigate(R.id.scheduleDetailsFragment, bundle);
+	}
+
+	@Override
+	public void viewRequestDetail(int id) {
+		Bundle bundle = new Bundle();
+		bundle.putInt("id", id);
+		NavHostFragment.findNavController(this).navigate(R.id.requestDetailsFragment, bundle);
 	}
 }
