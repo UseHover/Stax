@@ -1,6 +1,5 @@
 package com.hover.stax.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
@@ -18,12 +17,8 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.hover.stax.utils.bubbleshowcase.BubbleShowCase;
-import com.hover.stax.utils.bubbleshowcase.BubbleShowCaseBuilder;
-import com.hover.stax.utils.bubbleshowcase.BubbleShowCaseListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.hover.stax.ApplicationInstance;
-import com.hover.stax.R;
 
 public class UIHelper {
 
@@ -58,13 +53,17 @@ public class UIHelper {
 		SpannableString content = new SpannableString(cs);
 		content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
 		content.setSpan(android.graphics.Typeface.BOLD, 0, content.length(), 0);
-		try {textView.setText(content); }
-		catch (Exception ignored) { }
+		try {
+			textView.setText(content);
+		} catch (Exception ignored) {
+		}
 	}
 
 	public static void fixListViewHeight(ListView listView) {
 		ListAdapter listAdapter = listView.getAdapter();
-		if (listAdapter == null) { return; }
+		if (listAdapter == null) {
+			return;
+		}
 
 		int totalHeight = 0;
 		int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
@@ -78,22 +77,5 @@ public class UIHelper {
 		params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
 		listView.setLayoutParams(params);
 		listView.requestLayout();
-	}
-
-
-	public static void showCase(String title, String desc, BubbleShowCase.ArrowPosition arrowPosition, BubbleShowCaseListener listener, View v, Activity activity) {
-		new BubbleShowCaseBuilder(activity) //Activity instance
-				.title(title) //Any title for the bubble view
-				.description(desc) //More detailed description
-				.arrowPosition(arrowPosition) //You can force the position of the arrow to change the location of the bubble.
-				.backgroundColor(ApplicationInstance.getContext().getResources().getColor(R.color.colorAccent)) //Bubble background color
-				.textColor(ApplicationInstance.getContext().getResources().getColor(R.color.colorPrimary)) //Bubble Text color
-				.titleTextSize(20) //Title text size in SP (default value 16sp)
-				.descriptionTextSize(20) //Subtitle text size in SP (default value 14sp)
-				//.image(imageDrawable) //Bubble main image
-				//.closeActionImage(CloseImageDrawable) //Custom close action image
-				//.showOnce(title)  //Id to show only once the BubbleShowCase
-				.listener(listener)
-				.targetView(v).show();
 	}
 }

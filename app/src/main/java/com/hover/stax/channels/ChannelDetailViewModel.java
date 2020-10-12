@@ -29,7 +29,7 @@ public class ChannelDetailViewModel extends AndroidViewModel {
 		repo = new DatabaseRepo(application);
 		id = new MutableLiveData<>();
 		channel = Transformations.switchMap(id, id -> repo.getLiveChannel(id));
-		transactions =  Transformations.switchMap(id, id -> repo.getCompleteTransferTransactions(id));
+		transactions = Transformations.switchMap(id, id -> repo.getCompleteTransferTransactions(id));
 		spentThisMonth = Transformations.switchMap(id, this::loadSpentThisMonth);
 		feesThisYear = Transformations.switchMap(id, this::loadFeesThisYear);
 	}
@@ -72,7 +72,9 @@ public class ChannelDetailViewModel extends AndroidViewModel {
 	}
 
 	LiveData<Double> getFeesThisYear() {
-		if (feesThisYear == null) { feesThisYear = new MutableLiveData<>(); }
+		if (feesThisYear == null) {
+			feesThisYear = new MutableLiveData<>();
+		}
 		return feesThisYear;
 	}
 }

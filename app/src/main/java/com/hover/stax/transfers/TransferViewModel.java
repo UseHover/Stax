@@ -2,7 +2,6 @@ package com.hover.stax.transfers;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -51,22 +50,33 @@ public class TransferViewModel extends AndroidViewModel {
 		futureDate.setValue(null);
 	}
 
-	void setType(String transaction_type) { type = transaction_type; }
-	String getType() { return type; }
+	void setType(String transaction_type) {
+		type = transaction_type;
+	}
+
+	String getType() {
+		return type;
+	}
 
 	private void findActiveChannel(List<Channel> channels) {
-		if (channels != null && channels.size() > 0) { activeChannel.setValue(channels.get(0)); }
+		if (channels != null && channels.size() > 0) {
+			activeChannel.setValue(channels.get(0));
+		}
 	}
 
 	void setActiveChannel(int channel_id) {
-		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0) { return; }
-		for (Channel c: selectedChannels.getValue()) {
+		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0) {
+			return;
+		}
+		for (Channel c : selectedChannels.getValue()) {
 			if (c.id == channel_id)
 				activeChannel.setValue(c);
 		}
 	}
 
-	LiveData<Channel> getActiveChannel() { return activeChannel; }
+	LiveData<Channel> getActiveChannel() {
+		return activeChannel;
+	}
 
 	public LiveData<List<Action>> loadActions(Channel channel) {
 		if (channel != null)
@@ -74,19 +84,35 @@ public class TransferViewModel extends AndroidViewModel {
 		return filteredActions;
 	}
 
-	LiveData<List<Channel>> getSelectedChannels() { return selectedChannels; }
-	LiveData<List<Action>> getActions() { return filteredActions; }
+	LiveData<List<Channel>> getSelectedChannels() {
+		return selectedChannels;
+	}
+
+	LiveData<List<Action>> getActions() {
+		return filteredActions;
+	}
 
 	private void findActiveAction(List<Action> actions) {
-		if (actions != null && actions.size() > 0) { activeAction.setValue(actions.get(0)); }
+		if (actions != null && actions.size() > 0) {
+			activeAction.setValue(actions.get(0));
+		}
 	}
-	void setActiveAction(Action action) { activeAction.setValue(action); }
+
+	void setActiveAction(Action action) {
+		activeAction.setValue(action);
+	}
+
 	LiveData<Action> getActiveAction() {
-		if (activeAction == null) { activeAction = new MediatorLiveData<>(); }
+		if (activeAction == null) {
+			activeAction = new MediatorLiveData<>();
+		}
 		return activeAction;
 	}
 
-	void setStage(InputStage stage) { inputStage.setValue(stage); }
+	void setStage(InputStage stage) {
+		inputStage.setValue(stage);
+	}
+
 	void goToNextStage() {
 		InputStage next = inputStage.getValue() != null ? inputStage.getValue().next() : InputStage.AMOUNT;
 		next = validateNext(next);
@@ -94,57 +120,96 @@ public class TransferViewModel extends AndroidViewModel {
 	}
 
 	private InputStage validateNext(InputStage next) {
-		if (!canStayAt(next)) { next = validateNext(next.next()); }
+		if (!canStayAt(next)) {
+			next = validateNext(next.next());
+		}
 		return next;
 	}
 
 	boolean goToStage(InputStage stage) {
 		if (stage == null) return false;
 		boolean canGoBack = canStayAt(stage);
-		if (canGoBack) { inputStage.postValue(stage); }
+		if (canGoBack) {
+			inputStage.postValue(stage);
+		}
 		return canGoBack;
 	}
 
 	private boolean canStayAt(InputStage stage) {
 		switch (stage) {
-			case TO_NETWORK: return filteredActions.getValue() != null && filteredActions.getValue().size() > 0 && (filteredActions.getValue().size() > 1 || filteredActions.getValue().get(0).hasToInstitution());
-			case RECIPIENT: return activeAction.getValue() != null && activeAction.getValue().requiresRecipient();
-			case REASON: return activeAction.getValue() != null && activeAction.getValue().requiresReason();
-			default: return true;
+			case TO_NETWORK:
+				return filteredActions.getValue() != null && filteredActions.getValue().size() > 0 && (filteredActions.getValue().size() > 1 || filteredActions.getValue().get(0).hasToInstitution());
+			case RECIPIENT:
+				return activeAction.getValue() != null && activeAction.getValue().requiresRecipient();
+			case REASON:
+				return activeAction.getValue() != null && activeAction.getValue().requiresReason();
+			default:
+				return true;
 		}
 	}
 
 	LiveData<InputStage> getStage() {
-		if (inputStage == null) { inputStage = new MutableLiveData<>(); inputStage.setValue(InputStage.AMOUNT);}
+		if (inputStage == null) {
+			inputStage = new MutableLiveData<>();
+			inputStage.setValue(InputStage.AMOUNT);
+		}
 		return inputStage;
 	}
 
-	void setAmount(String a) { amount.postValue(a); }
+	void setAmount(String a) {
+		amount.postValue(a);
+	}
+
 	LiveData<String> getAmount() {
-		if (amount == null) { amount = new MutableLiveData<>(); }
+		if (amount == null) {
+			amount = new MutableLiveData<>();
+		}
 		return amount;
 	}
 
-	void setRecipient(String r) { recipient.postValue(r); }
+	void setRecipient(String r) {
+		recipient.postValue(r);
+	}
+
 	LiveData<String> getRecipient() {
-		if (recipient == null) { recipient = new MutableLiveData<>(); }
+		if (recipient == null) {
+			recipient = new MutableLiveData<>();
+		}
 		return recipient;
 	}
 
-	void setReason(String r) { reason.postValue(r); }
+	void setReason(String r) {
+		reason.postValue(r);
+	}
+
 	LiveData<String> getReason() {
-		if (reason == null) { reason = new MutableLiveData<>(); reason.setValue(" "); }
+		if (reason == null) {
+			reason = new MutableLiveData<>();
+			reason.setValue(" ");
+		}
 		return reason;
 	}
 
-	void setIsFutureDated(boolean isFuture) { futureDated.setValue(isFuture); }
+	void setIsFutureDated(boolean isFuture) {
+		futureDated.setValue(isFuture);
+	}
+
 	LiveData<Boolean> getIsFuture() {
-		if (futureDated == null) { futureDated = new MutableLiveData<>(); futureDated.setValue(false);}
+		if (futureDated == null) {
+			futureDated = new MutableLiveData<>();
+			futureDated.setValue(false);
+		}
 		return futureDated;
 	}
-	void setFutureDate(Long date) { futureDate.setValue(date); }
+
+	void setFutureDate(Long date) {
+		futureDate.setValue(date);
+	}
+
 	LiveData<Long> getFutureDate() {
-		if (futureDate == null) { futureDate = new MutableLiveData<>(); }
+		if (futureDate == null) {
+			futureDate = new MutableLiveData<>();
+		}
 		return futureDate;
 	}
 

@@ -73,7 +73,7 @@ public class TransferFragment extends Fragment {
 
 	private void initView(View root) {
 		((TextView) root.findViewById(R.id.title)).setText(
-			getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.buy_airtime : R.string.transfer));
+				getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.buy_airtime : R.string.transfer));
 		amountValue = root.findViewById(R.id.amountValue);
 		fromValue = root.findViewById(R.id.fromValue);
 		toNetworkValue = root.findViewById(R.id.toNetworkValue);
@@ -123,7 +123,9 @@ public class TransferFragment extends Fragment {
 		});
 
 		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action ->
-			{ if (action != null) toNetworkValue.setText(action.toString()); });
+		{
+			if (action != null) toNetworkValue.setText(action.toString());
+		});
 
 		transferViewModel.getActiveChannel().observe(getViewLifecycleOwner(), c -> {
 			if (c != null) {
@@ -140,7 +142,7 @@ public class TransferFragment extends Fragment {
 	private void createChannelSelector(List<Channel> channels) {
 		fromRadioGroup.removeAllViews();
 
-		for (Channel c: channels) {
+		for (Channel c : channels) {
 			RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.stax_radio_button, null);
 			radioButton.setText(c.name);
 			radioButton.setId(c.id);
@@ -159,7 +161,8 @@ public class TransferFragment extends Fragment {
 			case RECIPIENT:
 				if (validates(amountInput, AMOUNT, R.string.enterAmountError))
 					transferViewModel.setAmount(amountInput.getText().toString());
-				recipientInput.requestFocus(); break;
+				recipientInput.requestFocus();
+				break;
 			case REASON:
 				if (validates(recipientInput, RECIPIENT, R.string.enterRecipientError))
 					transferViewModel.setRecipient(recipientInput.getText().toString());
@@ -250,13 +253,14 @@ public class TransferFragment extends Fragment {
 		CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
 		constraintsBuilder.setStart(DateUtils.now() + DateUtils.DAY);
 		datePicker = MaterialDatePicker.Builder.datePicker()
-			             .setCalendarConstraints(constraintsBuilder.build()).build();
+							 .setCalendarConstraints(constraintsBuilder.build()).build();
 		datePicker.addOnPositiveButtonClickListener(unixTime -> transferViewModel.setFutureDate(unixTime));
 	}
 
 	private void setErrorText() {
 		TextView errorMsgView = errorCard.findViewById(R.id.error_message);
-		if (transferViewModel.getType().equals(Action.AIRTIME)) errorMsgView.setText(getString(R.string.no_airtime_action_error));
+		if (transferViewModel.getType().equals(Action.AIRTIME))
+			errorMsgView.setText(getString(R.string.no_airtime_action_error));
 		else errorMsgView.setText(getString(R.string.no_p2p_action_error));
 	}
 }

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
-import androidx.room.Dao;
 
 import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionDao;
@@ -48,7 +47,9 @@ public class DatabaseRepo {
 	}
 
 	// Channels
-	public Channel getChannel(int id) { return channelDao.getChannel(id); }
+	public Channel getChannel(int id) {
+		return channelDao.getChannel(id);
+	}
 
 	public LiveData<Channel> getLiveChannel(int id) {
 		return channelDao.getLiveChannel(id);
@@ -67,7 +68,9 @@ public class DatabaseRepo {
 	}
 
 	// SIMs
-	public List<Sim> getSims() { return simDao.getPresent(); }
+	public List<Sim> getSims() {
+		return simDao.getPresent();
+	}
 
 	// Actions
 	public Action getAction(String public_id) {
@@ -126,7 +129,9 @@ public class DatabaseRepo {
 		return scheduleDao.getLiveFuture();
 	}
 
-	public Schedule getSchedule(int id) { return scheduleDao.get(id); }
+	public Schedule getSchedule(int id) {
+		return scheduleDao.get(id);
+	}
 
 	public void insert(Schedule schedule) {
 		AppDatabase.databaseWriteExecutor.execute(() -> scheduleDao.insert(schedule));
@@ -141,7 +146,9 @@ public class DatabaseRepo {
 		return requestDao.getUnmatched();
 	}
 
-	public Request getRequest(int id) { return requestDao.get(id); }
+	public Request getRequest(int id) {
+		return requestDao.get(id);
+	}
 
 	public void insert(Request request) {
 		AppDatabase.databaseWriteExecutor.execute(() -> requestDao.insert(request));

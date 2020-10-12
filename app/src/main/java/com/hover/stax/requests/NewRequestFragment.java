@@ -72,7 +72,7 @@ public class NewRequestFragment extends Fragment {
 		requestViewModel.getRecipients().observe(getViewLifecycleOwner(), recipients -> {
 			if (recipients == null || recipients.size() == 0) return;
 			recipientValueList.removeAllViews();
-			for (String recipient: recipients) {
+			for (String recipient : recipients) {
 				TextView tv = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.recipient_cell, null);
 				tv.setText(recipient);
 				recipientValueList.addView(tv);
@@ -120,7 +120,7 @@ public class NewRequestFragment extends Fragment {
 				if (validates(firstRecipient.findViewById(R.id.recipient_input), RECIPIENT, R.string.enterRecipientError)) {
 					ArrayList<View> outputViews = new ArrayList<>();
 					recipientInputList.findViewsWithText(outputViews, "RECIPIENT_INPUT", FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
-					for (View view: outputViews) {
+					for (View view : outputViews) {
 						if (!((TextInputEditText) view).getText().toString().isEmpty())
 							requestViewModel.addRecipient(((TextInputEditText) view).getText().toString());
 					}
@@ -157,7 +157,7 @@ public class NewRequestFragment extends Fragment {
 			if (staxContactModel.getPhoneNumber() != null) {
 				Amplitude.getInstance().logEvent(getString(R.string.contact_select_success));
 				((TextInputEditText) recipientInputList.getChildAt(requestCode).findViewById(R.id.recipient_input))
-					.setText(staxContactModel.getPhoneNumber());
+						.setText(staxContactModel.getPhoneNumber());
 			} else {
 				Amplitude.getInstance().logEvent(getString(R.string.contact_select_error));
 				UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectContactErrorMessage));

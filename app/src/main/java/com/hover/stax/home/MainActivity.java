@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,7 +26,6 @@ import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.security.SecurityFragment;
-
 import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.DateUtils;
@@ -43,12 +41,12 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements BalancesViewModel.RunBalanceListener,
 																	   BalanceAdapter.BalanceListener, BiometricChecker.AuthListener,
-																	   RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener{
+																	   RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener {
 	final public static String TAG = "MainActivity";
 	final public static int ADD_SERVICE = 200;
 	private BalancesViewModel balancesViewModel;
 	private RapidFloatingActionHelper rfabHelper;
-	private ImageView showCaseStaxLogo;View showcaseBalanceDragIcon;
+	public static boolean CHECK_SHOWCASE = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +65,8 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 
 		balancesViewModel = new ViewModelProvider(this).get(BalancesViewModel.class);
 		balancesViewModel.setListener(this);
-		balancesViewModel.getBalanceActions().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
-		balancesViewModel.getToRun().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel") );
+		balancesViewModel.getBalanceActions().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel"));
+		balancesViewModel.getToRun().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel"));
 
 		if (getIntent().getBooleanExtra(SecurityFragment.LANG_CHANGE, false))
 			navController.navigate(R.id.navigation_security);
@@ -79,26 +77,26 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 		rfaContent.setOnRapidFloatingActionContentLabelListListener(this);
 		List<RFACLabelItem> items = new ArrayList<>();
 		items.add(new RFACLabelItem<Integer>()
-			.setLabel(getResources().getString(R.string.transfer))
-			.setLabelSizeSp(21)
-			.setLabelColor(getResources().getColor(R.color.offWhite))
-			.setIconNormalColor(R.color.cardViewColor)
-			.setLabelBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.cardViewColor)))
-			.setWrapper(0)
+						  .setLabel(getResources().getString(R.string.transfer))
+						  .setLabelSizeSp(21)
+						  .setLabelColor(getResources().getColor(R.color.offWhite))
+						  .setIconNormalColor(R.color.cardViewColor)
+						  .setLabelBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.cardViewColor)))
+						  .setWrapper(0)
 		);
 		items.add(new RFACLabelItem<Integer>()
-			.setLabel(getResources().getString(R.string.nav_airtime))
-			.setLabelSizeSp(21)
-			.setLabelColor(getResources().getColor(R.color.offWhite))
-			.setLabelBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.cardViewColor)))
-			.setWrapper(1)
+						  .setLabel(getResources().getString(R.string.nav_airtime))
+						  .setLabelSizeSp(21)
+						  .setLabelColor(getResources().getColor(R.color.offWhite))
+						  .setLabelBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.cardViewColor)))
+						  .setWrapper(1)
 		);
 		items.add(new RFACLabelItem<Integer>()
-			.setLabel(getResources().getString(R.string.title_request))
-			.setLabelSizeSp(21)
-			.setLabelColor(getResources().getColor(R.color.offWhite))
-			.setLabelBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.cardViewColor)))
-			.setWrapper(2));
+						  .setLabel(getResources().getString(R.string.title_request))
+						  .setLabelSizeSp(21)
+						  .setLabelColor(getResources().getColor(R.color.offWhite))
+						  .setLabelBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.cardViewColor)))
+						  .setWrapper(2));
 
 
 		rfaContent.setItems(items);
@@ -144,9 +142,10 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 		else run(a, i);
 	}
 
+
 	private void run(Action action, int index) {
 		new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), this, index)
-			.finalScreenTime(0).run();
+				.finalScreenTime(0).run();
 	}
 
 	@Override
@@ -182,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 			new ViewModelProvider(this).get(TransactionHistoryViewModel.class).saveTransaction(data, this);
 		} else if (data.getAction().equals(TransferActivity.SCHEDULED)) {
 			UIHelper.flashMessage(this, findViewById(R.id.content),
-				getString(R.string.schedule_created, DateUtils.humanFriendlyDate(data.getIntExtra(Schedule.DATE_KEY, 0))));
+					getString(R.string.schedule_created, DateUtils.humanFriendlyDate(data.getIntExtra(Schedule.DATE_KEY, 0))));
 		}
 	}
 
@@ -199,11 +198,20 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 	@Override
 	public void onRFACItemLabelClick(int position, RFACLabelItem item) {
 		switch (position) {
-			case 0: startTransfer(Action.P2P); break;
-			case 1: startTransfer(Action.AIRTIME); break;
-			case 2: startActivityForResult(new Intent(this, RequestActivity.class), RequestActivity.REQUEST_REQUEST); break;
-			case 3: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_security); break;
-			default: Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_home);
+			case 0:
+				startTransfer(Action.P2P);
+				break;
+			case 1:
+				startTransfer(Action.AIRTIME);
+				break;
+			case 2:
+				startActivityForResult(new Intent(this, RequestActivity.class), RequestActivity.REQUEST_REQUEST);
+				break;
+			case 3:
+				Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_security);
+				break;
+			default:
+				Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_home);
 		}
 		rfabHelper.toggleContent();
 	}

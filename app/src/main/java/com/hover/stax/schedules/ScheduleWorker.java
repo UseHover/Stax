@@ -3,7 +3,6 @@ package com.hover.stax.schedules;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -14,7 +13,6 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.database.AppDatabase;
 import com.hover.stax.transfers.TransferActivity;
 
@@ -42,7 +40,7 @@ public class ScheduleWorker extends Worker {
 	@Override
 	public Worker.Result doWork() {
 		List<Schedule> scheduled = scheduleDao.getFuture();
-		for (Schedule schedule: scheduled) {
+		for (Schedule schedule : scheduled) {
 			if (schedule.isScheduledForToday())
 				notifyUser(schedule);
 		}
@@ -51,14 +49,14 @@ public class ScheduleWorker extends Worker {
 
 	private void notifyUser(Schedule s) {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "DEFAULT")
-			.setSmallIcon(R.drawable.ic_stax)
-			.setContentTitle(s.title(getApplicationContext()))
-			.setContentText(s.notificationMsg(getApplicationContext()))
-			.setStyle(new NotificationCompat.BigTextStyle().bigText(s.notificationMsg(getApplicationContext())))
-			.setPriority(NotificationCompat.PRIORITY_DEFAULT)
-			.setCategory(NotificationCompat.CATEGORY_REMINDER)
-			.setContentIntent(createTransferIntent(s))
-			.setAutoCancel(true);
+													 .setSmallIcon(R.drawable.ic_stax)
+													 .setContentTitle(s.title(getApplicationContext()))
+													 .setContentText(s.notificationMsg(getApplicationContext()))
+													 .setStyle(new NotificationCompat.BigTextStyle().bigText(s.notificationMsg(getApplicationContext())))
+													 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+													 .setCategory(NotificationCompat.CATEGORY_REMINDER)
+													 .setContentIntent(createTransferIntent(s))
+													 .setAutoCancel(true);
 
 		NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
 		notificationManager.notify(s.id, builder.build());

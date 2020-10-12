@@ -30,17 +30,23 @@ public class ScheduleDetailViewModel extends AndroidViewModel {
 	}
 
 	public LiveData<Schedule> getSchedule() {
-		if (schedule == null) { return new MutableLiveData<>(); }
+		if (schedule == null) {
+			return new MutableLiveData<>();
+		}
 		return schedule;
 	}
 
 	private LiveData<Action> loadAction(Schedule s) {
-		if (s != null) { return repo.getLiveAction(s.action_id); }
+		if (s != null) {
+			return repo.getLiveAction(s.action_id);
+		}
 		return new MutableLiveData<>();
 	}
 
 	public LiveData<Action> getAction() {
-		if (action == null) { action = new MutableLiveData<>(); }
+		if (action == null) {
+			action = new MutableLiveData<>();
+		}
 		return action;
 	}
 

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
+import com.hover.stax.home.MainActivity;
 import com.hover.stax.utils.UIHelper;
 
 public class PinsActivity extends AppCompatActivity implements PinEntryAdapter.UpdateListener {
@@ -33,6 +34,7 @@ public class PinsActivity extends AppCompatActivity implements PinEntryAdapter.U
 
 		findViewById(R.id.cancel_button).setOnClickListener(view -> {
 			Amplitude.getInstance().logEvent(getString(R.string.skipped_pin_entry));
+			MainActivity.CHECK_SHOWCASE = true;
 			setResult(RESULT_CANCELED);
 			finish();
 		});
@@ -51,6 +53,7 @@ public class PinsActivity extends AppCompatActivity implements PinEntryAdapter.U
 		public void onClick(View view) {
 			Amplitude.getInstance().logEvent(getString(R.string.completed_pin_entry));
 			pinViewModel.savePins(PinsActivity.this);
+			MainActivity.CHECK_SHOWCASE = true;
 			setResult(RESULT_OK);
 			finish();
 		}

@@ -13,12 +13,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hover.stax.utils.bubbleshowcase.BubbleShowCase;
-import com.hover.stax.utils.bubbleshowcase.BubbleShowCaseListener;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.utils.bubbleshowcase.BubbleShowCase;
+import com.hover.stax.utils.bubbleshowcase.BubbleShowCaseListener;
 
 import java.util.List;
 
@@ -53,14 +53,15 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 
 		holder.channelName.setText(channel.name);
 		holder.channelId.setText(Integer.toString(channel.id));
-		if (channel.latestBalance != null) holder.amount.setText(Utils.formatAmount(channel.latestBalance));
+		if (channel.latestBalance != null)
+			holder.amount.setText(Utils.formatAmount(channel.latestBalance));
 		holder.balanced_swiped_layout.setBackgroundColor(Color.parseColor(channel.primaryColorHex));
 		//holder.refreshButton.setImageTintList(Color.parseColor(channel.secondaryColorHex));
 		holder.amount.setTextColor(Color.parseColor(channel.secondaryColorHex));
 		UIHelper.setColoredDrawable(holder.refreshButton, R.drawable.ic_refresh_white_24dp, Color.parseColor(channel.secondaryColorHex));
 
-		if(position == 0 && activity!=null && balanceShowcaseListener !=null) {
-			UIHelper.showCase(
+		if (position == 0 && activity != null && balanceShowcaseListener != null) {
+			BubbleShowCase.Companion.showCase(
 					Utils.getStaxString(R.string.keep_accounts_private),
 					Utils.getStaxString(R.string.keep_accounts_private_desc),
 					BubbleShowCase.ArrowPosition.TOP,
@@ -99,6 +100,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 
 	public interface BalanceListener {
 		void onTapRefresh(int channelId);
+
 		void onTapDetail(int channelId);
 	}
 

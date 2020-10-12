@@ -91,7 +91,9 @@ public class Action {
 			return "Myself";
 	}
 
-	public boolean hasToInstitution() { return to_institution_name != null && !to_institution_name.equals("null"); }
+	public boolean hasToInstitution() {
+		return to_institution_name != null && !to_institution_name.equals("null");
+	}
 
 	public boolean requiresRecipient() {
 		return requiresInput(ACCOUNT_KEY) || requiresInput(PHONE_KEY);
@@ -109,7 +111,8 @@ public class Action {
 				if (step != null && Boolean.TRUE.equals(step.optBoolean(STEP_IS_PARAM)) && step.optString(STEP_VALUE).equals(key))
 					return true;
 			}
-		} catch (JSONException e) { }
+		} catch (JSONException e) {
+		}
 		return false;
 	}
 

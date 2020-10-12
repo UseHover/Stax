@@ -14,9 +14,6 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.hover.stax.R;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
-import com.hover.stax.utils.Utils;
-
-import java.util.List;
 
 import static com.hover.stax.requests.RequestStage.AMOUNT;
 import static com.hover.stax.requests.RequestStage.NOTE;
@@ -108,7 +105,7 @@ public class RequestActivity extends AppCompatActivity {
 	}
 
 	private void setFab(RequestStage stage) {
-		ExtendedFloatingActionButton fab = ((ExtendedFloatingActionButton) findViewById(R.id.fab));
+		ExtendedFloatingActionButton fab = findViewById(R.id.fab);
 		if (stage.compareTo(REVIEW) >= 0) {
 			if (requestViewModel.getIsFuture().getValue() != null && requestViewModel.getIsFuture().getValue())
 				fab.setText(getString(R.string.schedule));
@@ -122,8 +119,12 @@ public class RequestActivity extends AppCompatActivity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_CANCELED) { return; }
-		if (requestCode == SEND_SMS_FOREGROUND) { returnResult(); }
+		if (resultCode == RESULT_CANCELED) {
+			return;
+		}
+		if (requestCode == SEND_SMS_FOREGROUND) {
+			returnResult();
+		}
 	}
 
 	private void returnResult() {

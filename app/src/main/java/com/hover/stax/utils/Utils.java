@@ -79,6 +79,7 @@ public class Utils {
 	public static boolean usingDebugVariant(Context c) {
 		return (Boolean) getBuildConfigValue(c, "DEBUG");
 	}
+
 	@SuppressWarnings("SameParameterValue")
 	private static Object getBuildConfigValue(Context context, String fieldName) {
 		try {

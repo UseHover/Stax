@@ -16,8 +16,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
-import com.hover.stax.utils.bubbleshowcase.BubbleShowCase;
-import com.hover.stax.utils.bubbleshowcase.BubbleShowCaseListener;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
@@ -29,6 +27,8 @@ import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.utils.bubbleshowcase.BubbleShowCase;
+import com.hover.stax.utils.bubbleshowcase.BubbleShowCaseListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,6 +43,7 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	private ImageView showcasingStaxLogo;
 	private BalanceAdapter balanceAdapter;
 	private TextView homeTimeAgo;
+
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_home)));
 		balancesViewModel = new ViewModelProvider(requireActivity()).get(BalancesViewModel.class);
@@ -58,8 +59,13 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		setUpBalances(view);
 		setUpFuture(view);
 		setUpHistory(view);
-		startShowcasing();
 
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		startShowcasing();
 	}
 
 	private void setHomeLogoViewToMainActivity(View view) {
@@ -141,24 +147,31 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		bundle.putInt("id", id);
 		NavHostFragment.findNavController(this).navigate(R.id.requestDetailsFragment, bundle);
 	}
-	private void showcaseSecondStage() {
-		if(balanceAdapter !=null) balanceAdapter.balanceShowcase(stageTwoBubbleListener, getActivity());
-	}
-
 
 
 	public void startShowcasing() {
-		UIHelper.showCase(
-				Utils.getStaxString(R.string.world_class_security),
-				Utils.getStaxString(R.string.world_class_security_description),
-				BubbleShowCase.ArrowPosition.TOP,
-				stageOneBubbleListener,
-				showcasingStaxLogo,
-				getActivity());
+		if (MainActivity.CHECK_SHOWCASE) {
+			try {
+				BubbleShowCase.Companion.showCase(
+						Utils.getStaxString(R.string.world_class_security),
+						Utils.getStaxString(R.string.world_class_security_description),
+						BubbleShowCase.ArrowPosition.TOP,
+						stageOneBubbleListener,
+						showcasingStaxLogo,
+						getActivity());
+			} catch (Exception ignored) {
+			}
+
+		}
+	}
+
+	private void showcaseSecondStage() {
+		if (balanceAdapter != null)
+			balanceAdapter.balanceShowcase(stageTwoBubbleListener, getActivity());
 	}
 
 	private void showcaseThirdStage() {
-		UIHelper.showCase(
+		BubbleShowCase.Companion.showCase(
 				Utils.getStaxString(R.string.refresh_stax),
 				Utils.getStaxString(R.string.refresh_stax_desc),
 				BubbleShowCase.ArrowPosition.TOP,

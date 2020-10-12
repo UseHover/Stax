@@ -1,13 +1,13 @@
 package com.hover.stax.transfers;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -19,15 +19,13 @@ import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.utils.UIHelper;
 
-import java.util.List;
-
 import static com.hover.stax.transfers.InputStage.AMOUNT;
 import static com.hover.stax.transfers.InputStage.FROM_ACCOUNT;
 import static com.hover.stax.transfers.InputStage.REASON;
+import static com.hover.stax.transfers.InputStage.RECIPIENT;
 import static com.hover.stax.transfers.InputStage.REVIEW;
 import static com.hover.stax.transfers.InputStage.REVIEW_DIRECT;
 import static com.hover.stax.transfers.InputStage.TO_NETWORK;
-import static com.hover.stax.transfers.InputStage.RECIPIENT;
 
 public class TransferActivity extends AppCompatActivity implements BiometricChecker.AuthListener {
 	final public static String TAG = "TransferActivity";
@@ -56,7 +54,9 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		});
 		transferViewModel.getActiveChannel().observe(this, channel -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel."));
 		transferViewModel.getActions().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel."));
-		transferViewModel.getActiveAction().observe(this, action -> { onUpdateStage(transferViewModel.getStage().getValue()); });
+		transferViewModel.getActiveAction().observe(this, action -> {
+			onUpdateStage(transferViewModel.getStage().getValue());
+		});
 
 		transferViewModel.getStage().observe(this, this::onUpdateStage);
 		transferViewModel.getIsFuture().observe(this, isFuture -> onUpdateStage(transferViewModel.getStage().getValue()));
@@ -68,7 +68,8 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	private void checkIntent() {
 		if (getIntent().hasExtra(Schedule.SCHEDULE_ID)) {
 			createFromSchedule(getIntent().getIntExtra(Schedule.SCHEDULE_ID, -1));
-		} else Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getIntent().getAction()));
+		} else
+			Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getIntent().getAction()));
 	}
 
 	private void createFromSchedule(int schedule_id) {
@@ -131,12 +132,12 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	private void makeHoverCall(Action act) {
 		Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
 		new HoverSession.Builder(act, transferViewModel.getActiveChannel().getValue(),
-			this, TransferActivity.TRANSFER_REQUEST)
-			.extra(Action.PHONE_KEY, transferViewModel.getRecipient().getValue())
-			.extra(Action.ACCOUNT_KEY, transferViewModel.getRecipient().getValue())
-			.extra(Action.AMOUNT_KEY, transferViewModel.getAmount().getValue())
-			.extra(Action.REASON_KEY, transferViewModel.getReason().getValue())
-			.run();
+				this, TransferActivity.TRANSFER_REQUEST)
+				.extra(Action.PHONE_KEY, transferViewModel.getRecipient().getValue())
+				.extra(Action.ACCOUNT_KEY, transferViewModel.getRecipient().getValue())
+				.extra(Action.AMOUNT_KEY, transferViewModel.getAmount().getValue())
+				.extra(Action.REASON_KEY, transferViewModel.getReason().getValue())
+				.run();
 	}
 
 	private void onUpdateStage(InputStage stage) {
@@ -144,7 +145,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		findViewById(R.id.amountRow).setVisibility(stage.compareTo(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.fromRow).setVisibility(stage.compareTo(FROM_ACCOUNT) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.toNetworkRow).setVisibility(stage.compareTo(TO_NETWORK) > 0 &&
-			transferViewModel.getActions().getValue() != null && transferViewModel.getActions().getValue().size() > 0 && (transferViewModel.getActions().getValue().size() > 1 || !transferViewModel.getActiveAction().getValue().toString().equals("Phone number")) ? View.VISIBLE : View.GONE);
+															  transferViewModel.getActions().getValue() != null && transferViewModel.getActions().getValue().size() > 0 && (transferViewModel.getActions().getValue().size() > 1 || !transferViewModel.getActiveAction().getValue().toString().equals("Phone number")) ? View.VISIBLE : View.GONE);
 		findViewById(R.id.recipientRow).setVisibility(stage.compareTo(RECIPIENT) > 0 && transferViewModel.getActiveAction().getValue() != null && transferViewModel.getActiveAction().getValue().requiresRecipient() ? View.VISIBLE : View.GONE);
 		findViewById(R.id.reasonRow).setVisibility((stage.compareTo(REASON) > 0 && transferViewModel.getReason().getValue() != null && !transferViewModel.getReason().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
 		findViewById(R.id.dateRow).setVisibility(transferViewModel.getFutureDate().getValue() != null ? View.VISIBLE : View.GONE);
@@ -163,7 +164,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void setFab(InputStage stage) {
-		ExtendedFloatingActionButton fab = ((ExtendedFloatingActionButton) findViewById(R.id.fab));
+		ExtendedFloatingActionButton fab = findViewById(R.id.fab);
 		if (stage.compareTo(REVIEW) >= 0) {
 			if (transferViewModel.getIsFuture().getValue() != null && transferViewModel.getIsFuture().getValue()) {
 				fab.setVisibility(transferViewModel.getFutureDate().getValue() == null ? View.GONE : View.VISIBLE);
@@ -181,13 +182,19 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_CANCELED) { return; }
-		if (requestCode == TRANSFER_REQUEST) { returnResult(requestCode); }
+		if (resultCode == RESULT_CANCELED) {
+			return;
+		}
+		if (requestCode == TRANSFER_REQUEST) {
+			returnResult(requestCode);
+		}
 	}
 
 	private void returnResult(int type) {
 		Intent i = new Intent();
-		if (type == SCHEDULED_REQUEST) { i.putExtra(Schedule.DATE_KEY, transferViewModel.getFutureDate().getValue()); }
+		if (type == SCHEDULED_REQUEST) {
+			i.putExtra(Schedule.DATE_KEY, transferViewModel.getFutureDate().getValue());
+		}
 		i.setAction(type == SCHEDULED_REQUEST ? SCHEDULED : TRANSFERED);
 		setResult(RESULT_OK, i);
 		finish();

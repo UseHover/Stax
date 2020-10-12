@@ -9,9 +9,6 @@ import androidx.room.PrimaryKey;
 
 import com.hover.stax.R;
 import com.hover.stax.utils.DateUtils;
-import com.hover.stax.utils.Utils;
-
-import java.util.List;
 
 @Entity(tableName = "requests")
 public class Request {
@@ -40,7 +37,8 @@ public class Request {
 	@ColumnInfo(name = "date_sent", defaultValue = "CURRENT_TIMESTAMP")
 	public Long date_sent;
 
-	public Request() {}
+	public Request() {
+	}
 
 	public Request(String r, String a, String n) {
 		recipient = r;

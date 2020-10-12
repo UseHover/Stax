@@ -26,7 +26,9 @@ public class RequestDetailViewModel extends AndroidViewModel {
 	}
 
 	public LiveData<Request> getRequest() {
-		if (request == null) { return new MutableLiveData<>(); }
+		if (request == null) {
+			return new MutableLiveData<>();
+		}
 		return request;
 	}
 

@@ -36,8 +36,14 @@ public class NewRequestViewModel extends AndroidViewModel {
 		futureDate.setValue(null);
 	}
 
-	LiveData<RequestStage> getStage() { return requestStage; }
-	void setStage(RequestStage stage) { requestStage.setValue(stage); }
+	LiveData<RequestStage> getStage() {
+		return requestStage;
+	}
+
+	void setStage(RequestStage stage) {
+		requestStage.setValue(stage);
+	}
+
 	void goToNextStage() {
 		RequestStage next = requestStage.getValue() != null ? requestStage.getValue().next() : RequestStage.RECIPIENT;
 		requestStage.postValue(next);
@@ -49,9 +55,14 @@ public class NewRequestViewModel extends AndroidViewModel {
 		return true;
 	}
 
-	void setAmount(String a) { amount.postValue(a); }
+	void setAmount(String a) {
+		amount.postValue(a);
+	}
+
 	LiveData<String> getAmount() {
-		if (amount == null) { amount = new MutableLiveData<>(); }
+		if (amount == null) {
+			amount = new MutableLiveData<>();
+		}
 		return amount;
 	}
 
@@ -60,25 +71,46 @@ public class NewRequestViewModel extends AndroidViewModel {
 		rList.add(recipient);
 		recipients.postValue(rList);
 	}
+
 	LiveData<List<String>> getRecipients() {
-		if (recipients == null) { recipients = new MutableLiveData<>(); }
+		if (recipients == null) {
+			recipients = new MutableLiveData<>();
+		}
 		return recipients;
 	}
 
-	void setNote(String n) { note.postValue(n); }
+	void setNote(String n) {
+		note.postValue(n);
+	}
+
 	LiveData<String> getNote() {
-		if (note == null) { note = new MutableLiveData<>(); note.setValue(" "); }
+		if (note == null) {
+			note = new MutableLiveData<>();
+			note.setValue(" ");
+		}
 		return note;
 	}
 
-	void setIsFutureDated(boolean isFuture) { futureDated.setValue(isFuture); }
+	void setIsFutureDated(boolean isFuture) {
+		futureDated.setValue(isFuture);
+	}
+
 	LiveData<Boolean> getIsFuture() {
-		if (futureDated == null) { futureDated = new MutableLiveData<>(); futureDated.setValue(false);}
+		if (futureDated == null) {
+			futureDated = new MutableLiveData<>();
+			futureDated.setValue(false);
+		}
 		return futureDated;
 	}
-	void setFutureDate(Long date) { futureDate.setValue(date); }
+
+	void setFutureDate(Long date) {
+		futureDate.setValue(date);
+	}
+
 	LiveData<Long> getFutureDate() {
-		if (futureDate == null) { futureDate = new MutableLiveData<>(); }
+		if (futureDate == null) {
+			futureDate = new MutableLiveData<>();
+		}
 		return futureDate;
 	}
 

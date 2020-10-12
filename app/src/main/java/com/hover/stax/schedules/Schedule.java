@@ -19,7 +19,7 @@ import java.util.Date;
 @Entity(tableName = "schedules")
 public class Schedule {
 	public final static String ONCE = "4once", DAILY = "0daily", WEEKLY = "1weekly", BIWEEKLY = "2biweekly", MONTHLY = "3monthly",
-		SCHEDULE_ID = "schedule_id", DATE_KEY = "date";
+			SCHEDULE_ID = "schedule_id", DATE_KEY = "date";
 
 	@PrimaryKey(autoGenerate = true)
 	@NonNull
@@ -61,7 +61,8 @@ public class Schedule {
 	@ColumnInfo(name = "frequency")
 	public String frequency;
 
-	public Schedule() {}
+	public Schedule() {
+	}
 
 	public Schedule(Action action, Long date, String r, String a, Context c) {
 		type = action.transaction_type;
@@ -89,37 +90,48 @@ public class Schedule {
 	}
 
 	public String humanFrequency(Context c) {
-		switch(frequency) {
-			case Schedule.DAILY: return c.getString(R.string.daily);
-			case Schedule.WEEKLY: return c.getString(R.string.weekly);
-			case Schedule.BIWEEKLY: return c.getString(R.string.biweekly);
-			case Schedule.MONTHLY: return c.getString(R.string.monthly);
-			default: return DateUtils.humanFriendlyDate(start_date);
+		switch (frequency) {
+			case Schedule.DAILY:
+				return c.getString(R.string.daily);
+			case Schedule.WEEKLY:
+				return c.getString(R.string.weekly);
+			case Schedule.BIWEEKLY:
+				return c.getString(R.string.biweekly);
+			case Schedule.MONTHLY:
+				return c.getString(R.string.monthly);
+			default:
+				return DateUtils.humanFriendlyDate(start_date);
 		}
 	}
 
 	String title(Context c) {
-		switch(type) {
+		switch (type) {
 			case Action.P2P:
-			case Action.ME2ME: return c.getString(R.string.notify_transfer_cta);
-			case Action.AIRTIME: return c.getString(R.string.notify_airtime_cta);
-			default: return null;
+			case Action.ME2ME:
+				return c.getString(R.string.notify_transfer_cta);
+			case Action.AIRTIME:
+				return c.getString(R.string.notify_airtime_cta);
+			default:
+				return null;
 		}
 	}
 
 	String notificationMsg(Context c) {
-		switch(type) {
+		switch (type) {
 			case Action.P2P:
-			case Action.ME2ME: return c.getString(R.string.notify_transfer, description);
-			case Action.AIRTIME: return c.getString(R.string.notify_airtime);
-			default: return null;
+			case Action.ME2ME:
+				return c.getString(R.string.notify_transfer, description);
+			case Action.AIRTIME:
+				return c.getString(R.string.notify_airtime);
+			default:
+				return null;
 		}
 	}
 
 	boolean isScheduledForToday() {
 		Date scheduledDate = new Date(start_date);
 		Date today = new Date(DateUtils.now());
-		SimpleDateFormat comparisonFormat =  new SimpleDateFormat("MM dd yyyy");
+		SimpleDateFormat comparisonFormat = new SimpleDateFormat("MM dd yyyy");
 		return comparisonFormat.format(scheduledDate).equals(comparisonFormat.format(today));
 	}
 

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.hover.stax.R;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
@@ -17,7 +16,7 @@ class StaxNavView extends RapidFloatingActionLayout {
 	public StaxNavView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		LayoutInflater.from(context).inflate(R.layout.stax_nav_view, this);
-		contentView = (FrameLayout) findViewById(R.id.content);
+		contentView = findViewById(R.id.content);
 	}
 
 	@Override

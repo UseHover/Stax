@@ -28,12 +28,16 @@ public class TransactionHistoryViewModel extends AndroidViewModel {
 		transactions = repo.getCompleteTransferTransactions();
 	}
 
-	public LiveData<List<StaxTransaction>> getStaxTransactions() { return transactions; }
+	public LiveData<List<StaxTransaction>> getStaxTransactions() {
+		return transactions;
+	}
 
 	public void saveTransaction(Intent data, Context c) {
 		new Thread(() -> {
 			StaxTransaction t = new StaxTransaction(data, repo.getAction(data.getStringExtra(TransactionContract.COLUMN_ACTION_ID)), c);
-			if (t.uuid != null) { repo.insert(t); }
+			if (t.uuid != null) {
+				repo.insert(t);
+			}
 		}).start();
 	}
 }

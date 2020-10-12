@@ -51,19 +51,29 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 	}
 
 	LiveData<Action> getAction() {
-		if (action == null) { action = new MutableLiveData<>(); }
+		if (action == null) {
+			action = new MutableLiveData<>();
+		}
 		return action;
 	}
 
-	void loadMessages(StaxTransaction t) { if (action.getValue() != null && t != null) loadMessages(t, action.getValue()); }
-	void loadMessages(Action a) { if (transaction.getValue() != null && a != null) loadMessages(transaction.getValue(), a); }
+	void loadMessages(StaxTransaction t) {
+		if (action.getValue() != null && t != null) loadMessages(t, action.getValue());
+	}
+
+	void loadMessages(Action a) {
+		if (transaction.getValue() != null && a != null) loadMessages(transaction.getValue(), a);
+	}
+
 	void loadMessages(StaxTransaction t, Action a) {
 		List<UssdCallResponse> ussds = UssdCallResponse.generateConvo(Hover.getTransaction(t.uuid, getApplication()), a);
 		messages.setValue(ussds);
 	}
 
 	LiveData<List<UssdCallResponse>> getMessages() {
-		if (messages == null) { messages = new MediatorLiveData<>(); }
+		if (messages == null) {
+			messages = new MediatorLiveData<>();
+		}
 		return messages;
 	}
 
@@ -80,7 +90,9 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 	}
 
 	LiveData<List<UssdCallResponse>> getSms() {
-		if (messages == null) { messages = new MediatorLiveData<>(); }
+		if (messages == null) {
+			messages = new MediatorLiveData<>();
+		}
 		return sms;
 	}
 

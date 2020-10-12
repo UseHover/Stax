@@ -34,8 +34,10 @@ public class RequestDetailFragment extends Fragment {
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		viewModel = new ViewModelProvider(this).get(RequestDetailViewModel.class);
 		JSONObject data = new JSONObject();
-		try { data.put("id", getArguments().getInt("id"));
-		} catch (JSONException e) { }
+		try {
+			data.put("id", getArguments().getInt("id"));
+		} catch (JSONException e) {
+		}
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_request_detail)), data);
 		return inflater.inflate(R.layout.fragment_request_detail, container, false);
 	}
@@ -71,24 +73,25 @@ public class RequestDetailFragment extends Fragment {
 		view.findViewById(R.id.noteRow).setVisibility(request.note == null || request.note.isEmpty() ? View.GONE : View.VISIBLE);
 		((TextView) view.findViewById(R.id.noteValue)).setText(request.note);
 
-		((Button) view.findViewById(R.id.cancel_btn)).setOnClickListener((View.OnClickListener) btn -> showConfirmDialog());
+		view.findViewById(R.id.cancel_btn).setOnClickListener(btn -> showConfirmDialog());
 	}
 
 	private void showConfirmDialog() {
 		AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.StaxDialog))
-			.setTitle(R.string.cancel_request_head)
-			.setMessage(R.string.cancel_request_msg)
-			.setNegativeButton(R.string.back, (DialogInterface.OnClickListener) (dialog, whichButton) -> {})
-			.setPositiveButton(R.string.cancel_request_btn, (DialogInterface.OnClickListener) (dialog, whichButton) -> {
-				viewModel.deleteRequest();
-				UIHelper.flashMessage(getContext(), getString(R.string.cancel_request_success));
-				NavHostFragment.findNavController(RequestDetailFragment.this).navigate(R.id.navigation_home);
-			}).create();
+										  .setTitle(R.string.cancel_request_head)
+										  .setMessage(R.string.cancel_request_msg)
+										  .setNegativeButton(R.string.back, (dialog, whichButton) -> {
+										  })
+										  .setPositiveButton(R.string.cancel_request_btn, (dialog, whichButton) -> {
+											  viewModel.deleteRequest();
+											  UIHelper.flashMessage(getContext(), getString(R.string.cancel_request_success));
+											  NavHostFragment.findNavController(RequestDetailFragment.this).navigate(R.id.navigation_home);
+										  }).create();
 		alertDialog.show();
 	}
 
 	private void setUpResendBtn(View view, Request request) {
-		((Button) view.findViewById(R.id.resend_btn)).setOnClickListener((View.OnClickListener) btn -> {
+		view.findViewById(R.id.resend_btn).setOnClickListener(btn -> {
 
 		});
 	}

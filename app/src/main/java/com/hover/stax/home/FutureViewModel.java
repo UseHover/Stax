@@ -31,7 +31,11 @@ public class FutureViewModel extends AndroidViewModel {
 		requests = repo.getRequests();
 	}
 
-	public LiveData<List<Schedule>> getScheduled() { return schedules; }
+	public LiveData<List<Schedule>> getScheduled() {
+		return schedules;
+	}
 
-	public LiveData<List<Request>> getRequests() { return requests; }
+	public LiveData<List<Request>> getRequests() {
+		return requests;
+	}
 }

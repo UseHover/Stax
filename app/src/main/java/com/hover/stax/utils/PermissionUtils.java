@@ -37,7 +37,7 @@ public class PermissionUtils {
 	}
 
 	public static void requestSendSMSPerms(Activity act, int requestCode) {
-		ActivityCompat.requestPermissions(act, new String[]{ Manifest.permission.SEND_SMS }, requestCode);
+		ActivityCompat.requestPermissions(act, new String[]{Manifest.permission.SEND_SMS}, requestCode);
 	}
 
 

@@ -62,7 +62,8 @@ public class TransactionDetailsFragment extends Fragment {
 		messagesView.setLayoutManager(UIHelper.setMainLinearManagers(ApplicationInstance.getContext()));
 		messagesView.setHasFixedSize(true);
 		viewModel.getMessages().observe(getViewLifecycleOwner(), ussdCallResponses -> {
-			if (ussdCallResponses != null) messagesView.setAdapter(new MessagesAdapter(ussdCallResponses));
+			if (ussdCallResponses != null)
+				messagesView.setAdapter(new MessagesAdapter(ussdCallResponses));
 		});
 
 		RecyclerView smsView = view.findViewById(R.id.sms_recyclerView);

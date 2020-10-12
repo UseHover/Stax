@@ -1,8 +1,6 @@
 package com.hover.stax.home;
 
 import android.app.Application;
-import android.content.Context;
-import android.content.Intent;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -10,11 +8,9 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
-import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.DatabaseRepo;
-import com.hover.stax.transactions.StaxTransaction;
 import com.hover.stax.utils.UIHelper;
 
 import java.util.ArrayList;
@@ -56,7 +52,9 @@ public class BalancesViewModel extends AndroidViewModel {
 		listener = l;
 	}
 
-	public LiveData<List<Action>> getToRun() { return toRun; }
+	public LiveData<List<Action>> getToRun() {
+		return toRun;
+	}
 
 	public LiveData<List<Channel>> getSelectedChannels() {
 		if (selectedChannels == null) {

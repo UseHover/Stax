@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.WorkManager;
-import androidx.work.Worker;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
