@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
+import com.hover.stax.utils.bubbleshowcase.BubbleShowCase;
+import com.hover.stax.utils.bubbleshowcase.BubbleShowCaseListener;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
@@ -25,6 +28,9 @@ import com.hover.stax.transactions.TransactionHistoryAdapter;
 import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -34,7 +40,9 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	private BalancesViewModel balancesViewModel;
 	private FutureViewModel futureViewModel;
 	private TransactionHistoryViewModel transactionsViewModel;
-
+	private ImageView showcasingStaxLogo;
+	private BalanceAdapter balanceAdapter;
+	private TextView homeTimeAgo;
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_home)));
 		balancesViewModel = new ViewModelProvider(requireActivity()).get(BalancesViewModel.class);
@@ -46,9 +54,16 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		setHomeLogoViewToMainActivity(view);
 		setUpBalances(view);
 		setUpFuture(view);
 		setUpHistory(view);
+		startShowcasing();
+
+	}
+
+	private void setHomeLogoViewToMainActivity(View view) {
+		showcasingStaxLogo = view.findViewById(R.id.home_stax_logo);
 	}
 
 	private void setUpBalances(View view) {
@@ -57,7 +72,8 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		recyclerView.setHasFixedSize(true);
 
 		balancesViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
-			recyclerView.setAdapter(new BalanceAdapter(channels, (MainActivity) getActivity()));
+			balanceAdapter = new BalanceAdapter(channels, (MainActivity) getActivity());
+			recyclerView.setAdapter(balanceAdapter);
 			setMeta(view, channels);
 		});
 	}
@@ -95,7 +111,7 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	}
 
 	private void setMeta(View view, List<Channel> channels) {
-		TextView homeTimeAgo = view.findViewById(R.id.homeTimeAgo);
+		homeTimeAgo = view.findViewById(R.id.homeTimeAgo);
 		long mostRecentTimestamp = 0;
 		for (Channel c : channels) {
 			if (c.latestBalanceTimestamp != null && c.latestBalanceTimestamp > mostRecentTimestamp)
@@ -125,4 +141,98 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		bundle.putInt("id", id);
 		NavHostFragment.findNavController(this).navigate(R.id.requestDetailsFragment, bundle);
 	}
+	private void showcaseSecondStage() {
+		if(balanceAdapter !=null) balanceAdapter.balanceShowcase(stageTwoBubbleListener, getActivity());
+	}
+
+
+
+	public void startShowcasing() {
+		UIHelper.showCase(
+				Utils.getStaxString(R.string.world_class_security),
+				Utils.getStaxString(R.string.world_class_security_description),
+				BubbleShowCase.ArrowPosition.TOP,
+				stageOneBubbleListener,
+				showcasingStaxLogo,
+				getActivity());
+	}
+
+	private void showcaseThirdStage() {
+		UIHelper.showCase(
+				Utils.getStaxString(R.string.refresh_stax),
+				Utils.getStaxString(R.string.refresh_stax_desc),
+				BubbleShowCase.ArrowPosition.TOP,
+				stageThreeBubbleListener,
+				homeTimeAgo,
+				getActivity());
+	}
+
+	BubbleShowCaseListener stageOneBubbleListener = new BubbleShowCaseListener() {
+		@Override
+		public void onTargetClick(@NotNull BubbleShowCase bubbleShowCase) {
+			bubbleShowCase.dismiss();
+			showcaseSecondStage();
+		}
+
+		@Override
+		public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) {
+			bubbleShowCase.dismiss();
+			showcaseSecondStage();
+		}
+
+		@Override
+		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) {
+		}
+
+		@Override
+		public void onBubbleClick(@NotNull BubbleShowCase bubbleShowCase) {
+			bubbleShowCase.dismiss();
+			showcaseSecondStage();
+		}
+	};
+
+	BubbleShowCaseListener stageTwoBubbleListener = new BubbleShowCaseListener() {
+		@Override
+		public void onTargetClick(@NotNull BubbleShowCase bubbleShowCase) {
+			bubbleShowCase.dismiss();
+			showcaseThirdStage();
+		}
+
+		@Override
+		public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) {
+			bubbleShowCase.dismiss();
+			showcaseThirdStage();
+		}
+
+		@Override
+		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) {
+		}
+
+		@Override
+		public void onBubbleClick(@NotNull BubbleShowCase bubbleShowCase) {
+			bubbleShowCase.dismiss();
+			showcaseThirdStage();
+		}
+	};
+
+	BubbleShowCaseListener stageThreeBubbleListener = new BubbleShowCaseListener() {
+		@Override
+		public void onTargetClick(@NotNull BubbleShowCase bubbleShowCase) {
+			bubbleShowCase.dismiss();
+		}
+
+		@Override
+		public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) {
+			bubbleShowCase.dismiss();
+		}
+
+		@Override
+		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) {
+		}
+
+		@Override
+		public void onBubbleClick(@NotNull BubbleShowCase bubbleShowCase) {
+			bubbleShowCase.dismiss();
+		}
+	};
 }

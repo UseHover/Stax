@@ -8,6 +8,7 @@
 	<com.google.android.material.textfield.TextInputLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+	    	android:fontFamily="font-normal"
 		android:hint="@string/optional_message"
 		style="@style/StaxLabeledInput">
 
@@ -16,6 +17,7 @@
 			android:layout_height="wrap_content"
 			android:padding="@dimen/margin_13"
 			android:textSize="@dimen/text_21"
+		    	android:fontFamily="font-normal"
 			android:textColor="@color/offWhite"
 			android:textCursorDrawable="@null"
 			android:inputType="text"

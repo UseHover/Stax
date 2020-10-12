@@ -65,7 +65,8 @@
 		<ImageView
 		    android:layout_width="wrap_content"
 		    android:layout_height="@dimen/margin_21"
-			android:layout_gravity="center_vertical"
+		    android:layout_gravity="center_vertical"
+		    android:id="@+id/balance_drag"
 		    android:src="@drawable/ic_drag" />
 	</LinearLayout>
 

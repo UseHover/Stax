@@ -47,6 +47,12 @@
 	<string name="to_this_network">To this network</string>
 	<string name="to_this_number">To this number</string>
 	<string name="language">Language</string>
+	<string name="world_class_security">World class security</string>
+	<string name="world_class_security_description">We secure Stax with the same technology that locks your device. You unlock Stax the same way you unlock your device.</string>
+	<string name="keep_accounts_private">Keep accounts private</string>
+	<string name="keep_accounts_private_desc">Peek at your balances by dragging the bar to the left.</string>
+	<string name="refresh_stax">Refresh Stax</string>
+	<string name="refresh_stax_desc">Tap here to refresh all of your accounts.</string>
 
 	<string name="accounts">Accounts</string>
 	<string name="account">Account</string>

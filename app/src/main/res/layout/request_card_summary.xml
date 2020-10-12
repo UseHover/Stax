@@ -14,6 +14,7 @@
 
 			<TextView
 				android:text="@string/from_who"
+			    	android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
@@ -27,11 +28,13 @@
 		<TableRow android:id="@+id/amountRow" android:layout_marginTop="@dimen/margin_21">
 			<TextView
 				android:text="@string/amount"
+			    	android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/amountValue"
 				android:layout_weight="1"
+			    	android:fontFamily="font-medium"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
@@ -40,11 +43,13 @@
 		<TableRow android:id="@+id/noteRow" android:layout_marginTop="@dimen/margin_21">
 			<TextView
 				android:text="@string/note"
+			    	android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/noteValue"
 				android:layout_weight="1"
+			    	android:fontFamily="font-medium"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
@@ -53,11 +58,13 @@
 		<TableRow android:id="@+id/dateRow" android:layout_marginTop="@dimen/margin_21">
 			<TextView
 				android:text="@string/date"
+			    	android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/dateValue"
 				android:layout_weight="1"
+			    	android:fontFamily="font-medium"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />

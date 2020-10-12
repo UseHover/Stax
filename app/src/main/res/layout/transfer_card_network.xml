@@ -9,6 +9,7 @@
 		style="@style/StaxLabeledDropdown"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+	    	android:fontFamily="font-normal"
 		android:hint="@string/network">
 
 		<AutoCompleteTextView
@@ -20,6 +21,7 @@
 			android:background="@null"
 			android:editable="false"
 			android:textSize="@dimen/text_21"
+		    	android:fontFamily="font-normal"
 			android:textColor="@color/offWhite"
 			android:textCursorDrawable="@null" />
 

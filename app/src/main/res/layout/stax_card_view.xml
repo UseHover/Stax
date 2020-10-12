@@ -42,7 +42,7 @@
 					android:layout_height="wrap_content"
 					android:layout_weight="1"
 					android:text="@string/balances"
-					android:textSize="@dimen/text_13"
+					android:textSize="@dimen/text_16"
 					android:textAllCaps="true"
 					android:textAlignment="viewEnd"
 					android:fontFamily="font-bold"

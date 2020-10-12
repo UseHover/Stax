@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,13 +41,14 @@ import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RapidFloating
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener, RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener {
+public class MainActivity extends AppCompatActivity implements BalancesViewModel.RunBalanceListener,
+																	   BalanceAdapter.BalanceListener, BiometricChecker.AuthListener,
+																	   RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener{
 	final public static String TAG = "MainActivity";
-
 	final public static int ADD_SERVICE = 200;
-
 	private BalancesViewModel balancesViewModel;
 	private RapidFloatingActionHelper rfabHelper;
+	private ImageView showCaseStaxLogo;View showcaseBalanceDragIcon;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 		bundle.putInt(TransactionContract.COLUMN_CHANNEL_ID, channel_id);
 		Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.channelsDetailsFragment, bundle);
 	}
+
 
 	@Override
 	public void onTapRefresh(int channel_id) {
@@ -215,6 +218,7 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 	public void onRFACItemIconClick(int position, RFACLabelItem item) {
 		rfabHelper.toggleContent();
 	}
+
 }
 
 
