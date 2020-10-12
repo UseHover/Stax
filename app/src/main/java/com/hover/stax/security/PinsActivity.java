@@ -1,62 +1,78 @@
 package com.hover.stax.security;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
+import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
+import com.hover.stax.requests.RequestDetailFragment;
 import com.hover.stax.utils.UIHelper;
 
-public class PinsActivity extends AppCompatActivity implements PinEntryAdapter.UpdateListener {
+public class PinsActivity extends AppCompatActivity {
 
 	private PinsViewModel pinViewModel;
-	private PinEntryAdapter pinEntryAdapter;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.pins_entry_layout);
+		setContentView(R.layout.activity_pins);
 		pinViewModel = new ViewModelProvider(this).get(PinsViewModel.class);
 
-		RecyclerView pinRecyclerView = findViewById(R.id.pin_recyclerView);
-		pinViewModel.getSelectedChannels().observe(this, channels -> {
-			pinRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(this));
-			pinRecyclerView.setHasFixedSize(true);
-			pinEntryAdapter = new PinEntryAdapter(channels, this);
-			pinRecyclerView.setAdapter(pinEntryAdapter);
-		});
-
-		findViewById(R.id.cancel_button).setOnClickListener(view -> {
-			Amplitude.getInstance().logEvent(getString(R.string.skipped_pin_entry));
-			setResult(RESULT_CANCELED);
-			finish();
-		});
-
-		findViewById(R.id.continue_button).setOnClickListener(continueListener);
-
-//		if (!((KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardSecure())
-//			Snackbar.make(findViewById(R.id.root), R.string.insecure_warning)
-//				.setAction(R.string.skip, skipListener).show();
-//		else
-//			UIHelper.flashMessage(this, "Device is secure");
+		if (new PermissionHelper(this).hasAllPerms())
+			Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_pin_entry);
 	}
 
-	private View.OnClickListener continueListener = new View.OnClickListener() {
-		@Override
-		public void onClick(View view) {
-			Amplitude.getInstance().logEvent(getString(R.string.completed_pin_entry));
-			pinViewModel.savePins(PinsActivity.this);
-			setResult(RESULT_OK);
-			finish();
-		}
-	};
+	public void done(View view) {
+		Amplitude.getInstance().logEvent(getString(R.string.completed_pin_entry));
+		pinViewModel.savePins(PinsActivity.this);
+		balanceAsk();
+	}
 
-	public void onUpdate(int id, String pin) {
-		pinViewModel.setPin(id, pin);
+	public void checkBalances() {
+		setResult(RESULT_OK);
+		finish();
+	}
+
+	public void cancel(View view) {
+		setResult(RESULT_CANCELED);
+		finish();
+	}
+
+	public void balanceAsk() {
+		AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.StaxDialog))
+			.setMessage(R.string.check_balance_ask)
+			.setNegativeButton(R.string.skip, (DialogInterface.OnClickListener) (dialog, whichButton) -> cancel(null))
+			.setPositiveButton(R.string.continue_text, (DialogInterface.OnClickListener) (dialog, whichButton) -> checkBalances())
+			.create();
+		alertDialog.show();
+	}
+
+	public void skipPins(View view) {
+		AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.StaxDialog))
+			.setMessage(R.string.ask_every_time)
+			.setPositiveButton(R.string.ok, (DialogInterface.OnClickListener) (dialog, whichButton) -> balanceAsk())
+			.create();
+		alertDialog.show();
+	}
+
+	public void learnMore(View view) {
+		AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.StaxDialog))
+			.setTitle(R.string.about_our_security)
+			.setMessage(R.string.about_our_security_content)
+			.setPositiveButton(R.string.ok, (DialogInterface.OnClickListener) (dialog, whichButton) -> {})
+			.create();
+		alertDialog.show();
 	}
 }

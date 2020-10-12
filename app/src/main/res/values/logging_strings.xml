@@ -18,6 +18,8 @@
 	<string name="refresh_balance_all" translatable="false">Clicked refresh all balances</string>
 	<string name="visit_screen" translatable="false">Visited %1$s screen</string>
 	<string name="visit_language" translatable="false">Language Choice</string>
+	<string name="visit_sim_permission" translatable="false">SIM permission</string>
+	<string name="visit_choose_channels" translatable="false">Choose Channel</string>
 	<string name="visit_security" translatable="false">Security</string>
 	<string name="visit_transaction" translatable="false">Transaction Detail</string>
 	<string name="visit_schedule" translatable="false">Schedule Detail</string>

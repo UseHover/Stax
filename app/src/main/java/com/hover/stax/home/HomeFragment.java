@@ -36,6 +36,7 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	private TransactionHistoryViewModel transactionsViewModel;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Log.e(TAG, "creating view");
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_home)));
 		balancesViewModel = new ViewModelProvider(requireActivity()).get(BalancesViewModel.class);
 		futureViewModel = new ViewModelProvider(requireActivity()).get(FutureViewModel.class);
@@ -46,6 +47,7 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		Log.e(TAG, "created view");
 		setUpBalances(view);
 		setUpFuture(view);
 		setUpHistory(view);

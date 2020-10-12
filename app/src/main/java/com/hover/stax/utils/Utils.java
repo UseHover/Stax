@@ -45,7 +45,9 @@ public class Utils {
 	}
 
 	public static String formatAmount(String number) {
-		return formatAmount(getAmount(number));
+		try {
+			return formatAmount(getAmount(number));
+		} catch (Exception e) { return number; }
 	}
 
 	public static String formatAmount(Double number) {
