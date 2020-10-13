@@ -26,14 +26,6 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 	private List<Channel> channels;
 
 	private final BalanceListener balanceListener;
-	private Activity activity;
-	private BubbleShowCaseListener balanceShowcaseListener;
-
-	void balanceShowcase(BubbleShowCaseListener balanceShowcaseListener, Activity activity) {
-		this.balanceShowcaseListener = balanceShowcaseListener;
-		this.activity = activity;
-		this.notifyDataSetChanged();
-	}
 
 	public BalanceAdapter(List<Channel> channels, BalanceListener listener) {
 		this.channels = channels;
@@ -59,23 +51,12 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 		//holder.refreshButton.setImageTintList(Color.parseColor(channel.secondaryColorHex));
 		holder.amount.setTextColor(Color.parseColor(channel.secondaryColorHex));
 		UIHelper.setColoredDrawable(holder.refreshButton, R.drawable.ic_refresh_white_24dp, Color.parseColor(channel.secondaryColorHex));
-
-		if (position == 0 && activity != null && balanceShowcaseListener != null) {
-			BubbleShowCase.Companion.showCase(
-					Utils.getStaxString(R.string.keep_accounts_private),
-					Utils.getStaxString(R.string.keep_accounts_private_desc),
-					BubbleShowCase.ArrowPosition.TOP,
-					balanceShowcaseListener,
-					holder.dragIcon,
-					activity);
-		}
 	}
 
 	class BalanceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		private TextView channelName, channelId, amount;
 		private ImageButton refreshButton;
 		private FrameLayout balanced_swiped_layout;
-		private ImageView dragIcon;
 
 		public BalanceViewHolder(@NonNull View itemView) {
 			super(itemView);
@@ -86,7 +67,6 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 			refreshButton.setOnClickListener(this);
 			amount = itemView.findViewById(R.id.balance_amount);
 			balanced_swiped_layout = itemView.findViewById(R.id.balanced_swiped_layout);
-			dragIcon = itemView.findViewById(R.id.balance_drag);
 		}
 
 		@Override

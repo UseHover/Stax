@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.transactions.TransactionContract;
-import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
@@ -59,7 +58,7 @@ public class TransactionDetailsFragment extends Fragment {
 		});
 
 		RecyclerView messagesView = view.findViewById(R.id.convo_recyclerView);
-		messagesView.setLayoutManager(UIHelper.setMainLinearManagers(ApplicationInstance.getContext()));
+		messagesView.setLayoutManager(UIHelper.setMainLinearManagers(view.getContext()));
 		messagesView.setHasFixedSize(true);
 		viewModel.getMessages().observe(getViewLifecycleOwner(), ussdCallResponses -> {
 			if (ussdCallResponses != null)
@@ -67,7 +66,7 @@ public class TransactionDetailsFragment extends Fragment {
 		});
 
 		RecyclerView smsView = view.findViewById(R.id.sms_recyclerView);
-		smsView.setLayoutManager(UIHelper.setMainLinearManagers(ApplicationInstance.getContext()));
+		smsView.setLayoutManager(UIHelper.setMainLinearManagers(view.getContext()));
 		smsView.setHasFixedSize(true);
 		viewModel.getSms().observe(getViewLifecycleOwner(), smses -> {
 			if (smses != null) smsView.setAdapter(new MessagesAdapter(smses));

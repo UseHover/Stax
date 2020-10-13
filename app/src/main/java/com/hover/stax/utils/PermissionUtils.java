@@ -1,14 +1,11 @@
 package com.hover.stax.utils;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
 import androidx.core.app.ActivityCompat;
-
-import com.hover.stax.ApplicationInstance;
 
 public class PermissionUtils {
 
@@ -32,11 +29,11 @@ public class PermissionUtils {
 		return grantResults.length > 0;
 	}
 
-	public static boolean hasContactPermission() {
-		return PermissionUtils.has(new String[]{Manifest.permission.READ_CONTACTS}, ApplicationInstance.getContext());
+	public static boolean hasContactPermission(Context c) {
+		return PermissionUtils.has(new String[]{Manifest.permission.READ_CONTACTS}, c);
 	}
 
-	public static boolean hasSendSMSPermission() {
-		return PermissionUtils.has(new String[]{Manifest.permission.SEND_SMS}, ApplicationInstance.getContext());
+	public static boolean hasSendSMSPermission(Context c) {
+		return PermissionUtils.has(new String[]{Manifest.permission.SEND_SMS}, c);
 	}
 }

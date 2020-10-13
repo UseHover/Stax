@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="StaxTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorAccent">@color/colorAccent</item>
+
+		<item name="windowActionBar">true</item>
+		<item name="android:windowBackground">@color/colorPrimaryDark</item>
+		<item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+		<item name="android:fitsSystemWindows">true</item>
+
+		<item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
+		<item name="materialCalendarFullscreenTheme">
+			@style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen
+		</item>
+		<item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar
+		</item>
+
+		<item name="android:textColor">@color/offWhite</item>
+		<item name="android:buttonStyle">@style/StaxButton</item>
+		<item name="buttonStyle">@style/StaxButton</item>
+	</style>
+</resources>

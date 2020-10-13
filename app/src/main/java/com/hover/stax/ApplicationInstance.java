@@ -1,20 +1,14 @@
 package com.hover.stax;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
-import android.content.Context;
 
 import com.hover.stax.utils.fonts.FontReplacer;
 import com.hover.stax.utils.fonts.Replacer;
 import com.yariksoffice.lingver.Lingver;
 
-import java.util.HashMap;
 import java.util.Locale;
 
 public class ApplicationInstance extends Application {
-	@SuppressLint("StaticFieldLeak")
-	private static Context context;
-	private static HashMap<String, String> currencyMap;
 
 	@Override
 	public void onCreate() {
@@ -25,11 +19,6 @@ public class ApplicationInstance extends Application {
 		replacer.setDefaultFont("Effra_Regular.ttf");
 		replacer.setThinFont("Effra_Regular.ttf");
 		replacer.applyFont();
-		context = this;
 		Lingver.init(this, Locale.getDefault());
-	}
-
-	public static Context getContext() {
-		return context;
 	}
 }

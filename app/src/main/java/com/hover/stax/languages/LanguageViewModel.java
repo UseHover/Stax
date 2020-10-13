@@ -1,20 +1,22 @@
 package com.hover.stax.languages;
 
+import android.app.Application;
+
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.yariksoffice.lingver.Lingver;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LanguageViewModel extends ViewModel {
+public class LanguageViewModel extends AndroidViewModel {
 	private MutableLiveData<List<Lang>> languages;
 
-	public LanguageViewModel() {
+	public LanguageViewModel(Application application) {
+		super(application);
 		languages = new MutableLiveData<>();
 		languages.setValue(getLanguages());
 	}
@@ -24,7 +26,7 @@ public class LanguageViewModel extends ViewModel {
 	}
 
 	private List<Lang> getLanguages() {
-		String[] languageCodes = ApplicationInstance.getContext().getResources().getStringArray(R.array.supported_languages_code);
+		String[] languageCodes = getApplication().getResources().getStringArray(R.array.supported_languages_code);
 		ArrayList<Lang> langs = new ArrayList<>();
 		langs.add(new Lang(Lingver.getInstance().getLanguage()));
 		for (String code : languageCodes) {

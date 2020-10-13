@@ -83,7 +83,7 @@ public class ScheduleDetailFragment extends Fragment {
 				NavHostFragment.findNavController(ScheduleDetailFragment.this).navigate(R.id.navigation_home);
 			})
 			.isDestructive()
-			.show();
+			.showIt();
 	}
 
 	private void setUpTestBtn(View view, Schedule schedule) {

@@ -7,7 +7,6 @@ import android.util.Log;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
-import com.hover.stax.ApplicationInstance;
 
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
@@ -92,9 +91,5 @@ public class Utils {
 			Log.d(TAG, "Error getting build config value", e);
 		}
 		return false;
-	}
-
-	public static String getStaxString(int resId) {
-		return ApplicationInstance.getContext().getResources().getString(resId);
 	}
 }

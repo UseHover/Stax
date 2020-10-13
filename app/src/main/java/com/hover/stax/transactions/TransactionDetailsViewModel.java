@@ -12,7 +12,6 @@ import androidx.lifecycle.Transformations;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.sms.MessageLog;
 import com.hover.sdk.transactions.Transaction;
-import com.hover.stax.ApplicationInstance;
 import com.hover.stax.actions.Action;
 import com.hover.stax.database.DatabaseRepo;
 
@@ -97,6 +96,6 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 	}
 
 	private MessageLog getSMSMessageByUUID(String uuid) {
-		return Hover.getSMSMessageByUUID(uuid, ApplicationInstance.getContext());
+		return Hover.getSMSMessageByUUID(uuid, getApplication());
 	}
 }

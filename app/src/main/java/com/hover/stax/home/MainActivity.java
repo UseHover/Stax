@@ -30,6 +30,7 @@ import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
@@ -39,14 +40,16 @@ import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RapidFloating
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements BalancesViewModel.RunBalanceListener,
-																	   BalanceAdapter.BalanceListener, BiometricChecker.AuthListener,
-																	   RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener {
+public class MainActivity extends AppCompatActivity implements
+		BalancesViewModel.RunBalanceListener,
+		BalanceAdapter.BalanceListener,
+		BiometricChecker.AuthListener,
+		RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener {
+
 	final public static String TAG = "MainActivity";
 	final public static int ADD_SERVICE = 200;
 	private BalancesViewModel balancesViewModel;
 	private RapidFloatingActionHelper rfabHelper;
-	public static boolean CHECK_SHOWCASE = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +57,6 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 
 		setContentView(R.layout.activity_main);
 		BottomNavigationView navView = findViewById(R.id.nav_view);
-		// Passing each menu ID as a set of Ids because each
-		// menu should be considered as top level destinations.
 		AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
 				R.id.navigation_home, R.id.navigation_security).build();
 		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 
 		balancesViewModel = new ViewModelProvider(this).get(BalancesViewModel.class);
 		balancesViewModel.setListener(this);
+		balancesViewModel.getSelectedChannels().observe(this, channels -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel"));
 		balancesViewModel.getBalanceActions().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel"));
 		balancesViewModel.getToRun().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel"));
 
@@ -165,15 +167,13 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 		if ((requestCode == TransferActivity.TRANSFER_REQUEST || requestCode < 100) && resultCode == RESULT_OK)
 			onProbableHoverCall(data);
 
-		Log.e(TAG, "Got result, code: " + resultCode);
 		if (requestCode < 100) { // Balance call
 			balancesViewModel.setRan(requestCode);
-		} else if (requestCode == ADD_SERVICE && resultCode == RESULT_OK) {
-			balancesViewModel.setRunning();
-		}
+		} else if (requestCode == ADD_SERVICE)
+			onAddServices(resultCode);
 
 		if ((requestCode == RequestActivity.REQUEST_REQUEST) && resultCode == RESULT_OK)
-			UIHelper.flashMessage(this, findViewById(R.id.content), getString(R.string.request_sent));
+			UIHelper.flashMessage(this, findViewById(R.id.home_root), getString(R.string.request_sent));
 	}
 
 	private void onProbableHoverCall(Intent data) {
@@ -181,9 +181,17 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 			Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
 			new ViewModelProvider(this).get(TransactionHistoryViewModel.class).saveTransaction(data, this);
 		} else if (data.getAction().equals(TransferActivity.SCHEDULED)) {
-			UIHelper.flashMessage(this, findViewById(R.id.content),
+			UIHelper.flashMessage(this, findViewById(R.id.home_root),
 					getString(R.string.schedule_created, DateUtils.humanFriendlyDate(data.getIntExtra(Schedule.DATE_KEY, 0))));
 		}
+	}
+
+	private void onAddServices(int resultCode) {
+		if (resultCode == RESULT_OK)
+			balancesViewModel.setRunning();
+
+		if (balancesViewModel.hasChannels() && Utils.getSharedPrefs(this).getInt(ShowcaseExecutor.SHOW_TUTORIAL, 0) == 0)
+			new ShowcaseExecutor(this, findViewById(R.id.home_root)).startShowcasing();
 	}
 
 	@Override

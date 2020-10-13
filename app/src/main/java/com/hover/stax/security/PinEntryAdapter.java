@@ -9,8 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
@@ -19,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.utils.UIHelper;
@@ -27,8 +24,6 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PinEntryAdapter extends RecyclerView.Adapter<PinEntryAdapter.PinEntryViewHolder> {
 	private List<Channel> channels;
@@ -65,7 +60,7 @@ public class PinEntryAdapter extends RecyclerView.Adapter<PinEntryAdapter.PinEnt
 		});
 
 		if (channel.pin != null && !channel.pin.isEmpty()) {
-			holder.input.setText(KeyStoreExecutor.decrypt(channel.pin, ApplicationInstance.getContext()));
+			holder.input.setText(KeyStoreExecutor.decrypt(channel.pin, holder.view.getContext()));
 		}
 	}
 

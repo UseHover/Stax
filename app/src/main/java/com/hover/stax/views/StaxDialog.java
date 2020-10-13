@@ -68,9 +68,10 @@ public class StaxDialog extends AlertDialog {
 		return this;
 	}
 
-	public void show() {
+	public AlertDialog showIt() {
 		dialog = new AlertDialog.Builder(context, R.style.StaxDialog).setView(view).create();
 		dialog.show();
+		return dialog;
 	}
 
 	private View.OnClickListener negListener = view -> {

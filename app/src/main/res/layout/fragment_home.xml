@@ -6,11 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".home.HomeFragment" >
 
-	<LinearLayout
+	<LinearLayout android:id="@+id/home_content"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:orientation="vertical"
-	    android:id="@+id/fragment_home_id"
 		android:layout_marginTop="@dimen/margin_13">
 
 		<include layout="@layout/home_card_header" />

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -85,7 +84,7 @@ public class RequestDetailFragment extends Fragment {
 				NavHostFragment.findNavController(RequestDetailFragment.this).navigate(R.id.navigation_home);
 			})
 			.isDestructive()
-			.show();
+			.showIt();
 	}
 
 	private void setUpResendBtn(View view, Request request) {

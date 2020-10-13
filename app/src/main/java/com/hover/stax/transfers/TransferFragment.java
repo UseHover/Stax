@@ -212,7 +212,7 @@ public class TransferFragment extends Fragment {
 	private void createContactSelector() {
 		contactButton.setOnClickListener(view -> {
 			Amplitude.getInstance().logEvent(getString(R.string.try_contact_select));
-			if (PermissionUtils.hasContactPermission()) {
+			if (PermissionUtils.hasContactPermission(view.getContext())) {
 				Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
 				startActivityForResult(contactPickerIntent, READ_CONTACT);
 			} else {
@@ -225,7 +225,7 @@ public class TransferFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == READ_CONTACT && resultCode == Activity.RESULT_OK) {
-			StaxContactModel staxContactModel = new StaxContactModel(data);
+			StaxContactModel staxContactModel = new StaxContactModel(data, getContext());
 			if (staxContactModel.getPhoneNumber() != null) {
 				Amplitude.getInstance().logEvent(getString(R.string.contact_select_success));
 				recipientInput.setText(Utils.normalizePhoneNumber(staxContactModel.getPhoneNumber(), transferViewModel.getActiveChannel().getValue().countryAlpha2));

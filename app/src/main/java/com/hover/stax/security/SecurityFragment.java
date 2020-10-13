@@ -142,7 +142,7 @@ public class SecurityFragment extends Fragment {
 				})
 				.setNegButton(R.string.no, null)
 				.isDestructive()
-				.show();
+				.showIt();
 		});
 	}
 

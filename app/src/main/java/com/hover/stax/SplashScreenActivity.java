@@ -18,7 +18,6 @@ import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.schedules.ScheduleWorker;
-import com.hover.stax.security.PinsActivity;
 import com.hover.stax.utils.Utils;
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -33,7 +32,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 		createNotificationChannel();
 		startWorkers();
 
-		if (Utils.getSharedPrefs(ApplicationInstance.getContext()).getInt(LANGUAGE_CHECK, 0) == 1)
+		if (Utils.getSharedPrefs(this).getInt(LANGUAGE_CHECK, 0) == 1)
 			startActivity(new Intent(this, MainActivity.class));
 		else
 			startActivity(new Intent(this, SelectLanguageActivity.class));
