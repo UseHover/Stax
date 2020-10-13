@@ -28,7 +28,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (Utils.selfDestruct(this)) {
+		if (SelfDestruct.isTime(this)) {
 			startActivity(new Intent(this, SelfDestruct.class));
 			return;
 		}

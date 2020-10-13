@@ -32,7 +32,7 @@
 		<item name="android:radius">5dp</item>
 		<item name="android:textColor">@color/offWhite</item>
 		<item name="android:textSize">16sp</item>
-		<item name="fontFamily">font-normal</item>
+		<item name="fontFamily">font-medium</item>
 		<item name="android:fontFamily">font-medium</item>
 		<item name="android:background">@drawable/button_bg</item>
 		<item name="elevation">5dp</item>
@@ -50,8 +50,6 @@
 		<item name="textAllCaps">false</item>
 		<item name="android:fontFamily">font-medium</item>
 		<item name="fontFamily">font-medium</item>
-		<item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlayExtended</item>
-		<item name="android:fitsSystemWindows">true</item>
 	</style>
 
 	<style name="ShapeAppearanceOverlayExtended" parent="">

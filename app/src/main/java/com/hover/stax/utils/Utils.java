@@ -83,7 +83,7 @@ public class Utils {
 	}
 
 	@SuppressWarnings("SameParameterValue")
-	private static Object getBuildConfigValue(Context context, String fieldName) {
+	public static Object getBuildConfigValue(Context context, String fieldName) {
 		try {
 			Class<?> clazz = Class.forName(getPackage(context) + ".BuildConfig");
 			Field field = clazz.getField(fieldName);
@@ -92,11 +92,5 @@ public class Utils {
 			Log.d(TAG, "Error getting build config value", e);
 		}
 		return false;
-	}
-
-	public static boolean selfDestruct(Context c) {
-		long currentTime = new Date().getTime();
-		long selfDestructTime = Long.parseLong(getBuildConfigValue(c, "SELF_DESTRUCT").toString());
-		return  currentTime <= selfDestructTime;
 	}
 }

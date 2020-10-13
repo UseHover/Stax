@@ -15,48 +15,45 @@
 	    android:layout_height="match_parent"
 	    app:cardElevation="10dp"
 		app:cardCornerRadius="5dp"
+		app:cardBackgroundColor="@color/cardViewColor"
 	    android:layout_marginHorizontal="@dimen/margin_68"
 	    android:layout_marginVertical="@dimen/margin_150">
 
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:paddingVertical="@dimen/margin_16"
-	    android:orientation="vertical"
-	    android:background="@color/colorPrimary"
-	    >
-
-		<ImageView
-		    android:layout_width="@dimen/margin_150"
-		    android:layout_height="38dp"
-		    android:layout_gravity="start"
-		    android:src="@drawable/stax_slim"/>
-
-		<TextView
+		<LinearLayout
 		    android:layout_width="match_parent"
-		    android:layout_height="0dp"
-		    android:textColor="@color/offWhite"
-		    android:layout_weight="1"
-		    android:textSize="@dimen/text_16"
-		    android:fontFamily="font-normal"
-		    android:layout_marginTop="@dimen/margin_16"
-		    android:paddingHorizontal="@dimen/margin_16"
-		    android:text="@string/self_destruct_content"/>
+		    android:layout_height="match_parent"
+		    android:padding="@dimen/margin_13"
+		    android:orientation="vertical" >
 
-		<androidx.appcompat.widget.AppCompatButton
-		    android:id="@+id/continueSelfDestructButton"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:text="@string/continue_text"
-		    android:layout_gravity="end|bottom"
-		    android:layout_marginHorizontal="@dimen/margin_16"
-		    android:layout_marginTop="@dimen/margin_21"
-		    android:background="@drawable/button_bg_colored"
-		    android:textColor="@color/colorPrimary"
-		    android:textSize="@dimen/text_16"
-		    android:fontFamily="font-medium" />
+			<ImageView
+			    android:layout_width="65dp"
+			    android:layout_height="@dimen/margin_21"
+			    android:layout_gravity="start"
+			    android:src="@drawable/stax_slim"/>
 
-	</LinearLayout>
+			<TextView
+			    android:layout_width="match_parent"
+			    android:layout_height="0dp"
+			    android:textColor="@color/offWhite"
+			    android:layout_weight="1"
+			    android:textSize="@dimen/text_13"
+			    android:fontFamily="font-normal"
+			    android:layout_marginTop="@dimen/margin_21"
+			    android:text="@string/self_destruct_content"/>
+
+			<androidx.appcompat.widget.AppCompatButton
+			    android:id="@+id/continueSelfDestructButton"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/continue_text"
+			    android:layout_gravity="end|bottom"
+				android:textColor="@color/colorPrimaryDark"
+				android:backgroundTint="@color/colorAccent"
+				style="@style/StaxButton"
+			    android:layout_marginTop="@dimen/margin_21"
+				android:onClick="downloadLatest"/>
+
+		</LinearLayout>
 	</androidx.cardview.widget.CardView>
 
 </RelativeLayout>
