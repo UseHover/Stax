@@ -165,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 		if ((requestCode == TransferActivity.TRANSFER_REQUEST || requestCode < 100) && resultCode == RESULT_OK)
 			onProbableHoverCall(data);
 
+		Log.e(TAG, "Got result, code: " + resultCode);
 		if (requestCode < 100) { // Balance call
 			balancesViewModel.setRan(requestCode);
 		} else if (requestCode == ADD_SERVICE && resultCode == RESULT_OK) {
@@ -176,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 	}
 
 	private void onProbableHoverCall(Intent data) {
-		if (data.getAction().equals(TransferActivity.TRANSFERED)) {
+		if (!data.getAction().equals(TransferActivity.SCHEDULED)) {
 			Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
 			new ViewModelProvider(this).get(TransactionHistoryViewModel.class).saveTransaction(data, this);
 		} else if (data.getAction().equals(TransferActivity.SCHEDULED)) {

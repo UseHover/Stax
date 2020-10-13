@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:orientation="vertical">
+
+	<androidx.recyclerview.widget.RecyclerView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/margin_21"
+		android:id="@+id/selected_recycler" />
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/margin_8"
+		android:lineSpacingExtra="@dimen/text_spacing_8"
+		android:textColor="@color/offWhite"
+		android:text="@string/hover_permission"/>
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:drawableStartCompat="@drawable/ic_check"
+		android:drawablePadding="@dimen/margin_5"
+		android:textColor="@color/offWhite"
+		android:text="@string/sms_permission"/>
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:drawableStartCompat="@drawable/ic_check"
+		android:drawablePadding="@dimen/margin_5"
+		android:textColor="@color/offWhite"
+		android:text="@string/overlay_permission"/>
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:drawableStartCompat="@drawable/ic_check"
+		android:drawablePadding="@dimen/margin_5"
+		android:textColor="@color/offWhite"
+		android:text="@string/accessibility_permission"/>
+
+</LinearLayout>

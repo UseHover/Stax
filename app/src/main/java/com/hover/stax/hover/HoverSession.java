@@ -7,6 +7,7 @@ import android.util.Log;
 import androidx.fragment.app.Fragment;
 
 import com.amplitude.api.Amplitude;
+import com.hover.sdk.api.Hover;
 import com.hover.sdk.api.HoverParameters;
 import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
@@ -29,6 +30,7 @@ final public class HoverSession {
 	private int requestCode, finalScreenTime;
 
 	private HoverSession(Builder b) {
+		Hover.setAfterPermissionReturnActivity(Hover.DEFAULT_PERM_ACTIVITY, b.activity);
 		frag = b.fragment;
 		channel = b.channel;
 		requestCode = b.requestCode;

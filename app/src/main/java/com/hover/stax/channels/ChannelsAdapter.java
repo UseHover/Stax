@@ -69,7 +69,8 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.Channe
 
 		@Override
 		public void onClick(View v) {
-			selectListener.onTap(Integer.parseInt(id.getText().toString()));
+			if (selectListener != null)
+				selectListener.onTap(Integer.parseInt(id.getText().toString()));
 		}
 	}
 

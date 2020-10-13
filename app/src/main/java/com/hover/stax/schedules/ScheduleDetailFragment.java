@@ -1,8 +1,6 @@
 package com.hover.stax.schedules;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
@@ -23,6 +20,7 @@ import com.hover.stax.R;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.views.StaxDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,21 +69,21 @@ public class ScheduleDetailFragment extends Fragment {
 		view.findViewById(R.id.reasonRow).setVisibility(schedule.reason == null || schedule.reason.isEmpty() ? View.GONE : View.VISIBLE);
 		((TextView) view.findViewById(R.id.details_reason)).setText(schedule.reason);
 
-		view.findViewById(R.id.cancel_btn).setOnClickListener(btn -> showConfirmDialog());
+		((Button) view.findViewById(R.id.cancel_btn)).setOnClickListener((View.OnClickListener) btn -> showConfirmDialog(btn));
 	}
 
-	private void showConfirmDialog() {
-		AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.StaxDialog))
-										  .setTitle(R.string.cancel_future_head)
-										  .setMessage(R.string.cancel_future_msg)
-										  .setNegativeButton(R.string.back, (dialog, whichButton) -> {
-										  })
-										  .setPositiveButton(R.string.cancel_future_btn, (dialog, whichButton) -> {
-											  viewModel.deleteSchedule();
-											  UIHelper.flashMessage(getContext(), getString(R.string.cancel_future_success));
-											  NavHostFragment.findNavController(ScheduleDetailFragment.this).navigate(R.id.navigation_home);
-										  }).create();
-		alertDialog.show();
+	private void showConfirmDialog(View v) {
+		new StaxDialog(v.getContext(), this)
+			.setDialogTitle(R.string.cancel_future_head)
+			.setDialogMessage(R.string.cancel_future_msg)
+			.setNegButton(R.string.back, btn -> {})
+			.setPosButton(R.string.cancel_future_btn, btn -> {
+				viewModel.deleteSchedule();
+				UIHelper.flashMessage(getContext(), getString(R.string.cancel_future_success));
+				NavHostFragment.findNavController(ScheduleDetailFragment.this).navigate(R.id.navigation_home);
+			})
+			.isDestructive()
+			.show();
 	}
 
 	private void setUpTestBtn(View view, Schedule schedule) {

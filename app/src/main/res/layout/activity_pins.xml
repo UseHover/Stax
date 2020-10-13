@@ -4,7 +4,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	tools:context=".channels.ChannelsActivity">
+	tools:context=".security.PinsActivity">
 
 	<androidx.core.widget.NestedScrollView
 		android:layout_width="match_parent"
@@ -15,18 +15,7 @@
 			android:layout_height="match_parent"
 			android:name="androidx.navigation.fragment.NavHostFragment"
 			app:defaultNavHost="true"
-			app:navGraph="@navigation/channels_navigation" />
+			app:navGraph="@navigation/pins_navigation" />
 
 	</androidx.core.widget.NestedScrollView>
-
-	<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-		android:id="@+id/continue_btn"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-		android:layout_margin="@dimen/margin_13"
-		android:layout_gravity="end|bottom"
-		style="@style/StaxButtonColored"
-	    android:text="@string/continue_text"
-	    android:fontFamily="font-medium"
-		android:visibility="gone"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

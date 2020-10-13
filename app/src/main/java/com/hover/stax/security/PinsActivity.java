@@ -6,60 +6,66 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.navigation.Navigation;
 
 import com.amplitude.api.Amplitude;
+import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.home.MainActivity;
-import com.hover.stax.utils.UIHelper;
+import com.hover.stax.views.StaxDialog;
 
-public class PinsActivity extends AppCompatActivity implements PinEntryAdapter.UpdateListener {
+public class PinsActivity extends AppCompatActivity {
 
 	private PinsViewModel pinViewModel;
-	private PinEntryAdapter pinEntryAdapter;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.pins_entry_layout);
+		setContentView(R.layout.activity_pins);
 		pinViewModel = new ViewModelProvider(this).get(PinsViewModel.class);
 
-		RecyclerView pinRecyclerView = findViewById(R.id.pin_recyclerView);
-		pinViewModel.getSelectedChannels().observe(this, channels -> {
-			pinRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(this));
-			pinRecyclerView.setHasFixedSize(true);
-			pinEntryAdapter = new PinEntryAdapter(channels, this);
-			pinRecyclerView.setAdapter(pinEntryAdapter);
-		});
-
-		findViewById(R.id.cancel_button).setOnClickListener(view -> {
-			Amplitude.getInstance().logEvent(getString(R.string.skipped_pin_entry));
-			MainActivity.CHECK_SHOWCASE = true;
-			setResult(RESULT_CANCELED);
-			finish();
-		});
-
-		findViewById(R.id.continue_button).setOnClickListener(continueListener);
-
-//		if (!((KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardSecure())
-//			Snackbar.make(findViewById(R.id.root), R.string.insecure_warning)
-//				.setAction(R.string.skip, skipListener).show();
-//		else
-//			UIHelper.flashMessage(this, "Device is secure");
+		if (new PermissionHelper(this).hasAllPerms())
+			Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_pin_entry);
 	}
 
-	private View.OnClickListener continueListener = new View.OnClickListener() {
-		@Override
-		public void onClick(View view) {
-			Amplitude.getInstance().logEvent(getString(R.string.completed_pin_entry));
-			pinViewModel.savePins(PinsActivity.this);
-			MainActivity.CHECK_SHOWCASE = true;
-			setResult(RESULT_OK);
-			finish();
-		}
-	};
+	public void done(View view) {
+		Amplitude.getInstance().logEvent(getString(R.string.completed_pin_entry));
+		pinViewModel.savePins(PinsActivity.this);
+		balanceAsk();
+	}
 
-	public void onUpdate(int id, String pin) {
-		pinViewModel.setPin(id, pin);
+	public void checkBalances() {
+		MainActivity.CHECK_SHOWCASE = true;
+		setResult(RESULT_OK);
+		finish();
+	}
+
+	public void cancel(View view) {
+		MainActivity.CHECK_SHOWCASE = true;
+		setResult(RESULT_CANCELED);
+		finish();
+	}
+
+	public void balanceAsk() {
+		new StaxDialog(this)
+			.setDialogMessage(R.string.check_balance_ask)
+			.setNegButton(R.string.skip, (View.OnClickListener) btn -> cancel(null))
+			.setPosButton(R.string.check_balances, (View.OnClickListener) btn -> checkBalances())
+			.show();
+	}
+
+	public void skipPins(View view) {
+		new StaxDialog(this)
+			.setDialogMessage(R.string.ask_every_time)
+			.setPosButton(R.string.ok, (View.OnClickListener) btn -> balanceAsk())
+			.show();
+	}
+
+	public void learnMore(View view) {
+		new StaxDialog(this)
+			.setDialogTitle(R.string.about_our_security)
+			.setDialogMessage(R.string.about_our_security_content)
+			.setPosButton(R.string.ok, (View.OnClickListener) btn -> {})
+			.show();
 	}
 }

@@ -1,25 +1,23 @@
 package com.hover.stax.channels;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.navigation.Navigation;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.WorkManager;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
+import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
+import com.hover.stax.security.PermissionsFragment;
 import com.hover.stax.security.PinsActivity;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
@@ -30,7 +28,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapter.SelectListener {
+public class ChannelsActivity extends AppCompatActivity {
 	public final static String TAG = "ChannelsActivity";
 
 	ChannelListViewModel channelViewModel;
@@ -41,90 +39,28 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 		WorkManager.getInstance(this).beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue();
 		setContentView(R.layout.activity_channels);
 		channelViewModel = new ViewModelProvider(this).get(ChannelListViewModel.class);
+		channelViewModel.getSelected().observe(this, this::onSelectedUpdate);
 
-		if (!PermissionUtils.hasPhonePerm(this))
-			PermissionUtils.requestPhonePerms(this, 0);
-		else init();
+		if (new PermissionHelper(this).hasPhonePerm())
+			goToChannelSelection();
 	}
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		if (PermissionUtils.permissionsGranted(grantResults))
-			init();
+		if (requestCode == PermissionsFragment.PHONE_REQUEST && PermissionUtils.permissionsGranted(grantResults))
+			goToChannelSelection();
 	}
 
-	private void init() {
+	private void goToChannelSelection() {
 		Hover.updateSimInfo(this);
-		addChannels();
-		watchSelected();
+		Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_channels);
+		findViewById(R.id.continue_btn).setVisibility(View.VISIBLE);
 	}
 
-	private void addChannels() {
-		channelViewModel.getSimChannels().observe(this, channels -> {
-			if (channels.size() > 0) {
-				findViewById(R.id.sim_card).setVisibility(View.VISIBLE);
-				findViewById(R.id.all_card).setVisibility(View.GONE);
-				fillSection(findViewById(R.id.sim_card), getString(R.string.sims_section), channels);
-			} else {
-				findViewById(R.id.sim_card).setVisibility(View.GONE);
-				findViewById(R.id.all_card).setVisibility(View.VISIBLE);
-			}
-		});
-
-		channelViewModel.getCountryChannels().observe(this, channels -> {
-			((LinearLayout) findViewById(R.id.country_wrapper)).removeAllViews();
-			if (channels.size() > 0 && channelViewModel.simCountryList.getValue() != null) {
-				for (String countryAlpha2 : channelViewModel.simCountryList.getValue()) {
-					addCountrySection(getString(R.string.country_section, countryAlpha2.toUpperCase()), getCountryChannels(countryAlpha2, channels));
-				}
-			}
-		});
-
-		channelViewModel.getChannels().observe(this, channels -> {
-			fillSection(findViewById(R.id.all_card), getString(R.string.all_section), channels);
-		});
-	}
-
-	private void fillSection(View card, String title, List<Channel> channels) {
-		if (channels.size() == 0) {
-			title = getString(R.string.loading);
-		}
-		((TextView) card.findViewById(R.id.title)).setText(title);
-		GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4, GridLayoutManager.VERTICAL, false);
-		ChannelsAdapter channelsAdapter = new ChannelsAdapter(channels, this);
-		RecyclerView view = card.findViewById(R.id.section_recycler);
-		view.setHasFixedSize(true);
-		view.setLayoutManager(gridLayoutManager);
-		view.setAdapter(channelsAdapter);
-		channelViewModel.getSelected().observe(ChannelsActivity.this, channelsAdapter::updateSelected);
-	}
-
-	private void addCountrySection(String sectionTitle, List<Channel> channels) {
-		if (channels.size() > 0) {
-			LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View section = inflater.inflate(R.layout.channel_card_grid, null);
-			fillSection(section, sectionTitle, channels);
-			((LinearLayout) findViewById(R.id.country_wrapper)).addView(section);
-		}
-	}
-
-	private List<Channel> getCountryChannels(String countryAlpha2, List<Channel> channels) {
-		List<Channel> countryChannels = new ArrayList<>();
-		for (int i = 0; i < channels.size(); i++) {
-			if (countryAlpha2.equals(channels.get(i).countryAlpha2.toUpperCase()))
-				countryChannels.add(channels.get(i));
-		}
-		return countryChannels;
-	}
-
-	private void watchSelected() {
-		channelViewModel.getSelected().observe(this, this::onDone);
-	}
-
-	private void onDone(List<Integer> ids) {
+	private void onSelectedUpdate(List<Integer> ids) {
 		if (ids.size() > 0) {
-			findViewById(R.id.choose_serves_done).setOnClickListener(view -> {
+			findViewById(R.id.continue_btn).setOnClickListener(view -> {
 				JSONObject event = new JSONObject();
 				try {
 					event.put(getString(R.string.account_select_count_key), ids.size());
@@ -134,12 +70,8 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 				saveAndContinue();
 			});
 		} else {
-			findViewById(R.id.choose_serves_done).setOnClickListener(view -> UIHelper.flashMessage(ChannelsActivity.this, getString(R.string.no_selection_error)));
+			findViewById(R.id.continue_btn).setOnClickListener(view -> UIHelper.flashMessage(ChannelsActivity.this, getString(R.string.no_selection_error)));
 		}
-	}
-
-	public void onTap(int id) {
-		channelViewModel.setSelected(id);
 	}
 
 	private void saveAndContinue() {
@@ -150,7 +82,10 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		setResult(RESULT_OK, addReturnData(new Intent()));
+		if (resultCode == RESULT_OK)
+			setResult(RESULT_OK, addReturnData(new Intent()));
+		else
+			setResult(RESULT_CANCELED);
 		finish();
 	}
 
@@ -161,5 +96,16 @@ public class ChannelsActivity extends AppCompatActivity implements ChannelsAdapt
 			i.putExtra("selected", bundle);
 		}
 		return i;
+	}
+
+	@Override
+	public void onBackPressed() {
+		cancel(null);
+		super.onBackPressed();
+	}
+
+	public void cancel(View view) {
+		setResult(RESULT_CANCELED);
+		finish();
 	}
 }
