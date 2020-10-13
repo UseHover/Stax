@@ -12,5 +12,9 @@ public class SelfDestruct extends AppCompatActivity {
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.self_destruct_layout);
+
+		findViewById(R.id.continueSelfDestructButton).setOnClickListener(view-> {
+
+		});
 	}
 }
