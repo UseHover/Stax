@@ -1,24 +1,17 @@
 package com.hover.stax.security;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.View;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
-import com.hover.stax.requests.RequestDetailFragment;
-import com.hover.stax.utils.UIHelper;
+import com.hover.stax.views.StaxDialog;
 
 public class PinsActivity extends AppCompatActivity {
 
@@ -51,28 +44,25 @@ public class PinsActivity extends AppCompatActivity {
 	}
 
 	public void balanceAsk() {
-		AlertDialog alertDialog = new AlertDialog.Builder(this, R.style.StaxDialog)
-			.setMessage(R.string.check_balance_ask)
-			.setNegativeButton(R.string.skip, (DialogInterface.OnClickListener) (dialog, whichButton) -> cancel(null))
-			.setPositiveButton(R.string.continue_text, (DialogInterface.OnClickListener) (dialog, whichButton) -> checkBalances())
-			.create();
-		alertDialog.show();
+		new StaxDialog(this)
+			.setDialogMessage(R.string.check_balance_ask)
+			.setNegButton(R.string.skip, (View.OnClickListener) btn -> cancel(null))
+			.setPosButton(R.string.check_balances, (View.OnClickListener) btn -> checkBalances())
+			.show();
 	}
 
 	public void skipPins(View view) {
-		AlertDialog alertDialog = new AlertDialog.Builder(this, R.style.StaxDialog)
-			.setMessage(R.string.ask_every_time)
-			.setPositiveButton(R.string.ok, (DialogInterface.OnClickListener) (dialog, whichButton) -> balanceAsk())
-			.create();
-		alertDialog.show();
+		new StaxDialog(this)
+			.setDialogMessage(R.string.ask_every_time)
+			.setPosButton(R.string.ok, (View.OnClickListener) btn -> balanceAsk())
+			.show();
 	}
 
 	public void learnMore(View view) {
-		AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.StaxDialog))
-			.setTitle(R.string.about_our_security)
-			.setMessage(R.string.about_our_security_content)
-			.setPositiveButton(R.string.ok, (DialogInterface.OnClickListener) (dialog, whichButton) -> {})
-			.create();
-		alertDialog.show();
+		new StaxDialog(this)
+			.setDialogTitle(R.string.about_our_security)
+			.setDialogMessage(R.string.about_our_security_content)
+			.setPosButton(R.string.ok, (View.OnClickListener) btn -> {})
+			.show();
 	}
 }

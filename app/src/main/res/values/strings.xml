@@ -77,6 +77,7 @@
 
 	<string name="balances">Balances</string>
 	<string name="balance">Balance</string>
+	<string name="check_balances">Check balances</string>
 	<string name="money_out">Money out this month</string>
 	<string name="money_in">Money in this month</string>
 	<string name="fees_description">Fees paid to %1$s this year</string>

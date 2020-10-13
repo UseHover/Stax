@@ -26,7 +26,8 @@
 				android:textAllCaps="true"
 				android:textAlignment="viewEnd"
 				android:fontFamily="font-bold"
-				android:textColor="@color/offWhite" />
+				android:textColor="@color/offWhite"
+				android:visibility="gone"/>
 		</LinearLayout>
 
 		<TextView android:id="@+id/message"

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.fragment.app.Fragment;
 
 import com.hover.stax.R;
 
@@ -25,14 +26,18 @@ public class StaxDialog extends AlertDialog {
 	View.OnClickListener customNegListener;
 	View.OnClickListener customPosListener;
 
-	public StaxDialog(@NonNull Activity c) {
+	public StaxDialog(@NonNull Activity a) { this(a, a.getLayoutInflater()); }
+
+	public StaxDialog(@NonNull Context c, Fragment frag) { this(c, frag.getLayoutInflater()); }
+
+	public StaxDialog(Context c, LayoutInflater inflater) {
 		super(c);
 		context = c;
-		LayoutInflater inflater = c.getLayoutInflater();
 		view = inflater.inflate(R.layout.stax_dialog, null);
 	}
 
 	public StaxDialog setDialogTitle(int title) {
+		view.findViewById(R.id.title).setVisibility(View.VISIBLE);
 		((TextView) view.findViewById(R.id.title)).setText(context.getString(title));
 		return this;
 	}
