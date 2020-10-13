@@ -21,6 +21,8 @@
 	<dimen name="margin_34">34dp</dimen>
 	<dimen name="margin_55">55dp</dimen>
 	<dimen name="margin_68">68dp</dimen>
+	<dimen name="margin_136">136dp</dimen>
+	<dimen name="margin_150">150dp</dimen>
 	<dimen name="editText_stroke_size">2dp</dimen>
 	<dimen name="editText_initial_stroke">1dp</dimen>
 	<dimen name="editText_corner">2dp</dimen>

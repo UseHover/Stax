@@ -21,6 +21,7 @@ import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.ChannelsActivity;
+import com.hover.stax.destruct.SelfDestruct;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.schedules.Schedule;
@@ -30,6 +31,7 @@ import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
@@ -52,6 +54,11 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		if(Utils.selfDestruct()) {
+			startActivity(new Intent(this, SelfDestruct.class));
+			return;
+		}
+
 		setContentView(R.layout.activity_main);
 		BottomNavigationView navView = findViewById(R.id.nav_view);
 		// Passing each menu ID as a set of Ids because each
@@ -70,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 
 		if (getIntent().getBooleanExtra(SecurityFragment.LANG_CHANGE, false))
 			navController.navigate(R.id.navigation_security);
+
 	}
 
 	void setupFloatingButton() {

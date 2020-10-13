@@ -214,4 +214,6 @@
 
 	<string name="hello_first_fragment">Hello first fragment</string>
 	<string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+	
+	<string name="self_destruct_content">This build of Stax has expired. \n\nDownload the latest build to keep using Stax.</string>
 </resources>

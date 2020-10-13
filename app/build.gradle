@@ -8,6 +8,7 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
+
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
 
@@ -28,7 +29,11 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            buildConfigField "String", "SELF_DESTRUCT", "\"1604063327000\""
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            buildConfigField "String", "SELF_DESTRUCT", "\"1604063327000\""
         }
     }
     bundle {
