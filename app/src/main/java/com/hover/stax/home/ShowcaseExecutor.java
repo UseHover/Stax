@@ -33,7 +33,6 @@ class ShowcaseExecutor {
 				stagedBubbleListener,
 				root.findViewById(R.id.home_stax_logo),
 				activity);
-			Utils.saveInt(ShowcaseExecutor.SHOW_TUTORIAL, 1, activity);
 		} catch (Exception ignored) { }
 	}
 
@@ -58,6 +57,7 @@ class ShowcaseExecutor {
 	}
 
 	private void showcaseNextStage(@NotNull BubbleShowCase bubbleShowCase) {
+		Utils.saveInt(ShowcaseExecutor.SHOW_TUTORIAL, 1, activity);
 		bubbleShowCase.dismiss();
 		switch (stage) {
 			case 0: showcaseSecondStage(); break;

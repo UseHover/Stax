@@ -29,7 +29,7 @@ public class Utils {
 	public static void saveInt(String key, int value, Context c) {
 		SharedPreferences.Editor editor = getSharedPrefs(c).edit();
 		editor.putInt(key, value);
-		editor.commit();
+		editor.apply();
 	}
 
 	public static String stripHniString(String hni) {

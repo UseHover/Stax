@@ -64,7 +64,7 @@
 		<item name="android:textColorHint">@color/offWhite</item>
 		<item name="hintTextColor">@color/offWhite</item>
 		<item name="android:textColor">@color/offWhite</item>
-		<item name="android:textSize">@dimen/text_16</item>
+		<item name="android:textSize">@dimen/text_13</item>
 		<item name="errorTextColor">@color/bright_red</item>
 		<item name="errorEnabled">true</item>
 	</style>

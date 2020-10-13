@@ -169,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements
 
 		if (requestCode < 100) { // Balance call
 			balancesViewModel.setRan(requestCode);
+			maybeRunShowcase();
 		} else if (requestCode == ADD_SERVICE)
 			onAddServices(resultCode);
 
@@ -189,7 +190,10 @@ public class MainActivity extends AppCompatActivity implements
 	private void onAddServices(int resultCode) {
 		if (resultCode == RESULT_OK)
 			balancesViewModel.setRunning();
+		maybeRunShowcase();
+	}
 
+	private void maybeRunShowcase() {
 		if (balancesViewModel.hasChannels() && Utils.getSharedPrefs(this).getInt(ShowcaseExecutor.SHOW_TUTORIAL, 0) == 0)
 			new ShowcaseExecutor(this, findViewById(R.id.home_root)).startShowcasing();
 	}
