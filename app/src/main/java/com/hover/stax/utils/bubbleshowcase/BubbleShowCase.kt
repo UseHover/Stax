@@ -15,7 +15,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
-import com.hover.stax.ApplicationInstance
 import com.hover.stax.R
 import java.lang.ref.WeakReference
 
@@ -415,16 +414,15 @@ class BubbleShowCase(builder: BubbleShowCaseBuilder) {
 	  }
 
 	  companion object {
-			fun showCase(title: String?, desc: String?, arrowPosition: ArrowPosition?, listener: BubbleShowCaseListener?, v: View?, activity: Activity?) {
-				  BubbleShowCaseBuilder(activity!!) //Activity instance
+			fun showCase(title: String?, desc: String?, arrowPosition: ArrowPosition?, listener: BubbleShowCaseListener?, v: View?, activity: Activity) {
+				  BubbleShowCaseBuilder(activity) //Activity instance
 						  .title(title!!) //Any title for the bubble view
 						  .description(desc!!) //More detailed description
 						  .arrowPosition(arrowPosition!!) //You can force the position of the arrow to change the location of the bubble.
-						  .backgroundColor(ApplicationInstance.getContext().resources.getColor(R.color.colorAccent)) //Bubble background color
-						  .textColor(ApplicationInstance.getContext().resources.getColor(R.color.colorPrimary)) //Bubble Text color
+						  .backgroundColor(activity.resources.getColor(R.color.colorAccent)) //Bubble background color
+						  .textColor(activity.resources.getColor(R.color.colorPrimary)) //Bubble Text color
 						  .titleTextSize(20) //Title text size in SP (default value 16sp)
 						  .descriptionTextSize(20) //Subtitle text size in SP (default value 14sp)
-						  .showOnce(title)  //Id to show only once the BubbleShowCase
 						  .listener(listener!!)
 						  .targetView(v!!).show()
 			}

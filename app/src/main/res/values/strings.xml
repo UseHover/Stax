@@ -20,10 +20,15 @@
 	<string name="nav_schedule">Schedule Details</string>
 	<string name="nav_request">Request Details</string>
 	<string name="nav_language">Language Choice</string>
+	<string name="nav_channels">Choose Channels</string>
+	<string name="nav_sim_permission">Grant SIM permission</string>
+	<string name="nav_hover_permissions">Grant Hover permissions</string>
+	<string name="nav_pins_entry">Enter Pins</string>
 	<string name="nav_account_detail">Account Details</string>
 
 	<string name="done">Done</string>
 	<string name="cancel">Cancel</string>
+	<string name="ok">OK</string>
 	<string name="skip">Skip</string>
 	<string name="resend">Resend</string>
 	<string name="continue_text">Continue</string>
@@ -35,6 +40,7 @@
 	<string name="add_an_account"><u>+ Add an account</u></string>
 	<string name="history">History</string>
 	<string name="no_history_yet">No history yet</string>
+	<string name="grant_permission">Grant Permission</string>
 	<string name="buy_airtime">Buy airtime</string>
 	<string name="transfer">Transfer</string>
 	<string name="transfer_now">Transfer now</string>
@@ -60,7 +66,12 @@
 	<string name="add_someone">Add someone else</string>
 	<string name="message_request">Message</string>
 	<string name="message_option">Message (Optional)</string>
+	<string name="sim_permission">We need phone permissions to see which SIM cards you have.</string>
+	<string name="hover_permission">Stax runs USSD sessions in the background so you don\'t have to. To do this we need:</string>
 	<string name="send_sms_perm_error">You must grant the send sms permission to be able to send your money request through SMS.</string>
+	<string name="sms_permission">SMS permissions</string>
+	<string name="overlay_permission">Overlay permission</string>
+	<string name="accessibility_permission">Accessibility permissions</string>
 
 	<string name="request_money_sms_template">This number has requested money from you using Stax. %1$s %2$s www.joinstax.com</string>
 
@@ -72,6 +83,7 @@
 
 	<string name="balances">Balances</string>
 	<string name="balance">Balance</string>
+	<string name="check_balances">Check balances</string>
 	<string name="money_out">Money out this month</string>
 	<string name="money_in">Money in this month</string>
 	<string name="fees_description">Fees paid to %1$s this year</string>
@@ -108,9 +120,11 @@
 	<string name="default_account_desc">Default account will show up first when you move money.</string>
 	<string name="about_our_security">Secure with Stax</string>
 	<string name="about_our_security_content">Hover’s Android SDK is a development kit meeting the criteria of 740.17(b)(3) (i) security classification of the United States Bureau of Industry and Security. This software uses HTTPS for server communication; symmetric key RSA encryption to temporarily store the user’s credentials on their own device using Android Keystore; and code obfuscation using DRM (Dexguard).</string>
+	<string name="ask_every_time">You will be asked for your PIN before every transaction. It will not be stored. You can save your PINs for faster transactions at any time by visiting settings.</string>
+	<string name="check_balance_ask">We will now check your balance on each of your services.</string>
 
 	<string name="pin_step_description">One last step: we need your account PINs to complete tasks and keep balances up to date.</string>
-	<string name="pin_security_description">PINs are encrypted and never leave your device. You can delete PINs from Stax at any time.</string>
+	<string name="pin_security_description"><![CDATA[PINs are encrypted and never leave your device. You can delete PINs from Stax at any time. <font color="#39CBFC"><u>Learn more.</u></font>]]></string>
 
 	<string name="title_airtime">Top up airtime</string>
 	<string name="title_p2p">Move money to someone else</string>
@@ -201,19 +215,11 @@
 
 	<string name="cancel_request_head">Cancel request</string>
 	<string name="cancel_request_btn">Cancel request</string>
-	<string name="cancel_request_msg">This will cancel this request. You can re-request money from someone else at any time.</string>
+	<string name="cancel_request_msg">This will cancel this request. You can re-request money from someone at any time.</string>
 	<string name="cancel_request_success">Request canceled.</string>
 
-	<string name="insecure_warning">Your device does not have a lockscreen enabled. Keep your money secure by entering PIN for every transaction.</string>
-	<string name="title_activity_some">SomeActivity</string>
-	<!-- Strings used for fragments for navigation -->
-	<string name="first_fragment_label">First Fragment</string>
-	<string name="second_fragment_label">Second Fragment</string>
 	<string name="next">Next</string>
 	<string name="previous">Previous</string>
 
-	<string name="hello_first_fragment">Hello first fragment</string>
-	<string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-	
 	<string name="self_destruct_content">This build of Stax has expired. \n\nDownload the latest build to keep using Stax.</string>
 </resources>

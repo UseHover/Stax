@@ -142,4 +142,6 @@ public class BalancesViewModel extends AndroidViewModel {
 	public interface RunBalanceListener {
 		void startRun(Action a, int index);
 	}
+
+	public boolean hasChannels() { return selectedChannels.getValue() != null && selectedChannels.getValue().size() > 0; }
 }

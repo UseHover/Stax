@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:fillViewport="false">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:padding="@dimen/margin_13">
+
+		<LinearLayout android:id="@+id/header"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/margin_21"
+			android:orientation="horizontal">
+
+			<TextView android:id="@+id/title"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:text="@string/balances"
+				android:textSize="@dimen/text_13"
+				android:textAllCaps="true"
+				android:textAlignment="viewEnd"
+				android:fontFamily="font-bold"
+				android:textColor="@color/offWhite"
+				android:visibility="gone"/>
+		</LinearLayout>
+
+		<TextView android:id="@+id/message"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingStart="@dimen/margin_5"
+			android:textSize="@dimen/text_16"
+			android:fontFamily="font-normal"
+			android:lineSpacingExtra="@dimen/text_spacing_8"
+			android:text="@string/hsdk_access_msg"
+			tools:ignore="RtlSymmetry" />
+
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/margin_55">
+
+			<androidx.appcompat.widget.AppCompatButton
+				android:id="@+id/neg_btn"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="@dimen/margin_21"
+				android:text="@string/cancel"
+				android:layout_toStartOf="@id/pos_btn"
+				style="@style/StaxButton"
+				android:fontFamily="font-medium"
+				android:visibility="gone"/>
+
+			<androidx.appcompat.widget.AppCompatButton
+				android:id="@+id/pos_btn"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/ok"
+				android:layout_alignParentEnd="true"
+				android:elevation="5dp"
+				style="@style/StaxButton"
+				android:fontFamily="font-medium" />
+		</RelativeLayout>
+
+	</LinearLayout>
+</ScrollView>

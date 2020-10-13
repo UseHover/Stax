@@ -1,24 +1,29 @@
 package com.hover.stax.security;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hover.stax.ApplicationInstance;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.utils.UIHelper;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PinEntryAdapter extends RecyclerView.Adapter<PinEntryAdapter.PinEntryViewHolder> {
 	private List<Channel> channels;
@@ -41,19 +46,12 @@ public class PinEntryAdapter extends RecyclerView.Adapter<PinEntryAdapter.PinEnt
 		Channel channel = channels.get(position);
 
 		holder.view.setTag(channel.id);
-		holder.labelView.setText(channel.name);
-		Picasso.get().load(channel.logoUrl).into(holder.circleImageView);
-		holder.circleImageView.setVisibility(View.VISIBLE);
+		holder.label.setHint(channel.name);
+		Picasso.get().load(channel.logoUrl).into(holder);
 
-
-		holder.editView.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void afterTextChanged(Editable s) {
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
+		holder.input.addTextChangedListener(new TextWatcher() {
+			@Override public void afterTextChanged(Editable s) { }
+			@Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -62,7 +60,7 @@ public class PinEntryAdapter extends RecyclerView.Adapter<PinEntryAdapter.PinEnt
 		});
 
 		if (channel.pin != null && !channel.pin.isEmpty()) {
-			holder.editView.setText(KeyStoreExecutor.decrypt(channel.pin, ApplicationInstance.getContext()));
+			holder.input.setText(KeyStoreExecutor.decrypt(channel.pin, holder.view.getContext()));
 		}
 	}
 
@@ -70,19 +68,33 @@ public class PinEntryAdapter extends RecyclerView.Adapter<PinEntryAdapter.PinEnt
 		void onUpdate(int id, String pin);
 	}
 
-	static class PinEntryViewHolder extends RecyclerView.ViewHolder {
-		final TextView labelView;
-		final CircleImageView circleImageView;
-		final EditText editView;
+	static class PinEntryViewHolder extends RecyclerView.ViewHolder implements Target {
 		final View view;
+		final TextInputLayout label;
+		final TextInputEditText input;
 
 		PinEntryViewHolder(@NonNull View itemView) {
 			super(itemView);
 			view = itemView;
-			labelView = itemView.findViewById(R.id.variable_label_id);
-			editView = itemView.findViewById(R.id.variableEditId);
-			circleImageView = itemView.findViewById(R.id.variable_logo);
+			label = itemView.findViewById(R.id.pinEntry);
+			input = itemView.findViewById(R.id.pin_input);
 		}
+
+		@Override
+		public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+			Bitmap b = Bitmap.createScaledBitmap(bitmap, UIHelper.dpToPx(34), UIHelper.dpToPx(34), true);
+			RoundedBitmapDrawable d = RoundedBitmapDrawableFactory.create(view.getContext().getResources(), b);
+			d.setCircular(true);
+			input.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
+		}
+
+		@Override
+		public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+			Log.e("LogTag", e.getMessage());
+		}
+
+		@Override
+		public void onPrepareLoad(Drawable placeHolderDrawable) { }
 	}
 
 	@Override

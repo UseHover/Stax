@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
-import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.SplashScreenActivity;
 import com.hover.stax.home.MainActivity;
@@ -48,14 +47,14 @@ public class SelectLanguageActivity extends AppCompatActivity {
 				int checkedRadioButtonId = radioGrp.getCheckedRadioButtonId();
 				RadioButton radioBtn = findViewById(checkedRadioButtonId);
 				selectedCode = radioBtn.getTag().toString();
-				Lingver.getInstance().setLocale(ApplicationInstance.getContext(), selectedCode);
+				Lingver.getInstance().setLocale(SelectLanguageActivity.this, selectedCode);
 				recreate();
 			});
 		});
 
 		findViewById(R.id.continueLanguageButton).setOnClickListener(v -> {
 			Lang.LogChange(selectedCode, SelectLanguageActivity.this);
-			Utils.saveInt(SplashScreenActivity.LANGUAGE_CHECK, 1, ApplicationInstance.getContext());
+			Utils.saveInt(SplashScreenActivity.LANGUAGE_CHECK, 1, SelectLanguageActivity.this);
 			startActivity(new Intent(this, MainActivity.class));
 			finish();
 		});

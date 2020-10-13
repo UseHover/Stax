@@ -11,7 +11,6 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
@@ -20,13 +19,13 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.transactions.TransactionContract;
-import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.languages.Lang;
 import com.hover.stax.languages.LanguageViewModel;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.views.StaxDialog;
 import com.yariksoffice.lingver.Lingver;
 
 import java.util.List;
@@ -134,16 +133,16 @@ public class SecurityFragment extends Fragment {
 
 	private void setUpRemovePins(View root, PinsViewModel securityViewModel) {
 		root.findViewById(R.id.removePinsButtonId).setOnClickListener(view -> {
-			AlertDialog.Builder builder = new AlertDialog.Builder(getContext() != null ? getContext() : ApplicationInstance.getContext());
-			builder.setTitle(getContext().getResources().getString(R.string.remove_pins));
-			builder.setMessage(getContext().getResources().getString(R.string.remove_pins_dialog_message));
-			builder.setPositiveButton(getContext().getResources().getString(R.string.yes), (dialog, which) -> {
-				securityViewModel.clearAllPins();
-				UIHelper.flashMessage(getContext(), getContext().getResources().getString(R.string.remove_pin_successful));
-			});
-			builder.setNegativeButton(getContext().getResources().getString(R.string.no), null);
-
-			builder.show();
+			new StaxDialog(root.getContext(), this)
+				.setDialogTitle(R.string.remove_pins)
+				.setDialogMessage(R.string.remove_pins_dialog_message)
+				.setPosButton(R.string.yes, btn -> {
+					securityViewModel.clearAllPins();
+					UIHelper.flashMessage(getContext(), getContext().getResources().getString(R.string.remove_pin_successful));
+				})
+				.setNegButton(R.string.no, null)
+				.isDestructive()
+				.showIt();
 		});
 	}
 

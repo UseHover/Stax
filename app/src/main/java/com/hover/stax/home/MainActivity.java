@@ -21,7 +21,6 @@ import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.ChannelsActivity;
-import com.hover.stax.destruct.SelfDestruct;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.schedules.Schedule;
@@ -41,28 +40,23 @@ import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RapidFloating
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements BalancesViewModel.RunBalanceListener,
-																	   BalanceAdapter.BalanceListener, BiometricChecker.AuthListener,
-																	   RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener {
+public class MainActivity extends AppCompatActivity implements
+		BalancesViewModel.RunBalanceListener,
+		BalanceAdapter.BalanceListener,
+		BiometricChecker.AuthListener,
+		RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener {
+
 	final public static String TAG = "MainActivity";
 	final public static int ADD_SERVICE = 200;
 	private BalancesViewModel balancesViewModel;
 	private RapidFloatingActionHelper rfabHelper;
-	public static boolean CHECK_SHOWCASE = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if(Utils.selfDestruct()) {
-			startActivity(new Intent(this, SelfDestruct.class));
-			return;
-		}
-
 		setContentView(R.layout.activity_main);
 		BottomNavigationView navView = findViewById(R.id.nav_view);
-		// Passing each menu ID as a set of Ids because each
-		// menu should be considered as top level destinations.
 		AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
 				R.id.navigation_home, R.id.navigation_security).build();
 		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -72,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 
 		balancesViewModel = new ViewModelProvider(this).get(BalancesViewModel.class);
 		balancesViewModel.setListener(this);
+		balancesViewModel.getSelectedChannels().observe(this, channels -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel"));
 		balancesViewModel.getBalanceActions().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel"));
 		balancesViewModel.getToRun().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel"));
 
@@ -175,22 +170,33 @@ public class MainActivity extends AppCompatActivity implements BalancesViewModel
 
 		if (requestCode < 100) { // Balance call
 			balancesViewModel.setRan(requestCode);
-		} else if (requestCode == ADD_SERVICE && resultCode == RESULT_OK) {
-			balancesViewModel.setRunning();
-		}
+			maybeRunShowcase();
+		} else if (requestCode == ADD_SERVICE)
+			onAddServices(resultCode);
 
 		if ((requestCode == RequestActivity.REQUEST_REQUEST) && resultCode == RESULT_OK)
-			UIHelper.flashMessage(this, findViewById(R.id.content), getString(R.string.request_sent));
+			UIHelper.flashMessage(this, findViewById(R.id.home_root), getString(R.string.request_sent));
 	}
 
 	private void onProbableHoverCall(Intent data) {
-		if (data.getAction().equals(TransferActivity.TRANSFERED)) {
+		if (!data.getAction().equals(TransferActivity.SCHEDULED)) {
 			Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
 			new ViewModelProvider(this).get(TransactionHistoryViewModel.class).saveTransaction(data, this);
 		} else if (data.getAction().equals(TransferActivity.SCHEDULED)) {
-			UIHelper.flashMessage(this, findViewById(R.id.content),
+			UIHelper.flashMessage(this, findViewById(R.id.home_root),
 					getString(R.string.schedule_created, DateUtils.humanFriendlyDate(data.getIntExtra(Schedule.DATE_KEY, 0))));
 		}
+	}
+
+	private void onAddServices(int resultCode) {
+		if (resultCode == RESULT_OK)
+			balancesViewModel.setRunning();
+		maybeRunShowcase();
+	}
+
+	private void maybeRunShowcase() {
+		if (balancesViewModel.hasChannels() && Utils.getSharedPrefs(this).getInt(ShowcaseExecutor.SHOW_TUTORIAL, 0) == 0)
+			new ShowcaseExecutor(this, findViewById(R.id.home_root)).startShowcasing();
 	}
 
 	@Override

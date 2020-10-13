@@ -5,34 +5,30 @@
 		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
 		<item name="colorAccent">@color/colorAccent</item>
 
-		<item name="android:windowActionBar">false</item>
+		<item name="windowActionBar">false</item>
+		<item name="android:windowBackground">@color/colorPrimaryDark</item>
+		<item name="android:fitsSystemWindows">true</item>
+
 		<item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
-		<item name="materialCalendarFullscreenTheme">
-			@style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen
-		</item>
-		<item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar
-		</item>
+		<item name="materialCalendarFullscreenTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen</item>
+		<item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar</item>
 
 		<item name="android:textColor">@color/offWhite</item>
 		<item name="android:buttonStyle">@style/StaxButton</item>
 		<item name="buttonStyle">@style/StaxButton</item>
-		<item name="android:windowBackground">@color/colorPrimaryDark</item>
-		<item name="android:fitsSystemWindows">true</item>
 	</style>
 
 	<style name="StaxHoverTheme" parent="StaxTheme" />
 
-	<style name="TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-		<item name="android:paddingBottom">8dp</item>
-	</style>
-
 	<style name="SplashTheme" parent="StaxTheme">
-		<item name="android:windowActionBar">false</item>
 		<item name="android:windowBackground">@drawable/splash_background</item>
 	</style>
 
 	<style name="StaxButton" parent="Widget.AppCompat.Button.Borderless">
-		<item name="android:padding">13sp</item>
+		<item name="android:paddingStart">13sp</item>
+		<item name="android:paddingEnd">13sp</item>
+		<item name="android:paddingTop">16sp</item>
+		<item name="android:paddingBottom">16sp</item>
 		<item name="android:radius">5dp</item>
 		<item name="android:textColor">@color/offWhite</item>
 		<item name="android:textSize">16sp</item>
@@ -55,6 +51,7 @@
 		<item name="android:fontFamily">font-medium</item>
 		<item name="fontFamily">font-medium</item>
 		<item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlayExtended</item>
+		<item name="android:fitsSystemWindows">true</item>
 	</style>
 
 	<style name="ShapeAppearanceOverlayExtended" parent="">
@@ -69,7 +66,7 @@
 		<item name="android:textColorHint">@color/offWhite</item>
 		<item name="hintTextColor">@color/offWhite</item>
 		<item name="android:textColor">@color/offWhite</item>
-		<item name="android:textSize">@dimen/text_16</item>
+		<item name="android:textSize">@dimen/text_13</item>
 		<item name="errorTextColor">@color/bright_red</item>
 		<item name="errorEnabled">true</item>
 	</style>
@@ -90,29 +87,20 @@
 		<item name="colorSurface">@color/cardViewColor</item>
 	</style>
 
-	<style name="StaxDialog" parent="Theme.MaterialComponents.Dialog.Alert">
+	<style name="StaxDialog" parent="Theme.MaterialComponents.Dialog">
 		<item name="colorPrimary">@color/colorPrimary</item>
 		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
 		<item name="colorAccent">@color/colorAccent</item>
 
+		<item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
+		<item name="materialCalendarFullscreenTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen</item>
+		<item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar</item>
+
 		<item name="android:textColor">@color/offWhite</item>
-		<item name="android:headerDividersEnabled">false</item>
-		<item name="android:background">@color/cardViewColor</item>
-		<item name="titleTextColor">@color/offWhite</item>
-		<item name="buttonBarNegativeButtonStyle">@style/StaxDialogButtonNeg</item>
-		<item name="buttonBarPositiveButtonStyle">@style/StaxDialogButtonPos</item>
 		<item name="android:buttonStyle">@style/StaxButton</item>
 		<item name="buttonStyle">@style/StaxButton</item>
-	</style>
-
-	<style name="StaxDialogButtonPos" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-		<item name="backgroundTint">@color/bright_red</item>
-		<item name="android:textColor">@color/offWhite</item>
-	</style>
-
-	<style name="StaxDialogButtonNeg" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-		<item name="backgroundTint">@color/buttonColor</item>
-		<item name="android:textColor">@color/offWhite</item>
+		<item name="dialogCornerRadius">10dp</item>
+		<item name="android:windowBackground">@drawable/dialog_bg</item>
 	</style>
 </resources>
 

@@ -7,14 +7,10 @@ import android.util.Log;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
-import com.hover.stax.ApplicationInstance;
-import com.hover.stax.BuildConfig;
-import com.hover.stax.home.MainActivity;
 
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 import java.util.Date;
-import java.util.Properties;
 
 public class Utils {
 	private final static String TAG = "Utils";
@@ -34,7 +30,7 @@ public class Utils {
 	public static void saveInt(String key, int value, Context c) {
 		SharedPreferences.Editor editor = getSharedPrefs(c).edit();
 		editor.putInt(key, value);
-		editor.commit();
+		editor.apply();
 	}
 
 	public static String stripHniString(String hni) {
@@ -50,7 +46,9 @@ public class Utils {
 	}
 
 	public static String formatAmount(String number) {
-		return formatAmount(getAmount(number));
+		try {
+			return formatAmount(getAmount(number));
+		} catch (Exception e) { return number; }
 	}
 
 	public static String formatAmount(Double number) {
@@ -96,13 +94,9 @@ public class Utils {
 		return false;
 	}
 
-	public static String getStaxString(int resId) {
-		return ApplicationInstance.getContext().getResources().getString(resId);
-	}
-
-	public static boolean selfDestruct() {
+	public static boolean selfDestruct(Context c) {
 		long currentTime = new Date().getTime();
-		long selfDestructTime = Long.parseLong(getBuildConfigValue(ApplicationInstance.getContext(), "SELF_DESTRUCT").toString());
+		long selfDestructTime = Long.parseLong(getBuildConfigValue(c, "SELF_DESTRUCT").toString());
 		return  currentTime <= selfDestructTime;
 	}
 }

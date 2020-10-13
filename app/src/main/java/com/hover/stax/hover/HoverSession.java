@@ -7,8 +7,8 @@ import android.util.Log;
 import androidx.fragment.app.Fragment;
 
 import com.amplitude.api.Amplitude;
+import com.hover.sdk.api.Hover;
 import com.hover.sdk.api.HoverParameters;
-import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
@@ -29,13 +29,14 @@ final public class HoverSession {
 	private int requestCode, finalScreenTime;
 
 	private HoverSession(Builder b) {
+		Hover.setAfterPermissionReturnActivity(Hover.DEFAULT_PERM_ACTIVITY, b.activity);
 		frag = b.fragment;
 		channel = b.channel;
 		requestCode = b.requestCode;
 		finalScreenTime = b.finalScreenTime;
 		HoverParameters.Builder builder = getBasicBuilder(b);
 		addExtras(builder, b.extras, b.action);
-		addPin(builder, b.action);
+		addPin(builder, b.action, b.activity);
 		startHover(builder, b.activity);
 	}
 
@@ -69,8 +70,8 @@ final public class HoverSession {
 		return value;
 	}
 
-	private void addPin(HoverParameters.Builder builder, Action action) {
-		builder.extra(Action.PIN_KEY, KeyStoreExecutor.decrypt(channel.pin, ApplicationInstance.getContext()));
+	private void addPin(HoverParameters.Builder builder, Action action, Activity a) {
+		builder.extra(Action.PIN_KEY, KeyStoreExecutor.decrypt(channel.pin, a));
 	}
 
 	private void startHover(HoverParameters.Builder builder, Activity a) {

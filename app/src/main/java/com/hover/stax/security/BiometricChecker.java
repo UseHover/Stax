@@ -9,7 +9,6 @@ import androidx.biometric.BiometricConstants;
 import androidx.biometric.BiometricPrompt;
 
 import com.amplitude.api.Amplitude;
-import com.hover.stax.ApplicationInstance;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 
@@ -43,9 +42,9 @@ public class BiometricChecker extends BiometricPrompt.AuthenticationCallback {
 
 		final BiometricPrompt.PromptInfo promptInfo =
 				new BiometricPrompt.PromptInfo.Builder()
-						.setTitle(ApplicationInstance.getContext().getResources().getString(R.string.auth_title))
-						.setSubtitle(ApplicationInstance.getContext().getResources().getString(R.string.auth_subTitle))
-						.setDescription(ApplicationInstance.getContext().getResources().getString(R.string.auth_desc))
+						.setTitle(a.getString(R.string.auth_title))
+						.setSubtitle(a.getString(R.string.auth_subTitle))
+						.setDescription(a.getString(R.string.auth_desc))
 						.setAllowedAuthenticators(BIOMETRIC_STRONG | BIOMETRIC_WEAK | DEVICE_CREDENTIAL)
 						.build();
 

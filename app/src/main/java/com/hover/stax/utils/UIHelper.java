@@ -1,6 +1,7 @@
 package com.hover.stax.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -18,7 +19,8 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.hover.stax.ApplicationInstance;
+
+import org.jetbrains.annotations.NotNull;
 
 public class UIHelper {
 
@@ -29,8 +31,7 @@ public class UIHelper {
 		else Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
 	}
 
-	public static void flashMessage(Context context, String message) {
-		if (context == null) context = ApplicationInstance.getContext();
+	public static void flashMessage(@NotNull Context context, String message) {
 		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 	}
 
@@ -42,7 +43,7 @@ public class UIHelper {
 	}
 
 	static public void setColoredDrawable(ImageButton imageButton, int drawable, int color) {
-		Drawable unwrappedDrawable = AppCompatResources.getDrawable(ApplicationInstance.getContext(), drawable);
+		Drawable unwrappedDrawable = AppCompatResources.getDrawable(imageButton.getContext(), drawable);
 		assert unwrappedDrawable != null;
 		Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
 		DrawableCompat.setTint(wrappedDrawable, color);
@@ -77,5 +78,9 @@ public class UIHelper {
 		params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
 		listView.setLayoutParams(params);
 		listView.requestLayout();
+	}
+
+	public static int dpToPx(int dp) {
+		return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
 	}
 }

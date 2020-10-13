@@ -95,18 +95,18 @@ public class NewRequestFragment extends Fragment {
 	}
 
 	private void startListeners(View view) {
-		firstRecipient.findViewById(R.id.contact_button).setOnClickListener(btn -> onClickContact(0));
+		firstRecipient.findViewById(R.id.contact_button).setOnClickListener(btn -> onClickContact(btn, 0));
 		addRecipientBtn.setOnClickListener(v -> {
 			View input = LayoutInflater.from(getContext()).inflate(R.layout.recipient_input, null);
 			final int childIndex = recipientInputList.getChildCount();
-			input.findViewById(R.id.contact_button).setOnClickListener(btn -> onClickContact(childIndex));
+			input.findViewById(R.id.contact_button).setOnClickListener(btn -> onClickContact(btn, childIndex));
 			recipientInputList.addView(input);
 		});
 	}
 
-	private void onClickContact(int index) {
+	private void onClickContact(View v, int index) {
 		Amplitude.getInstance().logEvent(getString(R.string.try_contact_select));
-		if (PermissionUtils.hasContactPermission()) {
+		if (PermissionUtils.hasContactPermission(v.getContext())) {
 			Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
 			startActivityForResult(contactPickerIntent, index);
 		} else {
@@ -153,7 +153,7 @@ public class NewRequestFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == Activity.RESULT_OK) {
-			StaxContactModel staxContactModel = new StaxContactModel(data);
+			StaxContactModel staxContactModel = new StaxContactModel(data, getContext());
 			if (staxContactModel.getPhoneNumber() != null) {
 				Amplitude.getInstance().logEvent(getString(R.string.contact_select_success));
 				((TextInputEditText) recipientInputList.getChildAt(requestCode).findViewById(R.id.recipient_input))
@@ -168,7 +168,7 @@ public class NewRequestFragment extends Fragment {
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		if (new PermissionHelper().permissionsGranted(grantResults)) {
+		if (new PermissionHelper(getContext()).permissionsGranted(grantResults)) {
 			Amplitude.getInstance().logEvent(getString(R.string.contact_perm_success));
 			Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
 			startActivityForResult(contactPickerIntent, requestCode);
