@@ -208,7 +208,7 @@
 
 	<string name="cancel_request_head">Cancel request</string>
 	<string name="cancel_request_btn">Cancel request</string>
-	<string name="cancel_request_msg">This will cancel this request. You can re-request money from someone else at any time.</string>
+	<string name="cancel_request_msg">This will cancel this request. You can re-request money from someone at any time.</string>
 	<string name="cancel_request_success">Request canceled.</string>
 
 	<string name="next">Next</string>

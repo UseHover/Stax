@@ -18,10 +18,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.amplitude.api.Amplitude;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.hover.stax.R;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.views.StaxDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -75,16 +77,17 @@ public class RequestDetailFragment extends Fragment {
 	}
 
 	private void showConfirmDialog() {
-		AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.StaxDialog))
-			.setTitle(R.string.cancel_request_head)
-			.setMessage(R.string.cancel_request_msg)
-			.setNegativeButton(R.string.back, (DialogInterface.OnClickListener) (dialog, whichButton) -> {})
-			.setPositiveButton(R.string.cancel_request_btn, (DialogInterface.OnClickListener) (dialog, whichButton) -> {
+		StaxDialog alert = new StaxDialog(getActivity())
+			.setDialogTitle(R.string.cancel_request_head)
+			.setDialogMessage(R.string.cancel_request_msg)
+			.setNegButton(R.string.back, (View.OnClickListener) btn -> {})
+			.setPosButton(R.string.cancel_request_btn, (View.OnClickListener) btn -> {
 				viewModel.deleteRequest();
 				UIHelper.flashMessage(getContext(), getString(R.string.cancel_request_success));
 				NavHostFragment.findNavController(RequestDetailFragment.this).navigate(R.id.navigation_home);
-			}).create();
-		alertDialog.show();
+			})
+			.isDestructive();
+		alert.show();
 	}
 
 	private void setUpResendBtn(View view, Request request) {

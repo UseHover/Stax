@@ -51,7 +51,7 @@ public class PinsActivity extends AppCompatActivity {
 	}
 
 	public void balanceAsk() {
-		AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.StaxDialog))
+		AlertDialog alertDialog = new AlertDialog.Builder(this, R.style.StaxDialog)
 			.setMessage(R.string.check_balance_ask)
 			.setNegativeButton(R.string.skip, (DialogInterface.OnClickListener) (dialog, whichButton) -> cancel(null))
 			.setPositiveButton(R.string.continue_text, (DialogInterface.OnClickListener) (dialog, whichButton) -> checkBalances())
@@ -60,7 +60,7 @@ public class PinsActivity extends AppCompatActivity {
 	}
 
 	public void skipPins(View view) {
-		AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.StaxDialog))
+		AlertDialog alertDialog = new AlertDialog.Builder(this, R.style.StaxDialog)
 			.setMessage(R.string.ask_every_time)
 			.setPositiveButton(R.string.ok, (DialogInterface.OnClickListener) (dialog, whichButton) -> balanceAsk())
 			.create();
