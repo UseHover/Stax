@@ -24,4 +24,5 @@
 		tools:layout="@layout/fragment_pins" >
 	</fragment>
 
+
 </navigation>
