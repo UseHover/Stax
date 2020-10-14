@@ -2,57 +2,41 @@ package com.hover.stax.requests;
 
 import android.app.Application;
 import android.content.Context;
+import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.hover.stax.R;
-import com.hover.stax.database.DatabaseRepo;
+import com.hover.stax.utils.StagedViewModel;
 import com.hover.stax.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-public class NewRequestViewModel extends AndroidViewModel {
+import static android.view.View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION;
+import static com.hover.stax.requests.RequestStage.AMOUNT;
+import static com.hover.stax.requests.RequestStage.NOTE;
+import static com.hover.stax.requests.RequestStage.RECIPIENT;
+import static com.hover.stax.requests.RequestStage.REVIEW;
+import static com.hover.stax.requests.RequestStage.REVIEW_DIRECT;
 
-	private DatabaseRepo repo;
-	private MutableLiveData<RequestStage> requestStage = new MutableLiveData<>();
+public class NewRequestViewModel extends StagedViewModel {
 
 	private MutableLiveData<String> amount = new MutableLiveData<>();
 	private MutableLiveData<List<String>> recipients = new MutableLiveData<>();
 	private MutableLiveData<String> note = new MutableLiveData<>();
-	private MutableLiveData<Boolean> futureDated = new MutableLiveData<>();
-	private MutableLiveData<Long> futureDate = new MutableLiveData<>();
+
+	private MutableLiveData<Integer> recipientError = new MutableLiveData<>();
 
 	public NewRequestViewModel(@NonNull Application application) {
 		super(application);
-		repo = new DatabaseRepo(application);
-
-		requestStage.setValue(RequestStage.RECIPIENT);
-		recipients.setValue(new ArrayList<>());
-		futureDated.setValue(false);
-		futureDate.setValue(null);
-	}
-
-	LiveData<RequestStage> getStage() {
-		return requestStage;
-	}
-
-	void setStage(RequestStage stage) {
-		requestStage.setValue(stage);
-	}
-
-	void goToNextStage() {
-		RequestStage next = requestStage.getValue() != null ? requestStage.getValue().next() : RequestStage.RECIPIENT;
-		requestStage.postValue(next);
-	}
-
-	boolean goToStage(RequestStage stage) {
-		if (stage == null) return false;
-		requestStage.postValue(stage);
-		return true;
+		stage.setValue(RequestStage.RECIPIENT);
+		recipients.setValue(new ArrayList<>(Collections.singletonList("")));
 	}
 
 	void setAmount(String a) {
@@ -64,6 +48,12 @@ public class NewRequestViewModel extends AndroidViewModel {
 			amount = new MutableLiveData<>();
 		}
 		return amount;
+	}
+
+	public void onUpdate(int pos, String recipient) {
+		List<String> rs = recipients.getValue() != null ? recipients.getValue() : new ArrayList<>();
+		rs.set(pos, recipient);
+		recipients.postValue(rs);
 	}
 
 	void addRecipient(String recipient) {
@@ -79,6 +69,13 @@ public class NewRequestViewModel extends AndroidViewModel {
 		return recipients;
 	}
 
+	LiveData<Integer> getRecipientError() {
+		if (recipientError == null) {
+			recipientError = new MutableLiveData<>();
+		}
+		return recipientError;
+	}
+
 	void setNote(String n) {
 		note.postValue(n);
 	}
@@ -91,27 +88,27 @@ public class NewRequestViewModel extends AndroidViewModel {
 		return note;
 	}
 
-	void setIsFutureDated(boolean isFuture) {
-		futureDated.setValue(isFuture);
-	}
+	boolean isDone() { return stage.getValue() == REVIEW || stage.getValue() == REVIEW_DIRECT; }
 
-	LiveData<Boolean> getIsFuture() {
-		if (futureDated == null) {
-			futureDated = new MutableLiveData<>();
-			futureDated.setValue(false);
+	boolean stageValidates() {
+		if (stage.getValue() == null) return false;
+		switch ((RequestStage) stage.getValue()) {
+			case RECIPIENT:
+				if (recipients.getValue() == null || recipients.getValue().size() == 0 || recipients.getValue().get(0).isEmpty()) {
+					recipientError.setValue(R.string.enterRecipientError);
+					return false;
+				} else {
+					recipientError.setValue(null);
+					List<String> rs = new ArrayList<>();
+					for (String r: recipients.getValue()) {
+						if (r != null && !r.isEmpty())
+							rs.add(r);
+					}
+					recipients.postValue(rs);
+				}
+				break;
 		}
-		return futureDated;
-	}
-
-	void setFutureDate(Long date) {
-		futureDate.setValue(date);
-	}
-
-	LiveData<Long> getFutureDate() {
-		if (futureDate == null) {
-			futureDate = new MutableLiveData<>();
-		}
-		return futureDate;
+		return true;
 	}
 
 	String generateRecipientString() {

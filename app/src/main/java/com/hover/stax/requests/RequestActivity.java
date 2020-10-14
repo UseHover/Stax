@@ -14,6 +14,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.hover.stax.R;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
+import com.hover.stax.utils.StagedViewModel;
 
 import static com.hover.stax.requests.RequestStage.AMOUNT;
 import static com.hover.stax.requests.RequestStage.NOTE;
@@ -71,10 +72,10 @@ public class RequestActivity extends AppCompatActivity {
 	}
 
 	public void onContinue(View view) {
-		if (requestViewModel.getStage().getValue() != REVIEW && requestViewModel.getStage().getValue() != REVIEW_DIRECT) {
-			requestViewModel.goToNextStage();
-		} else
+		if (requestViewModel.isDone())
 			submit();
+		else if (requestViewModel.stageValidates())
+			requestViewModel.goToNextStage();
 	}
 
 	@SuppressLint("NewApi")
@@ -87,26 +88,26 @@ public class RequestActivity extends AppCompatActivity {
 		startActivityForResult(i, SEND_SMS_FOREGROUND);
 	}
 
-	private void onUpdateStage(RequestStage stage) {
-		findViewById(R.id.recipientRow).setVisibility(stage.compareTo(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.amountRow).setVisibility(stage.compareTo(AMOUNT) > 0 && requestViewModel.getAmount().getValue() != null ? View.VISIBLE : View.GONE);
-		findViewById(R.id.noteRow).setVisibility((stage.compareTo(NOTE) > 0 && requestViewModel.getNote().getValue() != null && !requestViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
+	private void onUpdateStage(StagedViewModel.StagedEnum stage) {
+		findViewById(R.id.recipientRow).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 && requestViewModel.getAmount().getValue() != null ? View.VISIBLE : View.GONE);
+		findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && requestViewModel.getNote().getValue() != null && !requestViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
 		findViewById(R.id.dateRow).setVisibility(requestViewModel.getFutureDate().getValue() != null ? View.VISIBLE : View.GONE);
 
 		setCurrentCard(stage);
 		setFab(stage);
 	}
 
-	private void setCurrentCard(RequestStage stage) {
-		findViewById(R.id.recipientCard).setVisibility(stage.compareTo(RECIPIENT) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.amountCard).setVisibility(stage.compareTo(AMOUNT) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.noteCard).setVisibility(stage.compareTo(NOTE) == 0 ? View.VISIBLE : View.GONE);
+	private void setCurrentCard(StagedViewModel.StagedEnum stage) {
+		findViewById(R.id.recipientCard).setVisibility(stage.compare(RECIPIENT) == 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.amountCard).setVisibility(stage.compare(AMOUNT) == 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.noteCard).setVisibility(stage.compare(NOTE) == 0 ? View.VISIBLE : View.GONE);
 //		findViewById(R.id.futureCard).setVisibility(requestViewModel.getFutureDate().getValue() == null && allowSchedule ? View.VISIBLE : View.GONE);
 	}
 
-	private void setFab(RequestStage stage) {
+	private void setFab(StagedViewModel.StagedEnum stage) {
 		ExtendedFloatingActionButton fab = findViewById(R.id.fab);
-		if (stage.compareTo(REVIEW) >= 0) {
+		if (stage.compare(REVIEW) >= 0) {
 			if (requestViewModel.getIsFuture().getValue() != null && requestViewModel.getIsFuture().getValue())
 				fab.setText(getString(R.string.schedule));
 			else

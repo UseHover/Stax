@@ -6,14 +6,10 @@
 	android:layout_height="wrap_content"
 	app:title="@string/from_who">
 
-	<LinearLayout android:id="@+id/recipient_list"
+	<androidx.recyclerview.widget.RecyclerView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:orientation="vertical">
-
-		<include layout="@layout/recipient_input" android:id="@+id/firstRecipient"/>
-
-	</LinearLayout>
+		android:id="@+id/recipient_list" />
 
 	<RelativeLayout
 		android:layout_width="match_parent"

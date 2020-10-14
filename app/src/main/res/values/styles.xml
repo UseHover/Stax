@@ -50,6 +50,7 @@
 		<item name="textAllCaps">false</item>
 		<item name="android:fontFamily">font-medium</item>
 		<item name="fontFamily">font-medium</item>
+		<item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlayExtended</item>
 	</style>
 
 	<style name="ShapeAppearanceOverlayExtended" parent="">

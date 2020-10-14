@@ -17,7 +17,6 @@
 			android:layout_height="wrap_content"
 			android:padding="@dimen/margin_13"
 			android:textSize="@dimen/text_21"
-		    	android:fontFamily="font-normal"
 			android:textColor="@color/offWhite"
 			android:textCursorDrawable="@null"
 			android:inputType="text"
