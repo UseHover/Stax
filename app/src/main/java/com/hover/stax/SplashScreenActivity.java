@@ -30,6 +30,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
 		if (SelfDestruct.isTime(this)) {
 			startActivity(new Intent(this, SelfDestruct.class));
+			finish();
 			return;
 		}
 
