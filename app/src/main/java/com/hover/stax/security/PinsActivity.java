@@ -12,7 +12,6 @@ import androidx.navigation.Navigation;
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
-import com.hover.stax.home.MainActivity;
 import com.hover.stax.views.StaxDialog;
 
 public class PinsActivity extends AppCompatActivity {
@@ -48,25 +47,26 @@ public class PinsActivity extends AppCompatActivity {
 
 	public void balanceAsk() {
 		dialog = new StaxDialog(this)
-			.setDialogMessage(R.string.check_balance_ask)
-			.setNegButton(R.string.skip, (View.OnClickListener) btn -> cancel(null))
-			.setPosButton(R.string.check_balances, (View.OnClickListener) btn -> checkBalances())
-			.showIt();
+						 .setDialogMessage(R.string.check_balance_ask)
+						 .setNegButton(R.string.skip, btn -> cancel(null))
+						 .setPosButton(R.string.check_balances, btn -> checkBalances())
+						 .showIt();
 	}
 
 	public void skipPins(View view) {
 		dialog = new StaxDialog(this)
-			.setDialogMessage(R.string.ask_every_time)
-			.setPosButton(R.string.ok, (View.OnClickListener) btn -> balanceAsk())
-			.showIt();
+						 .setDialogMessage(R.string.ask_every_time)
+						 .setPosButton(R.string.ok, btn -> balanceAsk())
+						 .showIt();
 	}
 
 	public void learnMore(View view) {
 		dialog = new StaxDialog(this)
-			.setDialogTitle(R.string.about_our_security)
-			.setDialogMessage(R.string.about_our_security_content)
-			.setPosButton(R.string.ok, (View.OnClickListener) btn -> {})
-			.showIt();
+						 .setDialogTitle(R.string.about_our_security)
+						 .setDialogMessage(R.string.about_our_security_content)
+						 .setPosButton(R.string.ok, btn -> {
+						 })
+						 .showIt();
 	}
 
 	@Override

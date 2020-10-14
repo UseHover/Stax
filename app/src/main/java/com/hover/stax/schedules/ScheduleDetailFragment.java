@@ -69,21 +69,22 @@ public class ScheduleDetailFragment extends Fragment {
 		view.findViewById(R.id.reasonRow).setVisibility(schedule.reason == null || schedule.reason.isEmpty() ? View.GONE : View.VISIBLE);
 		((TextView) view.findViewById(R.id.details_reason)).setText(schedule.reason);
 
-		((Button) view.findViewById(R.id.cancel_btn)).setOnClickListener((View.OnClickListener) btn -> showConfirmDialog(btn));
+		view.findViewById(R.id.cancel_btn).setOnClickListener(btn -> showConfirmDialog(btn));
 	}
 
 	private void showConfirmDialog(View v) {
 		new StaxDialog(v.getContext(), this)
-			.setDialogTitle(R.string.cancel_future_head)
-			.setDialogMessage(R.string.cancel_future_msg)
-			.setNegButton(R.string.back, btn -> {})
-			.setPosButton(R.string.cancel_future_btn, btn -> {
-				viewModel.deleteSchedule();
-				UIHelper.flashMessage(getContext(), getString(R.string.cancel_future_success));
-				NavHostFragment.findNavController(ScheduleDetailFragment.this).navigate(R.id.navigation_home);
-			})
-			.isDestructive()
-			.showIt();
+				.setDialogTitle(R.string.cancel_future_head)
+				.setDialogMessage(R.string.cancel_future_msg)
+				.setNegButton(R.string.back, btn -> {
+				})
+				.setPosButton(R.string.cancel_future_btn, btn -> {
+					viewModel.deleteSchedule();
+					UIHelper.flashMessage(getContext(), getString(R.string.cancel_future_success));
+					NavHostFragment.findNavController(ScheduleDetailFragment.this).navigate(R.id.navigation_home);
+				})
+				.isDestructive()
+				.showIt();
 	}
 
 	private void setUpTestBtn(View view, Schedule schedule) {

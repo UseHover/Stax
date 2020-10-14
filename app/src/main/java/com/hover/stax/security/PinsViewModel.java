@@ -28,14 +28,18 @@ public class PinsViewModel extends AndroidViewModel {
 	public LiveData<List<Channel>> getSelectedChannels() {
 		return channels;
 	}
-	public LiveData<Channel> getChannel() {return channel;}
+
+	public LiveData<Channel> getChannel() {
+		return channel;
+	}
 
 	public void loadChannel(int id) {
-		if(channel == null) {
+		if (channel == null) {
 			channel = new MutableLiveData<>();
 		}
 		channel = repo.getLiveChannel(id);
 	}
+
 	private void loadSelectedChannels() {
 		if (channels == null) {
 			channels = new MutableLiveData<>();
@@ -61,6 +65,7 @@ public class PinsViewModel extends AndroidViewModel {
 			}
 		}
 	}
+
 	void savePin(Channel channel, Context c) {
 		if (channel.pin != null && !channel.pin.isEmpty()) {
 			channel.pin = KeyStoreExecutor.createNewKey(channel.pin, c);

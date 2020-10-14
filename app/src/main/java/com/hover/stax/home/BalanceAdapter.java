@@ -1,13 +1,11 @@
 package com.hover.stax.home;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,8 +15,6 @@ import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
-import com.hover.stax.utils.bubbleshowcase.BubbleShowCase;
-import com.hover.stax.utils.bubbleshowcase.BubbleShowCaseListener;
 
 import java.util.List;
 

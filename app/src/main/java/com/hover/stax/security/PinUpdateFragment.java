@@ -3,10 +3,6 @@ package com.hover.stax.security;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,12 +38,12 @@ public class PinUpdateFragment extends Fragment implements Target {
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		if (getArguments() == null) {
-			if(getActivity() !=null && getContext() !=null)  {
+			if (getActivity() != null && getContext() != null) {
 				UIHelper.flashMessage(getContext(), getResources().getString(R.string.account_not_found));
 				getActivity().onBackPressed();
 			}
 		}
-		int channel_id =  getArguments().getInt(ActionContract.COLUMN_CHANNEL_ID, 0);
+		int channel_id = getArguments().getInt(ActionContract.COLUMN_CHANNEL_ID, 0);
 		PinsViewModel pinViewModel = new ViewModelProvider(this).get(PinsViewModel.class);
 		pinViewModel.loadChannel(channel_id);
 
@@ -70,7 +66,7 @@ public class PinUpdateFragment extends Fragment implements Target {
 
 	private void loadPin(PinsViewModel pinsViewModel) {
 		pinsViewModel.getChannel().observe(getViewLifecycleOwner(), channel -> {
-			if(channel !=null) {
+			if (channel != null) {
 				titleText.setText(channel.name);
 				Picasso.get().load(channel.logoUrl).into(PinUpdateFragment.this);
 				label.setHint(channel.name);
@@ -86,26 +82,27 @@ public class PinUpdateFragment extends Fragment implements Target {
 
 	private void setupCancel() {
 		cancelUpdatePin.setOnClickListener(v -> {
-			if(getActivity() !=null) getActivity().onBackPressed();
+			if (getActivity() != null) getActivity().onBackPressed();
 		});
 	}
 
 	private void setupSavePin(PinsViewModel pinsViewModel, Channel channel) {
 		savePinButton.setOnClickListener(v -> {
-			if(input.getText() !=null) {
+			if (input.getText() != null) {
 				channel.pin = input.getText().toString();
 				pinsViewModel.savePin(channel, getContext());
 			}
-			if(getActivity() !=null && getContext() !=null){
+			if (getActivity() != null && getContext() != null) {
 				UIHelper.flashMessage(getContext(), getResources().getString(R.string.pin_updated));
 				getActivity().onBackPressed();
 			}
 		});
 	}
+
 	void setUpRemoveAccount(PinsViewModel pinsViewModel, Channel channel) {
 		removeAccountButton.setOnClickListener(v -> {
 			pinsViewModel.removeAccount(channel);
-			if(getActivity() !=null && getContext() !=null) {
+			if (getActivity() != null && getContext() != null) {
 				UIHelper.flashMessage(getContext(), getResources().getString(R.string.account_removed));
 				getActivity().onBackPressed();
 			}

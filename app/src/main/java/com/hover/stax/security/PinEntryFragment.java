@@ -35,15 +35,19 @@ public class PinEntryFragment extends Fragment implements PinEntryAdapter.Update
 
 		RecyclerView pinRecyclerView = view.findViewById(R.id.pin_recyclerView);
 		viewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
-			if (channels == null || channels.size() == 0) { return; }
+			if (channels == null || channels.size() == 0) {
+				return;
+			}
 
 			pinRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 			pinRecyclerView.setHasFixedSize(true);
 			PinEntryAdapter pinEntryAdapter = new PinEntryAdapter(channels, this);
 			pinRecyclerView.setAdapter(pinEntryAdapter);
 
-			for (Channel c: channels)
-				if (c.pin == null) { return; }
+			for (Channel c : channels)
+				if (c.pin == null) {
+					return;
+				}
 			if (getActivity() != null)
 				((PinsActivity) getActivity()).balanceAsk();
 		});
