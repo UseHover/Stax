@@ -30,10 +30,14 @@ public class PermissionUtils {
 	}
 
 	public static boolean hasContactPermission(Context c) {
-		return PermissionUtils.has(new String[]{Manifest.permission.READ_CONTACTS}, c);
+		return Build.VERSION.SDK_INT < 23 || PermissionUtils.has(new String[]{Manifest.permission.READ_CONTACTS}, c);
+	}
+
+	public static boolean hasWritePermission(Context c) {
+		return Build.VERSION.SDK_INT < 23 || PermissionUtils.has(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, c);
 	}
 
 	public static boolean hasSendSMSPermission(Context c) {
-		return PermissionUtils.has(new String[]{Manifest.permission.SEND_SMS}, c);
+		return Build.VERSION.SDK_INT < 23 || PermissionUtils.has(new String[]{Manifest.permission.SEND_SMS}, c);
 	}
 }

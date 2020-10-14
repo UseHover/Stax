@@ -222,4 +222,7 @@
 	<string name="previous">Previous</string>
 
 	<string name="self_destruct_content">This build of Stax has expired. \n\nDownload the latest build to keep using Stax.</string>
+	<string name="download">Download new version</string>
+	<string name="uninstall_content">Your update is downloading. \n\nClick the button below to uninstall this version. Once your download is complete tap the notification to install the new version.</string>
+	<string name="uninstall">Uninstall</string>
 </resources>

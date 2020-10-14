@@ -113,5 +113,4 @@
 	<string name="auth_title">Security check</string>
 	<string name="auth_subTitle">Authenticate</string>
 	<string name="auth_desc">Authenticate with your fingerprint</string>
-	<string name="insecure_warning">Kifaa chako hakina skrini iliyofungwa. Weka pesa zako salama kwa kuingiza PIN kwa kila shughuli.</string>
 </resources>

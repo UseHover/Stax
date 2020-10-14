@@ -12,8 +12,8 @@
 		<ImageView
 			android:layout_width="80dp"
 			android:layout_height="40dp"
-			android:src="@drawable/stax_slim"
-		    	android:id="@+id/home_stax_logo"
+			android:src="@mipmap/stax"
+			android:id="@+id/home_stax_logo"
 			android:layout_gravity="start|center"
 			android:gravity="start|center" />
 

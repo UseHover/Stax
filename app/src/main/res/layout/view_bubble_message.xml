@@ -31,7 +31,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
         android:orientation="vertical"
-        >
+        tools:ignore="MissingConstraints">
 
         <TextView
             android:id="@+id/textViewShowCaseTitle"
