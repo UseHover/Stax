@@ -9,6 +9,7 @@ import androidx.room.PrimaryKey;
 
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.database.Constants;
 import com.hover.stax.utils.DateUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -26,14 +27,12 @@ public class Schedule {
 	public int id;
 
 	@NonNull
-	@ColumnInfo(name = "type") // request, airtime, p2p, me2me
+	@ColumnInfo(name = "type")
 	public String type;
 
-	@NonNull
 	@ColumnInfo(name = "channel_id")
 	public int channel_id;
 
-	@NonNull
 	@ColumnInfo(name = "action_id")
 	public String action_id;
 
@@ -44,8 +43,8 @@ public class Schedule {
 	@ColumnInfo(name = "amount")
 	public String amount;
 
-	@ColumnInfo(name = "reason")
-	public String reason;
+	@ColumnInfo(name = "note")
+	public String note;
 
 	@NonNull
 	@ColumnInfo(name = "description")
@@ -58,21 +57,32 @@ public class Schedule {
 	@ColumnInfo(name = "end_date", defaultValue = "CURRENT_TIMESTAMP")
 	public Long end_date;
 
+	@NonNull
 	@ColumnInfo(name = "frequency")
 	public String frequency;
 
-	public Schedule() {
-	}
+	public Schedule() {}
 
-	public Schedule(Action action, Long date, String r, String a, Context c) {
+	public Schedule(Action action, Long date, String r, String a, String n, Context c) {
+		this(date, r, a, n);
 		type = action.transaction_type;
 		channel_id = action.channel_id;
 		action_id = action.public_id;
+		description = generateDescription(action, c);
+	}
+
+	public Schedule(Long date, String r, String a, String n, Context c) {
+		this(date, r, a, n);
+		type = Constants.REQUEST_TYPE;
+		description = generateDescription(null, c);
+	}
+
+	public Schedule(Long date, String r, String a, String n) {
 		start_date = date;
 		end_date = date;
 		recipient = r;
 		amount = a;
-		description = generateDescription(action, c);
+		note = n;
 		frequency = ONCE;
 	}
 
@@ -84,6 +94,8 @@ public class Schedule {
 				return c.getString(R.string.transaction_descrip_money, action.from_institution_name, recipient);
 			case Action.ME2ME:
 				return c.getString(R.string.transaction_descrip_money, action.from_institution_name, action.to_institution_name);
+			case Constants.REQUEST_TYPE:
+				return c.getString(R.string.request_descrip, recipient);
 			default:
 				return "Other";
 		}
@@ -111,6 +123,8 @@ public class Schedule {
 				return c.getString(R.string.notify_transfer_cta);
 			case Action.AIRTIME:
 				return c.getString(R.string.notify_airtime_cta);
+			case Constants.REQUEST_TYPE:
+				return c.getString(R.string.notify_request_cta);
 			default:
 				return null;
 		}
@@ -123,6 +137,8 @@ public class Schedule {
 				return c.getString(R.string.notify_transfer, description);
 			case Action.AIRTIME:
 				return c.getString(R.string.notify_airtime);
+			case Constants.REQUEST_TYPE:
+				return c.getString(R.string.notify_request, recipient);
 			default:
 				return null;
 		}

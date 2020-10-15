@@ -21,6 +21,7 @@ import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.ChannelsActivity;
+import com.hover.stax.database.Constants;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.schedules.Schedule;
@@ -47,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements
 		RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener {
 
 	final public static String TAG = "MainActivity";
-	final public static int ADD_SERVICE = 200;
 	private BalancesViewModel balancesViewModel;
 	private RapidFloatingActionHelper rfabHelper;
 
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements
 
 	public void addAccount(View view) {
 		Amplitude.getInstance().logEvent(getString(R.string.click_add_account));
-		startActivityForResult(new Intent(this, ChannelsActivity.class), MainActivity.ADD_SERVICE);
+		startActivityForResult(new Intent(this, ChannelsActivity.class), Constants.ADD_SERVICE);
 	}
 
 	@Override
@@ -165,26 +165,32 @@ public class MainActivity extends AppCompatActivity implements
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if ((requestCode == TransferActivity.TRANSFER_REQUEST || requestCode < 100) && resultCode == RESULT_OK)
-			onProbableHoverCall(data);
-
-		if (requestCode < 100) { // Balance call
-			balancesViewModel.setRan(requestCode);
-			maybeRunShowcase();
-		} else if (requestCode == ADD_SERVICE)
-			onAddServices(resultCode);
-
-		if ((requestCode == RequestActivity.REQUEST_REQUEST) && resultCode == RESULT_OK)
-			UIHelper.flashMessage(this, findViewById(R.id.home_root), getString(R.string.request_sent));
+		switch (requestCode) {
+			case Constants.TRANSFER_REQUEST:
+				if (resultCode == RESULT_OK) { onProbableHoverCall(data); }
+				break;
+			case Constants.ADD_SERVICE:
+				onAddServices(resultCode);
+				break;
+			case Constants.REQUEST_REQUEST:
+				if (resultCode == RESULT_OK) { onRequest(data); }
+				break;
+			default: // requestCode < Constants.BALANCE_MAX // Balance call
+				if (resultCode == RESULT_OK) {
+					onProbableHoverCall(data);
+					balancesViewModel.setRan(requestCode);
+					maybeRunShowcase();
+				}
+		}
 	}
 
 	private void onProbableHoverCall(Intent data) {
-		if (!data.getAction().equals(TransferActivity.SCHEDULED)) {
+		if (data.getAction().equals(Constants.SCHEDULED)) {
+			UIHelper.flashMessage(this, findViewById(R.id.home_root),
+				getString(R.string.schedule_created, DateUtils.humanFriendlyDate(data.getIntExtra(Schedule.DATE_KEY, 0))));
+		} else {
 			Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
 			new ViewModelProvider(this).get(TransactionHistoryViewModel.class).saveTransaction(data, this);
-		} else if (data.getAction().equals(TransferActivity.SCHEDULED)) {
-			UIHelper.flashMessage(this, findViewById(R.id.home_root),
-					getString(R.string.schedule_created, DateUtils.humanFriendlyDate(data.getIntExtra(Schedule.DATE_KEY, 0))));
 		}
 	}
 
@@ -193,10 +199,20 @@ public class MainActivity extends AppCompatActivity implements
 			balancesViewModel.setRunning();
 		maybeRunShowcase();
 	}
-
 	private void maybeRunShowcase() {
 		if (balancesViewModel.hasChannels() && Utils.getSharedPrefs(this).getInt(ShowcaseExecutor.SHOW_TUTORIAL, 0) == 0)
 			new ShowcaseExecutor(this, findViewById(R.id.home_root)).startShowcasing();
+	}
+
+	private void onRequest(Intent data) {
+		if (data.getAction().equals(Constants.SCHEDULED))
+			showMessage(getString(R.string.request_scheduled, DateUtils.humanFriendlyDate(data.getIntExtra(Schedule.DATE_KEY, 0))));
+		else
+			showMessage(getString(R.string.request_sent));
+	}
+
+	private void showMessage(String str) {
+		UIHelper.flashMessage(this, findViewById(R.id.home_root), str);
 	}
 
 	@Override
@@ -219,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements
 				startTransfer(Action.AIRTIME);
 				break;
 			case 2:
-				startActivityForResult(new Intent(this, RequestActivity.class), RequestActivity.REQUEST_REQUEST);
+				startActivityForResult(new Intent(this, RequestActivity.class), Constants.REQUEST_REQUEST);
 				break;
 			case 3:
 				Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_security);
@@ -233,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements
 	private void startTransfer(String type) {
 		Intent i = new Intent(this, TransferActivity.class);
 		i.setAction(type);
-		startActivityForResult(i, TransferActivity.TRANSFER_REQUEST);
+		startActivityForResult(i, Constants.TRANSFER_REQUEST);
 	}
 
 	@Override

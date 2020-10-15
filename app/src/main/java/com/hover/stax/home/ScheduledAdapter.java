@@ -1,5 +1,6 @@
 package com.hover.stax.home;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,15 +36,15 @@ public class ScheduledAdapter extends RecyclerView.Adapter<ScheduledAdapter.Sche
 		Schedule s = scheduleList.get(position);
 		holder.description.setText(s.description.substring(0, 1).toUpperCase() + s.description.substring(1));
 		holder.amount.setText(s.amount != null ? Utils.formatAmount(s.amount) : "none");
-		holder.header.setVisibility(shouldShowDate(s, position) ? View.VISIBLE : View.GONE);
+		holder.header.setVisibility(shouldShowDate(s, position, holder.itemView.getContext()) ? View.VISIBLE : View.GONE);
 		holder.header.setText(s.humanFrequency(holder.itemView.getContext()));
 		holder.itemView.setOnClickListener(view -> {
 			selectListener.viewScheduledDetail(s.id);
 		});
 	}
 
-	private boolean shouldShowDate(Schedule s, int position) {
-		return position == 0 || s.frequency.equals(Schedule.ONCE) || !scheduleList.get(position - 1).frequency.equals(s.frequency);
+	private boolean shouldShowDate(Schedule s, int position, Context c) {
+		return position == 0 || !scheduleList.get(position - 1).humanFrequency(c).equals(s.humanFrequency(c));
 	}
 
 	@Override

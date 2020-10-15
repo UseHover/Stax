@@ -42,6 +42,7 @@
 
 	<style name="StaxButtonColored" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
 		<item name="android:padding">13sp</item>
+		<item name="android:layout_marginBottom">@dimen/margin_55</item>
 		<item name="android:radius">5dp</item>
 		<item name="android:textColor">@color/colorPrimaryDark</item>
 		<item name="backgroundTint">@color/colorAccent</item>

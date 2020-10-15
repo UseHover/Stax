@@ -22,6 +22,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_margin="@dimen/margin_13"
+			android:layout_marginBottom="@dimen/margin_55"
 			android:layout_gravity="end|bottom"
 			style="@style/StaxButtonColored"
 			android:text="@string/continue_text"

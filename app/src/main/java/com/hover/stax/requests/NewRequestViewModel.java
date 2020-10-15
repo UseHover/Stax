@@ -2,28 +2,22 @@ package com.hover.stax.requests;
 
 import android.app.Application;
 import android.content.Context;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.material.textfield.TextInputEditText;
+import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
+import com.hover.stax.schedules.Schedule;
 import com.hover.stax.utils.StagedViewModel;
 import com.hover.stax.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static android.view.View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION;
-import static com.hover.stax.requests.RequestStage.AMOUNT;
-import static com.hover.stax.requests.RequestStage.NOTE;
-import static com.hover.stax.requests.RequestStage.RECIPIENT;
-import static com.hover.stax.requests.RequestStage.REVIEW;
-import static com.hover.stax.requests.RequestStage.REVIEW_DIRECT;
+import static com.hover.stax.requests.RequestStage.*;
 
 public class NewRequestViewModel extends StagedViewModel {
 
@@ -33,10 +27,13 @@ public class NewRequestViewModel extends StagedViewModel {
 
 	private MutableLiveData<Integer> recipientError = new MutableLiveData<>();
 
+	private MutableLiveData<Boolean> requestStarted = new MutableLiveData<>();
+
 	public NewRequestViewModel(@NonNull Application application) {
 		super(application);
 		stage.setValue(RequestStage.RECIPIENT);
 		recipients.setValue(new ArrayList<>(Collections.singletonList("")));
+		requestStarted.setValue(false);
 	}
 
 	void setAmount(String a) {
@@ -90,6 +87,13 @@ public class NewRequestViewModel extends StagedViewModel {
 
 	boolean isDone() { return stage.getValue() == REVIEW || stage.getValue() == REVIEW_DIRECT; }
 
+	public void setSchedule(Schedule schedule) {
+		setAmount(schedule.amount);
+		recipients.setValue(new ArrayList<>(Collections.singletonList(schedule.recipient)));
+		setNote(schedule.note);
+		setStage(REVIEW_DIRECT);
+	}
+
 	boolean stageValidates() {
 		if (stage.getValue() == null) return false;
 		switch ((RequestStage) stage.getValue()) {
@@ -130,5 +134,19 @@ public class NewRequestViewModel extends StagedViewModel {
 	void saveToDatabase() {
 		for (String recipient : recipients.getValue())
 			repo.insert(new Request(recipient, amount.getValue(), note.getValue()));
+	}
+
+	void setStarted() {
+		requestStarted.setValue(true);
+	}
+	LiveData<Boolean> getStarted() {
+		if (requestStarted == null) { requestStarted = new MutableLiveData<>(); }
+		return requestStarted;
+	}
+
+	public void schedule(Context c) {
+		Amplitude.getInstance().logEvent(c.getString(R.string.scheduled_request));
+		Schedule s = new Schedule(futureDate.getValue(), generateRecipientString(), amount.getValue(), note.getValue(), getApplication());
+		repo.insert(s);
 	}
 }

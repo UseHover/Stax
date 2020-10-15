@@ -150,6 +150,7 @@
 	<string name="send_repeat">Repeat transaction</string>
 	<string name="schedule_created">Transfer scheduled. We will remind you to make a transfer on %1$s</string>
 	<string name="request_sent">Your request has been sent.</string>
+	<string name="request_scheduled">Your request has been scheduled. You will be reminded to send a message on %1$s</string>
 
 	<string name="choose_service_hint">Choose a service</string>
 	<string-array name="choose_account_initial_array">
@@ -199,7 +200,7 @@
 
 	<string name="notify_transfer">It\'s time to transfer money %1$s with Stax.</string>
 	<string name="notify_transfer_cta">Transfer now</string>
-	<string name="notify_request">It\'s time to send a request to %1$s with Stax.</string>
+	<string name="notify_request">It\'s time to send a request for payment to %1$s with Stax.</string>
 	<string name="notify_request_cta">Send request</string>
 	<string name="notify_airtime">It\'s time to buy airtime with Stax.</string>
 	<string name="notify_airtime_cta">Buy airtime</string>

@@ -14,8 +14,8 @@ public abstract class StagedViewModel extends AndroidViewModel {
 	protected DatabaseRepo repo;
 	protected MutableLiveData<StagedEnum> stage = new MutableLiveData<>();
 
-	private MutableLiveData<Boolean> futureDated = new MutableLiveData<>();
-	private MutableLiveData<Long> futureDate = new MutableLiveData<>();
+	protected MutableLiveData<Boolean> futureDated = new MutableLiveData<>();
+	protected MutableLiveData<Long> futureDate = new MutableLiveData<>();
 
 	public StagedViewModel(@NonNull Application application) {
 		super(application);

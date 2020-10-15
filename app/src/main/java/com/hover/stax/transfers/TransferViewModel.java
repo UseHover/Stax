@@ -30,7 +30,7 @@ public class TransferViewModel extends AndroidViewModel {
 
 	private MutableLiveData<String> amount = new MutableLiveData<>();
 	private MutableLiveData<String> recipient = new MutableLiveData<>();
-	private MutableLiveData<String> reason = new MutableLiveData<>();
+	private MutableLiveData<String> note = new MutableLiveData<>();
 	private MutableLiveData<Boolean> futureDated = new MutableLiveData<>();
 	private MutableLiveData<Long> futureDate = new MutableLiveData<>();
 
@@ -178,16 +178,16 @@ public class TransferViewModel extends AndroidViewModel {
 		return recipient;
 	}
 
-	void setReason(String r) {
-		reason.postValue(r);
+	void setNote(String r) {
+		note.postValue(r);
 	}
 
-	LiveData<String> getReason() {
-		if (reason == null) {
-			reason = new MutableLiveData<>();
-			reason.setValue(" ");
+	LiveData<String> getNote() {
+		if (note == null) {
+			note = new MutableLiveData<>();
+			note.setValue(" ");
 		}
-		return reason;
+		return note;
 	}
 
 	void setIsFutureDated(boolean isFuture) {
@@ -215,7 +215,7 @@ public class TransferViewModel extends AndroidViewModel {
 
 	void schedule(Context c) {
 		Amplitude.getInstance().logEvent(c.getString(R.string.scheduled_transaction, type));
-		Schedule s = new Schedule(activeAction.getValue(), futureDate.getValue(), recipient.getValue(), amount.getValue(), getApplication());
+		Schedule s = new Schedule(activeAction.getValue(), futureDate.getValue(), recipient.getValue(), amount.getValue(), note.getValue(), getApplication());
 		repo.insert(s);
 	}
 }

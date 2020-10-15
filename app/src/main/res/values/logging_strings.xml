@@ -29,6 +29,7 @@
 	<string name="visit_home" translatable="false">Home</string>
 	<string name="finish_transfer" translatable="false">Completed submission %1$s transfer</string>
 	<string name="scheduled_transaction" translatable="false">Completed scheduling %1$s transfer</string>
+	<string name="scheduled_request" translatable="false">Completed scheduling request</string>
 	<string name="clicked_schedule_notification" translatable="false">Clicked schedule notification</string>
 	<string name="finished_scheduled_transaction" translatable="false">Completed scheduled %1$s transfer</string>
 	<string name="try_contact_select" translatable="false">Visited contact select screen</string>

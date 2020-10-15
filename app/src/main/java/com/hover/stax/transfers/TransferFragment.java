@@ -104,15 +104,9 @@ public class TransferFragment extends Fragment {
 			recipientInput.setText(recipient);
 			recipientValue.setText(recipient);
 		});
-		transferViewModel.getReason().observe(getViewLifecycleOwner(), reason -> {
+		transferViewModel.getNote().observe(getViewLifecycleOwner(), reason -> {
 			reasonInput.setText(reason);
 			reasonValue.setText(reason);
-		});
-
-		transferViewModel.getIsFuture().observe(getViewLifecycleOwner(), isFuture -> root.findViewById(R.id.dateInput).setVisibility(isFuture ? View.VISIBLE : View.GONE));
-		transferViewModel.getFutureDate().observe(getViewLifecycleOwner(), futureDate -> {
-			((TextView) root.findViewById(R.id.dateInput)).setText(futureDate != null ? DateUtils.humanFriendlyDate(futureDate) : getString(R.string.date));
-			((TextView) root.findViewById(R.id.dateValue)).setText(futureDate != null ? DateUtils.humanFriendlyDate(futureDate) : getString(R.string.date));
 		});
 
 		transferViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
@@ -169,7 +163,7 @@ public class TransferFragment extends Fragment {
 				reasonInput.requestFocus();
 				break;
 			case REVIEW:
-				transferViewModel.setReason(reasonInput.getText().toString().isEmpty() ? " " : reasonInput.getText().toString());
+				transferViewModel.setNote(reasonInput.getText().toString().isEmpty() ? " " : reasonInput.getText().toString());
 				if (validates(recipientInput, RECIPIENT, R.string.enterRecipientError))
 					transferViewModel.setRecipient(recipientInput.getText().toString());
 				break;
@@ -264,4 +258,3 @@ public class TransferFragment extends Fragment {
 		else errorMsgView.setText(getString(R.string.no_p2p_action_error));
 	}
 }
-

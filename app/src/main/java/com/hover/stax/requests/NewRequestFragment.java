@@ -20,10 +20,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.sdk.permissions.PermissionHelper;
@@ -32,6 +36,7 @@ import com.hover.stax.security.PinEntryAdapter;
 import com.hover.stax.transfers.StaxContactModel;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.PermissionUtils;
+import com.hover.stax.utils.StagedFragment;
 import com.hover.stax.utils.StagedViewModel;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -43,9 +48,9 @@ import static com.hover.stax.requests.RequestStage.AMOUNT;
 import static com.hover.stax.requests.RequestStage.NOTE;
 import static com.hover.stax.requests.RequestStage.RECIPIENT;
 
-public class NewRequestFragment extends Fragment implements RecipientAdapter.UpdateListener {
+public class NewRequestFragment extends StagedFragment implements RecipientAdapter.UpdateListener {
 
-	private NewRequestViewModel requestViewModel;
+	protected NewRequestViewModel requestViewModel;
 
 	private RecyclerView recipientInputList;
 	private LinearLayout recipientValueList;
@@ -59,15 +64,15 @@ public class NewRequestFragment extends Fragment implements RecipientAdapter.Upd
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		requestViewModel = new ViewModelProvider(requireActivity()).get(NewRequestViewModel.class);
+		stagedViewModel = new ViewModelProvider(requireActivity()).get(NewRequestViewModel.class);
+		requestViewModel = (NewRequestViewModel) stagedViewModel;
 		View view = inflater.inflate(R.layout.fragment_request, container, false);
 		init(view);
-		startObservers(view);
-		startListeners(view);
 		return view;
 	}
 
-	private void init(View view) {
+	@Override
+	protected void init(View view) {
 		recipientValueList = view.findViewById(R.id.recipientValueList);
 		amountValue = view.findViewById(R.id.amountValue);
 		noteValue = view.findViewById(R.id.noteValue);
@@ -79,9 +84,13 @@ public class NewRequestFragment extends Fragment implements RecipientAdapter.Upd
 		recipientInputList.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 		recipientAdapter = new RecipientAdapter(null, this);
 		recipientInputList.setAdapter(recipientAdapter);
+
+		super.init(view);
 	}
 
-	private void startObservers(View root) {
+	@Override
+	protected void startObservers(View root) {
+		super.startObservers(root);
 		requestViewModel.getStage().observe(getViewLifecycleOwner(), stage -> {
 			switch ((RequestStage) stage) {
 				case AMOUNT: amountInput.requestFocus(); break;
@@ -110,15 +119,11 @@ public class NewRequestFragment extends Fragment implements RecipientAdapter.Upd
 		});
 		requestViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> amountValue.setText(Utils.formatAmount(amount)));
 		requestViewModel.getNote().observe(getViewLifecycleOwner(), note -> noteValue.setText(note));
-
-		requestViewModel.getIsFuture().observe(getViewLifecycleOwner(), isFuture -> root.findViewById(R.id.dateInput).setVisibility(isFuture ? View.VISIBLE : View.GONE));
-		requestViewModel.getFutureDate().observe(getViewLifecycleOwner(), futureDate -> {
-			((TextView) root.findViewById(R.id.dateInput)).setText(futureDate != null ? DateUtils.humanFriendlyDate(futureDate) : getString(R.string.date));
-			((TextView) root.findViewById(R.id.dateValue)).setText(futureDate != null ? DateUtils.humanFriendlyDate(futureDate) : getString(R.string.date));
-		});
 	}
 
-	private void startListeners(View view) {
+	@Override
+	protected void startListeners(View root) {
+		super.startListeners(root);
 		addRecipientBtn.setOnClickListener(v -> requestViewModel.addRecipient(""));
 		amountInput.addTextChangedListener(amountWatcher);
 		noteInput.addTextChangedListener(noteWatcher);

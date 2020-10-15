@@ -12,21 +12,15 @@ import androidx.lifecycle.ViewModelProvider;
 import com.amplitude.api.Amplitude;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.hover.stax.R;
+import com.hover.stax.database.Constants;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.utils.StagedViewModel;
 
-import static com.hover.stax.requests.RequestStage.AMOUNT;
-import static com.hover.stax.requests.RequestStage.NOTE;
-import static com.hover.stax.requests.RequestStage.RECIPIENT;
-import static com.hover.stax.requests.RequestStage.REVIEW;
-import static com.hover.stax.requests.RequestStage.REVIEW_DIRECT;
+import static com.hover.stax.requests.RequestStage.*;
 
 public class RequestActivity extends AppCompatActivity {
 	final public static String TAG = "TransferActivity";
-	final public static int REQUEST_REQUEST = 301;
-	private final static int SEND_SMS = 302;
-	private final static int SEND_SMS_FOREGROUND = 303;
 
 	private NewRequestViewModel requestViewModel;
 	private ScheduleDetailViewModel scheduleViewModel = null;
@@ -40,6 +34,13 @@ public class RequestActivity extends AppCompatActivity {
 		startObservers();
 		checkIntent();
 		setContentView(R.layout.activity_request);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (requestViewModel.getStarted().getValue() != null && requestViewModel.getStarted().getValue())
+			returnResult(Constants.SEND_SMS_FOREGROUND);
 	}
 
 	private void startObservers() {
@@ -61,11 +62,7 @@ public class RequestActivity extends AppCompatActivity {
 		scheduleViewModel = new ViewModelProvider(this).get(ScheduleDetailViewModel.class);
 		scheduleViewModel.getSchedule().observe(this, schedule -> {
 			if (schedule == null) return;
-			requestViewModel.setAmount(schedule.amount);
-			requestViewModel.addRecipient(schedule.recipient);
-			requestViewModel.setNote(schedule.reason);
-			allowSchedule = false;
-			requestViewModel.setStage(REVIEW_DIRECT);
+			requestViewModel.setSchedule(schedule);
 		});
 		scheduleViewModel.setSchedule(schedule_id);
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_schedule_notification));
@@ -80,15 +77,25 @@ public class RequestActivity extends AppCompatActivity {
 
 	@SuppressLint("NewApi")
 	private void submit() {
-		requestViewModel.saveToDatabase();
+		if (requestViewModel.getIsFuture().getValue() != null && requestViewModel.getIsFuture().getValue() && requestViewModel.getFutureDate().getValue() != null) {
+			requestViewModel.schedule(this);
+			returnResult(Constants.SCHEDULE_REQUEST);
+		} else {
+			requestViewModel.saveToDatabase();
+			sendSms();
+		}
+	}
+
+	private void sendSms() {
+		requestViewModel.setStarted();
 		Intent i = new Intent(android.content.Intent.ACTION_VIEW);
 		i.setType("vnd.android-dir/mms-sms");
 		i.putExtra("address", requestViewModel.generateRecipientString());
 		i.putExtra("sms_body", requestViewModel.generateSMS(this));
-		startActivityForResult(i, SEND_SMS_FOREGROUND);
+		startActivityForResult(i, Constants.SEND_SMS_FOREGROUND);
 	}
 
-	private void onUpdateStage(StagedViewModel.StagedEnum stage) {
+	private void onUpdateStage(@Nullable StagedViewModel.StagedEnum stage) {
 		findViewById(R.id.recipientRow).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 && requestViewModel.getAmount().getValue() != null ? View.VISIBLE : View.GONE);
 		findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && requestViewModel.getNote().getValue() != null && !requestViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
@@ -102,17 +109,21 @@ public class RequestActivity extends AppCompatActivity {
 		findViewById(R.id.recipientCard).setVisibility(stage.compare(RECIPIENT) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.amountCard).setVisibility(stage.compare(AMOUNT) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.noteCard).setVisibility(stage.compare(NOTE) == 0 ? View.VISIBLE : View.GONE);
-//		findViewById(R.id.futureCard).setVisibility(requestViewModel.getFutureDate().getValue() == null && allowSchedule ? View.VISIBLE : View.GONE);
+		findViewById(R.id.futureCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && requestViewModel.getFutureDate().getValue() == null ? View.VISIBLE : View.GONE);
 	}
 
 	private void setFab(StagedViewModel.StagedEnum stage) {
 		ExtendedFloatingActionButton fab = findViewById(R.id.fab);
 		if (stage.compare(REVIEW) >= 0) {
-			if (requestViewModel.getIsFuture().getValue() != null && requestViewModel.getIsFuture().getValue())
+			if (requestViewModel.getIsFuture().getValue() != null && requestViewModel.getIsFuture().getValue()) {
+				fab.setVisibility(requestViewModel.getFutureDate().getValue() == null ? View.GONE : View.VISIBLE);
 				fab.setText(getString(R.string.schedule));
-			else
+			} else {
+				fab.setVisibility(View.VISIBLE);
 				fab.setText(getString(R.string.notify_request_cta));
+			}
 		} else {
+			fab.setVisibility(View.VISIBLE);
 			fab.setText(R.string.continue_text);
 		}
 	}
@@ -123,13 +134,17 @@ public class RequestActivity extends AppCompatActivity {
 		if (resultCode == RESULT_CANCELED) {
 			return;
 		}
-		if (requestCode == SEND_SMS_FOREGROUND) {
-			returnResult();
+		if (requestCode == Constants.SEND_SMS_FOREGROUND) {
+			returnResult(requestCode);
 		}
 	}
 
-	private void returnResult() {
+	private void returnResult(int type) {
 		Intent i = new Intent();
+		if (type == Constants.SCHEDULE_REQUEST) {
+			i.putExtra(Schedule.DATE_KEY, requestViewModel.getFutureDate().getValue());
+		}
+		i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);
 		setResult(RESULT_OK, i);
 		finish();
 	}
