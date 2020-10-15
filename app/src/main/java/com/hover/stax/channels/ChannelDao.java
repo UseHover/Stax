@@ -18,7 +18,7 @@ public interface ChannelDao {
 	@Query("SELECT * FROM channels WHERE selected = :selected ORDER BY defaultAccount DESC")
 	LiveData<List<Channel>> getSelected(boolean selected);
 
-	@Query("SELECT * FROM channels WHERE defaultAccount = 'true' LIMIT 1")
+	@Query("SELECT * FROM channels WHERE defaultAccount = 1 LIMIT 1")
 	LiveData<Channel> getLiveDefault();
 
 	@Query("SELECT * FROM channels WHERE country_alpha2 = :countryAlpha2")

@@ -6,15 +6,15 @@
     android:orientation="vertical">
 
 	<TextView
+		android:id="@+id/trans_date"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:textColor="@color/grey"
-	    android:visibility="gone"
 	    android:layout_marginTop="@dimen/spacing8"
 	    android:layout_marginBottom="@dimen/activity_vertical_margin"
 	    android:textSize="@dimen/text_13"
 	    android:fontFamily="font-normal"
-	    android:id="@+id/trans_date" />
+		android:visibility="gone" />
 
 	<LinearLayout
 	    android:layout_width="match_parent"

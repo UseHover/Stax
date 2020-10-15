@@ -25,6 +25,8 @@ public class NewRequestViewModel extends StagedViewModel {
 	private MutableLiveData<List<String>> recipients = new MutableLiveData<>();
 	private MutableLiveData<String> note = new MutableLiveData<>();
 
+	private MutableLiveData<Schedule> schedule = new MutableLiveData<>();
+
 	private MutableLiveData<Integer> recipientError = new MutableLiveData<>();
 
 	private MutableLiveData<Boolean> requestStarted = new MutableLiveData<>();
@@ -87,10 +89,11 @@ public class NewRequestViewModel extends StagedViewModel {
 
 	boolean isDone() { return stage.getValue() == REVIEW || stage.getValue() == REVIEW_DIRECT; }
 
-	public void setSchedule(Schedule schedule) {
-		setAmount(schedule.amount);
-		recipients.setValue(new ArrayList<>(Collections.singletonList(schedule.recipient)));
-		setNote(schedule.note);
+	public void setSchedule(Schedule s) {
+		schedule.setValue(s);
+		setAmount(s.amount);
+		recipients.setValue(new ArrayList<>(Collections.singletonList(s.recipient)));
+		setNote(s.note);
 		setStage(REVIEW_DIRECT);
 	}
 
@@ -134,6 +137,11 @@ public class NewRequestViewModel extends StagedViewModel {
 	void saveToDatabase() {
 		for (String recipient : recipients.getValue())
 			repo.insert(new Request(recipient, amount.getValue(), note.getValue()));
+		if (schedule.getValue() != null) {
+			Schedule s = schedule.getValue();
+			s.complete = true;
+			repo.update(s);
+		}
 	}
 
 	void setStarted() {

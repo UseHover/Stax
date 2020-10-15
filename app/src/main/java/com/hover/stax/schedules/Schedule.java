@@ -61,6 +61,10 @@ public class Schedule {
 	@ColumnInfo(name = "frequency")
 	public String frequency;
 
+	@NonNull
+	@ColumnInfo(name = "complete", defaultValue = "false")
+	public boolean complete;
+
 	public Schedule() {}
 
 	public Schedule(Action action, Long date, String r, String a, String n, Context c) {
@@ -84,6 +88,7 @@ public class Schedule {
 		amount = a;
 		note = n;
 		frequency = ONCE;
+		complete = false;
 	}
 
 	private String generateDescription(Action action, Context c) {

@@ -84,11 +84,11 @@ public class Channel {
 	public String secondaryColorHex;
 
 	@NonNull
-	@ColumnInfo(name = "selected", defaultValue = "false")
+	@ColumnInfo(name = "selected", defaultValue = "0")
 	public boolean selected;
 
 	@NonNull
-	@ColumnInfo(name = "defaultAccount", defaultValue = "false")
+	@ColumnInfo(name = "defaultAccount", defaultValue = "0")
 	public boolean defaultAccount;
 
 	@ColumnInfo(name = "pin")
