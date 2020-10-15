@@ -18,17 +18,16 @@ import com.hover.stax.hover.HoverSession;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.security.BiometricChecker;
+import com.hover.stax.utils.StagedViewModel;
 import com.hover.stax.utils.UIHelper;
 
-import static com.hover.stax.transfers.InputStage.*;
+import static com.hover.stax.transfers.TransferStage.*;
 
 public class TransferActivity extends AppCompatActivity implements BiometricChecker.AuthListener {
 	final public static String TAG = "TransferActivity";
 
 	private TransferViewModel transferViewModel;
 	private ScheduleDetailViewModel scheduleViewModel = null;
-
-	private boolean allowSchedule = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +77,6 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 			transferViewModel.setActiveChannel(schedule.channel_id);
 			transferViewModel.setRecipient(schedule.recipient);
 			transferViewModel.setNote(schedule.note);
-			allowSchedule = false;
 			transferViewModel.setStage(REVIEW_DIRECT);
 		});
 		scheduleViewModel.setSchedule(schedule_id);
@@ -133,32 +131,32 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 				.run();
 	}
 
-	private void onUpdateStage(InputStage stage) {
+	private void onUpdateStage(StagedViewModel.StagedEnum stage) {
 //		findViewById(R.id.summaryCard).setVisibility(stage.compareTo(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.amountRow).setVisibility(stage.compareTo(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.fromRow).setVisibility(stage.compareTo(FROM_ACCOUNT) > 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.toNetworkRow).setVisibility(stage.compareTo(TO_NETWORK) > 0 &&
+		findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.fromRow).setVisibility(stage.compare(FROM_ACCOUNT) > 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.toNetworkRow).setVisibility(stage.compare(TO_NETWORK) > 0 &&
 															  transferViewModel.getActions().getValue() != null && transferViewModel.getActions().getValue().size() > 0 && (transferViewModel.getActions().getValue().size() > 1 || !transferViewModel.getActiveAction().getValue().toString().equals("Phone number")) ? View.VISIBLE : View.GONE);
-		findViewById(R.id.recipientRow).setVisibility(stage.compareTo(RECIPIENT) > 0 && transferViewModel.getActiveAction().getValue() != null && transferViewModel.getActiveAction().getValue().requiresRecipient() ? View.VISIBLE : View.GONE);
-		findViewById(R.id.reasonRow).setVisibility((stage.compareTo(REASON) > 0 && transferViewModel.getNote().getValue() != null && !transferViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
+		findViewById(R.id.recipientRow).setVisibility(stage.compare(RECIPIENT) > 0 && transferViewModel.getActiveAction().getValue() != null && transferViewModel.getActiveAction().getValue().requiresRecipient() ? View.VISIBLE : View.GONE);
+		findViewById(R.id.reasonRow).setVisibility((stage.compare(REASON) > 0 && transferViewModel.getNote().getValue() != null && !transferViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
 		findViewById(R.id.dateRow).setVisibility(transferViewModel.getFutureDate().getValue() != null ? View.VISIBLE : View.GONE);
 
 		setCurrentCard(stage);
 		setFab(stage);
 	}
 
-	private void setCurrentCard(InputStage stage) {
-		findViewById(R.id.amountCard).setVisibility(stage.compareTo(AMOUNT) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.fromAccountCard).setVisibility(stage.compareTo(FROM_ACCOUNT) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.networkCard).setVisibility(stage.compareTo(TO_NETWORK) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.recipientCard).setVisibility(stage.compareTo(RECIPIENT) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.reasonCard).setVisibility(stage.compareTo(REASON) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.futureCard).setVisibility(transferViewModel.getFutureDate().getValue() == null && allowSchedule ? View.VISIBLE : View.GONE);
+	private void setCurrentCard(StagedViewModel.StagedEnum stage) {
+		findViewById(R.id.amountCard).setVisibility(stage.compare(AMOUNT) == 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.fromAccountCard).setVisibility(stage.compare(FROM_ACCOUNT) == 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.networkCard).setVisibility(stage.compare(TO_NETWORK) == 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.recipientCard).setVisibility(stage.compare(RECIPIENT) == 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.reasonCard).setVisibility(stage.compare(REASON) == 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.futureCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && transferViewModel.getFutureDate().getValue() == null ? View.VISIBLE : View.GONE);
 	}
 
-	private void setFab(InputStage stage) {
+	private void setFab(StagedViewModel.StagedEnum stage) {
 		ExtendedFloatingActionButton fab = findViewById(R.id.fab);
-		if (stage.compareTo(REVIEW) >= 0) {
+		if (stage.compare(REVIEW) >= 0) {
 			if (transferViewModel.getIsFuture().getValue() != null && transferViewModel.getIsFuture().getValue()) {
 				fab.setVisibility(transferViewModel.getFutureDate().getValue() == null ? View.GONE : View.VISIBLE);
 				fab.setText(getString(R.string.schedule));

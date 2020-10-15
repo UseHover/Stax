@@ -3,7 +3,8 @@
     android:layout_width="65dp"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginHorizontal="16dp">
+    android:layout_marginHorizontal="16dp"
+	android:layout_marginBottom="16dp">
 
 	<de.hdodenhof.circleimageview.CircleImageView
 	    android:layout_width="55dp"

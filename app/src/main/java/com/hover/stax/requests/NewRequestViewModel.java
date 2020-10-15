@@ -25,8 +25,6 @@ public class NewRequestViewModel extends StagedViewModel {
 	private MutableLiveData<List<String>> recipients = new MutableLiveData<>();
 	private MutableLiveData<String> note = new MutableLiveData<>();
 
-	private MutableLiveData<Schedule> schedule = new MutableLiveData<>();
-
 	private MutableLiveData<Integer> recipientError = new MutableLiveData<>();
 
 	private MutableLiveData<Boolean> requestStarted = new MutableLiveData<>();

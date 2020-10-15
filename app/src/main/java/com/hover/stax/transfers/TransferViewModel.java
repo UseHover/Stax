@@ -3,7 +3,6 @@ package com.hover.stax.transfers;
 import android.app.Application;
 import android.content.Context;
 
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -13,16 +12,16 @@ import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.schedules.Schedule;
+import com.hover.stax.utils.StagedViewModel;
 
 import java.util.List;
 
-public class TransferViewModel extends AndroidViewModel {
+public class TransferViewModel extends StagedViewModel {
 
 	private String type = Action.P2P;
 	private LiveData<List<Channel>> selectedChannels = new MutableLiveData<>();
-	private MutableLiveData<InputStage> inputStage = new MutableLiveData<>();
+	private MutableLiveData<TransferStage> inputStage = new MutableLiveData<>();
 
 	private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
 	private LiveData<List<Action>> filteredActions = new MutableLiveData<>();
@@ -31,23 +30,16 @@ public class TransferViewModel extends AndroidViewModel {
 	private MutableLiveData<String> amount = new MutableLiveData<>();
 	private MutableLiveData<String> recipient = new MutableLiveData<>();
 	private MutableLiveData<String> note = new MutableLiveData<>();
-	private MutableLiveData<Boolean> futureDated = new MutableLiveData<>();
-	private MutableLiveData<Long> futureDate = new MutableLiveData<>();
-
-	private DatabaseRepo repo;
 
 	public TransferViewModel(Application application) {
 		super(application);
-		repo = new DatabaseRepo(application);
 
 		selectedChannels = repo.getSelected();
 		activeChannel.addSource(selectedChannels, this::findActiveChannel);
 		filteredActions = Transformations.switchMap(activeChannel, this::loadActions);
 		activeAction.addSource(filteredActions, this::findActiveAction);
 
-		inputStage.setValue(InputStage.AMOUNT);
-		futureDated.setValue(false);
-		futureDate.setValue(null);
+		inputStage.setValue(TransferStage.AMOUNT);
 	}
 
 	void setType(String transaction_type) {
@@ -109,53 +101,6 @@ public class TransferViewModel extends AndroidViewModel {
 		return activeAction;
 	}
 
-	void setStage(InputStage stage) {
-		inputStage.setValue(stage);
-	}
-
-	void goToNextStage() {
-		InputStage next = inputStage.getValue() != null ? inputStage.getValue().next() : InputStage.AMOUNT;
-		next = validateNext(next);
-		inputStage.postValue(next);
-	}
-
-	private InputStage validateNext(InputStage next) {
-		if (!canStayAt(next)) {
-			next = validateNext(next.next());
-		}
-		return next;
-	}
-
-	boolean goToStage(InputStage stage) {
-		if (stage == null) return false;
-		boolean canGoBack = canStayAt(stage);
-		if (canGoBack) {
-			inputStage.postValue(stage);
-		}
-		return canGoBack;
-	}
-
-	private boolean canStayAt(InputStage stage) {
-		switch (stage) {
-			case TO_NETWORK:
-				return filteredActions.getValue() != null && filteredActions.getValue().size() > 0 && (filteredActions.getValue().size() > 1 || filteredActions.getValue().get(0).hasToInstitution());
-			case RECIPIENT:
-				return activeAction.getValue() != null && activeAction.getValue().requiresRecipient();
-			case REASON:
-				return activeAction.getValue() != null && activeAction.getValue().requiresReason();
-			default:
-				return true;
-		}
-	}
-
-	LiveData<InputStage> getStage() {
-		if (inputStage == null) {
-			inputStage = new MutableLiveData<>();
-			inputStage.setValue(InputStage.AMOUNT);
-		}
-		return inputStage;
-	}
-
 	void setAmount(String a) {
 		amount.postValue(a);
 	}
@@ -190,27 +135,18 @@ public class TransferViewModel extends AndroidViewModel {
 		return note;
 	}
 
-	void setIsFutureDated(boolean isFuture) {
-		futureDated.setValue(isFuture);
-	}
-
-	LiveData<Boolean> getIsFuture() {
-		if (futureDated == null) {
-			futureDated = new MutableLiveData<>();
-			futureDated.setValue(false);
+	boolean stageValidates() {
+		if (stage.getValue() == null) return false;
+		switch ((TransferStage) stage.getValue()) {
+			case TO_NETWORK:
+				return filteredActions.getValue() != null && filteredActions.getValue().size() > 0 && (filteredActions.getValue().size() > 1 || filteredActions.getValue().get(0).hasToInstitution());
+			case RECIPIENT:
+				return activeAction.getValue() != null && activeAction.getValue().requiresRecipient();
+			case REASON:
+				return activeAction.getValue() != null && activeAction.getValue().requiresReason();
+			default:
+				return true;
 		}
-		return futureDated;
-	}
-
-	void setFutureDate(Long date) {
-		futureDate.setValue(date);
-	}
-
-	LiveData<Long> getFutureDate() {
-		if (futureDate == null) {
-			futureDate = new MutableLiveData<>();
-		}
-		return futureDate;
 	}
 
 	void schedule(Context c) {

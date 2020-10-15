@@ -37,8 +37,8 @@ import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
-import static com.hover.stax.transfers.InputStage.AMOUNT;
-import static com.hover.stax.transfers.InputStage.RECIPIENT;
+import static com.hover.stax.transfers.TransferStage.AMOUNT;
+import static com.hover.stax.transfers.TransferStage.RECIPIENT;
 
 public class TransferFragment extends Fragment {
 	private static final String TAG = "TransferFragment";
@@ -95,7 +95,7 @@ public class TransferFragment extends Fragment {
 	}
 
 	private void startObservers(View root) {
-		transferViewModel.getStage().observe(getViewLifecycleOwner(), this::updateVariableValues);
+//		transferViewModel.getStage().observe(getViewLifecycleOwner(), this::updateVariableValues);
 		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> {
 			amountInput.setText(amount);
 			amountValue.setText(Utils.formatAmount(amount));
@@ -131,6 +131,12 @@ public class TransferFragment extends Fragment {
 		transferViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
 			if (channels != null) createChannelSelector(channels);
 		});
+
+		transferViewModel.getIsFuture().observe(getViewLifecycleOwner(), isFuture -> root.findViewById(R.id.dateInput).setVisibility(isFuture ? View.VISIBLE : View.GONE));
+		transferViewModel.getFutureDate().observe(getViewLifecycleOwner(), futureDate -> {
+			((TextView) root.findViewById(R.id.dateInput)).setText(futureDate != null ? DateUtils.humanFriendlyDate(futureDate) : getString(R.string.date));
+			((TextView) root.findViewById(R.id.dateValue)).setText(futureDate != null ? DateUtils.humanFriendlyDate(futureDate) : getString(R.string.date));
+		});
 	}
 
 	private void createChannelSelector(List<Channel> channels) {
@@ -146,7 +152,7 @@ public class TransferFragment extends Fragment {
 		}
 	}
 
-	private void updateVariableValues(InputStage stage) {
+	private void updateVariableValues(TransferStage stage) {
 		switch (stage) {
 			case FROM_ACCOUNT:
 				if (validates(amountInput, AMOUNT, R.string.enterAmountError))
@@ -170,7 +176,7 @@ public class TransferFragment extends Fragment {
 		}
 	}
 
-	private boolean validates(EditText input, InputStage stage, int errorMsg) {
+	private boolean validates(EditText input, TransferStage stage, int errorMsg) {
 		if (input.getText().toString().isEmpty()) {
 			boolean canGoBack = transferViewModel.goToStage(stage);
 			if (canGoBack)
