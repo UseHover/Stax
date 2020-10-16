@@ -52,4 +52,13 @@
 		    android:name="channel_id"
 		    app:argType="integer" />
 	</fragment>
+
+	<fragment
+	    android:id="@+id/pinUpdateFragment"
+	    android:name="com.hover.stax.security.PinUpdateFragment"
+	    android:label="PinUpdateFragment" >
+		<argument
+		    android:name="channel_id"
+		    app:argType="integer" />
+	</fragment>
 </navigation>

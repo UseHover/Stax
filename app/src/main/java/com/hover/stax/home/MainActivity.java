@@ -43,9 +43,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
 		BalancesViewModel.RunBalanceListener,
-		BalanceAdapter.BalanceListener,
-		BiometricChecker.AuthListener,
-		RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener {
+				BalanceAdapter.BalanceListener,
+				BiometricChecker.AuthListener,
+				RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener {
 
 	final public static String TAG = "MainActivity";
 	private BalancesViewModel balancesViewModel;

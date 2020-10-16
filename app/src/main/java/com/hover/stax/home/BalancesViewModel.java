@@ -143,5 +143,7 @@ public class BalancesViewModel extends AndroidViewModel {
 		void startRun(Action a, int index);
 	}
 
-	public boolean hasChannels() { return selectedChannels.getValue() != null && selectedChannels.getValue().size() > 0; }
+	public boolean hasChannels() {
+		return selectedChannels.getValue() != null && selectedChannels.getValue().size() > 0;
+	}
 }

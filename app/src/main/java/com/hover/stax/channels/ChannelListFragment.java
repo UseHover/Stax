@@ -64,7 +64,9 @@ public class ChannelListFragment extends Fragment implements ChannelsAdapter.Sel
 	}
 
 	private void fillSection(View card, String title, List<Channel> channels) {
-		if (channels.size() == 0) { title = getString(R.string.loading); }
+		if (channels.size() == 0) {
+			title = getString(R.string.loading);
+		}
 		((TextView) card.findViewById(R.id.title)).setText(title);
 		GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 4, GridLayoutManager.VERTICAL, false);
 		ChannelsAdapter channelsAdapter = new ChannelsAdapter(channels, this);

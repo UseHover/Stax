@@ -19,7 +19,7 @@ public class PermissionUtils {
 		}
 		return true;
 	}
-	
+
 	public static boolean permissionsGranted(int[] grantResults) {
 		for (int result : grantResults) {
 			if (result != PackageManager.PERMISSION_GRANTED) {

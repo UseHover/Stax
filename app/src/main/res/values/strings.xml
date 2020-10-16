@@ -118,6 +118,11 @@
 	<string name="remove_pin_successful">PIN removed successfully</string>
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
+	<string name="save_pin">Save PIN</string>
+	<string name="remove_account">Remove Account</string>
+	<string name="account_not_found">Account not found, please restart your app if this persist</string>
+	<string name="account_removed">Account removed successfully</string>
+	<string name="pin_updated">Pin saved successfully</string>
 
 	<string name="default_account">Default account</string>
 	<string name="default_account_desc">Default account will show up first when you move money.</string>

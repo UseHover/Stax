@@ -37,7 +37,7 @@ public class SelfDestruct extends AppCompatActivity {
 	public static boolean isTime(Context c) {
 		long currentTime = new Date().getTime();
 		long selfDestructTime = Long.parseLong(Utils.getBuildConfigValue(c, "SELF_DESTRUCT").toString());
-		return  currentTime >= selfDestructTime;
+		return currentTime >= selfDestructTime;
 	}
 
 	private void attemptDownload() {

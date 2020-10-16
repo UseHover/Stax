@@ -18,7 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.amplitude.api.Amplitude;
-import com.hover.sdk.transactions.TransactionContract;
+import com.hover.sdk.actions.ActionContract;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.home.MainActivity;
@@ -102,8 +102,8 @@ public class SecurityFragment extends Fragment {
 
 	private void goToAccountDetail(int channel_id) {
 		Bundle bundle = new Bundle();
-		bundle.putInt(TransactionContract.COLUMN_CHANNEL_ID, channel_id);
-		NavHostFragment.findNavController(SecurityFragment.this).navigate(R.id.channelsDetailsFragment);
+		bundle.putInt(ActionContract.COLUMN_CHANNEL_ID, channel_id);
+		NavHostFragment.findNavController(SecurityFragment.this).navigate(R.id.pinUpdateFragment, bundle);
 	}
 
 	private void createDefaultSelector(List<Channel> channels, View root, PinsViewModel securityViewModel) {
@@ -134,15 +134,15 @@ public class SecurityFragment extends Fragment {
 	private void setUpRemovePins(View root, PinsViewModel securityViewModel) {
 		root.findViewById(R.id.removePinsButtonId).setOnClickListener(view -> {
 			new StaxDialog(root.getContext(), this)
-				.setDialogTitle(R.string.remove_pins)
-				.setDialogMessage(R.string.remove_pins_dialog_message)
-				.setPosButton(R.string.yes, btn -> {
-					securityViewModel.clearAllPins();
-					UIHelper.flashMessage(getContext(), getContext().getResources().getString(R.string.remove_pin_successful));
-				})
-				.setNegButton(R.string.no, null)
-				.isDestructive()
-				.showIt();
+					.setDialogTitle(R.string.remove_pins)
+					.setDialogMessage(R.string.remove_pins_dialog_message)
+					.setPosButton(R.string.yes, btn -> {
+						securityViewModel.clearAllPins();
+						UIHelper.flashMessage(getContext(), getContext().getResources().getString(R.string.remove_pin_successful));
+					})
+					.setNegButton(R.string.no, null)
+					.isDestructive()
+					.showIt();
 		});
 	}
 

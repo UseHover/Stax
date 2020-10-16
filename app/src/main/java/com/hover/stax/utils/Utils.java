@@ -10,7 +10,6 @@ import com.google.i18n.phonenumbers.Phonenumber;
 
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
-import java.util.Date;
 
 public class Utils {
 	private final static String TAG = "Utils";
@@ -48,7 +47,9 @@ public class Utils {
 	public static String formatAmount(String number) {
 		try {
 			return formatAmount(getAmount(number));
-		} catch (Exception e) { return number; }
+		} catch (Exception e) {
+			return number;
+		}
 	}
 
 	public static String formatAmount(Double number) {

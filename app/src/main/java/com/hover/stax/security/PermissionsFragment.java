@@ -1,7 +1,6 @@
 package com.hover.stax.security;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +54,10 @@ public class PermissionsFragment extends Fragment {
 			requestNext();
 	}
 
-	private void startRequest() { askStarted = true; requestNext(); }
+	private void startRequest() {
+		askStarted = true;
+		requestNext();
+	}
 
 	private void requestNext() {
 		PermissionHelper ph = new PermissionHelper(getContext());
@@ -78,8 +80,13 @@ public class PermissionsFragment extends Fragment {
 			requestNext();
 	}
 
-	private void requestPhone(PermissionHelper ph) { ph.requestPhone(getActivity(), PHONE_REQUEST); }
-	private void requestSMS(PermissionHelper ph) { ph.requestBasicPerms(getActivity(), SMS_REQUEST); }
+	private void requestPhone(PermissionHelper ph) {
+		ph.requestPhone(getActivity(), PHONE_REQUEST);
+	}
+
+	private void requestSMS(PermissionHelper ph) {
+		ph.requestBasicPerms(getActivity(), SMS_REQUEST);
+	}
 
 	public void requestOverlay() {
 		if (dialog != null) dialog.dismiss();
