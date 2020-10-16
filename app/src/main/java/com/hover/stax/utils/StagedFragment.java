@@ -25,17 +25,17 @@ public abstract class StagedFragment extends Fragment {
 	private AutoCompleteTextView frequencyDropdown;
 
 	protected void init(View root) {
-		createDatePickers();
+		createDatePickers(root);
 		createFrequencyDropdown(root);
 		startObservers(root);
 		startListeners(root);
 	}
 
 	protected void startObservers(View root) {
-		stagedViewModel.getIsFuture().observe(getViewLifecycleOwner(), isFuture -> root.findViewById(R.id.dateInput).setVisibility(isFuture ? View.VISIBLE : View.GONE));
+		stagedViewModel.getIsFuture().observe(getViewLifecycleOwner(), isFuture -> root.findViewById(R.id.dateEntry).setVisibility(isFuture ? View.VISIBLE : View.GONE));
 		stagedViewModel.getFutureDate().observe(getViewLifecycleOwner(), futureDate -> {
-			((TextView) root.findViewById(R.id.dateInput)).setText(futureDate != null ? DateUtils.humanFriendlyDate(futureDate) : getString(R.string.date));
-			((TextView) root.findViewById(R.id.dateValue)).setText(futureDate != null ? DateUtils.humanFriendlyDate(futureDate) : getString(R.string.date));
+			((TextView) root.findViewById(R.id.dateInput)).setText(futureDate == null ? "" :DateUtils.humanFriendlyDate(futureDate));
+			((TextView) root.findViewById(R.id.dateValue)).setText(futureDate == null ? "" : DateUtils.humanFriendlyDate(futureDate));
 			root.findViewById(R.id.dateRow).setVisibility(futureDate == null ? View.GONE : View.VISIBLE);
 		});
 
@@ -45,8 +45,8 @@ public abstract class StagedFragment extends Fragment {
 			((TextView) root.findViewById(R.id.frequencyValue)).setText(getResources().getStringArray(R.array.frequency_array)[frequency]);
 		});
 		stagedViewModel.getEndDate().observe(getViewLifecycleOwner(), endDate -> {
-			((TextView) root.findViewById(R.id.endDateInput)).setText(endDate != null ? DateUtils.humanFriendlyDate(endDate) : getString(R.string.end_date_input));
-			((TextView) root.findViewById(R.id.endDateValue)).setText(endDate != null ? DateUtils.humanFriendlyDate(endDate) : getString(R.string.end_date));
+			((TextView) root.findViewById(R.id.endDateInput)).setText(endDate == null ? "" : DateUtils.humanFriendlyDate(endDate));
+			((TextView) root.findViewById(R.id.endDateValue)).setText(endDate == null ? "" : DateUtils.humanFriendlyDate(endDate));
 		});
 		stagedViewModel.getRepeatTimes().observe(getViewLifecycleOwner(), repeatTimes -> {
 			if (repeatTimes == null) return;
@@ -64,11 +64,15 @@ public abstract class StagedFragment extends Fragment {
 
 	protected void startListeners(View root) {
 		((SwitchMaterial) root.findViewById(R.id.futureSwitch)).setOnCheckedChangeListener((view, isChecked) -> stagedViewModel.setIsFutureDated(isChecked));
-		root.findViewById(R.id.dateInput).setOnClickListener(view -> datePicker.show(getActivity().getSupportFragmentManager(), datePicker.toString()));
+		root.findViewById(R.id.dateInput).setOnFocusChangeListener((view, hasFocus) -> {
+			if (hasFocus) datePicker.show(getActivity().getSupportFragmentManager(), datePicker.toString());
+		});
 
 		((SwitchMaterial) root.findViewById(R.id.repeatSwitch)).setOnCheckedChangeListener((view, isChecked) -> stagedViewModel.setIsRepeating(isChecked));
 		((AutoCompleteTextView) root.findViewById(R.id.frequencyDropdown)).setOnItemClickListener((adapterView, view, pos, id) -> stagedViewModel.setFrequency(pos));
-		root.findViewById(R.id.endDateInput).setOnClickListener(view -> endDatePicker.show(getActivity().getSupportFragmentManager(), endDatePicker.toString()));
+		root.findViewById(R.id.endDateInput).setOnFocusChangeListener((view, hasFocus) -> {
+			if (hasFocus) endDatePicker.show(getActivity().getSupportFragmentManager(), endDatePicker.toString());
+		});
 		((TextInputEditText) root.findViewById(R.id.repeat_times_input)).addTextChangedListener(repeatWatcher);
 
 		root.findViewById(R.id.save_btn).setOnClickListener(view -> stagedViewModel.saveRepeat());
@@ -82,7 +86,7 @@ public abstract class StagedFragment extends Fragment {
 		@Override public void onTextChanged(CharSequence s, int start, int before, int count) { }
 	};
 
-	private void createDatePickers() {
+	private void createDatePickers(View root) {
 		CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
 		constraintsBuilder.setStart(DateUtils.now() + DateUtils.DAY);
 		datePicker = MaterialDatePicker.Builder.datePicker()
@@ -91,7 +95,10 @@ public abstract class StagedFragment extends Fragment {
 
 		endDatePicker = MaterialDatePicker.Builder.datePicker()
 			             .setCalendarConstraints(constraintsBuilder.build()).build();
-		endDatePicker.addOnPositiveButtonClickListener(unixTime -> stagedViewModel.setEndDate(unixTime));
+		endDatePicker.addOnPositiveButtonClickListener(unixTime -> {
+			stagedViewModel.setEndDate(unixTime);
+			root.findViewById(R.id.repeat_times_input).requestFocus();
+		});
 	}
 
 	private void createFrequencyDropdown(View root) {

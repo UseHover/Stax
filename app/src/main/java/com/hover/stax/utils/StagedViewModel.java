@@ -71,8 +71,8 @@ public abstract class StagedViewModel extends AndroidViewModel {
 
 	public void setFutureDate(Long date) {
 		futureDate.setValue(date);
-		if (isRepeating.getValue() != null && isRepeating.getValue() && endDate.getValue() != null)
-			calculateRepeatTimes(endDate.getValue());
+		if (isRepeating.getValue() != null && isRepeating.getValue() && endDate.getValue() != null && frequency.getValue() != null)
+			calculateRepeatTimes(endDate.getValue(), frequency.getValue());
 	}
 
 	public LiveData<Long> getFutureDate() {
@@ -96,8 +96,8 @@ public abstract class StagedViewModel extends AndroidViewModel {
 
 	public void setFrequency(Integer freq) {
 		frequency.setValue(freq);
-		if (endDate.getValue() != null)
-			calculateRepeatTimes(endDate.getValue());
+		endDate.setValue(null);
+		repeatTimes.setValue(null);
 	}
 
 	public LiveData<Integer> getFrequency() {
@@ -107,7 +107,8 @@ public abstract class StagedViewModel extends AndroidViewModel {
 
 	public void setEndDate(Long date) {
 		endDate.setValue(date);
-		calculateRepeatTimes(date);
+		if (frequency.getValue() != null)
+			calculateRepeatTimes(date, frequency.getValue());
 	}
 
 	public LiveData<Long> getEndDate() {
@@ -119,7 +120,10 @@ public abstract class StagedViewModel extends AndroidViewModel {
 
 	public void setRepeatTimes(Integer times) {
 		repeatTimes.setValue(times);
-		calculateEndDate(times);
+		if (times != null)
+			calculateEndDate(times);
+		else
+			endDate.setValue(null);
 	}
 
 	public LiveData<Integer> getRepeatTimes() {
@@ -136,9 +140,9 @@ public abstract class StagedViewModel extends AndroidViewModel {
 		return repeatSaved;
 	}
 
-	private void calculateRepeatTimes(Long end_date) {
+	private void calculateRepeatTimes(Long end_date, int freq) {
 		Long start = futureDate.getValue() == null ? DateUtils.now() : futureDate.getValue();
-		switch (frequency.getValue()) {
+		switch (freq) {
 			case 1: repeatTimes.setValue(DateUtils.getWeeks(start, end_date)); break;
 			case 2: repeatTimes.setValue(DateUtils.getBiweeks(start, end_date)); break;
 			case 3: repeatTimes.setValue(DateUtils.getMonths(start, end_date)); break;

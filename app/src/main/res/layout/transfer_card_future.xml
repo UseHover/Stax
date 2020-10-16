@@ -21,26 +21,28 @@
 				android:layout_height="wrap_content"
 				android:paddingStart="@dimen/margin_8"
 				android:textSize="@dimen/text_16"
-			    	android:fontFamily="font-normal"
+				android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:text="@string/send_future" />
 		</LinearLayout>
 
-		<TextView android:id="@+id/dateInput"
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/dateEntry"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/margin_13"
-			android:paddingStart="@dimen/margin_13"
-			android:paddingEnd="@dimen/margin_21"
-			android:paddingVertical="@dimen/margin_16"
-			android:textColorHint="@color/darkGrey"
-			android:maxLines="1"
-			android:fontFamily="font-normal"
-			android:inputType="date"
-			android:textColor="@color/offWhite"
-			android:textSize="@dimen/text_21"
-			android:background="@drawable/edit_text_bg"
-			android:drawableEnd="@drawable/ic_calendar"
-			android:text="@string/date"
-			android:visibility="visible"/>
+			android:layout_marginTop="@dimen/margin_21"
+			android:hint="@string/end_date_input"
+			style="@style/StaxLabeledInput">
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:id="@+id/dateInput"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:padding="@dimen/margin_13"
+				android:textSize="@dimen/text_21"
+				android:textColor="@color/offWhite"
+				android:background="@null"
+				android:textCursorDrawable="@null"
+				android:drawableEnd="@drawable/ic_calendar"/>
+		</com.google.android.material.textfield.TextInputLayout>
 </com.hover.stax.views.StaxCardView>
