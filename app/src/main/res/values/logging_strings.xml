@@ -28,9 +28,10 @@
 	<string name="visit_new_request" translatable="false">New request</string>
 	<string name="visit_home" translatable="false">Home</string>
 	<string name="finish_transfer" translatable="false">Completed submission %1$s transfer</string>
-	<string name="scheduled_transaction" translatable="false">Completed scheduling %1$s transfer</string>
+	<string name="scheduled_complete" translatable="false">Completed scheduling %1$s</string>
 	<string name="clicked_schedule_notification" translatable="false">Clicked schedule notification</string>
 	<string name="finished_scheduled_transaction" translatable="false">Completed scheduled %1$s transfer</string>
+	<string name="clicked_send_request" translatable="false">Clicked send request</string>
 	<string name="try_contact_select" translatable="false">Visited contact select screen</string>
 	<string name="contact_perm_success" translatable="false">Completed grant contacts permissions</string>
 	<string name="sms_perm_success" translatable="false">Completed grant send SMS permission</string>

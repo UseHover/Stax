@@ -50,16 +50,6 @@ public class UIHelper {
 		imageButton.setImageDrawable(wrappedDrawable);
 	}
 
-	public static void setTextUnderline(TextView textView, String cs) {
-		SpannableString content = new SpannableString(cs);
-		content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
-		content.setSpan(android.graphics.Typeface.BOLD, 0, content.length(), 0);
-		try {
-			textView.setText(content);
-		} catch (Exception ignored) {
-		}
-	}
-
 	public static void fixListViewHeight(ListView listView) {
 		ListAdapter listAdapter = listView.getAdapter();
 		if (listAdapter == null) {

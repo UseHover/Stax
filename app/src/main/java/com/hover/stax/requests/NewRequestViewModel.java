@@ -4,55 +4,38 @@ import android.app.Application;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.hover.stax.R;
-import com.hover.stax.database.DatabaseRepo;
+import com.hover.stax.database.Constants;
+import com.hover.stax.schedules.Schedule;
+import com.hover.stax.utils.StagedViewModel;
 import com.hover.stax.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class NewRequestViewModel extends AndroidViewModel {
+import static com.hover.stax.requests.RequestStage.*;
 
-	private DatabaseRepo repo;
-	private MutableLiveData<RequestStage> requestStage = new MutableLiveData<>();
+public class NewRequestViewModel extends StagedViewModel {
+
+	private String type = Constants.REQUEST_TYPE;
 
 	private MutableLiveData<String> amount = new MutableLiveData<>();
 	private MutableLiveData<List<String>> recipients = new MutableLiveData<>();
 	private MutableLiveData<String> note = new MutableLiveData<>();
-	private MutableLiveData<Boolean> futureDated = new MutableLiveData<>();
-	private MutableLiveData<Long> futureDate = new MutableLiveData<>();
+
+	private MutableLiveData<Integer> recipientError = new MutableLiveData<>();
+
+	private MutableLiveData<Boolean> requestStarted = new MutableLiveData<>();
 
 	public NewRequestViewModel(@NonNull Application application) {
 		super(application);
-		repo = new DatabaseRepo(application);
-
-		requestStage.setValue(RequestStage.RECIPIENT);
-		recipients.setValue(new ArrayList<>());
-		futureDated.setValue(false);
-		futureDate.setValue(null);
-	}
-
-	LiveData<RequestStage> getStage() {
-		return requestStage;
-	}
-
-	void setStage(RequestStage stage) {
-		requestStage.setValue(stage);
-	}
-
-	void goToNextStage() {
-		RequestStage next = requestStage.getValue() != null ? requestStage.getValue().next() : RequestStage.RECIPIENT;
-		requestStage.postValue(next);
-	}
-
-	boolean goToStage(RequestStage stage) {
-		if (stage == null) return false;
-		requestStage.postValue(stage);
-		return true;
+		stage.setValue(RequestStage.RECIPIENT);
+		recipients.setValue(new ArrayList<>(Collections.singletonList("")));
+		requestStarted.setValue(false);
 	}
 
 	void setAmount(String a) {
@@ -64,6 +47,12 @@ public class NewRequestViewModel extends AndroidViewModel {
 			amount = new MutableLiveData<>();
 		}
 		return amount;
+	}
+
+	public void onUpdate(int pos, String recipient) {
+		List<String> rs = recipients.getValue() != null ? recipients.getValue() : new ArrayList<>();
+		rs.set(pos, recipient);
+		recipients.postValue(rs);
 	}
 
 	void addRecipient(String recipient) {
@@ -79,6 +68,13 @@ public class NewRequestViewModel extends AndroidViewModel {
 		return recipients;
 	}
 
+	LiveData<Integer> getRecipientError() {
+		if (recipientError == null) {
+			recipientError = new MutableLiveData<>();
+		}
+		return recipientError;
+	}
+
 	void setNote(String n) {
 		note.postValue(n);
 	}
@@ -91,27 +87,35 @@ public class NewRequestViewModel extends AndroidViewModel {
 		return note;
 	}
 
-	void setIsFutureDated(boolean isFuture) {
-		futureDated.setValue(isFuture);
+	boolean isDone() { return stage.getValue() == REVIEW || stage.getValue() == REVIEW_DIRECT; }
+
+	public void setSchedule(Schedule s) {
+		schedule.setValue(s);
+		setAmount(s.amount);
+		recipients.setValue(new ArrayList<>(Collections.singletonList(s.recipient)));
+		setNote(s.note);
+		setStage(REVIEW_DIRECT);
 	}
 
-	LiveData<Boolean> getIsFuture() {
-		if (futureDated == null) {
-			futureDated = new MutableLiveData<>();
-			futureDated.setValue(false);
+	boolean stageValidates() {
+		if (stage.getValue() == null) return false;
+		switch ((RequestStage) stage.getValue()) {
+			case RECIPIENT:
+				if (recipients.getValue() == null || recipients.getValue().size() == 0 || recipients.getValue().get(0).isEmpty()) {
+					recipientError.setValue(R.string.enterRecipientError);
+					return false;
+				} else {
+					recipientError.setValue(null);
+					List<String> rs = new ArrayList<>();
+					for (String r: recipients.getValue()) {
+						if (r != null && !r.isEmpty())
+							rs.add(r);
+					}
+					recipients.postValue(rs);
+				}
+				break;
 		}
-		return futureDated;
-	}
-
-	void setFutureDate(Long date) {
-		futureDate.setValue(date);
-	}
-
-	LiveData<Long> getFutureDate() {
-		if (futureDate == null) {
-			futureDate = new MutableLiveData<>();
-		}
-		return futureDate;
+		return true;
 	}
 
 	String generateRecipientString() {
@@ -130,8 +134,30 @@ public class NewRequestViewModel extends AndroidViewModel {
 		return c.getString(R.string.request_money_sms_template, a, n);
 	}
 
-	void saveToDatabase() {
+	void saveToDatabase(Context c) {
 		for (String recipient : recipients.getValue())
 			repo.insert(new Request(recipient, amount.getValue(), note.getValue()));
+
+		if (repeatSaved.getValue() != null && repeatSaved.getValue()) {
+			schedule();
+		} else if (schedule.getValue() != null) {
+			Schedule s = schedule.getValue();
+			s.complete = true;
+			repo.update(s);
+		}
+	}
+
+	void setStarted() {
+		requestStarted.setValue(true);
+	}
+	LiveData<Boolean> getStarted() {
+		if (requestStarted == null) { requestStarted = new MutableLiveData<>(); }
+		return requestStarted;
+	}
+
+	public void schedule() {
+		Schedule s = new Schedule(futureDate.getValue(), repeatSaved.getValue(), frequency.getValue(), endDate.getValue(),
+			generateRecipientString(), amount.getValue(), note.getValue(), getApplication());
+		saveSchedule(s);
 	}
 }

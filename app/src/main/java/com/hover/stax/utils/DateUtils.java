@@ -6,6 +6,7 @@ import com.hover.stax.R;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class DateUtils {
 	public final static int DAY = 24 * 60 * 60 * 1000;
@@ -23,12 +24,15 @@ public class DateUtils {
 	}
 
 	public static String humanFriendlyDate(long timestamp) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(timestamp);
-		String date = monthNumToName(cal.get(Calendar.MONTH));
-		date += " " + cal.get(Calendar.DAY_OF_MONTH);
-		date += " " + cal.get(Calendar.YEAR);
-		return date;
+		Calendar now = Calendar.getInstance();
+		now.setTimeInMillis(now());
+		Calendar date = Calendar.getInstance();
+		date.setTimeInMillis(timestamp);
+		String str = monthNumToName(date.get(Calendar.MONTH));
+		str += " " + date.get(Calendar.DAY_OF_MONTH);
+		if (date.get(Calendar.YEAR) != now.get(Calendar.YEAR))
+			str += " " + date.get(Calendar.YEAR);
+		return str;
 	}
 
 	public static String humanFriendlyTime(Context context, long diffMillis) {
@@ -70,6 +74,56 @@ public class DateUtils {
 		}
 	}
 
+	// All calculations need 1 added since the transaction happens on the start and end. Including it in the partial calculations breaks it tho
+	public static int getDays(Long start_date, Long end_date) {
+		return calculateDays(start_date, end_date) + 1;
+	}
+	private static int calculateDays(Long start_date, Long end_date) {
+		long diff = end_date - start_date;
+		return (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+	}
+
+	// Simply taking the floor for weeks and biweeks should work since any remainder of a week doesn't matter
+	public static int getWeeks(Long start_date, Long end_date) {
+		return calculateWeeks(start_date, end_date) + 1;
+	}
+	private static int calculateWeeks(Long start_date, Long end_date) {
+		return calculateDays(start_date, end_date) / 7;
+	}
+
+	public static int getBiweeks(Long start_date, Long end_date) {
+		return calculateBiweeks(start_date, end_date) + 1;
+	}
+	private static int calculateBiweeks(Long start_date, Long end_date) {
+		return calculateWeeks(start_date, end_date) / 2;
+	}
+
+	public static int getMonths(Long start_date, Long end_date) {
+		return calculateMonths(start_date, end_date) + 1;
+	}
+	private static int calculateMonths(Long start_date, Long end_date) {
+		Calendar start = Calendar.getInstance();
+		Calendar end = Calendar.getInstance();
+		start.setTimeInMillis(start_date);
+		end.setTimeInMillis(end_date);
+		if (end.get(Calendar.DAY_OF_MONTH) < start.get(Calendar.DAY_OF_MONTH))
+			end.add(Calendar.MONTH, -1);
+		int years = end.get(Calendar.YEAR) - start.get(Calendar.YEAR);
+		int months = end.get(Calendar.MONTH) - start.get(Calendar.MONTH);
+		return (years * 12) + months;
+	}
+
+	public static Long getDate(Long start_date, int frequency, int times) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(start_date);
+		switch (frequency) {
+			case 0: cal.add(Calendar.DATE, times); break;
+			case 1: cal.add(Calendar.WEEK_OF_YEAR, times); break;
+			case 2: cal.add(Calendar.WEEK_OF_YEAR, times*2); break;
+			case 3: cal.add(Calendar.MONTH, times); break;
+		}
+		return cal.getTimeInMillis();
+	}
 
 	public static String monthNumToName(int number) {
 		switch (number) {

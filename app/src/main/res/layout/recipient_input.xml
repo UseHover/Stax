@@ -8,7 +8,6 @@
 		android:id="@+id/recipientEntry"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-	    	android:fontFamily="font-normal"
 		android:hint="@string/recipient_phone"
 		style="@style/StaxLabeledInput">
 
@@ -20,9 +19,7 @@
 			android:textSize="@dimen/text_21"
 			android:textColor="@color/offWhite"
 			android:textCursorDrawable="@null"
-		    	android:fontFamily="font-normal"
 			android:inputType="number"
-			android:contentDescription="RECIPIENT_INPUT"
 			android:id="@+id/recipient_input"
 			tools:ignore="RtlSymmetry" />
 	</com.google.android.material.textfield.TextInputLayout>

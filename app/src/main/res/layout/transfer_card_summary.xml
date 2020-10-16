@@ -19,6 +19,7 @@
 
 			<TextView android:id="@+id/amountValue"
 				android:layout_weight="1"
+				android:fontFamily="font-medium"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
@@ -33,6 +34,7 @@
 
 			<TextView android:id="@+id/fromValue"
 				android:layout_weight="1"
+				android:fontFamily="font-medium"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
@@ -47,6 +49,7 @@
 
 			<TextView android:id="@+id/toNetworkValue"
 				android:layout_weight="1"
+				android:fontFamily="font-medium"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
@@ -61,6 +64,7 @@
 
 			<TextView android:id="@+id/recipientValue"
 				android:layout_weight="1"
+				android:fontFamily="font-medium"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
@@ -75,6 +79,7 @@
 
 			<TextView android:id="@+id/reasonValue"
 				android:layout_weight="1"
+				android:fontFamily="font-medium"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
@@ -89,6 +94,52 @@
 
 			<TextView android:id="@+id/dateValue"
 				android:layout_weight="1"
+				android:fontFamily="font-medium"
+				android:textColor="@color/offWhite"
+				android:textSize="@dimen/text_21"
+				android:textAlignment="viewEnd" />
+		</TableRow>
+
+		<TableRow android:id="@+id/frequencyRow" android:layout_marginTop="@dimen/margin_21">
+
+			<TextView
+				android:text="@string/how_often"
+				android:textColor="@color/offWhite"
+				android:textSize="@dimen/text_16" />
+
+			<TextView android:id="@+id/frequencyValue"
+				android:layout_weight="1"
+				android:fontFamily="font-medium"
+				android:textColor="@color/offWhite"
+				android:textSize="@dimen/text_21"
+				android:textAlignment="viewEnd" />
+		</TableRow>
+
+		<TableRow android:id="@+id/endDateRow" android:layout_marginTop="@dimen/margin_21">
+
+			<TextView
+				android:text="@string/end_date"
+				android:textColor="@color/offWhite"
+				android:textSize="@dimen/text_16" />
+
+			<TextView android:id="@+id/endDateValue"
+				android:layout_weight="1"
+				android:fontFamily="font-medium"
+				android:textColor="@color/offWhite"
+				android:textSize="@dimen/text_21"
+				android:textAlignment="viewEnd" />
+		</TableRow>
+
+		<TableRow android:id="@+id/repeatTimesRow" android:layout_marginTop="@dimen/margin_21">
+
+			<TextView
+				android:text="@string/how_many_times"
+				android:textColor="@color/offWhite"
+				android:textSize="@dimen/text_16" />
+
+			<TextView android:id="@+id/repeatTimesValue"
+				android:layout_weight="1"
+				android:fontFamily="font-medium"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />

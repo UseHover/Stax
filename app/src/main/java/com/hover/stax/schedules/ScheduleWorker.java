@@ -14,6 +14,9 @@ import androidx.work.WorkerParameters;
 
 import com.hover.stax.R;
 import com.hover.stax.database.AppDatabase;
+import com.hover.stax.database.Constants;
+import com.hover.stax.requests.Request;
+import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.transfers.TransferActivity;
 
 import java.util.List;
@@ -49,24 +52,28 @@ public class ScheduleWorker extends Worker {
 
 	private void notifyUser(Schedule s) {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "DEFAULT")
-													 .setSmallIcon(R.drawable.ic_stax)
-													 .setContentTitle(s.title(getApplicationContext()))
-													 .setContentText(s.notificationMsg(getApplicationContext()))
-													 .setStyle(new NotificationCompat.BigTextStyle().bigText(s.notificationMsg(getApplicationContext())))
-													 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-													 .setCategory(NotificationCompat.CATEGORY_REMINDER)
-													 .setContentIntent(createTransferIntent(s))
-													 .setAutoCancel(true);
+			.setSmallIcon(R.drawable.ic_stax)
+			.setContentTitle(s.title(getApplicationContext()))
+			.setContentText(s.notificationMsg(getApplicationContext()))
+			.setStyle(new NotificationCompat.BigTextStyle().bigText(s.notificationMsg(getApplicationContext())))
+			.setPriority(NotificationCompat.PRIORITY_DEFAULT)
+			.setCategory(NotificationCompat.CATEGORY_REMINDER)
+			.setContentIntent(createIntent(s))
+			.setAutoCancel(true);
 
 		NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
 		notificationManager.notify(s.id, builder.build());
 	}
 
-	private PendingIntent createTransferIntent(Schedule s) {
-		Intent intent = new Intent(getApplicationContext(), TransferActivity.class);
+	private PendingIntent createIntent(Schedule s) {
+		Intent intent;
+		if (s.type.equals(Constants.REQUEST_TYPE))
+			intent = new Intent(getApplicationContext(), RequestActivity.class);
+		else
+			intent = new Intent(getApplicationContext(), TransferActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		intent.setAction(s.type);
 		intent.putExtra(Schedule.SCHEDULE_ID, s.id);
-		return PendingIntent.getActivity(getApplicationContext(), TransferActivity.SCHEDULED_REQUEST, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		return PendingIntent.getActivity(getApplicationContext(), Constants.SCHEDULE_REQUEST, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 }

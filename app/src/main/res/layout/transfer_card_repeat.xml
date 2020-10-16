@@ -13,7 +13,7 @@
 			<com.google.android.material.switchmaterial.SwitchMaterial
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:id="@+id/repeatToggle" />
+				android:id="@+id/repeatSwitch" />
 
 			<TextView
 				android:layout_width="wrap_content"
@@ -24,4 +24,82 @@
 				android:text="@string/send_repeat" />
 		</LinearLayout>
 
+	<LinearLayout android:id="@+id/repeatInputs"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+
+		<com.google.android.material.textfield.TextInputLayout
+			style="@style/StaxLabeledDropdown"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:fontFamily="font-normal"
+			android:hint="@string/how_often">
+
+			<AutoCompleteTextView
+				android:id="@+id/frequencyDropdown"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:padding="@dimen/margin_13"
+				android:dropDownWidth="wrap_content"
+				android:background="@null"
+				android:editable="false"
+				android:textSize="@dimen/text_21"
+				android:textColor="@color/offWhite"
+				android:textCursorDrawable="@null" />
+
+		</com.google.android.material.textfield.TextInputLayout>
+
+		<com.google.android.material.textfield.TextInputLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/margin_21"
+			android:hint="@string/end_date_input"
+			style="@style/StaxLabeledInput">
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:id="@+id/endDateInput"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:padding="@dimen/margin_13"
+				android:textSize="@dimen/text_21"
+				android:textColor="@color/offWhite"
+				android:background="@null"
+				android:textCursorDrawable="@null"
+				android:drawableEnd="@drawable/ic_calendar"/>
+		</com.google.android.material.textfield.TextInputLayout>
+
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/numberOfTimesEntry"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/how_many_times_input"
+			style="@style/StaxLabeledInput">
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:padding="@dimen/margin_13"
+				android:textSize="@dimen/text_21"
+				android:textColor="@color/offWhite"
+				android:textCursorDrawable="@null"
+				android:inputType="number"
+				android:id="@+id/repeat_times_input"/>
+		</com.google.android.material.textfield.TextInputLayout>
+
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/margin_21">
+
+			<androidx.appcompat.widget.AppCompatButton
+				android:id="@+id/save_btn"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/save"
+				android:layout_alignParentEnd="true"
+				style="@style/StaxButton"
+				android:fontFamily="font-medium" />
+		</RelativeLayout>
+	</LinearLayout>
 </com.hover.stax.views.StaxCardView>

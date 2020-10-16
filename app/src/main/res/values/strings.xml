@@ -1,7 +1,7 @@
 <resources>
 	<string name="app_name" translatable="false">Stax</string>
-	<string name="root_url" translatable="false">https://stage.usehover.com</string>
-	<string name="api_url" translatable="false">https://stage.usehover.com/api</string>
+	<string name="root_url" translatable="false">https://www.usehover.com</string>
+	<string name="api_url" translatable="false">https://www.usehover.com/api</string>
 	<string name="channels_endpoint" translatable="false">/channels?published=true</string>
 	<string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
 
@@ -29,6 +29,7 @@
 	<string name="done">Done</string>
 	<string name="cancel">Cancel</string>
 	<string name="ok">OK</string>
+	<string name="save">Save</string>
 	<string name="skip">Skip</string>
 	<string name="resend">Resend</string>
 	<string name="continue_text">Continue</string>
@@ -47,7 +48,7 @@
 	<string name="number">Number</string>
 	<string name="toNetwork">To network</string>
 	<string name="how_much_money">How much money?</string>
-	<string name="how_much_money_optional">How much money? (Optional)</string>
+	<string name="how_much_money_optional">How much money? (optional)</string>
 	<string name="to_who">Receiver</string>
 	<string name="from_this_account">From this account</string>
 	<string name="to_this_network">To this network</string>
@@ -59,6 +60,8 @@
 	<string name="keep_accounts_private_desc">Peek at your balances by dragging the bar to the left.</string>
 	<string name="refresh_stax">Refresh Stax</string>
 	<string name="refresh_stax_desc">Tap here to refresh all of your accounts.</string>
+	<string name="how_many_times_input">How many times? (optional)</string>
+	<string name="how_many_times">How many times?</string>
 
 	<string name="accounts">Accounts</string>
 	<string name="account">Account</string>
@@ -150,6 +153,21 @@
 	<string name="send_repeat">Repeat transaction</string>
 	<string name="schedule_created">Transfer scheduled. We will remind you to make a transfer on %1$s</string>
 	<string name="request_sent">Your request has been sent.</string>
+	<string name="request_scheduled">Your request has been scheduled. You will be reminded to send a message on %1$s</string>
+
+	<string-array name="frequency_array">
+		<item>Every day</item>
+		<item>Every week</item>
+		<item>Every 2 weeks</item>
+		<item>Every month</item>
+	</string-array>
+
+	<string-array name="frequency_array_values" translatable="false">
+		<item>0daily</item>
+		<item>1weekly</item>
+		<item>2biweekly</item>
+		<item>3monthly</item>
+	</string-array>
 
 	<string name="choose_service_hint">Choose a service</string>
 	<string-array name="choose_account_initial_array">
@@ -167,6 +185,8 @@
 	<string name="transactionId">Transaction ID</string>
 	<string name="message">Message</string>
 	<string name="messages">Messages</string>
+
+	<string name="end_date_input">End date (optional)</string>
 
 	<string name="error">Error</string>
 	<string name="enterRecipientError">Please enter recipient number"</string>
@@ -199,7 +219,7 @@
 
 	<string name="notify_transfer">It\'s time to transfer money %1$s with Stax.</string>
 	<string name="notify_transfer_cta">Transfer now</string>
-	<string name="notify_request">It\'s time to send a request to %1$s with Stax.</string>
+	<string name="notify_request">It\'s time to send a request for payment to %1$s with Stax.</string>
 	<string name="notify_request_cta">Send request</string>
 	<string name="notify_airtime">It\'s time to buy airtime with Stax.</string>
 	<string name="notify_airtime_cta">Buy airtime</string>

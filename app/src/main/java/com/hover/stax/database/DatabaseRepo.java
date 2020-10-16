@@ -137,6 +137,10 @@ public class DatabaseRepo {
 		AppDatabase.databaseWriteExecutor.execute(() -> scheduleDao.insert(schedule));
 	}
 
+	public void update(Schedule schedule) {
+		AppDatabase.databaseWriteExecutor.execute(() -> scheduleDao.update(schedule));
+	}
+
 	public void delete(Schedule schedule) {
 		AppDatabase.databaseWriteExecutor.execute(() -> scheduleDao.delete(schedule));
 	}

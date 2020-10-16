@@ -39,6 +39,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.Reques
 		Request r = requestList.get(position);
 		holder.description.setText(r.getDescription(context));
 		holder.amount.setText(r.amount != null ? Utils.formatAmount(r.amount) : "none");
+		holder.header.setVisibility(View.VISIBLE);
 		holder.header.setText(DateUtils.humanFriendlyDate(r.date_sent));
 		holder.itemView.setOnClickListener(view -> {
 			selectListener.viewRequestDetail(r.id);

@@ -9,31 +9,31 @@ import androidx.room.PrimaryKey;
 
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.database.Constants;
 import com.hover.stax.utils.DateUtils;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 @Entity(tableName = "schedules")
 public class Schedule {
-	public final static String ONCE = "4once", DAILY = "0daily", WEEKLY = "1weekly", BIWEEKLY = "2biweekly", MONTHLY = "3monthly",
-			SCHEDULE_ID = "schedule_id", DATE_KEY = "date";
+	public final static int DAILY = 0, WEEKLY = 1, BIWEEKLY = 2, MONTHLY = 3, ONCE = 4;
+	public final static String SCHEDULE_ID = "schedule_id", DATE_KEY = "date";
 
 	@PrimaryKey(autoGenerate = true)
 	@NonNull
 	public int id;
 
 	@NonNull
-	@ColumnInfo(name = "type") // request, airtime, p2p, me2me
+	@ColumnInfo(name = "type")
 	public String type;
 
-	@NonNull
 	@ColumnInfo(name = "channel_id")
 	public int channel_id;
 
-	@NonNull
 	@ColumnInfo(name = "action_id")
 	public String action_id;
 
@@ -44,8 +44,8 @@ public class Schedule {
 	@ColumnInfo(name = "amount")
 	public String amount;
 
-	@ColumnInfo(name = "reason")
-	public String reason;
+	@ColumnInfo(name = "note")
+	public String note;
 
 	@NonNull
 	@ColumnInfo(name = "description")
@@ -58,22 +58,43 @@ public class Schedule {
 	@ColumnInfo(name = "end_date", defaultValue = "CURRENT_TIMESTAMP")
 	public Long end_date;
 
+	@NonNull
 	@ColumnInfo(name = "frequency")
-	public String frequency;
+	public int frequency;
 
-	public Schedule() {
-	}
+	@NonNull
+	@ColumnInfo(name = "complete", defaultValue = "false")
+	public boolean complete;
 
-	public Schedule(Action action, Long date, String r, String a, Context c) {
+	public Schedule() {}
+
+	public Schedule(Action action, Long start, Boolean isRepeat, int frequency, Long end, String r, String a, String n, Context c) {
+		this(start, r, a, n);
+		setRepeatVals(isRepeat, frequency, end);
 		type = action.transaction_type;
 		channel_id = action.channel_id;
 		action_id = action.public_id;
-		start_date = date;
-		end_date = date;
+		description = generateDescription(action, c);
+	}
+
+	public Schedule(Long start, Boolean isRepeat, int frequency, Long end, String r, String a, String n, Context c) {
+		this(start, r, a, n);
+		setRepeatVals(isRepeat, frequency, end);
+		type = Constants.REQUEST_TYPE;
+		description = generateDescription(null, c);
+	}
+
+	public Schedule(Long date, String r, String a, String n) {
+		start_date = date == null ? DateUtils.now() : date;
 		recipient = r;
 		amount = a;
-		description = generateDescription(action, c);
-		frequency = ONCE;
+		note = n;
+		complete = false;
+	}
+
+	private void setRepeatVals(Boolean isRepeat, int freq, Long end) {
+		frequency = isRepeat ? freq : ONCE;
+		end_date = isRepeat ? end : start_date;
 	}
 
 	private String generateDescription(Action action, Context c) {
@@ -84,24 +105,18 @@ public class Schedule {
 				return c.getString(R.string.transaction_descrip_money, action.from_institution_name, recipient);
 			case Action.ME2ME:
 				return c.getString(R.string.transaction_descrip_money, action.from_institution_name, action.to_institution_name);
+			case Constants.REQUEST_TYPE:
+				return c.getString(R.string.request_descrip, recipient);
 			default:
 				return "Other";
 		}
 	}
 
 	public String humanFrequency(Context c) {
-		switch (frequency) {
-			case Schedule.DAILY:
-				return c.getString(R.string.daily);
-			case Schedule.WEEKLY:
-				return c.getString(R.string.weekly);
-			case Schedule.BIWEEKLY:
-				return c.getString(R.string.biweekly);
-			case Schedule.MONTHLY:
-				return c.getString(R.string.monthly);
-			default:
-				return DateUtils.humanFriendlyDate(start_date);
-		}
+		if (frequency == ONCE)
+			return DateUtils.humanFriendlyDate(start_date);
+		else
+			return c.getResources().getStringArray(R.array.frequency_array)[frequency];
 	}
 
 	String title(Context c) {
@@ -111,6 +126,8 @@ public class Schedule {
 				return c.getString(R.string.notify_transfer_cta);
 			case Action.AIRTIME:
 				return c.getString(R.string.notify_airtime_cta);
+			case Constants.REQUEST_TYPE:
+				return c.getString(R.string.notify_request_cta);
 			default:
 				return null;
 		}
@@ -123,16 +140,61 @@ public class Schedule {
 				return c.getString(R.string.notify_transfer, description);
 			case Action.AIRTIME:
 				return c.getString(R.string.notify_airtime);
+			case Constants.REQUEST_TYPE:
+				return c.getString(R.string.notify_request, recipient);
 			default:
 				return null;
 		}
 	}
 
 	boolean isScheduledForToday() {
-		Date scheduledDate = new Date(start_date);
+		switch (frequency) {
+			case DAILY: return dateInRange();
+			case WEEKLY: return onDayOfWeek();
+			case BIWEEKLY: return onDayOfBiweek();
+			case MONTHLY: return onDayOfMonth();
+			default: return checkDateMatch(new Date(start_date));
+		}
+	}
+
+	private boolean checkDateMatch(Date d) {
 		Date today = new Date(DateUtils.now());
 		SimpleDateFormat comparisonFormat = new SimpleDateFormat("MM dd yyyy");
-		return comparisonFormat.format(scheduledDate).equals(comparisonFormat.format(today));
+		return comparisonFormat.format(d).equals(comparisonFormat.format(today));
+	}
+
+	private boolean dateInRange() {
+		Date today = new Date(DateUtils.now());
+		return !today.before(new Date(start_date)) && (end_date == null || !today.after(new Date(end_date)));
+	}
+
+	private boolean onDayOfWeek() {
+		Calendar today = Calendar.getInstance();
+		today.setTimeInMillis(DateUtils.now());
+		Calendar start = Calendar.getInstance();
+		start.setTimeInMillis(start_date);
+		return dateInRange() && today.get(Calendar.DAY_OF_WEEK) == start.get(Calendar.DAY_OF_WEEK);
+	}
+
+	private boolean onDayOfBiweek() {
+		return onDayOfWeek() && isEvenWeeksSince();
+	}
+
+	private boolean isEvenWeeksSince() {
+		Calendar today = Calendar.getInstance();
+		today.setTimeInMillis(DateUtils.now());
+		Calendar start = Calendar.getInstance();
+		start.setTimeInMillis(start_date);
+		return (Math.abs(start.get(Calendar.WEEK_OF_YEAR) - today.get(Calendar.WEEK_OF_YEAR)) % 2) == 0;
+	}
+
+	private boolean onDayOfMonth() {
+		Calendar today = Calendar.getInstance();
+		today.setTimeInMillis(DateUtils.now());
+		Calendar start = Calendar.getInstance();
+		start.setTimeInMillis(start_date);
+		return dateInRange() && (start.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH) ||
+            (start.get(Calendar.DAY_OF_MONTH) > 28 && start.get(Calendar.DAY_OF_MONTH) > today.getActualMaximum(Calendar.DAY_OF_MONTH) && today.get(Calendar.DAY_OF_MONTH) == today.getActualMaximum(Calendar.DAY_OF_MONTH)));
 	}
 
 	@NotNull
