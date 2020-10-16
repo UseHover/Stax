@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.amplitude.api.Amplitude;
-import com.hover.sdk.actions.ActionContract;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.home.MainActivity;
@@ -102,7 +101,7 @@ public class SecurityFragment extends Fragment {
 
 	private void goToAccountDetail(int channel_id) {
 		Bundle bundle = new Bundle();
-		bundle.putInt(ActionContract.COLUMN_CHANNEL_ID, channel_id);
+		bundle.putInt("channel_id", channel_id);
 		NavHostFragment.findNavController(SecurityFragment.this).navigate(R.id.pinUpdateFragment, bundle);
 	}
 

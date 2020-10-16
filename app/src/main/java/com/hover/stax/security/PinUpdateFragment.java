@@ -19,7 +19,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.hover.sdk.actions.ActionContract;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.utils.UIHelper;
@@ -43,7 +42,7 @@ public class PinUpdateFragment extends Fragment implements Target {
 				getActivity().onBackPressed();
 			}
 		}
-		int channel_id = getArguments().getInt(ActionContract.COLUMN_CHANNEL_ID, 0);
+		int channel_id = getArguments().getInt("channel_id", 0);
 		PinsViewModel pinViewModel = new ViewModelProvider(this).get(PinsViewModel.class);
 		pinViewModel.loadChannel(channel_id);
 
