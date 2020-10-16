@@ -23,6 +23,7 @@ import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.Constants;
 import com.hover.stax.utils.StagedFragment;
 import com.hover.stax.utils.Utils;
@@ -93,6 +94,9 @@ public class TransferFragment extends StagedFragment {
 			recipientEntry.setError((recipientError != null ? getString(recipientError) : null));
 			recipientEntry.setErrorIconDrawable(0);
 		});
+		transferViewModel.getContact().observe(getViewLifecycleOwner(), contact -> {
+			recipientInput.setText(contact.normalizedNumber(transferViewModel.getActiveChannel().getValue().countryAlpha2));
+		});
 
 		transferViewModel.getNote().observe(getViewLifecycleOwner(), reason -> noteValue.setText(reason));
 
@@ -103,8 +107,7 @@ public class TransferFragment extends StagedFragment {
 			networkDropdown.setText(networkDropdown.getAdapter().getItem(0).toString(), false);
 		});
 
-		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action ->
-		{
+		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
 			if (action != null) toNetworkValue.setText(action.toString());
 		});
 
@@ -159,8 +162,8 @@ public class TransferFragment extends StagedFragment {
 		}
 	}
 
-	protected void onContactSelected(int requestCode, StaxContactModel contact) {
-		recipientInput.setText(Utils.normalizePhoneNumber(contact.getPhoneNumber(), transferViewModel.getActiveChannel().getValue().countryAlpha2));
+	protected void onContactSelected(int requestCode, StaxContact contact) {
+		transferViewModel.setContact(contact);
 	}
 
 	private TextWatcher amountWatcher = new TextWatcher() {

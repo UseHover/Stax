@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
-import com.hover.stax.transfers.StaxContactModel;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.StagedFragment;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -111,8 +111,8 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 	@Override
 	public void onClickContact(int index, Context c) { contactPicker(index, c); }
 
-	protected void onContactSelected(int requestCode, StaxContactModel contact) {
-		requestViewModel.onUpdate(requestCode, contact.getPhoneNumber());
+	protected void onContactSelected(int requestCode, StaxContact contact) {
+		requestViewModel.onUpdate(requestCode, contact.phoneNumber);
 		recipientAdapter.notifyDataSetChanged();
 	}
 

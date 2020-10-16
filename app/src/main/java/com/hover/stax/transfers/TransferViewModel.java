@@ -10,6 +10,7 @@ import androidx.lifecycle.Transformations;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.utils.StagedViewModel;
 
@@ -28,6 +29,7 @@ public class TransferViewModel extends StagedViewModel {
 	private MediatorLiveData<Action> activeAction = new MediatorLiveData<>();
 
 	private MutableLiveData<String> amount = new MutableLiveData<>();
+	private MutableLiveData<StaxContact> contact = new MutableLiveData<>();
 	private MutableLiveData<String> recipient = new MutableLiveData<>();
 	private MutableLiveData<String> note = new MutableLiveData<>();
 
@@ -116,6 +118,15 @@ public class TransferViewModel extends StagedViewModel {
 	LiveData<Integer> getAmountError() {
 		if (amountError == null) { amountError = new MutableLiveData<>(); }
 		return amountError;
+	}
+
+	void setContact(StaxContact c) {
+		contact.postValue(c);
+	}
+
+	LiveData<StaxContact> getContact() {
+		if (contact == null) { contact = new MutableLiveData<>(); }
+		return contact;
 	}
 
 	void setRecipient(String r) {

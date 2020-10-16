@@ -4,11 +4,14 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
 
 import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionDao;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
+import com.hover.stax.contacts.ContactDao;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.requests.Request;
 import com.hover.stax.requests.RequestDao;
 import com.hover.stax.schedules.Schedule;
@@ -27,6 +30,7 @@ public class DatabaseRepo {
 	private ScheduleDao scheduleDao;
 	private SimDao simDao;
 	private TransactionDao transactionDao;
+	private ContactDao contactDao;
 
 	private LiveData<List<Channel>> allChannels;
 	private LiveData<List<Channel>> selectedChannels;
@@ -35,6 +39,7 @@ public class DatabaseRepo {
 		AppDatabase db = AppDatabase.getInstance(application);
 		channelDao = db.channelDao();
 		transactionDao = db.transactionDao();
+		contactDao = db.contactDao();
 		requestDao = db.requestDao();
 		scheduleDao = db.scheduleDao();
 
@@ -55,7 +60,7 @@ public class DatabaseRepo {
 		return channelDao.getLiveChannel(id);
 	}
 
-	public LiveData<List<Channel>> getAll() {
+	public LiveData<List<Channel>> getAllChannels() {
 		return allChannels;
 	}
 
@@ -122,6 +127,17 @@ public class DatabaseRepo {
 
 	public void update(StaxTransaction transaction) {
 		AppDatabase.databaseWriteExecutor.execute(() -> transactionDao.update(transaction));
+	}
+
+	// Contacts
+	public LiveData<List<StaxContact>> getAllContacts() { return contactDao.getAll(); }
+
+	public void insert(StaxContact contact) {
+		AppDatabase.databaseWriteExecutor.execute(() -> contactDao.insert(contact));
+	}
+
+	public void update(StaxContact contact) {
+		AppDatabase.databaseWriteExecutor.execute(() -> contactDao.update(contact));
 	}
 
 	// Schedules
