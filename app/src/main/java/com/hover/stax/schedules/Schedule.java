@@ -15,12 +15,13 @@ import com.hover.stax.utils.DateUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 @Entity(tableName = "schedules")
 public class Schedule {
-	public final static String ONCE = "4once", DAILY = "0daily", WEEKLY = "1weekly", BIWEEKLY = "2biweekly", MONTHLY = "3monthly",
-			SCHEDULE_ID = "schedule_id", DATE_KEY = "date";
+	public final static int DAILY = 0, WEEKLY = 1, BIWEEKLY = 2, MONTHLY = 3, ONCE = 4;
+	public final static String SCHEDULE_ID = "schedule_id", DATE_KEY = "date";
 
 	@PrimaryKey(autoGenerate = true)
 	@NonNull
@@ -59,7 +60,7 @@ public class Schedule {
 
 	@NonNull
 	@ColumnInfo(name = "frequency")
-	public String frequency;
+	public int frequency;
 
 	@NonNull
 	@ColumnInfo(name = "complete", defaultValue = "false")
@@ -75,20 +76,24 @@ public class Schedule {
 		description = generateDescription(action, c);
 	}
 
-	public Schedule(Long date, String r, String a, String n, Context c) {
-		this(date, r, a, n);
+	public Schedule(Long start, Boolean isRepeat, int frequency, Long end, String r, String a, String n, Context c) {
+		this(start, r, a, n);
+		setRepeatVals(isRepeat, frequency, end);
 		type = Constants.REQUEST_TYPE;
 		description = generateDescription(null, c);
 	}
 
 	public Schedule(Long date, String r, String a, String n) {
 		start_date = date;
-		end_date = date;
 		recipient = r;
 		amount = a;
 		note = n;
-		frequency = ONCE;
 		complete = false;
+	}
+
+	private void setRepeatVals(Boolean isRepeat, int freq, Long end) {
+		frequency = isRepeat ? freq : ONCE;
+		end_date = isRepeat ? end : start_date;
 	}
 
 	private String generateDescription(Action action, Context c) {
@@ -107,18 +112,10 @@ public class Schedule {
 	}
 
 	public String humanFrequency(Context c) {
-		switch (frequency) {
-			case Schedule.DAILY:
-				return c.getString(R.string.daily);
-			case Schedule.WEEKLY:
-				return c.getString(R.string.weekly);
-			case Schedule.BIWEEKLY:
-				return c.getString(R.string.biweekly);
-			case Schedule.MONTHLY:
-				return c.getString(R.string.monthly);
-			default:
-				return DateUtils.humanFriendlyDate(start_date);
-		}
+		if (frequency == ONCE)
+			return DateUtils.humanFriendlyDate(start_date);
+		else
+			return c.getResources().getStringArray(R.array.frequency_array)[frequency];
 	}
 
 	String title(Context c) {
@@ -150,10 +147,53 @@ public class Schedule {
 	}
 
 	boolean isScheduledForToday() {
-		Date scheduledDate = new Date(start_date);
+		switch (frequency) {
+			case DAILY: return dateInRange();
+			case WEEKLY: return onDayOfWeek();
+			case BIWEEKLY: return onDayOfBiweek();
+			case MONTHLY: return onDayOfMonth();
+			default: return checkDateMatch(new Date(start_date));
+		}
+	}
+
+	private boolean checkDateMatch(Date d) {
 		Date today = new Date(DateUtils.now());
 		SimpleDateFormat comparisonFormat = new SimpleDateFormat("MM dd yyyy");
-		return comparisonFormat.format(scheduledDate).equals(comparisonFormat.format(today));
+		return comparisonFormat.format(d).equals(comparisonFormat.format(today));
+	}
+
+	private boolean dateInRange() {
+		Date today = new Date(DateUtils.now());
+		return !today.before(new Date(start_date)) && !today.after(new Date(end_date));
+	}
+
+	private boolean onDayOfWeek() {
+		Calendar today = Calendar.getInstance();
+		today.setTimeInMillis(DateUtils.now());
+		Calendar start = Calendar.getInstance();
+		start.setTimeInMillis(start_date);
+		return dateInRange() && today.get(Calendar.DAY_OF_WEEK) == start.get(Calendar.DAY_OF_WEEK);
+	}
+
+	private boolean onDayOfBiweek() {
+		return onDayOfWeek() && isEvenWeeksSince();
+	}
+
+	private boolean isEvenWeeksSince() {
+		Calendar today = Calendar.getInstance();
+		today.setTimeInMillis(DateUtils.now());
+		Calendar start = Calendar.getInstance();
+		start.setTimeInMillis(start_date);
+		return (Math.abs(start.get(Calendar.WEEK_OF_YEAR) - today.get(Calendar.WEEK_OF_YEAR)) % 2) == 0;
+	}
+
+	private boolean onDayOfMonth() {
+		Calendar today = Calendar.getInstance();
+		today.setTimeInMillis(DateUtils.now());
+		Calendar start = Calendar.getInstance();
+		start.setTimeInMillis(start_date);
+		return dateInRange() && (start.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH) ||
+            (start.get(Calendar.DAY_OF_MONTH) > 28 && start.get(Calendar.DAY_OF_MONTH) > today.getActualMaximum(Calendar.DAY_OF_MONTH) && today.get(Calendar.DAY_OF_MONTH) == today.getActualMaximum(Calendar.DAY_OF_MONTH)));
 	}
 
 	@NotNull

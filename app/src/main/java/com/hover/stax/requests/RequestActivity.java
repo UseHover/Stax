@@ -25,8 +25,6 @@ public class RequestActivity extends AppCompatActivity {
 	private NewRequestViewModel requestViewModel;
 	private ScheduleDetailViewModel scheduleViewModel = null;
 
-	private boolean allowSchedule = true;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -82,7 +80,7 @@ public class RequestActivity extends AppCompatActivity {
 			requestViewModel.schedule(this);
 			returnResult(Constants.SCHEDULE_REQUEST);
 		} else {
-			requestViewModel.saveToDatabase();
+			requestViewModel.saveToDatabase(this);
 			sendSms();
 		}
 	}
@@ -143,6 +141,7 @@ public class RequestActivity extends AppCompatActivity {
 	private void returnResult(int type) {
 		Intent i = new Intent();
 		if (type == Constants.SCHEDULE_REQUEST) {
+			Amplitude.getInstance().logEvent(getString(R.string.clicked_send_request));
 			i.putExtra(Schedule.DATE_KEY, requestViewModel.getFutureDate().getValue());
 		}
 		i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);

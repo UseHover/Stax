@@ -132,10 +132,13 @@ public class NewRequestViewModel extends StagedViewModel {
 		return c.getString(R.string.request_money_sms_template, a, n);
 	}
 
-	void saveToDatabase() {
+	void saveToDatabase(Context c) {
 		for (String recipient : recipients.getValue())
 			repo.insert(new Request(recipient, amount.getValue(), note.getValue()));
-		if (schedule.getValue() != null) {
+
+		if (repeatSaved.getValue() != null && repeatSaved.getValue()) {
+			schedule(c);
+		} else if (schedule.getValue() != null) {
 			Schedule s = schedule.getValue();
 			s.complete = true;
 			repo.update(s);
@@ -152,7 +155,8 @@ public class NewRequestViewModel extends StagedViewModel {
 
 	public void schedule(Context c) {
 		Amplitude.getInstance().logEvent(c.getString(R.string.scheduled_request));
-		Schedule s = new Schedule(futureDate.getValue(), generateRecipientString(), amount.getValue(), note.getValue(), getApplication());
+		Schedule s = new Schedule(futureDate.getValue(), repeatSaved.getValue(), frequency.getValue(), endDate.getValue(),
+			generateRecipientString(), amount.getValue(), note.getValue(), getApplication());
 		repo.insert(s);
 	}
 }
