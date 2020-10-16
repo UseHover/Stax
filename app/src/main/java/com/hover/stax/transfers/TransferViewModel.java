@@ -1,14 +1,12 @@
 package com.hover.stax.transfers;
 
 import android.app.Application;
-import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
-import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
@@ -17,11 +15,13 @@ import com.hover.stax.utils.StagedViewModel;
 
 import java.util.List;
 
+import static com.hover.stax.transfers.TransferStage.REVIEW;
+import static com.hover.stax.transfers.TransferStage.REVIEW_DIRECT;
+
 public class TransferViewModel extends StagedViewModel {
 
 	private String type = Action.P2P;
 	private LiveData<List<Channel>> selectedChannels = new MutableLiveData<>();
-	private MutableLiveData<TransferStage> inputStage = new MutableLiveData<>();
 
 	private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
 	private LiveData<List<Action>> filteredActions = new MutableLiveData<>();
@@ -31,15 +31,17 @@ public class TransferViewModel extends StagedViewModel {
 	private MutableLiveData<String> recipient = new MutableLiveData<>();
 	private MutableLiveData<String> note = new MutableLiveData<>();
 
+	private MutableLiveData<Integer> amountError = new MutableLiveData<>();
+	private MutableLiveData<Integer> recipientError = new MutableLiveData<>();
+
 	public TransferViewModel(Application application) {
 		super(application);
+		stage.setValue(TransferStage.AMOUNT);
 
 		selectedChannels = repo.getSelected();
 		activeChannel.addSource(selectedChannels, this::findActiveChannel);
 		filteredActions = Transformations.switchMap(activeChannel, this::loadActions);
 		activeAction.addSource(filteredActions, this::findActiveAction);
-
-		inputStage.setValue(TransferStage.AMOUNT);
 	}
 
 	void setType(String transaction_type) {
@@ -111,6 +113,10 @@ public class TransferViewModel extends StagedViewModel {
 		}
 		return amount;
 	}
+	LiveData<Integer> getAmountError() {
+		if (amountError == null) { amountError = new MutableLiveData<>(); }
+		return amountError;
+	}
 
 	void setRecipient(String r) {
 		recipient.postValue(r);
@@ -121,6 +127,10 @@ public class TransferViewModel extends StagedViewModel {
 			recipient = new MutableLiveData<>();
 		}
 		return recipient;
+	}
+	LiveData<Integer> getRecipientError() {
+		if (recipientError == null) { recipientError = new MutableLiveData<>(); }
+		return recipientError;
 	}
 
 	void setNote(String r) {
@@ -135,23 +145,71 @@ public class TransferViewModel extends StagedViewModel {
 		return note;
 	}
 
-	boolean stageValidates() {
-		if (stage.getValue() == null) return false;
-		switch ((TransferStage) stage.getValue()) {
+	@Override
+	public void goToNextStage() {
+		stage.postValue(goToNextStage(stage.getValue()));
+	}
+
+	private StagedEnum goToNextStage(StagedEnum currentStage) {
+		StagedEnum next = currentStage.next();
+		if (!stageRequired((TransferStage) next))
+			next = goToNextStage(next);
+		return next;
+	}
+
+	boolean stageRequired(TransferStage ts) {
+		switch (ts) {
 			case TO_NETWORK:
-				return filteredActions.getValue() != null && filteredActions.getValue().size() > 0 && (filteredActions.getValue().size() > 1 || filteredActions.getValue().get(0).hasToInstitution());
+				return requiresActionChoice();
 			case RECIPIENT:
 				return activeAction.getValue() != null && activeAction.getValue().requiresRecipient();
-			case REASON:
+			case NOTE:
 				return activeAction.getValue() != null && activeAction.getValue().requiresReason();
 			default:
 				return true;
 		}
 	}
 
-	void schedule(Context c) {
-		Amplitude.getInstance().logEvent(c.getString(R.string.scheduled_transaction, type));
-		Schedule s = new Schedule(activeAction.getValue(), futureDate.getValue(), recipient.getValue(), amount.getValue(), note.getValue(), getApplication());
-		repo.insert(s);
+	private boolean requiresActionChoice() {
+		return filteredActions.getValue() != null && filteredActions.getValue().size() > 0 && (filteredActions.getValue().size() > 1 || filteredActions.getValue().get(0).hasToInstitution());
+	}
+
+	boolean stageValidates() {
+		if (stage.getValue() == null) return false;
+		switch ((TransferStage) stage.getValue()) {
+			case AMOUNT:
+				if (amount.getValue() == null || amount.getValue().isEmpty()) {
+					amountError.setValue(R.string.enterAmountError);
+					return false;
+				} else
+					amountError.setValue(null);
+				break;
+			case RECIPIENT:
+				if (recipient.getValue() == null || recipient.getValue().isEmpty()) {
+					recipientError.setValue(R.string.enterRecipientError);
+					return false;
+				} else
+					recipientError.setValue(null);
+				break;
+		}
+		return true;
+	}
+
+	boolean isDone() { return stage.getValue() == REVIEW || stage.getValue() == REVIEW_DIRECT; }
+
+	public void setSchedule(Schedule s) {
+		schedule.setValue(s);
+		setType(s.type);
+		setActiveChannel(s.channel_id);
+		setAmount(s.amount);
+		setRecipient(s.recipient);
+		setNote(s.note);
+		setStage(TransferStage.REVIEW_DIRECT);
+	}
+
+	public void schedule() {
+		Schedule s = new Schedule(activeAction.getValue(), futureDate.getValue(), repeatSaved.getValue(), frequency.getValue(), endDate.getValue(),
+			recipient.getValue(), amount.getValue(), note.getValue(), getApplication());
+		saveSchedule(s);
 	}
 }

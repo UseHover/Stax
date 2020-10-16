@@ -3,7 +3,7 @@ package com.hover.stax.transfers;
 import com.hover.stax.utils.StagedViewModel;
 
 enum TransferStage implements StagedViewModel.StagedEnum {
-	AMOUNT, FROM_ACCOUNT, TO_NETWORK, RECIPIENT, REASON, REVIEW, REVIEW_DIRECT;
+	AMOUNT, FROM_ACCOUNT, TO_NETWORK, RECIPIENT, NOTE, REVIEW, REVIEW_DIRECT;
 
 	private static TransferStage[] vals = values();
 

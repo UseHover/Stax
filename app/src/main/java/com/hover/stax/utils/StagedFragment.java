@@ -1,5 +1,10 @@
 package com.hover.stax.utils;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -8,13 +13,17 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.amplitude.api.Amplitude;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
+import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
+import com.hover.stax.transfers.StaxContactModel;
 
 public abstract class StagedFragment extends Fragment {
 
@@ -107,4 +116,46 @@ public abstract class StagedFragment extends Fragment {
 		frequencyDropdown.setAdapter(adapter);
 		frequencyDropdown.setText(frequencyDropdown.getAdapter().getItem(0).toString(), false);
 	}
+
+	protected void contactPicker(int requestCode, Context c) {
+		Amplitude.getInstance().logEvent(getString(R.string.try_contact_select));
+		if (PermissionUtils.hasContactPermission(c))
+			startContactIntent(requestCode);
+		else
+			requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, requestCode);
+	}
+
+	private void startContactIntent(int requestCode) {
+		Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+		startActivityForResult(contactPickerIntent, requestCode);
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		if (new PermissionHelper(getContext()).permissionsGranted(grantResults)) {
+			Amplitude.getInstance().logEvent(getString(R.string.contact_perm_success));
+			startContactIntent(requestCode);
+		} else {
+			Amplitude.getInstance().logEvent(getString(R.string.contact_perm_denied));
+			UIHelper.flashMessage(getContext(), getResources().getString(R.string.contact_perm_error));
+		}
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == Activity.RESULT_OK) {
+			StaxContactModel staxContactModel = new StaxContactModel(data, getContext());
+			if (staxContactModel.getPhoneNumber() != null) {
+				Amplitude.getInstance().logEvent(getString(R.string.contact_select_success));
+				onContactSelected(requestCode, staxContactModel);
+			} else {
+				Amplitude.getInstance().logEvent(getString(R.string.contact_select_error));
+				UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectContactErrorMessage));
+			}
+		}
+	}
+
+	protected abstract void onContactSelected(int requestCode, StaxContactModel contact);
 }

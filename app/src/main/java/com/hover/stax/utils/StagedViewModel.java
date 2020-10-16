@@ -1,12 +1,15 @@
 package com.hover.stax.utils;
 
 import android.app.Application;
+import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.amplitude.api.Amplitude;
+import com.hover.stax.R;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.schedules.Schedule;
 
@@ -49,12 +52,6 @@ public abstract class StagedViewModel extends AndroidViewModel {
 	public void goToNextStage() {
 		StagedEnum next = stage.getValue().next();
 		stage.postValue(next);
-	}
-
-	public boolean goToStage(StagedEnum s) {
-		if (stage == null) return false;
-		stage.postValue(s);
-		return true;
 	}
 
 	public void setIsFutureDated(boolean isFuture) {
@@ -159,5 +156,10 @@ public abstract class StagedViewModel extends AndroidViewModel {
 		StagedEnum next();
 		StagedEnum prev();
 		int compare(StagedEnum e);
+	}
+
+	protected void saveSchedule(Schedule s) {
+		Amplitude.getInstance().logEvent(getApplication().getString(R.string.scheduled_complete, s.type));
+		repo.insert(s);
 	}
 }

@@ -77,7 +77,7 @@ public class RequestActivity extends AppCompatActivity {
 	@SuppressLint("NewApi")
 	private void submit() {
 		if (requestViewModel.getIsFuture().getValue() != null && requestViewModel.getIsFuture().getValue() && requestViewModel.getFutureDate().getValue() != null) {
-			requestViewModel.schedule(this);
+			requestViewModel.schedule();
 			returnResult(Constants.SCHEDULE_REQUEST);
 		} else {
 			requestViewModel.saveToDatabase(this);

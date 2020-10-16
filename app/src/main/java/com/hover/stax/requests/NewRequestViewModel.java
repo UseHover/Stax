@@ -7,8 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
+import com.hover.stax.database.Constants;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.utils.StagedViewModel;
 import com.hover.stax.utils.Utils;
@@ -20,6 +20,8 @@ import java.util.List;
 import static com.hover.stax.requests.RequestStage.*;
 
 public class NewRequestViewModel extends StagedViewModel {
+
+	private String type = Constants.REQUEST_TYPE;
 
 	private MutableLiveData<String> amount = new MutableLiveData<>();
 	private MutableLiveData<List<String>> recipients = new MutableLiveData<>();
@@ -137,7 +139,7 @@ public class NewRequestViewModel extends StagedViewModel {
 			repo.insert(new Request(recipient, amount.getValue(), note.getValue()));
 
 		if (repeatSaved.getValue() != null && repeatSaved.getValue()) {
-			schedule(c);
+			schedule();
 		} else if (schedule.getValue() != null) {
 			Schedule s = schedule.getValue();
 			s.complete = true;
@@ -153,10 +155,9 @@ public class NewRequestViewModel extends StagedViewModel {
 		return requestStarted;
 	}
 
-	public void schedule(Context c) {
-		Amplitude.getInstance().logEvent(c.getString(R.string.scheduled_request));
+	public void schedule() {
 		Schedule s = new Schedule(futureDate.getValue(), repeatSaved.getValue(), frequency.getValue(), endDate.getValue(),
 			generateRecipientString(), amount.getValue(), note.getValue(), getApplication());
-		repo.insert(s);
+		saveSchedule(s);
 	}
 }

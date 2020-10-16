@@ -9,6 +9,7 @@
 	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/margin_89"
 	    android:orientation="vertical" >
 
 		<include layout="@layout/transfer_card_summary"
@@ -34,10 +35,6 @@
 
 		<include layout="@layout/transfer_card_repeat"
 			android:id="@+id/repeatCard"
-			android:visibility="gone" />
-
-		<include layout="@layout/transfer_card_error"
-			android:id="@+id/errorCard"
 			android:visibility="gone" />
 
 	</LinearLayout>

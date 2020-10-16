@@ -68,8 +68,9 @@ public class Schedule {
 
 	public Schedule() {}
 
-	public Schedule(Action action, Long date, String r, String a, String n, Context c) {
-		this(date, r, a, n);
+	public Schedule(Action action, Long start, Boolean isRepeat, int frequency, Long end, String r, String a, String n, Context c) {
+		this(start, r, a, n);
+		setRepeatVals(isRepeat, frequency, end);
 		type = action.transaction_type;
 		channel_id = action.channel_id;
 		action_id = action.public_id;
@@ -84,7 +85,7 @@ public class Schedule {
 	}
 
 	public Schedule(Long date, String r, String a, String n) {
-		start_date = date;
+		start_date = date == null ? DateUtils.now() : date;
 		recipient = r;
 		amount = a;
 		note = n;
@@ -164,7 +165,7 @@ public class Schedule {
 
 	private boolean dateInRange() {
 		Date today = new Date(DateUtils.now());
-		return !today.before(new Date(start_date)) && !today.after(new Date(end_date));
+		return !today.before(new Date(start_date)) && (end_date == null || !today.after(new Date(end_date)));
 	}
 
 	private boolean onDayOfWeek() {

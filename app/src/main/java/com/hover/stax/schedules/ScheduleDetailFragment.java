@@ -63,8 +63,8 @@ public class ScheduleDetailFragment extends Fragment {
 		view.findViewById(R.id.frequencyRow).setVisibility(schedule.frequency == Schedule.ONCE ? View.GONE : View.VISIBLE);
 		((TextView) view.findViewById(R.id.details_frequency)).setText(schedule.humanFrequency(getContext()));
 
-		view.findViewById(R.id.endRow).setVisibility(schedule.frequency == Schedule.ONCE ? View.GONE : View.VISIBLE);
-		((TextView) view.findViewById(R.id.details_end)).setText(DateUtils.humanFriendlyDate(schedule.end_date));
+		view.findViewById(R.id.endRow).setVisibility(schedule.frequency == Schedule.ONCE || schedule.end_date == null ? View.GONE : View.VISIBLE);
+		((TextView) view.findViewById(R.id.details_end)).setText(schedule.end_date != null ? DateUtils.humanFriendlyDate(schedule.end_date) : "");
 
 		view.findViewById(R.id.reasonRow).setVisibility(schedule.note == null || schedule.note.isEmpty() ? View.GONE : View.VISIBLE);
 		((TextView) view.findViewById(R.id.details_reason)).setText(schedule.note);
