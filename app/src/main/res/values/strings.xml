@@ -175,9 +175,6 @@
 	</string-array>
 
 	<string name="choose_service_hint">Choose a service</string>
-	<string-array name="choose_account_initial_array">
-		<item>choose_account_initial</item>
-	</string-array>
 	<string name="airtime_self">Myself</string>
 	<string name="airtime_other">Someone else</string>
 	<string name="add_service">+ Add a service</string>

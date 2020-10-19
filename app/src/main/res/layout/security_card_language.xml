@@ -5,11 +5,13 @@
 	android:layout_height="wrap_content"
 	app:title="@string/language">
 
-	<androidx.appcompat.widget.AppCompatSpinner
+	<TextView
+		android:id="@+id/select_language_btn"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:background="@drawable/spinner_bg"
 		android:layout_marginBottom="@dimen/margin_8"
-		android:id="@+id/selectLanguageSpinner" />
+		android:paddingVertical="@dimen/margin_21"
+		android:paddingHorizontal="@dimen/margin_13"
+		android:textSize="@dimen/text_16" />
 
 </com.hover.stax.views.StaxCardView>

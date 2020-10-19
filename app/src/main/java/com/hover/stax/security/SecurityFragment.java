@@ -1,5 +1,6 @@
 package com.hover.stax.security;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,7 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +26,7 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.languages.Lang;
 import com.hover.stax.languages.LanguageViewModel;
+import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.StaxDialog;
 import com.yariksoffice.lingver.Lingver;
@@ -34,6 +38,8 @@ import static android.view.View.GONE;
 public class SecurityFragment extends Fragment {
 	final public static String LANG_CHANGE = "Settings";
 
+	private ArrayAdapter<Channel> accountAdapter;
+
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -41,60 +47,45 @@ public class SecurityFragment extends Fragment {
 		PinsViewModel securityViewModel = new ViewModelProvider(this).get(PinsViewModel.class);
 
 		View root = inflater.inflate(R.layout.fragment_security, container, false);
-		setUpChooseLang(root);
 		setUpAccounts(root, securityViewModel);
 		setUpRemovePins(root, securityViewModel);
+		setUpChooseLang(root);
 		return root;
 	}
 
 	private void setUpChooseLang(View root) {
-		AppCompatSpinner languageSpinner = root.findViewById(R.id.selectLanguageSpinner);
+		TextView btn = root.findViewById(R.id.select_language_btn);
 		LanguageViewModel languageViewModel = new ViewModelProvider(this).get(LanguageViewModel.class);
 		languageViewModel.loadLanguages().observe(getViewLifecycleOwner(), languages -> {
-			ArrayAdapter<Lang> adapter = new ArrayAdapter<>(getContext(), R.layout.stax_spinner_item, languages);
-			languageSpinner.setAdapter(adapter);
-			languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-				@Override
-				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-					if (position != 0) {
-						String code = languages.get(position).code;
-						if (code != null) {
-							Lang.LogChange(code, getActivity());
-							Lingver.getInstance().setLocale(getContext(), code);
-							restart();
-						}
-					}
-				}
-
-				@Override
-				public void onNothingSelected(AdapterView<?> parent) {
-				}
-			});
+			for (Lang lang : languages) {
+				if (lang.isSelected()) btn.setText(lang.name);
+			}
 		});
+		btn.setOnClickListener(view -> goToLanguageSelect(view.getContext()));
 	}
 
-	private void restart() {
-		Intent intent = new Intent(getActivity(), MainActivity.class);
+	private void goToLanguageSelect(Context c) {
+		Intent intent = new Intent(c, SelectLanguageActivity.class);
 		intent.putExtra(LANG_CHANGE, true);
 		startActivity(intent);
-		if (getActivity() != null) getActivity().finish();
 	}
 
 	private void setUpAccounts(View root, PinsViewModel securityViewModel) {
+		accountAdapter = new ArrayAdapter<>(root.getContext(), R.layout.stax_spinner_item);
 		securityViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
 			showAccounts(channels, root);
-			if (channels != null && channels.size() > 1) {
+			if (channels != null && channels.size() > 1)
 				createDefaultSelector(channels, root, securityViewModel);
-			} else {
-				root.findViewById(R.id.defaultAccountSpinner).setVisibility(GONE);
-			}
+			else
+				root.findViewById(R.id.defaultAccountEntry).setVisibility(GONE);
 		});
 	}
 
 	private void showAccounts(List<Channel> channels, View root) {
 		ListView lv = root.findViewById(R.id.accounts_list);
-		ArrayAdapter<Channel> adapter = new ArrayAdapter<>(requireActivity(), R.layout.stax_spinner_item, channels);
-		lv.setAdapter(adapter);
+		accountAdapter.clear();
+		accountAdapter.addAll(channels);
+		lv.setAdapter(accountAdapter);
 		lv.setOnItemClickListener((arg0, arg1, position, arg3) -> goToAccountDetail(channels.get(position).id));
 		UIHelper.fixListViewHeight(lv);
 	}
@@ -106,27 +97,12 @@ public class SecurityFragment extends Fragment {
 	}
 
 	private void createDefaultSelector(List<Channel> channels, View root, PinsViewModel securityViewModel) {
-		AppCompatSpinner spinner = root.findViewById(R.id.defaultAccountSpinner);
-		ArrayAdapter<Channel> adapter = new ArrayAdapter<>(getContext(), R.layout.stax_spinner_item, channels);
-		spinner.setAdapter(adapter);
-		spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				if (position != 0) { // 0 is always be the default account, so need to set for 0.
-					Channel newDefaultChannel = channels.get(position);
-					newDefaultChannel.defaultAccount = true;
-					securityViewModel.setDefaultAccount(newDefaultChannel);
-				}
-
-				AppCompatTextView textView = (AppCompatTextView) parent.getChildAt(0);
-				if (textView != null) {
-					textView.setTextColor(getResources().getColor(R.color.white));
-				}
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-			}
+		AutoCompleteTextView spinner = root.findViewById(R.id.defaultAccountSpinner);
+		root.findViewById(R.id.defaultAccountEntry).setVisibility(View.VISIBLE);
+		spinner.setAdapter(accountAdapter);
+		spinner.setText(spinner.getAdapter().getItem(0).toString(), false);
+		spinner.setOnItemClickListener((adapterView, view, pos, id) -> {
+			if (pos != 0) securityViewModel.setDefaultAccount(channels.get(pos));
 		});
 	}
 

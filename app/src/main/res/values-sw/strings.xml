@@ -75,9 +75,6 @@
 	<string name="total">Jumla</string>
 
 	<string name="choose_service_hint">Chagua huduma</string>
-	<string-array name="choose_account_initial_array">
-		<item>choose_account_initial</item>
-	</string-array>
 	<string name="airtime_self">Mimi mwenyewe</string>
 	<string name="airtime_other">Mtu mwingine</string>
 	<string name="add_service">+ Ongeza huduma</string>

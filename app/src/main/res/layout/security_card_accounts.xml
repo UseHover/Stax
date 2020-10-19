@@ -8,16 +8,32 @@
 	<ListView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/margin_21"
+		android:divider="@null"
 		android:id="@+id/accounts_list" />
 
-	<androidx.appcompat.widget.AppCompatSpinner
+	<com.google.android.material.textfield.TextInputLayout
+		style="@style/StaxLabeledDropdown"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/margin_21"
-		android:entries="@array/choose_account_initial_array"
-		android:background="@drawable/spinner_bg"
-		android:padding="3dp"
-		android:id="@+id/defaultAccountSpinner" />
+		android:fontFamily="font-normal"
+		android:hint="@string/default_account"
+		android:id="@+id/defaultAccountEntry">
+
+		<AutoCompleteTextView
+			android:id="@+id/defaultAccountSpinner"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:padding="@dimen/margin_13"
+			android:dropDownWidth="wrap_content"
+			android:background="@null"
+			android:editable="false"
+			android:textSize="@dimen/text_21"
+			android:fontFamily="font-normal"
+			android:textColor="@color/offWhite"
+			android:textCursorDrawable="@null" />
+	</com.google.android.material.textfield.TextInputLayout>
 
 	<RelativeLayout
 		android:layout_width="match_parent"
