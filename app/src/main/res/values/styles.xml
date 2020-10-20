@@ -16,6 +16,9 @@
 		<item name="android:textColor">@color/offWhite</item>
 		<item name="android:buttonStyle">@style/StaxButton</item>
 		<item name="buttonStyle">@style/StaxButton</item>
+
+
+		<item name="hover_textColor">@color/colorPrimary</item>
 	</style>
 
 	<style name="StaxHoverTheme" parent="StaxTheme" />

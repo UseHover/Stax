@@ -2,6 +2,7 @@ package com.hover.stax.hover;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import androidx.fragment.app.Fragment;
@@ -12,6 +13,7 @@ import com.hover.sdk.api.HoverParameters;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.database.Constants;
 import com.hover.stax.security.KeyStoreExecutor;
 import com.hover.stax.utils.Utils;
 
@@ -27,6 +29,7 @@ final public class HoverSession {
 	private Fragment frag;
 	private Channel channel;
 	private int requestCode, finalScreenTime;
+
 
 	private HoverSession(Builder b) {
 		Hover.setAfterPermissionReturnActivity(Hover.DEFAULT_PERM_ACTIVITY, b.activity);
@@ -46,6 +49,12 @@ final public class HoverSession {
 //		builder.setEnvironment(HoverParameters.TEST_ENV);
 		builder.style(R.style.StaxHoverTheme);
 		builder.finalMsgDisplayTime(finalScreenTime);
+		builder.styleMode(Constants.STYLE_MODE_FOR_STAX);
+		builder.transactingImages(Utils.bitmapToByteArray(b.imageSenderBitmap), Utils.bitmapToByteArray(b.imageReceiverBitmap));
+		builder.initialProcessingMessage(b.userMessage);
+		builder.showUserStepDescriptions(true);
+		builder.customBackgroundImage(R.drawable.stax_background);
+
 		return builder;
 	}
 
@@ -90,6 +99,8 @@ final public class HoverSession {
 		private Action action;
 		private JSONObject extras;
 		private int requestCode, finalScreenTime = 2000;
+		private Bitmap imageSenderBitmap, imageReceiverBitmap;
+		String userMessage = "Performing transaction";
 
 		public Builder(Action a, Channel c, Activity act, int code) {
 			if (a == null) throw new IllegalArgumentException("Context must not be null");
@@ -116,6 +127,18 @@ final public class HoverSession {
 
 		public HoverSession.Builder finalScreenTime(int ms) {
 			finalScreenTime = ms;
+			return this;
+		}
+
+		public HoverSession.Builder userMessage(String msg) {
+			this.userMessage = msg;
+			return this;
+		}
+
+
+		public HoverSession.Builder setImages(Bitmap imageOne, Bitmap imageTwo) {
+			this.imageSenderBitmap = imageOne;
+			this.imageReceiverBitmap = imageTwo;
 			return this;
 		}
 

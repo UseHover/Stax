@@ -1,6 +1,7 @@
 package com.hover.stax.home;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +33,9 @@ import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
@@ -147,8 +151,18 @@ public class MainActivity extends AppCompatActivity implements
 
 
 	private void run(Action action, int index) {
+		Bitmap imageOneBitmap = null;
+		try{
+			imageOneBitmap = Picasso.get()
+									 .load(balancesViewModel.getChannel(action.channel_id).logoUrl)
+									 .networkPolicy(NetworkPolicy.OFFLINE).get();
+		}catch (Exception ignored) {};
+
 		new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), this, index)
-				.finalScreenTime(0).run();
+				.finalScreenTime(0)
+				.setImages(imageOneBitmap, null)
+				.userMessage(getResources().getString(R.string.connecting_to, action.from_institution_name))
+				.run();
 	}
 
 	@Override
@@ -185,12 +199,14 @@ public class MainActivity extends AppCompatActivity implements
 	}
 
 	private void onProbableHoverCall(Intent data) {
-		if (data.getAction().equals(Constants.SCHEDULED)) {
-			UIHelper.flashMessage(this, findViewById(R.id.home_root),
-				getString(R.string.schedule_created, DateUtils.humanFriendlyDate(data.getIntExtra(Schedule.DATE_KEY, 0))));
-		} else {
-			Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
-			new ViewModelProvider(this).get(TransactionHistoryViewModel.class).saveTransaction(data, this);
+		if(data!=null) {
+			if (data.getAction().equals(Constants.SCHEDULED)) {
+				UIHelper.flashMessage(this, findViewById(R.id.home_root),
+						getString(R.string.schedule_created, DateUtils.humanFriendlyDate(data.getIntExtra(Schedule.DATE_KEY, 0))));
+			} else {
+				Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
+				new ViewModelProvider(this).get(TransactionHistoryViewModel.class).saveTransaction(data, this);
+			}
 		}
 	}
 

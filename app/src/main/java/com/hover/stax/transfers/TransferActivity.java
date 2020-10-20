@@ -1,6 +1,7 @@
 package com.hover.stax.transfers;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.hover.sdk.requests.HoverRequestContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.database.Constants;
@@ -19,6 +21,8 @@ import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.utils.StagedViewModel;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import static com.hover.stax.transfers.TransferStage.*;
 
@@ -109,12 +113,30 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 
 	private void makeHoverCall(Action act) {
 		Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
+		Bitmap imageSender = null, imageReceiver = null;
+
+		try{
+			String logoUrl = transferViewModel.getChannel(act.channel_id).logoUrl;
+			imageSender = Picasso.get().load(logoUrl).networkPolicy(NetworkPolicy.OFFLINE) .get();
+		}catch (Exception ignored){}
+
+		//I NEED HELP HERE TO GET LOGO URL OF RECEIVER
+		if(!transferViewModel.getType().equals(Action.AIRTIME)) {
+			try{
+				String logoUrl2 = transferViewModel.getChannel(act.to_institution_id).logoUrl;
+				imageReceiver = Picasso.get().load(logoUrl2).networkPolicy(NetworkPolicy.OFFLINE).get();
+			}catch (Exception ignored){}
+		}
+
+
 		new HoverSession.Builder(act, transferViewModel.getActiveChannel().getValue(),
 				this, Constants.TRANSFER_REQUEST)
 				.extra(Action.PHONE_KEY, transferViewModel.getRecipient().getValue())
 				.extra(Action.ACCOUNT_KEY, transferViewModel.getRecipient().getValue())
 				.extra(Action.AMOUNT_KEY, transferViewModel.getAmount().getValue())
 				.extra(Action.REASON_KEY, transferViewModel.getNote().getValue())
+				.setImages(imageSender, imageReceiver)
+				.userMessage(transferViewModel.getType().equals(Action.AIRTIME) ? getResources().getString(R.string.buying_airtime): getResources().getString(R.string.transferring_money))
 				.run();
 	}
 

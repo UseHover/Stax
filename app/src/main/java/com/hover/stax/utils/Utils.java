@@ -2,12 +2,14 @@ package com.hover.stax.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 
+import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 
@@ -93,5 +95,12 @@ public class Utils {
 			Log.d(TAG, "Error getting build config value", e);
 		}
 		return false;
+	}
+
+	public static byte[] bitmapToByteArray(Bitmap bitmap) {
+		if(bitmap== null) return null;
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+		return stream.toByteArray();
 	}
 }

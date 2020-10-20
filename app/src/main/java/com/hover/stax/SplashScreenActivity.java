@@ -48,7 +48,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
 	private void initHover() {
 		Hover.initialize(this);
-		Hover.setBranding("Stax", R.mipmap.fullsize_logo, this);
+		Hover.setBranding("Stax", R.mipmap.stax, this);
 	}
 
 	private void createNotificationChannel() {
