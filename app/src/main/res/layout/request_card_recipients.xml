@@ -4,7 +4,8 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	app:title="@string/from_who">
+	app:title="@string/title_request"
+	app:showBack="true">
 
 	<androidx.recyclerview.widget.RecyclerView
 		android:layout_width="match_parent"
