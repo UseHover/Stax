@@ -419,7 +419,7 @@ class BubbleShowCase(builder: BubbleShowCaseBuilder) {
 						  .title(title!!) //Any title for the bubble view
 						  .description(desc!!) //More detailed description
 						  .arrowPosition(arrowPosition!!) //You can force the position of the arrow to change the location of the bubble.
-						  .backgroundColor(activity.resources.getColor(R.color.colorAccent)) //Bubble background color
+						  .backgroundColor(activity.resources.getColor(R.color.brightBlue)) //Bubble background color
 						  .textColor(activity.resources.getColor(R.color.colorPrimary)) //Bubble Text color
 						  .titleTextSize(20) //Title text size in SP (default value 16sp)
 						  .descriptionTextSize(20) //Subtitle text size in SP (default value 14sp)

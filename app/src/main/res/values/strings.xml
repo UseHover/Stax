@@ -247,4 +247,6 @@
 	<string name="download">Download new version</string>
 	<string name="uninstall_content">Your update is downloading. \n\nClick the button below to uninstall this version. Once your download is complete tap the notification to install the new version.</string>
 	<string name="uninstall">Uninstall</string>
+
+	<string name="disclaimer">All products names, brands, and trademarks are property of their respective owners. Use does not imply affiliation.</string>
 </resources>

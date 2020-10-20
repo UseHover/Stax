@@ -7,6 +7,7 @@
 	<dimen name="text_16">16sp</dimen>
 	<dimen name="text_21">21sp</dimen>
 	<dimen name="movemMoneyItemsTextSize">35sp</dimen>
+	<dimen name="elevation">10dp</dimen>
 	<dimen name="text_14">14sp</dimen>
 	<dimen name="text_13">13sp</dimen>
 	<dimen name="text_spacing_8">8sp</dimen>

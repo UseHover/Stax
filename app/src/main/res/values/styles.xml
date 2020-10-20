@@ -1,21 +1,41 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
 	<style name="StaxTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
 		<item name="colorPrimary">@color/colorPrimary</item>
-		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-		<item name="colorAccent">@color/colorAccent</item>
+
+		<item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+		<item name="colorOnPrimary">@color/offWhite</item>
+
+		<item name="colorSecondary">@color/brightBlue</item>
+		<item name="colorSecondaryVariant">@color/brightBlue</item>
+		<item name="colorOnSecondary">@color/cardViewColor</item>
+
+		<item name="colorSurface">@color/cardViewColor</item>
+		<item name="colorOnSurface">@color/offWhite</item>
+		<item name="colorOnBackground">@color/darkGrey</item>
+		<item name="colorError">@color/bright_red</item>
+		<item name="colorOnError">@color/offWhite</item>
+
+		<item name="colorControlNormal">@color/buttonColor</item>
+		<item name="colorControlHighlight">@color/brightBlue</item>
 
 		<item name="windowActionBar">false</item>
+		<item name="android:statusBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark</item>
+		<item name="android:navigationBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark</item>
 		<item name="android:windowBackground">@color/colorPrimaryDark</item>
 		<item name="android:fitsSystemWindows">true</item>
-
-		<item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
-		<item name="materialCalendarFullscreenTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen</item>
-		<item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar</item>
 
 		<item name="android:textColor">@color/offWhite</item>
 		<item name="android:buttonStyle">@style/StaxButton</item>
 		<item name="buttonStyle">@style/StaxButton</item>
+
+		<item name="android:popupMenuStyle">@style/StaxPopupMenu</item>
+		<item name="popupMenuStyle">@style/StaxPopupMenu</item>
+		<item name="android:listPreferredItemHeightSmall">61dp</item>
+
+		<item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
+		<item name="materialCalendarFullscreenTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen</item>
+		<item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar</item>
 	</style>
 
 	<style name="StaxHoverTheme" parent="StaxTheme" />
@@ -35,9 +55,18 @@
 		<item name="fontFamily">font-medium</item>
 		<item name="android:fontFamily">font-medium</item>
 		<item name="android:background">@drawable/button_bg</item>
-		<item name="elevation">5dp</item>
+		<item name="elevation">@dimen/elevation</item>
 		<item name="android:textAllCaps">false</item>
 		<item name="textAllCaps">false</item>
+	</style>
+
+	<style name="StaxPopupMenu" parent="Widget.AppCompat.PopupMenu">
+		<item name="android:textColor">@color/offWhite</item>
+		<item name="android:popupBackground">@color/cardViewColor</item>
+		<item name="colorSurface">@color/cardViewColor</item>
+		<item name="android:dropDownHorizontalOffset">-117dp</item>
+		<item name="android:dropDownVerticalOffset">-5dp</item>
+		<item name="android:background">@drawable/button_bg</item>
 	</style>
 
 	<style name="StaxButtonColored" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
@@ -45,7 +74,8 @@
 		<item name="android:layout_marginBottom">@dimen/margin_55</item>
 		<item name="android:radius">5dp</item>
 		<item name="android:textColor">@color/colorPrimaryDark</item>
-		<item name="backgroundTint">@color/colorAccent</item>
+		<item name="backgroundTint">@color/brightBlue</item>
+		<item name="elevation">@dimen/elevation</item>
 		<item name="android:textSize">16sp</item>
 		<item name="android:textAllCaps">false</item>
 		<item name="textAllCaps">false</item>
@@ -89,8 +119,18 @@
 
 	<style name="StaxDialog" parent="Theme.MaterialComponents.Dialog">
 		<item name="colorPrimary">@color/colorPrimary</item>
-		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-		<item name="colorAccent">@color/colorAccent</item>
+		<item name="colorPrimaryVariant">@color/brightBlue</item>
+		<item name="colorOnPrimary">@color/offWhite</item>
+
+		<item name="colorSecondary">@color/brightBlue</item>
+		<item name="colorSecondaryVariant">@color/brightBlue</item>
+		<item name="colorOnSecondary">@color/cardViewColor</item>
+
+		<item name="colorSurface">@color/cardViewColor</item>
+		<item name="colorOnSurface">@color/offWhite</item>
+		<item name="colorOnBackground">@color/darkGrey</item>
+		<item name="colorError">@color/bright_red</item>
+		<item name="colorOnError">@color/offWhite</item>
 
 		<item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
 		<item name="materialCalendarFullscreenTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen</item>

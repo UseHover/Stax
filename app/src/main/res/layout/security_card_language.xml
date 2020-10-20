@@ -12,6 +12,7 @@
 		android:layout_marginBottom="@dimen/margin_8"
 		android:paddingVertical="@dimen/margin_21"
 		android:paddingHorizontal="@dimen/margin_13"
+		android:background="?attr/selectableItemBackground"
 		android:textSize="@dimen/text_16" />
 
 </com.hover.stax.views.StaxCardView>

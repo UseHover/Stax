@@ -9,6 +9,7 @@
 	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
+		android:layout_marginBottom="@dimen/margin_89"
 	    android:orientation="vertical">
 
 		<include layout="@layout/security_card_accounts" />
@@ -16,6 +17,14 @@
 		<include layout="@layout/security_card_pins" />
 
 		<include layout="@layout/security_card_language" />
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginHorizontal="@dimen/margin_13"
+			android:textSize="@dimen/text_13"
+			android:textColor="@color/darkGrey"
+			android:text="@string/disclaimer"/>
 
 	</LinearLayout>
 </androidx.core.widget.NestedScrollView>

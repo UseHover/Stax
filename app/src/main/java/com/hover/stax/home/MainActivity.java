@@ -1,24 +1,28 @@
 package com.hover.stax.home;
 
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.amplitude.api.Amplitude;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
@@ -34,24 +38,12 @@ import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
-import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
-import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
-import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
-import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RFACLabelItem;
-import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RapidFloatingActionContentLabelList;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
-		BalancesViewModel.RunBalanceListener,
-				BalanceAdapter.BalanceListener,
-				BiometricChecker.AuthListener,
-				RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener {
+	BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener {
 
 	final public static String TAG = "MainActivity";
 	private BalancesViewModel balancesViewModel;
-	private RapidFloatingActionHelper rfabHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -183,86 +175,72 @@ public class MainActivity extends AppCompatActivity implements
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	public void onRFACItemLabelClick(int position, RFACLabelItem item) {
-		switch (position) {
-			case 0:
-				startTransfer(Action.P2P);
-				break;
-			case 1:
-				startTransfer(Action.AIRTIME);
-				break;
-			case 2:
-				startActivityForResult(new Intent(this, RequestActivity.class), Constants.REQUEST_REQUEST);
-				break;
-			case 3:
-				Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_security);
-				break;
-			default:
-				Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_home);
-		}
-		rfabHelper.toggleContent();
-	}
-
-	@Override
-	public void onRFACItemIconClick(int position, RFACLabelItem item) {
-		rfabHelper.toggleContent();
-	}
-
 	private void setUpNav() {
-		BottomNavigationView navView = findViewById(R.id.nav_view);
-		AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-			R.id.navigation_home, R.id.navigation_security).build();
+		FloatingActionButton fab = setupFloatingButton();
+		BottomAppBar nav = findViewById(R.id.nav_view);
 		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-		NavigationUI.setupWithNavController(navView, navController);
+		AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
+		NavigationUI.setupWithNavController(nav, navController, appBarConfiguration);
 
-		RapidFloatingActionButton fab = setupFloatingButton();
+		nav.setOnMenuItemClickListener((Toolbar.OnMenuItemClickListener) item -> {
+			switch (item.getItemId()) {
+				case R.id.navigation_home: navController.navigate(R.id.navigation_home); break;
+				case R.id.navigation_security: navController.navigate(R.id.navigation_security); break;
+			}
+            return false;
+		});
 
-		navController.addOnDestinationChangedListener((controller, destination, arguments) ->
-			fab.setVisibility(destination.getId() == R.id.navigation_security ? View.GONE : View.VISIBLE));
+		navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+			switch (destination.getId()) {
+				case R.id.navigation_security:
+					changeDrawableColor(nav.findViewById(R.id.navigation_home), R.color.offWhite);
+					changeDrawableColor(nav.findViewById(R.id.navigation_security), R.color.brightBlue);
+					fab.hide();
+					break;
+				case R.id.navigation_home:
+					changeDrawableColor(nav.findViewById(R.id.navigation_security), R.color.offWhite);
+					changeDrawableColor(nav.findViewById(R.id.navigation_home), R.color.brightBlue);
+					fab.show();
+					break;
+				default:
+					changeDrawableColor(nav.findViewById(R.id.navigation_security), R.color.offWhite);
+					changeDrawableColor(nav.findViewById(R.id.navigation_home), R.color.offWhite);
+					fab.show();
+			}
+		});
 
 		if (getIntent().getBooleanExtra(SecurityFragment.LANG_CHANGE, false))
 			navController.navigate(R.id.navigation_security);
 	}
 
-	RapidFloatingActionButton setupFloatingButton() {
-		RapidFloatingActionContentLabelList rfaContent = new RapidFloatingActionContentLabelList(this);
-		rfaContent.setOnRapidFloatingActionContentLabelListListener(this);
-		List<RFACLabelItem> items = new ArrayList<>();
-		items.add(new RFACLabelItem<Integer>()
-			          .setLabel(getResources().getString(R.string.transfer))
-			          .setLabelSizeSp(21)
-			          .setLabelColor(getResources().getColor(R.color.offWhite))
-			          .setIconNormalColor(R.color.cardViewColor)
-			          .setLabelBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.cardViewColor)))
-			          .setWrapper(0)
-		);
-		items.add(new RFACLabelItem<Integer>()
-			          .setLabel(getResources().getString(R.string.nav_airtime))
-			          .setLabelSizeSp(21)
-			          .setLabelColor(getResources().getColor(R.color.offWhite))
-			          .setLabelBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.cardViewColor)))
-			          .setWrapper(1)
-		);
-		items.add(new RFACLabelItem<Integer>()
-			          .setLabel(getResources().getString(R.string.title_request))
-			          .setLabelSizeSp(21)
-			          .setLabelColor(getResources().getColor(R.color.offWhite))
-			          .setLabelBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.cardViewColor)))
-			          .setWrapper(2));
+	private void changeDrawableColor(TextView tv, int color) {
+		for (Drawable d : tv.getCompoundDrawables()) {
+			if (d != null)
+				d.setColorFilter(new PorterDuffColorFilter(this.getResources().getColor(color), PorterDuff.Mode.SRC_IN));
+		}
+	}
 
+	FloatingActionButton setupFloatingButton() {
+		FloatingActionButton fab = findViewById(R.id.fab);
+		fab.setOnClickListener(view -> {
+			fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
+			PopupMenu popup = new PopupMenu(MainActivity.this, fab);
+			popup.getMenuInflater().inflate(R.menu.fab_menu, popup.getMenu());
 
-		rfaContent.setItems(items);
+			popup.setOnMenuItemClickListener(item -> {
+				switch (item.getItemId()) {
+					case R.id.transfer: startTransfer(Action.P2P); break;
+					case R.id.airtime: startTransfer(Action.AIRTIME); break;
+					case R.id.request: startActivityForResult(new Intent(this, RequestActivity.class), Constants.REQUEST_REQUEST); break;
+					default: break;
+				}
+				return true;
+			});
+			popup.setOnDismissListener(menu -> fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_money)));
 
-		RapidFloatingActionButton rfaBtn = findViewById(R.id.activity_main_rfab);
-		RapidFloatingActionLayout rfaLayout = findViewById(R.id.container);
-
-		rfaLayout.setIsContentAboveLayout(true);
-
-		rfaLayout.setFrameColor(getResources().getColor(R.color.cardViewColor));
-//		rfaLayout.setDisableContentDefaultAnimation(true);
-		rfabHelper = new RapidFloatingActionHelper(this, rfaLayout, rfaBtn, rfaContent).build();
-		return rfaBtn;
+			popup.show();
+		});
+		return fab;
 	}
 }
 
