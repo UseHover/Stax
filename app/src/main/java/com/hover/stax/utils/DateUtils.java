@@ -2,6 +2,7 @@ package com.hover.stax.utils;
 
 import android.content.Context;
 
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.hover.stax.R;
 
 import java.util.Calendar;
@@ -13,6 +14,10 @@ public class DateUtils {
 
 	public static long now() {
 		return new Date().getTime();
+	}
+
+	public static long today() {
+		return MaterialDatePicker.todayInUtcMilliseconds();
 	}
 
 	public static String timeUntil(Context context, final long millis) {

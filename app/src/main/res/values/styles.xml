@@ -34,10 +34,6 @@
 		<item name="popupMenuStyle">@style/StaxPopupMenu</item>
 		<item name="actionOverflowMenuStyle">@style/StaxPopupMenu</item>
 		<item name="android:listPreferredItemHeightSmall">61dp</item>
-
-		<item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
-		<item name="materialCalendarFullscreenTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen</item>
-		<item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar</item>
 	</style>
 
 	<style name="StaxHoverTheme" parent="StaxTheme" />
@@ -146,15 +142,16 @@
 		<item name="colorError">@color/bright_red</item>
 		<item name="colorOnError">@color/offWhite</item>
 
-		<item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
-		<item name="materialCalendarFullscreenTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen</item>
-		<item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar</item>
-
 		<item name="android:textColor">@color/offWhite</item>
 		<item name="android:buttonStyle">@style/StaxButton</item>
 		<item name="buttonStyle">@style/StaxButton</item>
 		<item name="dialogCornerRadius">@dimen/radius</item>
 		<item name="android:windowBackground">@drawable/dialog_bg</item>
+	</style>
+
+	<style name="StaxCalendar" parent="ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen">
+		<item name="colorPrimary">@color/brightBlue</item>
+		<item name="colorOnPrimary">@color/colorPrimaryDark</item>
 	</style>
 </resources>
 
