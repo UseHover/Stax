@@ -43,7 +43,6 @@
 	    android:layout_height="wrap_content"
 	    android:layout_gravity="center_vertical"
 	    android:paddingVertical="@dimen/margin_21"
-		android:paddingStart="@dimen/margin_13"
 	    android:orientation="horizontal">
 
 		<TextView android:id="@+id/balance_channel"

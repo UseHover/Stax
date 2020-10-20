@@ -76,12 +76,14 @@ public class StaxDialog extends AlertDialog {
 	}
 
 	private View.OnClickListener negListener = view -> {
-		customNegListener.onClick(view);
+		if (customNegListener != null)
+			customNegListener.onClick(view);
 		dialog.dismiss();
 	};
 
 	private View.OnClickListener posListener = view -> {
-		customPosListener.onClick(view);
+		if (customPosListener != null)
+			customPosListener.onClick(view);
 		dialog.dismiss();
 	};
 }

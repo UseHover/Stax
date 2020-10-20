@@ -30,7 +30,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.Reques
 	@NonNull
 	@Override
 	public RequestsAdapter.RequestsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.transaction_list_item, parent, false);
+		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.stax_list_item, parent, false);
 		return new RequestsAdapter.RequestsViewHolder(view);
 	}
 

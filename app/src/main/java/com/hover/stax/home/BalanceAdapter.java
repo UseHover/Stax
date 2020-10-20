@@ -4,7 +4,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +35,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 	@NonNull
 	@Override
 	public BalanceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.balance_items, parent, false);
+		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.balance_item, parent, false);
 		return new BalanceViewHolder(view);
 	}
 

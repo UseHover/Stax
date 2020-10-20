@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 	<stroke
-	    android:width="2dp"
+	    android:width="@dimen/stroke"
 	    android:color="@color/offWhite" />
 	<padding
-	    android:right="@dimen/activity_vertical_margin"
-	    android:left="@dimen/activity_vertical_margin"
-		android:bottom="@dimen/spacing8" android:top="@dimen/spacing8"/>
+	    android:right="@dimen/margin_13"
+	    android:left="@dimen/margin_13"
+		android:bottom="@dimen/margin_8"
+		android:top="@dimen/margin_8"/>
 	<corners android:radius="12dp" />
 </shape>

@@ -3,7 +3,7 @@
     android:textColor="@drawable/spinner_state_selector"
     android:textSize="@dimen/text_16"
 	android:background="?attr/selectableItemBackground"
-    android:padding="@dimen/margin_13"
+    android:paddingVertical="@dimen/margin_13"
 	android:paddingEnd="@dimen/margin_34"
     android:fontFamily="font-normal"
     android:singleLine="true"

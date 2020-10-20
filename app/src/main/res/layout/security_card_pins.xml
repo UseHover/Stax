@@ -17,21 +17,23 @@
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="@string/about_our_security"
+		android:layout_marginHorizontal="@dimen/margin_3"
 		android:layout_marginTop="@dimen/margin_21"
 		android:textColor="@color/offWhite"
 		android:textSize="@dimen/text_16"
-		android:fontFamily="font-medium" />
+		android:fontFamily="font-medium"
+		android:text="@string/about_our_security" />
 
 	<TextView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/about_our_security_content"
+		android:layout_marginHorizontal="@dimen/margin_3"
 		android:layout_marginTop="@dimen/margin_8"
 		android:layout_marginBottom="@dimen/margin_13"
 		android:fontFamily="font-regular"
 		android:textSize="@dimen/text_16"
-		android:lineSpacingExtra="4.5dp"
-		android:textColor="@color/offWhite" />
+		android:lineSpacingExtra="@dimen/text_spacing_8"
+		android:textColor="@color/offWhite"
+		android:text="@string/about_our_security_content"/>
 
 </com.hover.stax.views.StaxCardView>
