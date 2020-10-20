@@ -31,6 +31,7 @@
 
 		<item name="android:popupMenuStyle">@style/StaxPopupMenu</item>
 		<item name="popupMenuStyle">@style/StaxPopupMenu</item>
+		<item name="actionOverflowMenuStyle">@style/StaxPopupMenu</item>
 		<item name="android:listPreferredItemHeightSmall">61dp</item>
 
 		<item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
@@ -62,7 +63,7 @@
 
 	<style name="StaxPopupMenu" parent="Widget.AppCompat.PopupMenu">
 		<item name="android:textColor">@color/offWhite</item>
-		<item name="android:popupBackground">@color/cardViewColor</item>
+		<item name="android:popupBackground">@drawable/button_bg</item>
 		<item name="colorSurface">@color/cardViewColor</item>
 		<item name="android:dropDownHorizontalOffset">-117dp</item>
 		<item name="android:dropDownVerticalOffset">-5dp</item>

@@ -26,7 +26,7 @@
 			android:layout_gravity="center_vertical"
 			android:gravity="center|end"
 			android:fontFamily="font-normal"
-			android:drawableEnd="@drawable/ic_refresh_white_24dp"
+			app:drawableEndCompat="@drawable/ic_refresh_white_24dp"
 			android:drawablePadding="@dimen/spacing8"
 			android:textColor="@color/offWhite"
 			android:id="@+id/homeTimeAgo"
