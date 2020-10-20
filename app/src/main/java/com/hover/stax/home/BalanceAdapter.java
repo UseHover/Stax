@@ -1,6 +1,9 @@
 package com.hover.stax.home;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.RippleDrawable;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
@@ -31,10 +35,11 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 	@NonNull
 	@Override
 	public BalanceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.balance_items, parent, false);
+		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.balance_item, parent, false);
 		return new BalanceViewHolder(view);
 	}
 
+	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 	@Override
 	public void onBindViewHolder(@NonNull BalanceViewHolder holder, int position) {
 		Channel channel = channels.get(position);
@@ -43,10 +48,22 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 		holder.channelId.setText(Integer.toString(channel.id));
 		if (channel.latestBalance != null)
 			holder.amount.setText(Utils.formatAmount(channel.latestBalance));
-		holder.balanced_swiped_layout.setBackgroundColor(Color.parseColor(channel.primaryColorHex));
-		//holder.refreshButton.setImageTintList(Color.parseColor(channel.secondaryColorHex));
 		holder.amount.setTextColor(Color.parseColor(channel.secondaryColorHex));
+		setColors(holder, channel);
+	}
+
+	private void setColors(BalanceViewHolder holder, Channel channel) {
 		UIHelper.setColoredDrawable(holder.refreshButton, R.drawable.ic_refresh_white_24dp, Color.parseColor(channel.secondaryColorHex));
+		holder.balanced_swiped_layout.setBackgroundColor(Color.parseColor(channel.primaryColorHex));
+		if (Build.VERSION.SDK_INT >= 21) {
+			RippleDrawable rippleDrawable = (RippleDrawable) holder.refreshButton.getBackground(); // assumes bg is a RippleDrawable
+
+			int[][] states = new int[][]{new int[]{android.R.attr.state_enabled}};
+			int[] colors = new int[]{Color.parseColor(channel.secondaryColorHex)};
+
+			ColorStateList colorStateList = new ColorStateList(states, colors);
+			rippleDrawable.setColor(colorStateList);
+		}
 	}
 
 	class BalanceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

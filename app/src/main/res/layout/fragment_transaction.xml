@@ -9,6 +9,7 @@
 	<LinearLayout
 	    android:layout_height="wrap_content"
 	    android:layout_width="match_parent"
+		android:layout_marginBottom="@dimen/margin_55"
 	    android:orientation="vertical">
 
 		<com.hover.stax.views.StaxCardView
@@ -19,7 +20,8 @@
 
 			<TableLayout
 			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content">
+			    android:layout_height="wrap_content"
+				android:layout_marginHorizontal="@dimen/margin_3">
 
 				<TableRow android:layout_marginTop="@dimen/margin_24">
 					<TextView
@@ -87,11 +89,13 @@
 			<androidx.recyclerview.widget.RecyclerView
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
+				android:layout_marginHorizontal="@dimen/margin_3"
 			    android:id="@+id/convo_recyclerView" />
 
 			<androidx.recyclerview.widget.RecyclerView
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
+				android:layout_marginHorizontal="@dimen/margin_3"
 			    android:id="@+id/sms_recyclerView" />
 		</com.hover.stax.views.StaxCardView>
 

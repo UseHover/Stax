@@ -11,27 +11,6 @@
 	<item
 	    android:id="@+id/navigation_security"
 	    android:icon="@drawable/ic_settings"
-
 	    app:showAsAction="always"
 	    android:title="@string/nav_security" />
-
-	<item
-	    app:showAsAction="always"
-	    android:checkable="false"
-	    android:title="" />
-
-	<item
-
-	    app:showAsAction="always"
-	    android:checkable="false"
-	    android:title="" />
-
-	<item
-
-	    app:showAsAction="always"
-	    android:checkable="false"
-	    android:title="" />
-
-
-
 </menu>

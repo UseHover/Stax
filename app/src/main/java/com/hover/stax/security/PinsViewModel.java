@@ -87,6 +87,10 @@ public class PinsViewModel extends AndroidViewModel {
 	}
 
 	public void setDefaultAccount(Channel channel) {
-		repo.update(channel);
+		if (channels.getValue() == null) return;
+		for (Channel c: channels.getValue()) {
+			c.defaultAccount = c.id == channel.id;
+			repo.update(c);
+		}
 	}
 }

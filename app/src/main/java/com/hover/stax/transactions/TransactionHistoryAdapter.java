@@ -26,7 +26,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 	@NonNull
 	@Override
 	public HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.transaction_list_item, parent, false);
+		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.stax_list_item, parent, false);
 		return new HistoryViewHolder(view);
 	}
 

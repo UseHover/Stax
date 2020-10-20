@@ -85,7 +85,7 @@ public class Schedule {
 	}
 
 	public Schedule(Long date, String r, String a, String n) {
-		start_date = date == null ? DateUtils.now() : date;
+		start_date = date == null ? DateUtils.today() : date;
 		recipient = r;
 		amount = a;
 		note = n;
@@ -164,13 +164,13 @@ public class Schedule {
 	}
 
 	private boolean dateInRange() {
-		Date today = new Date(DateUtils.now());
+		Date today = new Date(DateUtils.today());
 		return !today.before(new Date(start_date)) && (end_date == null || !today.after(new Date(end_date)));
 	}
 
 	private boolean onDayOfWeek() {
 		Calendar today = Calendar.getInstance();
-		today.setTimeInMillis(DateUtils.now());
+		today.setTimeInMillis(DateUtils.today());
 		Calendar start = Calendar.getInstance();
 		start.setTimeInMillis(start_date);
 		return dateInRange() && today.get(Calendar.DAY_OF_WEEK) == start.get(Calendar.DAY_OF_WEEK);
@@ -182,7 +182,7 @@ public class Schedule {
 
 	private boolean isEvenWeeksSince() {
 		Calendar today = Calendar.getInstance();
-		today.setTimeInMillis(DateUtils.now());
+		today.setTimeInMillis(DateUtils.today());
 		Calendar start = Calendar.getInstance();
 		start.setTimeInMillis(start_date);
 		return (Math.abs(start.get(Calendar.WEEK_OF_YEAR) - today.get(Calendar.WEEK_OF_YEAR)) % 2) == 0;
@@ -190,7 +190,7 @@ public class Schedule {
 
 	private boolean onDayOfMonth() {
 		Calendar today = Calendar.getInstance();
-		today.setTimeInMillis(DateUtils.now());
+		today.setTimeInMillis(DateUtils.today());
 		Calendar start = Calendar.getInstance();
 		start.setTimeInMillis(start_date);
 		return dateInRange() && (start.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH) ||

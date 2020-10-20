@@ -8,12 +8,13 @@
 	<androidx.recyclerview.widget.RecyclerView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:layout_marginHorizontal="@dimen/margin_3"
+		android:layout_marginBottom="@dimen/margin_21"
 		android:id="@+id/balances_recyclerView" />
 
 	<RelativeLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/margin_21">
+		android:layout_height="wrap_content">
 
 			<androidx.appcompat.widget.AppCompatButton
 				android:id="@+id/add_accounts_btn"
@@ -22,7 +23,6 @@
 				android:text="@string/add_accounts"
 				android:layout_alignParentEnd="true"
 				style="@style/StaxButton"
-				android:fontFamily="font-medium"
 				android:onClick="addAccount" />
 	</RelativeLayout>
 </com.hover.stax.views.StaxCardView>

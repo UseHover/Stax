@@ -74,7 +74,7 @@
 				    style="@style/StaxButtonColored"
 				    android:gravity="center"
 				    android:layout_gravity="center"
-				    android:backgroundTint="@color/colorAccent"
+				    android:backgroundTint="@color/brightBlue"
 				    android:textSize="@dimen/text_16"
 				    android:textColor="@color/colorPrimary"
 				    android:background="@drawable/button_bg_colored"

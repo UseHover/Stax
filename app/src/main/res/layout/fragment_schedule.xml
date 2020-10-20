@@ -9,6 +9,7 @@
 	<LinearLayout
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
+		android:layout_marginBottom="@dimen/margin_55"
 		android:orientation="vertical">
 
 		<com.hover.stax.views.StaxCardView
@@ -26,23 +27,28 @@
 				android:layout_marginTop="@dimen/margin_21">
 
 				<androidx.appcompat.widget.AppCompatButton
+					style="@style/StaxButton"
 					android:id="@+id/test_btn"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="@string/test"
-					android:layout_toStartOf="@id/cancel_btn"
-					style="@style/StaxButton"
+					android:layout_toStartOf="@id/divider"
 					android:fontFamily="font-medium"
 					android:visibility="gone"/>
 
+				<View android:id="@+id/divider"
+					android:layout_width="@dimen/margin_21"
+					android:layout_height="wrap_content"
+					android:background="@color/transparent"
+					android:layout_toStartOf="@+id/cancel_btn"/>
+
 				<androidx.appcompat.widget.AppCompatButton
+					style="@style/StaxButton"
 					android:id="@+id/cancel_btn"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_marginStart="@dimen/margin_21"
 					android:text="@string/cancel"
 					android:layout_alignParentEnd="true"
-					style="@style/StaxButton"
 					android:fontFamily="font-medium" />
 			</RelativeLayout>
 		</com.hover.stax.views.StaxCardView>

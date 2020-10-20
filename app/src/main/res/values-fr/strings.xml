@@ -74,9 +74,6 @@
 	<string name="total">Totale</string>
 
 	<string name="choose_service_hint">Choisissez un service</string>
-	<string-array name="choose_account_initial_array">
-		<item>Choose_account_initial</item>
-	</string-array>
 	<string name="airtime_self">Moi même</string>
 	<string name="airtime_other">Quelqu\'un d\'autre</string>
 	<string name="add_service">+ Ajouter un service</string>

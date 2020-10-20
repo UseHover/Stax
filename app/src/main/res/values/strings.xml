@@ -175,9 +175,6 @@
 	</string-array>
 
 	<string name="choose_service_hint">Choose a service</string>
-	<string-array name="choose_account_initial_array">
-		<item>choose_account_initial</item>
-	</string-array>
 	<string name="airtime_self">Myself</string>
 	<string name="airtime_other">Someone else</string>
 	<string name="add_service">+ Add a service</string>
@@ -254,4 +251,6 @@
 	<string name="connecting_to">Connecting to %1$s</string>
 	<string name="buying_airtime">Buying airtime</string>
 	<string name="transferring_money">Transferring money</string>
+
+	<string name="disclaimer">All products names, brands, and trademarks are property of their respective owners. Use does not imply affiliation.</string>
 </resources>

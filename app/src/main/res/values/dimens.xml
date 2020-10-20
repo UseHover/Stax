@@ -1,16 +1,12 @@
 <resources>
-	<!-- Default screen margins, per the Android Design guidelines. -->
-
-	<dimen name="large_margin">55dp</dimen>
-
-	<dimen name="activity_vertical_margin">16dp</dimen>
 	<dimen name="text_16">16sp</dimen>
 	<dimen name="text_21">21sp</dimen>
-	<dimen name="movemMoneyItemsTextSize">35sp</dimen>
-	<dimen name="text_14">14sp</dimen>
 	<dimen name="text_13">13sp</dimen>
 	<dimen name="text_spacing_8">8sp</dimen>
-	<dimen name="spacing8">8dp</dimen>
+	<dimen name="stroke">2dp</dimen>
+	<dimen name="radius">5dp</dimen>
+	<dimen name="elevation">10dp</dimen>
+	<dimen name="margin_3">3dp</dimen>
 	<dimen name="margin_5">5dp</dimen>
 	<dimen name="margin_8">8dp</dimen>
 	<dimen name="margin_13">13dp</dimen>
@@ -22,16 +18,8 @@
 	<dimen name="margin_34">34dp</dimen>
 	<dimen name="margin_55">55dp</dimen>
 	<dimen name="margin_89">89dp</dimen>
+
 	<dimen name="margin_68">68dp</dimen>
 	<dimen name="margin_136">136dp</dimen>
 	<dimen name="margin_150">150dp</dimen>
-	<dimen name="editText_stroke_size">2dp</dimen>
-	<dimen name="editText_initial_stroke">1dp</dimen>
-	<dimen name="editText_corner">2dp</dimen>
-	<dimen name="editText_inter_spacing">32dp</dimen>
-	<dimen name="spacing32">32dp</dimen>
-	<dimen name="actionTextSize">22sp</dimen>
-	<dimen name="actionRightSideTextSize">15sp</dimen>
-	<dimen name="actDetailsStatusMarginLeft">42dp</dimen>
-	<dimen name="fab_margin">16dp</dimen>
 </resources>

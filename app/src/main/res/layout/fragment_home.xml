@@ -10,7 +10,8 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:orientation="vertical"
-		android:layout_marginTop="@dimen/margin_13">
+		android:layout_marginTop="@dimen/margin_13"
+		android:paddingBottom="@dimen/margin_55">
 
 		<include layout="@layout/home_card_header" />
 

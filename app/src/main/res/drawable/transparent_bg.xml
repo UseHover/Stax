@@ -7,12 +7,10 @@
 		</shape>
 	</item>
 
-
-	<item android:state_pressed="false">
+	<item>
 		<shape android:shape="rectangle" android:padding="@dimen/margin_13">
 			<corners android:radius="5dip" />
-			<solid android:color="@color/buttonColor"/>
+			<solid android:color="@color/transparent"/>
 		</shape>
 	</item>
 </selector>
-

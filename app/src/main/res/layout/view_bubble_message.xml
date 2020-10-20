@@ -43,7 +43,7 @@
             android:visibility="gone"
             android:textSize="16sp"
             android:fontFamily="font-medium"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/margin_13"
             android:textStyle="bold" />
 
         <TextView
@@ -71,7 +71,7 @@
             android:text="OK"
             android:background="@drawable/button_bg"
             android:fontFamily="font-medium"
-            android:layout_marginEnd="@dimen/activity_vertical_margin" />
+            android:layout_marginEnd="@dimen/margin_13" />
 
     </LinearLayout>
 

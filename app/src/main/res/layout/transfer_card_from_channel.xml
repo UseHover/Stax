@@ -8,16 +8,18 @@
 	<RadioGroup
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:layout_marginHorizontal="@dimen/margin_3"
 		android:id="@+id/fromRadioGroup"/>
 
 	<TextView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:layout_marginHorizontal="@dimen/margin_3"
+		android:layout_marginBottom="@dimen/margin_8"
 		android:id="@+id/add_new_account"
-		android:textColor="@color/colorAccent"
+		android:textColor="@color/brightBlue"
 		android:text="@string/add_an_account"
 		android:textSize="@dimen/text_16"
-		android:fontFamily="font-medium"
-		android:layout_marginBottom="@dimen/margin_8"/>
+		android:fontFamily="font-medium"/>
 
 </com.hover.stax.views.StaxCardView>

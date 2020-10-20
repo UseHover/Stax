@@ -1,55 +1,84 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
 	<style name="StaxTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
 		<item name="colorPrimary">@color/colorPrimary</item>
-		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-		<item name="colorAccent">@color/colorAccent</item>
+
+		<item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+		<item name="colorOnPrimary">@color/offWhite</item>
+
+		<item name="colorSecondary">@color/brightBlue</item>
+		<item name="colorSecondaryVariant">@color/brightBlue</item>
+		<item name="colorOnSecondary">@color/cardViewColor</item>
+
+		<item name="colorSurface">@color/cardViewColor</item>
+		<item name="colorOnSurface">@color/offWhite</item>
+		<item name="colorOnBackground">@color/darkGrey</item>
+		<item name="colorError">@color/bright_red</item>
+		<item name="colorOnError">@color/offWhite</item>
+
+		<item name="colorControlNormal">@color/buttonColor</item>
+		<item name="colorControlHighlight">@color/brightBlue</item>
+		<item name="colorSwitchThumbNormal">@color/grey</item>
 
 		<item name="windowActionBar">false</item>
+		<item name="android:statusBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark</item>
+		<item name="android:navigationBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark</item>
 		<item name="android:windowBackground">@color/colorPrimaryDark</item>
 		<item name="android:fitsSystemWindows">true</item>
-
-		<item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
-		<item name="materialCalendarFullscreenTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen</item>
-		<item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar</item>
 
 		<item name="android:textColor">@color/offWhite</item>
 		<item name="android:buttonStyle">@style/StaxButton</item>
 		<item name="buttonStyle">@style/StaxButton</item>
 
-
-		<item name="hover_textColor">@color/colorPrimary</item>
+		<item name="android:popupMenuStyle">@style/StaxPopupMenu</item>
+		<item name="popupMenuStyle">@style/StaxPopupMenu</item>
+		<item name="actionOverflowMenuStyle">@style/StaxPopupMenu</item>
+		<item name="android:listPreferredItemHeightSmall">61dp</item>
 	</style>
 
-	<style name="StaxHoverTheme" parent="StaxTheme" />
+	<style name="StaxHoverTheme" parent="StaxTheme">
+		<item name="hover_textColor">@color/colorPrimary</item>
+	</style>
 
 	<style name="SplashTheme" parent="StaxTheme">
 		<item name="android:windowBackground">@drawable/splash_background</item>
 	</style>
 
 	<style name="StaxButton" parent="Widget.AppCompat.Button.Borderless">
-		<item name="android:paddingStart">13sp</item>
-		<item name="android:paddingEnd">13sp</item>
-		<item name="android:paddingTop">16sp</item>
-		<item name="android:paddingBottom">16sp</item>
+		<item name="android:layout_margin">3dp</item>
+		<item name="android:paddingStart">@dimen/margin_13</item>
+		<item name="android:paddingEnd">@dimen/margin_13</item>
+		<item name="android:paddingTop">@dimen/margin_13</item>
+		<item name="android:paddingBottom">@dimen/margin_13</item>
 		<item name="android:radius">5dp</item>
 		<item name="android:textColor">@color/offWhite</item>
-		<item name="android:textSize">16sp</item>
+		<item name="android:textSize">@dimen/text_16</item>
 		<item name="fontFamily">font-medium</item>
 		<item name="android:fontFamily">font-medium</item>
 		<item name="android:background">@drawable/button_bg</item>
-		<item name="elevation">5dp</item>
+		<item name="android:elevation" tools:targetApi="lollipop">1dp</item>
+		<item name="elevation">1dp</item>
 		<item name="android:textAllCaps">false</item>
 		<item name="textAllCaps">false</item>
 	</style>
 
+	<style name="StaxPopupMenu" parent="Widget.AppCompat.PopupMenu">
+		<item name="android:textColor">@color/offWhite</item>
+		<item name="android:popupBackground">@drawable/button_bg</item>
+		<item name="colorSurface">@color/cardViewColor</item>
+		<item name="android:dropDownHorizontalOffset">-117dp</item>
+		<item name="android:dropDownVerticalOffset">-5dp</item>
+		<item name="android:background">@drawable/button_bg</item>
+	</style>
+
 	<style name="StaxButtonColored" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
-		<item name="android:padding">13sp</item>
+		<item name="android:padding">@dimen/margin_13</item>
 		<item name="android:layout_marginBottom">@dimen/margin_55</item>
 		<item name="android:radius">5dp</item>
 		<item name="android:textColor">@color/colorPrimaryDark</item>
-		<item name="backgroundTint">@color/colorAccent</item>
-		<item name="android:textSize">16sp</item>
+		<item name="backgroundTint">@color/brightBlue</item>
+		<item name="elevation">1dp</item>
+		<item name="android:textSize">@dimen/text_16</item>
 		<item name="android:textAllCaps">false</item>
 		<item name="textAllCaps">false</item>
 		<item name="android:fontFamily">font-medium</item>
@@ -63,6 +92,8 @@
 	</style>
 
 	<style name="StaxLabeledInput" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+		<item name="android:layout_marginStart">@dimen/margin_3</item>
+		<item name="android:layout_marginEnd">@dimen/margin_3</item>
 		<item name="boxStrokeColor">@color/offWhite</item>
 		<item name="boxBackgroundColor">@color/cardViewColor</item>
 		<item name="boxStrokeWidth">2dp</item>
@@ -75,6 +106,8 @@
 	</style>
 
 	<style name="StaxLabeledDropdown" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+		<item name="android:layout_marginStart">@dimen/margin_3</item>
+		<item name="android:layout_marginEnd">@dimen/margin_3</item>
 		<item name="boxStrokeColor">@color/offWhite</item>
 		<item name="boxStrokeWidth">2dp</item>
 		<item name="boxBackgroundColor">@color/cardViewColor</item>
@@ -90,20 +123,37 @@
 		<item name="colorSurface">@color/cardViewColor</item>
 	</style>
 
+	<style name="StaxSwitch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+		<item name="thumbTint">@color/switch_color_list</item>
+		<item name="android:scaleX">1.2</item>
+		<item name="android:scaleY">1.2</item>
+	</style>
+
 	<style name="StaxDialog" parent="Theme.MaterialComponents.Dialog">
 		<item name="colorPrimary">@color/colorPrimary</item>
-		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-		<item name="colorAccent">@color/colorAccent</item>
+		<item name="colorPrimaryVariant">@color/brightBlue</item>
+		<item name="colorOnPrimary">@color/offWhite</item>
 
-		<item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
-		<item name="materialCalendarFullscreenTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen</item>
-		<item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar</item>
+		<item name="colorSecondary">@color/brightBlue</item>
+		<item name="colorSecondaryVariant">@color/brightBlue</item>
+		<item name="colorOnSecondary">@color/cardViewColor</item>
+
+		<item name="colorSurface">@color/cardViewColor</item>
+		<item name="colorOnSurface">@color/offWhite</item>
+		<item name="colorOnBackground">@color/darkGrey</item>
+		<item name="colorError">@color/bright_red</item>
+		<item name="colorOnError">@color/offWhite</item>
 
 		<item name="android:textColor">@color/offWhite</item>
 		<item name="android:buttonStyle">@style/StaxButton</item>
 		<item name="buttonStyle">@style/StaxButton</item>
-		<item name="dialogCornerRadius">10dp</item>
+		<item name="dialogCornerRadius">@dimen/radius</item>
 		<item name="android:windowBackground">@drawable/dialog_bg</item>
+	</style>
+
+	<style name="StaxCalendar" parent="ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen">
+		<item name="colorPrimary">@color/brightBlue</item>
+		<item name="colorOnPrimary">@color/colorPrimaryDark</item>
 	</style>
 </resources>
 
