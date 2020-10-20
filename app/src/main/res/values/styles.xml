@@ -18,6 +18,7 @@
 
 		<item name="colorControlNormal">@color/buttonColor</item>
 		<item name="colorControlHighlight">@color/brightBlue</item>
+		<item name="colorSwitchThumbNormal">@color/grey</item>
 
 		<item name="windowActionBar">false</item>
 		<item name="android:statusBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark</item>
@@ -122,6 +123,12 @@
 
 	<style name="StaxDropdownPopup" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
 		<item name="colorSurface">@color/cardViewColor</item>
+	</style>
+
+	<style name="StaxSwitch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+		<item name="thumbTint">@color/switch_color_list</item>
+		<item name="android:scaleX">1.2</item>
+		<item name="android:scaleY">1.2</item>
 	</style>
 
 	<style name="StaxDialog" parent="Theme.MaterialComponents.Dialog">
