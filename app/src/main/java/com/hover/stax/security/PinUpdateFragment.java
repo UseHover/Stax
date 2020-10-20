@@ -22,7 +22,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.utils.UIHelper;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -68,7 +67,7 @@ public class PinUpdateFragment extends Fragment implements Target {
 		pinsViewModel.getChannel().observe(getViewLifecycleOwner(), channel -> {
 			if (channel != null) {
 				titleText.setText(channel.name);
-				Picasso.get().load(channel.logoUrl).networkPolicy(NetworkPolicy.OFFLINE).into(PinUpdateFragment.this);
+				Picasso.get().load(channel.logoUrl).into(PinUpdateFragment.this);
 				label.setHint(channel.name);
 				if (channel.pin != null && !channel.pin.isEmpty()) {
 					input.setText(KeyStoreExecutor.decrypt(channel.pin, getContext()));

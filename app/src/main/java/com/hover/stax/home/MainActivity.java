@@ -1,7 +1,6 @@
 package com.hover.stax.home;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,9 +32,6 @@ import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
@@ -151,16 +147,8 @@ public class MainActivity extends AppCompatActivity implements
 
 
 	private void run(Action action, int index) {
-		Bitmap imageOneBitmap = null;
-		try{
-			imageOneBitmap = Picasso.get()
-									 .load(balancesViewModel.getChannel(action.channel_id).logoUrl)
-									 .networkPolicy(NetworkPolicy.OFFLINE).get();
-		}catch (Exception ignored) {};
-
 		new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), this, index)
 				.finalScreenTime(0)
-				.setImages(imageOneBitmap, null)
 				.userMessage(getResources().getString(R.string.connecting_to, action.from_institution_name))
 				.run();
 	}

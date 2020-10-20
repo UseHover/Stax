@@ -16,6 +16,7 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.database.Constants;
 import com.hover.stax.security.KeyStoreExecutor;
 import com.hover.stax.utils.Utils;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,7 +51,7 @@ final public class HoverSession {
 		builder.style(R.style.StaxHoverTheme);
 		builder.finalMsgDisplayTime(finalScreenTime);
 		builder.styleMode(Constants.STYLE_MODE_FOR_STAX);
-		builder.transactingImages(Utils.bitmapToByteArray(b.imageSenderBitmap), Utils.bitmapToByteArray(b.imageReceiverBitmap));
+		builder.transactingImages(getSenderLogo(), getReceiverLogo(b.action));
 		builder.initialProcessingMessage(b.userMessage);
 		builder.showUserStepDescriptions(true);
 		builder.customBackgroundImage(R.drawable.stax_background);
@@ -83,6 +84,21 @@ final public class HoverSession {
 		builder.extra(Action.PIN_KEY, KeyStoreExecutor.decrypt(channel.pin, a));
 	}
 
+	private byte[] getSenderLogo() { return getLogo(channel.logoUrl); }
+	private byte[] getReceiverLogo(Action a) {
+		if (a.to_institution_logo != null && !channel.logoUrl.equals(a.to_institution_logo))
+			return getLogo(a.to_institution_logo);
+		return null;
+	}
+	private byte[] getLogo(String url) {
+		try {
+			Bitmap b = Picasso.get().load(url).get();
+			return Utils.bitmapToByteArray(b);
+		} catch (Exception ignored) {
+			return null;
+		}
+	}
+
 	private void startHover(HoverParameters.Builder builder, Activity a) {
 		Intent i = builder.buildIntent();
 		Amplitude.getInstance().logEvent(a.getString(R.string.start_load_screen));
@@ -99,7 +115,6 @@ final public class HoverSession {
 		private Action action;
 		private JSONObject extras;
 		private int requestCode, finalScreenTime = 2000;
-		private Bitmap imageSenderBitmap, imageReceiverBitmap;
 		String userMessage = "Performing transaction";
 
 		public Builder(Action a, Channel c, Activity act, int code) {
@@ -132,13 +147,6 @@ final public class HoverSession {
 
 		public HoverSession.Builder userMessage(String msg) {
 			this.userMessage = msg;
-			return this;
-		}
-
-
-		public HoverSession.Builder setImages(Bitmap imageOne, Bitmap imageTwo) {
-			this.imageSenderBitmap = imageOne;
-			this.imageReceiverBitmap = imageTwo;
 			return this;
 		}
 
