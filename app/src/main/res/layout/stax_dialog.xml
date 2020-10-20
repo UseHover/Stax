@@ -51,10 +51,15 @@
 				android:layout_height="wrap_content"
 				android:layout_marginEnd="@dimen/margin_21"
 				android:text="@string/cancel"
-				android:layout_toStartOf="@id/pos_btn"
+				android:layout_toStartOf="@id/divider"
 				style="@style/StaxButton"
-				android:fontFamily="font-medium"
 				android:visibility="gone"/>
+
+			<View android:id="@+id/divider"
+				android:layout_width="@dimen/margin_21"
+				android:layout_height="wrap_content"
+				android:background="@color/transparent"
+				android:layout_toStartOf="@+id/pos_btn"/>
 
 			<androidx.appcompat.widget.AppCompatButton
 				android:id="@+id/pos_btn"
@@ -62,9 +67,7 @@
 				android:layout_height="wrap_content"
 				android:text="@string/ok"
 				android:layout_alignParentEnd="true"
-				android:elevation="5dp"
-				style="@style/StaxButton"
-				android:fontFamily="font-medium" />
+				style="@style/StaxButton" />
 		</RelativeLayout>
 
 	</LinearLayout>

@@ -9,7 +9,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginBottom="@dimen/margin_34"
-		android:layout_marginStart="@dimen/margin_5"
+		android:layout_marginHorizontal="@dimen/margin_3"
 		android:lineSpacingExtra="@dimen/text_spacing_8"
 		android:text="@string/pin_step_description"
 		android:textColor="@color/offWhite" />
@@ -17,7 +17,7 @@
 	<TextView android:id="@+id/pin_explainer"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/margin_5"
+		android:layout_marginHorizontal="@dimen/margin_3"
 		android:lineSpacingExtra="@dimen/text_spacing_8"
 		android:text="@string/pin_security_description"
 		android:textColor="@color/offWhite"
@@ -37,13 +37,19 @@
 			android:id="@+id/cancel_button"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_toStartOf="@id/continue_button"
+			android:layout_toStartOf="@id/divider"
 			android:text="@string/skip"
 			style="@style/StaxButton"
 			android:fontFamily="font-medium"
 			android:elevation="0dp"
 			android:backgroundTint="@color/cardViewColor"
 			android:onClick="skipPins"/>
+
+		<View android:id="@+id/divider"
+			android:layout_width="@dimen/margin_21"
+			android:layout_height="wrap_content"
+			android:background="@color/transparent"
+			android:layout_toStartOf="@+id/continue_button"/>
 
 		<androidx.appcompat.widget.AppCompatButton
 			android:id="@+id/continue_button"
