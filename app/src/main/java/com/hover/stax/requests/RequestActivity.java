@@ -117,7 +117,7 @@ public class RequestActivity extends AppCompatActivity {
 		if (stage.compare(REVIEW) >= 0) {
 			if (requestViewModel.getIsFuture().getValue() != null && requestViewModel.getIsFuture().getValue()) {
 				fab.setVisibility(requestViewModel.getFutureDate().getValue() == null ? View.GONE : View.VISIBLE);
-				fab.setText(getString(R.string.schedule));
+				fab.setText(getString(R.string.fab_schedule));
 			} else {
 				fab.setVisibility(View.VISIBLE);
 				fab.setText(getString(R.string.notify_request_cta));

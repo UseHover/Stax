@@ -15,11 +15,14 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.stax.database.DatabaseRepo;
+import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.sims.Sim;
 import com.hover.stax.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.hover.stax.database.Constants.LANGUAGE_CHECK;
 
 public class ChannelListViewModel extends AndroidViewModel {
 	public final static String TAG = "ChannelViewModel";

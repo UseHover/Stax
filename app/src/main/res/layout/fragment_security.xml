@@ -16,7 +16,8 @@
 
 		<include layout="@layout/security_card_pins" />
 
-		<include layout="@layout/security_card_language" />
+		<include layout="@layout/security_card_language"
+			android:visibility="gone"/>
 
 		<TextView
 			android:layout_width="match_parent"

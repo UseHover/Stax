@@ -42,8 +42,6 @@ public class BiometricChecker extends BiometricPrompt.AuthenticationCallback {
 		final BiometricPrompt.PromptInfo promptInfo =
 				new BiometricPrompt.PromptInfo.Builder()
 						.setTitle(a.getString(R.string.auth_title))
-						.setSubtitle(a.getString(R.string.auth_subTitle))
-						.setDescription(a.getString(R.string.auth_desc))
 						.setAllowedAuthenticators(BIOMETRIC_STRONG | BIOMETRIC_WEAK | DEVICE_CREDENTIAL)
 						.build();
 

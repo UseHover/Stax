@@ -21,6 +21,8 @@ import com.yariksoffice.lingver.Lingver;
 
 import java.util.List;
 
+import static com.hover.stax.database.Constants.LANGUAGE_CHECK;
+
 public class SelectLanguageActivity extends AppCompatActivity {
 	String selectedCode = null;
 
@@ -68,7 +70,7 @@ public class SelectLanguageActivity extends AppCompatActivity {
 	private void onContinue() {
 		Lingver.getInstance().setLocale(SelectLanguageActivity.this, selectedCode);
 		Lang.LogChange(selectedCode, SelectLanguageActivity.this);
-		Utils.saveInt(SplashScreenActivity.LANGUAGE_CHECK, 1, SelectLanguageActivity.this);
+		Utils.saveInt(LANGUAGE_CHECK, 1, SelectLanguageActivity.this);
 		Intent i = new Intent(this, MainActivity.class);
 		if (getIntent().hasExtra(SecurityFragment.LANG_CHANGE)) {
 			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

@@ -26,7 +26,7 @@ public class LanguageViewModel extends AndroidViewModel {
 	}
 
 	private List<Lang> getLanguages() {
-		String[] languageCodes = getApplication().getResources().getStringArray(R.array.supported_languages_code);
+		String[] languageCodes = getApplication().getResources().getStringArray(R.array.supported_lang_codes);
 		ArrayList<Lang> langs = new ArrayList<>();
 		langs.add(new Lang(Lingver.getInstance().getLanguage()));
 		for (String code : languageCodes) {

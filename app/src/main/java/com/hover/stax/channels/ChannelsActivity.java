@@ -16,16 +16,21 @@ import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
+import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.security.PermissionsFragment;
 import com.hover.stax.security.PinsActivity;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.hover.stax.database.Constants.AUTH_CHECK;
+import static com.hover.stax.database.Constants.LANGUAGE_CHECK;
 
 public class ChannelsActivity extends AppCompatActivity {
 	public final static String TAG = "ChannelsActivity";
@@ -75,6 +80,7 @@ public class ChannelsActivity extends AppCompatActivity {
 
 	private void saveAndContinue() {
 		channelViewModel.saveSelected();
+		Utils.saveInt(AUTH_CHECK, 1, this);
 		startActivityForResult(new Intent(ChannelsActivity.this, PinsActivity.class), 0);
 	}
 

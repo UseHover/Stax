@@ -146,7 +146,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		if (stage.compare(REVIEW) >= 0) {
 			if (transferViewModel.getIsFuture().getValue() != null && transferViewModel.getIsFuture().getValue()) {
 				fab.setVisibility(transferViewModel.getFutureDate().getValue() == null ? View.GONE : View.VISIBLE);
-				fab.setText(getString(R.string.schedule));
+				fab.setText(getString(R.string.fab_schedule));
 			} else {
 				fab.setVisibility(View.VISIBLE);
 				fab.setText(getString(R.string.fab_transfernow));

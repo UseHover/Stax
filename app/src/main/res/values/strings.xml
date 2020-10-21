@@ -33,7 +33,7 @@
 	<string name="btn_test">Test</string>
 
 	<string name="lang_cardhead">Choose a language</string>
-	<string-array name="supported_languages_code">
+	<string-array name="supported_lang_codes">
 		<item>en</item>
 		<item>fr</item>
 		<item>sw</item>
@@ -149,8 +149,8 @@
 	<string name="amount_label_opt">How much money? (optional)</string>
 	<string name="reqfrom_label">From who?</string>
 	<string name="btn_addcontact">Add someone else</string>
-	<string name="sms_request_template">This number has requested money from you using Stax. %1$s %2$s www.joinstax.com</string>
-	<string name="sms_amount_detail">Amount: %1$s</string>
+	<string name="sms_request_template">You have a money request from this number for %1$s on stax.me. %2$s</string>
+	<string name="sms_amount_detail">%1$s</string>
 	<string name="sms_note_detail">Note: \"%1$s\"</string>
 	<string name="toast_confirm_request">Your request has been sent.</string>
 	<string name="toast_request_scheduled">Your request has been scheduled. You will be reminded to send a message on %1$s</string>
@@ -179,8 +179,11 @@
 		<item>2biweekly</item>
 		<item>3monthly</item>
 	</string-array>
+	<string name="fab_schedule">Schedule</string>
 
 	<!-- Notifications -->
+	<string name="notify_default_title">User scheduled</string>
+	<string name="notify_default_channel_descrip">Show notifications to make transfers and requests scheduled by you.</string>
 	<string name="notify_transfer">It\'s time to transfer money %1$s with Stax.</string>
 	<string name="notify_transfer_cta">Transfer now</string>
 	<string name="notify_request">It\'s time to send a money request to %1$s with Stax.</string>
@@ -226,9 +229,9 @@
 	<string name="disclaimer">All products names, brands, and trademarks are property of their respective owners. Use does not imply affiliation.</string>
 
 	<!-- System auth check -->
-	<string name="auth_title">Security check</string>
-	<string name="auth_subTitle">Authenticate</string>
+	<string name="auth_title">Authenticate with Stax</string>
 	<string name="auth_descrip">Authenticate with your fingerprint</string>
+	<string name="toast_error_auth">Authentication failed</string>
 
 	<!-- Self destruct -->
 	<string name="destruct_cardbody">This build of Stax has expired. \n\nDownload the latest build to keep using Stax.</string>
