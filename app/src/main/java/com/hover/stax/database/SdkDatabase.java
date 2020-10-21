@@ -14,7 +14,7 @@ import com.hover.stax.sims.Sim;
 import com.hover.stax.sims.SimDao;
 
 // This is a readonly database for accessing the DB created by SQL in the SDK
-@Database(entities = {Action.class, Sim.class}, version = 41, exportSchema = false)
+@Database(entities = {Action.class, Sim.class}, version = 42, exportSchema = false)
 public abstract class SdkDatabase extends RoomDatabase {
 
 	private static volatile SdkDatabase INSTANCE;
@@ -29,7 +29,7 @@ public abstract class SdkDatabase extends RoomDatabase {
 				if (INSTANCE == null) {
 					INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SdkDatabase.class, "hoversdktransactions.db")
 									   .setJournalMode(JournalMode.TRUNCATE)
-									   .addMigrations(MIGRATION_40_41)
+									   .addMigrations(LATEST_SDK_VERSION)
 									   .build();
 				}
 			}
@@ -37,7 +37,7 @@ public abstract class SdkDatabase extends RoomDatabase {
 		return INSTANCE;
 	}
 
-	static final Migration MIGRATION_40_41 = new Migration(40, 41) {
+	static final Migration LATEST_SDK_VERSION = new Migration(41, 42) {
 		@Override
 		public void migrate(SupportSQLiteDatabase database) {
 		}
