@@ -32,7 +32,7 @@
 		    android:fontFamily="font-normal"
 		    android:layout_marginTop="@dimen/margin_21"
 			android:layout_marginBottom="@dimen/margin_55"
-		    android:text="@string/self_destruct_content"/>
+		    android:text="@string/destruct_cardbody"/>
 
 		<RelativeLayout
 			android:layout_width="match_parent"
@@ -43,7 +43,7 @@
 				android:id="@+id/continue_btn"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@string/download"
+				android:text="@string/btn_download"
 				android:layout_alignParentEnd="true"
 				android:textColor="@color/colorPrimaryDark"
 				android:backgroundTint="@color/brightBlue"

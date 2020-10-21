@@ -38,7 +38,7 @@ public class PinUpdateFragment extends Fragment implements Target {
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		if (getArguments() == null) {
 			if (getActivity() != null && getContext() != null) {
-				UIHelper.flashMessage(getContext(), getResources().getString(R.string.account_not_found));
+				UIHelper.flashMessage(getContext(), getResources().getString(R.string.toast_error_acct404));
 				getActivity().onBackPressed();
 			}
 		}
@@ -92,7 +92,7 @@ public class PinUpdateFragment extends Fragment implements Target {
 				pinsViewModel.savePin(channel, getContext());
 			}
 			if (getActivity() != null && getContext() != null) {
-				UIHelper.flashMessage(getContext(), getResources().getString(R.string.pin_updated));
+				UIHelper.flashMessage(getContext(), getResources().getString(R.string.toast_confirm_pinupdate));
 				getActivity().onBackPressed();
 			}
 		});
@@ -102,7 +102,7 @@ public class PinUpdateFragment extends Fragment implements Target {
 		removeAccountButton.setOnClickListener(v -> {
 			pinsViewModel.removeAccount(channel);
 			if (getActivity() != null && getContext() != null) {
-				UIHelper.flashMessage(getContext(), getResources().getString(R.string.account_removed));
+				UIHelper.flashMessage(getContext(), getResources().getString(R.string.toast_confirm_acctremoved));
 				getActivity().onBackPressed();
 			}
 		});

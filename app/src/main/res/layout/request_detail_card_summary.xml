@@ -58,7 +58,7 @@
 
 		<TableRow android:id="@+id/dateRow" android:layout_marginTop="@dimen/margin_21">
 			<TextView
-				android:text="@string/date"
+				android:text="@string/date_label"
 			    	android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />

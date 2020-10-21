@@ -22,7 +22,7 @@
 		<TextView
 			android:textColor="@color/offWhite"
 			android:textSize="@dimen/text_16"
-			android:text="@string/date"/>
+			android:text="@string/date_label"/>
 
 		<TextView android:id="@+id/details_date"
 			android:layout_weight="1"
@@ -36,7 +36,7 @@
 		<TextView
 			android:textColor="@color/offWhite"
 			android:textSize="@dimen/text_16"
-			android:text="@string/how_often"/>
+			android:text="@string/repeatfreq_label"/>
 
 		<TextView android:id="@+id/details_frequency"
 			android:layout_weight="1"
@@ -50,7 +50,7 @@
 		<TextView
 			android:textColor="@color/offWhite"
 			android:textSize="@dimen/text_16"
-			android:text="@string/end_date"/>
+			android:text="@string/end_label"/>
 
 		<TextView android:id="@+id/details_end"
 			android:layout_weight="1"

@@ -62,7 +62,7 @@ public class PinsActivity extends AppCompatActivity {
 
 	public void learnMore(View view) {
 		dialog = new StaxDialog(this)
-						 .setDialogTitle(R.string.about_our_security)
+						 .setDialogTitle(R.string.security_head)
 						 .setDialogMessage(R.string.security_cardbody)
 						 .setPosButton(R.string.btn_ok, btn -> {
 						 })

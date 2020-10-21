@@ -41,7 +41,7 @@
 					<TextView
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_16"
-						android:text="@string/date"/>
+						android:text="@string/date_label"/>
 
 					<TextView android:id="@+id/details_date"
 						android:layout_weight="1"
@@ -55,7 +55,7 @@
 					<TextView
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_16"
-						android:text="@string/network"/>
+						android:text="@string/network_label"/>
 
 					<TextView android:id="@+id/details_network"
 						android:layout_weight="1"
@@ -69,7 +69,7 @@
 					<TextView
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_16"
-						android:text="@string/transactionId"/>
+						android:text="@string/id_label"/>
 
 					<TextView android:id="@+id/details_transactionNumber"
 						android:layout_weight="1"
@@ -84,7 +84,7 @@
 		<com.hover.stax.views.StaxCardView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			app:title="@string/messages">
+			app:title="@string/session_cardhead">
 
 			<androidx.recyclerview.widget.RecyclerView
 			    android:layout_width="match_parent"

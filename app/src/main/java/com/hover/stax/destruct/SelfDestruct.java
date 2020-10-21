@@ -6,9 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.ContactsContract;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,14 +13,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
-import com.amplitude.api.Amplitude;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.utils.PermissionUtils;
-import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
-import java.io.File;
 import java.util.Date;
 
 public class SelfDestruct extends AppCompatActivity {
@@ -70,8 +64,8 @@ public class SelfDestruct extends AppCompatActivity {
 	}
 
 	private void updateView() {
-		((TextView) findViewById(R.id.explainer)).setText(R.string.uninstall_content);
-		((AppCompatButton) findViewById(R.id.continue_btn)).setText(R.string.uninstall);
+		((TextView) findViewById(R.id.explainer)).setText(R.string.uninstall_cardbody);
+		((AppCompatButton) findViewById(R.id.continue_btn)).setText(R.string.btn_uninstall);
 		findViewById(R.id.continue_btn).setOnClickListener(view -> uninstall());
 	}
 

@@ -27,7 +27,7 @@
 						android:layout_weight="1"
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_16"
-						android:text="@string/balance"/>
+						android:text="@string/balance_label"/>
 
 					<TextView android:id="@+id/details_balance"
 						android:textAlignment="viewEnd"
@@ -41,7 +41,7 @@
 						android:layout_weight="1"
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_16"
-						android:text="@string/money_out"/>
+						android:text="@string/moneyout_label"/>
 
 					<TextView android:id="@+id/details_money_out"
 						android:textAlignment="viewEnd"
@@ -55,7 +55,7 @@
 						android:layout_weight="1"
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_16"
-						android:text="@string/money_in"/>
+						android:text="@string/moneyin_label"/>
 
 					<TextView android:id="@+id/details_money_in"
 						android:textAlignment="viewEnd"
@@ -69,7 +69,7 @@
 						android:layout_weight="1"
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_16"
-						android:text="@string/fees_description"/>
+						android:text="@string/fees_label"/>
 
 					<TextView android:id="@+id/details_fees"
 						android:textAlignment="viewEnd"

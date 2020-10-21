@@ -10,7 +10,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 	    	android:fontFamily="font-normal"
-		android:hint="@string/network">
+		android:hint="@string/network_label">
 
 		<AutoCompleteTextView
 			android:id="@+id/networkDropdown"

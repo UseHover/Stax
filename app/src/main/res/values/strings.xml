@@ -24,6 +24,8 @@
 	<string name="btn_ok">OK</string>
 	<string name="btn_save">Save</string>
 	<string name="btn_skip">Skip</string>
+	<string name="btn_yes">Yes</string>
+	<string name="btn_no">No</string>
 	<string name="btn_resend">Resend</string>
 	<string name="btn_continue">Continue</string>
 	<string name="btn_edit">Edit</string>
@@ -156,29 +158,22 @@
 	<string name="descrip_airtime_sched">buy airtime with %1$s for %2$s</string>
 
 	<!-- Scheduling -->
-	<string name="frequency">Frequency</string>
-	<string name="schedule">Schedule</string>
-	<string name="send_future">Send in the future</string>
-	<string name="send_repeat">Repeat transaction</string>
-	<string name="repeattimes_label_opt">How many times? (optional)</string>
-	<string name="repeattimes_label">How many times?</string>
-	<string name="daily_choice">Every day</string>
-	<string name="weekly_choice">Every week</string>
-	<string name="biweekly_choice">Every 2 weeks</string>
-	<string name="monthly_choice">Every month</string>
-	<string name="date">Date</string>
-	<string name="end_date">End date</string>
-	<string name="end_date_input">End date (optional)</string>
-	<string name="how_often">How often?</string>
-	<string name="schedule_created">Transfer scheduled. We will remind you to make a transfer on %1$s</string>
-	<string-array name="frequency_array">
+	<string name="future_toggle">Send in the future</string>
+	<string name="date_label">Date</string>
+	<string name="repeat_toggle">Repeat transaction</string>
+	<string name="repeatfreq_label">How often?</string>
+	<string name="end_label">End date</string>
+	<string name="end_label_opt">End date (optional)</string>
+	<string name="repeatnum_label_opt">How many times? (optional)</string>
+	<string name="repeatnum_label">How many times?</string>
+	<string name="toast_confirm_schedule">Transfer scheduled. We will remind you to make a transfer on %1$s</string>
+	<string-array name="frequency_choices">
 		<item>Every day</item>
 		<item>Every week</item>
 		<item>Every 2 weeks</item>
 		<item>Every month</item>
 	</string-array>
-
-	<string-array name="frequency_array_values" translatable="false">
+	<string-array name="frequency_choices_values" translatable="false">
 		<item>0daily</item>
 		<item>1weekly</item>
 		<item>2biweekly</item>
@@ -188,60 +183,58 @@
 	<!-- Notifications -->
 	<string name="notify_transfer">It\'s time to transfer money %1$s with Stax.</string>
 	<string name="notify_transfer_cta">Transfer now</string>
-	<string name="notify_request">It\'s time to send a request for payment to %1$s with Stax.</string>
+	<string name="notify_request">It\'s time to send a money request to %1$s with Stax.</string>
 	<string name="notify_request_cta">Send request</string>
 	<string name="notify_airtime">It\'s time to buy airtime with Stax.</string>
 	<string name="notify_airtime_cta">Buy airtime</string>
 
 	<!-- Details -->
-	<string name="balance">Balance</string>
-	<string name="money_out">Money out this month</string>
-	<string name="money_in">Money in this month</string>
-	<string name="fees_description">Fees paid to %1$s this year</string>
-	<string name="transactions">Transactions</string>
-	<string name="network">Network</string>
-	<string name="transactionId">Transaction ID</string>
-	<string name="messages">Messages</string>
+	<string name="balance_label">Balance</string>
+	<string name="moneyout_label">Money out this month</string>
+	<string name="moneyin_label">Money in this month</string>
+	<string name="fees_label">Fees paid to %1$s this year</string>
+	<string name="transactions_cardhead">Transactions</string>
+	<string name="network_label">Network</string>
+	<string name="id_label">Transaction ID</string>
+	<string name="session_cardhead">Messages</string>
 
 	<!-- Canceling -->
-	<string name="cancel_future_head">Cancel future transaction</string>
-	<string name="cancel_future_btn">Cancel transactions</string>
-	<string name="cancel_future_msg">This will cancel future transactions. You can re-schedule the transactions at any time.</string>
-	<string name="cancel_future_success">Future transactions canceled.</string>
-	<string name="cancel_request_head">Cancel request</string>
-	<string name="cancel_request_btn">Cancel request</string>
-	<string name="cancel_request_msg">This will cancel this request. You can re-request money from someone at any time.</string>
-	<string name="cancel_request_success">Request canceled.</string>
+	<string name="cancelfuture_head">Cancel future transaction</string>
+	<string name="btn_canceltrans">Cancel transactions</string>
+	<string name="cancelfuture_msg">This will cancel future transactions. You can re-schedule the transactions at any time.</string>
+	<string name="toast_confirm_cancelfuture">Future transactions canceled.</string>
+	<string name="cancelreq_head">Cancel request</string>
+	<string name="btn_cancelreq">Cancel request</string>
+	<string name="cancelreq_msg">This will cancel this request. You can re-request money from someone at any time.</string>
+	<string name="toast_confirm_cancelreq">Request canceled.</string>
 
 	<!-- Settings -->
 	<string name="accts_cardhead">Accounts</string>
-	<string name="security">Security</string>
-	<string name="default_account">Default account</string>
-	<string name="default_account_desc">Default account will show up first when you move money.</string>
-	<string name="about_our_security">Secure with Stax</string>
-	<string name="remove_pin_from_device">Remove PINs from device</string>
-	<string name="remove_pins">Remove all PINs now</string>
-	<string name="remove_pins_dialog_message">You can add your PINs to Stax again at any time.</string>
-	<string name="remove_pin_successful">PIN removed successfully</string>
-	<string name="yes">Yes</string>
-	<string name="no">No</string>
-	<string name="save_pin">Save PIN</string>
-	<string name="remove_account">Remove Account</string>
-	<string name="account_not_found">Account not found, please restart your app if this persist</string>
-	<string name="account_removed">Account removed successfully</string>
-	<string name="pin_updated">Pin saved successfully</string>
-	<string name="language">Language</string>
+	<string name="security_cardhead">Security</string>
+	<string name="defaultacct_label">Default account</string>
+	<string name="security_head">Secure with Stax</string>
+	<string name="btn_removepins">Remove PINs from device</string>
+	<string name="removepins_dialoghead">Remove all PINs now</string>
+	<string name="removepins_dialogmes">You can add your PINs to Stax again at any time.</string>
+	<string name="toast_confirm_removepin">PIN removed successfully</string>
+	<string name="btn_savepin">Save PIN</string>
+	<string name="btn_removeacct">Remove Account</string>
+	<string name="toast_error_acct404">Account not found, please restart your app if this persist</string>
+	<string name="toast_confirm_acctremoved">Account removed successfully</string>
+	<string name="toast_confirm_pinupdate">Pin saved successfully</string>
+	<string name="language_cardhead">Language</string>
 	<string name="disclaimer">All products names, brands, and trademarks are property of their respective owners. Use does not imply affiliation.</string>
 
+	<!-- System auth check -->
 	<string name="auth_title">Security check</string>
 	<string name="auth_subTitle">Authenticate</string>
-	<string name="auth_desc">Authenticate with your fingerprint</string>
+	<string name="auth_descrip">Authenticate with your fingerprint</string>
 
 	<!-- Self destruct -->
-	<string name="self_destruct_content">This build of Stax has expired. \n\nDownload the latest build to keep using Stax.</string>
-	<string name="download">Download new version</string>
-	<string name="uninstall_content">Your update is downloading. \n\nClick the button below to uninstall this version. Once your download is complete tap the notification to install the new version.</string>
-	<string name="uninstall">Uninstall</string>
+	<string name="destruct_cardbody">This build of Stax has expired. \n\nDownload the latest build to keep using Stax.</string>
+	<string name="btn_download">Download new version</string>
+	<string name="uninstall_cardbody">Your update is downloading. \n\nClick the button below to uninstall this version. Once your download is complete tap the notification to install the new version.</string>
+	<string name="btn_uninstall">Uninstall</string>
 
 	<!-- Time -->
 	<string name="timeago_ago">%1$s ago</string>

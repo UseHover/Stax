@@ -73,13 +73,13 @@ public class ScheduleDetailFragment extends Fragment {
 
 	private void showConfirmDialog(View v) {
 		new StaxDialog(v.getContext(), this)
-				.setDialogTitle(R.string.cancel_future_head)
-				.setDialogMessage(R.string.cancel_future_msg)
+				.setDialogTitle(R.string.cancelfuture_head)
+				.setDialogMessage(R.string.cancelfuture_msg)
 				.setNegButton(R.string.btn_back, btn -> {
 				})
-				.setPosButton(R.string.cancel_future_btn, btn -> {
+				.setPosButton(R.string.btn_canceltrans, btn -> {
 					viewModel.deleteSchedule();
-					UIHelper.flashMessage(getContext(), getString(R.string.cancel_future_success));
+					UIHelper.flashMessage(getContext(), getString(R.string.toast_confirm_cancelfuture));
 					NavHostFragment.findNavController(ScheduleDetailFragment.this).navigate(R.id.navigation_home);
 				})
 				.isDestructive()

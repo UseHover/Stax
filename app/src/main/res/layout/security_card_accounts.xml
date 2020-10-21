@@ -19,7 +19,7 @@
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/margin_21"
 		android:fontFamily="font-normal"
-		android:hint="@string/default_account"
+		android:hint="@string/defaultacct_label"
 		android:id="@+id/defaultAccountEntry">
 
 		<AutoCompleteTextView

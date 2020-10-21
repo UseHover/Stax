@@ -53,7 +53,7 @@ public abstract class StagedFragment extends Fragment {
 		stagedViewModel.getIsRepeating().observe(getViewLifecycleOwner(), isRepeating ->
             root.findViewById(R.id.repeatInputs).setVisibility(isRepeating ? View.VISIBLE : View.GONE));
 		stagedViewModel.getFrequency().observe(getViewLifecycleOwner(), frequency -> {
-			((TextView) root.findViewById(R.id.frequencyValue)).setText(getResources().getStringArray(R.array.frequency_array)[frequency]);
+			((TextView) root.findViewById(R.id.frequencyValue)).setText(getResources().getStringArray(R.array.frequency_choices)[frequency]);
 			((TextView) root.findViewById(R.id.repeat_times_input)).setText(null);
 		});
 		stagedViewModel.getEndDate().observe(getViewLifecycleOwner(), endDate -> {
@@ -126,7 +126,7 @@ public abstract class StagedFragment extends Fragment {
 
 	private void createFrequencyDropdown(View root) {
 		frequencyDropdown = root.findViewById(R.id.frequencyDropdown);
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireActivity(), R.array.frequency_array, R.layout.stax_spinner_item);
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireActivity(), R.array.frequency_choices, R.layout.stax_spinner_item);
 		frequencyDropdown.setAdapter(adapter);
 		frequencyDropdown.setText(frequencyDropdown.getAdapter().getItem(0).toString(), false);
 	}

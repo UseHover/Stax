@@ -68,7 +68,7 @@
 				    android:paddingVertical="@dimen/margin_8"
 				    android:paddingHorizontal="@dimen/margin_16"
 				    android:layout_marginStart="@dimen/margin_34"
-				    android:text="@string/save_pin"
+				    android:text="@string/btn_savepin"
 				    android:id="@+id/save_pin_button_id"
 				    android:textAllCaps="false"
 				    style="@style/StaxButtonColored"
@@ -87,7 +87,7 @@
 	<androidx.appcompat.widget.AppCompatButton
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:text="@string/remove_account"
+	    android:text="@string/btn_removeacct"
 	    android:layout_gravity="center"
 	    android:gravity="center"
 	    android:id="@+id/removeAccountButtonId"

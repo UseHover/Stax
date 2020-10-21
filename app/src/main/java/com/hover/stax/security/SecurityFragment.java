@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
@@ -14,8 +13,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
@@ -23,13 +20,11 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.home.MainActivity;
 import com.hover.stax.languages.Lang;
 import com.hover.stax.languages.LanguageViewModel;
 import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.StaxDialog;
-import com.yariksoffice.lingver.Lingver;
 
 import java.util.List;
 
@@ -109,13 +104,13 @@ public class SecurityFragment extends Fragment {
 	private void setUpRemovePins(View root, PinsViewModel securityViewModel) {
 		root.findViewById(R.id.removePinsButtonId).setOnClickListener(view -> {
 			new StaxDialog(root.getContext(), this)
-					.setDialogTitle(R.string.remove_pins)
-					.setDialogMessage(R.string.remove_pins_dialog_message)
-					.setPosButton(R.string.yes, btn -> {
+					.setDialogTitle(R.string.removepins_dialoghead)
+					.setDialogMessage(R.string.removepins_dialogmes)
+					.setPosButton(R.string.btn_yes, btn -> {
 						securityViewModel.clearAllPins();
-						UIHelper.flashMessage(getContext(), getContext().getResources().getString(R.string.remove_pin_successful));
+						UIHelper.flashMessage(getContext(), getContext().getResources().getString(R.string.toast_confirm_removepin));
 					})
-					.setNegButton(R.string.no, null)
+					.setNegButton(R.string.btn_no, null)
 					.isDestructive()
 					.showIt();
 		});

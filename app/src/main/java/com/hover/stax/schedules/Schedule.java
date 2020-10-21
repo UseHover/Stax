@@ -116,7 +116,7 @@ public class Schedule {
 		if (frequency == ONCE)
 			return DateUtils.humanFriendlyDate(start_date);
 		else
-			return c.getResources().getStringArray(R.array.frequency_array)[frequency];
+			return c.getResources().getStringArray(R.array.frequency_choices)[frequency];
 	}
 
 	String title(Context c) {
