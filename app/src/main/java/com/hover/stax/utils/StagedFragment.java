@@ -22,7 +22,6 @@ import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.transfers.StaxContactModel;
@@ -153,7 +152,7 @@ public abstract class StagedFragment extends Fragment {
 			startContactIntent(requestCode);
 		} else {
 			Amplitude.getInstance().logEvent(getString(R.string.contact_perm_denied));
-			UIHelper.flashMessage(getContext(), getResources().getString(R.string.contact_perm_error));
+			UIHelper.flashMessage(getContext(), getResources().getString(R.string.toast_error_contactperm));
 		}
 	}
 
@@ -167,7 +166,7 @@ public abstract class StagedFragment extends Fragment {
 				onContactSelected(requestCode, staxContactModel);
 			} else {
 				Amplitude.getInstance().logEvent(getString(R.string.contact_select_error));
-				UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectContactErrorMessage));
+				UIHelper.flashMessage(getContext(), getResources().getString(R.string.toast_error_contactselect));
 			}
 		}
 	}

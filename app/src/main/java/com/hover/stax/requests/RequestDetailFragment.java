@@ -77,7 +77,7 @@ public class RequestDetailFragment extends Fragment {
 		new StaxDialog(getActivity())
 				.setDialogTitle(R.string.cancel_request_head)
 				.setDialogMessage(R.string.cancel_request_msg)
-				.setNegButton(R.string.back, btn -> {
+				.setNegButton(R.string.btn_back, btn -> {
 				})
 				.setPosButton(R.string.cancel_request_btn, btn -> {
 					viewModel.deleteRequest();

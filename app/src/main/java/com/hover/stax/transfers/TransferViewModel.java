@@ -179,14 +179,14 @@ public class TransferViewModel extends StagedViewModel {
 		switch ((TransferStage) stage.getValue()) {
 			case AMOUNT:
 				if (amount.getValue() == null || amount.getValue().isEmpty()) {
-					amountError.setValue(R.string.enterAmountError);
+					amountError.setValue(R.string.amount_fielderror);
 					return false;
 				} else
 					amountError.setValue(null);
 				break;
 			case RECIPIENT:
 				if (recipient.getValue() == null || recipient.getValue().isEmpty()) {
-					recipientError.setValue(R.string.enterRecipientError);
+					recipientError.setValue(R.string.recipient_fielderror);
 					return false;
 				} else
 					recipientError.setValue(null);

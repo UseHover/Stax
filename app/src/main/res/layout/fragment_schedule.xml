@@ -31,7 +31,7 @@
 					android:id="@+id/test_btn"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="@string/test"
+					android:text="@string/btn_test"
 					android:layout_toStartOf="@id/divider"
 					android:fontFamily="font-medium"
 					android:visibility="gone"/>
@@ -47,7 +47,7 @@
 					android:id="@+id/cancel_btn"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="@string/cancel"
+					android:text="@string/btn_cancel"
 					android:layout_alignParentEnd="true"
 					android:fontFamily="font-medium" />
 			</RelativeLayout>

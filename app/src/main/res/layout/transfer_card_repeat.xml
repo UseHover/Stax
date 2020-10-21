@@ -74,7 +74,7 @@
 			android:id="@+id/numberOfTimesEntry"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/how_many_times_input"
+			android:hint="@string/repeattimes_label_opt"
 			style="@style/StaxLabeledInput">
 
 			<com.google.android.material.textfield.TextInputEditText
@@ -97,7 +97,7 @@
 				android:id="@+id/save_btn"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@string/save"
+				android:text="@string/btn_save"
 				android:layout_alignParentEnd="true"
 				style="@style/StaxButton"
 				android:fontFamily="font-medium" />

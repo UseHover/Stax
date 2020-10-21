@@ -3,7 +3,7 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	app:title="@string/balances">
+	app:title="@string/bal_cardhead">
 
 	<androidx.recyclerview.widget.RecyclerView
 		android:layout_width="match_parent"
@@ -20,7 +20,7 @@
 				android:id="@+id/add_accounts_btn"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@string/add_accounts"
+				android:text="@string/btn_addaccts"
 				android:layout_alignParentEnd="true"
 				style="@style/StaxButton"
 				android:onClick="addAccount" />

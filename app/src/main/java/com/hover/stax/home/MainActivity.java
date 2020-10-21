@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements
 		if (data.getAction().equals(Constants.SCHEDULED))
 			showMessage(getString(R.string.request_scheduled, DateUtils.humanFriendlyDate(data.getIntExtra(Schedule.DATE_KEY, 0))));
 		else
-			showMessage(getString(R.string.request_sent));
+			showMessage(getString(R.string.toast_confirm_request));
 	}
 
 	private void showMessage(String str) {

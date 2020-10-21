@@ -9,7 +9,7 @@
 		android:id="@+id/recipientEntry"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:hint="@string/recipient_phone"
+		android:hint="@string/recipientphone_label"
 		style="@style/StaxLabeledInput">
 
 		<com.google.android.material.textfield.TextInputEditText

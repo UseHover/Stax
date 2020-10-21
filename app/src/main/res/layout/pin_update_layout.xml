@@ -28,7 +28,7 @@
 			    android:id="@+id/pinEntry"
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
-			    android:hint="@string/pin_input_hint"
+			    android:hint="@string/pin_cardhead"
 			    style="@style/StaxLabeledInput">
 
 				<com.google.android.material.textfield.TextInputEditText
@@ -53,7 +53,7 @@
 				<TextView
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
-				    android:text="@string/cancel"
+				    android:text="@string/btn_cancel"
 				    android:id="@+id/cancelUpdatePin"
 				    android:textSize="@dimen/text_16"
 				    android:fontFamily="font-medium"

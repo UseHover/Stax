@@ -13,6 +13,7 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.WorkManager;
 
 import com.amplitude.api.Amplitude;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hover.sdk.api.Hover;
 import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.destruct.SelfDestruct;

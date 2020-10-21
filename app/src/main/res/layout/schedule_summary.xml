@@ -8,7 +8,7 @@
 		<TextView
 			android:textColor="@color/offWhite"
 			android:textSize="@dimen/text_16"
-			android:text="@string/amount"/>
+			android:text="@string/amount_cardhead"/>
 
 		<TextView android:id="@+id/details_amount"
 			android:layout_weight="1"
@@ -60,11 +60,11 @@
 			android:textSize="@dimen/text_21" />
 	</TableRow>
 
-	<TableRow android:id="@+id/reasonRow" android:layout_marginTop="@dimen/margin_24">
+	<TableRow android:id="@+id/noteRow" android:layout_marginTop="@dimen/margin_24">
 		<TextView
 			android:textColor="@color/offWhite"
 			android:textSize="@dimen/text_16"
-			android:text="@string/note"/>
+			android:text="@string/note_cardhead"/>
 
 		<TextView android:id="@+id/details_reason"
 			android:layout_weight="1"

@@ -124,7 +124,7 @@ public class RequestActivity extends AppCompatActivity {
 			}
 		} else {
 			fab.setVisibility(View.VISIBLE);
-			fab.setText(R.string.continue_text);
+			fab.setText(R.string.btn_continue);
 		}
 	}
 

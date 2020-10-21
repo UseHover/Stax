@@ -9,7 +9,7 @@
 	<com.hover.stax.views.StaxCardView
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-		app:title="@string/select_language">
+		app:title="@string/lang_cardhead">
 
 		<RadioGroup
 		    android:layout_width="match_parent"
@@ -23,7 +23,7 @@
 			    android:id="@+id/continueLanguageButton"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
-				android:text="@string/continue_text"
+				android:text="@string/btn_continue"
 				android:layout_alignParentEnd="true"
 				android:layout_marginTop="@dimen/margin_21"
 				style="@style/StaxButton"

@@ -34,6 +34,6 @@
 		android:textSize="@dimen/text_16"
 		android:lineSpacingExtra="@dimen/text_spacing_8"
 		android:textColor="@color/offWhite"
-		android:text="@string/about_our_security_content"/>
+		android:text="@string/security_cardbody"/>
 
 </com.hover.stax.views.StaxCardView>

@@ -27,7 +27,7 @@
 					<TextView
 					    android:textColor="@color/offWhite"
 					    android:textSize="@dimen/text_16"
-					    android:text="@string/amount"/>
+					    android:text="@string/amount_cardhead"/>
 
 					<TextView android:id="@+id/details_amount"
 						android:layout_weight="1"

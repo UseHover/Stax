@@ -72,9 +72,9 @@ public class TransferFragment extends StagedFragment {
 
 	private void setTitle(View root) {
 		((TextView) root.findViewById(R.id.summaryCard).findViewById(R.id.title)).setText(
-			getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.buy_airtime : R.string.transfer));
+			getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.fab_airtime : R.string.fab_transfer));
 		((TextView) root.findViewById(R.id.amountCard).findViewById(R.id.title)).setText(
-			getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.buy_airtime : R.string.transfer));
+			getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.fab_airtime : R.string.fab_transfer));
 	}
 
 	protected void startObservers(View root) {
@@ -159,9 +159,9 @@ public class TransferFragment extends StagedFragment {
 
 	private void setRecipientHint(Action action) {
 		if (action.getRequiredParams().contains(Action.ACCOUNT_KEY)) {
-			recipientEntry.setHint(getString(R.string.recipient_account));
+			recipientEntry.setHint(getString(R.string.recipientacct_label));
 		} else {
-			recipientEntry.setHint(getString(R.string.recipient_phone));
+			recipientEntry.setHint(getString(R.string.recipientphone_label));
 		}
 	}
 

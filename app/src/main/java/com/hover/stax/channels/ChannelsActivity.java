@@ -69,7 +69,7 @@ public class ChannelsActivity extends AppCompatActivity {
 				saveAndContinue();
 			});
 		} else {
-			findViewById(R.id.continue_btn).setOnClickListener(view -> UIHelper.flashMessage(ChannelsActivity.this, getString(R.string.no_selection_error)));
+			findViewById(R.id.continue_btn).setOnClickListener(view -> UIHelper.flashMessage(ChannelsActivity.this, getString(R.string.toast_error_noselect)));
 		}
 	}
 

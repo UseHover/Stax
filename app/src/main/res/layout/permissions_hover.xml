@@ -18,7 +18,7 @@
 		android:layout_marginBottom="@dimen/margin_8"
 		android:lineSpacingExtra="@dimen/text_spacing_8"
 		android:textColor="@color/offWhite"
-		android:text="@string/hover_permission"/>
+		android:text="@string/perm_cardbody"/>
 
 	<TextView
 		android:layout_width="match_parent"
@@ -27,7 +27,7 @@
 		app:drawableStartCompat="@drawable/ic_check"
 		android:drawablePadding="@dimen/margin_5"
 		android:textColor="@color/offWhite"
-		android:text="@string/sms_permission"/>
+		android:text="@string/sms_cardbody"/>
 
 	<TextView
 		android:layout_width="match_parent"
@@ -36,7 +36,7 @@
 		app:drawableStartCompat="@drawable/ic_check"
 		android:drawablePadding="@dimen/margin_5"
 		android:textColor="@color/offWhite"
-		android:text="@string/overlay_permission"/>
+		android:text="@string/overlay_cardbody"/>
 
 	<TextView
 		android:layout_width="match_parent"
@@ -45,6 +45,6 @@
 		app:drawableStartCompat="@drawable/ic_check"
 		android:drawablePadding="@dimen/margin_5"
 		android:textColor="@color/offWhite"
-		android:text="@string/accessibility_permission"/>
+		android:text="@string/access_cardbody"/>
 
 </LinearLayout>

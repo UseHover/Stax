@@ -4,7 +4,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	app:title="@string/title_request"
+	app:title="@string/req_cardhead"
 	app:showBack="true">
 
 	<androidx.recyclerview.widget.RecyclerView
@@ -21,7 +21,7 @@
 			android:id="@+id/add_recipient_button"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/add_someone"
+			android:text="@string/btn_addcontact"
 			android:layout_alignParentEnd="true"
 			style="@style/StaxButton"
 			android:fontFamily="font-medium"

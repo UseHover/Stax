@@ -124,7 +124,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		findViewById(R.id.toNetworkRow).setVisibility(stage.compare(TO_NETWORK) > 0 &&
 															  transferViewModel.getActions().getValue() != null && transferViewModel.getActions().getValue().size() > 0 && (transferViewModel.getActions().getValue().size() > 1 || !transferViewModel.getActiveAction().getValue().toString().equals("Phone number")) ? View.VISIBLE : View.GONE);
 		findViewById(R.id.recipientRow).setVisibility(stage.compare(RECIPIENT) > 0 && transferViewModel.getActiveAction().getValue() != null && transferViewModel.getActiveAction().getValue().requiresRecipient() ? View.VISIBLE : View.GONE);
-		findViewById(R.id.reasonRow).setVisibility((stage.compare(NOTE) > 0 && transferViewModel.getNote().getValue() != null && !transferViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
+		findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && transferViewModel.getNote().getValue() != null && !transferViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
 
 		setCurrentCard(stage);
 		setFab(stage);
@@ -149,11 +149,11 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 				fab.setText(getString(R.string.schedule));
 			} else {
 				fab.setVisibility(View.VISIBLE);
-				fab.setText(getString(R.string.transfer_now));
+				fab.setText(getString(R.string.fab_transfernow));
 			}
 		} else {
 			fab.setVisibility(View.VISIBLE);
-			fab.setText(R.string.continue_text);
+			fab.setText(R.string.btn_continue);
 		}
 	}
 
