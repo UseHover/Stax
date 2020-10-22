@@ -20,10 +20,6 @@ public class DateUtils {
 		return MaterialDatePicker.todayInUtcMilliseconds();
 	}
 
-	public static String timeUntil(Context context, final long millis) {
-		return humanFriendlyTime(context, millis - System.currentTimeMillis());
-	}
-
 	public static String timeAgo(Context context, final long millis) {
 		return humanFriendlyTime(context, System.currentTimeMillis() - millis);
 	}

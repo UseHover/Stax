@@ -109,13 +109,13 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 
 	private void makeHoverCall(Action act) {
 		Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
+		transferViewModel.checkSchedule();
 		new HoverSession.Builder(act, transferViewModel.getActiveChannel().getValue(),
 				this, Constants.TRANSFER_REQUEST)
 				.extra(Action.PHONE_KEY, transferViewModel.getRecipient().getValue())
 				.extra(Action.ACCOUNT_KEY, transferViewModel.getRecipient().getValue())
 				.extra(Action.AMOUNT_KEY, transferViewModel.getAmount().getValue())
 				.extra(Action.REASON_KEY, transferViewModel.getNote().getValue())
-				.userMessage(transferViewModel.getType().equals(Action.AIRTIME) ? getResources().getString(R.string.buying_airtime): getResources().getString(R.string.transferring_money))
 				.run();
 	}
 
@@ -125,14 +125,14 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		findViewById(R.id.toNetworkRow).setVisibility(stage.compare(TO_NETWORK) > 0 &&
 															  transferViewModel.getActions().getValue() != null && transferViewModel.getActions().getValue().size() > 0 && (transferViewModel.getActions().getValue().size() > 1 || !transferViewModel.getActiveAction().getValue().toString().equals("Phone number")) ? View.VISIBLE : View.GONE);
 		findViewById(R.id.recipientRow).setVisibility(stage.compare(RECIPIENT) > 0 && transferViewModel.getActiveAction().getValue() != null && transferViewModel.getActiveAction().getValue().requiresRecipient() ? View.VISIBLE : View.GONE);
-		findViewById(R.id.reasonRow).setVisibility((stage.compare(NOTE) > 0 && transferViewModel.getNote().getValue() != null && !transferViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
+		findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && transferViewModel.getNote().getValue() != null && !transferViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
 
 		setCurrentCard(stage);
 		setFab(stage);
 	}
 
 	private void setCurrentCard(StagedViewModel.StagedEnum stage) {
-		findViewById(R.id.summaryCard).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
+//		findViewById(R.id.summaryCard).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.amountCard).setVisibility(stage.compare(AMOUNT) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.fromAccountCard).setVisibility(stage.compare(FROM_ACCOUNT) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.networkCard).setVisibility(stage.compare(TO_NETWORK) == 0 ? View.VISIBLE : View.GONE);
@@ -147,14 +147,14 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		if (stage.compare(REVIEW) >= 0) {
 			if (transferViewModel.getIsFuture().getValue() != null && transferViewModel.getIsFuture().getValue()) {
 				fab.setVisibility(transferViewModel.getFutureDate().getValue() == null ? View.GONE : View.VISIBLE);
-				fab.setText(getString(R.string.schedule));
+				fab.setText(getString(R.string.fab_schedule));
 			} else {
 				fab.setVisibility(View.VISIBLE);
-				fab.setText(getString(R.string.transfer_now));
+				fab.setText(getString(R.string.fab_transfernow));
 			}
 		} else {
 			fab.setVisibility(View.VISIBLE);
-			fab.setText(R.string.continue_text);
+			fab.setText(R.string.btn_continue);
 		}
 	}
 

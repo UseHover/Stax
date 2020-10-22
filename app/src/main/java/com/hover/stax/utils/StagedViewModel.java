@@ -36,7 +36,7 @@ public abstract class StagedViewModel extends AndroidViewModel {
 		futureDate.setValue(null);
 
 		isRepeating.setValue(false);
-		frequency.setValue(0);
+		frequency.setValue(3);
 		repeatSaved.setValue(false);
 		endDate.setValue(null);
 	}

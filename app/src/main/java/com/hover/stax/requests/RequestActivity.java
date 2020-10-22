@@ -104,7 +104,7 @@ public class RequestActivity extends AppCompatActivity {
 	}
 
 	private void setCurrentCard(StagedViewModel.StagedEnum stage) {
-		findViewById(R.id.summaryCard).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
+//		findViewById(R.id.summaryCard).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.recipientCard).setVisibility(stage.compare(RECIPIENT) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.amountCard).setVisibility(stage.compare(AMOUNT) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.noteCard).setVisibility(stage.compare(NOTE) == 0 ? View.VISIBLE : View.GONE);
@@ -117,14 +117,14 @@ public class RequestActivity extends AppCompatActivity {
 		if (stage.compare(REVIEW) >= 0) {
 			if (requestViewModel.getIsFuture().getValue() != null && requestViewModel.getIsFuture().getValue()) {
 				fab.setVisibility(requestViewModel.getFutureDate().getValue() == null ? View.GONE : View.VISIBLE);
-				fab.setText(getString(R.string.schedule));
+				fab.setText(getString(R.string.fab_schedule));
 			} else {
 				fab.setVisibility(View.VISIBLE);
 				fab.setText(getString(R.string.notify_request_cta));
 			}
 		} else {
 			fab.setVisibility(View.VISIBLE);
-			fab.setText(R.string.continue_text);
+			fab.setText(R.string.btn_continue);
 		}
 	}
 

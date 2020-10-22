@@ -3,7 +3,7 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	app:title="@string/transfer"
+	app:title="@string/fab_transfer"
 	app:showBack="true">
 
 	<TableLayout
@@ -14,7 +14,7 @@
 		<TableRow android:id="@+id/amountRow">
 
 			<TextView
-				android:text="@string/amount"
+				android:text="@string/amount_cardhead"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
@@ -29,7 +29,7 @@
 		<TableRow android:id="@+id/fromRow" android:layout_marginTop="@dimen/margin_21">
 
 			<TextView
-				android:text="@string/from"
+				android:text="@string/acct_label"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
@@ -44,7 +44,7 @@
 		<TableRow android:id="@+id/toNetworkRow" android:layout_marginTop="@dimen/margin_21">
 
 			<TextView
-				android:text="@string/to_network"
+				android:text="@string/recipientnetwork_cardhead"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
@@ -59,7 +59,7 @@
 		<TableRow android:id="@+id/recipientRow" android:layout_marginTop="@dimen/margin_21">
 
 			<TextView
-				android:text="@string/to"
+				android:text="@string/recipient_label"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
@@ -71,10 +71,10 @@
 				android:textAlignment="viewEnd" />
 		</TableRow>
 
-		<TableRow android:id="@+id/reasonRow" android:layout_marginTop="@dimen/margin_21">
+		<TableRow android:id="@+id/noteRow" android:layout_marginTop="@dimen/margin_21">
 
 			<TextView
-				android:text="@string/message"
+				android:text="@string/note_cardhead"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
@@ -89,7 +89,7 @@
 		<TableRow android:id="@+id/dateRow" android:layout_marginTop="@dimen/margin_21">
 
 			<TextView
-				android:text="@string/date"
+				android:text="@string/date_label"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
@@ -104,7 +104,7 @@
 		<TableRow android:id="@+id/frequencyRow" android:layout_marginTop="@dimen/margin_21">
 
 			<TextView
-				android:text="@string/how_often"
+				android:text="@string/repeatfreq_label"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
@@ -119,7 +119,7 @@
 		<TableRow android:id="@+id/endDateRow" android:layout_marginTop="@dimen/margin_21">
 
 			<TextView
-				android:text="@string/end_date"
+				android:text="@string/end_label"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
@@ -134,7 +134,7 @@
 		<TableRow android:id="@+id/repeatTimesRow" android:layout_marginTop="@dimen/margin_21">
 
 			<TextView
-				android:text="@string/how_many_times"
+				android:text="@string/repeatnum_label"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
@@ -157,7 +157,7 @@
 			android:id="@+id/edit_btn"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/edit"
+			android:text="@string/btn_edit"
 			android:layout_alignParentEnd="true"
 			style="@style/StaxButton"
 			android:fontFamily="font-medium" />

@@ -26,7 +26,7 @@
 			android:layout_gravity="end|bottom"
 			app:layout_anchorGravity="end|bottom"
 			style="@style/StaxButtonColored"
-			android:text="@string/continue_text"
+			android:text="@string/btn_continue"
 			android:fontFamily="font-medium"
 			android:onClick="onContinue"/>
 

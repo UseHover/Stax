@@ -26,8 +26,8 @@ class ShowcaseExecutor {
 	public void startShowcasing() {
 		try {
 			BubbleShowCase.Companion.showCase(
-					activity.getString(R.string.world_class_security),
-					activity.getString(R.string.world_class_security_description),
+					activity.getString(R.string.onboard_sechead),
+					activity.getString(R.string.onboard_secbody),
 					BubbleShowCase.ArrowPosition.TOP,
 					stagedBubbleListener,
 					root.findViewById(R.id.home_stax_logo),
@@ -38,8 +38,8 @@ class ShowcaseExecutor {
 
 	private void showcaseSecondStage() {
 		BubbleShowCase.Companion.showCase(
-				activity.getString(R.string.keep_accounts_private),
-				activity.getString(R.string.keep_accounts_private_desc),
+				activity.getString(R.string.onboard_peekhead),
+				activity.getString(R.string.onboard_peekbody),
 				BubbleShowCase.ArrowPosition.TOP,
 				stagedBubbleListener,
 				((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0).findViewById(R.id.balance_drag),
@@ -48,8 +48,8 @@ class ShowcaseExecutor {
 
 	private void showcaseThirdStage() {
 		BubbleShowCase.Companion.showCase(
-				activity.getString(R.string.refresh_stax),
-				activity.getString(R.string.refresh_stax_desc),
+				activity.getString(R.string.onboard_balhead),
+				activity.getString(R.string.onboard_balbody),
 				BubbleShowCase.ArrowPosition.TOP,
 				stagedBubbleListener,
 				root.findViewById(R.id.homeTimeAgo),

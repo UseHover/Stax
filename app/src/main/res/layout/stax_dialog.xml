@@ -21,7 +21,7 @@
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
-				android:text="@string/balances"
+				android:text="@string/bal_cardhead"
 				android:textSize="@dimen/text_13"
 				android:textAllCaps="true"
 				android:textAlignment="viewEnd"
@@ -50,7 +50,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginEnd="@dimen/margin_21"
-				android:text="@string/cancel"
+				android:text="@string/btn_cancel"
 				android:layout_toStartOf="@id/divider"
 				style="@style/StaxButton"
 				android:visibility="gone"/>
@@ -65,7 +65,7 @@
 				android:id="@+id/pos_btn"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@string/ok"
+				android:text="@string/btn_ok"
 				android:layout_alignParentEnd="true"
 				style="@style/StaxButton" />
 		</RelativeLayout>

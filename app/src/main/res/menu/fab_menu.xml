@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:id="@+id/transfer"
-		android:title="@string/transfer" />
+		android:title="@string/fab_transfer" />
 
 	<item android:id="@+id/airtime"
-		android:title="@string/buy_airtime" />
+		android:title="@string/fab_airtime" />
 
 	<item android:id="@+id/request"
-		android:title="@string/title_request" />
+		android:title="@string/fab_request" />
 </menu>

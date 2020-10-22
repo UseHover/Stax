@@ -48,6 +48,6 @@ public class Request {
 	}
 
 	public String getDescription(Context c) {
-		return c.getString(R.string.request_descrip, recipient);
+		return c.getString(R.string.descrip_request, recipient);
 	}
 }

@@ -1,103 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-	android:layout_marginTop="@dimen/margin_13">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_height="wrap_content"
+	android:layout_width="match_parent"
+	android:layout_marginTop="@dimen/margin_13"
+	android:layout_marginBottom="@dimen/margin_55"
+	android:orientation="vertical">
 
-	<LinearLayout
-	    android:layout_height="wrap_content"
-	    android:layout_width="match_parent"
-		android:layout_marginBottom="@dimen/margin_55"
-	    android:orientation="vertical">
+	<com.hover.stax.views.StaxCardView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:title="@string/nav_transaction"
+		app:showBack="true">
 
-		<com.hover.stax.views.StaxCardView
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			app:title="@string/nav_transaction"
-			app:showBack="true">
+		<TableLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+			android:layout_marginHorizontal="@dimen/margin_3">
 
-			<TableLayout
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-				android:layout_marginHorizontal="@dimen/margin_3">
+			<TableRow android:layout_marginTop="@dimen/margin_24">
+				<TextView
+				    android:textColor="@color/offWhite"
+				    android:textSize="@dimen/text_16"
+				    android:text="@string/amount_cardhead"/>
 
-				<TableRow android:layout_marginTop="@dimen/margin_24">
-					<TextView
-					    android:textColor="@color/offWhite"
-					    android:textSize="@dimen/text_16"
-					    android:text="@string/amount"/>
+				<TextView android:id="@+id/details_amount"
+					android:layout_weight="1"
+				    android:textAlignment="viewEnd"
+				    android:fontFamily="font-normal"
+				    android:textColor="@color/offWhite"
+				    android:textSize="@dimen/text_21" />
+			</TableRow>
 
-					<TextView android:id="@+id/details_amount"
-						android:layout_weight="1"
-					    android:textAlignment="viewEnd"
-					    android:fontFamily="font-normal"
-					    android:textColor="@color/offWhite"
-					    android:textSize="@dimen/text_21" />
-				</TableRow>
+			<TableRow android:layout_marginTop="@dimen/margin_24">
+				<TextView
+					android:textColor="@color/offWhite"
+					android:textSize="@dimen/text_16"
+					android:text="@string/date_label"/>
 
-				<TableRow android:layout_marginTop="@dimen/margin_24">
-					<TextView
-						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_16"
-						android:text="@string/date"/>
+				<TextView android:id="@+id/details_date"
+					android:layout_weight="1"
+					android:textAlignment="viewEnd"
+					android:fontFamily="font-normal"
+					android:textColor="@color/offWhite"
+					android:textSize="@dimen/text_21" />
+			</TableRow>
 
-					<TextView android:id="@+id/details_date"
-						android:layout_weight="1"
-						android:textAlignment="viewEnd"
-						android:fontFamily="font-normal"
-						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_21" />
-				</TableRow>
+			<TableRow android:layout_marginTop="@dimen/margin_24">
+				<TextView
+					android:textColor="@color/offWhite"
+					android:textSize="@dimen/text_16"
+					android:text="@string/network_label"/>
 
-				<TableRow android:layout_marginTop="@dimen/margin_24">
-					<TextView
-						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_16"
-						android:text="@string/network"/>
+				<TextView android:id="@+id/details_network"
+					android:layout_weight="1"
+					android:textAlignment="viewEnd"
+					android:fontFamily="font-normal"
+					android:textColor="@color/offWhite"
+					android:textSize="@dimen/text_21" />
+			</TableRow>
 
-					<TextView android:id="@+id/details_network"
-						android:layout_weight="1"
-						android:textAlignment="viewEnd"
-						android:fontFamily="font-normal"
-						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_21" />
-				</TableRow>
+			<TableRow android:layout_marginTop="@dimen/margin_24">
+				<TextView
+					android:textColor="@color/offWhite"
+					android:textSize="@dimen/text_16"
+					android:text="@string/id_label"/>
 
-				<TableRow android:layout_marginTop="@dimen/margin_24">
-					<TextView
-						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_16"
-						android:text="@string/transactionId"/>
+				<TextView android:id="@+id/details_transactionNumber"
+					android:layout_weight="1"
+					android:textAlignment="viewEnd"
+					android:fontFamily="font-normal"
+					android:textColor="@color/offWhite"
+					android:textSize="@dimen/text_21" />
+			</TableRow>
+		</TableLayout>
+	</com.hover.stax.views.StaxCardView>
 
-					<TextView android:id="@+id/details_transactionNumber"
-						android:layout_weight="1"
-						android:textAlignment="viewEnd"
-						android:fontFamily="font-normal"
-						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_21" />
-				</TableRow>
-			</TableLayout>
-		</com.hover.stax.views.StaxCardView>
+	<com.hover.stax.views.StaxCardView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:title="@string/session_cardhead">
 
-		<com.hover.stax.views.StaxCardView
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			app:title="@string/messages">
+		<androidx.recyclerview.widget.RecyclerView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+			android:layout_marginHorizontal="@dimen/margin_3"
+		    android:id="@+id/convo_recyclerView" />
 
-			<androidx.recyclerview.widget.RecyclerView
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-				android:layout_marginHorizontal="@dimen/margin_3"
-			    android:id="@+id/convo_recyclerView" />
-
-			<androidx.recyclerview.widget.RecyclerView
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-				android:layout_marginHorizontal="@dimen/margin_3"
-			    android:id="@+id/sms_recyclerView" />
-		</com.hover.stax.views.StaxCardView>
-
-	</LinearLayout>
-</androidx.core.widget.NestedScrollView>
+		<androidx.recyclerview.widget.RecyclerView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+			android:layout_marginHorizontal="@dimen/margin_3"
+		    android:id="@+id/sms_recyclerView" />
+	</com.hover.stax.views.StaxCardView>
+</LinearLayout>

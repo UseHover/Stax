@@ -3,13 +3,13 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	app:title="@string/amount">
+	app:title="@string/amount_cardhead">
 
 	<com.google.android.material.textfield.TextInputLayout
 		android:id="@+id/amountEntry"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:hint="@string/how_much_money_optional"
+		android:hint="@string/amount_label_opt"
 		style="@style/StaxLabeledInput">
 
 		<com.google.android.material.textfield.TextInputEditText

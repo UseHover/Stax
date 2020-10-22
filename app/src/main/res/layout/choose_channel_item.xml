@@ -6,26 +6,19 @@
     android:layout_marginHorizontal="16dp"
 	android:layout_marginBottom="16dp">
 
-	<de.hdodenhof.circleimageview.CircleImageView
-	    android:layout_width="55dp"
-	    android:layout_height="55dp"
-	    android:scaleType="centerCrop"
-	    android:layout_centerHorizontal="true"
-	    android:id="@+id/service_item_image_id"
-		app:srcCompat="@drawable/ic_grey_circle" />
+	<FrameLayout
+		android:id="@+id/img_wrapper"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true">
 
-	<de.hdodenhof.circleimageview.CircleImageView
-	    android:layout_width="65dp"
-	    android:layout_height="55dp"
-	    app:srcCompat="@drawable/ic_grey_circle"
-	    android:layout_centerHorizontal="true"
-	    android:visibility="visible"
-	    app:civ_border_overlay="true"
-	    app:civ_border_width="6dp"
-	    app:civ_border_color="#DD838385"
-	    android:scaleType="centerCrop"
-	    android:id="@+id/checked_service_frame" />
-
+		<ImageView
+		    android:layout_width="55dp"
+		    android:layout_height="55dp"
+		    android:scaleType="centerCrop"
+		    android:id="@+id/service_item_image_id"
+			app:srcCompat="@drawable/ic_grey_circle" />
+	</FrameLayout>
 
 	<ImageView
 	    android:layout_width="wrap_content"
@@ -41,7 +34,7 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:id="@+id/service_item_name_id"
-	    android:layout_below="@id/service_item_image_id"
+	    android:layout_below="@id/img_wrapper"
 	    android:textAlignment="center"
 	    android:textColor="@color/offWhite"
 	    android:textSize="@dimen/text_13" />

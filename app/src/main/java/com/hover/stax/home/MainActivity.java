@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements
 	private void run(Action action, int index) {
 		new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), this, index)
 				.finalScreenTime(0)
-				.userMessage(getResources().getString(R.string.connecting_to, action.from_institution_name))
 				.run();
 	}
 
@@ -122,23 +121,21 @@ public class MainActivity extends AppCompatActivity implements
 				if (resultCode == RESULT_OK) { onRequest(data); }
 				break;
 			default: // requestCode < Constants.BALANCE_MAX // Balance call
-				if (resultCode == RESULT_OK) {
+				balancesViewModel.setRan(requestCode);
+				if (resultCode == RESULT_OK && data != null && data.getAction() != null) {
 					onProbableHoverCall(data);
-					balancesViewModel.setRan(requestCode);
 					maybeRunShowcase();
 				}
 		}
 	}
 
 	private void onProbableHoverCall(Intent data) {
-		if(data!=null) {
-			if (data.getAction().equals(Constants.SCHEDULED)) {
-				UIHelper.flashMessage(this, findViewById(R.id.home_root),
-						getString(R.string.schedule_created, DateUtils.humanFriendlyDate(data.getIntExtra(Schedule.DATE_KEY, 0))));
-			} else {
-				Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
-				new ViewModelProvider(this).get(TransactionHistoryViewModel.class).saveTransaction(data, this);
-			}
+		if (data.getAction().equals(Constants.SCHEDULED)) {
+			UIHelper.flashMessage(this, findViewById(R.id.home_root),
+				getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getIntExtra(Schedule.DATE_KEY, 0))));
+		} else {
+			Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
+			new ViewModelProvider(this).get(TransactionHistoryViewModel.class).saveTransaction(data, this);
 		}
 	}
 
@@ -160,9 +157,9 @@ public class MainActivity extends AppCompatActivity implements
 
 	private void onRequest(Intent data) {
 		if (data.getAction().equals(Constants.SCHEDULED))
-			showMessage(getString(R.string.request_scheduled, DateUtils.humanFriendlyDate(data.getIntExtra(Schedule.DATE_KEY, 0))));
+			showMessage(getString(R.string.toast_request_scheduled, DateUtils.humanFriendlyDate(data.getIntExtra(Schedule.DATE_KEY, 0))));
 		else
-			showMessage(getString(R.string.request_sent));
+			showMessage(getString(R.string.toast_confirm_request));
 	}
 
 	private void showMessage(String str) {

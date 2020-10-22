@@ -100,13 +100,13 @@ public class Schedule {
 	private String generateDescription(Action action, Context c) {
 		switch (type) {
 			case Action.AIRTIME:
-				return c.getString(R.string.schedule_descrip_airtime, action.from_institution_name, ((recipient == null || recipient.equals("")) ? "myself" : recipient));
+				return c.getString(R.string.descrip_airtime_sched, action.from_institution_name, ((recipient == null || recipient.equals("")) ? "myself" : recipient));
 			case Action.P2P:
-				return c.getString(R.string.transaction_descrip_money, action.from_institution_name, recipient);
+				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, recipient);
 			case Action.ME2ME:
-				return c.getString(R.string.transaction_descrip_money, action.from_institution_name, action.to_institution_name);
+				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, action.to_institution_name);
 			case Constants.REQUEST_TYPE:
-				return c.getString(R.string.request_descrip, recipient);
+				return c.getString(R.string.descrip_request, recipient);
 			default:
 				return "Other";
 		}
@@ -116,7 +116,7 @@ public class Schedule {
 		if (frequency == ONCE)
 			return DateUtils.humanFriendlyDate(start_date);
 		else
-			return c.getResources().getStringArray(R.array.frequency_array)[frequency];
+			return c.getResources().getStringArray(R.array.frequency_choices)[frequency];
 	}
 
 	String title(Context c) {

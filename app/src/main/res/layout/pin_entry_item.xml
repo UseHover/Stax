@@ -9,7 +9,7 @@
 		android:id="@+id/pinEntry"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:hint="@string/pin_input_hint"
+		android:hint="@string/pin_cardhead"
 		style="@style/StaxLabeledInput">
 
 		<com.google.android.material.textfield.TextInputEditText

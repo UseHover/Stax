@@ -98,7 +98,7 @@ public class Utils {
 	}
 
 	public static byte[] bitmapToByteArray(Bitmap bitmap) {
-		if(bitmap== null) return null;
+		if (bitmap == null) return null;
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 		return stream.toByteArray();

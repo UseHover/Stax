@@ -22,7 +22,7 @@
 				android:paddingStart="@dimen/margin_8"
 				android:textSize="@dimen/text_16"
 				android:textColor="@color/offWhite"
-				android:text="@string/send_repeat" />
+				android:text="@string/repeat_toggle" />
 		</LinearLayout>
 
 	<LinearLayout android:id="@+id/repeatInputs"
@@ -35,7 +35,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:fontFamily="font-normal"
-			android:hint="@string/how_often">
+			android:hint="@string/repeatfreq_label">
 
 			<AutoCompleteTextView
 				android:id="@+id/frequencyDropdown"
@@ -55,7 +55,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/margin_21"
-			android:hint="@string/end_date_input"
+			android:hint="@string/end_label_opt"
 			style="@style/StaxLabeledInput">
 
 			<com.google.android.material.textfield.TextInputEditText
@@ -74,7 +74,7 @@
 			android:id="@+id/numberOfTimesEntry"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/how_many_times_input"
+			android:hint="@string/repeatnum_label_opt"
 			style="@style/StaxLabeledInput">
 
 			<com.google.android.material.textfield.TextInputEditText
@@ -97,7 +97,7 @@
 				android:id="@+id/save_btn"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@string/save"
+				android:text="@string/btn_save"
 				android:layout_alignParentEnd="true"
 				style="@style/StaxButton"
 				android:fontFamily="font-medium" />

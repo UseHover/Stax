@@ -29,7 +29,7 @@ public abstract class SdkDatabase extends RoomDatabase {
 				if (INSTANCE == null) {
 					INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SdkDatabase.class, "hoversdktransactions.db")
 									   .setJournalMode(JournalMode.TRUNCATE)
-									   .addMigrations(MIGRATION_41_42)
+									   .addMigrations(LATEST_SDK_VERSION)
 									   .build();
 				}
 			}
@@ -37,7 +37,7 @@ public abstract class SdkDatabase extends RoomDatabase {
 		return INSTANCE;
 	}
 
-	static final Migration MIGRATION_41_42 = new Migration(41, 42) {
+	static final Migration LATEST_SDK_VERSION = new Migration(41, 42) {
 		@Override
 		public void migrate(SupportSQLiteDatabase database) {
 		}

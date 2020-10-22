@@ -3,12 +3,12 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	app:title="@string/security">
+	app:title="@string/security_cardhead">
 
 	<androidx.appcompat.widget.AppCompatButton
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="@string/remove_pins"
+		android:text="@string/removepins_dialoghead"
 		android:id="@+id/removePinsButtonId"
 		style="@style/StaxButton"
 		android:backgroundTint="@color/bright_red"
@@ -22,7 +22,7 @@
 		android:textColor="@color/offWhite"
 		android:textSize="@dimen/text_16"
 		android:fontFamily="font-medium"
-		android:text="@string/about_our_security" />
+		android:text="@string/security_head" />
 
 	<TextView
 		android:layout_width="match_parent"
@@ -34,6 +34,6 @@
 		android:textSize="@dimen/text_16"
 		android:lineSpacingExtra="@dimen/text_spacing_8"
 		android:textColor="@color/offWhite"
-		android:text="@string/about_our_security_content"/>
+		android:text="@string/security_cardbody"/>
 
 </com.hover.stax.views.StaxCardView>

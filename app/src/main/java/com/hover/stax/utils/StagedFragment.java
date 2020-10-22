@@ -22,7 +22,6 @@ import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.transfers.StaxContactModel;
@@ -54,7 +53,7 @@ public abstract class StagedFragment extends Fragment {
 		stagedViewModel.getIsRepeating().observe(getViewLifecycleOwner(), isRepeating ->
             root.findViewById(R.id.repeatInputs).setVisibility(isRepeating ? View.VISIBLE : View.GONE));
 		stagedViewModel.getFrequency().observe(getViewLifecycleOwner(), frequency -> {
-			((TextView) root.findViewById(R.id.frequencyValue)).setText(getResources().getStringArray(R.array.frequency_array)[frequency]);
+			((TextView) root.findViewById(R.id.frequencyValue)).setText(getResources().getStringArray(R.array.frequency_choices)[frequency]);
 			((TextView) root.findViewById(R.id.repeat_times_input)).setText(null);
 		});
 		stagedViewModel.getEndDate().observe(getViewLifecycleOwner(), endDate -> {
@@ -127,9 +126,9 @@ public abstract class StagedFragment extends Fragment {
 
 	private void createFrequencyDropdown(View root) {
 		frequencyDropdown = root.findViewById(R.id.frequencyDropdown);
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireActivity(), R.array.frequency_array, R.layout.stax_spinner_item);
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireActivity(), R.array.frequency_choices, R.layout.stax_spinner_item);
 		frequencyDropdown.setAdapter(adapter);
-		frequencyDropdown.setText(frequencyDropdown.getAdapter().getItem(0).toString(), false);
+		frequencyDropdown.setText(frequencyDropdown.getAdapter().getItem(stagedViewModel.getFrequency().getValue()).toString(), false);
 	}
 
 	protected void contactPicker(int requestCode, Context c) {
@@ -153,7 +152,7 @@ public abstract class StagedFragment extends Fragment {
 			startContactIntent(requestCode);
 		} else {
 			Amplitude.getInstance().logEvent(getString(R.string.contact_perm_denied));
-			UIHelper.flashMessage(getContext(), getResources().getString(R.string.contact_perm_error));
+			UIHelper.flashMessage(getContext(), getResources().getString(R.string.toast_error_contactperm));
 		}
 	}
 
@@ -167,7 +166,7 @@ public abstract class StagedFragment extends Fragment {
 				onContactSelected(requestCode, staxContactModel);
 			} else {
 				Amplitude.getInstance().logEvent(getString(R.string.contact_select_error));
-				UIHelper.flashMessage(getContext(), getResources().getString(R.string.selectContactErrorMessage));
+				UIHelper.flashMessage(getContext(), getResources().getString(R.string.toast_error_contactselect));
 			}
 		}
 	}
