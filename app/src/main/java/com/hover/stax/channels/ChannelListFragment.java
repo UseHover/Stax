@@ -42,7 +42,7 @@ public class ChannelListFragment extends Fragment implements ChannelsAdapter.Sel
 			if (channels.size() > 0) {
 				view.findViewById(R.id.sim_card).setVisibility(View.VISIBLE);
 				view.findViewById(R.id.all_card).setVisibility(View.GONE);
-				fillSection(view.findViewById(R.id.sim_card), getString(R.string.sims_section), channels);
+				fillSection(view.findViewById(R.id.sim_card), getString(R.string.simaccts_cardhead), channels);
 			} else {
 				view.findViewById(R.id.sim_card).setVisibility(View.GONE);
 				view.findViewById(R.id.all_card).setVisibility(View.VISIBLE);
@@ -53,20 +53,17 @@ public class ChannelListFragment extends Fragment implements ChannelsAdapter.Sel
 			((LinearLayout) view.findViewById(R.id.country_wrapper)).removeAllViews();
 			if (channels.size() > 0 && channelViewModel.simCountryList.getValue() != null) {
 				for (String countryAlpha2 : channelViewModel.simCountryList.getValue()) {
-					addCountrySection(view, getString(R.string.country_section, countryAlpha2.toUpperCase()), getCountryChannels(countryAlpha2, channels));
+					addCountrySection(view, getString(R.string.countryaccts_cardhead, countryAlpha2.toUpperCase()), getCountryChannels(countryAlpha2, channels));
 				}
 			}
 		});
 
 		channelViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> {
-			fillSection(view.findViewById(R.id.all_card), getString(R.string.all_section), channels);
+			fillSection(view.findViewById(R.id.all_card), getString(R.string.allaccts_cardhead), channels);
 		});
 	}
 
 	private void fillSection(View card, String title, List<Channel> channels) {
-		if (channels.size() == 0) {
-			title = getString(R.string.loading);
-		}
 		((TextView) card.findViewById(R.id.title)).setText(title);
 		GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 4, GridLayoutManager.VERTICAL, false);
 		ChannelsAdapter channelsAdapter = new ChannelsAdapter(channels, this);

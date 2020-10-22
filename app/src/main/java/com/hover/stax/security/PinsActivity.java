@@ -47,24 +47,24 @@ public class PinsActivity extends AppCompatActivity {
 
 	public void balanceAsk() {
 		dialog = new StaxDialog(this)
-						 .setDialogMessage(R.string.check_balance_ask)
-						 .setNegButton(R.string.skip, btn -> cancel(null))
-						 .setPosButton(R.string.check_balances, btn -> checkBalances())
+						 .setDialogMessage(R.string.balance_dialogbody)
+						 .setNegButton(R.string.btn_skip, btn -> cancel(null))
+						 .setPosButton(R.string.btn_balances, btn -> checkBalances())
 						 .showIt();
 	}
 
 	public void skipPins(View view) {
 		dialog = new StaxDialog(this)
-						 .setDialogMessage(R.string.ask_every_time)
-						 .setPosButton(R.string.ok, btn -> balanceAsk())
+						 .setDialogMessage(R.string.nopin_dialogbody)
+						 .setPosButton(R.string.btn_ok, btn -> balanceAsk())
 						 .showIt();
 	}
 
 	public void learnMore(View view) {
 		dialog = new StaxDialog(this)
-						 .setDialogTitle(R.string.about_our_security)
-						 .setDialogMessage(R.string.about_our_security_content)
-						 .setPosButton(R.string.ok, btn -> {
+						 .setDialogTitle(R.string.security_head)
+						 .setDialogMessage(R.string.security_cardbody)
+						 .setPosButton(R.string.btn_ok, btn -> {
 						 })
 						 .showIt();
 	}

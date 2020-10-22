@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -66,7 +65,7 @@ public class ScheduleDetailFragment extends Fragment {
 		view.findViewById(R.id.endRow).setVisibility(schedule.frequency == Schedule.ONCE || schedule.end_date == null ? View.GONE : View.VISIBLE);
 		((TextView) view.findViewById(R.id.details_end)).setText(schedule.end_date != null ? DateUtils.humanFriendlyDate(schedule.end_date) : "");
 
-		view.findViewById(R.id.reasonRow).setVisibility(schedule.note == null || schedule.note.isEmpty() ? View.GONE : View.VISIBLE);
+		view.findViewById(R.id.noteRow).setVisibility(schedule.note == null || schedule.note.isEmpty() ? View.GONE : View.VISIBLE);
 		((TextView) view.findViewById(R.id.details_reason)).setText(schedule.note);
 
 		view.findViewById(R.id.cancel_btn).setOnClickListener(btn -> showConfirmDialog(btn));
@@ -74,13 +73,13 @@ public class ScheduleDetailFragment extends Fragment {
 
 	private void showConfirmDialog(View v) {
 		new StaxDialog(v.getContext(), this)
-				.setDialogTitle(R.string.cancel_future_head)
-				.setDialogMessage(R.string.cancel_future_msg)
-				.setNegButton(R.string.back, btn -> {
+				.setDialogTitle(R.string.cancelfuture_head)
+				.setDialogMessage(R.string.cancelfuture_msg)
+				.setNegButton(R.string.btn_back, btn -> {
 				})
-				.setPosButton(R.string.cancel_future_btn, btn -> {
+				.setPosButton(R.string.btn_canceltrans, btn -> {
 					viewModel.deleteSchedule();
-					UIHelper.flashMessage(getContext(), getString(R.string.cancel_future_success));
+					UIHelper.flashMessage(getContext(), getString(R.string.toast_confirm_cancelfuture));
 					NavHostFragment.findNavController(ScheduleDetailFragment.this).navigate(R.id.navigation_home);
 				})
 				.isDestructive()

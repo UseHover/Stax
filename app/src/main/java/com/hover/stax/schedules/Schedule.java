@@ -85,7 +85,7 @@ public class Schedule {
 	}
 
 	public Schedule(Long date, String r, String a, String n) {
-		start_date = date == null ? DateUtils.now() : date;
+		start_date = date == null ? DateUtils.today() : date;
 		recipient = r;
 		amount = a;
 		note = n;
@@ -100,13 +100,13 @@ public class Schedule {
 	private String generateDescription(Action action, Context c) {
 		switch (type) {
 			case Action.AIRTIME:
-				return c.getString(R.string.schedule_descrip_airtime, action.from_institution_name, ((recipient == null || recipient.equals("")) ? "myself" : recipient));
+				return c.getString(R.string.descrip_airtime_sched, action.from_institution_name, ((recipient == null || recipient.equals("")) ? "myself" : recipient));
 			case Action.P2P:
-				return c.getString(R.string.transaction_descrip_money, action.from_institution_name, recipient);
+				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, recipient);
 			case Action.ME2ME:
-				return c.getString(R.string.transaction_descrip_money, action.from_institution_name, action.to_institution_name);
+				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, action.to_institution_name);
 			case Constants.REQUEST_TYPE:
-				return c.getString(R.string.request_descrip, recipient);
+				return c.getString(R.string.descrip_request, recipient);
 			default:
 				return "Other";
 		}
@@ -116,7 +116,7 @@ public class Schedule {
 		if (frequency == ONCE)
 			return DateUtils.humanFriendlyDate(start_date);
 		else
-			return c.getResources().getStringArray(R.array.frequency_array)[frequency];
+			return c.getResources().getStringArray(R.array.frequency_choices)[frequency];
 	}
 
 	String title(Context c) {
@@ -164,13 +164,13 @@ public class Schedule {
 	}
 
 	private boolean dateInRange() {
-		Date today = new Date(DateUtils.now());
+		Date today = new Date(DateUtils.today());
 		return !today.before(new Date(start_date)) && (end_date == null || !today.after(new Date(end_date)));
 	}
 
 	private boolean onDayOfWeek() {
 		Calendar today = Calendar.getInstance();
-		today.setTimeInMillis(DateUtils.now());
+		today.setTimeInMillis(DateUtils.today());
 		Calendar start = Calendar.getInstance();
 		start.setTimeInMillis(start_date);
 		return dateInRange() && today.get(Calendar.DAY_OF_WEEK) == start.get(Calendar.DAY_OF_WEEK);
@@ -182,7 +182,7 @@ public class Schedule {
 
 	private boolean isEvenWeeksSince() {
 		Calendar today = Calendar.getInstance();
-		today.setTimeInMillis(DateUtils.now());
+		today.setTimeInMillis(DateUtils.today());
 		Calendar start = Calendar.getInstance();
 		start.setTimeInMillis(start_date);
 		return (Math.abs(start.get(Calendar.WEEK_OF_YEAR) - today.get(Calendar.WEEK_OF_YEAR)) % 2) == 0;
@@ -190,7 +190,7 @@ public class Schedule {
 
 	private boolean onDayOfMonth() {
 		Calendar today = Calendar.getInstance();
-		today.setTimeInMillis(DateUtils.now());
+		today.setTimeInMillis(DateUtils.today());
 		Calendar start = Calendar.getInstance();
 		start.setTimeInMillis(start_date);
 		return dateInRange() && (start.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH) ||

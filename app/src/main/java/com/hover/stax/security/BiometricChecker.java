@@ -5,7 +5,6 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.biometric.BiometricConstants;
 import androidx.biometric.BiometricPrompt;
 
 import com.amplitude.api.Amplitude;
@@ -43,8 +42,6 @@ public class BiometricChecker extends BiometricPrompt.AuthenticationCallback {
 		final BiometricPrompt.PromptInfo promptInfo =
 				new BiometricPrompt.PromptInfo.Builder()
 						.setTitle(a.getString(R.string.auth_title))
-						.setSubtitle(a.getString(R.string.auth_subTitle))
-						.setDescription(a.getString(R.string.auth_desc))
 						.setAllowedAuthenticators(BIOMETRIC_STRONG | BIOMETRIC_WEAK | DEVICE_CREDENTIAL)
 						.build();
 
@@ -54,7 +51,7 @@ public class BiometricChecker extends BiometricPrompt.AuthenticationCallback {
 	@Override
 	public void onAuthenticationError(int errorCode, @NonNull CharSequence error) {
 		super.onAuthenticationError(errorCode, error);
-		if (errorCode == BiometricConstants.ERROR_NO_BIOMETRICS) {
+		if (errorCode == BiometricPrompt.ERROR_NO_BIOMETRICS) {
 			listener.onAuthError(error.toString());
 		} else Amplitude.getInstance().logEvent(a.getString(R.string.biometrics_not_setup));
 	}

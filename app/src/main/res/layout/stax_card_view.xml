@@ -9,15 +9,15 @@
 		android:layout_marginHorizontal="@dimen/margin_13"
 		android:layout_marginTop="@dimen/margin_5"
 		android:layout_marginBottom="@dimen/margin_21"
-	    android:padding="1dp"
-		app:cardElevation="10dp"
-		app:cardCornerRadius="5dp"
+		app:cardElevation="8dp"
+		app:cardCornerRadius="@dimen/radius"
 		app:cardBackgroundColor="@color/cardViewColor">
 
 		<LinearLayout android:id="@+id/content"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:padding="@dimen/margin_13"
+			android:padding="10dp"
+			android:clipChildren="false"
 			android:background="@color/cardViewColor"
 			android:orientation="vertical" >
 
@@ -30,9 +30,10 @@
 				<ImageButton android:id="@+id/backButton"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
+					android:padding="@dimen/margin_3"
 					android:layout_marginEnd="@dimen/margin_21"
-					android:background="@color/transparent"
-					android:src="@drawable/ic_arrow_back"
+					android:background="?attr/selectableItemBackgroundBorderless"
+					app:srcCompat="@drawable/ic_arrow_back"
 					android:layout_gravity="start"
 					android:gravity="start"
 					android:visibility="gone" />
@@ -41,7 +42,8 @@
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:layout_weight="1"
-					android:text="@string/balances"
+					android:paddingEnd="@dimen/margin_3"
+					android:text="@string/bal_cardhead"
 					android:textSize="@dimen/text_13"
 					android:textAllCaps="true"
 					android:textAlignment="viewEnd"

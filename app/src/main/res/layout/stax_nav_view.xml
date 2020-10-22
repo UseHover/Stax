@@ -1,55 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/container"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	app:rfal_frame_color="@color/cardViewColor"
-	app:rfal_frame_alpha="0.1">
+	android:layout_height="match_parent">
 
-	<LinearLayout
+	<FrameLayout android:id="@+id/content"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:orientation="vertical">
+		android:layout_height="match_parent" />
 
-		<FrameLayout android:id="@+id/content"
-			android:layout_width="match_parent"
-			android:layout_height="0dp"
-			android:layout_weight="1"/>
+	<com.google.android.material.bottomappbar.BottomAppBar
+		android:id="@+id/nav_view"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="bottom"
+		app:elevation="10dp"
+		style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
+		app:fabAlignmentMode="end"
+		app:fabAnimationMode="slide"
+		app:menu="@menu/bottom_nav_menu" />
 
-		<com.google.android.material.bottomnavigation.BottomNavigationView
-			android:id="@+id/nav_view"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="0dp"
-			android:layout_marginEnd="0dp"
-			android:background="@color/cardViewColor"
-			app:itemIconTint="@drawable/nav_color_state"
-			app:itemTextColor="@color/cardViewColor"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintLeft_toLeftOf="parent"
-			app:layout_constraintRight_toRightOf="parent"
-			app:labelVisibilityMode="unlabeled"
-			app:menu="@menu/bottom_nav_menu" />
-	</LinearLayout>
-
-	<com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton
-		android:id="@+id/activity_main_rfab"
+	<com.google.android.material.floatingactionbutton.FloatingActionButton
+		android:id="@+id/fab"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_alignParentEnd="true"
-		android:layout_alignParentBottom="true"
-		android:layout_marginEnd="16dp"
-		android:layout_marginBottom="28dp"
-		android:fontFamily="font-normal"
-		android:padding="8dp"
-		app:rfab_size="normal"
-		app:rfab_drawable="@drawable/payment_icon_foreground"
-		app:rfab_color_normal="@color/colorAccent"
-		app:rfab_color_pressed="@color/colorAccent"
-		app:rfab_shadow_radius="3dp"
-		app:rfab_shadow_color="@color/colorPrimaryDark"
-		app:rfab_shadow_dx="1dp"
-		app:rfab_shadow_dy="1.5dp" />
-</com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout>
+		app:backgroundTint="?attr/colorSecondary"
+		app:srcCompat="@drawable/ic_money"
+		app:layout_anchor="@id/nav_view" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

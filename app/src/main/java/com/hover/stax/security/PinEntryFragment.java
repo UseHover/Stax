@@ -31,7 +31,7 @@ public class PinEntryFragment extends Fragment implements PinEntryAdapter.Update
 
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-		((TextView) view.findViewById(R.id.pin_explainer)).setText(Html.fromHtml(getString(R.string.pin_security_description)));
+		((TextView) view.findViewById(R.id.pin_explainer)).setText(Html.fromHtml(getString(R.string.pin_cardbody2)));
 
 		RecyclerView pinRecyclerView = view.findViewById(R.id.pin_recyclerView);
 		viewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {

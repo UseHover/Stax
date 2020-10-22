@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.hover.stax.R;
 import com.hover.stax.database.Constants;
 import com.hover.stax.schedules.Schedule;
+import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.StagedViewModel;
 import com.hover.stax.utils.Utils;
 
@@ -102,7 +103,7 @@ public class NewRequestViewModel extends StagedViewModel {
 		switch ((RequestStage) stage.getValue()) {
 			case RECIPIENT:
 				if (recipients.getValue() == null || recipients.getValue().size() == 0 || recipients.getValue().get(0).isEmpty()) {
-					recipientError.setValue(R.string.enterRecipientError);
+					recipientError.setValue(R.string.recipient_fielderror);
 					return false;
 				} else {
 					recipientError.setValue(null);
@@ -129,9 +130,9 @@ public class NewRequestViewModel extends StagedViewModel {
 	}
 
 	String generateSMS(Context c) {
-		String a = amount.getValue() != null ? c.getString(R.string.amount_detail, Utils.formatAmount(amount.getValue())) : "";
-		String n = note.getValue() != null ? c.getString(R.string.note_detail, note.getValue()) : "";
-		return c.getString(R.string.request_money_sms_template, a, n);
+		String a = amount.getValue() != null ? c.getString(R.string.sms_amount_detail, Utils.formatAmount(amount.getValue())) : "";
+		String n = note.getValue() != null ? c.getString(R.string.sms_note_detail, note.getValue()) : "";
+		return c.getString(R.string.sms_request_template, a, n);
 	}
 
 	void saveToDatabase(Context c) {
@@ -142,8 +143,10 @@ public class NewRequestViewModel extends StagedViewModel {
 			schedule();
 		} else if (schedule.getValue() != null) {
 			Schedule s = schedule.getValue();
-			s.complete = true;
-			repo.update(s);
+			if (s.end_date <= DateUtils.today()) {
+				s.complete = true;
+				repo.update(s);
+			}
 		}
 	}
 

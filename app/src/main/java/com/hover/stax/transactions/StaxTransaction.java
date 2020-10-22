@@ -107,11 +107,11 @@ public class StaxTransaction {
 	private String generateDescription(Action action, Context c) {
 		switch (transaction_type) {
 			case Action.AIRTIME:
-				return c.getString(R.string.transaction_descrip_airtime, action.from_institution_name, ((recipient == null || recipient.equals("")) ? "myself" : recipient));
+				return c.getString(R.string.descrip_airtime_sent, action.from_institution_name, ((recipient == null || recipient.equals("")) ? "myself" : recipient));
 			case Action.P2P:
-				return c.getString(R.string.transaction_descrip_money, action.from_institution_name, recipient);
+				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, recipient);
 			case Action.ME2ME:
-				return c.getString(R.string.transaction_descrip_money, action.from_institution_name, action.to_institution_name);
+				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, action.to_institution_name);
 			default:
 				return "Other";
 		}

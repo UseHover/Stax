@@ -23,21 +23,11 @@ public class PinsViewModel extends AndroidViewModel {
 		super(application);
 		repo = new DatabaseRepo(application);
 		loadSelectedChannels();
+		channel = new MutableLiveData<>();
 	}
 
 	public LiveData<List<Channel>> getSelectedChannels() {
 		return channels;
-	}
-
-	public LiveData<Channel> getChannel() {
-		return channel;
-	}
-
-	public void loadChannel(int id) {
-		if (channel == null) {
-			channel = new MutableLiveData<>();
-		}
-		channel = repo.getLiveChannel(id);
 	}
 
 	private void loadSelectedChannels() {
@@ -46,6 +36,13 @@ public class PinsViewModel extends AndroidViewModel {
 		}
 		channels = repo.getSelected();
 	}
+
+	public LiveData<Channel> getChannel() {
+		if (channel == null) { channel = new MutableLiveData<>(); }
+		return channel;
+	}
+
+	public void loadChannel(int id) { channel = repo.getLiveChannel(id); }
 
 	void setPin(int id, String pin) {
 		List<Channel> allChannels = channels.getValue() != null ? channels.getValue() : new ArrayList<>();
@@ -87,6 +84,10 @@ public class PinsViewModel extends AndroidViewModel {
 	}
 
 	public void setDefaultAccount(Channel channel) {
-		repo.update(channel);
+		if (channels.getValue() == null) return;
+		for (Channel c: channels.getValue()) {
+			c.defaultAccount = c.id == channel.id;
+			repo.update(c);
+		}
 	}
 }

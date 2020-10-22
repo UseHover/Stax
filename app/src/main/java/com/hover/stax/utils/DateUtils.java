@@ -2,6 +2,7 @@ package com.hover.stax.utils;
 
 import android.content.Context;
 
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.hover.stax.R;
 
 import java.util.Calendar;
@@ -15,8 +16,8 @@ public class DateUtils {
 		return new Date().getTime();
 	}
 
-	public static String timeUntil(Context context, final long millis) {
-		return humanFriendlyTime(context, millis - System.currentTimeMillis());
+	public static long today() {
+		return MaterialDatePicker.todayInUtcMilliseconds();
 	}
 
 	public static String timeAgo(Context context, final long millis) {

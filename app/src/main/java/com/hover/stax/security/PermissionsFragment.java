@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
@@ -102,7 +103,8 @@ public class PermissionsFragment extends Fragment {
 	private void setUpSelectedChannels(View view) {
 		RecyclerView selectedRecyclerView = view.findViewById(R.id.selected_recycler);
 		viewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
-			selectedRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
+			GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 4, GridLayoutManager.VERTICAL, false);
+			selectedRecyclerView.setLayoutManager(gridLayoutManager);
 			selectedRecyclerView.setHasFixedSize(true);
 			ChannelsAdapter selectedAdapter = new ChannelsAdapter(channels, null);
 			selectedRecyclerView.setAdapter(selectedAdapter);

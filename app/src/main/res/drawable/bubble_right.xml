@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:left="20dp">
+    <item>
         <rotate
                 android:fromDegrees="-40"
                 android:pivotX="100%"
                 android:pivotY="100%"
                 android:toDegrees="0">
-            <shape android:shape="rectangle" android:padding="10dp">
-
+            <shape android:shape="rectangle">
                 <solid android:color="@color/grey"/>
-                <corners android:radius="@dimen/editText_corner" />
-
+                <corners android:radius="@dimen/radius" />
             </shape>
         </rotate>
     </item>
-    <item android:right="10dp">
-        <shape android:shape="rectangle" android:padding="10dp">
+    <item android:right="13dp">
+        <shape android:shape="rectangle">
 
             <solid android:color="@color/cardViewColor"/>
-            <stroke android:width="2dp" android:color="@color/grey"/>
-            <corners android:radius="@dimen/editText_corner" />
+            <stroke android:width="@dimen/stroke" android:color="@color/grey"/>
+            <corners android:radius="@dimen/radius" />
 
         </shape>
     </item>

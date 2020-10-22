@@ -2,7 +2,7 @@
 <resources  xmlns:tools="http://schemas.android.com/tools">
 	<color name="colorPrimary" tools:override="true">#292E35</color>
 	<color name="colorPrimaryDark" tools:override="true">#1E232A</color>
-	<color name="colorAccent" tools:override="true">#39CBFC</color>
+	<color name="brightBlue" tools:override="true">#39CBFC</color>
 	<color name="cardViewColor">#292E35</color>
 	<color name="buttonColor">#3A3E45</color>
 	<color name="grey">#B1B2B6</color>
@@ -15,7 +15,7 @@
 	<color name="transparent">#00000000</color>
 
 	<color name="transparent_grey">#77000000</color>
-	<color name="blue_default">#3F51B5</color>
+	<color name="transparent_overlay">#1E232AA3</color>
 
 	<color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/offWhite</color>
 </resources>

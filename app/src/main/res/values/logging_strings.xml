@@ -21,6 +21,7 @@
 	<string name="visit_sim_permission" translatable="false">SIM permission</string>
 	<string name="visit_choose_channels" translatable="false">Choose Channel</string>
 	<string name="visit_security" translatable="false">Security</string>
+	<string name="visit_change_pin" translatable="false">Change PIN</string>
 	<string name="visit_transaction" translatable="false">Transaction Detail</string>
 	<string name="visit_schedule" translatable="false">Schedule Detail</string>
 	<string name="visit_channel" translatable="false">Channel Detail</string>

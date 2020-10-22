@@ -7,10 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.hover.stax.R;
-import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-class StaxNavView extends RapidFloatingActionLayout {
+import com.hover.stax.R;
+
+class StaxNavView extends CoordinatorLayout {
 	private FrameLayout contentView;
 
 	public StaxNavView(Context context, AttributeSet attrs) {

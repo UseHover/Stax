@@ -44,10 +44,9 @@ public class StaxCardView extends FrameLayout {
 		if (title != null) ((TextView) findViewById(R.id.title)).setText(title);
 		else findViewById(R.id.header).setVisibility(GONE);
 
-		if (showBack) {
+		backButton.setOnClickListener(view -> triggerBack());
+		if (showBack)
 			backButton.setVisibility(VISIBLE);
-			backButton.setOnClickListener(view -> triggerBack());
-		}
 	}
 
 	@Override

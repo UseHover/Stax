@@ -45,7 +45,7 @@ public class PinEntryAdapter extends RecyclerView.Adapter<PinEntryAdapter.PinEnt
 		Channel channel = channels.get(position);
 
 		holder.view.setTag(channel.id);
-		holder.label.setHint(channel.name);
+		holder.label.setHint(holder.view.getContext().getString(R.string.pin_label, channel.name));
 		Picasso.get().load(channel.logoUrl).into(holder);
 
 		holder.input.addTextChangedListener(new TextWatcher() {

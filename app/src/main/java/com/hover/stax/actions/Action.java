@@ -51,6 +51,9 @@ public class Action {
 	@ColumnInfo(name = "to_institution_name")
 	public String to_institution_name;
 
+	@ColumnInfo(name = "to_institution_logo")
+	public String to_institution_logo;
+
 	@NonNull
 	@ColumnInfo(name = "network_name")
 	public String network_name;
