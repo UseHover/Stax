@@ -80,6 +80,7 @@ public class PinUpdateFragment extends Fragment implements Target {
 	private void showChoiceCard(boolean show) {
 		view.findViewById(R.id.choice_card).setVisibility(show ? View.VISIBLE : View.GONE);
 		view.findViewById(R.id.edit_card).setVisibility(show ? View.GONE : View.VISIBLE);
+		if (!show) input.requestFocus();
 	}
 
 	@Override
