@@ -128,7 +128,7 @@ public abstract class StagedFragment extends Fragment {
 		frequencyDropdown = root.findViewById(R.id.frequencyDropdown);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireActivity(), R.array.frequency_choices, R.layout.stax_spinner_item);
 		frequencyDropdown.setAdapter(adapter);
-		frequencyDropdown.setText(frequencyDropdown.getAdapter().getItem(0).toString(), false);
+		frequencyDropdown.setText(frequencyDropdown.getAdapter().getItem(stagedViewModel.getFrequency().getValue()).toString(), false);
 	}
 
 	protected void contactPicker(int requestCode, Context c) {

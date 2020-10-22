@@ -4,8 +4,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	app:title="@string/req_cardhead"
-	app:showBack="true">
+	app:title="@string/reqfrom_label">
 
 	<androidx.recyclerview.widget.RecyclerView
 		android:layout_width="match_parent"

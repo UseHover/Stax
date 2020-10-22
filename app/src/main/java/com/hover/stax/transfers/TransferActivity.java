@@ -18,7 +18,6 @@ import com.hover.stax.hover.HoverSession;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.security.BiometricChecker;
-import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.StagedViewModel;
 
 import static com.hover.stax.transfers.TransferStage.*;
@@ -133,7 +132,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void setCurrentCard(StagedViewModel.StagedEnum stage) {
-		findViewById(R.id.summaryCard).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
+//		findViewById(R.id.summaryCard).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.amountCard).setVisibility(stage.compare(AMOUNT) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.fromAccountCard).setVisibility(stage.compare(FROM_ACCOUNT) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.networkCard).setVisibility(stage.compare(TO_NETWORK) == 0 ? View.VISIBLE : View.GONE);
