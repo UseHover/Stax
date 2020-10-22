@@ -47,11 +47,13 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
 		if (Utils.getSharedPrefs(this).getInt(AUTH_CHECK, 0) == 1)
 			new BiometricChecker(this, this).startAuthentication(null);
-//		else if (Utils.getSharedPrefs(this).getInt(LANGUAGE_CHECK, 0) == 0)
+//		else if (Utils.getSharedPrefs(this).getInt(LANGUAGE_CHECK, 0) == 0) {
 //			startActivity(new Intent(this, SelectLanguageActivity.class));
-		else
+//		finish(); }
+		else {
 			startActivity(new Intent(this, MainActivity.class));
-		finish();
+			finish();
+		}
 	}
 
 	private void initHover() {
@@ -84,5 +86,6 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	@Override
 	public void onAuthSuccess(Action act) {
 		startActivity(new Intent(this, MainActivity.class));
+		finish();
 	}
 }
