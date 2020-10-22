@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.hover.stax.R;
 import com.hover.stax.database.Constants;
 import com.hover.stax.schedules.Schedule;
+import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.StagedViewModel;
 import com.hover.stax.utils.Utils;
 
@@ -142,8 +143,10 @@ public class NewRequestViewModel extends StagedViewModel {
 			schedule();
 		} else if (schedule.getValue() != null) {
 			Schedule s = schedule.getValue();
-			s.complete = true;
-			repo.update(s);
+			if (s.end_date <= DateUtils.today()) {
+				s.complete = true;
+				repo.update(s);
+			}
 		}
 	}
 

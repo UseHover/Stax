@@ -11,6 +11,7 @@ import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.schedules.Schedule;
+import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.StagedViewModel;
 
 import java.util.List;
@@ -211,5 +212,15 @@ public class TransferViewModel extends StagedViewModel {
 		Schedule s = new Schedule(activeAction.getValue(), futureDate.getValue(), repeatSaved.getValue(), frequency.getValue(), endDate.getValue(),
 			recipient.getValue(), amount.getValue(), note.getValue(), getApplication());
 		saveSchedule(s);
+	}
+
+	public void checkSchedule() {
+		if (schedule.getValue() != null) {
+			Schedule s = schedule.getValue();
+			if (s.end_date <= DateUtils.today()) {
+				s.complete = true;
+				repo.update(s);
+			}
+		}
 	}
 }

@@ -18,6 +18,7 @@ import com.hover.stax.hover.HoverSession;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.security.BiometricChecker;
+import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.StagedViewModel;
 
 import static com.hover.stax.transfers.TransferStage.*;
@@ -109,6 +110,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 
 	private void makeHoverCall(Action act) {
 		Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
+		transferViewModel.checkSchedule();
 		new HoverSession.Builder(act, transferViewModel.getActiveChannel().getValue(),
 				this, Constants.TRANSFER_REQUEST)
 				.extra(Action.PHONE_KEY, transferViewModel.getRecipient().getValue())
