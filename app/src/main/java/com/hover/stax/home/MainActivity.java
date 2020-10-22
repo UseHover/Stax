@@ -120,9 +120,9 @@ public class MainActivity extends AppCompatActivity implements
 				if (resultCode == RESULT_OK) { onRequest(data); }
 				break;
 			default: // requestCode < Constants.BALANCE_MAX // Balance call
-				if (resultCode == RESULT_OK) {
+				balancesViewModel.setRan(requestCode);
+				if (resultCode == RESULT_OK && data.getAction() != null) {
 					onProbableHoverCall(data);
-					balancesViewModel.setRan(requestCode);
 					maybeRunShowcase();
 				}
 		}
