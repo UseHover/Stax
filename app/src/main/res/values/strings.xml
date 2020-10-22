@@ -221,10 +221,11 @@
 	<string name="removepins_dialogmes">You can add your PINs to Stax again at any time.</string>
 	<string name="toast_confirm_removepin">PIN removed successfully</string>
 	<string name="btn_savepin">Save PIN</string>
+	<string name="btn_editpin">Edit PIN</string>
+	<string name="editpin_label">PIN</string>
 	<string name="btn_removeacct">Remove Account</string>
-	<string name="toast_error_acct404">Account not found, please restart your app if this persist</string>
 	<string name="toast_confirm_acctremoved">Account removed successfully</string>
-	<string name="toast_confirm_pinupdate">Pin saved successfully</string>
+	<string name="toast_confirm_pinupdate">Pin saved</string>
 	<string name="language_cardhead">Language</string>
 	<string name="disclaimer">All products names, brands, and trademarks are property of their respective owners. Use does not imply affiliation.</string>
 

@@ -3,22 +3,21 @@ package com.hover.stax.security;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.amplitude.api.Amplitude;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.utils.UIHelper;
@@ -26,86 +25,61 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 public class PinUpdateFragment extends Fragment implements Target {
-	private TextInputLayout label;
-	private TextInputEditText input;
+
 	private View view;
-	private TextView titleText, cancelUpdatePin;
-	private Button savePinButton;
-	private AppCompatButton removeAccountButton;
+	private TextInputEditText input;
+	PinsViewModel pinViewModel;
 
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		if (getArguments() == null) {
-			if (getActivity() != null && getContext() != null) {
-				UIHelper.flashMessage(getContext(), getResources().getString(R.string.toast_error_acct404));
-				getActivity().onBackPressed();
-			}
-		}
-		int channel_id = getArguments().getInt("channel_id", 0);
-		PinsViewModel pinViewModel = new ViewModelProvider(this).get(PinsViewModel.class);
-		pinViewModel.loadChannel(channel_id);
+		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_change_pin)));
+		view = inflater.inflate(R.layout.fragment_pin_update, container, false);
 
-		view = inflater.inflate(R.layout.pin_update_layout, container, false);
-		init(view);
-		loadPin(pinViewModel);
-		setupCancel();
+		pinViewModel = new ViewModelProvider(this).get(PinsViewModel.class);
+		pinViewModel.loadChannel(getArguments().getInt("channel_id", 0));
+		pinViewModel.getChannel().observe(getViewLifecycleOwner(), this::initView);
+
+		input = view.findViewById(R.id.pin_input);
+		view.findViewById(R.id.editBtn).setOnClickListener(v -> showChoiceCard(false));
+		view.findViewById(R.id.cancelBtn).setOnClickListener(v -> showChoiceCard(true));
 
 		return view;
 	}
 
-	private void init(View view) {
-		label = view.findViewById(R.id.pinEntry);
-		input = view.findViewById(R.id.pin_input);
-		titleText = view.findViewById(R.id.title);
-		cancelUpdatePin = view.findViewById(R.id.cancelUpdatePin);
-		savePinButton = view.findViewById(R.id.save_pin_button_id);
-		removeAccountButton = view.findViewById(R.id.removeAccountButtonId);
+	private void initView(Channel c) {
+		if (c == null) { return; }
+		((TextView) view.findViewById(R.id.choice_card).findViewById(R.id.title)).setText(c.name);
+		((TextView) view.findViewById(R.id.edit_card).findViewById(R.id.title)).setText(c.name);
+		Picasso.get().load(c.logoUrl).into(PinUpdateFragment.this);
+		if (c.pin != null && !c.pin.isEmpty())
+			input.setText(KeyStoreExecutor.decrypt(c.pin, getContext()));
+		setupSavePin(c);
+		setUpRemoveAccount(c);
 	}
 
-	private void loadPin(PinsViewModel pinsViewModel) {
-		pinsViewModel.getChannel().observe(getViewLifecycleOwner(), channel -> {
-			if (channel != null) {
-				titleText.setText(channel.name);
-				Picasso.get().load(channel.logoUrl).into(PinUpdateFragment.this);
-				label.setHint(channel.name);
-				if (channel.pin != null && !channel.pin.isEmpty()) {
-					input.setText(KeyStoreExecutor.decrypt(channel.pin, getContext()));
-				}
-				setupSavePin(pinsViewModel, channel);
-				setUpRemoveAccount(pinsViewModel, channel);
-			}
-
-		});
-	}
-
-	private void setupCancel() {
-		cancelUpdatePin.setOnClickListener(v -> {
-			if (getActivity() != null) getActivity().onBackPressed();
-		});
-	}
-
-	private void setupSavePin(PinsViewModel pinsViewModel, Channel channel) {
-		savePinButton.setOnClickListener(v -> {
+	private void setupSavePin(Channel channel) {
+		view.findViewById(R.id.saveBtn).setOnClickListener(v -> {
 			if (input.getText() != null) {
 				channel.pin = input.getText().toString();
-				pinsViewModel.savePin(channel, getContext());
+				pinViewModel.savePin(channel, getContext());
 			}
-			if (getActivity() != null && getContext() != null) {
-				UIHelper.flashMessage(getContext(), getResources().getString(R.string.toast_confirm_pinupdate));
-				getActivity().onBackPressed();
-			}
+			UIHelper.flashMessage(view.getContext(), getResources().getString(R.string.toast_confirm_pinupdate));
+			showChoiceCard(true);
 		});
 	}
 
-	void setUpRemoveAccount(PinsViewModel pinsViewModel, Channel channel) {
-		removeAccountButton.setOnClickListener(v -> {
-			pinsViewModel.removeAccount(channel);
-			if (getActivity() != null && getContext() != null) {
-				UIHelper.flashMessage(getContext(), getResources().getString(R.string.toast_confirm_acctremoved));
-				getActivity().onBackPressed();
-			}
+	private void setUpRemoveAccount(Channel channel) {
+		view.findViewById(R.id.removeAcct).setOnClickListener(v -> {
+			pinViewModel.removeAccount(channel);
+			UIHelper.flashMessage(getContext(), getResources().getString(R.string.toast_confirm_acctremoved));
+			showChoiceCard(true);
 		});
+	}
+
+	private void showChoiceCard(boolean show) {
+		view.findViewById(R.id.choice_card).setVisibility(show ? View.VISIBLE : View.GONE);
+		view.findViewById(R.id.edit_card).setVisibility(show ? View.GONE : View.VISIBLE);
 	}
 
 	@Override
@@ -116,13 +90,6 @@ public class PinUpdateFragment extends Fragment implements Target {
 		input.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
 	}
 
-	@Override
-	public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-	}
-
-	@Override
-	public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-	}
+	@Override public void onBitmapFailed(Exception e, Drawable errorDrawable) {	}
+	@Override public void onPrepareLoad(Drawable placeHolderDrawable) {	}
 }

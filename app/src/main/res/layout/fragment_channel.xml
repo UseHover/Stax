@@ -1,86 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:layout_marginTop="@dimen/margin_13">
+	android:layout_marginTop="@dimen/margin_13"
+	android:layout_marginBottom="@dimen/margin_55"
+	android:orientation="vertical">
 
-	<LinearLayout
+	<com.hover.stax.views.StaxCardView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginBottom="@dimen/margin_55"
-		android:orientation="vertical">
+		app:title="@string/nav_account_detail"
+		app:showBack="true">
 
-		<com.hover.stax.views.StaxCardView
+		<TableLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			app:title="@string/nav_account_detail"
-			app:showBack="true">
+			android:layout_marginHorizontal="@dimen/margin_3">
 
-			<TableLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginHorizontal="@dimen/margin_3">
+			<TableRow android:layout_marginVertical="@dimen/margin_21">
+				<TextView
+					android:layout_weight="1"
+					android:textColor="@color/offWhite"
+					android:textSize="@dimen/text_16"
+					android:text="@string/balance_label"/>
 
-				<TableRow android:layout_marginVertical="@dimen/margin_21">
-					<TextView
-						android:layout_weight="1"
-						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_16"
-						android:text="@string/balance_label"/>
+				<TextView android:id="@+id/details_balance"
+					android:textAlignment="viewEnd"
+					android:textColor="@color/offWhite"
+					android:textSize="@dimen/text_21"
+					android:textStyle="bold"/>
+			</TableRow>
 
-					<TextView android:id="@+id/details_balance"
-						android:textAlignment="viewEnd"
-						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_21"
-						android:textStyle="bold"/>
-				</TableRow>
+			<TableRow android:layout_marginVertical="@dimen/margin_21">
+				<TextView
+					android:layout_weight="1"
+					android:textColor="@color/offWhite"
+					android:textSize="@dimen/text_16"
+					android:text="@string/moneyout_label"/>
 
-				<TableRow android:layout_marginVertical="@dimen/margin_21">
-					<TextView
-						android:layout_weight="1"
-						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_16"
-						android:text="@string/moneyout_label"/>
+				<TextView android:id="@+id/details_money_out"
+					android:textAlignment="viewEnd"
+					android:textColor="@color/offWhite"
+					android:textSize="@dimen/text_21"
+					android:textStyle="bold"/>
+			</TableRow>
 
-					<TextView android:id="@+id/details_money_out"
-						android:textAlignment="viewEnd"
-						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_21"
-						android:textStyle="bold"/>
-				</TableRow>
+			<TableRow android:layout_marginVertical="@dimen/margin_21" android:visibility="gone">
+				<TextView
+					android:layout_weight="1"
+					android:textColor="@color/offWhite"
+					android:textSize="@dimen/text_16"
+					android:text="@string/moneyin_label"/>
 
-				<TableRow android:layout_marginVertical="@dimen/margin_21" android:visibility="gone">
-					<TextView
-						android:layout_weight="1"
-						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_16"
-						android:text="@string/moneyin_label"/>
+				<TextView android:id="@+id/details_money_in"
+					android:textAlignment="viewEnd"
+					android:textColor="@color/offWhite"
+					android:textSize="@dimen/text_21"
+					android:textStyle="bold"/>
+			</TableRow>
 
-					<TextView android:id="@+id/details_money_in"
-						android:textAlignment="viewEnd"
-						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_21"
-						android:textStyle="bold"/>
-				</TableRow>
+			<TableRow android:layout_marginVertical="@dimen/margin_21">
+				<TextView android:id="@+id/fees_description"
+					android:layout_weight="1"
+					android:textColor="@color/offWhite"
+					android:textSize="@dimen/text_16"
+					android:text="@string/fees_label"/>
 
-				<TableRow android:layout_marginVertical="@dimen/margin_21">
-					<TextView android:id="@+id/fees_description"
-						android:layout_weight="1"
-						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_16"
-						android:text="@string/fees_label"/>
+				<TextView android:id="@+id/details_fees"
+					android:textAlignment="viewEnd"
+					android:textColor="@color/offWhite"
+					android:textSize="@dimen/text_21"
+					android:textStyle="bold"/>
+			</TableRow>
+		</TableLayout>
+	</com.hover.stax.views.StaxCardView>
 
-					<TextView android:id="@+id/details_fees"
-						android:textAlignment="viewEnd"
-						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_21"
-						android:textStyle="bold"/>
-				</TableRow>
-			</TableLayout>
-		</com.hover.stax.views.StaxCardView>
+	<include layout="@layout/home_card_transactions" />
 
-		<include layout="@layout/home_card_transactions" />
-
-	</LinearLayout>
-</androidx.core.widget.NestedScrollView>
+</LinearLayout>

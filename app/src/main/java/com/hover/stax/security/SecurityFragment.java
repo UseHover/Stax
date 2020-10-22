@@ -41,7 +41,7 @@ public class SecurityFragment extends Fragment {
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_security)));
 		PinsViewModel securityViewModel = new ViewModelProvider(this).get(PinsViewModel.class);
 
-		View root = inflater.inflate(R.layout.fragment_security, container, false);
+		View root = inflater.inflate(R.layout.fragment_settings, container, false);
 		setUpAccounts(root, securityViewModel);
 		setUpRemovePins(root, securityViewModel);
 		setUpChooseLang(root);
