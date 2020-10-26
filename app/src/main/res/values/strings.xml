@@ -106,6 +106,9 @@
 	<string name="btn_request">Send request</string>
 	<string name="btn_nothanks">No thanks</string>
 	<string name="toast_confirm_contact">Thanks! Contact info received. We\'ll be in touch soon.</string>
+	<string name="reqcancel_head">Cancel request</string>
+	<string name="reqcancel_msg">Looks like your message has not been sent. Would you like to cancel this request?</string>
+	<string name="btn_saveanyway">Save anyway</string>
 
 	<!-- Onboarding showcase -->
 	<string name="onboard_sechead">World class security</string>

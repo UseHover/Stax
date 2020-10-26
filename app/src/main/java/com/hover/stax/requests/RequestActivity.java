@@ -2,10 +2,14 @@ package com.hover.stax.requests;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -16,14 +20,17 @@ import com.hover.stax.database.Constants;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.utils.StagedViewModel;
+import com.hover.stax.views.StaxDialog;
 
 import static com.hover.stax.requests.RequestStage.*;
 
-public class RequestActivity extends AppCompatActivity {
+public class RequestActivity extends AppCompatActivity implements SmsSentObserver.SmsSentListener {
 	final public static String TAG = "TransferActivity";
 
 	private NewRequestViewModel requestViewModel;
 	private ScheduleDetailViewModel scheduleViewModel = null;
+
+	AlertDialog dialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +45,17 @@ public class RequestActivity extends AppCompatActivity {
 	protected void onResume() {
 		super.onResume();
 		if (requestViewModel.getStarted().getValue() != null && requestViewModel.getStarted().getValue())
-			returnResult(Constants.SEND_SMS_FOREGROUND);
+			showRequestNotSentDialog();
+	}
+
+	private void showRequestNotSentDialog() {
+		dialog = new StaxDialog(this)
+			.setDialogTitle(R.string.reqcancel_head)
+			.setDialogMessage(R.string.reqcancel_msg)
+			.setNegButton(R.string.btn_saveanyway, btn -> returnResult(-1))
+			.setPosButton(R.string.btn_cancel, btn ->  cancel())
+			.isDestructive()
+			.showIt();
 	}
 
 	private void startObservers() {
@@ -87,11 +104,25 @@ public class RequestActivity extends AppCompatActivity {
 
 	private void sendSms() {
 		requestViewModel.setStarted();
-		Intent i = new Intent(android.content.Intent.ACTION_VIEW);
-		i.setType("vnd.android-dir/mms-sms");
-		i.putExtra("address", requestViewModel.generateRecipientString());
-		i.putExtra("sms_body", requestViewModel.generateSMS(this));
-		startActivityForResult(i, Constants.SEND_SMS_FOREGROUND);
+		HandlerThread thread = new HandlerThread("SmsObserverThread");
+		thread.start();
+		Handler handler = new Handler(thread.getLooper());
+		new SmsSentObserver(this, requestViewModel.getRecipients().getValue(), new Handler(), this).start();
+		// Works with ACTION_VIEW
+//		String whatsapp ="https://api.whatsapp.com/send?phone="+ requestViewModel.generateRecipientString() +"&text=" + requestViewModel.generateSMS(this);
+//		sendIntent.setData(Uri.parse(whatsapp));
+
+		Intent sendIntent = new Intent();
+		sendIntent.setAction(Intent.ACTION_VIEW);
+		sendIntent.setData(Uri.parse("smsto:" + requestViewModel.generateRecipientString()));
+		sendIntent.putExtra(Intent.EXTRA_TEXT, requestViewModel.generateSMS(this));
+		sendIntent.putExtra("sms_body", requestViewModel.generateSMS(this));
+		startActivityForResult(Intent.createChooser(sendIntent, "Request"), Constants.SEND_SMS);
+	}
+
+	@Override
+	public void onSmsSendEvent(boolean wasSent) {
+		if (wasSent) returnResult(Constants.SEND_SMS);
 	}
 
 	private void onUpdateStage(@Nullable StagedViewModel.StagedEnum stage) {
@@ -134,7 +165,7 @@ public class RequestActivity extends AppCompatActivity {
 		if (resultCode == RESULT_CANCELED) {
 			return;
 		}
-		if (requestCode == Constants.SEND_SMS_FOREGROUND) {
+		if (requestCode == Constants.SEND_SMS) {
 			returnResult(requestCode);
 		}
 	}
@@ -147,6 +178,11 @@ public class RequestActivity extends AppCompatActivity {
 		}
 		i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);
 		setResult(RESULT_OK, i);
+		finish();
+	}
+
+	private void cancel() {
+		setResult(RESULT_CANCELED);
 		finish();
 	}
 }
