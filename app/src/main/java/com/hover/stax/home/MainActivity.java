@@ -96,8 +96,19 @@ public class MainActivity extends AppCompatActivity implements
 	}
 
 	private void run(Action action, int index) {
-		new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), this, index)
+		if (balancesViewModel.getChannel(action.channel_id) != null) {
+			new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), this, index)
 				.finalScreenTime(0).run();
+		} else // Possible fix for auth issue on OnePlus 6
+			balancesViewModel.getSelectedChannels().observe(this, new Observer<List<Channel>>() {
+				@Override
+				public void onChanged(List<Channel> channels) {
+					if (channels != null && balancesViewModel.getChannel(channels, action.channel_id) != null) {
+						run(action, 0);
+						balancesViewModel.getSelectedChannels().removeObserver(this);
+					}
+				}
+			});
 	}
 
 	@Override
@@ -107,18 +118,7 @@ public class MainActivity extends AppCompatActivity implements
 
 	@Override
 	public void onAuthSuccess(Action act) {
-		if (balancesViewModel.getChannel(act.channel_id) != null)
 			run(act, 0);
-		else // Possible fix for auth issue on OnePlus 6
-			balancesViewModel.getSelectedChannels().observe(this, new Observer<List<Channel>>() {
-					@Override
-					public void onChanged(List<Channel> channels) {
-						if (channels != null && balancesViewModel.getChannel(channels, act.channel_id) != null) {
-							run(act, 0);
-							balancesViewModel.getSelectedChannels().removeObserver(this);
-						}
-					}
-				});
 	}
 
 	@Override
