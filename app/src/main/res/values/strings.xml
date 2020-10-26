@@ -121,7 +121,7 @@
 	<string name="onboard_balhead">Refresh your accounts</string>
 	<string name="onboard_balbody">Check your account\'s balance by pulling the bar all the way to the left</string>
 	<string name="onboard_refreshhead">Refresh Stax</string>
-	<string name="onboard_refreshbody">Swipe down here to refresh all of your accounts</string>
+	<string name="onboard_refreshbody">Pull down the whole screen to refresh all of your accounts</string>
 	<string name="onboard_infohead">Long press for more info</string>
 	<string name="onboard_infobody">Press and hold any element in Stax for more information</string>
 
