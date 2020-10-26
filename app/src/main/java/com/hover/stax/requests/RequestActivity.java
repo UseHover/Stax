@@ -1,13 +1,16 @@
 package com.hover.stax.requests;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.provider.ContactsContract;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,11 +18,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.database.Constants;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
+import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.StagedViewModel;
+import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.StaxDialog;
 
 import static com.hover.stax.requests.RequestStage.*;
@@ -91,38 +97,61 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 			requestViewModel.goToNextStage();
 	}
 
-	@SuppressLint("NewApi")
 	private void submit() {
 		if (requestViewModel.getIsFuture().getValue() != null && requestViewModel.getIsFuture().getValue() && requestViewModel.getFutureDate().getValue() != null) {
 			requestViewModel.schedule();
 			returnResult(Constants.SCHEDULE_REQUEST);
 		} else {
 			requestViewModel.saveToDatabase(this);
+			sendRequest();
+		}
+	}
+
+	private void sendRequest() {
+		Amplitude.getInstance().logEvent(getString(R.string.clicked_send_request));
+		if (!PermissionUtils.hasSmsPermission(this))
+			requestPermissions(new String[]{Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS}, Constants.SMS);
+		else
 			sendSms();
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		if (requestCode == Constants.SMS && new PermissionHelper(this).permissionsGranted(grantResults)) {
+			Amplitude.getInstance().logEvent(getString(R.string.sms_perm_success));
+			sendSms();
+		} else if (requestCode == Constants.SMS) {
+			Amplitude.getInstance().logEvent(getString(R.string.sms_perm_denied));
+			UIHelper.flashMessage(this, getResources().getString(R.string.toast_error_smsperm));
 		}
 	}
 
 	private void sendSms() {
 		requestViewModel.setStarted();
-		HandlerThread thread = new HandlerThread("SmsObserverThread");
-		thread.start();
-		Handler handler = new Handler(thread.getLooper());
 		new SmsSentObserver(this, requestViewModel.getRecipients().getValue(), new Handler(), this).start();
-		// Works with ACTION_VIEW
-//		String whatsapp ="https://api.whatsapp.com/send?phone="+ requestViewModel.generateRecipientString() +"&text=" + requestViewModel.generateSMS(this);
-//		sendIntent.setData(Uri.parse(whatsapp));
 
 		Intent sendIntent = new Intent();
 		sendIntent.setAction(Intent.ACTION_VIEW);
 		sendIntent.setData(Uri.parse("smsto:" + requestViewModel.generateRecipientString()));
 		sendIntent.putExtra(Intent.EXTRA_TEXT, requestViewModel.generateSMS(this));
 		sendIntent.putExtra("sms_body", requestViewModel.generateSMS(this));
-		startActivityForResult(Intent.createChooser(sendIntent, "Request"), Constants.SEND_SMS);
+		startActivityForResult(Intent.createChooser(sendIntent, "Request"), Constants.SMS);
+	}
+
+	private void sendWhatsapp() {
+		Intent sendIntent = new Intent();
+		sendIntent.setAction(Intent.ACTION_VIEW);
+
+		// FIXME: Needs to use international number format with no +
+		String whatsapp ="https://api.whatsapp.com/send?phone="+ requestViewModel.generateRecipientString() +"&text=" + requestViewModel.generateSMS(this);
+		sendIntent.setData(Uri.parse(whatsapp));
+		startActivityForResult(sendIntent, Constants.SMS);
 	}
 
 	@Override
 	public void onSmsSendEvent(boolean wasSent) {
-		if (wasSent) returnResult(Constants.SEND_SMS);
+		if (wasSent) returnResult(Constants.SMS);
 	}
 
 	private void onUpdateStage(@Nullable StagedViewModel.StagedEnum stage) {
@@ -165,7 +194,7 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 		if (resultCode == RESULT_CANCELED) {
 			return;
 		}
-		if (requestCode == Constants.SEND_SMS) {
+		if (requestCode == Constants.SMS) {
 			returnResult(requestCode);
 		}
 	}

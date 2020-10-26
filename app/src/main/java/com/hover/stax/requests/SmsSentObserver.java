@@ -9,47 +9,38 @@ import android.os.Handler;
 import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 
+import com.amplitude.api.Amplitude;
+import com.hover.stax.R;
+
 import java.util.List;
 
 class SmsSentObserver extends ContentObserver {
+	private static final String TAG = "SmsSentObserver";
 	private static final Uri uri = Uri.parse("content://sms/");
 
 	private static final int MESSAGE_TYPE_SENT = 2;
-	private static final String COLUMN_ADDRESS = "address";
 	private static final String COLUMN_TYPE = "type";
+	private static final String COLUMN_ADDRESS = "address";
 	private static final String[] PROJECTION = { COLUMN_ADDRESS, COLUMN_TYPE };
 
-	private SmsSentListener listener;
 	private ContentResolver resolver;
-	private Handler handler;
-
-	private List<String> phoneNumbers;
-	private long timeout = 30;
+	final private SmsSentListener listener;
+	final private List<String> phoneNumbers;
 	private boolean wasSent = false;
-	private boolean timedOut = false;
+	final private String successMsg;
 
 	public SmsSentObserver(SmsSentListener l, List<String> numbers, Handler handler, Context c) {
 		super(handler);
 
-		this.listener = l;
 		this.resolver = c.getContentResolver();
+		this.listener = l;
 		this.phoneNumbers = numbers;
-		this.handler = handler;
-	}
 
-	private Runnable runOut = new Runnable() {
-		@Override
-		public void run() {
-			if (!wasSent) {
-				timedOut = true;
-				callBack();
-			}
-		}
-	};
+		successMsg = c.getString(R.string.sms_sent_success);
+	}
 
 	public void start() {
 		resolver.registerContentObserver(uri, true, this);
-		handler.postDelayed(runOut, timeout);
 	}
 
 	public void stop() {
@@ -64,31 +55,26 @@ class SmsSentObserver extends ContentObserver {
 
 	@Override
 	public void onChange(boolean selfChange) {
-		Log.e("OBSERVE", "detected change");
-		if (wasSent || timedOut)
-			return;
+		if (wasSent) return;
 
 		Cursor cursor = null;
-
 		try {
 			cursor = resolver.query(uri, PROJECTION, null, null, null);
 
 			if (cursor != null && cursor.moveToFirst()) {
 				final String address = cursor.getString(cursor.getColumnIndex(COLUMN_ADDRESS));
 				final int type = cursor.getInt(cursor.getColumnIndex(COLUMN_TYPE));
-				Log.e("OBSERVE", "address: " + address);
-				Log.e("OBSERVE", "type: " + type);
-				for (String number: phoneNumbers) {
+				for (String number : phoneNumbers) {
 					if (PhoneNumberUtils.compare(address, number) && type == MESSAGE_TYPE_SENT) {
 						wasSent = true;
 						callBack();
+						Amplitude.getInstance().logEvent(successMsg);
 						break;
 					}
 				}
 			}
-		} finally {
-			if (cursor != null) cursor.close();
-		}
+		} catch (Exception e) { Log.e(TAG, "FAILURE", e);
+		} finally { if (cursor != null) cursor.close(); }
 	}
 
 	public interface SmsSentListener {
