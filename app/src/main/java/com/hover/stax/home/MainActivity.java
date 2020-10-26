@@ -5,6 +5,8 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,12 +40,15 @@ import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout;
+
 
 public class MainActivity extends AppCompatActivity implements
 	BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener {
 
 	final public static String TAG = "MainActivity";
 	private BalancesViewModel balancesViewModel;
+	private CustomSwipeRefreshLayout swipeRefreshLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,14 @@ public class MainActivity extends AppCompatActivity implements
 		balancesViewModel.getToRun().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel"));
 
 		setUpNav();
+		setupSwipeRefresh();
+	}
+
+	private void setupSwipeRefresh() {
+		swipeRefreshLayout = findViewById(R.id.swipelayout);
+		swipeRefreshLayout.setRefreshCompleteTimeout(1000);
+		swipeRefreshLayout.enableTopProgressBar(false);
+		swipeRefreshLayout.setOnRefreshListener(() -> runAllBalances(swipeRefreshLayout));
 	}
 
 	public void addAccount(View view) {
@@ -121,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements
 				if (resultCode == RESULT_OK) { onRequest(data); }
 				break;
 			default: // requestCode < Constants.BALANCE_MAX // Balance call
+				if(swipeRefreshLayout !=null) new Handler(Looper.getMainLooper()).postDelayed(()->swipeRefreshLayout.refreshComplete(), 1000);
 				balancesViewModel.setRan(requestCode);
 				if (resultCode == RESULT_OK && data != null && data.getAction() != null) {
 					onProbableHoverCall(data);

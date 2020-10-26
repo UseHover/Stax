@@ -121,7 +121,7 @@
 	<string name="onboard_balhead">Refresh your accounts</string>
 	<string name="onboard_balbody">Check your account\'s balance by pulling the bar all the way to the left</string>
 	<string name="onboard_refreshhead">Refresh Stax</string>
-	<string name="onboard_refreshbody">Tap here to refresh all of your accounts</string>
+	<string name="onboard_refreshbody">Swipe down here to refresh all of your accounts</string>
 	<string name="onboard_infohead">Long press for more info</string>
 	<string name="onboard_infobody">Press and hold any element in Stax for more information</string>
 
@@ -260,4 +260,10 @@
 	<string name="timeago_months">%1$d months</string>
 	<string name="timeago_year">about a year</string>
 	<string name="timeago_years">%1$d years</string>
+
+	<string name="csr_text_state_normal">Swipe  to  refresh balance </string>
+	<string name="csr_text_state_ready">Release to refresh balance</string>
+	<string name="csr_text_state_refresh">Refreshing balance …   </string>
+	<string name="csr_text_state_complete">Refreshing balance complete </string>
+	<string name="csr_text_last_refresh">last update:  </string>
 </resources>
