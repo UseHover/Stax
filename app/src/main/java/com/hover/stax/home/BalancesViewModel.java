@@ -77,7 +77,11 @@ public class BalancesViewModel extends AndroidViewModel {
 
 	public Channel getChannel(int id) {
 		List<Channel> allChannels = selectedChannels.getValue() != null ? selectedChannels.getValue() : new ArrayList<>();
-		for (Channel channel : allChannels) {
+		return getChannel(allChannels, id);
+	}
+
+	public Channel getChannel(List<Channel> channels, int id) {
+		for (Channel channel : channels) {
 			if (channel.id == id) {
 				return channel;
 			}
