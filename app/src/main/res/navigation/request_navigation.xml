@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/request_navigation"
+	app:startDestination="@+id/navigation_new">
+
+	<fragment
+		android:id="@+id/navigation_new"
+		android:name="com.hover.stax.requests.NewRequestFragment"
+		android:label="@string/nav_request"
+		tools:layout="@layout/fragment_request" >
+	</fragment>
+
+	<fragment
+		android:id="@+id/navigation_edit"
+		android:name="com.hover.stax.requests.EditRequestFragment"
+		android:label="@string/nav_edit_request"
+		tools:layout="@layout/fragment_edit_request" >
+	</fragment>
+</navigation>

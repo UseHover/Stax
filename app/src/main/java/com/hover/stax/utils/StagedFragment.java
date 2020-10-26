@@ -15,6 +15,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.amplitude.api.Amplitude;
 import com.google.android.material.datepicker.CalendarConstraints;
@@ -36,7 +39,8 @@ public abstract class StagedFragment extends Fragment {
 	private TextInputEditText repeatInput;
 
 	protected void init(View root) {
-		createFuturePicker(root);
+		repeatInput = root.findViewById(R.id.repeat_times_input);
+		createFuturePicker();
 		createFrequencyDropdown(root);
 		startObservers(root);
 		startListeners(root);
@@ -50,8 +54,10 @@ public abstract class StagedFragment extends Fragment {
 			root.findViewById(R.id.dateRow).setVisibility(futureDate == null ? View.GONE : View.VISIBLE);
 		});
 
-		stagedViewModel.getIsRepeating().observe(getViewLifecycleOwner(), isRepeating ->
-            root.findViewById(R.id.repeatInputs).setVisibility(isRepeating ? View.VISIBLE : View.GONE));
+		stagedViewModel.getIsRepeating().observe(getViewLifecycleOwner(), isRepeating -> {
+            root.findViewById(R.id.repeatInputs).setVisibility(isRepeating ? View.VISIBLE : View.GONE);
+			root.findViewById(R.id.repeatButtons).setVisibility(isRepeating ? View.VISIBLE : View.GONE);
+		});
 		stagedViewModel.getFrequency().observe(getViewLifecycleOwner(), frequency -> {
 			((TextView) root.findViewById(R.id.frequencyValue)).setText(getResources().getStringArray(R.array.frequency_choices)[frequency]);
 			((TextView) root.findViewById(R.id.repeat_times_input)).setText(null);
@@ -76,18 +82,22 @@ public abstract class StagedFragment extends Fragment {
 
 	protected void startListeners(View root) {
 		((SwitchMaterial) root.findViewById(R.id.futureSwitch)).setOnCheckedChangeListener((view, isChecked) -> stagedViewModel.setIsFutureDated(isChecked));
+		((SwitchMaterial) root.findViewById(R.id.repeatSwitch)).setOnCheckedChangeListener((view, isChecked) -> stagedViewModel.setIsRepeating(isChecked));
+		dateDetailListeners(root);
+
+		root.findViewById(R.id.save_btn).setOnClickListener(view -> stagedViewModel.saveRepeat());
+		root.findViewById(R.id.edit_btn).setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(R.id.navigation_edit));
+	}
+
+	protected void dateDetailListeners(View root) {
 		root.findViewById(R.id.dateInput).setOnFocusChangeListener((view, hasFocus) -> {
 			if (hasFocus) datePicker.show(getActivity().getSupportFragmentManager(), datePicker.toString());
 		});
-
-		((SwitchMaterial) root.findViewById(R.id.repeatSwitch)).setOnCheckedChangeListener((view, isChecked) -> stagedViewModel.setIsRepeating(isChecked));
 		((AutoCompleteTextView) root.findViewById(R.id.frequencyDropdown)).setOnItemClickListener((adapterView, view, pos, id) -> stagedViewModel.setFrequency(pos));
 		root.findViewById(R.id.endDateInput).setOnFocusChangeListener((view, hasFocus) -> {
 			if (hasFocus) createAndShowEndPicker();
 		});
 		((TextInputEditText) root.findViewById(R.id.repeat_times_input)).addTextChangedListener(repeatWatcher);
-
-		root.findViewById(R.id.save_btn).setOnClickListener(view -> stagedViewModel.saveRepeat());
 	}
 
 	private TextWatcher repeatWatcher = new TextWatcher() {
@@ -98,8 +108,7 @@ public abstract class StagedFragment extends Fragment {
 		@Override public void onTextChanged(CharSequence s, int start, int before, int count) { }
 	};
 
-	private void createFuturePicker(View root) {
-		repeatInput = root.findViewById(R.id.repeat_times_input);
+	private void createFuturePicker() {
 		CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
 		constraintsBuilder.setStart(DateUtils.today() + DateUtils.DAY);
 		constraintsBuilder.setValidator(DateValidatorPointForward.from(DateUtils.today() + DateUtils.DAY));

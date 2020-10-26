@@ -113,14 +113,14 @@
 		</TableRow>
 	</TableLayout>
 
-	<RelativeLayout
+	<RelativeLayout android:id="@+id/btnRow"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:visibility="gone"
 		android:layout_marginTop="@dimen/margin_21">
 
 		<androidx.appcompat.widget.AppCompatButton
-			android:id="@+id/add_accounts_btn"
+			android:id="@+id/edit_btn"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/btn_edit"

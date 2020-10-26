@@ -28,6 +28,7 @@ public abstract class StagedViewModel extends AndroidViewModel {
 	protected MutableLiveData<Boolean> repeatSaved = new MutableLiveData<>();
 
 	protected MutableLiveData<Schedule> schedule = new MutableLiveData<>();
+	protected MutableLiveData<Boolean> isEditing = new MutableLiveData<>();
 
 	public StagedViewModel(@NonNull Application application) {
 		super(application);
@@ -39,6 +40,7 @@ public abstract class StagedViewModel extends AndroidViewModel {
 		frequency.setValue(3);
 		repeatSaved.setValue(false);
 		endDate.setValue(null);
+		isEditing.setValue(false);
 	}
 
 	public LiveData<StagedEnum> getStage() {
@@ -135,6 +137,15 @@ public abstract class StagedViewModel extends AndroidViewModel {
 			repeatSaved.setValue(false);
 		}
 		return repeatSaved;
+	}
+
+	public void setEditing(boolean isEdit) { isEditing.setValue(isEdit); }
+	public LiveData<Boolean> getIsEditing() {
+		if (isEditing == null) {
+			isEditing = new MutableLiveData<>();
+			isEditing.setValue(false);
+		}
+		return isEditing;
 	}
 
 	private void calculateRepeatTimes(Long end_date, int freq) {

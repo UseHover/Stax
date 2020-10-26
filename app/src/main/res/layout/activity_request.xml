@@ -7,11 +7,11 @@
 	tools:context=".requests.RequestActivity">
 
 	<fragment
-		android:id="@+id/fragment_container"
-		android:name="com.hover.stax.requests.NewRequestFragment"
+		android:id="@+id/nav_host_fragment"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		tools:layout="@layout/fragment_request"/>
+		android:name="androidx.navigation.fragment.NavHostFragment"
+		app:navGraph="@navigation/request_navigation"/>
 
 	<androidx.coordinatorlayout.widget.CoordinatorLayout
 		android:layout_width="match_parent"

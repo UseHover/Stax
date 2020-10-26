@@ -12,6 +12,7 @@
 	<string name="nav_transaction">Transaction Details</string>
 	<string name="nav_schedule">Schedule Details</string>
 	<string name="nav_request">Request Details</string>
+	<string name="nav_edit_request">Edit Request Details</string>
 	<string name="nav_language">Language Choice</string>
 	<string name="nav_channels">Choose Channels</string>
 	<string name="nav_sim_permission">Grant SIM permission</string>
@@ -143,6 +144,7 @@
 	<string name="descrip_airtime_sent">%1$s sent airtime to %2$s</string>
 	<string name="descrip_transfer_sent">from %1$s to %2$s</string>
 	<string name="fab_transfernow">Transfer now</string>
+	<string name="edittransfer_cardhead">Edit Transfer</string>
 
 	<!-- Request -->
 	<string name="req_cardhead">Request money</string>
@@ -156,6 +158,7 @@
 	<string name="toast_request_scheduled">Your request has been scheduled. You will be reminded to send a message on %1$s</string>
 	<string name="descrip_request">Request from %1$s</string>
 	<string name="descrip_airtime_sched">buy airtime with %1$s for %2$s</string>
+	<string name="editreq_cardhead">Edit Request</string>
 
 	<!-- Scheduling -->
 	<string name="future_toggle">Send in the future</string>
