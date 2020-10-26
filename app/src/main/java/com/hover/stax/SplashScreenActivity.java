@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,13 +13,11 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.WorkManager;
 
 import com.amplitude.api.Amplitude;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hover.sdk.api.Hover;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.UpdateChannelsWorker;
-import com.hover.stax.destruct.SelfDestruct;
+import com.hover.stax.destruct.SelfDestructActivity;
 import com.hover.stax.home.MainActivity;
-import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.schedules.ScheduleWorker;
 import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.utils.UIHelper;
@@ -34,8 +31,8 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (SelfDestruct.isTime(this)) {
-			startActivity(new Intent(this, SelfDestruct.class));
+		if (SelfDestructActivity.isTime(this)) {
+			startActivity(new Intent(this, SelfDestructActivity.class));
 			finish();
 			return;
 		}
