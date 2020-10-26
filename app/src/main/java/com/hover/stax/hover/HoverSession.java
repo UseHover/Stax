@@ -24,9 +24,9 @@ import java.util.List;
 final public class HoverSession {
 	private final static String TAG = "HoverCaller";
 
-	private Fragment frag;
-	private Channel channel;
-	private int requestCode, finalScreenTime;
+	final private Fragment frag;
+	final private Channel channel;
+	final private int requestCode, finalScreenTime;
 
 	private HoverSession(Builder b) {
 		Hover.setAfterPermissionReturnActivity(Hover.DEFAULT_PERM_ACTIVITY, b.activity);
@@ -36,7 +36,7 @@ final public class HoverSession {
 		finalScreenTime = b.finalScreenTime;
 		HoverParameters.Builder builder = getBasicBuilder(b);
 		addExtras(builder, b.extras, b.action);
-		addPin(builder, b.action, b.activity);
+		addPin(builder, b.activity);
 		startHover(builder, b.activity);
 	}
 
@@ -70,7 +70,7 @@ final public class HoverSession {
 		return value;
 	}
 
-	private void addPin(HoverParameters.Builder builder, Action action, Activity a) {
+	private void addPin(HoverParameters.Builder builder, Activity a) {
 		builder.extra(Action.PIN_KEY, KeyStoreExecutor.decrypt(channel.pin, a));
 	}
 

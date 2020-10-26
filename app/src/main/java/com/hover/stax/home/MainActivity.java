@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -26,6 +27,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.database.Constants;
 import com.hover.stax.hover.HoverSession;
@@ -38,6 +40,8 @@ import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
 	BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener {
@@ -87,12 +91,24 @@ public class MainActivity extends AppCompatActivity implements
 	public void startRun(Action a, int i) {
 		if (i == 0)
 			new BiometricChecker(this, this).startAuthentication(a);
-		else run(a, i);
+		else
+			run(a, i);
 	}
 
 	private void run(Action action, int index) {
-		new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), this, index)
+		if (balancesViewModel.getChannel(action.channel_id) != null) {
+			new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), this, index)
 				.finalScreenTime(0).run();
+		} else // Possible fix for auth issue on OnePlus 6
+			balancesViewModel.getSelectedChannels().observe(this, new Observer<List<Channel>>() {
+				@Override
+				public void onChanged(List<Channel> channels) {
+					if (channels != null && balancesViewModel.getChannel(channels, action.channel_id) != null) {
+						run(action, 0);
+						balancesViewModel.getSelectedChannels().removeObserver(this);
+					}
+				}
+			});
 	}
 
 	@Override
@@ -102,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements
 
 	@Override
 	public void onAuthSuccess(Action act) {
-		run(act, 0);
+			run(act, 0);
 	}
 
 	@Override
