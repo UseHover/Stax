@@ -43,4 +43,5 @@
 	<string name="biometrics_not_setup" translatable="false">Device auth not setup</string>
 	<string name="biometrics_failed" translatable="false">Device auth failed</string>
 	<string name="biometrics_succeeded" translatable="false">Device auth successful</string>
+	<string name="sdk_failure" translatable="false">SDK failed to parse properly, returned null data on activity result</string>
 </resources>

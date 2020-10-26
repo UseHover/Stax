@@ -7,7 +7,9 @@
 
 	<com.google.android.material.textfield.TextInputLayout
 		android:id="@+id/amountEntry"
+	    	android:padding="@dimen/margin_16"
 		android:layout_width="match_parent"
+	    	android:fontFamily="font-normal"
 		android:layout_height="wrap_content"
 		android:hint="@string/amount_label_opt"
 		style="@style/StaxLabeledInput">
@@ -17,6 +19,7 @@
 			android:layout_height="wrap_content"
 			android:padding="@dimen/margin_13"
 			android:textSize="@dimen/text_21"
+		    	android:fontFamily="font-normal"
 			android:textColor="@color/offWhite"
 			android:textCursorDrawable="@null"
 			android:inputType="numberDecimal"

@@ -3,6 +3,7 @@ package com.hover.stax.views;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +18,11 @@ import com.hover.stax.R;
 public class StaxCardView extends FrameLayout {
 
 	private String title;
-	private boolean showBack;
+	private boolean showBack, backClickable;
 	private LinearLayout contentView;
 	private ImageButton backButton;
+	private int backDrawable = 0;
+	private int bgColor;
 
 	public StaxCardView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -35,6 +38,9 @@ public class StaxCardView extends FrameLayout {
 		try {
 			title = a.getString(R.styleable.StaxCardView_title);
 			showBack = a.getBoolean(R.styleable.StaxCardView_showBack, false);
+			backClickable = a.getBoolean(R.styleable.StaxCardView_backClickable, true);
+			backDrawable = a.getResourceId(R.styleable.StaxCardView_backRes, 0);
+			bgColor = a.getColor(R.styleable.StaxCardView_staxCardColor, context.getResources().getColor(R.color.colorPrimary));
 		} finally {
 			a.recycle();
 		}
@@ -44,9 +50,10 @@ public class StaxCardView extends FrameLayout {
 		if (title != null) ((TextView) findViewById(R.id.title)).setText(title);
 		else findViewById(R.id.header).setVisibility(GONE);
 
-		backButton.setOnClickListener(view -> triggerBack());
-		if (showBack)
-			backButton.setVisibility(VISIBLE);
+		if(backClickable) backButton.setOnClickListener(view -> triggerBack());
+		if (showBack) backButton.setVisibility(VISIBLE);
+		if(backDrawable != 0) backButton.setImageResource(backDrawable);
+		contentView.setBackgroundColor(bgColor);
 	}
 
 	@Override

@@ -1,14 +1,17 @@
 package com.hover.stax.transactions;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
+import com.hover.stax.database.Constants;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.Utils;
 
@@ -17,11 +20,14 @@ import java.util.List;
 public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionHistoryAdapter.HistoryViewHolder> {
 	private List<StaxTransaction> transactionList;
 	private final SelectListener selectListener;
+	private Context context;
 
-	public TransactionHistoryAdapter(List<StaxTransaction> transactions, SelectListener selectListener) {
+	public TransactionHistoryAdapter( List<StaxTransaction> transactions, SelectListener selectListener, Context context) {
 		this.transactionList = transactions;
 		this.selectListener = selectListener;
+		this.context = context;
 	}
+
 
 	@NonNull
 	@Override
@@ -33,6 +39,18 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 	@Override
 	public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
 		StaxTransaction t = transactionList.get(position);
+			if(t.status.equals(Constants.PENDING)) {
+				holder.parentLayout.setBackgroundColor(context.getResources().getColor(R.color.cardDarkBlue));
+				holder.pendingNotice.setVisibility(View.VISIBLE);
+
+			}
+			else {
+				holder.parentLayout.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
+				holder.pendingNotice.setVisibility(View.GONE);
+			}
+
+
+
 		holder.content.setText(t.description.substring(0, 1).toUpperCase() + t.description.substring(1));
 		holder.amount.setText("-" + Utils.formatAmount(t.amount));
 		holder.date.setVisibility(shouldShowDate(t, position) ? View.VISIBLE : View.GONE);
@@ -54,13 +72,16 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 	}
 
 	static class HistoryViewHolder extends RecyclerView.ViewHolder {
-		private TextView content, amount, date;
+		private TextView content, amount, date, pendingNotice;
+		private LinearLayout parentLayout;
 
 		HistoryViewHolder(@NonNull View itemView) {
 			super(itemView);
+			parentLayout = itemView.findViewById(R.id.transaction_item_layout);
 			content = itemView.findViewById(R.id.trans_content);
 			amount = itemView.findViewById(R.id.trans_amount);
 			date = itemView.findViewById(R.id.trans_date);
+			pendingNotice = itemView.findViewById(R.id.pending_notify_in_list);
 		}
 	}
 

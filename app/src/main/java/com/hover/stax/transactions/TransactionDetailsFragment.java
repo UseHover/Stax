@@ -15,9 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
+import com.hover.stax.database.Constants;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.views.StaxCardView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,6 +50,8 @@ public class TransactionDetailsFragment extends Fragment {
 				((TextView) view.findViewById(R.id.details_transactionNumber)).setText(transaction.uuid);
 				((TextView) view.findViewById(R.id.details_amount)).setText(Utils.formatAmount(transaction.amount));
 				((TextView) view.findViewById(R.id.details_date)).setText(DateUtils.humanFriendlyDate(transaction.initiated_at));
+
+				view.findViewById(R.id.pending_notify_in_details).setVisibility(transaction.status.equals(Constants.PENDING) ? View.VISIBLE : View.GONE);
 			}
 		});
 

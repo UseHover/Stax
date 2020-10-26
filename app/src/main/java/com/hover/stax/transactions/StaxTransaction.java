@@ -13,6 +13,7 @@ import androidx.room.PrimaryKey;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.database.Constants;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.Utils;
 
@@ -44,7 +45,7 @@ public class StaxTransaction {
 	public int channel_id;
 
 	@NonNull
-	@ColumnInfo(name = "status")
+	@ColumnInfo(name = "status", defaultValue = Constants.PENDING)
 	public String status;
 
 	@NonNull

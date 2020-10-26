@@ -9,13 +9,14 @@
 	<TableLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginHorizontal="@dimen/margin_3">
+		android:layout_marginHorizontal="@dimen/margin_16">
 
 		<TableRow android:id="@+id/recipientRow">
 
 			<TextView
 				android:text="@string/reqfrom_label"
 				android:textColor="@color/offWhite"
+			    	android:fontFamily="font-normal"
 				android:textSize="@dimen/text_16" />
 
 			<LinearLayout android:id="@+id/recipientValueList"
@@ -29,6 +30,7 @@
 			<TextView
 				android:text="@string/amount_cardhead"
 				android:textColor="@color/offWhite"
+			    	android:fontFamily="font-normal"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/amountValue"
@@ -43,6 +45,7 @@
 			<TextView
 				android:text="@string/note_cardhead"
 				android:textColor="@color/offWhite"
+			    	android:fontFamily="font-normal"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/noteValue"
@@ -57,6 +60,7 @@
 			<TextView
 				android:text="@string/date_label"
 				android:textColor="@color/offWhite"
+			    	android:fontFamily="font-normal"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/dateValue"
@@ -72,6 +76,7 @@
 			<TextView
 				android:text="@string/repeatfreq_label"
 				android:textColor="@color/offWhite"
+			    	android:fontFamily="font-normal"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/frequencyValue"
@@ -87,6 +92,7 @@
 			<TextView
 				android:text="@string/end_label"
 				android:textColor="@color/offWhite"
+			    	android:fontFamily="font-normal"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/endDateValue"
@@ -102,6 +108,7 @@
 			<TextView
 				android:text="@string/repeatnum_label"
 				android:textColor="@color/offWhite"
+			    	android:fontFamily="font-normal"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/repeatTimesValue"
@@ -117,6 +124,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:visibility="gone"
+	    	android:paddingHorizontal="@dimen/margin_16"
 		android:layout_marginTop="@dimen/margin_21">
 
 		<androidx.appcompat.widget.AppCompatButton

@@ -149,6 +149,9 @@
 	<string name="descrip_airtime_sent">%1$s sent airtime to %2$s</string>
 	<string name="descrip_transfer_sent">from %1$s to %2$s</string>
 	<string name="fab_transfernow">Transfer now</string>
+	<string name="transfer_sent_waiting_confirmation">Transaction sent. Waiting for confirmation.</string>
+	<string name="waiting_for_confirmation_title">WAITING FOR CONFIRMATION</string>
+	<string name="waiting_for_confirmation_desc">The USSD session is complete, but we have not received a confirmation SMS yet.</string>
 
 	<!-- Request -->
 	<string name="req_cardhead">Request money</string>
@@ -245,6 +248,8 @@
 	<string name="btn_download">Download new version</string>
 	<string name="uninstall_cardbody">Your update is downloading. \n\nClick the button below to uninstall this version. Once your download is complete tap the notification to install the new version.</string>
 	<string name="btn_uninstall">Uninstall</string>
+	<string name="stax_update">Stax  update</string>
+	<string name="downloading">Downloading</string>
 
 	<!-- Time -->
 	<string name="timeago_ago">%1$s ago</string>
@@ -261,9 +266,12 @@
 	<string name="timeago_year">about a year</string>
 	<string name="timeago_years">%1$d years</string>
 
+	<!-- SWIPE REFRESH -->
 	<string name="csr_text_state_normal">Swipe  to  refresh balance </string>
 	<string name="csr_text_state_ready">Release to refresh balance</string>
 	<string name="csr_text_state_refresh">Refreshing balance …   </string>
 	<string name="csr_text_state_complete">Refreshing balance complete </string>
 	<string name="csr_text_last_refresh">last update:  </string>
+
+
 </resources>

@@ -8,12 +8,14 @@
 	<androidx.recyclerview.widget.RecyclerView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginHorizontal="@dimen/margin_3"
+		android:layout_marginHorizontal="@dimen/margin_16"
 		android:layout_marginBottom="@dimen/margin_21"
 		android:id="@+id/balances_recyclerView" />
 
 	<RelativeLayout
 		android:layout_width="match_parent"
+	    	android:layout_marginBottom="@dimen/margin_16"
+	    	android:layout_marginHorizontal="@dimen/margin_16"
 		android:layout_height="wrap_content">
 
 			<androidx.appcompat.widget.AppCompatButton

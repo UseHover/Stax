@@ -23,6 +23,9 @@ public interface TransactionDao {
 	@Query("SELECT * FROM stax_transactions WHERE transaction_type != 'balance' AND status == 'succeeded'")
 	LiveData<List<StaxTransaction>> getCompleteTransfers();
 
+	@Query("SELECT * FROM stax_transactions WHERE transaction_type != 'balance' AND status == 'succeeded' OR status == 'pending'")
+	LiveData<List<StaxTransaction>> getCompleteAndPendingTransfers();
+
 	@Query("SELECT * FROM stax_transactions WHERE uuid = :uuid LIMIT 1")
 	StaxTransaction getTransaction(String uuid);
 

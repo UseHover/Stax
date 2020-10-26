@@ -13,7 +13,7 @@
 		<TextView android:id="@+id/phone_description"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginHorizontal="@dimen/margin_3"
+			android:layout_marginHorizontal="@dimen/margin_16"
 			android:lineSpacingExtra="@dimen/text_spacing_8"
 			android:textColor="@color/offWhite"
 			android:text="@string/simperm_cardbody" />
@@ -25,6 +25,8 @@
 		<RelativeLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+		    	android:layout_marginHorizontal="@dimen/margin_16"
+		    	android:paddingBottom="@dimen/margin_16"
 			android:layout_marginTop="@dimen/margin_21">
 
 			<androidx.appcompat.widget.AppCompatButton

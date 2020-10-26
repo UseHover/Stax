@@ -1,5 +1,6 @@
 package com.hover.stax.home;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -125,7 +126,8 @@ public class MainActivity extends AppCompatActivity implements
 
 		switch (requestCode) {
 			case Constants.TRANSFER_REQUEST:
-				if (resultCode == RESULT_OK) { onProbableHoverCall(data); }
+				if (resultCode == RESULT_OK && data != null && data.getAction() != null) { onProbableHoverCall(data); }
+				else Amplitude.getInstance().logEvent(getString(R.string.sdk_failure));
 				break;
 			case Constants.ADD_SERVICE:
 				onAddServices(resultCode);
@@ -182,10 +184,9 @@ public class MainActivity extends AppCompatActivity implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				onBackPressed();
-				return true;
+		if (item.getItemId() == android.R.id.home) {
+			onBackPressed();
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -235,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements
 		}
 	}
 
+	@SuppressLint("UseCompatLoadingForDrawables")
 	FloatingActionButton setupFloatingButton() {
 		FloatingActionButton fab = findViewById(R.id.fab);
 		fab.setOnClickListener(view -> {

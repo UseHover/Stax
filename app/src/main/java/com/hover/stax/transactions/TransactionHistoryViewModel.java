@@ -3,12 +3,14 @@ package com.hover.stax.transactions;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.hover.sdk.transactions.TransactionContract;
+import com.hover.stax.actions.Action;
 import com.hover.stax.database.DatabaseRepo;
 
 import java.util.List;
@@ -25,7 +27,7 @@ public class TransactionHistoryViewModel extends AndroidViewModel {
 		repo = new DatabaseRepo(application);
 
 		transactions = new MutableLiveData<>();
-		transactions = repo.getCompleteTransferTransactions();
+		transactions = repo.getCompleteAndPendingTransferTransactions();
 	}
 
 	public LiveData<List<StaxTransaction>> getStaxTransactions() {

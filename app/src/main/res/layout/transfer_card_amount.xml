@@ -9,6 +9,7 @@
 		android:id="@+id/amountEntry"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+	    	android:padding="@dimen/margin_16"
 		android:hint="@string/amount_label"
 	    	android:fontFamily="font-normal"
 		style="@style/StaxLabeledInput">

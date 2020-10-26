@@ -9,6 +9,7 @@
 		style="@style/StaxLabeledDropdown"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+	    	android:padding="@dimen/margin_16"
 	    	android:fontFamily="font-normal"
 		android:hint="@string/network_label">
 

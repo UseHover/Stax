@@ -7,7 +7,7 @@
 		<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:paddingVertical="@dimen/margin_5"
+			android:padding="@dimen/margin_16"
 			android:orientation="horizontal" >
 
 			<com.google.android.material.switchmaterial.SwitchMaterial
@@ -21,6 +21,7 @@
 				android:layout_height="wrap_content"
 				android:paddingStart="@dimen/margin_8"
 				android:textSize="@dimen/text_16"
+			    	android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:text="@string/repeat_toggle" />
 		</LinearLayout>
@@ -28,6 +29,7 @@
 	<LinearLayout android:id="@+id/repeatInputs"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+	    	android:paddingHorizontal="@dimen/margin_16"
 		android:orientation="vertical">
 
 		<com.google.android.material.textfield.TextInputLayout
@@ -46,6 +48,7 @@
 				android:background="@null"
 				android:editable="false"
 				android:textSize="@dimen/text_21"
+			    	android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textCursorDrawable="@null" />
 
@@ -55,6 +58,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/margin_21"
+		    	android:fontFamily="font-normal"
 			android:hint="@string/end_label_opt"
 			style="@style/StaxLabeledInput">
 
@@ -66,6 +70,7 @@
 				android:textSize="@dimen/text_21"
 				android:textColor="@color/offWhite"
 				android:background="@null"
+			    	android:fontFamily="font-normal"
 				android:textCursorDrawable="@null"
 				android:drawableEnd="@drawable/ic_calendar"/>
 		</com.google.android.material.textfield.TextInputLayout>
@@ -75,6 +80,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/repeatnum_label_opt"
+		    	android:fontFamily="font-normal"
 			style="@style/StaxLabeledInput">
 
 			<com.google.android.material.textfield.TextInputEditText
@@ -84,6 +90,7 @@
 				android:textSize="@dimen/text_21"
 				android:textColor="@color/offWhite"
 				android:textCursorDrawable="@null"
+			    	android:fontFamily="font-normal"
 				android:inputType="number"
 				android:id="@+id/repeat_times_input"/>
 		</com.google.android.material.textfield.TextInputLayout>
@@ -91,6 +98,7 @@
 		<RelativeLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+		    	android:paddingBottom="@dimen/margin_16"
 			android:layout_marginTop="@dimen/margin_21">
 
 			<androidx.appcompat.widget.AppCompatButton
