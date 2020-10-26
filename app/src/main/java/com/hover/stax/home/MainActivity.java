@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements
 
 	@Override
 	public void onAuthError(String error) {
-		if(swipeRefreshLayout !=null) new Handler(Looper.getMainLooper()).postDelayed(()->swipeRefreshLayout.refreshComplete(), 1000);
 		Log.e(TAG, "error: " + error);
 	}
 
@@ -132,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements
 				if (resultCode == RESULT_OK) { onRequest(data); }
 				break;
 			default: // requestCode < Constants.BALANCE_MAX // Balance call
-				if(swipeRefreshLayout !=null) new Handler(Looper.getMainLooper()).postDelayed(()->swipeRefreshLayout.refreshComplete(), 1000);
 				balancesViewModel.setRan(requestCode);
 				if (resultCode == RESULT_OK && data != null && data.getAction() != null) {
 					onProbableHoverCall(data);
@@ -258,7 +256,6 @@ public class MainActivity extends AppCompatActivity implements
 
 	@Override
 	public void triggerRefresh(CustomSwipeRefreshLayout swipeRefreshLayout) {
-		this.swipeRefreshLayout = swipeRefreshLayout;
 		runAllBalances(null);
 	}
 }

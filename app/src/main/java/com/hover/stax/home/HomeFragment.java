@@ -66,7 +66,10 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	}
 	private void activateSwipeRefresh() {
 		SwipeAllBalanceListener swipeAllBalanceListener = (MainActivity) getActivity();
-		if(swipeAllBalanceListener !=null) swipeRefreshLayout.setOnRefreshListener(() ->swipeAllBalanceListener.triggerRefresh(swipeRefreshLayout));
+		if(swipeAllBalanceListener !=null) swipeRefreshLayout.setOnRefreshListener(() -> {
+			swipeRefreshLayout.refreshComplete();
+			swipeAllBalanceListener.triggerRefresh(swipeRefreshLayout);
+		});
 	}
 
 	private void setUpBalances(View view) {
