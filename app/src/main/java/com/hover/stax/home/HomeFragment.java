@@ -24,6 +24,7 @@ import com.hover.stax.transactions.TransactionHistoryAdapter;
 import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	private FutureViewModel futureViewModel;
 	private TransactionHistoryViewModel transactionsViewModel;
 	private BalanceAdapter balanceAdapter;
+	private CustomSwipeRefreshLayout swipeRefreshLayout;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.e(TAG, "creating view");
@@ -51,6 +53,20 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		setUpBalances(view);
 		setUpFuture(view);
 		setUpHistory(view);
+		setupSwipeRefresh(view);
+	}
+
+	private void setupSwipeRefresh(View view) {
+		swipeRefreshLayout = view.findViewById(R.id.swipelayout);
+			if(swipeRefreshLayout !=null) {
+				swipeRefreshLayout.setRefreshCompleteTimeout(1000);
+				swipeRefreshLayout.enableTopProgressBar(false);
+				swipeRefreshLayout.setOnRefreshListener(() -> swipeRefreshLayout.refreshComplete());
+			}
+	}
+	private void activateSwipeRefresh() {
+		SwipeAllBalanceListener swipeAllBalanceListener = (MainActivity) getActivity();
+		if(swipeAllBalanceListener !=null) swipeRefreshLayout.setOnRefreshListener(() ->swipeAllBalanceListener.triggerRefresh(swipeRefreshLayout));
 	}
 
 	private void setUpBalances(View view) {
@@ -62,7 +78,8 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 			balanceAdapter = new BalanceAdapter(channels, (MainActivity) getActivity());
 			recyclerView.setAdapter(balanceAdapter);
 			recyclerView.setVisibility(channels != null && channels.size() > 0 ? View.VISIBLE : View.GONE);
-			setMeta(view, channels);
+			activateSwipeRefresh();
+			//setMeta(view, channels);
 		});
 	}
 

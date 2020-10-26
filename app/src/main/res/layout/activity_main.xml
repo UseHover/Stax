@@ -4,30 +4,15 @@
 	android:layout_height="match_parent"
 	android:layout_width="match_parent"
 	android:id="@+id/home_root">
-	<com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout
-	    xmlns:swiperefresh="http://schemas.android.com/apk/res-auto"
-	    android:id="@+id/swipelayout"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    swiperefresh:refresh_mode="pull_mode"
-	    swiperefresh:keep_refresh_head="true"
-	    swiperefresh:enable_top_progress_bar="true"
-	    swiperefresh:time_out_refresh_complete="2000"
-	    swiperefresh:time_out_return_to_top="1000"
-	    swiperefresh:return_to_top_duration="500"
-	    swiperefresh:return_to_header_duration="500"
-	    swiperefresh:top_progress_bar_color_2="@color/brightBlue"
-	    swiperefresh:top_progress_bar_color_3="@color/offWhite">
-	<androidx.core.widget.NestedScrollView
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
+
+
 
 		<fragment android:id="@+id/nav_host_fragment"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:name="androidx.navigation.fragment.NavHostFragment"
 			app:defaultNavHost="true"
+
 			app:navGraph="@navigation/home_navigation" />
-	</androidx.core.widget.NestedScrollView>
-	</com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout>>
+
 </com.hover.stax.views.StaxNavView>

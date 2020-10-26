@@ -22,6 +22,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.amplitude.api.Amplitude;
 import com.google.android.material.bottomappbar.BottomAppBar;
@@ -45,7 +46,7 @@ import com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout;
 
 
 public class MainActivity extends AppCompatActivity implements
-	BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener {
+	BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener, SwipeAllBalanceListener {
 
 	final public static String TAG = "MainActivity";
 	private BalancesViewModel balancesViewModel;
@@ -64,15 +65,9 @@ public class MainActivity extends AppCompatActivity implements
 		balancesViewModel.getToRun().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel"));
 
 		setUpNav();
-		setupSwipeRefresh();
 	}
 
-	private void setupSwipeRefresh() {
-		swipeRefreshLayout = findViewById(R.id.swipelayout);
-		swipeRefreshLayout.setRefreshCompleteTimeout(1000);
-		swipeRefreshLayout.enableTopProgressBar(false);
-		swipeRefreshLayout.setOnRefreshListener(() -> runAllBalances(swipeRefreshLayout));
-	}
+
 
 	public void addAccount(View view) {
 		Amplitude.getInstance().logEvent(getString(R.string.click_add_account));
@@ -112,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements
 
 	@Override
 	public void onAuthError(String error) {
+		if(swipeRefreshLayout !=null) new Handler(Looper.getMainLooper()).postDelayed(()->swipeRefreshLayout.refreshComplete(), 1000);
 		Log.e(TAG, "error: " + error);
 	}
 
@@ -258,6 +254,12 @@ public class MainActivity extends AppCompatActivity implements
 			popup.show();
 		});
 		return fab;
+	}
+
+	@Override
+	public void triggerRefresh(CustomSwipeRefreshLayout swipeRefreshLayout) {
+		this.swipeRefreshLayout = swipeRefreshLayout;
+		runAllBalances(null);
 	}
 }
 

@@ -44,7 +44,7 @@ public class TransactionReceiver extends BroadcastReceiver {
 				Action a = repo.getAction(intent.getStringExtra("action_id"));
 				t = new StaxTransaction(intent, a, c);
 				t.update(intent);
-				//repo.insert(t);
+				repo.insert(t);
 			} else {
 				t.update(intent);
 				repo.update(t);

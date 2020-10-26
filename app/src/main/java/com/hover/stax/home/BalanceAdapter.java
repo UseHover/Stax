@@ -93,7 +93,6 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 
 	public interface BalanceListener {
 		void onTapRefresh(int channelId);
-
 		void onTapDetail(int channelId);
 	}
 

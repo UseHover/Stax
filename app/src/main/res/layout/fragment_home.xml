@@ -1,20 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/home_content"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-	android:layout_marginTop="@dimen/margin_13"
-	android:paddingBottom="@dimen/margin_55"
-	tools:context=".home.HomeFragment">
+<com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout
+    xmlns:swiperefresh="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+    		android:id="@+id/swipelayout"
+	    swiperefresh:refresh_mode="pull_mode"
+	    swiperefresh:keep_refresh_head="true"
+	    swiperefresh:enable_top_progress_bar="false"
+	    swiperefresh:time_out_refresh_complete="2000"
+	    swiperefresh:time_out_return_to_top="1000"
+	    swiperefresh:return_to_top_duration="500"
+	    swiperefresh:return_to_header_duration="500"
+	    swiperefresh:layout_behavior="@string/appbar_scrolling_view_behavior"
+	    swiperefresh:top_progress_bar_color_2="@color/brightBlue"
+	    swiperefresh:top_progress_bar_color_3="@color/offWhite">
+	<androidx.core.widget.NestedScrollView
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent">
 
-	<include layout="@layout/home_card_header" />
+			<LinearLayout
+			    tools:context=".home.HomeFragment"
+			    android:id="@+id/home_content"
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:orientation="vertical"
+			    android:layout_marginTop="@dimen/margin_13"
+			    android:paddingBottom="@dimen/margin_55"
+			   >
 
-	<include layout="@layout/home_card_balances" />
+				<include layout="@layout/home_card_header" />
 
-	<include android:id="@+id/scheduled_card"
-		layout="@layout/home_card_future" />
+				<include layout="@layout/home_card_balances" />
 
-	<include layout="@layout/home_card_transactions" />
-</LinearLayout>
+				<include android:id="@+id/scheduled_card"
+				    layout="@layout/home_card_future" />
+
+				<include layout="@layout/home_card_transactions" />
+			</LinearLayout>
+	</androidx.core.widget.NestedScrollView>
+	</com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout>

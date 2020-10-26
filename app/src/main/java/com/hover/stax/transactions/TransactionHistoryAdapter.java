@@ -42,14 +42,11 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 			if(t.status.equals(Constants.PENDING)) {
 				holder.parentLayout.setBackgroundColor(context.getResources().getColor(R.color.cardDarkBlue));
 				holder.pendingNotice.setVisibility(View.VISIBLE);
-
 			}
 			else {
 				holder.parentLayout.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
 				holder.pendingNotice.setVisibility(View.GONE);
 			}
-
-
 
 		holder.content.setText(t.description.substring(0, 1).toUpperCase() + t.description.substring(1));
 		holder.amount.setText("-" + Utils.formatAmount(t.amount));

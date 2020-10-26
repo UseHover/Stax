@@ -52,6 +52,16 @@ class ShowcaseExecutor {
 				activity.getString(R.string.onboard_balbody),
 				BubbleShowCase.ArrowPosition.TOP,
 				stagedBubbleListener,
+				((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0).findViewById(R.id.balance_drag),
+				activity);
+	}
+
+	private void showcaseFourthStage() {
+		BubbleShowCase.Companion.showCase(
+				activity.getString(R.string.onboard_refreshhead),
+				activity.getString(R.string.onboard_refreshbody),
+				BubbleShowCase.ArrowPosition.TOP,
+				stagedBubbleListener,
 				root.findViewById(R.id.homeTimeAgo),
 				activity);
 	}
@@ -65,6 +75,8 @@ class ShowcaseExecutor {
 				break;
 			case 1:
 				showcaseThirdStage();
+				break;
+			case 2: showcaseFourthStage();
 				break;
 		}
 		stage++;
