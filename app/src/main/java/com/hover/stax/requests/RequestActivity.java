@@ -1,13 +1,10 @@
 package com.hover.stax.requests;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.provider.ContactsContract;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -58,7 +55,7 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 		dialog = new StaxDialog(this)
 			.setDialogTitle(R.string.reqcancel_head)
 			.setDialogMessage(R.string.reqcancel_msg)
-			.setNegButton(R.string.btn_saveanyway, btn -> returnResult(-1))
+			.setNegButton(R.string.btn_saveanyway, btn -> onFinished(-1))
 			.setPosButton(R.string.btn_cancel, btn ->  cancel())
 			.isDestructive()
 			.showIt();
@@ -100,11 +97,9 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 	private void submit() {
 		if (requestViewModel.getIsFuture().getValue() != null && requestViewModel.getIsFuture().getValue() && requestViewModel.getFutureDate().getValue() != null) {
 			requestViewModel.schedule();
-			returnResult(Constants.SCHEDULE_REQUEST);
-		} else {
-			requestViewModel.saveToDatabase(this);
+			onFinished(Constants.SCHEDULE_REQUEST);
+		} else
 			sendRequest();
-		}
 	}
 
 	private void sendRequest() {
@@ -151,7 +146,7 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 
 	@Override
 	public void onSmsSendEvent(boolean wasSent) {
-		if (wasSent) returnResult(Constants.SMS);
+		if (wasSent) onFinished(Constants.SMS);
 	}
 
 	private void onUpdateStage(@Nullable StagedViewModel.StagedEnum stage) {
@@ -195,23 +190,35 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 			return;
 		}
 		if (requestCode == Constants.SMS) {
-			returnResult(requestCode);
+			onFinished(requestCode);
 		}
 	}
 
-	private void returnResult(int type) {
-		Intent i = new Intent();
-		if (type == Constants.SCHEDULE_REQUEST) {
-			Amplitude.getInstance().logEvent(getString(R.string.clicked_send_request));
-			i.putExtra(Schedule.DATE_KEY, requestViewModel.getFutureDate().getValue());
-		}
-		i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);
-		setResult(RESULT_OK, i);
+	private void onFinished(int type) {
+		requestViewModel.saveToDatabase(this);
+		setResult(RESULT_OK, createSuccessIntent(type));
 		finish();
+	}
+
+	private Intent createSuccessIntent(int type) {
+		Intent i = new Intent();
+		if (type == Constants.SCHEDULE_REQUEST)
+			i.putExtra(Schedule.DATE_KEY, requestViewModel.getFutureDate().getValue());
+		i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);
+		return i;
 	}
 
 	private void cancel() {
 		setResult(RESULT_CANCELED);
 		finish();
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if (dialog != null) {
+			dialog.dismiss();
+			dialog = null;
+		}
 	}
 }
