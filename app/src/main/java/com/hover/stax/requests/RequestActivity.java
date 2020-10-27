@@ -1,29 +1,39 @@
 package com.hover.stax.requests;
 
-import android.annotation.SuppressLint;
+import android.Manifest;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.database.Constants;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
+import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.StagedViewModel;
+import com.hover.stax.utils.UIHelper;
+import com.hover.stax.views.StaxDialog;
 
 import static com.hover.stax.requests.RequestStage.*;
 
-public class RequestActivity extends AppCompatActivity {
+public class RequestActivity extends AppCompatActivity implements SmsSentObserver.SmsSentListener {
 	final public static String TAG = "TransferActivity";
 
 	private NewRequestViewModel requestViewModel;
 	private ScheduleDetailViewModel scheduleViewModel = null;
+
+	AlertDialog dialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +48,17 @@ public class RequestActivity extends AppCompatActivity {
 	protected void onResume() {
 		super.onResume();
 		if (requestViewModel.getStarted().getValue() != null && requestViewModel.getStarted().getValue())
-			returnResult(Constants.SEND_SMS_FOREGROUND);
+			showRequestNotSentDialog();
+	}
+
+	private void showRequestNotSentDialog() {
+		dialog = new StaxDialog(this)
+			.setDialogTitle(R.string.reqcancel_head)
+			.setDialogMessage(R.string.reqcancel_msg)
+			.setNegButton(R.string.btn_saveanyway, btn -> onFinished(-1))
+			.setPosButton(R.string.btn_cancel, btn ->  cancel())
+			.isDestructive()
+			.showIt();
 	}
 
 	private void startObservers() {
@@ -74,24 +94,59 @@ public class RequestActivity extends AppCompatActivity {
 			requestViewModel.goToNextStage();
 	}
 
-	@SuppressLint("NewApi")
 	private void submit() {
 		if (requestViewModel.getIsFuture().getValue() != null && requestViewModel.getIsFuture().getValue() && requestViewModel.getFutureDate().getValue() != null) {
 			requestViewModel.schedule();
-			returnResult(Constants.SCHEDULE_REQUEST);
-		} else {
-			requestViewModel.saveToDatabase(this);
+			onFinished(Constants.SCHEDULE_REQUEST);
+		} else
+			sendRequest();
+	}
+
+	private void sendRequest() {
+		Amplitude.getInstance().logEvent(getString(R.string.clicked_send_request));
+		if (!PermissionUtils.hasSmsPermission(this))
+			requestPermissions(new String[]{Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS}, Constants.SMS);
+		else
 			sendSms();
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		if (requestCode == Constants.SMS && new PermissionHelper(this).permissionsGranted(grantResults)) {
+			Amplitude.getInstance().logEvent(getString(R.string.sms_perm_success));
+			sendSms();
+		} else if (requestCode == Constants.SMS) {
+			Amplitude.getInstance().logEvent(getString(R.string.sms_perm_denied));
+			UIHelper.flashMessage(this, getResources().getString(R.string.toast_error_smsperm));
 		}
 	}
 
 	private void sendSms() {
 		requestViewModel.setStarted();
-		Intent i = new Intent(android.content.Intent.ACTION_VIEW);
-		i.setType("vnd.android-dir/mms-sms");
-		i.putExtra("address", requestViewModel.generateRecipientString());
-		i.putExtra("sms_body", requestViewModel.generateSMS(this));
-		startActivityForResult(i, Constants.SEND_SMS_FOREGROUND);
+		new SmsSentObserver(this, requestViewModel.getRecipients().getValue(), new Handler(), this).start();
+
+		Intent sendIntent = new Intent();
+		sendIntent.setAction(Intent.ACTION_VIEW);
+		sendIntent.setData(Uri.parse("smsto:" + requestViewModel.generateRecipientString()));
+		sendIntent.putExtra(Intent.EXTRA_TEXT, requestViewModel.generateSMS(this));
+		sendIntent.putExtra("sms_body", requestViewModel.generateSMS(this));
+		startActivityForResult(Intent.createChooser(sendIntent, "Request"), Constants.SMS);
+	}
+
+	private void sendWhatsapp() {
+		Intent sendIntent = new Intent();
+		sendIntent.setAction(Intent.ACTION_VIEW);
+
+		// FIXME: Needs to use international number format with no +
+		String whatsapp ="https://api.whatsapp.com/send?phone="+ requestViewModel.generateRecipientString() +"&text=" + requestViewModel.generateSMS(this);
+		sendIntent.setData(Uri.parse(whatsapp));
+		startActivityForResult(sendIntent, Constants.SMS);
+	}
+
+	@Override
+	public void onSmsSendEvent(boolean wasSent) {
+		if (wasSent) onFinished(Constants.SMS);
 	}
 
 	private void onUpdateStage(@Nullable StagedViewModel.StagedEnum stage) {
@@ -134,19 +189,36 @@ public class RequestActivity extends AppCompatActivity {
 		if (resultCode == RESULT_CANCELED) {
 			return;
 		}
-		if (requestCode == Constants.SEND_SMS_FOREGROUND) {
-			returnResult(requestCode);
+		if (requestCode == Constants.SMS) {
+			onFinished(requestCode);
 		}
 	}
 
-	private void returnResult(int type) {
-		Intent i = new Intent();
-		if (type == Constants.SCHEDULE_REQUEST) {
-			Amplitude.getInstance().logEvent(getString(R.string.clicked_send_request));
-			i.putExtra(Schedule.DATE_KEY, requestViewModel.getFutureDate().getValue());
-		}
-		i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);
-		setResult(RESULT_OK, i);
+	private void onFinished(int type) {
+		requestViewModel.saveToDatabase(this);
+		setResult(RESULT_OK, createSuccessIntent(type));
 		finish();
+	}
+
+	private Intent createSuccessIntent(int type) {
+		Intent i = new Intent();
+		if (type == Constants.SCHEDULE_REQUEST)
+			i.putExtra(Schedule.DATE_KEY, requestViewModel.getFutureDate().getValue());
+		i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);
+		return i;
+	}
+
+	private void cancel() {
+		setResult(RESULT_CANCELED);
+		finish();
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if (dialog != null) {
+			dialog.dismiss();
+			dialog = null;
+		}
 	}
 }
