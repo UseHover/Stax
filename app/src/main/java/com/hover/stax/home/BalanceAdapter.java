@@ -48,18 +48,20 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 		holder.channelId.setText(Integer.toString(channel.id));
 		if (channel.latestBalance != null)
 			holder.amount.setText(Utils.formatAmount(channel.latestBalance));
-		holder.amount.setTextColor(Color.parseColor(channel.secondaryColorHex));
-		setColors(holder, channel);
+		setColors(holder, channel,
+			UIHelper.getColor(channel.primaryColorHex, true, holder.itemView.getContext()),
+			UIHelper.getColor(channel.secondaryColorHex, false, holder.itemView.getContext()));
 	}
 
-	private void setColors(BalanceViewHolder holder, Channel channel) {
-		UIHelper.setColoredDrawable(holder.refreshButton, R.drawable.ic_refresh_white_24dp, Color.parseColor(channel.secondaryColorHex));
-		holder.balanced_swiped_layout.setBackgroundColor(Color.parseColor(channel.primaryColorHex));
+	private void setColors(BalanceViewHolder holder, Channel channel, int primary, int secondary) {
+		holder.amount.setTextColor(secondary);
+		UIHelper.setColoredDrawable(holder.refreshButton, R.drawable.ic_refresh_white_24dp, secondary);
+		holder.balanced_swiped_layout.setBackgroundColor(primary);
 		if (Build.VERSION.SDK_INT >= 21) {
 			RippleDrawable rippleDrawable = (RippleDrawable) holder.refreshButton.getBackground(); // assumes bg is a RippleDrawable
 
 			int[][] states = new int[][]{new int[]{android.R.attr.state_enabled}};
-			int[] colors = new int[]{Color.parseColor(channel.secondaryColorHex)};
+			int[] colors = new int[]{ secondary };
 
 			ColorStateList colorStateList = new ColorStateList(states, colors);
 			rippleDrawable.setColor(colorStateList);
