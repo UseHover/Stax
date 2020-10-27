@@ -5,6 +5,8 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -97,18 +99,21 @@ public class MainActivity extends AppCompatActivity implements
 
 	private void run(Action action, int index) {
 		if (balancesViewModel.getChannel(action.channel_id) != null) {
-			new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), this, index)
+			new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), MainActivity.this, index)
 				.finalScreenTime(0).run();
-		} else // Possible fix for auth issue on OnePlus 6
-			balancesViewModel.getSelectedChannels().observe(this, new Observer<List<Channel>>() {
-				@Override
-				public void onChanged(List<Channel> channels) {
-					if (channels != null && balancesViewModel.getChannel(channels, action.channel_id) != null) {
-						run(action, 0);
-						balancesViewModel.getSelectedChannels().removeObserver(this);
+		} else { // Possible fix for auth issue on OnePlus 6
+			new Handler(Looper.getMainLooper()).post(() -> {
+				balancesViewModel.getSelectedChannels().observe(MainActivity.this, new Observer<List<Channel>>() {
+					@Override
+					public void onChanged(List<Channel> channels) {
+						if (channels != null && balancesViewModel.getChannel(channels, action.channel_id) != null) {
+							run(action, 0);
+							balancesViewModel.getSelectedChannels().removeObserver(this);
+						}
 					}
-				}
+				});
 			});
+		}
 	}
 
 	@Override
