@@ -38,12 +38,6 @@ public class EditRequestFragment extends StagedFragment implements RecipientAdap
 	}
 
 	@Override
-	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		requestViewModel.setEditing(true);
-	}
-
-	@Override
 	protected void init(View view) {
 		recipientInputList = view.findViewById(R.id.recipient_list);
 		recipientInputList.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
@@ -54,7 +48,6 @@ public class EditRequestFragment extends StagedFragment implements RecipientAdap
 		amountInput.setText(requestViewModel.getAmount().getValue());
 		noteInput = view.findViewById(R.id.note_input);
 		noteInput.setText(requestViewModel.getNote().getValue());
-//		addRecipientBtn = view.findViewById(R.id.add_recipient_button);
 
 		view.findViewById(R.id.dateEntry).setVisibility(stagedViewModel.getFutureDate().getValue() == null ? View.GONE : View.VISIBLE);
 		view.findViewById(R.id.repeatInputs).setVisibility(stagedViewModel.repeatSaved().getValue() == null || !stagedViewModel.repeatSaved().getValue() ? View.GONE : View.VISIBLE);
@@ -91,8 +84,10 @@ public class EditRequestFragment extends StagedFragment implements RecipientAdap
 		for (int c = 0; c < recipientInputList.getChildCount(); c++)
 			requestViewModel.addRecipient(
 				((TextView) recipientInputList.getChildAt(c).findViewById(R.id.recipient_input)).getText().toString());
-		requestViewModel.setAmount(amountInput.getText().toString());
-		requestViewModel.setNote(noteInput.getText().toString());
+		if (!amountInput.getText().toString().isEmpty())
+			requestViewModel.setAmount(amountInput.getText().toString());
+		if (!noteInput.getText().toString().isEmpty())
+			requestViewModel.setNote(noteInput.getText().toString());
 		NavHostFragment.findNavController(this).navigate(R.id.navigation_new);
 	}
 
@@ -104,5 +99,11 @@ public class EditRequestFragment extends StagedFragment implements RecipientAdap
 
 	protected void onContactSelected(int requestCode, StaxContactModel contact) {
 		((TextView) recipientInputList.getChildAt(requestCode).findViewById(R.id.recipient_input)).setText(contact.getPhoneNumber());
+	}
+
+	@Override
+	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		requestViewModel.setEditing(true);
 	}
 }

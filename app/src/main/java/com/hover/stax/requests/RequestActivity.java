@@ -99,18 +99,20 @@ public class RequestActivity extends AppCompatActivity {
 	}
 
 	private void onUpdateStage(@Nullable StagedViewModel.StagedEnum stage) {
-		Log.e(TAG, "updating stage");
 		if (Navigation.findNavController(this, R.id.nav_host_fragment).getCurrentDestination().getId() == R.id.navigation_edit)
 			((ExtendedFloatingActionButton) findViewById(R.id.fab)).hide();
 		else if (findViewById(R.id.recipientRow) != null) {
-			findViewById(R.id.recipientRow).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
-			findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 && requestViewModel.getAmount().getValue() != null ? View.VISIBLE : View.GONE);
-			findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && requestViewModel.getNote().getValue() != null && !requestViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
-			findViewById(R.id.btnRow).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
-
+			setSummaryCard(stage);
 			setCurrentCard(stage);
 			setFab(stage);
-		} else { Log.e(TAG, "recipient row was null"); }
+		}
+	}
+
+	private void setSummaryCard(@Nullable StagedViewModel.StagedEnum stage) {
+		findViewById(R.id.recipientRow).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 && requestViewModel.getAmount().getValue() != null ? View.VISIBLE : View.GONE);
+		findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && requestViewModel.getNote().getValue() != null && !requestViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
+		findViewById(R.id.btnRow).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
 	}
 
 	private void setCurrentCard(StagedViewModel.StagedEnum stage) {

@@ -111,9 +111,7 @@ public abstract class StagedViewModel extends AndroidViewModel {
 	}
 
 	public LiveData<Long> getEndDate() {
-		if (endDate == null) {
-			endDate = new MutableLiveData<>();
-		}
+		if (endDate == null) { endDate = new MutableLiveData<>(); }
 		return endDate;
 	}
 

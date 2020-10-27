@@ -48,12 +48,6 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 	}
 
 	@Override
-	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		requestViewModel.setEditing(false);
-	}
-
-	@Override
 	protected void init(View view) {
 		recipientValueList = view.findViewById(R.id.recipientValueList);
 		amountValue = view.findViewById(R.id.amountValue);
@@ -142,4 +136,10 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 			requestViewModel.setNote(charSequence.toString());
 		}
 	};
+
+	@Override
+	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		requestViewModel.setEditing(false);
+	}
 }
