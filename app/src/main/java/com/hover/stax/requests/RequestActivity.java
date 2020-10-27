@@ -9,7 +9,6 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.amplitude.api.Amplitude;
@@ -160,5 +159,11 @@ public class RequestActivity extends AppCompatActivity {
 		i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);
 		setResult(RESULT_OK, i);
 		finish();
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (!Navigation.findNavController(findViewById(R.id.nav_host_fragment)).popBackStack())
+			super.onBackPressed();
 	}
 }

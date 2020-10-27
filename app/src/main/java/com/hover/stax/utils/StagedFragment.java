@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -85,7 +84,7 @@ public abstract class StagedFragment extends Fragment {
 		dateDetailListeners(root);
 
 		root.findViewById(R.id.save_btn).setOnClickListener(view -> stagedViewModel.saveRepeat());
-		root.findViewById(R.id.edit_btn).setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(R.id.navigation_edit));
+		root.findViewById(R.id.edit_btn).setOnClickListener(Navigation.createNavigateOnClickListener(R.id.navigation_edit, null));
 	}
 
 	protected void dateDetailListeners(View root) {
