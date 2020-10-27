@@ -17,12 +17,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.amplitude.api.Amplitude;
 import com.google.android.material.bottomappbar.BottomAppBar;
@@ -30,6 +30,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.database.Constants;
 import com.hover.stax.hover.HoverSession;
@@ -44,6 +45,8 @@ import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout;
 
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
 	BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener, SwipeAllBalanceListener {
@@ -96,13 +99,27 @@ public class MainActivity extends AppCompatActivity implements
 	public void startRun(Action a, int i) {
 		if (i == 0)
 			new BiometricChecker(this, this).startAuthentication(a);
-		else run(a, i);
+		else
+			run(a, i);
 	}
 
 	private void run(Action action, int index) {
-		new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), this, index)
-				.finalScreenTime(0)
-				.run();
+		if (balancesViewModel.getChannel(action.channel_id) != null) {
+			new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), MainActivity.this, index)
+				.finalScreenTime(0).run();
+		} else { // Possible fix for auth issue on OnePlus 6
+			new Handler(Looper.getMainLooper()).post(() -> {
+				balancesViewModel.getSelectedChannels().observe(MainActivity.this, new Observer<List<Channel>>() {
+					@Override
+					public void onChanged(List<Channel> channels) {
+						if (channels != null && balancesViewModel.getChannel(channels, action.channel_id) != null) {
+							run(action, 0);
+							balancesViewModel.getSelectedChannels().removeObserver(this);
+						}
+					}
+				});
+			});
+		}
 	}
 
 	@Override
@@ -112,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements
 
 	@Override
 	public void onAuthSuccess(Action act) {
-		run(act, 0);
+			run(act, 0);
 	}
 
 	@Override
@@ -121,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements
 
 		switch (requestCode) {
 			case Constants.TRANSFER_REQUEST:
-				if (resultCode == RESULT_OK && data != null && data.getAction() != null) { onProbableHoverCall(data); }
+				if (resultCode == RESULT_OK && data != null) { onProbableHoverCall(data); }
 				else Amplitude.getInstance().logEvent(getString(R.string.sdk_failure));
 				break;
 			case Constants.ADD_SERVICE:
@@ -140,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements
 	}
 
 	private void onProbableHoverCall(Intent data) {
-		if (data.getAction().equals(Constants.SCHEDULED)) {
+		if (data.getAction() != null && data.getAction().equals(Constants.SCHEDULED)) {
 			UIHelper.flashMessage(this, findViewById(R.id.home_root),
 				getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getIntExtra(Schedule.DATE_KEY, 0))));
 		} else {

@@ -3,29 +3,21 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-
 	app:title="@string/security_cardhead">
 
-	<FrameLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_marginHorizontal="@dimen/margin_16">
-		<androidx.appcompat.widget.AppCompatButton
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:text="@string/removepins_dialoghead"
-
-		    android:id="@+id/removePinsButtonId"
-		    style="@style/StaxButton"
-		    android:backgroundTint="@color/bright_red"
-		    android:fontFamily="font-medium" />
-	</FrameLayout>
-
+	<androidx.appcompat.widget.AppCompatButton
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/removepins_dialoghead"
+		android:id="@+id/removePinsButtonId"
+		style="@style/StaxButton"
+		android:backgroundTint="@color/bright_red"
+		android:fontFamily="font-medium" />
 
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-	    android:layout_marginHorizontal="@dimen/margin_16"
+		android:layout_marginHorizontal="@dimen/margin_3"
 		android:layout_marginTop="@dimen/margin_21"
 		android:textColor="@color/offWhite"
 		android:textSize="@dimen/text_16"
@@ -35,7 +27,7 @@
 	<TextView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-	    	android:layout_marginHorizontal="@dimen/margin_16"
+		android:layout_marginHorizontal="@dimen/margin_3"
 		android:layout_marginTop="@dimen/margin_8"
 		android:layout_marginBottom="@dimen/margin_13"
 		android:fontFamily="font-normal"

@@ -113,7 +113,7 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		rv.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 
 		transactionsViewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
-			rv.setAdapter(new TransactionHistoryAdapter(staxTransactions, HomeFragment.this, getContext()));
+			rv.setAdapter(new TransactionHistoryAdapter(staxTransactions, HomeFragment.this));
 			view.findViewById(R.id.no_history).setVisibility(staxTransactions.size() > 0 ? View.GONE : View.VISIBLE);
 		});
 	}

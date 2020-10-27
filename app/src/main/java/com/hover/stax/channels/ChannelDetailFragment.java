@@ -46,7 +46,7 @@ public class ChannelDetailFragment extends Fragment implements TransactionHistor
 		viewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
 			view.findViewById(R.id.no_history).setVisibility(staxTransactions == null || staxTransactions.size() == 0 ? View.VISIBLE : View.GONE);
 			transactionHistoryRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-			transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions, this, getContext()));
+			transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions, this));
 		});
 
 		viewModel.getSpentThisMonth().observe(getViewLifecycleOwner(), sum -> {

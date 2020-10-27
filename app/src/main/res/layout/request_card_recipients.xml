@@ -14,8 +14,6 @@
 	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-	    	android:paddingHorizontal="@dimen/margin_16"
-	    	android:layout_marginBottom="@dimen/margin_16"
 		android:layout_marginTop="@dimen/margin_21">
 
 		<androidx.appcompat.widget.AppCompatButton

@@ -95,6 +95,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 
 	private void authenticate() {
 		new BiometricChecker(this, this).startAuthentication(transferViewModel.getActiveAction().getValue());
+//		makeHoverCall(transferViewModel.getActiveAction().getValue());
 	}
 
 	@Override

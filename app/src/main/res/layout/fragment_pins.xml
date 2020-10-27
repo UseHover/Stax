@@ -9,7 +9,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginBottom="@dimen/margin_34"
-		android:layout_marginHorizontal="@dimen/margin_16"
+		android:layout_marginHorizontal="@dimen/margin_3"
 		android:lineSpacingExtra="@dimen/text_spacing_8"
 		android:text="@string/pin_cardbody1"
 		android:textColor="@color/offWhite" />
@@ -17,7 +17,7 @@
 	<TextView android:id="@+id/pin_explainer"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginHorizontal="@dimen/margin_16"
+		android:layout_marginHorizontal="@dimen/margin_3"
 		android:lineSpacingExtra="@dimen/text_spacing_8"
 		android:text="@string/pin_cardbody2"
 		android:textColor="@color/offWhite"
@@ -26,14 +26,11 @@
 	<androidx.recyclerview.widget.RecyclerView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-	    	android:paddingHorizontal="@dimen/margin_16"
 		android:id="@+id/pin_recyclerView" />
 
 	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-	    	android:paddingHorizontal="@dimen/margin_16"
-	    android:paddingBottom="@dimen/margin_16"
 		android:layout_marginTop="@dimen/margin_21">
 
 		<androidx.appcompat.widget.AppCompatButton

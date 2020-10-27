@@ -2,14 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-    	android:paddingHorizontal="@dimen/margin_16"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:orientation="vertical">
 
 	<androidx.recyclerview.widget.RecyclerView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginBottom="@dimen/margin_16"
+		android:layout_marginBottom="@dimen/margin_21"
 		android:id="@+id/selected_recycler" />
 
 	<TextView
@@ -28,8 +27,8 @@
 		android:layout_marginHorizontal="@dimen/margin_3"
 		app:drawableStartCompat="@drawable/ic_check"
 		android:drawablePadding="@dimen/margin_5"
-	      android:layout_marginBottom="4dp"
-	    	android:fontFamily="font-normal"
+		android:layout_marginBottom="4dp"
+		android:fontFamily="font-normal"
 		android:textColor="@color/offWhite"
 		android:text="@string/sms_cardbody"/>
 
@@ -39,8 +38,8 @@
 		android:layout_marginHorizontal="@dimen/margin_3"
 		app:drawableStartCompat="@drawable/ic_check"
 		android:drawablePadding="@dimen/margin_5"
-	    	android:fontFamily="font-normal"
-	    	android:layout_marginBottom="4dp"
+		android:fontFamily="font-normal"
+		android:layout_marginBottom="4dp"
 		android:textColor="@color/offWhite"
 		android:text="@string/overlay_cardbody"/>
 
@@ -51,7 +50,7 @@
 		app:drawableStartCompat="@drawable/ic_check"
 		android:drawablePadding="@dimen/margin_5"
 		android:textColor="@color/offWhite"
-	    	android:fontFamily="font-normal"
+        android:fontFamily="font-normal"
 		android:text="@string/access_cardbody"/>
 
 </LinearLayout>

@@ -7,8 +7,8 @@
 		<LinearLayout android:id="@+id/futureToggle"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_margin="@dimen/margin_16"
-
+			android:layout_marginHorizontal="@dimen/margin_3"
+			android:paddingVertical="@dimen/margin_8"
 			android:gravity="center_vertical"
 			android:orientation="horizontal" >
 
@@ -28,17 +28,12 @@
 				android:text="@string/future_toggle" />
 		</LinearLayout>
 
-	<FrameLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_marginHorizontal="@dimen/margin_16">
 		<com.google.android.material.textfield.TextInputLayout
 			android:id="@+id/dateEntry"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-		    	android:layout_marginVertical="@dimen/margin_16"
+			android:layout_marginTop="@dimen/margin_21"
 			android:hint="@string/date_label"
-		    	android:fontFamily="font-normal"
 			style="@style/StaxLabeledInput">
 
 			<com.google.android.material.textfield.TextInputEditText
@@ -49,9 +44,7 @@
 				android:textSize="@dimen/text_21"
 				android:textColor="@color/offWhite"
 				android:background="@null"
-			    	android:fontFamily="font-normal"
 				android:textCursorDrawable="@null"
 				android:drawableEnd="@drawable/ic_calendar"/>
 		</com.google.android.material.textfield.TextInputLayout>
-	</FrameLayout>
 </com.hover.stax.views.StaxCardView>

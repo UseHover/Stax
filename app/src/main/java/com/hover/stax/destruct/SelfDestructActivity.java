@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,7 +21,7 @@ import com.hover.stax.utils.Utils;
 
 import java.util.Date;
 
-public class SelfDestruct extends AppCompatActivity {
+public class SelfDestructActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -54,12 +55,13 @@ public class SelfDestruct extends AppCompatActivity {
 		Uri uri = Uri.parse("http://maven.usehover.com/apps/stax_release.apk");
 
 		DownloadManager.Request request = new DownloadManager.Request(uri);
-		request.setTitle(getResources().getString(R.string.stax_update));
-		request.setDescription(getResources().getString(R.string.downloading));
+		request.setTitle(getResources().getString(R.string.notify_download_head));
+		request.setDescription(getResources().getString(R.string.notify_download_body));
 		request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 		request.setVisibleInDownloadsUi(true);
 		request.setDestinationInExternalPublicDir("", "stax.apk");
-		if(downloadmanager !=null) {
+		request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "stax.apk");
+		if (downloadmanager != null) {
 			downloadmanager.enqueue(request);
 			updateView();
 		}

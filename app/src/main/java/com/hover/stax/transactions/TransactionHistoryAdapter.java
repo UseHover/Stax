@@ -20,14 +20,11 @@ import java.util.List;
 public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionHistoryAdapter.HistoryViewHolder> {
 	private List<StaxTransaction> transactionList;
 	private final SelectListener selectListener;
-	private Context context;
 
-	public TransactionHistoryAdapter( List<StaxTransaction> transactions, SelectListener selectListener, Context context) {
+	public TransactionHistoryAdapter( List<StaxTransaction> transactions, SelectListener selectListener) {
 		this.transactionList = transactions;
 		this.selectListener = selectListener;
-		this.context = context;
 	}
-
 
 	@NonNull
 	@Override
@@ -40,11 +37,11 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 	public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
 		StaxTransaction t = transactionList.get(position);
 			if(t.status.equals(Constants.PENDING)) {
-				holder.parentLayout.setBackgroundColor(context.getResources().getColor(R.color.cardDarkBlue));
+				holder.parentLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.cardDarkBlue));
 				holder.pendingNotice.setVisibility(View.VISIBLE);
 			}
 			else {
-				holder.parentLayout.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
+				holder.parentLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.colorPrimary));
 				holder.pendingNotice.setVisibility(View.GONE);
 			}
 
