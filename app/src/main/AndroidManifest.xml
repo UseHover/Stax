@@ -48,7 +48,7 @@
 		<activity android:name=".requests.RequestActivity"
 			android:theme="@style/StaxTheme"
 			android:windowSoftInputMode="stateVisible|adjustResize" />
-		<activity android:name=".destruct.SelfDestruct" />
+		<activity android:name=".destruct.SelfDestructActivity" />
 
 		<receiver
 			android:name=".hover.TransactionReceiver"
@@ -56,6 +56,16 @@
 			android:exported="false">
 			<intent-filter>
 				<action android:name="com.hover.stax.TRANSACTION_UPDATE" />
+			</intent-filter>
+		</receiver>
+
+		<receiver
+			android:name=".requests.SmsReceiver"
+			android:enabled="true"
+			android:exported="true"
+			android:permission="android.permission.BROADCAST_SMS">
+			<intent-filter android:priority="999">
+				<action android:name="android.provider.Telephony.SMS_RECEIVED" />
 			</intent-filter>
 		</receiver>
 

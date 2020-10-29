@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,7 +21,7 @@ import com.hover.stax.utils.Utils;
 
 import java.util.Date;
 
-public class SelfDestruct extends AppCompatActivity {
+public class SelfDestructActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,7 +59,7 @@ public class SelfDestruct extends AppCompatActivity {
 		request.setDescription("Downloading");
 		request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 		request.setVisibleInDownloadsUi(true);
-		request.setDestinationInExternalPublicDir("", "stax.apk");
+		request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "stax.apk");
 		downloadmanager.enqueue(request);
 		updateView();
 	}

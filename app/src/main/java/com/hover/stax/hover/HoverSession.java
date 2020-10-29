@@ -29,9 +29,9 @@ import java.util.List;
 final public class HoverSession {
 	private final static String TAG = "HoverCaller";
 
-	private Fragment frag;
-	private Channel channel;
-	private int requestCode, finalScreenTime;
+	final private Fragment frag;
+	final private Channel channel;
+	final private int requestCode, finalScreenTime;
 
 
 	private HoverSession(Builder b) {
