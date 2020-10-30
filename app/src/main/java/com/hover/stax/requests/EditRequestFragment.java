@@ -16,16 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
 import com.hover.stax.transfers.StaxContactModel;
-import com.hover.stax.utils.DateUtils;
-import com.hover.stax.utils.StagedFragment;
+import com.hover.stax.utils.EditStagedFragment;
 import com.hover.stax.utils.UIHelper;
 
-public class EditRequestFragment extends StagedFragment implements RecipientAdapter.UpdateListener {
+public class EditRequestFragment extends EditStagedFragment implements RecipientAdapter.UpdateListener {
 
 	protected NewRequestViewModel requestViewModel;
 
 	private RecyclerView recipientInputList;
-	private RecipientAdapter recipientAdapter;
 	private EditText amountInput, noteInput;
 
 	@Override
@@ -41,7 +39,7 @@ public class EditRequestFragment extends StagedFragment implements RecipientAdap
 	protected void init(View view) {
 		recipientInputList = view.findViewById(R.id.recipient_list);
 		recipientInputList.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-		recipientAdapter = new RecipientAdapter(requestViewModel.getRecipients().getValue(), this);
+		RecipientAdapter recipientAdapter = new RecipientAdapter(requestViewModel.getRecipients().getValue(), this);
 		recipientInputList.setAdapter(recipientAdapter);
 
 		amountInput = view.findViewById(R.id.amount_input);
@@ -49,37 +47,10 @@ public class EditRequestFragment extends StagedFragment implements RecipientAdap
 		noteInput = view.findViewById(R.id.note_input);
 		noteInput.setText(requestViewModel.getNote().getValue());
 
-		view.findViewById(R.id.dateEntry).setVisibility(stagedViewModel.getFutureDate().getValue() == null ? View.GONE : View.VISIBLE);
-		view.findViewById(R.id.repeatInputs).setVisibility(stagedViewModel.repeatSaved().getValue() == null || !stagedViewModel.repeatSaved().getValue() ? View.GONE : View.VISIBLE);
-
 		super.init(view);
 	}
 
-	@Override
-	protected void startObservers(View root) {
-		stagedViewModel.getFutureDate().observe(getViewLifecycleOwner(), futureDate -> {
-			((TextView) root.findViewById(R.id.dateInput)).setText(futureDate == null ? "" : DateUtils.humanFriendlyDate(futureDate));
-		});
-
-		stagedViewModel.getFrequency().observe(getViewLifecycleOwner(), frequency -> {
-			((TextView) root.findViewById(R.id.repeat_times_input)).setText(null);
-		});
-		stagedViewModel.getEndDate().observe(getViewLifecycleOwner(), endDate -> {
-			((TextView) root.findViewById(R.id.endDateInput)).setText(endDate == null ? "" : DateUtils.humanFriendlyDate(endDate));
-		});
-		stagedViewModel.getRepeatTimes().observe(getViewLifecycleOwner(), repeatTimes -> {
-			if (repeatTimes != null && !repeatTimes.toString().equals(((EditText) root.findViewById(R.id.repeat_times_input)).getText().toString()))
-				((EditText) root.findViewById(R.id.repeat_times_input)).setText(repeatTimes.toString());
-		});
-	}
-
-	@Override
-	protected void startListeners(View root) {
-		dateDetailListeners(root);
-		root.findViewById(R.id.save_edits_btn).setOnClickListener(v -> save());
-	}
-
-	private void save() {
+	protected void save() {
 		requestViewModel.resetRecipients();
 		for (int c = 0; c < recipientInputList.getChildCount(); c++)
 			requestViewModel.addRecipient(
@@ -99,11 +70,5 @@ public class EditRequestFragment extends StagedFragment implements RecipientAdap
 
 	protected void onContactSelected(int requestCode, StaxContactModel contact) {
 		((TextView) recipientInputList.getChildAt(requestCode).findViewById(R.id.recipient_input)).setText(contact.getPhoneNumber());
-	}
-
-	@Override
-	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		requestViewModel.setEditing(true);
 	}
 }

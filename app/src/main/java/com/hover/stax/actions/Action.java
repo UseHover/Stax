@@ -86,16 +86,25 @@ public class Action {
 	@NotNull
 	@Override
 	public String toString() {
-		if (transaction_type.equals(P2P) || transaction_type.equals(ME2ME) || transaction_type.equals(C2B))
-			return to_institution_name != null && !to_institution_name.equals("null") ? to_institution_name : "Phone number";
+		if (transaction_type.equals(P2P) || transaction_type.equals(C2B) || transaction_type.equals(ME2ME))
+			return to_institution_name != null && !to_institution_name.equals("null") ? to_institution_name : (transaction_type.equals(ME2ME) ? "Myself" : "Phone number");
+
 		if (requiresRecipient()) // airtime
 			return "Someone else";
 		else
 			return "Myself";
 	}
 
+	public String getLabel() {
+			return to_institution_name != null && !to_institution_name.equals("null") ? "Recipient network" : null;
+	}
+
 	public boolean hasToInstitution() {
 		return to_institution_name != null && !to_institution_name.equals("null");
+	}
+
+	public boolean hasDiffToInstitution() {
+		return !hasToInstitution() || from_institution_id != to_institution_id;
 	}
 
 	public boolean requiresRecipient() {

@@ -225,7 +225,8 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 
 	@Override
 	public void onBackPressed() {
-		if (!Navigation.findNavController(findViewById(R.id.nav_host_fragment)).popBackStack())
+		if (Navigation.findNavController(findViewById(R.id.nav_host_fragment)).getCurrentDestination().getId() != R.id.navigation_edit ||
+			    !Navigation.findNavController(findViewById(R.id.nav_host_fragment)).popBackStack())
 			super.onBackPressed();
 	}
 
