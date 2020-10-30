@@ -92,7 +92,7 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		});
 		requestViewModel.getRecipientError().observe(getViewLifecycleOwner(), recipientError -> {
 			if (recipientInputList.getChildAt(0) == null) return;
-			TextInputLayout v = recipientInputList.getChildAt(0).findViewById(R.id.recipientEntry);
+			TextInputLayout v = recipientInputList.getChildAt(0).findViewById(R.id.recipientLabel);
 			v.setError((recipientError != null ? getString(recipientError) : null));
 			v.setErrorIconDrawable(0);
 		});

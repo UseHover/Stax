@@ -116,7 +116,12 @@ public class TransferFragment extends StagedFragment {
 		});
 
 		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
-			if (action != null) actionValue.setText(action.toString());
+			if (action != null) {
+				actionValue.setText(action.toString());
+				actionLabel.setText(action.getLabel());
+				if (!action.requiresRecipient())
+					recipientValue.setText(action.toString());
+			}
 		});
 
 		transferViewModel.getActiveChannel().observe(getViewLifecycleOwner(), c -> {

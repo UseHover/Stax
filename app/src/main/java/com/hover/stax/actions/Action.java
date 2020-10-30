@@ -87,7 +87,7 @@ public class Action {
 	@Override
 	public String toString() {
 		if (transaction_type.equals(P2P) || transaction_type.equals(C2B) || transaction_type.equals(ME2ME))
-			return to_institution_name != null && !to_institution_name.equals("null") ? to_institution_name : (transaction_type.equals(ME2ME) ? "Myself" : "Phone number");
+			return to_institution_name != null && !to_institution_name.equals("null") ? to_institution_name : (transaction_type.equals(ME2ME) ? "Myself" : from_institution_name);
 
 		if (requiresRecipient()) // airtime
 			return "Someone else";
@@ -104,7 +104,7 @@ public class Action {
 	}
 
 	public boolean hasDiffToInstitution() {
-		return !hasToInstitution() || from_institution_id != to_institution_id;
+		return hasToInstitution() && from_institution_id != to_institution_id;
 	}
 
 	public boolean requiresRecipient() {

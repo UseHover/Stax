@@ -77,7 +77,7 @@ public class EditTransferFragment extends EditStagedFragment {
 			if (actions == null || actions.size() == 0) return;
 			ArrayAdapter<Action> adapter = new ArrayAdapter<>(requireActivity(), R.layout.stax_spinner_item, actions);
 			actionDropdown.setAdapter(adapter);
-			String current = transferViewModel.getActiveAction().getValue() != null ? transferViewModel.getActiveAction().getValue().toString() : actionDropdown.getAdapter().getItem(0).toString()
+			String current = transferViewModel.getActiveAction().getValue() != null ? transferViewModel.getActiveAction().getValue().toString() : actionDropdown.getAdapter().getItem(0).toString();
 			actionDropdown.setText(current, false);
 		});
 		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
@@ -93,7 +93,6 @@ public class EditTransferFragment extends EditStagedFragment {
 		});
 		transferViewModel.getActiveChannel().observe(getViewLifecycleOwner(), c -> {
 			channelDropdown.setText(c.toString(), false);
-			actionEntry.setVisibility(transferViewModel.requiresActionChoice() ? View.VISIBLE : View.GONE);
 		});
 	}
 
