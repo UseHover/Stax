@@ -4,11 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-<<<<<<< HEAD
-import android.util.Log;
-=======
 import android.os.Handler;
->>>>>>> development
 import android.view.View;
 
 import androidx.annotation.NonNull;
