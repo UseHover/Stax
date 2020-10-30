@@ -2,6 +2,7 @@ package com.hover.stax.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -15,10 +16,12 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.hover.stax.R;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -40,6 +43,14 @@ public class UIHelper {
 		linearLayoutManager.setInitialPrefetchItemCount(INITIAL_ITEMS_FETCH);
 		linearLayoutManager.setSmoothScrollbarEnabled(true);
 		return linearLayoutManager;
+	}
+
+	public static int getColor(String hex, boolean isBackground, Context c) {
+		try {
+			return Color.parseColor(hex);
+		} catch (IllegalArgumentException e) {
+			return ContextCompat.getColor(c, isBackground ? R.color.offWhite : R.color.brightBlue);
+		}
 	}
 
 	static public void setColoredDrawable(ImageButton imageButton, int drawable, int color) {

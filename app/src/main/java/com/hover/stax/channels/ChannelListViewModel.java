@@ -121,7 +121,7 @@ public class ChannelListViewModel extends AndroidViewModel {
 		if (sims == null) return null;
 		List<String> countries = new ArrayList<>();
 		for (Sim sim : sims) {
-			if (!countries.contains(sim.country_iso.toUpperCase())) {
+			if (sim.country_iso != null && !countries.contains(sim.country_iso.toUpperCase())) {
 				countries.add(sim.country_iso.toUpperCase());
 				FirebaseMessaging.getInstance().subscribeToTopic(sim.country_iso);
 			}

@@ -15,11 +15,14 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.amplitude.api.Amplitude;
 import com.google.android.material.textfield.TextInputEditText;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.schedules.ScheduleDetailFragment;
 import com.hover.stax.utils.UIHelper;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -72,8 +75,8 @@ public class PinUpdateFragment extends Fragment implements Target {
 	private void setUpRemoveAccount(Channel channel) {
 		view.findViewById(R.id.removeAcct).setOnClickListener(v -> {
 			pinViewModel.removeAccount(channel);
+			NavHostFragment.findNavController(PinUpdateFragment.this).popBackStack();
 			UIHelper.flashMessage(getContext(), getResources().getString(R.string.toast_confirm_acctremoved));
-			showChoiceCard(true);
 		});
 	}
 
