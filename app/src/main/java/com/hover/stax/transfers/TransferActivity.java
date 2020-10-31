@@ -96,6 +96,8 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void authenticate() {
+//		if (transferViewModel.getActiveAction().getValue() == null)
+
 		new BiometricChecker(this, this).startAuthentication(transferViewModel.getActiveAction().getValue());
 //		makeHoverCall(transferViewModel.getActiveAction().getValue());
 	}
@@ -114,7 +116,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
 		transferViewModel.checkSchedule();
 		new HoverSession.Builder(act, transferViewModel.getActiveChannel().getValue(),
-				this, Constants.TRANSFER_REQUEST)
+				TransferActivity.this, Constants.TRANSFER_REQUEST)
 				.extra(Action.PHONE_KEY, transferViewModel.getRecipient().getValue())
 				.extra(Action.ACCOUNT_KEY, transferViewModel.getRecipient().getValue())
 				.extra(Action.AMOUNT_KEY, transferViewModel.getAmount().getValue())
