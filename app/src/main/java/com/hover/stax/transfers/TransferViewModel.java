@@ -98,7 +98,7 @@ public class TransferViewModel extends StagedViewModel {
 	}
 
 	private void findActiveAction(List<Action> actions) {
-		if (actions != null && actions.size() > 0) {
+		if (actions != null && actions.size() > 0 && activeAction.getValue() == null) {
 			activeAction.setValue(actions.get(0));
 		}
 	}

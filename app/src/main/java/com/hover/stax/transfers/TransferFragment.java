@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,14 +104,14 @@ public class TransferFragment extends StagedFragment {
 		transferViewModel.getNote().observe(getViewLifecycleOwner(), reason -> noteValue.setText(reason));
 
 		transferViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
+			Log.e(TAG, "actions: " + actions.size());
 			if (actions == null || actions.size() == 0) return;
 			ArrayAdapter<Action> adapter = new ArrayAdapter<>(requireActivity(), R.layout.stax_spinner_item, actions);
 			networkDropdown.setAdapter(adapter);
 			networkDropdown.setText(networkDropdown.getAdapter().getItem(0).toString(), false);
 		});
 
-		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action ->
-		{
+		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
 			if (action != null) toNetworkValue.setText(action.toString());
 		});
 

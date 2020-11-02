@@ -44,7 +44,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 				transferViewModel.setActiveChannel(scheduleViewModel.getSchedule().getValue().channel_id);
 		});
 		transferViewModel.getActiveChannel().observe(this, channel -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel."));
-		transferViewModel.getActions().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel."));
+		transferViewModel.getActions().observe(this, actions -> onUpdateStage(transferViewModel.getStage().getValue()));
 		transferViewModel.getActiveAction().observe(this, action -> onUpdateStage(transferViewModel.getStage().getValue()));
 
 		transferViewModel.getStage().observe(this, this::onUpdateStage);
@@ -112,7 +112,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
 		transferViewModel.checkSchedule();
 		new HoverSession.Builder(act, transferViewModel.getActiveChannel().getValue(),
-				this, Constants.TRANSFER_REQUEST)
+				TransferActivity.this, Constants.TRANSFER_REQUEST)
 				.extra(Action.PHONE_KEY, transferViewModel.getRecipient().getValue())
 				.extra(Action.ACCOUNT_KEY, transferViewModel.getRecipient().getValue())
 				.extra(Action.AMOUNT_KEY, transferViewModel.getAmount().getValue())
