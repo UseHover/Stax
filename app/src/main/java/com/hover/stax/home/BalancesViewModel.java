@@ -1,6 +1,7 @@
 package com.hover.stax.home;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -32,9 +33,6 @@ public class BalancesViewModel extends AndroidViewModel {
 	public BalancesViewModel(Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
-		if (selectedChannels == null) {
-			selectedChannels = new MutableLiveData<>();
-		}
 		if (runFlag == null) {
 			runFlag = new MutableLiveData<>();
 			runFlag.setValue(NONE);
@@ -98,10 +96,10 @@ public class BalancesViewModel extends AndroidViewModel {
 	}
 
 	private void onSetRunning(Integer flag) {
+		Log.e(TAG, "setting running. Flag: " + flag);
 		if (flag == null) return;
-		if (flag == NONE) {
-			toRun.setValue(new ArrayList<>());
-		} else if (flag == ALL) startRun(balanceActions.getValue());
+		else if (flag == NONE) toRun.setValue(new ArrayList<>());
+		else if (flag == ALL) startRun(balanceActions.getValue());
 		else startRun(getChannelActions(flag));
 	}
 
@@ -122,6 +120,7 @@ public class BalancesViewModel extends AndroidViewModel {
 	}
 
 	void startRun(List<Action> actions) {
+		Log.e(TAG, "action are: " + actions.size());
 		if (actions == null || actions.size() == 0) return;
 		toRun.setValue(actions);
 		runNext(actions, 0);

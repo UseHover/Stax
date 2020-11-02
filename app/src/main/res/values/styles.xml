@@ -26,6 +26,7 @@
 		<item name="android:windowBackground">@color/colorPrimaryDark</item>
 		<item name="android:fitsSystemWindows">true</item>
 
+		<item name="titleTextColor">@color/offWhite</item>
 		<item name="android:textColor">@color/offWhite</item>
 		<item name="android:buttonStyle">@style/StaxButton</item>
 		<item name="buttonStyle">@style/StaxButton</item>
