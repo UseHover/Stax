@@ -194,6 +194,8 @@
 	<string name="notify_request_cta">Send request</string>
 	<string name="notify_airtime">It\'s time to buy airtime with Stax.</string>
 	<string name="notify_airtime_cta">Buy airtime</string>
+	<string name="notify_download_title">Stax Update</string>
+	<string name="notify_download_body">Downloading</string>
 
 	<!-- Details -->
 	<string name="balance_label">Balance</string>
