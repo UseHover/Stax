@@ -134,7 +134,7 @@ final public class HoverSession {
 		private int requestCode, finalScreenTime = 2000;
 
 		public Builder(Action a, Channel c, Activity act, int code) {
-			if (a == null) throw new IllegalArgumentException("Context must not be null");
+			if (a == null) throw new IllegalArgumentException("Action must not be null");
 			activity = act;
 			channel = c;
 			action = a;

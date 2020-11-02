@@ -54,14 +54,13 @@ public class MainActivity extends AppCompatActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.activity_main);
 
 		balancesViewModel = new ViewModelProvider(this).get(BalancesViewModel.class);
 		balancesViewModel.setListener(this);
-		balancesViewModel.getSelectedChannels().observe(this, channels -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel"));
-		balancesViewModel.getBalanceActions().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel"));
-		balancesViewModel.getToRun().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel"));
+		balancesViewModel.getSelectedChannels().observe(this, channels -> Log.e(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel. " + channels.size()));
+		balancesViewModel.getBalanceActions().observe(this, actions -> Log.e(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
+		balancesViewModel.getToRun().observe(this, actions -> Log.e(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
 
 		setUpNav();
 	}
@@ -80,11 +79,13 @@ public class MainActivity extends AppCompatActivity implements
 
 	@Override
 	public void onTapRefresh(int channel_id) {
+		Log.e(TAG, "please refresh");
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_single));
 		balancesViewModel.setRunning(channel_id);
 	}
 
 	public void runAllBalances(View view) {
+		Log.e(TAG, "please refresh all");
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_all));
 		balancesViewModel.setRunning();
 	}
@@ -135,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements
 				if (resultCode == RESULT_OK) { onProbableHoverCall(data); }
 				break;
 			case Constants.ADD_SERVICE:
-				onAddServices(resultCode);
+				if (resultCode == RESULT_OK) { onAddServices(resultCode); }
 				break;
 			case Constants.REQUEST_REQUEST:
 				if (resultCode == RESULT_OK) { onRequest(data); }
@@ -160,8 +161,7 @@ public class MainActivity extends AppCompatActivity implements
 	}
 
 	private void onAddServices(int resultCode) {
-		if (resultCode == RESULT_OK)
-			balancesViewModel.setRunning();
+		balancesViewModel.setRunning();
 		maybeRunShowcase();
 	}
 	private void maybeRunShowcase() {

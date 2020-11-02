@@ -52,13 +52,15 @@ public class SelfDestructActivity extends AppCompatActivity {
 
 	public void downloadLatest() {
 		DownloadManager downloadmanager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-		Uri uri = Uri.parse("http://maven.usehover.com/apps/stax_release.apk");
+		Uri uri = Uri.parse("https://maven.usehover.com/apps/stax_release.apk");
 
 		DownloadManager.Request request = new DownloadManager.Request(uri);
-		request.setTitle("Stax Update");
-		request.setDescription("Downloading");
+		request.setTitle(getString(R.string.notify_download_title));
+		request.setDescription(getString(R.string.notify_download_body));
+		request.allowScanningByMediaScanner();
 		request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 		request.setVisibleInDownloadsUi(true);
+		request.setMimeType("application/*");
 		request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "stax.apk");
 		downloadmanager.enqueue(request);
 		updateView();
