@@ -1,6 +1,7 @@
 package com.hover.stax.channels;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,14 +13,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
+import com.hover.stax.database.Constants;
+import com.hover.stax.requestAccount.RequestAccountActivity;
+import com.hover.stax.utils.UIHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 public class ChannelListFragment extends Fragment implements ChannelsAdapter.SelectListener {
 	private ChannelListViewModel channelViewModel;
@@ -35,6 +42,9 @@ public class ChannelListFragment extends Fragment implements ChannelsAdapter.Sel
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		addChannels(view);
+		view.findViewById(R.id.request_accounts_btn).setOnClickListener(v -> {
+			startActivityForResult(new Intent(getActivity(), RequestAccountActivity.class), Constants.REQUEST_NEW_ACCOUNT);
+		});
 	}
 
 	private void addChannels(View view) {
@@ -94,5 +104,13 @@ public class ChannelListFragment extends Fragment implements ChannelsAdapter.Sel
 
 	public void onTap(int id) {
 		channelViewModel.setSelected(id);
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if(requestCode == Constants.REQUEST_NEW_ACCOUNT && resultCode == RESULT_OK) {
+			UIHelper.flashMessage(getContext(), getResources().getString(R.string.toast_confirm_contact));
+		}
 	}
 }

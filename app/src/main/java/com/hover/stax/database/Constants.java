@@ -8,6 +8,7 @@ public class Constants {
 	final public static int SCHEDULE_REQUEST = 204;
 	final public static int REQUEST_REQUEST = 301;
 	final public static int SMS = 303;
+	final public static int REQUEST_NEW_ACCOUNT = 401;
 	final public static int STYLE_MODE_FOR_STAX = 1;
 
 	final public static String LANGUAGE_CHECK = "Language";

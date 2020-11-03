@@ -31,11 +31,11 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            buildConfigField "String", "SELF_DESTRUCT", "\"1604102400000\"" // Oct 31, 2020
+            buildConfigField "String", "SELF_DESTRUCT", "\"1606821424000\"" // Nov 31, 2020
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            buildConfigField "String", "SELF_DESTRUCT", "\"1604102400000\""
+            buildConfigField "String", "SELF_DESTRUCT", "\"1606821424000\""
         }
     }
     bundle {

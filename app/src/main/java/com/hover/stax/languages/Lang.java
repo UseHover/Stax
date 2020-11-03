@@ -6,6 +6,7 @@ import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.yariksoffice.lingver.Lingver;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,6 +26,7 @@ public class Lang {
 		return code.equals(Lingver.getInstance().getLanguage());
 	}
 
+	@NotNull
 	@Override
 	public String toString() {
 		return name;

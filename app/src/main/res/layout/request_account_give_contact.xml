@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hover.stax.views.StaxCardView android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:title="@string/contact_cardhead"
+    android:id="@+id/giveContactStaxCard"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical">
+
+		<TextView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:fontFamily="font-normal"
+		    android:textSize="@dimen/text_16"
+		    android:paddingHorizontal="10dp"
+		    android:id="@+id/contact_desc"
+		    android:layout_marginBottom="@dimen/margin_16"
+		    />
+
+		<com.google.android.material.textfield.TextInputLayout
+		    android:id="@+id/phoneEntry"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:hint="@string/phone_label"
+		    style="@style/StaxLabeledInput">
+
+			<com.google.android.material.textfield.TextInputEditText
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:padding="@dimen/margin_13"
+			    android:paddingEnd="@dimen/margin_68"
+			    android:textSize="@dimen/text_21"
+			    android:textColor="@color/offWhite"
+			    android:textCursorDrawable="@null"
+			    android:inputType="number"
+			    android:id="@+id/phone_input"
+			    tools:ignore="RtlSymmetry" />
+		</com.google.android.material.textfield.TextInputLayout>
+
+		<com.google.android.material.textfield.TextInputLayout
+		    android:id="@+id/emailEntry"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:hint="@string/email_label"
+		    style="@style/StaxLabeledInput">
+
+			<com.google.android.material.textfield.TextInputEditText
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:padding="@dimen/margin_13"
+			    android:paddingEnd="@dimen/margin_68"
+			    android:textSize="@dimen/text_21"
+			    android:textColor="@color/offWhite"
+			    android:textCursorDrawable="@null"
+			    android:inputType="number"
+			    android:id="@+id/email_input"
+			    tools:ignore="RtlSymmetry" />
+		</com.google.android.material.textfield.TextInputLayout>
+
+		<LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="end"
+		    android:orientation="horizontal">
+
+			<androidx.appcompat.widget.AppCompatButton
+			    android:id="@+id/noThanksButton"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/btn_nothanks"
+			    android:layout_alignParentEnd="true"
+			    android:layout_marginTop="@dimen/margin_21"
+			    style="@style/StaxButton"
+			    android:fontFamily="font-medium" />
+
+			<androidx.appcompat.widget.AppCompatButton
+			    android:id="@+id/sendContactButton"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/btn_send"
+			    android:layout_alignParentEnd="true"
+			    android:layout_marginTop="@dimen/margin_21"
+			    style="@style/StaxButton"
+			    android:fontFamily="font-medium" />
+		</LinearLayout>
+	</LinearLayout>
+
+
+</com.hover.stax.views.StaxCardView>

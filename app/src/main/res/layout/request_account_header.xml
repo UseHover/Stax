@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:showBack="false"
+    android:id="@+id/request_acccount_header"
+    app:backClickable="false"
+    app:title="@string/request_account">
+
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:paddingHorizontal="10dp"
+	    >
+		<TextView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:fontFamily="font-normal"
+		    android:textSize="@dimen/text_16"
+		    android:id="@+id/request_account_text_desc"
+		    android:text="@string/request_account_desc"
+		    android:layout_marginBottom="@dimen/margin_16"
+			/>
+
+		<androidx.appcompat.widget.AppCompatButton
+		    android:id="@+id/request_accounts_btn"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/request_account"
+		    android:layout_gravity="end"
+		    style="@style/StaxButton"
+		    />
+
+	</LinearLayout>
+
+</com.hover.stax.views.StaxCardView>

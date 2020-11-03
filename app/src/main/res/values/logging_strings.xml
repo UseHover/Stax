@@ -4,6 +4,8 @@
 
 	<!--	Amplitude log events -->
 	<string name="selected_language" translatable="false">Selected language</string>
+	<string name="selected_country" translatable="false">Selected country</string>
+	<string name="selected_network" translatable="false">Selected network</string>
 	<string name="click_add_account" translatable="false">Clicked add account</string>
 	<string name="finished_account_select" translatable="false">Completed account Select</string>
 	<string name="account_select_count_key" translatable="false">chosen_account_count</string>

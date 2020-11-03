@@ -28,6 +28,8 @@
 	<string name="btn_no">No</string>
 	<string name="btn_resend">Resend</string>
 	<string name="btn_continue">Continue</string>
+	<string name="btn_send">Send</string>
+	<string name="no_thanks">No, thanks</string>
 	<string name="btn_edit">Edit</string>
 	<string name="btn_back">Back</string>
 	<string name="btn_test">Test</string>
@@ -38,6 +40,8 @@
 		<item>fr</item>
 		<item>sw</item>
 	</string-array>
+
+
 
 	<!-- Home -->
 	<string name="bal_cardhead">Balances</string>
@@ -114,6 +118,25 @@
 	<string name="reqcancel_head">Cancel request</string>
 	<string name="reqcancel_msg">Looks like your message has not been sent. Would you like to cancel this request?</string>
 	<string name="btn_saveanyway">Save anyway</string>
+	<string name="request_account">Request account</string>
+	<string name="request_account_desc">Can\’t find what you\’re looking for? We\’re adding new accounts to Stax every day, and if you let us know which one you\’re looking for, we\’ll add it as soon as possible.</string>
+	<string name="request_received_content">Request received. We\’ll add %1$s soon.</string>
+	<string name="contact_optional">It\’s optional, but if you give us your contact info and we\’ll let you know as soon as %1$s is available on Stax.</string>
+
+	<string-array name="supported_countries">
+		<item>Cameroon</item>
+		<item>Ethiopia</item>
+		<item>Ghana</item>
+		<item>Kenya</item>
+		<item>Nigeria</item>
+		<item>Indonesia</item>
+		<item>Sierra Leon</item>
+		<item>Senegal</item>
+		<item>South Africa</item>
+		<item>Tanzania</item>
+		<item>Zambia</item>
+		<item>Zimbabwe</item>
+	</string-array>
 
 	<!-- Onboarding showcase -->
 	<string name="onboard_sechead">World class security</string>
