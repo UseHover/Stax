@@ -40,7 +40,7 @@
 		    android:id="@+id/trans_amount"
 		    android:fontFamily="font-normal"
 		    android:textColor="@color/white"
-		    android:textSize="@dimen/text_21" />
+		    android:textSize="@dimen/text_34" />
 
 	</LinearLayout>
 
