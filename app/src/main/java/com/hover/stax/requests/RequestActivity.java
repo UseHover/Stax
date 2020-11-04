@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.amplitude.api.Amplitude;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -38,10 +39,10 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_request);
 		requestViewModel = new ViewModelProvider(this).get(NewRequestViewModel.class);
 		startObservers();
 		checkIntent();
-		setContentView(R.layout.activity_request);
 	}
 
 	@Override
@@ -68,6 +69,7 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 		requestViewModel.getIsFuture().observe(this, isFuture -> onUpdateStage(requestViewModel.getStage().getValue()));
 		requestViewModel.getFutureDate().observe(this, date -> onUpdateStage(requestViewModel.getStage().getValue()));
 		requestViewModel.repeatSaved().observe(this, isSaved -> onUpdateStage(requestViewModel.getStage().getValue()));
+		requestViewModel.getIsEditing().observe(this, isEditing -> onUpdateStage(requestViewModel.getStage().getValue()));
 	}
 
 	private void checkIntent() {
@@ -150,12 +152,20 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 	}
 
 	private void onUpdateStage(@Nullable StagedViewModel.StagedEnum stage) {
+		if (Navigation.findNavController(this, R.id.nav_host_fragment).getCurrentDestination().getId() == R.id.navigation_edit)
+			((ExtendedFloatingActionButton) findViewById(R.id.fab)).hide();
+		else if (findViewById(R.id.recipientRow) != null) {
+			setSummaryCard(stage);
+			setCurrentCard(stage);
+			setFab(stage);
+		}
+	}
+
+	private void setSummaryCard(@Nullable StagedViewModel.StagedEnum stage) {
 		findViewById(R.id.recipientRow).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 && requestViewModel.getAmount().getValue() != null ? View.VISIBLE : View.GONE);
 		findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && requestViewModel.getNote().getValue() != null && !requestViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
-
-		setCurrentCard(stage);
-		setFab(stage);
+		findViewById(R.id.btnRow).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
 	}
 
 	private void setCurrentCard(StagedViewModel.StagedEnum stage) {
@@ -171,15 +181,15 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 		ExtendedFloatingActionButton fab = findViewById(R.id.fab);
 		if (stage.compare(REVIEW) >= 0) {
 			if (requestViewModel.getIsFuture().getValue() != null && requestViewModel.getIsFuture().getValue()) {
-				fab.setVisibility(requestViewModel.getFutureDate().getValue() == null ? View.GONE : View.VISIBLE);
 				fab.setText(getString(R.string.fab_schedule));
+				if (requestViewModel.getFutureDate().getValue() == null) { fab.hide(); } else { fab.show(); }
 			} else {
-				fab.setVisibility(View.VISIBLE);
 				fab.setText(getString(R.string.notify_request_cta));
+				fab.show();
 			}
 		} else {
-			fab.setVisibility(View.VISIBLE);
 			fab.setText(R.string.btn_continue);
+			fab.show();
 		}
 	}
 
@@ -214,6 +224,11 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 	}
 
 	@Override
+	public void onBackPressed() {
+		if (!Navigation.findNavController(findViewById(R.id.nav_host_fragment)).popBackStack())
+			super.onBackPressed();
+	}
+
 	protected void onStop() {
 		super.onStop();
 		if (dialog != null) {
