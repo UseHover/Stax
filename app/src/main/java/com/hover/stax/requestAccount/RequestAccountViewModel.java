@@ -1,17 +1,27 @@
 package com.hover.stax.requestAccount;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.hover.sdk.utils.Utils;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.hover.stax.R;
+import com.hover.stax.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class RequestAccountViewModel extends AndroidViewModel {
@@ -20,8 +30,8 @@ public class RequestAccountViewModel extends AndroidViewModel {
 
 	private MutableLiveData<Integer> phoneError;
 	private MutableLiveData<Integer> emailError;
-	private MutableLiveData<String> phoneVal;
-	private MutableLiveData<String> emailVal;
+
+
 	public RequestAccountViewModel(@NonNull Application application) {
 		super(application);
 
@@ -29,16 +39,13 @@ public class RequestAccountViewModel extends AndroidViewModel {
 		countriesMutableLiveData = new MutableLiveData<>();
 		phoneError = new MutableLiveData<>();
 		emailError = new MutableLiveData<>();
-		phoneVal = new MutableLiveData<>();
-		emailVal = new MutableLiveData<>();
 
 
 		requestAccountStageMutableLiveData.setValue(RequestAccountStage.SELECT_COUNTRY);
 		countriesMutableLiveData.setValue(getSupportedCountries());
 		phoneError.setValue(null);
 		emailError.setValue(null);
-		phoneVal.setValue(null);
-		emailVal.setValue(null);
+
 	}
 
 	public MutableLiveData<RequestAccountStage> getRequestAccountStageMutableLiveData() { return requestAccountStageMutableLiveData; }
@@ -47,20 +54,40 @@ public class RequestAccountViewModel extends AndroidViewModel {
 
 	LiveData<Integer> getPhoneError() { return phoneError; }
 	LiveData<Integer> getEmailError() { return emailError; }
-	public MutableLiveData<String> getPhoneVal() { return phoneVal; }
 
-	public void setPhoneVal(String phone) { phoneVal.postValue(phone); }
-	public void setEmailVal(String email) { emailVal.postValue(email); }
-	public boolean validateContactEntries() {
-		if(phoneVal.getValue().length() > 7) return true;
-		else (ea)
+
+	public boolean validateContactEntries(String phone, String email) {
+		if(phone.isEmpty() && email.isEmpty()) {
+			phoneError.postValue(R.string.phone_and_email_input_empty);
+			emailError.postValue(R.string.phone_and_email_input_empty);
+			return false;
+		}
+		if(!phone.isEmpty() && phone.length() < 7 ){
+			phoneError.postValue(R.string.phone_input_err);
+			return false;
+		}
+		if(!email.isEmpty() && !Utils.validateEmail(email)) {
+			emailError.postValue(R.string.email_input_err);
+			return false;
+		}
+		return true;
 	}
 
 	public void sendAccountRequestInfoToFirebase(String selectedCountry, String selectedNetwork, String deviceId) {
-
+		Map<String, Object> map = new HashMap<>();
+		map.put("deviceId", deviceId);
+		map.put("country", selectedCountry);
+		map.put("service", selectedNetwork);
+		map.put("timeStamp", Timestamp.now());
+		FirebaseFirestore.getInstance().collection("requests_from_users").add(map);
 	}
 	public void sendContactInfoToFirebase(String phone, String email, String deviceId) {
-
+		Map<String, Object> map = new HashMap<>();
+		map.put("deviceId", deviceId);
+		map.put("phone", phone);
+		map.put("email", email);
+		map.put("timeStamp", Timestamp.now());
+		FirebaseFirestore.getInstance().collection("users_contact").add(map);
 	}
 
 	private List<SupportedCountries> getSupportedCountries() {

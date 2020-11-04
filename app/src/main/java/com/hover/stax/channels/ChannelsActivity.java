@@ -16,6 +16,7 @@ import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
+import com.hover.stax.database.Constants;
 import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.security.PermissionsFragment;
 import com.hover.stax.security.PinsActivity;
@@ -45,8 +46,8 @@ public class ChannelsActivity extends AppCompatActivity {
 		channelViewModel = new ViewModelProvider(this).get(ChannelListViewModel.class);
 		channelViewModel.getSelected().observe(this, this::onSelectedUpdate);
 
-		if (new PermissionHelper(this).hasPhonePerm())
-			goToChannelSelection();
+		if (new PermissionHelper(this).hasPhonePerm()) goToChannelSelection();
+
 	}
 
 	@Override

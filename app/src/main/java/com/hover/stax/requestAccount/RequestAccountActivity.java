@@ -14,14 +14,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
-import com.hover.sdk.api.Hover;
-import com.hover.sdk.sims.SimInfo;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
+import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxCardView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.List;
 
 public class RequestAccountActivity extends AppCompatActivity {
@@ -31,13 +32,14 @@ public class RequestAccountActivity extends AppCompatActivity {
 	private TextView countryValue, networkValue;
 	private RadioGroup radioCountryGrp, radioNetworkGrp;
 	private StaxCardView countryStaxCard, networkStaxCard, giveContactStaxCard;
+	private TextInputEditText phoneInput, emailInput;
+	private TextInputLayout phoneEntry, emailEntry;
 
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.request_account_layout);
-		
 		init();
 		requestAccountViewModel = new ViewModelProvider(this).get(RequestAccountViewModel.class);
 		setClicks();
@@ -53,10 +55,26 @@ public class RequestAccountActivity extends AppCompatActivity {
 					break;
 			}
 		});
-		createNetworkRadio();
+		requestAccountViewModel.getPhoneError().observe(this, stringRes-> {
+			if(stringRes !=null && stringRes !=0) {
+				phoneEntry.setError(getString(stringRes));
+				phoneEntry.setErrorIconDrawable(0);
+			}
+			else {
+				phoneEntry.setError(null);
+			}
+		});
+		requestAccountViewModel.getEmailError().observe(this, stringRes-> {
+			if(stringRes !=null && stringRes !=0) {
+				emailEntry.setError(getString(stringRes));
+				emailEntry.setErrorIconDrawable(0);
+			}
+			else {
+				emailEntry.setError(null);
+			}
+		});
+
 	}
-
-
 
 	void init() {
 		countryRow = findViewById(R.id.countryRow);
@@ -64,11 +82,18 @@ public class RequestAccountActivity extends AppCompatActivity {
 		countryValue = findViewById(R.id.countryValue);
 		networkValue = findViewById(R.id.networkValue);
 		requestDescText = findViewById(R.id.request_account_text_desc);
+		contactDescText = findViewById(R.id.contact_desc);
+
 		radioCountryGrp = findViewById(R.id.countriesRadioGroup);
 		radioNetworkGrp = findViewById(R.id.networkRadioGroup);
 		countryStaxCard = findViewById(R.id.countryStaxCard);
 		networkStaxCard = findViewById(R.id.networkStaxCard);
 		giveContactStaxCard = findViewById(R.id.giveContactStaxCard);
+
+		phoneInput = findViewById(R.id.phone_input);
+		emailInput = findViewById(R.id.email_input);
+		phoneEntry = findViewById(R.id.phoneEntry);
+		emailEntry = findViewById(R.id.emailEntry);
 
 		countryRow.setVisibility(View.GONE);
 		networkRow.setVisibility(View.GONE);
@@ -96,7 +121,7 @@ public class RequestAccountActivity extends AppCompatActivity {
 	}
 	void showGiveContactInfoStage() {
 		requestDescText.setText(getResources().getString(R.string.request_received_content, networkValue.getText()));
-		contactDescText.setText(.setText(getResources().getString(R.string.contact_optional, networkValue.getText()));
+		contactDescText.setText(getResources().getString(R.string.contact_optional, networkValue.getText()));
 
 		countryRow.setVisibility(View.VISIBLE);
 		networkRow.setVisibility(View.VISIBLE);
@@ -104,13 +129,12 @@ public class RequestAccountActivity extends AppCompatActivity {
 		countryStaxCard.setVisibility(View.GONE);
 		networkStaxCard.setVisibility(View.GONE);
 		giveContactStaxCard.setVisibility(View.VISIBLE);
-
-
 	}
 
 	void setClicks() {
 		findViewById(R.id.continueCountryButton).setOnClickListener(v -> {
 			SupportedCountries.LogChange(countryValue.getText().toString(), RequestAccountActivity.this);
+			createServicesRadio();
 			requestAccountViewModel.setNextRequestAccountStage(RequestAccountStage.SELECT_COUNTRY);
 		});
 
@@ -118,7 +142,20 @@ public class RequestAccountActivity extends AppCompatActivity {
 			JSONObject data = new JSONObject();
 			try { data.put("network", networkValue.getText().toString()); } catch (JSONException ignored) { }
 			Amplitude.getInstance().logEvent(getResources().getString(R.string.selected_network), data);
+			requestAccountViewModel.sendAccountRequestInfoToFirebase(countryValue.getText().toString(), networkValue.getText().toString(), Utils.getDeviceId(this));
 			requestAccountViewModel.setNextRequestAccountStage(RequestAccountStage.SELECT_NETWORK);
+		
+		});
+
+		findViewById(R.id.noThanksButton).setOnClickListener(v -> {
+				goToPreviousActivity(false);
+		});
+
+		findViewById(R.id.sendContactButton).setOnClickListener(v -> {
+			if(requestAccountViewModel.validateContactEntries(phoneInput.getText().toString(), emailInput.getText().toString())) {
+				requestAccountViewModel.sendContactInfoToFirebase(phoneInput.getText().toString(), emailInput.getText().toString(), Utils.getDeviceId(this));
+				goToPreviousActivity(true);
+			}
 		});
 	}
 
@@ -139,22 +176,24 @@ public class RequestAccountActivity extends AppCompatActivity {
 
 		radioCountryGrp.setOnCheckedChangeListener(this::onSelectCountry);
 	}
-	void createNetworkRadio() {
-		List<SimInfo> simInfoList = Hover.getPresentSims(this);
-		for (int l = 0; l < simInfoList.size(); l++) {
+	void createServicesRadio() {
+		AccountsByCountry accountsByCountry = new AccountsByCountry(null, null);
+		List<String> services = accountsByCountry.filterAccounts(accountsByCountry.init(), countryValue.getText().toString());
+		for (int l = 0; l < services.size(); l++) {
 			@SuppressLint("InflateParams")
 			RadioButton radioButton = (RadioButton) LayoutInflater.from(this).inflate(R.layout.stax_radio_button, null);
 			radioButton.setId(l);
-			radioButton.setText(simInfoList.get(l).getNetworkOperatorName());
-			radioButton.setTag(simInfoList.get(l).getNetworkOperatorName());
+			radioButton.setText(services.get(l));
+			radioButton.setTag(services.get(l));
 			if (l ==0 ) {
-				networkValue.setText(simInfoList.get(l).getNetworkOperatorName());
+				networkValue.setText(services.get(l));
 				radioButton.setChecked(true);
 			} else radioButton.setChecked(false);
 			radioNetworkGrp.addView(radioButton);
 		}
 		radioNetworkGrp.setOnCheckedChangeListener(this::onNetworkCountry);
 	}
+
 	private void onSelectCountry(RadioGroup group, int checkedId) {
 		RadioButton radioBtn = group.findViewById(checkedId);
 		countryValue.setText(radioBtn.getTag().toString());
@@ -164,5 +203,9 @@ public class RequestAccountActivity extends AppCompatActivity {
 		networkValue.setText(radioBtn.getTag().toString());
 	}
 
+	private void goToPreviousActivity(boolean sendNotice) {
+		if(sendNotice) UIHelper.flashMessage(this, getResources().getString(R.string.toast_confirm_contact));
+		onBackPressed();
 
+	}
 }

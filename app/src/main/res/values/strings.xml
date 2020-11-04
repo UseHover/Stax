@@ -108,12 +108,13 @@
 	<string name="reqacct_cardbody">Can\'t find what you\'re looking for? We\'re adding new services to Stax every day, and if you let us know which one you’re looking for, we\'ll add it as soon as possible.</string>
 	<string name="country_cardhead">Country</string>
 	<string name="network_cardhead">Network</string>
+	<string name="service_cardhead">Service</string>
 	<string name="contact_cardhead">Contact</string>
 	<string name="phone_label">Phone (optional)</string>
 	<string name="email_label">Email (optional)</string>
 	<string name="reqcomplete_cardbody">We\'ll let you know as soon as %1$s is available</string>
 	<string name="btn_request">Send request</string>
-	<string name="btn_nothanks">No thanks</string>
+	<string name="btn_nothanks">No, thanks</string>
 	<string name="toast_confirm_contact">Thanks! Contact info received. We\'ll be in touch soon.</string>
 	<string name="reqcancel_head">Cancel request</string>
 	<string name="reqcancel_msg">Looks like your message has not been sent. Would you like to cancel this request?</string>
@@ -122,6 +123,10 @@
 	<string name="request_account_desc">Can\’t find what you\’re looking for? We\’re adding new accounts to Stax every day, and if you let us know which one you\’re looking for, we\’ll add it as soon as possible.</string>
 	<string name="request_received_content">Request received. We\’ll add %1$s soon.</string>
 	<string name="contact_optional">It\’s optional, but if you give us your contact info and we\’ll let you know as soon as %1$s is available on Stax.</string>
+	<string name="phone_input_err">Phone number format or length incorrect</string>
+	<string name="email_input_err">Email incorrect, please review and try again</string>
+	<string name="phone_and_email_input_empty">Both phone and email should not be empty</string>
+
 
 	<string-array name="supported_countries">
 		<item>Cameroon</item>

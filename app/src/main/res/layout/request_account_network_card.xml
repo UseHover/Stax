@@ -2,7 +2,7 @@
 <com.hover.stax.views.StaxCardView android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:title="@string/country_cardhead"
+    app:title="@string/service_cardhead"
     android:id="@+id/networkStaxCard"
     xmlns:android="http://schemas.android.com/apk/res/android">
 

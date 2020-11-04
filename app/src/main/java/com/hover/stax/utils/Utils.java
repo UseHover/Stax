@@ -1,13 +1,19 @@
 package com.hover.stax.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.os.Build;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.hover.sdk.permissions.PermissionHelper;
+import com.hover.sdk.utils.AnalyticsSingleton;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
@@ -107,4 +113,22 @@ public class Utils {
 		bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 		return stream.toByteArray();
 	}
+
+	@SuppressLint({"HardwareIds", "MissingPermission"})
+	public static String getDeviceId(Context c) {
+		try {
+			if (new PermissionHelper(c).hasPhonePerm()) {
+				String id = null;
+				if (Build.VERSION.SDK_INT < 29) {
+					try {
+						id = ((TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+					} catch (Exception ignored) {}
+				}
+				if (id == null) { id = Settings.Secure.getString(c.getContentResolver(), Settings.Secure.ANDROID_ID); }
+				return id;
+			}
+		} catch (SecurityException e) {  AnalyticsSingleton.capture(c, e); }
+		return c.getString(com.hover.sdk.R.string.hsdk_unknown_device_id);
+	}
+
 }

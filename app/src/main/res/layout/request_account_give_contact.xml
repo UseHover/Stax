@@ -38,6 +38,7 @@
 			    android:textColor="@color/offWhite"
 			    android:textCursorDrawable="@null"
 			    android:inputType="number"
+			    android:fontFamily="font-normal"
 			    android:id="@+id/phone_input"
 			    tools:ignore="RtlSymmetry" />
 		</com.google.android.material.textfield.TextInputLayout>
@@ -57,7 +58,8 @@
 			    android:textSize="@dimen/text_21"
 			    android:textColor="@color/offWhite"
 			    android:textCursorDrawable="@null"
-			    android:inputType="number"
+			    android:inputType="textEmailAddress"
+			    android:fontFamily="font-normal"
 			    android:id="@+id/email_input"
 			    tools:ignore="RtlSymmetry" />
 		</com.google.android.material.textfield.TextInputLayout>
@@ -66,6 +68,8 @@
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_gravity="end"
+		    android:gravity="end"
+		    android:layout_marginTop="@dimen/margin_34"
 		    android:orientation="horizontal">
 
 			<androidx.appcompat.widget.AppCompatButton
@@ -73,9 +77,9 @@
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
 			    android:text="@string/btn_nothanks"
-			    android:layout_alignParentEnd="true"
 			    android:layout_marginTop="@dimen/margin_21"
 			    style="@style/StaxButton"
+			    android:layout_marginEnd="@dimen/margin_16"
 			    android:fontFamily="font-medium" />
 
 			<androidx.appcompat.widget.AppCompatButton
@@ -83,7 +87,6 @@
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
 			    android:text="@string/btn_send"
-			    android:layout_alignParentEnd="true"
 			    android:layout_marginTop="@dimen/margin_21"
 			    style="@style/StaxButton"
 			    android:fontFamily="font-medium" />
