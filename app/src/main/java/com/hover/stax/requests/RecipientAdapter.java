@@ -45,7 +45,8 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				updateListener.onUpdate(position, s.toString());
+				if (updateListener != null)
+					updateListener.onUpdate(position, s.toString());
 			}
 		});
 		holder.contactButton.setOnClickListener(view -> updateListener.onClickContact(position, holder.view.getContext()));

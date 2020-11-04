@@ -69,6 +69,8 @@ public class NewRequestViewModel extends StagedViewModel {
 		return recipients;
 	}
 
+	void resetRecipients() { recipients.setValue(new ArrayList<>()); }
+
 	LiveData<Integer> getRecipientError() {
 		if (recipientError == null) {
 			recipientError = new MutableLiveData<>();
