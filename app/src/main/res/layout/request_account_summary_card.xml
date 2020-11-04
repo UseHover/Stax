@@ -45,7 +45,7 @@
 		<TableRow android:id="@+id/networkRow" android:layout_marginTop="@dimen/margin_21">
 
 			<TextView
-			    android:text="@string/network_cardhead"
+			    android:text="@string/service_cardhead"
 			    android:textColor="@color/offWhite"
 			    android:textSize="@dimen/text_16" />
 

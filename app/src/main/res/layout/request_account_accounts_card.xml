@@ -3,20 +3,20 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:title="@string/service_cardhead"
-    android:id="@+id/networkStaxCard"
+    android:id="@+id/accountsStaxCard"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<RadioGroup
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:id="@+id/networkRadioGroup"/>
+	    android:id="@+id/accountRadioGroup"/>
 
 	<RelativeLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content">
 
 		<androidx.appcompat.widget.AppCompatButton
-		    android:id="@+id/continueNetworkButton"
+		    android:id="@+id/continueAccountButton"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:text="@string/btn_continue"

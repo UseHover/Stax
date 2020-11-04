@@ -20,9 +20,9 @@ class AccountsByCountry {
 	}
 
 
+	List<AccountsByCountry> accounts = new ArrayList<>();
+	void init() {
 
-	List<AccountsByCountry> init() {
-		List<AccountsByCountry> accounts = new ArrayList<>();
 		accounts.add(new AccountsByCountry("Cameroon", "MTN"));
 		accounts.add(new AccountsByCountry("Ethiopia", "MTN"));
 		accounts.add(new AccountsByCountry("Ghana", "MTN"));
@@ -35,10 +35,9 @@ class AccountsByCountry {
 		accounts.add(new AccountsByCountry("Tanzania", "MTN"));
 		accounts.add(new AccountsByCountry("Zambia", "MTN"));
 		accounts.add(new AccountsByCountry("Zimbabwe", "MTN"));
-		return accounts;
 	}
 
-	List<String> filterAccounts(List<AccountsByCountry>accounts,  String country) {
+	List<String> filterAccounts( String country) {
 		List<String> result = new ArrayList<>();
 		for(AccountsByCountry act : accounts) {
 			if(act.getCountry().equals(country)) result.add(act.getServiceName());

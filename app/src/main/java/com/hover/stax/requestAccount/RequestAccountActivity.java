@@ -30,8 +30,8 @@ public class RequestAccountActivity extends AppCompatActivity {
 	private RequestAccountViewModel requestAccountViewModel;
 	private TableRow countryRow, networkRow;
 	private TextView countryValue, networkValue;
-	private RadioGroup radioCountryGrp, radioNetworkGrp;
-	private StaxCardView countryStaxCard, networkStaxCard, giveContactStaxCard;
+	private RadioGroup radioCountryGrp, radioAccountGrp;
+	private StaxCardView countryStaxCard, accountStaxCard, giveContactStaxCard;
 	private TextInputEditText phoneInput, emailInput;
 	private TextInputLayout phoneEntry, emailEntry;
 
@@ -85,9 +85,9 @@ public class RequestAccountActivity extends AppCompatActivity {
 		contactDescText = findViewById(R.id.contact_desc);
 
 		radioCountryGrp = findViewById(R.id.countriesRadioGroup);
-		radioNetworkGrp = findViewById(R.id.networkRadioGroup);
+		radioAccountGrp = findViewById(R.id.accountRadioGroup);
 		countryStaxCard = findViewById(R.id.countryStaxCard);
-		networkStaxCard = findViewById(R.id.networkStaxCard);
+		accountStaxCard = findViewById(R.id.accountsStaxCard);
 		giveContactStaxCard = findViewById(R.id.giveContactStaxCard);
 
 		phoneInput = findViewById(R.id.phone_input);
@@ -104,7 +104,7 @@ public class RequestAccountActivity extends AppCompatActivity {
 		networkRow.setVisibility(View.GONE);
 
 		countryStaxCard.setVisibility(View.VISIBLE);
-		networkStaxCard.setVisibility(View.GONE);
+		accountStaxCard.setVisibility(View.GONE);
 		giveContactStaxCard.setVisibility(View.GONE);
 
 	}
@@ -113,7 +113,7 @@ public class RequestAccountActivity extends AppCompatActivity {
 		networkRow.setVisibility(View.GONE);
 
 		countryStaxCard.setVisibility(View.GONE);
-		networkStaxCard.setVisibility(View.VISIBLE);
+		accountStaxCard.setVisibility(View.VISIBLE);
 		giveContactStaxCard.setVisibility(View.GONE);
 
 		radioCountryGrp.setVisibility(View.GONE);
@@ -127,7 +127,7 @@ public class RequestAccountActivity extends AppCompatActivity {
 		networkRow.setVisibility(View.VISIBLE);
 
 		countryStaxCard.setVisibility(View.GONE);
-		networkStaxCard.setVisibility(View.GONE);
+		accountStaxCard.setVisibility(View.GONE);
 		giveContactStaxCard.setVisibility(View.VISIBLE);
 	}
 
@@ -138,7 +138,7 @@ public class RequestAccountActivity extends AppCompatActivity {
 			requestAccountViewModel.setNextRequestAccountStage(RequestAccountStage.SELECT_COUNTRY);
 		});
 
-		findViewById(R.id.continueNetworkButton).setOnClickListener(v -> {
+		findViewById(R.id.continueAccountButton).setOnClickListener(v -> {
 			JSONObject data = new JSONObject();
 			try { data.put("network", networkValue.getText().toString()); } catch (JSONException ignored) { }
 			Amplitude.getInstance().logEvent(getResources().getString(R.string.selected_network), data);
@@ -178,7 +178,8 @@ public class RequestAccountActivity extends AppCompatActivity {
 	}
 	void createServicesRadio() {
 		AccountsByCountry accountsByCountry = new AccountsByCountry(null, null);
-		List<String> services = accountsByCountry.filterAccounts(accountsByCountry.init(), countryValue.getText().toString());
+		accountsByCountry.init();
+		List<String> services = accountsByCountry.filterAccounts(countryValue.getText().toString());
 		for (int l = 0; l < services.size(); l++) {
 			@SuppressLint("InflateParams")
 			RadioButton radioButton = (RadioButton) LayoutInflater.from(this).inflate(R.layout.stax_radio_button, null);
@@ -189,9 +190,9 @@ public class RequestAccountActivity extends AppCompatActivity {
 				networkValue.setText(services.get(l));
 				radioButton.setChecked(true);
 			} else radioButton.setChecked(false);
-			radioNetworkGrp.addView(radioButton);
+			radioAccountGrp.addView(radioButton);
 		}
-		radioNetworkGrp.setOnCheckedChangeListener(this::onNetworkCountry);
+		radioAccountGrp.setOnCheckedChangeListener(this::onNetworkCountry);
 	}
 
 	private void onSelectCountry(RadioGroup group, int checkedId) {

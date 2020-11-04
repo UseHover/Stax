@@ -10,7 +10,7 @@
 
 		<include layout="@layout/request_account_summary_card"/>
 		<include layout="@layout/request_account_countries_card"/>
-		<include  layout="@layout/request_account_network_card"/>
+		<include  layout="@layout/request_account_accounts_card"/>
 		<include layout="@layout/request_account_give_contact"/>
 
 
