@@ -128,6 +128,7 @@
 		<item name="android:textSize">@dimen/text_21</item>
 		<item name="endIconTint">@color/offWhite</item>
 		<item name="materialThemeOverlay">@style/StaxDropdownPopup</item>
+		<item name="errorEnabled">true</item>
 	</style>
 
 	<style name="StaxDropdownPopup" parent="Theme.MaterialComponents.DayNight.DarkActionBar">

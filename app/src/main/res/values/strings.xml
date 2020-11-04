@@ -12,7 +12,9 @@
 	<string name="nav_transaction">Transaction Details</string>
 	<string name="nav_schedule">Schedule Details</string>
 	<string name="nav_request">Request Details</string>
+	<string name="nav_transfer">Transfer Details</string>
 	<string name="nav_edit_request">Edit Request Details</string>
+	<string name="nav_edit_transfer">Edit Transfer Details</string>
 	<string name="nav_language">Language Choice</string>
 	<string name="nav_channels">Choose Channels</string>
 	<string name="nav_sim_permission">Grant SIM permission</string>
@@ -132,6 +134,7 @@
 	<!-- Transfer -->
 	<string name="amount_cardhead">Amount</string>
 	<string name="amount_label">How much money?</string>
+	<string name="channel_label">Account</string>
 	<string name="fromacct_cardhead">From this account</string>
 	<string name="link_addacct"><u>+ Add an account</u></string>
 	<string name="recipientnetwork_cardhead">To network</string>
@@ -154,6 +157,7 @@
 	<string name="descrip_transfer_sent">from %1$s to %2$s</string>
 	<string name="fab_transfernow">Transfer now</string>
 	<string name="edittransfer_cardhead">Edit Transfer</string>
+	<string name="editairtime_cardhead">Edit Buy Airtime</string>
 
 	<!-- Request -->
 	<string name="req_cardhead">Request money</string>

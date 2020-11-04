@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.amplitude.api.Amplitude;
 import com.google.android.material.datepicker.CalendarConstraints;
@@ -83,7 +81,7 @@ public abstract class StagedFragment extends Fragment {
 		((SwitchMaterial) root.findViewById(R.id.repeatSwitch)).setOnCheckedChangeListener((view, isChecked) -> stagedViewModel.setIsRepeating(isChecked));
 		dateDetailListeners(root);
 
-		root.findViewById(R.id.save_btn).setOnClickListener(view -> stagedViewModel.saveRepeat());
+		root.findViewById(R.id.save_repeat_btn).setOnClickListener(view -> stagedViewModel.saveRepeat());
 		root.findViewById(R.id.edit_btn).setOnClickListener(Navigation.createNavigateOnClickListener(R.id.navigation_edit, null));
 	}
 
