@@ -64,7 +64,7 @@ public class Utils {
 		try {
 			DecimalFormat formatter = new DecimalFormat("#,##0.00");
 			formatter.setMaximumFractionDigits(2);
-			return formatter.format(number);
+			return formatter.format(number).replace(".00", "");
 		} catch (Exception e) {
 			return String.valueOf(number);
 		}
