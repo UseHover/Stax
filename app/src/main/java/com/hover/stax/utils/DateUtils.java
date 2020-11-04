@@ -10,7 +10,8 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class DateUtils {
-	public final static int DAY = 24 * 60 * 60 * 1000;
+	public final static int MIN = 60 * 1000;
+	public final static int DAY = 24 * 60 * MIN;
 
 	public static long now() {
 		return new Date().getTime();

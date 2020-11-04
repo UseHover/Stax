@@ -5,6 +5,7 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.hover.stax.R;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.bubbleshowcase.BubbleShowCase;
@@ -37,6 +38,7 @@ class ShowcaseExecutor {
 	}
 
 	private void showcaseSecondStage() {
+		openBalance();
 		BubbleShowCase.Companion.showCase(
 				activity.getString(R.string.onboard_peekhead),
 				activity.getString(R.string.onboard_peekbody),
@@ -47,6 +49,7 @@ class ShowcaseExecutor {
 	}
 
 	private void showcaseThirdStage() {
+		openBalance();
 		BubbleShowCase.Companion.showCase(
 				activity.getString(R.string.onboard_balhead),
 				activity.getString(R.string.onboard_balbody),
@@ -54,6 +57,13 @@ class ShowcaseExecutor {
 				stagedBubbleListener,
 				root.findViewById(R.id.homeTimeAgo),
 				activity);
+	}
+
+	private void openBalance() {
+		if (root.findViewById(R.id.balances_recyclerView) != null &&
+			    ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildCount() > 0 &&
+			    ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0).findViewById(R.id.swipe_reveal_layout) != null)
+			((SwipeRevealLayout) ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0).findViewById(R.id.swipe_reveal_layout)).open(true);
 	}
 
 	private void showcaseNextStage(@NotNull BubbleShowCase bubbleShowCase) {

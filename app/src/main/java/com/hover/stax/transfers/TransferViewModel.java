@@ -54,15 +54,6 @@ public class TransferViewModel extends StagedViewModel {
 		return type;
 	}
 
-	public Channel getChannel(int id) {
-		List<Channel> allChannels = selectedChannels.getValue() != null ? selectedChannels.getValue() : new ArrayList<>();
-		for (Channel channel : allChannels) {
-			if (channel.id == id) {
-				return channel;
-			}
-		}
-		return null;
-	}
 	private void findActiveChannel(List<Channel> channels) {
 		if (channels != null && channels.size() > 0) {
 			activeChannel.setValue(channels.get(0));
