@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -35,13 +36,15 @@ public class TransferFragment extends StagedFragment {
 
 	private TransferViewModel transferViewModel;
 
-	private TextInputLayout recipientEntry, amountEntry;
+	private RelativeLayout recipientEntry;
+	private TextInputLayout recipientLabel, amountEntry;
 	private EditText amountInput, recipientInput, noteInput;
-	private RadioGroup fromRadioGroup;
-	private AutoCompleteTextView networkDropdown;
+	private RadioGroup channelRadioGroup;
+	private TextView actionLabel;
+	private AutoCompleteTextView actionDropdown;
 	private ImageButton contactButton;
 
-	private TextView amountValue, fromValue, toNetworkValue, recipientValue, noteValue;
+	private TextView amountValue, channelValue, actionValue, recipientValue, noteValue;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		stagedViewModel = new ViewModelProvider(requireActivity()).get(TransferViewModel.class);
@@ -54,19 +57,24 @@ public class TransferFragment extends StagedFragment {
 	protected void init(View root) {
 		setTitle(root);
 		amountValue = root.findViewById(R.id.amountValue);
-		fromValue = root.findViewById(R.id.fromValue);
-		toNetworkValue = root.findViewById(R.id.toNetworkValue);
+		channelValue = root.findViewById(R.id.accountValue);
+		actionLabel = root.findViewById(R.id.actionLabel);
+		actionValue = root.findViewById(R.id.actionValue);
 		recipientValue = root.findViewById(R.id.recipientValue);
 		noteValue = root.findViewById(R.id.reasonValue);
 
 		amountEntry = root.findViewById(R.id.amountEntry);
 		amountInput = root.findViewById(R.id.amount_input);
-		fromRadioGroup = root.findViewById(R.id.fromRadioGroup);
-		networkDropdown = root.findViewById(R.id.networkDropdown);
+		amountInput.setText(transferViewModel.getAmount().getValue());
+		channelRadioGroup = root.findViewById(R.id.channelRadioGroup);
+		actionDropdown = root.findViewById(R.id.networkDropdown);
 		recipientEntry = root.findViewById(R.id.recipientEntry);
+		recipientLabel = root.findViewById(R.id.recipientLabel);
 		recipientInput = root.findViewById(R.id.recipient_input);
+		recipientInput.setText(transferViewModel.getRecipient().getValue());
 		contactButton = root.findViewById(R.id.contact_button);
 		noteInput = root.findViewById(R.id.note_input);
+		noteInput.setText(transferViewModel.getNote().getValue());
 
 		super.init(root);
 	}
@@ -74,8 +82,6 @@ public class TransferFragment extends StagedFragment {
 	private void setTitle(View root) {
 		((TextView) root.findViewById(R.id.summaryCard).findViewById(R.id.title)).setText(
 			getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.fab_airtime : R.string.fab_transfer));
-//		((TextView) root.findViewById(R.id.amountCard).findViewById(R.id.title)).setText(
-//			getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.fab_airtime : R.string.fab_transfer));
 	}
 
 	protected void startObservers(View root) {
@@ -97,8 +103,8 @@ public class TransferFragment extends StagedFragment {
 
 		transferViewModel.getRecipient().observe(getViewLifecycleOwner(), recipient -> recipientValue.setText(recipient));
 		transferViewModel.getRecipientError().observe(getViewLifecycleOwner(), recipientError -> {
-			recipientEntry.setError((recipientError != null ? getString(recipientError) : null));
-			recipientEntry.setErrorIconDrawable(0);
+			recipientLabel.setError((recipientError != null ? getString(recipientError) : null));
+			recipientLabel.setErrorIconDrawable(0);
 		});
 
 		transferViewModel.getNote().observe(getViewLifecycleOwner(), reason -> noteValue.setText(reason));
@@ -107,18 +113,23 @@ public class TransferFragment extends StagedFragment {
 			Log.e(TAG, "actions: " + actions.size());
 			if (actions == null || actions.size() == 0) return;
 			ArrayAdapter<Action> adapter = new ArrayAdapter<>(requireActivity(), R.layout.stax_spinner_item, actions);
-			networkDropdown.setAdapter(adapter);
-			networkDropdown.setText(networkDropdown.getAdapter().getItem(0).toString(), false);
+			actionDropdown.setAdapter(adapter);
+			actionDropdown.setText(actionDropdown.getAdapter().getItem(0).toString(), false);
 		});
 
 		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
-			if (action != null) toNetworkValue.setText(action.toString());
+			if (action != null) {
+				actionValue.setText(action.toString());
+				actionLabel.setText(action.getLabel());
+				if (!action.requiresRecipient())
+					recipientValue.setText(action.toString());
+			}
 		});
 
 		transferViewModel.getActiveChannel().observe(getViewLifecycleOwner(), c -> {
 			if (c != null) {
-				fromValue.setText(c.name);
-				fromRadioGroup.check(c.id);
+				channelValue.setText(c.name);
+				channelRadioGroup.check(c.id);
 			}
 		});
 
@@ -128,7 +139,7 @@ public class TransferFragment extends StagedFragment {
 	}
 
 	private void createChannelSelector(List<Channel> channels) {
-		fromRadioGroup.removeAllViews();
+		channelRadioGroup.removeAllViews();
 
 		for (Channel c : channels) {
 			RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.stax_radio_button, null);
@@ -136,20 +147,21 @@ public class TransferFragment extends StagedFragment {
 			radioButton.setId(c.id);
 			if (transferViewModel.getActiveChannel().getValue() != null && transferViewModel.getActiveChannel().getValue().id == c.id)
 				radioButton.setChecked(true);
-			fromRadioGroup.addView(radioButton);
+			channelRadioGroup.addView(radioButton);
 		}
 	}
 
 	protected void startListeners(View root) {
 		super.startListeners(root);
-		fromRadioGroup.setOnCheckedChangeListener((group, checkedId) -> transferViewModel.setActiveChannel(checkedId));
+		channelRadioGroup.setOnCheckedChangeListener((group, checkedId) -> transferViewModel.setActiveChannel(checkedId));
 		root.findViewById(R.id.add_new_account).setOnClickListener(view -> startActivity(new Intent(getActivity(), ChannelsActivity.class)));
 
-		networkDropdown.setOnItemClickListener((adapterView, view, pos, id) -> {
+		actionDropdown.setOnItemClickListener((adapterView, view, pos, id) -> {
 			Action action = (Action) adapterView.getItemAtPosition(pos);
 			transferViewModel.setActiveAction(action);
 			setRecipientHint(action);
-			toNetworkValue.setText(action.toString());
+			actionValue.setText(action.toString());
+			actionLabel.setText(action.getLabel());
 		});
 
 		amountInput.addTextChangedListener(amountWatcher);
@@ -160,9 +172,9 @@ public class TransferFragment extends StagedFragment {
 
 	private void setRecipientHint(Action action) {
 		if (action.getRequiredParams().contains(Action.ACCOUNT_KEY)) {
-			recipientEntry.setHint(getString(R.string.recipientacct_label));
+			recipientLabel.setHint(getString(R.string.recipientacct_label));
 		} else {
-			recipientEntry.setHint(getString(R.string.recipientphone_label));
+			recipientLabel.setHint(getString(R.string.recipientphone_label));
 		}
 	}
 

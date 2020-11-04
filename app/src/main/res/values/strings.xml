@@ -12,6 +12,9 @@
 	<string name="nav_transaction">Transaction Details</string>
 	<string name="nav_schedule">Schedule Details</string>
 	<string name="nav_request">Request Details</string>
+	<string name="nav_transfer">Transfer Details</string>
+	<string name="nav_edit_request">Edit Request Details</string>
+	<string name="nav_edit_transfer">Edit Transfer Details</string>
 	<string name="nav_language">Language Choice</string>
 	<string name="nav_channels">Choose Channels</string>
 	<string name="nav_sim_permission">Grant SIM permission</string>
@@ -130,6 +133,7 @@
 	<!-- Transfer -->
 	<string name="amount_cardhead">Amount</string>
 	<string name="amount_label">How much money?</string>
+	<string name="channel_label">Account</string>
 	<string name="fromacct_cardhead">From this account</string>
 	<string name="link_addacct"><u>+ Add an account</u></string>
 	<string name="recipientnetwork_cardhead">To network</string>
@@ -154,6 +158,8 @@
 	<string name="pending_callout">Transaction sent. Waiting for confirmation.</string>
 	<string name="pending_cardhead">Waiting for confirmation</string>
 	<string name="pending_cardbody">The USSD session is complete, but we have not received a confirmation SMS yet.</string>
+	<string name="edittransfer_cardhead">Edit Transfer</string>
+	<string name="editairtime_cardhead">Edit Buy Airtime</string>
 
 	<!-- Request -->
 	<string name="req_cardhead">Request money</string>
@@ -168,6 +174,7 @@
 	<string name="toast_request_scheduled">Your request has been scheduled. You will be reminded to send a message on %1$s</string>
 	<string name="descrip_request">Request from %1$s</string>
 	<string name="descrip_airtime_sched">buy airtime with %1$s for %2$s</string>
+	<string name="editreq_cardhead">Edit Request</string>
 
 	<!-- Scheduling -->
 	<string name="future_toggle">Send in the future</string>

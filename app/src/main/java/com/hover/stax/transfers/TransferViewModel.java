@@ -54,18 +54,19 @@ public class TransferViewModel extends StagedViewModel {
 		return type;
 	}
 
-	public Channel getChannel(int id) {
-		List<Channel> allChannels = selectedChannels.getValue() != null ? selectedChannels.getValue() : new ArrayList<>();
-		for (Channel channel : allChannels) {
-			if (channel.id == id) {
-				return channel;
-			}
-		}
-		return null;
-	}
 	private void findActiveChannel(List<Channel> channels) {
 		if (channels != null && channels.size() > 0) {
 			activeChannel.setValue(channels.get(0));
+		}
+	}
+
+	void setActiveChannel(String channelString) {
+		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0) {
+			return;
+		}
+		for (Channel c : selectedChannels.getValue()) {
+			if (c.toString().equals(channelString))
+				activeChannel.setValue(c);
 		}
 	}
 
@@ -105,6 +106,15 @@ public class TransferViewModel extends StagedViewModel {
 
 	void setActiveAction(Action action) {
 		activeAction.setValue(action);
+	}
+	void setActiveAction(String actionString) {
+		if (filteredActions.getValue() == null || filteredActions.getValue().size() == 0) {
+			return;
+		}
+		for (Action a : filteredActions.getValue()) {
+			if (a.toString().equals(actionString))
+				activeAction.setValue(a);
+		}
 	}
 
 	LiveData<Action> getActiveAction() {
@@ -181,8 +191,8 @@ public class TransferViewModel extends StagedViewModel {
 		}
 	}
 
-	private boolean requiresActionChoice() {
-		return filteredActions.getValue() != null && filteredActions.getValue().size() > 0 && (filteredActions.getValue().size() > 1 || filteredActions.getValue().get(0).hasToInstitution());
+	boolean requiresActionChoice() { // in last case, should have request network as choice
+		return filteredActions.getValue() != null && filteredActions.getValue().size() > 0 && (filteredActions.getValue().size() > 1 || filteredActions.getValue().get(0).hasDiffToInstitution());
 	}
 
 	boolean stageValidates() {
@@ -208,7 +218,7 @@ public class TransferViewModel extends StagedViewModel {
 
 	boolean isDone() { return stage.getValue() == REVIEW || stage.getValue() == REVIEW_DIRECT; }
 
-	public void setSchedule(Schedule s) {
+	public void view(Schedule s) {
 		schedule.setValue(s);
 		setType(s.type);
 		setActiveChannel(s.channel_id);

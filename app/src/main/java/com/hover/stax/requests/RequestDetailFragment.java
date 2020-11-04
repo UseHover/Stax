@@ -82,7 +82,7 @@ public class RequestDetailFragment extends Fragment {
 				.setPosButton(R.string.btn_cancelreq, btn -> {
 					viewModel.deleteRequest();
 					UIHelper.flashMessage(getContext(), getString(R.string.toast_confirm_cancelreq));
-					NavHostFragment.findNavController(RequestDetailFragment.this).navigate(R.id.navigation_home);
+					NavHostFragment.findNavController(RequestDetailFragment.this).popBackStack();
 				})
 				.isDestructive()
 				.showIt();

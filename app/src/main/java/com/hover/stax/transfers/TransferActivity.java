@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.amplitude.api.Amplitude;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -51,6 +52,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		transferViewModel.getIsFuture().observe(this, isFuture -> onUpdateStage(transferViewModel.getStage().getValue()));
 		transferViewModel.getFutureDate().observe(this, date -> onUpdateStage(transferViewModel.getStage().getValue()));
 		transferViewModel.repeatSaved().observe(this, isSaved -> onUpdateStage(transferViewModel.getStage().getValue()));
+		transferViewModel.getIsEditing().observe(this, isEditing -> onUpdateStage(transferViewModel.getStage().getValue()));
 
 		transferViewModel.setType(getIntent().getAction());
 	}
@@ -69,7 +71,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		});
 		scheduleViewModel.getSchedule().observe(this, schedule -> {
 			if (schedule == null) return;
-			transferViewModel.setSchedule(schedule);
+			transferViewModel.view(schedule);
 		});
 		scheduleViewModel.setSchedule(schedule_id);
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_schedule_notification));
@@ -94,6 +96,8 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void authenticate() {
+//		if (transferViewModel.getActiveAction().getValue() == null)
+
 		new BiometricChecker(this, this).startAuthentication(transferViewModel.getActiveAction().getValue());
 //		makeHoverCall(transferViewModel.getActiveAction().getValue());
 	}
@@ -120,16 +124,25 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 				.run();
 	}
 
-	private void onUpdateStage(StagedViewModel.StagedEnum stage) {
-		findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.fromRow).setVisibility(stage.compare(FROM_ACCOUNT) > 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.toNetworkRow).setVisibility(stage.compare(TO_NETWORK) > 0 &&
-															  transferViewModel.getActions().getValue() != null && transferViewModel.getActions().getValue().size() > 0 && (transferViewModel.getActions().getValue().size() > 1 || !transferViewModel.getActiveAction().getValue().toString().equals("Phone number")) ? View.VISIBLE : View.GONE);
-		findViewById(R.id.recipientRow).setVisibility(stage.compare(RECIPIENT) > 0 && transferViewModel.getActiveAction().getValue() != null && transferViewModel.getActiveAction().getValue().requiresRecipient() ? View.VISIBLE : View.GONE);
-		findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && transferViewModel.getNote().getValue() != null && !transferViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
+	private void onUpdateStage(@Nullable StagedViewModel.StagedEnum stage) {
+		if (Navigation.findNavController(this, R.id.nav_host_fragment).getCurrentDestination().getId() == R.id.navigation_edit)
+			((ExtendedFloatingActionButton) findViewById(R.id.fab)).hide();
+		else if (findViewById(R.id.amountRow) != null) {
+			setSummaryCard(stage);
+			setCurrentCard(stage);
+			setFab(stage);
+		}
+	}
 
-		setCurrentCard(stage);
-		setFab(stage);
+	private void setSummaryCard(@Nullable StagedViewModel.StagedEnum stage) {
+		findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.accountRow).setVisibility(stage.compare(FROM_ACCOUNT) > 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.actionRow).setVisibility(stage.compare(TO_NETWORK) > 0 &&
+			transferViewModel.getActions().getValue() != null && transferViewModel.getActions().getValue().size() > 0 && (transferViewModel.getActions().getValue().size() > 1 || transferViewModel.getActiveAction().getValue().hasToInstitution()) ? View.VISIBLE : View.GONE);
+		findViewById(R.id.recipientRow).setVisibility(stage.compare(RECIPIENT) > 0 && transferViewModel.getActiveAction().getValue() != null ? View.VISIBLE : View.GONE);
+		findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && transferViewModel.getNote().getValue() != null && !transferViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
+		findViewById(R.id.btnRow).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
+
 	}
 
 	private void setCurrentCard(StagedViewModel.StagedEnum stage) {
@@ -147,15 +160,15 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		ExtendedFloatingActionButton fab = findViewById(R.id.fab);
 		if (stage.compare(REVIEW) >= 0) {
 			if (transferViewModel.getIsFuture().getValue() != null && transferViewModel.getIsFuture().getValue()) {
-				fab.setVisibility(transferViewModel.getFutureDate().getValue() == null ? View.GONE : View.VISIBLE);
 				fab.setText(getString(R.string.fab_schedule));
+				if (transferViewModel.getFutureDate().getValue() == null) { fab.hide(); } else { fab.show(); }
 			} else {
-				fab.setVisibility(View.VISIBLE);
 				fab.setText(getString(R.string.fab_transfernow));
+				fab.show();
 			}
 		} else {
-			fab.setVisibility(View.VISIBLE);
 			fab.setText(R.string.btn_continue);
+			fab.show();
 		}
 	}
 
@@ -178,5 +191,12 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);
 		setResult(RESULT_OK, i);
 		finish();
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (Navigation.findNavController(findViewById(R.id.nav_host_fragment)).getCurrentDestination().getId() != R.id.navigation_edit ||
+			    !Navigation.findNavController(findViewById(R.id.nav_host_fragment)).popBackStack())
+			super.onBackPressed();
 	}
 }

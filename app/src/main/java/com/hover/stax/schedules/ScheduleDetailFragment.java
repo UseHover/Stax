@@ -80,7 +80,7 @@ public class ScheduleDetailFragment extends Fragment {
 				.setPosButton(R.string.btn_canceltrans, btn -> {
 					viewModel.deleteSchedule();
 					UIHelper.flashMessage(getContext(), getString(R.string.toast_confirm_cancelfuture));
-					NavHostFragment.findNavController(ScheduleDetailFragment.this).navigate(R.id.navigation_home);
+					NavHostFragment.findNavController(ScheduleDetailFragment.this).popBackStack();
 				})
 				.isDestructive()
 				.showIt();
