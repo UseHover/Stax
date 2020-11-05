@@ -78,6 +78,7 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		recyclerView.setHasFixedSize(true);
 
 		balancesViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
+			Log.e(TAG, "found some channels: " + channels);
 			balanceAdapter = new BalanceAdapter(channels, (MainActivity) getActivity());
 			recyclerView.setAdapter(balanceAdapter);
 			recyclerView.setVisibility(channels != null && channels.size() > 0 ? View.VISIBLE : View.GONE);

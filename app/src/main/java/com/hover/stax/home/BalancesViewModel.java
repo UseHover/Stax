@@ -26,7 +26,7 @@ public class BalancesViewModel extends AndroidViewModel {
 	private RunBalanceListener listener;
 
 	private LiveData<List<Channel>> selectedChannels;
-	private LiveData<List<Action>> balanceActions;
+	private LiveData<List<Action>> balanceActions = new MediatorLiveData<>();
 	private MutableLiveData<Integer> runFlag;
 	private MediatorLiveData<List<Action>> toRun;
 
@@ -42,8 +42,9 @@ public class BalancesViewModel extends AndroidViewModel {
 		balanceActions = Transformations.switchMap(selectedChannels, this::loadBalanceActions);
 
 		toRun = new MediatorLiveData<>();
+		toRun.setValue(new ArrayList<>());
 		toRun.addSource(runFlag, this::onSetRunning);
-		toRun.addSource(balanceActions, this::onSetBalanceActions);
+		toRun.addSource(balanceActions, this::onActionsLoaded);
 	}
 
 	void setListener(RunBalanceListener l) {
@@ -62,10 +63,10 @@ public class BalancesViewModel extends AndroidViewModel {
 	}
 
 	public LiveData<List<Action>> loadBalanceActions(List<Channel> channelList) {
+		Log.e(TAG, "Loading balance actions: " + channelList.size());
 		int[] ids = new int[channelList.size()];
-		for (int c = 0; c < channelList.size(); c++) {
+		for (int c = 0; c < channelList.size(); c++)
 			ids[c] = channelList.get(c).id;
-		}
 		return repo.getLiveActions(ids, Action.BALANCE);
 	}
 
@@ -97,26 +98,15 @@ public class BalancesViewModel extends AndroidViewModel {
 
 	private void onSetRunning(Integer flag) {
 		Log.e(TAG, "setting running. Flag: " + flag);
-		if (flag == null) return;
-		else if (flag == NONE) toRun.setValue(new ArrayList<>());
+		if (flag == null || flag == NONE) toRun.setValue(new ArrayList<>());
 		else if (flag == ALL) startRun(balanceActions.getValue());
 		else startRun(getChannelActions(flag));
 	}
 
-	private void onSetBalanceActions(List<Action> balanceActions) {
-		if (runFlag.getValue() == null) return;
-		if (runFlag.getValue() == ALL) startRun(balanceActions);
+	private void onActionsLoaded(List<Action> actions) {
+		if (runFlag.getValue() == null || toRun.getValue().size() > 0) return;
+		if (runFlag.getValue() == ALL) startRun(actions);
 		else if (runFlag.getValue() != NONE) startRun(getChannelActions(runFlag.getValue()));
-	}
-
-	private List<Action> getChannelActions(int flag) {
-		List list = new ArrayList<Action>();
-		if (balanceActions.getValue() == null || balanceActions.getValue().size() == 0) return list;
-		for (Action action : balanceActions.getValue()) {
-			if (action.channel_id == flag)
-				list.add(action);
-		}
-		return list;
 	}
 
 	void startRun(List<Action> actions) {
@@ -135,11 +125,23 @@ public class BalancesViewModel extends AndroidViewModel {
 
 	void setRan(int index) {
 		if (toRun.getValue().size() > index + 1) {
+			Log.e(TAG, "running next");
 			runNext(toRun.getValue(), index + 1);
 		} else {
+			Log.e(TAG, "done run");
 			toRun.setValue(new ArrayList<>());
 			runFlag.setValue(NONE);
 		}
+	}
+
+	private List<Action> getChannelActions(int flag) {
+		List list = new ArrayList<Action>();
+		if (balanceActions.getValue() == null || balanceActions.getValue().size() == 0) return list;
+		for (Action action : balanceActions.getValue()) {
+			if (action.channel_id == flag)
+				list.add(action);
+		}
+		return list;
 	}
 
 	public interface RunBalanceListener {

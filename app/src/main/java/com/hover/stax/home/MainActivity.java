@@ -62,9 +62,9 @@ public class MainActivity extends AppCompatActivity implements
 
 		balancesViewModel = new ViewModelProvider(this).get(BalancesViewModel.class);
 		balancesViewModel.setListener(this);
-		balancesViewModel.getSelectedChannels().observe(this, channels -> Log.e(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel. " + channels.size()));
-		balancesViewModel.getBalanceActions().observe(this, actions -> Log.e(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
-		balancesViewModel.getToRun().observe(this, actions -> Log.e(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
+		balancesViewModel.getToRun().observe(this, actions -> Log.e(TAG, "RunActions observer is neccessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
+		balancesViewModel.getBalanceActions().observe(this, actions -> Log.e(TAG, "Actions observer is neccessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
+		balancesViewModel.getSelectedChannels().observe(this, channels -> Log.e(TAG, "Channels observer is neccessary to make updates fire, but all logic is in viewmodel. " + channels.size()));
 
 		setUpNav();
 	}
@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements
 	}
 
 	private void run(Action action, int index) {
+		Log.e(TAG, "running index: " + index);
 		if (balancesViewModel.getChannel(action.channel_id) != null) {
 			new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), MainActivity.this, index)
 				.finalScreenTime(0).run();
@@ -168,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements
 	}
 
 	private void onAddServices(int resultCode) {
+		Log.e(TAG, "Add services result");
 		balancesViewModel.setRunning();
 		maybeRunShowcase();
 	}
