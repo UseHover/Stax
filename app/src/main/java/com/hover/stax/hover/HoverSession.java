@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 
 final public class HoverSession {
-	private final static String TAG = "HoverCaller";
+	private final static String TAG = "HoverSession";
 
 	final private Fragment frag;
 	final private Channel channel;
@@ -88,7 +88,7 @@ final public class HoverSession {
 
 	private byte[] getSenderLogo() {
 		byte[] l = getLogo(channel.logoUrl);
-		Log.e(TAG, "logo array: " + l);
+//		Log.e(TAG, "logo array: " + l);
 		return l;
 	}
 	private byte[] getReceiverLogo(Action a) {
@@ -98,12 +98,12 @@ final public class HoverSession {
 	}
 	private byte[] getLogo(String url) {
 		try {
-			Log.e(TAG, "logo url: " + url);
+//			Log.e(TAG, "logo url: " + url);
 			Bitmap b = Picasso.get().load(url).networkPolicy(NetworkPolicy.OFFLINE).get();
-			Log.e(TAG, "bitmap: " + b);
+//			Log.e(TAG, "bitmap: " + b);
 			return Utils.bitmapToByteArray(b);
 		} catch (Exception ignored) {
-			Log.e(TAG, "exception", ignored);
+//			Log.e(TAG, "exception", ignored);
 			return null;
 		}
 	}
