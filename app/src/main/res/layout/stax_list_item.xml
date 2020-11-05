@@ -56,5 +56,5 @@
 	    android:visibility="gone"
 	    android:id="@+id/pending_notify_in_list"
 	    android:text="@string/pending_callout"
-	    app:drawableStartCompat="@drawable/ic_baseline_warning_24" />
+	    app:drawableStartCompat="@drawable/ic_warning" />
 </LinearLayout>
