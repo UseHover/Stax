@@ -13,7 +13,6 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.hover.sdk.permissions.PermissionHelper;
-import com.hover.sdk.utils.AnalyticsSingleton;
 import com.hover.stax.R;
 
 import java.io.ByteArrayOutputStream;
@@ -128,7 +127,7 @@ public class Utils {
 				if (id == null) { id = Settings.Secure.getString(c.getContentResolver(), Settings.Secure.ANDROID_ID); }
 				return id;
 			}
-		} catch (SecurityException e) {  AnalyticsSingleton.capture(c, e); }
+		} catch (SecurityException e) { Log.e(TAG, "Could not get device Id", e); }
 		return c.getString(R.string.hsdk_unknown_device_id);
 	}
 
