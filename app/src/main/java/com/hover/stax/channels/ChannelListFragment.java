@@ -1,6 +1,7 @@
 package com.hover.stax.channels;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +13,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
+import com.hover.stax.database.Constants;
+import com.hover.stax.requestAccount.RequestAccountActivity;
+import com.hover.stax.utils.UIHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +40,9 @@ public class ChannelListFragment extends Fragment implements ChannelsAdapter.Sel
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		addChannels(view);
+		view.findViewById(R.id.request_accounts_btn).setOnClickListener(v -> {
+			startActivity(new Intent(getActivity(), RequestAccountActivity.class));
+		});
 	}
 
 	private void addChannels(View view) {

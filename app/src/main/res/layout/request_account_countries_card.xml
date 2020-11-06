@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hover.stax.views.StaxCardView android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:title="@string/country_cardhead"
+    android:id="@+id/countryStaxCard"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<RadioGroup
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+		android:layout_marginHorizontal="@dimen/margin_3"
+	    android:id="@+id/countriesRadioGroup"/>
+
+	<RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content">
+
+		<androidx.appcompat.widget.AppCompatButton
+		    android:id="@+id/continueCountryButton"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/btn_continue"
+		    android:layout_alignParentEnd="true"
+		    android:layout_marginTop="@dimen/margin_21"
+		    style="@style/StaxButton"
+		    android:fontFamily="font-medium" />
+	</RelativeLayout>
+</com.hover.stax.views.StaxCardView>

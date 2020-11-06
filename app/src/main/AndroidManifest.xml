@@ -51,6 +51,8 @@
 			android:windowSoftInputMode="stateVisible|adjustResize" />
 		<activity android:name=".destruct.SelfDestructActivity" />
 
+		<activity android:name=".requestAccount.RequestAccountActivity" android:theme="@style/StaxTheme"/>
+
 		<receiver
 			android:name=".hover.TransactionReceiver"
 			android:enabled="true"

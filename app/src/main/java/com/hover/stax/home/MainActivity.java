@@ -134,12 +134,6 @@ public class MainActivity extends AppCompatActivity implements
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Log.e(TAG, "request: " + requestCode);
-		Log.e(TAG, "result: " + resultCode);
-		if (data != null && data.hasExtra("error"))
-			Log.e(TAG, "error: " + data.getStringExtra("error"));
-		if (data != null)
-			Log.e(TAG, "action_id: " + data.getStringExtra("action_id"));
 		switch (requestCode) {
 			case Constants.TRANSFER_REQUEST:
 				if (data != null) { onProbableHoverCall(data); }
