@@ -11,19 +11,16 @@ import java.util.List;
 
 @Dao
 public interface TransactionDao {
-	@Query("SELECT * FROM stax_transactions")
+	@Query("SELECT * FROM stax_transactions ORDER BY initiated_at DESC")
 	List<StaxTransaction> getAll();
 
-	@Query("SELECT * FROM stax_transactions WHERE transaction_type != 'balance'")
+	@Query("SELECT * FROM stax_transactions WHERE transaction_type != 'balance' ORDER BY initiated_at DESC")
 	LiveData<List<StaxTransaction>> getTransfers();
 
-	@Query("SELECT * FROM stax_transactions WHERE channel_id = :channelId AND transaction_type != 'balance' AND status == 'succeeded'")
-	LiveData<List<StaxTransaction>> getCompleteTransfers(int channelId);
+	@Query("SELECT * FROM stax_transactions WHERE channel_id = :channelId AND transaction_type != 'balance' AND status != 'failed' ORDER BY initiated_at DESC")
+	LiveData<List<StaxTransaction>> getCompleteAndPendingTransfers(int channelId);
 
-	@Query("SELECT * FROM stax_transactions WHERE transaction_type != 'balance' AND status == 'succeeded'")
-	LiveData<List<StaxTransaction>> getCompleteTransfers();
-
-	@Query("SELECT * FROM stax_transactions WHERE transaction_type != 'balance' AND status != 'failed'")
+	@Query("SELECT * FROM stax_transactions WHERE transaction_type != 'balance' AND status != 'failed' ORDER BY initiated_at DESC")
 	LiveData<List<StaxTransaction>> getCompleteAndPendingTransfers();
 
 	@Query("SELECT * FROM stax_transactions WHERE uuid = :uuid LIMIT 1")

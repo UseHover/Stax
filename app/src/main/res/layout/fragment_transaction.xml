@@ -87,7 +87,7 @@
 		    android:visibility="gone"
 		    android:id="@+id/pending_notify_in_details"
 		    app:title="@string/pending_cardhead"
-		    app:backRes="@drawable/ic_baseline_warning_24"
+		    app:backRes="@drawable/ic_warning"
 		    app:staxCardColor="@color/cardDarkBlue"
 		    app:backClickable="false"
 		    app:showBack="true">

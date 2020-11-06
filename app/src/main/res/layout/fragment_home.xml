@@ -16,6 +16,7 @@
 	    swiperefresh:layout_behavior="@string/appbar_scrolling_view_behavior"
 	    swiperefresh:top_progress_bar_color_2="@color/brightBlue"
 	    swiperefresh:top_progress_bar_color_3="@color/offWhite">
+
 	<androidx.core.widget.NestedScrollView
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent">

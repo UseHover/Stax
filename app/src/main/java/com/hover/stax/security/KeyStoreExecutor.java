@@ -6,6 +6,7 @@ import android.security.KeyPairGeneratorSpec;
 import android.util.Base64;
 import android.util.Log;
 
+import com.hover.stax.R;
 import com.hover.stax.utils.Utils;
 
 import java.io.ByteArrayInputStream;
@@ -57,7 +58,7 @@ final public class KeyStoreExecutor {
 		} catch (Exception e) {
 			if (c != null) {
 			}
-			Log.println(Log.ERROR, TAG, c.getString(com.hover.sdk.R.string.hsdk_log_pin_encrypt_err));
+			Log.println(Log.ERROR, TAG, c.getString(R.string.hsdk_log_pin_encrypt_err));
 		}
 		return null;
 	}
@@ -80,7 +81,7 @@ final public class KeyStoreExecutor {
 
 			return new String(bytes, 0, bytes.length, "UTF-8");
 		} catch (Exception e) {
-			Log.println(Log.ERROR, TAG, c.getString(com.hover.sdk.R.string.hsdk_log_pin_decrypt_err));
+			Log.println(Log.ERROR, TAG, c.getString(R.string.hsdk_log_pin_decrypt_err));
 		}
 		return null;
 	}
@@ -129,7 +130,7 @@ final public class KeyStoreExecutor {
 				generator.generateKeyPair();
 			}
 		} catch (Exception e) {
-			Log.println(Log.ERROR, TAG, c.getString(com.hover.sdk.R.string.hsdk_log_keystore_err));
+			Log.println(Log.ERROR, TAG, c.getString(R.string.hsdk_log_keystore_err));
 		}
 	}
 

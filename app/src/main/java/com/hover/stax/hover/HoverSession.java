@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 
 final public class HoverSession {
-	private final static String TAG = "HoverCaller";
+	private final static String TAG = "HoverSession";
 
 	final private Fragment frag;
 	final private Channel channel;
@@ -54,7 +54,6 @@ final public class HoverSession {
 		builder.showUserStepDescriptions(true);
 		builder.finalMsgDisplayTime(finalScreenTime);
 		builder.style(R.style.StaxHoverTheme);
-		builder.timeout(1000000);
 		builder.styleMode(Constants.STYLE_MODE_FOR_STAX);
 		builder.transactingImages(getSenderLogo(), getReceiverLogo(b.action));
 		builder.customBackgroundImage(R.drawable.stax_background);
@@ -89,7 +88,7 @@ final public class HoverSession {
 
 	private byte[] getSenderLogo() {
 		byte[] l = getLogo(channel.logoUrl);
-		Log.e(TAG, "logo array: " + l);
+//		Log.e(TAG, "logo array: " + l);
 		return l;
 	}
 	private byte[] getReceiverLogo(Action a) {
@@ -99,12 +98,12 @@ final public class HoverSession {
 	}
 	private byte[] getLogo(String url) {
 		try {
-			Log.e(TAG, "logo url: " + url);
+//			Log.e(TAG, "logo url: " + url);
 			Bitmap b = Picasso.get().load(url).networkPolicy(NetworkPolicy.OFFLINE).get();
-			Log.e(TAG, "bitmap: " + b);
+//			Log.e(TAG, "bitmap: " + b);
 			return Utils.bitmapToByteArray(b);
 		} catch (Exception ignored) {
-			Log.e(TAG, "exception", ignored);
+//			Log.e(TAG, "exception", ignored);
 			return null;
 		}
 	}
@@ -135,7 +134,7 @@ final public class HoverSession {
 		private int requestCode, finalScreenTime = 2000;
 
 		public Builder(Action a, Channel c, Activity act, int code) {
-			if (a == null) throw new IllegalArgumentException("Context must not be null");
+			if (a == null) throw new IllegalArgumentException("Action must not be null");
 			activity = act;
 			channel = c;
 			action = a;

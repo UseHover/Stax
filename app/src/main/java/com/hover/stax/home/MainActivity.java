@@ -49,28 +49,24 @@ import com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
-	BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener, SwipeAllBalanceListener {
+	BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener {
 
 	final public static String TAG = "MainActivity";
 	private BalancesViewModel balancesViewModel;
-	private CustomSwipeRefreshLayout swipeRefreshLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.activity_main);
 
 		balancesViewModel = new ViewModelProvider(this).get(BalancesViewModel.class);
 		balancesViewModel.setListener(this);
-		balancesViewModel.getSelectedChannels().observe(this, channels -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel"));
-		balancesViewModel.getBalanceActions().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel"));
-		balancesViewModel.getToRun().observe(this, actions -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel"));
+		balancesViewModel.getToRun().observe(this, actions -> Log.e(TAG, "RunActions observer is neccessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
+		balancesViewModel.getBalanceActions().observe(this, actions -> Log.e(TAG, "Actions observer is neccessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
+		balancesViewModel.getSelectedChannels().observe(this, channels -> Log.e(TAG, "Channels observer is neccessary to make updates fire, but all logic is in viewmodel. " + channels.size()));
 
 		setUpNav();
 	}
-
-
 
 	public void addAccount(View view) {
 		Amplitude.getInstance().logEvent(getString(R.string.click_add_account));
@@ -86,11 +82,13 @@ public class MainActivity extends AppCompatActivity implements
 
 	@Override
 	public void onTapRefresh(int channel_id) {
+		Log.e(TAG, "please refresh");
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_single));
 		balancesViewModel.setRunning(channel_id);
 	}
 
 	public void runAllBalances(View view) {
+		Log.e(TAG, "please refresh all");
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_all));
 		balancesViewModel.setRunning();
 	}
@@ -104,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements
 	}
 
 	private void run(Action action, int index) {
+		Log.e(TAG, "running index: " + index);
 		if (balancesViewModel.getChannel(action.channel_id) != null) {
 			new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), MainActivity.this, index)
 				.finalScreenTime(0).run();
@@ -135,14 +134,19 @@ public class MainActivity extends AppCompatActivity implements
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-
+		Log.e(TAG, "request: " + requestCode);
+		Log.e(TAG, "result: " + resultCode);
+		if (data != null && data.hasExtra("error"))
+			Log.e(TAG, "error: " + data.getStringExtra("error"));
+		if (data != null)
+			Log.e(TAG, "action_id: " + data.getStringExtra("action_id"));
 		switch (requestCode) {
 			case Constants.TRANSFER_REQUEST:
-				if (resultCode == RESULT_OK && data != null) { onProbableHoverCall(data); }
+				if (data != null) { onProbableHoverCall(data); }
 				else Amplitude.getInstance().logEvent(getString(R.string.sdk_failure));
 				break;
 			case Constants.ADD_SERVICE:
-				onAddServices(resultCode);
+				if (resultCode == RESULT_OK) { onAddServices(resultCode); }
 				break;
 			case Constants.REQUEST_REQUEST:
 				if (resultCode == RESULT_OK) { onRequest(data); }
@@ -167,8 +171,8 @@ public class MainActivity extends AppCompatActivity implements
 	}
 
 	private void onAddServices(int resultCode) {
-		if (resultCode == RESULT_OK)
-			balancesViewModel.setRunning();
+		Log.e(TAG, "Add services result");
+		balancesViewModel.setRunning();
 		maybeRunShowcase();
 	}
 	private void maybeRunShowcase() {
@@ -269,11 +273,6 @@ public class MainActivity extends AppCompatActivity implements
 			popup.show();
 		});
 		return fab;
-	}
-
-	@Override
-	public void triggerRefresh(CustomSwipeRefreshLayout swipeRefreshLayout) {
-		runAllBalances(null);
 	}
 }
 

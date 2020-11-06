@@ -15,8 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
@@ -51,6 +53,8 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 		setColors(holder, channel,
 			UIHelper.getColor(channel.primaryColorHex, true, holder.itemView.getContext()),
 			UIHelper.getColor(channel.secondaryColorHex, false, holder.itemView.getContext()));
+		if (channel.latestBalanceTimestamp != null && channel.latestBalanceTimestamp > (DateUtils.now() - DateUtils.MIN))
+			holder.swl.open(true);
 	}
 
 	private void setColors(BalanceViewHolder holder, Channel channel, int primary, int secondary) {
@@ -72,6 +76,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 		private TextView channelName, channelId, amount;
 		private ImageButton refreshButton;
 		private FrameLayout balanced_swiped_layout;
+		private SwipeRevealLayout swl;
 
 		public BalanceViewHolder(@NonNull View itemView) {
 			super(itemView);
@@ -82,6 +87,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 			refreshButton.setOnClickListener(this);
 			amount = itemView.findViewById(R.id.balance_amount);
 			balanced_swiped_layout = itemView.findViewById(R.id.balanced_swiped_layout);
+			swl = itemView.findViewById(R.id.swipe_reveal_layout);
 		}
 
 		@Override

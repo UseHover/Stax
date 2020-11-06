@@ -3,9 +3,11 @@
 	<style name="StaxTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
 		<item name="colorPrimary">@color/colorPrimary</item>
 
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
 		<item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
 		<item name="colorOnPrimary">@color/offWhite</item>
 
+		<item name="colorAccent">@color/brightBlue</item>
 		<item name="colorSecondary">@color/brightBlue</item>
 		<item name="colorSecondaryVariant">@color/brightBlue</item>
 		<item name="colorOnSecondary">@color/cardViewColor</item>
@@ -26,6 +28,7 @@
 		<item name="android:windowBackground">@color/colorPrimaryDark</item>
 		<item name="android:fitsSystemWindows">true</item>
 
+		<item name="titleTextColor">@color/offWhite</item>
 		<item name="android:textColor">@color/offWhite</item>
 		<item name="android:buttonStyle">@style/StaxButton</item>
 		<item name="buttonStyle">@style/StaxButton</item>
@@ -37,7 +40,8 @@
 	</style>
 
 	<style name="StaxHoverTheme" parent="StaxTheme">
-		<item name="hover_textColor">@color/colorPrimary</item>
+		<item name="android:buttonStyle">@style/HoverButton</item>
+		<item name="buttonStyle">@style/HoverButton</item>
 	</style>
 
 	<style name="SplashTheme" parent="StaxTheme">
@@ -60,6 +64,13 @@
 		<item name="elevation">1dp</item>
 		<item name="android:textAllCaps">false</item>
 		<item name="textAllCaps">false</item>
+	</style>
+
+	<style name="HoverButton" parent="StaxButton">
+		<item name="android:paddingStart">@dimen/margin_13</item>
+		<item name="android:paddingEnd">@dimen/margin_13</item>
+		<item name="android:paddingTop">0dp</item>
+		<item name="android:paddingBottom">0dp</item>
 	</style>
 
 	<style name="StaxPopupMenu" parent="Widget.AppCompat.PopupMenu">
@@ -117,6 +128,7 @@
 		<item name="android:textSize">@dimen/text_21</item>
 		<item name="endIconTint">@color/offWhite</item>
 		<item name="materialThemeOverlay">@style/StaxDropdownPopup</item>
+		<item name="errorEnabled">true</item>
 	</style>
 
 	<style name="StaxDropdownPopup" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
