@@ -101,7 +101,7 @@ public class StaxTransaction {
 		updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, DateUtils.now());
 
 		HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES);
-		if (extras.containsKey(Action.FEE_KEY))
+		if (extras != null && extras.containsKey(Action.FEE_KEY))
 			fee = Utils.getAmount(extras.get(Action.FEE_KEY));
 	}
 

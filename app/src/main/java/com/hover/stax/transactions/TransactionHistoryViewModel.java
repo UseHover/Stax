@@ -10,7 +10,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.hover.sdk.transactions.TransactionContract;
-import com.hover.stax.actions.Action;
 import com.hover.stax.database.DatabaseRepo;
 
 import java.util.List;
@@ -36,10 +35,12 @@ public class TransactionHistoryViewModel extends AndroidViewModel {
 
 	public void saveTransaction(Intent data, Context c) {
 		new Thread(() -> {
-			StaxTransaction t = new StaxTransaction(data, repo.getAction(data.getStringExtra(TransactionContract.COLUMN_ACTION_ID)), c);
-			if (t.uuid != null) {
-				repo.insert(t);
-			}
+			try {
+				StaxTransaction t = new StaxTransaction(data, repo.getAction(data.getStringExtra(TransactionContract.COLUMN_ACTION_ID)), c);
+				if (t.uuid != null) {
+					repo.insert(t);
+				}
+			} catch (Exception e) { Log.e("THViewModel", "Failed to save transaction.", e); }
 		}).start();
 	}
 }

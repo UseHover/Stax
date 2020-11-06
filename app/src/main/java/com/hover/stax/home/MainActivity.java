@@ -49,11 +49,10 @@ import com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
-	BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener, SwipeAllBalanceListener {
+	BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener {
 
 	final public static String TAG = "MainActivity";
 	private BalancesViewModel balancesViewModel;
-	private CustomSwipeRefreshLayout swipeRefreshLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +67,6 @@ public class MainActivity extends AppCompatActivity implements
 
 		setUpNav();
 	}
-
-
 
 	public void addAccount(View view) {
 		Amplitude.getInstance().logEvent(getString(R.string.click_add_account));
@@ -137,10 +134,15 @@ public class MainActivity extends AppCompatActivity implements
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-
+		Log.e(TAG, "request: " + requestCode);
+		Log.e(TAG, "result: " + resultCode);
+		if (data != null && data.hasExtra("error"))
+			Log.e(TAG, "error: " + data.getStringExtra("error"));
+		if (data != null)
+			Log.e(TAG, "action_id: " + data.getStringExtra("action_id"));
 		switch (requestCode) {
 			case Constants.TRANSFER_REQUEST:
-				if (resultCode == RESULT_OK && data != null) { onProbableHoverCall(data); }
+				if (data != null) { onProbableHoverCall(data); }
 				else Amplitude.getInstance().logEvent(getString(R.string.sdk_failure));
 				break;
 			case Constants.ADD_SERVICE:
@@ -271,11 +273,6 @@ public class MainActivity extends AppCompatActivity implements
 			popup.show();
 		});
 		return fab;
-	}
-
-	@Override
-	public void triggerRefresh(CustomSwipeRefreshLayout swipeRefreshLayout) {
-		runAllBalances(null);
 	}
 }
 

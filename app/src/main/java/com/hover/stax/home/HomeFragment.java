@@ -35,7 +35,6 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	private FutureViewModel futureViewModel;
 	private TransactionHistoryViewModel transactionsViewModel;
 	private BalanceAdapter balanceAdapter;
-	private CustomSwipeRefreshLayout swipeRefreshLayout;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.e(TAG, "creating view");
@@ -53,23 +52,20 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		setUpBalances(view);
 		setUpFuture(view);
 		setUpHistory(view);
-		setupSwipeRefresh(view);
+		setupPullRefresh(view);
 	}
 
-	private void setupSwipeRefresh(View view) {
-		swipeRefreshLayout = view.findViewById(R.id.swipelayout);
-			if(swipeRefreshLayout !=null) {
-				swipeRefreshLayout.setRefreshCompleteTimeout(1000);
-				swipeRefreshLayout.enableTopProgressBar(false);
-				swipeRefreshLayout.setOnRefreshListener(() -> swipeRefreshLayout.refreshComplete());
-			}
-	}
-	private void activateSwipeRefresh() {
-		SwipeAllBalanceListener swipeAllBalanceListener = (MainActivity) getActivity();
-		if(swipeAllBalanceListener !=null) swipeRefreshLayout.setOnRefreshListener(() -> {
-			swipeRefreshLayout.refreshComplete();
-			swipeAllBalanceListener.triggerRefresh(swipeRefreshLayout);
-		});
+	private void setupPullRefresh(View view) {
+		CustomSwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipelayout);
+		if (swipeRefreshLayout != null) {
+			swipeRefreshLayout.setRefreshCompleteTimeout(1000);
+			swipeRefreshLayout.enableTopProgressBar(false);
+			swipeRefreshLayout.setOnRefreshListener(() -> {
+				swipeRefreshLayout.refreshComplete();
+				if (getActivity() != null)
+					((MainActivity) getActivity()).runAllBalances(null);
+			});
+		}
 	}
 
 	private void setUpBalances(View view) {
@@ -82,7 +78,6 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 			balanceAdapter = new BalanceAdapter(channels, (MainActivity) getActivity());
 			recyclerView.setAdapter(balanceAdapter);
 			recyclerView.setVisibility(channels != null && channels.size() > 0 ? View.VISIBLE : View.GONE);
-			activateSwipeRefresh();
 			//setMeta(view, channels);
 		});
 	}
@@ -114,6 +109,7 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		rv.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 
 		transactionsViewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
+			Log.e(TAG, "found transactions: " + staxTransactions);
 			rv.setAdapter(new TransactionHistoryAdapter(staxTransactions, HomeFragment.this));
 			view.findViewById(R.id.no_history).setVisibility(staxTransactions.size() > 0 ? View.GONE : View.VISIBLE);
 		});

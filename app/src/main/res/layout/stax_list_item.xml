@@ -3,23 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="@dimen/margin_3"
     android:id="@+id/transaction_item_layout"
     android:orientation="vertical">
 
 	<TextView
 		android:id="@+id/trans_date"
-	    android:layout_width="wrap_content"
+	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:textColor="@color/grey"
-	    android:layout_marginBottom="@dimen/margin_21"
+	    android:paddingBottom="@dimen/margin_21"
 	    android:textSize="@dimen/text_13"
 	    android:fontFamily="font-normal"
+		android:background="@color/cardViewColor"
 		android:visibility="gone" />
 
 	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
+		android:paddingHorizontal="@dimen/margin_3"
 		android:layout_marginBottom="@dimen/margin_21"
 		android:background="?attr/selectableItemBackground"
 	    android:orientation="horizontal">

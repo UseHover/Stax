@@ -87,7 +87,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	private void submit() {
 		if (transferViewModel.getIsFuture().getValue() != null && transferViewModel.getIsFuture().getValue() && transferViewModel.getFutureDate().getValue() != null) {
 			transferViewModel.schedule();
-			returnResult(Constants.SCHEDULE_REQUEST);
+			returnResult(Constants.SCHEDULE_REQUEST, RESULT_OK);
 		} else {
 			if (transferViewModel.repeatSaved().getValue() != null && transferViewModel.repeatSaved().getValue())
 				transferViewModel.schedule();
@@ -175,21 +175,18 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_CANCELED) {
-			return;
-		}
 		if (requestCode == Constants.TRANSFER_REQUEST) {
-			returnResult(requestCode);
+			returnResult(requestCode, resultCode);
 		}
 	}
 
-	private void returnResult(int type) {
+	private void returnResult(int type, int result) {
 		Intent i = new Intent();
 		if (type == Constants.SCHEDULE_REQUEST) {
 			i.putExtra(Schedule.DATE_KEY, transferViewModel.getFutureDate().getValue());
 		}
 		i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);
-		setResult(RESULT_OK, i);
+		setResult(result, i);
 		finish();
 	}
 
