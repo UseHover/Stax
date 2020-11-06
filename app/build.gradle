@@ -31,11 +31,11 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            buildConfigField "String", "SELF_DESTRUCT", "\"1606780999000\"" // Nov 15, 2020
+            buildConfigField "String", "SELF_DESTRUCT", "\"1606780800000\"" // Nov 31, 2020
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            buildConfigField "String", "SELF_DESTRUCT", "\"1606780999000\""
+            buildConfigField "String", "SELF_DESTRUCT", "\"1606780800000\""
         }
     }
     bundle {
@@ -87,7 +87,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    def sdk_version = "1.6.5-stax-beta01.4-pro"
+    def sdk_version = "1.6.5-stax-beta02-pro"
     releaseImplementation "com.hover:android-sdk:$sdk_version"
     debugImplementation project(":hover.sdk")
     debugImplementation 'com.android.volley:volley:1.1.1'
