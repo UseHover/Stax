@@ -17,10 +17,10 @@
 		    android:layout_height="wrap_content"
 		    android:fontFamily="font-normal"
 		    android:textSize="@dimen/text_16"
-		    android:paddingHorizontal="10dp"
+		    android:paddingHorizontal="@dimen/margin_3"
+			android:lineSpacingExtra="@dimen/text_spacing_8"
 		    android:id="@+id/contact_desc"
-		    android:layout_marginBottom="@dimen/margin_16"
-		    />
+		    android:layout_marginBottom="@dimen/margin_21" />
 
 		<com.google.android.material.textfield.TextInputLayout
 		    android:id="@+id/phoneEntry"

@@ -14,6 +14,7 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.sdk.utils.AnalyticsSingleton;
+import com.hover.stax.R;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
@@ -63,8 +64,8 @@ public class Utils {
 	public static String formatAmount(Double number) {
 		try {
 			DecimalFormat formatter = new DecimalFormat("#,##0.00");
-			formatter.setMaximumFractionDigits(2);
-			return formatter.format(number).replace(".00", "");
+			formatter.setMaximumFractionDigits(0);
+			return formatter.format(number);
 		} catch (Exception e) {
 			return String.valueOf(number);
 		}
@@ -128,7 +129,7 @@ public class Utils {
 				return id;
 			}
 		} catch (SecurityException e) {  AnalyticsSingleton.capture(c, e); }
-		return c.getString(com.hover.sdk.R.string.hsdk_unknown_device_id);
+		return c.getString(R.string.hsdk_unknown_device_id);
 	}
 
 }

@@ -105,6 +105,7 @@
 	<style name="StaxLabeledInput" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 		<item name="android:layout_marginStart">@dimen/margin_3</item>
 		<item name="android:layout_marginEnd">@dimen/margin_3</item>
+		<item name="android:layout_marginBottom">@dimen/margin_8</item>
 		<item name="boxStrokeColor">@color/offWhite</item>
 		<item name="boxBackgroundColor">@color/cardViewColor</item>
 		<item name="boxStrokeWidth">2dp</item>

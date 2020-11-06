@@ -6,21 +6,16 @@
     app:title="@string/request_account"
     app:showBack="true">
 
-	<LinearLayout
+	<TextView
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:orientation="vertical">
-
-		<TextView
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:fontFamily="font-normal"
-		    android:textSize="@dimen/text_16"
-		    android:paddingHorizontal="10dp"
-		    android:id="@+id/request_account_text_desc"
-		    android:text="@string/request_account_desc"
-		    android:layout_marginBottom="@dimen/margin_16"
-		    />
+	    android:fontFamily="font-normal"
+		android:layout_marginBottom="@dimen/margin_13"
+	    android:textSize="@dimen/text_16"
+	    android:paddingHorizontal="@dimen/margin_3"
+		android:lineSpacingExtra="@dimen/text_spacing_8"
+	    android:id="@+id/request_account_text_desc"
+	    android:text="@string/request_account_desc" />
 
 	<TableLayout
 	    android:layout_width="match_parent"
@@ -57,5 +52,4 @@
 			    android:textAlignment="viewEnd" />
 		</TableRow>
 	</TableLayout>
-	</LinearLayout>
 </com.hover.stax.views.StaxCardView>
