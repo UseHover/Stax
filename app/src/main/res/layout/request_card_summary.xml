@@ -41,6 +41,36 @@
 				android:textAlignment="viewEnd" />
 		</TableRow>
 
+		<TableRow android:id="@+id/receiveAccountRow" android:layout_marginTop="@dimen/margin_21">
+			<TextView
+			    android:text="@string/receiving_account_type_label"
+			    android:textColor="@color/offWhite"
+			    android:fontFamily="font-normal"
+			    android:textSize="@dimen/text_16" />
+
+			<TextView android:id="@+id/receiveAccountNameValue"
+			    android:layout_weight="1"
+			    android:fontFamily="font-medium"
+			    android:textColor="@color/offWhite"
+			    android:textSize="@dimen/text_21"
+			    android:textAlignment="viewEnd" />
+		</TableRow>
+
+		<TableRow android:id="@+id/receiveAccountNumberRow" android:layout_marginTop="@dimen/margin_21">
+			<TextView
+			    android:text="@string/receiving_account_number_label"
+			    android:textColor="@color/offWhite"
+			    android:fontFamily="font-normal"
+			    android:textSize="@dimen/text_16" />
+
+			<TextView android:id="@+id/receiveAccountNumberValue"
+			    android:layout_weight="1"
+			    android:fontFamily="font-medium"
+			    android:textColor="@color/offWhite"
+			    android:textSize="@dimen/text_21"
+			    android:textAlignment="viewEnd" />
+		</TableRow>
+
 		<TableRow android:id="@+id/noteRow" android:layout_marginTop="@dimen/margin_21">
 			<TextView
 				android:text="@string/note_cardhead"

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -108,8 +109,9 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_send_request));
 		if (!PermissionUtils.hasSmsPermission(this))
 			requestPermissions(new String[]{Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS}, Constants.SMS);
-		else
+		else{
 			sendSms();
+		}
 	}
 
 	@Override
@@ -125,6 +127,8 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 	}
 
 	private void sendSms() {
+		//UIHelper.flashMessage(this, findViewById(R.id.request_rootView), getString(R.string.request_processing_msg));
+
 		requestViewModel.setStarted();
 		new SmsSentObserver(this, requestViewModel.getRecipients().getValue(), new Handler(), this).start();
 
@@ -164,6 +168,8 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 	private void setSummaryCard(@Nullable StagedViewModel.StagedEnum stage) {
 		findViewById(R.id.recipientRow).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 && requestViewModel.getAmount().getValue() != null ? View.VISIBLE : View.GONE);
+		findViewById(R.id.receiveAccountRow).setVisibility(stage.compare(RECEIVING_ACCOUNT_INFO) > 0 && requestViewModel.getActiveChannel().getValue() != null ? View.VISIBLE : View.GONE);
+		findViewById(R.id.receiveAccountNumberRow).setVisibility(stage.compare(RECEIVING_ACCOUNT_INFO) > 0 && requestViewModel.getReceivingAccountNumber().getValue() != null ? View.VISIBLE : View.GONE);
 		findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && requestViewModel.getNote().getValue() != null && !requestViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
 		findViewById(R.id.btnRow).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
 	}
@@ -172,6 +178,7 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 //		findViewById(R.id.summaryCard).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.recipientCard).setVisibility(stage.compare(RECIPIENT) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.amountCard).setVisibility(stage.compare(AMOUNT) == 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.receiving_account_infoCard).setVisibility(stage.compare(RECEIVING_ACCOUNT_INFO) == 0 ?View.VISIBLE : View.GONE);
 		findViewById(R.id.noteCard).setVisibility(stage.compare(NOTE) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.futureCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && requestViewModel.getFutureDate().getValue() == null ? View.VISIBLE : View.GONE);
 		findViewById(R.id.repeatCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && (requestViewModel.repeatSaved().getValue() == null || !requestViewModel.repeatSaved().getValue()) ? View.VISIBLE : View.GONE);

@@ -22,6 +22,7 @@
 			android:textColor="@color/offWhite"
 			android:textCursorDrawable="@null"
 			android:inputType="number"
+		    	android:fontFamily="font-normal"
 			android:id="@+id/recipient_input"
 			tools:ignore="RtlSymmetry" />
 	</com.google.android.material.textfield.TextInputLayout>

@@ -34,6 +34,7 @@ public class Utils {
 		editor.commit();
 	}
 
+
 	public static void saveInt(String key, int value, Context c) {
 		SharedPreferences.Editor editor = getSharedPrefs(c).edit();
 		editor.putInt(key, value);

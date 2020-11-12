@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.api.HoverParameters;
+import com.hover.sdk.api.HoverTemplates;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
@@ -54,7 +55,7 @@ final public class HoverSession {
 		builder.showUserStepDescriptions(true);
 		builder.finalMsgDisplayTime(finalScreenTime);
 		builder.style(R.style.StaxHoverTheme);
-		builder.styleMode(Constants.STYLE_MODE_FOR_STAX);
+		builder.template(HoverTemplates.STAX);
 		builder.transactingImages(getSenderLogo(), getReceiverLogo(b.action));
 		builder.customBackgroundImage(R.drawable.stax_background);
 

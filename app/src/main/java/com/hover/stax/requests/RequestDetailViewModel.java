@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.hover.stax.channels.Channel;
 import com.hover.stax.database.DatabaseRepo;
 
 public class RequestDetailViewModel extends AndroidViewModel {
@@ -14,15 +15,24 @@ public class RequestDetailViewModel extends AndroidViewModel {
 
 	private DatabaseRepo repo;
 	private MutableLiveData<Request> request;
+	private MutableLiveData<String> channelName;
 
 	public RequestDetailViewModel(@NonNull Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
 		request = new MutableLiveData<>();
+		channelName = new MutableLiveData<>();
 	}
 
 	public void setRequest(int id) {
-		new Thread(() -> request.postValue(repo.getRequest(id))).start();
+		new Thread(() ->{
+			Request req = repo.getRequest(id);
+			Channel channel = repo.getChannel(req.receiving_channel_id);
+
+			request.postValue(req);
+			channelName.postValue(channel.name);
+
+		} ).start();
 	}
 
 	public LiveData<Request> getRequest() {
@@ -30,6 +40,13 @@ public class RequestDetailViewModel extends AndroidViewModel {
 			return new MutableLiveData<>();
 		}
 		return request;
+	}
+
+	public LiveData<String> getChannelName() {
+		if(channelName == null) {
+			return new MutableLiveData<>();
+		}
+		return channelName;
 	}
 
 	void deleteRequest() {

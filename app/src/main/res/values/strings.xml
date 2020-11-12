@@ -194,7 +194,8 @@
 	<string name="amount_label_opt">How much money? (optional)</string>
 	<string name="reqfrom_label">From who?</string>
 	<string name="btn_addcontact">Add someone else</string>
-	<string name="sms_request_template">You have a money request from this number for %1$s on stax.me. %2$s</string>
+	<string name="sms_request_template_no_link">You have a money request from this number for %1$s on stax.me. %2$s</string>
+	<string name="sms_request_template_with_link">You have a money request from this number for %1$s on Stax app. %2$s. Pay using %3$s</string>
 	<string name="sms_amount_detail">%1$s</string>
 	<string name="sms_note_detail">Note: \"%1$s\"</string>
 	<string name="toast_error_smsperm">You must grant the read SMS permission so Stax can tell when a request is sent or fulfilled.</string>
@@ -203,6 +204,12 @@
 	<string name="descrip_request">Request from %1$s</string>
 	<string name="descrip_airtime_sched">buy airtime with %1$s for %2$s</string>
 	<string name="editreq_cardhead">Edit Request</string>
+	<string name="receiving_account_cardhead">Your preferred account to receive money</string>
+	<string name="receiving_account_number_label">Your account number</string>
+	<string name="receiving_account_type_label">Receive money into</string>
+	<string name="receiving_account_number_fielderror">Please enter the account or phone number you\'d like to receive the money into</string>
+	<string name="receiving_account_choice_error">Please select an account or add a new one to receive your money</string>
+	<string name="request_processing_msg">Processing request, please wait…</string>
 
 	<!-- Scheduling -->
 	<string name="future_toggle">Send in the future</string>

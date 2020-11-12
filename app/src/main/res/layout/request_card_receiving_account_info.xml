@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:title="@string/receiving_account_cardhead">
+
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    >
+
+		<RadioGroup
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginHorizontal="@dimen/margin_3"
+		    android:id="@+id/channelRadioGroup"/>
+
+		<TextView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginHorizontal="@dimen/margin_3"
+		    android:layout_marginBottom="@dimen/margin_8"
+		    android:id="@+id/add_new_account"
+		    android:textColor="@color/brightBlue"
+		    android:text="@string/link_addacct"
+		    android:textSize="@dimen/text_16"
+		    android:fontFamily="font-medium"/>
+
+	<com.google.android.material.textfield.TextInputLayout
+	    android:id="@+id/accountNumberEntry"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginTop="@dimen/margin_16"
+	    android:hint="@string/receiving_account_number_label"
+	    style="@style/StaxLabeledInput">
+
+		<com.google.android.material.textfield.TextInputEditText
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:padding="@dimen/margin_13"
+		    android:textSize="@dimen/text_21"
+		    android:textColor="@color/offWhite"
+		    android:textCursorDrawable="@null"
+		    android:inputType="number"
+		    android:id="@+id/accountNumber_input"/>
+	</com.google.android.material.textfield.TextInputLayout>
+	</LinearLayout>
+</com.hover.stax.views.StaxCardView>

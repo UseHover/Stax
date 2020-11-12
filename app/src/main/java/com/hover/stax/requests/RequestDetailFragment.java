@@ -50,6 +50,13 @@ public class RequestDetailFragment extends Fragment {
 			}
 		});
 
+		viewModel.getChannelName().observe(getViewLifecycleOwner(), channelName-> {
+			if(channelName !=null) {
+				view.findViewById(R.id.receiveAccountRow).setVisibility(View.VISIBLE);
+				((TextView) view.findViewById(R.id.receiveAccountNameValue)).setText(channelName);
+			}
+		});
+
 		viewModel.setRequest(getArguments().getInt("id"));
 	}
 
@@ -65,6 +72,11 @@ public class RequestDetailFragment extends Fragment {
 			((TextView) view.findViewById(R.id.amountValue)).setText(Utils.formatAmount(request.amount));
 		} else
 			view.findViewById(R.id.amountRow).setVisibility(View.GONE);
+
+		if(request.receiving_account_number !=null && !request.receiving_account_number.isEmpty()) {
+			view.findViewById(R.id.receiveAccountNumberRow).setVisibility(View.VISIBLE);
+			((TextView) view.findViewById(R.id.receiveAccountNumberValue)).setText(request.receiving_account_number);
+		}
 
 
 		view.findViewById(R.id.noteRow).setVisibility(request.note == null || request.note.isEmpty() ? View.GONE : View.VISIBLE);

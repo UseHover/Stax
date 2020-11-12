@@ -21,6 +21,9 @@
 		<include layout="@layout/request_card_amount"
 			android:id="@+id/amountCard" />
 
+		<include layout="@layout/request_card_receiving_account_info"
+			android:id="@+id/receiving_account_infoCard"/>
+
 		<include layout="@layout/transfer_card_note"
 			android:id="@+id/noteCard" />
 

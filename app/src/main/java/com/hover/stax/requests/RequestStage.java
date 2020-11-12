@@ -4,7 +4,7 @@ import com.hover.stax.utils.StagedViewModel;
 
 enum RequestStage implements StagedViewModel.StagedEnum {
 
-	RECIPIENT, AMOUNT, NOTE, REVIEW, REVIEW_DIRECT;
+	RECIPIENT, AMOUNT, RECEIVING_ACCOUNT_INFO, NOTE, REVIEW, REVIEW_DIRECT;
 
 	private static RequestStage[] vals = values();
 

@@ -1,6 +1,7 @@
 package com.hover.stax.requests;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,10 +23,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
+import com.hover.stax.channels.Channel;
+import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.transfers.StaxContactModel;
 import com.hover.stax.utils.StagedFragment;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+
+import java.util.List;
 
 public class NewRequestFragment extends StagedFragment implements RecipientAdapter.UpdateListener {
 
@@ -31,9 +38,11 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 
 	private RecyclerView recipientInputList;
 	private LinearLayout recipientValueList;
-	private TextView amountValue, noteValue;
-	private EditText amountInput, noteInput;
+	private TextView amountValue, receivingChannelNameValue, receivingAccountNumberValue, noteValue;
+	private EditText amountInput, receivingAccountNumberInput, noteInput;
+	private RadioGroup channelRadioGroup;
 	private Button addRecipientBtn;
+
 
 	private RecipientAdapter recipientAdapter;
 	private int recipientCount = 0;
@@ -52,9 +61,15 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		recipientValueList = view.findViewById(R.id.recipientValueList);
 		amountValue = view.findViewById(R.id.amountValue);
 		noteValue = view.findViewById(R.id.noteValue);
+		receivingChannelNameValue = view.findViewById(R.id.receiveAccountNameValue);
+		receivingAccountNumberValue = view.findViewById(R.id.receiveAccountNumberValue);
 		recipientInputList = view.findViewById(R.id.recipient_list);
 		amountInput = view.findViewById(R.id.amount_input);
 		amountInput.setText(requestViewModel.getAmount().getValue());
+		receivingAccountNumberInput = view.findViewById(R.id.accountNumber_input);
+		receivingAccountNumberInput.setText(requestViewModel.getReceivingAccountNumber().getValue());
+		channelRadioGroup = view.findViewById(R.id.channelRadioGroup);
+
 		noteInput = view.findViewById(R.id.note_input);
 		noteInput.setText(requestViewModel.getNote().getValue());
 		addRecipientBtn = view.findViewById(R.id.add_recipient_button);
@@ -72,6 +87,7 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		requestViewModel.getStage().observe(getViewLifecycleOwner(), stage -> {
 			switch ((RequestStage) stage) {
 				case AMOUNT: amountInput.requestFocus(); break;
+				case RECEIVING_ACCOUNT_INFO: receivingAccountNumberInput.requestFocus(); break;
 				case NOTE: noteInput.requestFocus(); break;
 			}
 		});
@@ -96,7 +112,33 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 			v.setError((recipientError != null ? getString(recipientError) : null));
 			v.setErrorIconDrawable(0);
 		});
+
+		requestViewModel.getReceivingAccountNumberError().observe(getViewLifecycleOwner(), accountNumberError->{
+			TextInputLayout v = root.findViewById(R.id.accountNumberEntry);
+			v.setError((accountNumberError != null ? getString(accountNumberError) : null));
+			v.setErrorIconDrawable(0);
+		});
+
+		requestViewModel.getReceivingAccountChoiceError().observe(getViewLifecycleOwner(), accountChoiceError-> {
+			if(getContext() !=null && accountChoiceError !=null) UIHelper.flashMessage(getContext(), getString(accountChoiceError));
+		});
+
 		requestViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> amountValue.setText(Utils.formatAmount(amount)));
+
+		requestViewModel.getActiveChannel().observe(getViewLifecycleOwner(), c -> {
+			if (c != null) {
+				receivingChannelNameValue.setText(c.name);
+				channelRadioGroup.check(c.id);
+			}
+		});
+
+		requestViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
+			if (channels != null) createChannelSelector(channels);
+		});
+
+		requestViewModel.getReceivingAccountNumber().observe(getViewLifecycleOwner(), accountNumber -> {
+			receivingAccountNumberValue.setText(accountNumber);
+		});
 		requestViewModel.getNote().observe(getViewLifecycleOwner(), note -> noteValue.setText(note));
 	}
 
@@ -105,7 +147,23 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		super.startListeners(root);
 		addRecipientBtn.setOnClickListener(v -> requestViewModel.setEditing(false));
 		amountInput.addTextChangedListener(amountWatcher);
+		channelRadioGroup.setOnCheckedChangeListener((group, checkedId) -> requestViewModel.setActiveChannel(checkedId));
+		root.findViewById(R.id.add_new_account).setOnClickListener(view -> startActivity(new Intent(getActivity(), ChannelsActivity.class)));
+		receivingAccountNumberInput.addTextChangedListener(receivingAccountNumberWatcher);
 		noteInput.addTextChangedListener(noteWatcher);
+	}
+
+	private void createChannelSelector(List<Channel> channels) {
+		channelRadioGroup.removeAllViews();
+
+		for (Channel c : channels) {
+			RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.stax_radio_button, null);
+			radioButton.setText(c.name);
+			radioButton.setId(c.id);
+			if (requestViewModel.getActiveChannel().getValue() != null && requestViewModel.getActiveChannel().getValue().id == c.id)
+				radioButton.setChecked(true);
+			channelRadioGroup.addView(radioButton);
+		}
 	}
 
 	@Override
@@ -125,6 +183,17 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 
 		@Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 			requestViewModel.setAmount(charSequence.toString());
+		}
+	};
+
+	private TextWatcher receivingAccountNumberWatcher = new TextWatcher() {
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+		@Override
+		public void afterTextChanged(Editable s) { }
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+			requestViewModel.setReceivingAccountNumber(s.toString());
 		}
 	};
 

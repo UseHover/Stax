@@ -33,6 +33,12 @@ public class Request {
 	@ColumnInfo(name = "matched_transaction_uuid")
 	public String matched_transaction_uuid;
 
+	@ColumnInfo(name = "receiving_channel_id")
+	public int receiving_channel_id;
+
+	@ColumnInfo(name  = "receiving_account_number")
+	public String receiving_account_number;
+
 	@NonNull
 	@ColumnInfo(name = "date_sent", defaultValue = "CURRENT_TIMESTAMP")
 	public Long date_sent;
@@ -40,10 +46,12 @@ public class Request {
 	public Request() {
 	}
 
-	public Request(String r, String a, String n) {
-		recipient = r;
-		amount = a;
-		note = n;
+	public Request(@NonNull String recipient, String amount, String note, int receiving_channel_id, String receiving_account_number) {
+		this.recipient = recipient;
+		this.amount = amount;
+		this.note = note;
+		this.receiving_channel_id = receiving_channel_id;
+		this.receiving_account_number = receiving_account_number;
 		date_sent = DateUtils.now();
 	}
 
