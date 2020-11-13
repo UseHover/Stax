@@ -27,7 +27,7 @@ import com.hover.stax.utils.Utils;
 
 import static com.hover.stax.database.Constants.AUTH_CHECK;
 
-public class SplashScreenActivity extends AppCompatActivity implements BiometricChecker.AuthListener {
+public class SplashScreenForStaxLinkActivity extends AppCompatActivity implements BiometricChecker.AuthListener {
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,14 +44,12 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 		createNotificationChannel();
 		startWorkers();
 
-		if (Utils.getSharedPrefs(this).getInt(AUTH_CHECK, 0) == 1)
-			new BiometricChecker(this, this).startAuthentication(null);
+		if (Utils.getSharedPrefs(this).getInt(AUTH_CHECK, 0) == 1) new BiometricChecker(this, this).startAuthentication(null);
 //		else if (Utils.getSharedPrefs(this).getInt(LANGUAGE_CHECK, 0) == 0) {
 //			startActivity(new Intent(this, SelectLanguageActivity.class));
 //		finish(); }
 		else {
-			startActivity(new Intent(this, MainActivity.class));
-			finish();
+			handleStaxLinkIntent(getIntent());
 		}
 	}
 
@@ -75,9 +73,28 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 		wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue();
 		wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, UpdateChannelsWorker.makeToil());
 		wm.enqueueUniquePeriodicWork(ScheduleWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, ScheduleWorker.makeToil());
+	}
 
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		handleStaxLinkIntent(intent);
+	}
 
+	private void handleStaxLinkIntent(Intent intent) {
 
+		String appLinkAction = intent.getAction();
+		Uri appLinkData = intent.getData();
+		if (Intent.ACTION_VIEW.equals(appLinkAction) && appLinkData != null){
+			String encryptedString = appLinkData.toString();
+			Intent intent1 = new Intent(this, MainActivity.class);
+			intent1.putExtra(Constants.SOCIAL_LINK, encryptedString);
+			startActivity(intent1);
+			finish();
+		}
+		else {
+			startActivity(new Intent(this, MainActivity.class));
+			finish();
+		}
 
 	}
 
@@ -88,7 +105,6 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
 	@Override
 	public void onAuthSuccess(Action act) {
-		startActivity(new Intent(this, MainActivity.class));
-		finish();
+		handleStaxLinkIntent(getIntent());
 	}
 }

@@ -219,7 +219,7 @@ public class NewRequestViewModel extends StagedViewModel {
 		Amplitude.getInstance().logEvent(c.getString(R.string.stax_link_encryption_failure_1));
 		return null;
 	}
-	String separator = "-";
+	String separator = Constants.PAYMENT_LINK_SEPERATOR;
 	String fullString = amount+separator+channel_id +separator+accountNumber+separator+DateUtils.today();
 
 		try {

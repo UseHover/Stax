@@ -18,5 +18,7 @@ public class Constants {
 	final public static String SCHEDULED = "SCHEDULED";
 	final public static String REQUEST_TYPE = "request";
 	final public static String PENDING = "pending";
-	final public static String STAX_LINK_PREFIX = "stax.me/pay?";
+	final public static String STAX_LINK_PREFIX = "https://stax.me/pay?";
+	final public static String SOCIAL_LINK = "payment_link";
+	final public static String PAYMENT_LINK_SEPERATOR = "-";
 }

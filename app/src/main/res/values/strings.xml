@@ -188,6 +188,9 @@
 	<string name="pending_cardbody">The USSD session is complete, but we have not received a confirmation SMS yet.</string>
 	<string name="edittransfer_cardhead">Edit Transfer</string>
 	<string name="editairtime_cardhead">Edit Buy Airtime</string>
+	<string name="stax_cannot_make_transfer_title">Stax can\'t make this transfer yet</string>
+	<string name="stax_cannot_make_transfer_desc">Sorry, its our fault not yours. Stax app does not support making transfer from your bank to the recipient\'s account yet. Please choose another account to complete the transfer</string>
+	<string name="loading">Loading…</string>
 
 	<!-- Request -->
 	<string name="req_cardhead">Request money</string>

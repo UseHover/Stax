@@ -27,6 +27,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.amplitude.api.Amplitude;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.hover.sdk.api.Hover;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
@@ -66,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements
 		balancesViewModel.getSelectedChannels().observe(this, channels -> Log.e(TAG, "Channels observer is neccessary to make updates fire, but all logic is in viewmodel. " + channels.size()));
 
 		setUpNav();
+
+		if(getIntent().hasExtra(Constants.SOCIAL_LINK)) { startTransfer(Action.P2P, true); }
 	}
 
 	public void addAccount(View view) {
@@ -174,9 +177,10 @@ public class MainActivity extends AppCompatActivity implements
 			new ShowcaseExecutor(this, findViewById(R.id.home_root)).startShowcasing();
 	}
 
-	private void startTransfer(String type) {
+	private void startTransfer(String type, boolean isFromStaxLink) {
 		Intent i = new Intent(this, TransferActivity.class);
 		i.setAction(type);
+		if(isFromStaxLink) i.putExtra(Constants.SOCIAL_LINK, getIntent().getExtras().getString(Constants.SOCIAL_LINK));
 		startActivityForResult(i, Constants.TRANSFER_REQUEST);
 	}
 
@@ -255,8 +259,8 @@ public class MainActivity extends AppCompatActivity implements
 
 			popup.setOnMenuItemClickListener(item -> {
 				switch (item.getItemId()) {
-					case R.id.transfer: startTransfer(Action.P2P); break;
-					case R.id.airtime: startTransfer(Action.AIRTIME); break;
+					case R.id.transfer: startTransfer(Action.P2P, false); break;
+					case R.id.airtime: startTransfer(Action.AIRTIME, false); break;
 					case R.id.request: startActivityForResult(new Intent(this, RequestActivity.class), Constants.REQUEST_REQUEST); break;
 					default: break;
 				}

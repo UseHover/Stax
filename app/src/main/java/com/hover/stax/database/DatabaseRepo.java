@@ -91,6 +91,10 @@ public class DatabaseRepo {
 		return actionDao.getActions(channelIds, type);
 	}
 
+	public List<Action> getActions(int channelId, String type) {
+		return actionDao.getActions(channelId, type);
+	}
+
 	// Transactions
 	public LiveData<List<StaxTransaction>> getCompleteAndPendingTransferTransactions() {
 		return transactionDao.getCompleteAndPendingTransfers();
@@ -149,6 +153,8 @@ public class DatabaseRepo {
 	}
 
 	public Encryption.Builder getEncryptionSettings() {
+		//ADDING THIS TO REPO, BECAUSE I THINK THESE SETTINGS
+		// SHOULDN'T BE IN THE SOURCE CODE, BUT COME FROM AN ONLINE SERVER OR CACHED
 		return new Encryption.Builder()
 				.setKeyLength(128)
 				.setKeyAlgorithm("AES")

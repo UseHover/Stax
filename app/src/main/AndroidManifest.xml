@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.hover.stax">
+    package="com.hover.stax">
 
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -9,21 +9,21 @@
 	<uses-permission android:name="android.permission.READ_CONTACTS" />
 	<uses-permission android:name="android.permission.USE_BIOMETRIC" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES"/>
+	<uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
 
 	<application
-		android:name=".ApplicationInstance"
-		android:allowBackup="true"
-		android:icon="@mipmap/ic_launcher"
-		android:label="@string/app_name"
-		android:roundIcon="@mipmap/ic_launcher_round"
-		android:supportsRtl="true"
-		android:theme="@style/StaxTheme">
+	    android:name=".ApplicationInstance"
+	    android:allowBackup="true"
+	    android:icon="@mipmap/ic_launcher"
+	    android:label="@string/app_name"
+	    android:roundIcon="@mipmap/ic_launcher_round"
+	    android:supportsRtl="true"
+	    android:theme="@style/StaxTheme">
 
 		<activity
-			android:name=".SplashScreenActivity"
-			android:label="@string/app_name"
-			android:theme="@style/SplashTheme">
+		    android:name=".SplashScreenActivity"
+		    android:label="@string/app_name"
+		    android:theme="@style/SplashTheme">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
@@ -32,60 +32,82 @@
 		</activity>
 
 		<activity
-			android:name=".home.MainActivity"
-			android:label="@string/app_name"
-			android:theme="@style/StaxTheme" />
+		    android:name=".home.MainActivity"
+		    android:label="@string/app_name"
+		    android:theme="@style/StaxTheme" />
 
 		<activity android:name=".languages.SelectLanguageActivity" />
 		<activity android:name=".channels.ChannelsActivity" />
 
-		<activity android:name=".security.PinsActivity"
-			android:launchMode="singleTop" />
+		<activity
+		    android:name=".security.PinsActivity"
+		    android:launchMode="singleTop" />
 
-		<activity android:name=".transfers.TransferActivity"
-			android:theme="@style/StaxTheme"
-			android:windowSoftInputMode="stateVisible|adjustResize" />
+		<activity
+		    android:name=".transfers.TransferActivity"
+		    android:theme="@style/StaxTheme"
+		    android:windowSoftInputMode="stateVisible|adjustResize">
 
-		<activity android:name=".requests.RequestActivity"
-			android:theme="@style/StaxTheme"
-			android:windowSoftInputMode="stateVisible|adjustResize" />
+		</activity>
+
+		<activity android:name=".SplashScreenForStaxLinkActivity"  android:theme="@style/StaxTheme">
+			<intent-filter android:autoVerify="true">
+				<action android:name="android.intent.action.VIEW" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data
+				    android:scheme="https"
+				    android:host="stax.me"
+				    android:pathPattern="/pay" />
+			</intent-filter>
+
+		</activity>
+
+		<activity
+		    android:name=".requests.RequestActivity"
+		    android:theme="@style/StaxTheme"
+		    android:windowSoftInputMode="stateVisible|adjustResize" />
 		<activity android:name=".destruct.SelfDestructActivity" />
 
-		<activity android:name=".requestAccount.RequestAccountActivity" android:theme="@style/StaxTheme"/>
+		<activity
+		    android:name=".requestAccount.RequestAccountActivity"
+		    android:theme="@style/StaxTheme" />
 
 		<receiver
-			android:name=".hover.TransactionReceiver"
-			android:enabled="true"
-			android:exported="false">
+		    android:name=".hover.TransactionReceiver"
+		    android:enabled="true"
+		    android:exported="false">
 			<intent-filter>
 				<action android:name="com.hover.stax.TRANSACTION_UPDATE" />
 			</intent-filter>
 		</receiver>
 
 		<receiver
-			android:name=".requests.SmsReceiver"
-			android:enabled="true"
-			android:exported="true"
-			android:permission="android.permission.BROADCAST_SMS">
+		    android:name=".requests.SmsReceiver"
+		    android:enabled="true"
+		    android:exported="true"
+		    android:permission="android.permission.BROADCAST_SMS">
 			<intent-filter android:priority="999">
 				<action android:name="android.provider.Telephony.SMS_RECEIVED" />
 			</intent-filter>
 		</receiver>
 
 		<meta-data
-			android:name="com.google.firebase.messaging.default_notification_icon"
-			android:resource="@drawable/ic_stax" />
+		    android:name="com.google.firebase.messaging.default_notification_icon"
+		    android:resource="@drawable/ic_stax" />
 		<meta-data
-			android:name="com.google.firebase.messaging.default_notification_color"
-			android:resource="@color/brightBlue" />
+		    android:name="com.google.firebase.messaging.default_notification_color"
+		    android:resource="@color/brightBlue" />
 
 		<meta-data
-			android:name="io.sentry.dsn"
-			android:value="https://ce9bf386ab104ece903cd33fc563c241@o44209.ingest.sentry.io/5477330" />
+		    android:name="io.sentry.dsn"
+		    android:value="https://ce9bf386ab104ece903cd33fc563c241@o44209.ingest.sentry.io/5477330" />
 
 		<meta-data
-			android:name="com.hover.ApiKey"
-			android:value="1335646a78bb2b1157304be1510641f6" />
+		    android:name="com.hover.ApiKey"
+		    android:value="1335646a78bb2b1157304be1510641f6" />
 	</application>
 
 </manifest>

@@ -1,6 +1,7 @@
 package com.hover.stax.transfers;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +21,8 @@ import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.utils.StagedViewModel;
+import com.hover.stax.utils.UIHelper;
+import com.hover.stax.views.StaxDialog;
 
 import static com.hover.stax.transfers.TransferStage.*;
 
@@ -28,15 +31,21 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 
 	private TransferViewModel transferViewModel;
 	private ScheduleDetailViewModel scheduleViewModel = null;
+	private  boolean isFromStaxLink = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		transferViewModel = new ViewModelProvider(this).get(TransferViewModel.class);
 
+
 		startObservers();
 		checkIntent();
+		handleStaxLinkIntent(getIntent());
 		setContentView(R.layout.activity_transfer);
+
+
+
 	}
 
 	private void startObservers() {
@@ -45,7 +54,9 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 				transferViewModel.setActiveChannel(scheduleViewModel.getSchedule().getValue().channel_id);
 		});
 		transferViewModel.getActiveChannel().observe(this, channel -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel."));
-		transferViewModel.getActions().observe(this, actions -> onUpdateStage(transferViewModel.getStage().getValue()));
+		transferViewModel.getActions().observe(this, actions ->{
+			onUpdateStage(transferViewModel.getStage().getValue());
+		} );
 		transferViewModel.getActiveAction().observe(this, action -> onUpdateStage(transferViewModel.getStage().getValue()));
 
 		transferViewModel.getStage().observe(this, this::onUpdateStage);
@@ -55,13 +66,23 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		transferViewModel.getIsEditing().observe(this, isEditing -> onUpdateStage(transferViewModel.getStage().getValue()));
 
 		transferViewModel.setType(getIntent().getAction());
+
+		transferViewModel.getIschannelRelationshipExist().observe(this, relationshipExists->{
+			if(relationshipExists !=null && !relationshipExists) {
+				new StaxDialog(TransferActivity.this)
+						.setDialogTitle(R.string.stax_cannot_make_transfer_title)
+						.setDialogMessage(R.string.stax_cannot_make_transfer_desc)
+						.setPosButton(R.string.btn_ok, null)
+						.showIt();
+			}
+		});
+		transferViewModel.getIschannelRelationshipExistMediator().observe(this, status-> { });
 	}
 
 	private void checkIntent() {
 		if (getIntent().hasExtra(Schedule.SCHEDULE_ID)) {
 			createFromSchedule(getIntent().getIntExtra(Schedule.SCHEDULE_ID, -1));
-		} else
-			Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getIntent().getAction()));
+		} else Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getIntent().getAction()));
 	}
 
 	private void createFromSchedule(int schedule_id) {
@@ -135,13 +156,20 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void setSummaryCard(@Nullable StagedViewModel.StagedEnum stage) {
-		findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
+		if(isFromStaxLink) {
+			findViewById(R.id.amountRow).setVisibility(View.VISIBLE);
+			findViewById(R.id.actionRow).setVisibility(View.VISIBLE);
+			findViewById(R.id.recipientRow).setVisibility(View.VISIBLE);
+		}
+		else {
+			findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
+			findViewById(R.id.actionRow).setVisibility(stage.compare(TO_NETWORK) > 0 &&
+															   transferViewModel.getActions().getValue() != null && transferViewModel.getActions().getValue().size() > 0 && (transferViewModel.getActions().getValue().size() > 1 || transferViewModel.getActiveAction().getValue().hasToInstitution()) ? View.VISIBLE : View.GONE);
+			findViewById(R.id.recipientRow).setVisibility(stage.compare(RECIPIENT) > 0 && transferViewModel.getActiveAction().getValue() != null ? View.VISIBLE : View.GONE);
+			findViewById(R.id.btnRow).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
+		}
 		findViewById(R.id.accountRow).setVisibility(stage.compare(FROM_ACCOUNT) > 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.actionRow).setVisibility(stage.compare(TO_NETWORK) > 0 &&
-			transferViewModel.getActions().getValue() != null && transferViewModel.getActions().getValue().size() > 0 && (transferViewModel.getActions().getValue().size() > 1 || transferViewModel.getActiveAction().getValue().hasToInstitution()) ? View.VISIBLE : View.GONE);
-		findViewById(R.id.recipientRow).setVisibility(stage.compare(RECIPIENT) > 0 && transferViewModel.getActiveAction().getValue() != null ? View.VISIBLE : View.GONE);
 		findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && transferViewModel.getNote().getValue() != null && !transferViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
-		findViewById(R.id.btnRow).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
 
 	}
 
@@ -150,7 +178,12 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		findViewById(R.id.amountCard).setVisibility(stage.compare(AMOUNT) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.fromAccountCard).setVisibility(stage.compare(FROM_ACCOUNT) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.networkCard).setVisibility(stage.compare(TO_NETWORK) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.recipientCard).setVisibility(stage.compare(RECIPIENT) == 0 ? View.VISIBLE : View.GONE);
+
+		if(isFromStaxLink && stage.compare(RECIPIENT) == 0) transferViewModel.goToNextStage();
+		else
+			findViewById(R.id.recipientCard).setVisibility(stage.compare(RECIPIENT) == 0 ? View.VISIBLE : View.GONE);
+
+
 		findViewById(R.id.reasonCard).setVisibility(stage.compare(NOTE) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.futureCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && transferViewModel.getFutureDate().getValue() == null ? View.VISIBLE : View.GONE);
 		findViewById(R.id.repeatCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && (transferViewModel.repeatSaved().getValue() == null || !transferViewModel.repeatSaved().getValue()) ? View.VISIBLE : View.GONE);
@@ -188,6 +221,14 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);
 		setResult(result, i);
 		finish();
+	}
+
+	private void handleStaxLinkIntent(Intent intent) {
+		if(intent.getExtras()!=null && intent.hasExtra(Constants.SOCIAL_LINK)) {
+			isFromStaxLink = true;
+			String encryptedString = intent.getExtras().getString(Constants.SOCIAL_LINK);
+			transferViewModel.setupTransferPageFromPaymentLink(encryptedString);
+		}
 	}
 
 	@Override

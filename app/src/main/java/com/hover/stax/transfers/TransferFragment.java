@@ -80,8 +80,12 @@ public class TransferFragment extends StagedFragment {
 	}
 
 	private void setTitle(View root) {
-		((TextView) root.findViewById(R.id.summaryCard).findViewById(R.id.title)).setText(
-			getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.fab_airtime : R.string.fab_transfer));
+		try{
+			((TextView) root.findViewById(R.id.summaryCard).findViewById(R.id.title)).setText(
+					getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.fab_airtime : R.string.fab_transfer));
+		}catch (Exception e) {
+
+		}
 	}
 
 	protected void startObservers(View root) {
@@ -111,7 +115,9 @@ public class TransferFragment extends StagedFragment {
 
 		transferViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
 			Log.e(TAG, "actions: " + actions.size());
-			if (actions == null || actions.size() == 0) return;
+			if (actions == null || actions.size() == 0){
+				return;
+			}
 			ArrayAdapter<Action> adapter = new ArrayAdapter<>(requireActivity(), R.layout.stax_spinner_item, actions);
 			actionDropdown.setAdapter(adapter);
 			actionDropdown.setText(actionDropdown.getAdapter().getItem(0).toString(), false);
@@ -136,6 +142,30 @@ public class TransferFragment extends StagedFragment {
 		transferViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
 			if (channels != null) createChannelSelector(channels);
 		});
+
+		transferViewModel.forceGetActionName().observe(getViewLifecycleOwner(), actionName-> {
+			if(actionName!=null) { actionValue.setText(actionName); }
+			else { if(getContext()!=null) actionValue.setText(getContext().getResources().getString(R.string.loading)); }
+		});
+
+		transferViewModel.getCtssLiveData().observe(getViewLifecycleOwner(), ctss-> {
+			if(ctss!=null) {
+				amountInput.setText(ctss.getAmountInput());
+				if(!ctss.isAmountClickable()) amountInput.setTextColor(getResources().getColor(R.color.grey));
+
+				recipientInput.setText(ctss.getRecipientInput());
+				recipientInput.setTextColor(getResources().getColor(R.color.grey));
+				disableView(amountInput, ctss.isAmountClickable());
+				disableView(recipientInput, ctss.isRecipientClickable());
+				disableView(actionDropdown, ctss.isActionRadioClickable());
+				disableView(contactButton, ctss.isRecipientClickable());
+			}
+		});
+	}
+
+	private void disableView(View view, boolean status) {
+		view.setClickable(status);
+		view.setFocusable(status);
 	}
 
 	private void createChannelSelector(List<Channel> channels) {
@@ -145,8 +175,10 @@ public class TransferFragment extends StagedFragment {
 			RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.stax_radio_button, null);
 			radioButton.setText(c.name);
 			radioButton.setId(c.id);
-			if (transferViewModel.getActiveChannel().getValue() != null && transferViewModel.getActiveChannel().getValue().id == c.id)
+			if (transferViewModel.getActiveChannel().getValue() != null && transferViewModel.getActiveChannel().getValue().id == c.id) {
 				radioButton.setChecked(true);
+				transferViewModel.setActiveChannel(c.id);
+			}
 			channelRadioGroup.addView(radioButton);
 		}
 	}
