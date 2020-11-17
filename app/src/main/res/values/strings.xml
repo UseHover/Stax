@@ -44,8 +44,6 @@
 		<item>sw</item>
 	</string-array>
 
-
-
 	<!-- Home -->
 	<string name="bal_cardhead">Balances</string>
 	<string name="btn_addaccts">Add accounts</string>
@@ -69,6 +67,7 @@
 	<string name="simaccts_cardhead">Services on your SIMs</string>
 	<string name="countryaccts_cardhead">Other services in %1$s</string>
 	<string name="allaccts_cardhead">All services</string>
+	<string name="allaccts_zerobody">Please turn on data to load services.</string>
 	<string name="toast_error_noselect">You must select at least 1 service.</string>
 	<string name="perm_cardbody">Stax runs USSD sessions in the background so you don\'t have to. To do this we need:</string>
 	<string name="sms_cardbody">SMS permissions</string>

@@ -105,7 +105,7 @@ public class TransferViewModel extends StagedViewModel {
 	}
 
 	void setActiveAction(Action action) {
-		activeAction.setValue(action);
+		activeAction.postValue(action);
 	}
 	void setActiveAction(String actionString) {
 		if (filteredActions.getValue() == null || filteredActions.getValue().size() == 0) {
@@ -113,7 +113,7 @@ public class TransferViewModel extends StagedViewModel {
 		}
 		for (Action a : filteredActions.getValue()) {
 			if (a.toString().equals(actionString))
-				activeAction.setValue(a);
+				activeAction.postValue(a);
 		}
 	}
 
