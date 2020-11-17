@@ -3,14 +3,14 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	app:title="@string/to_this_network">
+	app:title="@string/recipientnetwork_label">
 
 	<com.google.android.material.textfield.TextInputLayout
 		style="@style/StaxLabeledDropdown"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-	    	android:fontFamily="font-normal"
-		android:hint="@string/network">
+		android:id="@+id/networkEntry"
+		android:hint="@string/network_label">
 
 		<AutoCompleteTextView
 			android:id="@+id/networkDropdown"
@@ -21,7 +21,6 @@
 			android:background="@null"
 			android:editable="false"
 			android:textSize="@dimen/text_21"
-		    	android:fontFamily="font-normal"
 			android:textColor="@color/offWhite"
 			android:textCursorDrawable="@null" />
 

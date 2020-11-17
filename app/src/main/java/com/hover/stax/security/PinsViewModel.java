@@ -17,11 +17,13 @@ public class PinsViewModel extends AndroidViewModel {
 
 	private DatabaseRepo repo;
 	private LiveData<List<Channel>> channels;
+	private LiveData<Channel> channel;
 
 	public PinsViewModel(Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
 		loadSelectedChannels();
+		channel = new MutableLiveData<>();
 	}
 
 	public LiveData<List<Channel>> getSelectedChannels() {
@@ -34,6 +36,13 @@ public class PinsViewModel extends AndroidViewModel {
 		}
 		channels = repo.getSelected();
 	}
+
+	public LiveData<Channel> getChannel() {
+		if (channel == null) { channel = new MutableLiveData<>(); }
+		return channel;
+	}
+
+	public void loadChannel(int id) { channel = repo.getLiveChannel(id); }
 
 	void setPin(int id, String pin) {
 		List<Channel> allChannels = channels.getValue() != null ? channels.getValue() : new ArrayList<>();
@@ -54,6 +63,13 @@ public class PinsViewModel extends AndroidViewModel {
 		}
 	}
 
+	void savePin(Channel channel, Context c) {
+		if (channel.pin != null && !channel.pin.isEmpty()) {
+			channel.pin = KeyStoreExecutor.createNewKey(channel.pin, c);
+			repo.update(channel);
+		}
+	}
+
 	public void clearAllPins() {
 		List<Channel> selectedChannels = channels.getValue() != null ? channels.getValue() : new ArrayList<>();
 		for (Channel channel : selectedChannels) {
@@ -62,7 +78,16 @@ public class PinsViewModel extends AndroidViewModel {
 		}
 	}
 
-	public void setDefaultAccount(Channel channel) {
+	public void removeAccount(Channel channel) {
+		channel.selected = false;
 		repo.update(channel);
+	}
+
+	public void setDefaultAccount(Channel channel) {
+		if (channels.getValue() == null) return;
+		for (Channel c: channels.getValue()) {
+			c.defaultAccount = c.id == channel.id;
+			repo.update(c);
+		}
 	}
 }

@@ -7,6 +7,7 @@
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:layout_marginHorizontal="@dimen/margin_3"
 		android:orientation="horizontal">
 
 		<ImageView
@@ -26,10 +27,11 @@
 			android:layout_gravity="center_vertical"
 			android:gravity="center|end"
 			android:fontFamily="font-normal"
-			android:drawableEnd="@drawable/ic_refresh_white_24dp"
-			android:drawablePadding="@dimen/spacing8"
+			app:drawableEndCompat="@drawable/ic_refresh_white_24dp"
+			android:drawablePadding="@dimen/margin_8"
 			android:textColor="@color/offWhite"
 			android:id="@+id/homeTimeAgo"
-			android:onClick="runAllBalances" />
+		    	android:visibility="invisible"
+		    />
 	</LinearLayout>
 </com.hover.stax.views.StaxCardView>

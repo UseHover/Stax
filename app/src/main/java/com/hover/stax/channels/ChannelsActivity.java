@@ -2,7 +2,6 @@ package com.hover.stax.channels;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -17,16 +16,22 @@ import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
+import com.hover.stax.database.Constants;
+import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.security.PermissionsFragment;
 import com.hover.stax.security.PinsActivity;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.hover.stax.database.Constants.AUTH_CHECK;
+import static com.hover.stax.database.Constants.LANGUAGE_CHECK;
 
 public class ChannelsActivity extends AppCompatActivity {
 	public final static String TAG = "ChannelsActivity";
@@ -41,8 +46,8 @@ public class ChannelsActivity extends AppCompatActivity {
 		channelViewModel = new ViewModelProvider(this).get(ChannelListViewModel.class);
 		channelViewModel.getSelected().observe(this, this::onSelectedUpdate);
 
-		if (new PermissionHelper(this).hasPhonePerm())
-			goToChannelSelection();
+		if (new PermissionHelper(this).hasPhonePerm()) goToChannelSelection();
+
 	}
 
 	@Override
@@ -70,12 +75,13 @@ public class ChannelsActivity extends AppCompatActivity {
 				saveAndContinue();
 			});
 		} else {
-			findViewById(R.id.continue_btn).setOnClickListener(view -> UIHelper.flashMessage(ChannelsActivity.this, getString(R.string.no_selection_error)));
+			findViewById(R.id.continue_btn).setOnClickListener(view -> UIHelper.flashMessage(ChannelsActivity.this, getString(R.string.toast_error_noselect)));
 		}
 	}
 
 	private void saveAndContinue() {
 		channelViewModel.saveSelected();
+		Utils.saveInt(AUTH_CHECK, 1, this);
 		startActivityForResult(new Intent(ChannelsActivity.this, PinsActivity.class), 0);
 	}
 

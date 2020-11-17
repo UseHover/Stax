@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    tools:context=".security.SecurityFragment"
+    android:layout_height="match_parent">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+	android:layout_marginTop="@dimen/margin_13"
+	android:layout_marginBottom="@dimen/margin_89"
+    android:orientation="vertical"
+	>
+
+	<include layout="@layout/security_card_accounts" />
+
+	<include layout="@layout/security_card_pins" />
+
+	<include layout="@layout/security_card_language"
+		android:visibility="gone"/>
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginHorizontal="@dimen/margin_13"
+		android:lineSpacingExtra="2sp"
+		android:textSize="@dimen/text_13"
+		android:textColor="@color/darkGrey"
+		android:text="@string/disclaimer"/>
+
+</LinearLayout>
+</androidx.core.widget.NestedScrollView>

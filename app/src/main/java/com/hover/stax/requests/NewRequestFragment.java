@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,6 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 	private RecipientAdapter recipientAdapter;
 	private int recipientCount = 0;
 
-	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		stagedViewModel = new ViewModelProvider(requireActivity()).get(NewRequestViewModel.class);
@@ -54,11 +54,13 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		noteValue = view.findViewById(R.id.noteValue);
 		recipientInputList = view.findViewById(R.id.recipient_list);
 		amountInput = view.findViewById(R.id.amount_input);
+		amountInput.setText(requestViewModel.getAmount().getValue());
 		noteInput = view.findViewById(R.id.note_input);
+		noteInput.setText(requestViewModel.getNote().getValue());
 		addRecipientBtn = view.findViewById(R.id.add_recipient_button);
 
 		recipientInputList.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-		recipientAdapter = new RecipientAdapter(null, this);
+		recipientAdapter = new RecipientAdapter(requestViewModel.getRecipients().getValue(), this);
 		recipientInputList.setAdapter(recipientAdapter);
 
 		super.init(view);
@@ -89,7 +91,8 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 
 		});
 		requestViewModel.getRecipientError().observe(getViewLifecycleOwner(), recipientError -> {
-			TextInputLayout v = recipientInputList.getChildAt(0).findViewById(R.id.recipientEntry);
+			if (recipientInputList.getChildAt(0) == null) return;
+			TextInputLayout v = recipientInputList.getChildAt(0).findViewById(R.id.recipientLabel);
 			v.setError((recipientError != null ? getString(recipientError) : null));
 			v.setErrorIconDrawable(0);
 		});
@@ -100,7 +103,7 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 	@Override
 	protected void startListeners(View root) {
 		super.startListeners(root);
-		addRecipientBtn.setOnClickListener(v -> requestViewModel.addRecipient(""));
+		addRecipientBtn.setOnClickListener(v -> requestViewModel.setEditing(false));
 		amountInput.addTextChangedListener(amountWatcher);
 		noteInput.addTextChangedListener(noteWatcher);
 	}
@@ -133,4 +136,10 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 			requestViewModel.setNote(charSequence.toString());
 		}
 	};
+
+	@Override
+	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		requestViewModel.setEditing(false);
+	}
 }

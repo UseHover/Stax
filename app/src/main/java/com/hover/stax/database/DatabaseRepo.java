@@ -95,16 +95,12 @@ public class DatabaseRepo {
 	}
 
 	// Transactions
-	public List<StaxTransaction> getTransactions() {
-		return transactionDao.getAll();
-	}
-
-	public LiveData<List<StaxTransaction>> getCompleteTransferTransactions() {
-		return transactionDao.getCompleteTransfers();
+	public LiveData<List<StaxTransaction>> getCompleteAndPendingTransferTransactions() {
+		return transactionDao.getCompleteAndPendingTransfers();
 	}
 
 	public LiveData<List<StaxTransaction>> getCompleteTransferTransactions(int channelId) {
-		return transactionDao.getCompleteTransfers(channelId);
+		return transactionDao.getCompleteAndPendingTransfers(channelId);
 	}
 
 	@SuppressLint("DefaultLocale")

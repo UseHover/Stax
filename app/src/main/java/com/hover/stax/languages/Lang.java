@@ -4,7 +4,9 @@ import android.content.Context;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
+import com.yariksoffice.lingver.Lingver;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,8 +19,14 @@ public class Lang {
 		this.code = code;
 		Locale l = new Locale(code);
 		name = l.getDisplayLanguage(l);
+		name = name.substring(0, 1).toUpperCase() + name.substring(1);
 	}
 
+	public boolean isSelected() {
+		return code.equals(Lingver.getInstance().getLanguage());
+	}
+
+	@NotNull
 	@Override
 	public String toString() {
 		return name;

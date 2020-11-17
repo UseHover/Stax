@@ -5,13 +5,6 @@
 	<string name="channels_endpoint" translatable="false">/channels?published=true</string>
 	<string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
 
-	<string name="select_language">Choose a language</string>
-	<string-array name="supported_languages_code">
-		<item>en</item>
-		<item>fr</item>
-		<item>sw</item>
-	</string-array>
-
 	<string name="nav_home">Home</string>
 	<string name="nav_airtime">Buy Airtime</string>
 	<string name="nav_money">Move Money</string>
@@ -19,6 +12,9 @@
 	<string name="nav_transaction">Transaction Details</string>
 	<string name="nav_schedule">Schedule Details</string>
 	<string name="nav_request">Request Details</string>
+	<string name="nav_transfer">Transfer Details</string>
+	<string name="nav_edit_request">Edit Request Details</string>
+	<string name="nav_edit_transfer">Edit Transfer Details</string>
 	<string name="nav_language">Language Choice</string>
 	<string name="nav_channels">Choose Channels</string>
 	<string name="nav_sim_permission">Grant SIM permission</string>
@@ -26,178 +22,273 @@
 	<string name="nav_pins_entry">Enter Pins</string>
 	<string name="nav_account_detail">Account Details</string>
 
-	<string name="done">Done</string>
-	<string name="cancel">Cancel</string>
-	<string name="ok">OK</string>
-	<string name="save">Save</string>
-	<string name="skip">Skip</string>
-	<string name="resend">Resend</string>
-	<string name="continue_text">Continue</string>
-	<string name="no_selection_error">You must select at least 1 service.</string>
-	<string name="add_accounts">Add accounts</string>
-	<string name="edit">Edit</string>
-	<string name="back">Back</string>
-	<string name="test">Test</string>
-	<string name="add_an_account"><u>+ Add an account</u></string>
-	<string name="history">History</string>
-	<string name="no_history_yet">No history yet</string>
-	<string name="grant_permission">Grant Permission</string>
-	<string name="buy_airtime">Buy airtime</string>
-	<string name="transfer">Transfer</string>
-	<string name="transfer_now">Transfer now</string>
-	<string name="number">Number</string>
-	<string name="toNetwork">To network</string>
-	<string name="how_much_money">How much money?</string>
-	<string name="how_much_money_optional">How much money? (optional)</string>
-	<string name="to_who">Receiver</string>
-	<string name="from_this_account">From this account</string>
-	<string name="to_this_network">To this network</string>
-	<string name="to_this_number">To this number</string>
-	<string name="language">Language</string>
-	<string name="world_class_security">World class security</string>
-	<string name="world_class_security_description">We secure Stax with the same technology that locks your device. You unlock Stax the same way you unlock your device.</string>
-	<string name="keep_accounts_private">Keep accounts private</string>
-	<string name="keep_accounts_private_desc">Peek at your balances by dragging the bar to the left.</string>
-	<string name="refresh_stax">Refresh Stax</string>
-	<string name="refresh_stax_desc">Tap here to refresh all of your accounts.</string>
-	<string name="how_many_times_input">How many times? (optional)</string>
-	<string name="how_many_times">How many times?</string>
+	<string name="btn_done">Done</string>
+	<string name="btn_cancel">Cancel</string>
+	<string name="btn_ok">OK</string>
+	<string name="btn_save">Save</string>
+	<string name="btn_skip">Skip</string>
+	<string name="btn_yes">Yes</string>
+	<string name="btn_no">No</string>
+	<string name="btn_resend">Resend</string>
+	<string name="btn_continue">Continue</string>
+	<string name="btn_send">Send</string>
+	<string name="no_thanks">No, thanks</string>
+	<string name="btn_edit">Edit</string>
+	<string name="btn_back">Back</string>
+	<string name="btn_test">Test</string>
 
-	<string name="accounts">Accounts</string>
-	<string name="account">Account</string>
-	<string name="from_who">From who?</string>
-	<string name="add_someone">Add someone else</string>
-	<string name="message_request">Message</string>
-	<string name="message_option">Message (Optional)</string>
-	<string name="sim_permission">We need phone permissions to see which SIM cards you have.</string>
-	<string name="hover_permission">Stax runs USSD sessions in the background so you don\'t have to. To do this we need:</string>
-	<string name="send_sms_perm_error">You must grant the send sms permission to be able to send your money request through SMS.</string>
-	<string name="sms_permission">SMS permissions</string>
-	<string name="overlay_permission">Overlay permission</string>
-	<string name="accessibility_permission">Accessibility permissions</string>
+	<string name="lang_cardhead">Choose a language</string>
+	<string-array name="supported_lang_codes">
+		<item>en</item>
+		<item>fr</item>
+		<item>sw</item>
+	</string-array>
 
-	<string name="request_money_sms_template">This number has requested money from you using Stax. %1$s %2$s www.joinstax.com</string>
+	<!-- Home -->
+	<string name="bal_cardhead">Balances</string>
+	<string name="btn_addaccts">Add accounts</string>
+	<string name="hist_cardhead">History</string>
+	<string name="hist_zerobody">No history yet</string>
+	<string name="future_cardhead">Future Transactions</string>
+	<string name="fab_transfer">Transfer</string>
+	<string name="fab_airtime">Buy airtime</string>
+	<string name="fab_request">Request money</string>
+	<string name="tool_histbody">These are all the transactions you have made with Stax</string>
 
-	<string name="future_transactions">Future Transactions</string>
-	<string name="daily">Every day</string>
-	<string name="weekly">Every week</string>
-	<string name="biweekly">Every 2 weeks</string>
-	<string name="monthly">Every month</string>
+	<!-- Hover Session -->
+	<string name="balance_msg">Connecting to %1$s</string>
+	<string name="airtime_msg">Buying airtime</string>
+	<string name="transfer_msg">Transferring money</string>
 
-	<string name="balances">Balances</string>
-	<string name="balance">Balance</string>
-	<string name="check_balances">Check balances</string>
-	<string name="money_out">Money out this month</string>
-	<string name="money_in">Money in this month</string>
-	<string name="fees_description">Fees paid to %1$s this year</string>
-	<string name="transactions">Transactions</string>
+	<!-- Accounts and Permissions -->
+	<string name="perm_cardhead">Add accounts</string>
+	<string name="simperm_cardbody">We need phone permissions to see which SIM cards you have.</string>
+	<string name="btn_grantperm">Grant Permission</string>
+	<string name="simaccts_cardhead">Services on your SIMs</string>
+	<string name="countryaccts_cardhead">Other services in %1$s</string>
+	<string name="allaccts_cardhead">All services</string>
+	<string name="allaccts_zerobody">Please turn on data to load services.</string>
+	<string name="toast_error_noselect">You must select at least 1 service.</string>
+	<string name="perm_cardbody">Stax runs USSD sessions in the background so you don\'t have to. To do this we need:</string>
+	<string name="sms_cardbody">SMS permissions</string>
+	<string name="overlay_cardbody">Overlay permission</string>
+	<string name="access_cardbody">Accessibility permissions</string>
 
-	<string name="choose_institutions_title">Choose your services</string>
-	<string name="loading">Loading…</string>
-	<string name="sims_section">ADD SIM ACCOUNTS</string>
-	<string name="country_section">Other accounts in %1$s</string>
-	<string name="all_section">All services</string>
-	<string name="add_new_balance">Add a new balance to view it here</string>
+	<!-- SDK Overrides -->
+	<string name="hsdk_overlay_msg"><![CDATA[<font color="#1E232A">Show progress updates by turning <b>switch ON</b> in the next screen.</font>]]></string>
+	<string name="hsdk_access_msg"><![CDATA[<font color="#0A9A8D">Turn on Accessibility</font> <font color="#1E232A">in the <b>next screen</b> to run USSD sessions</font>]]></string>
+	<string name="hsdk_access_btn">Open Settings</string>
+	<string name="hsdk_overlay_tip">Next, tap the switch ON</string>
+	<string name="hsdk_overlay_example">Allow display over other apps</string>
+	<string name="hsdk_settings">Settings</string>
+	<string name="hsdk_off">Off</string>
+	<string name="hsdk_accessibility">Accessibility</string>
+	<string name="hsdk_accessibility_sub">Services</string>
+	<string name="hsdk_enable_accessibility">Enable Accessibility</string>
+	<string name="hsdk_default_accessibility_name">Hover Menu Service</string>
+	<string name="hsdk_access_tip">Find \"%1$s\" in the list and turn it ON</string>
+	<string name="hsdk_access_find">Find and Tap %1$s then turn it ON</string>
+	<string name="hsdk_access_step_1">Step 1</string>
+	<string name="hsdk_access_step_1_explain">Touch this button</string>
+	<string name="hsdk_access_step_2">Step 2</string>
+	<string name="hsdk_access_step_2_explain">Switch ON</string>
+	<string name="access_service_summary">Connect with Mobile Money and Telecom services on your behalf</string>
+	<string name="access_service_descript">This is used to read and interact with USSD menus to provide a simplified and more accessible experience.</string>
 
-	<string name="permission_showup_text">Heads up:\n\n We need permission to access your contacts and use your accessibility services so that we can do dope USSD magic for you.</string>
-	<string name="turn_on_permission">Turn on permissions</string>
-	<string name="permission_failure">You did not allow all permissions</string>
-	<string name="permission_success">All permissions allowed successfully</string>
+	<!-- PIN Entry -->
+	<string name="pin_cardhead">Enter your PINs</string>
+	<string name="pin_cardbody1">One last step: we need your account PINs to complete tasks and keep balances up to date.</string>
+	<string name="pin_cardbody2"><![CDATA[PINs are encrypted and never leave your device. You can delete PINs from Stax at any time. <font color="#39CBFC"><u>Learn more.</u></font>]]></string>
+	<string name="security_cardbody">Stax meets the criteria of 740.17(b)(3) (i) security classification of the United States Bureau of Industry and Security. This software uses HTTPS for server communication; symmetric key RSA encryption to temporarily store the user\'s credentials on their own device using Android Keystore; and code obfuscation using DRM.</string>
+	<string name="pin_label">%1$s PIN</string>
+	<string name="nopin_dialogbody">You will be asked for your PIN before every transaction. It will not be stored. You can save your PINs for faster transactions at any time by visiting settings.</string>
+	<string name="balance_dialogbody">We will now check your balance on each of your services.</string>
+	<string name="btn_balances">Check balances</string>
 
-	<string name="input_label">Input label</string>
-	<string name="pin_input_hint">PIN entry</string>
-	<string name="recipient_phone">Recipient phone number</string>
-	<string name="recipient_account">Recipient account number</string>
-	<string name="recipient_hint">Enter number</string>
-	<string name="optional_message">Enter message (optional)</string>
+	<!-- Request Services -->
+	<string name="reqacct_cardhead">Request coverage</string>
+	<string name="reqacct_cardbody">Can\'t find what you\'re looking for? We\'re adding new services to Stax every day, and if you let us know which one you’re looking for, we\'ll add it as soon as possible.</string>
+	<string name="country_cardhead">Country</string>
+	<string name="network_cardhead">Network</string>
+	<string name="service_cardhead">Service</string>
+	<string name="contact_cardhead">Contact</string>
+	<string name="phone_label">Phone (optional)</string>
+	<string name="email_label">Email (optional)</string>
+	<string name="reqcomplete_cardbody">We\'ll let you know as soon as %1$s is available</string>
+	<string name="btn_request">Send request</string>
+	<string name="btn_nothanks">No, thanks</string>
+	<string name="toast_confirm_contact">Thanks! Contact info received. We\'ll be in touch soon.</string>
+	<string name="reqcancel_head">Cancel request</string>
+	<string name="reqcancel_msg">Looks like your message has not been sent. Would you like to cancel this request?</string>
+	<string name="btn_saveanyway">Save anyway</string>
+	<string name="request_account">Request account</string>
+	<string name="request_account_desc">Can\’t find what you\’re looking for? We\’re adding new accounts to Stax every day, and if you let us know which one you\’re looking for, we\’ll add it as soon as possible.</string>
+	<string name="request_received_content">Request received. We\’ll add %1$s soon.</string>
+	<string name="contact_optional">It\’s optional, but if you give us your contact info and we\’ll let you know as soon as %1$s is available on Stax.</string>
+	<string name="phone_input_err">Phone number format or length incorrect</string>
+	<string name="email_input_err">Email incorrect, please review and try again</string>
+	<string name="phone_and_email_input_empty">Both phone and email should not be empty</string>
 
-	<string name="security">Security</string>
-	<string name="remove_pin_from_device">Remove PINs from device</string>
-	<string name="remove_pins">Remove all PINs now</string>
-	<string name="remove_pins_dialog_message">You can add your PINs to Stax again at any time.</string>
-	<string name="remove_pin_successful">PIN removed successfully</string>
-	<string name="yes">Yes</string>
-	<string name="no">No</string>
 
-	<string name="default_account">Default account</string>
-	<string name="default_account_desc">Default account will show up first when you move money.</string>
-	<string name="about_our_security">Secure with Stax</string>
-	<string name="about_our_security_content">Hover’s Android SDK is a development kit meeting the criteria of 740.17(b)(3) (i) security classification of the United States Bureau of Industry and Security. This software uses HTTPS for server communication; symmetric key RSA encryption to temporarily store the user’s credentials on their own device using Android Keystore; and code obfuscation using DRM (Dexguard).</string>
-	<string name="ask_every_time">You will be asked for your PIN before every transaction. It will not be stored. You can save your PINs for faster transactions at any time by visiting settings.</string>
-	<string name="check_balance_ask">We will now check your balance on each of your services.</string>
+	<string-array name="supported_countries">
+		<item>Cameroon</item>
+		<item>Ethiopia</item>
+		<item>Ghana</item>
+		<item>Kenya</item>
+		<item>Nigeria</item>
+		<item>Indonesia</item>
+		<item>Sierra Leon</item>
+		<item>Senegal</item>
+		<item>South Africa</item>
+		<item>Tanzania</item>
+		<item>Zambia</item>
+		<item>Zimbabwe</item>
+	</string-array>
 
-	<string name="pin_step_description">One last step: we need your account PINs to complete tasks and keep balances up to date.</string>
-	<string name="pin_security_description"><![CDATA[PINs are encrypted and never leave your device. You can delete PINs from Stax at any time. <font color="#39CBFC"><u>Learn more.</u></font>]]></string>
+	<!-- Onboarding showcase -->
+	<string name="onboard_sechead">World class security</string>
+	<string name="onboard_secbody">We secure Stax with the same technology that locks your device. You unlock Stax the same way you unlock your device</string>
+	<string name="onboard_peekhead">Keep accounts private</string>
+	<string name="onboard_peekbody">Peek at your balances by dragging the bar to the left</string>
+	<string name="onboard_balhead">Refresh your accounts</string>
+	<string name="onboard_balbody">Check your account\'s balance by pulling the bar all the way to the left</string>
+	<string name="onboard_refreshhead">Refresh Stax</string>
+	<string name="onboard_refreshbody">Pull down the whole screen to refresh all of your accounts</string>
+	<string name="onboard_infohead">Long press for more info</string>
+	<string name="onboard_infobody">Press and hold any element in Stax for more information</string>
 
-	<string name="title_airtime">Top up airtime</string>
-	<string name="title_p2p">Move money to someone else</string>
-	<string name="title_me2me">Move money between accounts</string>
-	<string name="title_request">Request money</string>
+	<!-- Transfer -->
+	<string name="amount_cardhead">Amount</string>
+	<string name="amount_label">How much money?</string>
+	<string name="channel_label">Account</string>
+	<string name="fromacct_cardhead">From this account</string>
+	<string name="link_addacct"><u>+ Add an account</u></string>
+	<string name="recipientnetwork_cardhead">To network</string>
+	<string name="recipientnetwork_label">To this network</string>
+	<string name="recipient_cardhead">To this number</string>
+	<string name="recipientphone_label">Recipient phone number</string>
+	<string name="recipientacct_label">Recipient account number</string>
+	<string name="toast_error_contactperm">You must grant the read contacts permission to choose a number from your address book.</string>
+	<string name="toast_error_contactselect">There was a problem selecting from your contact, please try again</string>
+	<string name="recipient_fielderror">Please enter recipient number</string>
+	<string name="amount_fielderror">Please enter amount</string>
+	<string name="service_fielderror">Please select a service</string>
+	<string name="airtimeself_choice">Myself</string>
+	<string name="airtimeother_choice">Someone else</string>
+	<string name="note_cardhead">Note</string>
+	<string name="note_label_opt">Enter note (optional)</string>
+	<string name="acct_label">Account</string>
+	<string name="recipient_label">To</string>
+	<string name="descrip_airtime_sent">%1$s sent airtime to %2$s</string>
+	<string name="descrip_transfer_sent">from %1$s to %2$s</string>
+	<string name="fab_transfernow">Transfer now</string>
+	<string name="pending_callout">Transaction sent. Waiting for confirmation.</string>
+	<string name="pending_cardhead">Waiting for confirmation</string>
+	<string name="pending_cardbody">The USSD session is complete, but we have not received a confirmation SMS yet.</string>
+	<string name="edittransfer_cardhead">Edit Transfer</string>
+	<string name="editairtime_cardhead">Edit Buy Airtime</string>
 
-	<string name="from">From</string>
-	<string name="to">To</string>
-	<string name="to_network">To network</string>
-	<string name="amount">Amount</string>
-	<string name="amount_detail">Amount: %1$s</string>
-	<string name="note_detail">Note: \"%1$s\"</string>
-	<string name="add_a_message">Add a message</string>
-	<string name="when">When</string>
-	<string name="frequency">Frequency</string>
-	<string name="until">Until</string>
-	<string name="number_of_transactions">Number of transactions</string>
-	<string name="fees">Fees</string>
-	<string name="choose_a_service_to_calculate">Choose a service to calculate your fees</string>
-	<string name="total">Total</string>
-	<string name="schedule">Schedule</string>
-	<string name="send_future">Send in the future</string>
-	<string name="send_repeat">Repeat transaction</string>
-	<string name="schedule_created">Transfer scheduled. We will remind you to make a transfer on %1$s</string>
-	<string name="request_sent">Your request has been sent.</string>
-	<string name="request_scheduled">Your request has been scheduled. You will be reminded to send a message on %1$s</string>
+	<!-- Request -->
+	<string name="req_cardhead">Request money</string>
+	<string name="amount_label_opt">How much money? (optional)</string>
+	<string name="reqfrom_label">From who?</string>
+	<string name="btn_addcontact">Add someone else</string>
+	<string name="sms_request_template">You have a money request from this number for %1$s on stax.me. %2$s</string>
+	<string name="sms_amount_detail">%1$s</string>
+	<string name="sms_note_detail">Note: \"%1$s\"</string>
+	<string name="toast_error_smsperm">You must grant the read SMS permission so Stax can tell when a request is sent or fulfilled.</string>
+	<string name="toast_confirm_request">Your request has been sent.</string>
+	<string name="toast_request_scheduled">Your request has been scheduled. You will be reminded to send a message on %1$s</string>
+	<string name="descrip_request">Request from %1$s</string>
+	<string name="descrip_airtime_sched">buy airtime with %1$s for %2$s</string>
+	<string name="editreq_cardhead">Edit Request</string>
 
-	<string-array name="frequency_array">
+	<!-- Scheduling -->
+	<string name="future_toggle">Send in the future</string>
+	<string name="date_label">Date</string>
+	<string name="repeat_toggle">Repeat transaction</string>
+	<string name="repeatfreq_label">How often?</string>
+	<string name="end_label">End date</string>
+	<string name="end_label_opt">End date (optional)</string>
+	<string name="repeatnum_label_opt">How many times? (optional)</string>
+	<string name="repeatnum_label">How many times?</string>
+	<string name="toast_confirm_schedule">Transfer scheduled. We will remind you to make a transfer on %1$s</string>
+	<string-array name="frequency_choices">
 		<item>Every day</item>
 		<item>Every week</item>
 		<item>Every 2 weeks</item>
 		<item>Every month</item>
 	</string-array>
-
-	<string-array name="frequency_array_values" translatable="false">
+	<string-array name="frequency_choices_values" translatable="false">
 		<item>0daily</item>
 		<item>1weekly</item>
 		<item>2biweekly</item>
 		<item>3monthly</item>
 	</string-array>
+	<string name="fab_schedule">Schedule</string>
 
-	<string name="choose_service_hint">Choose a service</string>
-	<string-array name="choose_account_initial_array">
-		<item>choose_account_initial</item>
-	</string-array>
-	<string name="airtime_self">Myself</string>
-	<string name="airtime_other">Someone else</string>
-	<string name="add_service">+ Add a service</string>
+	<!-- Notifications -->
+	<string name="notify_default_title">User scheduled</string>
+	<string name="notify_default_channel_descrip">Show notifications to make transfers and requests scheduled by you.</string>
+	<string name="notify_transfer">It\'s time to transfer money %1$s with Stax.</string>
+	<string name="notify_transfer_cta">Transfer now</string>
+	<string name="notify_request">It\'s time to send a money request to %1$s with Stax.</string>
+	<string name="notify_request_cta">Send request</string>
+	<string name="notify_airtime">It\'s time to buy airtime with Stax.</string>
+	<string name="notify_airtime_cta">Buy airtime</string>
 
-	<string name="date">Date</string>
-	<string name="end_date">End date</string>
-	<string name="network">Network</string>
-	<string name="how_often">How often?</string>
-	<string name="note">Note</string>
-	<string name="transactionId">Transaction ID</string>
-	<string name="message">Message</string>
-	<string name="messages">Messages</string>
+	<!-- Details -->
+	<string name="balance_label">Balance</string>
+	<string name="moneyout_label">Money out this month</string>
+	<string name="moneyin_label">Money in this month</string>
+	<string name="fees_label">Fees paid to %1$s this year</string>
+	<string name="transactions_cardhead">Transactions</string>
+	<string name="network_label">Network</string>
+	<string name="id_label">Transaction ID</string>
+	<string name="session_cardhead">Messages</string>
 
-	<string name="end_date_input">End date (optional)</string>
+	<!-- Canceling -->
+	<string name="cancelfuture_head">Cancel future transaction</string>
+	<string name="btn_canceltrans">Cancel transactions</string>
+	<string name="cancelfuture_msg">This will cancel future transactions. You can re-schedule the transactions at any time.</string>
+	<string name="toast_confirm_cancelfuture">Future transactions canceled.</string>
+	<string name="cancelreq_head">Cancel request</string>
+	<string name="btn_cancelreq">Cancel request</string>
+	<string name="cancelreq_msg">This will cancel this request. You can re-request money from someone at any time.</string>
+	<string name="toast_confirm_cancelreq">Request canceled.</string>
 
-	<string name="error">Error</string>
-	<string name="enterRecipientError">Please enter recipient number"</string>
-	<string name="enterAnotherOptionError">Please try another option</string>
-	<string name="enterAmountError">Please enter amount</string>
-	<string name="selectServiceError">Please select a service</string>
-	<string name="contact_perm_error">You must grant the read contacts permission to choose a number from your address book.</string>
-	<string name="selectContactErrorMessage">There was a problem selecting from your contact, please try again</string>
-	<string name="no_p2p_action_error">Can\'t send money using this service. Choose a difference service or contact support.</string>
-	<string name="no_airtime_action_error">Can\'t transfer airtime using this service. Choose a difference service or contact support.</string>
+	<!-- Settings -->
+	<string name="accts_cardhead">Accounts</string>
+	<string name="security_cardhead">Security</string>
+	<string name="defaultacct_label">Default account</string>
+	<string name="security_head">Secure with Stax</string>
+	<string name="btn_removepins">Remove PINs from device</string>
+	<string name="removepins_dialoghead">Remove all PINs now</string>
+	<string name="removepins_dialogmes">You can add your PINs to Stax again at any time.</string>
+	<string name="toast_confirm_removepin">PIN removed successfully</string>
+	<string name="btn_savepin">Save PIN</string>
+	<string name="btn_editpin">Edit PIN</string>
+	<string name="editpin_label">PIN</string>
+	<string name="btn_removeacct">Remove Account</string>
+	<string name="toast_confirm_acctremoved">Account removed successfully</string>
+	<string name="toast_confirm_pinupdate">Pin saved</string>
+	<string name="language_cardhead">Language</string>
+	<string name="disclaimer">All products names, brands, and trademarks are property of their respective owners. Use does not imply affiliation.</string>
 
+	<!-- System auth check -->
+	<string name="auth_title">Authenticate with Stax</string>
+	<string name="auth_descrip">Authenticate with your fingerprint</string>
+	<string name="toast_error_auth">Authentication failed</string>
+
+	<!-- Self destruct -->
+	<string name="destruct_cardbody">This build of Stax has expired. \n\nDownload the latest build to keep using Stax.</string>
+	<string name="btn_download">Download new version</string>
+	<string name="uninstall_cardbody">Your update is downloading. \n\nClick the button below to uninstall this version. Once your download is complete tap the notification to install the new version.</string>
+	<string name="btn_uninstall">Uninstall</string>
+	<string name="notify_download_head">Stax update</string>
+	<string name="notify_download_body">Downloading</string>
+
+	<!-- Time -->
 	<string name="timeago_ago">%1$s ago</string>
 	<string name="timeago_from_now">%1$s from now</string>
 	<string name="timeago_secondes">less than a minute</string>
@@ -212,37 +303,10 @@
 	<string name="timeago_year">about a year</string>
 	<string name="timeago_years">%1$d years</string>
 
-	<string name="transaction_descrip_airtime">%1$s sent airtime to %2$s</string>
-	<string name="schedule_descrip_airtime">buy airtime with %1$s for %2$s</string>
-	<string name="transaction_descrip_money">from %1$s to %2$s</string>
-	<string name="request_descrip">Request from %1$s</string>
-
-	<string name="notify_transfer">It\'s time to transfer money %1$s with Stax.</string>
-	<string name="notify_transfer_cta">Transfer now</string>
-	<string name="notify_request">It\'s time to send a request for payment to %1$s with Stax.</string>
-	<string name="notify_request_cta">Send request</string>
-	<string name="notify_airtime">It\'s time to buy airtime with Stax.</string>
-	<string name="notify_airtime_cta">Buy airtime</string>
-
-	<string name="auth_title">Security check</string>
-	<string name="auth_subTitle">Authenticate</string>
-	<string name="auth_desc">Authenticate with your fingerprint</string>
-
-	<string name="cancel_future_head">Cancel future transaction</string>
-	<string name="cancel_future_btn">Cancel transactions</string>
-	<string name="cancel_future_msg">This will cancel future transactions. You can re-schedule the transactions at any time.</string>
-	<string name="cancel_future_success">Future transactions canceled.</string>
-
-	<string name="cancel_request_head">Cancel request</string>
-	<string name="cancel_request_btn">Cancel request</string>
-	<string name="cancel_request_msg">This will cancel this request. You can re-request money from someone at any time.</string>
-	<string name="cancel_request_success">Request canceled.</string>
-
-	<string name="next">Next</string>
-	<string name="previous">Previous</string>
-
-	<string name="self_destruct_content">This build of Stax has expired. \n\nDownload the latest build to keep using Stax.</string>
-	<string name="download">Download new version</string>
-	<string name="uninstall_content">Your update is downloading. \n\nClick the button below to uninstall this version. Once your download is complete tap the notification to install the new version.</string>
-	<string name="uninstall">Uninstall</string>
+	<!-- SWIPE REFRESH -->
+	<string name="csr_text_state_normal">Swipe to refresh balance </string>
+	<string name="csr_text_state_ready">Release to refresh balance</string>
+	<string name="csr_text_state_refresh">Refreshing balance…</string>
+	<string name="csr_text_state_complete">Refreshing balance complete</string>
+	<string name="csr_text_last_refresh">last update:</string>
 </resources>

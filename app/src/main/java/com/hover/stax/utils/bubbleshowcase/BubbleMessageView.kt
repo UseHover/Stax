@@ -34,7 +34,7 @@ class BubbleMessageView : ConstraintLayout {
 	  private var showCaseMessageViewLayout: ConstraintLayout? = null
 
 	  private var targetViewScreenLocation: RectF? = null
-	  private var mBackgroundColor: Int = ContextCompat.getColor(context, R.color.blue_default)
+	  private var mBackgroundColor: Int = ContextCompat.getColor(context, R.color.brightBlue)
 	  private var arrowPositionList = ArrayList<BubbleShowCase.ArrowPosition>()
 
 	  private var paint: Paint? = null

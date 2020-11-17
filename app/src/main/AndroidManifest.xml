@@ -9,6 +9,7 @@
 	<uses-permission android:name="android.permission.READ_CONTACTS" />
 	<uses-permission android:name="android.permission.USE_BIOMETRIC" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES"/>
 
 	<application
 		android:name=".ApplicationInstance"
@@ -48,7 +49,9 @@
 		<activity android:name=".requests.RequestActivity"
 			android:theme="@style/StaxTheme"
 			android:windowSoftInputMode="stateVisible|adjustResize" />
-		<activity android:name=".destruct.SelfDestruct" />
+		<activity android:name=".destruct.SelfDestructActivity" />
+
+		<activity android:name=".requestAccount.RequestAccountActivity" android:theme="@style/StaxTheme"/>
 
 		<receiver
 			android:name=".hover.TransactionReceiver"
@@ -59,12 +62,27 @@
 			</intent-filter>
 		</receiver>
 
+		<receiver
+			android:name=".requests.SmsReceiver"
+			android:enabled="true"
+			android:exported="true"
+			android:permission="android.permission.BROADCAST_SMS">
+			<intent-filter android:priority="999">
+				<action android:name="android.provider.Telephony.SMS_RECEIVED" />
+			</intent-filter>
+		</receiver>
+
 		<meta-data
 			android:name="com.google.firebase.messaging.default_notification_icon"
 			android:resource="@drawable/ic_stax" />
 		<meta-data
 			android:name="com.google.firebase.messaging.default_notification_color"
-			android:resource="@color/colorAccent" />
+			android:resource="@color/brightBlue" />
+
+		<meta-data
+			android:name="io.sentry.dsn"
+			android:value="https://ce9bf386ab104ece903cd33fc563c241@o44209.ingest.sentry.io/5477330" />
+
 		<meta-data
 			android:name="com.hover.ApiKey"
 			android:value="1335646a78bb2b1157304be1510641f6" />

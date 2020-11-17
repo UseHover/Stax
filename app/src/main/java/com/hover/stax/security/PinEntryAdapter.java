@@ -1,7 +1,6 @@
 package com.hover.stax.security;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -46,12 +45,17 @@ public class PinEntryAdapter extends RecyclerView.Adapter<PinEntryAdapter.PinEnt
 		Channel channel = channels.get(position);
 
 		holder.view.setTag(channel.id);
-		holder.label.setHint(channel.name);
+		holder.label.setHint(holder.view.getContext().getString(R.string.pin_label, channel.name));
 		Picasso.get().load(channel.logoUrl).into(holder);
 
 		holder.input.addTextChangedListener(new TextWatcher() {
-			@Override public void afterTextChanged(Editable s) { }
-			@Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -94,7 +98,8 @@ public class PinEntryAdapter extends RecyclerView.Adapter<PinEntryAdapter.PinEnt
 		}
 
 		@Override
-		public void onPrepareLoad(Drawable placeHolderDrawable) { }
+		public void onPrepareLoad(Drawable placeHolderDrawable) {
+		}
 	}
 
 	@Override

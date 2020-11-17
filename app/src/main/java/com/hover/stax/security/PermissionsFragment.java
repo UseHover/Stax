@@ -1,7 +1,6 @@
 package com.hover.stax.security;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
@@ -55,7 +55,10 @@ public class PermissionsFragment extends Fragment {
 			requestNext();
 	}
 
-	private void startRequest() { askStarted = true; requestNext(); }
+	private void startRequest() {
+		askStarted = true;
+		requestNext();
+	}
 
 	private void requestNext() {
 		PermissionHelper ph = new PermissionHelper(getContext());
@@ -78,8 +81,13 @@ public class PermissionsFragment extends Fragment {
 			requestNext();
 	}
 
-	private void requestPhone(PermissionHelper ph) { ph.requestPhone(getActivity(), PHONE_REQUEST); }
-	private void requestSMS(PermissionHelper ph) { ph.requestBasicPerms(getActivity(), SMS_REQUEST); }
+	private void requestPhone(PermissionHelper ph) {
+		ph.requestPhone(getActivity(), PHONE_REQUEST);
+	}
+
+	private void requestSMS(PermissionHelper ph) {
+		ph.requestBasicPerms(getActivity(), SMS_REQUEST);
+	}
 
 	public void requestOverlay() {
 		if (dialog != null) dialog.dismiss();
@@ -95,7 +103,8 @@ public class PermissionsFragment extends Fragment {
 	private void setUpSelectedChannels(View view) {
 		RecyclerView selectedRecyclerView = view.findViewById(R.id.selected_recycler);
 		viewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
-			selectedRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
+			GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 4, GridLayoutManager.VERTICAL, false);
+			selectedRecyclerView.setLayoutManager(gridLayoutManager);
 			selectedRecyclerView.setHasFixedSize(true);
 			ChannelsAdapter selectedAdapter = new ChannelsAdapter(channels, null);
 			selectedRecyclerView.setAdapter(selectedAdapter);

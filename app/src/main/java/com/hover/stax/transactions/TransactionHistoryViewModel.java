@@ -3,6 +3,7 @@ package com.hover.stax.transactions;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -25,7 +26,7 @@ public class TransactionHistoryViewModel extends AndroidViewModel {
 		repo = new DatabaseRepo(application);
 
 		transactions = new MutableLiveData<>();
-		transactions = repo.getCompleteTransferTransactions();
+		transactions = repo.getCompleteAndPendingTransferTransactions();
 	}
 
 	public LiveData<List<StaxTransaction>> getStaxTransactions() {
@@ -34,10 +35,12 @@ public class TransactionHistoryViewModel extends AndroidViewModel {
 
 	public void saveTransaction(Intent data, Context c) {
 		new Thread(() -> {
-			StaxTransaction t = new StaxTransaction(data, repo.getAction(data.getStringExtra(TransactionContract.COLUMN_ACTION_ID)), c);
-			if (t.uuid != null) {
-				repo.insert(t);
-			}
+			try {
+				StaxTransaction t = new StaxTransaction(data, repo.getAction(data.getStringExtra(TransactionContract.COLUMN_ACTION_ID)), c);
+				if (t.uuid != null) {
+					repo.insert(t);
+				}
+			} catch (Exception e) { Log.e("THViewModel", "Failed to save transaction.", e); }
 		}).start();
 	}
 }

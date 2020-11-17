@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:title="@string/request_account"
+    app:showBack="true">
+
+	<TextView
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:fontFamily="font-normal"
+		android:layout_marginBottom="@dimen/margin_13"
+	    android:textSize="@dimen/text_16"
+	    android:paddingHorizontal="@dimen/margin_3"
+		android:lineSpacingExtra="@dimen/text_spacing_8"
+	    android:id="@+id/request_account_text_desc"
+	    android:text="@string/request_account_desc" />
+
+	<TableLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginHorizontal="@dimen/margin_3">
+
+		<TableRow android:id="@+id/countryRow">
+
+			<TextView
+			    android:text="@string/country_cardhead"
+			    android:textColor="@color/offWhite"
+			    android:textSize="@dimen/text_16" />
+
+			<TextView android:id="@+id/countryValue"
+			    android:layout_weight="1"
+			    android:fontFamily="font-medium"
+			    android:textColor="@color/offWhite"
+			    android:textSize="@dimen/text_21"
+			    android:textAlignment="viewEnd" />
+		</TableRow>
+
+		<TableRow android:id="@+id/networkRow" android:layout_marginTop="@dimen/margin_21">
+
+			<TextView
+			    android:text="@string/service_cardhead"
+			    android:textColor="@color/offWhite"
+			    android:textSize="@dimen/text_16" />
+
+			<TextView android:id="@+id/networkValue"
+			    android:layout_weight="1"
+			    android:fontFamily="font-medium"
+			    android:textColor="@color/offWhite"
+			    android:textSize="@dimen/text_21"
+			    android:textAlignment="viewEnd" />
+		</TableRow>
+	</TableLayout>
+</com.hover.stax.views.StaxCardView>

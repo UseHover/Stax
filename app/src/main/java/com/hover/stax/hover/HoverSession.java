@@ -1,7 +1,9 @@
 package com.hover.stax.hover;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import androidx.fragment.app.Fragment;
@@ -12,8 +14,11 @@ import com.hover.sdk.api.HoverParameters;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.database.Constants;
 import com.hover.stax.security.KeyStoreExecutor;
 import com.hover.stax.utils.Utils;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,11 +27,12 @@ import java.util.Iterator;
 import java.util.List;
 
 final public class HoverSession {
-	private final static String TAG = "HoverCaller";
+	private final static String TAG = "HoverSession";
 
-	private Fragment frag;
-	private Channel channel;
-	private int requestCode, finalScreenTime;
+	final private Fragment frag;
+	final private Channel channel;
+	final private int requestCode, finalScreenTime;
+
 
 	private HoverSession(Builder b) {
 		Hover.setAfterPermissionReturnActivity(Hover.DEFAULT_PERM_ACTIVITY, b.activity);
@@ -36,7 +42,7 @@ final public class HoverSession {
 		finalScreenTime = b.finalScreenTime;
 		HoverParameters.Builder builder = getBasicBuilder(b);
 		addExtras(builder, b.extras, b.action);
-		addPin(builder, b.action, b.activity);
+		addPin(builder, b.activity);
 		startHover(builder, b.activity);
 	}
 
@@ -44,8 +50,14 @@ final public class HoverSession {
 		HoverParameters.Builder builder = new HoverParameters.Builder(b.activity);
 		builder.request(b.action.public_id);
 //		builder.setEnvironment(HoverParameters.TEST_ENV);
-		builder.style(R.style.StaxHoverTheme);
+		builder.initialProcessingMessage(getMessage(b.action, b.activity));
+		builder.showUserStepDescriptions(true);
 		builder.finalMsgDisplayTime(finalScreenTime);
+		builder.style(R.style.StaxHoverTheme);
+		builder.styleMode(Constants.STYLE_MODE_FOR_STAX);
+		builder.transactingImages(getSenderLogo(), getReceiverLogo(b.action));
+		builder.customBackgroundImage(R.drawable.stax_background);
+
 		return builder;
 	}
 
@@ -70,8 +82,38 @@ final public class HoverSession {
 		return value;
 	}
 
-	private void addPin(HoverParameters.Builder builder, Action action, Activity a) {
+	private void addPin(HoverParameters.Builder builder, Activity a) {
 		builder.extra(Action.PIN_KEY, KeyStoreExecutor.decrypt(channel.pin, a));
+	}
+
+	private byte[] getSenderLogo() {
+		byte[] l = getLogo(channel.logoUrl);
+//		Log.e(TAG, "logo array: " + l);
+		return l;
+	}
+	private byte[] getReceiverLogo(Action a) {
+		if (a.to_institution_logo != null && !channel.logoUrl.equals(a.to_institution_logo))
+			return getLogo(a.to_institution_logo);
+		return null;
+	}
+	private byte[] getLogo(String url) {
+		try {
+//			Log.e(TAG, "logo url: " + url);
+			Bitmap b = Picasso.get().load(url).networkPolicy(NetworkPolicy.OFFLINE).get();
+//			Log.e(TAG, "bitmap: " + b);
+			return Utils.bitmapToByteArray(b);
+		} catch (Exception ignored) {
+//			Log.e(TAG, "exception", ignored);
+			return null;
+		}
+	}
+
+	private String getMessage(Action a, Context c) {
+		switch (a.transaction_type) {
+			case Action.BALANCE: return c.getString(R.string.balance_msg, a.from_institution_name);
+			case Action.AIRTIME: return c.getString(R.string.airtime_msg);
+			default: return c.getString(R.string.transfer_msg);
+		}
 	}
 
 	private void startHover(HoverParameters.Builder builder, Activity a) {
@@ -92,7 +134,7 @@ final public class HoverSession {
 		private int requestCode, finalScreenTime = 2000;
 
 		public Builder(Action a, Channel c, Activity act, int code) {
-			if (a == null) throw new IllegalArgumentException("Context must not be null");
+			if (a == null) throw new IllegalArgumentException("Action must not be null");
 			activity = act;
 			channel = c;
 			action = a;

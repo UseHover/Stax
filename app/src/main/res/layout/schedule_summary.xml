@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout android:layout_width="match_parent"
 	android:layout_height="wrap_content"
+	android:layout_marginHorizontal="@dimen/margin_3"
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<TableRow android:layout_marginTop="@dimen/margin_24">
 		<TextView
 			android:textColor="@color/offWhite"
 			android:textSize="@dimen/text_16"
-			android:text="@string/amount"/>
+	        android:fontFamily="font-normal"
+			android:text="@string/amount_cardhead"/>
 
 		<TextView android:id="@+id/details_amount"
 			android:layout_weight="1"
@@ -21,7 +23,8 @@
 		<TextView
 			android:textColor="@color/offWhite"
 			android:textSize="@dimen/text_16"
-			android:text="@string/date"/>
+		    	android:fontFamily="font-normal"
+			android:text="@string/date_label"/>
 
 		<TextView android:id="@+id/details_date"
 			android:layout_weight="1"
@@ -35,7 +38,8 @@
 		<TextView
 			android:textColor="@color/offWhite"
 			android:textSize="@dimen/text_16"
-			android:text="@string/how_often"/>
+		    	android:fontFamily="font-normal"
+			android:text="@string/repeatfreq_label"/>
 
 		<TextView android:id="@+id/details_frequency"
 			android:layout_weight="1"
@@ -49,7 +53,8 @@
 		<TextView
 			android:textColor="@color/offWhite"
 			android:textSize="@dimen/text_16"
-			android:text="@string/end_date"/>
+		    	android:fontFamily="font-normal"
+			android:text="@string/end_label"/>
 
 		<TextView android:id="@+id/details_end"
 			android:layout_weight="1"
@@ -59,11 +64,12 @@
 			android:textSize="@dimen/text_21" />
 	</TableRow>
 
-	<TableRow android:id="@+id/reasonRow" android:layout_marginTop="@dimen/margin_24">
+	<TableRow android:id="@+id/noteRow" android:layout_marginTop="@dimen/margin_24">
 		<TextView
 			android:textColor="@color/offWhite"
 			android:textSize="@dimen/text_16"
-			android:text="@string/note"/>
+		    	android:fontFamily="font-normal"
+			android:text="@string/note_cardhead"/>
 
 		<TextView android:id="@+id/details_reason"
 			android:layout_weight="1"

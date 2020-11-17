@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.ContactsContract;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,17 +14,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
-import com.amplitude.api.Amplitude;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.utils.PermissionUtils;
-import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
-import java.io.File;
 import java.util.Date;
 
-public class SelfDestruct extends AppCompatActivity {
+public class SelfDestructActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,7 +32,7 @@ public class SelfDestruct extends AppCompatActivity {
 	public static boolean isTime(Context c) {
 		long currentTime = new Date().getTime();
 		long selfDestructTime = Long.parseLong(Utils.getBuildConfigValue(c, "SELF_DESTRUCT").toString());
-		return  currentTime >= selfDestructTime;
+		return currentTime >= selfDestructTime;
 	}
 
 	private void attemptDownload() {
@@ -57,21 +52,25 @@ public class SelfDestruct extends AppCompatActivity {
 
 	public void downloadLatest() {
 		DownloadManager downloadmanager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-		Uri uri = Uri.parse("http://maven.usehover.com/apps/stax_release.apk");
+		Uri uri = Uri.parse("https://maven.usehover.com/apps/stax_release.apk");
 
 		DownloadManager.Request request = new DownloadManager.Request(uri);
-		request.setTitle("Stax Update");
-		request.setDescription("Downloading");
+		request.setTitle(getString(R.string.notify_download_head));
+		request.setDescription(getString(R.string.notify_download_body));
+		request.allowScanningByMediaScanner();
 		request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 		request.setVisibleInDownloadsUi(true);
-		request.setDestinationInExternalPublicDir("", "stax.apk");
-		downloadmanager.enqueue(request);
-		updateView();
+		request.setMimeType("application/*");
+		request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "stax.apk");
+		if (downloadmanager != null) {
+			downloadmanager.enqueue(request);
+			updateView();
+		}
 	}
 
 	private void updateView() {
-		((TextView) findViewById(R.id.explainer)).setText(R.string.uninstall_content);
-		((AppCompatButton) findViewById(R.id.continue_btn)).setText(R.string.uninstall);
+		((TextView) findViewById(R.id.explainer)).setText(R.string.uninstall_cardbody);
+		((AppCompatButton) findViewById(R.id.continue_btn)).setText(R.string.btn_uninstall);
 		findViewById(R.id.continue_btn).setOnClickListener(view -> uninstall());
 	}
 

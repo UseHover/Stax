@@ -7,11 +7,11 @@
 	tools:context=".transfers.TransferActivity">
 
 	<fragment
-		android:id="@+id/fragment_container"
-		android:name="com.hover.stax.transfers.TransferFragment"
+		android:id="@+id/nav_host_fragment"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		tools:layout="@layout/fragment_transfer"/>
+		android:name="androidx.navigation.fragment.NavHostFragment"
+		app:navGraph="@navigation/transfer_navigation" />
 
 	<androidx.coordinatorlayout.widget.CoordinatorLayout
 		android:layout_width="match_parent"
@@ -26,7 +26,7 @@
 			android:layout_gravity="end|bottom"
 			app:layout_anchorGravity="end|bottom"
 			style="@style/StaxButtonColored"
-			android:text="@string/continue_text"
+			android:text="@string/btn_continue"
 			android:fontFamily="font-medium"
 			android:onClick="onContinue"/>
 

@@ -3,11 +3,23 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	app:title="@string/sims_section">
+	app:title="@string/simaccts_cardhead">
 
 	<androidx.recyclerview.widget.RecyclerView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:id="@+id/section_recycler" />
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/margin_8"
+		android:layout_marginTop="@dimen/margin_21"
+		android:layout_marginHorizontal="@dimen/margin_3"
+		android:text="@string/allaccts_zerobody"
+		android:fontFamily="font-regular"
+		android:textColor="@color/offWhite"
+		android:textSize="@dimen/text_16"
+		android:id="@+id/no_accounts"/>
 
 </com.hover.stax.views.StaxCardView>

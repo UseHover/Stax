@@ -12,8 +12,10 @@ import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.schedules.Schedule;
+import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.StagedViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.hover.stax.transfers.TransferStage.REVIEW;
@@ -60,6 +62,16 @@ public class TransferViewModel extends StagedViewModel {
 		}
 	}
 
+	void setActiveChannel(String channelString) {
+		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0) {
+			return;
+		}
+		for (Channel c : selectedChannels.getValue()) {
+			if (c.toString().equals(channelString))
+				activeChannel.setValue(c);
+		}
+	}
+
 	void setActiveChannel(int channel_id) {
 		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0) {
 			return;
@@ -89,13 +101,22 @@ public class TransferViewModel extends StagedViewModel {
 	}
 
 	private void findActiveAction(List<Action> actions) {
-		if (actions != null && actions.size() > 0) {
+		if (actions != null && actions.size() > 0 && activeAction.getValue() == null) {
 			activeAction.setValue(actions.get(0));
 		}
 	}
 
 	void setActiveAction(Action action) {
-		activeAction.setValue(action);
+		activeAction.postValue(action);
+	}
+	void setActiveAction(String actionString) {
+		if (filteredActions.getValue() == null || filteredActions.getValue().size() == 0) {
+			return;
+		}
+		for (Action a : filteredActions.getValue()) {
+			if (a.toString().equals(actionString))
+				activeAction.postValue(a);
+		}
 	}
 
 	LiveData<Action> getActiveAction() {
@@ -181,8 +202,8 @@ public class TransferViewModel extends StagedViewModel {
 		}
 	}
 
-	private boolean requiresActionChoice() {
-		return filteredActions.getValue() != null && filteredActions.getValue().size() > 0 && (filteredActions.getValue().size() > 1 || filteredActions.getValue().get(0).hasToInstitution());
+	boolean requiresActionChoice() { // in last case, should have request network as choice
+		return filteredActions.getValue() != null && filteredActions.getValue().size() > 0 && (filteredActions.getValue().size() > 1 || filteredActions.getValue().get(0).hasDiffToInstitution());
 	}
 
 	boolean stageValidates() {
@@ -190,14 +211,14 @@ public class TransferViewModel extends StagedViewModel {
 		switch ((TransferStage) stage.getValue()) {
 			case AMOUNT:
 				if (amount.getValue() == null || amount.getValue().isEmpty()) {
-					amountError.setValue(R.string.enterAmountError);
+					amountError.setValue(R.string.amount_fielderror);
 					return false;
 				} else
 					amountError.setValue(null);
 				break;
 			case RECIPIENT:
 				if (recipient.getValue() == null || recipient.getValue().isEmpty()) {
-					recipientError.setValue(R.string.enterRecipientError);
+					recipientError.setValue(R.string.recipient_fielderror);
 					return false;
 				} else
 					recipientError.setValue(null);
@@ -208,7 +229,7 @@ public class TransferViewModel extends StagedViewModel {
 
 	boolean isDone() { return stage.getValue() == REVIEW || stage.getValue() == REVIEW_DIRECT; }
 
-	public void setSchedule(Schedule s) {
+	public void view(Schedule s) {
 		schedule.setValue(s);
 		setType(s.type);
 		setActiveChannel(s.channel_id);
@@ -222,5 +243,15 @@ public class TransferViewModel extends StagedViewModel {
 		Schedule s = new Schedule(activeAction.getValue(), futureDate.getValue(), repeatSaved.getValue(), frequency.getValue(), endDate.getValue(),
 			recipient.getValue(), amount.getValue(), note.getValue(), getApplication());
 		saveSchedule(s);
+	}
+
+	public void checkSchedule() {
+		if (schedule.getValue() != null) {
+			Schedule s = schedule.getValue();
+			if (s.end_date <= DateUtils.today()) {
+				s.complete = true;
+				repo.update(s);
+			}
+		}
 	}
 }

@@ -19,7 +19,7 @@ public class PermissionUtils {
 		}
 		return true;
 	}
-	
+
 	public static boolean permissionsGranted(int[] grantResults) {
 		for (int result : grantResults) {
 			if (result != PackageManager.PERMISSION_GRANTED) {
@@ -37,7 +37,7 @@ public class PermissionUtils {
 		return Build.VERSION.SDK_INT < 23 || PermissionUtils.has(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, c);
 	}
 
-	public static boolean hasSendSMSPermission(Context c) {
-		return Build.VERSION.SDK_INT < 23 || PermissionUtils.has(new String[]{Manifest.permission.SEND_SMS}, c);
+	public static boolean hasSmsPermission(Context c) {
+		return Build.VERSION.SDK_INT < 23 || PermissionUtils.has(new String[]{Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS}, c);
 	}
 }

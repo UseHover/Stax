@@ -13,6 +13,7 @@ import androidx.room.PrimaryKey;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.database.Constants;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.Utils;
 
@@ -44,7 +45,7 @@ public class StaxTransaction {
 	public int channel_id;
 
 	@NonNull
-	@ColumnInfo(name = "status")
+	@ColumnInfo(name = "status", defaultValue = Constants.PENDING)
 	public String status;
 
 	@NonNull
@@ -100,18 +101,18 @@ public class StaxTransaction {
 		updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, DateUtils.now());
 
 		HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES);
-		if (extras.containsKey(Action.FEE_KEY))
+		if (extras != null && extras.containsKey(Action.FEE_KEY))
 			fee = Utils.getAmount(extras.get(Action.FEE_KEY));
 	}
 
 	private String generateDescription(Action action, Context c) {
 		switch (transaction_type) {
 			case Action.AIRTIME:
-				return c.getString(R.string.transaction_descrip_airtime, action.from_institution_name, ((recipient == null || recipient.equals("")) ? "myself" : recipient));
+				return c.getString(R.string.descrip_airtime_sent, action.from_institution_name, ((recipient == null || recipient.equals("")) ? "myself" : recipient));
 			case Action.P2P:
-				return c.getString(R.string.transaction_descrip_money, action.from_institution_name, recipient);
+				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, recipient);
 			case Action.ME2ME:
-				return c.getString(R.string.transaction_descrip_money, action.from_institution_name, action.to_institution_name);
+				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, action.to_institution_name);
 			default:
 				return "Other";
 		}

@@ -15,12 +15,13 @@
 	    android:id="@+id/navigation_security"
 	    android:name="com.hover.stax.security.SecurityFragment"
 	    android:label="@string/nav_security"
-	    tools:layout="@layout/fragment_security" />
+	    tools:layout="@layout/fragment_settings" />
 
 	<fragment
 		android:id="@+id/transactionDetailsFragment"
 		android:name="com.hover.stax.transactions.TransactionDetailsFragment"
-		android:label="TransactionDetailsFragment" >
+		android:label="TransactionDetailsFragment"
+		tools:layout="@layout/fragment_transaction" >
 		<argument
 			android:name="uuid"
 			app:argType="string" />
@@ -29,7 +30,8 @@
 	<fragment
 		android:id="@+id/scheduleDetailsFragment"
 		android:name="com.hover.stax.schedules.ScheduleDetailFragment"
-		android:label="ScheduleDetailFragment" >
+		android:label="ScheduleDetailFragment"
+		tools:layout="@layout/fragment_schedule" >
 		<argument
 			android:name="id"
 			app:argType="integer" />
@@ -38,7 +40,8 @@
 	<fragment
 		android:id="@+id/requestDetailsFragment"
 		android:name="com.hover.stax.requests.RequestDetailFragment"
-		android:label="RequestDetailFragment" >
+		android:label="RequestDetailFragment"
+		tools:layout="@layout/fragment_request_detail" >
 		<argument
 			android:name="id"
 			app:argType="integer" />
@@ -47,7 +50,18 @@
 	<fragment
 	    android:id="@+id/channelsDetailsFragment"
 	    android:name="com.hover.stax.channels.ChannelDetailFragment"
-	    android:label="ChannelsDetailsFragment" >
+	    android:label="ChannelsDetailsFragment"
+		tools:layout="@layout/fragment_channel" >
+		<argument
+		    android:name="channel_id"
+		    app:argType="integer" />
+	</fragment>
+
+	<fragment
+	    android:id="@+id/pinUpdateFragment"
+	    android:name="com.hover.stax.security.PinUpdateFragment"
+	    android:label="PinUpdateFragment"
+		tools:layout="@layout/fragment_pin_update" >
 		<argument
 		    android:name="channel_id"
 		    app:argType="integer" />

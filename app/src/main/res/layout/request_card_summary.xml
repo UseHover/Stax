@@ -3,18 +3,20 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	app:title="@string/title_request"
+	app:title="@string/req_cardhead"
 	app:showBack="true">
 
 	<TableLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
+		android:layout_height="wrap_content"
+		android:layout_marginHorizontal="@dimen/margin_3">
 
 		<TableRow android:id="@+id/recipientRow">
 
 			<TextView
-				android:text="@string/from_who"
+				android:text="@string/reqfrom_label"
 				android:textColor="@color/offWhite"
+			    	android:fontFamily="font-normal"
 				android:textSize="@dimen/text_16" />
 
 			<LinearLayout android:id="@+id/recipientValueList"
@@ -26,8 +28,9 @@
 
 		<TableRow android:id="@+id/amountRow" android:layout_marginTop="@dimen/margin_21">
 			<TextView
-				android:text="@string/amount"
+				android:text="@string/amount_cardhead"
 				android:textColor="@color/offWhite"
+			    	android:fontFamily="font-normal"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/amountValue"
@@ -40,8 +43,9 @@
 
 		<TableRow android:id="@+id/noteRow" android:layout_marginTop="@dimen/margin_21">
 			<TextView
-				android:text="@string/note"
+				android:text="@string/note_cardhead"
 				android:textColor="@color/offWhite"
+			    	android:fontFamily="font-normal"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/noteValue"
@@ -54,8 +58,9 @@
 
 		<TableRow android:id="@+id/dateRow" android:layout_marginTop="@dimen/margin_21">
 			<TextView
-				android:text="@string/date"
+				android:text="@string/date_label"
 				android:textColor="@color/offWhite"
+			    	android:fontFamily="font-normal"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/dateValue"
@@ -69,8 +74,9 @@
 		<TableRow android:id="@+id/frequencyRow" android:layout_marginTop="@dimen/margin_21">
 
 			<TextView
-				android:text="@string/how_often"
+				android:text="@string/repeatfreq_label"
 				android:textColor="@color/offWhite"
+			    	android:fontFamily="font-normal"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/frequencyValue"
@@ -84,8 +90,9 @@
 		<TableRow android:id="@+id/endDateRow" android:layout_marginTop="@dimen/margin_21">
 
 			<TextView
-				android:text="@string/end_date"
+				android:text="@string/end_label"
 				android:textColor="@color/offWhite"
+			    	android:fontFamily="font-normal"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/endDateValue"
@@ -99,8 +106,9 @@
 		<TableRow android:id="@+id/repeatTimesRow" android:layout_marginTop="@dimen/margin_21">
 
 			<TextView
-				android:text="@string/how_many_times"
+				android:text="@string/repeatnum_label"
 				android:textColor="@color/offWhite"
+			    	android:fontFamily="font-normal"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/repeatTimesValue"
@@ -112,17 +120,17 @@
 		</TableRow>
 	</TableLayout>
 
-	<RelativeLayout
+	<RelativeLayout android:id="@+id/btnRow"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:visibility="gone"
 		android:layout_marginTop="@dimen/margin_21">
 
 		<androidx.appcompat.widget.AppCompatButton
-			android:id="@+id/add_accounts_btn"
+			android:id="@+id/edit_btn"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/edit"
+			android:text="@string/btn_edit"
 			android:layout_alignParentEnd="true"
 			style="@style/StaxButton"
 			android:fontFamily="font-medium" />

@@ -1,7 +1,6 @@
 package com.hover.stax.utils;
 
 import android.app.Application;
-import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -28,6 +27,7 @@ public abstract class StagedViewModel extends AndroidViewModel {
 	protected MutableLiveData<Boolean> repeatSaved = new MutableLiveData<>();
 
 	protected MutableLiveData<Schedule> schedule = new MutableLiveData<>();
+	protected MutableLiveData<Boolean> isEditing = new MutableLiveData<>();
 
 	public StagedViewModel(@NonNull Application application) {
 		super(application);
@@ -36,9 +36,10 @@ public abstract class StagedViewModel extends AndroidViewModel {
 		futureDate.setValue(null);
 
 		isRepeating.setValue(false);
-		frequency.setValue(0);
+		frequency.setValue(3);
 		repeatSaved.setValue(false);
 		endDate.setValue(null);
+		isEditing.setValue(false);
 	}
 
 	public LiveData<StagedEnum> getStage() {
@@ -109,9 +110,7 @@ public abstract class StagedViewModel extends AndroidViewModel {
 	}
 
 	public LiveData<Long> getEndDate() {
-		if (endDate == null) {
-			endDate = new MutableLiveData<>();
-		}
+		if (endDate == null) { endDate = new MutableLiveData<>(); }
 		return endDate;
 	}
 
@@ -137,19 +136,30 @@ public abstract class StagedViewModel extends AndroidViewModel {
 		return repeatSaved;
 	}
 
+	public void setEditing(boolean isEdit) { isEditing.setValue(isEdit); }
+	public LiveData<Boolean> getIsEditing() {
+		if (isEditing == null) {
+			isEditing = new MutableLiveData<>();
+			isEditing.setValue(false);
+		}
+		return isEditing;
+	}
+
 	private void calculateRepeatTimes(Long end_date, int freq) {
-		Long start = futureDate.getValue() == null ? DateUtils.now() : futureDate.getValue();
 		switch (freq) {
-			case 1: repeatTimes.setValue(DateUtils.getWeeks(start, end_date)); break;
-			case 2: repeatTimes.setValue(DateUtils.getBiweeks(start, end_date)); break;
-			case 3: repeatTimes.setValue(DateUtils.getMonths(start, end_date)); break;
-			default: repeatTimes.setValue(DateUtils.getDays(start, end_date)); break;
+			case 1: repeatTimes.setValue(DateUtils.getWeeks(getStartDate(), end_date)); break;
+			case 2: repeatTimes.setValue(DateUtils.getBiweeks(getStartDate(), end_date)); break;
+			case 3: repeatTimes.setValue(DateUtils.getMonths(getStartDate(), end_date)); break;
+			default: repeatTimes.setValue(DateUtils.getDays(getStartDate(), end_date)); break;
 		}
 	}
 
+	public Long getStartDate() {
+		return futureDate.getValue() == null ? DateUtils.today() : futureDate.getValue();
+	}
+
 	private void calculateEndDate(int repeatTimes) {
-		Long start = futureDate.getValue() == null ? DateUtils.now() : futureDate.getValue();
-		endDate.setValue(DateUtils.getDate(start, frequency.getValue(), repeatTimes));
+		endDate.setValue(DateUtils.getDate(getStartDate(), frequency.getValue(), repeatTimes));
 	}
 
 	public interface StagedEnum {

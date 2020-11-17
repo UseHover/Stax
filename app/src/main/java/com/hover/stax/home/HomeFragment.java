@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,6 +24,7 @@ import com.hover.stax.transactions.TransactionHistoryAdapter;
 import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout;
 
 import java.util.List;
 
@@ -52,6 +52,20 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		setUpBalances(view);
 		setUpFuture(view);
 		setUpHistory(view);
+		setupPullRefresh(view);
+	}
+
+	private void setupPullRefresh(View view) {
+		CustomSwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipelayout);
+		if (swipeRefreshLayout != null) {
+			swipeRefreshLayout.setRefreshCompleteTimeout(1000);
+			swipeRefreshLayout.enableTopProgressBar(false);
+			swipeRefreshLayout.setOnRefreshListener(() -> {
+				swipeRefreshLayout.refreshComplete();
+				if (getActivity() != null)
+					((MainActivity) getActivity()).runAllBalances(null);
+			});
+		}
 	}
 
 	private void setUpBalances(View view) {
@@ -60,9 +74,11 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		recyclerView.setHasFixedSize(true);
 
 		balancesViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
+			Log.e(TAG, "found some channels: " + channels);
 			balanceAdapter = new BalanceAdapter(channels, (MainActivity) getActivity());
 			recyclerView.setAdapter(balanceAdapter);
-			setMeta(view, channels);
+			recyclerView.setVisibility(channels != null && channels.size() > 0 ? View.VISIBLE : View.GONE);
+			//setMeta(view, channels);
 		});
 	}
 
@@ -93,6 +109,7 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		rv.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 
 		transactionsViewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
+			Log.e(TAG, "found transactions: " + staxTransactions);
 			rv.setAdapter(new TransactionHistoryAdapter(staxTransactions, HomeFragment.this));
 			view.findViewById(R.id.no_history).setVisibility(staxTransactions.size() > 0 ? View.GONE : View.VISIBLE);
 		});

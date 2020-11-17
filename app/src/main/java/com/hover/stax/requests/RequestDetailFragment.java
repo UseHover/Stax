@@ -75,16 +75,17 @@ public class RequestDetailFragment extends Fragment {
 
 	private void showConfirmDialog() {
 		new StaxDialog(getActivity())
-			.setDialogTitle(R.string.cancel_request_head)
-			.setDialogMessage(R.string.cancel_request_msg)
-			.setNegButton(R.string.back, (View.OnClickListener) btn -> {})
-			.setPosButton(R.string.cancel_request_btn, (View.OnClickListener) btn -> {
-				viewModel.deleteRequest();
-				UIHelper.flashMessage(getContext(), getString(R.string.cancel_request_success));
-				NavHostFragment.findNavController(RequestDetailFragment.this).navigate(R.id.navigation_home);
-			})
-			.isDestructive()
-			.showIt();
+				.setDialogTitle(R.string.cancelreq_head)
+				.setDialogMessage(R.string.cancelreq_msg)
+				.setNegButton(R.string.btn_back, btn -> {
+				})
+				.setPosButton(R.string.btn_cancelreq, btn -> {
+					viewModel.deleteRequest();
+					UIHelper.flashMessage(getContext(), getString(R.string.toast_confirm_cancelreq));
+					NavHostFragment.findNavController(RequestDetailFragment.this).popBackStack();
+				})
+				.isDestructive()
+				.showIt();
 	}
 
 	private void setUpResendBtn(View view, Request request) {

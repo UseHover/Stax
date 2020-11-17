@@ -4,6 +4,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+    	android:id="@+id/channel_root"
 	tools:context=".channels.ChannelsActivity">
 
 	<androidx.core.widget.NestedScrollView
@@ -26,7 +27,7 @@
 		android:layout_margin="@dimen/margin_13"
 		android:layout_gravity="end|bottom"
 		style="@style/StaxButtonColored"
-	    android:text="@string/continue_text"
+	    android:text="@string/btn_continue"
 	    android:fontFamily="font-medium"
 		android:visibility="gone"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

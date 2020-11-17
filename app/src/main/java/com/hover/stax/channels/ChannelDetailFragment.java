@@ -16,9 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
+import com.hover.stax.home.MainActivity;
 import com.hover.stax.transactions.TransactionHistoryAdapter;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout;
 
 public class ChannelDetailFragment extends Fragment implements TransactionHistoryAdapter.SelectListener {
 	private RecyclerView transactionHistoryRecyclerView;
@@ -36,10 +38,11 @@ public class ChannelDetailFragment extends Fragment implements TransactionHistor
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		transactionHistoryRecyclerView = view.findViewById(R.id.transaction_history_recyclerView);
+		setupPullRefresh(view);
 
 		viewModel.getChannel().observe(getViewLifecycleOwner(), channel -> {
 			((TextView) view.findViewById(R.id.title)).setText(channel.name);
-			((TextView) view.findViewById(R.id.fees_description)).setText(getString(R.string.fees_description, channel.name));
+			((TextView) view.findViewById(R.id.fees_description)).setText(getString(R.string.fees_label, channel.name));
 			((TextView) view.findViewById(R.id.details_balance)).setText(channel.latestBalance);
 		});
 
@@ -57,6 +60,19 @@ public class ChannelDetailFragment extends Fragment implements TransactionHistor
 			((TextView) view.findViewById(R.id.details_fees)).setText(Utils.formatAmount(sum != null ? sum : 0));
 		});
 		viewModel.setChannel(getArguments().getInt(TransactionContract.COLUMN_CHANNEL_ID));
+	}
+
+	private void setupPullRefresh(View view) {
+		CustomSwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipelayout);
+		if (swipeRefreshLayout != null) {
+			swipeRefreshLayout.setRefreshCompleteTimeout(1000);
+			swipeRefreshLayout.enableTopProgressBar(false);
+			swipeRefreshLayout.setOnRefreshListener(() -> {
+				swipeRefreshLayout.refreshComplete();
+				if (getActivity() != null && viewModel.getChannel().getValue() != null)
+					((MainActivity) getActivity()).onTapRefresh(viewModel.getChannel().getValue().id);
+			});
+		}
 	}
 
 	@Override
