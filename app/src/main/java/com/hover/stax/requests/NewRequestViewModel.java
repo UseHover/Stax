@@ -223,7 +223,7 @@ public class NewRequestViewModel extends StagedViewModel {
 	String fullString = amount+separator+channel_id +separator+accountNumber+separator+DateUtils.today();
 
 		try {
-			Encryption encryption =  repo.getEncryptionSettings().build();
+			Encryption encryption =  Request.getEncryptionSettings().build();
 			String encryptedString = encryption.encryptOrNull(fullString);
 			return getApplication().getResources().getString(R.string.payment_root_url)+encryptedString;
 

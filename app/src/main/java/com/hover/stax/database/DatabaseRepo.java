@@ -152,23 +152,6 @@ public class DatabaseRepo {
 		return requestDao.getUnmatched();
 	}
 
-	public Encryption.Builder getEncryptionSettings() {
-		//ADDING THIS TO REPO, BECAUSE I THINK THESE SETTINGS
-		// SHOULDN'T BE IN THE SOURCE CODE, BUT COME FROM AN ONLINE SERVER OR CACHED
-		return new Encryption.Builder()
-				.setKeyLength(128)
-				.setKeyAlgorithm("AES")
-				.setCharsetName("UTF8")
-				.setIterationCount(65536)
-				.setKey("ves€Z€xs€aBKgh")
-				.setDigestAlgorithm("SHA1")
-				.setSalt("A secured salt")
-				.setBase64Mode(Base64.DEFAULT)
-				.setAlgorithm("AES/CBC/PKCS5Padding")
-				.setSecureRandomAlgorithm("SHA1PRNG")
-				.setSecretKeyType("PBKDF2WithHmacSHA1")
-				.setIv(new byte[] { 29, 88, -79, -101, -108, -38, -126, 90, 52, 101, -35, 114, 12, -48, -66, -30 });
-	}
 	public Request getRequest(int id) {
 		return requestDao.get(id);
 	}

@@ -12,6 +12,7 @@ import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.Constants;
+import com.hover.stax.requests.Request;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.StagedViewModel;
@@ -286,7 +287,7 @@ public class TransferViewModel extends StagedViewModel {
 
 	void setupTransferPageFromPaymentLink(String encryptedString) {
 		try{
-			Encryption encryption = repo.getEncryptionSettings().build();
+			Encryption encryption = Request.getEncryptionSettings().build();
 			encryption.decryptAsync(encryptedString.replace(getApplication().getResources().getString(R.string.payment_root_url),""), new Encryption.Callback() {
 				@Override
 				public void onSuccess(String result) {
