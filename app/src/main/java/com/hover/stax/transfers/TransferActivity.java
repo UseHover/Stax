@@ -138,12 +138,10 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	private void setSummaryCard(@Nullable StagedViewModel.StagedEnum stage) {
 		findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.accountRow).setVisibility(stage.compare(FROM_ACCOUNT) > 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.actionRow).setVisibility(stage.compare(TO_NETWORK) > 0 &&
-			transferViewModel.getActions().getValue() != null && transferViewModel.getActions().getValue().size() > 0 && (transferViewModel.getActions().getValue().size() > 1 || transferViewModel.getActiveAction().getValue().hasToInstitution()) ? View.VISIBLE : View.GONE);
+		findViewById(R.id.actionRow).setVisibility((stage.compare(TO_NETWORK) > 0 && transferViewModel.hasActionsLoaded()) ? View.VISIBLE : View.GONE);
 		findViewById(R.id.recipientRow).setVisibility(stage.compare(RECIPIENT) > 0 && transferViewModel.getActiveAction().getValue() != null ? View.VISIBLE : View.GONE);
 		findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && transferViewModel.getNote().getValue() != null && !transferViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
 		findViewById(R.id.btnRow).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
-
 	}
 
 	private void setCurrentCard(StagedViewModel.StagedEnum stage) {

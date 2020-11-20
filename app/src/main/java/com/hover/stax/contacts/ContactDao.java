@@ -20,6 +20,9 @@ public interface ContactDao {
 	@Query("SELECT * FROM stax_contacts WHERE id IN (:ids)")
 	List<StaxContact> get(String[] ids);
 
+	@Query("SELECT * FROM stax_contacts WHERE id IN (:ids)")
+	LiveData<List<StaxContact>> getLive(String[] ids);
+
 	@Query("SELECT * FROM stax_contacts WHERE id  = :id LIMIT 1")
 	StaxContact get(String id);
 

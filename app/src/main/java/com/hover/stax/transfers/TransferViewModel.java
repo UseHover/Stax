@@ -146,7 +146,7 @@ public class TransferViewModel extends StagedViewModel {
 	}
 
 	void setContact(String contact_ids) {
-		contact.setValue(repo.getContacts(contact_ids.split(",")).get(0));
+		new Thread(() -> contact.postValue(repo.getContacts(contact_ids.split(",")).get(0))).start();
 	}
 
 	void setContact(StaxContact c) {
@@ -207,6 +207,11 @@ public class TransferViewModel extends StagedViewModel {
 
 	boolean requiresActionChoice() { // in last case, should have request network as choice
 		return filteredActions.getValue() != null && filteredActions.getValue().size() > 0 && (filteredActions.getValue().size() > 1 || filteredActions.getValue().get(0).hasDiffToInstitution());
+	}
+
+	boolean hasActionsLoaded() {
+		return filteredActions.getValue() != null && filteredActions.getValue().size() > 0 &&
+			(filteredActions.getValue().size() > 1 || (activeAction.getValue() != null && activeAction.getValue().hasToInstitution()));
 	}
 
 	boolean stageValidates() {

@@ -128,6 +128,7 @@ public class DatabaseRepo {
 	public LiveData<List<StaxContact>> getAllContacts() { return contactDao.getAll(); }
 
 	public List<StaxContact> getContacts(String[] ids) { return contactDao.get(ids); }
+	public LiveData<List<StaxContact>> getLiveContacts(String[] ids) { return contactDao.getLive(ids); }
 
 	public StaxContact getContact(String id) { return contactDao.get(id); }
 

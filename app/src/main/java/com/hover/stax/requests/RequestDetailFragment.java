@@ -46,11 +46,8 @@ public class RequestDetailFragment extends Fragment {
 
 		viewModel.getRecipients().observe(getViewLifecycleOwner(), contacts -> {
 			if (contacts != null && contacts.size() > 0) {
-				for (StaxContact c: contacts) {
-					TextView tv = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.recipient_cell, null);
-					tv.setText(c.shortName());
-					((LinearLayout) view.findViewById(R.id.recipientValueList)).addView(tv);
-				}
+				for (StaxContact c: contacts)
+					createRecipientEntry(c, view);
 			}
 		});
 
@@ -62,6 +59,12 @@ public class RequestDetailFragment extends Fragment {
 		});
 
 		viewModel.setRequest(getArguments().getInt("id"));
+	}
+
+	private void createRecipientEntry(StaxContact c, View view) {
+		TextView tv = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.recipient_cell, null);
+		tv.setText(c.toString());
+		((LinearLayout) view.findViewById(R.id.recipientValueList)).addView(tv);
 	}
 
 	private void setUpSummary(View view, Request request) {

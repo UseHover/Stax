@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -171,6 +172,7 @@ public abstract class StagedFragment extends Fragment {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == Activity.RESULT_OK) {
 			StaxContact staxContact = new StaxContact(data, getContext());
+			Log.e("COntact", "regualar name: " + staxContact.name);
 			if (staxContact.phoneNumber != null) {
 				Amplitude.getInstance().logEvent(getString(R.string.contact_select_success));
 				onContactSelected(requestCode, staxContact);

@@ -21,9 +21,7 @@
 
 			<LinearLayout android:id="@+id/recipientValueList"
 				android:orientation="vertical"
-				android:layout_weight="1">
-
-			</LinearLayout>
+				android:layout_weight="1" />
 		</TableRow>
 
 		<TableRow android:id="@+id/amountRow" android:layout_marginTop="@dimen/margin_21">
