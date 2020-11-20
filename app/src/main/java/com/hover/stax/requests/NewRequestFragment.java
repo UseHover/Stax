@@ -79,9 +79,9 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		requestViewModel.getRecipients().observe(getViewLifecycleOwner(), recipients -> {
 			if (recipients == null || recipients.size() == 0) return;
 			recipientValueList.removeAllViews();
-			for (String recipient : recipients) {
+			for (StaxContact recipient : recipients) {
 				TextView tv = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.recipient_cell, null);
-				tv.setText(recipient);
+				tv.setText(recipient.toString());
 				recipientValueList.addView(tv);
 			}
 
@@ -109,13 +109,13 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 	}
 
 	@Override
-	public void onUpdate(int pos, String recipient) { requestViewModel.onUpdate(pos, recipient); }
+	public void onUpdate(int pos, String recipient) { requestViewModel.onUpdate(pos, new StaxContact(recipient)); }
 
 	@Override
 	public void onClickContact(int index, Context c) { contactPicker(index, c); }
 
 	protected void onContactSelected(int requestCode, StaxContact contact) {
-		requestViewModel.onUpdate(requestCode, contact.phoneNumber);
+		requestViewModel.onUpdate(requestCode, contact);
 		recipientAdapter.notifyDataSetChanged();
 	}
 

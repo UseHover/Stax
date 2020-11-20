@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.hover.stax.R;
-import com.hover.stax.transfers.StaxContactModel;
+import com.hover.stax.contacts.StaxContact;
 
 
 public abstract class EditStagedFragment extends StagedFragment {
@@ -51,7 +51,7 @@ public abstract class EditStagedFragment extends StagedFragment {
 		root.findViewById(R.id.save_edits_btn).setOnClickListener(v -> save());
 	}
 
-	protected abstract void onContactSelected(int requestCode, StaxContactModel contact);
+	protected abstract void onContactSelected(int requestCode, StaxContact contact);
 
 	protected abstract void save();
 }

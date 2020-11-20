@@ -115,10 +115,11 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	private void makeHoverCall(Action act) {
 		Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
 		transferViewModel.checkSchedule();
+		transferViewModel.saveContact();
 		new HoverSession.Builder(act, transferViewModel.getActiveChannel().getValue(),
 				TransferActivity.this, Constants.TRANSFER_REQUEST)
-				.extra(Action.PHONE_KEY, transferViewModel.getRecipient().getValue())
-				.extra(Action.ACCOUNT_KEY, transferViewModel.getRecipient().getValue())
+				.extra(Action.PHONE_KEY, transferViewModel.getContact().getValue().normalizedNumber(transferViewModel.getActiveChannel().getValue().countryAlpha2))
+				.extra(Action.ACCOUNT_KEY, transferViewModel.getContact().getValue().phoneNumber)
 				.extra(Action.AMOUNT_KEY, transferViewModel.getAmount().getValue())
 				.extra(Action.REASON_KEY, transferViewModel.getNote().getValue())
 				.run();

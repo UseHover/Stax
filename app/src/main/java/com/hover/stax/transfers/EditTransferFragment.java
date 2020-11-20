@@ -20,9 +20,9 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.Constants;
 import com.hover.stax.utils.EditStagedFragment;
-import com.hover.stax.utils.Utils;
 
 
 public class EditTransferFragment extends EditStagedFragment {
@@ -30,9 +30,9 @@ public class EditTransferFragment extends EditStagedFragment {
 	private RelativeLayout recipientEntry;
 	protected TransferViewModel transferViewModel;
 	private TextInputLayout actionEntry;
-	private EditText amountInput, noteInput, recipientInput;
+	private EditText amountInput, noteInput;
 	private ImageButton contactButton;
-	private AutoCompleteTextView channelDropdown, actionDropdown;
+	private AutoCompleteTextView channelDropdown, actionDropdown, recipientAutocomplete;
 
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -56,8 +56,9 @@ public class EditTransferFragment extends EditStagedFragment {
 		if (transferViewModel.getActiveAction().getValue() != null)
 			actionDropdown.setText(transferViewModel.getActiveAction().getValue().toString());
 		recipientEntry = view.findViewById(R.id.recipientEntry);
-		recipientInput = view.findViewById(R.id.recipient_input);
-		recipientInput.setText(transferViewModel.getRecipient().getValue());
+		recipientAutocomplete = view.findViewById(R.id.recipient_autocomplete);
+		if (transferViewModel.getContact().getValue() != null)
+			recipientAutocomplete.setText(transferViewModel.getContact().getValue().toString());
 		contactButton = view.findViewById(R.id.contact_button);
 		noteInput = view.findViewById(R.id.note_input);
 		noteInput.setText(transferViewModel.getNote().getValue());
@@ -118,14 +119,15 @@ public class EditTransferFragment extends EditStagedFragment {
 			transferViewModel.setActiveChannel(channelDropdown.getText().toString());
 		if (!actionDropdown.getText().toString().isEmpty())
 			transferViewModel.setActiveAction(actionDropdown.getText().toString());
-		if (!recipientInput.getText().toString().isEmpty())
-			transferViewModel.setRecipient(recipientInput.getText().toString());
+		if (!recipientAutocomplete.getText().toString().isEmpty() && !recipientAutocomplete.getText().toString().equals(transferViewModel.getContact().toString()))
+			transferViewModel.setRecipient(recipientAutocomplete.getText().toString());
 		if (!noteInput.getText().toString().isEmpty())
 			transferViewModel.setNote(noteInput.getText().toString());
 		NavHostFragment.findNavController(this).navigate(R.id.navigation_new);
 	}
 
-	protected void onContactSelected(int requestCode, StaxContactModel contact) {
-		recipientInput.setText(Utils.normalizePhoneNumber(contact.getPhoneNumber(), transferViewModel.getActiveChannel().getValue().countryAlpha2));
+	protected void onContactSelected(int requestCode, StaxContact contact) {
+		transferViewModel.setContact(contact);
+		recipientAutocomplete.setText(contact.toString());
 	}
 }

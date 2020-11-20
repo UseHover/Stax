@@ -17,14 +17,13 @@ import com.hover.stax.utils.Utils;
 import java.util.List;
 
 public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.RequestsViewHolder> {
-	private Context context;
+
 	private List<Request> requestList;
 	private final SelectListener selectListener;
 
-	public RequestsAdapter(List<Request> requests, SelectListener selectListener, Context c) {
+	public RequestsAdapter(List<Request> requests, SelectListener selectListener) {
 		this.requestList = requests;
 		this.selectListener = selectListener;
-		context = c;
 	}
 
 	@NonNull
@@ -37,7 +36,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.Reques
 	@Override
 	public void onBindViewHolder(@NonNull RequestsAdapter.RequestsViewHolder holder, int position) {
 		Request r = requestList.get(position);
-		holder.description.setText(r.getDescription(context));
+		holder.description.setText(r.description);
 		holder.amount.setText(r.amount != null ? Utils.formatAmount(r.amount) : "none");
 		holder.header.setVisibility(View.VISIBLE);
 		holder.header.setText(DateUtils.humanFriendlyDate(r.date_sent));
@@ -52,7 +51,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.Reques
 	}
 
 	static class RequestsViewHolder extends RecyclerView.ViewHolder {
-		private TextView description, amount, header;
+		final private TextView description, amount, header;
 
 		RequestsViewHolder(@NonNull View itemView) {
 			super(itemView);

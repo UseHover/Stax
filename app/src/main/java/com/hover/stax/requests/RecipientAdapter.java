@@ -3,7 +3,6 @@ package com.hover.stax.requests;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,19 +14,20 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
+import com.hover.stax.contacts.StaxContact;
 
 import java.util.List;
 
 public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.RecipientViewHolder> {
-	private List<String> recipients;
+	private List<StaxContact> recipients;
 	private UpdateListener updateListener;
 
-	RecipientAdapter(List<String> numbers, UpdateListener listener) {
-		this.recipients = numbers;
+	RecipientAdapter(List<StaxContact> contacts, UpdateListener listener) {
+		this.recipients = contacts;
 		updateListener = listener;
 	}
 
-	void update(List<String> numbers) { recipients = numbers; notifyDataSetChanged(); }
+	void update(List<StaxContact> contacts) { recipients = contacts; notifyDataSetChanged(); }
 
 	@NonNull
 	@Override
@@ -38,7 +38,7 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
 
 	@Override
 	public void onBindViewHolder(final @NonNull RecipientViewHolder holder, int position) {
-		holder.input.setText(recipients.get(position), TextView.BufferType.EDITABLE);
+		holder.input.setText(recipients.get(position).toString(), TextView.BufferType.EDITABLE);
 		holder.input.addTextChangedListener(new TextWatcher() {
 			@Override public void afterTextChanged(Editable s) { }
 			@Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -65,7 +65,7 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
 		RecipientViewHolder(@NonNull View itemView) {
 			super(itemView);
 			view = itemView;
-			input = itemView.findViewById(R.id.recipient_input);
+			input = itemView.findViewById(R.id.recipient_autocomplete);
 			contactButton = itemView.findViewById(R.id.contact_button);
 		}
 	}

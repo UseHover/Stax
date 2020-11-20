@@ -15,6 +15,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -43,6 +44,16 @@ public class RequestDetailFragment extends Fragment {
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
+		viewModel.getRecipients().observe(getViewLifecycleOwner(), contacts -> {
+			if (contacts != null && contacts.size() > 0) {
+				for (StaxContact c: contacts) {
+					TextView tv = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.recipient_cell, null);
+					tv.setText(c.shortName());
+					((LinearLayout) view.findViewById(R.id.recipientValueList)).addView(tv);
+				}
+			}
+		});
+
 		viewModel.getRequest().observe(getViewLifecycleOwner(), request -> {
 			if (request != null) {
 				setUpSummary(view, request);
@@ -54,10 +65,7 @@ public class RequestDetailFragment extends Fragment {
 	}
 
 	private void setUpSummary(View view, Request request) {
-		((TextView) view.findViewById(R.id.title)).setText(request.getDescription(view.getContext()));
-		TextView tv = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.recipient_cell, null);
-		tv.setText(request.recipient);
-		((LinearLayout) view.findViewById(R.id.recipientValueList)).addView(tv);
+		((TextView) view.findViewById(R.id.title)).setText(request.description);
 		((TextView) view.findViewById(R.id.dateValue)).setText(DateUtils.humanFriendlyDate(request.date_sent));
 
 		if (request.amount != null && !request.amount.isEmpty()) {

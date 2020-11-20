@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
-import androidx.room.Dao;
 
 import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionDao;
@@ -127,6 +126,10 @@ public class DatabaseRepo {
 
 	// Contacts
 	public LiveData<List<StaxContact>> getAllContacts() { return contactDao.getAll(); }
+
+	public List<StaxContact> getContacts(String[] ids) { return contactDao.get(ids); }
+
+	public StaxContact getContact(String id) { return contactDao.get(id); }
 
 	public void insert(StaxContact contact) {
 		AppDatabase.databaseWriteExecutor.execute(() -> contactDao.insert(contact));
