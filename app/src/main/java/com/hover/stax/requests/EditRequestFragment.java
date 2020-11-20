@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -39,7 +40,7 @@ public class EditRequestFragment extends EditStagedFragment implements Recipient
 	protected void init(View view) {
 		recipientInputList = view.findViewById(R.id.recipient_list);
 		recipientInputList.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-		RecipientAdapter recipientAdapter = new RecipientAdapter(requestViewModel.getRecipients().getValue(), this);
+		RecipientAdapter recipientAdapter = new RecipientAdapter(requestViewModel.getRecipients().getValue(), requestViewModel.getRecentContacts().getValue(), this);
 		recipientInputList.setAdapter(recipientAdapter);
 
 		amountInput = view.findViewById(R.id.amount_input);
@@ -51,7 +52,6 @@ public class EditRequestFragment extends EditStagedFragment implements Recipient
 	}
 
 	protected void save() {
-		requestViewModel.resetRecipients();
 		for (int c = 0; c < requestViewModel.getRecipients().getValue().size(); c++)
 			if (!requestViewModel.getRecipients().getValue().get(c).toString().equals(
 					((TextView) recipientInputList.getChildAt(c).findViewById(R.id.recipient_autocomplete)).getText().toString())) {
@@ -67,13 +67,13 @@ public class EditRequestFragment extends EditStagedFragment implements Recipient
 	}
 
 	@Override
-	public void onUpdate(int pos, String recipient) { }
+	public void onUpdate(int pos, StaxContact recipient) { }
 
 	@Override
 	public void onClickContact(int index, Context c) { contactPicker(index, c); }
 
 	protected void onContactSelected(int requestCode, StaxContact contact) {
+		((AutoCompleteTextView) recipientInputList.getChildAt(requestCode).findViewById(R.id.recipient_autocomplete)).setText(contact.toString());
 		requestViewModel.onUpdate(requestCode, contact);
-		((TextView) recipientInputList.getChildAt(requestCode).findViewById(R.id.recipient_autocomplete)).setText(contact.phoneNumber);
 	}
 }

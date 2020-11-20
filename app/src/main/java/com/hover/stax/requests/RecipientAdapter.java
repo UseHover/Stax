@@ -6,6 +6,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -20,14 +22,18 @@ import java.util.List;
 
 public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.RecipientViewHolder> {
 	private List<StaxContact> recipients;
+	private List<StaxContact> allContacts;
 	private UpdateListener updateListener;
 
-	RecipientAdapter(List<StaxContact> contacts, UpdateListener listener) {
-		this.recipients = contacts;
+	RecipientAdapter(List<StaxContact> recipients, List<StaxContact> contacts, UpdateListener listener) {
+		this.recipients = recipients;
+		allContacts = contacts;
 		updateListener = listener;
 	}
 
-	void update(List<StaxContact> contacts) { recipients = contacts; notifyDataSetChanged(); }
+	void update(List<StaxContact> recips) { recipients = recips; notifyDataSetChanged(); }
+
+	void updateContactList(List<StaxContact> contacts) { allContacts = contacts; notifyDataSetChanged(); }
 
 	@NonNull
 	@Override
@@ -38,28 +44,37 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
 
 	@Override
 	public void onBindViewHolder(final @NonNull RecipientViewHolder holder, int position) {
-		holder.input.setText(recipients.get(position).toString(), TextView.BufferType.EDITABLE);
-		holder.input.addTextChangedListener(new TextWatcher() {
-			@Override public void afterTextChanged(Editable s) { }
-			@Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+		ArrayAdapter<StaxContact> adapter = new ArrayAdapter<>(holder.view.getContext(), android.R.layout.simple_dropdown_item_1line, allContacts);
+		holder.input.setAdapter(adapter);
 
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				if (updateListener != null)
-					updateListener.onUpdate(position, s.toString());
+		if (recipients != null && recipients.size() > position && recipients.get(position).phoneNumber != null)
+			holder.input.setText(recipients.get(position).toString());
+
+		holder.input.addTextChangedListener(new TextWatcher() {
+			@Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+			@Override public void afterTextChanged(Editable editable) { }
+			@Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+				if (!recipients.get(position).toString().equals(charSequence.toString()))
+					updateListener.onUpdate(position, new StaxContact(charSequence.toString()));
 			}
 		});
+
+		holder.input.setOnItemClickListener((adapterView, view, pos, id) -> {
+			StaxContact contact = (StaxContact) adapterView.getItemAtPosition(pos);
+			updateListener.onUpdate(position, contact);
+		});
+
 		holder.contactButton.setOnClickListener(view -> updateListener.onClickContact(position, holder.view.getContext()));
 	}
 
 	public interface UpdateListener {
-		void onUpdate(int pos, String recipient);
+		void onUpdate(int pos, StaxContact recipient);
 		void onClickContact(int index, Context c);
 	}
 
 	static class RecipientViewHolder extends RecyclerView.ViewHolder {
 		final View view;
-		final EditText input;
+		final AutoCompleteTextView input;
 		final AppCompatImageButton contactButton;
 
 		RecipientViewHolder(@NonNull View itemView) {

@@ -60,7 +60,7 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		addRecipientBtn = view.findViewById(R.id.add_recipient_button);
 
 		recipientInputList.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-		recipientAdapter = new RecipientAdapter(requestViewModel.getRecipients().getValue(), this);
+		recipientAdapter = new RecipientAdapter(requestViewModel.getRecipients().getValue(), requestViewModel.getRecentContacts().getValue(), this);
 		recipientInputList.setAdapter(recipientAdapter);
 
 		super.init(view);
@@ -88,8 +88,11 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 			if (recipients.size() == recipientCount) return;
 			recipientCount = recipients.size();
 			recipientAdapter.update(recipients);
-
 		});
+		requestViewModel.getRecentContacts().observe(getViewLifecycleOwner(), contacts -> {
+			recipientAdapter.updateContactList(contacts);
+		});
+
 		requestViewModel.getRecipientError().observe(getViewLifecycleOwner(), recipientError -> {
 			if (recipientInputList.getChildAt(0) == null) return;
 			TextInputLayout v = recipientInputList.getChildAt(0).findViewById(R.id.recipientLabel);
@@ -103,13 +106,13 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 	@Override
 	protected void startListeners(View root) {
 		super.startListeners(root);
-		addRecipientBtn.setOnClickListener(v -> requestViewModel.setEditing(false));
+		addRecipientBtn.setOnClickListener(v -> requestViewModel.addRecipient(new StaxContact("")));
 		amountInput.addTextChangedListener(amountWatcher);
 		noteInput.addTextChangedListener(noteWatcher);
 	}
 
 	@Override
-	public void onUpdate(int pos, String recipient) { requestViewModel.onUpdate(pos, new StaxContact(recipient)); }
+	public void onUpdate(int pos, StaxContact recipient) { requestViewModel.onUpdate(pos, recipient); }
 
 	@Override
 	public void onClickContact(int index, Context c) { contactPicker(index, c); }

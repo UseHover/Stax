@@ -36,7 +36,7 @@ public class NewRequestViewModel extends StagedViewModel {
 	public NewRequestViewModel(@NonNull Application application) {
 		super(application);
 		stage.setValue(RequestStage.RECIPIENT);
-		recipients.setValue(new ArrayList<>(Collections.singletonList(new StaxContact())));
+		recipients.setValue(new ArrayList<>(Collections.singletonList(new StaxContact(""))));
 		requestStarted.setValue(false);
 	}
 
@@ -126,8 +126,8 @@ public class NewRequestViewModel extends StagedViewModel {
 		StringBuilder phones = new StringBuilder();
 		List<StaxContact> rs = recipients.getValue();
 		for (int r = 0; r < rs.size(); r++) {
-			phones.append(rs.get(r));
-			if (rs.size() > r + 1) phones.append(",");
+			if (phones.length() > 0) phones.append(",");
+			phones.append(rs.get(r).phoneNumber);
 		}
 		return phones.toString();
 	}
