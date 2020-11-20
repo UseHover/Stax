@@ -2,7 +2,8 @@ package com.hover.stax.transfers;
 
 class CustomizedTransferSummarySettings {
 	private String amountInput, recipientInput;
-	private boolean isAmountClickable, isRecipientClickable, isActionRadioClickable;
+	private boolean isAmountClickable;
+	public boolean isRecipientClickable = false, isActionRadioClickable = false;
 
 	public String getAmountInput() {
 		return amountInput;
@@ -28,19 +29,4 @@ class CustomizedTransferSummarySettings {
 		isAmountClickable = amountClickable;
 	}
 
-	public boolean isRecipientClickable() {
-		return isRecipientClickable;
-	}
-
-	public void setRecipientClickable(boolean recipientClickable) {
-		isRecipientClickable = recipientClickable;
-	}
-
-	public boolean isActionRadioClickable() {
-		return isActionRadioClickable;
-	}
-
-	public void setActionRadioClickable(boolean actionRadioClickable) {
-		isActionRadioClickable = actionRadioClickable;
-	}
 }

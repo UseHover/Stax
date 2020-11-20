@@ -3,11 +3,14 @@ package com.hover.stax.transfers;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethod;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -20,6 +23,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
@@ -80,12 +84,8 @@ public class TransferFragment extends StagedFragment {
 	}
 
 	private void setTitle(View root) {
-		try{
-			((TextView) root.findViewById(R.id.summaryCard).findViewById(R.id.title)).setText(
-					getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.fab_airtime : R.string.fab_transfer));
-		}catch (Exception e) {
-
-		}
+		TextView tv = root.findViewById(R.id.summaryCard).findViewById(R.id.title);
+		if(tv !=null) { tv.setText(getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.fab_airtime : R.string.fab_transfer)); }
 	}
 
 	protected void startObservers(View root) {
@@ -155,10 +155,12 @@ public class TransferFragment extends StagedFragment {
 
 				recipientInput.setText(ctss.getRecipientInput());
 				recipientInput.setTextColor(getResources().getColor(R.color.grey));
-				disableView(amountInput, ctss.isAmountClickable());
-				disableView(recipientInput, ctss.isRecipientClickable());
-				disableView(actionDropdown, ctss.isActionRadioClickable());
-				disableView(contactButton, ctss.isRecipientClickable());
+
+				disableEditText(amountInput);
+				disableEditText(recipientInput);
+
+				disableView(actionDropdown, ctss.isActionRadioClickable);
+				disableView(contactButton, ctss.isRecipientClickable);
 			}
 		});
 	}
@@ -166,6 +168,13 @@ public class TransferFragment extends StagedFragment {
 	private void disableView(View view, boolean status) {
 		view.setClickable(status);
 		view.setFocusable(status);
+	}
+	private void disableEditText(EditText editText) {
+		editText.setInputType(InputType.TYPE_NULL);
+		editText.setTextIsSelectable(false);
+		editText.setClickable(false);
+		editText.setFocusable(false);
+		editText.setOnKeyListener((v, keyCode, event) -> true);
 	}
 
 	private void createChannelSelector(List<Channel> channels) {
@@ -177,7 +186,6 @@ public class TransferFragment extends StagedFragment {
 			radioButton.setId(c.id);
 			if (transferViewModel.getActiveChannel().getValue() != null && transferViewModel.getActiveChannel().getValue().id == c.id) {
 				radioButton.setChecked(true);
-				transferViewModel.setActiveChannel(c.id);
 			}
 			channelRadioGroup.addView(radioButton);
 		}

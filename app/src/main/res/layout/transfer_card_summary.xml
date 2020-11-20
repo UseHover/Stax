@@ -15,6 +15,7 @@
 
 			<TextView
 				android:text="@string/amount_cardhead"
+			    	android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
@@ -30,6 +31,7 @@
 
 			<TextView
 				android:text="@string/acct_label"
+			    	android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
@@ -45,6 +47,7 @@
 
 			<TextView android:id="@+id/actionLabel"
 				android:text="@string/recipientnetwork_cardhead"
+			    	android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
@@ -60,6 +63,7 @@
 
 			<TextView
 				android:text="@string/recipient_label"
+			      android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
@@ -75,6 +79,7 @@
 
 			<TextView
 				android:text="@string/note_cardhead"
+			    	android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
@@ -90,6 +95,7 @@
 
 			<TextView
 				android:text="@string/date_label"
+			    	android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
@@ -105,6 +111,7 @@
 
 			<TextView
 				android:text="@string/repeatfreq_label"
+			    	android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
@@ -120,6 +127,7 @@
 
 			<TextView
 				android:text="@string/end_label"
+			    	android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
@@ -135,6 +143,7 @@
 
 			<TextView
 				android:text="@string/repeatnum_label"
+			    	android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 

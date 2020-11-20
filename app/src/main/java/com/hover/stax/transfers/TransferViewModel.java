@@ -302,18 +302,17 @@ public class TransferViewModel extends StagedViewModel {
 					CustomizedTransferSummarySettings ctss = new CustomizedTransferSummarySettings();
 					ctss.setAmountInput(amount);
 					ctss.setAmountClickable(true);
-					if(!amount.equals("0")) {
-						ctss.setAmountClickable(false);
-						goToNextStage();
-					}
 					ctss.setRecipientInput(recipient_number);
-					ctss.setRecipientClickable(false);
-					ctss.setActionRadioClickable(false);
-					ctssLiveData.postValue(ctss);
 
 					//SET PARAMETERS IN SUMMARY CARD
 					setAmount(amount);
 					setRecipient(recipient_number);
+
+					if(!amount.equals("0")) {
+						ctss.setAmountClickable(false);
+						goToNextStage(REVIEW);
+					}
+					ctssLiveData.postValue(ctss);
 
 					new Thread(()->{
 						Channel channel = repo.getChannel(channel_id);

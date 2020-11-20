@@ -76,6 +76,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 			}
 		});
 		transferViewModel.getIschannelRelationshipExistMediator().observe(this, status-> { });
+		if(isFromStaxLink)onUpdateStage(REVIEW_DIRECT);
 	}
 
 	private void checkIntent() {
@@ -161,21 +162,13 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void setSummaryCard(@Nullable StagedViewModel.StagedEnum stage) {
-		if(isFromStaxLink) {
-			findViewById(R.id.amountRow).setVisibility(View.VISIBLE);
-			findViewById(R.id.actionRow).setVisibility(View.VISIBLE);
-			findViewById(R.id.recipientRow).setVisibility(View.VISIBLE);
-		}
-		else {
-			findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
+			findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 || stage.compare(REVIEW_DIRECT) < 0 ? View.VISIBLE : View.GONE);
+			findViewById(R.id.accountRow).setVisibility(stage.compare(FROM_ACCOUNT) > 0 ? View.VISIBLE : View.GONE);
 			findViewById(R.id.actionRow).setVisibility(stage.compare(TO_NETWORK) > 0 &&
-															   transferViewModel.getActions().getValue() != null && transferViewModel.getActions().getValue().size() > 0 && (transferViewModel.getActions().getValue().size() > 1 || transferViewModel.getActiveAction().getValue().hasToInstitution()) ? View.VISIBLE : View.GONE);
+															   transferViewModel.getActions().getValue() != null && transferViewModel.getActions().getValue().size() > 0 && (transferViewModel.getActions().getValue().size() > 1 || transferViewModel.getActiveAction().getValue().hasToInstitution()) ? View.VISIBLE : View.VISIBLE);
 			findViewById(R.id.recipientRow).setVisibility(stage.compare(RECIPIENT) > 0 && transferViewModel.getActiveAction().getValue() != null ? View.VISIBLE : View.GONE);
 			findViewById(R.id.btnRow).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
-		}
-		findViewById(R.id.accountRow).setVisibility(stage.compare(FROM_ACCOUNT) > 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && transferViewModel.getNote().getValue() != null && !transferViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
-
+			findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && transferViewModel.getNote().getValue() != null && !transferViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
 	}
 
 	private void setCurrentCard(StagedViewModel.StagedEnum stage) {
@@ -183,12 +176,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		findViewById(R.id.amountCard).setVisibility(stage.compare(AMOUNT) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.fromAccountCard).setVisibility(stage.compare(FROM_ACCOUNT) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.networkCard).setVisibility(stage.compare(TO_NETWORK) == 0 ? View.VISIBLE : View.GONE);
-
-		if(isFromStaxLink && stage.compare(RECIPIENT) == 0) transferViewModel.goToNextStage();
-		else
-			findViewById(R.id.recipientCard).setVisibility(stage.compare(RECIPIENT) == 0 ? View.VISIBLE : View.GONE);
-
-
+		findViewById(R.id.recipientCard).setVisibility(stage.compare(RECIPIENT) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.reasonCard).setVisibility(stage.compare(NOTE) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.futureCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && transferViewModel.getFutureDate().getValue() == null ? View.VISIBLE : View.GONE);
 		findViewById(R.id.repeatCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && (transferViewModel.repeatSaved().getValue() == null || !transferViewModel.repeatSaved().getValue()) ? View.VISIBLE : View.GONE);

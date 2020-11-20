@@ -68,7 +68,7 @@ public class ScheduleDetailFragment extends Fragment {
 		view.findViewById(R.id.noteRow).setVisibility(schedule.note == null || schedule.note.isEmpty() ? View.GONE : View.VISIBLE);
 		((TextView) view.findViewById(R.id.details_reason)).setText(schedule.note);
 
-		view.findViewById(R.id.cancel_btn).setOnClickListener(btn -> showConfirmDialog(btn));
+		view.findViewById(R.id.cancel_btn).setOnClickListener(this::showConfirmDialog);
 	}
 
 	private void showConfirmDialog(View v) {
