@@ -59,7 +59,7 @@
 	<string name="tool_histbody">These are all the transactions you have made with Stax</string>
 
 	<!-- Hover Session -->
-	<string name="balance_msg">Connecting to %1$s</string>
+	<string name="balance_msg">Checking %1$s balance</string>
 	<string name="airtime_msg">Buying airtime</string>
 	<string name="transfer_msg">Transferring money</string>
 
