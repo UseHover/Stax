@@ -287,7 +287,7 @@ public class TransferViewModel extends StagedViewModel {
 	void setupTransferPageFromPaymentLink(String encryptedString) {
 		try{
 			Encryption encryption = repo.getEncryptionSettings().build();
-			encryption.decryptAsync(encryptedString.replace(Constants.STAX_LINK_PREFIX,""), new Encryption.Callback() {
+			encryption.decryptAsync(encryptedString.replace(getApplication().getResources().getString(R.string.payment_root_url),""), new Encryption.Callback() {
 				@Override
 				public void onSuccess(String result) {
 					isFromStaxLink = true;

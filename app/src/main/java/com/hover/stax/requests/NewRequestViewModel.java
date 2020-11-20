@@ -225,7 +225,7 @@ public class NewRequestViewModel extends StagedViewModel {
 		try {
 			Encryption encryption =  repo.getEncryptionSettings().build();
 			String encryptedString = encryption.encryptOrNull(fullString);
-			return Constants.STAX_LINK_PREFIX+encryptedString;
+			return getApplication().getResources().getString(R.string.payment_root_url)+encryptedString;
 
 		} catch (NoSuchAlgorithmException e) {
 			Amplitude.getInstance().logEvent(c.getString(R.string.stax_link_encryption_failure_2));
