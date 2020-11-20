@@ -41,7 +41,6 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 
 		startObservers();
 		checkIntent();
-		handleStaxLinkIntent(getIntent());
 		setContentView(R.layout.activity_transfer);
 
 
@@ -83,6 +82,12 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		if (getIntent().hasExtra(Schedule.SCHEDULE_ID)) {
 			createFromSchedule(getIntent().getIntExtra(Schedule.SCHEDULE_ID, -1));
 		} else Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getIntent().getAction()));
+
+		if(getIntent().getExtras()!=null && getIntent().hasExtra(Constants.SOCIAL_LINK)) {
+			isFromStaxLink = true;
+			String encryptedString = getIntent().getExtras().getString(Constants.SOCIAL_LINK);
+			transferViewModel.setupTransferPageFromPaymentLink(encryptedString);
+		}
 	}
 
 	private void createFromSchedule(int schedule_id) {
@@ -221,14 +226,6 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);
 		setResult(result, i);
 		finish();
-	}
-
-	private void handleStaxLinkIntent(Intent intent) {
-		if(intent.getExtras()!=null && intent.hasExtra(Constants.SOCIAL_LINK)) {
-			isFromStaxLink = true;
-			String encryptedString = intent.getExtras().getString(Constants.SOCIAL_LINK);
-			transferViewModel.setupTransferPageFromPaymentLink(encryptedString);
-		}
 	}
 
 	@Override
