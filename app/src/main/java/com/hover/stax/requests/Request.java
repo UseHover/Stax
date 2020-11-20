@@ -7,10 +7,14 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
+import com.hover.stax.database.Constants;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.paymentLinkCryptography.Base64;
 import com.hover.stax.utils.paymentLinkCryptography.Encryption;
+
+import java.security.NoSuchAlgorithmException;
 
 @Entity(tableName = "requests")
 public class Request {
@@ -76,5 +80,24 @@ public class Request {
 					   .setSecureRandomAlgorithm("SHA1PRNG")
 					   .setSecretKeyType("PBKDF2WithHmacSHA1")
 					   .setIv(new byte[] { 29, 88, -79, -101, -108, -38, -126, 90, 52, 101, -35, 114, 12, -48, -66, -30 });
+	}
+
+	 static String generateStaxLink(String amount, int channel_id, String accountNumber, Context c) {
+		if(channel_id == 0 || accountNumber.isEmpty()) {
+			Amplitude.getInstance().logEvent(c.getString(R.string.stax_link_encryption_failure_1));
+			return null;
+		}
+		String separator = Constants.PAYMENT_LINK_SEPERATOR;
+		String fullString = amount+separator+channel_id +separator+accountNumber+separator+DateUtils.today();
+
+		try {
+			Encryption encryption =  Request.getEncryptionSettings().build();
+			String encryptedString = encryption.encryptOrNull(fullString);
+			return c.getResources().getString(R.string.payment_root_url)+encryptedString;
+
+		} catch (NoSuchAlgorithmException e) {
+			Amplitude.getInstance().logEvent(c.getString(R.string.stax_link_encryption_failure_2));
+			return null;
+		}
 	}
 }

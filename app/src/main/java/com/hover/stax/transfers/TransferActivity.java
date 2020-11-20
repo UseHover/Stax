@@ -76,7 +76,6 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 			}
 		});
 		transferViewModel.getIschannelRelationshipExistMediator().observe(this, status-> { });
-		if(isFromStaxLink)onUpdateStage(REVIEW_DIRECT);
 	}
 
 	private void checkIntent() {

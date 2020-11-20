@@ -208,30 +208,12 @@ public class NewRequestViewModel extends StagedViewModel {
 		int channel_id = activeChannel.getValue() !=null ? activeChannel.getValue().id : 0;
 		String accountNumber= receivingAccountNumber.getValue() !=null ? receivingAccountNumber.getValue().trim() : "";
 
-		String paymentLink = generateStaxLink(amountNoFormat, channel_id, accountNumber, c );
+		String paymentLink = Request.generateStaxLink(amountNoFormat, channel_id, accountNumber, c );
 
 		if(paymentLink !=null) return c.getString(R.string.sms_request_template_with_link, amountString, noteString, paymentLink);
 		else return c.getString(R.string.sms_request_template_no_link, amountString, noteString);
 	}
 
-	private String generateStaxLink(String amount, int channel_id, String accountNumber, Context c) {
-	if(channel_id == 0 || accountNumber.isEmpty()) {
-		Amplitude.getInstance().logEvent(c.getString(R.string.stax_link_encryption_failure_1));
-		return null;
-	}
-	String separator = Constants.PAYMENT_LINK_SEPERATOR;
-	String fullString = amount+separator+channel_id +separator+accountNumber+separator+DateUtils.today();
-
-		try {
-			Encryption encryption =  Request.getEncryptionSettings().build();
-			String encryptedString = encryption.encryptOrNull(fullString);
-			return getApplication().getResources().getString(R.string.payment_root_url)+encryptedString;
-
-		} catch (NoSuchAlgorithmException e) {
-			Amplitude.getInstance().logEvent(c.getString(R.string.stax_link_encryption_failure_2));
-			return null;
-		}
-	}
 
 
 	void saveToDatabase(Context c) {
