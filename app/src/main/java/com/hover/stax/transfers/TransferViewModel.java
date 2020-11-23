@@ -169,7 +169,7 @@ public class TransferViewModel extends StagedViewModel {
 		}
 		for (Action a : filteredActions.getValue()) {
 			if (a.toString().equals(actionString))
-				activeAction.setValue(a);
+				activeAction.postValue(a);
 		}
 	}
 

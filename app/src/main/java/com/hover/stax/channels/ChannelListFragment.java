@@ -67,6 +67,7 @@ public class ChannelListFragment extends Fragment implements ChannelsAdapter.Sel
 		});
 
 		channelViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> {
+			view.findViewById(R.id.no_accounts).setVisibility(channels == null || channels.size() == 0 ? View.VISIBLE : View.GONE);
 			fillSection(view.findViewById(R.id.all_card), getString(R.string.allaccts_cardhead), channels);
 		});
 	}

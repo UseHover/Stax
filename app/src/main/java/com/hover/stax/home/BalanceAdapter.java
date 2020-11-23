@@ -53,8 +53,6 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 		setColors(holder, channel,
 			UIHelper.getColor(channel.primaryColorHex, true, holder.itemView.getContext()),
 			UIHelper.getColor(channel.secondaryColorHex, false, holder.itemView.getContext()));
-		if (channel.latestBalanceTimestamp != null && channel.latestBalanceTimestamp > (DateUtils.now() - DateUtils.MIN))
-			holder.swl.open(true);
 	}
 
 	private void setColors(BalanceViewHolder holder, Channel channel, int primary, int secondary) {
