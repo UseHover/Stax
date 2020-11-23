@@ -27,7 +27,7 @@ public class RequestDetailViewModel extends AndroidViewModel {
 		super(application);
 		repo = new DatabaseRepo(application);
 		request = new MutableLiveData<>();
-		recipients = Transformations.map(request, this::loadRecipients);
+		recipients = Transformations.switchMap(request, this::loadRecipients);
 	}
 
 	public void setRequest(int id) {
@@ -41,8 +41,8 @@ public class RequestDetailViewModel extends AndroidViewModel {
 		return request;
 	}
 
-	public List<StaxContact> loadRecipients(Request r) {
-		return repo.getContacts(r.recipient_ids.split(","));
+	public LiveData<List<StaxContact>> loadRecipients(Request r) {
+		return repo.getLiveContacts(r.recipient_ids.split(","));
 	}
 
 	public LiveData<List<StaxContact>> getRecipients() {

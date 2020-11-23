@@ -2,9 +2,13 @@ package com.hover.stax.database;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionDao;
 import com.hover.stax.channels.Channel;
@@ -116,12 +120,22 @@ public class DatabaseRepo {
 		return transactionDao.getTransaction(uuid);
 	}
 
-	public void insert(StaxTransaction transaction) {
-		AppDatabase.databaseWriteExecutor.execute(() -> transactionDao.insert(transaction));
-	}
+	public void insertOrUpdate(Intent intent, Context c) {
+		AppDatabase.databaseWriteExecutor.execute(() -> {
+			try {
+				StaxTransaction t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID));
+				StaxContact contact = intent.hasExtra(StaxContact.ID_KEY) ? getContact(intent.getStringExtra(StaxContact.ID_KEY)) : null;
+				Action a = intent.hasExtra(Action.ID_KEY) ? getAction(intent.getStringExtra(Action.ID_KEY)) : null;
 
-	public void update(StaxTransaction transaction) {
-		AppDatabase.databaseWriteExecutor.execute(() -> transactionDao.update(transaction));
+				if (t == null) {
+					t = new StaxTransaction(intent, a, contact, c);
+					transactionDao.insert(t);
+				}
+				t.update(intent, a, contact, c);
+				transactionDao.update(t);
+
+			} catch (Exception e) { Log.e("DatabaseRepo", "error", e); }
+		});
 	}
 
 	// Contacts
@@ -131,6 +145,7 @@ public class DatabaseRepo {
 	public LiveData<List<StaxContact>> getLiveContacts(String[] ids) { return contactDao.getLive(ids); }
 
 	public StaxContact getContact(String id) { return contactDao.get(id); }
+	public LiveData<StaxContact> getLiveContact(String id) { return contactDao.getLive(id); }
 
 	public void insert(StaxContact contact) {
 		AppDatabase.databaseWriteExecutor.execute(() -> contactDao.insert(contact));

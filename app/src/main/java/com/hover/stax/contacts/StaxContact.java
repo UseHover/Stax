@@ -27,6 +27,7 @@ import static com.google.i18n.phonenumbers.PhoneNumberUtil.MatchType.NO_MATCH;
 
 @Entity(tableName = "stax_contacts", indices = {@Index(value="id", unique = true), @Index(value ="lookup_key", unique = true)} )
 public class StaxContact {
+	public final static String ID_KEY = "contact_id";
 
 	@PrimaryKey
 	@NonNull

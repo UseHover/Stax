@@ -26,7 +26,7 @@ import java.util.List;
 @Entity(tableName = "schedules")
 public class Schedule {
 	public final static int DAILY = 0, WEEKLY = 1, BIWEEKLY = 2, MONTHLY = 3, ONCE = 4;
-	public final static String SCHEDULE_ID = "schedule_id", DATE_KEY = "date";
+	public final static String SCHEDULE_ID = "schedule_id", DATE_KEY = "schedule_date";
 
 	@PrimaryKey(autoGenerate = true)
 	@NonNull

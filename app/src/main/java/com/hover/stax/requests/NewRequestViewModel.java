@@ -139,8 +139,10 @@ public class NewRequestViewModel extends StagedViewModel {
 	}
 
 	void saveToDatabase(Context c) {
-		for (StaxContact recipient : recipients.getValue())
+		saveContacts();
+		for (StaxContact recipient : recipients.getValue()) {
 			repo.insert(new Request(recipient, amount.getValue(), note.getValue(), getApplication()));
+		}
 
 		if (repeatSaved.getValue() != null && repeatSaved.getValue()) {
 			schedule();
@@ -165,5 +167,17 @@ public class NewRequestViewModel extends StagedViewModel {
 		Schedule s = new Schedule(futureDate.getValue(), repeatSaved.getValue(), frequency.getValue(), endDate.getValue(),
 			recipients.getValue(), amount.getValue(), note.getValue(), getApplication());
 		saveSchedule(s);
+	}
+
+	public void saveContacts() {
+		if (recipients.getValue() != null) {
+			new Thread(() -> {
+				for (StaxContact c: recipients.getValue()) {
+					StaxContact existing = repo.getContact(c.id);
+					if (existing == null || !existing.equals(c))
+						repo.insert(c);
+				}
+			}).start();
+		}
 	}
 }

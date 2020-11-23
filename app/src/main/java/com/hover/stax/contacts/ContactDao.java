@@ -26,6 +26,9 @@ public interface ContactDao {
 	@Query("SELECT * FROM stax_contacts WHERE id  = :id LIMIT 1")
 	StaxContact get(String id);
 
+	@Query("SELECT * FROM stax_contacts WHERE id  = :id LIMIT 1")
+	LiveData<StaxContact> getLive(String id);
+
 	@Insert
 	void insert(StaxContact contact);
 

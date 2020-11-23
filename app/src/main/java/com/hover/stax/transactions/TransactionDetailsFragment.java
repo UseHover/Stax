@@ -56,9 +56,13 @@ public class TransactionDetailsFragment extends Fragment {
 		});
 
 		viewModel.getAction().observe(getViewLifecycleOwner(), action -> {
-			if (action != null) {
+			if (action != null)
 				((TextView) view.findViewById(R.id.details_network)).setText(action.network_name);
-			}
+		});
+
+		viewModel.getContact().observe(getViewLifecycleOwner(), contact -> {
+			if (contact != null)
+				((TextView) view.findViewById(R.id.details_recipient)).setText(contact.toString());
 		});
 
 		RecyclerView messagesView = view.findViewById(R.id.convo_recyclerView);

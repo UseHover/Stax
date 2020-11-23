@@ -13,6 +13,7 @@ import androidx.room.PrimaryKey;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.Constants;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.Utils;
@@ -68,10 +69,13 @@ public class StaxTransaction {
 	@ColumnInfo(name = "recipient")
 	public String recipient;
 
+	@ColumnInfo(name = "recipient_id")
+	public String recipient_id;
+
 	public StaxTransaction() {
 	}
 
-	public StaxTransaction(Intent data, Action action, Context c) {
+	public StaxTransaction(Intent data, Action action, StaxContact contact, Context c) {
 		if (data.hasExtra(TransactionContract.COLUMN_UUID) && data.getStringExtra(TransactionContract.COLUMN_UUID) != null) {
 			uuid = data.getStringExtra(TransactionContract.COLUMN_UUID);
 			action_id = data.getStringExtra(TransactionContract.COLUMN_ACTION_ID);
@@ -90,27 +94,38 @@ public class StaxTransaction {
 				else if (extras.containsKey(Action.ACCOUNT_KEY))
 					recipient = extras.get(Action.ACCOUNT_KEY);
 			}
-			if (transaction_type != null)
-				description = generateDescription(action, c);
+			if (data.hasExtra(StaxContact.ID_KEY))
+				recipient_id = data.getStringExtra(StaxContact.ID_KEY);
+
 			Log.e("Transaction", "creating transaction with uuid: " + uuid);
+
+			if (transaction_type != null)
+				description = generateDescription(action, contact, c);
 		}
 	}
 
-	public void update(Intent data) {
+	public void update(Intent data, Action action, StaxContact contact, Context c) {
 		status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
-		updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, DateUtils.now());
+		updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, initiated_at);
 
 		HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES);
 		if (extras != null && extras.containsKey(Action.FEE_KEY))
 			fee = Utils.getAmount(extras.get(Action.FEE_KEY));
+
+		if (data.hasExtra(StaxContact.ID_KEY))
+			recipient_id = data.getStringExtra(StaxContact.ID_KEY);
+
+		if (contact != null)
+			description = generateDescription(action, contact, c);
 	}
 
-	private String generateDescription(Action action, Context c) {
+	private String generateDescription(Action action, StaxContact contact, Context c) {
+		String recipientStr = contact != null ? contact.shortName() : recipient;
 		switch (transaction_type) {
 			case Action.AIRTIME:
-				return c.getString(R.string.descrip_airtime_sent, action.from_institution_name, ((recipient == null || recipient.equals("")) ? "myself" : recipient));
+				return c.getString(R.string.descrip_airtime_sent, action.from_institution_name, ((recipient == null || recipient.equals("")) ? "myself" : recipientStr));
 			case Action.P2P:
-				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, recipient);
+				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, recipientStr);
 			case Action.ME2ME:
 				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, action.to_institution_name);
 			default:

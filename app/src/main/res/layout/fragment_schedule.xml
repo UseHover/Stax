@@ -1,51 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:layout_height="wrap_content"
 	android:layout_width="match_parent"
-	android:layout_marginTop="@dimen/margin_13"
-	android:layout_marginBottom="@dimen/margin_55"
-	android:orientation="vertical">
+	android:layout_height="match_parent">
 
-	<com.hover.stax.views.StaxCardView
-		android:layout_width="match_parent"
+	<LinearLayout
 		android:layout_height="wrap_content"
-		app:title="@string/nav_schedule"
-		app:showBack="true">
+		android:layout_width="match_parent"
+		android:layout_marginTop="@dimen/margin_13"
+		android:layout_marginBottom="@dimen/margin_55"
+		android:orientation="vertical">
 
-		<include layout="@layout/schedule_summary"
-			android:id="@+id/summaryCard"/>
-
-		<RelativeLayout
+		<com.hover.stax.views.StaxCardView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/margin_21">
+			app:title="@string/nav_schedule"
+			app:showBack="true">
 
-			<androidx.appcompat.widget.AppCompatButton
-				style="@style/StaxButton"
-				android:id="@+id/test_btn"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/btn_test"
-				android:layout_toStartOf="@id/divider"
-				android:fontFamily="font-medium"
-				android:visibility="gone"/>
+			<include layout="@layout/schedule_summary"
+				android:id="@+id/summaryCard"/>
 
-			<View android:id="@+id/divider"
-				android:layout_width="@dimen/margin_21"
+			<RelativeLayout
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:background="@color/transparent"
-				android:layout_toStartOf="@+id/cancel_btn"/>
+				android:layout_marginTop="@dimen/margin_21">
 
-			<androidx.appcompat.widget.AppCompatButton
-				style="@style/StaxButton"
-				android:id="@+id/cancel_btn"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/btn_cancel"
-				android:layout_alignParentEnd="true"
-				android:fontFamily="font-medium" />
-		</RelativeLayout>
-	</com.hover.stax.views.StaxCardView>
-</LinearLayout>
+				<androidx.appcompat.widget.AppCompatButton
+					style="@style/StaxButton"
+					android:id="@+id/test_btn"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/btn_test"
+					android:layout_toStartOf="@id/divider"
+					android:fontFamily="font-medium"
+					android:visibility="gone"/>
+
+				<View android:id="@+id/divider"
+					android:layout_width="@dimen/margin_21"
+					android:layout_height="wrap_content"
+					android:background="@color/transparent"
+					android:layout_toStartOf="@+id/cancel_btn"/>
+
+				<androidx.appcompat.widget.AppCompatButton
+					style="@style/StaxButton"
+					android:id="@+id/cancel_btn"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/btn_cancel"
+					android:layout_alignParentEnd="true"
+					android:fontFamily="font-medium" />
+			</RelativeLayout>
+		</com.hover.stax.views.StaxCardView>
+	</LinearLayout>
+</androidx.core.widget.NestedScrollView>

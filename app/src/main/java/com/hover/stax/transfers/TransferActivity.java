@@ -14,6 +14,7 @@ import com.amplitude.api.Amplitude;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.Constants;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.schedules.Schedule;
@@ -87,7 +88,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	private void submit() {
 		if (transferViewModel.getIsFuture().getValue() != null && transferViewModel.getIsFuture().getValue() && transferViewModel.getFutureDate().getValue() != null) {
 			transferViewModel.schedule();
-			returnResult(Constants.SCHEDULE_REQUEST, RESULT_OK);
+			returnResult(Constants.SCHEDULE_REQUEST, RESULT_OK, null);
 		} else {
 			if (transferViewModel.repeatSaved().getValue() != null && transferViewModel.repeatSaved().getValue())
 				transferViewModel.schedule();
@@ -175,15 +176,16 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == Constants.TRANSFER_REQUEST) {
-			returnResult(requestCode, resultCode);
+			returnResult(requestCode, resultCode, data);
 		}
 	}
 
-	private void returnResult(int type, int result) {
-		Intent i = new Intent();
-		if (type == Constants.SCHEDULE_REQUEST) {
+	private void returnResult(int type, int result, Intent data) {
+		Intent i = new Intent(data);
+		if (type == Constants.SCHEDULE_REQUEST)
 			i.putExtra(Schedule.DATE_KEY, transferViewModel.getFutureDate().getValue());
-		}
+		else
+			i.putExtra(StaxContact.ID_KEY, transferViewModel.getContact().getValue().id);
 		i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);
 		setResult(result, i);
 		finish();
