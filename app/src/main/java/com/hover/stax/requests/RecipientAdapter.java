@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.contacts.StaxContactArrayAdapter;
 
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
 
 	@Override
 	public void onBindViewHolder(final @NonNull RecipientViewHolder holder, int position) {
-		ArrayAdapter<StaxContact> adapter = new ArrayAdapter<>(holder.view.getContext(), android.R.layout.simple_dropdown_item_1line, allContacts);
+		ArrayAdapter<StaxContact> adapter = new StaxContactArrayAdapter(holder.view.getContext(), allContacts);
 		holder.input.setAdapter(adapter);
 
 		if (recipients != null && recipients.size() > position && recipients.get(position).phoneNumber != null)

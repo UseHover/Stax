@@ -21,6 +21,7 @@ import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.contacts.StaxContactArrayAdapter;
 import com.hover.stax.database.Constants;
 import com.hover.stax.utils.EditStagedFragment;
 
@@ -84,6 +85,13 @@ public class EditTransferFragment extends EditStagedFragment {
 		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
 			actionDropdown.setText(action.toString(), false);
 			recipientEntry.setVisibility(action.requiresRecipient() ? View.VISIBLE : View.GONE);
+		});
+
+		transferViewModel.getRecentContacts().observe(getViewLifecycleOwner(), contacts -> {
+			ArrayAdapter<StaxContact> adapter = new StaxContactArrayAdapter(requireActivity(), contacts);
+			recipientAutocomplete.setAdapter(adapter);
+			if (transferViewModel.getContact().getValue() != null)
+				recipientAutocomplete.setText(transferViewModel.getContact().getValue().toString());
 		});
 
 		transferViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {

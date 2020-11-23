@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +25,7 @@ import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.contacts.StaxContactArrayAdapter;
 import com.hover.stax.database.Constants;
 import com.hover.stax.utils.StagedFragment;
 import com.hover.stax.utils.Utils;
@@ -102,7 +102,7 @@ public class TransferFragment extends StagedFragment {
 		});
 
 		transferViewModel.getRecentContacts().observe(getViewLifecycleOwner(), contacts -> {
-			ArrayAdapter<StaxContact> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_dropdown_item_1line, contacts);
+			ArrayAdapter<StaxContact> adapter = new StaxContactArrayAdapter(requireActivity(), contacts);
 			recipientAutocomplete.setAdapter(adapter);
 			if (transferViewModel.getContact().getValue() != null)
 				recipientAutocomplete.setText(transferViewModel.getContact().getValue().toString());
@@ -119,7 +119,6 @@ public class TransferFragment extends StagedFragment {
 		transferViewModel.getNote().observe(getViewLifecycleOwner(), reason -> noteValue.setText(reason));
 
 		transferViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
-			Log.e(TAG, "actions: " + actions.size());
 			if (actions == null || actions.size() == 0) return;
 			ArrayAdapter<Action> adapter = new ArrayAdapter<>(requireActivity(), R.layout.stax_spinner_item, actions);
 			actionDropdown.setAdapter(adapter);
