@@ -8,7 +8,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
-import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.DatabaseRepo;
 

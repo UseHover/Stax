@@ -87,6 +87,12 @@ public class ScheduleDetailFragment extends Fragment {
 		((LinearLayout) view.findViewById(R.id.recipientValueList)).addView(tv);
 	}
 
+	private void createRecipientEntry(StaxContact c, View view) {
+		TextView tv = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.recipient_cell, null);
+		tv.setText(c.toString());
+		((LinearLayout) view.findViewById(R.id.recipientValueList)).addView(tv);
+	}
+
 	private void showConfirmDialog(View v) {
 		new StaxDialog(v.getContext(), this)
 				.setDialogTitle(R.string.cancelfuture_head)

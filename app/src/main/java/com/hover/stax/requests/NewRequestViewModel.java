@@ -188,6 +188,7 @@ public class NewRequestViewModel extends StagedViewModel {
 	String generateRecipientString() {
 		StringBuilder phones = new StringBuilder();
 		List<StaxContact> rs = requestees.getValue();
+
 		for (int r = 0; r < rs.size(); r++) {
 			if (phones.length() > 0) phones.append(",");
 			phones.append(rs.get(r).phoneNumber);
