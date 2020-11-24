@@ -33,21 +33,15 @@ public class TransferViewModel extends StagedViewModel {
 	private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
 	private LiveData<List<Action>> filteredActions = new MutableLiveData<>();
 	private MediatorLiveData<Action> activeAction = new MediatorLiveData<>();
-	private MediatorLiveData<Boolean> ischannelRelationshipExistMediator = new MediatorLiveData<>();
 
 	private MutableLiveData<String> amount = new MutableLiveData<>();
-	private MutableLiveData<String> activeActionName = new MutableLiveData<>();
 	private MutableLiveData<String> recipient = new MutableLiveData<>();
 	private MutableLiveData<String> note = new MutableLiveData<>();
 
 	private MutableLiveData<Integer> amountError = new MutableLiveData<>();
 	private MutableLiveData<Integer> recipientError = new MutableLiveData<>();
-	private MutableLiveData<Boolean> ischannelRelationshipExist = new MutableLiveData<>();
-	private MutableLiveData<CustomizedTransferSummarySettings>ctssLiveData = new MutableLiveData<>();
 
-	private boolean isFromStaxLink = false;
-	private int channelIdFromStaxLink = 0;
-
+	protected LiveData<Request> request = new MutableLiveData<>();
 
 	public TransferViewModel(Application application) {
 		super(application);
@@ -57,9 +51,7 @@ public class TransferViewModel extends StagedViewModel {
 		activeChannel.addSource(selectedChannels, this::findActiveChannel);
 		filteredActions = Transformations.switchMap(activeChannel, this::loadActions);
 		activeAction.addSource(filteredActions, this::findActiveAction);
-		ischannelRelationshipExistMediator.addSource(filteredActions, this::checkIfRelationshipExistForStaxLinkSake);
 	}
-
 
 	void setType(String transaction_type) {
 		type = transaction_type;
@@ -67,10 +59,6 @@ public class TransferViewModel extends StagedViewModel {
 
 	String getType() {
 		return type;
-	}
-
-	public LiveData<CustomizedTransferSummarySettings> getCtssLiveData() {
-		return ctssLiveData;
 	}
 
 	private void findActiveChannel(List<Channel> channels) {
@@ -84,8 +72,10 @@ public class TransferViewModel extends StagedViewModel {
 			return;
 		}
 		for (Channel c : selectedChannels.getValue()) {
-			if (c.toString().equals(channelString))
+			if (c.toString().equals(channelString)) {
 				activeChannel.setValue(c);
+				return;
+			}
 		}
 	}
 
@@ -94,8 +84,10 @@ public class TransferViewModel extends StagedViewModel {
 			return;
 		}
 		for (Channel c : selectedChannels.getValue()) {
-			if (c.id == channel_id)
+			if (c.id == channel_id) {
 				activeChannel.setValue(c);
+				return;
+			}
 		}
 	}
 
@@ -108,42 +100,6 @@ public class TransferViewModel extends StagedViewModel {
 			filteredActions = repo.getLiveActions(channel.id, type);
 		}
 		return filteredActions;
-	}
-
-	public void checkIfRelationshipExistForStaxLinkSake(List<Action> filteredActions) {
-		if(isFromStaxLink) {
-			//CHECK IF THE SENDER'S SELECTED CHANNEL HAS AN ACTION WITH A LINK TO THE RECIPIENT'S CHANNEL ID.
-			if(filteredActions !=null) {
-				if(filteredActions.size() == 0) {
-					//Spent hours trying to debug this, for whatever reason, the actions kept returning empty until when reloaded
-					//Or when user clicks on another channel radio button option.
-					activeActionName.postValue(null);
-					new Thread(()-> {
-						List<Action> acts = repo.getActions(activeChannel.getValue().id, type);
-						checkIfRelationshipExistForStaxLinkSake(acts);
-					}).start();
-
-				}else {
-					boolean linkChecked = false;
-					for (Action action : filteredActions) {
-						if (action.channel_id == channelIdFromStaxLink) {
-							linkChecked = true;
-							setActiveAction(action);
-							break;
-						}
-					}
-					ischannelRelationshipExist.postValue(linkChecked);
-				}
-			}
-		}
-	}
-
-	public LiveData<Boolean> getIschannelRelationshipExist() {
-		return ischannelRelationshipExist;
-	}
-
-	public LiveData<Boolean> getIschannelRelationshipExistMediator() {
-		return ischannelRelationshipExistMediator;
 	}
 
 	LiveData<List<Channel>> getSelectedChannels() {
@@ -210,9 +166,9 @@ public class TransferViewModel extends StagedViewModel {
 		return recipientError;
 	}
 
-
-	LiveData<String> forceGetActionName() {
-		return  activeActionName;
+	public LiveData<Request> getRequest() {
+		if (request == null) { request = new MutableLiveData<>(); }
+		return request;
 	}
 
 	void setNote(String r) {
@@ -266,14 +222,6 @@ public class TransferViewModel extends StagedViewModel {
 				} else
 					amountError.setValue(null);
 				break;
-
-			case FROM_ACCOUNT:
-				if(isFromStaxLink && (ischannelRelationshipExist.getValue() ==null || !ischannelRelationshipExist.getValue())) {
-					if(activeActionName.getValue() != null) ischannelRelationshipExist.postValue(false);
-					return false;
-				}
-				break;
-
 			case RECIPIENT:
 				if (recipient.getValue() == null || recipient.getValue().isEmpty()) {
 					recipientError.setValue(R.string.recipient_fielderror);
@@ -285,53 +233,21 @@ public class TransferViewModel extends StagedViewModel {
 		return true;
 	}
 
-	void setupTransferPageFromPaymentLink(String encryptedString) {
-		try{
-			Encryption encryption = Request.getEncryptionSettings().build();
-			encryption.decryptAsync(encryptedString.replace(getApplication().getResources().getString(R.string.payment_root_url),""), new Encryption.Callback() {
-				@Override
-				public void onSuccess(String result) {
-					isFromStaxLink = true;
-					String separator = Constants.PAYMENT_LINK_SEPERATOR;
-					String[] splittedString = result.split(separator);
-					String amount = Utils.formatAmount(splittedString[0]);
-					int channel_id = Integer.parseInt(splittedString[1]);
-					channelIdFromStaxLink = channel_id;
-					String recipient_number = splittedString[2];
+	boolean isDone() { return stage.getValue() == REVIEW || stage.getValue() == REVIEW_DIRECT; }
 
-					CustomizedTransferSummarySettings ctss = new CustomizedTransferSummarySettings();
-					ctss.setAmountInput(amount);
-					ctss.setAmountClickable(true);
-					ctss.setRecipientInput(recipient_number);
-
-					//SET PARAMETERS IN SUMMARY CARD
-					setAmount(amount);
-					setRecipient(recipient_number);
-
-					if(!amount.equals("0")) {
-						ctss.setAmountClickable(false);
-						goToNextStage(REVIEW);
-					}
-					ctssLiveData.postValue(ctss);
-
-					new Thread(()->{
-						Channel channel = repo.getChannel(channel_id);
-						activeActionName.postValue(channel.name);
-					}).start();
-
-				}
-
-				@Override
-				public void onError(Exception exception) {
-				}
-			});
-
-		}catch (Exception e) {
-		}
-
+	public void decrypt(String encryptedLink) {
+		if (request == null) { request = new MutableLiveData<>(); }
+		request = repo.decrypt(encryptedLink, getApplication());
 	}
 
-	boolean isDone() { return stage.getValue() == REVIEW || stage.getValue() == REVIEW_DIRECT; }
+	public void view(Request request) {
+		setAmount(request.amount);
+		setActiveChannel(request.recipient_channel_id);
+		setRecipient(request.recipient);
+		setStage(TransferStage.REVIEW_DIRECT);
+		if (request.amount.isEmpty())
+			setEditing(true);
+	}
 
 	public void view(Schedule s) {
 		schedule.setValue(s);

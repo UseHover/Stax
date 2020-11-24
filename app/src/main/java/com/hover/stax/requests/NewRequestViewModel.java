@@ -8,23 +8,15 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.Constants;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.StagedViewModel;
-import com.hover.stax.utils.Utils;
-import com.hover.stax.utils.paymentLinkCryptography.Base64;
-import com.hover.stax.utils.paymentLinkCryptography.Encryption;
-
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import io.sentry.Sentry;
 
 import static com.hover.stax.requests.RequestStage.*;
 
@@ -42,7 +34,7 @@ public class NewRequestViewModel extends StagedViewModel {
 	private MutableLiveData<Integer> receivingAccountNumberError = new MutableLiveData<>();
 	private MutableLiveData<Integer> receivingAccountChoiceError = new MutableLiveData<>();
 
-	private MutableLiveData<Boolean> requestStarted = new MutableLiveData<>();
+	private MutableLiveData<Request> formulatedRequest = new MutableLiveData<>();
 
 	public NewRequestViewModel(@NonNull Application application) {
 		super(application);
@@ -50,7 +42,7 @@ public class NewRequestViewModel extends StagedViewModel {
 		activeChannel.addSource(selectedChannels, this::findActiveChannel);
 		stage.setValue(RequestStage.RECIPIENT);
 		recipients.setValue(new ArrayList<>(Collections.singletonList("")));
-		requestStarted.setValue(false);
+		formulatedRequest.setValue(null);
 	}
 
 	private void findActiveChannel(List<Channel> channels) {
@@ -200,25 +192,13 @@ public class NewRequestViewModel extends StagedViewModel {
 		return phones.toString();
 	}
 
-	String generateSMS(Context c) {
-		String amountString = amount.getValue() != null ? c.getString(R.string.sms_amount_detail, Utils.formatAmount(amount.getValue())) : "";
-		String noteString = note.getValue() != null ? c.getString(R.string.sms_note_detail, note.getValue()) : "";
-
-		String amountNoFormat = amount.getValue() != null ? amount.getValue() : "0.00";
-		int channel_id = activeChannel.getValue() !=null ? activeChannel.getValue().id : 0;
-		String accountNumber= receivingAccountNumber.getValue() !=null ? receivingAccountNumber.getValue().trim() : "";
-
-		String paymentLink = Request.generateStaxLink(amountNoFormat, channel_id, accountNumber, c );
-
-		if(paymentLink !=null) return c.getString(R.string.sms_request_template_with_link, amountString, noteString, paymentLink);
-		else return c.getString(R.string.sms_request_template_no_link, amountString, noteString);
+	String generateMessage(Context c) {
+		return formulatedRequest.getValue().generateSMS(c);
 	}
-
-
 
 	void saveToDatabase(Context c) {
 		for (String recipient : recipients.getValue())
-			repo.insert(new Request(recipient, amount.getValue(), note.getValue(), getActiveChannel().getValue().id, getReceivingAccountNumber().getValue()));
+			repo.insert(formulatedRequest.getValue().setRecipient(recipient));
 
 		if (repeatSaved.getValue() != null && repeatSaved.getValue()) {
 			schedule();
@@ -232,11 +212,10 @@ public class NewRequestViewModel extends StagedViewModel {
 	}
 
 	void setStarted() {
-		requestStarted.setValue(true);
+		formulatedRequest.setValue(new Request(amount.getValue(), note.getValue(), getReceivingAccountNumber().getValue(), getActiveChannel().getValue().id));
 	}
-	LiveData<Boolean> getStarted() {
-		if (requestStarted == null) { requestStarted = new MutableLiveData<>(); }
-		return requestStarted;
+	Boolean getStarted() {
+		return formulatedRequest == null || formulatedRequest.getValue() != null;
 	}
 
 	public void schedule() {

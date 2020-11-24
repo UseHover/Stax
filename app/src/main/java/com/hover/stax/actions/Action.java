@@ -107,6 +107,10 @@ public class Action {
 		return hasToInstitution() && from_institution_id != to_institution_id;
 	}
 
+	public int recipientInstitutionId() {
+		return hasToInstitution() ? to_institution_id : channel_id;
+	}
+
 	public boolean requiresRecipient() {
 		return requiresInput(ACCOUNT_KEY) || requiresInput(PHONE_KEY);
 	}

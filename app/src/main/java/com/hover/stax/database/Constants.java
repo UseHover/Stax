@@ -18,6 +18,6 @@ public class Constants {
 	final public static String SCHEDULED = "SCHEDULED";
 	final public static String REQUEST_TYPE = "request";
 	final public static String PENDING = "pending";
-	final public static String SOCIAL_LINK = "payment_link";
+	final public static String REQUEST_LINK = "request_link";
 	final public static String PAYMENT_LINK_SEPERATOR = "-";
 }

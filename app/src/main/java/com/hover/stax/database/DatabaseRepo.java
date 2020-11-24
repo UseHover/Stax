@@ -2,9 +2,13 @@ package com.hover.stax.database;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
+import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionDao;
 import com.hover.stax.channels.Channel;
@@ -20,6 +24,7 @@ import com.hover.stax.transactions.TransactionDao;
 import com.hover.stax.utils.paymentLinkCryptography.Base64;
 import com.hover.stax.utils.paymentLinkCryptography.Encryption;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public class DatabaseRepo {
@@ -32,6 +37,8 @@ public class DatabaseRepo {
 
 	private LiveData<List<Channel>> allChannels;
 	private LiveData<List<Channel>> selectedChannels;
+
+	private MutableLiveData<Request> decryptedRequest= new MutableLiveData<>();
 
 	public DatabaseRepo(Application application) {
 		AppDatabase db = AppDatabase.getInstance(application);
@@ -154,6 +161,24 @@ public class DatabaseRepo {
 
 	public Request getRequest(int id) {
 		return requestDao.get(id);
+	}
+
+	public LiveData<Request> decrypt(String encrypted, Context c) {
+		if (decryptedRequest == null) { decryptedRequest = new MutableLiveData<>(); }
+		decryptedRequest.setValue(null);
+		try {
+			Encryption e = Request.getEncryptionSettings().build();
+			e.decryptAsync(encrypted.replace(c.getString(R.string.payment_root_url, ""),""), new Encryption.Callback() {
+				@Override
+				public void onSuccess(String result) {
+					decryptedRequest.setValue(new Request(result));
+				}
+
+				@Override public void onError(Exception exception) {}
+			});
+
+		} catch (NoSuchAlgorithmException e) { Log.e("DatabaseRepo", "decryption failure"); }
+		return decryptedRequest;
 	}
 
 	public void insert(Request request) {

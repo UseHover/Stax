@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -49,7 +48,7 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (requestViewModel.getStarted().getValue() != null && requestViewModel.getStarted().getValue())
+		if (requestViewModel.getStarted())
 			showRequestNotSentDialog();
 	}
 
@@ -127,16 +126,14 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 	}
 
 	private void sendSms() {
-		//UIHelper.flashMessage(this, findViewById(R.id.request_rootView), getString(R.string.request_processing_msg));
-
 		requestViewModel.setStarted();
 		new SmsSentObserver(this, requestViewModel.getRecipients().getValue(), new Handler(), this).start();
 
 		Intent sendIntent = new Intent();
 		sendIntent.setAction(Intent.ACTION_VIEW);
 		sendIntent.setData(Uri.parse("smsto:" + requestViewModel.generateRecipientString()));
-		sendIntent.putExtra(Intent.EXTRA_TEXT, requestViewModel.generateSMS(this));
-		sendIntent.putExtra("sms_body", requestViewModel.generateSMS(this));
+		sendIntent.putExtra(Intent.EXTRA_TEXT, requestViewModel.generateMessage(this));
+		sendIntent.putExtra("sms_body", requestViewModel.generateMessage(this));
 		startActivityForResult(Intent.createChooser(sendIntent, "Request"), Constants.SMS);
 	}
 
@@ -145,7 +142,7 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 		sendIntent.setAction(Intent.ACTION_VIEW);
 
 		// FIXME: Needs to use international number format with no +
-		String whatsapp ="https://api.whatsapp.com/send?phone="+ requestViewModel.generateRecipientString() +"&text=" + requestViewModel.generateSMS(this);
+		String whatsapp ="https://api.whatsapp.com/send?phone="+ requestViewModel.generateRecipientString() +"&text=" + requestViewModel.generateMessage(this);
 		sendIntent.setData(Uri.parse(whatsapp));
 		startActivityForResult(sendIntent, Constants.SMS);
 	}

@@ -27,7 +27,7 @@ public class RequestDetailViewModel extends AndroidViewModel {
 	public void setRequest(int id) {
 		new Thread(() ->{
 			Request req = repo.getRequest(id);
-			Channel channel = repo.getChannel(req.receiving_channel_id);
+			Channel channel = repo.getChannel(req.recipient_channel_id);
 
 			request.postValue(req);
 			channelName.postValue(channel.name);

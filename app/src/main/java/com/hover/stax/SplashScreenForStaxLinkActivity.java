@@ -81,13 +81,12 @@ public class SplashScreenForStaxLinkActivity extends AppCompatActivity implement
 	}
 
 	private void handleStaxLinkIntent(Intent intent) {
-
 		String appLinkAction = intent.getAction();
 		Uri appLinkData = intent.getData();
 		if (Intent.ACTION_VIEW.equals(appLinkAction) && appLinkData != null){
 			String encryptedString = appLinkData.toString();
 			Intent intent1 = new Intent(this, MainActivity.class);
-			intent1.putExtra(Constants.SOCIAL_LINK, encryptedString);
+			intent1.putExtra(Constants.REQUEST_LINK, encryptedString);
 			startActivity(intent1);
 			finish();
 		}

@@ -147,34 +147,6 @@ public class TransferFragment extends StagedFragment {
 			if(actionName!=null) { actionValue.setText(actionName); }
 			else { if(getContext()!=null) actionValue.setText(getContext().getResources().getString(R.string.loading)); }
 		});
-
-		transferViewModel.getCtssLiveData().observe(getViewLifecycleOwner(), ctss-> {
-			if(ctss!=null) {
-				amountInput.setText(ctss.getAmountInput());
-				if(!ctss.isAmountClickable()) amountInput.setTextColor(getResources().getColor(R.color.grey));
-
-				recipientInput.setText(ctss.getRecipientInput());
-				recipientInput.setTextColor(getResources().getColor(R.color.grey));
-
-				disableEditText(amountInput);
-				disableEditText(recipientInput);
-
-				disableView(actionDropdown, ctss.isActionRadioClickable);
-				disableView(contactButton, ctss.isRecipientClickable);
-			}
-		});
-	}
-
-	private void disableView(View view, boolean status) {
-		view.setClickable(status);
-		view.setFocusable(status);
-	}
-	private void disableEditText(EditText editText) {
-		editText.setInputType(InputType.TYPE_NULL);
-		editText.setTextIsSelectable(false);
-		editText.setClickable(false);
-		editText.setFocusable(false);
-		editText.setOnKeyListener((v, keyCode, event) -> true);
 	}
 
 	private void createChannelSelector(List<Channel> channels) {

@@ -27,7 +27,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.amplitude.api.Amplitude;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.hover.sdk.api.Hover;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
@@ -44,7 +43,6 @@ import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
-import com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout;
 
 
 import java.util.List;
@@ -68,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements
 
 		setUpNav();
 
-		if(getIntent().hasExtra(Constants.SOCIAL_LINK)) { startTransfer(Action.P2P, true); }
+		if(getIntent().hasExtra(Constants.REQUEST_LINK)) { startTransfer(Action.P2P, true); }
 	}
 
 	public void addAccount(View view) {
@@ -180,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements
 	private void startTransfer(String type, boolean isFromStaxLink) {
 		Intent i = new Intent(this, TransferActivity.class);
 		i.setAction(type);
-		if(isFromStaxLink) i.putExtra(Constants.SOCIAL_LINK, getIntent().getExtras().getString(Constants.SOCIAL_LINK));
+		if(isFromStaxLink) i.putExtra(Constants.REQUEST_LINK, getIntent().getExtras().getString(Constants.REQUEST_LINK));
 		startActivityForResult(i, Constants.TRANSFER_REQUEST);
 	}
 
