@@ -10,6 +10,7 @@ import androidx.room.PrimaryKey;
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.database.Constants;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.paymentLinkCryptography.Base64;
 import com.hover.stax.utils.paymentLinkCryptography.Encryption;
@@ -23,12 +24,21 @@ public class Request {
 	@NonNull
 	public int id;
 
+	@ColumnInfo(name = "description")
+	public String description;
+
 	@NonNull
-	@ColumnInfo(name = "recipient")
-	public String recipient;
+	@ColumnInfo(name = "requestee_ids")
+	public String requestee_ids;
 
 	@ColumnInfo(name = "amount")
 	public String amount;
+
+	@ColumnInfo(name = "requester_institution_id")
+	public int requester_institution_id;
+
+	@ColumnInfo(name  = "requester_number")
+	public String requester_number;
 
 	@ColumnInfo(name = "note")
 	public String note;
@@ -39,30 +49,24 @@ public class Request {
 	@ColumnInfo(name = "matched_transaction_uuid")
 	public String matched_transaction_uuid;
 
-	@ColumnInfo(name = "receiving_channel_id")
-	public int receiving_channel_id;
-
-	@ColumnInfo(name  = "receiving_account_number")
-	public String receiving_account_number;
-
 	@NonNull
 	@ColumnInfo(name = "date_sent", defaultValue = "CURRENT_TIMESTAMP")
 	public Long date_sent;
 
-	public Request() {
-	}
+	public Request() { }
 
-	public Request(@NonNull String recipient, String amount, String note, int receiving_channel_id, String receiving_account_number) {
-		this.recipient = recipient;
-		this.amount = amount;
-		this.note = note;
-		this.receiving_channel_id = receiving_channel_id;
-		this.receiving_account_number = receiving_account_number;
+	public Request(StaxContact requestee, String a, String n, String requester_number, int institution_id, Context context) {
+		requestee_ids = requestee.id;
+		amount = a;
+		note = n;
+		requester_institution_id = institution_id;
+		this.requester_number = requester_number;
 		date_sent = DateUtils.now();
+		description = getDescription(requestee, context);
 	}
 
-	public String getDescription(Context c) {
-		return c.getString(R.string.descrip_request, recipient);
+	public String getDescription(StaxContact contact, Context c) {
+		return c.getString(R.string.descrip_request, contact.shortName());
 	}
 
 	public static Encryption.Builder getEncryptionSettings() {
@@ -83,12 +87,12 @@ public class Request {
 	}
 
 	 static String generateStaxLink(String amount, int channel_id, String accountNumber, Context c) {
-		if(channel_id == 0 || accountNumber.isEmpty()) {
+		if (channel_id == 0 || accountNumber.isEmpty()) {
 			Amplitude.getInstance().logEvent(c.getString(R.string.stax_link_encryption_failure_1));
 			return null;
 		}
 		String separator = Constants.PAYMENT_LINK_SEPERATOR;
-		String fullString = amount+separator+channel_id +separator+accountNumber+separator+DateUtils.today();
+		String fullString = amount+separator+channel_id +separator+accountNumber+separator+DateUtils.now();
 
 		try {
 			Encryption encryption =  Request.getEncryptionSettings().build();

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
-import com.hover.stax.transfers.StaxContactModel;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.StagedFragment;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -61,13 +60,13 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		recipientValueList = view.findViewById(R.id.recipientValueList);
 		amountValue = view.findViewById(R.id.amountValue);
 		noteValue = view.findViewById(R.id.noteValue);
-		receivingChannelNameValue = view.findViewById(R.id.receiveAccountNameValue);
-		receivingAccountNumberValue = view.findViewById(R.id.receiveAccountNumberValue);
+		receivingChannelNameValue = view.findViewById(R.id.requesteeChannelValue);
+		receivingAccountNumberValue = view.findViewById(R.id.requesteeNumberValue);
 		recipientInputList = view.findViewById(R.id.recipient_list);
 		amountInput = view.findViewById(R.id.amount_input);
 		amountInput.setText(requestViewModel.getAmount().getValue());
 		receivingAccountNumberInput = view.findViewById(R.id.accountNumber_input);
-		receivingAccountNumberInput.setText(requestViewModel.getReceivingAccountNumber().getValue());
+		receivingAccountNumberInput.setText(requestViewModel.getRequesterNumber().getValue());
 		channelRadioGroup = view.findViewById(R.id.channelRadioGroup);
 
 		noteInput = view.findViewById(R.id.note_input);
@@ -75,7 +74,7 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		addRecipientBtn = view.findViewById(R.id.add_recipient_button);
 
 		recipientInputList.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-		recipientAdapter = new RecipientAdapter(requestViewModel.getRecipients().getValue(), this);
+		recipientAdapter = new RecipientAdapter(requestViewModel.getRecipients().getValue(), requestViewModel.getRecentContacts().getValue(), this);
 		recipientInputList.setAdapter(recipientAdapter);
 
 		super.init(view);
@@ -95,17 +94,20 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		requestViewModel.getRecipients().observe(getViewLifecycleOwner(), recipients -> {
 			if (recipients == null || recipients.size() == 0) return;
 			recipientValueList.removeAllViews();
-			for (String recipient : recipients) {
+			for (StaxContact recipient : recipients) {
 				TextView tv = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.recipient_cell, null);
-				tv.setText(recipient);
+				tv.setText(recipient.toString());
 				recipientValueList.addView(tv);
 			}
 
 			if (recipients.size() == recipientCount) return;
 			recipientCount = recipients.size();
 			recipientAdapter.update(recipients);
-
 		});
+		requestViewModel.getRecentContacts().observe(getViewLifecycleOwner(), contacts -> {
+			recipientAdapter.updateContactList(contacts);
+		});
+
 		requestViewModel.getRecipientError().observe(getViewLifecycleOwner(), recipientError -> {
 			if (recipientInputList.getChildAt(0) == null) return;
 			TextInputLayout v = recipientInputList.getChildAt(0).findViewById(R.id.recipientLabel);
@@ -136,7 +138,7 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 			if (channels != null) createChannelSelector(channels);
 		});
 
-		requestViewModel.getReceivingAccountNumber().observe(getViewLifecycleOwner(), accountNumber -> {
+		requestViewModel.getRequesterNumber().observe(getViewLifecycleOwner(), accountNumber -> {
 			receivingAccountNumberValue.setText(accountNumber);
 		});
 		requestViewModel.getNote().observe(getViewLifecycleOwner(), note -> noteValue.setText(note));
@@ -145,7 +147,7 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 	@Override
 	protected void startListeners(View root) {
 		super.startListeners(root);
-		addRecipientBtn.setOnClickListener(v -> requestViewModel.setEditing(false));
+		addRecipientBtn.setOnClickListener(v -> requestViewModel.addRecipient(new StaxContact("")));
 		amountInput.addTextChangedListener(amountWatcher);
 		channelRadioGroup.setOnCheckedChangeListener((group, checkedId) -> requestViewModel.setActiveChannel(checkedId));
 		root.findViewById(R.id.add_new_account).setOnClickListener(view -> startActivity(new Intent(getActivity(), ChannelsActivity.class)));
@@ -167,13 +169,13 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 	}
 
 	@Override
-	public void onUpdate(int pos, String recipient) { requestViewModel.onUpdate(pos, recipient); }
+	public void onUpdate(int pos, StaxContact recipient) { requestViewModel.onUpdate(pos, recipient); }
 
 	@Override
 	public void onClickContact(int index, Context c) { contactPicker(index, c); }
 
-	protected void onContactSelected(int requestCode, StaxContactModel contact) {
-		requestViewModel.onUpdate(requestCode, contact.getPhoneNumber());
+	protected void onContactSelected(int requestCode, StaxContact contact) {
+		requestViewModel.onUpdate(requestCode, contact);
 		recipientAdapter.notifyDataSetChanged();
 	}
 
@@ -193,7 +195,7 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		public void afterTextChanged(Editable s) { }
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before, int count) {
-			requestViewModel.setReceivingAccountNumber(s.toString());
+			requestViewModel.setRequesterNumber(s.toString());
 		}
 	};
 

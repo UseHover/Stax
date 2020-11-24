@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.transfers.StaxContactModel;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.EditStagedFragment;
 import com.hover.stax.utils.UIHelper;
 
@@ -43,7 +43,7 @@ public class EditRequestFragment extends EditStagedFragment implements Recipient
 	protected void init(View view) {
 		recipientInputList = view.findViewById(R.id.recipient_list);
 		recipientInputList.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-		RecipientAdapter recipientAdapter = new RecipientAdapter(requestViewModel.getRecipients().getValue(), this);
+		RecipientAdapter recipientAdapter = new RecipientAdapter(requestViewModel.getRecipients().getValue(), requestViewModel.getRecentContacts().getValue(), this);
 		recipientInputList.setAdapter(recipientAdapter);
 
 		amountInput = view.findViewById(R.id.amount_input);
@@ -51,7 +51,7 @@ public class EditRequestFragment extends EditStagedFragment implements Recipient
 		channelDropdown = view.findViewById(R.id.channelDropdown);
 		if (requestViewModel.getActiveChannel().getValue() != null) channelDropdown.setText(requestViewModel.getActiveChannel().getValue().toString());
 		receivingAccountNumberInput = view.findViewById(R.id.accountNumber_input);
-		receivingAccountNumberInput.setText(requestViewModel.getReceivingAccountNumber().getValue());
+		receivingAccountNumberInput.setText(requestViewModel.getRequesterNumber().getValue());
 		noteInput = view.findViewById(R.id.note_input);
 		noteInput.setText(requestViewModel.getNote().getValue());
 
@@ -59,14 +59,17 @@ public class EditRequestFragment extends EditStagedFragment implements Recipient
 	}
 
 	protected void save() {
-		requestViewModel.resetRecipients();
-		for (int c = 0; c < recipientInputList.getChildCount(); c++)
-			requestViewModel.addRecipient(
-				((TextView) recipientInputList.getChildAt(c).findViewById(R.id.recipient_input)).getText().toString());
+		for (int c = 0; c < requestViewModel.getRecipients().getValue().size(); c++)
+			if (!requestViewModel.getRecipients().getValue().get(c).toString().equals(
+					((TextView) recipientInputList.getChildAt(c).findViewById(R.id.recipient_autocomplete)).getText().toString())) {
+				StaxContact contact = new StaxContact(((TextView)recipientInputList.getChildAt(c).findViewById(R.id.recipient_autocomplete)).getText().toString());
+				requestViewModel.onUpdate(c, contact);
+			}
+
 		if (!amountInput.getText().toString().isEmpty())
 			requestViewModel.setAmount(amountInput.getText().toString());
 		if (!receivingAccountNumberInput.getText().toString().isEmpty())
-			requestViewModel.setReceivingAccountNumber(receivingAccountNumberInput.getText().toString());
+			requestViewModel.setRequesterNumber(receivingAccountNumberInput.getText().toString());
 		if (!noteInput.getText().toString().isEmpty())
 			requestViewModel.setNote(noteInput.getText().toString());
 		NavHostFragment.findNavController(this).navigate(R.id.navigation_new);
@@ -97,12 +100,13 @@ public class EditRequestFragment extends EditStagedFragment implements Recipient
 	}
 
 	@Override
-	public void onUpdate(int pos, String recipient) { }
+	public void onUpdate(int pos, StaxContact recipient) { }
 
 	@Override
 	public void onClickContact(int index, Context c) { contactPicker(index, c); }
 
-	protected void onContactSelected(int requestCode, StaxContactModel contact) {
-		((TextView) recipientInputList.getChildAt(requestCode).findViewById(R.id.recipient_input)).setText(contact.getPhoneNumber());
+	protected void onContactSelected(int requestCode, StaxContact contact) {
+		((AutoCompleteTextView) recipientInputList.getChildAt(requestCode).findViewById(R.id.recipient_autocomplete)).setText(contact.toString());
+		requestViewModel.onUpdate(requestCode, contact);
 	}
 }

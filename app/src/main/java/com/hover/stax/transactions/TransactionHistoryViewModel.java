@@ -34,13 +34,6 @@ public class TransactionHistoryViewModel extends AndroidViewModel {
 	}
 
 	public void saveTransaction(Intent data, Context c) {
-		new Thread(() -> {
-			try {
-				StaxTransaction t = new StaxTransaction(data, repo.getAction(data.getStringExtra(TransactionContract.COLUMN_ACTION_ID)), c);
-				if (t.uuid != null) {
-					repo.insert(t);
-				}
-			} catch (Exception e) { Log.e("THViewModel", "Failed to save transaction.", e); }
-		}).start();
+		repo.insertOrUpdate(data, c);
 	}
 }

@@ -41,14 +41,14 @@
 				android:textAlignment="viewEnd" />
 		</TableRow>
 
-		<TableRow android:id="@+id/receiveAccountRow" android:layout_marginTop="@dimen/margin_21">
+		<TableRow android:id="@+id/requesteeChannelRow" android:layout_marginTop="@dimen/margin_21">
 			<TextView
 			    android:text="@string/receiving_account_type_label"
 			    android:textColor="@color/offWhite"
 			    android:fontFamily="font-normal"
 			    android:textSize="@dimen/text_16" />
 
-			<TextView android:id="@+id/receiveAccountNameValue"
+			<TextView android:id="@+id/requesteeChannelValue"
 			    android:layout_weight="1"
 			    android:fontFamily="font-medium"
 			    android:textColor="@color/offWhite"
@@ -56,14 +56,14 @@
 			    android:textAlignment="viewEnd" />
 		</TableRow>
 
-		<TableRow android:id="@+id/receiveAccountNumberRow" android:layout_marginTop="@dimen/margin_21">
+		<TableRow android:id="@+id/requesteeNumberRow" android:layout_marginTop="@dimen/margin_21">
 			<TextView
 			    android:text="@string/receiving_account_number_label"
 			    android:textColor="@color/offWhite"
 			    android:fontFamily="font-normal"
 			    android:textSize="@dimen/text_16" />
 
-			<TextView android:id="@+id/receiveAccountNumberValue"
+			<TextView android:id="@+id/requesteeNumberValue"
 			    android:layout_weight="1"
 			    android:fontFamily="font-medium"
 			    android:textColor="@color/offWhite"

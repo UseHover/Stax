@@ -27,7 +27,7 @@ import com.hover.stax.utils.Utils;
 
 import static com.hover.stax.database.Constants.AUTH_CHECK;
 
-public class SplashScreenForStaxLinkActivity extends AppCompatActivity implements BiometricChecker.AuthListener {
+public class SplashScreenForStaxLinkActivity extends SplashScreenActivity {
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {

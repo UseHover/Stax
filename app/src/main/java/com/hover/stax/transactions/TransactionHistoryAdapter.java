@@ -1,6 +1,5 @@
 package com.hover.stax.transactions;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 	@NonNull
 	@Override
 	public HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.stax_list_item, parent, false);
+		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_list_item, parent, false);
 		return new HistoryViewHolder(view);
 	}
 

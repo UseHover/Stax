@@ -4,6 +4,7 @@
     android:textSize="@dimen/text_16"
 	android:background="?attr/selectableItemBackground"
     android:paddingVertical="@dimen/margin_13"
+	android:paddingStart="@dimen/margin_13"
 	android:paddingEnd="@dimen/margin_34"
     android:fontFamily="font-normal"
     android:singleLine="true"

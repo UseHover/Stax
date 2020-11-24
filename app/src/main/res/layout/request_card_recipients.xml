@@ -24,6 +24,6 @@
 			android:layout_alignParentEnd="true"
 			style="@style/StaxButton"
 			android:fontFamily="font-medium"
-			android:onClick="addAccount" />
+			android:onClick="addSomeone" />
 	</RelativeLayout>
 </com.hover.stax.views.StaxCardView>

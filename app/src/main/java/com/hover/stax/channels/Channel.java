@@ -17,6 +17,8 @@ import java.util.HashMap;
 @Entity(tableName = "channels")
 public class Channel {
 
+	public Channel() {}
+
 	public Channel(int _id, String addChannel) {
 		this.id = _id;
 		this.name = addChannel;
@@ -24,15 +26,6 @@ public class Channel {
 
 	public Channel(JSONObject jsonObject, String rootUrl) {
 		update(jsonObject, rootUrl);
-	}
-
-	public Channel(int id, String name, String countryAlpha2, String hniList, String primaryColorHex, String secondaryColorHex) {
-		this.id = id;
-		this.name = name;
-		this.countryAlpha2 = countryAlpha2;
-		this.hniList = hniList;
-		this.primaryColorHex = primaryColorHex;
-		this.secondaryColorHex = secondaryColorHex;
 	}
 
 	Channel update(JSONObject jsonObject, String rootUrl) {
@@ -43,6 +36,7 @@ public class Channel {
 			currency = jsonObject.getString("currency");
 			hniList = jsonObject.getString("hni_list");
 			logoUrl = rootUrl + jsonObject.getString("logo_url");
+			institutionId = jsonObject.getInt("institution_id");
 			primaryColorHex = jsonObject.getString("primary_color_hex");
 			secondaryColorHex = jsonObject.getString("secondary_color_hex");
 		} catch (JSONException e) {
@@ -74,6 +68,10 @@ public class Channel {
 	@NonNull
 	@ColumnInfo(name = "logo_url")
 	public String logoUrl;
+
+	@NonNull
+	@ColumnInfo(name = "institution_id")
+	public int institutionId;
 
 	@NonNull
 	@ColumnInfo(name = "primary_color_hex")

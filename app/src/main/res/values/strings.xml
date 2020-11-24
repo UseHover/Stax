@@ -180,6 +180,7 @@
 	<string name="note_label_opt">Enter note (optional)</string>
 	<string name="acct_label">Account</string>
 	<string name="recipient_label">To</string>
+	<string name="descrip_multcontacts">%1$d contacts</string>
 	<string name="descrip_airtime_sent">%1$s sent airtime to %2$s</string>
 	<string name="descrip_transfer_sent">from %1$s to %2$s</string>
 	<string name="fab_transfernow">Transfer now</string>

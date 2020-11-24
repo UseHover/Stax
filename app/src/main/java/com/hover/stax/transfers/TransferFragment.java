@@ -6,11 +6,9 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethod;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -23,12 +21,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
+import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.contacts.StaxContactArrayAdapter;
 import com.hover.stax.database.Constants;
 import com.hover.stax.utils.StagedFragment;
 import com.hover.stax.utils.Utils;
@@ -42,10 +41,10 @@ public class TransferFragment extends StagedFragment {
 
 	private RelativeLayout recipientEntry;
 	private TextInputLayout recipientLabel, amountEntry;
-	private EditText amountInput, recipientInput, noteInput;
+	private EditText amountInput, noteInput;
 	private RadioGroup channelRadioGroup;
 	private TextView actionLabel;
-	private AutoCompleteTextView actionDropdown;
+	private AutoCompleteTextView actionDropdown, recipientAutocomplete;
 	private ImageButton contactButton;
 
 	private TextView amountValue, channelValue, actionValue, recipientValue, noteValue;
@@ -74,8 +73,7 @@ public class TransferFragment extends StagedFragment {
 		actionDropdown = root.findViewById(R.id.networkDropdown);
 		recipientEntry = root.findViewById(R.id.recipientEntry);
 		recipientLabel = root.findViewById(R.id.recipientLabel);
-		recipientInput = root.findViewById(R.id.recipient_input);
-		recipientInput.setText(transferViewModel.getRecipient().getValue());
+		recipientAutocomplete = root.findViewById(R.id.recipient_autocomplete);
 		contactButton = root.findViewById(R.id.contact_button);
 		noteInput = root.findViewById(R.id.note_input);
 		noteInput.setText(transferViewModel.getNote().getValue());
@@ -94,7 +92,7 @@ public class TransferFragment extends StagedFragment {
 		transferViewModel.getStage().observe(getViewLifecycleOwner(), stage -> {
 			switch ((TransferStage) stage) {
 				case AMOUNT: amountInput.requestFocus(); break;
-				case RECIPIENT: recipientInput.requestFocus(); break;
+				case RECIPIENT: recipientAutocomplete.showDropDown(); recipientAutocomplete.requestFocus(); break;
 				case NOTE: noteInput.requestFocus(); break;
 			}
 		});
@@ -105,7 +103,16 @@ public class TransferFragment extends StagedFragment {
 			amountEntry.setErrorIconDrawable(0);
 		});
 
-		transferViewModel.getRecipient().observe(getViewLifecycleOwner(), recipient -> recipientValue.setText(recipient));
+		transferViewModel.getRecentContacts().observe(getViewLifecycleOwner(), contacts -> {
+			ArrayAdapter<StaxContact> adapter = new StaxContactArrayAdapter(requireActivity(), contacts);
+			recipientAutocomplete.setAdapter(adapter);
+			if (transferViewModel.getContact().getValue() != null)
+				recipientAutocomplete.setText(transferViewModel.getContact().getValue().toString());
+		});
+		transferViewModel.getContact().observe(getViewLifecycleOwner(), contact -> {
+			recipientValue.setText(contact.toString());
+		});
+
 		transferViewModel.getRecipientError().observe(getViewLifecycleOwner(), recipientError -> {
 			recipientLabel.setError((recipientError != null ? getString(recipientError) : null));
 			recipientLabel.setErrorIconDrawable(0);
@@ -115,9 +122,7 @@ public class TransferFragment extends StagedFragment {
 
 		transferViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
 			Log.e(TAG, "actions: " + actions.size());
-			if (actions == null || actions.size() == 0){
-				return;
-			}
+			if (actions == null || actions.size() == 0) return;
 			ArrayAdapter<Action> adapter = new ArrayAdapter<>(requireActivity(), R.layout.stax_spinner_item, actions);
 			actionDropdown.setAdapter(adapter);
 			actionDropdown.setText(actionDropdown.getAdapter().getItem(0).toString(), false);
@@ -143,21 +148,16 @@ public class TransferFragment extends StagedFragment {
 			if (channels != null) createChannelSelector(channels);
 		});
 
-		transferViewModel.forceGetActionName().observe(getViewLifecycleOwner(), actionName-> {
-			if(actionName!=null) { actionValue.setText(actionName); }
-			else { if(getContext()!=null) actionValue.setText(getContext().getResources().getString(R.string.loading)); }
-		});
-
 		transferViewModel.getCtssLiveData().observe(getViewLifecycleOwner(), ctss-> {
 			if(ctss!=null) {
 				amountInput.setText(ctss.getAmountInput());
 				if(!ctss.isAmountClickable()) amountInput.setTextColor(getResources().getColor(R.color.grey));
 
-				recipientInput.setText(ctss.getRecipientInput());
-				recipientInput.setTextColor(getResources().getColor(R.color.grey));
+				recipientAutocomplete.setText(ctss.getRecipientInput());
+				recipientAutocomplete.setTextColor(getResources().getColor(R.color.grey));
 
 				disableEditText(amountInput);
-				disableEditText(recipientInput);
+				disableEditText(recipientAutocomplete);
 
 				disableView(actionDropdown, ctss.isActionRadioClickable);
 				disableView(contactButton, ctss.isRecipientClickable);
@@ -204,8 +204,13 @@ public class TransferFragment extends StagedFragment {
 			actionLabel.setText(action.getLabel());
 		});
 
+		recipientAutocomplete.setOnItemClickListener((adapterView, view, pos, id) -> {
+			StaxContact contact = (StaxContact) adapterView.getItemAtPosition(pos);
+			transferViewModel.setContact(contact);
+		});
+
 		amountInput.addTextChangedListener(amountWatcher);
-		recipientInput.addTextChangedListener(recipientWatcher);
+		recipientAutocomplete.addTextChangedListener(recipientWatcher);
 		contactButton.setOnClickListener(view -> contactPicker(Constants.GET_CONTACT, view.getContext()));
 		noteInput.addTextChangedListener(noteWatcher);
 	}
@@ -218,8 +223,9 @@ public class TransferFragment extends StagedFragment {
 		}
 	}
 
-	protected void onContactSelected(int requestCode, StaxContactModel contact) {
-		recipientInput.setText(Utils.normalizePhoneNumber(contact.getPhoneNumber(), transferViewModel.getActiveChannel().getValue().countryAlpha2));
+	protected void onContactSelected(int requestCode, StaxContact contact) {
+		transferViewModel.setContact(contact);
+		recipientAutocomplete.setText(contact.toString());
 	}
 
 	private TextWatcher amountWatcher = new TextWatcher() {

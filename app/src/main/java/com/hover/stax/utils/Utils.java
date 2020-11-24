@@ -75,19 +75,6 @@ public class Utils {
 		return Double.parseDouble(amount.replaceAll(",", ""));
 	}
 
-	public static String normalizePhoneNumber(String value, String country) {
-		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-		String number = value;
-		try {
-			Phonenumber.PhoneNumber phone = phoneUtil.parse(value, country);
-			number = phoneUtil.formatNumberForMobileDialing(phone, country, false);
-			Log.e(TAG, "Normalized number: " + number);
-		} catch (NumberParseException e) {
-			Log.e(TAG, "error formating number", e);
-		}
-		return number;
-	}
-
 	public static boolean usingDebugVariant(Context c) {
 		return (Boolean) getBuildConfigValue(c, "DEBUG");
 	}

@@ -13,19 +13,20 @@ import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.Constants;
 import com.hover.stax.requests.Request;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.StagedViewModel;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.paymentLinkCryptography.Encryption;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.hover.stax.transfers.TransferStage.REVIEW;
 import static com.hover.stax.transfers.TransferStage.REVIEW_DIRECT;
 
 public class TransferViewModel extends StagedViewModel {
+	final private String TAG = "TransferViewModel";
 
 	private String type = Action.P2P;
 	private LiveData<List<Channel>> selectedChannels = new MutableLiveData<>();
@@ -36,12 +37,12 @@ public class TransferViewModel extends StagedViewModel {
 	private MediatorLiveData<Boolean> ischannelRelationshipExistMediator = new MediatorLiveData<>();
 
 	private MutableLiveData<String> amount = new MutableLiveData<>();
-	private MutableLiveData<String> activeActionName = new MutableLiveData<>();
-	private MutableLiveData<String> recipient = new MutableLiveData<>();
+	private MutableLiveData<StaxContact> contact = new MutableLiveData<>();
 	private MutableLiveData<String> note = new MutableLiveData<>();
 
 	private MutableLiveData<Integer> amountError = new MutableLiveData<>();
 	private MutableLiveData<Integer> recipientError = new MutableLiveData<>();
+
 	private MutableLiveData<Boolean> ischannelRelationshipExist = new MutableLiveData<>();
 	private MutableLiveData<CustomizedTransferSummarySettings>ctssLiveData = new MutableLiveData<>();
 
@@ -59,7 +60,6 @@ public class TransferViewModel extends StagedViewModel {
 		activeAction.addSource(filteredActions, this::findActiveAction);
 		ischannelRelationshipExistMediator.addSource(filteredActions, this::checkIfRelationshipExistForStaxLinkSake);
 	}
-
 
 	void setType(String transaction_type) {
 		type = transaction_type;
@@ -111,19 +111,16 @@ public class TransferViewModel extends StagedViewModel {
 	}
 
 	public void checkIfRelationshipExistForStaxLinkSake(List<Action> filteredActions) {
-		if(isFromStaxLink) {
+		if (isFromStaxLink) {
 			//CHECK IF THE SENDER'S SELECTED CHANNEL HAS AN ACTION WITH A LINK TO THE RECIPIENT'S CHANNEL ID.
-			if(filteredActions !=null) {
-				if(filteredActions.size() == 0) {
-					//Spent hours trying to debug this, for whatever reason, the actions kept returning empty until when reloaded
-					//Or when user clicks on another channel radio button option.
-					activeActionName.postValue(null);
+			if (filteredActions != null) {
+				if (filteredActions.size() == 0) {
 					new Thread(()-> {
 						List<Action> acts = repo.getActions(activeChannel.getValue().id, type);
 						checkIfRelationshipExistForStaxLinkSake(acts);
 					}).start();
 
-				}else {
+				} else {
 					boolean linkChecked = false;
 					for (Action action : filteredActions) {
 						if (action.channel_id == channelIdFromStaxLink) {
@@ -195,24 +192,27 @@ public class TransferViewModel extends StagedViewModel {
 		return amountError;
 	}
 
-	void setRecipient(String r) {
-		recipient.postValue(r);
+	void setContact(String contact_ids) {
+		new Thread(() -> contact.postValue(repo.getContacts(contact_ids.split(",")).get(0))).start();
 	}
 
-	LiveData<String> getRecipient() {
-		if (recipient == null) {
-			recipient = new MutableLiveData<>();
-		}
-		return recipient;
+	void setContact(StaxContact c) {
+		contact.setValue(c);
 	}
+
+	LiveData<StaxContact> getContact() {
+		if (contact == null) { contact = new MutableLiveData<>(); }
+		return contact;
+	}
+
+	void setRecipient(String r) {
+		if (contact.getValue() != null && contact.getValue().toString().equals(r)) { return; }
+		contact.setValue(new StaxContact(r));
+	}
+
 	LiveData<Integer> getRecipientError() {
 		if (recipientError == null) { recipientError = new MutableLiveData<>(); }
 		return recipientError;
-	}
-
-
-	LiveData<String> forceGetActionName() {
-		return  activeActionName;
 	}
 
 	void setNote(String r) {
@@ -256,6 +256,11 @@ public class TransferViewModel extends StagedViewModel {
 		return filteredActions.getValue() != null && filteredActions.getValue().size() > 0 && (filteredActions.getValue().size() > 1 || filteredActions.getValue().get(0).hasDiffToInstitution());
 	}
 
+	boolean hasActionsLoaded() {
+		return filteredActions.getValue() != null && filteredActions.getValue().size() > 0 &&
+			(filteredActions.getValue().size() > 1 || (activeAction.getValue() != null && activeAction.getValue().hasToInstitution()));
+	}
+
 	boolean stageValidates() {
 		if (stage.getValue() == null) return false;
 		switch ((TransferStage) stage.getValue()) {
@@ -268,14 +273,14 @@ public class TransferViewModel extends StagedViewModel {
 				break;
 
 			case FROM_ACCOUNT:
-				if(isFromStaxLink && (ischannelRelationshipExist.getValue() ==null || !ischannelRelationshipExist.getValue())) {
-					if(activeActionName.getValue() != null) ischannelRelationshipExist.postValue(false);
+				if (isFromStaxLink && (ischannelRelationshipExist.getValue() ==null || !ischannelRelationshipExist.getValue())) {
+					if (activeAction.getValue() != null) ischannelRelationshipExist.postValue(false);
 					return false;
 				}
 				break;
 
 			case RECIPIENT:
-				if (recipient.getValue() == null || recipient.getValue().isEmpty()) {
+				if (contact.getValue() == null || contact.getValue().phoneNumber.isEmpty()) {
 					recipientError.setValue(R.string.recipient_fielderror);
 					return false;
 				} else
@@ -313,12 +318,6 @@ public class TransferViewModel extends StagedViewModel {
 						goToNextStage(REVIEW);
 					}
 					ctssLiveData.postValue(ctss);
-
-					new Thread(()->{
-						Channel channel = repo.getChannel(channel_id);
-						activeActionName.postValue(channel.name);
-					}).start();
-
 				}
 
 				@Override
@@ -338,14 +337,14 @@ public class TransferViewModel extends StagedViewModel {
 		setType(s.type);
 		setActiveChannel(s.channel_id);
 		setAmount(s.amount);
-		setRecipient(s.recipient);
+		setContact(s.recipient_ids);
 		setNote(s.note);
 		setStage(TransferStage.REVIEW_DIRECT);
 	}
 
 	public void schedule() {
 		Schedule s = new Schedule(activeAction.getValue(), futureDate.getValue(), repeatSaved.getValue(), frequency.getValue(), endDate.getValue(),
-			recipient.getValue(), amount.getValue(), note.getValue(), getApplication());
+			contact.getValue(), amount.getValue(), note.getValue(), getApplication());
 		saveSchedule(s);
 	}
 
@@ -356,6 +355,16 @@ public class TransferViewModel extends StagedViewModel {
 				s.complete = true;
 				repo.update(s);
 			}
+		}
+	}
+
+	public void saveContact() {
+		if (contact.getValue() != null) {
+			new Thread(() -> {
+				StaxContact existing = repo.getContact(contact.getValue().id);
+				if (existing == null || !existing.equals(contact.getValue()))
+					repo.insert(contact.getValue());
+			}).start();
 		}
 	}
 }

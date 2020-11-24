@@ -31,6 +31,21 @@
 			</intent-filter>
 		</activity>
 
+		<activity android:name=".SplashScreenForStaxLinkActivity"  android:theme="@style/StaxTheme">
+			<intent-filter android:autoVerify="true">
+				<action android:name="android.intent.action.VIEW" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data
+					android:scheme="https"
+					android:host="stax.me"
+					android:pathPattern="/pay" />
+			</intent-filter>
+
+		</activity>
+
 		<activity
 		    android:name=".home.MainActivity"
 		    android:label="@string/app_name"
@@ -47,21 +62,6 @@
 		    android:name=".transfers.TransferActivity"
 		    android:theme="@style/StaxTheme"
 		    android:windowSoftInputMode="stateVisible|adjustResize">
-
-		</activity>
-
-		<activity android:name=".SplashScreenForStaxLinkActivity"  android:theme="@style/StaxTheme">
-			<intent-filter android:autoVerify="true">
-				<action android:name="android.intent.action.VIEW" />
-
-				<category android:name="android.intent.category.DEFAULT" />
-				<category android:name="android.intent.category.BROWSABLE" />
-
-				<data
-				    android:scheme="https"
-				    android:host="stax.me"
-				    android:pathPattern="/pay" />
-			</intent-filter>
 
 		</activity>
 

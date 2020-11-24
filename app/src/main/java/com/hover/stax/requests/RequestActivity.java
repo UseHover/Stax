@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -135,8 +134,8 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 		Intent sendIntent = new Intent();
 		sendIntent.setAction(Intent.ACTION_VIEW);
 		sendIntent.setData(Uri.parse("smsto:" + requestViewModel.generateRecipientString()));
-		sendIntent.putExtra(Intent.EXTRA_TEXT, requestViewModel.generateSMS(this));
-		sendIntent.putExtra("sms_body", requestViewModel.generateSMS(this));
+		sendIntent.putExtra(Intent.EXTRA_TEXT, requestViewModel.generateSMS());
+		sendIntent.putExtra("sms_body", requestViewModel.generateSMS());
 		startActivityForResult(Intent.createChooser(sendIntent, "Request"), Constants.SMS);
 	}
 
@@ -145,7 +144,7 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 		sendIntent.setAction(Intent.ACTION_VIEW);
 
 		// FIXME: Needs to use international number format with no +
-		String whatsapp ="https://api.whatsapp.com/send?phone="+ requestViewModel.generateRecipientString() +"&text=" + requestViewModel.generateSMS(this);
+		String whatsapp ="https://api.whatsapp.com/send?phone="+ requestViewModel.generateRecipientString() +"&text=" + requestViewModel.generateSMS();
 		sendIntent.setData(Uri.parse(whatsapp));
 		startActivityForResult(sendIntent, Constants.SMS);
 	}
@@ -168,8 +167,8 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 	private void setSummaryCard(@Nullable StagedViewModel.StagedEnum stage) {
 		findViewById(R.id.recipientRow).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 && requestViewModel.getAmount().getValue() != null ? View.VISIBLE : View.GONE);
-		findViewById(R.id.receiveAccountRow).setVisibility(stage.compare(RECEIVING_ACCOUNT_INFO) > 0 && requestViewModel.getActiveChannel().getValue() != null ? View.VISIBLE : View.GONE);
-		findViewById(R.id.receiveAccountNumberRow).setVisibility(stage.compare(RECEIVING_ACCOUNT_INFO) > 0 && requestViewModel.getReceivingAccountNumber().getValue() != null ? View.VISIBLE : View.GONE);
+		findViewById(R.id.requesteeChannelRow).setVisibility(stage.compare(RECEIVING_ACCOUNT_INFO) > 0 && requestViewModel.getActiveChannel().getValue() != null ? View.VISIBLE : View.GONE);
+		findViewById(R.id.requesteeNumberRow).setVisibility(stage.compare(RECEIVING_ACCOUNT_INFO) > 0 && requestViewModel.getRequesterNumber().getValue() != null ? View.VISIBLE : View.GONE);
 		findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && requestViewModel.getNote().getValue() != null && !requestViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
 		findViewById(R.id.btnRow).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
 	}
@@ -212,7 +211,7 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 	}
 
 	private void onFinished(int type) {
-		requestViewModel.saveToDatabase(this);
+		requestViewModel.saveToDatabase();
 		setResult(RESULT_OK, createSuccessIntent(type));
 		finish();
 	}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TwoLineListItem xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:minHeight="?attr/listPreferredItemHeight"
+	android:mode="twoLine"
+	android:paddingStart="?attr/listPreferredItemPaddingStart"
+	android:paddingEnd="?attr/listPreferredItemPaddingEnd"
+	android:layout_gravity="center_vertical"
+	android:gravity="center_vertical"
+	android:textColor="@drawable/spinner_state_selector"
+	android:background="?attr/selectableItemBackground" >
+
+	<TextView android:id="@+id/title"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="8dp"
+		android:textSize="@dimen/text_16" />
+
+	<TextView android:id="@+id/subtitle"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/title"
+		android:layout_alignStart="@id/title"
+		android:textSize="@dimen/text_13"
+		android:textColor="@color/darkGrey"
+		android:textAppearance="?attr/textAppearanceListItemSecondary"
+		android:visibility="gone" />
+
+</TwoLineListItem>

@@ -1,30 +1,24 @@
 package com.hover.stax.requests;
 
 import android.app.Application;
-import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.Constants;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.StagedViewModel;
 import com.hover.stax.utils.Utils;
-import com.hover.stax.utils.paymentLinkCryptography.Base64;
-import com.hover.stax.utils.paymentLinkCryptography.Encryption;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import io.sentry.Sentry;
 
 import static com.hover.stax.requests.RequestStage.*;
 
@@ -34,8 +28,9 @@ public class NewRequestViewModel extends StagedViewModel {
 	private LiveData<List<Channel>> selectedChannels = new MutableLiveData<>();
 	private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
 	private MutableLiveData<String> amount = new MutableLiveData<>();
-	private MutableLiveData<String> receivingAccountNumber = new MutableLiveData<>();
-	private MutableLiveData<List<String>> recipients = new MutableLiveData<>();
+
+	private MutableLiveData<String> requesterNumber = new MutableLiveData<>();
+	private MutableLiveData<List<StaxContact>> requestees = new MutableLiveData<>();
 	private MutableLiveData<String> note = new MutableLiveData<>();
 
 	private MutableLiveData<Integer> recipientError = new MutableLiveData<>();
@@ -49,7 +44,7 @@ public class NewRequestViewModel extends StagedViewModel {
 		selectedChannels = repo.getSelected();
 		activeChannel.addSource(selectedChannels, this::findActiveChannel);
 		stage.setValue(RequestStage.RECIPIENT);
-		recipients.setValue(new ArrayList<>(Collections.singletonList("")));
+		requestees.setValue(new ArrayList<>(Collections.singletonList(new StaxContact(""))));
 		requestStarted.setValue(false);
 	}
 
@@ -86,34 +81,34 @@ public class NewRequestViewModel extends StagedViewModel {
 		return amount;
 	}
 
-	void setReceivingAccountNumber(String number) { receivingAccountNumber.postValue(number); }
-	LiveData<String> getReceivingAccountNumber() {
-		if(receivingAccountNumber ==null) {
-			receivingAccountNumber = new MutableLiveData<>();
+	void setRequesterNumber(String number) { requesterNumber.postValue(number); }
+	LiveData<String> getRequesterNumber() {
+		if(requesterNumber ==null) {
+			requesterNumber = new MutableLiveData<>();
 		}
-		return receivingAccountNumber;
+		return requesterNumber;
 	}
 
-	public void onUpdate(int pos, String recipient) {
-		List<String> rs = recipients.getValue() != null ? recipients.getValue() : new ArrayList<>();
-		rs.set(pos, recipient);
-		recipients.postValue(rs);
+	public void onUpdate(int pos, StaxContact contact) {
+		List<StaxContact> cs = requestees.getValue() != null ? requestees.getValue() : new ArrayList<>();
+		cs.set(pos, contact);
+		requestees.postValue(cs);
 	}
 
-	void addRecipient(String recipient) {
-		List<String> rList = recipients.getValue() != null ? recipients.getValue() : new ArrayList<>();
-		rList.add(recipient);
-		recipients.postValue(rList);
+	void addRecipient(StaxContact contact) {
+		List<StaxContact> rList = requestees.getValue() != null ? requestees.getValue() : new ArrayList<>();
+		rList.add(contact);
+		requestees.postValue(rList);
 	}
 
-	LiveData<List<String>> getRecipients() {
-		if (recipients == null) {
-			recipients = new MutableLiveData<>();
+	LiveData<List<StaxContact>> getRecipients() {
+		if (requestees == null) {
+			requestees = new MutableLiveData<>();
 		}
-		return recipients;
+		return requestees;
 	}
 
-	void resetRecipients() { recipients.setValue(new ArrayList<>()); }
+	void resetRecipients() { requestees.setValue(new ArrayList<>()); }
 
 	LiveData<Integer> getRecipientError() {
 		if (recipientError == null) {
@@ -152,7 +147,7 @@ public class NewRequestViewModel extends StagedViewModel {
 	public void setSchedule(Schedule s) {
 		schedule.setValue(s);
 		setAmount(s.amount);
-		recipients.setValue(new ArrayList<>(Collections.singletonList(s.recipient)));
+		requestees.setValue(repo.getContacts(s.recipient_ids.split(",")));
 		setNote(s.note);
 		setStage(REVIEW_DIRECT);
 	}
@@ -161,17 +156,17 @@ public class NewRequestViewModel extends StagedViewModel {
 		if (stage.getValue() == null) return false;
 		switch ((RequestStage) stage.getValue()) {
 			case RECIPIENT:
-				if (recipients.getValue() == null || recipients.getValue().size() == 0 || recipients.getValue().get(0).isEmpty()) {
+				if (requestees.getValue() == null || requestees.getValue().size() == 0 || requestees.getValue().get(0).phoneNumber.isEmpty()) {
 					recipientError.setValue(R.string.recipient_fielderror);
 					return false;
 				} else {
 					recipientError.setValue(null);
-					List<String> rs = new ArrayList<>();
-					for (String r: recipients.getValue()) {
-						if (r != null && !r.isEmpty())
-							rs.add(r);
+					List<StaxContact> cs = new ArrayList<>();
+					for (StaxContact r: requestees.getValue()) {
+						if (r != null && !r.phoneNumber.isEmpty())
+							cs.add(r);
 					}
-					recipients.postValue(rs);
+					requestees.postValue(cs);
 				}
 				break;
 
@@ -181,7 +176,7 @@ public class NewRequestViewModel extends StagedViewModel {
 					return false;
 				}else receivingAccountChoiceError.setValue(null);
 
-				if(receivingAccountNumber.getValue() == null || receivingAccountNumber.getValue().length()<5) {
+				if(requesterNumber.getValue() == null || requesterNumber.getValue().isEmpty()) {
 					receivingAccountNumberError.setValue(R.string.receiving_account_number_fielderror);
 					return false;
 				}else receivingAccountNumberError.setValue(null);
@@ -192,33 +187,32 @@ public class NewRequestViewModel extends StagedViewModel {
 
 	String generateRecipientString() {
 		StringBuilder phones = new StringBuilder();
-		List<String> rs = recipients.getValue();
+		List<StaxContact> rs = requestees.getValue();
 		for (int r = 0; r < rs.size(); r++) {
-			phones.append(rs.get(r));
-			if (rs.size() > r + 1) phones.append(",");
+			if (phones.length() > 0) phones.append(",");
+			phones.append(rs.get(r).phoneNumber);
 		}
 		return phones.toString();
 	}
 
-	String generateSMS(Context c) {
-		String amountString = amount.getValue() != null ? c.getString(R.string.sms_amount_detail, Utils.formatAmount(amount.getValue())) : "";
-		String noteString = note.getValue() != null ? c.getString(R.string.sms_note_detail, note.getValue()) : "";
+	String generateSMS() {
+		String amountString = amount.getValue() != null ? getApplication().getString(R.string.sms_amount_detail, Utils.formatAmount(amount.getValue())) : "";
+		String noteString = note.getValue() != null ? getApplication().getString(R.string.sms_note_detail, note.getValue()) : "";
 
 		String amountNoFormat = amount.getValue() != null ? amount.getValue() : "0.00";
 		int channel_id = activeChannel.getValue() !=null ? activeChannel.getValue().id : 0;
-		String accountNumber= receivingAccountNumber.getValue() !=null ? receivingAccountNumber.getValue().trim() : "";
+		String accountNumber= requesterNumber.getValue() !=null ? requesterNumber.getValue().trim() : "";
 
-		String paymentLink = Request.generateStaxLink(amountNoFormat, channel_id, accountNumber, c );
+		String paymentLink = Request.generateStaxLink(amountNoFormat, channel_id, accountNumber, getApplication());
 
-		if(paymentLink !=null) return c.getString(R.string.sms_request_template_with_link, amountString, noteString, paymentLink);
-		else return c.getString(R.string.sms_request_template_no_link, amountString, noteString);
+		if (paymentLink !=null) return getApplication().getString(R.string.sms_request_template_with_link, amountString, noteString, paymentLink);
+		else return getApplication().getString(R.string.sms_request_template_no_link, amountString, noteString);
 	}
 
-
-
-	void saveToDatabase(Context c) {
-		for (String recipient : recipients.getValue())
-			repo.insert(new Request(recipient, amount.getValue(), note.getValue(), getActiveChannel().getValue().id, getReceivingAccountNumber().getValue()));
+	void saveToDatabase() {
+		saveContacts();
+		for (StaxContact recipient : requestees.getValue())
+			repo.insert(new Request(recipient, amount.getValue(), note.getValue(), getRequesterNumber().getValue(), getActiveChannel().getValue().institutionId, getApplication()));
 
 		if (repeatSaved.getValue() != null && repeatSaved.getValue()) {
 			schedule();
@@ -241,7 +235,19 @@ public class NewRequestViewModel extends StagedViewModel {
 
 	public void schedule() {
 		Schedule s = new Schedule(futureDate.getValue(), repeatSaved.getValue(), frequency.getValue(), endDate.getValue(),
-			generateRecipientString(), amount.getValue(), note.getValue(), getApplication());
+			requestees.getValue(), amount.getValue(), note.getValue(), getApplication());
 		saveSchedule(s);
+	}
+
+	public void saveContacts() {
+		if (requestees.getValue() != null) {
+			new Thread(() -> {
+				for (StaxContact c: requestees.getValue()) {
+					StaxContact existing = repo.getContact(c.id);
+					if (existing == null || !existing.equals(c))
+						repo.insert(c);
+				}
+			}).start();
+		}
 	}
 }
