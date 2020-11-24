@@ -1,103 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tool="http://schemas.android.com/tools"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tool="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-    android:orientation="vertical"
-    tool:context = ".security.PinUpdateFragment" >
+	tool:context = ".security.PinUpdateFragment">
 
-	<com.hover.stax.views.StaxCardView
-		android:id="@+id/choice_card"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    app:showBack="true"
-		app:title="PIN options" >
-
-		<RelativeLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/margin_55">
-
-			<androidx.appcompat.widget.AppCompatButton
-				style="@style/StaxButton"
-				android:id="@+id/removeAcct"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/btn_removeacct"
-				android:layout_toStartOf="@id/divider"
-				android:backgroundTint="@color/bright_red"/>
-
-			<View android:id="@+id/divider"
-				android:layout_width="@dimen/margin_21"
-				android:layout_height="wrap_content"
-				android:background="@color/transparent"
-				android:layout_toStartOf="@+id/editBtn"/>
-
-			<androidx.appcompat.widget.AppCompatButton
-				android:id="@+id/editBtn"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/btn_editpin"
-				android:layout_alignParentEnd="true"
-				style="@style/StaxButton"/>
-		</RelativeLayout>
-	</com.hover.stax.views.StaxCardView>
-
-	<com.hover.stax.views.StaxCardView
-		android:id="@+id/edit_card"
+	<LinearLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:visibility="gone"
-		app:title="Edit PIN" >
+		android:layout_height="match_parent"
+	    android:orientation="vertical" >
 
-		<com.google.android.material.textfield.TextInputLayout
-		    android:id="@+id/pinEntry"
+		<com.hover.stax.views.StaxCardView
+			android:id="@+id/choice_card"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-		    android:hint="@string/editpin_label"
-		    style="@style/StaxLabeledInput">
+		    app:showBack="true"
+			app:title="PIN options" >
 
-			<com.google.android.material.textfield.TextInputEditText
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:padding="@dimen/margin_13"
-			    android:textSize="@dimen/text_21"
-			    android:textColor="@color/offWhite"
-			    android:textCursorDrawable="@null"
-			    android:inputType="numberPassword"
-			    android:drawablePadding="@dimen/margin_5"
-			    android:drawableStart="@drawable/ic_grey_circle"
-			    android:id="@+id/pin_input"/>
-		</com.google.android.material.textfield.TextInputLayout>
+			<RelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/margin_55">
 
-		<RelativeLayout
+				<androidx.appcompat.widget.AppCompatButton
+					style="@style/StaxButton"
+					android:id="@+id/removeAcct"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/btn_removeacct"
+					android:layout_toStartOf="@id/divider"
+					android:backgroundTint="@color/bright_red"/>
+
+				<View android:id="@+id/divider"
+					android:layout_width="@dimen/margin_21"
+					android:layout_height="wrap_content"
+					android:background="@color/transparent"
+					android:layout_toStartOf="@+id/editBtn"/>
+
+				<androidx.appcompat.widget.AppCompatButton
+					android:id="@+id/editBtn"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/btn_editpin"
+					android:layout_alignParentEnd="true"
+					style="@style/StaxButton"/>
+			</RelativeLayout>
+		</com.hover.stax.views.StaxCardView>
+
+		<com.hover.stax.views.StaxCardView
+			android:id="@+id/edit_card"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/margin_13">
+			android:visibility="gone"
+			app:title="Edit PIN" >
 
-			<androidx.appcompat.widget.AppCompatButton
-				android:id="@+id/cancelBtn"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/btn_cancel"
-				android:layout_toStartOf="@id/divider2"
-				style="@style/StaxButton"
-				android:background="@drawable/transparent_bg"/>
+			<com.google.android.material.textfield.TextInputLayout
+			    android:id="@+id/pinEntry"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:hint="@string/editpin_label"
+			    style="@style/StaxLabeledInput">
 
-			<View android:id="@+id/divider2"
-				android:layout_width="@dimen/margin_21"
-				android:layout_height="wrap_content"
-				android:background="@color/transparent"
-				android:layout_toStartOf="@+id/saveBtn"/>
+				<com.google.android.material.textfield.TextInputEditText
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:padding="@dimen/margin_13"
+				    android:textSize="@dimen/text_21"
+				    android:textColor="@color/offWhite"
+				    android:textCursorDrawable="@null"
+				    android:inputType="numberPassword"
+				    android:drawablePadding="@dimen/margin_5"
+				    android:drawableStart="@drawable/ic_grey_circle"
+				    android:id="@+id/pin_input"/>
+			</com.google.android.material.textfield.TextInputLayout>
 
-			<androidx.appcompat.widget.AppCompatButton
-				android:id="@+id/saveBtn"
-				android:layout_width="wrap_content"
+			<RelativeLayout
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:text="@string/btn_savepin"
-				android:layout_alignParentEnd="true"
-				style="@style/StaxButton" />
-		</RelativeLayout>
-	</com.hover.stax.views.StaxCardView>
-</LinearLayout>
+				android:layout_marginTop="@dimen/margin_13">
+
+				<androidx.appcompat.widget.AppCompatButton
+					android:id="@+id/cancelBtn"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/btn_cancel"
+					android:layout_toStartOf="@id/divider2"
+					style="@style/StaxButton"
+					android:background="@drawable/transparent_bg"/>
+
+				<View android:id="@+id/divider2"
+					android:layout_width="@dimen/margin_21"
+					android:layout_height="wrap_content"
+					android:background="@color/transparent"
+					android:layout_toStartOf="@+id/saveBtn"/>
+
+				<androidx.appcompat.widget.AppCompatButton
+					android:id="@+id/saveBtn"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/btn_savepin"
+					android:layout_alignParentEnd="true"
+					style="@style/StaxButton" />
+			</RelativeLayout>
+		</com.hover.stax.views.StaxCardView>
+	</LinearLayout>
+</androidx.core.widget.NestedScrollView>

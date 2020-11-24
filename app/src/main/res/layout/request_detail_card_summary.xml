@@ -11,19 +11,16 @@
 		android:layout_height="wrap_content"
 		android:layout_marginHorizontal="@dimen/margin_3">
 
-		<TableRow android:id="@+id/recipientRow" android:visibility="gone">
-
+		<TableRow android:id="@+id/recipientRow">
 			<TextView
 				android:text="@string/reqfrom_label"
-			    	android:fontFamily="font-normal"
+				android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
 			<LinearLayout android:id="@+id/recipientValueList"
 				android:orientation="vertical"
-				android:layout_weight="1">
-
-			</LinearLayout>
+				android:layout_weight="1" />
 		</TableRow>
 
 		<TableRow android:id="@+id/amountRow" android:layout_marginTop="@dimen/margin_21">

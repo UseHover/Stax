@@ -1,26 +1,32 @@
 package com.hover.stax.transfers;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.contacts.ContactDao;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.schedules.Schedule;
+import com.hover.stax.transactions.StaxTransaction;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.StagedViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.hover.stax.transfers.TransferStage.REVIEW;
 import static com.hover.stax.transfers.TransferStage.REVIEW_DIRECT;
 
 public class TransferViewModel extends StagedViewModel {
+	final private String TAG = "TransferViewModel";
 
 	private String type = Action.P2P;
 	private LiveData<List<Channel>> selectedChannels = new MutableLiveData<>();
@@ -30,7 +36,7 @@ public class TransferViewModel extends StagedViewModel {
 	private MediatorLiveData<Action> activeAction = new MediatorLiveData<>();
 
 	private MutableLiveData<String> amount = new MutableLiveData<>();
-	private MutableLiveData<String> recipient = new MutableLiveData<>();
+	private MutableLiveData<StaxContact> contact = new MutableLiveData<>();
 	private MutableLiveData<String> note = new MutableLiveData<>();
 
 	private MutableLiveData<Integer> amountError = new MutableLiveData<>();
@@ -139,16 +145,24 @@ public class TransferViewModel extends StagedViewModel {
 		return amountError;
 	}
 
-	void setRecipient(String r) {
-		recipient.postValue(r);
+	void setContact(String contact_ids) {
+		new Thread(() -> contact.postValue(repo.getContacts(contact_ids.split(",")).get(0))).start();
 	}
 
-	LiveData<String> getRecipient() {
-		if (recipient == null) {
-			recipient = new MutableLiveData<>();
-		}
-		return recipient;
+	void setContact(StaxContact c) {
+		contact.setValue(c);
 	}
+
+	LiveData<StaxContact> getContact() {
+		if (contact == null) { contact = new MutableLiveData<>(); }
+		return contact;
+	}
+
+	void setRecipient(String r) {
+		if (contact.getValue() != null && contact.getValue().toString().equals(r)) { return; }
+		contact.setValue(new StaxContact(r));
+	}
+
 	LiveData<Integer> getRecipientError() {
 		if (recipientError == null) { recipientError = new MutableLiveData<>(); }
 		return recipientError;
@@ -195,6 +209,11 @@ public class TransferViewModel extends StagedViewModel {
 		return filteredActions.getValue() != null && filteredActions.getValue().size() > 0 && (filteredActions.getValue().size() > 1 || filteredActions.getValue().get(0).hasDiffToInstitution());
 	}
 
+	boolean hasActionsLoaded() {
+		return filteredActions.getValue() != null && filteredActions.getValue().size() > 0 &&
+			(filteredActions.getValue().size() > 1 || (activeAction.getValue() != null && activeAction.getValue().hasToInstitution()));
+	}
+
 	boolean stageValidates() {
 		if (stage.getValue() == null) return false;
 		switch ((TransferStage) stage.getValue()) {
@@ -206,7 +225,7 @@ public class TransferViewModel extends StagedViewModel {
 					amountError.setValue(null);
 				break;
 			case RECIPIENT:
-				if (recipient.getValue() == null || recipient.getValue().isEmpty()) {
+				if (contact.getValue() == null || contact.getValue().phoneNumber.isEmpty()) {
 					recipientError.setValue(R.string.recipient_fielderror);
 					return false;
 				} else
@@ -223,14 +242,14 @@ public class TransferViewModel extends StagedViewModel {
 		setType(s.type);
 		setActiveChannel(s.channel_id);
 		setAmount(s.amount);
-		setRecipient(s.recipient);
+		setContact(s.recipient_ids);
 		setNote(s.note);
 		setStage(TransferStage.REVIEW_DIRECT);
 	}
 
 	public void schedule() {
 		Schedule s = new Schedule(activeAction.getValue(), futureDate.getValue(), repeatSaved.getValue(), frequency.getValue(), endDate.getValue(),
-			recipient.getValue(), amount.getValue(), note.getValue(), getApplication());
+			contact.getValue(), amount.getValue(), note.getValue(), getApplication());
 		saveSchedule(s);
 	}
 
@@ -241,6 +260,16 @@ public class TransferViewModel extends StagedViewModel {
 				s.complete = true;
 				repo.update(s);
 			}
+		}
+	}
+
+	public void saveContact() {
+		if (contact.getValue() != null) {
+			new Thread(() -> {
+				StaxContact existing = repo.getContact(contact.getValue().id);
+				if (existing == null || !existing.equals(contact.getValue()))
+					repo.insert(contact.getValue());
+			}).start();
 		}
 	}
 }

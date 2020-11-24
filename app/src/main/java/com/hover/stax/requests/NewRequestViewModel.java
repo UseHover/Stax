@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.hover.stax.R;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.Constants;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.utils.DateUtils;
@@ -25,7 +26,7 @@ public class NewRequestViewModel extends StagedViewModel {
 	private String type = Constants.REQUEST_TYPE;
 
 	private MutableLiveData<String> amount = new MutableLiveData<>();
-	private MutableLiveData<List<String>> recipients = new MutableLiveData<>();
+	private MutableLiveData<List<StaxContact>> recipients = new MutableLiveData<>();
 	private MutableLiveData<String> note = new MutableLiveData<>();
 
 	private MutableLiveData<Integer> recipientError = new MutableLiveData<>();
@@ -35,7 +36,7 @@ public class NewRequestViewModel extends StagedViewModel {
 	public NewRequestViewModel(@NonNull Application application) {
 		super(application);
 		stage.setValue(RequestStage.RECIPIENT);
-		recipients.setValue(new ArrayList<>(Collections.singletonList("")));
+		recipients.setValue(new ArrayList<>(Collections.singletonList(new StaxContact(""))));
 		requestStarted.setValue(false);
 	}
 
@@ -50,19 +51,19 @@ public class NewRequestViewModel extends StagedViewModel {
 		return amount;
 	}
 
-	public void onUpdate(int pos, String recipient) {
-		List<String> rs = recipients.getValue() != null ? recipients.getValue() : new ArrayList<>();
-		rs.set(pos, recipient);
-		recipients.postValue(rs);
+	public void onUpdate(int pos, StaxContact contact) {
+		List<StaxContact> cs = recipients.getValue() != null ? recipients.getValue() : new ArrayList<>();
+		cs.set(pos, contact);
+		recipients.postValue(cs);
 	}
 
-	void addRecipient(String recipient) {
-		List<String> rList = recipients.getValue() != null ? recipients.getValue() : new ArrayList<>();
-		rList.add(recipient);
+	void addRecipient(StaxContact contact) {
+		List<StaxContact> rList = recipients.getValue() != null ? recipients.getValue() : new ArrayList<>();
+		rList.add(contact);
 		recipients.postValue(rList);
 	}
 
-	LiveData<List<String>> getRecipients() {
+	LiveData<List<StaxContact>> getRecipients() {
 		if (recipients == null) {
 			recipients = new MutableLiveData<>();
 		}
@@ -95,7 +96,7 @@ public class NewRequestViewModel extends StagedViewModel {
 	public void setSchedule(Schedule s) {
 		schedule.setValue(s);
 		setAmount(s.amount);
-		recipients.setValue(new ArrayList<>(Collections.singletonList(s.recipient)));
+		recipients.setValue(repo.getContacts(s.recipient_ids.split(",")));
 		setNote(s.note);
 		setStage(REVIEW_DIRECT);
 	}
@@ -104,17 +105,17 @@ public class NewRequestViewModel extends StagedViewModel {
 		if (stage.getValue() == null) return false;
 		switch ((RequestStage) stage.getValue()) {
 			case RECIPIENT:
-				if (recipients.getValue() == null || recipients.getValue().size() == 0 || recipients.getValue().get(0).isEmpty()) {
+				if (recipients.getValue() == null || recipients.getValue().size() == 0 || recipients.getValue().get(0).phoneNumber.isEmpty()) {
 					recipientError.setValue(R.string.recipient_fielderror);
 					return false;
 				} else {
 					recipientError.setValue(null);
-					List<String> rs = new ArrayList<>();
-					for (String r: recipients.getValue()) {
-						if (r != null && !r.isEmpty())
-							rs.add(r);
+					List<StaxContact> cs = new ArrayList<>();
+					for (StaxContact r: recipients.getValue()) {
+						if (r != null && !r.phoneNumber.isEmpty())
+							cs.add(r);
 					}
-					recipients.postValue(rs);
+					recipients.postValue(cs);
 				}
 				break;
 		}
@@ -123,10 +124,10 @@ public class NewRequestViewModel extends StagedViewModel {
 
 	String generateRecipientString() {
 		StringBuilder phones = new StringBuilder();
-		List<String> rs = recipients.getValue();
+		List<StaxContact> rs = recipients.getValue();
 		for (int r = 0; r < rs.size(); r++) {
-			phones.append(rs.get(r));
-			if (rs.size() > r + 1) phones.append(",");
+			if (phones.length() > 0) phones.append(",");
+			phones.append(rs.get(r).phoneNumber);
 		}
 		return phones.toString();
 	}
@@ -138,8 +139,10 @@ public class NewRequestViewModel extends StagedViewModel {
 	}
 
 	void saveToDatabase(Context c) {
-		for (String recipient : recipients.getValue())
-			repo.insert(new Request(recipient, amount.getValue(), note.getValue()));
+		saveContacts();
+		for (StaxContact recipient : recipients.getValue()) {
+			repo.insert(new Request(recipient, amount.getValue(), note.getValue(), getApplication()));
+		}
 
 		if (repeatSaved.getValue() != null && repeatSaved.getValue()) {
 			schedule();
@@ -162,7 +165,19 @@ public class NewRequestViewModel extends StagedViewModel {
 
 	public void schedule() {
 		Schedule s = new Schedule(futureDate.getValue(), repeatSaved.getValue(), frequency.getValue(), endDate.getValue(),
-			generateRecipientString(), amount.getValue(), note.getValue(), getApplication());
+			recipients.getValue(), amount.getValue(), note.getValue(), getApplication());
 		saveSchedule(s);
+	}
+
+	public void saveContacts() {
+		if (recipients.getValue() != null) {
+			new Thread(() -> {
+				for (StaxContact c: recipients.getValue()) {
+					StaxContact existing = repo.getContact(c.id);
+					if (existing == null || !existing.equals(c))
+						repo.insert(c);
+				}
+			}).start();
+		}
 	}
 }

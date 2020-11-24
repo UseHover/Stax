@@ -2,13 +2,19 @@ package com.hover.stax.database;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionDao;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
+import com.hover.stax.contacts.ContactDao;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.requests.Request;
 import com.hover.stax.requests.RequestDao;
 import com.hover.stax.schedules.Schedule;
@@ -27,6 +33,7 @@ public class DatabaseRepo {
 	private ScheduleDao scheduleDao;
 	private SimDao simDao;
 	private TransactionDao transactionDao;
+	private ContactDao contactDao;
 
 	private LiveData<List<Channel>> allChannels;
 	private LiveData<List<Channel>> selectedChannels;
@@ -35,6 +42,7 @@ public class DatabaseRepo {
 		AppDatabase db = AppDatabase.getInstance(application);
 		channelDao = db.channelDao();
 		transactionDao = db.transactionDao();
+		contactDao = db.contactDao();
 		requestDao = db.requestDao();
 		scheduleDao = db.scheduleDao();
 
@@ -55,7 +63,7 @@ public class DatabaseRepo {
 		return channelDao.getLiveChannel(id);
 	}
 
-	public LiveData<List<Channel>> getAll() {
+	public LiveData<List<Channel>> getAllChannels() {
 		return allChannels;
 	}
 
@@ -112,12 +120,39 @@ public class DatabaseRepo {
 		return transactionDao.getTransaction(uuid);
 	}
 
-	public void insert(StaxTransaction transaction) {
-		AppDatabase.databaseWriteExecutor.execute(() -> transactionDao.insert(transaction));
+	public void insertOrUpdate(Intent intent, Context c) {
+		AppDatabase.databaseWriteExecutor.execute(() -> {
+			try {
+				StaxTransaction t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID));
+				StaxContact contact = intent.hasExtra(StaxContact.ID_KEY) ? getContact(intent.getStringExtra(StaxContact.ID_KEY)) : null;
+				Action a = intent.hasExtra(Action.ID_KEY) ? getAction(intent.getStringExtra(Action.ID_KEY)) : null;
+
+				if (t == null) {
+					t = new StaxTransaction(intent, a, contact, c);
+					transactionDao.insert(t);
+				}
+				t.update(intent, a, contact, c);
+				transactionDao.update(t);
+
+			} catch (Exception e) { Log.e("DatabaseRepo", "error", e); }
+		});
 	}
 
-	public void update(StaxTransaction transaction) {
-		AppDatabase.databaseWriteExecutor.execute(() -> transactionDao.update(transaction));
+	// Contacts
+	public LiveData<List<StaxContact>> getAllContacts() { return contactDao.getAll(); }
+
+	public List<StaxContact> getContacts(String[] ids) { return contactDao.get(ids); }
+	public LiveData<List<StaxContact>> getLiveContacts(String[] ids) { return contactDao.getLive(ids); }
+
+	public StaxContact getContact(String id) { return contactDao.get(id); }
+	public LiveData<StaxContact> getLiveContact(String id) { return contactDao.getLive(id); }
+
+	public void insert(StaxContact contact) {
+		AppDatabase.databaseWriteExecutor.execute(() -> contactDao.insert(contact));
+	}
+
+	public void update(StaxContact contact) {
+		AppDatabase.databaseWriteExecutor.execute(() -> contactDao.update(contact));
 	}
 
 	// Schedules

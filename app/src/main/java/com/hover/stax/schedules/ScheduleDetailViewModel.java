@@ -9,7 +9,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
 import com.hover.stax.actions.Action;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.DatabaseRepo;
+
+import java.util.List;
 
 public class ScheduleDetailViewModel extends AndroidViewModel {
 	private final String TAG = "ScheduleViewModel";
@@ -17,12 +20,14 @@ public class ScheduleDetailViewModel extends AndroidViewModel {
 	private DatabaseRepo repo;
 	private MutableLiveData<Schedule> schedule;
 	private LiveData<Action> action;
+	private LiveData<List<StaxContact>> contacts;
 
 	public ScheduleDetailViewModel(@NonNull Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
 		schedule = new MutableLiveData<>();
 		action = Transformations.switchMap(schedule, this::loadAction);
+		contacts = Transformations.switchMap(schedule, this::loadContacts);
 	}
 
 	public void setSchedule(int id) {
@@ -48,6 +53,20 @@ public class ScheduleDetailViewModel extends AndroidViewModel {
 			action = new MutableLiveData<>();
 		}
 		return action;
+	}
+
+	private LiveData<List<StaxContact>> loadContacts(Schedule s) {
+		if (s != null) {
+			return repo.getLiveContacts(s.recipient_ids.split(","));
+		}
+		return null;
+	}
+
+	public LiveData<List<StaxContact>> getContacts() {
+		if (contacts == null) {
+			contacts = new MutableLiveData<>();
+		}
+		return contacts;
 	}
 
 	void deleteSchedule() {

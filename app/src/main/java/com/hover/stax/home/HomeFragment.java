@@ -94,7 +94,7 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		futureViewModel.getRequests().observe(getViewLifecycleOwner(), requests -> {
 			RecyclerView rv = root.findViewById(R.id.requests_recyclerView);
 			rv.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-			rv.setAdapter(new RequestsAdapter(requests, this, getContext()));
+			rv.setAdapter(new RequestsAdapter(requests, this));
 			setFutureVisible(root, futureViewModel.getScheduled().getValue(), requests);
 		});
 	}

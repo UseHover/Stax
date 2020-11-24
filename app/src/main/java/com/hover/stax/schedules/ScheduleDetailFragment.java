@@ -1,9 +1,11 @@
 package com.hover.stax.schedules;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +18,7 @@ import androidx.work.WorkManager;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -51,6 +54,13 @@ public class ScheduleDetailFragment extends Fragment {
 			}
 		});
 
+		viewModel.getContacts().observe(getViewLifecycleOwner(), contacts -> {
+			if (contacts != null && contacts.size() > 0) {
+				for (StaxContact c: contacts)
+					createRecipientEntry(c, view);
+			}
+		});
+
 		viewModel.setSchedule(getArguments().getInt("id"));
 	}
 
@@ -69,6 +79,12 @@ public class ScheduleDetailFragment extends Fragment {
 		((TextView) view.findViewById(R.id.details_reason)).setText(schedule.note);
 
 		view.findViewById(R.id.cancel_btn).setOnClickListener(btn -> showConfirmDialog(btn));
+	}
+
+	private void createRecipientEntry(StaxContact c, View view) {
+		TextView tv = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.recipient_cell, null);
+		tv.setText(c.toString());
+		((LinearLayout) view.findViewById(R.id.recipientValueList)).addView(tv);
 	}
 
 	private void showConfirmDialog(View v) {

@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
+import com.hover.stax.contacts.StaxContact;
 
 import java.util.List;
 
@@ -25,16 +26,16 @@ class SmsSentObserver extends ContentObserver {
 
 	private ContentResolver resolver;
 	final private SmsSentListener listener;
-	final private List<String> phoneNumbers;
+	final private List<StaxContact> recipients;
 	private boolean wasSent = false;
 	final private String successMsg;
 
-	public SmsSentObserver(SmsSentListener l, List<String> numbers, Handler handler, Context c) {
+	public SmsSentObserver(SmsSentListener l, List<StaxContact> contacts, Handler handler, Context c) {
 		super(handler);
 
 		this.resolver = c.getContentResolver();
 		this.listener = l;
-		this.phoneNumbers = numbers;
+		this.recipients = contacts;
 
 		successMsg = c.getString(R.string.sms_sent_success);
 	}
@@ -64,8 +65,8 @@ class SmsSentObserver extends ContentObserver {
 			if (cursor != null && cursor.moveToFirst()) {
 				final String address = cursor.getString(cursor.getColumnIndex(COLUMN_ADDRESS));
 				final int type = cursor.getInt(cursor.getColumnIndex(COLUMN_TYPE));
-				for (String number : phoneNumbers) {
-					if (PhoneNumberUtils.compare(address, number) && type == MESSAGE_TYPE_SENT) {
+				for (StaxContact c : recipients) {
+					if (PhoneNumberUtils.compare(address, c.phoneNumber) && type == MESSAGE_TYPE_SENT) {
 						wasSent = true;
 						callBack();
 						Amplitude.getInstance().logEvent(successMsg);

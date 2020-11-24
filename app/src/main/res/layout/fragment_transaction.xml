@@ -41,6 +41,20 @@
 					<TextView
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_16"
+						android:text="@string/recipient_label"/>
+
+					<TextView android:id="@+id/details_recipient"
+						android:layout_weight="1"
+						android:textAlignment="viewEnd"
+						android:fontFamily="font-normal"
+						android:textColor="@color/offWhite"
+						android:textSize="@dimen/text_21" />
+				</TableRow>
+
+				<TableRow android:layout_marginTop="@dimen/margin_24">
+					<TextView
+						android:textColor="@color/offWhite"
+						android:textSize="@dimen/text_16"
 						android:text="@string/date_label"/>
 
 					<TextView android:id="@+id/details_date"

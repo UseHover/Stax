@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -25,7 +26,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
-import com.hover.stax.transfers.StaxContactModel;
+import com.hover.stax.contacts.StaxContact;
 
 public abstract class StagedFragment extends Fragment {
 
@@ -170,10 +171,10 @@ public abstract class StagedFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == Activity.RESULT_OK) {
-			StaxContactModel staxContactModel = new StaxContactModel(data, getContext());
-			if (staxContactModel.getPhoneNumber() != null) {
+			StaxContact staxContact = new StaxContact(data, getContext());
+			if (staxContact.phoneNumber != null) {
 				Amplitude.getInstance().logEvent(getString(R.string.contact_select_success));
-				onContactSelected(requestCode, staxContactModel);
+				onContactSelected(requestCode, staxContact);
 			} else {
 				Amplitude.getInstance().logEvent(getString(R.string.contact_select_error));
 				UIHelper.flashMessage(getContext(), getResources().getString(R.string.toast_error_contactselect));
@@ -181,5 +182,5 @@ public abstract class StagedFragment extends Fragment {
 		}
 	}
 
-	protected abstract void onContactSelected(int requestCode, StaxContactModel contact);
+	protected abstract void onContactSelected(int requestCode, StaxContact contact);
 }

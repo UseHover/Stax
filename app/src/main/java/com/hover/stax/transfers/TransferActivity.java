@@ -14,6 +14,7 @@ import com.amplitude.api.Amplitude;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.Constants;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.schedules.Schedule;
@@ -87,7 +88,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	private void submit() {
 		if (transferViewModel.getIsFuture().getValue() != null && transferViewModel.getIsFuture().getValue() && transferViewModel.getFutureDate().getValue() != null) {
 			transferViewModel.schedule();
-			returnResult(Constants.SCHEDULE_REQUEST, RESULT_OK);
+			returnResult(Constants.SCHEDULE_REQUEST, RESULT_OK, null);
 		} else {
 			if (transferViewModel.repeatSaved().getValue() != null && transferViewModel.repeatSaved().getValue())
 				transferViewModel.schedule();
@@ -115,10 +116,11 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	private void makeHoverCall(Action act) {
 		Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
 		transferViewModel.checkSchedule();
+		transferViewModel.saveContact();
 		new HoverSession.Builder(act, transferViewModel.getActiveChannel().getValue(),
 				TransferActivity.this, Constants.TRANSFER_REQUEST)
-				.extra(Action.PHONE_KEY, transferViewModel.getRecipient().getValue())
-				.extra(Action.ACCOUNT_KEY, transferViewModel.getRecipient().getValue())
+				.extra(Action.PHONE_KEY, transferViewModel.getContact().getValue().normalizedNumber(transferViewModel.getActiveChannel().getValue().countryAlpha2))
+				.extra(Action.ACCOUNT_KEY, transferViewModel.getContact().getValue().phoneNumber)
 				.extra(Action.AMOUNT_KEY, transferViewModel.getAmount().getValue())
 				.extra(Action.REASON_KEY, transferViewModel.getNote().getValue())
 				.run();
@@ -137,12 +139,10 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	private void setSummaryCard(@Nullable StagedViewModel.StagedEnum stage) {
 		findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.accountRow).setVisibility(stage.compare(FROM_ACCOUNT) > 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.actionRow).setVisibility(stage.compare(TO_NETWORK) > 0 &&
-			transferViewModel.getActions().getValue() != null && transferViewModel.getActions().getValue().size() > 0 && (transferViewModel.getActions().getValue().size() > 1 || transferViewModel.getActiveAction().getValue().hasToInstitution()) ? View.VISIBLE : View.GONE);
+		findViewById(R.id.actionRow).setVisibility((stage.compare(TO_NETWORK) > 0 && transferViewModel.hasActionsLoaded()) ? View.VISIBLE : View.GONE);
 		findViewById(R.id.recipientRow).setVisibility(stage.compare(RECIPIENT) > 0 && transferViewModel.getActiveAction().getValue() != null ? View.VISIBLE : View.GONE);
 		findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && transferViewModel.getNote().getValue() != null && !transferViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
 		findViewById(R.id.btnRow).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
-
 	}
 
 	private void setCurrentCard(StagedViewModel.StagedEnum stage) {
@@ -176,15 +176,16 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == Constants.TRANSFER_REQUEST) {
-			returnResult(requestCode, resultCode);
+			returnResult(requestCode, resultCode, data);
 		}
 	}
 
-	private void returnResult(int type, int result) {
-		Intent i = new Intent();
-		if (type == Constants.SCHEDULE_REQUEST) {
+	private void returnResult(int type, int result, Intent data) {
+		Intent i = new Intent(data);
+		if (type == Constants.SCHEDULE_REQUEST)
 			i.putExtra(Schedule.DATE_KEY, transferViewModel.getFutureDate().getValue());
-		}
+		else
+			i.putExtra(StaxContact.ID_KEY, transferViewModel.getContact().getValue().id);
 		i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);
 		setResult(result, i);
 		finish();
