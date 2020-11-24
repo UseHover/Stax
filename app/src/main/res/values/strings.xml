@@ -181,6 +181,7 @@
 	<string name="note_label_opt">Enter note (optional)</string>
 	<string name="acct_label">Account</string>
 	<string name="recipient_label">To</string>
+	<string name="descrip_multcontacts">%1$d contacts</string>
 	<string name="descrip_airtime_sent">%1$s sent airtime to %2$s</string>
 	<string name="descrip_transfer_sent">from %1$s to %2$s</string>
 	<string name="fab_transfernow">Transfer now</string>
@@ -210,7 +211,7 @@
 	<string name="editreq_cardhead">Edit Request</string>
 	<string name="receiving_account_cardhead">Your preferred account to receive money</string>
 	<string name="receiving_account_number_label">Your account number</string>
-	<string name="receiving_account_type_label">Receive money into</string>
+	<string name="requester_account_type_label">Receive money into</string>
 	<string name="receiving_account_number_fielderror">Please enter the account or phone number you\'d like to receive the money into</string>
 	<string name="receiving_account_choice_error">Please select an account or add a new one to receive your money</string>
 	<string name="request_processing_msg">Processing request, please wait…</string>

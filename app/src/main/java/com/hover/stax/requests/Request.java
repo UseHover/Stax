@@ -10,6 +10,7 @@ import androidx.room.PrimaryKey;
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.database.Constants;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.paymentLinkCryptography.Base64;
@@ -24,12 +25,18 @@ public class Request {
 	@NonNull
 	public int id;
 
+	@ColumnInfo(name = "description")
+	public String description;
+
 	@NonNull
-	@ColumnInfo(name = "recipient")
-	public String recipient;
+	@ColumnInfo(name = "requestee_ids")
+	public String requestee_ids;
 
 	@ColumnInfo(name = "recipient_channel_id")
-	public int recipient_channel_id;
+	public int requester_channel_id;
+
+	@ColumnInfo(name = "requester_number")
+	public String requester_number;
 
 	@ColumnInfo(name = "amount")
 	public String amount;
@@ -49,24 +56,25 @@ public class Request {
 
 	public Request() {}
 
-	public Request(String amount, String note, String recipient, int receiving_channel_id) {
+	public Request(String amount, String note, String requester, int receiving_channel_id, Context context) {
 		this.amount = amount;
 		this.note = note;
-		this.recipient_channel_id = receiving_channel_id;
-		this.recipient = recipient;
+		this.requester_number = requester;
+		this.requester_channel_id = receiving_channel_id;
 		date_sent = DateUtils.now();
+		description = getDescription(null, context);
 	}
 
 	public Request(String paymentLink) {
 		String[] splitString = paymentLink.split(Constants.PAYMENT_LINK_SEPERATOR);
 		amount = splitString[0].equals("0.00") ? "" : Utils.formatAmount(splitString[0]);
-		recipient = splitString[2];
-		recipient_channel_id = Integer.parseInt(splitString[1]);
+		requester_number = splitString[2];
+		requester_channel_id = Integer.parseInt(splitString[1]);
 	}
 
-	public String getDescription(Context c) { return c.getString(R.string.descrip_request, recipient); }
+	public String getDescription(StaxContact contact, Context c) { return c.getString(R.string.descrip_request, contact.shortName()); }
 
-	Request setRecipient(String r) { this.recipient = r; return this; }
+	Request setRecipient(StaxContact c) { this.requestee_ids = c.id; return this; }
 
 	public String generateSMS(Context c) {
 		String amountString = amount != null ? c.getString(R.string.sms_amount_detail, Utils.formatAmount(amount)) : "";
@@ -79,7 +87,7 @@ public class Request {
 
 	 private String generateStaxLink(Context c) {
 		 String amountNoFormat = amount != null ? amount : "0.00";
-		String params = c.getString(R.string.payment_url_end, amountNoFormat, recipient_channel_id, recipient, DateUtils.now());
+		String params = c.getString(R.string.payment_url_end, amountNoFormat, requester_channel_id, requester_number, DateUtils.now());
 
 		try {
 			Encryption encryption =  Request.getEncryptionSettings().build();

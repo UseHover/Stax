@@ -9,8 +9,11 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.schedules.Schedule;
+
+import java.util.List;
 
 public abstract class StagedViewModel extends AndroidViewModel {
 
@@ -26,6 +29,7 @@ public abstract class StagedViewModel extends AndroidViewModel {
 	protected MutableLiveData<Integer> repeatTimes = new MutableLiveData<>();
 	protected MutableLiveData<Boolean> repeatSaved = new MutableLiveData<>();
 
+	protected LiveData<List<StaxContact>> recentContacts = new MutableLiveData<>();
 	protected MutableLiveData<Schedule> schedule = new MutableLiveData<>();
 	protected MutableLiveData<Boolean> isEditing = new MutableLiveData<>();
 
@@ -40,6 +44,8 @@ public abstract class StagedViewModel extends AndroidViewModel {
 		repeatSaved.setValue(false);
 		endDate.setValue(null);
 		isEditing.setValue(false);
+
+		recentContacts = repo.getAllContacts();
 	}
 
 	public LiveData<StagedEnum> getStage() {
@@ -160,6 +166,11 @@ public abstract class StagedViewModel extends AndroidViewModel {
 
 	private void calculateEndDate(int repeatTimes) {
 		endDate.setValue(DateUtils.getDate(getStartDate(), frequency.getValue(), repeatTimes));
+	}
+
+	public LiveData<List<StaxContact>> getRecentContacts() {
+		if (recentContacts == null) { recentContacts = new MutableLiveData<>(); }
+		return recentContacts;
 	}
 
 	public interface StagedEnum {

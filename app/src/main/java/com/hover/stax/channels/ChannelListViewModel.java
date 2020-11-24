@@ -63,7 +63,7 @@ public class ChannelListViewModel extends AndroidViewModel {
 		if (allChannels == null) {
 			allChannels = new MutableLiveData<>();
 		}
-		allChannels = repo.getAll();
+		allChannels = repo.getAllChannels();
 		initSelected();
 	}
 

@@ -4,11 +4,14 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
+import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.android.gms.common.util.CollectionUtils;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.Constants;
 import com.hover.stax.utils.DateUtils;
 
@@ -16,12 +19,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @Entity(tableName = "schedules")
 public class Schedule {
 	public final static int DAILY = 0, WEEKLY = 1, BIWEEKLY = 2, MONTHLY = 3, ONCE = 4;
-	public final static String SCHEDULE_ID = "schedule_id", DATE_KEY = "date";
+	public final static String SCHEDULE_ID = "schedule_id", DATE_KEY = "schedule_date";
 
 	@PrimaryKey(autoGenerate = true)
 	@NonNull
@@ -38,8 +43,8 @@ public class Schedule {
 	public String action_id;
 
 	@NonNull
-	@ColumnInfo(name = "recipient")
-	public String recipient;
+	@ColumnInfo(name = "recipient_ids")
+	public String recipient_ids;
 
 	@ColumnInfo(name = "amount")
 	public String amount;
@@ -68,25 +73,30 @@ public class Schedule {
 
 	public Schedule() {}
 
-	public Schedule(Action action, Long start, Boolean isRepeat, int frequency, Long end, String r, String a, String n, Context c) {
-		this(start, r, a, n);
+	public Schedule(Action action, Long start, Boolean isRepeat, int frequency, Long end, StaxContact contact, String a, String n, Context c) {
+		this(start, Collections.singletonList(contact), a, n);
 		setRepeatVals(isRepeat, frequency, end);
 		type = action.transaction_type;
 		channel_id = action.channel_id;
 		action_id = action.public_id;
-		description = generateDescription(action, c);
+		description = generateDescription(action, Collections.singletonList(contact), c);
 	}
 
-	public Schedule(Long start, Boolean isRepeat, int frequency, Long end, String r, String a, String n, Context c) {
-		this(start, r, a, n);
+	public Schedule(Long start, Boolean isRepeat, int frequency, Long end, List<StaxContact> contacts, String a, String n, Context c) {
+		this(start, contacts, a, n);
 		setRepeatVals(isRepeat, frequency, end);
 		type = Constants.REQUEST_TYPE;
-		description = generateDescription(null, c);
+		description = generateDescription(null, contacts, c);
 	}
 
-	public Schedule(Long date, String r, String a, String n) {
+	public Schedule(Long date, List<StaxContact> cs, String a, String n) {
 		start_date = date == null ? DateUtils.today() : date;
-		recipient = r;
+		StringBuilder contacts = new StringBuilder();
+		for(StaxContact c : cs) {
+			if (contacts.length() > 0) contacts.append(",");
+			contacts.append(c.id);
+		}
+		recipient_ids = contacts.toString();
 		amount = a;
 		note = n;
 		complete = false;
@@ -97,16 +107,16 @@ public class Schedule {
 		end_date = isRepeat ? end : start_date;
 	}
 
-	private String generateDescription(Action action, Context c) {
+	private String generateDescription(Action action, List<StaxContact> contacts, Context c) {
 		switch (type) {
 			case Action.AIRTIME:
-				return c.getString(R.string.descrip_airtime_sched, action.from_institution_name, ((recipient == null || recipient.equals("")) ? "myself" : recipient));
+				return c.getString(R.string.descrip_airtime_sched, action.from_institution_name, ((contacts == null || contacts.size() == 0 || contacts.get(0).phoneNumber.equals("")) ? "myself" : StaxContact.shortName(contacts, c)));
 			case Action.P2P:
-				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, recipient);
+				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, StaxContact.shortName(contacts, c));
 			case Action.ME2ME:
 				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, action.to_institution_name);
 			case Constants.REQUEST_TYPE:
-				return c.getString(R.string.descrip_request, recipient);
+				return c.getString(R.string.descrip_request, StaxContact.shortName(contacts, c));
 			default:
 				return "Other";
 		}
@@ -119,7 +129,7 @@ public class Schedule {
 			return c.getResources().getStringArray(R.array.frequency_choices)[frequency];
 	}
 
-	String title(Context c) {
+	public String title(Context c) {
 		switch (type) {
 			case Action.P2P:
 			case Action.ME2ME:
@@ -133,7 +143,7 @@ public class Schedule {
 		}
 	}
 
-	String notificationMsg(Context c) {
+	public String notificationMsg(Context c, List<StaxContact> contacts) {
 		switch (type) {
 			case Action.P2P:
 			case Action.ME2ME:
@@ -141,7 +151,7 @@ public class Schedule {
 			case Action.AIRTIME:
 				return c.getString(R.string.notify_airtime);
 			case Constants.REQUEST_TYPE:
-				return c.getString(R.string.notify_request, recipient);
+				return c.getString(R.string.notify_request, StaxContact.shortName(contacts, c));
 			default:
 				return null;
 		}

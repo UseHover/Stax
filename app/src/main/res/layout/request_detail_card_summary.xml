@@ -11,19 +11,16 @@
 		android:layout_height="wrap_content"
 		android:layout_marginHorizontal="@dimen/margin_3">
 
-		<TableRow android:id="@+id/recipientRow" android:visibility="gone">
-
+		<TableRow android:id="@+id/requesteeRow">
 			<TextView
 				android:text="@string/reqfrom_label"
-			    	android:fontFamily="font-normal"
+				android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
-			<LinearLayout android:id="@+id/recipientValueList"
+			<LinearLayout android:id="@+id/requesteeValueList"
 				android:orientation="vertical"
-				android:layout_weight="1">
-
-			</LinearLayout>
+				android:layout_weight="1" />
 		</TableRow>
 
 		<TableRow android:id="@+id/amountRow" android:layout_marginTop="@dimen/margin_21">
@@ -41,14 +38,14 @@
 				android:textAlignment="viewEnd" />
 		</TableRow>
 
-		<TableRow android:id="@+id/receiveAccountRow" android:layout_marginTop="@dimen/margin_21">
+		<TableRow android:id="@+id/requesterChannelRow" android:layout_marginTop="@dimen/margin_21">
 			<TextView
-			    android:text="@string/receiving_account_type_label"
+			    android:text="@string/requester_account_type_label"
 			    android:textColor="@color/offWhite"
 			    android:fontFamily="font-normal"
 			    android:textSize="@dimen/text_16" />
 
-			<TextView android:id="@+id/receiveAccountNameValue"
+			<TextView android:id="@+id/requester_channel_value"
 			    android:layout_weight="1"
 			    android:fontFamily="font-medium"
 			    android:textColor="@color/offWhite"
@@ -56,14 +53,14 @@
 			    android:textAlignment="viewEnd" />
 		</TableRow>
 
-		<TableRow android:id="@+id/receiveAccountNumberRow" android:layout_marginTop="@dimen/margin_21">
+		<TableRow android:id="@+id/requesterNumberRow" android:layout_marginTop="@dimen/margin_21">
 			<TextView
 			    android:text="@string/receiving_account_number_label"
 			    android:textColor="@color/offWhite"
 			    android:fontFamily="font-normal"
 			    android:textSize="@dimen/text_16" />
 
-			<TextView android:id="@+id/receiveAccountNumberValue"
+			<TextView android:id="@+id/requesterNumberValue"
 			    android:layout_weight="1"
 			    android:fontFamily="font-medium"
 			    android:textColor="@color/offWhite"

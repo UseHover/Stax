@@ -127,7 +127,7 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 
 	private void sendSms() {
 		requestViewModel.setStarted();
-		new SmsSentObserver(this, requestViewModel.getRecipients().getValue(), new Handler(), this).start();
+		new SmsSentObserver(this, requestViewModel.getRequestees().getValue(), new Handler(), this).start();
 
 		Intent sendIntent = new Intent();
 		sendIntent.setAction(Intent.ACTION_VIEW);
@@ -155,7 +155,7 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 	private void onUpdateStage(@Nullable StagedViewModel.StagedEnum stage) {
 		if (Navigation.findNavController(this, R.id.nav_host_fragment).getCurrentDestination().getId() == R.id.navigation_edit)
 			((ExtendedFloatingActionButton) findViewById(R.id.fab)).hide();
-		else if (findViewById(R.id.recipientRow) != null) {
+		else if (findViewById(R.id.requesteeRow) != null) {
 			setSummaryCard(stage);
 			setCurrentCard(stage);
 			setFab(stage);
@@ -163,19 +163,19 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 	}
 
 	private void setSummaryCard(@Nullable StagedViewModel.StagedEnum stage) {
-		findViewById(R.id.recipientRow).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.requesteeRow).setVisibility(stage.compare(REQUESTEE) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 && requestViewModel.getAmount().getValue() != null ? View.VISIBLE : View.GONE);
-		findViewById(R.id.receiveAccountRow).setVisibility(stage.compare(RECEIVING_ACCOUNT_INFO) > 0 && requestViewModel.getActiveChannel().getValue() != null ? View.VISIBLE : View.GONE);
-		findViewById(R.id.receiveAccountNumberRow).setVisibility(stage.compare(RECEIVING_ACCOUNT_INFO) > 0 && requestViewModel.getReceivingAccountNumber().getValue() != null ? View.VISIBLE : View.GONE);
+		findViewById(R.id.requesterChannelRow).setVisibility(stage.compare(REQUESTER_NUMBER) > 0 && requestViewModel.getActiveChannel().getValue() != null ? View.VISIBLE : View.GONE);
+		findViewById(R.id.requesterNumberRow).setVisibility(stage.compare(REQUESTER_NUMBER) > 0 && requestViewModel.getRequesterNumber().getValue() != null ? View.VISIBLE : View.GONE);
 		findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && requestViewModel.getNote().getValue() != null && !requestViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
-		findViewById(R.id.btnRow).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.btnRow).setVisibility(stage.compare(REQUESTEE) > 0 ? View.VISIBLE : View.GONE);
 	}
 
 	private void setCurrentCard(StagedViewModel.StagedEnum stage) {
 //		findViewById(R.id.summaryCard).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.recipientCard).setVisibility(stage.compare(RECIPIENT) == 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.recipientCard).setVisibility(stage.compare(REQUESTEE) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.amountCard).setVisibility(stage.compare(AMOUNT) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.receiving_account_infoCard).setVisibility(stage.compare(RECEIVING_ACCOUNT_INFO) == 0 ?View.VISIBLE : View.GONE);
+		findViewById(R.id.receiving_account_infoCard).setVisibility(stage.compare(REQUESTER_NUMBER) == 0 ?View.VISIBLE : View.GONE);
 		findViewById(R.id.noteCard).setVisibility(stage.compare(NOTE) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.futureCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && requestViewModel.getFutureDate().getValue() == null ? View.VISIBLE : View.GONE);
 		findViewById(R.id.repeatCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && (requestViewModel.repeatSaved().getValue() == null || !requestViewModel.repeatSaved().getValue()) ? View.VISIBLE : View.GONE);

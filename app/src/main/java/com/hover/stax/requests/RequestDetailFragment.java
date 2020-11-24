@@ -15,6 +15,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -43,6 +44,18 @@ public class RequestDetailFragment extends Fragment {
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
+		viewModel.getRecipients().observe(getViewLifecycleOwner(), contacts -> {
+			if (contacts != null && contacts.size() > 0) {
+				for (StaxContact c: contacts)
+					createRecipientEntry(c, view);
+			}
+		});
+
+		viewModel.getChannel().observe(getViewLifecycleOwner(), channel-> {
+			view.findViewById(R.id.requesterChannelRow).setVisibility(channel != null ? View.VISIBLE : View.GONE);
+			if (channel != null) ((TextView) view.findViewById(R.id.requester_channel_value)).setText(channel.name);
+		});
+
 		viewModel.getRequest().observe(getViewLifecycleOwner(), request -> {
 			if (request != null) {
 				setUpSummary(view, request);
@@ -50,21 +63,17 @@ public class RequestDetailFragment extends Fragment {
 			}
 		});
 
-		viewModel.getChannelName().observe(getViewLifecycleOwner(), channelName-> {
-			if(channelName !=null) {
-				view.findViewById(R.id.receiveAccountRow).setVisibility(View.VISIBLE);
-				((TextView) view.findViewById(R.id.receiveAccountNameValue)).setText(channelName);
-			}
-		});
-
 		viewModel.setRequest(getArguments().getInt("id"));
 	}
 
-	private void setUpSummary(View view, Request request) {
-		((TextView) view.findViewById(R.id.title)).setText(request.getDescription(view.getContext()));
+	private void createRecipientEntry(StaxContact c, View view) {
 		TextView tv = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.recipient_cell, null);
-		tv.setText(request.recipient);
-		((LinearLayout) view.findViewById(R.id.recipientValueList)).addView(tv);
+		tv.setText(c.toString());
+		((LinearLayout) view.findViewById(R.id.requesteeValueList)).addView(tv);
+	}
+
+	private void setUpSummary(View view, Request request) {
+		((TextView) view.findViewById(R.id.title)).setText(request.description);
 		((TextView) view.findViewById(R.id.dateValue)).setText(DateUtils.humanFriendlyDate(request.date_sent));
 
 		if (request.amount != null && !request.amount.isEmpty()) {
@@ -73,9 +82,9 @@ public class RequestDetailFragment extends Fragment {
 		} else
 			view.findViewById(R.id.amountRow).setVisibility(View.GONE);
 
-		if(request.receiving_account_number !=null && !request.receiving_account_number.isEmpty()) {
-			view.findViewById(R.id.receiveAccountNumberRow).setVisibility(View.VISIBLE);
-			((TextView) view.findViewById(R.id.receiveAccountNumberValue)).setText(request.receiving_account_number);
+		if (request.requester_number != null && !request.requester_number.isEmpty()) {
+			view.findViewById(R.id.requesterNumberRow).setVisibility(View.VISIBLE);
+			((TextView) view.findViewById(R.id.requesterNumberValue)).setText(request.requester_number);
 		}
 
 

@@ -27,7 +27,7 @@ public class ScheduledAdapter extends RecyclerView.Adapter<ScheduledAdapter.Sche
 	@NonNull
 	@Override
 	public ScheduledAdapter.ScheduledViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.stax_list_item, parent, false);
+		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_list_item, parent, false);
 		return new ScheduledAdapter.ScheduledViewHolder(view);
 	}
 

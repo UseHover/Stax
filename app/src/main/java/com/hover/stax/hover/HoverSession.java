@@ -15,6 +15,7 @@ import com.hover.sdk.api.HoverParameters;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.Constants;
 import com.hover.stax.security.KeyStoreExecutor;
 import com.hover.stax.utils.Utils;
@@ -55,7 +56,7 @@ final public class HoverSession {
 		builder.showUserStepDescriptions(true);
 		builder.finalMsgDisplayTime(finalScreenTime);
 		builder.style(R.style.StaxHoverTheme);
-		builder.template(Constants.STYLE_MODE_FOR_STAX);
+//		builder.template(Constants.STYLE_MODE_FOR_STAX);
 		builder.transactingImages(getSenderLogo(), getReceiverLogo(b.action));
 		builder.customBackgroundImage(R.drawable.stax_background);
 
@@ -78,7 +79,7 @@ final public class HoverSession {
 			return null;
 		}
 		if (key.equals(Action.PHONE_KEY)) {
-			return Utils.normalizePhoneNumber(value, channel.countryAlpha2);
+			return StaxContact.normalizeNumber(value, channel.countryAlpha2);
 		}
 		return value;
 	}

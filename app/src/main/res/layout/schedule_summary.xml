@@ -23,6 +23,18 @@
 		<TextView
 			android:textColor="@color/offWhite"
 			android:textSize="@dimen/text_16"
+			android:fontFamily="font-normal"
+			android:text="@string/recipient_label"/>
+
+		<LinearLayout android:id="@+id/requesteeValueList"
+			android:orientation="vertical"
+			android:layout_weight="1" />
+	</TableRow>
+
+	<TableRow android:layout_marginTop="@dimen/margin_24">
+		<TextView
+			android:textColor="@color/offWhite"
+			android:textSize="@dimen/text_16"
 		    	android:fontFamily="font-normal"
 			android:text="@string/date_label"/>
 

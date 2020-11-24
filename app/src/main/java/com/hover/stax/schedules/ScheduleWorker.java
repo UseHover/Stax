@@ -13,9 +13,10 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.hover.stax.R;
+import com.hover.stax.contacts.ContactDao;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.AppDatabase;
 import com.hover.stax.database.Constants;
-import com.hover.stax.requests.Request;
 import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.transfers.TransferActivity;
 
@@ -26,10 +27,12 @@ public class ScheduleWorker extends Worker {
 	public final static String TAG = "ScheduleWorker";
 
 	private final ScheduleDao scheduleDao;
+	private final ContactDao contactDao;
 
 	public ScheduleWorker(@NonNull Context context, @NonNull WorkerParameters params) {
 		super(context, params);
 		scheduleDao = AppDatabase.getInstance(context).scheduleDao();
+		contactDao = AppDatabase.getInstance(context).contactDao();
 	}
 
 	public static PeriodicWorkRequest makeToil() {
@@ -43,19 +46,20 @@ public class ScheduleWorker extends Worker {
 	@Override
 	public Worker.Result doWork() {
 		List<Schedule> scheduled = scheduleDao.getFuture();
-		for (Schedule schedule : scheduled) {
-			if (schedule.isScheduledForToday())
-				notifyUser(schedule);
+		for (Schedule s : scheduled) {
+			if (s.isScheduledForToday())
+				notifyUser(s);
 		}
 		return Result.success();
 	}
 
 	private void notifyUser(Schedule s) {
+		List<StaxContact> contacts = contactDao.get(s.recipient_ids.split(","));
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "DEFAULT")
 			.setSmallIcon(R.drawable.ic_stax)
 			.setContentTitle(s.title(getApplicationContext()))
-			.setContentText(s.notificationMsg(getApplicationContext()))
-			.setStyle(new NotificationCompat.BigTextStyle().bigText(s.notificationMsg(getApplicationContext())))
+			.setContentText(s.notificationMsg(getApplicationContext(), contacts))
+			.setStyle(new NotificationCompat.BigTextStyle().bigText(s.notificationMsg(getApplicationContext(), contacts)))
 			.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 			.setCategory(NotificationCompat.CATEGORY_REMINDER)
 			.setContentIntent(createIntent(s))
