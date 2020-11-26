@@ -95,9 +95,20 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 			if (recipients == null || recipients.size() == 0) return;
 			recipientValueList.removeAllViews();
 			for (StaxContact recipient : recipients) {
-				TextView tv = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.recipient_cell, null);
-				tv.setText(recipient.toString());
-				recipientValueList.addView(tv);
+				View view =  LayoutInflater.from(getContext()).inflate(R.layout.recipient_cell, null);
+				TextView name = view.findViewById(R.id.recipient_name);
+				TextView phone = view.findViewById(R.id.recipient_phone);
+
+				if(recipient.shortName().equals(recipient.phoneNumber)) {
+					name.setText(recipient.shortName());
+					phone.setVisibility(View.GONE);
+				}
+				else {
+					name.setText(recipient.shortName());
+					phone.setText(recipient.phoneNumber);
+				}
+
+				recipientValueList.addView(view);
 			}
 
 			if (recipients.size() == recipientCount) return;

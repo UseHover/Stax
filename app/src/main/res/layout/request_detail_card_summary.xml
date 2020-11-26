@@ -45,27 +45,34 @@
 			    android:fontFamily="font-normal"
 			    android:textSize="@dimen/text_16" />
 
-			<TextView android:id="@+id/requesteeChannelValue"
+			<LinearLayout
+			    android:orientation="vertical"
 			    android:layout_weight="1"
-			    android:fontFamily="font-medium"
-			    android:textColor="@color/offWhite"
-			    android:textSize="@dimen/text_21"
-			    android:textAlignment="viewEnd" />
-		</TableRow>
+			    android:layout_gravity="end|center_vertical"
+			    android:gravity="end"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    >
 
-		<TableRow android:id="@+id/requesteeNumberRow" android:layout_marginTop="@dimen/margin_21">
-			<TextView
-			    android:text="@string/receiving_account_number_label"
-			    android:textColor="@color/offWhite"
-			    android:fontFamily="font-normal"
-			    android:textSize="@dimen/text_16" />
+				<TextView
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:id="@+id/requesteeChannelValue"
+				    android:fontFamily="font-medium"
+				    android:visibility="gone"
+				    android:textColor="@color/offWhite"
+				    android:textSize="@dimen/text_21"
+				    android:textAlignment="viewEnd" />
 
-			<TextView android:id="@+id/requesteeNumberValue"
-			    android:layout_weight="1"
-			    android:fontFamily="font-medium"
-			    android:textColor="@color/offWhite"
-			    android:textSize="@dimen/text_21"
-			    android:textAlignment="viewEnd" />
+				<TextView
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:id="@+id/requesteeNumberValue"
+				    android:fontFamily="font-medium"
+				    android:textColor="@color/offWhite"
+				    android:textSize="@dimen/text_16"
+				    android:textAlignment="viewEnd" />
+			</LinearLayout>
 		</TableRow>
 
 		<TableRow android:id="@+id/noteRow" android:layout_marginTop="@dimen/margin_21">

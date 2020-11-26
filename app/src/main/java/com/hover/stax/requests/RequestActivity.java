@@ -169,15 +169,14 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 		findViewById(R.id.recipientRow).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 && requestViewModel.getAmount().getValue() != null ? View.VISIBLE : View.GONE);
 		findViewById(R.id.requesteeChannelRow).setVisibility(stage.compare(RECEIVING_ACCOUNT_INFO) > 0 && requestViewModel.getActiveChannel().getValue() != null ? View.VISIBLE : View.GONE);
-		findViewById(R.id.requesteeNumberRow).setVisibility(stage.compare(RECEIVING_ACCOUNT_INFO) > 0 && requestViewModel.getRequesterNumber().getValue() != null ? View.VISIBLE : View.GONE);
 		findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && requestViewModel.getNote().getValue() != null && !requestViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
 		findViewById(R.id.btnRow).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
 	}
 
 	private void setCurrentCard(StagedViewModel.StagedEnum stage) {
 //		findViewById(R.id.summaryCard).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.recipientCard).setVisibility(stage.compare(RECIPIENT) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.amountCard).setVisibility(stage.compare(AMOUNT) == 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.recipientCard).setVisibility(stage.compare(RECIPIENT) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.receiving_account_infoCard).setVisibility(stage.compare(RECEIVING_ACCOUNT_INFO) == 0 ?View.VISIBLE : View.GONE);
 		findViewById(R.id.noteCard).setVisibility(stage.compare(NOTE) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.futureCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && requestViewModel.getFutureDate().getValue() == null ? View.VISIBLE : View.GONE);
@@ -192,7 +191,7 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 				if (requestViewModel.getFutureDate().getValue() == null) { fab.hide(); } else { fab.show(); }
 			} else {
 				fab.setText(getString(R.string.notify_request_cta));
-				fab.show();
+				fab.hide();
 			}
 		} else {
 			fab.setText(R.string.btn_continue);

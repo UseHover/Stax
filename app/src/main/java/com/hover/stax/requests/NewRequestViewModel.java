@@ -43,7 +43,7 @@ public class NewRequestViewModel extends StagedViewModel {
 		super(application);
 		selectedChannels = repo.getSelected();
 		activeChannel.addSource(selectedChannels, this::findActiveChannel);
-		stage.setValue(RequestStage.RECIPIENT);
+		stage.setValue(AMOUNT);
 		requestees.setValue(new ArrayList<>(Collections.singletonList(new StaxContact(""))));
 		requestStarted.setValue(false);
 	}

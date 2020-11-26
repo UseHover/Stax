@@ -86,7 +86,8 @@ public class RequestDetailFragment extends Fragment {
 			view.findViewById(R.id.amountRow).setVisibility(View.GONE);
 
 		if(request.requester_number !=null && !request.requester_number.isEmpty()) {
-			view.findViewById(R.id.requesteeNumberRow).setVisibility(View.VISIBLE);
+			view.findViewById(R.id.requesteeChannelRow).setVisibility(View.VISIBLE);
+			//((TextView) view.findViewById(R.id.requesteeChannelValue)).setText(request.);
 			((TextView) view.findViewById(R.id.requesteeNumberValue)).setText(request.requester_number);
 		}
 

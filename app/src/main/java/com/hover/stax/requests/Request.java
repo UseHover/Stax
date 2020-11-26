@@ -37,7 +37,7 @@ public class Request {
 	@ColumnInfo(name = "requester_institution_id")
 	public int requester_institution_id;
 
-	@ColumnInfo(name  = "requester_number")
+	@ColumnInfo(name  = "requestee_number")
 	public String requester_number;
 
 	@ColumnInfo(name = "note")
