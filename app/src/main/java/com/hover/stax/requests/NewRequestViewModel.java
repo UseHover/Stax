@@ -206,7 +206,7 @@ public class NewRequestViewModel extends StagedViewModel {
 		int institution_id = activeChannel.getValue() !=null ? activeChannel.getValue().institutionId : 0;
 		String accountNumber= requesterNumber.getValue() !=null ? requesterNumber.getValue().trim() : "";
 
-		String paymentLink = Request.generateStaxLink(amountNoFormat, institution_id, accountNumber, getApplication());
+		String paymentLink = Request.generateStaxLink(amountNoFormat, institution_id, accountNumber, DateUtils.now(), getApplication());
 
 		if (paymentLink !=null) return getApplication().getString(R.string.sms_request_template_with_link, amountString, noteString, paymentLink);
 		else return getApplication().getString(R.string.sms_request_template_no_link, amountString, noteString);

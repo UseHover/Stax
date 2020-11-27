@@ -102,13 +102,13 @@ public class Request {
 					   .setIv(new byte[] { 29, 88, -79, -101, -108, -38, -126, 90, 52, 101, -35, 114, 12, -48, -66, -30 });
 	}
 
-	 static String generateStaxLink(String amount, int channel_id, String accountNumber, Context c) {
+	 static String generateStaxLink(String amount, int channel_id, String accountNumber, long date_sent, Context c) {
 		if (channel_id == 0 || accountNumber.isEmpty()) {
 			Amplitude.getInstance().logEvent(c.getString(R.string.stax_link_encryption_failure_1));
 			return null;
 		}
 		String separator = Constants.PAYMENT_LINK_SEPERATOR;
-		String fullString = amount+separator+channel_id +separator+accountNumber+separator+DateUtils.now();
+		String fullString = amount+separator+channel_id +separator+accountNumber+separator+date_sent;
 
 		try {
 			Encryption encryption =  Request.getEncryptionSettings().build();
