@@ -1,6 +1,9 @@
 package com.hover.stax.utils;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -18,6 +21,8 @@ import com.hover.stax.R;
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
+
+import static android.content.Context.CLIPBOARD_SERVICE;
 
 public class Utils {
 	private final static String TAG = "Utils";
@@ -117,6 +122,16 @@ public class Utils {
 			}
 		} catch (SecurityException e) { Log.e(TAG, "Could not get device Id", e); }
 		return c.getString(R.string.hsdk_unknown_device_id);
+	}
+
+	public static boolean copyToClipboard(String content, Activity activity) {
+		ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(CLIPBOARD_SERVICE);
+		ClipData clip = ClipData.newPlainText("Stax payment link", content);
+		if(clipboard!=null) {
+			clipboard.setPrimaryClip(clip);
+			return true;
+		}
+		return false;
 	}
 
 }

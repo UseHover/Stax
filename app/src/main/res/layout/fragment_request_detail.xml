@@ -13,5 +13,8 @@
 		<include layout="@layout/request_detail_card_summary"
 			android:id="@+id/summaryCard"/>
 
+		<include layout="@layout/share_layout"
+		    android:id="@+id/shareCard" />
+
 	</LinearLayout>
 </androidx.core.widget.NestedScrollView>

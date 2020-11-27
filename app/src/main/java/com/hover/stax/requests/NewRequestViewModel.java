@@ -1,6 +1,8 @@
 package com.hover.stax.requests;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -208,6 +210,12 @@ public class NewRequestViewModel extends StagedViewModel {
 
 		if (paymentLink !=null) return getApplication().getString(R.string.sms_request_template_with_link, amountString, noteString, paymentLink);
 		else return getApplication().getString(R.string.sms_request_template_no_link, amountString, noteString);
+	}
+
+	void getCountryAlphaAndSendWithWhatsApp(Context context, Activity activity) {
+		Channel channel = getActiveChannel().getValue();
+		if(channel!=null)
+			Request.sendUsingWhatsapp(generateRecipientString(), channel.countryAlpha2, generateSMS(), context, activity);
 	}
 
 	void saveToDatabase() {

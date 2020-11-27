@@ -214,6 +214,11 @@
 	<string name="receiving_account_number_fielderror">Please enter the account or phone number you\'d like to receive the money into</string>
 	<string name="receiving_account_choice_error">Please select an account or add a new one to receive your money</string>
 	<string name="request_processing_msg">Processing request, please wait…</string>
+	<string name="sms_label">SMS</string>
+	<string name="whatsapp_label">WhatsApp</string>
+	<string name="copyLink_label">Copy link</string>
+	<string name="link_copied_label">Link copied</string>
+	<string name="share_request_link_cardhead">Share request link</string>
 
 	<!-- Scheduling -->
 	<string name="future_toggle">Send in the future</string>

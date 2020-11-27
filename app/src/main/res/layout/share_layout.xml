@@ -1,16 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.hover.stax.views.StaxCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:title="@string/amount_cardhead">
+    tools:ignore="UseCompoundDrawables"
+    app:title="@string/share_request_link_cardhead">
 
 	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:orientation="horizontal">
+	    android:layout_gravity="center"
+	    android:gravity="center"
+	    android:orientation="horizontal"
+	    android:baselineAligned="false">
 
 
+		<LinearLayout
+		    android:layout_width="0dp"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="center"
+		    android:layout_weight="1"
+		    android:gravity="center"
+		    android:onClick="sendSMS"
+		    android:id="@+id/sms_share_selection"
+		    android:orientation="vertical"
+		    >
+
+			<ImageView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:background="@drawable/circle_white_background"
+			    android:padding="@dimen/margin_16"
+			    android:contentDescription="@string/sms_label"
+			    app:srcCompat="@drawable/message_icon" />
+
+			<TextView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:fontFamily="font-normal"
+			    android:layout_marginTop="@dimen/margin_8"
+			    android:text="@string/sms_label" />
+		</LinearLayout>
+
+		<LinearLayout
+		    android:layout_width="0dp"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="center"
+		    android:layout_weight="1"
+		    android:gravity="center"
+		    android:onClick="sendWhatsapp"
+		    android:id="@+id/whatsapp_share_selection"
+		    android:orientation="vertical">
+
+			<ImageView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:background="@drawable/circle_white_background"
+			    android:padding="@dimen/margin_16"
+			    app:srcCompat="@drawable/whatsapp_icon"
+			    android:contentDescription="@string/whatsapp_label" />
+
+			<TextView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:fontFamily="font-normal"
+			    android:layout_marginTop="@dimen/margin_8"
+			    android:text="@string/whatsapp_label" />
+		</LinearLayout>
+
+
+		<LinearLayout
+		    android:layout_width="0dp"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="center"
+		    android:layout_weight="1"
+		    android:gravity="center"
+		    android:onClick="copyShareLink"
+		    android:id="@+id/copylink_share_selection"
+		    android:orientation="vertical">
+
+			<ImageView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:background="@drawable/circle_white_background"
+			    android:padding="@dimen/margin_16"
+			    android:id="@+id/copyLinkImage"
+			    android:contentDescription="@string/copyLink_label"
+			    app:srcCompat="@drawable/copy_icon" />
+
+			<TextView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:fontFamily="font-normal"
+			    android:id="@+id/copyLinkText"
+			    android:layout_marginTop="@dimen/margin_8"
+			    android:text="@string/copyLink_label" />
+		</LinearLayout>
 
 	</LinearLayout>
 </com.hover.stax.views.StaxCardView>

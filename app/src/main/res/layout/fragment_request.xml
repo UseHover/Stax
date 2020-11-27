@@ -27,6 +27,9 @@
 		<include layout="@layout/transfer_card_note"
 			android:id="@+id/noteCard" />
 
+		<include layout="@layout/share_layout"
+		    android:id="@+id/shareCard" />
+
 		<include layout="@layout/transfer_card_future"
 			android:id="@+id/futureCard"
 			android:visibility="gone" />
@@ -34,5 +37,6 @@
 		<include layout="@layout/transfer_card_repeat"
 			android:id="@+id/repeatCard"
 			android:visibility="gone" />
+
 	</LinearLayout>
 </androidx.core.widget.NestedScrollView>

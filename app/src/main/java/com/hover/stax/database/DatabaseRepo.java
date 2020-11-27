@@ -60,6 +60,7 @@ public class DatabaseRepo {
 	public Channel getChannel(int id) {
 		return channelDao.getChannel(id);
 	}
+	public Channel getChannelByInstitutionId(int id) { return channelDao.getChannelByInstitutionId(id); }
 
 	public LiveData<Channel> getLiveChannel(int id) {
 		return channelDao.getLiveChannel(id);

@@ -1,10 +1,10 @@
 package com.hover.stax.requests;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,6 +24,7 @@ import com.hover.stax.views.StaxDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 public class RequestDetailFragment extends Fragment {
 	final public static String TAG = "RequestDetailFragment";
@@ -47,7 +48,7 @@ public class RequestDetailFragment extends Fragment {
 
 		viewModel.getRecipients().observe(getViewLifecycleOwner(), contacts -> {
 			if (contacts != null && contacts.size() > 0) {
-				for (StaxContact c: contacts)
+				for (StaxContact c : contacts)
 					createRecipientEntry(c, view);
 			}
 		});
@@ -67,12 +68,22 @@ public class RequestDetailFragment extends Fragment {
 //		});
 
 		viewModel.setRequest(getArguments().getInt("id"));
+		initShareButtons(view);
 	}
 
 	private void createRecipientEntry(StaxContact c, View view) {
-		TextView tv = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.recipient_cell, null);
-		tv.setText(c.toString());
-		((LinearLayout) view.findViewById(R.id.recipientValueList)).addView(tv);
+		View v = LayoutInflater.from(getContext()).inflate(R.layout.recipient_cell, null);
+		TextView name = v.findViewById(R.id.recipient_name);
+		TextView phone = v.findViewById(R.id.recipient_phone);
+
+		if (c.shortName().equals(c.phoneNumber)) {
+			name.setText(c.shortName());
+			phone.setVisibility(View.GONE);
+		} else {
+			name.setText(c.shortName());
+			phone.setText(c.phoneNumber);
+		}
+		((LinearLayout) view.findViewById(R.id.recipientValueList)).addView(v);
 	}
 
 	private void setUpSummary(View view, Request request) {
@@ -85,7 +96,7 @@ public class RequestDetailFragment extends Fragment {
 		} else
 			view.findViewById(R.id.amountRow).setVisibility(View.GONE);
 
-		if(request.requester_number !=null && !request.requester_number.isEmpty()) {
+		if (request.requester_number != null && !request.requester_number.isEmpty()) {
 			view.findViewById(R.id.requesteeChannelRow).setVisibility(View.VISIBLE);
 			//((TextView) view.findViewById(R.id.requesteeChannelValue)).setText(request.);
 			((TextView) view.findViewById(R.id.requesteeNumberValue)).setText(request.requester_number);
@@ -99,23 +110,45 @@ public class RequestDetailFragment extends Fragment {
 	}
 
 	private void showConfirmDialog() {
-		new StaxDialog(getActivity())
-				.setDialogTitle(R.string.cancelreq_head)
-				.setDialogMessage(R.string.cancelreq_msg)
-				.setNegButton(R.string.btn_back, btn -> {
-				})
-				.setPosButton(R.string.btn_cancelreq, btn -> {
-					viewModel.deleteRequest();
-					UIHelper.flashMessage(getContext(), getString(R.string.toast_confirm_cancelreq));
-					NavHostFragment.findNavController(RequestDetailFragment.this).popBackStack();
-				})
-				.isDestructive()
-				.showIt();
+		if(getActivity() !=null && getContext() !=null) {
+			new StaxDialog(getActivity())
+					.setDialogTitle(R.string.cancelreq_head)
+					.setDialogMessage(R.string.cancelreq_msg)
+					.setNegButton(R.string.btn_back, btn -> {
+					})
+					.setPosButton(R.string.btn_cancelreq, btn -> {
+						viewModel.deleteRequest();
+						UIHelper.flashMessage(getContext(), getString(R.string.toast_confirm_cancelreq));
+						NavHostFragment.findNavController(RequestDetailFragment.this).popBackStack();
+					})
+					.isDestructive()
+					.showIt();
+		}
 	}
 
 	private void setUpResendBtn(View view, Request request) {
-		view.findViewById(R.id.resend_btn).setOnClickListener(btn -> {
-
-		});
+		view.findViewById(R.id.resend_btn).setOnClickListener(btn -> { });
 	}
+
+
+
+	public void initShareButtons(View view) {
+		if(getContext() !=null && getActivity() !=null) {
+			view.findViewById(R.id.sms_share_selection).setOnClickListener(v -> Request.sendUsingSms(viewModel.generateRecipientString(), viewModel.generateSMS(), getContext(), getActivity()));
+			view.findViewById(R.id.whatsapp_share_selection).setOnClickListener(v -> viewModel.getCountryAlphaAndSendWithWhatsApp(getContext(), getActivity()));
+			view.findViewById(R.id.copylink_share_selection).setOnClickListener(v -> {
+				ImageView copyImage = v.findViewById(R.id.copyLinkImage);
+				if (Utils.copyToClipboard(viewModel.generateSMS(), getActivity())) {
+					copyImage.setActivated(true);
+					copyImage.setImageResource(R.drawable.copy_icon_white);
+
+					TextView copyLabel = v.findViewById(R.id.copyLinkText);
+					copyLabel.setText(getString(R.string.link_copied_label));
+				} else {
+					copyImage.setActivated(false);
+				}
+			});
+		}
+	}
+
 }
