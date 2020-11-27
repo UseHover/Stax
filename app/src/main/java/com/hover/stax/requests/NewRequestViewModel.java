@@ -214,8 +214,10 @@ public class NewRequestViewModel extends StagedViewModel {
 
 	void getCountryAlphaAndSendWithWhatsApp(Context context, Activity activity) {
 		Channel channel = getActiveChannel().getValue();
-		if(channel!=null)
+		if(channel!=null) {
+			saveToDatabase();
 			Request.sendUsingWhatsapp(generateRecipientString(), channel.countryAlpha2, generateSMS(), context, activity);
+		}
 	}
 
 	void saveToDatabase() {

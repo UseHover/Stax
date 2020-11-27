@@ -127,6 +127,7 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 	public void copyShareLink(View view) {
 		ImageView copyImage = view.findViewById(R.id.copyLinkImage);
 			if (Utils.copyToClipboard(requestViewModel.generateSMS(), this)) {
+				requestViewModel.saveToDatabase();
 				copyImage.setActivated(true);
 				copyImage.setImageResource(R.drawable.copy_icon_white);
 				TextView copyLabel = view.findViewById(R.id.copyLinkText);
