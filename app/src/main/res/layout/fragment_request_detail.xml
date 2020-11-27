@@ -16,5 +16,20 @@
 		<include layout="@layout/share_layout"
 		    android:id="@+id/shareCard" />
 
+
+
+			<androidx.appcompat.widget.AppCompatButton
+			    android:id="@+id/cancel_btn"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/btn_cancelreq"
+			    android:layout_gravity="end"
+			    style="@style/StaxButton"
+			    android:backgroundTint="@color/bright_red"
+			    android:layout_marginHorizontal="@dimen/text_13"
+			    android:layout_marginTop="@dimen/margin_21"
+			    android:fontFamily="font-medium" />
+
+
 	</LinearLayout>
 </androidx.core.widget.NestedScrollView>

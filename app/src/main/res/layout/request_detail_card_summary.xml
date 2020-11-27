@@ -106,34 +106,4 @@
 		</TableRow>
 	</TableLayout>
 
-	<RelativeLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/margin_21">
-
-		<androidx.appcompat.widget.AppCompatButton
-			android:id="@+id/resend_btn"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/btn_resend"
-			android:layout_toStartOf="@id/divider"
-			style="@style/StaxButton"
-			android:fontFamily="font-medium"
-			android:visibility="gone"/>
-
-		<View android:id="@+id/divider"
-			android:layout_width="@dimen/margin_21"
-			android:layout_height="wrap_content"
-			android:background="@color/transparent"
-			android:layout_toStartOf="@+id/cancel_btn"/>
-
-		<androidx.appcompat.widget.AppCompatButton
-			android:id="@+id/cancel_btn"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/btn_cancel"
-			android:layout_alignParentEnd="true"
-			style="@style/StaxButton"
-			android:fontFamily="font-medium" />
-	</RelativeLayout>
 </com.hover.stax.views.StaxCardView>

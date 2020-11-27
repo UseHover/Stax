@@ -34,10 +34,10 @@ public class RequestDetailFragment extends Fragment {
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		viewModel = new ViewModelProvider(this).get(RequestDetailViewModel.class);
 		JSONObject data = new JSONObject();
-		try {
-			data.put("id", getArguments().getInt("id"));
-		} catch (JSONException e) {
-		}
+
+		try { if(getArguments() !=null) data.put("id", getArguments().getInt("id")); }
+		catch (JSONException ignored) { }
+
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_request_detail)), data);
 		return inflater.inflate(R.layout.fragment_request_detail, container, false);
 	}
@@ -56,16 +56,8 @@ public class RequestDetailFragment extends Fragment {
 		viewModel.getRequest().observe(getViewLifecycleOwner(), request -> {
 			if (request != null) {
 				setUpSummary(view, request);
-				setUpResendBtn(view, request);
 			}
 		});
-
-//		viewModel.getChannel().observe(getViewLifecycleOwner(), channel-> {
-//			if (channel != null) {
-//				view.findViewById(R.id.requesteeChannelRow).setVisibility(View.VISIBLE);
-//				((TextView) view.findViewById(R.id.requesteeChannelValue)).setText(channel.toString());
-//			}
-//		});
 
 		viewModel.setRequest(getArguments().getInt("id"));
 		initShareButtons(view);
@@ -125,11 +117,6 @@ public class RequestDetailFragment extends Fragment {
 					.showIt();
 		}
 	}
-
-	private void setUpResendBtn(View view, Request request) {
-		view.findViewById(R.id.resend_btn).setOnClickListener(btn -> { });
-	}
-
 
 
 	public void initShareButtons(View view) {
