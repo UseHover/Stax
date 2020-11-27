@@ -47,7 +47,7 @@ public class TransferViewModel extends StagedViewModel {
 	private MutableLiveData<CustomizedTransferSummarySettings>ctssLiveData = new MutableLiveData<>();
 
 	private boolean isFromStaxLink = false;
-	private int channelIdFromStaxLink = 0;
+	private int institutionIdFromStaxLink = 0;
 
 
 	public TransferViewModel(Application application) {
@@ -123,7 +123,7 @@ public class TransferViewModel extends StagedViewModel {
 				} else {
 					boolean linkChecked = false;
 					for (Action action : filteredActions) {
-						if (action.channel_id == channelIdFromStaxLink) {
+						if (action.to_institution_id == institutionIdFromStaxLink) {
 							linkChecked = true;
 							setActiveAction(action);
 							break;
@@ -300,8 +300,8 @@ public class TransferViewModel extends StagedViewModel {
 					String separator = Constants.PAYMENT_LINK_SEPERATOR;
 					String[] splittedString = result.split(separator);
 					String amount = Utils.formatAmount(splittedString[0]);
-					int channel_id = Integer.parseInt(splittedString[1]);
-					channelIdFromStaxLink = channel_id;
+					int institution_id = Integer.parseInt(splittedString[1]);
+					institutionIdFromStaxLink = institution_id;
 					String recipient_number = splittedString[2];
 
 					CustomizedTransferSummarySettings ctss = new CustomizedTransferSummarySettings();
