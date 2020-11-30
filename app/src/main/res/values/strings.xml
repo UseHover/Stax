@@ -13,7 +13,6 @@
 	<string name="nav_schedule">Schedule Details</string>
 	<string name="nav_request">Request Details</string>
 	<string name="nav_language">Language Choice</string>
-	<string name="nav_channels">Choose Channels</string>
 	<string name="nav_sim_permission">Grant SIM permission</string>
 	<string name="nav_hover_permissions">Grant Hover permissions</string>
 	<string name="nav_pins_entry">Enter Pins</string>
@@ -43,7 +42,7 @@
 	<string name="bal_cardhead">Balances</string>
 	<string name="btn_addaccts">Add accounts</string>
 	<string name="hist_cardhead">History</string>
-	<string name="hist_zerobody">No history yet</string>
+	<string name="hist_zerobody">You do not have any history yet. Send money or buy airtime to get started.</string>
 	<string name="future_cardhead">Future Transactions</string>
 	<string name="fab_transfer">Transfer</string>
 	<string name="fab_airtime">Buy airtime</string>
@@ -130,13 +129,13 @@
 	<string name="recipientnetwork_cardhead">To network</string>
 	<string name="recipientnetwork_label">To this network</string>
 	<string name="recipient_cardhead">To this number</string>
-	<string name="recipientphone_label">Recipient phone number</string>
-	<string name="recipientacct_label">Recipient account number</string>
+	<string name="recipientphone_label">Contact phone number</string>
+	<string name="recipientacct_label">Contact account number</string>
 	<string name="toast_error_contactperm">You must grant the read contacts permission to choose a number from your address book.</string>
-	<string name="toast_error_contactselect">There was a problem selecting from your contact, please try again</string>
-	<string name="recipient_fielderror">Please enter recipient number</string>
-	<string name="amount_fielderror">Please enter amount</string>
-	<string name="service_fielderror">Please select a service</string>
+	<string name="toast_error_contactselect">There was a problem selecting your contact. Please try again.</string>
+	<string name="recipient_fielderror">Please enter a phone or account number for this contact.</string>
+	<string name="amount_fielderror">Please enter an amount.</string>
+	<string name="service_fielderror">Please select a service.</string>
 	<string name="airtimeself_choice">Myself</string>
 	<string name="airtimeother_choice">Someone else</string>
 	<string name="note_cardhead">Note</string>
@@ -152,19 +151,19 @@
 	<string name="amount_label_opt">How much money? (optional)</string>
 	<string name="reqfrom_label">From who?</string>
 	<string name="btn_addcontact">Add someone else</string>
-	<string name="sms_request_template">You have a money request from this number for %1$s on stax.me. %2$s</string>
+	<string name="sms_request_template">Kindly stax me %1$s at your earliest convenience. %2$s</string>
 	<string name="sms_amount_detail">%1$s</string>
 	<string name="sms_note_detail">Note: \"%1$s\"</string>
 	<string name="toast_error_smsperm">You must grant the read SMS permission so Stax can tell when a request is sent or fulfilled.</string>
 	<string name="toast_confirm_request">Your request has been sent.</string>
 	<string name="toast_request_scheduled">Your request has been scheduled. You will be reminded to send a message on %1$s</string>
 	<string name="descrip_request">Request from %1$s</string>
-	<string name="descrip_airtime_sched">buy airtime with %1$s for %2$s</string>
+	<string name="descrip_airtime_sched">Buy airtime with %1$s for %2$s</string>
 
 	<!-- Scheduling -->
-	<string name="future_toggle">Send in the future</string>
+	<string name="future_toggle">Send later</string>
 	<string name="date_label">Date</string>
-	<string name="repeat_toggle">Repeat transaction</string>
+	<string name="repeat_toggle">Send more than once</string>
 	<string name="repeatfreq_label">How often?</string>
 	<string name="end_label">End date</string>
 	<string name="end_label_opt">End date (optional)</string>
