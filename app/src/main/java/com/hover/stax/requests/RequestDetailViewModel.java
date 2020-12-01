@@ -89,8 +89,8 @@ public class RequestDetailViewModel extends AndroidViewModel {
 
 			String paymentLink = Request.generateStaxLink(amountNoFormat, institution_id, accountNumber, requestValue.date_sent, getApplication());
 
-			if (paymentLink !=null) return getApplication().getString(R.string.sms_request_template_with_link, amountString, noteString, paymentLink);
-			else return getApplication().getString(R.string.sms_request_template_no_link, amountString, noteString);
+			if (paymentLink !=null) return getApplication().getString(R.string.sms_request_template, amountString, noteString);
+			else return getApplication().getString(R.string.sms_request_template, amountString, noteString+" "+paymentLink);
 		}
 		else return  null;
 	}
