@@ -15,17 +15,20 @@
 		<include layout="@layout/request_card_summary"
 			android:id="@+id/summaryCard" />
 
+		<include layout="@layout/request_card_amount"
+		    android:id="@+id/amountCard" />
+
 		<include layout="@layout/request_card_recipients"
 			android:id="@+id/recipientCard" />
-
-		<include layout="@layout/request_card_amount"
-			android:id="@+id/amountCard" />
 
 		<include layout="@layout/request_card_receiving_account_info"
 			android:id="@+id/receiving_account_infoCard"/>
 
 		<include layout="@layout/transfer_card_note"
 			android:id="@+id/noteCard" />
+
+		<include layout="@layout/share_layout"
+		    android:id="@+id/shareCard" />
 
 		<include layout="@layout/transfer_card_future"
 			android:id="@+id/futureCard"
@@ -34,5 +37,6 @@
 		<include layout="@layout/transfer_card_repeat"
 			android:id="@+id/repeatCard"
 			android:visibility="gone" />
+
 	</LinearLayout>
 </androidx.core.widget.NestedScrollView>

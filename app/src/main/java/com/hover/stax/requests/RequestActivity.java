@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +27,7 @@ import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.StagedViewModel;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxDialog;
 
 import static com.hover.stax.requests.RequestStage.*;
@@ -102,52 +105,34 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 			requestViewModel.schedule();
 			onFinished(Constants.SCHEDULE_REQUEST);
 		} else
-			sendRequest();
+			sendSMS(null);
 	}
 
-	private void sendRequest() {
-		Amplitude.getInstance().logEvent(getString(R.string.clicked_send_request));
-		if (!PermissionUtils.hasSmsPermission(this))
-			requestPermissions(new String[]{Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS}, Constants.SMS);
-		else{
-			sendSms();
-		}
-	}
+
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		if (requestCode == Constants.SMS && new PermissionHelper(this).permissionsGranted(grantResults)) {
 			Amplitude.getInstance().logEvent(getString(R.string.sms_perm_success));
-			sendSms();
+			sendSMS(null);
 		} else if (requestCode == Constants.SMS) {
 			Amplitude.getInstance().logEvent(getString(R.string.sms_perm_denied));
 			UIHelper.flashMessage(this, getResources().getString(R.string.toast_error_smsperm));
 		}
 	}
 
-	private void sendSms() {
-		//UIHelper.flashMessage(this, findViewById(R.id.request_rootView), getString(R.string.request_processing_msg));
-
-		requestViewModel.setStarted();
-		new SmsSentObserver(this, requestViewModel.getRecipients().getValue(), new Handler(), this).start();
-
-		Intent sendIntent = new Intent();
-		sendIntent.setAction(Intent.ACTION_VIEW);
-		sendIntent.setData(Uri.parse("smsto:" + requestViewModel.generateRecipientString()));
-		sendIntent.putExtra(Intent.EXTRA_TEXT, requestViewModel.generateSMS());
-		sendIntent.putExtra("sms_body", requestViewModel.generateSMS());
-		startActivityForResult(Intent.createChooser(sendIntent, "Request"), Constants.SMS);
-	}
-
-	private void sendWhatsapp() {
-		Intent sendIntent = new Intent();
-		sendIntent.setAction(Intent.ACTION_VIEW);
-
-		// FIXME: Needs to use international number format with no +
-		String whatsapp ="https://api.whatsapp.com/send?phone="+ requestViewModel.generateRecipientString() +"&text=" + requestViewModel.generateSMS();
-		sendIntent.setData(Uri.parse(whatsapp));
-		startActivityForResult(sendIntent, Constants.SMS);
+	public void sendSMS(View view) { Request.sendUsingSms(requestViewModel, this, this, this); }
+	public void sendWhatsapp(View view) { requestViewModel.getCountryAlphaAndSendWithWhatsApp(this, this); }
+	public void copyShareLink(View view) {
+		ImageView copyImage = view.findViewById(R.id.copyLinkImage);
+			if (Utils.copyToClipboard(requestViewModel.generateSMS(), this)) {
+				requestViewModel.saveToDatabase();
+				copyImage.setActivated(true);
+				copyImage.setImageResource(R.drawable.copy_icon_white);
+				TextView copyLabel = view.findViewById(R.id.copyLinkText);
+				copyLabel.setText(getString(R.string.link_copied_label));
+			} else copyImage.setActivated(false);
 	}
 
 	@Override
@@ -169,17 +154,17 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 		findViewById(R.id.recipientRow).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 && requestViewModel.getAmount().getValue() != null ? View.VISIBLE : View.GONE);
 		findViewById(R.id.requesteeChannelRow).setVisibility(stage.compare(RECEIVING_ACCOUNT_INFO) > 0 && requestViewModel.getActiveChannel().getValue() != null ? View.VISIBLE : View.GONE);
-		findViewById(R.id.requesteeNumberRow).setVisibility(stage.compare(RECEIVING_ACCOUNT_INFO) > 0 && requestViewModel.getRequesterNumber().getValue() != null ? View.VISIBLE : View.GONE);
 		findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && requestViewModel.getNote().getValue() != null && !requestViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
 		findViewById(R.id.btnRow).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
 	}
 
 	private void setCurrentCard(StagedViewModel.StagedEnum stage) {
 //		findViewById(R.id.summaryCard).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.recipientCard).setVisibility(stage.compare(RECIPIENT) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.amountCard).setVisibility(stage.compare(AMOUNT) == 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.recipientCard).setVisibility(stage.compare(RECIPIENT) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.receiving_account_infoCard).setVisibility(stage.compare(RECEIVING_ACCOUNT_INFO) == 0 ?View.VISIBLE : View.GONE);
 		findViewById(R.id.noteCard).setVisibility(stage.compare(NOTE) == 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.shareCard).setVisibility(stage.compare(REVIEW) >= 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.futureCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && requestViewModel.getFutureDate().getValue() == null ? View.VISIBLE : View.GONE);
 		findViewById(R.id.repeatCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && (requestViewModel.repeatSaved().getValue() == null || !requestViewModel.repeatSaved().getValue()) ? View.VISIBLE : View.GONE);
 	}
@@ -192,7 +177,7 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 				if (requestViewModel.getFutureDate().getValue() == null) { fab.hide(); } else { fab.show(); }
 			} else {
 				fab.setText(getString(R.string.notify_request_cta));
-				fab.show();
+				fab.hide();
 			}
 		} else {
 			fab.setText(R.string.btn_continue);

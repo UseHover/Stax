@@ -30,6 +30,9 @@ public interface ChannelDao {
 	@Query("SELECT * FROM channels WHERE id = :id LIMIT 1")
 	Channel getChannel(int id);
 
+	@Query("SELECT * FROM channels WHERE institution_id = :id LIMIT 1")
+	Channel getChannelByInstitutionId(int id);
+
 	@Query("SELECT * FROM channels WHERE id = :id LIMIT 1")
 	LiveData<Channel> getLiveChannel(int id);
 

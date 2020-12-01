@@ -1,6 +1,8 @@
 package com.hover.stax.requests;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -43,7 +45,7 @@ public class NewRequestViewModel extends StagedViewModel {
 		super(application);
 		selectedChannels = repo.getSelected();
 		activeChannel.addSource(selectedChannels, this::findActiveChannel);
-		stage.setValue(RequestStage.RECIPIENT);
+		stage.setValue(AMOUNT);
 		requestees.setValue(new ArrayList<>(Collections.singletonList(new StaxContact(""))));
 		requestStarted.setValue(false);
 	}
@@ -201,13 +203,21 @@ public class NewRequestViewModel extends StagedViewModel {
 		String noteString = note.getValue() != null ? getApplication().getString(R.string.sms_note_detail, note.getValue()) : "";
 
 		String amountNoFormat = amount.getValue() != null ? amount.getValue() : "0.00";
-		int channel_id = activeChannel.getValue() !=null ? activeChannel.getValue().id : 0;
+		int institution_id = activeChannel.getValue() !=null ? activeChannel.getValue().institutionId : 0;
 		String accountNumber= requesterNumber.getValue() !=null ? requesterNumber.getValue().trim() : "";
 
-		String paymentLink = Request.generateStaxLink(amountNoFormat, channel_id, accountNumber, getApplication());
+		String paymentLink = Request.generateStaxLink(amountNoFormat, institution_id, accountNumber, DateUtils.now(), getApplication());
 
 		if (paymentLink !=null) return getApplication().getString(R.string.sms_request_template_with_link, amountString, noteString, paymentLink);
 		else return getApplication().getString(R.string.sms_request_template_no_link, amountString, noteString);
+	}
+
+	void getCountryAlphaAndSendWithWhatsApp(Context context, Activity activity) {
+		Channel channel = getActiveChannel().getValue();
+		if(channel!=null) {
+			saveToDatabase();
+			Request.sendUsingWhatsapp(generateRecipientString(), channel.countryAlpha2, generateSMS(), context, activity);
+		}
 	}
 
 	void saveToDatabase() {
