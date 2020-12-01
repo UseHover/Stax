@@ -9,6 +9,7 @@
 	<string name="nav_airtime">Buy Airtime</string>
 	<string name="nav_money">Move Money</string>
 	<string name="nav_security">Security</string>
+	<string name="nav_channels">Choose Services</string>
 	<string name="nav_transaction">Transaction Details</string>
 	<string name="nav_schedule">Schedule Details</string>
 	<string name="nav_request">Request Details</string>
