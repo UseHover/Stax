@@ -208,8 +208,8 @@ public class NewRequestViewModel extends StagedViewModel {
 
 		String paymentLink = Request.generateStaxLink(amountNoFormat, institution_id, accountNumber, DateUtils.now(), getApplication());
 
-		if (paymentLink !=null) return getApplication().getString(R.string.sms_request_template_with_link, amountString, noteString, paymentLink);
-		else return getApplication().getString(R.string.sms_request_template_no_link, amountString, noteString);
+		if (paymentLink !=null) return getApplication().getString(R.string.sms_request_template, amountString, noteString+" "+paymentLink);
+		else return getApplication().getString(R.string.sms_request_template, amountString, noteString);
 	}
 
 	void getCountryAlphaAndSendWithWhatsApp(Context context, Activity activity) {
