@@ -10,6 +10,7 @@ import androidx.lifecycle.Transformations;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.database.Constants;
 import com.hover.stax.requests.Request;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.schedules.Schedule;
@@ -252,7 +253,7 @@ public class TransferViewModel extends StagedViewModel {
 
 	public void view(Request request) {
 		setAmount(request.amount);
-		setActiveChannel(request.requester_channel_id);
+		setActiveChannel(request.requester_institution_id);
 		setRecipient(request.requester_number);
 		setStage(TransferStage.REVIEW_DIRECT);
 		if (request.amount.isEmpty())

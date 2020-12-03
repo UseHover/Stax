@@ -33,7 +33,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (SelfDestructActivity.isTime(this)) {
+		if (SelfDestructActivity.isExpired(this)) {
 			startActivity(new Intent(this, SelfDestructActivity.class));
 			finish();
 			return;
@@ -49,6 +49,8 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 //		else if (Utils.getSharedPrefs(this).getInt(LANGUAGE_CHECK, 0) == 0) {
 //			startActivity(new Intent(this, SelectLanguageActivity.class));
 //		finish(); }
+		else if (getIntent().getAction().equals(Intent.ACTION_VIEW) && getIntent().getData() != null)
+			goToRequest(getIntent());
 		else {
 			startActivity(new Intent(this, MainActivity.class));
 			finish();
@@ -75,10 +77,13 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 		wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue();
 		wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, UpdateChannelsWorker.makeToil());
 		wm.enqueueUniquePeriodicWork(ScheduleWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, ScheduleWorker.makeToil());
+	}
 
-
-
-
+	private void goToRequest(Intent intent) {
+		Intent i = new Intent(this, MainActivity.class);
+		i.putExtra(Constants.REQUEST_LINK, intent.getData().toString());
+		startActivity(i);
+		finish();
 	}
 
 	@Override

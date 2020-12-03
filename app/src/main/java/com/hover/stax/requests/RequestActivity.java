@@ -1,6 +1,5 @@
 package com.hover.stax.requests;
 
-import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,7 +20,6 @@ import com.hover.stax.R;
 import com.hover.stax.database.Constants;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
-import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.StagedViewModel;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.StaxDialog;
@@ -101,16 +99,7 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 			requestViewModel.schedule();
 			onFinished(Constants.SCHEDULE_REQUEST);
 		} else
-			sendRequest();
-	}
-
-	private void sendRequest() {
-		Amplitude.getInstance().logEvent(getString(R.string.clicked_send_request));
-		if (!PermissionUtils.hasSmsPermission(this))
-			requestPermissions(new String[]{Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS}, Constants.SMS);
-		else{
 			sendSms();
-		}
 	}
 
 	@Override
@@ -142,10 +131,23 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 		sendIntent.setAction(Intent.ACTION_VIEW);
 
 		// FIXME: Needs to use international number format with no +
-		String whatsapp ="https://api.whatsapp.com/send?phone="+ requestViewModel.generateRecipientString() +"&text=" + requestViewModel.generateMessage(this);
+		String whatsapp = "https://api.whatsapp.com/send?phone=" + requestViewModel.generateRecipientString() + "&text=" + requestViewModel.generateMessage(this);
 		sendIntent.setData(Uri.parse(whatsapp));
 		startActivityForResult(sendIntent, Constants.SMS);
 	}
+
+//	public void sendSMS(View view) { Request.sendUsingSms(requestViewModel, this, this, this); }
+//	public void sendWhatsapp(View view) { requestViewModel.getCountryAlphaAndSendWithWhatsApp(this, this); }
+//	public void copyShareLink(View view) {
+//		ImageView copyImage = view.findViewById(R.id.copyLinkImage);
+//			if (Utils.copyToClipboard(requestViewModel.generateSMS(), this)) {
+//				requestViewModel.saveToDatabase();
+//				copyImage.setActivated(true);
+//				copyImage.setImageResource(R.drawable.copy_icon_white);
+//				TextView copyLabel = view.findViewById(R.id.copyLinkText);
+//				copyLabel.setText(getString(R.string.link_copied_label));
+//			} else copyImage.setActivated(false);
+//	}
 
 	@Override
 	public void onSmsSendEvent(boolean wasSent) {
@@ -163,20 +165,19 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 	}
 
 	private void setSummaryCard(@Nullable StagedViewModel.StagedEnum stage) {
-		findViewById(R.id.requesteeRow).setVisibility(stage.compare(REQUESTEE) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 && requestViewModel.getAmount().getValue() != null ? View.VISIBLE : View.GONE);
-		findViewById(R.id.requesterChannelRow).setVisibility(stage.compare(REQUESTER_NUMBER) > 0 && requestViewModel.getActiveChannel().getValue() != null ? View.VISIBLE : View.GONE);
-		findViewById(R.id.requesterNumberRow).setVisibility(stage.compare(REQUESTER_NUMBER) > 0 && requestViewModel.getRequesterNumber().getValue() != null ? View.VISIBLE : View.GONE);
+		findViewById(R.id.requesteeRow).setVisibility(stage.compare(REQUESTEE) > 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.requesterAccountRow).setVisibility(stage.compare(REQUESTER) > 0 && requestViewModel.getActiveChannel().getValue() != null ? View.VISIBLE : View.GONE);
 		findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && requestViewModel.getNote().getValue() != null && !requestViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
 		findViewById(R.id.btnRow).setVisibility(stage.compare(REQUESTEE) > 0 ? View.VISIBLE : View.GONE);
 	}
 
 	private void setCurrentCard(StagedViewModel.StagedEnum stage) {
-//		findViewById(R.id.summaryCard).setVisibility(stage.compare(RECIPIENT) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.recipientCard).setVisibility(stage.compare(REQUESTEE) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.amountCard).setVisibility(stage.compare(AMOUNT) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.receiving_account_infoCard).setVisibility(stage.compare(REQUESTER_NUMBER) == 0 ?View.VISIBLE : View.GONE);
+		findViewById(R.id.receiving_account_infoCard).setVisibility(stage.compare(REQUESTER) == 0 ?View.VISIBLE : View.GONE);
 		findViewById(R.id.noteCard).setVisibility(stage.compare(NOTE) == 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.shareCard).setVisibility(stage.compare(REVIEW) >= 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.futureCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && requestViewModel.getFutureDate().getValue() == null ? View.VISIBLE : View.GONE);
 		findViewById(R.id.repeatCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && (requestViewModel.repeatSaved().getValue() == null || !requestViewModel.repeatSaved().getValue()) ? View.VISIBLE : View.GONE);
 	}
@@ -189,7 +190,7 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 				if (requestViewModel.getFutureDate().getValue() == null) { fab.hide(); } else { fab.show(); }
 			} else {
 				fab.setText(getString(R.string.notify_request_cta));
-				fab.show();
+				fab.hide();
 			}
 		} else {
 			fab.setText(R.string.btn_continue);
@@ -209,7 +210,7 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 	}
 
 	private void onFinished(int type) {
-		requestViewModel.saveToDatabase(this);
+		requestViewModel.saveToDatabase();
 		setResult(RESULT_OK, createSuccessIntent(type));
 		finish();
 	}

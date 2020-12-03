@@ -52,6 +52,7 @@ public class EditRequestFragment extends EditStagedFragment implements Recipient
 		if (requestViewModel.getActiveChannel().getValue() != null) channelDropdown.setText(requestViewModel.getActiveChannel().getValue().toString());
 		requesterNumberInput = view.findViewById(R.id.accountNumber_input);
 		requesterNumberInput.setText(requestViewModel.getRequesterNumber().getValue());
+
 		noteInput = view.findViewById(R.id.note_input);
 		noteInput.setText(requestViewModel.getNote().getValue());
 
@@ -68,8 +69,10 @@ public class EditRequestFragment extends EditStagedFragment implements Recipient
 
 		if (!amountInput.getText().toString().isEmpty())
 			requestViewModel.setAmount(amountInput.getText().toString());
+
 		if (!requesterNumberInput.getText().toString().isEmpty())
 			requestViewModel.setRequesterNumber(requesterNumberInput.getText().toString());
+
 		if (!noteInput.getText().toString().isEmpty())
 			requestViewModel.setNote(noteInput.getText().toString());
 		NavHostFragment.findNavController(this).navigate(R.id.navigation_new);

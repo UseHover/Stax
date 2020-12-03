@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:title="@string/receiving_account_cardhead">
+    app:title="@string/requester_account_cardhead">
 
 	<LinearLayout
 	    android:layout_width="match_parent"
@@ -33,7 +33,7 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginTop="@dimen/margin_16"
-	    android:hint="@string/receiving_account_number_label"
+	    android:hint="@string/requester_number_label"
 	    style="@style/StaxLabeledInput">
 
 		<com.google.android.material.textfield.TextInputEditText

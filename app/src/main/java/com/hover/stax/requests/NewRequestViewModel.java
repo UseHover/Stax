@@ -1,5 +1,6 @@
 package com.hover.stax.requests;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
@@ -15,6 +16,7 @@ import com.hover.stax.database.Constants;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.StagedViewModel;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,7 +44,7 @@ public class NewRequestViewModel extends StagedViewModel {
 		super(application);
 		selectedChannels = repo.getSelected();
 		activeChannel.addSource(selectedChannels, this::findActiveChannel);
-		stage.setValue(RequestStage.REQUESTEE);
+		stage.setValue(AMOUNT);
 		requestees.setValue(new ArrayList<>(Collections.singletonList(new StaxContact(""))));
 		formulatedRequest.setValue(null);
 	}
@@ -169,14 +171,14 @@ public class NewRequestViewModel extends StagedViewModel {
 				}
 				break;
 
-			case REQUESTER_NUMBER:
+			case REQUESTER:
 				if (getActiveChannel().getValue() == null) {
-					requesterAccountError.setValue(R.string.receiving_account_choice_error);
+					requesterAccountError.setValue(R.string.requester_account_error);
 					return false;
 				} else requesterAccountError.setValue(null);
 
 				if (requesterNumber.getValue() == null || requesterNumber.getValue().isEmpty()) {
-					requesterNumberError.setValue(R.string.receiving_account_number_fielderror);
+					requesterNumberError.setValue(R.string.requester_number_fielderror);
 					return false;
 				} else requesterNumberError.setValue(null);
 				break;
@@ -187,6 +189,7 @@ public class NewRequestViewModel extends StagedViewModel {
 	String generateRecipientString() {
 		StringBuilder phones = new StringBuilder();
 		List<StaxContact> rs = requestees.getValue();
+
 		for (int r = 0; r < rs.size(); r++) {
 			if (phones.length() > 0) phones.append(",");
 			phones.append(rs.get(r).phoneNumber);
@@ -198,7 +201,7 @@ public class NewRequestViewModel extends StagedViewModel {
 		return formulatedRequest.getValue().generateSMS(c);
 	}
 
-	void saveToDatabase(Context c) {
+	void saveToDatabase() {
 		saveContacts();
 		for (StaxContact recipient : requestees.getValue())
 			repo.insert(formulatedRequest.getValue().setRecipient(recipient));
@@ -212,6 +215,14 @@ public class NewRequestViewModel extends StagedViewModel {
 				repo.update(s);
 			}
 		}
+	}
+
+	void getCountryAlphaAndSendWithWhatsApp(Context context, Activity activity) {
+//		Channel channel = getActiveChannel().getValue();
+//		if (channel != null) {
+//			saveToDatabase();
+//			Request.sendUsingWhatsapp(generateRecipientString(), channel.countryAlpha2, generateSMS(), context, activity);
+//		}
 	}
 
 	void setStarted() {

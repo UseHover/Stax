@@ -35,7 +35,7 @@
 	    style="@style/StaxLabeledDropdown"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:hint="@string/requester_account_type_label">
+	    android:hint="@string/requester_account_cardhead">
 
 		<AutoCompleteTextView
 		    android:id="@+id/channelDropdown"
@@ -51,12 +51,13 @@
 		    android:textCursorDrawable="@null" />
 
 	</com.google.android.material.textfield.TextInputLayout>
+
 	<com.google.android.material.textfield.TextInputLayout
 	    android:id="@+id/accountNumberEntry"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginTop="@dimen/margin_16"
-	    android:hint="@string/receiving_account_number_label"
+	    android:hint="@string/requester_number_label"
 	    style="@style/StaxLabeledInput">
 
 		<com.google.android.material.textfield.TextInputEditText

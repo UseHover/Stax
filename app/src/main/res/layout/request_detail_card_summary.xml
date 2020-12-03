@@ -26,7 +26,7 @@
 		<TableRow android:id="@+id/amountRow" android:layout_marginTop="@dimen/margin_21">
 			<TextView
 				android:text="@string/amount_cardhead"
-			    	android:fontFamily="font-normal"
+		        android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
@@ -38,9 +38,9 @@
 				android:textAlignment="viewEnd" />
 		</TableRow>
 
-		<TableRow android:id="@+id/requesterChannelRow" android:layout_marginTop="@dimen/margin_21">
+		<TableRow android:id="@+id/requesterAccountRow" android:layout_marginTop="@dimen/margin_21">
 			<TextView
-			    android:text="@string/requester_account_type_label"
+			    android:text="@string/requester_account_cardhead"
 			    android:textColor="@color/offWhite"
 			    android:fontFamily="font-normal"
 			    android:textSize="@dimen/text_16" />
@@ -55,12 +55,12 @@
 
 		<TableRow android:id="@+id/requesterNumberRow" android:layout_marginTop="@dimen/margin_21">
 			<TextView
-			    android:text="@string/receiving_account_number_label"
+			    android:text="@string/requester_number_label"
 			    android:textColor="@color/offWhite"
 			    android:fontFamily="font-normal"
 			    android:textSize="@dimen/text_16" />
 
-			<TextView android:id="@+id/requesterNumberValue"
+			<StaxSpinner2Line android:id="@+id/requesterNumberValue"
 			    android:layout_weight="1"
 			    android:fontFamily="font-medium"
 			    android:textColor="@color/offWhite"
@@ -71,13 +71,13 @@
 		<TableRow android:id="@+id/noteRow" android:layout_marginTop="@dimen/margin_21">
 			<TextView
 				android:text="@string/note_cardhead"
-			    	android:fontFamily="font-normal"
+		        android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/noteValue"
 				android:layout_weight="1"
-			    	android:fontFamily="font-medium"
+		        android:fontFamily="font-medium"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
@@ -86,47 +86,17 @@
 		<TableRow android:id="@+id/dateRow" android:layout_marginTop="@dimen/margin_21">
 			<TextView
 				android:text="@string/date_label"
-			    	android:fontFamily="font-normal"
+		        android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/dateValue"
 				android:layout_weight="1"
-			    	android:fontFamily="font-medium"
+		        android:fontFamily="font-medium"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
 		</TableRow>
 	</TableLayout>
 
-	<RelativeLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/margin_21">
-
-		<androidx.appcompat.widget.AppCompatButton
-			android:id="@+id/resend_btn"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/btn_resend"
-			android:layout_toStartOf="@id/divider"
-			style="@style/StaxButton"
-			android:fontFamily="font-medium"
-			android:visibility="gone"/>
-
-		<View android:id="@+id/divider"
-			android:layout_width="@dimen/margin_21"
-			android:layout_height="wrap_content"
-			android:background="@color/transparent"
-			android:layout_toStartOf="@+id/cancel_btn"/>
-
-		<androidx.appcompat.widget.AppCompatButton
-			android:id="@+id/cancel_btn"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/btn_cancel"
-			android:layout_alignParentEnd="true"
-			style="@style/StaxButton"
-			android:fontFamily="font-medium" />
-	</RelativeLayout>
 </com.hover.stax.views.StaxCardView>

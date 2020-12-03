@@ -25,7 +25,6 @@
 			android:textSize="@dimen/text_21"
 			android:textColor="@color/offWhite"
 			android:textCursorDrawable="@null"
-			android:fontFamily="font-normal"
 			android:dropDownHeight="135dp"
 			android:inputType="textPersonName"/>
 	</com.google.android.material.textfield.TextInputLayout>

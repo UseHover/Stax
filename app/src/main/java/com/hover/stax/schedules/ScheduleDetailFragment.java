@@ -85,7 +85,6 @@ public class ScheduleDetailFragment extends Fragment {
 		tv.setText(c.toString());
 		((LinearLayout) view.findViewById(R.id.requesteeValueList)).addView(tv);
 	}
-
 	private void showConfirmDialog(View v) {
 		new StaxDialog(v.getContext(), this)
 				.setDialogTitle(R.string.cancelfuture_head)

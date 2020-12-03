@@ -45,7 +45,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 			if (scheduleViewModel != null && scheduleViewModel.getSchedule().getValue() != null)
 				transferViewModel.setActiveChannel(scheduleViewModel.getSchedule().getValue().channel_id);
 			else if (transferViewModel != null && transferViewModel.getRequest().getValue() != null)
-				transferViewModel.setActiveChannel(transferViewModel.getRequest().getValue().requester_channel_id);
+				transferViewModel.setActiveChannel(transferViewModel.getRequest().getValue().requester_institution_id);
 		});
 		transferViewModel.getActiveChannel().observe(this, channel -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel."));
 		transferViewModel.getActions().observe(this, actions -> onUpdateStage(transferViewModel.getStage().getValue()));
@@ -150,7 +150,6 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void setSummaryCard(@Nullable StagedViewModel.StagedEnum stage) {
-		Log.e(TAG, "Summary card stage: " + stage);
 		findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.accountRow).setVisibility(stage.compare(FROM_ACCOUNT) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.actionRow).setVisibility((stage.compare(TO_NETWORK) > 0 && transferViewModel.hasActionsLoaded()) ? View.VISIBLE : View.GONE);

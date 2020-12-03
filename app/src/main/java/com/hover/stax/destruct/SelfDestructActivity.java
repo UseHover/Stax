@@ -29,10 +29,11 @@ public class SelfDestructActivity extends AppCompatActivity {
 		findViewById(R.id.continue_btn).setOnClickListener(view -> attemptDownload());
 	}
 
-	public static boolean isTime(Context c) {
-		long currentTime = new Date().getTime();
-		long selfDestructTime = Long.parseLong(Utils.getBuildConfigValue(c, "SELF_DESTRUCT").toString());
-		return currentTime >= selfDestructTime;
+	public static boolean isExpired(Context c) {
+		return false;
+//		long currentTime = new Date().getTime();
+//		long selfDestructTime = Long.parseLong(Utils.getBuildConfigValue(c, "SELF_DESTRUCT").toString());
+//		return currentTime >= selfDestructTime;
 	}
 
 	private void attemptDownload() {

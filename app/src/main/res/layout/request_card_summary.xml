@@ -11,64 +11,44 @@
 		android:layout_height="wrap_content"
 		android:layout_marginHorizontal="@dimen/margin_3">
 
-		<TableRow android:id="@+id/requesteeRow">
+		<TableRow android:id="@+id/amountRow">
+			<TextView
+			    android:text="@string/amount_cardhead"
+			    android:textColor="@color/offWhite"
+			    android:fontFamily="font-normal"
+			    android:textSize="@dimen/text_16" />
 
+			<TextView android:id="@+id/amountValue"
+			    android:layout_weight="1"
+			    android:fontFamily="font-normal"
+			    android:textColor="@color/offWhite"
+			    android:textSize="@dimen/text_21"
+			    android:textAlignment="viewEnd" />
+		</TableRow>
+
+		<TableRow android:id="@+id/requesteeRow" android:layout_marginTop="@dimen/margin_21" android:gravity="center_vertical">
 			<TextView
 				android:text="@string/reqfrom_label"
 				android:textColor="@color/offWhite"
-			    	android:fontFamily="font-normal"
+				android:fontFamily="font-normal"
 				android:textSize="@dimen/text_16" />
 
 			<LinearLayout android:id="@+id/requesteeValueList"
 				android:orientation="vertical"
-				android:layout_weight="1">
-
-			</LinearLayout>
+				android:layout_weight="1" />
 		</TableRow>
 
-		<TableRow android:id="@+id/amountRow" android:layout_marginTop="@dimen/margin_21">
+		<TableRow android:id="@+id/requesterAccountRow" android:layout_marginTop="@dimen/margin_21" android:gravity="center_vertical">
 			<TextView
-				android:text="@string/amount_cardhead"
-				android:textColor="@color/offWhite"
-			    	android:fontFamily="font-normal"
-				android:textSize="@dimen/text_16" />
+			    android:text="@string/requester_account_cardhead"
+			    android:textColor="@color/offWhite"
+			    android:fontFamily="font-normal"
+			    android:textSize="@dimen/text_16" />
 
-			<TextView android:id="@+id/amountValue"
-				android:layout_weight="1"
-			    	android:fontFamily="font-medium"
-				android:textColor="@color/offWhite"
-				android:textSize="@dimen/text_21"
+			<com.hover.stax.views.Stax2LineItem
+				android:id="@+id/requester_account_value"
+			    android:layout_weight="1"
 				android:textAlignment="viewEnd" />
-		</TableRow>
-
-		<TableRow android:id="@+id/requesterChannelRow" android:layout_marginTop="@dimen/margin_21">
-			<TextView
-			    android:text="@string/requester_account_type_label"
-			    android:textColor="@color/offWhite"
-			    android:fontFamily="font-normal"
-			    android:textSize="@dimen/text_16" />
-
-			<TextView android:id="@+id/requester_channel_value"
-			    android:layout_weight="1"
-			    android:fontFamily="font-medium"
-			    android:textColor="@color/offWhite"
-			    android:textSize="@dimen/text_21"
-			    android:textAlignment="viewEnd" />
-		</TableRow>
-
-		<TableRow android:id="@+id/requesterNumberRow" android:layout_marginTop="@dimen/margin_21">
-			<TextView
-			    android:text="@string/receiving_account_number_label"
-			    android:textColor="@color/offWhite"
-			    android:fontFamily="font-normal"
-			    android:textSize="@dimen/text_16" />
-
-			<TextView android:id="@+id/requesterNumberValue"
-			    android:layout_weight="1"
-			    android:fontFamily="font-medium"
-			    android:textColor="@color/offWhite"
-			    android:textSize="@dimen/text_21"
-			    android:textAlignment="viewEnd" />
 		</TableRow>
 
 		<TableRow android:id="@+id/noteRow" android:layout_marginTop="@dimen/margin_21">
@@ -80,7 +60,7 @@
 
 			<TextView android:id="@+id/noteValue"
 				android:layout_weight="1"
-			    	android:fontFamily="font-medium"
+			    	android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
@@ -90,12 +70,12 @@
 			<TextView
 				android:text="@string/date_label"
 				android:textColor="@color/offWhite"
-			    	android:fontFamily="font-normal"
+				android:fontFamily="font-normal"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/dateValue"
 				android:layout_weight="1"
-				android:fontFamily="font-medium"
+				android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
@@ -111,7 +91,7 @@
 
 			<TextView android:id="@+id/frequencyValue"
 				android:layout_weight="1"
-				android:fontFamily="font-medium"
+				android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
@@ -127,7 +107,7 @@
 
 			<TextView android:id="@+id/endDateValue"
 				android:layout_weight="1"
-				android:fontFamily="font-medium"
+				android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
@@ -143,7 +123,7 @@
 
 			<TextView android:id="@+id/repeatTimesValue"
 				android:layout_weight="1"
-				android:fontFamily="font-medium"
+				android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />

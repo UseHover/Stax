@@ -28,6 +28,7 @@ import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.StagedFragment;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.views.Stax2LineItem;
 
 import java.util.List;
 
@@ -37,7 +38,8 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 
 	private RecyclerView recipientInputList;
 	private LinearLayout recipientValueList;
-	private TextView amountValue, receivingChannelNameValue, receivingAccountNumberValue, noteValue;
+	private TextView amountValue, noteValue;
+	private Stax2LineItem requesterAccountValue;
 	private EditText amountInput, receivingAccountNumberInput, noteInput;
 	private RadioGroup channelRadioGroup;
 	private Button addRecipientBtn;
@@ -60,8 +62,9 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		recipientValueList = view.findViewById(R.id.requesteeValueList);
 		amountValue = view.findViewById(R.id.amountValue);
 		noteValue = view.findViewById(R.id.noteValue);
-		receivingChannelNameValue = view.findViewById(R.id.requester_channel_value);
-		receivingAccountNumberValue = view.findViewById(R.id.requesterNumberValue);
+
+		requesterAccountValue = view.findViewById(R.id.requester_account_value);
+
 		recipientInputList = view.findViewById(R.id.recipient_list);
 		amountInput = view.findViewById(R.id.amount_input);
 		amountInput.setText(requestViewModel.getAmount().getValue());
@@ -86,7 +89,7 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		requestViewModel.getStage().observe(getViewLifecycleOwner(), stage -> {
 			switch ((RequestStage) stage) {
 				case AMOUNT: amountInput.requestFocus(); break;
-				case REQUESTER_NUMBER: receivingAccountNumberInput.requestFocus(); break;
+				case REQUESTER: receivingAccountNumberInput.requestFocus(); break;
 				case NOTE: noteInput.requestFocus(); break;
 			}
 		});
@@ -95,9 +98,9 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 			if (recipients == null || recipients.size() == 0) return;
 			recipientValueList.removeAllViews();
 			for (StaxContact recipient : recipients) {
-				TextView tv = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.recipient_cell, null);
-				tv.setText(recipient.toString());
-				recipientValueList.addView(tv);
+				Stax2LineItem ssi2l = new Stax2LineItem(getContext(), null);
+				ssi2l.setContact(recipient);
+				recipientValueList.addView(ssi2l);
 			}
 
 			if (recipients.size() == recipientCount) return;
@@ -129,7 +132,7 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 
 		requestViewModel.getActiveChannel().observe(getViewLifecycleOwner(), c -> {
 			if (c != null) {
-				receivingChannelNameValue.setText(c.name);
+				requesterAccountValue.setTitle(c.name);
 				channelRadioGroup.check(c.id);
 			}
 		});
@@ -139,7 +142,7 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		});
 
 		requestViewModel.getRequesterNumber().observe(getViewLifecycleOwner(), accountNumber -> {
-			receivingAccountNumberValue.setText(accountNumber);
+			requesterAccountValue.setSubtitle(accountNumber);
 		});
 		requestViewModel.getNote().observe(getViewLifecycleOwner(), note -> noteValue.setText(note));
 	}

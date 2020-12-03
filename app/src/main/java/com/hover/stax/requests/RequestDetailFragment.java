@@ -32,10 +32,10 @@ public class RequestDetailFragment extends Fragment {
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		viewModel = new ViewModelProvider(this).get(RequestDetailViewModel.class);
 		JSONObject data = new JSONObject();
-		try {
-			data.put("id", getArguments().getInt("id"));
-		} catch (JSONException e) {
-		}
+
+		try { if(getArguments() !=null) data.put("id", getArguments().getInt("id")); }
+		catch (JSONException ignored) { }
+
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_request_detail)), data);
 		return inflater.inflate(R.layout.fragment_request_detail, container, false);
 	}
@@ -46,24 +46,25 @@ public class RequestDetailFragment extends Fragment {
 
 		viewModel.getRecipients().observe(getViewLifecycleOwner(), contacts -> {
 			if (contacts != null && contacts.size() > 0) {
-				for (StaxContact c: contacts)
+				for (StaxContact c : contacts)
 					createRecipientEntry(c, view);
 			}
 		});
 
 		viewModel.getChannel().observe(getViewLifecycleOwner(), channel-> {
-			view.findViewById(R.id.requesterChannelRow).setVisibility(channel != null ? View.VISIBLE : View.GONE);
+			view.findViewById(R.id.requesterAccountRow).setVisibility(channel != null ? View.VISIBLE : View.GONE);
 			if (channel != null) ((TextView) view.findViewById(R.id.requester_channel_value)).setText(channel.name);
 		});
 
 		viewModel.getRequest().observe(getViewLifecycleOwner(), request -> {
 			if (request != null) {
 				setUpSummary(view, request);
-				setUpResendBtn(view, request);
+//				setUpResendBtn(view, request);
 			}
 		});
 
 		viewModel.setRequest(getArguments().getInt("id"));
+		initShareButtons(view);
 	}
 
 	private void createRecipientEntry(StaxContact c, View view) {
@@ -95,23 +96,39 @@ public class RequestDetailFragment extends Fragment {
 	}
 
 	private void showConfirmDialog() {
-		new StaxDialog(getActivity())
-				.setDialogTitle(R.string.cancelreq_head)
-				.setDialogMessage(R.string.cancelreq_msg)
-				.setNegButton(R.string.btn_back, btn -> {
-				})
-				.setPosButton(R.string.btn_cancelreq, btn -> {
-					viewModel.deleteRequest();
-					UIHelper.flashMessage(getContext(), getString(R.string.toast_confirm_cancelreq));
-					NavHostFragment.findNavController(RequestDetailFragment.this).popBackStack();
-				})
-				.isDestructive()
-				.showIt();
+		if(getActivity() !=null && getContext() !=null) {
+			new StaxDialog(getActivity())
+					.setDialogTitle(R.string.cancelreq_head)
+					.setDialogMessage(R.string.cancelreq_msg)
+					.setNegButton(R.string.btn_back, btn -> {
+					})
+					.setPosButton(R.string.btn_cancelreq, btn -> {
+						viewModel.deleteRequest();
+						UIHelper.flashMessage(getContext(), getString(R.string.toast_confirm_cancelreq));
+						NavHostFragment.findNavController(RequestDetailFragment.this).popBackStack();
+					})
+					.isDestructive()
+					.showIt();
+		}
 	}
 
-	private void setUpResendBtn(View view, Request request) {
-		view.findViewById(R.id.resend_btn).setOnClickListener(btn -> {
-
-		});
+	public void initShareButtons(View view) {
+		if(getContext() !=null && getActivity() !=null) {
+			view.findViewById(R.id.sms_share_selection).setOnClickListener(v -> viewModel.getRequest().getValue().generateSMS(getActivity()));
+//			view.findViewById(R.id.whatsapp_share_selection).setOnClickListener(v -> viewModel.getCountryAlphaAndSendWithWhatsApp(getContext(), getActivity()));
+//			view.findViewById(R.id.copylink_share_selection).setOnClickListener(v -> {
+//				ImageView copyImage = v.findViewById(R.id.copyLinkImage);
+//				if (Utils.copyToClipboard(viewModel.generateSMS(), getActivity())) {
+//					copyImage.setActivated(true);
+//					copyImage.setImageResource(R.drawable.copy_icon_white);
+//
+//					TextView copyLabel = v.findViewById(R.id.copyLinkText);
+//					copyLabel.setText(getString(R.string.link_copied_label));
+//				} else {
+//					copyImage.setActivated(false);
+//				}
+//			});
+		}
 	}
+
 }
