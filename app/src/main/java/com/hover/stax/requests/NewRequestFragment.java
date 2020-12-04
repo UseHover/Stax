@@ -210,10 +210,4 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 			requestViewModel.setNote(charSequence.toString());
 		}
 	};
-
-	@Override
-	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		requestViewModel.setEditing(false);
-	}
 }

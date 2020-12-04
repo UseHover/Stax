@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -36,6 +38,12 @@ public abstract class StagedFragment extends Fragment {
 	protected MaterialDatePicker<Long> endDatePicker;
 	private AutoCompleteTextView frequencyDropdown;
 	private TextInputEditText repeatInput;
+
+	@Override
+	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		stagedViewModel.setEditing(false);
+	}
 
 	protected void init(View root) {
 		repeatInput = root.findViewById(R.id.repeat_times_input);

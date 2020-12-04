@@ -72,6 +72,8 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 
 	@Override
 	protected void onNewIntent(Intent intent) {
+		Log.e(TAG, "Got new intent");
+		Log.e(TAG, "has link: " + intent.hasExtra(Constants.REQUEST_LINK));
 		super.onNewIntent(intent);
 		if (intent.hasExtra(Constants.REQUEST_LINK))
 			startTransfer(Action.P2P, true, intent);
