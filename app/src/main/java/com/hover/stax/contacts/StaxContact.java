@@ -101,8 +101,9 @@ public class StaxContact {
 	public String getInternationalNumber(String country) throws NumberParseException {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 		Phonenumber.PhoneNumber phone = phoneUtil.parse(phoneNumber, country);
-		phoneNumber = phoneUtil.formatOutOfCountryCallingNumber(phone, country).replace("+", "");
-		return phoneNumber;
+		String str = phoneUtil.format(phone, PhoneNumberUtil.PhoneNumberFormat.E164);
+		Log.e("CONTACT", "generated: " + str);
+		return str;
 	}
 
 	public String shortName(boolean obfusicate) {

@@ -35,15 +35,18 @@ public class StaxDialog extends AlertDialog {
 		super(c);
 		context = c;
 		view = inflater.inflate(R.layout.stax_dialog, null);
+		customNegListener = null;
+		customPosListener = null;
 	}
 
 	public StaxDialog setDialogTitle(int title) {
-		view.findViewById(R.id.title).setVisibility(View.VISIBLE);
+		view.findViewById(R.id.header).setVisibility(View.VISIBLE);
 		((TextView) view.findViewById(R.id.title)).setText(context.getString(title));
 		return this;
 	}
 
 	public StaxDialog setDialogMessage(int message) {
+		view.findViewById(R.id.message).setVisibility(View.VISIBLE);
 		((TextView) view.findViewById(R.id.message)).setText(context.getString(message));
 		return this;
 	}

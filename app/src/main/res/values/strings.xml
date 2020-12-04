@@ -160,6 +160,7 @@
 	<string name="onboard_infobody">Press and hold any element in Stax for more information</string>
 
 	<!-- Transfer -->
+	<string name="loading_dialoghead">Loading, one moment</string>
 	<string name="amount_cardhead">Amount</string>
 	<string name="amount_label">How much money?</string>
 	<string name="channel_label">Account</string>

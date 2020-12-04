@@ -103,7 +103,7 @@ public class Request {
 		for (int r = 0; r < contacts.size(); r++) {
 			if (phones.length() > 0) phones.append(",");
 			try {
-				phones.append(contacts.get(r).getInternationalNumber(c.countryAlpha2));
+				phones.append(contacts.get(r).getInternationalNumber(c.countryAlpha2).replace("+", ""));
 			} catch (NumberParseException e) { Log.e("Request", "Failed to add number for contact.", e); }
 		}
 		return phones.toString();

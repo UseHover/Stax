@@ -172,7 +172,6 @@ public class NewRequestViewModel extends StagedViewModel {
 					requestees.postValue(cs);
 				}
 				break;
-
 			case REQUESTER:
 				if (getActiveChannel().getValue() == null) {
 					requesterAccountError.setValue(R.string.requester_account_error);
@@ -186,30 +185,6 @@ public class NewRequestViewModel extends StagedViewModel {
 				break;
 		}
 		return true;
-	}
-
-	String generateRecipientString() {
-		StringBuilder phones = new StringBuilder();
-		List<StaxContact> rs = requestees.getValue();
-
-		for (int r = 0; r < rs.size(); r++) {
-			if (phones.length() > 0) phones.append(",");
-			phones.append(rs.get(r).getPhoneNumber());
-		}
-		return phones.toString();
-	}
-
-	String generateWhatsappRecipientString() {
-		StringBuilder phones = new StringBuilder();
-		List<StaxContact> rs = requestees.getValue();
-
-		for (int r = 0; r < rs.size(); r++) {
-			if (phones.length() > 0) phones.append(",");
-			try {
-				phones.append(rs.get(r).getInternationalNumber(getActiveChannel().getValue().countryAlpha2));
-			} catch (NumberParseException e) { Log.e(TAG, "Failed to add number for contact.", e); }
-		}
-		return phones.toString();
 	}
 
 	LiveData<Request> getRequest() {

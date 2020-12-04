@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -21,6 +22,7 @@ import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.utils.StagedViewModel;
+import com.hover.stax.views.StaxDialog;
 
 import static com.hover.stax.transfers.TransferStage.*;
 
@@ -83,14 +85,12 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void createFromRequest(String link) {
-		Log.e(TAG, "Create from a request link");
-//		showLoadingDialog();
+		AlertDialog dialog = new StaxDialog(this).setDialogTitle(R.string.loading_dialoghead).showIt();
 		transferViewModel.decrypt(link);
 		transferViewModel.getRequest().observe(this, request -> {
-			Log.e(TAG, "request update: " + request);
 			if (request == null) return;
 			transferViewModel.view(request);
-//			dismissDialog();
+			if (dialog != null) dialog.dismiss();
 		});
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_request_link));
 	}

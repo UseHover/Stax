@@ -15,19 +15,18 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="@dimen/margin_21"
-			android:orientation="horizontal">
+			android:orientation="horizontal"
+			android:visibility="gone">
 
 			<TextView android:id="@+id/title"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
-				android:text="@string/bal_cardhead"
 				android:textSize="@dimen/text_13"
 				android:textAllCaps="true"
 				android:textAlignment="viewEnd"
 				android:fontFamily="font-bold"
-				android:textColor="@color/offWhite"
-				android:visibility="gone"/>
+				android:textColor="@color/offWhite"/>
 		</LinearLayout>
 
 		<TextView android:id="@+id/message"
@@ -37,8 +36,8 @@
 			android:textSize="@dimen/text_16"
 			android:fontFamily="font-normal"
 			android:lineSpacingExtra="@dimen/text_spacing_8"
-			android:text="@string/hsdk_access_msg"
-			tools:ignore="RtlSymmetry" />
+			tools:ignore="RtlSymmetry"
+			android:visibility="gone"/>
 
 		<RelativeLayout
 			android:layout_width="match_parent"
