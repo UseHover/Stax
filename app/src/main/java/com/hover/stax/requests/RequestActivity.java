@@ -5,11 +5,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -22,11 +24,12 @@ import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.utils.StagedViewModel;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxDialog;
 
 import static com.hover.stax.requests.RequestStage.*;
 
-public class RequestActivity extends AppCompatActivity implements SmsSentObserver.SmsSentListener {
+public class RequestActivity extends AbstractMessageSendingActivity implements SmsSentObserver.SmsSentListener {
 	final public static String TAG = "TransferActivity";
 
 	private NewRequestViewModel requestViewModel;
@@ -47,16 +50,15 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 	protected void onResume() {
 		super.onResume();
 		if (requestViewModel.getStarted())
-			showRequestNotSentDialog();
+			wasRequestSentDialog();
 	}
 
-	private void showRequestNotSentDialog() {
+	private void wasRequestSentDialog() {
 		dialog = new StaxDialog(this)
-			.setDialogTitle(R.string.reqcancel_head)
-			.setDialogMessage(R.string.reqcancel_msg)
-			.setNegButton(R.string.btn_saveanyway, btn -> onFinished(-1))
-			.setPosButton(R.string.btn_cancel, btn ->  cancel())
-			.isDestructive()
+			.setDialogTitle(R.string.reqsave_head)
+			.setDialogMessage(R.string.reqsave_msg)
+			.setPosButton(R.string.btn_saveanyway, btn -> onFinished(-1))
+			.setNegButton(R.string.btn_cancel, btn ->  cancel())
 			.showIt();
 	}
 
@@ -99,7 +101,7 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 			requestViewModel.schedule();
 			onFinished(Constants.SCHEDULE_REQUEST);
 		} else
-			sendSms();
+			sendSms(null);
 	}
 
 	@Override
@@ -107,47 +109,38 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		if (requestCode == Constants.SMS && new PermissionHelper(this).permissionsGranted(grantResults)) {
 			Amplitude.getInstance().logEvent(getString(R.string.sms_perm_success));
-			sendSms();
+			sendSms(null);
 		} else if (requestCode == Constants.SMS) {
 			Amplitude.getInstance().logEvent(getString(R.string.sms_perm_denied));
 			UIHelper.flashMessage(this, getResources().getString(R.string.toast_error_smsperm));
 		}
 	}
 
-	private void sendSms() {
-		requestViewModel.setStarted();
+	public void sendSms(View view) {
+		start();
+		Amplitude.getInstance().logEvent(getString(R.string.clicked_send_sms_request));
 		new SmsSentObserver(this, requestViewModel.getRequestees().getValue(), new Handler(), this).start();
-
-		Intent sendIntent = new Intent();
-		sendIntent.setAction(Intent.ACTION_VIEW);
-		sendIntent.setData(Uri.parse("smsto:" + requestViewModel.generateRecipientString()));
-		sendIntent.putExtra(Intent.EXTRA_TEXT, requestViewModel.generateMessage(this));
-		sendIntent.putExtra("sms_body", requestViewModel.generateMessage(this));
-		startActivityForResult(Intent.createChooser(sendIntent, "Request"), Constants.SMS);
+		super.sendSms(view);
 	}
 
-	private void sendWhatsapp() {
-		Intent sendIntent = new Intent();
-		sendIntent.setAction(Intent.ACTION_VIEW);
-
-		// FIXME: Needs to use international number format with no +
-		String whatsapp = "https://api.whatsapp.com/send?phone=" + requestViewModel.generateRecipientString() + "&text=" + requestViewModel.generateMessage(this);
-		sendIntent.setData(Uri.parse(whatsapp));
-		startActivityForResult(sendIntent, Constants.SMS);
+	public void sendWhatsapp(View view) {
+		start();
+		Amplitude.getInstance().logEvent(getString(R.string.clicked_send_whatsapp_request));
+		super.sendWhatsapp(view);
 	}
 
-//	public void sendSMS(View view) { Request.sendUsingSms(requestViewModel, this, this, this); }
-//	public void sendWhatsapp(View view) { requestViewModel.getCountryAlphaAndSendWithWhatsApp(this, this); }
-//	public void copyShareLink(View view) {
-//		ImageView copyImage = view.findViewById(R.id.copyLinkImage);
-//			if (Utils.copyToClipboard(requestViewModel.generateSMS(), this)) {
-//				requestViewModel.saveToDatabase();
-//				copyImage.setActivated(true);
-//				copyImage.setImageResource(R.drawable.copy_icon_white);
-//				TextView copyLabel = view.findViewById(R.id.copyLinkText);
-//				copyLabel.setText(getString(R.string.link_copied_label));
-//			} else copyImage.setActivated(false);
-//	}
+	public void copyShareLink(View view) {
+		start();
+		Amplitude.getInstance().logEvent(getString(R.string.clicked_copylink_request));
+		super.copyShareLink(view);
+	}
+
+	private void start() {
+		requestViewModel.setStarted();
+		channel = requestViewModel.getActiveChannel().getValue();
+		currentRequest = requestViewModel.getRequest().getValue();
+		requestees = requestViewModel.getRequestees().getValue();
+	}
 
 	@Override
 	public void onSmsSendEvent(boolean wasSent) {
@@ -175,7 +168,7 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 	private void setCurrentCard(StagedViewModel.StagedEnum stage) {
 		findViewById(R.id.recipientCard).setVisibility(stage.compare(REQUESTEE) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.amountCard).setVisibility(stage.compare(AMOUNT) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.receiving_account_infoCard).setVisibility(stage.compare(REQUESTER) == 0 ?View.VISIBLE : View.GONE);
+		findViewById(R.id.requesterCard).setVisibility(stage.compare(REQUESTER) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.noteCard).setVisibility(stage.compare(NOTE) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.shareCard).setVisibility(stage.compare(REVIEW) >= 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.futureCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && requestViewModel.getFutureDate().getValue() == null ? View.VISIBLE : View.GONE);
@@ -195,17 +188,6 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 		} else {
 			fab.setText(R.string.btn_continue);
 			fab.show();
-		}
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_CANCELED) {
-			return;
-		}
-		if (requestCode == Constants.SMS) {
-			onFinished(requestCode);
 		}
 	}
 
@@ -231,8 +213,12 @@ public class RequestActivity extends AppCompatActivity implements SmsSentObserve
 	@Override
 	public void onBackPressed() {
 		if (Navigation.findNavController(findViewById(R.id.nav_host_fragment)).getCurrentDestination().getId() != R.id.navigation_edit ||
-			    !Navigation.findNavController(findViewById(R.id.nav_host_fragment)).popBackStack())
-			super.onBackPressed();
+			    !Navigation.findNavController(findViewById(R.id.nav_host_fragment)).popBackStack()) {
+			if (requestViewModel.getStarted())
+				wasRequestSentDialog();
+			else
+				super.onBackPressed();
+		}
 	}
 
 	protected void onStop() {

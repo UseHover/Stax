@@ -98,6 +98,13 @@ public class StaxContact {
 		return number;
 	}
 
+	public String getInternationalNumber(String country) throws NumberParseException {
+		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+		Phonenumber.PhoneNumber phone = phoneUtil.parse(phoneNumber, country);
+		phoneNumber = phoneUtil.formatOutOfCountryCallingNumber(phone, country).replace("+", "");
+		return phoneNumber;
+	}
+
 	public String shortName() {
 		return name == null || name.isEmpty() ? phoneNumber : name;
 	}

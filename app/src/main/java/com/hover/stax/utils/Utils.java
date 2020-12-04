@@ -124,8 +124,8 @@ public class Utils {
 		return c.getString(R.string.hsdk_unknown_device_id);
 	}
 
-	public static boolean copyToClipboard(String content, Activity activity) {
-		ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(CLIPBOARD_SERVICE);
+	public static boolean copyToClipboard(String content, Context c) {
+		ClipboardManager clipboard = (ClipboardManager) c.getSystemService(CLIPBOARD_SERVICE);
 		ClipData clip = ClipData.newPlainText("Stax payment link", content);
 		if(clipboard!=null) {
 			clipboard.setPrimaryClip(clip);

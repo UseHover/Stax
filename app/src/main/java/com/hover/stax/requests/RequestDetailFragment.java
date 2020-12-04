@@ -19,6 +19,7 @@ import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.views.Stax2LineItem;
 import com.hover.stax.views.StaxDialog;
 
 import org.json.JSONException;
@@ -43,23 +44,33 @@ public class RequestDetailFragment extends Fragment {
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		((TextView) view.findViewById(R.id.shareCard).findViewById(R.id.title)).setText(getString(R.string.share_again_cardhead));
 
 		viewModel.getRecipients().observe(getViewLifecycleOwner(), contacts -> {
 			if (contacts != null && contacts.size() > 0) {
 				for (StaxContact c : contacts)
 					createRecipientEntry(c, view);
+				if (getActivity() != null) {
+					((AbstractMessageSendingActivity) getActivity()).requestees = contacts;
+				}
 			}
 		});
 
 		viewModel.getChannel().observe(getViewLifecycleOwner(), channel-> {
 			view.findViewById(R.id.requesterAccountRow).setVisibility(channel != null ? View.VISIBLE : View.GONE);
-			if (channel != null) ((TextView) view.findViewById(R.id.requester_channel_value)).setText(channel.name);
+			if (channel != null) {
+				((Stax2LineItem) view.findViewById(R.id.requesterValue)).setTitle(channel.name);
+				if (getActivity() != null)
+					((AbstractMessageSendingActivity) getActivity()).channel = channel;
+			}
 		});
 
 		viewModel.getRequest().observe(getViewLifecycleOwner(), request -> {
 			if (request != null) {
 				setUpSummary(view, request);
 //				setUpResendBtn(view, request);
+				if (getActivity() != null)
+					((AbstractMessageSendingActivity) getActivity()).currentRequest = request;
 			}
 		});
 
@@ -68,9 +79,9 @@ public class RequestDetailFragment extends Fragment {
 	}
 
 	private void createRecipientEntry(StaxContact c, View view) {
-		TextView tv = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.recipient_cell, null);
-		tv.setText(c.toString());
-		((LinearLayout) view.findViewById(R.id.requesteeValueList)).addView(tv);
+		Stax2LineItem ss2li = new Stax2LineItem(getContext(), null);
+		ss2li.setContact(c);
+		((LinearLayout) view.findViewById(R.id.requesteeValueList)).addView(ss2li);
 	}
 
 	private void setUpSummary(View view, Request request) {
@@ -83,10 +94,8 @@ public class RequestDetailFragment extends Fragment {
 		} else
 			view.findViewById(R.id.amountRow).setVisibility(View.GONE);
 
-		if (request.requester_number != null && !request.requester_number.isEmpty()) {
-			view.findViewById(R.id.requesterNumberRow).setVisibility(View.VISIBLE);
-			((TextView) view.findViewById(R.id.requesterNumberValue)).setText(request.requester_number);
-		}
+		if (request.requester_number != null && !request.requester_number.isEmpty())
+			((Stax2LineItem) view.findViewById(R.id.requesterValue)).setSubtitle(request.requester_number);
 
 
 		view.findViewById(R.id.noteRow).setVisibility(request.note == null || request.note.isEmpty() ? View.GONE : View.VISIBLE);
@@ -114,7 +123,7 @@ public class RequestDetailFragment extends Fragment {
 
 	public void initShareButtons(View view) {
 		if(getContext() !=null && getActivity() !=null) {
-			view.findViewById(R.id.sms_share_selection).setOnClickListener(v -> viewModel.getRequest().getValue().generateSMS(getActivity()));
+			view.findViewById(R.id.sms_share_selection).setOnClickListener(v -> viewModel.getRequest().getValue().generateMessage(getActivity()));
 //			view.findViewById(R.id.whatsapp_share_selection).setOnClickListener(v -> viewModel.getCountryAlphaAndSendWithWhatsApp(getContext(), getActivity()));
 //			view.findViewById(R.id.copylink_share_selection).setOnClickListener(v -> {
 //				ImageView copyImage = v.findViewById(R.id.copyLinkImage);

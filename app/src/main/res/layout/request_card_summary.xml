@@ -40,7 +40,7 @@
 
 		<TableRow android:id="@+id/requesterAccountRow" android:layout_marginTop="@dimen/margin_21" android:gravity="center_vertical">
 			<TextView
-			    android:text="@string/requester_account_cardhead"
+			    android:text="@string/requester_number_label"
 			    android:textColor="@color/offWhite"
 			    android:fontFamily="font-normal"
 			    android:textSize="@dimen/text_16" />

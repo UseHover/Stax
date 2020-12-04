@@ -3,19 +3,22 @@
 
 	<item android:state_activated="false" android:state_pressed="false">
 		<shape android:shape="oval">
+			<size android:height="@dimen/margin_55" android:width="@dimen/margin_55"/>
 			<solid android:color="@color/white"/>
 		</shape>
 	</item>
 
 	<item  android:state_pressed="true">
 		<shape android:shape="oval">
+			<size android:height="@dimen/margin_55" android:width="@dimen/margin_55"/>
 			<solid android:color="@color/grey"/>
 		</shape>
 	</item>
 
 	<item android:state_activated="true">
 		<shape android:shape="oval">
-			<solid android:color="@color/dividerColor"/>
+			<size android:height="@dimen/margin_55" android:width="@dimen/margin_55"/>
+			<solid android:color="@color/grey"/>
 		</shape>
 	</item>
 

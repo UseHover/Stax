@@ -35,7 +35,7 @@
 	    style="@style/StaxLabeledDropdown"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:hint="@string/requester_account_cardhead">
+	    android:hint="@string/requester_number_label">
 
 		<AutoCompleteTextView
 		    android:id="@+id/channelDropdown"

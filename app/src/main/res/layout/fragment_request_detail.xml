@@ -13,7 +13,7 @@
 		<include layout="@layout/request_detail_card_summary"
 			android:id="@+id/summaryCard"/>
 
-		<include layout="@layout/share_layout"
+		<include layout="@layout/request_card_share"
 		    android:id="@+id/shareCard" />
 
 		<FrameLayout

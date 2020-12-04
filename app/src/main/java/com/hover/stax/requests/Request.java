@@ -1,9 +1,7 @@
 package com.hover.stax.requests;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -12,9 +10,8 @@ import androidx.room.PrimaryKey;
 
 import com.amplitude.api.Amplitude;
 import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
 import com.hover.stax.R;
+import com.hover.stax.channels.Channel;
 import com.hover.stax.database.Constants;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.DateUtils;
@@ -23,8 +20,7 @@ import com.hover.stax.utils.paymentLinkCryptography.Base64;
 import com.hover.stax.utils.paymentLinkCryptography.Encryption;
 
 import java.security.NoSuchAlgorithmException;
-
-import io.sentry.Sentry;
+import java.util.List;
 
 @Entity(tableName = "requests")
 public class Request {
@@ -64,13 +60,12 @@ public class Request {
 
 	public Request() {}
 
-	public Request(String amount, String note, String requester, int receiving_channel_id, Context context) {
+	public Request(String amount, String note, String requester, int receiving_channel_id) {
 		this.amount = amount;
 		this.note = note;
 		this.requester_number = requester;
 		this.requester_institution_id = receiving_channel_id;
 		date_sent = DateUtils.now();
-		description = getDescription(null, context);
 	}
 
 	public Request(String paymentLink) {
@@ -82,9 +77,33 @@ public class Request {
 
 	public String getDescription(StaxContact contact, Context c) { return c.getString(R.string.descrip_request, contact.shortName()); }
 
-	Request setRecipient(StaxContact c) { this.requestee_ids = c.id; return this; }
+	Request setRecipient(StaxContact c, Context context) {
+		this.requestee_ids = c.id;
+		description = getDescription(c, context);
+		return this;
+	}
 
-	public String generateSMS(Context c) {
+	String generateRecipientString(List<StaxContact> contacts) {
+		StringBuilder phones = new StringBuilder();
+		for (int r = 0; r < contacts.size(); r++) {
+			if (phones.length() > 0) phones.append(",");
+			phones.append(contacts.get(r).phoneNumber);
+		}
+		return phones.toString();
+	}
+
+	String generateWhatsappRecipientString(List<StaxContact> contacts, Channel c) {
+		StringBuilder phones = new StringBuilder();
+		for (int r = 0; r < contacts.size(); r++) {
+			if (phones.length() > 0) phones.append(",");
+			try {
+				phones.append(contacts.get(r).getInternationalNumber(c.countryAlpha2));
+			} catch (NumberParseException e) { Log.e("Request", "Failed to add number for contact.", e); }
+		}
+		return phones.toString();
+	}
+
+	public String generateMessage(Context c) {
 		String amountString = amount != null ? c.getString(R.string.sms_amount_detail, Utils.formatAmount(amount)) : "";
 		String noteString = note != null ? c.getString(R.string.sms_note_detail, note) : "";
 		String paymentLink = generateStaxLink(c);
@@ -123,34 +142,5 @@ public class Request {
 			       .setSecureRandomAlgorithm("SHA1PRNG")
 			       .setSecretKeyType("PBKDF2WithHmacSHA1")
 			       .setIv(new byte[]{29, 88, -79, -101, -108, -38, -126, 90, 52, 101, -35, 114, 12, -48, -66, -30});
-	}
-
-	void sendUsingSms(Activity activity) {
-//		Amplitude.getInstance().logEvent(context.getString(R.string.clicked_send_sms_request));
-//		if (!PermissionUtils.hasSmsPermission(activity))
-//			activity.requestPermissions(new String[]{Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS}, Constants.SMS);
-//		else{
-//			Intent sendIntent = new Intent();
-//			sendIntent.setAction(Intent.ACTION_VIEW);
-//			sendIntent.setData(Uri.parse("smsto:" + recipients));
-//			sendIntent.putExtra(Intent.EXTRA_TEXT, smsContent);
-//			sendIntent.putExtra("sms_body", smsContent);
-//			activity.startActivityForResult(Intent.createChooser(sendIntent, "Request"), Constants.SMS);
-//		}
-	}
-	static void  sendUsingWhatsapp(String recipient, String countryAlpha, String smsContent, Context context, Activity activity) {
-		Amplitude.getInstance().logEvent(context.getString(R.string.clicked_send_whatsapp_request));
-		Intent sendIntent = new Intent();
-		sendIntent.setAction(Intent.ACTION_VIEW);
-
-		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-		try {
-			Phonenumber.PhoneNumber formattedPhone = phoneUtil.parse(recipient, countryAlpha);
-			String whatsapp ="https://api.whatsapp.com/send?phone="+formattedPhone +"&text=" + smsContent;
-			sendIntent.setData(Uri.parse(whatsapp));
-			activity.startActivityForResult(sendIntent, Constants.SMS);
-		} catch (NumberParseException e) {
-			Sentry.capture(e.getMessage());
-		}
 	}
 }

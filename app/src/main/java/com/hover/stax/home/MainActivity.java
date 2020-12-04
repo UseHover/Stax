@@ -34,6 +34,7 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.database.Constants;
 import com.hover.stax.hover.HoverSession;
+import com.hover.stax.requests.AbstractMessageSendingActivity;
 import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.security.BiometricChecker;
@@ -47,7 +48,7 @@ import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements
+public class MainActivity extends AbstractMessageSendingActivity implements
 	BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener {
 
 	final public static String TAG = "MainActivity";

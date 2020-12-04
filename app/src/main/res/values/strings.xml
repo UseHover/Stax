@@ -120,9 +120,9 @@
 	<string name="btn_request">Send request</string>
 	<string name="btn_nothanks">No, thanks</string>
 	<string name="toast_confirm_contact">Thanks! Contact info received. We\'ll be in touch soon.</string>
-	<string name="reqcancel_head">Cancel request</string>
-	<string name="reqcancel_msg">Looks like your message has not been sent. Would you like to cancel this request?</string>
-	<string name="btn_saveanyway">Save anyway</string>
+	<string name="reqsave_head">Save request?</string>
+	<string name="reqsave_msg">We\'re not sure if your message has been sent.</string>
+	<string name="btn_saveanyway">Save</string>
 	<string name="request_account">Request account</string>
 	<string name="request_account_desc">Can\’t find what you\’re looking for? We\’re adding new accounts to Stax every day, and if you let us know which one you\’re looking for, we\’ll add it as soon as possible.</string>
 	<string name="request_received_content">Request received. We\’ll add %1$s soon.</string>
@@ -180,7 +180,7 @@
 	<string name="note_cardhead">Note</string>
 	<string name="note_label_opt">Enter note (optional)</string>
 	<string name="acct_label">Account</string>
-	<string name="recipient_label">To</string>
+	<string name="recipient_label">To whom?</string>
 	<string name="descrip_multcontacts">%1$d contacts</string>
 	<string name="descrip_airtime_sent">%1$s sent airtime to %2$s</string>
 	<string name="descrip_transfer_sent">from %1$s to %2$s</string>
@@ -194,8 +194,8 @@
 
 	<!-- Request -->
 	<string name="req_cardhead">Request money</string>
-	<string name="amount_label_opt">How much money? (optional)</string>
-	<string name="reqfrom_label">From who?</string>
+	<string name="amount_label_opt">Amount (Optional)</string>
+	<string name="reqfrom_label">To</string>
 	<string name="btn_addcontact">Add someone else</string>
 	<string name="sms_request_template">Kindly stax me %1$s at your earliest convenience. %2$s %3$s</string>
 	<string name="sms_amount_detail">%1$s</string>
@@ -203,9 +203,8 @@
 	<string name="toast_error_smsperm">You must grant the read SMS permission so Stax can tell when a request is sent or fulfilled.</string>
 	<string name="toast_confirm_request">Your request has been sent.</string>
 	<string name="toast_request_scheduled">Your request has been scheduled. You will be reminded to send a message on %1$s</string>
-	<string name="descrip_request">Request from %1$s</string>
+	<string name="descrip_request">Request to %1$s</string>
 	<string name="editreq_cardhead">Edit Request</string>
-	<string name="requester_account_cardhead">To which account?</string>
 	<string name="requester_number_label">Account</string>
 	<string name="requester_number_fielderror">Please enter the account or phone number you\'d like to receive the money into</string>
 	<string name="requester_account_error">Please select an account or add a new one to receive your money</string>
@@ -215,6 +214,7 @@
 	<string name="copyLink_label">Copy link</string>
 	<string name="link_copied_label">Link copied</string>
 	<string name="share_request_link_cardhead">Share request link</string>
+	<string name="share_again_cardhead">Share request link again</string>
 
 	<!-- Scheduling -->
 	<string name="future_toggle">Send later</string>

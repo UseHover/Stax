@@ -1,14 +1,15 @@
 package com.hover.stax.requests;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.i18n.phonenumbers.NumberParseException;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
@@ -24,6 +25,7 @@ import java.util.List;
 import static com.hover.stax.requests.RequestStage.*;
 
 public class NewRequestViewModel extends StagedViewModel {
+	public final static String TAG = "NewRequestViewModel";
 
 	private String type = Constants.REQUEST_TYPE;
 	private LiveData<List<Channel>> selectedChannels = new MutableLiveData<>();
@@ -197,14 +199,28 @@ public class NewRequestViewModel extends StagedViewModel {
 		return phones.toString();
 	}
 
-	String generateMessage(Context c) {
-		return formulatedRequest.getValue().generateSMS(c);
+	String generateWhatsappRecipientString() {
+		StringBuilder phones = new StringBuilder();
+		List<StaxContact> rs = requestees.getValue();
+
+		for (int r = 0; r < rs.size(); r++) {
+			if (phones.length() > 0) phones.append(",");
+			try {
+				phones.append(rs.get(r).getInternationalNumber(getActiveChannel().getValue().countryAlpha2));
+			} catch (NumberParseException e) { Log.e(TAG, "Failed to add number for contact.", e); }
+		}
+		return phones.toString();
+	}
+
+	LiveData<Request> getRequest() {
+		if (formulatedRequest == null) { formulatedRequest = new MutableLiveData<>(); }
+		return formulatedRequest;
 	}
 
 	void saveToDatabase() {
 		saveContacts();
 		for (StaxContact recipient : requestees.getValue())
-			repo.insert(formulatedRequest.getValue().setRecipient(recipient));
+			repo.insert(formulatedRequest.getValue().setRecipient(recipient, getApplication()));
 
 		if (repeatSaved.getValue() != null && repeatSaved.getValue()) {
 			schedule();
@@ -217,16 +233,8 @@ public class NewRequestViewModel extends StagedViewModel {
 		}
 	}
 
-	void getCountryAlphaAndSendWithWhatsApp(Context context, Activity activity) {
-//		Channel channel = getActiveChannel().getValue();
-//		if (channel != null) {
-//			saveToDatabase();
-//			Request.sendUsingWhatsapp(generateRecipientString(), channel.countryAlpha2, generateSMS(), context, activity);
-//		}
-	}
-
 	void setStarted() {
-		formulatedRequest.setValue(new Request(amount.getValue(), note.getValue(), getRequesterNumber().getValue(), getActiveChannel().getValue().id, getApplication()));
+		formulatedRequest.setValue(new Request(amount.getValue(), note.getValue(), getRequesterNumber().getValue(), getActiveChannel().getValue().institutionId));
 	}
 	Boolean getStarted() {
 		return formulatedRequest == null || formulatedRequest.getValue() != null;
