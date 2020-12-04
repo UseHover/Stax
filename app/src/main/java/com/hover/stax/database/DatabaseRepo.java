@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.hover.stax.R;
@@ -42,6 +43,7 @@ public class DatabaseRepo {
 
 	private LiveData<List<Channel>> allChannels;
 	private LiveData<List<Channel>> selectedChannels;
+	private MediatorLiveData<List<Action>> filteredActions = new MediatorLiveData<>();
 
 	private MutableLiveData<Request> decryptedRequest= new MutableLiveData<>();
 
@@ -107,6 +109,25 @@ public class DatabaseRepo {
 
 	public List<Action> getActions(int channelId, String type) {
 		return actionDao.getActions(channelId, type);
+	}
+
+	public List<Action> getActions(int[] channels, int recipientInstitutionId) {
+		return actionDao.getActions(channels, recipientInstitutionId, Action.P2P);
+	}
+
+	public LiveData<List<Action>> getActionsSendingTo(int[] channels, int recipientInstitutionId) {
+		filteredActions.addSource(actionDao.getLiveActions(channels, recipientInstitutionId, Action.P2P), this::addActions);
+		filteredActions.addSource(actionDao.getLiveActionsByInst(channels, recipientInstitutionId, Action.P2P), this::addActions);
+		return filteredActions;
+	}
+	private void addActions(List<Action> actions) {
+		if (filteredActions.getValue() != null)
+			actions.addAll(filteredActions.getValue());
+		filteredActions.setValue(actions);
+	}
+
+	public List<Action> getAllActions() {
+		return actionDao.getAll();
 	}
 
 	// Transactions
@@ -203,12 +224,11 @@ public class DatabaseRepo {
 		try {
 			Encryption e = Request.getEncryptionSettings().build();
 			e.decryptAsync(encrypted.replace(c.getString(R.string.payment_root_url, ""),""), new Encryption.Callback() {
-				@Override
-				public void onSuccess(String result) {
-					decryptedRequest.setValue(new Request(result));
+				@Override public void onSuccess(String result) {
+					decryptedRequest.postValue(new Request(result));
 				}
 
-				@Override public void onError(Exception exception) {}
+				@Override public void onError(Exception exception) { Log.e("repo", "failed decryption", exception);}
 			});
 
 		} catch (NoSuchAlgorithmException e) { Log.e("DatabaseRepo", "decryption failure"); }

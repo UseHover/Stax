@@ -19,8 +19,6 @@ import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.Constants;
 import com.hover.stax.security.KeyStoreExecutor;
 import com.hover.stax.utils.Utils;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -99,15 +97,15 @@ final public class HoverSession {
 		return null;
 	}
 	private byte[] getLogo(String url) {
-		try {
+//		try {
 //			Log.e(TAG, "logo url: " + url);
-			Bitmap b = Picasso.get().load(url).networkPolicy(NetworkPolicy.OFFLINE).get();
+//			Bitmap b = Picasso.get().load(url).networkPolicy(NetworkPolicy.OFFLINE).get();
 //			Log.e(TAG, "bitmap: " + b);
-			return Utils.bitmapToByteArray(b);
-		} catch (Exception ignored) {
+//			return Utils.bitmapToByteArray(b);
+//		} catch (Exception ignored) {
 //			Log.e(TAG, "exception", ignored);
 			return null;
-		}
+//		}
 	}
 
 	private String getMessage(Action a, Context c) {

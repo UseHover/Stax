@@ -1,16 +1,15 @@
 package com.hover.stax.transfers;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.database.Constants;
 import com.hover.stax.requests.Request;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.schedules.Schedule;
@@ -29,7 +28,7 @@ public class TransferViewModel extends StagedViewModel {
 	private LiveData<List<Channel>> selectedChannels = new MutableLiveData<>();
 
 	private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
-	private LiveData<List<Action>> filteredActions = new MutableLiveData<>();
+	private MediatorLiveData<List<Action>> filteredActions = new MediatorLiveData<>();
 	private MediatorLiveData<Action> activeAction = new MediatorLiveData<>();
 
 	private MutableLiveData<String> amount = new MutableLiveData<>();
@@ -47,7 +46,10 @@ public class TransferViewModel extends StagedViewModel {
 
 		selectedChannels = repo.getSelected();
 		activeChannel.addSource(selectedChannels, this::findActiveChannel);
-		filteredActions = Transformations.switchMap(activeChannel, this::loadActions);
+
+		filteredActions.addSource(activeChannel, this::loadActions);
+		filteredActions.addSource(request, this::loadActions);
+
 		activeAction.addSource(filteredActions, this::findActiveAction);
 	}
 
@@ -93,11 +95,27 @@ public class TransferViewModel extends StagedViewModel {
 		return activeChannel;
 	}
 
-	public LiveData<List<Action>> loadActions(Channel channel) {
-		if (channel != null) {
-			filteredActions = repo.getLiveActions(channel.id, type);
+	public void loadActions(Channel channel) {
+		if (channel != null && (request == null || request.getValue() == null)) {
+			new Thread(() -> {
+				List<Action> as = repo.getActions(channel.id, type);
+				filteredActions.postValue(as);
+			}).start();
 		}
-		return filteredActions;
+	}
+
+	public void loadActions(Request r) {
+		if (r != null && selectedChannels != null && selectedChannels.getValue().size() > 0) {
+			List<Channel> channels = selectedChannels.getValue();
+			int[] ids = new int[channels.size()];
+			for (int c = 0; c < channels.size(); c++)
+				ids[c] = channels.get(c).id;
+			new Thread(() -> {
+				List<Action> actions = repo.getActions(ids, r.requester_institution_id);
+				filteredActions.postValue(actions);
+				setActiveChannel(actions.get(0).channel_id);
+			}).start();
+		}
 	}
 
 	LiveData<List<Channel>> getSelectedChannels() {
@@ -206,9 +224,9 @@ public class TransferViewModel extends StagedViewModel {
 			case TO_NETWORK:
 				return requiresActionChoice();
 			case RECIPIENT:
-				return activeAction.getValue() != null && activeAction.getValue().requiresRecipient();
+				return (request.getValue() == null || !request.getValue().hasRequesterInfo()) && activeAction.getValue() != null && activeAction.getValue().requiresRecipient();
 			case NOTE:
-				return activeAction.getValue() != null && activeAction.getValue().requiresReason();
+				return activeAction.getValue() != null && activeAction.getValue().allowsNote();
 			default:
 				return true;
 		}
@@ -233,8 +251,11 @@ public class TransferViewModel extends StagedViewModel {
 				} else
 					amountError.setValue(null);
 				break;
+			case TO_NETWORK:
+				if (request.getValue() != null)
+				break;
 			case RECIPIENT:
-				if (contact.getValue() == null || contact.getValue().phoneNumber.isEmpty()) {
+				if (contact.getValue() == null || contact.getValue().getPhoneNumber().isEmpty()) {
 					recipientError.setValue(R.string.recipient_fielderror);
 					return false;
 				} else
@@ -247,17 +268,13 @@ public class TransferViewModel extends StagedViewModel {
 	boolean isDone() { return stage.getValue() == REVIEW || stage.getValue() == REVIEW_DIRECT; }
 
 	public void decrypt(String encryptedLink) {
-		if (request == null) { request = new MutableLiveData<>(); }
 		request = repo.decrypt(encryptedLink, getApplication());
 	}
 
 	public void view(Request request) {
 		setAmount(request.amount);
-		setActiveChannel(request.requester_institution_id);
 		setRecipient(request.requester_number);
-		setStage(TransferStage.REVIEW_DIRECT);
-		if (request.amount.isEmpty())
-			setEditing(true);
+		setStage(request.amount.isEmpty() ? TransferStage.AMOUNT : TransferStage.REVIEW_DIRECT);
 	}
 
 	public void view(Schedule s) {

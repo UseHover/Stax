@@ -66,7 +66,7 @@ class SmsSentObserver extends ContentObserver {
 				final String address = cursor.getString(cursor.getColumnIndex(COLUMN_ADDRESS));
 				final int type = cursor.getInt(cursor.getColumnIndex(COLUMN_TYPE));
 				for (StaxContact c : recipients) {
-					if (PhoneNumberUtils.compare(address, c.phoneNumber) && type == MESSAGE_TYPE_SENT) {
+					if (PhoneNumberUtils.compare(address, c.getPhoneNumber()) && type == MESSAGE_TYPE_SENT) {
 						wasSent = true;
 						callBack();
 						Amplitude.getInstance().logEvent(successMsg);

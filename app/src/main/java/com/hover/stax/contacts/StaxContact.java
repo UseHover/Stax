@@ -43,7 +43,7 @@ public class StaxContact {
 	public String aliases;
 
 	@ColumnInfo(name = "phone_number")
-	public String phoneNumber;
+	private String phoneNumber;
 
 	@ColumnInfo(name = "thumb_uri")
 	public String thumbUri;
@@ -105,14 +105,40 @@ public class StaxContact {
 		return phoneNumber;
 	}
 
-	public String shortName() {
-		return name == null || name.isEmpty() ? phoneNumber : name;
+	public String shortName(boolean obfusicate) {
+		return hasName() ? name : getPhoneNumber(obfusicate);
+	}
+
+	public String getPhoneNumber(boolean obfusicate) {
+		return obfusicate ? obfusicatePhone() : phoneNumber;
+	}
+
+	public void setPhoneNumber(String number) { phoneNumber = number; }
+	public String getPhoneNumber() { return phoneNumber; }
+
+	public boolean hasName() {
+		return name != null && !name.isEmpty();
 	}
 
 	public static String shortName(List<StaxContact> contacts, Context c) {
 		if (contacts == null || contacts.size() == 0) return null;
-		else if (contacts.size() == 1) return contacts.get(0).shortName();
+		else if (contacts.size() == 1) return contacts.get(0).shortName(false);
 		else return c.getString(R.string.descrip_multcontacts, contacts.size());
+	}
+
+	private String obfusicatePhone() {
+		if (phoneNumber.length() <= 3)
+			return phoneNumber;
+		else if (phoneNumber.length() <= 6)
+			return phoneNumber.substring(0, 1) + repeat("*", phoneNumber.length() - 2) + phoneNumber.substring(phoneNumber.length() - 1);
+		else if (phoneNumber.length() <= 8)
+			return phoneNumber.substring(0, 2) + repeat("*", phoneNumber.length() - 4) + phoneNumber.substring(phoneNumber.length() - 2);
+		else
+			return repeat("*", phoneNumber.length() - 4) + phoneNumber.substring(phoneNumber.length() - 4);
+	}
+
+	String repeat(String s, int length) {
+		return s.length() >= length ? s.substring(0, length) : repeat(s + s, length);
 	}
 
 	@NonNull

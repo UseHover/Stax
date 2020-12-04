@@ -74,7 +74,8 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:hint="@string/note_label_opt"
-		style="@style/StaxLabeledInput">
+		style="@style/StaxLabeledInput"
+		android:id="@+id/noteEntry">
 
 		<com.google.android.material.textfield.TextInputEditText
 			android:layout_width="match_parent"

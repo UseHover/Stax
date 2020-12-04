@@ -63,7 +63,8 @@ public class BalancesViewModel extends AndroidViewModel {
 	}
 
 	public LiveData<List<Action>> loadBalanceActions(List<Channel> channelList) {
-		Log.e(TAG, "Loading balance actions: " + channelList.size());
+		Log.e(TAG, "action vers " + channelList.size() + " channels");
+		Log.e(TAG, "Loading balance actions for " + channelList.size() + " channels");
 		int[] ids = new int[channelList.size()];
 		for (int c = 0; c < channelList.size(); c++)
 			ids[c] = channelList.get(c).id;

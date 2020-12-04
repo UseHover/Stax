@@ -15,77 +15,53 @@
 
 			<TextView
 				android:text="@string/amount_cardhead"
-			    	android:fontFamily="font-normal"
+		        android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/amountValue"
 				android:layout_weight="1"
-				android:fontFamily="font-medium"
+				android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
 		</TableRow>
 
-		<TableRow android:id="@+id/accountRow" android:layout_marginTop="@dimen/margin_21">
+		<TableRow android:id="@+id/accountsRow" android:layout_marginTop="@dimen/margin_21">
 
-			<TextView
-				android:text="@string/acct_label"
-			    	android:fontFamily="font-normal"
+			<TextView android:id="@+id/accountsLabel"
+				android:text="@string/accounts_label"
+				android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
-			<TextView android:id="@+id/accountValue"
+			<com.hover.stax.views.Stax2LineItem android:id="@+id/accountsValue"
 				android:layout_weight="1"
-				android:fontFamily="font-medium"
-				android:textColor="@color/offWhite"
-				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
 		</TableRow>
 
-		<TableRow android:id="@+id/actionRow" android:layout_marginTop="@dimen/margin_21">
-
-			<TextView android:id="@+id/actionLabel"
-				android:text="@string/recipientnetwork_cardhead"
-			    	android:fontFamily="font-normal"
-				android:textColor="@color/offWhite"
-				android:textSize="@dimen/text_16" />
-
-			<TextView android:id="@+id/actionValue"
-				android:layout_weight="1"
-				android:fontFamily="font-medium"
-				android:textColor="@color/offWhite"
-				android:textSize="@dimen/text_21"
-				android:textAlignment="viewEnd" />
-		</TableRow>
-
-		<TableRow android:id="@+id/requesteeRow" android:layout_marginTop="@dimen/margin_21">
-
+		<TableRow android:id="@+id/recipientRow" android:layout_marginTop="@dimen/margin_21">
 			<TextView
 				android:text="@string/recipient_label"
-			      android:fontFamily="font-normal"
+				android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
-			<TextView android:id="@+id/recipientValue"
+			<com.hover.stax.views.Stax2LineItem android:id="@+id/recipientValue"
 				android:layout_weight="1"
-				android:fontFamily="font-medium"
-				android:textColor="@color/offWhite"
-				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
 		</TableRow>
 
 		<TableRow android:id="@+id/noteRow" android:layout_marginTop="@dimen/margin_21">
-
 			<TextView
 				android:text="@string/note_cardhead"
-			    	android:fontFamily="font-normal"
+				android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/reasonValue"
 				android:layout_weight="1"
-				android:fontFamily="font-medium"
+				android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
@@ -95,13 +71,13 @@
 
 			<TextView
 				android:text="@string/date_label"
-			    	android:fontFamily="font-normal"
+		        android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/dateValue"
 				android:layout_weight="1"
-				android:fontFamily="font-medium"
+				android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
@@ -111,13 +87,13 @@
 
 			<TextView
 				android:text="@string/repeatfreq_label"
-			    	android:fontFamily="font-normal"
+		        android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/frequencyValue"
 				android:layout_weight="1"
-				android:fontFamily="font-medium"
+				android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
@@ -127,13 +103,13 @@
 
 			<TextView
 				android:text="@string/end_label"
-			    	android:fontFamily="font-normal"
+		        android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/endDateValue"
 				android:layout_weight="1"
-				android:fontFamily="font-medium"
+				android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
@@ -143,13 +119,13 @@
 
 			<TextView
 				android:text="@string/repeatnum_label"
-			    	android:fontFamily="font-normal"
+		        android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/repeatTimesValue"
 				android:layout_weight="1"
-				android:fontFamily="font-medium"
+				android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />

@@ -120,7 +120,7 @@ public class StaxTransaction {
 	}
 
 	private String generateDescription(Action action, StaxContact contact, Context c) {
-		String recipientStr = contact != null ? contact.shortName() : recipient;
+		String recipientStr = contact != null ? contact.shortName(false) : recipient;
 		switch (transaction_type) {
 			case Action.AIRTIME:
 				return c.getString(R.string.descrip_airtime_sent, action.from_institution_name, ((recipient == null || recipient.equals("")) ? "myself" : recipientStr));

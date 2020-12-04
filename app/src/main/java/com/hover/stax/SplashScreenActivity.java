@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.database.Constants;
 import com.hover.stax.destruct.SelfDestructActivity;
 import com.hover.stax.home.MainActivity;
+import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.schedules.ScheduleWorker;
 import com.hover.stax.security.BiometricChecker;
 import com.hover.stax.utils.UIHelper;
@@ -46,15 +48,8 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
 		if (Utils.getSharedPrefs(this).getInt(AUTH_CHECK, 0) == 1)
 			new BiometricChecker(this, this).startAuthentication(null);
-//		else if (Utils.getSharedPrefs(this).getInt(LANGUAGE_CHECK, 0) == 0) {
-//			startActivity(new Intent(this, SelectLanguageActivity.class));
-//		finish(); }
-		else if (getIntent().getAction().equals(Intent.ACTION_VIEW) && getIntent().getData() != null)
-			goToRequest(getIntent());
-		else {
-			startActivity(new Intent(this, MainActivity.class));
-			finish();
-		}
+		else
+			chooseNav();
 	}
 
 	private void initHover() {
@@ -79,11 +74,21 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 		wm.enqueueUniquePeriodicWork(ScheduleWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, ScheduleWorker.makeToil());
 	}
 
+	private void chooseNav() {
+		if (getIntent().getAction().equals(Intent.ACTION_VIEW) && getIntent().getData() != null)
+			goToRequest(getIntent());
+//		else if (Utils.getSharedPrefs(this).getInt(LANGUAGE_CHECK, 0) == 0)
+//			startActivity(new Intent(this, SelectLanguageActivity.class));
+		else {
+			startActivity(new Intent(this, MainActivity.class));
+		}
+		finish();
+	}
+
 	private void goToRequest(Intent intent) {
 		Intent i = new Intent(this, MainActivity.class);
 		i.putExtra(Constants.REQUEST_LINK, intent.getData().toString());
 		startActivity(i);
-		finish();
 	}
 
 	@Override
@@ -93,7 +98,6 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
 	@Override
 	public void onAuthSuccess(Action act) {
-		startActivity(new Intent(this, MainActivity.class));
-		finish();
+		chooseNav();
 	}
 }

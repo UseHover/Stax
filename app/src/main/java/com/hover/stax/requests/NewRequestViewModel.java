@@ -159,14 +159,14 @@ public class NewRequestViewModel extends StagedViewModel {
 		if (stage.getValue() == null) return false;
 		switch ((RequestStage) stage.getValue()) {
 			case REQUESTEE:
-				if (requestees.getValue() == null || requestees.getValue().size() == 0 || requestees.getValue().get(0).phoneNumber.isEmpty()) {
+				if (requestees.getValue() == null || requestees.getValue().size() == 0 || requestees.getValue().get(0).getPhoneNumber().isEmpty()) {
 					requesteeError.setValue(R.string.recipient_fielderror);
 					return false;
 				} else {
 					requesteeError.setValue(null);
 					List<StaxContact> cs = new ArrayList<>();
 					for (StaxContact r: requestees.getValue()) {
-						if (r != null && !r.phoneNumber.isEmpty())
+						if (r != null && !r.getPhoneNumber().isEmpty())
 							cs.add(r);
 					}
 					requestees.postValue(cs);
@@ -194,7 +194,7 @@ public class NewRequestViewModel extends StagedViewModel {
 
 		for (int r = 0; r < rs.size(); r++) {
 			if (phones.length() > 0) phones.append(",");
-			phones.append(rs.get(r).phoneNumber);
+			phones.append(rs.get(r).getPhoneNumber());
 		}
 		return phones.toString();
 	}

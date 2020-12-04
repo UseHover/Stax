@@ -172,7 +172,7 @@ public abstract class StagedFragment extends Fragment {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == Activity.RESULT_OK) {
 			StaxContact staxContact = new StaxContact(data, getContext());
-			if (staxContact.phoneNumber != null) {
+			if (staxContact.getPhoneNumber() != null) {
 				Amplitude.getInstance().logEvent(getString(R.string.contact_select_success));
 				onContactSelected(requestCode, staxContact);
 			} else {

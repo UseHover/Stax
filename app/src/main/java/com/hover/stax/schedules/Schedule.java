@@ -110,7 +110,7 @@ public class Schedule {
 	private String generateDescription(Action action, List<StaxContact> contacts, Context c) {
 		switch (type) {
 			case Action.AIRTIME:
-				return c.getString(R.string.descrip_airtime_sched, action.from_institution_name, ((contacts == null || contacts.size() == 0 || contacts.get(0).phoneNumber.equals("")) ? "myself" : StaxContact.shortName(contacts, c)));
+				return c.getString(R.string.descrip_airtime_sched, action.from_institution_name, !action.requiresRecipient() ? c.getString(R.string.self_choice) : StaxContact.shortName(contacts, c));
 			case Action.P2P:
 				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, StaxContact.shortName(contacts, c));
 			case Action.ME2ME:

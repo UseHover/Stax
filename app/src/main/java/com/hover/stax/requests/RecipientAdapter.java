@@ -48,7 +48,7 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
 		ArrayAdapter<StaxContact> adapter = new StaxContactArrayAdapter(holder.view.getContext(), allContacts);
 		holder.input.setAdapter(adapter);
 
-		if (recipients != null && recipients.size() > position && recipients.get(position).phoneNumber != null)
+		if (recipients != null && recipients.size() > position && recipients.get(position).getPhoneNumber() != null)
 			holder.input.setText(recipients.get(position).toString());
 
 		holder.input.addTextChangedListener(new TextWatcher() {

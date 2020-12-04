@@ -50,19 +50,29 @@ public class EditTransferFragment extends EditStagedFragment {
 		amountInput = view.findViewById(R.id.amount_input);
 		amountInput.setText(transferViewModel.getAmount().getValue());
 		channelDropdown = view.findViewById(R.id.channelDropdown);
-		if (transferViewModel.getActiveChannel().getValue() != null)
-			channelDropdown.setText(transferViewModel.getActiveChannel().getValue().toString());
 		actionEntry = view.findViewById(R.id.networkEntry);
 		actionDropdown = view.findViewById(R.id.networkDropdown);
-		if (transferViewModel.getActiveAction().getValue() != null)
-			actionDropdown.setText(transferViewModel.getActiveAction().getValue().toString());
 		recipientEntry = view.findViewById(R.id.recipientEntry);
 		recipientAutocomplete = view.findViewById(R.id.recipient_autocomplete);
-		if (transferViewModel.getContact().getValue() != null)
-			recipientAutocomplete.setText(transferViewModel.getContact().getValue().toString());
 		contactButton = view.findViewById(R.id.contact_button);
 		noteInput = view.findViewById(R.id.note_input);
 		noteInput.setText(transferViewModel.getNote().getValue());
+
+		if (transferViewModel.getRequest().getValue() != null && transferViewModel.getRequest().getValue().hasRequesterInfo()) {
+			recipientEntry.setVisibility(View.GONE);
+		}
+
+		if (transferViewModel.getActiveChannel().getValue() != null)
+			channelDropdown.setText(transferViewModel.getActiveChannel().getValue().toString());
+
+		if (transferViewModel.getActiveAction().getValue() != null) {
+			actionDropdown.setText(transferViewModel.getActiveAction().getValue().toString());
+			if (!transferViewModel.getActiveAction().getValue().allowsNote())
+				view.findViewById(R.id.noteEntry).setVisibility(View.GONE);
+		}
+
+		if (transferViewModel.getContact().getValue() != null)
+			recipientAutocomplete.setText(transferViewModel.getContact().getValue().toString());
 
 		super.init(view);
 	}
@@ -84,7 +94,8 @@ public class EditTransferFragment extends EditStagedFragment {
 		});
 		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
 			actionDropdown.setText(action.toString(), false);
-			recipientEntry.setVisibility(action.requiresRecipient() ? View.VISIBLE : View.GONE);
+			recipientEntry.setVisibility(action.requiresRecipient() &&
+				(transferViewModel.getRequest().getValue() == null || !transferViewModel.getRequest().getValue().hasRequesterInfo()) ? View.VISIBLE : View.GONE);
 		});
 
 		transferViewModel.getRecentContacts().observe(getViewLifecycleOwner(), contacts -> {

@@ -20,7 +20,7 @@ public class Action {
 	public final static String ID_KEY = "action_id";
 	public final static String TRANSACTION_TYPE = "transaction_type", P2P = "p2p", AIRTIME = "airtime", ME2ME = "me2me", C2B = "c2b", BALANCE = "balance";
 	public final static String STEP_IS_PARAM = "is_param", STEP_VALUE = "value",
-			PIN_KEY = "pin", AMOUNT_KEY = "amount", PHONE_KEY = "phone", ACCOUNT_KEY = "account", FEE_KEY = "fee", REASON_KEY = "reason";
+			PIN_KEY = "pin", AMOUNT_KEY = "amount", PHONE_KEY = "phone", ACCOUNT_KEY = "account", FEE_KEY = "fee", NOTE_KEY = "reason";
 
 	@PrimaryKey
 	@ColumnInfo(name = "_id")
@@ -87,13 +87,11 @@ public class Action {
 	@NotNull
 	@Override
 	public String toString() {
-		if (transaction_type.equals(P2P) || transaction_type.equals(C2B) || transaction_type.equals(ME2ME))
-			return to_institution_name != null && !to_institution_name.equals("null") ? to_institution_name : (transaction_type.equals(ME2ME) ? "Myself" : from_institution_name);
+		return isOnNetwork() ? from_institution_name : to_institution_name;
+	}
 
-		if (requiresRecipient()) // airtime
-			return "Someone else";
-		else
-			return "Myself";
+	public boolean isOnNetwork() {
+		return to_institution_name == null || to_institution_name.equals("null") || from_institution_id == to_institution_id;
 	}
 
 	public String getLabel() {
@@ -116,8 +114,8 @@ public class Action {
 		return requiresInput(ACCOUNT_KEY) || requiresInput(PHONE_KEY);
 	}
 
-	public boolean requiresReason() {
-		return requiresInput(REASON_KEY);
+	public boolean allowsNote() {
+		return requiresInput(NOTE_KEY);
 	}
 
 	private boolean requiresInput(String key) {

@@ -66,8 +66,15 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 		balancesViewModel.getSelectedChannels().observe(this, channels -> Log.i(TAG, "Channels observer is neccessary to make updates fire, but all logic is in viewmodel. " + channels.size()));
 
 		setUpNav();
+		if (getIntent().hasExtra(Constants.REQUEST_LINK))
+			startTransfer(Action.P2P, true);
+	}
 
-		if(getIntent().hasExtra(Constants.REQUEST_LINK)) { startTransfer(Action.P2P, true); }
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		if (intent.hasExtra(Constants.REQUEST_LINK))
+			startTransfer(Action.P2P, true, intent);
 	}
 
 	public void addAccount(View view) {
@@ -176,10 +183,11 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 			new ShowcaseExecutor(this, findViewById(R.id.home_root)).startShowcasing();
 	}
 
-	private void startTransfer(String type, boolean isFromStaxLink) {
+	private void startTransfer(String type, boolean isFromStaxLink) { startTransfer(type, isFromStaxLink, getIntent()); }
+	private void startTransfer(String type, boolean isFromStaxLink, Intent received) {
 		Intent i = new Intent(this, TransferActivity.class);
 		i.setAction(type);
-		if(isFromStaxLink) i.putExtra(Constants.REQUEST_LINK, getIntent().getExtras().getString(Constants.REQUEST_LINK));
+		if(isFromStaxLink) i.putExtra(Constants.REQUEST_LINK, received.getExtras().getString(Constants.REQUEST_LINK));
 		startActivityForResult(i, Constants.TRANSFER_REQUEST);
 	}
 

@@ -99,7 +99,7 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 			recipientValueList.removeAllViews();
 			for (StaxContact recipient : recipients) {
 				Stax2LineItem ssi2l = new Stax2LineItem(getContext(), null);
-				ssi2l.setContact(recipient);
+				ssi2l.setContact(recipient, false);
 				recipientValueList.addView(ssi2l);
 			}
 

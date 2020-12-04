@@ -83,11 +83,15 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void createFromRequest(String link) {
+		Log.e(TAG, "Create from a request link");
+//		showLoadingDialog();
+		transferViewModel.decrypt(link);
 		transferViewModel.getRequest().observe(this, request -> {
+			Log.e(TAG, "request update: " + request);
 			if (request == null) return;
 			transferViewModel.view(request);
+//			dismissDialog();
 		});
-		transferViewModel.decrypt(link);
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_request_link));
 	}
 
@@ -133,9 +137,9 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		new HoverSession.Builder(act, transferViewModel.getActiveChannel().getValue(),
 				TransferActivity.this, Constants.TRANSFER_REQUEST)
 				.extra(Action.PHONE_KEY, transferViewModel.getContact().getValue().normalizedNumber(transferViewModel.getActiveChannel().getValue().countryAlpha2))
-				.extra(Action.ACCOUNT_KEY, transferViewModel.getContact().getValue().phoneNumber)
+				.extra(Action.ACCOUNT_KEY, transferViewModel.getContact().getValue().getPhoneNumber())
 				.extra(Action.AMOUNT_KEY, transferViewModel.getAmount().getValue())
-				.extra(Action.REASON_KEY, transferViewModel.getNote().getValue())
+				.extra(Action.NOTE_KEY, transferViewModel.getNote().getValue())
 				.run();
 	}
 
@@ -151,9 +155,8 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 
 	private void setSummaryCard(@Nullable StagedViewModel.StagedEnum stage) {
 		findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.accountRow).setVisibility(stage.compare(FROM_ACCOUNT) > 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.actionRow).setVisibility((stage.compare(TO_NETWORK) > 0 && transferViewModel.hasActionsLoaded()) ? View.VISIBLE : View.GONE);
-		findViewById(R.id.requesteeRow).setVisibility(stage.compare(RECIPIENT) > 0 && transferViewModel.getActiveAction().getValue() != null ? View.VISIBLE : View.GONE);
+		findViewById(R.id.accountsRow).setVisibility(stage.compare(FROM_ACCOUNT) > 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.recipientRow).setVisibility((stage.compare(RECIPIENT) > 0 || transferViewModel.getRequest().getValue() != null && transferViewModel.getRequest().getValue().hasRequesterInfo()) ? View.VISIBLE : View.GONE);
 		findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && transferViewModel.getNote().getValue() != null && !transferViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
 		findViewById(R.id.btnRow).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
 	}

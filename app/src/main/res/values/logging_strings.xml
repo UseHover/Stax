@@ -35,7 +35,7 @@
 	<string name="clicked_schedule_notification" translatable="false">Clicked schedule notification</string>
 	<string name="finished_scheduled_transaction" translatable="false">Completed scheduled %1$s transfer</string>
 
-	<string name="clicked_request_link" translatable="false">Clicked request link</string>
+	<string name="clicked_request_link" translatable="false">Clicked link from request</string>
 	<string name="clicked_send_request" translatable="false">Clicked send request</string>
 	<string name="clicked_send_sms_request" translatable="false">Clicked send sms request</string>
 	<string name="clicked_send_whatsapp_request" translatable="false">Clicked send whatsapp request</string>
