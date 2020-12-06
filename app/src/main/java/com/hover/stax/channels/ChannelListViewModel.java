@@ -42,9 +42,10 @@ public class ChannelListViewModel extends AndroidViewModel {
 		super(application);
 		repo = new DatabaseRepo(application);
 		loadChannels();
+		initSelectedChannels();
 		loadSims();
-		simHniList = Transformations.map(sims, this::getHnis);
-		simCountryList = Transformations.map(sims, this::getSimCountries);
+		simHniList = Transformations.map(sims, this::getHnisAndSubscribeToEachOnFirebase);
+		simCountryList = Transformations.map(sims, this::getSimCountriesAndSubscribeToEachOnFirebase);
 
 		simChannels = new MediatorLiveData<>();
 		simChannels.addSource(allChannels, this::onChannelsUpdateHnis);
@@ -64,17 +65,16 @@ public class ChannelListViewModel extends AndroidViewModel {
 			allChannels = new MutableLiveData<>();
 		}
 		allChannels = repo.getAllChannels();
-		initSelected();
 	}
 
-	private void initSelected() {
+	private void initSelectedChannels() {
 		if (selected == null) {
 			selected = new MediatorLiveData<>();
 		}
-		selected.addSource(allChannels, this::loadSelected);
+		selected.addSource(allChannels, this::loadSelectedChannels);
 	}
 
-	private void loadSelected(List<Channel> channels) {
+	private void loadSelectedChannels(List<Channel> channels) {
 		List<Integer> ls = new ArrayList<>();
 		for (Channel channel : channels) {
 			if (channel.selected) ls.add(channel.id);
@@ -105,7 +105,7 @@ public class ChannelListViewModel extends AndroidViewModel {
 		}
 	};
 
-	private List<String> getHnis(List<Sim> sims) {
+	private List<String> getHnisAndSubscribeToEachOnFirebase(List<Sim> sims) {
 		if (sims == null) return null;
 		List<String> hniList = new ArrayList<>();
 		for (Sim sim : sims) {
@@ -117,7 +117,7 @@ public class ChannelListViewModel extends AndroidViewModel {
 		return hniList;
 	}
 
-	private List<String> getSimCountries(List<Sim> sims) {
+	private List<String> getSimCountriesAndSubscribeToEachOnFirebase(List<Sim> sims) {
 		if (sims == null) return null;
 		List<String> countries = new ArrayList<>();
 		for (Sim sim : sims) {
@@ -139,17 +139,17 @@ public class ChannelListViewModel extends AndroidViewModel {
 
 	private void updateSimChannels(List<Channel> channels, List<String> hniList) {
 		if (channels == null || hniList == null) return;
-		List<Channel> simChanneList = new ArrayList<>();
+		List<Channel> simChannelList = new ArrayList<>();
 		for (int i = 0; i < channels.size(); i++) {
 			String[] hniArr = channels.get(i).hniList.split(",");
 			for (String s : hniArr) {
 				if (hniList.contains(Utils.stripHniString(s))) {
-					if (!simChanneList.contains(channels.get(i)))
-						simChanneList.add(channels.get(i));
+					if (!simChannelList.contains(channels.get(i)))
+						simChannelList.add(channels.get(i));
 				}
 			}
 		}
-		simChannels.setValue(simChanneList);
+		simChannels.setValue(simChannelList);
 	}
 
 	LiveData<List<Channel>> getSimChannels() {
@@ -190,12 +190,12 @@ public class ChannelListViewModel extends AndroidViewModel {
 	}
 
 	void saveSelected() {
-		List<Channel> saveChannels = allChannels.getValue() != null ? allChannels.getValue() : new ArrayList<>();
-		for (int i = 0; i < saveChannels.size(); i++) {
-			Channel channel = saveChannels.get(i);
+		List<Channel> saveChannelsTemp = allChannels.getValue() != null ? allChannels.getValue() : new ArrayList<>();
+		for (int i = 0; i < saveChannelsTemp.size(); i++) {
+			Channel channel = saveChannelsTemp.get(i);
 			if (selected.getValue().contains(channel.id)) {
 				channel.selected = true;
-				if (i == 0) channel.defaultAccount = true;
+				channel.defaultAccount = i==0;
 				repo.update(channel);
 				FirebaseMessaging.getInstance().subscribeToTopic("channel-" + channel.id);
 			}
