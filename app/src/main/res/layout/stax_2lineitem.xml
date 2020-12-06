@@ -8,6 +8,7 @@
 	android:id="@+id/content" >
 
 	<TextView android:id="@+id/title"
+	    	android:fontFamily="font-normal"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:textSize="@dimen/text_21" />
@@ -18,6 +19,7 @@
 		android:layout_below="@id/title"
 		android:layout_alignStart="@id/title"
 		android:textSize="@dimen/text_13"
+	    	android:fontFamily="font-normal"
 		android:textColor="@color/offWhite"
 		android:textAppearance="?attr/textAppearanceListItemSecondary" />
 

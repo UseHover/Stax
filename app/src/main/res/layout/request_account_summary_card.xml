@@ -26,6 +26,7 @@
 
 			<TextView
 			    android:text="@string/country_cardhead"
+			    android:fontFamily="font-normal"
 			    android:textColor="@color/offWhite"
 			    android:textSize="@dimen/text_16" />
 
@@ -41,6 +42,7 @@
 
 			<TextView
 			    android:text="@string/service_cardhead"
+			    android:fontFamily="font-normal"
 			    android:textColor="@color/offWhite"
 			    android:textSize="@dimen/text_16" />
 

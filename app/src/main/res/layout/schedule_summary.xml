@@ -8,7 +8,7 @@
 		<TextView
 			android:textColor="@color/offWhite"
 			android:textSize="@dimen/text_16"
-	        android:fontFamily="font-normal"
+		      android:fontFamily="font-normal"
 			android:text="@string/amount_cardhead"/>
 
 		<TextView android:id="@+id/details_amount"

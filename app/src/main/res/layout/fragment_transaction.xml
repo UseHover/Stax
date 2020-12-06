@@ -27,10 +27,11 @@
 					<TextView
 					    android:textColor="@color/offWhite"
 					    android:textSize="@dimen/text_16"
+					    android:fontFamily="font-normal"
 					    android:text="@string/amount_cardhead"/>
 
 					<TextView android:id="@+id/details_amount"
-						android:layout_weight="1"
+					    android:layout_weight="1"
 					    android:textAlignment="viewEnd"
 					    android:fontFamily="font-normal"
 					    android:textColor="@color/offWhite"
@@ -41,6 +42,7 @@
 					<TextView
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_16"
+					    	android:fontFamily="font-normal"
 						android:text="@string/recipient_label"/>
 
 					<TextView android:id="@+id/details_recipient"
@@ -55,6 +57,7 @@
 					<TextView
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_16"
+					    	android:fontFamily="font-normal"
 						android:text="@string/date_label"/>
 
 					<TextView android:id="@+id/details_date"
@@ -69,6 +72,7 @@
 					<TextView
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_16"
+					    	android:fontFamily="font-normal"
 						android:text="@string/network_label"/>
 
 					<TextView android:id="@+id/details_network"
@@ -83,6 +87,7 @@
 					<TextView
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_16"
+					    	android:fontFamily="font-normal"
 						android:text="@string/id_label"/>
 
 					<TextView android:id="@+id/details_transactionNumber"
@@ -110,8 +115,9 @@
 			    android:layout_width="match_parent"
 			    android:text="@string/pending_cardbody"
 			    android:textSize="@dimen/text_16"
-				android:layout_marginHorizontal="@dimen/margin_3"
-				android:layout_marginBottom="@dimen/margin_3"
+			    android:fontFamily="font-normal"
+			    android:layout_marginHorizontal="@dimen/margin_3"
+			    android:layout_marginBottom="@dimen/margin_3"
 			    android:layout_height="wrap_content"/>
 		</com.hover.stax.views.StaxCardView>
 
@@ -124,14 +130,14 @@
 			<androidx.recyclerview.widget.RecyclerView
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
-				android:layout_marginHorizontal="@dimen/margin_3"
+			    android:layout_marginHorizontal="@dimen/margin_3"
 			    android:id="@+id/convo_recyclerView" />
 
 			<androidx.recyclerview.widget.RecyclerView
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
-				android:layout_marginHorizontal="@dimen/margin_13"
-				android:layout_marginBottom="@dimen/margin_21"
+			    android:layout_marginHorizontal="@dimen/margin_13"
+			    android:layout_marginBottom="@dimen/margin_21"
 			    android:id="@+id/sms_recyclerView" />
 
 		</com.hover.stax.views.StaxCardView>
