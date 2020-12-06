@@ -78,9 +78,9 @@ public class StaxContact {
 		}
 	}
 
-	public String normalizedNumber(String country) { return normalizeNumber(phoneNumber, country); }
+	public String normalizedNumberByCountry(String country) { return normalizeNumberByCountry(phoneNumber, country); }
 
-	public static String normalizeNumber(String number, String country) {
+	public static String normalizeNumberByCountry(String number, String country) {
 		String phoneNumber = number;
 		try {
 			phoneNumber = convertToCountry(number, country);
@@ -154,10 +154,10 @@ public class StaxContact {
 		if (other == this) return true;
 		if (!(other instanceof StaxContact)) return false;
 		StaxContact otherContact = (StaxContact) other;
-		return id.equals(otherContact.id) || samePhone(otherContact);
+		return id.equals(otherContact.id) || isSamePhone(otherContact);
 	}
 
-	private boolean samePhone(StaxContact other) {
+	private boolean isSamePhone(StaxContact other) {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 		return phoneUtil.isNumberMatch(phoneNumber, other.phoneNumber) != NO_MATCH;
 	}
