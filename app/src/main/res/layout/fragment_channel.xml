@@ -45,12 +45,14 @@
 						android:layout_weight="1"
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_16"
+					    	android:fontFamily="font-normal"
 						android:text="@string/balance_label"/>
 
 					<TextView android:id="@+id/details_balance"
 						android:textAlignment="viewEnd"
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_21"
+					    	android:fontFamily="font-normal"
 						android:textStyle="bold"/>
 				</TableRow>
 
@@ -59,12 +61,14 @@
 						android:layout_weight="1"
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_16"
+					    	android:fontFamily="font-normal"
 						android:text="@string/moneyout_label"/>
 
 					<TextView android:id="@+id/details_money_out"
 						android:textAlignment="viewEnd"
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_21"
+					    	android:fontFamily="font-normal"
 						android:textStyle="bold"/>
 				</TableRow>
 
@@ -73,12 +77,14 @@
 						android:layout_weight="1"
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_16"
+					    	android:fontFamily="font-normal"
 						android:text="@string/moneyin_label"/>
 
 					<TextView android:id="@+id/details_money_in"
 						android:textAlignment="viewEnd"
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_21"
+					    	android:fontFamily="font-normal"
 						android:textStyle="bold"/>
 				</TableRow>
 
@@ -87,12 +93,14 @@
 						android:layout_weight="1"
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_16"
+					    	android:fontFamily="font-normal"
 						android:text="@string/fees_label"/>
 
 					<TextView android:id="@+id/details_fees"
 						android:textAlignment="viewEnd"
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_21"
+					    	android:fontFamily="font-normal"
 						android:textStyle="bold"/>
 				</TableRow>
 			</TableLayout>

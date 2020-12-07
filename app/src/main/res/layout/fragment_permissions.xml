@@ -15,6 +15,7 @@
 			android:layout_height="wrap_content"
 			android:layout_marginHorizontal="@dimen/margin_3"
 			android:lineSpacingExtra="@dimen/text_spacing_8"
+		    	android:fontFamily="font-normal"
 			android:textColor="@color/offWhite"
 			android:text="@string/simperm_cardbody" />
 

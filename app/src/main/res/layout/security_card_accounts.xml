@@ -27,6 +27,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:padding="@dimen/margin_13"
+		    	android:fontFamily="font-normal"
 			android:dropDownWidth="wrap_content"
 			android:background="@null"
 			android:editable="false"

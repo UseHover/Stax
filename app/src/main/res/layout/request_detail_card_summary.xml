@@ -13,13 +13,13 @@
 		<TableRow android:id="@+id/amountRow">
 			<TextView
 				android:text="@string/amount_cardhead"
-		        android:fontFamily="font-normal"
+			    	android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16" />
 
 			<TextView android:id="@+id/amountValue"
 				android:layout_weight="1"
-			    android:fontFamily="font-normal"
+			      android:fontFamily="font-normal"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
