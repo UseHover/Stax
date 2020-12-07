@@ -14,7 +14,7 @@ import com.hover.stax.sims.Sim;
 import com.hover.stax.sims.SimDao;
 
 // This is a readonly database for accessing the DB created by SQL in the SDK
-@Database(entities = {Action.class, Sim.class}, version = 46, exportSchema = false)
+@Database(entities = {Action.class, Sim.class}, version = 47, exportSchema = false)
 public abstract class SdkDatabase extends RoomDatabase {
 
 	private static volatile SdkDatabase INSTANCE;
