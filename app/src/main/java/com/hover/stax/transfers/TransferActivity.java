@@ -134,6 +134,18 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
 		transferViewModel.checkSchedule();
 		transferViewModel.saveContact();
+
+		if(transferViewModel.getContact().getValue() !=null) callHoverForThirdPartyTransaction(act);
+		else callHoverForSelfTransaction(act);
+	}
+	private void callHoverForSelfTransaction(Action act) {
+		new HoverSession.Builder(act, transferViewModel.getActiveChannel().getValue(),
+				TransferActivity.this, Constants.TRANSFER_REQUEST)
+				.extra(Action.AMOUNT_KEY, transferViewModel.getAmount().getValue())
+				.extra(Action.NOTE_KEY, transferViewModel.getNote().getValue())
+				.run();
+	}
+	private void callHoverForThirdPartyTransaction(Action act) {
 		new HoverSession.Builder(act, transferViewModel.getActiveChannel().getValue(),
 				TransferActivity.this, Constants.TRANSFER_REQUEST)
 				.extra(Action.PHONE_KEY, transferViewModel.getContact().getValue().normalizedNumber(transferViewModel.getActiveChannel().getValue().countryAlpha2))
@@ -142,6 +154,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 				.extra(Action.NOTE_KEY, transferViewModel.getNote().getValue())
 				.run();
 	}
+
 
 	private void onUpdateStage(@Nullable StagedViewModel.StagedEnum stage) {
 		if (Navigation.findNavController(this, R.id.nav_host_fragment).getCurrentDestination().getId() == R.id.navigation_edit)
