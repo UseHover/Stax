@@ -35,6 +35,7 @@ public abstract class SdkDatabase extends RoomDatabase {
 						.addMigrations(M43_44)
 						.addMigrations(M44_45)
 						.addMigrations(M45_46)
+						.addMigrations(M46_47)
 						.build();
 				}
 			}
@@ -73,6 +74,12 @@ public abstract class SdkDatabase extends RoomDatabase {
 	};
 
 	static final Migration M45_46 = new Migration(45, 46) {
+		@Override
+		public void migrate(SupportSQLiteDatabase database) {
+		}
+	};
+
+	static final Migration M46_47 = new Migration(46, 47) {
 		@Override
 		public void migrate(SupportSQLiteDatabase database) {
 		}

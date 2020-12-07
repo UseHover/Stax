@@ -16,8 +16,8 @@ android {
         applicationId "com.hover.stax"
         minSdkVersion 18
         targetSdkVersion 29
-        versionCode 16
-        versionName "0.8.2"
+        versionCode 17
+        versionName "0.8.3"
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -94,7 +94,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     // Hover SDK
-    def sdk_version = "1.6.5-stax-beta03-pro"
+    def sdk_version = "1.6.5-stax-beta05-pro"
     releaseImplementation "com.hover:android-sdk:$sdk_version"
     debugImplementation project(":hover.sdk")
     debugImplementation 'com.android.volley:volley:1.1.1'
