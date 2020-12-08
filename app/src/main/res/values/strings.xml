@@ -29,8 +29,6 @@
 	<string name="btn_ok">OK</string>
 	<string name="btn_save">Save</string>
 	<string name="btn_skip">Skip</string>
-	<string name="btn_yes">Yes</string>
-	<string name="btn_no">No</string>
 	<string name="btn_resend">Resend</string>
 	<string name="btn_continue">Continue</string>
 	<string name="btn_send">Send</string>
@@ -278,8 +276,10 @@
 	<string name="security_cardhead">Security</string>
 	<string name="defaultacct_label">Default account</string>
 	<string name="security_head">Secure with Stax</string>
-	<string name="btn_removepins">Remove PINs from device</string>
+	<string name="btn_removepins">Remove PINs</string>
 	<string name="removepins_dialoghead">Remove all PINs now</string>
+	<string name="removepin_dialoghead">Remove %1$s PIN now</string>
+	<string name="btn_removepin">Remove PIN</string>
 	<string name="removepins_dialogmes">You can add your PINs to Stax again at any time.</string>
 	<string name="toast_confirm_removepin">PIN removed successfully</string>
 	<string name="btn_savepin">Save PIN</string>

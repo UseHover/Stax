@@ -24,6 +24,7 @@ import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.schedules.ScheduleDetailFragment;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.views.StaxDialog;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -74,10 +75,20 @@ public class PinUpdateFragment extends Fragment implements Target {
 
 	private void setUpRemoveAccount(Channel channel) {
 		view.findViewById(R.id.removeAcct).setOnClickListener(v -> {
-			pinViewModel.removeAccount(channel);
-			NavHostFragment.findNavController(PinUpdateFragment.this).popBackStack();
-			UIHelper.flashMessage(getContext(), getResources().getString(R.string.toast_confirm_acctremoved));
+			new StaxDialog(getContext(), this)
+				.setDialogTitle(getContext().getString(R.string.removepin_dialoghead, channel.name))
+				.setDialogMessage(R.string.removepins_dialogmes)
+				.setPosButton(R.string.btn_removepin, btn -> removeAccount(channel))
+				.setNegButton(R.string.btn_cancel, null)
+				.isDestructive()
+				.showIt();
 		});
+	}
+
+	private void removeAccount(Channel channel) {
+		pinViewModel.removeAccount(channel);
+		NavHostFragment.findNavController(PinUpdateFragment.this).popBackStack();
+		UIHelper.flashMessage(getContext(), getResources().getString(R.string.toast_confirm_acctremoved));
 	}
 
 	private void showChoiceCard(boolean show) {

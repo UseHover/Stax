@@ -106,11 +106,11 @@ public class SecurityFragment extends Fragment {
 			new StaxDialog(root.getContext(), this)
 					.setDialogTitle(R.string.removepins_dialoghead)
 					.setDialogMessage(R.string.removepins_dialogmes)
-					.setPosButton(R.string.btn_yes, btn -> {
+					.setPosButton(R.string.btn_removepins, btn -> {
 						securityViewModel.clearAllPins();
 						UIHelper.flashMessage(getContext(), getContext().getResources().getString(R.string.toast_confirm_removepin));
 					})
-					.setNegButton(R.string.btn_no, null)
+					.setNegButton(R.string.btn_cancel, null)
 					.isDestructive()
 					.showIt();
 		});
