@@ -37,7 +37,6 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	private BalanceAdapter balanceAdapter;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.e(TAG, "creating view");
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_home)));
 		balancesViewModel = new ViewModelProvider(requireActivity()).get(BalancesViewModel.class);
 		futureViewModel = new ViewModelProvider(requireActivity()).get(FutureViewModel.class);
@@ -48,7 +47,6 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		Log.e(TAG, "created view");
 		setUpBalances(view);
 		setUpFuture(view);
 		setUpHistory(view);
@@ -74,7 +72,6 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		recyclerView.setHasFixedSize(true);
 
 		balancesViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
-			Log.e(TAG, "found some channels: " + channels);
 			balanceAdapter = new BalanceAdapter(channels, (MainActivity) getActivity());
 			recyclerView.setAdapter(balanceAdapter);
 			recyclerView.setVisibility(channels != null && channels.size() > 0 ? View.VISIBLE : View.GONE);
@@ -109,7 +106,6 @@ public class HomeFragment extends Fragment implements TransactionHistoryAdapter.
 		rv.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 
 		transactionsViewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
-			Log.e(TAG, "found transactions: " + staxTransactions);
 			rv.setAdapter(new TransactionHistoryAdapter(staxTransactions, HomeFragment.this));
 			view.findViewById(R.id.no_history).setVisibility(staxTransactions.size() > 0 ? View.GONE : View.VISIBLE);
 		});

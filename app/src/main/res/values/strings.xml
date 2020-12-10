@@ -163,9 +163,12 @@
 	<string name="amount_label">How much money?</string>
 	<string name="channel_label">Account</string>
 	<string name="fromacct_cardhead">From this account</string>
+	<string name="fromacct_fielderror">You must select an sending account. If you have none please tap <u>add account</u>.</string>
 	<string name="link_addacct"><u>+ Add an account</u></string>
 	<string name="recipientnetwork_cardhead">To network</string>
 	<string name="recipientnetwork_label">To this network</string>
+	<string name="recipientnetwork_fielderror">No recipient network chosen.</string>
+	<string name="whoopsie">Something went wrong, the problem has been reported. Please try again.</string>
 	<string name="recipient_cardhead">To this number</string>
 	<string name="recipientphone_label">Contact phone number</string>
 	<string name="recipientacct_label">Contact account number</string>

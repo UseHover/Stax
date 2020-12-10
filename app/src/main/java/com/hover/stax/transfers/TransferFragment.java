@@ -18,7 +18,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -30,8 +29,12 @@ import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.contacts.StaxContactArrayAdapter;
 import com.hover.stax.database.Constants;
 import com.hover.stax.utils.StagedFragment;
+import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.Stax2LineItem;
+import com.hover.stax.views.StaxDialog;
+
+import static com.hover.stax.transfers.TransferStage.*;
 
 import java.util.List;
 
@@ -115,6 +118,15 @@ public class TransferFragment extends StagedFragment {
 		transferViewModel.getRecipientError().observe(getViewLifecycleOwner(), recipientError -> {
 			recipientLabel.setError((recipientError != null ? getString(recipientError) : null));
 			recipientLabel.setErrorIconDrawable(0);
+		});
+
+		transferViewModel.getPageError().observe(getViewLifecycleOwner(), error -> {
+			if (error != null) {
+				if ((transferViewModel.isDone()) && getActivity() != null)
+					new StaxDialog(getActivity()).setDialogMessage(error).showIt();
+				else
+					UIHelper.flashMessage(getContext(), getString(error));
+			}
 		});
 
 		transferViewModel.getNote().observe(getViewLifecycleOwner(), reason -> noteValue.setText(reason));

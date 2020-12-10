@@ -43,12 +43,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void startObservers() {
-		transferViewModel.getSelectedChannels().observe(this, channels -> {
-			if (scheduleViewModel != null && scheduleViewModel.getSchedule().getValue() != null)
-				transferViewModel.setActiveChannel(scheduleViewModel.getSchedule().getValue().channel_id);
-			else if (transferViewModel != null && transferViewModel.getRequest().getValue() != null)
-				transferViewModel.setActiveChannel(transferViewModel.getRequest().getValue().requester_institution_id);
-		});
+		transferViewModel.getSelectedChannels().observe(this, channels -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel."));
 		transferViewModel.getActiveChannel().observe(this, channel -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel."));
 		transferViewModel.getActions().observe(this, actions -> onUpdateStage(transferViewModel.getStage().getValue()));
 		transferViewModel.getActiveAction().observe(this, action -> onUpdateStage(transferViewModel.getStage().getValue()));
@@ -85,7 +80,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void createFromRequest(String link) {
-		AlertDialog dialog = new StaxDialog(this).setDialogTitle(R.string.loading_dialoghead).showIt();
+		AlertDialog dialog = new StaxDialog(this).setDialogMessage(R.string.loading_dialoghead).showIt();
 		transferViewModel.decrypt(link);
 		transferViewModel.getRequest().observe(this, request -> {
 			if (request == null) return;
@@ -96,10 +91,12 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	public void onContinue(View view) {
-		if (transferViewModel.isDone())
-			submit();
-		else if (transferViewModel.stageValidates())
-			transferViewModel.goToNextStage();
+		if (transferViewModel.stageValidates()) {
+			if (transferViewModel.isDone())
+				submit();
+			else
+				transferViewModel.goToNextStage();
+		}
 	}
 
 	private void submit() {
@@ -114,10 +111,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void authenticate() {
-//		if (transferViewModel.getActiveAction().getValue() == null)
-
 		new BiometricChecker(this, this).startAuthentication(transferViewModel.getActiveAction().getValue());
-//		makeHoverCall(transferViewModel.getActiveAction().getValue());
 	}
 
 	@Override
@@ -174,7 +168,9 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	private void setFab(StagedViewModel.StagedEnum stage) {
 		ExtendedFloatingActionButton fab = findViewById(R.id.fab);
 		if (stage.compare(REVIEW) >= 0) {
-			if (transferViewModel.getIsFuture().getValue() != null && transferViewModel.getIsFuture().getValue()) {
+			if (transferViewModel.getPageError().getValue() != null)
+				fab.hide();
+			else if (transferViewModel.getIsFuture().getValue() != null && transferViewModel.getIsFuture().getValue()) {
 				fab.setText(getString(R.string.fab_schedule));
 				if (transferViewModel.getFutureDate().getValue() == null) { fab.hide(); } else { fab.show(); }
 			} else {
