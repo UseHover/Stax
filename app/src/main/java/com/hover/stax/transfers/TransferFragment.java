@@ -123,7 +123,7 @@ public class TransferFragment extends StagedFragment {
 		transferViewModel.getPageError().observe(getViewLifecycleOwner(), error -> {
 			if (error != null) {
 				if ((transferViewModel.isDone()) && getActivity() != null)
-					new StaxDialog(getActivity()).setDialogMessage(error).showIt();
+					new StaxDialog(getActivity()).setDialogMessage(error).setPosButton(R.string.btn_ok, null).showIt();
 				else
 					UIHelper.flashMessage(getContext(), getString(error));
 			}
