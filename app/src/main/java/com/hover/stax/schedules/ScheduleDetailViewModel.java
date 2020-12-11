@@ -1,6 +1,7 @@
 package com.hover.stax.schedules;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;

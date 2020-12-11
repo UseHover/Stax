@@ -205,7 +205,11 @@ public class TransferViewModel extends StagedViewModel {
 	}
 
 	void setContact(String contact_ids) {
-		new Thread(() -> contact.postValue(repo.getContacts(contact_ids.split(",")).get(0))).start();
+		if (contact_ids == null) return;
+		new Thread(() -> {
+			List<StaxContact> contacts = repo.getContacts(contact_ids.split(","));
+			if (contacts.size() > 0) contact.postValue(contacts.get(0));
+		}).start();
 	}
 
 	void setContact(StaxContact c) {
