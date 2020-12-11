@@ -298,13 +298,14 @@ public class TransferViewModel extends StagedViewModel {
 				return setError((MutableLiveData) activeAction, pageError, R.string.recipientnetwork_fielderror);
 			case RECIPIENT:
 				return setError((MutableLiveData) contact, recipientError, R.string.recipient_fielderror);
+			case NOTE: return true;
 			case REVIEW:
 			case REVIEW_DIRECT:
 			default:
 				Log.e(TAG, "active channel: " + activeChannel.getValue());
 				Log.e(TAG, "active action: " + activeAction.getValue());
 				Log.e(TAG, "contact: " + contact.getValue());
-			    return stageRequired((TransferStage) stage.getValue()) || (setError((MutableLiveData) activeChannel, pageError, R.string.whoopsie) && setError((MutableLiveData) activeAction, pageError, R.string.whoopsie) && setError((MutableLiveData) contact, pageError, R.string.whoopsie));
+			    return setError((MutableLiveData) activeChannel, pageError, R.string.whoopsie) && setError((MutableLiveData) activeAction, pageError, R.string.whoopsie) && setError((MutableLiveData) contact, pageError, R.string.whoopsie);
 		}
 	}
 
