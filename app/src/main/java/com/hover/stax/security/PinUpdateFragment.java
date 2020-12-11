@@ -3,7 +3,6 @@ package com.hover.stax.security;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +14,14 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.amplitude.api.Amplitude;
 import com.google.android.material.textfield.TextInputEditText;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.schedules.ScheduleDetailFragment;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.views.StaxDialog;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -74,10 +72,20 @@ public class PinUpdateFragment extends Fragment implements Target {
 
 	private void setUpRemoveAccount(Channel channel) {
 		view.findViewById(R.id.removeAcct).setOnClickListener(v -> {
-			pinViewModel.removeAccount(channel);
-			NavHostFragment.findNavController(PinUpdateFragment.this).popBackStack();
-			UIHelper.flashMessage(getContext(), getResources().getString(R.string.toast_confirm_acctremoved));
+			new StaxDialog(getContext(), this)
+				.setDialogTitle(getContext().getString(R.string.removepin_dialoghead, channel.name))
+				.setDialogMessage(R.string.removepins_dialogmes)
+				.setPosButton(R.string.btn_removeaccount, btn -> removeAccount(channel))
+				.setNegButton(R.string.btn_cancel, null)
+				.isDestructive()
+				.showIt();
 		});
+	}
+
+	private void removeAccount(Channel channel) {
+		pinViewModel.removeAccount(channel);
+		NavHostFragment.findNavController(PinUpdateFragment.this).popBackStack();
+		UIHelper.flashMessage(getContext(), getResources().getString(R.string.toast_confirm_acctremoved));
 	}
 
 	private void showChoiceCard(boolean show) {

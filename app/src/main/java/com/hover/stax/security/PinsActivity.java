@@ -37,11 +37,17 @@ public class PinsActivity extends AppCompatActivity {
 
 	public void checkBalances() {
 		setResult(RESULT_OK);
-		finish();
+		cleanup();
 	}
 
 	public void cancel(View view) {
 		setResult(RESULT_CANCELED);
+		cleanup();
+	}
+
+	private void cleanup() {
+		if (dialog != null) dialog.dismiss();
+		dialog = null;
 		finish();
 	}
 
@@ -73,5 +79,6 @@ public class PinsActivity extends AppCompatActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		if (dialog != null) dialog.dismiss();
+		dialog = null;
 	}
 }

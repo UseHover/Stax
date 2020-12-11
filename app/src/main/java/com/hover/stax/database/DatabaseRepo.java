@@ -26,7 +26,6 @@ import com.hover.stax.sims.Sim;
 import com.hover.stax.sims.SimDao;
 import com.hover.stax.transactions.StaxTransaction;
 import com.hover.stax.transactions.TransactionDao;
-import com.hover.stax.utils.paymentLinkCryptography.Base64;
 import com.hover.stax.utils.paymentLinkCryptography.Encryption;
 
 import java.security.NoSuchAlgorithmException;
@@ -104,30 +103,19 @@ public class DatabaseRepo {
 	}
 
 	public LiveData<List<Action>> getLiveActions(int[] channelIds, String type) {
-		return actionDao.getActions(channelIds, type);
+		return actionDao.getLiveActions(channelIds, type);
 	}
 
 	public List<Action> getActions(int channelId, String type) {
 		return actionDao.getActions(channelId, type);
 	}
 
-	public List<Action> getActions(int[] channels, int recipientInstitutionId) {
-		return actionDao.getActions(channels, recipientInstitutionId, Action.P2P);
+	public List<Action> getActions(int[] channelIds, String type) {
+		return actionDao.getActions(channelIds, type);
 	}
 
-	public LiveData<List<Action>> getActionsSendingTo(int[] channels, int recipientInstitutionId) {
-		filteredActions.addSource(actionDao.getLiveActions(channels, recipientInstitutionId, Action.P2P), this::addActions);
-		filteredActions.addSource(actionDao.getLiveActionsByInst(channels, recipientInstitutionId, Action.P2P), this::addActions);
-		return filteredActions;
-	}
-	private void addActions(List<Action> actions) {
-		if (filteredActions.getValue() != null)
-			actions.addAll(filteredActions.getValue());
-		filteredActions.setValue(actions);
-	}
-
-	public List<Action> getAllActions() {
-		return actionDao.getAll();
+	public List<Action> getActions(int[] channelIds, int recipientInstitutionId) {
+		return actionDao.getActions(channelIds, recipientInstitutionId, Action.P2P);
 	}
 
 	// Transactions

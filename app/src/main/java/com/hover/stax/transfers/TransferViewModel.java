@@ -37,6 +37,7 @@ public class TransferViewModel extends StagedViewModel {
 
 	private MutableLiveData<Integer> amountError = new MutableLiveData<>();
 	private MutableLiveData<Integer> recipientError = new MutableLiveData<>();
+	private MutableLiveData<Integer> pageError = new MutableLiveData<>();
 
 	protected LiveData<Request> request = new MutableLiveData<>();
 
@@ -45,11 +46,8 @@ public class TransferViewModel extends StagedViewModel {
 		stage.setValue(TransferStage.AMOUNT);
 
 		selectedChannels = repo.getSelected();
-		activeChannel.addSource(selectedChannels, this::findActiveChannel);
-
+		activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull);
 		filteredActions.addSource(activeChannel, this::loadActions);
-		filteredActions.addSource(request, this::loadActions);
-
 		activeAction.addSource(filteredActions, this::findActiveAction);
 	}
 
@@ -61,9 +59,14 @@ public class TransferViewModel extends StagedViewModel {
 		return type;
 	}
 
-	private void findActiveChannel(List<Channel> channels) {
+	private void setActiveChannelIfNull(List<Channel> channels) {
 		if (channels != null && channels.size() > 0) {
-			activeChannel.setValue(channels.get(0));
+			if (schedule.getValue() != null)
+				setActiveChannel(schedule.getValue().channel_id);
+			else if (request.getValue() != null)
+				activeChannel.setValue(getChannelByInstId(request.getValue().requester_institution_id));
+			else if (activeChannel.getValue() == null)
+				activeChannel.setValue(channels.get(0));
 		}
 	}
 
@@ -79,16 +82,34 @@ public class TransferViewModel extends StagedViewModel {
 		}
 	}
 
+	void setActiveChannel(List<Action> actions) {
+		if (actions == null || actions.size() == 0) { return; }
+		activeChannel.setValue(getChannelById(actions.get(0).channel_id));
+	}
+
 	void setActiveChannel(int channel_id) {
-		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0) {
-			return;
-		}
+		Log.e(TAG, "Setting active channel: " + channel_id);
+		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0) return;
+		activeChannel.setValue(getChannelById(channel_id));
+	}
+
+	private Channel getChannelByInstId(int id) {
+		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0) return null;
 		for (Channel c : selectedChannels.getValue()) {
-			if (c.id == channel_id) {
-				activeChannel.setValue(c);
-				return;
+			if (c.institutionId == id) {
+				Log.e(TAG, "inst active channel: " + c);
+				return c;
 			}
 		}
+		return null;
+	}
+
+	private Channel getChannelById(int id) {
+		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0) return null;
+		for (Channel c : selectedChannels.getValue()) {
+			if (c.id == id) return c;
+		}
+		return null;
 	}
 
 	LiveData<Channel> getActiveChannel() {
@@ -96,26 +117,35 @@ public class TransferViewModel extends StagedViewModel {
 	}
 
 	public void loadActions(Channel channel) {
-		if (channel != null && (request == null || request.getValue() == null)) {
+		if (channel != null) {
 			new Thread(() -> {
-				List<Action> as = repo.getActions(channel.id, type);
+				List<Action> as = request.getValue() == null ? repo.getActions(channel.id, type) : repo.getActions(getChannelIds(), request.getValue().requester_institution_id);
 				filteredActions.postValue(as);
 			}).start();
 		}
 	}
 
 	public void loadActions(Request r) {
-		if (r != null && selectedChannels != null && selectedChannels.getValue().size() > 0) {
-			List<Channel> channels = selectedChannels.getValue();
-			int[] ids = new int[channels.size()];
-			for (int c = 0; c < channels.size(); c++)
-				ids[c] = channels.get(c).id;
+		Log.e(TAG, "Loading actions from request update. Channel count: " + (selectedChannels.getValue() != null ? selectedChannels.getValue().size() : "null"));
+		if (r != null && selectedChannels.getValue() != null && selectedChannels.getValue().size() > 0) {
+
 			new Thread(() -> {
-				List<Action> actions = repo.getActions(ids, r.requester_institution_id);
+				List<Action> actions = repo.getActions(getChannelIds(), r.requester_institution_id);
+				Log.e(TAG, "Found " + actions.size() + " actions");
 				filteredActions.postValue(actions);
-				setActiveChannel(actions.get(0).channel_id);
+				if (actions.size() <= 0)
+					pageError.postValue(R.string.whoopsie);
 			}).start();
+			activeChannel.addSource(filteredActions, this::setActiveChannel);
 		}
+	}
+
+	private int[] getChannelIds() {
+		List<Channel> channels = selectedChannels.getValue();
+		int[] ids = new int[channels.size()];
+		for (int c = 0; c < channels.size(); c++)
+			ids[c] = channels.get(c).id;
+		return ids;
 	}
 
 	LiveData<List<Channel>> getSelectedChannels() {
@@ -127,7 +157,9 @@ public class TransferViewModel extends StagedViewModel {
 	}
 
 	private void findActiveAction(List<Action> actions) {
+		Log.e(TAG, "updating active action " + actions.size());
 		if (actions != null && actions.size() > 0 && activeAction.getValue() == null) {
+			Log.e(TAG, "updating active action " + actions.get(0));
 			activeAction.setValue(actions.get(0));
 		}
 	}
@@ -143,6 +175,11 @@ public class TransferViewModel extends StagedViewModel {
 			if (a.toString().equals(actionString))
 				activeAction.postValue(a);
 		}
+	}
+
+	void setActiveAction(List<Action> actions) {
+		if (actions == null || actions.size() == 0) return;
+		activeAction.postValue(actions.get(0));
 	}
 
 	LiveData<Action> getActiveAction() {
@@ -168,7 +205,11 @@ public class TransferViewModel extends StagedViewModel {
 	}
 
 	void setContact(String contact_ids) {
-		new Thread(() -> contact.postValue(repo.getContacts(contact_ids.split(",")).get(0))).start();
+		if (contact_ids == null) return;
+		new Thread(() -> {
+			List<StaxContact> contacts = repo.getContacts(contact_ids.split(","));
+			if (contacts.size() > 0) contact.postValue(contacts.get(0));
+		}).start();
 	}
 
 	void setContact(StaxContact c) {
@@ -188,6 +229,11 @@ public class TransferViewModel extends StagedViewModel {
 	LiveData<Integer> getRecipientError() {
 		if (recipientError == null) { recipientError = new MutableLiveData<>(); }
 		return recipientError;
+	}
+
+	LiveData<Integer> getPageError() {
+		if (pageError == null) { pageError = new MutableLiveData<>(); }
+		return pageError;
 	}
 
 	public LiveData<Request> getRequest() {
@@ -245,23 +291,29 @@ public class TransferViewModel extends StagedViewModel {
 		if (stage.getValue() == null) return false;
 		switch ((TransferStage) stage.getValue()) {
 			case AMOUNT:
-				if (amount.getValue() == null || amount.getValue().isEmpty()) {
-					amountError.setValue(R.string.amount_fielderror);
-					return false;
-				} else
-					amountError.setValue(null);
-				break;
+				return setError((MutableLiveData) amount, amountError, R.string.amount_fielderror);
+			case FROM_ACCOUNT:
+				return setError((MutableLiveData) activeChannel, pageError, R.string.fromacct_fielderror);
 			case TO_NETWORK:
-				if (request.getValue() != null)
-				break;
+				return setError((MutableLiveData) activeAction, pageError, R.string.recipientnetwork_fielderror);
 			case RECIPIENT:
-				if (contact.getValue() == null || contact.getValue().getPhoneNumber().isEmpty()) {
-					recipientError.setValue(R.string.recipient_fielderror);
-					return false;
-				} else
-					recipientError.setValue(null);
-				break;
+				return setError((MutableLiveData) contact, recipientError, R.string.recipient_fielderror);
+			case REVIEW:
+			case REVIEW_DIRECT:
+			default:
+				Log.e(TAG, "active channel: " + activeChannel.getValue());
+				Log.e(TAG, "active action: " + activeAction.getValue());
+				Log.e(TAG, "contact: " + contact.getValue());
+				return setError((MutableLiveData) activeChannel, pageError, R.string.whoopsie) && setError((MutableLiveData) activeAction, pageError, R.string.whoopsie) && setError((MutableLiveData) contact, pageError, R.string.whoopsie);
 		}
+	}
+
+	private boolean setError(MutableLiveData<Object> whichProp, MutableLiveData<Integer> whichError, int errorString) {
+		if (whichProp.getValue() == null || (whichProp.getValue() instanceof String && ((String) whichProp.getValue()).isEmpty()) || (whichProp.getValue() instanceof StaxContact && ((StaxContact) whichProp.getValue()).getPhoneNumber().isEmpty())) {
+			whichError.setValue(errorString);
+			return false;
+		} else
+			whichError.setValue(null);
 		return true;
 	}
 
@@ -269,12 +321,19 @@ public class TransferViewModel extends StagedViewModel {
 
 	public void decrypt(String encryptedLink) {
 		request = repo.decrypt(encryptedLink, getApplication());
+		filteredActions.addSource(request, this::loadActions);
 	}
 
-	public void view(Request request) {
-		setAmount(request.amount);
-		setRecipient(request.requester_number);
-		setStage(request.amount.isEmpty() ? TransferStage.AMOUNT : TransferStage.REVIEW_DIRECT);
+	public void view(Request r) {
+		setAmount(r.amount);
+		setRecipient(r.requester_number);
+		setStage(chooseRequestStage(r));
+	}
+
+	private TransferStage chooseRequestStage(Request r) {
+		if (r.amount.isEmpty()) return TransferStage.AMOUNT;
+		else if (filteredActions.getValue() == null || filteredActions.getValue().size() <= 0) return TransferStage.FROM_ACCOUNT;
+		else return TransferStage.REVIEW_DIRECT;
 	}
 
 	public void view(Schedule s) {

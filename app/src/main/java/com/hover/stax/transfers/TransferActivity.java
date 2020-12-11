@@ -43,12 +43,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void startObservers() {
-		transferViewModel.getSelectedChannels().observe(this, channels -> {
-			if (scheduleViewModel != null && scheduleViewModel.getSchedule().getValue() != null)
-				transferViewModel.setActiveChannel(scheduleViewModel.getSchedule().getValue().channel_id);
-			else if (transferViewModel != null && transferViewModel.getRequest().getValue() != null)
-				transferViewModel.setActiveChannel(transferViewModel.getRequest().getValue().requester_institution_id);
-		});
+		transferViewModel.getSelectedChannels().observe(this, channels -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel."));
 		transferViewModel.getActiveChannel().observe(this, channel -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel."));
 		transferViewModel.getActions().observe(this, actions -> onUpdateStage(transferViewModel.getStage().getValue()));
 		transferViewModel.getActiveAction().observe(this, action -> onUpdateStage(transferViewModel.getStage().getValue()));
@@ -85,7 +80,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void createFromRequest(String link) {
-		AlertDialog dialog = new StaxDialog(this).setDialogTitle(R.string.loading_dialoghead).showIt();
+		AlertDialog dialog = new StaxDialog(this).setDialogMessage(R.string.loading_dialoghead).showIt();
 		transferViewModel.decrypt(link);
 		transferViewModel.getRequest().observe(this, request -> {
 			if (request == null) return;
@@ -96,13 +91,16 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	public void onContinue(View view) {
-		if (transferViewModel.isDone())
-			submit();
-		else if (transferViewModel.stageValidates())
-			transferViewModel.goToNextStage();
+		if (transferViewModel.stageValidates()) {
+			if (transferViewModel.isDone())
+				submit();
+			else
+				transferViewModel.goToNextStage();
+		}
 	}
 
 	private void submit() {
+		transferViewModel.saveContact();
 		if (transferViewModel.getIsFuture().getValue() != null && transferViewModel.getIsFuture().getValue() && transferViewModel.getFutureDate().getValue() != null) {
 			transferViewModel.schedule();
 			returnResult(Constants.SCHEDULE_REQUEST, RESULT_OK, null);
@@ -114,10 +112,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void authenticate() {
-//		if (transferViewModel.getActiveAction().getValue() == null)
-
 		new BiometricChecker(this, this).startAuthentication(transferViewModel.getActiveAction().getValue());
-//		makeHoverCall(transferViewModel.getActiveAction().getValue());
 	}
 
 	@Override
@@ -134,27 +129,21 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
 		transferViewModel.checkSchedule();
 		transferViewModel.saveContact();
-
-		if(transferViewModel.getContact().getValue() !=null) callHoverForThirdPartyTransaction(act);
-		else callHoverForSelfTransaction(act);
+		makeCall(act);
 	}
-	private void callHoverForSelfTransaction(Action act) {
-		new HoverSession.Builder(act, transferViewModel.getActiveChannel().getValue(),
+	private void makeCall(Action act) {
+		HoverSession.Builder hsb = new HoverSession.Builder(act, transferViewModel.getActiveChannel().getValue(),
 				TransferActivity.this, Constants.TRANSFER_REQUEST)
 				.extra(Action.AMOUNT_KEY, transferViewModel.getAmount().getValue())
-				.extra(Action.NOTE_KEY, transferViewModel.getNote().getValue())
-				.run();
-	}
-	private void callHoverForThirdPartyTransaction(Action act) {
-		new HoverSession.Builder(act, transferViewModel.getActiveChannel().getValue(),
-				TransferActivity.this, Constants.TRANSFER_REQUEST)
-				.extra(Action.PHONE_KEY, transferViewModel.getContact().getValue().normalizedNumber(transferViewModel.getActiveChannel().getValue().countryAlpha2))
-				.extra(Action.ACCOUNT_KEY, transferViewModel.getContact().getValue().getPhoneNumber())
-				.extra(Action.AMOUNT_KEY, transferViewModel.getAmount().getValue())
-				.extra(Action.NOTE_KEY, transferViewModel.getNote().getValue())
-				.run();
-	}
+				.extra(Action.NOTE_KEY, transferViewModel.getNote().getValue());
 
+		if (transferViewModel.getContact().getValue() != null) { addRecipientInfo(hsb); }
+		hsb.run();
+	}
+	private void addRecipientInfo(HoverSession.Builder hsb) {
+		hsb.extra(Action.ACCOUNT_KEY, transferViewModel.getContact().getValue().getPhoneNumber())
+			.extra(Action.PHONE_KEY, transferViewModel.getContact().getValue().normalizedNumber(transferViewModel.getActiveChannel().getValue().countryAlpha2));
+	}
 
 	private void onUpdateStage(@Nullable StagedViewModel.StagedEnum stage) {
 		if (Navigation.findNavController(this, R.id.nav_host_fragment).getCurrentDestination().getId() == R.id.navigation_edit)
@@ -187,7 +176,9 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	private void setFab(StagedViewModel.StagedEnum stage) {
 		ExtendedFloatingActionButton fab = findViewById(R.id.fab);
 		if (stage.compare(REVIEW) >= 0) {
-			if (transferViewModel.getIsFuture().getValue() != null && transferViewModel.getIsFuture().getValue()) {
+			if (transferViewModel.getPageError().getValue() != null)
+				fab.hide();
+			else if (transferViewModel.getIsFuture().getValue() != null && transferViewModel.getIsFuture().getValue()) {
 				fab.setText(getString(R.string.fab_schedule));
 				if (transferViewModel.getFutureDate().getValue() == null) { fab.hide(); } else { fab.show(); }
 			} else {
@@ -205,11 +196,12 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == Constants.TRANSFER_REQUEST) {
 			returnResult(requestCode, resultCode, data);
-		}
+		} else if (requestCode == Constants.ADD_SERVICE)
+			startObservers();
 	}
 
 	private void returnResult(int type, int result, Intent data) {
-		Intent i = new Intent(data);
+		Intent i = data == null ? new Intent() : new Intent(data);
 		if (type == Constants.SCHEDULE_REQUEST)
 			i.putExtra(Schedule.DATE_KEY, transferViewModel.getFutureDate().getValue());
 		else
