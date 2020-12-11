@@ -44,7 +44,7 @@ public class ChannelsActivity extends AppCompatActivity {
 		WorkManager.getInstance(this).beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue();
 		setContentView(R.layout.activity_channels);
 		channelViewModel = new ViewModelProvider(this).get(ChannelListViewModel.class);
-		channelViewModel.getSelected().observe(this, this::onSelectedUpdate);
+		channelViewModel.getSelected().observe(this, this:: validateToLogeventThenSaveAndContinue);
 
 		if (new PermissionHelper(this).hasPhonePerm()) goToChannelSelection();
 	}
@@ -68,12 +68,12 @@ public class ChannelsActivity extends AppCompatActivity {
 		findViewById(R.id.continue_btn).setVisibility(View.VISIBLE);
 	}
 
-	private void onSelectedUpdate(List<Integer> ids) {
-		if (ids.size() > 0) {
+	private void validateToLogeventThenSaveAndContinue(List<Integer> channelIds) {
+		if (channelIds.size() > 0) {
 			findViewById(R.id.continue_btn).setOnClickListener(view -> {
 				JSONObject event = new JSONObject();
 				try {
-					event.put(getString(R.string.account_select_count_key), ids.size());
+					event.put(getString(R.string.account_select_count_key), channelIds.size());
 				} catch (JSONException ignored) {
 				}
 				Amplitude.getInstance().logEvent(getString(R.string.finished_account_select), event);

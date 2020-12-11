@@ -12,7 +12,9 @@ import com.hover.stax.utils.DateUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Entity(tableName = "channels")
 public class Channel {

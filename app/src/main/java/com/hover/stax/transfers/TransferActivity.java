@@ -128,26 +128,21 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	private void makeHoverCall(Action act) {
 		Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
 		transferViewModel.checkSchedule();
-		if(transferViewModel.getContact().getValue() !=null) callHoverForThirdPartyTransaction(act);
-		else callHoverForSelfTransaction(act);
+		transferViewModel.saveContact();
+		makeCall(act);
 	}
-
-	private void callHoverForSelfTransaction(Action act) {
-		new HoverSession.Builder(act, transferViewModel.getActiveChannel().getValue(),
+	private void makeCall(Action act) {
+		HoverSession.Builder hsb = new HoverSession.Builder(act, transferViewModel.getActiveChannel().getValue(),
 				TransferActivity.this, Constants.TRANSFER_REQUEST)
 				.extra(Action.AMOUNT_KEY, transferViewModel.getAmount().getValue())
-				.extra(Action.NOTE_KEY, transferViewModel.getNote().getValue())
-				.run();
-	}
+				.extra(Action.NOTE_KEY, transferViewModel.getNote().getValue());
 
-	private void callHoverForThirdPartyTransaction(Action act) {
-		new HoverSession.Builder(act, transferViewModel.getActiveChannel().getValue(),
-				TransferActivity.this, Constants.TRANSFER_REQUEST)
-				.extra(Action.PHONE_KEY, transferViewModel.getContact().getValue().normalizedNumber(transferViewModel.getActiveChannel().getValue().countryAlpha2))
-				.extra(Action.ACCOUNT_KEY, transferViewModel.getContact().getValue().getPhoneNumber())
-				.extra(Action.AMOUNT_KEY, transferViewModel.getAmount().getValue())
-				.extra(Action.NOTE_KEY, transferViewModel.getNote().getValue())
-				.run();
+		if (transferViewModel.getContact().getValue() != null) { addRecipientInfo(hsb); }
+		hsb.run();
+	}
+	private void addRecipientInfo(HoverSession.Builder hsb) {
+		hsb.extra(Action.ACCOUNT_KEY, transferViewModel.getContact().getValue().getPhoneNumber())
+			.extra(Action.PHONE_KEY, transferViewModel.getContact().getValue().normalizedNumber(transferViewModel.getActiveChannel().getValue().countryAlpha2));
 	}
 
 	private void onUpdateStage(@Nullable StagedViewModel.StagedEnum stage) {

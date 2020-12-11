@@ -22,7 +22,7 @@ import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout;
 
-public class ChannelDetailFragment extends Fragment implements TransactionHistoryAdapter.SelectListener {
+public class ChannelDetailFragment extends Fragment implements TransactionHistoryAdapter.SelectListener, CustomSwipeRefreshLayout.OnRefreshListener {
 	private RecyclerView transactionHistoryRecyclerView;
 	private ChannelDetailViewModel viewModel;
 
@@ -67,11 +67,7 @@ public class ChannelDetailFragment extends Fragment implements TransactionHistor
 		if (swipeRefreshLayout != null) {
 			swipeRefreshLayout.setRefreshCompleteTimeout(1000);
 			swipeRefreshLayout.enableTopProgressBar(false);
-			swipeRefreshLayout.setOnRefreshListener(() -> {
-				swipeRefreshLayout.refreshComplete();
-				if (getActivity() != null && viewModel.getChannel().getValue() != null)
-					((MainActivity) getActivity()).onTapRefresh(viewModel.getChannel().getValue().id);
-			});
+			swipeRefreshLayout.setOnRefreshListener(this);
 		}
 	}
 
@@ -80,5 +76,11 @@ public class ChannelDetailFragment extends Fragment implements TransactionHistor
 		Bundle bundle = new Bundle();
 		bundle.putString(TransactionContract.COLUMN_UUID, uuid);
 		NavHostFragment.findNavController(this).navigate(R.id.transactionDetailsFragment, bundle);
+	}
+
+	@Override
+	public void onRefresh() {
+		if (getActivity() != null && viewModel.getChannel().getValue() != null)
+			((MainActivity) getActivity()).onTapRefresh(viewModel.getChannel().getValue().id);
 	}
 }

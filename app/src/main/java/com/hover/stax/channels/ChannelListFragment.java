@@ -46,6 +46,11 @@ public class ChannelListFragment extends Fragment implements ChannelsAdapter.Sel
 	}
 
 	private void addChannels(View view) {
+		observeToSetupChannelViews(view);
+		observeToSetupCountryChannels(view);
+		observeToSetupAllChannels(view);
+	}
+	private void observeToSetupChannelViews(View view) {
 		channelViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> {
 			if (channels.size() > 0) {
 				view.findViewById(R.id.sim_card).setVisibility(View.VISIBLE);
@@ -56,21 +61,34 @@ public class ChannelListFragment extends Fragment implements ChannelsAdapter.Sel
 				view.findViewById(R.id.all_card).setVisibility(View.VISIBLE);
 			}
 		});
-
+	}
+	private void observeToSetupCountryChannels(View view) {
 		channelViewModel.getCountryChannels().observe(getViewLifecycleOwner(), channels -> {
 			((LinearLayout) view.findViewById(R.id.country_wrapper)).removeAllViews();
 			if (channels.size() > 0 && channelViewModel.simCountryList.getValue() != null) {
 				for (String countryAlpha2 : channelViewModel.simCountryList.getValue()) {
-					addCountrySection(view, getString(R.string.countryaccts_cardhead, countryAlpha2.toUpperCase()), getCountryChannels(countryAlpha2, channels));
+					List<Channel> channelsAvailableInACountryByAlpha = getCountryChannels(countryAlpha2, channels);
+					addCountrySection(view, getString(R.string.countryaccts_cardhead, countryAlpha2.toUpperCase()), channelsAvailableInACountryByAlpha);
 				}
 			}
 		});
-
+	}
+	private void observeToSetupAllChannels(View view) {
 		channelViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> {
 			view.findViewById(R.id.no_accounts).setVisibility(channels == null || channels.size() == 0 ? View.VISIBLE : View.GONE);
 			fillSection(view.findViewById(R.id.all_card), getString(R.string.allaccts_cardhead), channels);
 		});
 	}
+
+	List<Channel> getCountryChannels(String countryAlpha2, List<Channel> channels) {
+		List<Channel> countryChannels = new ArrayList<>();
+		for (int i = 0; i < channels.size(); i++) {
+			if (countryAlpha2.equals(channels.get(i).countryAlpha2.toUpperCase()))
+				countryChannels.add(channels.get(i));
+		}
+		return countryChannels;
+	}
+
 
 	private void fillSection(View card, String title, List<Channel> channels) {
 		((TextView) card.findViewById(R.id.title)).setText(title);
@@ -90,15 +108,6 @@ public class ChannelListFragment extends Fragment implements ChannelsAdapter.Sel
 			fillSection(section, sectionTitle, channels);
 			((LinearLayout) root.findViewById(R.id.country_wrapper)).addView(section);
 		}
-	}
-
-	private List<Channel> getCountryChannels(String countryAlpha2, List<Channel> channels) {
-		List<Channel> countryChannels = new ArrayList<>();
-		for (int i = 0; i < channels.size(); i++) {
-			if (countryAlpha2.equals(channels.get(i).countryAlpha2.toUpperCase()))
-				countryChannels.add(channels.get(i));
-		}
-		return countryChannels;
 	}
 
 	public void onTap(int id) {

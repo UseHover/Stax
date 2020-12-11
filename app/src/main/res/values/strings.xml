@@ -282,7 +282,7 @@
 	<string name="btn_removepins">Remove PINs</string>
 	<string name="removepins_dialoghead">Remove all PINs now</string>
 	<string name="removepin_dialoghead">Remove %1$s PIN now</string>
-	<string name="btn_removepin">Remove PIN</string>
+	<string name="btn_removeaccount">Remove account</string>
 	<string name="removepins_dialogmes">You can add your PINs to Stax again at any time.</string>
 	<string name="toast_confirm_removepin">PIN removed successfully</string>
 	<string name="btn_savepin">Save PIN</string>
