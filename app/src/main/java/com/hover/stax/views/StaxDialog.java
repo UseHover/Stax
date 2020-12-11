@@ -40,8 +40,13 @@ public class StaxDialog extends AlertDialog {
 	}
 
 	public StaxDialog setDialogTitle(int title) {
+		setDialogTitle(context.getString(title));
+		return this;
+	}
+
+	public StaxDialog setDialogTitle(String title) {
 		view.findViewById(R.id.header).setVisibility(View.VISIBLE);
-		((TextView) view.findViewById(R.id.title)).setText(context.getString(title));
+		((TextView) view.findViewById(R.id.title)).setText(title);
 		return this;
 	}
 

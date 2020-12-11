@@ -63,8 +63,6 @@ public class BalancesViewModel extends AndroidViewModel {
 	}
 
 	public LiveData<List<Action>> loadBalanceActions(List<Channel> channelList) {
-		Log.e(TAG, "action vers " + channelList.size() + " channels");
-		Log.e(TAG, "Loading balance actions for " + channelList.size() + " channels");
 		int[] ids = new int[channelList.size()];
 		for (int c = 0; c < channelList.size(); c++)
 			ids[c] = channelList.get(c).id;
@@ -98,7 +96,6 @@ public class BalancesViewModel extends AndroidViewModel {
 	}
 
 	private void onSetRunning(Integer flag) {
-		Log.e(TAG, "setting running. Flag: " + flag);
 		if (flag == null || flag == NONE) toRun.setValue(new ArrayList<>());
 		else if (flag == ALL) startRun(balanceActions.getValue());
 		else startRun(getChannelActions(flag));
@@ -111,7 +108,6 @@ public class BalancesViewModel extends AndroidViewModel {
 	}
 
 	void startRun(List<Action> actions) {
-		Log.e(TAG, "action are: " + actions.size());
 		if (actions == null || actions.size() == 0) return;
 		toRun.setValue(actions);
 		runNext(actions, 0);
@@ -126,10 +122,8 @@ public class BalancesViewModel extends AndroidViewModel {
 
 	void setRan(int index) {
 		if (toRun.getValue().size() > index + 1) {
-			Log.e(TAG, "running next");
 			runNext(toRun.getValue(), index + 1);
 		} else {
-			Log.e(TAG, "done run");
 			toRun.setValue(new ArrayList<>());
 			runFlag.setValue(NONE);
 		}

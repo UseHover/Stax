@@ -80,6 +80,15 @@ public class ChannelListFragment extends Fragment implements ChannelsAdapter.Sel
 		});
 	}
 
+	List<Channel> getCountryChannels(String countryAlpha2, List<Channel> channels) {
+		List<Channel> countryChannels = new ArrayList<>();
+		for (int i = 0; i < channels.size(); i++) {
+			if (countryAlpha2.equals(channels.get(i).countryAlpha2.toUpperCase()))
+				countryChannels.add(channels.get(i));
+		}
+		return countryChannels;
+	}
+
 
 	private void fillSection(View card, String title, List<Channel> channels) {
 		((TextView) card.findViewById(R.id.title)).setText(title);

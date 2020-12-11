@@ -29,6 +29,7 @@
 
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
+
 			<intent-filter android:autoVerify="true">
 				<action android:name="android.intent.action.VIEW" />
 
@@ -48,11 +49,10 @@
 		    android:theme="@style/StaxTheme" />
 
 		<activity android:name=".languages.SelectLanguageActivity" />
-		<activity android:name=".channels.ChannelsActivity" />
+		<activity android:name=".channels.ChannelsActivity"
+			android:launchMode="singleTask" />
 
-		<activity
-		    android:name=".security.PinsActivity"
-		    android:launchMode="singleTop" />
+		<activity android:name=".security.PinsActivity" />
 
 		<activity
 		    android:name=".transfers.TransferActivity"

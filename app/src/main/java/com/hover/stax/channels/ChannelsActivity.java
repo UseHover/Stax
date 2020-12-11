@@ -47,7 +47,12 @@ public class ChannelsActivity extends AppCompatActivity {
 		channelViewModel.getSelected().observe(this, this:: changeContinueClickAction);
 
 		if (new PermissionHelper(this).hasPhonePerm()) goToChannelSelection();
+	}
 
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		if (new PermissionHelper(this).hasPhonePerm()) goToChannelSelection();
 	}
 
 	@Override

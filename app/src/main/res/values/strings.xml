@@ -29,8 +29,6 @@
 	<string name="btn_ok">OK</string>
 	<string name="btn_save">Save</string>
 	<string name="btn_skip">Skip</string>
-	<string name="btn_yes">Yes</string>
-	<string name="btn_no">No</string>
 	<string name="btn_resend">Resend</string>
 	<string name="btn_continue">Continue</string>
 	<string name="btn_send">Send</string>
@@ -165,9 +163,12 @@
 	<string name="amount_label">How much money?</string>
 	<string name="channel_label">Account</string>
 	<string name="fromacct_cardhead">From this account</string>
+	<string name="fromacct_fielderror">You must select an sending account. If you have none please tap <u>add account</u>.</string>
 	<string name="link_addacct"><u>+ Add an account</u></string>
 	<string name="recipientnetwork_cardhead">To network</string>
 	<string name="recipientnetwork_label">To this network</string>
+	<string name="recipientnetwork_fielderror">No recipient network chosen.</string>
+	<string name="whoopsie">Something went wrong, the problem has been reported. Please try again.</string>
 	<string name="recipient_cardhead">To this number</string>
 	<string name="recipientphone_label">Contact phone number</string>
 	<string name="recipientacct_label">Contact account number</string>
@@ -278,8 +279,10 @@
 	<string name="security_cardhead">Security</string>
 	<string name="defaultacct_label">Default account</string>
 	<string name="security_head">Secure with Stax</string>
-	<string name="btn_removepins">Remove PINs from device</string>
+	<string name="btn_removepins">Remove PINs</string>
 	<string name="removepins_dialoghead">Remove all PINs now</string>
+	<string name="removepin_dialoghead">Remove %1$s PIN now</string>
+	<string name="btn_removeaccount">Remove account</string>
 	<string name="removepins_dialogmes">You can add your PINs to Stax again at any time.</string>
 	<string name="toast_confirm_removepin">PIN removed successfully</string>
 	<string name="btn_savepin">Save PIN</string>

@@ -1,6 +1,7 @@
 package com.hover.stax.schedules;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.views.Stax2LineItem;
 import com.hover.stax.views.StaxDialog;
 
 import org.json.JSONException;
@@ -81,10 +83,11 @@ public class ScheduleDetailFragment extends Fragment {
 	}
 
 	private void createRecipientEntry(StaxContact c, View view) {
-		TextView tv = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.recipient_cell, null);
-		tv.setText(c.toString());
-		((LinearLayout) view.findViewById(R.id.requesteeValueList)).addView(tv);
+		Stax2LineItem ss2li = new Stax2LineItem(getContext(), null);
+		ss2li.setContact(c, false);
+		((LinearLayout) view.findViewById(R.id.requesteeValueList)).addView(ss2li);
 	}
+
 	private void showConfirmDialog(View v) {
 		new StaxDialog(v.getContext(), this)
 				.setDialogTitle(R.string.cancelfuture_head)
