@@ -176,7 +176,7 @@ public class TransferFragment extends StagedFragment {
 	protected void startListeners(View root) {
 		super.startListeners(root);
 		channelRadioGroup.setOnCheckedChangeListener((group, checkedId) -> transferViewModel.setActiveChannel(checkedId));
-		root.findViewById(R.id.add_new_account).setOnClickListener(view -> startActivity(new Intent(getActivity(), ChannelsActivity.class)));
+		root.findViewById(R.id.add_new_account).setOnClickListener(view -> startActivityForResult(new Intent(getActivity(), ChannelsActivity.class), Constants.ADD_SERVICE));
 
 		actionDropdown.setOnItemClickListener((adapterView, view, pos, id) -> {
 			Action action = (Action) adapterView.getItemAtPosition(pos);

@@ -188,11 +188,12 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == Constants.TRANSFER_REQUEST) {
 			returnResult(requestCode, resultCode, data);
-		}
+		} else if (requestCode == Constants.ADD_SERVICE)
+			startObservers();
 	}
 
 	private void returnResult(int type, int result, Intent data) {
-		Intent i = new Intent(data);
+		Intent i = data == null ? new Intent() : new Intent(data);
 		if (type == Constants.SCHEDULE_REQUEST)
 			i.putExtra(Schedule.DATE_KEY, transferViewModel.getFutureDate().getValue());
 		else

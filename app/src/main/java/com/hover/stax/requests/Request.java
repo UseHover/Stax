@@ -70,7 +70,7 @@ public class Request {
 	}
 
 	public Request(String paymentLink) {
-		Log.e(TAG, "Creating request from link: " + paymentLink);
+		Log.v(TAG, "Creating request from link: " + paymentLink);
 		String[] splitString = paymentLink.split(Constants.PAYMENT_LINK_SEPERATOR);
 		amount = splitString[0].equals("0.00") ? "" : Utils.formatAmount(splitString[0]);
 		requester_number = splitString[2];

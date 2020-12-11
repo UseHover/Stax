@@ -47,10 +47,7 @@ public class TransferViewModel extends StagedViewModel {
 
 		selectedChannels = repo.getSelected();
 		activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull);
-
 		filteredActions.addSource(activeChannel, this::loadActions);
-		filteredActions.addSource(request, this::loadActions);
-
 		activeAction.addSource(filteredActions, this::findActiveAction);
 	}
 
@@ -120,9 +117,9 @@ public class TransferViewModel extends StagedViewModel {
 	}
 
 	public void loadActions(Channel channel) {
-		if (channel != null && (request == null || request.getValue() == null)) {
+		if (channel != null) {
 			new Thread(() -> {
-				List<Action> as = repo.getActions(channel.id, type);
+				List<Action> as = request.getValue() == null ? repo.getActions(channel.id, type) : repo.getActions(getChannelIds(), request.getValue().requester_institution_id);
 				filteredActions.postValue(as);
 			}).start();
 		}
@@ -131,12 +128,9 @@ public class TransferViewModel extends StagedViewModel {
 	public void loadActions(Request r) {
 		Log.e(TAG, "Loading actions from request update. Channel count: " + (selectedChannels.getValue() != null ? selectedChannels.getValue().size() : "null"));
 		if (r != null && selectedChannels.getValue() != null && selectedChannels.getValue().size() > 0) {
-			List<Channel> channels = selectedChannels.getValue();
-			int[] ids = new int[channels.size()];
-			for (int c = 0; c < channels.size(); c++)
-				ids[c] = channels.get(c).id;
+
 			new Thread(() -> {
-				List<Action> actions = repo.getActions(ids, r.requester_institution_id);
+				List<Action> actions = repo.getActions(getChannelIds(), r.requester_institution_id);
 				Log.e(TAG, "Found " + actions.size() + " actions");
 				filteredActions.postValue(actions);
 				if (actions.size() <= 0)
@@ -144,6 +138,14 @@ public class TransferViewModel extends StagedViewModel {
 			}).start();
 			activeChannel.addSource(filteredActions, this::setActiveChannel);
 		}
+	}
+
+	private int[] getChannelIds() {
+		List<Channel> channels = selectedChannels.getValue();
+		int[] ids = new int[channels.size()];
+		for (int c = 0; c < channels.size(); c++)
+			ids[c] = channels.get(c).id;
+		return ids;
 	}
 
 	LiveData<List<Channel>> getSelectedChannels() {
