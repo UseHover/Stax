@@ -67,7 +67,7 @@ public class ChannelListFragment extends Fragment implements ChannelsAdapter.Sel
 			((LinearLayout) view.findViewById(R.id.country_wrapper)).removeAllViews();
 			if (channels.size() > 0 && channelViewModel.simCountryList.getValue() != null) {
 				for (String countryAlpha2 : channelViewModel.simCountryList.getValue()) {
-					List<Channel> channelsAvailableInACountryByAlpha = Channel.getCountryChannels(countryAlpha2, channels);
+					List<Channel> channelsAvailableInACountryByAlpha = getCountryChannels(countryAlpha2, channels);
 					addCountrySection(view, getString(R.string.countryaccts_cardhead, countryAlpha2.toUpperCase()), channelsAvailableInACountryByAlpha);
 				}
 			}
@@ -78,6 +78,15 @@ public class ChannelListFragment extends Fragment implements ChannelsAdapter.Sel
 			view.findViewById(R.id.no_accounts).setVisibility(channels == null || channels.size() == 0 ? View.VISIBLE : View.GONE);
 			fillSection(view.findViewById(R.id.all_card), getString(R.string.allaccts_cardhead), channels);
 		});
+	}
+
+	List<Channel> getCountryChannels(String countryAlpha2, List<Channel> channels) {
+		List<Channel> countryChannels = new ArrayList<>();
+		for (int i = 0; i < channels.size(); i++) {
+			if (countryAlpha2.equals(channels.get(i).countryAlpha2.toUpperCase()))
+				countryChannels.add(channels.get(i));
+		}
+		return countryChannels;
 	}
 
 
