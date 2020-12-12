@@ -168,8 +168,13 @@ public class DatabaseRepo {
 	public StaxContact getContact(String id) { return contactDao.get(id); }
 	public LiveData<StaxContact> getLiveContact(String id) { return contactDao.getLive(id); }
 
-	public void insert(StaxContact contact) {
-		AppDatabase.databaseWriteExecutor.execute(() -> contactDao.insert(contact));
+	public void insertOrUpdate(StaxContact contact) {
+		AppDatabase.databaseWriteExecutor.execute(() -> {
+			if (getContact(contact.id) == null)
+				contactDao.insert(contact);
+			else
+				contactDao.update(contact);
+		});
 	}
 
 	public void update(StaxContact contact) {
@@ -211,7 +216,7 @@ public class DatabaseRepo {
 		decryptedRequest.setValue(null);
 		try {
 			Encryption e = Request.getEncryptionSettings().build();
-			e.decryptAsync(encrypted.replace(c.getString(R.string.payment_root_url, ""),""), new Encryption.Callback() {
+			e.decryptAsync(encrypted.replace(c.getString(R.string.payment_root_url, ""),"").replaceAll("[(]","+"), new Encryption.Callback() {
 				@Override public void onSuccess(String result) {
 					decryptedRequest.postValue(new Request(result));
 				}

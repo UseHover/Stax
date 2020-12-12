@@ -78,7 +78,7 @@ public class StaxContact {
 		}
 	}
 
-	public String normalizedNumberByCountry(String country) { return normalizeNumberByCountry(phoneNumber, country); }
+	public String normalizeNumberByCountry(String country) { return normalizeNumberByCountry(phoneNumber, country); }
 
 	public static String normalizeNumberByCountry(String number, String country) {
 		String phoneNumber = number;

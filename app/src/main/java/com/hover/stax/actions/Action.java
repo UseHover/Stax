@@ -1,9 +1,13 @@
 package com.hover.stax.actions;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import com.hover.stax.R;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -94,8 +98,9 @@ public class Action {
 		return to_institution_name == null || to_institution_name.equals("null") || from_institution_id == to_institution_id;
 	}
 
-	public String getLabel() {
-			return to_institution_name != null && !to_institution_name.equals("null") ? "Recipient network" : null;
+	public String getLabel(Context c) {
+		if (transaction_type.equals(AIRTIME)) return requiresRecipient() ?  c.getString(R.string.other_choice) : c.getString(R.string.self_choice);
+		return this.toString();
 	}
 
 	public boolean hasToInstitution() {

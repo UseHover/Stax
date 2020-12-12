@@ -77,7 +77,7 @@ final public class HoverSession {
 			return null;
 		}
 		if (key.equals(Action.PHONE_KEY)) {
-			return StaxContact.normalizeNumber(value, channel.countryAlpha2);
+			return StaxContact.normalizeNumberByCountry(value, channel.countryAlpha2);
 		}
 		return value;
 	}

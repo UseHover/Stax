@@ -66,7 +66,7 @@ public class EditTransferFragment extends EditStagedFragment {
 			channelDropdown.setText(transferViewModel.getActiveChannel().getValue().toString());
 
 		if (transferViewModel.getActiveAction().getValue() != null) {
-			actionDropdown.setText(transferViewModel.getActiveAction().getValue().toString());
+			actionDropdown.setText(transferViewModel.getActiveAction().getValue().getLabel(getContext()));
 			if (!transferViewModel.getActiveAction().getValue().allowsNote())
 				view.findViewById(R.id.noteEntry).setVisibility(View.GONE);
 		}
@@ -89,11 +89,11 @@ public class EditTransferFragment extends EditStagedFragment {
 			if (actions == null || actions.size() == 0) return;
 			ArrayAdapter<Action> adapter = new ArrayAdapter<>(requireActivity(), R.layout.stax_spinner_item, actions);
 			actionDropdown.setAdapter(adapter);
-			String current = transferViewModel.getActiveAction().getValue() != null ? transferViewModel.getActiveAction().getValue().toString() : actionDropdown.getAdapter().getItem(0).toString();
+			String current = transferViewModel.getActiveAction().getValue() != null ? transferViewModel.getActiveAction().getValue().getLabel(getContext()) : actionDropdown.getAdapter().getItem(0).toString();
 			actionDropdown.setText(current, false);
 		});
 		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
-			actionDropdown.setText(action.toString(), false);
+			actionDropdown.setText(action.getLabel(getContext()), false);
 			recipientEntry.setVisibility(action.requiresRecipient() &&
 				(transferViewModel.getRequest().getValue() == null || !transferViewModel.getRequest().getValue().hasRequesterInfo()) ? View.VISIBLE : View.GONE);
 		});

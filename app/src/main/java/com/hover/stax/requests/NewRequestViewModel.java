@@ -1,15 +1,12 @@
 package com.hover.stax.requests;
 
 import android.app.Application;
-import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.i18n.phonenumbers.NumberParseException;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
@@ -227,7 +224,7 @@ public class NewRequestViewModel extends StagedViewModel {
 				for (StaxContact c: requestees.getValue()) {
 					StaxContact existing = repo.getContact(c.id);
 					if (existing == null || !existing.equals(c))
-						repo.insert(c);
+						repo.insertOrUpdate(c);
 				}
 			}).start();
 		}

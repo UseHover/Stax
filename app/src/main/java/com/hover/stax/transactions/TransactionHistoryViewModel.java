@@ -34,6 +34,7 @@ public class TransactionHistoryViewModel extends AndroidViewModel {
 	}
 
 	public void saveTransaction(Intent data, Context c) {
-		repo.insertOrUpdate(data, c);
+		if (data != null)
+			repo.insertOrUpdate(data, c);
 	}
 }

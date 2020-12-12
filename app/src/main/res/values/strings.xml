@@ -178,6 +178,7 @@
 	<string name="amount_fielderror">Please enter an amount.</string>
 	<string name="service_fielderror">Please select a service.</string>
 	<string name="self_choice">Myself</string>
+	<string name="other_choice">Someone else</string>
 	<string name="onnet_choice">On network</string>
 	<string name="offnet_choice">To %1$s</string>
 	<string name="airtimeother_choice">Someone else</string>

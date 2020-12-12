@@ -142,7 +142,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 	private void addRecipientInfo(HoverSession.Builder hsb) {
 		hsb.extra(Action.ACCOUNT_KEY, transferViewModel.getContact().getValue().getPhoneNumber())
-			.extra(Action.PHONE_KEY, transferViewModel.getContact().getValue().normalizedNumber(transferViewModel.getActiveChannel().getValue().countryAlpha2));
+			.extra(Action.PHONE_KEY, transferViewModel.getContact().getValue().normalizeNumberByCountry(transferViewModel.getActiveChannel().getValue().countryAlpha2));
 	}
 
 	private void onUpdateStage(@Nullable StagedViewModel.StagedEnum stage) {

@@ -10,7 +10,10 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 		android:layout_marginBottom="@dimen/margin_89"
-	    android:orientation="vertical" >
+	    android:orientation="vertical"
+		android:id="@+id/mainLayout"
+		android:descendantFocusability="beforeDescendants"
+		android:focusableInTouchMode="true" >
 
 		<include layout="@layout/transfer_card_summary"
 			android:id="@+id/summaryCard" />

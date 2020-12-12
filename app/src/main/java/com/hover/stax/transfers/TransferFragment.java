@@ -96,6 +96,7 @@ public class TransferFragment extends StagedFragment {
 				case AMOUNT: amountInput.requestFocus(); break;
 				case RECIPIENT: recipientAutocomplete.showDropDown(); recipientAutocomplete.requestFocus(); break;
 				case NOTE: noteInput.requestFocus(); break;
+				default: root.findViewById(R.id.mainLayout).requestFocus();
 			}
 		});
 
@@ -142,8 +143,9 @@ public class TransferFragment extends StagedFragment {
 		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
 			if (action != null) {
 				accountsValue.setSubtitle(action.isOnNetwork() ? getString(R.string.onnet_choice) : getString(R.string.offnet_choice, action.toString()));
-				if (!action.requiresRecipient())
-					recipientValue.setTitle(getString(R.string.self_choice));
+				if (!action.requiresRecipient()) {
+					recipientValue.setTitle(action.getLabel(getContext()));
+				}
 			}
 		});
 
