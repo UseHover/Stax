@@ -305,7 +305,7 @@ public class TransferViewModel extends StagedViewModel {
 				Log.e(TAG, "active channel: " + activeChannel.getValue());
 				Log.e(TAG, "active action: " + activeAction.getValue());
 				Log.e(TAG, "contact: " + contact.getValue());
-			    return setError((MutableLiveData) activeChannel, pageError, R.string.whoopsie) && setError((MutableLiveData) activeAction, pageError, R.string.whoopsie) && setError((MutableLiveData) contact, pageError, R.string.whoopsie);
+			    return stageRequired((TransferStage) stage.getValue()) || setError((MutableLiveData) activeChannel, pageError, R.string.whoopsie) && setError((MutableLiveData) activeAction, pageError, R.string.whoopsie) && setError((MutableLiveData) contact, pageError, R.string.whoopsie);
 		}
 	}
 
