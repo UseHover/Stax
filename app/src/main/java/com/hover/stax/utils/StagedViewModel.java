@@ -69,6 +69,11 @@ public abstract class StagedViewModel extends AndroidViewModel {
 		stage.postValue(next);
 	}
 
+	public void goToPrevStage() {
+		StagedEnum prev = stage.getValue().prev();
+		stage.postValue(prev);
+	}
+
 	private void findActiveChannel(List<Channel> channels) {
 		if (channels != null && channels.size() > 0) {
 			activeChannel.setValue(channels.get(0));

@@ -33,10 +33,16 @@
 		<item name="android:buttonStyle">@style/StaxButton</item>
 		<item name="buttonStyle">@style/StaxButton</item>
 
+		<!-- Fab and dropdowns -->
 		<item name="android:popupMenuStyle">@style/StaxPopupMenu</item>
 		<item name="popupMenuStyle">@style/StaxPopupMenu</item>
 		<item name="actionOverflowMenuStyle">@style/StaxPopupMenu</item>
 		<item name="android:listPreferredItemHeightSmall">61dp</item>
+
+		<!-- Snackbars -->
+		<item name="snackbarStyle">@style/StaxSnackbar</item>
+		<item name="snackbarButtonStyle">@style/StaxButton</item>
+		<item name="snackbarTextViewStyle">@style/StaxSnackbarText</item>
 	</style>
 
 	<style name="StaxHoverTheme" parent="StaxTheme">
@@ -167,6 +173,13 @@
 	<style name="StaxCalendar" parent="ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen">
 		<item name="colorPrimary">@color/brightBlue</item>
 		<item name="colorOnPrimary">@color/colorPrimaryDark</item>
+	</style>
+
+	<style name="StaxSnackbar" parent="@style/Widget.MaterialComponents.Snackbar">
+		<item name="backgroundTint">@color/cardViewColor</item>
+	</style>
+	<style name="StaxSnackbarText" parent="@style/Widget.MaterialComponents.Snackbar.TextView">
+		<item name="android:textColor">@color/offWhite</item>
 	</style>
 </resources>
 

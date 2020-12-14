@@ -217,6 +217,8 @@ public class RequestActivity extends AbstractMessageSendingActivity implements S
 			    !Navigation.findNavController(findViewById(R.id.nav_host_fragment)).popBackStack()) {
 			if (requestViewModel.getStarted())
 				wasRequestSentDialog();
+			else if (requestViewModel.getStage().getValue().compare(AMOUNT) > 0)
+				requestViewModel.goToPrevStage();
 			else
 				super.onBackPressed();
 		}

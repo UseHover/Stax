@@ -236,11 +236,23 @@ public class TransferViewModel extends StagedViewModel {
 		stage.postValue(goToNextStage(stage.getValue()));
 	}
 
+	@Override
+	public void goToPrevStage() {
+		stage.postValue(goToPrevStage(stage.getValue()));
+	}
+
 	private StagedEnum goToNextStage(StagedEnum currentStage) {
 		StagedEnum next = currentStage.next();
 		if (!stageRequired((TransferStage) next))
 			next = goToNextStage(next);
 		return next;
+	}
+
+	private StagedEnum goToPrevStage(StagedEnum currentStage) {
+		StagedEnum prev = currentStage.prev();
+		if (!stageRequired((TransferStage) prev))
+			prev = goToPrevStage(prev);
+		return prev;
 	}
 
 	boolean stageRequired(TransferStage ts) {
