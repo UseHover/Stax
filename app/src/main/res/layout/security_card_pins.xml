@@ -11,6 +11,7 @@
 		android:text="@string/removepins_dialoghead"
 		android:id="@+id/removePinsButtonId"
 		style="@style/StaxButton"
+	      android:visibility="gone"
 		android:backgroundTint="@color/bright_red"
 		android:fontFamily="font-medium" />
 

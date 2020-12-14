@@ -71,6 +71,12 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		showNecessaryShowcaseAfter1Secs();
+	}
+
+	@Override
 	protected void onNewIntent(Intent intent) {
 		Log.e(TAG, "Got new intent");
 		Log.e(TAG, "has link: " + intent.hasExtra(Constants.REQUEST_LINK));
@@ -160,7 +166,7 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 				balancesViewModel.setRan(requestCode);
 				if (resultCode == RESULT_OK && data != null && data.getAction() != null) {
 					onProbableHoverCall(data);
-					maybeRunShowcase();
+					maybeRunShowcaseAfterAddingBalance();
 				}
 		}
 	}
@@ -177,13 +183,28 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 
 	private void onAddServices(int resultCode) {
 		Log.e(TAG, "Add services result");
-		balancesViewModel.setRunning();
-		maybeRunShowcase();
+		//balancesViewModel.setRunning();
+		maybeRunShowcaseAfterAddingBalance();
 	}
-	private void maybeRunShowcase() {
+	private void maybeRunShowcaseAfterAddingBalance() {
 		if (balancesViewModel.hasChannels() && Utils.getSharedPrefs(this).getInt(ShowcaseExecutor.SHOW_TUTORIAL, 0) == 0)
-			new ShowcaseExecutor(this, findViewById(R.id.home_root)).startShowcasing();
+			new ShowcaseExecutor(this, findViewById(R.id.home_root)).startFullOnboardingShowcasing();
 	}
+	private void runShowcaseIfBalanceIsEmpty() {
+		if(!balancesViewModel.hasChannels()) new ShowcaseExecutor(this, findViewById(R.id.home_root)).startAddBalanceShowcasing();
+	}
+
+
+	private void showNecessaryShowcaseAfter1Secs() {
+		//Putting in a try and catch to prevent crashing if user clicks elsewhere before 2 sec completes
+		try{
+			new Handler().postDelayed(() -> {
+				runShowcaseIfBalanceIsEmpty();
+				maybeRunShowcaseAfterAddingBalance();
+			}, 2000);
+		}catch (Exception ignored){}
+	}
+
 
 	private void startTransfer(String type, boolean isFromStaxLink) { startTransfer(type, isFromStaxLink, getIntent()); }
 	private void startTransfer(String type, boolean isFromStaxLink, Intent received) {

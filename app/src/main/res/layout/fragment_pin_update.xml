@@ -29,11 +29,13 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="@string/btn_removeacct"
+				    	android:layout_alignParentEnd="true"
 					android:layout_toStartOf="@id/divider"
 					android:backgroundTint="@color/bright_red"/>
 
 				<View android:id="@+id/divider"
 					android:layout_width="@dimen/margin_21"
+				    	android:visibility="gone"
 					android:layout_height="wrap_content"
 					android:background="@color/transparent"
 					android:layout_toStartOf="@+id/editBtn"/>
@@ -43,6 +45,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="@string/btn_editpin"
+				    	android:visibility="gone"
 					android:layout_alignParentEnd="true"
 					style="@style/StaxButton"/>
 			</RelativeLayout>

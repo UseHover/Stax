@@ -85,8 +85,14 @@ public class ChannelsActivity extends AppCompatActivity {
 	private void saveAndContinue() {
 		channelViewModel.saveSelected();
 		Utils.saveInt(AUTH_CHECK, 1, this);
-		startActivityForResult(new Intent(ChannelsActivity.this, PinsActivity.class), 0);
+		goToMainActivity();
+		//startActivityForResult(new Intent(ChannelsActivity.this, PinsActivity.class), 0);
 	}
+	private void goToMainActivity() {
+		setResult(RESULT_OK, addReturnData(new Intent()));
+		finish();
+	}
+
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
