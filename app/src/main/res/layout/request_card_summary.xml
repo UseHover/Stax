@@ -46,7 +46,7 @@
 			    android:textSize="@dimen/text_16" />
 
 			<com.hover.stax.views.Stax2LineItem
-				android:id="@+id/requester_account_value"
+				android:id="@+id/account_value"
 			    android:layout_weight="1"
 				android:textAlignment="viewEnd" />
 		</TableRow>

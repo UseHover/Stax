@@ -58,7 +58,7 @@ public class RequestActivity extends AbstractMessageSendingActivity implements S
 			.setDialogTitle(R.string.reqsave_head)
 			.setDialogMessage(R.string.reqsave_msg)
 			.setPosButton(R.string.btn_saveanyway, btn -> onFinished(-1))
-			.setNegButton(R.string.btn_cancel, btn ->  cancel())
+			.setNegButton(R.string.btn_dontsave, btn ->  cancel())
 			.showIt();
 	}
 

@@ -75,13 +75,14 @@ public class ChannelListFragment extends Fragment implements ChannelsAdapter.Sel
 	}
 	private void observeToSetupAllChannels(View view) {
 		channelViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> {
-			view.findViewById(R.id.no_accounts).setVisibility(channels == null || channels.size() == 0 ? View.VISIBLE : View.GONE);
 			fillSection(view.findViewById(R.id.all_card), getString(R.string.allaccts_cardhead), channels);
+			view.findViewById(R.id.request_an_account).setVisibility(channels == null || channels.size() == 0 ? View.GONE : View.VISIBLE);
 		});
 	}
 
 	private void fillSection(View card, String title, List<Channel> channels) {
 		((TextView) card.findViewById(R.id.title)).setText(title);
+		card.findViewById(R.id.no_accounts).setVisibility(channels == null || channels.size() == 0 ? View.VISIBLE : View.GONE);
 		GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 4, GridLayoutManager.VERTICAL, false);
 		ChannelsAdapter channelsAdapter = new ChannelsAdapter(channels, this);
 		RecyclerView view = card.findViewById(R.id.section_recycler);

@@ -22,6 +22,7 @@
 	    xmlns:app="http://schemas.android.com/apk/res-auto"
 	    android:layout_height="wrap_content"
 	    android:layout_width="match_parent">
+
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
@@ -32,8 +33,7 @@
 		<com.hover.stax.views.StaxCardView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			app:title="@string/nav_account_detail"
-			app:showBack="true">
+			app:title="@string/nav_account_detail" >
 
 			<TableLayout
 				android:layout_width="match_parent"

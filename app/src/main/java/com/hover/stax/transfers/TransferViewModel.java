@@ -87,12 +87,6 @@ public class TransferViewModel extends StagedViewModel {
 		activeChannel.setValue(getChannelById(actions.get(0).channel_id));
 	}
 
-	void setActiveChannel(int channel_id) {
-		Log.e(TAG, "Setting active channel: " + channel_id);
-		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0) return;
-		activeChannel.setValue(getChannelById(channel_id));
-	}
-
 	private Channel getChannelByInstId(int id) {
 		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0) return null;
 		for (Channel c : selectedChannels.getValue()) {
@@ -102,18 +96,6 @@ public class TransferViewModel extends StagedViewModel {
 			}
 		}
 		return null;
-	}
-
-	private Channel getChannelById(int id) {
-		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0) return null;
-		for (Channel c : selectedChannels.getValue()) {
-			if (c.id == id) return c;
-		}
-		return null;
-	}
-
-	LiveData<Channel> getActiveChannel() {
-		return activeChannel;
 	}
 
 	public void loadActions(Channel channel) {
@@ -146,10 +128,6 @@ public class TransferViewModel extends StagedViewModel {
 		for (int c = 0; c < channels.size(); c++)
 			ids[c] = channels.get(c).id;
 		return ids;
-	}
-
-	LiveData<List<Channel>> getSelectedChannels() {
-		return selectedChannels;
 	}
 
 	LiveData<List<Action>> getActions() {

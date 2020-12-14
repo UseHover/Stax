@@ -25,12 +25,10 @@ public class NewRequestViewModel extends StagedViewModel {
 	public final static String TAG = "NewRequestViewModel";
 
 	private String type = Constants.REQUEST_TYPE;
-	private LiveData<List<Channel>> selectedChannels = new MutableLiveData<>();
-	private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
 	private MutableLiveData<String> amount = new MutableLiveData<>();
 
-	private MutableLiveData<String> requesterNumber = new MutableLiveData<>();
 	private MutableLiveData<List<StaxContact>> requestees = new MutableLiveData<>();
+	private MediatorLiveData<String> requesterNumber = new MediatorLiveData<>();
 	private MutableLiveData<String> note = new MutableLiveData<>();
 
 	private MutableLiveData<Integer> requesteeError = new MutableLiveData<>();
@@ -41,33 +39,11 @@ public class NewRequestViewModel extends StagedViewModel {
 
 	public NewRequestViewModel(@NonNull Application application) {
 		super(application);
-		selectedChannels = repo.getSelected();
-		activeChannel.addSource(selectedChannels, this::findActiveChannel);
 		stage.setValue(AMOUNT);
 		requestees.setValue(new ArrayList<>(Collections.singletonList(new StaxContact(""))));
 		formulatedRequest.setValue(null);
-	}
 
-	private void findActiveChannel(List<Channel> channels) {
-		if (channels != null && channels.size() > 0) {
-			activeChannel.setValue(channels.get(0));
-		}
-	}
-
-	void setActiveChannel(int channel_id) {
-		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0) {
-			return;
-		}
-		for (Channel c : selectedChannels.getValue()) {
-			if (c.id == channel_id)
-				activeChannel.setValue(c);
-		}
-	}
-	LiveData<Channel> getActiveChannel() {
-		return activeChannel;
-	}
-	LiveData<List<Channel>> getSelectedChannels() {
-		return selectedChannels;
+		requesterNumber.addSource(activeChannel, this::setRequesterNumber);
 	}
 
 	void setAmount(String a) {
@@ -81,11 +57,20 @@ public class NewRequestViewModel extends StagedViewModel {
 		return amount;
 	}
 
-	void setRequesterNumber(String number) { requesterNumber.postValue(number); }
+	void setRequesterNumber(Channel c) {
+		if (c != null && c.accountNo != null && !c.accountNo.isEmpty())
+			requesterNumber.setValue(c.accountNo);
+		else if (c != null && requesterNumber.getValue() != null && !requesterNumber.getValue().isEmpty())
+			c.accountNo = requesterNumber.getValue();
+	}
+
+	void setRequesterNumber(String number) {
+		requesterNumber.postValue(number);
+		if (activeChannel.getValue() != null)
+			activeChannel.getValue().accountNo = number;
+	}
 	LiveData<String> getRequesterNumber() {
-		if (requesterNumber ==null) {
-			requesterNumber = new MutableLiveData<>();
-		}
+		if (requesterNumber == null) { requesterNumber = new MediatorLiveData<>(); }
 		return requesterNumber;
 	}
 
@@ -190,6 +175,8 @@ public class NewRequestViewModel extends StagedViewModel {
 	}
 
 	void saveToDatabase() {
+		repo.update(activeChannel.getValue());
+
 		saveContacts();
 		for (StaxContact recipient : requestees.getValue())
 			repo.insert(formulatedRequest.getValue().setRecipient(recipient, getApplication()));

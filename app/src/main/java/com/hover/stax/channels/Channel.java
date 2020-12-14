@@ -100,6 +100,9 @@ public class Channel {
 	@ColumnInfo(name = "latestBalanceTimestamp", defaultValue = "CURRENT_TIMESTAMP")
 	public Long latestBalanceTimestamp;
 
+	@ColumnInfo(name = "account_no")
+	public String accountNo;
+
 	public String spentThisMonth, spentDifferenceToLastMonth;
 
 	public void setSpentThisMonth(String spentThisMonth) {

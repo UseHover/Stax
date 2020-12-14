@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,16 +30,23 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
+import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.database.Constants;
+import com.hover.stax.views.Stax2LineItem;
+
+import java.util.List;
 
 public abstract class StagedFragment extends Fragment {
 
 	protected StagedViewModel stagedViewModel;
 
+	protected RadioGroup channelRadioGroup;
 	protected MaterialDatePicker<Long> datePicker;
 	protected MaterialDatePicker<Long> endDatePicker;
 	private AutoCompleteTextView frequencyDropdown;
 	private TextInputEditText repeatInput;
+	protected Stax2LineItem accountValue;
 
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -46,7 +55,9 @@ public abstract class StagedFragment extends Fragment {
 	}
 
 	protected void init(View root) {
+		channelRadioGroup = root.findViewById(R.id.channelRadioGroup);
 		repeatInput = root.findViewById(R.id.repeat_times_input);
+		accountValue = root.findViewById(R.id.account_value);
 		createFuturePicker();
 		createFrequencyDropdown(root);
 		startObservers(root);
@@ -54,6 +65,12 @@ public abstract class StagedFragment extends Fragment {
 	}
 
 	protected void startObservers(View root) {
+		stagedViewModel.getActiveChannel().observe(getViewLifecycleOwner(), this:: onActiveChannelChange);
+
+		stagedViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
+			if (channels != null) createChannelSelector(channels);
+		});
+
 		stagedViewModel.getIsFuture().observe(getViewLifecycleOwner(), isFuture -> root.findViewById(R.id.dateEntry).setVisibility(isFuture ? View.VISIBLE : View.GONE));
 		stagedViewModel.getFutureDate().observe(getViewLifecycleOwner(), futureDate -> {
 			((TextView) root.findViewById(R.id.dateInput)).setText(futureDate == null ? "" : DateUtils.humanFriendlyDate(futureDate));
@@ -85,13 +102,35 @@ public abstract class StagedFragment extends Fragment {
 		});
 	}
 
+	protected void onActiveChannelChange(Channel c) {
+		if (c != null) {
+			accountValue.setTitle(c.name);
+			channelRadioGroup.check(c.id);
+		}
+	}
+
 	protected void startListeners(View root) {
+		channelRadioGroup.setOnCheckedChangeListener((group, checkedId) -> stagedViewModel.setActiveChannel(checkedId));
 		((SwitchMaterial) root.findViewById(R.id.futureSwitch)).setOnCheckedChangeListener((view, isChecked) -> stagedViewModel.setIsFutureDated(isChecked));
 		((SwitchMaterial) root.findViewById(R.id.repeatSwitch)).setOnCheckedChangeListener((view, isChecked) -> stagedViewModel.setIsRepeating(isChecked));
 		dateDetailListeners(root);
 
 		root.findViewById(R.id.save_repeat_btn).setOnClickListener(view -> stagedViewModel.saveRepeat());
 		root.findViewById(R.id.edit_btn).setOnClickListener(Navigation.createNavigateOnClickListener(R.id.navigation_edit, null));
+	}
+
+	protected void createChannelSelector(List<Channel> channels) {
+		channelRadioGroup.removeAllViews();
+
+		for (Channel c : channels) {
+			RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.stax_radio_button, null);
+			radioButton.setText(c.name);
+			radioButton.setId(c.id);
+			if (stagedViewModel.getActiveChannel().getValue() != null && stagedViewModel.getActiveChannel().getValue().id == c.id) {
+				radioButton.setChecked(true);
+			}
+			channelRadioGroup.addView(radioButton);
+		}
 	}
 
 	protected void dateDetailListeners(View root) {
@@ -178,7 +217,7 @@ public abstract class StagedFragment extends Fragment {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == Activity.RESULT_OK) {
+		if (requestCode != Constants.ADD_SERVICE && resultCode == Activity.RESULT_OK) {
 			StaxContact staxContact = new StaxContact(data, getContext());
 			if (staxContact.getPhoneNumber() != null) {
 				Amplitude.getInstance().logEvent(getString(R.string.contact_select_success));

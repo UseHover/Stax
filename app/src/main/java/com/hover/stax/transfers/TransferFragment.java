@@ -46,12 +46,11 @@ public class TransferFragment extends StagedFragment {
 	private RelativeLayout recipientEntry;
 	private TextInputLayout recipientLabel, amountEntry;
 	private EditText amountInput, noteInput;
-	private RadioGroup channelRadioGroup;
 	private AutoCompleteTextView actionDropdown, recipientAutocomplete;
 	private ImageButton contactButton;
 
 	private TextView amountValue, noteValue;
-	private Stax2LineItem recipientValue, accountsValue;
+	private Stax2LineItem recipientValue;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		stagedViewModel = new ViewModelProvider(requireActivity()).get(TransferViewModel.class);
@@ -65,13 +64,11 @@ public class TransferFragment extends StagedFragment {
 		setTitle(root);
 		amountValue = root.findViewById(R.id.amountValue);
 		recipientValue = root.findViewById(R.id.recipientValue);
-		accountsValue = root.findViewById(R.id.accountsValue);
 		noteValue = root.findViewById(R.id.reasonValue);
 
 		amountEntry = root.findViewById(R.id.amountEntry);
 		amountInput = root.findViewById(R.id.amount_input);
 		amountInput.setText(transferViewModel.getAmount().getValue());
-		channelRadioGroup = root.findViewById(R.id.channelRadioGroup);
 		actionDropdown = root.findViewById(R.id.networkDropdown);
 		recipientEntry = root.findViewById(R.id.recipientEntry);
 		recipientLabel = root.findViewById(R.id.recipientLabel);
@@ -142,42 +139,16 @@ public class TransferFragment extends StagedFragment {
 
 		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
 			if (action != null) {
-				accountsValue.setSubtitle(action.isOnNetwork() ? getString(R.string.onnet_choice) : getString(R.string.offnet_choice, action.toString()));
+				accountValue.setSubtitle(action.isOnNetwork() ? getString(R.string.onnet_choice) : getString(R.string.offnet_choice, action.toString()));
 				if (!action.requiresRecipient()) {
 					recipientValue.setTitle(action.getLabel(getContext()));
 				}
 			}
 		});
-
-		transferViewModel.getActiveChannel().observe(getViewLifecycleOwner(), c -> {
-			if (c != null) {
-				accountsValue.setTitle(c.toString());
-				channelRadioGroup.check(c.id);
-			}
-		});
-
-		transferViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
-			if (channels != null) createChannelSelector(channels);
-		});
-	}
-
-	private void createChannelSelector(List<Channel> channels) {
-		channelRadioGroup.removeAllViews();
-
-		for (Channel c : channels) {
-			RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.stax_radio_button, null);
-			radioButton.setText(c.name);
-			radioButton.setId(c.id);
-			if (transferViewModel.getActiveChannel().getValue() != null && transferViewModel.getActiveChannel().getValue().id == c.id) {
-				radioButton.setChecked(true);
-			}
-			channelRadioGroup.addView(radioButton);
-		}
 	}
 
 	protected void startListeners(View root) {
 		super.startListeners(root);
-		channelRadioGroup.setOnCheckedChangeListener((group, checkedId) -> transferViewModel.setActiveChannel(checkedId));
 		root.findViewById(R.id.add_new_account).setOnClickListener(view -> startActivityForResult(new Intent(getActivity(), ChannelsActivity.class), Constants.ADD_SERVICE));
 
 		actionDropdown.setOnItemClickListener((adapterView, view, pos, id) -> {

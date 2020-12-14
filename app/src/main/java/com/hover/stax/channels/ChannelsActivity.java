@@ -44,8 +44,7 @@ public class ChannelsActivity extends AppCompatActivity {
 		WorkManager.getInstance(this).beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue();
 		setContentView(R.layout.activity_channels);
 		channelViewModel = new ViewModelProvider(this).get(ChannelListViewModel.class);
-		channelViewModel.getSelected().observe(this, this:: changeContinueClickAction);
-
+		channelViewModel.getSelected().observe(this, this::changeContinueClickAction);
 		if (new PermissionHelper(this).hasPhonePerm()) goToChannelSelection();
 	}
 
@@ -65,11 +64,11 @@ public class ChannelsActivity extends AppCompatActivity {
 	private void goToChannelSelection() {
 		Hover.updateSimInfo(this);
 		Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_channels);
-		findViewById(R.id.continue_btn).setVisibility(View.VISIBLE);
+		channelViewModel.getChannels().observe(this, channels -> findViewById(R.id.continue_btn).setVisibility(channels == null || channels.size() == 0 ? View.GONE : View.VISIBLE));
 	}
 
 	private void changeContinueClickAction(List<Integer> channelIds) {
-		if (channelIds.size() > 0) findViewById(R.id.continue_btn).setOnClickListener(view ->logChoicesSaveAction(channelIds));
+		if (channelIds.size() > 0) findViewById(R.id.continue_btn).setOnClickListener(view -> logChoicesSaveAction(channelIds));
 		else findViewById(R.id.continue_btn).setOnClickListener(view -> UIHelper.flashMessage(ChannelsActivity.this, getString(R.string.toast_error_noselect)));
 	}
 	private void logChoicesSaveAction(List<Integer> channelIds) {
@@ -85,14 +84,13 @@ public class ChannelsActivity extends AppCompatActivity {
 	private void saveAndContinue() {
 		channelViewModel.saveSelected();
 		Utils.saveInt(AUTH_CHECK, 1, this);
-		goToMainActivity();
+		returnResult();
 		//startActivityForResult(new Intent(ChannelsActivity.this, PinsActivity.class), 0);
 	}
-	private void goToMainActivity() {
+	private void returnResult() {
 		setResult(RESULT_OK, addReturnData(new Intent()));
 		finish();
 	}
-
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

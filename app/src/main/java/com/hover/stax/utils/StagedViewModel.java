@@ -5,10 +5,12 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
+import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.schedules.Schedule;
@@ -19,6 +21,9 @@ public abstract class StagedViewModel extends AndroidViewModel {
 
 	protected DatabaseRepo repo;
 	protected MutableLiveData<StagedEnum> stage = new MutableLiveData<>();
+
+	private LiveData<List<Channel>> selectedChannels = new MutableLiveData<>();
+	protected MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
 
 	protected MutableLiveData<Boolean> futureDated = new MutableLiveData<>();
 	protected MutableLiveData<Long> futureDate = new MutableLiveData<>();
@@ -36,6 +41,9 @@ public abstract class StagedViewModel extends AndroidViewModel {
 	public StagedViewModel(@NonNull Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
+		selectedChannels = repo.getSelected();
+		activeChannel.addSource(selectedChannels, this::findActiveChannel);
+
 		futureDated.setValue(false);
 		futureDate.setValue(null);
 
@@ -59,6 +67,34 @@ public abstract class StagedViewModel extends AndroidViewModel {
 	public void goToNextStage() {
 		StagedEnum next = stage.getValue().next();
 		stage.postValue(next);
+	}
+
+	private void findActiveChannel(List<Channel> channels) {
+		if (channels != null && channels.size() > 0) {
+			activeChannel.setValue(channels.get(0));
+		}
+	}
+
+	public void setActiveChannel(int channel_id) {
+		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0) {
+			return;
+		}
+		activeChannel.setValue(getChannelById(channel_id));
+	}
+
+	protected Channel getChannelById(int id) {
+		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0) return null;
+		for (Channel c : selectedChannels.getValue()) {
+			if (c.id == id) return c;
+		}
+		return null;
+	}
+
+	public LiveData<Channel> getActiveChannel() {
+		return activeChannel;
+	}
+	public LiveData<List<Channel>> getSelectedChannels() {
+		return selectedChannels;
 	}
 
 	public void setIsFutureDated(boolean isFuture) {

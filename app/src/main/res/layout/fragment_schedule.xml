@@ -14,8 +14,7 @@
 		<com.hover.stax.views.StaxCardView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			app:title="@string/nav_schedule"
-			app:showBack="true">
+			app:title="@string/nav_schedule">
 
 			<include layout="@layout/schedule_summary"
 				android:id="@+id/summaryCard"/>

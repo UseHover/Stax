@@ -29,7 +29,7 @@ class ShowcaseExecutor {
 		root = view;
 	}
 
-	public void startFullOnboardingShowcasing() {
+	public void startFullShowcase() {
 		try {
 			BubbleShowCase.Companion.showCase(
 					activity.getString(R.string.onboard_sechead),
@@ -42,7 +42,7 @@ class ShowcaseExecutor {
 		}
 	}
 
-	public void startAddBalanceShowcasing() {
+	public void startAddAcctShowcase() {
 		try {
 			BubbleShowCase.Companion.showCase(
 					activity.getString(R.string.onboard_addaccounthead),
@@ -124,8 +124,7 @@ class ShowcaseExecutor {
 		}
 
 		@Override
-		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) {
-		}
+		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) { bubbleShowCase.finishSequence(); }
 
 		@Override
 		public void onBubbleClick(@NotNull BubbleShowCase bubbleShowCase) {
@@ -135,26 +134,18 @@ class ShowcaseExecutor {
 
 	BubbleShowCaseListener addBalanceListener = new BubbleShowCaseListener() {
 
-		@Override
-		public void onBubbleClick(@NotNull BubbleShowCase bubbleShowCase) {
-
-		}
+		@Override public void onBubbleClick(@NotNull BubbleShowCase bubbleShowCase) {}
 
 		@Override
-		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) {
-
-		}
+		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) { bubbleShowCase.dismiss(); }
 
 		@Override
-		public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) {
-			goToAddAccountActivity();
-			bubbleShowCase.dismiss();
-		}
+		public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) { bubbleShowCase.dismiss(); }
 
 		@Override
 		public void onTargetClick(@NotNull BubbleShowCase bubbleShowCase) {
-			goToAddAccountActivity();
 			bubbleShowCase.dismiss();
+			goToAddAccountActivity();
 		}
 	};
 

@@ -11,8 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,12 +23,11 @@ import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.database.Constants;
 import com.hover.stax.utils.StagedFragment;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.Stax2LineItem;
-
-import java.util.List;
 
 public class NewRequestFragment extends StagedFragment implements RecipientAdapter.UpdateListener {
 
@@ -39,11 +36,8 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 	private RecyclerView recipientInputList;
 	private LinearLayout recipientValueList;
 	private TextView amountValue, noteValue;
-	private Stax2LineItem requesterAccountValue;
-	private EditText amountInput, receivingAccountNumberInput, noteInput;
-	private RadioGroup channelRadioGroup;
+	private EditText amountInput, requesterAccountNo, noteInput;
 	private Button addRecipientBtn;
-
 
 	private RecipientAdapter recipientAdapter;
 	private int recipientCount = 0;
@@ -63,14 +57,11 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		amountValue = view.findViewById(R.id.amountValue);
 		noteValue = view.findViewById(R.id.noteValue);
 
-		requesterAccountValue = view.findViewById(R.id.requester_account_value);
-
 		recipientInputList = view.findViewById(R.id.recipient_list);
 		amountInput = view.findViewById(R.id.amount_input);
 		amountInput.setText(requestViewModel.getAmount().getValue());
-		receivingAccountNumberInput = view.findViewById(R.id.accountNumber_input);
-		receivingAccountNumberInput.setText(requestViewModel.getRequesterNumber().getValue());
-		channelRadioGroup = view.findViewById(R.id.channelRadioGroup);
+		requesterAccountNo = view.findViewById(R.id.accountNumber_input);
+		requesterAccountNo.setText(requestViewModel.getRequesterNumber().getValue());
 
 		noteInput = view.findViewById(R.id.note_input);
 		noteInput.setText(requestViewModel.getNote().getValue());
@@ -89,7 +80,7 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		requestViewModel.getStage().observe(getViewLifecycleOwner(), stage -> {
 			switch ((RequestStage) stage) {
 				case AMOUNT: amountInput.requestFocus(); break;
-				case REQUESTER: receivingAccountNumberInput.requestFocus(); break;
+				case REQUESTER: requesterAccountNo.requestFocus(); break;
 				case NOTE: noteInput.requestFocus(); break;
 			}
 		});
@@ -130,21 +121,16 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 
 		requestViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> amountValue.setText(Utils.formatAmount(amount)));
 
-		requestViewModel.getActiveChannel().observe(getViewLifecycleOwner(), c -> {
-			if (c != null) {
-				requesterAccountValue.setTitle(c.name);
-				channelRadioGroup.check(c.id);
-			}
-		});
-
-		requestViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
-			if (channels != null) createChannelSelector(channels);
-		});
-
 		requestViewModel.getRequesterNumber().observe(getViewLifecycleOwner(), accountNumber -> {
-			requesterAccountValue.setSubtitle(accountNumber);
+			accountValue.setSubtitle(accountNumber);
 		});
 		requestViewModel.getNote().observe(getViewLifecycleOwner(), note -> noteValue.setText(note));
+	}
+
+	protected void onActiveChannelChange(Channel c) {
+		super.onActiveChannelChange(c);
+		if (c != null && c.accountNo != null && !c.accountNo.isEmpty())
+			requesterAccountNo.setText(c.accountNo);
 	}
 
 	@Override
@@ -152,23 +138,9 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		super.startListeners(root);
 		addRecipientBtn.setOnClickListener(v -> requestViewModel.addRecipient(new StaxContact("")));
 		amountInput.addTextChangedListener(amountWatcher);
-		channelRadioGroup.setOnCheckedChangeListener((group, checkedId) -> requestViewModel.setActiveChannel(checkedId));
-		root.findViewById(R.id.add_new_account).setOnClickListener(view -> startActivity(new Intent(getActivity(), ChannelsActivity.class)));
-		receivingAccountNumberInput.addTextChangedListener(receivingAccountNumberWatcher);
+		root.findViewById(R.id.add_new_account).setOnClickListener(view -> startActivityForResult(new Intent(getActivity(), ChannelsActivity.class), Constants.ADD_SERVICE));
+		requesterAccountNo.addTextChangedListener(receivingAccountNumberWatcher);
 		noteInput.addTextChangedListener(noteWatcher);
-	}
-
-	private void createChannelSelector(List<Channel> channels) {
-		channelRadioGroup.removeAllViews();
-
-		for (Channel c : channels) {
-			RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.stax_radio_button, null);
-			radioButton.setText(c.name);
-			radioButton.setId(c.id);
-			if (requestViewModel.getActiveChannel().getValue() != null && requestViewModel.getActiveChannel().getValue().id == c.id)
-				radioButton.setChecked(true);
-			channelRadioGroup.addView(radioButton);
-		}
 	}
 
 	@Override

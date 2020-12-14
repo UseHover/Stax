@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
@@ -66,8 +65,7 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 		balancesViewModel.getSelectedChannels().observe(this, channels -> Log.i(TAG, "Channels observer is neccessary to make updates fire, but all logic is in viewmodel. " + channels.size()));
 
 		setUpNav();
-		if (getIntent().hasExtra(Constants.REQUEST_LINK))
-			startTransfer(Action.P2P, true);
+		goToFullfillRequest(getIntent());
 	}
 
 	@Override
@@ -81,6 +79,10 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 		Log.e(TAG, "Got new intent");
 		Log.e(TAG, "has link: " + intent.hasExtra(Constants.REQUEST_LINK));
 		super.onNewIntent(intent);
+		goToFullfillRequest(intent);
+	}
+
+	private void goToFullfillRequest(Intent intent) {
 		if (intent.hasExtra(Constants.REQUEST_LINK))
 			startTransfer(Action.P2P, true, intent);
 	}
@@ -188,10 +190,10 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 	}
 	private void maybeRunShowcaseAfterAddingBalance() {
 		if (balancesViewModel.hasChannels() && Utils.getSharedPrefs(this).getInt(ShowcaseExecutor.SHOW_TUTORIAL, 0) == 0)
-			new ShowcaseExecutor(this, findViewById(R.id.home_root)).startFullOnboardingShowcasing();
+			new ShowcaseExecutor(this, findViewById(R.id.home_root)).startFullShowcase();
 	}
 	private void runShowcaseIfBalanceIsEmpty() {
-		if(!balancesViewModel.hasChannels()) new ShowcaseExecutor(this, findViewById(R.id.home_root)).startAddBalanceShowcasing();
+		if(!balancesViewModel.hasChannels()) new ShowcaseExecutor(this, findViewById(R.id.home_root)).startAddAcctShowcase();
 	}
 
 
@@ -205,12 +207,10 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 		}catch (Exception ignored){}
 	}
 
-
-	private void startTransfer(String type, boolean isFromStaxLink) { startTransfer(type, isFromStaxLink, getIntent()); }
 	private void startTransfer(String type, boolean isFromStaxLink, Intent received) {
 		Intent i = new Intent(this, TransferActivity.class);
 		i.setAction(type);
-		if(isFromStaxLink) i.putExtra(Constants.REQUEST_LINK, received.getExtras().getString(Constants.REQUEST_LINK));
+		if (isFromStaxLink) i.putExtra(Constants.REQUEST_LINK, received.getExtras().getString(Constants.REQUEST_LINK));
 		startActivityForResult(i, Constants.TRANSFER_REQUEST);
 	}
 
@@ -289,8 +289,8 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 
 			popup.setOnMenuItemClickListener(item -> {
 				switch (item.getItemId()) {
-					case R.id.transfer: startTransfer(Action.P2P, false); break;
-					case R.id.airtime: startTransfer(Action.AIRTIME, false); break;
+					case R.id.transfer: startTransfer(Action.P2P, false, getIntent()); break;
+					case R.id.airtime: startTransfer(Action.AIRTIME, false, getIntent()); break;
 					case R.id.request: startActivityForResult(new Intent(this, RequestActivity.class), Constants.REQUEST_REQUEST); break;
 					default: break;
 				}
