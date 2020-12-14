@@ -209,7 +209,7 @@
 	<string name="sms_amount_detail">%1$s </string>
 	<string name="sms_note_detail">Note: \"%1$s\" </string>
 	<string name="toast_error_smsperm">You must grant the read SMS permission so Stax can tell when a request is sent or fulfilled.</string>
-	<string name="toast_confirm_request">Your request has been sent.</string>
+	<string name="toast_confirm_request">Your request has been saved.</string>
 	<string name="toast_request_scheduled">Your request has been scheduled. You will be reminded to send a message on %1$s</string>
 	<string name="descrip_request">Request to %1$s</string>
 	<string name="editreq_cardhead">Edit Request</string>

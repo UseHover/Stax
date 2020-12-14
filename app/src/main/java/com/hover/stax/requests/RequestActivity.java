@@ -98,6 +98,7 @@ public class RequestActivity extends AbstractMessageSendingActivity implements S
 
 	private void submit() {
 		if (requestViewModel.getIsFuture().getValue() != null && requestViewModel.getIsFuture().getValue() && requestViewModel.getFutureDate().getValue() != null) {
+			requestViewModel.setStarted();
 			requestViewModel.schedule();
 			onFinished(Constants.SCHEDULE_REQUEST);
 		} else

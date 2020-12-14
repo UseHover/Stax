@@ -67,7 +67,10 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
 
 		holder.contactButton.setOnClickListener(view -> updateListener.onClickContact(position, holder.view.getContext()));
 
-		if (position == 0) holder.input.requestFocus();
+		if (position == 0) {
+			holder.input.showDropDown();
+			holder.input.requestFocus();
+		}
 	}
 
 	public interface UpdateListener {

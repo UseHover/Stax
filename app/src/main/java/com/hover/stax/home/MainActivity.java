@@ -175,8 +175,7 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 
 	private void onProbableHoverCall(Intent data) {
 		if (data.getAction() != null && data.getAction().equals(Constants.SCHEDULED)) {
-			UIHelper.flashMessage(this, findViewById(R.id.home_root),
-				getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getIntExtra(Schedule.DATE_KEY, 0))));
+			showMessage(getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))));
 		} else {
 			Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
 			new ViewModelProvider(this).get(TransactionHistoryViewModel.class).saveTransaction(data, this);
@@ -184,7 +183,6 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 	}
 
 	private void onAddServices(int resultCode) {
-		Log.e(TAG, "Add services result");
 		//balancesViewModel.setRunning();
 		maybeRunShowcaseAfterAddingBalance();
 	}
@@ -216,13 +214,13 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 
 	private void onRequest(Intent data) {
 		if (data.getAction().equals(Constants.SCHEDULED))
-			showMessage(getString(R.string.toast_request_scheduled, DateUtils.humanFriendlyDate(data.getIntExtra(Schedule.DATE_KEY, 0))));
+			showMessage(getString(R.string.toast_request_scheduled, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))));
 		else
 			showMessage(getString(R.string.toast_confirm_request));
 	}
 
 	private void showMessage(String str) {
-		UIHelper.flashMessage(this, findViewById(R.id.home_root), str);
+		UIHelper.flashMessage(this, findViewById(R.id.fab), str);
 	}
 
 	@Override

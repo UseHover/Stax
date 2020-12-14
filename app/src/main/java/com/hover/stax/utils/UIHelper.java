@@ -31,7 +31,13 @@ public class UIHelper {
 
 	public static void flashMessage(Context context, @Nullable View view, String message) {
 		if (view == null) flashMessage(context, message);
-		else Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+		else showSnack(view, message);
+	}
+
+	private static void showSnack(View view, String message) {
+		Snackbar s = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
+		s.setAnchorView(view);
+		s.show();
 	}
 
 	public static void flashMessage(@NotNull Context context, String message) {
