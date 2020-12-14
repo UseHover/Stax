@@ -291,13 +291,13 @@ public class TransferViewModel extends StagedViewModel {
 		if (stage.getValue() == null) return false;
 		switch ((TransferStage) stage.getValue()) {
 			case AMOUNT:
-				return setError((MutableLiveData) amount, amountError, R.string.amount_fielderror);
+				return isErrorFree((MutableLiveData) amount, amountError, R.string.amount_fielderror);
 			case FROM_ACCOUNT:
-				return setError((MutableLiveData) activeChannel, pageError, R.string.fromacct_fielderror);
+				return isErrorFree((MutableLiveData) activeChannel, pageError, R.string.fromacct_fielderror);
 			case TO_NETWORK:
-				return setError((MutableLiveData) activeAction, pageError, R.string.recipientnetwork_fielderror);
+				return isErrorFree((MutableLiveData) activeAction, pageError, R.string.recipientnetwork_fielderror);
 			case RECIPIENT:
-				return setError((MutableLiveData) contact, recipientError, R.string.recipient_fielderror);
+				return isErrorFree((MutableLiveData) contact, recipientError, R.string.recipient_fielderror);
 			case NOTE: return true;
 			case REVIEW:
 			case REVIEW_DIRECT:
@@ -305,11 +305,13 @@ public class TransferViewModel extends StagedViewModel {
 				Log.e(TAG, "active channel: " + activeChannel.getValue());
 				Log.e(TAG, "active action: " + activeAction.getValue());
 				Log.e(TAG, "contact: " + contact.getValue());
-			    return stageRequired((TransferStage) stage.getValue()) || setError((MutableLiveData) activeChannel, pageError, R.string.whoopsie) && setError((MutableLiveData) activeAction, pageError, R.string.whoopsie) && setError((MutableLiveData) contact, pageError, R.string.whoopsie);
+			    return isErrorFree((MutableLiveData) activeChannel, pageError, R.string.whoopsie) &&
+				           isErrorFree((MutableLiveData) activeAction, pageError, R.string.whoopsie) &&
+				           (!activeAction.getValue().requiresRecipient() || isErrorFree((MutableLiveData) contact, pageError, R.string.whoopsie));
 		}
 	}
 
-	private boolean setError(MutableLiveData<Object> whichProp, MutableLiveData<Integer> whichError, int errorString) {
+	private boolean isErrorFree(MutableLiveData<Object> whichProp, MutableLiveData<Integer> whichError, int errorString) {
 		if (whichProp.getValue() == null || (whichProp.getValue() instanceof String && ((String) whichProp.getValue()).isEmpty()) || (whichProp.getValue() instanceof StaxContact && ((StaxContact) whichProp.getValue()).getPhoneNumber().isEmpty())) {
 			whichError.setValue(errorString);
 			return false;

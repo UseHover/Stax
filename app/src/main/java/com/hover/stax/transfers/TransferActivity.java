@@ -204,7 +204,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		Intent i = data == null ? new Intent() : new Intent(data);
 		if (type == Constants.SCHEDULE_REQUEST)
 			i.putExtra(Schedule.DATE_KEY, transferViewModel.getFutureDate().getValue());
-		else
+		else if (transferViewModel.getContact().getValue() != null)
 			i.putExtra(StaxContact.ID_KEY, transferViewModel.getContact().getValue().id);
 		i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);
 		setResult(result, i);
