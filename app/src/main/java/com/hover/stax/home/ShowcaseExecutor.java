@@ -1,12 +1,17 @@
 package com.hover.stax.home;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amplitude.api.Amplitude;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.hover.stax.R;
+import com.hover.stax.channels.ChannelsActivity;
+import com.hover.stax.database.Constants;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.bubbleshowcase.BubbleShowCase;
 import com.hover.stax.utils.bubbleshowcase.BubbleShowCaseListener;
@@ -24,7 +29,7 @@ class ShowcaseExecutor {
 		root = view;
 	}
 
-	public void startShowcasing() {
+	public void startFullOnboardingShowcasing() {
 		try {
 			BubbleShowCase.Companion.showCase(
 					activity.getString(R.string.onboard_sechead),
@@ -36,6 +41,21 @@ class ShowcaseExecutor {
 		} catch (Exception ignored) {
 		}
 	}
+
+	public void startAddBalanceShowcasing() {
+		try {
+			BubbleShowCase.Companion.showCase(
+					activity.getString(R.string.onboard_addaccounthead),
+					activity.getString(R.string.onboard_addaccountbody),
+					BubbleShowCase.ArrowPosition.TOP,
+					addBalanceListener,
+					root.findViewById(R.id.add_accounts_btn),
+					activity);
+		} catch (Exception igno) {
+			Log.d("STAX_TESTING", "IT FAILED HERE");
+		}
+	}
+
 
 	private void showcaseSecondStage() {
 		openBalance();
@@ -112,4 +132,34 @@ class ShowcaseExecutor {
 			showcaseNextStage(bubbleShowCase);
 		}
 	};
+
+	BubbleShowCaseListener addBalanceListener = new BubbleShowCaseListener() {
+
+		@Override
+		public void onBubbleClick(@NotNull BubbleShowCase bubbleShowCase) {
+
+		}
+
+		@Override
+		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) {
+
+		}
+
+		@Override
+		public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) {
+			goToAddAccountActivity();
+			bubbleShowCase.dismiss();
+		}
+
+		@Override
+		public void onTargetClick(@NotNull BubbleShowCase bubbleShowCase) {
+			goToAddAccountActivity();
+			bubbleShowCase.dismiss();
+		}
+	};
+
+	private void goToAddAccountActivity() {
+		Amplitude.getInstance().logEvent(activity.getString(R.string.click_add_account));
+		activity.startActivityForResult(new Intent(activity, ChannelsActivity.class), Constants.ADD_SERVICE);
+	}
 }

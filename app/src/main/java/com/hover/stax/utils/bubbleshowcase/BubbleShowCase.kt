@@ -424,6 +424,7 @@ class BubbleShowCase(builder: BubbleShowCaseBuilder) {
 						  .titleTextSize(20) //Title text size in SP (default value 16sp)
 						  .descriptionTextSize(20) //Subtitle text size in SP (default value 14sp)
 						  .listener(listener!!)
+
 						  .targetView(v!!).show()
 			}
 	  }
