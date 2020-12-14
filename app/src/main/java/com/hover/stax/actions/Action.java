@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.hover.stax.R;
@@ -88,10 +89,13 @@ public class Action {
 	@ColumnInfo(name = "root_code")
 	public String root_code;
 
+	@Ignore
+	public Context context;
+
 	@NotNull
 	@Override
 	public String toString() {
-		return isOnNetwork() ? from_institution_name : to_institution_name;
+		return getLabel(context);
 	}
 
 	public boolean isOnNetwork() {
@@ -99,8 +103,8 @@ public class Action {
 	}
 
 	public String getLabel(Context c) {
-		if (transaction_type.equals(AIRTIME)) return requiresRecipient() ?  c.getString(R.string.other_choice) : c.getString(R.string.self_choice);
-		return this.toString();
+		if (context != null && transaction_type.equals(AIRTIME)) return requiresRecipient() ?  c.getString(R.string.other_choice) : c.getString(R.string.self_choice);
+		else return isOnNetwork() ? from_institution_name : to_institution_name;
 	}
 
 	public boolean hasToInstitution() {

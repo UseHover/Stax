@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.hover.stax.utils.DateUtils;
@@ -103,6 +104,7 @@ public class Channel {
 	@ColumnInfo(name = "account_no")
 	public String accountNo;
 
+	@Ignore
 	public String spentThisMonth, spentDifferenceToLastMonth;
 
 	public void setSpentThisMonth(String spentThisMonth) {

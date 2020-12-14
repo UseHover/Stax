@@ -214,6 +214,11 @@ public class TransferViewModel extends StagedViewModel {
 		return pageError;
 	}
 
+	public LiveData<Schedule> getSchedule() {
+		if (schedule == null) { schedule = new MutableLiveData<>(); }
+		return schedule;
+	}
+
 	public LiveData<Request> getRequest() {
 		if (request == null) { request = new MutableLiveData<>(); }
 		return request;

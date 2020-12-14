@@ -215,7 +215,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	public void onBackPressed() {
 		if (Navigation.findNavController(findViewById(R.id.nav_host_fragment)).getCurrentDestination().getId() != R.id.navigation_edit ||
 			    !Navigation.findNavController(findViewById(R.id.nav_host_fragment)).popBackStack()) {
-			if (transferViewModel.getStage().getValue().compare(AMOUNT) > 0)
+			if (transferViewModel.getStage().getValue().compare(AMOUNT) > 0 && transferViewModel.getSchedule().getValue() == null && transferViewModel.getRequest().getValue() == null)
 				transferViewModel.goToPrevStage();
 			else
 				super.onBackPressed();

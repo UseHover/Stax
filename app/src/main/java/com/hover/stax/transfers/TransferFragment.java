@@ -132,6 +132,7 @@ public class TransferFragment extends StagedFragment {
 		transferViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
 			Log.e(TAG, "actions: " + actions.size());
 			if (actions == null || actions.size() == 0) return;
+			for (Action a: actions) a.context = getContext();
 			ArrayAdapter<Action> adapter = new ArrayAdapter<>(requireActivity(), R.layout.stax_spinner_item, actions);
 			actionDropdown.setAdapter(adapter);
 			actionDropdown.setText(actionDropdown.getAdapter().getItem(0).toString(), false);

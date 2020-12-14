@@ -87,6 +87,7 @@ public class EditTransferFragment extends EditStagedFragment {
 
 		transferViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
 			if (actions == null || actions.size() == 0) return;
+			for (Action a: actions) a.context = getContext();
 			ArrayAdapter<Action> adapter = new ArrayAdapter<>(requireActivity(), R.layout.stax_spinner_item, actions);
 			actionDropdown.setAdapter(adapter);
 			String current = transferViewModel.getActiveAction().getValue() != null ? transferViewModel.getActiveAction().getValue().getLabel(getContext()) : actionDropdown.getAdapter().getItem(0).toString();
