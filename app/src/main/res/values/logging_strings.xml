@@ -55,7 +55,6 @@
 	<string name="biometrics_failed" translatable="false">Device auth failed</string>
 	<string name="biometrics_succeeded" translatable="false">Device auth successful</string>
 	<string name="sdk_failure" translatable="false">No SDK response, returned null data on activity result</string>
-	<string name="stax_link_encryption_failure_1">Error creating Stax payment link failed due to user not adding an account or accountNumber, SMS will be sent without a link</string>
-	<string name="stax_link_encryption_failure_2">Error creating Stax payment link failed due to encryption failure, SMS will be sent without a link</string>
+	<string name="link_encryptfail" translatable="false">Error creating encrypted Stax payment link</string>
 
 </resources>

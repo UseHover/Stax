@@ -45,9 +45,9 @@ android {
             enableSplit = false
         }
     }
-    lintOptions{
-        disable 'MissingTranslation'
-    }
+//    lintOptions{
+//        disable 'MissingTranslation'
+//    }
 //    buildFeatures.dataBinding = true
 }
 

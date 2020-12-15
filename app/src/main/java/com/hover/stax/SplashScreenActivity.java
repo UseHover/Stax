@@ -21,6 +21,7 @@ import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.database.Constants;
 import com.hover.stax.destruct.SelfDestructActivity;
 import com.hover.stax.home.MainActivity;
+import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.schedules.ScheduleWorker;
 import com.hover.stax.security.BiometricChecker;
@@ -28,6 +29,7 @@ import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
 import static com.hover.stax.database.Constants.AUTH_CHECK;
+import static com.hover.stax.database.Constants.LANGUAGE_CHECK;
 
 public class SplashScreenActivity extends AppCompatActivity implements BiometricChecker.AuthListener {
 
@@ -77,8 +79,8 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	private void chooseNav() {
 		if (getIntent().getAction().equals(Intent.ACTION_VIEW) && getIntent().getData() != null)
 			goToRequest(getIntent());
-//		else if (Utils.getSharedPrefs(this).getInt(LANGUAGE_CHECK, 0) == 0)
-//			startActivity(new Intent(this, SelectLanguageActivity.class));
+		else if (Utils.getSharedPrefs(this).getInt(LANGUAGE_CHECK, 0) == 0)
+			startActivity(new Intent(this, SelectLanguageActivity.class));
 		else {
 			startActivity(new Intent(this, MainActivity.class));
 		}
