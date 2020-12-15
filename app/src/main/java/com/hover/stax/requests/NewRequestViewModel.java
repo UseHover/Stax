@@ -209,9 +209,8 @@ public class NewRequestViewModel extends StagedViewModel {
 		if (requestees.getValue() != null) {
 			new Thread(() -> {
 				for (StaxContact c: requestees.getValue()) {
-					StaxContact existing = repo.getContact(c.id);
-					if (existing == null || !existing.equals(c))
-						repo.insertOrUpdate(c);
+					c.lastUsedTimestamp = DateUtils.now();
+					repo.insertOrUpdate(c);
 				}
 			}).start();
 		}

@@ -128,7 +128,6 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	private void makeHoverCall(Action act) {
 		Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
 		transferViewModel.checkSchedule();
-		transferViewModel.saveContact();
 		makeCall(act);
 	}
 	private void makeCall(Action act) {

@@ -14,10 +14,10 @@ import java.util.List;
 @Dao
 public interface ContactDao {
 
-	@Query("SELECT * FROM stax_contacts")
+	@Query("SELECT * FROM stax_contacts ORDER BY name, phone_number, last_used_timestamp")
 	LiveData<List<StaxContact>> getAll();
 
-	@Query("SELECT * FROM stax_contacts WHERE id IN (:ids)")
+	@Query("SELECT * FROM stax_contacts WHERE id IN (:ids) ORDER BY name, phone_number, last_used_timestamp")
 	List<StaxContact> get(String[] ids);
 
 	@Query("SELECT * FROM stax_contacts WHERE id IN (:ids)")

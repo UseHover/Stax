@@ -363,9 +363,9 @@ public class TransferViewModel extends StagedViewModel {
 	public void saveContact() {
 		if (contact.getValue() != null) {
 			new Thread(() -> {
-				StaxContact existing = repo.getContact(contact.getValue().id);
-				if (existing == null || !existing.equals(contact.getValue()))
-					repo.insertOrUpdate(contact.getValue());
+				StaxContact c = contact.getValue();
+				c.lastUsedTimestamp = DateUtils.now();
+				repo.insertOrUpdate(contact.getValue());
 			}).start();
 		}
 	}

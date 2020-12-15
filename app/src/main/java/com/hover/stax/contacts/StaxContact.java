@@ -19,6 +19,7 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.hover.sdk.transactions.Transaction;
 import com.hover.stax.R;
+import com.hover.stax.utils.DateUtils;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +28,7 @@ import static com.google.i18n.phonenumbers.PhoneNumberUtil.MatchType.NO_MATCH;
 
 @Entity(tableName = "stax_contacts", indices = {@Index(value= {"id", "phone_number"}, unique = true), @Index(value ="lookup_key", unique = true)} )
 public class StaxContact {
+	private final static String TAG = "StaxContact";
 	public final static String ID_KEY = "contact_id";
 
 	@PrimaryKey
@@ -48,12 +50,16 @@ public class StaxContact {
 	@ColumnInfo(name = "thumb_uri")
 	public String thumbUri;
 
+	@ColumnInfo(name = "last_used_timestamp")
+	public Long lastUsedTimestamp;
+
 	public StaxContact() {}
 
 	public StaxContact(String phone) {
 		id = UUID.randomUUID().toString();
 		name = "";
 		phoneNumber = phone;
+		lastUsedTimestamp = DateUtils.now();
 	}
 
 	public StaxContact(Intent data, Context c) {
@@ -93,8 +99,10 @@ public class StaxContact {
 
 	private static String convertToCountry(String number, String country) throws NumberParseException {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-		Phonenumber.PhoneNumber phone = phoneUtil.parse(number, country);
-		number = phoneUtil.formatNumberForMobileDialing(phone, country, false);
+		try {
+			Phonenumber.PhoneNumber phone = phoneUtil.parse(number, country);
+			number = phoneUtil.formatNumberForMobileDialing(phone, country, false);
+		} catch (IllegalStateException e) { Log.e(TAG, "Google phone number util failed.", e); }
 		return number;
 	}
 
