@@ -48,9 +48,13 @@ public class TransactionDetailsFragment extends Fragment {
 		viewModel.getTransaction().observe(getViewLifecycleOwner(), transaction -> {
 			if (transaction != null) {
 				((TextView) view.findViewById(R.id.title)).setText(transaction.description);
-				((TextView) view.findViewById(R.id.details_transactionNumber)).setText(transaction.uuid);
 				((TextView) view.findViewById(R.id.details_amount)).setText(Utils.formatAmount(transaction.amount));
 				((TextView) view.findViewById(R.id.details_date)).setText(DateUtils.humanFriendlyDate(transaction.initiated_at));
+
+				if (transaction.confirm_code != null && !transaction.confirm_code.isEmpty())
+					((TextView) view.findViewById(R.id.details_transactionNumber)).setText(transaction.confirm_code);
+				else
+					((TextView) view.findViewById(R.id.details_transactionNumber)).setText(transaction.uuid);
 
 				view.findViewById(R.id.pending_notify_in_details).setVisibility(transaction.status.equals(Constants.PENDING) ? View.VISIBLE : View.GONE);
 			}

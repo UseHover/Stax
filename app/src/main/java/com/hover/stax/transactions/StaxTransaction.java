@@ -24,6 +24,7 @@ import java.util.HashMap;
 
 @Entity(tableName = "stax_transactions", indices = {@Index(value = {"uuid"}, unique = true)})
 public class StaxTransaction {
+	public final static String CONFIRM_CODE_KEY = "confirmCode";
 
 	@PrimaryKey(autoGenerate = true)
 	@NonNull
@@ -65,6 +66,9 @@ public class StaxTransaction {
 
 	@ColumnInfo(name = "fee")
 	public Double fee;
+
+	@ColumnInfo(name = "confirm_code")
+	public String confirm_code;
 
 	@ColumnInfo(name = "recipient")
 	public String recipient;
@@ -109,8 +113,12 @@ public class StaxTransaction {
 		updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, initiated_at);
 
 		HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES);
-		if (extras != null && extras.containsKey(Action.FEE_KEY))
-			fee = Utils.getAmount(extras.get(Action.FEE_KEY));
+		if (extras != null) {
+			if (extras.containsKey(Action.FEE_KEY))
+				fee = Utils.getAmount(extras.get(Action.FEE_KEY));
+			if (extras.containsKey(CONFIRM_CODE_KEY))
+				confirm_code = extras.get(CONFIRM_CODE_KEY);
+		}
 
 		if (data.hasExtra(StaxContact.ID_KEY))
 			recipient_id = data.getStringExtra(StaxContact.ID_KEY);

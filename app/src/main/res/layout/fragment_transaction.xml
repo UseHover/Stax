@@ -92,7 +92,7 @@
 						android:textAlignment="viewEnd"
 						android:fontFamily="font-normal"
 						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_21" />
+						android:textSize="@dimen/text_13" />
 				</TableRow>
 			</TableLayout>
 		</com.hover.stax.views.StaxCardView>
