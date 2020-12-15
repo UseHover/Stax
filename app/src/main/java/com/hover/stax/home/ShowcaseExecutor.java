@@ -67,7 +67,7 @@ class ShowcaseExecutor {
 	}
 
 	private SwipeRevealLayout getSwipeLayout() {
-		if (root.findViewById(R.id.balances_recyclerView) != null &&
+		if (root != null && root.findViewById(R.id.balances_recyclerView) != null &&
 			    ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildCount() > 0 &&
 			    ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0).findViewById(R.id.swipe_reveal_layout) != null)
 			return ((SwipeRevealLayout) ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0).findViewById(R.id.swipe_reveal_layout));
@@ -105,7 +105,7 @@ class ShowcaseExecutor {
 		}
 
 		@Override
-		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) { bubbleShowCase.finishSequence(); }
+		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) { closeBalance(getSwipeLayout()); bubbleShowCase.finishSequence(); }
 
 		@Override
 		public void onBubbleClick(@NotNull BubbleShowCase bubbleShowCase) {
