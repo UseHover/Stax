@@ -19,6 +19,7 @@ import com.hover.stax.database.Constants;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.views.Stax2LineItem;
 import com.hover.stax.views.StaxCardView;
 
 import org.json.JSONException;
@@ -62,7 +63,7 @@ public class TransactionDetailsFragment extends Fragment {
 
 		viewModel.getContact().observe(getViewLifecycleOwner(), contact -> {
 			if (contact != null)
-				((TextView) view.findViewById(R.id.details_recipient)).setText(contact.toString());
+				((Stax2LineItem) view.findViewById(R.id.details_recipient)).setContact(contact, false);
 		});
 
 		RecyclerView messagesView = view.findViewById(R.id.convo_recyclerView);
