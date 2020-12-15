@@ -85,20 +85,9 @@ public class ChannelsActivity extends AppCompatActivity {
 		channelViewModel.saveSelected();
 		Utils.saveInt(AUTH_CHECK, 1, this);
 		returnResult();
-		//startActivityForResult(new Intent(ChannelsActivity.this, PinsActivity.class), 0);
 	}
 	private void returnResult() {
 		setResult(RESULT_OK, addReturnData(new Intent()));
-		finish();
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_OK)
-			setResult(RESULT_OK, addReturnData(new Intent()));
-		else
-			setResult(RESULT_CANCELED);
 		finish();
 	}
 
@@ -114,7 +103,6 @@ public class ChannelsActivity extends AppCompatActivity {
 	@Override
 	public void onBackPressed() {
 		cancel(null);
-		super.onBackPressed();
 	}
 
 	public void cancel(View view) {

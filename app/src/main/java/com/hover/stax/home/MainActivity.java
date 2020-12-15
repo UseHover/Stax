@@ -65,13 +65,13 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 		balancesViewModel.getSelectedChannels().observe(this, channels -> Log.i(TAG, "Channels observer is neccessary to make updates fire, but all logic is in viewmodel. " + channels.size()));
 
 		setUpNav();
-		goToFullfillRequest(getIntent());
+		checkForRequest(getIntent());
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		showNecessaryShowcaseAfter1Secs();
+		maybeRunAShowcase();
 	}
 
 	@Override
@@ -79,10 +79,10 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 		Log.e(TAG, "Got new intent");
 		Log.e(TAG, "has link: " + intent.hasExtra(Constants.REQUEST_LINK));
 		super.onNewIntent(intent);
-		goToFullfillRequest(intent);
+		checkForRequest(intent);
 	}
 
-	private void goToFullfillRequest(Intent intent) {
+	private void checkForRequest(Intent intent) {
 		if (intent.hasExtra(Constants.REQUEST_LINK))
 			startTransfer(Action.P2P, true, intent);
 	}
@@ -159,17 +159,15 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 				else Amplitude.getInstance().logEvent(getString(R.string.sdk_failure));
 				break;
 			case Constants.ADD_SERVICE:
-				if (resultCode == RESULT_OK) { onAddServices(resultCode); }
+				if (resultCode == RESULT_OK) { maybeRunFullShowcase(); }
 				break;
 			case Constants.REQUEST_REQUEST:
 				if (resultCode == RESULT_OK) { onRequest(data); }
 				break;
 			default: // requestCode < Constants.BALANCE_MAX // Balance call
 				balancesViewModel.setRan(requestCode);
-				if (resultCode == RESULT_OK && data != null && data.getAction() != null) {
+				if (resultCode == RESULT_OK && data != null && data.getAction() != null)
 					onProbableHoverCall(data);
-					maybeRunShowcaseAfterAddingBalance();
-				}
 		}
 	}
 
@@ -182,28 +180,21 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 		}
 	}
 
-	private void onAddServices(int resultCode) {
-		//balancesViewModel.setRunning();
-		maybeRunShowcaseAfterAddingBalance();
+	private void maybeRunAShowcase() {
+		Log.e(TAG, "run showcase?");
+		if (Utils.getSharedPrefs(this).getInt(Constants.AUTH_CHECK, 0) == 0) {
+			Log.e(TAG, "yes please");
+			runStarterShowcase();
+		} else maybeRunFullShowcase();
 	}
-	private void maybeRunShowcaseAfterAddingBalance() {
-		if (balancesViewModel.hasChannels() && Utils.getSharedPrefs(this).getInt(ShowcaseExecutor.SHOW_TUTORIAL, 0) == 0)
+	private void runStarterShowcase() {
+		new ShowcaseExecutor(this, findViewById(R.id.home_root)).startAddAcctShowcase();
+	}
+	private void maybeRunFullShowcase() {
+		if (Utils.getSharedPrefs(this).getInt(Constants.AUTH_CHECK, 0) == 1 && Utils.getSharedPrefs(this).getInt(ShowcaseExecutor.SHOW_TUTORIAL, 0) == 0)
 			new ShowcaseExecutor(this, findViewById(R.id.home_root)).startFullShowcase();
 	}
-	private void runShowcaseIfBalanceIsEmpty() {
-		if(!balancesViewModel.hasChannels()) new ShowcaseExecutor(this, findViewById(R.id.home_root)).startAddAcctShowcase();
-	}
 
-
-	private void showNecessaryShowcaseAfter1Secs() {
-		//Putting in a try and catch to prevent crashing if user clicks elsewhere before 2 sec completes
-		try{
-			new Handler().postDelayed(() -> {
-				runShowcaseIfBalanceIsEmpty();
-				maybeRunShowcaseAfterAddingBalance();
-			}, 2000);
-		}catch (Exception ignored){}
-	}
 
 	private void startTransfer(String type, boolean isFromStaxLink, Intent received) {
 		Intent i = new Intent(this, TransferActivity.class);

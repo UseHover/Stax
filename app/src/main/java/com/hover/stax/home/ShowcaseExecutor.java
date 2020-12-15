@@ -19,6 +19,7 @@ import com.hover.stax.utils.bubbleshowcase.BubbleShowCaseListener;
 import org.jetbrains.annotations.NotNull;
 
 class ShowcaseExecutor {
+	private static String TAG = "ShowcaseExecutor";
 	public static String SHOW_TUTORIAL = "SHOWCASE";
 	private Activity activity;
 	private View root;
@@ -30,71 +31,51 @@ class ShowcaseExecutor {
 	}
 
 	public void startFullShowcase() {
-		try {
-			BubbleShowCase.Companion.showCase(
-					activity.getString(R.string.onboard_sechead),
-					activity.getString(R.string.onboard_secbody),
-					BubbleShowCase.ArrowPosition.TOP,
-					stagedBubbleListener,
-					root.findViewById(R.id.home_stax_logo),
-					activity);
-		} catch (Exception ignored) {
-		}
+		startShowcase(activity.getString(R.string.onboard_sechead), activity.getString(R.string.onboard_secbody),
+				stagedBubbleListener, root.findViewById(R.id.home_stax_logo));
 	}
 
 	public void startAddAcctShowcase() {
-		try {
-			BubbleShowCase.Companion.showCase(
-					activity.getString(R.string.onboard_addaccounthead),
-					activity.getString(R.string.onboard_addaccountbody),
-					BubbleShowCase.ArrowPosition.TOP,
-					addBalanceListener,
-					root.findViewById(R.id.add_accounts_btn),
-					activity);
-		} catch (Exception igno) {
-			Log.d("STAX_TESTING", "IT FAILED HERE");
-		}
+		startShowcase(activity.getString(R.string.onboard_addaccounthead), activity.getString(R.string.onboard_addaccountbody),
+			addedAccountListener, root.findViewById(R.id.add_accounts_btn));
+
 	}
 
+	private void startShowcase(String head, String body, BubbleShowCaseListener listener, View view) {
+		try {
+			BubbleShowCase.Companion.showCase(
+				head, body, BubbleShowCase.ArrowPosition.TOP, listener, view, activity);
+		} catch (Exception e) { Log.e(TAG, "Showcase failed to start", e); }
+	}
 
 	private void showcaseSecondStage() {
-		openBalance();
-		BubbleShowCase.Companion.showCase(
-				activity.getString(R.string.onboard_peekhead),
-				activity.getString(R.string.onboard_peekbody),
-				BubbleShowCase.ArrowPosition.TOP,
-				stagedBubbleListener,
-				((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0).findViewById(R.id.balance_drag),
-				activity);
+		openBalance(getSwipeLayout());
+		startShowcase(activity.getString(R.string.onboard_peekhead), activity.getString(R.string.onboard_peekbody),
+				stagedBubbleListener, ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0).findViewById(R.id.balance_drag));
 	}
 
 	private void showcaseThirdStage() {
-		openBalance();
-		BubbleShowCase.Companion.showCase(
-				activity.getString(R.string.onboard_balhead),
-				activity.getString(R.string.onboard_balbody),
-				BubbleShowCase.ArrowPosition.TOP,
-				stagedBubbleListener,
-				((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0).findViewById(R.id.balance_drag),
-				activity);
+		openBalance(getSwipeLayout());
+		startShowcase(activity.getString(R.string.onboard_balhead), activity.getString(R.string.onboard_balbody),
+				stagedBubbleListener, ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0).findViewById(R.id.balance_drag));
 	}
 
 	private void showcaseFourthStage() {
-		BubbleShowCase.Companion.showCase(
-				activity.getString(R.string.onboard_refreshhead),
-				activity.getString(R.string.onboard_refreshbody),
-				BubbleShowCase.ArrowPosition.TOP,
-				stagedBubbleListener,
-				root.findViewById(R.id.homeTimeAgo),
-				activity);
+		closeBalance(getSwipeLayout());
+		startShowcase(activity.getString(R.string.onboard_refreshhead), activity.getString(R.string.onboard_refreshbody),
+				stagedBubbleListener, root.findViewById(R.id.homeTimeAgo));
 	}
 
-	private void openBalance() {
+	private SwipeRevealLayout getSwipeLayout() {
 		if (root.findViewById(R.id.balances_recyclerView) != null &&
 			    ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildCount() > 0 &&
 			    ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0).findViewById(R.id.swipe_reveal_layout) != null)
-			((SwipeRevealLayout) ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0).findViewById(R.id.swipe_reveal_layout)).open(true);
+			return ((SwipeRevealLayout) ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0).findViewById(R.id.swipe_reveal_layout));
+		return null;
 	}
+
+	private void openBalance(SwipeRevealLayout v) { if (v != null) v.open(true); }
+	private void closeBalance(SwipeRevealLayout v) { if (v != null) v.close(true); }
 
 	private void showcaseNextStage(@NotNull BubbleShowCase bubbleShowCase) {
 		Utils.saveInt(ShowcaseExecutor.SHOW_TUTORIAL, 1, activity);
@@ -132,7 +113,7 @@ class ShowcaseExecutor {
 		}
 	};
 
-	BubbleShowCaseListener addBalanceListener = new BubbleShowCaseListener() {
+	BubbleShowCaseListener addedAccountListener = new BubbleShowCaseListener() {
 
 		@Override public void onBubbleClick(@NotNull BubbleShowCase bubbleShowCase) {}
 
