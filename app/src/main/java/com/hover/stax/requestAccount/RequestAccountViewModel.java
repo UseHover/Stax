@@ -1,6 +1,7 @@
 package com.hover.stax.requestAccount;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -8,20 +9,16 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
+import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.Utils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class RequestAccountViewModel extends AndroidViewModel {
@@ -73,21 +70,25 @@ public class RequestAccountViewModel extends AndroidViewModel {
 		return true;
 	}
 
-	public void sendAccountRequestInfoToFirebase(String selectedCountry, String selectedNetwork, String deviceId) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("deviceId", deviceId);
-		map.put("country", selectedCountry);
-		map.put("service", selectedNetwork);
-		map.put("timeStamp", Timestamp.now());
-		FirebaseFirestore.getInstance().collection("requests_from_users").add(map);
+	public void sendAccountRequestInfoToAmplitude(String selectedCountry, String selectedNetwork, Context c) {
+		JSONObject data = new JSONObject();
+		try {
+			data.put("deviceId", Utils.getDeviceId(c));
+			data.put("country", selectedCountry);
+			data.put("service", selectedNetwork);
+			data.put("timeStamp", DateUtils.now());
+		} catch (JSONException e) {}
+		Amplitude.getInstance().logEvent(c.getString(R.string.request_add_service), data);
 	}
-	public void sendContactInfoToFirebase(String phone, String email, String deviceId) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("deviceId", deviceId);
-		map.put("phone", phone);
-		map.put("email", email);
-		map.put("timeStamp", Timestamp.now());
-		FirebaseFirestore.getInstance().collection("users_contact").add(map);
+	public void sendContactInfoToAmplitude(String phone, String email, Context c) {
+		JSONObject data = new JSONObject();
+		try {
+			data.put("deviceId", Utils.getDeviceId(c));
+			data.put("phone", phone);
+			data.put("email", email);
+			data.put("timeStamp", DateUtils.now());
+		} catch (JSONException e) {}
+		Amplitude.getInstance().logEvent(c.getString(R.string.request_add_service_contact_info), data);
 	}
 
 	private List<SupportedCountries> getSupportedCountries() {

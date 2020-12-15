@@ -142,7 +142,7 @@ public class RequestAccountActivity extends AppCompatActivity {
 			JSONObject data = new JSONObject();
 			try { data.put("network", networkValue.getText().toString()); } catch (JSONException ignored) { }
 			Amplitude.getInstance().logEvent(getResources().getString(R.string.selected_network), data);
-			requestAccountViewModel.sendAccountRequestInfoToFirebase(countryValue.getText().toString(), networkValue.getText().toString(), Utils.getDeviceId(this));
+			requestAccountViewModel.sendAccountRequestInfoToAmplitude(countryValue.getText().toString(), networkValue.getText().toString(), this);
 			requestAccountViewModel.setNextRequestAccountStage(RequestAccountStage.SELECT_NETWORK);
 		
 		});
@@ -153,7 +153,7 @@ public class RequestAccountActivity extends AppCompatActivity {
 
 		findViewById(R.id.sendContactButton).setOnClickListener(v -> {
 			if(requestAccountViewModel.validateContactEntries(phoneInput.getText().toString(), emailInput.getText().toString())) {
-				requestAccountViewModel.sendContactInfoToFirebase(phoneInput.getText().toString(), emailInput.getText().toString(), Utils.getDeviceId(this));
+				requestAccountViewModel.sendContactInfoToAmplitude(phoneInput.getText().toString(), emailInput.getText().toString(), this);
 				goToPreviousActivity(true);
 			}
 		});
