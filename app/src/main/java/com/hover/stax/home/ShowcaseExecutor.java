@@ -105,7 +105,11 @@ class ShowcaseExecutor {
 		}
 
 		@Override
-		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) { closeBalance(getSwipeLayout()); bubbleShowCase.finishSequence(); }
+		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) {
+			closeBalance(getSwipeLayout());
+			Utils.saveInt(ShowcaseExecutor.SHOW_TUTORIAL, 1, activity);
+			bubbleShowCase.finishSequence();
+		}
 
 		@Override
 		public void onBubbleClick(@NotNull BubbleShowCase bubbleShowCase) {
