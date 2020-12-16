@@ -27,16 +27,13 @@ public class BalancesViewModel extends AndroidViewModel {
 
 	private LiveData<List<Channel>> selectedChannels;
 	private LiveData<List<Action>> balanceActions = new MediatorLiveData<>();
-	private MutableLiveData<Integer> runFlag;
+	private MutableLiveData<Integer> runFlag = new MutableLiveData<>();
 	private MediatorLiveData<List<Action>> toRun;
 
 	public BalancesViewModel(Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
-		if (runFlag == null) {
-			runFlag = new MutableLiveData<>();
-			runFlag.setValue(NONE);
-		}
+		if (runFlag == null) runFlag.setValue(NONE);
 
 		selectedChannels = repo.getSelected();
 		balanceActions = Transformations.switchMap(selectedChannels, this::loadBalanceActions);
@@ -96,6 +93,7 @@ public class BalancesViewModel extends AndroidViewModel {
 	}
 
 	private void onSetRunning(Integer flag) {
+		Log.e(TAG, "Recieved run flag update, starting run.");
 		if (flag == null || flag == NONE) toRun.setValue(new ArrayList<>());
 		else if (flag == ALL) startRun(balanceActions.getValue());
 		else startRun(getChannelActions(flag));
@@ -108,6 +106,7 @@ public class BalancesViewModel extends AndroidViewModel {
 	}
 
 	void startRun(List<Action> actions) {
+		Log.e(TAG, "running " + actions.size() + " actions");
 		if (actions == null || actions.size() == 0) return;
 		toRun.setValue(actions);
 		runNext(actions, 0);

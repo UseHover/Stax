@@ -112,6 +112,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void authenticate() {
+		Log.e(TAG, "active action: " + transferViewModel.getActiveAction().getValue());
 		new BiometricChecker(this, this).startAuthentication(transferViewModel.getActiveAction().getValue());
 	}
 
@@ -131,6 +132,10 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		makeCall(act);
 	}
 	private void makeCall(Action act) {
+		if (transferViewModel.getActiveAction().getValue() != null)
+			Log.e(TAG, "calling. active action: " + transferViewModel.getActiveAction().getValue().id);
+		Log.e(TAG, "calling. this action: " + act.id);
+
 		HoverSession.Builder hsb = new HoverSession.Builder(act, transferViewModel.getActiveChannel().getValue(),
 				TransferActivity.this, Constants.TRANSFER_REQUEST)
 				.extra(Action.AMOUNT_KEY, transferViewModel.getAmount().getValue())

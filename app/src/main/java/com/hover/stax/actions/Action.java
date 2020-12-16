@@ -1,6 +1,7 @@
 package com.hover.stax.actions;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -8,6 +9,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.hover.sdk.parsers.ParserHelper;
+import com.hover.sdk.transactions.Transaction;
 import com.hover.stax.R;
 
 import org.jetbrains.annotations.NotNull;
@@ -95,15 +98,22 @@ public class Action {
 	@NotNull
 	@Override
 	public String toString() {
-		return getLabel(context);
+		String val = getLabel(null), label = getLabel(context);
+		if (context != null)
+			val += ": " + label;
+		return val;
 	}
 
 	public boolean isOnNetwork() {
 		return to_institution_name == null || to_institution_name.equals("null") || from_institution_id == to_institution_id;
 	}
 
+	public String getNetworkSubtitle(Context c) {
+		return isOnNetwork() ? c.getString(R.string.onnet_choice) : c.getString(R.string.offnet_choice, getLabel(null));
+	}
+
 	public String getLabel(Context c) {
-		if (context != null && transaction_type.equals(AIRTIME)) return requiresRecipient() ?  c.getString(R.string.other_choice) : c.getString(R.string.self_choice);
+		if (c != null) return requiresRecipient() ?  c.getString(R.string.other_choice) : c.getString(R.string.self_choice);
 		else return isOnNetwork() ? from_institution_name : to_institution_name;
 	}
 
@@ -153,5 +163,14 @@ public class Action {
 		} catch (JSONException e) {
 		}
 		return params;
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if (other == null) return false;
+		if (other == this) return true;
+		if (!(other instanceof Action)) return false;
+		Action otherA = (Action) other;
+		return otherA.id == id;
 	}
 }

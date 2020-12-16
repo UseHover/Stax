@@ -598,5 +598,6 @@
   <string name="other_choice">Someone else</string>
   <string name="removepin_dialoghead">Remove %1$s PIN now</string>
   <string name="btn_removeaccount">Remove account</string>
+  <string name="actions_fielderror">This account does not support buy airtime. Please select a different account.</string>
   
 </resources>

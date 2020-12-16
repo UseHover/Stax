@@ -600,5 +600,6 @@
   <string name="fromacct_fielderror">You must select an sending account. If you have none please tap <u>add account</u>.</string>
   <string name="recipientnetwork_fielderror">No recipient network chosen.</string><string name="whoopsie">Something went wrong, the problem has been reported. Please try again.</string>
   <string name="other_choice">Someone else</string>
+  <string name="actions_fielderror">This account does not support buy airtime. Please select a different account.</string>
   
 </resources>

@@ -140,10 +140,11 @@ public class TransferFragment extends StagedFragment {
 
 		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
 			if (action != null) {
-				accountValue.setSubtitle(action.isOnNetwork() ? getString(R.string.onnet_choice) : getString(R.string.offnet_choice, action.toString()));
-				if (!action.requiresRecipient()) {
-					recipientValue.setTitle(action.getLabel(getContext()));
-				}
+				accountValue.setSubtitle(action.getNetworkSubtitle(getContext()));
+				if (!action.requiresRecipient())
+					recipientValue.setContent(action.getLabel(getContext()), "");
+				else if (transferViewModel.getContact().getValue() != null)
+					recipientValue.setContact(transferViewModel.getContact().getValue(), transferViewModel.getRequest().getValue() != null);
 			}
 		});
 	}

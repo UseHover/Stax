@@ -76,8 +76,6 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-		Log.e(TAG, "Got new intent");
-		Log.e(TAG, "has link: " + intent.hasExtra(Constants.REQUEST_LINK));
 		super.onNewIntent(intent);
 		checkForRequest(intent);
 	}
@@ -101,13 +99,13 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 
 	@Override
 	public void onTapRefresh(int channel_id) {
-		Log.e(TAG, "please refresh");
+		Log.e(TAG, "tapped refresh");
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_single));
 		balancesViewModel.setRunning(channel_id);
 	}
 
 	public void runAllBalances(View view) {
-		Log.e(TAG, "please refresh all");
+		Log.e(TAG, "pulled to refresh all");
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_all));
 		balancesViewModel.setRunning();
 	}
