@@ -118,10 +118,10 @@
 	<string name="btn_request">Send request</string>
 	<string name="btn_nothanks">No, thanks</string>
 	<string name="toast_confirm_contact">Thanks! Contact info received. We\'ll be in touch soon.</string>
-	<string name="reqsave_head">Save request?</string>
-	<string name="reqsave_msg">We\'re not sure if your message has been sent.</string>
-	<string name="btn_saveanyway">Save</string>
-	<string name="btn_dontsave">Don\'t save</string>
+	<string name="reqsave_head">Request sent?</string>
+	<string name="reqsave_msg">Have you sent the request link yet?</string>
+	<string name="btn_saveanyway">Yes</string>
+	<string name="btn_dontsave">No</string>
 	<string name="request_account">Request account</string>
 	<string name="request_account_desc">Can\’t find what you\’re looking for? We\’re adding new accounts to Stax every day, and if you let us know which one you\’re looking for, we\’ll add it as soon as possible.</string>
 	<string name="request_received_content">Request received. We\’ll add %1$s soon.</string>
@@ -147,18 +147,18 @@
 	</string-array>
 
 	<!-- Onboarding showcase -->
-	<string name="onboard_addaccounthead">Add an account to get started</string>
-	<string name="onboard_addaccountbody">Stax supercharges your bank and mobile money accounts in one secure place</string>
+	<string name="onboard_addaccounthead">Add an account to get started.</string>
+	<string name="onboard_addaccountbody">Stax puts all your bank and mobile money accounts in one secure place.</string>
 	<string name="onboard_sechead">World class security</string>
-	<string name="onboard_secbody">We secure Stax with the same technology that locks your device. You unlock Stax the same way you unlock your device</string>
+	<string name="onboard_secbody">We secure Stax with the same technology that locks your device. You unlock Stax the same way you unlock your device.</string>
 	<string name="onboard_peekhead">Keep accounts private</string>
-	<string name="onboard_peekbody">Peek at your balances by dragging the bar to the left</string>
+	<string name="onboard_peekbody">Peek at your balances by dragging the bar to the left.</string>
 	<string name="onboard_balhead">Refresh your accounts</string>
-	<string name="onboard_balbody">Check your account\'s balance by pulling the bar all the way to the left</string>
+	<string name="onboard_balbody">Check your account\'s balance by pulling the bar all the way to the left.</string>
 	<string name="onboard_refreshhead">Refresh Stax</string>
-	<string name="onboard_refreshbody">Pull down the whole screen to refresh all of your accounts</string>
+	<string name="onboard_refreshbody">Pull down the whole screen to refresh all of your accounts.</string>
 	<string name="onboard_infohead">Long press for more info</string>
-	<string name="onboard_infobody">Press and hold any element in Stax for more information</string>
+	<string name="onboard_infobody">Press and hold any element in Stax for more information.</string>
 
 	<!-- Transfer -->
 	<string name="loading_dialoghead">Loading, one moment</string>
@@ -185,9 +185,9 @@
 	<string name="onnet_choice">On network</string>
 	<string name="offnet_choice">To %1$s</string>
 	<string name="airtimeother_choice">Someone else</string>
-	<string name="note_cardhead">Note</string>
-	<string name="note_label_opt">Enter note (optional)</string>
-	<string name="recipient_label">To whom?</string>
+	<string name="note_cardhead">Description</string>
+	<string name="note_label_opt">What is your request for? (optional)</string>
+	<string name="recipient_label">To</string>
 	<string name="accounts_label">Pay from</string>
 	<string name="descrip_multcontacts">%1$d contacts</string>
 	<string name="descrip_airtime_sent">%1$s sent airtime to %2$s</string>
