@@ -61,12 +61,22 @@ public class Request {
 
 	public Request() {}
 
-	public Request(String amount, String note, String requester, int receiving_channel_id) {
+	public Request(String amount, String note, String requester, int requester_institution_id) {
 		this.amount = amount;
 		this.note = note;
 		this.requester_number = requester;
-		this.requester_institution_id = receiving_channel_id;
+		this.requester_institution_id = requester_institution_id;
 		date_sent = DateUtils.now();
+	}
+
+	public Request(Request r, StaxContact requestee, Context c) {
+		this.amount = r.amount;
+		this.note = r.note;
+		this.requestee_ids = requestee.id;
+		this.requester_number = r.requester_number;
+		this.requester_institution_id = r.requester_institution_id;
+		this.date_sent = r.date_sent;
+		this.description = getDescription(requestee, c);
 	}
 
 	public Request(String paymentLink) {
@@ -82,12 +92,6 @@ public class Request {
 	}
 
 	public String getDescription(StaxContact contact, Context c) { return c.getString(R.string.descrip_request, contact.shortName(false)); }
-
-	Request setRecipient(StaxContact c, Context context) {
-		this.requestee_ids = c.id;
-		description = getDescription(c, context);
-		return this;
-	}
 
 	String generateRecipientString(List<StaxContact> contacts) {
 		StringBuilder phones = new StringBuilder();
