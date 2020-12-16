@@ -50,7 +50,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 		holder.channelId.setText(Integer.toString(channel.id));
 		if (channel.latestBalance != null)
 			holder.amount.setText(Utils.formatAmount(channel.latestBalance));
-		setColors(holder, channel,
+		 setColors(holder, channel,
 			UIHelper.getColor(channel.primaryColorHex, true, holder.itemView.getContext()),
 			UIHelper.getColor(channel.secondaryColorHex, false, holder.itemView.getContext()));
 	}
