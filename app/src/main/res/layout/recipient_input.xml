@@ -11,6 +11,7 @@
 		android:layout_height="wrap_content"
 		android:id="@+id/recipientLabel"
 		android:hint="@string/recipientphone_label"
+		app:endIconMode="none"
 		style="@style/StaxLabeledDropdown">
 
 		<AutoCompleteTextView

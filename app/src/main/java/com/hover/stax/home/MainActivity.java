@@ -110,9 +110,9 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 
 	@Override
 	public void startRun(Action a, int i) {
-		if (i == 0)
-			new BiometricChecker(this, this).startAuthentication(a);
-		else
+//		if (i == 0)
+//			new BiometricChecker(this, this).startAuthentication(a);
+//		else
 			run(a, i);
 	}
 
