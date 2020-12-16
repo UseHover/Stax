@@ -9,8 +9,6 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import com.hover.sdk.parsers.ParserHelper;
-import com.hover.sdk.transactions.Transaction;
 import com.hover.stax.R;
 
 import org.jetbrains.annotations.NotNull;
