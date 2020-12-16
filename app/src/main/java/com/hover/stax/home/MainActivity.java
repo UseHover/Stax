@@ -47,6 +47,8 @@ import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
+import static com.hover.stax.database.Constants.SHOWCASE_STAGE;
+
 public class MainActivity extends AbstractMessageSendingActivity implements
 	BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener {
 
@@ -155,15 +157,17 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 				else Amplitude.getInstance().logEvent(getString(R.string.sdk_failure));
 				break;
 			case Constants.ADD_SERVICE:
-				if (resultCode == RESULT_OK) { maybeRunFullShowcase(); }
+				//No need for this because onResume will respond to it anyway.
+				//if (resultCode == RESULT_OK) { maybeRunAShowcase(); }
 				break;
 			case Constants.REQUEST_REQUEST:
 				if (resultCode == RESULT_OK) { onRequest(data); }
 				break;
 			default: // requestCode < Constants.BALANCE_MAX // Balance call
 				balancesViewModel.setRan(requestCode);
-				if (resultCode == RESULT_OK && data != null && data.getAction() != null)
-					onProbableHoverCall(data);
+				ShowcaseExecutor.maybeSetStageForPeek(this);
+				if (resultCode == RESULT_OK && data != null && data.getAction() != null) onProbableHoverCall(data);
+				maybeRunAShowcase();
 		}
 	}
 
@@ -177,18 +181,24 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 	}
 
 	private void maybeRunAShowcase() {
-		Log.e(TAG, "run showcase?");
-		if (Utils.getSharedPrefs(this).getInt(Constants.AUTH_CHECK, 0) == 0) {
-			Log.e(TAG, "yes please");
-			runStarterShowcase();
-		} else maybeRunFullShowcase();
+		switch (Utils.getSharedPrefs(this).getInt(Constants.SHOWCASE_STAGE, 0)) {
+			case 0: runAddAcntShowcase();
+				break;
+			case 1: runRefreshShowcase();
+				break;
+			case 2: runPeekBalanceShowcase();
+				break;
+		}
+
 	}
-	private void runStarterShowcase() {
-		new ShowcaseExecutor(this, findViewById(R.id.home_root)).startAddAcctShowcase();
+	private void runAddAcntShowcase() {
+		new ShowcaseExecutor(this, findViewById(R.id.home_root)).showcaseAddAcctStage();
 	}
-	private void maybeRunFullShowcase() {
-		if (Utils.getSharedPrefs(this).getInt(Constants.AUTH_CHECK, 0) == 1 && Utils.getSharedPrefs(this).getInt(ShowcaseExecutor.SHOW_TUTORIAL, 0) == 0)
-			new ShowcaseExecutor(this, findViewById(R.id.home_root)).startFullShowcase();
+	private void runRefreshShowcase() {
+			new ShowcaseExecutor(this, findViewById(R.id.home_root)).showcaseRefreshAccountStage();
+	}
+	private void runPeekBalanceShowcase() {
+		new ShowcaseExecutor(this, findViewById(R.id.home_root)).showcasePeekBalanceStage();
 	}
 
 

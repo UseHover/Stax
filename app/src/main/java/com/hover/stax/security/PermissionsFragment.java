@@ -22,6 +22,9 @@ import com.hover.stax.R;
 import com.hover.stax.channels.ChannelsAdapter;
 import com.hover.stax.utils.UIHelper;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 public class PermissionsFragment extends Fragment {
 
 	public final static int PHONE_REQUEST = 0, SMS_REQUEST = 1;
@@ -71,7 +74,11 @@ public class PermissionsFragment extends Fragment {
 		else if (!ph.hasAccessPerm())
 			requestAccessibility();
 		else
-			NavHostFragment.findNavController(this).navigate(R.id.navigation_pin_entry);
+			if(getActivity()!=null) {
+				getActivity().setResult(RESULT_OK);
+				getActivity().finish();
+			}
+			//NavHostFragment.findNavController(this).navigate(R.id.navigation_pin_entry);
 	}
 
 	@Override
