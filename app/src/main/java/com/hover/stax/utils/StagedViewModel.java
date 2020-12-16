@@ -76,19 +76,13 @@ public abstract class StagedViewModel extends AndroidViewModel {
 	}
 
 	protected void setActiveChannelIfNull(List<Channel> channels) {
-		Log.e("StagedVM", "setting active channel from: " + channels.size());
-		if (channels != null && channels.size() > 0 && activeChannel.getValue() == null) {
+		if (channels != null && channels.size() > 0 && activeChannel.getValue() == null)
 			activeChannel.setValue(channels.get(0));
-			Log.e("StagedVM", "set active channel to: " + channels.get(0));
-		}
 	}
 
 	public void setActiveChannel(int channel_id) {
-		Log.e("StagedVM", "setActive channel: " + channel_id);
-		Log.e("StagedVM", "selectedChannels size: " + (selectedChannels.getValue() != null ? selectedChannels.getValue().size() : "null"));
 		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0)
 			return;
-		Log.e("StagedVM", "setActive channel: " + getChannelById(channel_id));
 		activeChannel.setValue(getChannelById(channel_id));
 	}
 

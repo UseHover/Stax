@@ -87,7 +87,6 @@ public class TransferViewModel extends StagedViewModel {
 		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0) return null;
 		for (Channel c : selectedChannels.getValue()) {
 			if (c.institutionId == id) {
-				Log.e(TAG, "inst active channel: " + c);
 				return c;
 			}
 		}
@@ -95,10 +94,8 @@ public class TransferViewModel extends StagedViewModel {
 	}
 
 	public void loadActions(Channel channel) {
-		Log.e(TAG, "action update fired");
 		if (channel != null) {
 			new Thread(() -> {
-				Log.e(TAG, "posting filtered action update");
 				if (request.getValue() != null)
 					filteredActions.postValue(repo.getActions(getChannelIds(), request.getValue().requester_institution_id));
 				else
@@ -108,12 +105,10 @@ public class TransferViewModel extends StagedViewModel {
 	}
 
 	public void loadActions(Request r) {
-		Log.e(TAG, "Loading actions from request update. Channel count: " + (selectedChannels.getValue() != null ? selectedChannels.getValue().size() : "null"));
-		if (r != null && selectedChannels.getValue() != null && selectedChannels.getValue().size() > 0) {
 
+		if (r != null && selectedChannels.getValue() != null && selectedChannels.getValue().size() > 0) {
 			new Thread(() -> {
 				List<Action> actions = repo.getActions(getChannelIds(), r.requester_institution_id);
-				Log.e(TAG, "Found " + actions.size() + " actions");
 				filteredActions.postValue(actions);
 				if (actions.size() <= 0)
 					pageError.postValue(R.string.whoopsie);
@@ -135,11 +130,8 @@ public class TransferViewModel extends StagedViewModel {
 	}
 
 	private void setActiveActionIfOutOfDate(List<Action> actions) {
-		Log.e(TAG, "updating active action count" + actions.size());
-		if (actions != null && actions.size() > 0 && (activeAction.getValue() == null || !actions.contains(activeAction.getValue()))) {
-			Log.e(TAG, "updating active action " + actions.get(0).id);
+		if (actions != null && actions.size() > 0 && (activeAction.getValue() == null || !actions.contains(activeAction.getValue())))
 			activeAction.setValue(actions.get(0));
-		}
 	}
 
 	void setActiveAction(Action action) {
@@ -288,8 +280,8 @@ public class TransferViewModel extends StagedViewModel {
 			case AMOUNT:
 				return isErrorFree((MutableLiveData) amount, amountError, R.string.amount_fielderror);
 			case FROM_ACCOUNT:
-				return isErrorFree((MutableLiveData) activeChannel, pageError, R.string.fromacct_fielderror);
-//					       && isErrorFree((MutableLiveData) filteredActions, pageError, R.string.actions_fielderror);
+				return isErrorFree((MutableLiveData) activeChannel, pageError, R.string.fromacct_fielderror)
+					       && isErrorFree((MutableLiveData) filteredActions, pageError, R.string.actions_fielderror);
 			case TO_NETWORK:
 				return isErrorFree((MutableLiveData) activeAction, pageError, R.string.recipientnetwork_fielderror);
 			case RECIPIENT:

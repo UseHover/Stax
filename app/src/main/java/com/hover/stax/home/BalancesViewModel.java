@@ -93,7 +93,6 @@ public class BalancesViewModel extends AndroidViewModel {
 	}
 
 	private void onSetRunning(Integer flag) {
-		Log.e(TAG, "Recieved run flag update, starting run.");
 		if (flag == null || flag == NONE) toRun.setValue(new ArrayList<>());
 		else if (flag == ALL) startRun(balanceActions.getValue());
 		else startRun(getChannelActions(flag));
@@ -106,7 +105,6 @@ public class BalancesViewModel extends AndroidViewModel {
 	}
 
 	void startRun(List<Action> actions) {
-		Log.e(TAG, "running " + actions.size() + " actions");
 		if (actions == null || actions.size() == 0) return;
 		toRun.setValue(actions);
 		runNext(actions, 0);
