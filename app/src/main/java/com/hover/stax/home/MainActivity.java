@@ -154,7 +154,7 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 				else Amplitude.getInstance().logEvent(getString(R.string.sdk_failure));
 				break;
 			case Constants.ADD_SERVICE:
-				maybeRunAShowcase();
+				if (resultCode == RESULT_OK) { maybeRunAShowcase(); }
 				break;
 			case Constants.REQUEST_REQUEST:
 				if (resultCode == RESULT_OK) { onRequest(data); }
@@ -166,8 +166,6 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 	}
 
 	public void maybeRunAShowcase() {
-		Log.e(TAG, "stage: " + ShowcaseExecutor.getStage(this));
-
 		switch (ShowcaseExecutor.getStage(this)) {
 			case 0: new ShowcaseExecutor(this, findViewById(R.id.home_root)).showcaseAddAcctStage();
 				break;
