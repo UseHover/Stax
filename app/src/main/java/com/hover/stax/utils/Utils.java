@@ -23,6 +23,7 @@ import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
+import static com.hover.stax.database.Constants.SHOWCASE_STAGE;
 
 public class Utils {
 	private final static String TAG = "Utils";
@@ -133,5 +134,6 @@ public class Utils {
 		}
 		return false;
 	}
+
 
 }

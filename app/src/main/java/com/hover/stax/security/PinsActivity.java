@@ -25,8 +25,12 @@ public class PinsActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_pins);
 		pinViewModel = new ViewModelProvider(this).get(PinsViewModel.class);
 
-		if (new PermissionHelper(this).hasAllPerms())
-			Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_pin_entry);
+		if (new PermissionHelper(this).hasAllPerms()){
+			setResult(RESULT_OK);
+			finish();
+			cleanup();
+		}
+			//Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.navigation_pin_entry);
 	}
 
 	public void done(View view) {

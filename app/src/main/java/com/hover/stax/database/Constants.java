@@ -13,6 +13,7 @@ public class Constants {
 
 	final public static String LANGUAGE_CHECK = "Language";
 	final public static String AUTH_CHECK = "Authenticate";
+	final public static String SHOWCASE_STAGE = "showcase_stage";
 
 	final public static String TRANSFERED = "TRANSFERED";
 	final public static String SCHEDULED = "SCHEDULED";

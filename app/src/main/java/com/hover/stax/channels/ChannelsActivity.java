@@ -17,6 +17,7 @@ import com.hover.sdk.api.Hover;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.database.Constants;
+import com.hover.stax.home.ShowcaseExecutor;
 import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.security.PermissionsFragment;
 import com.hover.stax.security.PinsActivity;
@@ -31,7 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.hover.stax.database.Constants.AUTH_CHECK;
-import static com.hover.stax.database.Constants.LANGUAGE_CHECK;
 
 public class ChannelsActivity extends AppCompatActivity {
 	public final static String TAG = "ChannelsActivity";
@@ -84,7 +84,8 @@ public class ChannelsActivity extends AppCompatActivity {
 	private void saveAndContinue() {
 		channelViewModel.saveSelected();
 		Utils.saveInt(AUTH_CHECK, 1, this);
-		returnResult();
+		ShowcaseExecutor.maybeSetStageForRefresh(this);
+		startActivityForResult(new Intent(this, PinsActivity.class), 111);
 	}
 	private void returnResult() {
 		setResult(RESULT_OK, addReturnData(new Intent()));
@@ -108,5 +109,11 @@ public class ChannelsActivity extends AppCompatActivity {
 	public void cancel(View view) {
 		setResult(RESULT_CANCELED);
 		finish();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+			returnResult();
 	}
 }
