@@ -2,6 +2,8 @@ package com.hover.stax.transactions;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -13,6 +15,7 @@ import androidx.room.PrimaryKey;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.Constants;
 import com.hover.stax.utils.DateUtils;
@@ -61,6 +64,9 @@ public class StaxTransaction {
 	@ColumnInfo(name = "description")
 	public String description;
 
+	@ColumnInfo(name = "currency")
+	public String currency;
+
 	@ColumnInfo(name = "amount")
 	public Double amount;
 
@@ -79,7 +85,7 @@ public class StaxTransaction {
 	public StaxTransaction() {
 	}
 
-	public StaxTransaction(Intent data, Action action, StaxContact contact, Context c) {
+	public StaxTransaction(String currency, Intent data, Action action, StaxContact contact, Context c) {
 		if (data.hasExtra(TransactionContract.COLUMN_UUID) && data.getStringExtra(TransactionContract.COLUMN_UUID) != null) {
 			uuid = data.getStringExtra(TransactionContract.COLUMN_UUID);
 			action_id = data.getStringExtra(TransactionContract.COLUMN_ACTION_ID);
@@ -88,6 +94,7 @@ public class StaxTransaction {
 			status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
 			initiated_at = data.getLongExtra(TransactionContract.COLUMN_REQUEST_TIMESTAMP, DateUtils.now());
 			updated_at = initiated_at;
+			this.currency = currency;
 
 			HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS);
 			if (extras != null) {

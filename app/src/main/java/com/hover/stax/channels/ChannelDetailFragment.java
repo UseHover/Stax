@@ -43,7 +43,7 @@ public class ChannelDetailFragment extends Fragment implements TransactionHistor
 		viewModel.getChannel().observe(getViewLifecycleOwner(), channel -> {
 			((TextView) view.findViewById(R.id.title)).setText(channel.name);
 			((TextView) view.findViewById(R.id.fees_description)).setText(getString(R.string.fees_label, channel.name));
-			((TextView) view.findViewById(R.id.details_balance)).setText(channel.latestBalance);
+			((TextView) view.findViewById(R.id.details_balance)).setText(getString(R.string.amount_template, channel.currency, channel.latestBalance));
 		});
 
 		viewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {

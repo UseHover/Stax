@@ -44,6 +44,9 @@
 		<item>sw</item>
 	</string-array>
 
+	<!--General -->
+	<string name="amount_template">%1$s %2$s</string>
+
 	<!-- Home -->
 	<string name="bal_cardhead">Balances</string>
 	<string name="btn_addaccts">Add accounts</string>
@@ -207,7 +210,7 @@
 	<string name="reqfrom_label">To</string>
 	<string name="btn_addcontact">Add someone else</string>
 	<string name="sms_request_template">Kindly stax me %1$s at your earliest convenience. %2$s%3$s</string>
-	<string name="sms_amount_detail">%1$s </string>
+	<string name="sms_amount_detail">%1$s %2$s </string>
 	<string name="sms_note_detail">Note: \"%1$s\" </string>
 	<string name="toast_error_smsperm">You must grant the read SMS permission so Stax can tell when a request is sent or fulfilled.</string>
 	<string name="toast_confirm_request">Your request has been saved.</string>

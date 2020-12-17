@@ -48,15 +48,19 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 
 		holder.channelName.setText(channel.name);
 		holder.channelId.setText(Integer.toString(channel.id));
-		if (channel.latestBalance != null)
+		if (channel.latestBalance != null){
 			holder.amount.setText(Utils.formatAmount(channel.latestBalance));
-		 setColors(holder, channel,
+			holder.currency.setText(channel.currency);
+		}
+
+		setColors(holder, channel,
 			UIHelper.getColor(channel.primaryColorHex, true, holder.itemView.getContext()),
 			UIHelper.getColor(channel.secondaryColorHex, false, holder.itemView.getContext()));
 	}
 
 	private void setColors(BalanceViewHolder holder, Channel channel, int primary, int secondary) {
 		holder.amount.setTextColor(secondary);
+		holder.currency.setTextColor(secondary);
 		UIHelper.setColoredDrawable(holder.refreshButton, R.drawable.ic_refresh_white_24dp, secondary);
 		holder.balanced_swiped_layout.setBackgroundColor(primary);
 		if (Build.VERSION.SDK_INT >= 21) {
@@ -71,7 +75,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 	}
 
 	class BalanceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-		private TextView channelName, channelId, amount;
+		private TextView channelName, channelId, amount, currency;
 		private ImageButton refreshButton;
 		private FrameLayout balanced_swiped_layout;
 		private SwipeRevealLayout swl;
@@ -84,6 +88,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 			refreshButton = itemView.findViewById(R.id.refresh_button);
 			refreshButton.setOnClickListener(this);
 			amount = itemView.findViewById(R.id.balance_amount);
+			currency = itemView.findViewById(R.id.balance_currency);
 			balanced_swiped_layout = itemView.findViewById(R.id.balanced_swiped_layout);
 			swl = itemView.findViewById(R.id.swipe_reveal_layout);
 		}

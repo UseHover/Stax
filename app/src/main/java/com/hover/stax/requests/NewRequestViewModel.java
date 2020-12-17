@@ -193,7 +193,7 @@ public class NewRequestViewModel extends StagedViewModel {
 	}
 
 	void setStarted() {
-		formulatedRequest.setValue(new Request(amount.getValue(), note.getValue(), getRequesterNumber().getValue(), getActiveChannel().getValue().institutionId));
+		formulatedRequest.setValue(new Request(getActiveChannel().getValue().currency, amount.getValue(), note.getValue(), getRequesterNumber().getValue(), getActiveChannel().getValue().institutionId));
 	}
 	Boolean getStarted() {
 		return formulatedRequest == null || formulatedRequest.getValue() != null;

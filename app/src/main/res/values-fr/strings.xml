@@ -67,7 +67,9 @@
     <item>sw</item>
     	
   </string-array>
-  	
+
+  <string name="amount_template">%1$s %2$s</string>
+
   <!-- Home -->
   	
   <string name="bal_cardhead">Soldes</string>
@@ -360,7 +362,7 @@
   	
   <string name="sms_request_template">Veuillez me staxer %1$s dans les meilleurs délais. %2$s%3$s</string>
   	
-  <string name="sms_amount_detail">%1$s </string>
+  <string name="sms_amount_detail">%1$s %2$s </string>
   	
   <string name="sms_note_detail">Remarque : \"%1$s\" </string>
   	
