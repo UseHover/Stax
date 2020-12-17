@@ -28,26 +28,31 @@ public class ShowcaseExecutor {
 	private View root;
 	private int stage = 0;
 
+	private boolean isShowing;
+
 	public ShowcaseExecutor(Activity a, View view) {
 		activity = a;
 		root = view;
+		isShowing = false;
 	}
+
+	public static int getStage(Context c) { return Utils.getSharedPrefs(c).getInt(Constants.SHOWCASE_STAGE, 0); }
+	public static void increaseStage(Context c) { Utils.saveInt(Constants.SHOWCASE_STAGE, getStage(c) + 1, c); }
 
 	private void startShowcase(String head, String body, BubbleShowCaseListener listener, View view) {
 		try {
-			BubbleShowCase.Companion.showCase(
-					head, body, BubbleShowCase.ArrowPosition.TOP, listener, view, activity);
+			if (!isShowing)
+				BubbleShowCase.Companion.showCase(head, body, BubbleShowCase.ArrowPosition.TOP, listener, view, activity);
+			isShowing = true;
 		} catch (Exception e) { Log.e(TAG, "Showcase failed to start", e); }
 	}
 
 	public void showcaseAddAcctStage() {
 		startShowcase(activity.getString(R.string.onboard_addaccounthead), activity.getString(R.string.onboard_addaccountbody),
 				addedAccountListener, root.findViewById(R.id.add_accounts_btn));
-
 	}
 
 	public void showcaseRefreshAccountStage() {
-		closeBalance(getSwipeLayout());
 		startShowcase(activity.getString(R.string.onboard_refreshhead), activity.getString(R.string.onboard_refreshbody),
 				refreshShowcaseClickListener, root.findViewById(R.id.homeTimeAgo));
 	}
@@ -69,38 +74,20 @@ public class ShowcaseExecutor {
 	private void openBalance(SwipeRevealLayout v) { if (v != null) v.open(true); }
 	private void closeBalance(SwipeRevealLayout v) { if (v != null) v.close(true); }
 
-	public static void maybeSetStageForRefresh(Context c) {
-		if(isFullShowcaseNotCompleted(c)) Utils.saveInt(SHOWCASE_STAGE, 1, c);
-	}
-	public static void maybeSetStageForPeek(Context c) {
-		if(isFullShowcaseNotCompleted(c)) Utils.saveInt(SHOWCASE_STAGE, 2, c);
-	}
-	private static boolean isFullShowcaseNotCompleted(Context context) {
-		return (Utils.getSharedPrefs(context).getInt(SHOWCASE_STAGE, 0) <= 2);
-	}
-	private void setShowcaseCompleted() {
-		Utils.saveInt(SHOWCASE_STAGE, 3, activity.getBaseContext());
-	}
-
-	BubbleShowCaseListener peekBalanceShowcaseClickListener = new BubbleShowCaseListener() {
+	BubbleShowCaseListener addedAccountListener = new BubbleShowCaseListener() {
 
 		@Override public void onBubbleClick(@NotNull BubbleShowCase bubbleShowCase) {}
 
 		@Override
-		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) {
-			bubbleShowCase.dismiss();
-			setShowcaseCompleted();
-		}
+		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) { endStage(bubbleShowCase); }
 
 		@Override
-		public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) {
-			bubbleShowCase.dismiss();
-			setShowcaseCompleted();
-		}
+		public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) { endStage(bubbleShowCase); }
 
 		@Override
 		public void onTargetClick(@NotNull BubbleShowCase bubbleShowCase) {
-			setShowcaseCompleted();
+			endStage(bubbleShowCase);
+			goToAddAccountActivity();
 		}
 	};
 
@@ -109,30 +96,34 @@ public class ShowcaseExecutor {
 		@Override public void onBubbleClick(@NotNull BubbleShowCase bubbleShowCase) {}
 
 		@Override
-		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) { bubbleShowCase.dismiss(); }
+		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) { endStage(bubbleShowCase); }
 
 		@Override
-		public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) { bubbleShowCase.dismiss(); }
+		public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) { endStage(bubbleShowCase); }
 
 		@Override
 		public void onTargetClick(@NotNull BubbleShowCase bubbleShowCase) {
 		}
 	};
 
-	BubbleShowCaseListener addedAccountListener = new BubbleShowCaseListener() {
+	BubbleShowCaseListener peekBalanceShowcaseClickListener = new BubbleShowCaseListener() {
 
 		@Override public void onBubbleClick(@NotNull BubbleShowCase bubbleShowCase) {}
 
 		@Override
-		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) { bubbleShowCase.dismiss(); }
+		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) {
+			endStage(bubbleShowCase);
+		}
 
 		@Override
-		public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) { bubbleShowCase.dismiss(); }
+		public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) {
+			endStage(bubbleShowCase);
+		}
 
 		@Override
 		public void onTargetClick(@NotNull BubbleShowCase bubbleShowCase) {
-			bubbleShowCase.dismiss();
-			goToAddAccountActivity();
+			endStage(bubbleShowCase);
+			closeBalance(getSwipeLayout());
 		}
 	};
 
@@ -141,54 +132,9 @@ public class ShowcaseExecutor {
 		activity.startActivityForResult(new Intent(activity, ChannelsActivity.class), Constants.ADD_SERVICE);
 	}
 
-	/*
-	public void startFullShowcase() {
-		startShowcase(activity.getString(R.string.onboard_sechead), activity.getString(R.string.onboard_secbody),
-				stagedBubbleListener, root.findViewById(R.id.home_stax_logo));
-	}
-	private void showcaseThirdStage() {
-		openBalance(getSwipeLayout());
-		startShowcase(activity.getString(R.string.onboard_balhead), activity.getString(R.string.onboard_balbody),
-				stagedBubbleListener, ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0).findViewById(R.id.balance_drag));
-	}
-
-	private void showcaseNextStage(@NotNull BubbleShowCase bubbleShowCase) {
-		Utils.saveInt(ShowcaseExecutor.SHOW_TUTORIAL, 1, activity);
+	private void endStage(BubbleShowCase bubbleShowCase) {
+		increaseStage(activity);
 		bubbleShowCase.dismiss();
-		switch (stage) {
-			case 0:
-				showcaseSecondStage();
-				break;
-			case 1:
-				showcaseThirdStage();
-				break;
-			case 2: showcaseFourthStage();
-				break;
-		}
-		stage++;
+		isShowing = false;
 	}
-
-	BubbleShowCaseListener stagedBubbleListener = new BubbleShowCaseListener() {
-		@Override
-		public void onTargetClick(@NotNull BubbleShowCase bubbleShowCase) {
-			showcaseNextStage(bubbleShowCase);
-		}
-
-		@Override
-		public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) {
-			showcaseNextStage(bubbleShowCase);
-		}
-
-		@Override
-		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) {
-			closeBalance(getSwipeLayout());
-			Utils.saveInt(ShowcaseExecutor.SHOW_TUTORIAL, 1, activity);
-			bubbleShowCase.finishSequence();
-		}
-
-		@Override
-		public void onBubbleClick(@NotNull BubbleShowCase bubbleShowCase) {
-			showcaseNextStage(bubbleShowCase);
-		}
-	}; */
 }

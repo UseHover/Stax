@@ -16,9 +16,6 @@ import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
-import com.hover.stax.database.Constants;
-import com.hover.stax.home.ShowcaseExecutor;
-import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.security.PermissionsFragment;
 import com.hover.stax.security.PinsActivity;
 import com.hover.stax.utils.PermissionUtils;
@@ -84,7 +81,6 @@ public class ChannelsActivity extends AppCompatActivity {
 	private void saveAndContinue() {
 		channelViewModel.saveSelected();
 		Utils.saveInt(AUTH_CHECK, 1, this);
-		ShowcaseExecutor.maybeSetStageForRefresh(this);
 		startActivityForResult(new Intent(this, PinsActivity.class), 111);
 	}
 	private void returnResult() {

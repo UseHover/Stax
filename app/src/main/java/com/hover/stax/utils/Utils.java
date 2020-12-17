@@ -12,9 +12,6 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 
@@ -23,7 +20,6 @@ import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
-import static com.hover.stax.database.Constants.SHOWCASE_STAGE;
 
 public class Utils {
 	private final static String TAG = "Utils";

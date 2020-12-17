@@ -1,6 +1,7 @@
 package com.hover.stax.home;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -42,12 +43,8 @@ import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
-import com.hover.stax.utils.Utils;
-
 
 import java.util.List;
-
-import static com.hover.stax.database.Constants.SHOWCASE_STAGE;
 
 public class MainActivity extends AbstractMessageSendingActivity implements
 	BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener {
@@ -64,7 +61,7 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 		balancesViewModel.setListener(this);
 		balancesViewModel.getToRun().observe(this, actions -> Log.i(TAG, "RunActions observer is neccessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
 		balancesViewModel.getBalanceActions().observe(this, actions -> Log.i(TAG, "Actions observer is neccessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
-		balancesViewModel.getSelectedChannels().observe(this, channels -> Log.i(TAG, "Channels observer is neccessary to make updates fire, but all logic is in viewmodel. " + channels.size()));
+		balancesViewModel.getSelectedChannels().observe(this, channels -> maybeRunAShowcase());
 
 		setUpNav();
 		checkForRequest(getIntent());
@@ -157,17 +154,31 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 				else Amplitude.getInstance().logEvent(getString(R.string.sdk_failure));
 				break;
 			case Constants.ADD_SERVICE:
-				//No need for this because onResume will respond to it anyway.
-				//if (resultCode == RESULT_OK) { maybeRunAShowcase(); }
+				maybeRunAShowcase();
 				break;
 			case Constants.REQUEST_REQUEST:
 				if (resultCode == RESULT_OK) { onRequest(data); }
 				break;
 			default: // requestCode < Constants.BALANCE_MAX // Balance call
 				balancesViewModel.setRan(requestCode);
-				ShowcaseExecutor.maybeSetStageForPeek(this);
 				if (resultCode == RESULT_OK && data != null && data.getAction() != null) onProbableHoverCall(data);
-				maybeRunAShowcase();
+		}
+	}
+
+	public void maybeRunAShowcase() {
+		Log.e(TAG, "stage: " + ShowcaseExecutor.getStage(this));
+
+		switch (ShowcaseExecutor.getStage(this)) {
+			case 0: new ShowcaseExecutor(this, findViewById(R.id.home_root)).showcaseAddAcctStage();
+				break;
+			case 1:
+				if (balancesViewModel.getSelectedChannels().getValue() != null && balancesViewModel.getSelectedChannels().getValue().size() > 0)
+					new ShowcaseExecutor(this, findViewById(R.id.home_root)).showcaseRefreshAccountStage();
+				break;
+			case 2:
+				if (balancesViewModel.getSelectedChannels().getValue() != null && balancesViewModel.getSelectedChannels().getValue().size() > 0)
+					new ShowcaseExecutor(this, findViewById(R.id.home_root)).showcasePeekBalanceStage();
+				break;
 		}
 	}
 
@@ -179,28 +190,6 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 			new ViewModelProvider(this).get(TransactionHistoryViewModel.class).saveTransaction(data, this);
 		}
 	}
-
-	private void maybeRunAShowcase() {
-		switch (Utils.getSharedPrefs(this).getInt(Constants.SHOWCASE_STAGE, 0)) {
-			case 0: runAddAcntShowcase();
-				break;
-			case 1: runRefreshShowcase();
-				break;
-			case 2: runPeekBalanceShowcase();
-				break;
-		}
-
-	}
-	private void runAddAcntShowcase() {
-		new ShowcaseExecutor(this, findViewById(R.id.home_root)).showcaseAddAcctStage();
-	}
-	private void runRefreshShowcase() {
-			new ShowcaseExecutor(this, findViewById(R.id.home_root)).showcaseRefreshAccountStage();
-	}
-	private void runPeekBalanceShowcase() {
-		new ShowcaseExecutor(this, findViewById(R.id.home_root)).showcasePeekBalanceStage();
-	}
-
 
 	private void startTransfer(String type, boolean isFromStaxLink, Intent received) {
 		Intent i = new Intent(this, TransferActivity.class);
