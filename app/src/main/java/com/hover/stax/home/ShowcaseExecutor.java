@@ -16,6 +16,7 @@ import com.hover.stax.database.Constants;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.bubbleshowcase.BubbleShowCase;
 import com.hover.stax.utils.bubbleshowcase.BubbleShowCaseListener;
+import com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -53,14 +54,17 @@ public class ShowcaseExecutor {
 	}
 
 	public void showcaseRefreshAccountStage() {
+		CustomSwipeRefreshLayout csrl = ((CustomSwipeRefreshLayout) root.findViewById(R.id.swipelayout));
+		csrl.animateOffsetToTriggerPosition(0, null);
 		startShowcase(activity.getString(R.string.onboard_refreshhead), activity.getString(R.string.onboard_refreshbody),
 				refreshShowcaseClickListener, root.findViewById(R.id.homeTimeAgo));
 	}
 
 	public void showcasePeekBalanceStage() {
 		openBalance(getSwipeLayout());
-		startShowcase(activity.getString(R.string.onboard_peekhead), activity.getString(R.string.onboard_peekbody),
-				peekBalanceShowcaseClickListener, ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0).findViewById(R.id.balance_drag));
+		if (((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0) != null)
+			startShowcase(activity.getString(R.string.onboard_peekhead), activity.getString(R.string.onboard_peekbody),
+					peekBalanceShowcaseClickListener, ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0).findViewById(R.id.balance_drag));
 	}
 
 	private SwipeRevealLayout getSwipeLayout() {
@@ -96,14 +100,19 @@ public class ShowcaseExecutor {
 		@Override public void onBubbleClick(@NotNull BubbleShowCase bubbleShowCase) {}
 
 		@Override
-		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) { endStage(bubbleShowCase); }
-
-		@Override
-		public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) { endStage(bubbleShowCase); }
-
-		@Override
-		public void onTargetClick(@NotNull BubbleShowCase bubbleShowCase) {
+		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) {
+			endStage(bubbleShowCase);
+			((CustomSwipeRefreshLayout) root.findViewById(R.id.swipelayout)).animateStayComplete(null);
 		}
+
+		@Override
+		public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) {
+			endStage(bubbleShowCase);
+			((CustomSwipeRefreshLayout) root.findViewById(R.id.swipelayout)).animateStayComplete(null);
+		}
+
+		@Override
+		public void onTargetClick(@NotNull BubbleShowCase bubbleShowCase) {}
 	};
 
 	BubbleShowCaseListener peekBalanceShowcaseClickListener = new BubbleShowCaseListener() {
@@ -113,11 +122,13 @@ public class ShowcaseExecutor {
 		@Override
 		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) {
 			endStage(bubbleShowCase);
+			closeBalance(getSwipeLayout());
 		}
 
 		@Override
 		public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) {
 			endStage(bubbleShowCase);
+			closeBalance(getSwipeLayout());
 		}
 
 		@Override

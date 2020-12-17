@@ -17,10 +17,8 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
-import android.widget.AbsListView;
 
 import androidx.core.view.ViewCompat;
-import androidx.viewpager.widget.ViewPager;
 
 import com.hover.stax.R;
 
@@ -132,12 +130,12 @@ public class CustomSwipeRefreshLayout extends ViewGroup {
     private boolean mInReturningAnimation;
     private int mTriggerOffset = 0;
 
-    private final Runnable mReturnToTrigerPosition = new Runnable() {
+    private final Runnable mReturnToTriggerPosition = new Runnable() {
 
         @Override
         public void run() {
             mInReturningAnimation = true;
-            animateOffsetToTrigerPosition(mTarget.getTop(),
+            animateOffsetToTriggerPosition(mTarget.getTop(),
                     mReturningAnimationListener);
         }
 
@@ -216,7 +214,7 @@ public class CustomSwipeRefreshLayout extends ViewGroup {
         }
     };
 
-    private final Animation mAnimateToTrigerPosition = new Animation() {
+    private final Animation mAnimateToTriggerPosition = new Animation() {
         @Override
         public void applyTransformation(float interpolatedTime, Transformation t) {
             int targetTop = mDistanceToTriggerSync;
@@ -284,20 +282,22 @@ public class CustomSwipeRefreshLayout extends ViewGroup {
         a.recycle();
     }
 
-    private void animateStayComplete(AnimationListener listener) {
+    public void animateStayComplete(AnimationListener listener) {
         mAnimateStayComplete.reset();
         mAnimateStayComplete.setDuration(mRefreshCompleteTimeout);
         mAnimateStayComplete.setAnimationListener(listener);
-        mTarget.startAnimation(mAnimateStayComplete);
+        if (mTarget != null)
+            mTarget.startAnimation(mAnimateStayComplete);
     }
 
-    private void animateOffsetToTrigerPosition(int from, AnimationListener listener) {
+    public void animateOffsetToTriggerPosition(int from, AnimationListener listener) {
         mFrom = from;
-        mAnimateToTrigerPosition.reset();
-        mAnimateToTrigerPosition.setDuration(mReturnToHeaderDuration);
-        mAnimateToTrigerPosition.setAnimationListener(listener);
-        mAnimateToTrigerPosition.setInterpolator(mDecelerateInterpolator);
-        mTarget.startAnimation(mAnimateToTrigerPosition);
+        mAnimateToTriggerPosition.reset();
+        mAnimateToTriggerPosition.setDuration(mReturnToHeaderDuration);
+        mAnimateToTriggerPosition.setAnimationListener(listener);
+        mAnimateToTriggerPosition.setInterpolator(mDecelerateInterpolator);
+        if (mTarget != null)
+            mTarget.startAnimation(mAnimateToTriggerPosition);
     }
 
     private void animateOffsetToStartPosition(int from, AnimationListener listener) {
@@ -306,7 +306,8 @@ public class CustomSwipeRefreshLayout extends ViewGroup {
         mAnimateToStartPosition.setDuration(mReturnToTopDuration);
         mAnimateToStartPosition.setAnimationListener(listener);
         mAnimateToStartPosition.setInterpolator(mDecelerateInterpolator);
-        mTarget.startAnimation(mAnimateToStartPosition);
+        if (mTarget != null)
+            mTarget.startAnimation(mAnimateToStartPosition);
     }
 
 
@@ -523,7 +524,7 @@ public class CustomSwipeRefreshLayout extends ViewGroup {
                     mTopProgressBar.start();
                 }
                 if (refresshMode == REFRESH_MODE_PULL) {
-                    mReturnToTrigerPosition.run();
+                    mReturnToTriggerPosition.run();
                 } else if (refresshMode == REFRESH_MODE_SWIPE) {
                     mReturnToStartPosition.run();
                 }

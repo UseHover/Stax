@@ -1,7 +1,6 @@
 package com.hover.stax.home;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -51,6 +50,7 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 
 	final public static String TAG = "MainActivity";
 	private BalancesViewModel balancesViewModel;
+	private ShowcaseExecutor showCase;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -166,16 +166,18 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 	}
 
 	public void maybeRunAShowcase() {
+		if (showCase == null)
+			showCase = new ShowcaseExecutor(this, findViewById(R.id.home_root));
 		switch (ShowcaseExecutor.getStage(this)) {
-			case 0: new ShowcaseExecutor(this, findViewById(R.id.home_root)).showcaseAddAcctStage();
+			case 0: showCase.showcaseAddAcctStage();
 				break;
 			case 1:
 				if (balancesViewModel.getSelectedChannels().getValue() != null && balancesViewModel.getSelectedChannels().getValue().size() > 0)
-					new ShowcaseExecutor(this, findViewById(R.id.home_root)).showcaseRefreshAccountStage();
+					showCase.showcaseRefreshAccountStage();
 				break;
 			case 2:
 				if (balancesViewModel.getSelectedChannels().getValue() != null && balancesViewModel.getSelectedChannels().getValue().size() > 0)
-					new ShowcaseExecutor(this, findViewById(R.id.home_root)).showcasePeekBalanceStage();
+					showCase.showcasePeekBalanceStage();
 				break;
 		}
 	}
