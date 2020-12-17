@@ -67,6 +67,8 @@
     <item>sw</item>
     	
   </string-array>
+
+  <string name="amount_template">%1$s %2$s</string>
   	
   <!-- Home -->
   	
@@ -360,7 +362,7 @@
   	
   <string name="sms_request_template">Tafadhali nitumie Stax %1$s haraka unavyoweza %2$s%3$s</string>
   	
-  <string name="sms_amount_detail">%1$s </string>
+  <string name="sms_amount_detail">%1$s %2$s </string>
   	
   <string name="sms_note_detail">Kumbuka: \"%1$s\" </string>
   	

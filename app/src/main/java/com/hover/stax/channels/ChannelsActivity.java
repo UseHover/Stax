@@ -85,7 +85,7 @@ public class ChannelsActivity extends AppCompatActivity {
 		channelViewModel.saveSelected();
 		Utils.saveInt(AUTH_CHECK, 1, this);
 		ShowcaseExecutor.maybeSetStageForRefresh(this);
-		startActivityForResult(new Intent(this, PinsActivity.class), 111);
+		startActivityForResult(new Intent(this, PinsActivity.class), 0);
 	}
 	private void returnResult() {
 		setResult(RESULT_OK, addReturnData(new Intent()));

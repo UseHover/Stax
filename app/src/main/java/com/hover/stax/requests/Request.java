@@ -37,6 +37,9 @@ public class Request {
 	@ColumnInfo(name = "requestee_ids")
 	public String requestee_ids;
 
+	@ColumnInfo(name = "currency")
+	public String currency;
+
 	@ColumnInfo(name = "amount")
 	public String amount;
 
@@ -61,7 +64,8 @@ public class Request {
 
 	public Request() {}
 
-	public Request(String amount, String note, String requester, int requester_institution_id) {
+	public Request(String currency, String amount, String note, String requester, int requester_institution_id) {
+		this.currency = currency;
 		this.amount = amount;
 		this.note = note;
 		this.requester_number = requester;
@@ -114,7 +118,7 @@ public class Request {
 	}
 
 	public String generateMessage(Context c) {
-		String amountString = amount != null ? c.getString(R.string.sms_amount_detail, Utils.formatAmount(amount)) : "";
+		String amountString = amount != null ? c.getString(R.string.sms_amount_detail,currency,  Utils.formatAmount(amount)) : "";
 		String noteString = note != null ? c.getString(R.string.sms_note_detail, note) : "";
 		String paymentLink = generateStaxLink(c);
 

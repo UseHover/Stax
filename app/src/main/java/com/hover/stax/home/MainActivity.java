@@ -166,8 +166,8 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 			default: // requestCode < Constants.BALANCE_MAX // Balance call
 				balancesViewModel.setRan(requestCode);
 				ShowcaseExecutor.maybeSetStageForPeek(this);
-				if (resultCode == RESULT_OK && data != null && data.getAction() != null) onProbableHoverCall(data);
 				maybeRunAShowcase();
+				if (resultCode == RESULT_OK && data != null && data.getAction() != null) onProbableHoverCall(data);
 		}
 	}
 
@@ -198,7 +198,10 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 			new ShowcaseExecutor(this, findViewById(R.id.home_root)).showcaseRefreshAccountStage();
 	}
 	private void runPeekBalanceShowcase() {
-		new ShowcaseExecutor(this, findViewById(R.id.home_root)).showcasePeekBalanceStage();
+		new Handler().postDelayed(()->{
+			new ShowcaseExecutor(this, findViewById(R.id.home_root)).showcasePeekBalanceStage();
+		}, 1000);
+
 	}
 
 

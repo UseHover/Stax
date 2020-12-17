@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -148,12 +150,23 @@ public class DatabaseRepo {
 				StaxContact contact = intent.hasExtra(StaxContact.ID_KEY) ? getContact(intent.getStringExtra(StaxContact.ID_KEY)) : null;
 				Action a = intent.hasExtra(Action.ID_KEY) ? getAction(intent.getStringExtra(Action.ID_KEY)) : null;
 
+
 				if (t == null) {
-					t = new StaxTransaction(intent, a, contact, c);
-					transactionDao.insert(t);
+					new Thread(() -> {
+						int channel_id = intent.getIntExtra(TransactionContract.COLUMN_CHANNEL_ID, -1);
+
+						String currency = "";
+						Channel channel = getChannel(channel_id);
+						if(channel!=null) currency = channel.currency;
+						StaxTransaction tx = new StaxTransaction(currency, intent, a, contact, c);
+						transactionDao.insert(tx);
+					}).start();
+
 				}
-				t.update(intent, a, contact, c);
-				transactionDao.update(t);
+				else {
+					t.update(intent, a, contact, c);
+					transactionDao.update(t);
+				}
 
 			} catch (Exception e) { Log.e("DatabaseRepo", "error", e); }
 		});
