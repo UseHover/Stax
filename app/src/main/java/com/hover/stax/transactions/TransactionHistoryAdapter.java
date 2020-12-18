@@ -28,7 +28,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 	@NonNull
 	@Override
 	public HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_list_item, parent, false);
+		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_list_item_with_padding, parent, false);
 		return new HistoryViewHolder(view);
 	}
 
@@ -36,7 +36,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 	public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
 		StaxTransaction t = transactionList.get(position);
 			if(t.status.equals(Constants.PENDING)) {
-				holder.parentLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.cardDarkBlue));
+				holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.cardDarkBlue));
 				holder.pendingNotice.setVisibility(View.VISIBLE);
 			}
 			else {
