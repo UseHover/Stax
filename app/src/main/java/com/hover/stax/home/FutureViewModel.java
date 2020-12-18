@@ -28,7 +28,7 @@ public class FutureViewModel extends AndroidViewModel {
 		schedules = repo.getFutureTransactions();
 
 		requests = new MutableLiveData<>();
-		requests = repo.getRequests();
+		requests = repo.getLiveRequests();
 	}
 
 	public LiveData<List<Schedule>> getScheduled() {

@@ -10,6 +10,7 @@ import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -117,8 +118,13 @@ class BubbleShowCase(builder: BubbleShowCaseBuilder) {
 			}
 			if (isFirstOfSequence) {
 				  //Add the background dim layout above the root view
-				  val animation = AnimationUtils.getFadeInAnimation(0, DURATION_BACKGROUND_ANIMATION)
-				  backgroundDimLayout?.let { rootView.addView(AnimationUtils.setAnimationToView(backgroundDimLayout!!, animation)) }
+			  	val animation = AnimationUtils.getFadeInAnimation(0, DURATION_BACKGROUND_ANIMATION)
+				backgroundDimLayout?.let {
+					val v = AnimationUtils.setAnimationToView(backgroundDimLayout!!, animation)
+//					if (v.getParent() != null)
+//						v.getParent().removeView();
+					rootView.addView(v)
+				}
 			}
 	  }
 

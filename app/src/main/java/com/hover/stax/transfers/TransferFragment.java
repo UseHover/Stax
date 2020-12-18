@@ -91,7 +91,7 @@ public class TransferFragment extends StagedFragment {
 		transferViewModel.getStage().observe(getViewLifecycleOwner(), stage -> {
 			switch ((TransferStage) stage) {
 				case AMOUNT: amountInput.requestFocus(); break;
-				case RECIPIENT: recipientAutocomplete.showDropDown(); recipientAutocomplete.requestFocus(); break;
+				case RECIPIENT: recipientAutocomplete.requestFocus(); break;
 				case NOTE: noteInput.requestFocus(); break;
 				default: root.findViewById(R.id.mainLayout).requestFocus();
 			}
@@ -130,7 +130,6 @@ public class TransferFragment extends StagedFragment {
 		transferViewModel.getNote().observe(getViewLifecycleOwner(), reason -> noteValue.setText(reason));
 
 		transferViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
-			Log.e(TAG, "actions: " + actions.size());
 			if (actions == null || actions.size() == 0) return;
 			for (Action a: actions) a.context = getContext();
 			ArrayAdapter<Action> adapter = new ArrayAdapter<>(requireActivity(), R.layout.stax_spinner_item, actions);
@@ -140,10 +139,11 @@ public class TransferFragment extends StagedFragment {
 
 		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
 			if (action != null) {
-				accountValue.setSubtitle(action.isOnNetwork() ? getString(R.string.onnet_choice) : getString(R.string.offnet_choice, action.toString()));
-				if (!action.requiresRecipient()) {
-					recipientValue.setTitle(action.getLabel(getContext()));
-				}
+				accountValue.setSubtitle(action.getNetworkSubtitle(getContext()));
+				if (!action.requiresRecipient())
+					recipientValue.setContent(action.getLabel(getContext()), "");
+				else if (transferViewModel.getContact().getValue() != null)
+					recipientValue.setContact(transferViewModel.getContact().getValue(), transferViewModel.getRequest().getValue() != null);
 			}
 		});
 	}

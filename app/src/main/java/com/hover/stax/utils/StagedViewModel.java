@@ -1,6 +1,7 @@
 package com.hover.stax.utils;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -22,7 +23,7 @@ public abstract class StagedViewModel extends AndroidViewModel {
 	protected DatabaseRepo repo;
 	protected MutableLiveData<StagedEnum> stage = new MutableLiveData<>();
 
-	private LiveData<List<Channel>> selectedChannels = new MutableLiveData<>();
+	protected LiveData<List<Channel>> selectedChannels = new MutableLiveData<>();
 	protected MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
 
 	protected MutableLiveData<Boolean> futureDated = new MutableLiveData<>();
@@ -42,7 +43,7 @@ public abstract class StagedViewModel extends AndroidViewModel {
 		super(application);
 		repo = new DatabaseRepo(application);
 		selectedChannels = repo.getSelected();
-		activeChannel.addSource(selectedChannels, this::findActiveChannel);
+		activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull);
 
 		futureDated.setValue(false);
 		futureDate.setValue(null);
@@ -74,16 +75,14 @@ public abstract class StagedViewModel extends AndroidViewModel {
 		stage.postValue(prev);
 	}
 
-	private void findActiveChannel(List<Channel> channels) {
-		if (channels != null && channels.size() > 0) {
+	protected void setActiveChannelIfNull(List<Channel> channels) {
+		if (channels != null && channels.size() > 0 && activeChannel.getValue() == null)
 			activeChannel.setValue(channels.get(0));
-		}
 	}
 
 	public void setActiveChannel(int channel_id) {
-		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0) {
+		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0)
 			return;
-		}
 		activeChannel.setValue(getChannelById(channel_id));
 	}
 

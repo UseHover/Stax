@@ -14,7 +14,7 @@
 	<TextView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginHorizontal="@dimen/margin_3"
+		android:layout_marginHorizontal="@dimen/margin_10"
 		android:layout_marginBottom="@dimen/margin_8"
 		android:lineSpacingExtra="@dimen/text_spacing_8"
 		android:textColor="@color/offWhite"
@@ -24,7 +24,7 @@
 	<TextView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginHorizontal="@dimen/margin_3"
+		android:layout_marginHorizontal="@dimen/margin_10"
 		app:drawableStartCompat="@drawable/ic_check"
 		android:drawablePadding="@dimen/margin_5"
 		android:layout_marginBottom="4dp"
@@ -35,7 +35,7 @@
 	<TextView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginHorizontal="@dimen/margin_3"
+		android:layout_marginHorizontal="@dimen/margin_10"
 		app:drawableStartCompat="@drawable/ic_check"
 		android:drawablePadding="@dimen/margin_5"
 		android:fontFamily="font-normal"
@@ -46,7 +46,7 @@
 	<TextView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginHorizontal="@dimen/margin_3"
+		android:layout_marginHorizontal="@dimen/margin_10"
 		app:drawableStartCompat="@drawable/ic_check"
 		android:drawablePadding="@dimen/margin_5"
 		android:textColor="@color/offWhite"

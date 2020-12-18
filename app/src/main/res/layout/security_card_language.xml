@@ -9,10 +9,10 @@
 		android:id="@+id/select_language_btn"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginHorizontal="@dimen/margin_3"
+		android:layout_marginHorizontal="@dimen/margin_10"
 		android:layout_marginBottom="@dimen/margin_8"
 		android:paddingVertical="@dimen/margin_21"
-	    	android:fontFamily="font-normal"
+        android:fontFamily="font-normal"
 		android:background="?attr/selectableItemBackground"
 		android:textSize="@dimen/text_16" />
 

@@ -1,6 +1,7 @@
 package com.hover.stax.actions;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -23,8 +24,8 @@ import java.util.List;
 @Entity(tableName = "hsdk_actions")
 public class Action {
 	public final static String ID_KEY = "action_id";
-	public final static String TRANSACTION_TYPE = "transaction_type", P2P = "p2p", AIRTIME = "airtime", ME2ME = "me2me", C2B = "c2b", BALANCE = "balance";
-	public final static String STEP_IS_PARAM = "is_param", STEP_VALUE = "value",
+	public final static String TRANSACTION_TYPE = "transaction_type", P2P = "p2p", AIRTIME = "airtime", ME2ME = "me2me", RECEIVE = "receive", C2B = "c2b", BALANCE = "balance";
+	public final static String STEP_IS_PARAM = "is_param", STEP_VALUE = "value", STEP_FORMAT = "valid_response_regex",
 			PIN_KEY = "pin", AMOUNT_KEY = "amount", PHONE_KEY = "phone", ACCOUNT_KEY = "account", FEE_KEY = "fee", NOTE_KEY = "reason";
 
 	@PrimaryKey
@@ -95,15 +96,22 @@ public class Action {
 	@NotNull
 	@Override
 	public String toString() {
-		return getLabel(context);
+		String val = getLabel(null), label = getLabel(context);
+		if (context != null)
+			val += ": " + label;
+		return val;
 	}
 
 	public boolean isOnNetwork() {
 		return to_institution_name == null || to_institution_name.equals("null") || from_institution_id == to_institution_id;
 	}
 
+	public String getNetworkSubtitle(Context c) {
+		return isOnNetwork() ? c.getString(R.string.onnet_choice) : c.getString(R.string.offnet_choice, getLabel(null));
+	}
+
 	public String getLabel(Context c) {
-		if (context != null && transaction_type.equals(AIRTIME)) return requiresRecipient() ?  c.getString(R.string.other_choice) : c.getString(R.string.self_choice);
+		if (c != null) return requiresRecipient() ?  c.getString(R.string.other_choice) : c.getString(R.string.self_choice);
 		else return isOnNetwork() ? from_institution_name : to_institution_name;
 	}
 
@@ -140,6 +148,18 @@ public class Action {
 		return false;
 	}
 
+	public String getFormatInfo(String key) {
+		try {
+			JSONArray steps = new JSONArray(custom_steps);
+			for (int s = 0; s < steps.length(); s++) {
+				JSONObject step = steps.optJSONObject(s);
+				if (step != null && Boolean.TRUE.equals(step.optBoolean(STEP_IS_PARAM)) && step.optString(STEP_VALUE).equals(key))
+					return step.optString(STEP_FORMAT);
+			}
+		} catch (JSONException ignored) {}
+		return null;
+	}
+
 	public List<String> getRequiredParams() {
 		List<String> params = new ArrayList<>();
 		try {
@@ -153,5 +173,14 @@ public class Action {
 		} catch (JSONException e) {
 		}
 		return params;
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if (other == null) return false;
+		if (other == this) return true;
+		if (!(other instanceof Action)) return false;
+		Action otherA = (Action) other;
+		return otherA.id == id;
 	}
 }

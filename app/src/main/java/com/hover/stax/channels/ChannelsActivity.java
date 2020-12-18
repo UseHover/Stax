@@ -16,8 +16,6 @@ import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
-import com.hover.stax.database.Constants;
-import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.security.PermissionsFragment;
 import com.hover.stax.security.PinsActivity;
 import com.hover.stax.utils.PermissionUtils;
@@ -31,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.hover.stax.database.Constants.AUTH_CHECK;
-import static com.hover.stax.database.Constants.LANGUAGE_CHECK;
 
 public class ChannelsActivity extends AppCompatActivity {
 	public final static String TAG = "ChannelsActivity";
@@ -84,21 +81,10 @@ public class ChannelsActivity extends AppCompatActivity {
 	private void saveAndContinue() {
 		channelViewModel.saveSelected();
 		Utils.saveInt(AUTH_CHECK, 1, this);
-		returnResult();
-		//startActivityForResult(new Intent(ChannelsActivity.this, PinsActivity.class), 0);
+		startActivityForResult(new Intent(this, PinsActivity.class), 111);
 	}
 	private void returnResult() {
 		setResult(RESULT_OK, addReturnData(new Intent()));
-		finish();
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_OK)
-			setResult(RESULT_OK, addReturnData(new Intent()));
-		else
-			setResult(RESULT_CANCELED);
 		finish();
 	}
 
@@ -114,11 +100,16 @@ public class ChannelsActivity extends AppCompatActivity {
 	@Override
 	public void onBackPressed() {
 		cancel(null);
-		super.onBackPressed();
 	}
 
 	public void cancel(View view) {
 		setResult(RESULT_CANCELED);
 		finish();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+			returnResult();
 	}
 }

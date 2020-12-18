@@ -7,11 +7,11 @@
     android:orientation="vertical">
 
 	<TextView
-		android:id="@+id/trans_date"
+		android:id="@+id/li_header"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
+		android:paddingHorizontal="@dimen/margin_10"
 	    android:textColor="@color/grey"
-	    android:paddingBottom="@dimen/margin_13"
 	    android:textSize="@dimen/text_13"
 	    android:fontFamily="font-normal"
 		android:background="@color/cardViewColor"
@@ -20,43 +20,46 @@
 	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-		android:paddingHorizontal="@dimen/margin_3"
-		android:layout_marginTop="@dimen/margin_8"
-		android:layout_marginBottom="@dimen/margin_8"
+		android:paddingHorizontal="@dimen/margin_10"
+		android:paddingTop="@dimen/margin_10"
+		android:paddingBottom="11dp"
 		android:background="?attr/selectableItemBackground"
-	    android:orientation="horizontal">
+	    android:orientation="horizontal"
+		android:layout_gravity="center_vertical"
+		android:gravity="center_vertical">
 
-		<TextView
+		<TextView android:id="@+id/li_description"
 		    android:layout_width="0dp"
 		    android:layout_height="wrap_content"
+			android:layout_weight="1"
 			android:layout_marginEnd="@dimen/margin_13"
-		    android:layout_weight="1"
+			android:gravity="center_vertical"
 		    android:textColor="@color/offWhite"
 		    android:textSize="@dimen/text_16"
-		    android:fontFamily="font-normal"
-		    android:id="@+id/trans_content" />
+		    android:fontFamily="font-normal" />
 
-		<TextView
+		<TextView android:id="@+id/li_amount"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:id="@+id/trans_amount"
+			android:gravity="center_vertical"
 		    android:fontFamily="font-normal"
 		    android:textColor="@color/white"
-		    android:textSize="@dimen/text_34" />
+		    android:textSize="@dimen/text_21" />
 
 	</LinearLayout>
 
-	<TextView
+	<TextView android:id="@+id/li_callout"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:layout_marginTop="@dimen/margin_13"
+		android:paddingHorizontal="@dimen/margin_10"
+	    android:layout_marginTop="@dimen/margin_8"
 		android:layout_marginBottom="@dimen/margin_13"
 	    android:drawablePadding="@dimen/margin_5"
 	    android:gravity="center_vertical"
 	    android:fontFamily="font-normal"
+		android:textColor="@color/offWhite"
 	    android:textSize="@dimen/text_13"
 	    android:visibility="gone"
-	    android:id="@+id/pending_notify_in_list"
 	    android:text="@string/pending_callout"
 	    app:drawableStartCompat="@drawable/ic_warning" />
 </LinearLayout>

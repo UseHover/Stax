@@ -8,6 +8,7 @@
 	<dimen name="radius">5dp</dimen>
 	<dimen name="elevation">10dp</dimen>
 	<dimen name="margin_3">3dp</dimen>
+	<dimen name="margin_10">10dp</dimen>
 	<dimen name="margin_5">5dp</dimen>
 	<dimen name="margin_8">8dp</dimen>
 	<dimen name="margin_13">13dp</dimen>

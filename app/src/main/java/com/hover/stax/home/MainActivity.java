@@ -42,8 +42,6 @@ import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
-import com.hover.stax.utils.Utils;
-
 
 import java.util.List;
 
@@ -52,6 +50,7 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 
 	final public static String TAG = "MainActivity";
 	private BalancesViewModel balancesViewModel;
+	private ShowcaseExecutor showCase;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,27 +61,25 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 		balancesViewModel.setListener(this);
 		balancesViewModel.getToRun().observe(this, actions -> Log.i(TAG, "RunActions observer is neccessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
 		balancesViewModel.getBalanceActions().observe(this, actions -> Log.i(TAG, "Actions observer is neccessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
-		balancesViewModel.getSelectedChannels().observe(this, channels -> Log.i(TAG, "Channels observer is neccessary to make updates fire, but all logic is in viewmodel. " + channels.size()));
+		balancesViewModel.getSelectedChannels().observe(this, channels -> maybeRunAShowcase());
 
 		setUpNav();
-		goToFullfillRequest(getIntent());
+		checkForRequest(getIntent());
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		showNecessaryShowcaseAfter1Secs();
+		maybeRunAShowcase();
 	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-		Log.e(TAG, "Got new intent");
-		Log.e(TAG, "has link: " + intent.hasExtra(Constants.REQUEST_LINK));
 		super.onNewIntent(intent);
-		goToFullfillRequest(intent);
+		checkForRequest(intent);
 	}
 
-	private void goToFullfillRequest(Intent intent) {
+	private void checkForRequest(Intent intent) {
 		if (intent.hasExtra(Constants.REQUEST_LINK))
 			startTransfer(Action.P2P, true, intent);
 	}
@@ -101,22 +98,20 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 
 	@Override
 	public void onTapRefresh(int channel_id) {
-		Log.e(TAG, "please refresh");
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_single));
 		balancesViewModel.setRunning(channel_id);
 	}
 
 	public void runAllBalances(View view) {
-		Log.e(TAG, "please refresh all");
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_all));
 		balancesViewModel.setRunning();
 	}
 
 	@Override
 	public void startRun(Action a, int i) {
-		if (i == 0)
-			new BiometricChecker(this, this).startAuthentication(a);
-		else
+//		if (i == 0)
+//			new BiometricChecker(this, this).startAuthentication(a);
+//		else
 			run(a, i);
 	}
 
@@ -159,17 +154,31 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 				else Amplitude.getInstance().logEvent(getString(R.string.sdk_failure));
 				break;
 			case Constants.ADD_SERVICE:
-				if (resultCode == RESULT_OK) { onAddServices(resultCode); }
+				if (resultCode == RESULT_OK) { maybeRunAShowcase(); }
 				break;
 			case Constants.REQUEST_REQUEST:
 				if (resultCode == RESULT_OK) { onRequest(data); }
 				break;
 			default: // requestCode < Constants.BALANCE_MAX // Balance call
 				balancesViewModel.setRan(requestCode);
-				if (resultCode == RESULT_OK && data != null && data.getAction() != null) {
-					onProbableHoverCall(data);
-					maybeRunShowcaseAfterAddingBalance();
-				}
+				if (resultCode == RESULT_OK && data != null && data.getAction() != null) onProbableHoverCall(data);
+		}
+	}
+
+	public void maybeRunAShowcase() {
+		if (showCase == null)
+			showCase = new ShowcaseExecutor(this, findViewById(R.id.home_root));
+		switch (ShowcaseExecutor.getStage(this)) {
+			case 0: showCase.showcaseAddAcctStage();
+				break;
+			case 1:
+				if (balancesViewModel.getSelectedChannels().getValue() != null && balancesViewModel.getSelectedChannels().getValue().size() > 0)
+					showCase.showcaseRefreshAccountStage();
+				break;
+			case 2:
+				if (balancesViewModel.getSelectedChannels().getValue() != null && balancesViewModel.getSelectedChannels().getValue().size() > 0)
+					showCase.showcasePeekBalanceStage();
+				break;
 		}
 	}
 
@@ -180,29 +189,6 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 			Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
 			new ViewModelProvider(this).get(TransactionHistoryViewModel.class).saveTransaction(data, this);
 		}
-	}
-
-	private void onAddServices(int resultCode) {
-		//balancesViewModel.setRunning();
-		maybeRunShowcaseAfterAddingBalance();
-	}
-	private void maybeRunShowcaseAfterAddingBalance() {
-		if (balancesViewModel.hasChannels() && Utils.getSharedPrefs(this).getInt(ShowcaseExecutor.SHOW_TUTORIAL, 0) == 0)
-			new ShowcaseExecutor(this, findViewById(R.id.home_root)).startFullShowcase();
-	}
-	private void runShowcaseIfBalanceIsEmpty() {
-		if(!balancesViewModel.hasChannels()) new ShowcaseExecutor(this, findViewById(R.id.home_root)).startAddAcctShowcase();
-	}
-
-
-	private void showNecessaryShowcaseAfter1Secs() {
-		//Putting in a try and catch to prevent crashing if user clicks elsewhere before 2 sec completes
-		try{
-			new Handler().postDelayed(() -> {
-				runShowcaseIfBalanceIsEmpty();
-				maybeRunShowcaseAfterAddingBalance();
-			}, 2000);
-		}catch (Exception ignored){}
 	}
 
 	private void startTransfer(String type, boolean isFromStaxLink, Intent received) {

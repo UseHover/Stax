@@ -22,6 +22,9 @@ import com.hover.stax.R;
 import com.hover.stax.channels.ChannelsAdapter;
 import com.hover.stax.utils.UIHelper;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 public class PermissionsFragment extends Fragment {
 
 	public final static int PHONE_REQUEST = 0, SMS_REQUEST = 1;
@@ -70,8 +73,12 @@ public class PermissionsFragment extends Fragment {
 			requestOverlay();
 		else if (!ph.hasAccessPerm())
 			requestAccessibility();
-		else
-			NavHostFragment.findNavController(this).navigate(R.id.navigation_pin_entry);
+		else if (getActivity() != null) {
+			Amplitude.getInstance().logEvent(getString(R.string.granted_sdk_permissions));
+			getActivity().setResult(RESULT_OK);
+			getActivity().finish();
+		}
+		//NavHostFragment.findNavController(this).navigate(R.id.navigation_pin_entry);
 	}
 
 	@Override
@@ -82,19 +89,23 @@ public class PermissionsFragment extends Fragment {
 	}
 
 	private void requestPhone(PermissionHelper ph) {
+		Amplitude.getInstance().logEvent(getString(R.string.request_permphone));
 		ph.requestPhone(getActivity(), PHONE_REQUEST);
 	}
 
 	private void requestSMS(PermissionHelper ph) {
+		Amplitude.getInstance().logEvent(getString(R.string.request_permsms));
 		ph.requestBasicPerms(getActivity(), SMS_REQUEST);
 	}
 
 	public void requestOverlay() {
+		Amplitude.getInstance().logEvent(getString(R.string.request_permoverlay));
 		if (dialog != null) dialog.dismiss();
 		dialog = new PermissionDialog(getContext(), PermissionDialog.OVERLAY).createDialog(getActivity());
 	}
 
 	public void requestAccessibility() {
+		Amplitude.getInstance().logEvent(getString(R.string.request_permaccessibility));
 		if (dialog != null) dialog.dismiss();
 		Hover.setAfterPermissionReturnActivity("com.hover.stax.security.PinsActivity", getContext());
 		dialog = new PermissionDialog(getContext(), PermissionDialog.ACCESS).createDialog(getActivity());

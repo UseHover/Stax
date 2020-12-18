@@ -110,7 +110,6 @@ public abstract class StagedFragment extends Fragment {
 	}
 
 	protected void startListeners(View root) {
-		channelRadioGroup.setOnCheckedChangeListener((group, checkedId) -> stagedViewModel.setActiveChannel(checkedId));
 		((SwitchMaterial) root.findViewById(R.id.futureSwitch)).setOnCheckedChangeListener((view, isChecked) -> stagedViewModel.setIsFutureDated(isChecked));
 		((SwitchMaterial) root.findViewById(R.id.repeatSwitch)).setOnCheckedChangeListener((view, isChecked) -> stagedViewModel.setIsRepeating(isChecked));
 		dateDetailListeners(root);
@@ -131,6 +130,7 @@ public abstract class StagedFragment extends Fragment {
 			}
 			channelRadioGroup.addView(radioButton);
 		}
+		channelRadioGroup.setOnCheckedChangeListener((group, checkedId) -> stagedViewModel.setActiveChannel(checkedId));
 	}
 
 	protected void dateDetailListeners(View root) {

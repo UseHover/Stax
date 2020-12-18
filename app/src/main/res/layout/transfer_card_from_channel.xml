@@ -8,13 +8,13 @@
 	<RadioGroup
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginHorizontal="@dimen/margin_3"
+		android:layout_marginHorizontal="@dimen/margin_10"
 		android:id="@+id/channelRadioGroup"/>
 
 	<TextView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginHorizontal="@dimen/margin_3"
+		android:layout_marginHorizontal="@dimen/margin_10"
 		android:layout_marginBottom="@dimen/margin_8"
 		android:id="@+id/add_new_account"
 		android:textColor="@color/brightBlue"

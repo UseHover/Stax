@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:layout_marginHorizontal="@dimen/margin_3"
+	android:layout_marginHorizontal="@dimen/margin_10"
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<TableRow android:layout_marginTop="@dimen/margin_24">

@@ -16,8 +16,8 @@ android {
         applicationId "com.hover.stax"
         minSdkVersion 18
         targetSdkVersion 29
-        versionCode 23
-        versionName "0.9.0"
+        versionCode 27
+        versionName "0.9.3"
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -29,13 +29,14 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField "String", "SELF_DESTRUCT", "\"1612055681000\""
+        }
         release {
             minifyEnabled false
-            buildConfigField "String", "SELF_DESTRUCT", "\"1607357179000\"" // Dec 31, 2020
+            buildConfigField "String", "SELF_DESTRUCT", "\"1612055681000\"" // Jan 31, 2021
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-        debug {
-            buildConfigField "String", "SELF_DESTRUCT", "\"1607357179000\""
+//            signingConfig signingConfigs.debug
         }
     }
     bundle {
@@ -44,9 +45,9 @@ android {
             enableSplit = false
         }
     }
-    lintOptions{
-        disable 'MissingTranslation'
-    }
+//    lintOptions{
+//        disable 'MissingTranslation'
+//    }
 //    buildFeatures.dataBinding = true
 }
 
@@ -74,7 +75,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-messaging'
-    implementation 'com.google.firebase:firebase-firestore'
 
     //implementation 'io.sentry:sentry-android:3.1.0'
     implementation 'com.amplitude:android-sdk:2.23.2'
@@ -94,7 +94,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     // Hover SDK
-    def sdk_version = "1.6.5-stax-beta06-pro"
+    def sdk_version = "1.6.5-stax-rc1-pro"
     releaseImplementation "com.hover:android-sdk:$sdk_version"
     debugImplementation project(":hover.sdk")
     debugImplementation 'com.android.volley:volley:1.1.1'

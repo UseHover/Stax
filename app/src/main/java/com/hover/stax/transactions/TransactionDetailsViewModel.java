@@ -9,7 +9,6 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
-import com.google.android.gms.common.util.ArrayUtils;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.sms.MessageLog;
 import com.hover.sdk.transactions.Transaction;
@@ -18,7 +17,6 @@ import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.DatabaseRepo;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class TransactionDetailsViewModel extends AndroidViewModel {
@@ -40,7 +38,7 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 		messages = new MediatorLiveData<>();
 
 		action = Transformations.switchMap(transaction, t -> repo.getLiveAction(t.action_id));
-		contact = Transformations.switchMap(transaction, t -> repo.getLiveContact(t.recipient_id));
+		contact = Transformations.switchMap(transaction, t -> repo.getLiveContact(t.counterparty_id));
 		messages.addSource(transaction, this::loadMessages);
 		messages.addSource(action, this::loadMessages);
 		sms = Transformations.map(transaction, this::loadSms);

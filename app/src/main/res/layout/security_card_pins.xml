@@ -18,7 +18,7 @@
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginHorizontal="@dimen/margin_3"
+		android:layout_marginHorizontal="@dimen/margin_10"
 		android:layout_marginTop="@dimen/margin_21"
 		android:textColor="@color/offWhite"
 		android:textSize="@dimen/text_16"
@@ -28,7 +28,7 @@
 	<TextView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginHorizontal="@dimen/margin_3"
+		android:layout_marginHorizontal="@dimen/margin_10"
 		android:layout_marginTop="@dimen/margin_8"
 		android:layout_marginBottom="@dimen/margin_13"
 		android:fontFamily="font-normal"

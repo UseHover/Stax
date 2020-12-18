@@ -179,7 +179,7 @@ public class NewRequestViewModel extends StagedViewModel {
 
 		saveContacts();
 		for (StaxContact recipient : requestees.getValue())
-			repo.insert(formulatedRequest.getValue().setRecipient(recipient, getApplication()));
+			repo.insert(new Request(formulatedRequest.getValue(), recipient, getApplication()));
 
 		if (repeatSaved.getValue() != null && repeatSaved.getValue()) {
 			schedule();

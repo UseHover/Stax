@@ -27,16 +27,13 @@ public class BalancesViewModel extends AndroidViewModel {
 
 	private LiveData<List<Channel>> selectedChannels;
 	private LiveData<List<Action>> balanceActions = new MediatorLiveData<>();
-	private MutableLiveData<Integer> runFlag;
+	private MutableLiveData<Integer> runFlag = new MutableLiveData<>();
 	private MediatorLiveData<List<Action>> toRun;
 
 	public BalancesViewModel(Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
-		if (runFlag == null) {
-			runFlag = new MutableLiveData<>();
-			runFlag.setValue(NONE);
-		}
+		if (runFlag == null) runFlag.setValue(NONE);
 
 		selectedChannels = repo.getSelected();
 		balanceActions = Transformations.switchMap(selectedChannels, this::loadBalanceActions);

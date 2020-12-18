@@ -21,6 +21,7 @@
 		layout="@layout/channel_card_grid" />
 
 	<include android:id="@+id/request_an_account"
+		android:visibility="gone"
 	    layout="@layout/request_account_header" />
 
 </LinearLayout>
