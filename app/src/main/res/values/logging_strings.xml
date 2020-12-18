@@ -13,6 +13,10 @@
 	<string name="request_add_service_contact_info" translatable="false">Added contact info for requesting a service</string>
 	<string name="skipped_pin_entry" translatable="false">Clicked skip pin entry</string>
 	<string name="completed_pin_entry" translatable="false">Complete save pin</string>
+	<string name="request_permphone" translatable="false">Asking for phone permissions</string>
+	<string name="request_permsms" translatable="false">Asking for sms permissions</string>
+	<string name="request_permoverlay" translatable="false">Asking for overlay permissions</string>
+	<string name="request_permaccessibility" translatable="false">Asking for accessibility permissions</string>
 	<string name="request_permissions" translatable="false">Ask for all SDK permissions</string>
 	<string name="granted_sdk_permissions" translatable="false">Completed grant all SDK permissions</string>
 	<string name="denied_sdk_permissions" translatable="false">Denied SDK permissions</string>
