@@ -595,11 +595,15 @@
   <string name="csr_text_last_refresh">sasisho la mwisho:</string>
 
   <!-- Missing -->
-  <string name="btn_dontsave">Don\'t save</string>
-  <string name="onboard_addaccounthead">Add an account to get started</string><string name="onboard_addaccountbody">Stax supercharges your bank and mobile money accounts in one secure place</string>
-  <string name="fromacct_fielderror">You must select an sending account. If you have none please tap <u>add account</u>.</string>
-  <string name="recipientnetwork_fielderror">No recipient network chosen.</string><string name="whoopsie">Something went wrong, the problem has been reported. Please try again.</string>
-  <string name="other_choice">Someone else</string>
-  <string name="actions_fielderror">This account does not support buy airtime. Please select a different account.</string>
+  <string name="btn_dontsave">Usihifadhi</string>
+  <string name="onboard_addaccountbody">Usihifadhi</string>
+  <string name="hsdk_complete">Shughuli imekamilika</string>
+  <string name="onboard_addaccounthead">Ongeza akaunti ili uanze</string>
+  <string name="fromacct_fielderror">Lazima uchague akaunti inayotuma. Ikiwa hauna chochote tafadhali gonga <u>ongeza akaunti</u>.</string>
+  <string name="recipientnetwork_fielderror">Hakuna mtandao wa mpokeaji uliochaguliwa</string>
+  <string name="whoopsie">Hitilafu imetokea, tatizo limeripotiwa. Tafadhali jaribu tena.</string>
+  <string name="other_choice">Mtu mwingine</string>
+  <string name="actions_fielderror">Akaunti hii haitumiki kununua muda wa maongezi. Tafadhali chagua akaunti tofauti.</string>
+  <string name="descrip_transfer_received">umepokea pesa kutoka kwa %1$s</string>
   
 </resources>

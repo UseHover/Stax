@@ -591,13 +591,17 @@
   <string name="csr_text_last_refresh">dernière mise à jour :</string>
 
   <!-- Missing -->
-  <string name="btn_dontsave">Don\'t save</string>
-  <string name="onboard_addaccounthead">Add an account to get started</string><string name="onboard_addaccountbody">Stax supercharges your bank and mobile money accounts in one secure place</string>
-  <string name="fromacct_fielderror">You must select an sending account. If you have none please tap <u>add account</u>.</string>
-  <string name="recipientnetwork_fielderror">No recipient network chosen.</string><string name="whoopsie">Something went wrong, the problem has been reported. Please try again.</string>
-  <string name="other_choice">Someone else</string>
-  <string name="removepin_dialoghead">Remove %1$s PIN now</string>
-  <string name="btn_removeaccount">Remove account</string>
-  <string name="actions_fielderror">This account does not support buy airtime. Please select a different account.</string>
+  <string name="btn_dontsave">Ne sauve pas</string>
+  <string name="onboard_addaccounthead">Ajoutez un compte pour commencer</string>
+  <string name="onboard_addaccountbody">Stax met tous vos comptes bancaires et d\'argent mobile en un seul endroit sécurisé</string>
+  <string name="fromacct_fielderror">Vous devez sélectionner un compte d\'envoi. Si vous n\'en avez pas, appuyez sur <u>ajouter des comptes</u>.</string>
+  <string name="recipientnetwork_fielderror">Aucun réseau de destinataires choisi.</string>
+  <string name="whoopsie">Une erreur s\'est produite, le problème a été signalé. Veuillez réessayer.</string>
+  <string name="other_choice">Quelqu\'un d\'autre</string>
+  <string name="removepin_dialoghead">Supprimer le code PIN %1$s maintenant</string>
+  <string name="btn_removeaccount">Supprimer le compte</string>
+  <string name="actions_fielderror">Ce compte ne prend pas en charge l\'achat de temps d\'antenne. Veuillez sélectionner un autre compte.</string>
+  <string name="descrip_transfer_received">tu as reçu de l\'argent %1$s</string>
+  <string name="hsdk_complete">Transaction terminée</string>
   
 </resources>
