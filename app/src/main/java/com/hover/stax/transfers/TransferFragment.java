@@ -91,7 +91,7 @@ public class TransferFragment extends StagedFragment {
 		transferViewModel.getStage().observe(getViewLifecycleOwner(), stage -> {
 			switch ((TransferStage) stage) {
 				case AMOUNT: amountInput.requestFocus(); break;
-				case RECIPIENT: recipientAutocomplete.showDropDown(); recipientAutocomplete.requestFocus(); break;
+				case RECIPIENT: recipientAutocomplete.requestFocus(); break;
 				case NOTE: noteInput.requestFocus(); break;
 				default: root.findViewById(R.id.mainLayout).requestFocus();
 			}

@@ -22,7 +22,7 @@ public abstract class AbstractMessageSendingActivity extends AppCompatActivity {
 	public Channel channel;
 
 	public void sendSms(View view) {
-		if (preventedError()) return;
+		if (currentRequest == null || requestees == null) { showError(); return; }
 		Intent sendIntent = new Intent();
 		sendIntent.setAction(Intent.ACTION_VIEW);
 		sendIntent.setData(Uri.parse("smsto:" + currentRequest.generateRecipientString(requestees)));
@@ -32,7 +32,7 @@ public abstract class AbstractMessageSendingActivity extends AppCompatActivity {
 	}
 
 	public void sendWhatsapp(View view) {
-		if (preventedError()) return;
+		if (currentRequest == null || requestees == null) { showError(); return; }
 		Intent sendIntent = new Intent();
 		sendIntent.setAction(Intent.ACTION_VIEW);
 
@@ -42,7 +42,7 @@ public abstract class AbstractMessageSendingActivity extends AppCompatActivity {
 	}
 
 	public void copyShareLink(View view) {
-		if (preventedError()) return;
+		if (currentRequest == null) showError();
 		TextView copyBtn = view.findViewById(R.id.copylink_share_selection);
 		if (Utils.copyToClipboard(currentRequest.generateMessage(this), this)) {
 			copyBtn.setActivated(true);
@@ -55,11 +55,7 @@ public abstract class AbstractMessageSendingActivity extends AppCompatActivity {
 		}
 	}
 
-	private boolean preventedError() {
-		if (currentRequest == null || requestees == null || channel == null) {
-			UIHelper.flashMessage(this, "Something went wrong, please try again.");
-			return true;
-		}
-		return false;
+	private void showError() {
+		UIHelper.flashMessage(this, getString(R.string.loading_dialoghead));
 	}
 }

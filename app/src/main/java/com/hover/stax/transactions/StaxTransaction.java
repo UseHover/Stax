@@ -70,11 +70,11 @@ public class StaxTransaction {
 	@ColumnInfo(name = "confirm_code")
 	public String confirm_code;
 
-	@ColumnInfo(name = "recipient")
-	public String recipient;
+	@ColumnInfo(name = "counterparty")
+	public String counterparty;
 
 	@ColumnInfo(name = "recipient_id")
-	public String recipient_id;
+	public String counterparty_id;
 
 	public StaxTransaction() {
 	}
@@ -94,12 +94,12 @@ public class StaxTransaction {
 				if (extras.containsKey(Action.AMOUNT_KEY))
 					amount = Utils.getAmount((extras.get(Action.AMOUNT_KEY)));
 				if (extras.containsKey(Action.PHONE_KEY))
-					recipient = extras.get(Action.PHONE_KEY);
+					counterparty = extras.get(Action.PHONE_KEY);
 				else if (extras.containsKey(Action.ACCOUNT_KEY))
-					recipient = extras.get(Action.ACCOUNT_KEY);
+					counterparty = extras.get(Action.ACCOUNT_KEY);
 			}
 			if (data.hasExtra(StaxContact.ID_KEY))
-				recipient_id = data.getStringExtra(StaxContact.ID_KEY);
+				counterparty_id = data.getStringExtra(StaxContact.ID_KEY);
 
 			Log.e("Transaction", "creating transaction with uuid: " + uuid);
 
@@ -121,21 +121,23 @@ public class StaxTransaction {
 		}
 
 		if (data.hasExtra(StaxContact.ID_KEY))
-			recipient_id = data.getStringExtra(StaxContact.ID_KEY);
+			counterparty_id = data.getStringExtra(StaxContact.ID_KEY);
 
 		if (contact != null)
 			description = generateDescription(action, contact, c);
 	}
 
 	private String generateDescription(Action action, StaxContact contact, Context c) {
-		String recipientStr = contact != null ? contact.shortName(false) : recipient;
+		String recipientStr = contact != null ? contact.shortName(false) : counterparty;
 		switch (transaction_type) {
 			case Action.AIRTIME:
-				return c.getString(R.string.descrip_airtime_sent, action.from_institution_name, ((recipient == null || recipient.equals("")) ? "myself" : recipientStr));
+				return c.getString(R.string.descrip_airtime_sent, action.from_institution_name, ((counterparty == null || counterparty.equals("")) ? "myself" : recipientStr));
 			case Action.P2P:
 				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, recipientStr);
 			case Action.ME2ME:
 				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, action.to_institution_name);
+			case Action.RECEIVE:
+				return c.getString(R.string.descrip_transfer_received, counterparty);
 			default:
 				return "Other";
 		}

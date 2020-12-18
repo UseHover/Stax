@@ -9,7 +9,9 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.room.Dao;
 
+import com.hover.sdk.transactions.Transaction;
 import com.hover.stax.R;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.actions.Action;
@@ -155,8 +157,22 @@ public class DatabaseRepo {
 				t.update(intent, a, contact, c);
 				transactionDao.update(t);
 
+				updateRequests(t, intent);
 			} catch (Exception e) { Log.e("DatabaseRepo", "error", e); }
 		});
+	}
+
+	private void updateRequests(StaxTransaction t, Intent intent) {
+		if (t.transaction_type.equals(Action.RECEIVE)) {
+			List<Request> rs = getRequests();
+			for (Request r: rs) {
+				StaxContact r_contact = getContact(r.requestee_ids);
+				if (r_contact != null && r_contact.equals(new StaxContact(intent.getStringExtra("senderPhone")))) {
+					r.matched_transaction_uuid = t.uuid;
+					update(r);
+				}
+			}
+		}
 	}
 
 	// Contacts
@@ -203,7 +219,11 @@ public class DatabaseRepo {
 	}
 
 	// Requests
-	public LiveData<List<Request>> getRequests() {
+	public LiveData<List<Request>> getLiveRequests() {
+		return requestDao.getLiveUnmatched();
+	}
+
+	public List<Request> getRequests() {
 		return requestDao.getUnmatched();
 	}
 
@@ -230,6 +250,10 @@ public class DatabaseRepo {
 
 	public void insert(Request request) {
 		AppDatabase.databaseWriteExecutor.execute(() -> requestDao.insert(request));
+	}
+
+	public void update(Request request) {
+		AppDatabase.databaseWriteExecutor.execute(() -> requestDao.update(request));
 	}
 
 	public void delete(Request request) {

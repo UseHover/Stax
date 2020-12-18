@@ -11,7 +11,6 @@
 		android:layout_height="wrap_content"
 		android:id="@+id/recipientLabel"
 		android:hint="@string/recipientphone_label"
-		app:endIconMode="none"
 		style="@style/StaxLabeledDropdown">
 
 		<AutoCompleteTextView
@@ -19,7 +18,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:padding="@dimen/margin_13"
-		    	android:fontFamily="font-normal"
+			android:fontFamily="font-normal"
 			android:paddingEnd="@dimen/margin_68"
 			tools:ignore="RtlSymmetry"
 			android:dropDownWidth="wrap_content"
@@ -28,13 +27,14 @@
 			android:textColor="@color/offWhite"
 			android:textCursorDrawable="@null"
 			android:dropDownHeight="135dp"
+			android:completionThreshold="0"
 			android:inputType="textPersonName"/>
 	</com.google.android.material.textfield.TextInputLayout>
 
 	<ImageButton android:id="@+id/contact_button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/margin_21"
+		android:layout_marginTop="28dp"
 		android:layout_marginEnd="@dimen/margin_21"
 		android:layout_alignParentEnd="true"
 		app:srcCompat="@drawable/ic_contacts"

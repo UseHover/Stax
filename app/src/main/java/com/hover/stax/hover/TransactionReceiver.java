@@ -4,15 +4,15 @@ import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
-import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.DatabaseRepo;
-import com.hover.stax.transactions.StaxTransaction;
+import com.hover.stax.requests.Request;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class TransactionReceiver extends BroadcastReceiver {
 	final private static String TAG = "TransactionReceiver";

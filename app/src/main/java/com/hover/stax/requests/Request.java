@@ -18,9 +18,11 @@ import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.paymentLinkCryptography.Base64;
 import com.hover.stax.utils.paymentLinkCryptography.Encryption;
+import com.yariksoffice.lingver.Lingver;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Locale;
 
 @Entity(tableName = "requests")
 public class Request {
@@ -107,7 +109,7 @@ public class Request {
 		for (int r = 0; r < contacts.size(); r++) {
 			if (phones.length() > 0) phones.append(",");
 			try {
-				phones.append(contacts.get(r).getInternationalNumber(c.countryAlpha2).replace("+", ""));
+				phones.append(contacts.get(r).getInternationalNumber(c != null ? c.countryAlpha2 : Lingver.getInstance().getLocale().getCountry()).replace("+", ""));
 			} catch (NumberParseException e) { Log.e("Request", "Failed to add number for contact.", e); }
 		}
 		return phones.toString();

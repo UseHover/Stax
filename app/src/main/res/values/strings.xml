@@ -94,6 +94,7 @@
 	<string name="hsdk_access_step_2_explain">Switch ON</string>
 	<string name="access_service_summary">Connect with Mobile Money and Telecom services on your behalf</string>
 	<string name="access_service_descript">This is used to read and interact with USSD menus to provide a simplified and more accessible experience.</string>
+	<string name="hsdk_complete">Transaction complete</string>
 
 	<!-- PIN Entry -->
 	<string name="pin_cardhead">Enter your PINs</string>
@@ -192,7 +193,8 @@
 	<string name="accounts_label">Pay from</string>
 	<string name="descrip_multcontacts">%1$d contacts</string>
 	<string name="descrip_airtime_sent">%1$s sent airtime to %2$s</string>
-	<string name="descrip_transfer_sent">from %1$s to %2$s</string>
+	<string name="descrip_transfer_sent">%1$s sent money to %2$s</string>
+	<string name="descrip_transfer_received">received money from %2$s</string>
 	<string name="fab_transfernow">Transfer now</string>
 	<string name="descrip_airtime_sched">Buy airtime with %1$s for %2$s</string>
 	<string name="pending_callout">Transaction sent. Waiting for confirmation.</string>

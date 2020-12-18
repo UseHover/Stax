@@ -1,6 +1,7 @@
 package com.hover.stax.requests;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.home.MainActivity;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -50,9 +52,8 @@ public class RequestDetailFragment extends Fragment {
 			if (contacts != null && contacts.size() > 0) {
 				for (StaxContact c : contacts)
 					createRecipientEntry(c, view);
-				if (getActivity() != null) {
-					((AbstractMessageSendingActivity) getActivity()).requestees = contacts;
-				}
+				if (getActivity() != null)
+					((MainActivity) getActivity()).requestees = contacts;
 			}
 		});
 
@@ -60,17 +61,17 @@ public class RequestDetailFragment extends Fragment {
 			view.findViewById(R.id.requesterAccountRow).setVisibility(channel != null ? View.VISIBLE : View.GONE);
 			if (channel != null) {
 				((Stax2LineItem) view.findViewById(R.id.requesterValue)).setTitle(channel.name);
+				Log.e(TAG, "Activity is null? " + (getActivity() == null));
 				if (getActivity() != null)
-					((AbstractMessageSendingActivity) getActivity()).channel = channel;
+					((MainActivity) getActivity()).channel = channel;
 			}
 		});
 
 		viewModel.getRequest().observe(getViewLifecycleOwner(), request -> {
 			if (request != null) {
 				setUpSummary(view, request);
-//				setUpResendBtn(view, request);
 				if (getActivity() != null)
-					((AbstractMessageSendingActivity) getActivity()).currentRequest = request;
+					((MainActivity) getActivity()).currentRequest = request;
 			}
 		});
 
@@ -123,7 +124,7 @@ public class RequestDetailFragment extends Fragment {
 
 	public void initShareButtons(View view) {
 		if(getContext() !=null && getActivity() !=null) {
-			view.findViewById(R.id.sms_share_selection).setOnClickListener(v -> viewModel.getRequest().getValue().generateMessage(getActivity()));
+//			view.findViewById(R.id.sms_share_selection).setOnClickListener(v -> viewModel.getRequest().getValue().generateMessage(getActivity()));
 //			view.findViewById(R.id.whatsapp_share_selection).setOnClickListener(v -> viewModel.getCountryAlphaAndSendWithWhatsApp(getContext(), getActivity()));
 //			view.findViewById(R.id.copylink_share_selection).setOnClickListener(v -> {
 //				ImageView copyImage = v.findViewById(R.id.copyLinkImage);

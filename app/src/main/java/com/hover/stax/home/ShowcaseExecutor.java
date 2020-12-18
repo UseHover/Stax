@@ -55,14 +55,15 @@ public class ShowcaseExecutor {
 
 	public void showcaseRefreshAccountStage() {
 		CustomSwipeRefreshLayout csrl = ((CustomSwipeRefreshLayout) root.findViewById(R.id.swipelayout));
-		csrl.animateOffsetToTriggerPosition(0, null);
+		if (csrl != null)
+			csrl.animateOffsetToTriggerPosition(0, null);
 		startShowcase(activity.getString(R.string.onboard_refreshhead), activity.getString(R.string.onboard_refreshbody),
 				refreshShowcaseClickListener, root.findViewById(R.id.homeTimeAgo));
 	}
 
 	public void showcasePeekBalanceStage() {
 		openBalance(getSwipeLayout());
-		if (((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0) != null)
+		if (root != null && root.findViewById(R.id.balances_recyclerView) != null && ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0) != null)
 			startShowcase(activity.getString(R.string.onboard_peekhead), activity.getString(R.string.onboard_peekbody),
 					peekBalanceShowcaseClickListener, ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0).findViewById(R.id.balance_drag));
 	}

@@ -45,7 +45,7 @@ public class StaxContact {
 	public String aliases;
 
 	@ColumnInfo(name = "phone_number")
-	private String phoneNumber;
+	public String phoneNumber;
 
 	@ColumnInfo(name = "thumb_uri")
 	public String thumbUri;
@@ -162,7 +162,7 @@ public class StaxContact {
 		if (other == this) return true;
 		if (!(other instanceof StaxContact)) return false;
 		StaxContact otherContact = (StaxContact) other;
-		return id.equals(otherContact.id) || isSamePhone(otherContact);
+		return id.equals(otherContact.id) || phoneNumber.equals(otherContact.phoneNumber) || isSamePhone(otherContact);
 	}
 
 	private boolean isSamePhone(StaxContact other) {

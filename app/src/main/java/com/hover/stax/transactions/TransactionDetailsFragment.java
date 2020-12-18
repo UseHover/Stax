@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
+import com.hover.stax.actions.Action;
 import com.hover.stax.database.Constants;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
@@ -48,7 +49,7 @@ public class TransactionDetailsFragment extends Fragment {
 		viewModel.getTransaction().observe(getViewLifecycleOwner(), transaction -> {
 			if (transaction != null) {
 				((TextView) view.findViewById(R.id.title)).setText(transaction.description);
-				((TextView) view.findViewById(R.id.details_amount)).setText(Utils.formatAmount(transaction.amount));
+				((TextView) view.findViewById(R.id.details_amount)).setText((transaction.transaction_type.equals(Action.RECEIVE) ? "" : "-") + Utils.formatAmount(transaction.amount));
 				((TextView) view.findViewById(R.id.details_date)).setText(DateUtils.humanFriendlyDate(transaction.initiated_at));
 
 				if (transaction.confirm_code != null && !transaction.confirm_code.isEmpty())
