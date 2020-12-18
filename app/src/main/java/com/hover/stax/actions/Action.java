@@ -25,7 +25,7 @@ import java.util.List;
 public class Action {
 	public final static String ID_KEY = "action_id";
 	public final static String TRANSACTION_TYPE = "transaction_type", P2P = "p2p", AIRTIME = "airtime", ME2ME = "me2me", RECEIVE = "receive", C2B = "c2b", BALANCE = "balance";
-	public final static String STEP_IS_PARAM = "is_param", STEP_VALUE = "value",
+	public final static String STEP_IS_PARAM = "is_param", STEP_VALUE = "value", STEP_FORMAT = "valid_response_regex",
 			PIN_KEY = "pin", AMOUNT_KEY = "amount", PHONE_KEY = "phone", ACCOUNT_KEY = "account", FEE_KEY = "fee", NOTE_KEY = "reason";
 
 	@PrimaryKey
@@ -146,6 +146,18 @@ public class Action {
 		} catch (JSONException e) {
 		}
 		return false;
+	}
+
+	public String getFormatInfo(String key) {
+		try {
+			JSONArray steps = new JSONArray(custom_steps);
+			for (int s = 0; s < steps.length(); s++) {
+				JSONObject step = steps.optJSONObject(s);
+				if (step != null && Boolean.TRUE.equals(step.optBoolean(STEP_IS_PARAM)) && step.optString(STEP_VALUE).equals(key))
+					return step.optString(STEP_FORMAT);
+			}
+		} catch (JSONException ignored) {}
+		return null;
 	}
 
 	public List<String> getRequiredParams() {

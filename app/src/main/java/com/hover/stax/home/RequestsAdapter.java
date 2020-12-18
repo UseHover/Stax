@@ -1,5 +1,6 @@
 package com.hover.stax.home;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,11 +38,16 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.Reques
 		Request r = requestList.get(position);
 		holder.description.setText(r.description);
 		holder.amount.setText(r.amount != null ? Utils.formatAmount(r.amount) : "none");
-		holder.header.setVisibility(View.VISIBLE);
+		holder.header.setVisibility(shouldShowDate(r, position) ? View.VISIBLE : View.GONE);
 		holder.header.setText(DateUtils.humanFriendlyDate(r.date_sent));
 		holder.itemView.setOnClickListener(view -> {
 			selectListener.viewRequestDetail(r.id);
 		});
+	}
+
+	private boolean shouldShowDate(Request r, int position) {
+		return position == 0 || !DateUtils.humanFriendlyDate(requestList.get(position - 1).date_sent)
+			                         .equals(DateUtils.humanFriendlyDate(r.date_sent));
 	}
 
 	@Override

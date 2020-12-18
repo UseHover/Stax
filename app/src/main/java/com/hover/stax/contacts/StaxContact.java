@@ -19,6 +19,8 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.hover.sdk.transactions.Transaction;
 import com.hover.stax.R;
+import com.hover.stax.actions.Action;
+import com.hover.stax.channels.Channel;
 import com.hover.stax.utils.DateUtils;
 
 import java.util.List;
@@ -58,7 +60,7 @@ public class StaxContact {
 	public StaxContact(String phone) {
 		id = UUID.randomUUID().toString();
 		name = "";
-		phoneNumber = phone;
+		phoneNumber = phone.replaceAll(" ", "");
 		lastUsedTimestamp = DateUtils.now();
 	}
 
@@ -82,6 +84,17 @@ public class StaxContact {
 			}
 			if (cur != null) cur.close();
 		}
+	}
+
+	public String getNumberFormatForInput(Action a, Channel c) {
+		try {
+			String format = a.getFormatInfo(Action.PHONE_KEY);
+			if (format != null && format.startsWith(String.valueOf(getPhone(c.countryAlpha2).getCountryCode())))
+				return getInternationalNumberNoPlus(c.countryAlpha2);
+			else
+				return normalizeNumberByCountry(c.countryAlpha2);
+		} catch (NumberParseException e) { Log.e(TAG, "Google phone number util failed.", e); }
+		return phoneNumber;
 	}
 
 	public String normalizeNumberByCountry(String country) { return normalizeNumberByCountry(phoneNumber, country); }
@@ -108,10 +121,19 @@ public class StaxContact {
 
 	public String getInternationalNumber(String country) throws NumberParseException {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-		Phonenumber.PhoneNumber phone = phoneUtil.parse(phoneNumber, country);
+		Phonenumber.PhoneNumber phone = getPhone(country);
+		phone.getCountryCode();
 		String str = phoneUtil.format(phone, PhoneNumberUtil.PhoneNumberFormat.E164);
 		Log.e("CONTACT", "generated: " + str);
 		return str;
+	}
+	public String getInternationalNumberNoPlus(String country) throws NumberParseException {
+		return getInternationalNumber(country).replace("+", "");
+	}
+
+	private Phonenumber.PhoneNumber getPhone(String country) throws NumberParseException {
+		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+		return phoneUtil.parse(phoneNumber, country);
 	}
 
 	public String shortName(boolean obfusicate) {

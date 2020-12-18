@@ -55,7 +55,10 @@
 	</style>
 
 	<style name="StaxButton" parent="Widget.AppCompat.Button.Borderless">
-		<item name="android:layout_margin">3dp</item>
+		<item name="android:layout_marginStart">@dimen/margin_3</item>
+		<item name="android:layout_marginEnd">@dimen/margin_10</item>
+		<item name="android:layout_marginBottom">@dimen/margin_3</item>
+		<item name="android:layout_marginTop">@dimen/margin_3</item>
 		<item name="android:paddingStart">@dimen/margin_13</item>
 		<item name="android:paddingEnd">@dimen/margin_13</item>
 		<item name="android:paddingTop">@dimen/margin_13</item>

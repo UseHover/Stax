@@ -13,7 +13,7 @@
 	    android:layout_gravity="center"
 	    android:gravity="center"
 		android:paddingBottom="@dimen/margin_8"
-		android:paddingHorizontal="@dimen/margin_8"
+		android:paddingHorizontal="@dimen/margin_13"
 	    android:orientation="horizontal"
 	    android:baselineAligned="false">
 
