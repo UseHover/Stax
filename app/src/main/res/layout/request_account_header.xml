@@ -11,7 +11,7 @@
 	<TextView
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-		android:paddingHorizontal="@dimen/margin_3"
+		android:paddingHorizontal="@dimen/margin_10"
 	    android:fontFamily="font-normal"
 	    android:textSize="@dimen/text_16"
 	    android:id="@+id/request_account_text_desc"

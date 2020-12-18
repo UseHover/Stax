@@ -72,10 +72,10 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 		HistoryViewHolder(@NonNull View itemView) {
 			super(itemView);
 			parentLayout = itemView.findViewById(R.id.transaction_item_layout);
-			content = itemView.findViewById(R.id.trans_content);
-			amount = itemView.findViewById(R.id.trans_amount);
-			date = itemView.findViewById(R.id.trans_date);
-			pendingNotice = itemView.findViewById(R.id.pending_notify_in_list);
+			content = itemView.findViewById(R.id.li_description);
+			amount = itemView.findViewById(R.id.li_amount);
+			date = itemView.findViewById(R.id.li_header);
+			pendingNotice = itemView.findViewById(R.id.li_callout);
 		}
 	}
 

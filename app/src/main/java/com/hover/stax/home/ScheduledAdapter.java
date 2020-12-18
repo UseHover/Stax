@@ -57,9 +57,9 @@ public class ScheduledAdapter extends RecyclerView.Adapter<ScheduledAdapter.Sche
 
 		ScheduledViewHolder(@NonNull View itemView) {
 			super(itemView);
-			description = itemView.findViewById(R.id.trans_content);
-			amount = itemView.findViewById(R.id.trans_amount);
-			header = itemView.findViewById(R.id.trans_date);
+			description = itemView.findViewById(R.id.li_description);
+			amount = itemView.findViewById(R.id.li_amount);
+			header = itemView.findViewById(R.id.li_header);
 		}
 	}
 

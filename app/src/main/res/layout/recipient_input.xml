@@ -34,8 +34,8 @@
 	<ImageButton android:id="@+id/contact_button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="28dp"
-		android:layout_marginEnd="@dimen/margin_21"
+		android:layout_marginTop="26dp"
+		android:layout_marginEnd="28dp"
 		android:layout_alignParentEnd="true"
 		app:srcCompat="@drawable/ic_contacts"
 		android:background="@color/transparent"/>

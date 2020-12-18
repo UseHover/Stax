@@ -12,7 +12,7 @@
 	    android:fontFamily="font-normal"
 		android:layout_marginBottom="@dimen/margin_13"
 	    android:textSize="@dimen/text_16"
-	    android:paddingHorizontal="@dimen/margin_3"
+	    android:paddingHorizontal="@dimen/margin_10"
 		android:lineSpacingExtra="@dimen/text_spacing_8"
 	    android:id="@+id/request_account_text_desc"
 	    android:text="@string/request_account_desc" />
@@ -20,7 +20,7 @@
 	<TableLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:layout_marginHorizontal="@dimen/margin_3">
+	    android:layout_marginHorizontal="@dimen/margin_10">
 
 		<TableRow android:id="@+id/countryRow">
 

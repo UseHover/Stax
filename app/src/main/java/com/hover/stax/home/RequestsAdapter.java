@@ -54,9 +54,9 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.Reques
 
 		RequestsViewHolder(@NonNull View itemView) {
 			super(itemView);
-			description = itemView.findViewById(R.id.trans_content);
-			amount = itemView.findViewById(R.id.trans_amount);
-			header = itemView.findViewById(R.id.trans_date);
+			description = itemView.findViewById(R.id.li_description);
+			amount = itemView.findViewById(R.id.li_amount);
+			header = itemView.findViewById(R.id.li_header);
 		}
 	}
 

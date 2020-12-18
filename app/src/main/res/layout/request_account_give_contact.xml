@@ -17,7 +17,7 @@
 		    android:layout_height="wrap_content"
 		    android:fontFamily="font-normal"
 		    android:textSize="@dimen/text_16"
-		    android:paddingHorizontal="@dimen/margin_3"
+		    android:paddingHorizontal="@dimen/margin_10"
 			android:lineSpacingExtra="@dimen/text_spacing_8"
 		    android:id="@+id/contact_desc"
 		    android:layout_marginBottom="@dimen/margin_21" />

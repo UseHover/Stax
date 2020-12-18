@@ -13,20 +13,19 @@
 	<com.hover.stax.views.StaxCardView
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-	    android:layout_marginTop="92dp"
-	    android:layout_marginHorizontal="3dp">
+	    android:layout_marginTop="92dp">
 
 		<ImageView
 		    android:layout_width="106dp"
 		    android:layout_height="@dimen/margin_34"
-			android:layout_margin="@dimen/margin_3"
+			android:layout_margin="@dimen/margin_10"
 		    android:layout_gravity="start"
 		    android:src="@mipmap/stax"/>
 
 		<TextView android:id="@+id/explainer"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-			android:layout_marginHorizontal="@dimen/margin_3"
+			android:layout_marginHorizontal="@dimen/margin_10"
 		    android:textColor="@color/offWhite"
 		    android:textSize="@dimen/text_16"
 		    android:fontFamily="font-normal"
