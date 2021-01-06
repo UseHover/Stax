@@ -70,7 +70,8 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		maybeRunAShowcase();
+		//For some reason, this caused a fatal exception for a specific Samsung device. Putting in try and catch to avoid crash.
+		try{maybeRunAShowcase(); } catch (Exception ignored){}
 	}
 
 	@Override
