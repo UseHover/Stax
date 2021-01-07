@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-    		android:id="@+id/swipelayout"
+          android:id="@+id/swipelayout"
 	    swiperefresh:refresh_mode="pull_mode"
 	    swiperefresh:keep_refresh_head="true"
 	    swiperefresh:enable_top_progress_bar="false"

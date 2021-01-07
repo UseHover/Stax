@@ -10,14 +10,14 @@ import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Handler
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import com.hover.stax.R
-import java.lang.Exception
+import com.hover.stax.home.MainActivity
+import com.hover.stax.utils.Utils
 import java.lang.ref.WeakReference
 
 
@@ -433,7 +433,7 @@ class BubbleShowCase(builder: BubbleShowCaseBuilder) {
 								.descriptionTextSize(20) //Subtitle text size in SP (default value 14sp)
 								.listener(listener!!)
 								.targetView(v!!).show()
-				  }catch (e: Exception) { }
+				  }catch (e: Exception) { Utils.logErrorAndReportToFirebase("BubbleShowcase", "Bubble showcase error", e) }
 
 			}
 	  }

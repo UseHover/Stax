@@ -132,7 +132,7 @@ public class NewRequestViewModel extends StagedViewModel {
 	public void setSchedule(Schedule s) {
 		schedule.setValue(s);
 		setAmount(s.amount);
-		new Thread(() -> requestees.setValue(repo.getContacts(s.recipient_ids.split(",")))).start();
+		new Thread(() -> requestees.postValue(repo.getContacts(s.recipient_ids.split(",")))).start();
 		setNote(s.note);
 		setStage(REVIEW_DIRECT);
 	}

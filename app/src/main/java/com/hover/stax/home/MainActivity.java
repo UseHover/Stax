@@ -26,6 +26,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.amplitude.api.Amplitude;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
@@ -42,6 +43,7 @@ import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
@@ -71,7 +73,7 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 	protected void onResume() {
 		super.onResume();
 		//For some reason, this caused a fatal exception for a specific Samsung device. Putting in try and catch to avoid crash.
-		try{maybeRunAShowcase(); } catch (Exception ignored){}
+		try{maybeRunAShowcase(); } catch (Exception e){ Utils.logErrorAndReportToFirebase(TAG, "Maybe showcase error", e); }
 	}
 
 	@Override
