@@ -10,13 +10,14 @@ import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Handler
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import com.hover.stax.R
+import com.hover.stax.home.MainActivity
+import com.hover.stax.utils.Utils
 import java.lang.ref.WeakReference
 
 
@@ -421,16 +422,19 @@ class BubbleShowCase(builder: BubbleShowCaseBuilder) {
 
 	  companion object {
 			fun showCase(title: String?, desc: String?, arrowPosition: ArrowPosition?, listener: BubbleShowCaseListener?, v: View?, activity: Activity) {
-				  BubbleShowCaseBuilder(activity) //Activity instance
-						  .title(title!!) //Any title for the bubble view
-						  .description(desc!!) //More detailed description
-						  .arrowPosition(arrowPosition!!) //You can force the position of the arrow to change the location of the bubble.
-						  .backgroundColor(activity.resources.getColor(R.color.brightBlue)) //Bubble background color
-						  .textColor(activity.resources.getColor(R.color.colorPrimary)) //Bubble Text color
-						  .titleTextSize(20) //Title text size in SP (default value 16sp)
-						  .descriptionTextSize(20) //Subtitle text size in SP (default value 14sp)
-						  .listener(listener!!)
-						  .targetView(v!!).show()
+				  try{
+						BubbleShowCaseBuilder(activity) //Activity instance
+								.title(title!!) //Any title for the bubble view
+								.description(desc!!) //More detailed description
+								.arrowPosition(arrowPosition!!) //You can force the position of the arrow to change the location of the bubble.
+								.backgroundColor(activity.resources.getColor(R.color.brightBlue)) //Bubble background color
+								.textColor(activity.resources.getColor(R.color.colorPrimary)) //Bubble Text color
+								.titleTextSize(20) //Title text size in SP (default value 16sp)
+								.descriptionTextSize(20) //Subtitle text size in SP (default value 14sp)
+								.listener(listener!!)
+								.targetView(v!!).show()
+				  }catch (e: Exception) { Utils.logErrorAndReportToFirebase("BubbleShowcase", "Bubble showcase error", e) }
+
 			}
 	  }
 
