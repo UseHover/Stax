@@ -19,8 +19,13 @@
 		app:elevation="10dp"
 		style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
 		app:fabAlignmentMode="end"
-		app:fabAnimationMode="slide"
+		app:fabAnimationMode="scale"
 		app:menu="@menu/bottom_nav_menu" />
-
+	<com.google.android.material.floatingactionbutton.FloatingActionButton
+	    android:visibility="visible"
+	    android:layout_width="0dp"
+	    android:layout_height="0dp"
+	    app:backgroundTint="?attr/colorSecondary"
+	    app:layout_anchor="@id/nav_view" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

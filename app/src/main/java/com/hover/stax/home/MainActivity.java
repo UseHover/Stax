@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
@@ -27,6 +28,7 @@ import com.amplitude.api.Amplitude;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
@@ -38,21 +40,24 @@ import com.hover.stax.requests.AbstractMessageSendingActivity;
 import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.security.BiometricChecker;
+import com.hover.stax.security.PermissionsFragment;
 import com.hover.stax.security.SecurityFragment;
 import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.DateUtils;
+import com.hover.stax.utils.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
 public class MainActivity extends AbstractMessageSendingActivity implements
-	BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener {
+	BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener, HomeNavigationListener {
 
 	final public static String TAG = "MainActivity";
 	private BalancesViewModel balancesViewModel;
 	private ShowcaseExecutor showCase;
+	BottomAppBar nav;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -222,7 +227,7 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 	}
 
 	private void setUpNav() {
-		BottomAppBar nav = findViewById(R.id.nav_view);
+		nav = findViewById(R.id.nav_view);
 		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 		AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
 		NavigationUI.setupWithNavController(nav, navController, appBarConfiguration);
@@ -272,6 +277,38 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 		}
 	}
 
+
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		if (requestCode == PermissionsFragment.PHONE_REQUEST && PermissionUtils.permissionsGranted(grantResults))
+			//goToChannelSelection();
+	}
+
+	@Override
+	public void goToBuyAirtimeScreen() {
+		if(nav !=null)
+	}
+
+	@Override
+	public void goToRequestMoneyScreen() {
+
+	}
+
+	@Override
+	public void goToSendMoneyScreen() {
+
+	}
+
+	@Override
+	public void goToBalanceAndHistoryScreen() {
+
+	}
+
+	private boolean hasAcceptedBasicPermissions() {
+		return new PermissionHelper(this).hasPhonePerm();
+	}
 }
 
 
