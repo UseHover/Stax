@@ -14,18 +14,13 @@
 		android:id="@+id/nav_view"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_gravity="bottom"
+		android:layout_gravity="bottom|start"
+	    	android:gravity="start"
 		app:elevation="10dp"
 		style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
 		app:fabAlignmentMode="end"
 		app:fabAnimationMode="slide"
 		app:menu="@menu/bottom_nav_menu" />
 
-	<com.google.android.material.floatingactionbutton.FloatingActionButton
-		android:id="@+id/fab"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		app:backgroundTint="?attr/colorSecondary"
-		app:srcCompat="@drawable/ic_money"
-		app:layout_anchor="@id/nav_view" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

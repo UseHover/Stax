@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="bottom"
+    android:paddingVertical="@dimen/margin_89"
+    android:paddingHorizontal="@dimen/margin_5"
+    >
+
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginHorizontal="@dimen/margin_3"
+	    android:layout_gravity="center"
+	    android:gravity="center"
+	    android:layout_marginVertical="@dimen/margin_26"
+	    android:orientation="horizontal">
+
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textSize="@dimen/text_21"
+		    android:gravity="center"
+		    android:fontFamily="font-normal"
+		    android:layout_gravity="center"
+		    android:layout_marginHorizontal="@dimen/margin_8"
+		    android:text="@string/welcome_to"/>
+
+		<ImageView
+		    android:layout_width="80dp"
+		    android:layout_height="40dp"
+		    android:src="@mipmap/stax"
+		    android:id="@+id/home_stax_logo"
+		    android:layout_gravity="center"
+		    android:gravity="center" />
+	</LinearLayout>
+
+	<com.hover.stax.views.StaxCardView
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:id="@+id/buyAirtimeOption"
+	    >
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/nav_airtime"
+		    android:textSize="@dimen/text_21"
+		    android:fontFamily="font-medium"
+		    android:padding="@dimen/margin_21"
+		    />
+	</com.hover.stax.views.StaxCardView>
+
+	<View
+	    android:layout_width="match_parent"
+	    android:background="@color/colorPrimaryDark"
+	    android:layout_height="5dp"/>
+
+	<com.hover.stax.views.StaxCardView
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:id="@+id/requestMoneyOption"
+	    android:layout_marginTop="-26dp"
+	    >
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/fab_request"
+		    android:textSize="@dimen/text_21"
+		    android:fontFamily="font-medium"
+		    android:padding="@dimen/margin_21"
+		    />
+	</com.hover.stax.views.StaxCardView>
+
+	<View
+	    android:layout_width="match_parent"
+	    android:background="@color/colorPrimaryDark"
+	    android:layout_height="5dp"/>
+
+	<com.hover.stax.views.StaxCardView
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:id="@+id/sendMoneyOption"
+	    android:layout_marginTop="-26dp"
+	    >
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/fab_sendMoney"
+		    android:fontFamily="font-medium"
+		    android:textSize="@dimen/text_21"
+		    android:padding="@dimen/margin_21"
+		    />
+	</com.hover.stax.views.StaxCardView>
+
+</LinearLayout>

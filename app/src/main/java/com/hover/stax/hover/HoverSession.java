@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.widget.RelativeLayout;
 
 import androidx.fragment.app.Fragment;
 
@@ -49,14 +50,15 @@ final public class HoverSession {
 	private HoverParameters.Builder getBasicBuilder(Builder b) {
 		HoverParameters.Builder builder = new HoverParameters.Builder(b.activity);
 		builder.request(b.action.public_id);
-//		builder.setEnvironment(HoverParameters.TEST_ENV);
+		builder.setEnvironment(HoverParameters.PROD_ENV);
 		builder.initialProcessingMessage(getMessage(b.action, b.activity));
 		builder.showUserStepDescriptions(true);
 		builder.finalMsgDisplayTime(finalScreenTime);
 		builder.style(R.style.StaxHoverTheme);
-//		builder.template(Constants.STYLE_MODE_FOR_STAX);
+		//builder.sty(Constants.STYLE_MODE_FOR_STAX);
 		builder.transactingImages(getSenderLogo(), getReceiverLogo(b.action));
 		builder.customBackgroundImage(R.drawable.stax_background);
+		builder.styleMode(R.layout.stax_transacting_in_progress);
 
 		return builder;
 	}

@@ -73,7 +73,7 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 	protected void onResume() {
 		super.onResume();
 		//For some reason, this caused a fatal exception for a specific Samsung device. Putting in try and catch to avoid crash.
-		try{maybeRunAShowcase(); } catch (Exception e){ Utils.logErrorAndReportToFirebase(TAG, "Maybe showcase error", e); }
+	//	try{maybeRunAShowcase(); } catch (Exception e){ Utils.logErrorAndReportToFirebase(TAG, "Maybe showcase error", e); }
 	}
 
 	@Override
@@ -222,7 +222,6 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 	}
 
 	private void setUpNav() {
-		FloatingActionButton fab = setupFloatingButton();
 		BottomAppBar nav = findViewById(R.id.nav_view);
 		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 		AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
@@ -231,6 +230,7 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 		nav.setOnMenuItemClickListener((Toolbar.OnMenuItemClickListener) item -> {
 			switch (item.getItemId()) {
 				case R.id.navigation_home: navController.navigate(R.id.navigation_home); break;
+				case R.id.navigation_balance_history: navController.navigate(R.id.navigation_balance_history); break;
 				case R.id.navigation_security: navController.navigate(R.id.navigation_security); break;
 			}
             return false;
@@ -238,20 +238,26 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 
 		navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
 			switch (destination.getId()) {
+				case R.id.navigation_home:
+					changeDrawableColor(nav.findViewById(R.id.navigation_home), R.color.brightBlue);
+					changeDrawableColor(nav.findViewById(R.id.navigation_balance_history), R.color.offWhite);
+					changeDrawableColor(nav.findViewById(R.id.navigation_security), R.color.offWhite);
+					break;
+				case R.id.navigation_balance_history:
+					changeDrawableColor(nav.findViewById(R.id.navigation_home), R.color.offWhite);
+					changeDrawableColor(nav.findViewById(R.id.navigation_balance_history), R.color.brightBlue);
+					changeDrawableColor(nav.findViewById(R.id.navigation_security), R.color.offWhite);
+					break;
 				case R.id.navigation_security:
 					changeDrawableColor(nav.findViewById(R.id.navigation_home), R.color.offWhite);
+					changeDrawableColor(nav.findViewById(R.id.navigation_balance_history), R.color.offWhite);
 					changeDrawableColor(nav.findViewById(R.id.navigation_security), R.color.brightBlue);
-					fab.hide();
 					break;
-				case R.id.navigation_home:
-					changeDrawableColor(nav.findViewById(R.id.navigation_security), R.color.offWhite);
-					changeDrawableColor(nav.findViewById(R.id.navigation_home), R.color.brightBlue);
-					fab.show();
-					break;
+
 				default:
 					changeDrawableColor(nav.findViewById(R.id.navigation_security), R.color.offWhite);
+					changeDrawableColor(nav.findViewById(R.id.navigation_balance_history), R.color.offWhite);
 					changeDrawableColor(nav.findViewById(R.id.navigation_home), R.color.offWhite);
-					fab.show();
 			}
 		});
 
@@ -266,29 +272,6 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 		}
 	}
 
-	@SuppressLint("UseCompatLoadingForDrawables")
-	FloatingActionButton setupFloatingButton() {
-		FloatingActionButton fab = findViewById(R.id.fab);
-		fab.setOnClickListener(view -> {
-			fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
-			PopupMenu popup = new PopupMenu(MainActivity.this, fab);
-			popup.getMenuInflater().inflate(R.menu.fab_menu, popup.getMenu());
-
-			popup.setOnMenuItemClickListener(item -> {
-				switch (item.getItemId()) {
-					case R.id.transfer: startTransfer(Action.P2P, false, getIntent()); break;
-					case R.id.airtime: startTransfer(Action.AIRTIME, false, getIntent()); break;
-					case R.id.request: startActivityForResult(new Intent(this, RequestActivity.class), Constants.REQUEST_REQUEST); break;
-					default: break;
-				}
-				return true;
-			});
-			popup.setOnDismissListener(menu -> fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_money)));
-
-			popup.show();
-		});
-		return fab;
-	}
 }
 
 

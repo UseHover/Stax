@@ -8,6 +8,7 @@
 	<string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
 
 	<string name="nav_home">Home</string>
+	<string name="nav_balance_and_history">Balance and history</string>
 	<string name="nav_airtime">Buy Airtime</string>
 	<string name="nav_money">Move Money</string>
 	<string name="nav_security">Security</string>
@@ -45,12 +46,14 @@
 	</string-array>
 
 	<!-- Home -->
+	<string name="welcome_to">Welcome to</string>
 	<string name="bal_cardhead">Balances</string>
 	<string name="btn_addaccts">Add accounts</string>
 	<string name="hist_cardhead">History</string>
 	<string name="hist_zerobody">You do not have any history yet. Send money or buy airtime to get started.</string>
 	<string name="future_cardhead">Future Transactions</string>
 	<string name="fab_transfer">Transfer</string>
+	<string name="fab_sendMoney">Send money</string>
 	<string name="fab_airtime">Buy airtime</string>
 	<string name="fab_request">Request money</string>
 	<string name="tool_histbody">These are all the transactions you have made with Stax</string>
