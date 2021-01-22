@@ -54,6 +54,7 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.Channe
 		Picasso.get().load(channel.logoUrl).into(holder);
 		holder.logoWrapper.setForeground(selected.contains(channel.id) ?
 			holder.itemView.getResources().getDrawable(R.drawable.ic_grey_circle) : null);
+
 		holder.checkIcon.setVisibility(selected.contains(channel.id) ? View.VISIBLE : View.GONE);
 	}
 

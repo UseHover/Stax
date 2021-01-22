@@ -1,11 +1,16 @@
 package com.hover.stax.permissions;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.view.View;
 
 import androidx.core.app.ActivityCompat;
+
+import com.hover.stax.R;
+import com.hover.stax.views.StaxDialog;
 
 public class PermissionUtils {
 
@@ -39,5 +44,14 @@ public class PermissionUtils {
 
 	public static boolean hasSmsPermission(Context c) {
 		return Build.VERSION.SDK_INT < 23 || PermissionUtils.has(new String[]{Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS}, c);
+	}
+
+	public static void showInformativeBasicPermissionDialog(View.OnClickListener posListener, View.OnClickListener negListener, Activity activity) {
+		new StaxDialog(activity)
+				.setDialogTitle(R.string.permissions_title)
+				.setDialogMessage(R.string.permissions_basic_desc)
+				.setPosButton(R.string.btn_ok, posListener)
+				.setNegButton(R.string.btn_cancel, negListener)
+				.showIt();
 	}
 }

@@ -45,6 +45,8 @@
 					android:layout_weight="1"
 					android:paddingHorizontal="@dimen/margin_10"
 					android:text="@string/bal_cardhead"
+				    	android:gravity="center_vertical|end"
+				    	android:layout_gravity="center_vertical|end"
 					android:textSize="@dimen/text_13"
 					android:textAllCaps="true"
 					android:textAlignment="viewEnd"

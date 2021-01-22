@@ -1,6 +1,5 @@
 package com.hover.stax.home;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -11,10 +10,12 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -25,7 +26,8 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.amplitude.api.Amplitude;
 import com.google.android.material.bottomappbar.BottomAppBar;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.hover.sdk.permissions.PermissionDialog;
+import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
@@ -41,16 +43,24 @@ import com.hover.stax.security.SecurityFragment;
 import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.DateUtils;
+import com.hover.stax.permissions.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
 
 import java.util.List;
 
 public class MainActivity extends AbstractMessageSendingActivity implements
-	BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener {
+	BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener, HomeNavigationListener {
 
 	final public static String TAG = "MainActivity";
 	private BalancesViewModel balancesViewModel;
 	private ShowcaseExecutor showCase;
+	private NavController navController;
+	private int navigateToWhere = 0;
+	private boolean askStarted = false;
+	private final static String BASIC_PERM = "basic_permission";
+	private boolean currentAskIsForBasicPermssion;
+	private AlertDialog dialog;
+	public final static int PHONE_REQUEST = 0, SMS_REQUEST = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +80,7 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		maybeRunAShowcase();
+		if (!currentAskIsForBasicPermssion && askStarted) requestNext();
 	}
 
 	@Override
@@ -94,6 +104,11 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 		Bundle bundle = new Bundle();
 		bundle.putInt(TransactionContract.COLUMN_CHANNEL_ID, channel_id);
 		Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.channelsDetailsFragment, bundle);
+	}
+
+	@Override
+	public void triggerRefreshAll() {
+		runAllBalances(null);
 	}
 
 	@Override
@@ -219,36 +234,42 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 	}
 
 	private void setUpNav() {
-		FloatingActionButton fab = setupFloatingButton();
 		BottomAppBar nav = findViewById(R.id.nav_view);
-		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+		navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 		AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
 		NavigationUI.setupWithNavController(nav, navController, appBarConfiguration);
 
 		nav.setOnMenuItemClickListener((Toolbar.OnMenuItemClickListener) item -> {
-			switch (item.getItemId()) {
-				case R.id.navigation_home: navController.navigate(R.id.navigation_home); break;
-				case R.id.navigation_security: navController.navigate(R.id.navigation_security); break;
+			if(item.getItemId() == R.id.navigation_home) navController.navigate(R.id.navigation_home);
+			else {
+				navigateToWhere = item.getItemId();
+				navigateOutsideHomeScreen(item.getItemId(), navController);
 			}
             return false;
 		});
 
 		navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
 			switch (destination.getId()) {
+				case R.id.navigation_home:
+					changeDrawableColor(nav.findViewById(R.id.navigation_home), R.color.brightBlue);
+					changeDrawableColor(nav.findViewById(R.id.navigation_balance_history), R.color.offWhite);
+					changeDrawableColor(nav.findViewById(R.id.navigation_security), R.color.offWhite);
+					break;
+				case R.id.navigation_balance_history:
+					changeDrawableColor(nav.findViewById(R.id.navigation_home), R.color.offWhite);
+					changeDrawableColor(nav.findViewById(R.id.navigation_balance_history), R.color.brightBlue);
+					changeDrawableColor(nav.findViewById(R.id.navigation_security), R.color.offWhite);
+					break;
 				case R.id.navigation_security:
 					changeDrawableColor(nav.findViewById(R.id.navigation_home), R.color.offWhite);
+					changeDrawableColor(nav.findViewById(R.id.navigation_balance_history), R.color.offWhite);
 					changeDrawableColor(nav.findViewById(R.id.navigation_security), R.color.brightBlue);
-					fab.hide();
 					break;
-				case R.id.navigation_home:
-					changeDrawableColor(nav.findViewById(R.id.navigation_security), R.color.offWhite);
-					changeDrawableColor(nav.findViewById(R.id.navigation_home), R.color.brightBlue);
-					fab.show();
-					break;
+
 				default:
 					changeDrawableColor(nav.findViewById(R.id.navigation_security), R.color.offWhite);
+					changeDrawableColor(nav.findViewById(R.id.navigation_balance_history), R.color.offWhite);
 					changeDrawableColor(nav.findViewById(R.id.navigation_home), R.color.offWhite);
-					fab.show();
 			}
 		});
 
@@ -263,29 +284,94 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 		}
 	}
 
-	@SuppressLint("UseCompatLoadingForDrawables")
-	FloatingActionButton setupFloatingButton() {
-		FloatingActionButton fab = findViewById(R.id.fab);
-		fab.setOnClickListener(view -> {
-			fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
-			PopupMenu popup = new PopupMenu(MainActivity.this, fab);
-			popup.getMenuInflater().inflate(R.menu.fab_menu, popup.getMenu());
-
-			popup.setOnMenuItemClickListener(item -> {
-				switch (item.getItemId()) {
-					case R.id.transfer: startTransfer(Action.P2P, false, getIntent()); break;
-					case R.id.airtime: startTransfer(Action.AIRTIME, false, getIntent()); break;
-					case R.id.request: startActivityForResult(new Intent(this, RequestActivity.class), Constants.REQUEST_REQUEST); break;
-					default: break;
-				}
-				return true;
-			});
-			popup.setOnDismissListener(menu -> fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_money)));
-
-			popup.show();
-		});
-		return fab;
+	private void navigateOutsideHomeScreen(int toWhere, NavController navController) {
+		PermissionHelper permissionHelper = new PermissionHelper(this);
+		if(permissionHelper.hasPhonePerm() && permissionHelper.hasSmsPerm()) {
+			askStarted = false;
+			switch (toWhere) {
+				case R.id.transfer: startTransfer(Action.P2P, false, getIntent()); break;
+				case R.id.airtime: startTransfer(Action.AIRTIME, false, getIntent()); break;
+				case R.id.request: startActivityForResult(new Intent(this, RequestActivity.class), Constants.REQUEST_REQUEST); break;
+				case R.id.navigation_home: navController.navigate(R.id.navigation_home); break;
+				case R.id.navigation_balance_history: navController.navigate(R.id.navigation_balance_history); break;
+				case R.id.navigation_security: navController.navigate(R.id.navigation_security); break;
+				default: break;
+			}
+		}
+		else if (askStarted) requestNext();
+		else PermissionUtils.showInformativeBasicPermissionDialog(posBtn-> startRequest(true), null, this);
 	}
+
+	@Override
+	public void goToBuyAirtimeScreen(int resId) {
+		navigateToWhere = resId;
+		navigateOutsideHomeScreen(resId, null);
+	}
+
+	@Override
+	public void goToRequestMoneyScreen(int resId) {
+		navigateToWhere = resId;
+		navigateOutsideHomeScreen(resId, null);
+	}
+
+	@Override
+	public void goToSendMoneyScreen(int resId) {
+		navigateToWhere = resId;
+		navigateOutsideHomeScreen(resId, null);
+	}
+
+
+
+	//PERMISSIONS
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		if (PermissionUtils.permissionsGranted(grantResults)) navigateOutsideHomeScreen(navigateToWhere, navController);
+		else requestNext();
+	}
+
+	private void startRequest(boolean isForBasicPermission) {
+		askStarted = true;
+		currentAskIsForBasicPermssion = isForBasicPermission;
+		requestNext();
+	}
+
+	private void requestNext() {
+		PermissionHelper ph = new PermissionHelper(this);
+		if (currentAskIsForBasicPermssion && !ph.hasPhonePerm())
+			requestPhone(ph);
+		else if (!ph.hasSmsPerm())
+			requestSMS(ph);
+		else if (!currentAskIsForBasicPermssion && !ph.hasOverlayPerm())
+			requestOverlay();
+		else if (!currentAskIsForBasicPermssion && !ph.hasAccessPerm())
+			requestAccessibility();
+		else Amplitude.getInstance().logEvent(getString(R.string.granted_sdk_permissions));
+	}
+
+	private void requestPhone(PermissionHelper ph) {
+		Amplitude.getInstance().logEvent(getString(R.string.request_permphone));
+		ph.requestPhone(this, PHONE_REQUEST);
+	}
+
+	private void requestSMS(PermissionHelper ph) {
+		Amplitude.getInstance().logEvent(getString(R.string.request_permsms));
+		ph.requestBasicPerms(this, SMS_REQUEST);
+	}
+
+	public void requestOverlay() {
+		Amplitude.getInstance().logEvent(getString(R.string.request_permoverlay));
+		if (dialog != null) dialog.dismiss();
+		dialog = new PermissionDialog(this, PermissionDialog.OVERLAY).createDialog(this);
+	}
+
+	public void requestAccessibility() {
+		Amplitude.getInstance().logEvent(getString(R.string.request_permaccessibility));
+		if (dialog != null) dialog.dismiss();
+		dialog = new PermissionDialog(this, PermissionDialog.ACCESS).createDialog(this);
+	}
+
 }
 
 

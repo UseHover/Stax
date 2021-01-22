@@ -9,7 +9,13 @@
 	    android:id="@+id/navigation_home"
 	    android:name="com.hover.stax.home.HomeFragment"
 	    android:label="@string/nav_home"
-	    tools:layout="@layout/fragment_home" />
+	    tools:layout="@layout/fragment_main" />
+
+	<fragment
+	    android:id="@+id/navigation_balance_history"
+	    android:name="com.hover.stax.home.BalanceAndHistoryFragment"
+	    android:label="@string/nav_balance_and_history"
+	    tools:layout="@layout/fragment_balance_history" />
 
 	<fragment
 	    android:id="@+id/navigation_security"

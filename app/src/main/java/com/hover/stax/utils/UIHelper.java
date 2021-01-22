@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -21,6 +22,7 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.hover.stax.R;
 
 import org.jetbrains.annotations.NotNull;
@@ -90,4 +92,5 @@ public class UIHelper {
 	public static int dpToPx(int dp) {
 		return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
 	}
+
 }

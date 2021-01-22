@@ -43,6 +43,7 @@ public class DatabaseRepo {
 	private ContactDao contactDao;
 
 	private LiveData<List<Channel>> allChannels;
+	private LiveData<List<Channel>> allChannelsBySelected;
 	private LiveData<List<Channel>> selectedChannels;
 	private MediatorLiveData<List<Action>> filteredActions = new MediatorLiveData<>();
 
@@ -60,7 +61,8 @@ public class DatabaseRepo {
 		actionDao = sdkDb.actionDao();
 		simDao = sdkDb.simDao();
 
-		allChannels = channelDao.getAll();
+		allChannels = channelDao.getAllInAlphaOrder();
+		allChannelsBySelected = channelDao.getAllInSelectedOrder();
 		selectedChannels = channelDao.getSelected(true);
 	}
 
@@ -76,6 +78,9 @@ public class DatabaseRepo {
 
 	public LiveData<List<Channel>> getAllChannels() {
 		return allChannels;
+	}
+	public LiveData<List<Channel>> getAllChannelsBySelectedOrder() {
+		return allChannelsBySelected;
 	}
 
 	public LiveData<List<Channel>> getSelected() {

@@ -77,7 +77,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	}
 
 	private void chooseNav() {
-		if (getIntent().getAction().equals(Intent.ACTION_VIEW) && getIntent().getData() != null)
+		if (getIntent().getAction() !=null && getIntent().getAction().equals(Intent.ACTION_VIEW) && getIntent().getData() != null)
 			goToRequest(getIntent());
 		else if (Utils.getSharedPrefs(this).getInt(LANGUAGE_CHECK, 0) == 0)
 			startActivity(new Intent(this, SelectLanguageActivity.class));

@@ -55,6 +55,9 @@ public class ChannelListViewModel extends AndroidViewModel {
 		countryChannels.addSource(allChannels, this::onChannelsUpdateCountries);
 		countryChannels.addSource(simCountryList, this::onCountryUpdate);
 	}
+	public void init(boolean byAlpha) {
+
+	}
 
 	LiveData<List<Channel>> getChannels() {
 		return allChannels;
@@ -73,6 +76,7 @@ public class ChannelListViewModel extends AndroidViewModel {
 		}
 		selected.addSource(allChannels, this::loadSelectedChannels);
 	}
+
 
 	private void loadSelectedChannels(List<Channel> channels) {
 		List<Integer> ls = new ArrayList<>();
@@ -152,7 +156,7 @@ public class ChannelListViewModel extends AndroidViewModel {
 		simChannels.setValue(simChannelList);
 	}
 
-	LiveData<List<Channel>> getSimChannels() {
+	public LiveData<List<Channel>> getSimChannels() {
 		return simChannels;
 	}
 
@@ -189,7 +193,7 @@ public class ChannelListViewModel extends AndroidViewModel {
 		selected.setValue(list);
 	}
 
-	void saveSelected() {
+	public void saveSelected() {
 		List<Channel> saveChannelsTemp = allChannels.getValue() != null ? allChannels.getValue() : new ArrayList<>();
 		for (int i = 0; i < saveChannelsTemp.size(); i++) {
 			Channel channel = saveChannelsTemp.get(i);

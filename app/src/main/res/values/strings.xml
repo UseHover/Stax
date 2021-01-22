@@ -8,6 +8,7 @@
 	<string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
 
 	<string name="nav_home">Home</string>
+	<string name="nav_balance_and_history">Balance and history</string>
 	<string name="nav_airtime">Buy Airtime</string>
 	<string name="nav_money">Move Money</string>
 	<string name="nav_security">Security</string>
@@ -19,6 +20,8 @@
 	<string name="nav_edit_request">Edit Request Details</string>
 	<string name="nav_edit_transfer">Edit Transfer Details</string>
 	<string name="nav_language">Language Choice</string>
+	<string name="permissions_title">Permissions needed</string>
+	<string name="permissions_basic_desc">We need phone permissions to see which accounts you might have.</string>
 	<string name="nav_sim_permission">Grant SIM permission</string>
 	<string name="nav_hover_permissions">Grant Hover permissions</string>
 	<string name="nav_pins_entry">Enter Pins</string>
@@ -45,15 +48,23 @@
 	</string-array>
 
 	<!-- Home -->
+	<string name="welcome_to">Welcome to</string>
 	<string name="bal_cardhead">Balances</string>
 	<string name="btn_addaccts">Add accounts</string>
 	<string name="hist_cardhead">History</string>
 	<string name="hist_zerobody">You do not have any history yet. Send money or buy airtime to get started.</string>
 	<string name="future_cardhead">Future Transactions</string>
 	<string name="fab_transfer">Transfer</string>
+	<string name="fab_sendMoney">Send money</string>
 	<string name="fab_airtime">Buy airtime</string>
 	<string name="fab_request">Request money</string>
 	<string name="tool_histbody">These are all the transactions you have made with Stax</string>
+
+	<!-- Balances -->
+	<string name="refresh_balance_desc">Refresh balance to see your money</string>
+	<string name="refresh_balances">Refresh balances</string>
+	<string name="link_an_account">Link an account</string>
+	<string name="refresh_balance_error">Add an account to check your balance.</string>
 
 	<!-- Hover Session -->
 	<string name="balance_msg">Checking %1$s balance</string>
@@ -174,7 +185,7 @@
 	<string name="fromacct_cardhead">From this account</string>
 	<string name="fromacct_fielderror">You must select an sending account. If you have none please tap <u>add account</u>.</string>
 	<string name="actions_fielderror">This account does not support buy airtime. Please select a different account.</string>
-	<string name="link_addacct"><u>+ Add an account</u></string>
+	<string name="link_addacct"><u>+ Link another account</u></string>
 	<string name="recipientnetwork_cardhead">To network</string>
 	<string name="recipientnetwork_label">To this network</string>
 	<string name="recipientnetwork_fielderror">No recipient network chosen.</string>

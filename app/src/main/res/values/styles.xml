@@ -75,6 +75,27 @@
 		<item name="textAllCaps">false</item>
 	</style>
 
+	<style name="StaxOrdinaryButtonColored" parent="Widget.AppCompat.Button.Borderless">
+		<item name="android:layout_marginStart">@dimen/margin_3</item>
+		<item name="android:layout_marginEnd">@dimen/margin_10</item>
+		<item name="android:layout_marginBottom">@dimen/margin_3</item>
+		<item name="android:layout_marginTop">@dimen/margin_3</item>
+		<item name="android:paddingStart">@dimen/margin_13</item>
+		<item name="android:paddingEnd">@dimen/margin_13</item>
+		<item name="android:paddingTop">@dimen/margin_13</item>
+		<item name="android:paddingBottom">@dimen/margin_13</item>
+		<item name="android:radius">5dp</item>
+		<item name="android:textColor">@color/colorPrimaryDark</item>
+		<item name="android:textSize">@dimen/text_16</item>
+		<item name="fontFamily">font-medium</item>
+		<item name="android:fontFamily">font-medium</item>
+		<item name="android:background">@drawable/button_bg_colored</item>
+		<item name="android:elevation" tools:targetApi="lollipop">1dp</item>
+		<item name="elevation">1dp</item>
+		<item name="android:textAllCaps">false</item>
+		<item name="textAllCaps">false</item>
+	</style>
+
 	<style name="HoverButton" parent="StaxButton">
 		<item name="android:paddingStart">@dimen/margin_13</item>
 		<item name="android:paddingEnd">@dimen/margin_13</item>
@@ -122,6 +143,8 @@
 		<item name="hintTextColor">@color/offWhite</item>
 		<item name="android:textColor">@color/offWhite</item>
 		<item name="android:textSize">@dimen/text_13</item>
+		<item name="fontFamily">font-medium</item>
+		<item name="android:fontFamily">font-medium</item>
 		<item name="errorTextColor">@color/bright_red</item>
 		<item name="errorEnabled">true</item>
 	</style>
@@ -136,6 +159,8 @@
 		<item name="hintTextColor">@color/offWhite</item>
 		<item name="android:textColor">@color/offWhite</item>
 		<item name="android:textSize">@dimen/text_21</item>
+		<item name="fontFamily">font-medium</item>
+		<item name="android:fontFamily">font-medium</item>
 		<item name="endIconTint">@color/offWhite</item>
 		<item name="materialThemeOverlay">@style/StaxDropdownPopup</item>
 		<item name="errorEnabled">true</item>

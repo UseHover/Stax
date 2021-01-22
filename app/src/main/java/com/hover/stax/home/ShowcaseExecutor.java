@@ -62,18 +62,7 @@ public class ShowcaseExecutor {
 	}
 
 	public void showcasePeekBalanceStage() {
-		openBalance(getSwipeLayout());
-		if (root != null && root.findViewById(R.id.balances_recyclerView) != null && ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0) != null)
-			startShowcase(activity.getString(R.string.onboard_peekhead), activity.getString(R.string.onboard_peekbody),
-					peekBalanceShowcaseClickListener, ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0).findViewById(R.id.balance_drag));
-	}
 
-	private SwipeRevealLayout getSwipeLayout() {
-		if (root != null && root.findViewById(R.id.balances_recyclerView) != null &&
-			    ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildCount() > 0 &&
-			    ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0).findViewById(R.id.swipe_reveal_layout) != null)
-			return ((SwipeRevealLayout) ((RecyclerView) root.findViewById(R.id.balances_recyclerView)).getChildAt(0).findViewById(R.id.swipe_reveal_layout));
-		return null;
 	}
 
 	private void openBalance(SwipeRevealLayout v) { if (v != null) v.open(true); }
@@ -123,19 +112,16 @@ public class ShowcaseExecutor {
 		@Override
 		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) {
 			endStage(bubbleShowCase);
-			closeBalance(getSwipeLayout());
 		}
 
 		@Override
 		public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) {
 			endStage(bubbleShowCase);
-			closeBalance(getSwipeLayout());
 		}
 
 		@Override
 		public void onTargetClick(@NotNull BubbleShowCase bubbleShowCase) {
 			endStage(bubbleShowCase);
-			closeBalance(getSwipeLayout());
 		}
 	};
 

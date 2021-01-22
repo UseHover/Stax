@@ -12,6 +12,7 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 
@@ -129,6 +130,10 @@ public class Utils {
 			return true;
 		}
 		return false;
+	}
+	public static void logErrorAndReportToFirebase(String tag, String message, Exception e) {
+		Log.e(tag, message, e);
+		FirebaseCrashlytics.getInstance().recordException(e);
 	}
 
 
