@@ -87,6 +87,10 @@ public class BalanceAndHistoryFragment extends Fragment implements TransactionHi
 
 
 	private void setUpBalances(View view) {
+		observeBalanceChannels(view);
+		observeBalanceError();
+	}
+	private void observeBalanceChannels(View view) {
 		StaxCardView balanceCard = view.findViewById(R.id.balance_card);
 		balanceCard.backButton.setVisibility(GONE);
 		balanceCard.setActivated(false);
@@ -97,8 +101,6 @@ public class BalanceAndHistoryFragment extends Fragment implements TransactionHi
 		recyclerView.setHasFixedSize(true);
 
 		balancesViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
-
-
 			balanceAdapter = new BalanceAdapter(channels, (MainActivity) getActivity());
 			recyclerView.setAdapter(balanceAdapter);
 			recyclerView.setVisibility(channels != null && channels.size() > 0 ? VISIBLE : GONE);
@@ -109,10 +111,10 @@ public class BalanceAndHistoryFragment extends Fragment implements TransactionHi
 				balanceAdapter.updateShowBalance();
 			});
 			setAddAccountVisibilityStagTeToOnlyText(channels !=null && channels.size() > 0);
-
-			//setMeta(view, channels);
 		});
+	}
 
+	private void observeBalanceError() {
 		balancesViewModel.getBalanceError().observe(getViewLifecycleOwner(), showError-> {
 			if(showError) {
 				linkAccountLayout.setError(getString(R.string.refresh_balance_error));

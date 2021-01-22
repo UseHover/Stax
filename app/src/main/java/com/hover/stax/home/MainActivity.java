@@ -320,11 +320,7 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 		navigateOutsideHomeScreen(resId, null);
 	}
 
-	@Override
-	public void goToBalanceAndHistoryScreen(int resId) {
-		navigateToWhere = resId;
-		navigateOutsideHomeScreen(resId, null);
-	}
+
 
 	//PERMISSIONS
 
