@@ -20,6 +20,7 @@ import com.hover.sdk.permissions.PermissionDialog;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.channels.ChannelsAdapter;
+import com.hover.stax.security.PinsViewModel;
 import com.hover.stax.utils.UIHelper;
 
 import static android.app.Activity.RESULT_CANCELED;

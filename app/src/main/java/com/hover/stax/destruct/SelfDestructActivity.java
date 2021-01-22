@@ -16,10 +16,8 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
-import com.hover.stax.utils.PermissionUtils;
+import com.hover.stax.permissions.PermissionUtils;
 import com.hover.stax.utils.Utils;
-
-import java.util.Date;
 
 public class SelfDestructActivity extends AppCompatActivity {
 	@Override

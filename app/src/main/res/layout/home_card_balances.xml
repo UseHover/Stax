@@ -3,26 +3,75 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
+    	app:backClickable="true"
+    	app:showBack="true"
+    	android:id="@+id/balance_card"
+      app:backRes="@drawable/visibility_icon"
 	app:title="@string/bal_cardhead">
 
 	<androidx.recyclerview.widget.RecyclerView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginHorizontal="@dimen/margin_10"
 		android:layout_marginBottom="@dimen/margin_21"
 		android:id="@+id/balances_recyclerView" />
 
-	<RelativeLayout
+	<LinearLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
+		android:layout_height="wrap_content"
+	    	android:orientation="vertical"
 
+	    >
+
+		<TextView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:text="@string/link_addacct"
+		    android:id="@+id/add_new_account"
+		    android:fontFamily="font-medium"
+		    android:layout_marginTop="-8dp"
+		    android:textSize="@dimen/text_16"
+		    android:visibility="gone"
+		    android:textColor="@color/brightBlue"
+		    android:padding="@dimen/margin_13"/>
+
+		<com.google.android.material.textfield.TextInputLayout
+		    style="@style/StaxLabeledDropdown"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:visibility="visible"
+		    android:id="@+id/linkAccountLayout"
+		    android:hint="@string/link_an_account">
+
+			<AutoCompleteTextView
+			    android:id="@+id/channelDropdown"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:padding="@dimen/margin_13"
+			    android:dropDownWidth="wrap_content"
+			    android:background="@null"
+			    android:editable="false"
+			    android:textSize="@dimen/text_21"
+			    android:fontFamily="font-normal"
+			    android:textColor="@color/offWhite"
+			    android:textCursorDrawable="@null" />
+
+		</com.google.android.material.textfield.TextInputLayout>
+
+		<RelativeLayout
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="end"
+		    >
 			<androidx.appcompat.widget.AppCompatButton
-				android:id="@+id/add_accounts_btn"
+				android:id="@+id/refresh_accounts_btn"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@string/btn_addaccts"
-				android:layout_alignParentEnd="true"
-				style="@style/StaxButton"
-				android:onClick="addAccount" />
-	</RelativeLayout>
+			    	android:layout_marginVertical="@dimen/margin_8"
+				android:text="@string/refresh_balances"
+			    	android:drawablePadding="@dimen/margin_5"
+			    	android:drawableStart="@drawable/ic_refresh_dark_24"
+			    	style="@style/StaxOrdinaryButtonColored"
+				 />
+		</RelativeLayout>
+	</LinearLayout>
 </com.hover.stax.views.StaxCardView>

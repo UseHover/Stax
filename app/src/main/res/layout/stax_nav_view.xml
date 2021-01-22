@@ -20,6 +20,7 @@
 		style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
 		app:fabAlignmentMode="end"
 		app:fabAnimationMode="scale"
+	      app:paddingLeftSystemWindowInsets="true"
 		app:menu="@menu/bottom_nav_menu" />
 	<com.google.android.material.floatingactionbutton.FloatingActionButton
 	    android:visibility="visible"

@@ -14,9 +14,6 @@
 			    android:layout_marginTop="@dimen/margin_13"
 			    android:paddingBottom="@dimen/margin_55"
 			   >
-
-				<include layout="@layout/home_card_header" />
-
 				<include layout="@layout/home_card_balances" />
 
 				<include android:id="@+id/scheduled_card"

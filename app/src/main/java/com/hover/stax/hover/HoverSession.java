@@ -58,7 +58,6 @@ final public class HoverSession {
 		//builder.sty(Constants.STYLE_MODE_FOR_STAX);
 		builder.transactingImages(getSenderLogo(), getReceiverLogo(b.action));
 		builder.customBackgroundImage(R.drawable.stax_background);
-		builder.styleMode(R.layout.stax_transacting_in_progress);
 
 		return builder;
 	}

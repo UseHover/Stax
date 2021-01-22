@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="bottom"
+    android:layout_alignParentBottom="true"
+
+	>
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="bottom"
     android:paddingVertical="@dimen/margin_89"
-    android:paddingHorizontal="@dimen/margin_5"
-    >
+    android:paddingHorizontal="@dimen/margin_5">
 
 	<LinearLayout
 	    android:layout_width="match_parent"
@@ -37,61 +44,76 @@
 		    android:gravity="center" />
 	</LinearLayout>
 
-	<com.hover.stax.views.StaxCardView
+	<androidx.cardview.widget.CardView
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:id="@+id/buyAirtimeOption"
-	    >
+	    android:layout_marginHorizontal="@dimen/margin_8"
+	    android:layout_marginTop="@dimen/margin_5"
+	    app:cardElevation="8dp"
+	    android:clipToPadding="true"
+	    android:id="@+id/airtime"
+	    app:cardCornerRadius="@dimen/radius"
+	    app:cardBackgroundColor="@color/cardViewColor">
 		<TextView
-		    android:layout_width="wrap_content"
+		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:text="@string/nav_airtime"
 		    android:textSize="@dimen/text_21"
-		    android:fontFamily="font-medium"
-		    android:padding="@dimen/margin_21"
+		    android:fontFamily="font-normal"
+		    android:background="@drawable/button_bg_grey"
+		    android:padding="@dimen/margin_24"
+
 		    />
-	</com.hover.stax.views.StaxCardView>
+	</androidx.cardview.widget.CardView>
 
 	<View
 	    android:layout_width="match_parent"
 	    android:background="@color/colorPrimaryDark"
 	    android:layout_height="5dp"/>
 
-	<com.hover.stax.views.StaxCardView
+	<androidx.cardview.widget.CardView
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:id="@+id/requestMoneyOption"
-	    android:layout_marginTop="-26dp"
-	    >
+	    android:layout_marginHorizontal="@dimen/margin_8"
+	    app:cardElevation="8dp"
+	    android:id="@+id/request"
+	    app:cardCornerRadius="@dimen/radius"
+	    app:cardBackgroundColor="@color/cardViewColor">
 		<TextView
-		    android:layout_width="wrap_content"
+		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:text="@string/fab_request"
+		    android:fontFamily="font-normal"
 		    android:textSize="@dimen/text_21"
-		    android:fontFamily="font-medium"
-		    android:padding="@dimen/margin_21"
+		    android:background="@drawable/button_bg_grey"
+		    android:padding="@dimen/margin_24"
 		    />
-	</com.hover.stax.views.StaxCardView>
+	</androidx.cardview.widget.CardView>
 
 	<View
 	    android:layout_width="match_parent"
 	    android:background="@color/colorPrimaryDark"
 	    android:layout_height="5dp"/>
 
-	<com.hover.stax.views.StaxCardView
+	<androidx.cardview.widget.CardView
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:id="@+id/sendMoneyOption"
-	    android:layout_marginTop="-26dp"
-	    >
+	    android:layout_marginHorizontal="@dimen/margin_8"
+	    app:cardElevation="8dp"
+	    android:layout_marginBottom="@dimen/margin_21"
+	    android:id="@+id/transfer"
+	    app:cardCornerRadius="@dimen/radius"
+	    app:cardBackgroundColor="@color/cardViewColor">
 		<TextView
-		    android:layout_width="wrap_content"
+		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:text="@string/fab_sendMoney"
-		    android:fontFamily="font-medium"
+		    android:fontFamily="font-normal"
+		    android:background="@drawable/button_bg_grey"
 		    android:textSize="@dimen/text_21"
-		    android:padding="@dimen/margin_21"
+		    android:padding="@dimen/margin_24"
 		    />
-	</com.hover.stax.views.StaxCardView>
+	</androidx.cardview.widget.CardView>
 
 </LinearLayout>
+</androidx.core.widget.NestedScrollView>

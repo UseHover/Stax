@@ -1,8 +1,8 @@
 package com.hover.stax.home;
 
 interface HomeNavigationListener {
-	void goToBuyAirtimeScreen();
-	void goToRequestMoneyScreen();
-	void goToSendMoneyScreen();
-	void goToBalanceAndHistoryScreen();
+	void goToBuyAirtimeScreen(int resId);
+	void goToRequestMoneyScreen(int resId);
+	void goToSendMoneyScreen(int resId);
+	void goToBalanceAndHistoryScreen(int resId);
 }

@@ -9,6 +9,7 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.DatabaseRepo;
@@ -29,6 +30,8 @@ public class BalancesViewModel extends AndroidViewModel {
 	private LiveData<List<Action>> balanceActions = new MediatorLiveData<>();
 	private MutableLiveData<Integer> runFlag = new MutableLiveData<>();
 	private MediatorLiveData<List<Action>> toRun;
+	private MutableLiveData<Channel> selectedFromSpinner = new MutableLiveData<Channel>();
+	private MutableLiveData<Boolean> runBalanceError = new MutableLiveData<>();
 
 	public BalancesViewModel(Application application) {
 		super(application);
@@ -42,6 +45,7 @@ public class BalancesViewModel extends AndroidViewModel {
 		toRun.setValue(new ArrayList<>());
 		toRun.addSource(runFlag, this::onSetRunning);
 		toRun.addSource(balanceActions, this::onActionsLoaded);
+		runBalanceError.setValue(false);
 	}
 
 	void setListener(RunBalanceListener l) {
@@ -70,6 +74,34 @@ public class BalancesViewModel extends AndroidViewModel {
 		return balanceActions;
 	}
 
+	public void setChannelSelectedFromSpinner(Channel channel) {
+		setRunBalanceError(false);
+		selectedFromSpinner.postValue(channel);
+	}
+	public void saveChannelSelectedFromSpinner() {
+		Channel channel = selectedFromSpinner.getValue() != null ? selectedFromSpinner.getValue() : null;
+		if(channel !=null) {
+					channel.selected = true;
+					channel.defaultAccount = true;
+					repo.update(channel);
+					FirebaseMessaging.getInstance().subscribeToTopic("channel-" + channel.id);
+		}
+
+	}
+	public boolean validateRun() {
+		List<Channel> allChannels = selectedChannels.getValue() != null ? selectedChannels.getValue() : new ArrayList<>();
+		Channel channel = selectedFromSpinner.getValue();
+		if(allChannels.size() > 0 || channel != null) {
+			setRunBalanceError(false);
+			setChannelSelectedFromSpinner(null);
+			return true;
+		}else {
+			setRunBalanceError(true);
+			return false;
+		}
+
+
+	}
 	public Channel getChannel(int id) {
 		List<Channel> allChannels = selectedChannels.getValue() != null ? selectedChannels.getValue() : new ArrayList<>();
 		return getChannel(allChannels, id);
@@ -90,7 +122,11 @@ public class BalancesViewModel extends AndroidViewModel {
 
 	void setRunning() {
 		runFlag.setValue(ALL);
+
 	}
+
+	public void setRunBalanceError(boolean showError) {runBalanceError.postValue(showError);}
+	public LiveData<Boolean> getBalanceError() { return runBalanceError; }
 
 	private void onSetRunning(Integer flag) {
 		if (flag == null || flag == NONE) toRun.setValue(new ArrayList<>());

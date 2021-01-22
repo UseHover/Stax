@@ -12,8 +12,11 @@ import java.util.List;
 
 @Dao
 public interface ChannelDao {
-	@Query("SELECT * FROM channels ORDER BY country_alpha2, name")
-	LiveData<List<Channel>> getAll();
+	@Query("SELECT * FROM channels ORDER BY defaultAccount DESC, selected DESC, name ASC")
+	LiveData<List<Channel>> getAllInSelectedOrder();
+
+	@Query("SELECT * FROM channels ORDER BY name ASC")
+	LiveData<List<Channel>> getAllInAlphaOrder();
 
 	@Query("SELECT * FROM channels WHERE selected = :selected ORDER BY defaultAccount DESC")
 	LiveData<List<Channel>> getSelected(boolean selected);

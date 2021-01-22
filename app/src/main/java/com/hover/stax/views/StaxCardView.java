@@ -19,8 +19,9 @@ public class StaxCardView extends FrameLayout {
 
 	private String title;
 	private boolean showBack, backClickable;
+
 	private LinearLayout contentView;
-	private ImageButton backButton;
+	public ImageButton backButton;
 	private int backDrawable = 0;
 	private int bgColor;
 
