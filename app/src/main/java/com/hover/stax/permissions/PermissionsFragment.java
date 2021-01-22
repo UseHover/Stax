@@ -1,4 +1,4 @@
-package com.hover.stax.security;
+package com.hover.stax.permissions;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,9 +19,8 @@ import com.hover.sdk.permissions.PermissionDialog;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.channels.ChannelsAdapter;
-import com.hover.stax.utils.UIHelper;
+import com.hover.stax.security.PinsViewModel;
 
-import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 public class PermissionsFragment extends Fragment {

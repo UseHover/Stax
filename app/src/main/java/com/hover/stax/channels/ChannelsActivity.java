@@ -16,9 +16,9 @@ import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
-import com.hover.stax.security.PermissionsFragment;
+import com.hover.stax.permissions.PermissionsFragment;
 import com.hover.stax.security.PinsActivity;
-import com.hover.stax.utils.PermissionUtils;
+import com.hover.stax.permissions.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 

@@ -1,4 +1,4 @@
-package com.hover.stax.utils;
+package com.hover.stax.permissions;
 
 import android.Manifest;
 import android.content.Context;

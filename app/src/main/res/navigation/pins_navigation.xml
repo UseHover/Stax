@@ -7,7 +7,7 @@
 
 	<fragment
 		android:id="@+id/navigation_permissions"
-		android:name="com.hover.stax.security.PermissionsFragment"
+		android:name="com.hover.stax.permissions.PermissionsFragment"
 		android:label="@string/nav_hover_permissions"
 		tools:layout="@layout/fragment_permissions" >
 
