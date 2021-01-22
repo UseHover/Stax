@@ -3,7 +3,6 @@ package com.hover.stax.hover;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.util.Log;
 
 import androidx.fragment.app.Fragment;
@@ -11,14 +10,14 @@ import androidx.fragment.app.Fragment;
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.api.HoverParameters;
-//import com.hover.sdk.api.HoverTemplates;
+import com.hover.sdk.permissions.PermissionActivity;
+import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.Constants;
 import com.hover.stax.security.KeyStoreExecutor;
-import com.hover.stax.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +34,7 @@ final public class HoverSession {
 
 
 	private HoverSession(Builder b) {
-		Hover.setAfterPermissionReturnActivity(Hover.DEFAULT_PERM_ACTIVITY, b.activity);
+		Hover.setPermissionActivity(Hover.DEFAULT_PERM_ACTIVITY, b.activity);
 		frag = b.fragment;
 		channel = b.channel;
 		requestCode = b.requestCode;

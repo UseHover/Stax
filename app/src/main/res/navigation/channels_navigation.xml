@@ -6,18 +6,6 @@
 	app:startDestination="@+id/navigation_read_sim">
 
 	<fragment
-		android:id="@+id/navigation_read_sim"
-		android:name="com.hover.stax.permissions.PermissionsFragment"
-		android:label="@string/nav_sim_permission"
-		tools:layout="@layout/fragment_permissions" >
-
-		<argument
-			android:name="perm_type"
-			app:argType="string"
-			android:defaultValue="phone" />
-	</fragment>
-
-	<fragment
 		android:id="@+id/navigation_channels"
 		android:name="com.hover.stax.channels.ChannelListFragment"
 		android:label="@string/nav_channels"

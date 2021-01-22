@@ -61,7 +61,12 @@
 	<string name="transfer_msg">Transferring money</string>
 
 	<!-- Accounts and Permissions -->
-	<string name="perm_cardhead">Add accounts</string>
+	<string name="perm_dialoghead">One last thing…</string>
+	<string name="perm_dialogbody">Stax needs 2 permissions to %1$s</string>
+	<string name="perm_progress1">Step 1 of 2: Display permission</string>
+	<string name="perm_progress2">Step 2 of 2: Accessibility permission</string>
+	<string name="perm_cta1">Show settings</string>
+	<string name="perm_cta2">Show settings again</string>
 	<string name="simperm_cardbody">We need phone permissions to see which SIM cards you have.</string>
 	<string name="btn_grantperm">Grant Permission</string>
 	<string name="simaccts_cardhead">Services on your SIMs</string>

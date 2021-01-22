@@ -16,12 +16,12 @@ import com.hover.stax.R;
 
 public class StaxDialog extends AlertDialog {
 
-	private Context context;
-	private View view;
+	protected Context context;
+	protected View view;
 	public AlertDialog dialog;
 
-	View.OnClickListener customNegListener;
-	View.OnClickListener customPosListener;
+	protected View.OnClickListener customNegListener;
+	protected View.OnClickListener customPosListener;
 
 	public StaxDialog(@NonNull Activity a) {
 		this(a, a.getLayoutInflater());
@@ -31,7 +31,7 @@ public class StaxDialog extends AlertDialog {
 		this(c, frag.getLayoutInflater());
 	}
 
-	public StaxDialog(Context c, LayoutInflater inflater) {
+	private StaxDialog(Context c, LayoutInflater inflater) {
 		super(c);
 		context = c;
 		view = inflater.inflate(R.layout.stax_dialog, null);
@@ -77,8 +77,18 @@ public class StaxDialog extends AlertDialog {
 		return this;
 	}
 
+	public StaxDialog highlightPos() {
+		view.findViewById(R.id.pos_btn).getBackground()
+			.setColorFilter(context.getResources().getColor(R.color.brightBlue), PorterDuff.Mode.SRC);
+		return this;
+	}
+
+	public AlertDialog createIt() {
+		return new AlertDialog.Builder(context, R.style.StaxDialog).setView(view).create();
+	}
+
 	public AlertDialog showIt() {
-		dialog = new AlertDialog.Builder(context, R.style.StaxDialog).setView(view).create();
+		dialog = createIt();
 		dialog.show();
 		return dialog;
 	}
