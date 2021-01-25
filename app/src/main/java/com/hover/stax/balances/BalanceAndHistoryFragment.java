@@ -72,23 +72,24 @@ public class BalanceAndHistoryFragment extends Fragment implements TransactionHi
 		setupRefreshBalance(view);
 	}
 
-	void setAddAccountVisibilityStagTeToOnlyText(boolean isOnlyTextVisible) {
-		if(isOnlyTextVisible) {
-			addAccountText.setVisibility(VISIBLE);
-			linkAccountLayout.setVisibility(GONE);
-			addAccountText.setOnClickListener(v -> setAddAccountVisibilityStagTeToOnlyText(false));
-
-		}else {
-			addAccountText.setVisibility(GONE);
-			linkAccountLayout.setVisibility(VISIBLE);
-		}
-	}
-
-
 	private void setUpBalances(View view) {
 		observeBalanceChannels(view);
 		observeBalanceError();
 	}
+
+	private void observeBalanceError() {
+		balancesViewModel.getBalanceError().observe(getViewLifecycleOwner(), showError-> {
+			if (showError) {
+				linkAccountLayout.setError(getString(R.string.refresh_balance_error));
+				linkAccountLayout.setErrorIconDrawable(R.drawable.ic_error_warning_24dp);
+				channelDropdown.setText(getString(R.string.link_an_account), false);
+			} else {
+				linkAccountLayout.setError(null);
+				linkAccountLayout.setErrorIconDrawable(0);
+			}
+		});
+	}
+
 	private void observeBalanceChannels(View view) {
 		StaxCardView balanceCard = view.findViewById(R.id.balance_card);
 		balanceCard.backButton.setVisibility(GONE);
@@ -113,24 +114,22 @@ public class BalanceAndHistoryFragment extends Fragment implements TransactionHi
 		});
 	}
 
-	private void observeBalanceError() {
-		balancesViewModel.getBalanceError().observe(getViewLifecycleOwner(), showError-> {
-			if(showError) {
-				linkAccountLayout.setError(getString(R.string.refresh_balance_error));
-				linkAccountLayout.setErrorIconDrawable(R.drawable.ic_error_warning_24dp);
-				channelDropdown.setText(getString(R.string.link_an_account), false);
-			}else {
-				linkAccountLayout.setError(null);
-				linkAccountLayout.setErrorIconDrawable(0);
-			}
-		});
+	void setAddAccountVisibilityStagTeToOnlyText(boolean isOnlyTextVisible) {
+		if(isOnlyTextVisible) {
+			addAccountText.setVisibility(VISIBLE);
+			linkAccountLayout.setVisibility(GONE);
+			addAccountText.setOnClickListener(v -> setAddAccountVisibilityStagTeToOnlyText(false));
+
+		}else {
+			addAccountText.setVisibility(GONE);
+			linkAccountLayout.setVisibility(VISIBLE);
+		}
 	}
 
 	private void setUpSimChannels(View view) {
 		channelDropdown = view.findViewById(R.id.channelDropdown);
 		channelViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> {
 			if (channels == null || channels.size() == 0 || getContext() == null) return;
-
 
 			ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(channels,  false, getContext());
 			channelDropdown.setAdapter(channelDropdownAdapter);

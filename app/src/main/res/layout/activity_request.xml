@@ -25,7 +25,6 @@
 			android:layout_marginHorizontal="@dimen/margin_13"
 			android:layout_marginVertical="@dimen/margin_34"
 			android:layout_gravity="end|bottom"
-			style="@style/StaxButtonColored"
 			android:text="@string/btn_continue"
 			android:fontFamily="font-medium"
 			android:onClick="onContinue"/>
