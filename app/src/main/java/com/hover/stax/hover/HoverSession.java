@@ -4,21 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.RelativeLayout;
 
 import androidx.fragment.app.Fragment;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.api.HoverParameters;
-import com.hover.sdk.permissions.PermissionActivity;
-import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
-import com.hover.stax.database.Constants;
-import com.hover.stax.security.KeyStoreExecutor;
+import com.hover.stax.settings.KeyStoreExecutor;
 
 import org.json.JSONException;
 import org.json.JSONObject;

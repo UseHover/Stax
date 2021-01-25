@@ -8,8 +8,10 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.hover.sdk.actions.ActionContract;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
+import com.hover.stax.actions.Action;
 
 public class PermissionsActivity extends AppCompatActivity {
 
@@ -41,7 +43,18 @@ public class PermissionsActivity extends AppCompatActivity {
 		ft.addToBackStack(null);
 
 		// Create and show the dialog.
-		PermissionsFragment newFragment = PermissionsFragment.newInstance(mStackLevel);
+		PermissionsFragment newFragment = PermissionsFragment.newInstance(getReason(), new PermissionHelper(this));
 		newFragment.show(ft, "dialog");
+	}
+
+	private String getReason() {
+		if (getIntent() != null && getIntent().getStringExtra(ActionContract.COLUMN_TRANSACTION_TYPE) != null) {
+			String type = getIntent().getStringExtra(ActionContract.COLUMN_TRANSACTION_TYPE);
+			if (type.equals(Action.AIRTIME)) return getString(R.string.buy_airtime);
+			else if (type.equals(Action.BALANCE)) return getString(R.string.check_balance);
+			else if (type.equals(Action.P2P)) return getString(R.string.send_money);
+			else if (type.equals(Action.ME2ME)) return getString(R.string.move_money);
+		}
+		return getString(R.string.use_ussd);
 	}
 }

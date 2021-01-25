@@ -1,4 +1,4 @@
-package com.hover.stax.home;
+package com.hover.stax.balances;
 
 import android.app.Application;
 import android.util.Log;
@@ -48,7 +48,7 @@ public class BalancesViewModel extends AndroidViewModel {
 		runBalanceError.setValue(false);
 	}
 
-	void setListener(RunBalanceListener l) {
+	public void setListener(RunBalanceListener l) {
 		listener = l;
 	}
 
@@ -116,11 +116,11 @@ public class BalancesViewModel extends AndroidViewModel {
 		return null;
 	}
 
-	void setRunning(int channel_id) {
+	public void setRunning(int channel_id) {
 		runFlag.setValue(channel_id);
 	}
 
-	void setRunning() {
+	public void setRunning() {
 		runFlag.setValue(ALL);
 
 	}
@@ -153,7 +153,7 @@ public class BalancesViewModel extends AndroidViewModel {
 			UIHelper.flashMessage(getApplication(), "Failed to start run, please try again.");
 	}
 
-	void setRan(int index) {
+	public void setRan(int index) {
 		if (toRun.getValue().size() > index + 1) {
 			runNext(toRun.getValue(), index + 1);
 		} else {

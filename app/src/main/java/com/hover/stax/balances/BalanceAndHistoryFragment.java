@@ -1,11 +1,10 @@
-package com.hover.stax.home;
+package com.hover.stax.balances;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
@@ -20,17 +19,17 @@ import com.amplitude.api.Amplitude;
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDropdownAdapter;
 import com.hover.stax.channels.ChannelListViewModel;
+import com.hover.stax.home.MainActivity;
+import com.hover.stax.permissions.PermissionsActivity;
 import com.hover.stax.requests.Request;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.transactions.TransactionHistoryAdapter;
 import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
-import com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout;
 import com.hover.stax.views.StaxCardView;
 
 import java.util.List;
@@ -144,11 +143,13 @@ public class BalanceAndHistoryFragment extends Fragment implements TransactionHi
 
 	private void setupRefreshBalance(View view) {
 		view.findViewById(R.id.refresh_accounts_btn).setOnClickListener(v -> {
-			BalanceAdapter.BalanceListener balanceListener = ((MainActivity) getActivity());
-			if(balanceListener !=null) {
-				balancesViewModel.saveChannelSelectedFromSpinner();
-				if(balancesViewModel.validateRun())balanceListener.triggerRefreshAll();
-			}
+			startActivity(new Intent(getContext(), PermissionsActivity.class));
+//			BalanceAdapter.BalanceListener balanceListener = ((MainActivity) getActivity());
+//			if (balanceListener != null) {
+//				This needs to be threaded properly!
+//				balancesViewModel.saveChannelSelectedFromSpinner();
+//				if (balancesViewModel.validateRun()) balanceListener.triggerRefreshAll();
+//			}
 		});
 	}
 

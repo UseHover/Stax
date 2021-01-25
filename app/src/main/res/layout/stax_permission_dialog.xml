@@ -36,7 +36,6 @@
 			android:paddingStart="@dimen/margin_5"
 			android:textSize="@dimen/text_16"
 			android:fontFamily="font-normal"
-			android:lineSpacingExtra="@dimen/text_spacing_8"
 			tools:ignore="RtlSymmetry"
 			android:visibility="gone"/>
 
@@ -49,6 +48,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginBottom="@dimen/margin_13"
+				android:fontFamily="font-normal"
 				android:text="@string/perm_progress1"/>
 
 			<ProgressBar android:id="@+id/progress_indicator"

@@ -1,10 +1,14 @@
 package com.hover.stax.permissions;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.view.LayoutInflater;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.hover.sdk.utils.Utils;
 import com.hover.stax.R;
 import com.hover.stax.views.StaxDialog;
 
@@ -22,7 +26,15 @@ public class StaxPermissionDialog extends StaxDialog {
 		super(a);
 		context = a;
 		view = inflater.inflate(R.layout.stax_permission_dialog, null);
+		((TextView) view.findViewById(R.id.app_name)).setText(Utils.getAppName(a));
 		customNegListener = null;
 		customPosListener = null;
+	}
+
+	public void animateProgressTo(int percent) {
+		ObjectAnimator oa = ObjectAnimator.ofInt(view.findViewById(R.id.progress_indicator), "progress", percent);
+		oa.setDuration(800);
+		oa.setInterpolator(new DecelerateInterpolator());
+		oa.start();
 	}
 }

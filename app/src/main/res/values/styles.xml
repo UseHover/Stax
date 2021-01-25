@@ -75,22 +75,9 @@
 		<item name="textAllCaps">false</item>
 	</style>
 
-	<style name="StaxOrdinaryButtonColored" parent="Widget.AppCompat.Button.Borderless">
-		<item name="android:layout_marginStart">@dimen/margin_3</item>
-		<item name="android:layout_marginEnd">@dimen/margin_10</item>
-		<item name="android:layout_marginBottom">@dimen/margin_3</item>
-		<item name="android:layout_marginTop">@dimen/margin_3</item>
-		<item name="android:paddingStart">@dimen/margin_13</item>
-		<item name="android:paddingEnd">@dimen/margin_13</item>
-		<item name="android:paddingTop">@dimen/margin_13</item>
-		<item name="android:paddingBottom">@dimen/margin_13</item>
-		<item name="android:radius">5dp</item>
+	<style name="StaxButtonColored" parent="StaxButton">
 		<item name="android:textColor">@color/colorPrimaryDark</item>
-		<item name="android:textSize">@dimen/text_16</item>
-		<item name="fontFamily">font-medium</item>
-		<item name="android:fontFamily">font-medium</item>
 		<item name="android:background">@drawable/button_bg_colored</item>
-		<item name="android:elevation" tools:targetApi="lollipop">1dp</item>
 		<item name="elevation">1dp</item>
 		<item name="android:textAllCaps">false</item>
 		<item name="textAllCaps">false</item>
@@ -110,21 +97,6 @@
 		<item name="android:dropDownHorizontalOffset">-117dp</item>
 		<item name="android:dropDownVerticalOffset">-5dp</item>
 		<item name="android:background">@drawable/button_bg</item>
-	</style>
-
-	<style name="StaxButtonColored" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
-		<item name="android:padding">@dimen/margin_13</item>
-		<item name="android:layout_marginBottom">@dimen/margin_55</item>
-		<item name="android:radius">5dp</item>
-		<item name="android:textColor">@color/colorPrimaryDark</item>
-		<item name="backgroundTint">@color/brightBlue</item>
-		<item name="elevation">1dp</item>
-		<item name="android:textSize">@dimen/text_16</item>
-		<item name="android:textAllCaps">false</item>
-		<item name="textAllCaps">false</item>
-		<item name="android:fontFamily">font-medium</item>
-		<item name="fontFamily">font-medium</item>
-		<item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlayExtended</item>
 	</style>
 
 	<style name="ShapeAppearanceOverlayExtended" parent="">

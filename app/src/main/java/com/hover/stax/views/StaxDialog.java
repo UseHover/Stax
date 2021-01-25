@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -51,8 +52,13 @@ public class StaxDialog extends AlertDialog {
 	}
 
 	public StaxDialog setDialogMessage(int message) {
+		setDialogMessage(context.getString(message));
+		return this;
+	}
+
+	public StaxDialog setDialogMessage(String message) {
 		view.findViewById(R.id.message).setVisibility(View.VISIBLE);
-		((TextView) view.findViewById(R.id.message)).setText(context.getString(message));
+		((TextView) view.findViewById(R.id.message)).setText(message);
 		return this;
 	}
 
@@ -78,6 +84,7 @@ public class StaxDialog extends AlertDialog {
 	}
 
 	public StaxDialog highlightPos() {
+		((Button) view.findViewById(R.id.pos_btn)).setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
 		view.findViewById(R.id.pos_btn).getBackground()
 			.setColorFilter(context.getResources().getColor(R.color.brightBlue), PorterDuff.Mode.SRC);
 		return this;
@@ -96,12 +103,16 @@ public class StaxDialog extends AlertDialog {
 	private View.OnClickListener negListener = view -> {
 		if (customNegListener != null)
 			customNegListener.onClick(view);
-		dialog.dismiss();
+		if (dialog != null)
+			dialog.dismiss();
 	};
 
 	private View.OnClickListener posListener = view -> {
 		if (customPosListener != null)
 			customPosListener.onClick(view);
-		dialog.dismiss();
+		if (dialog != null)
+			dialog.dismiss();
 	};
+
+	public View getView() { return view; }
 }

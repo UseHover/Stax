@@ -3,10 +3,8 @@ package com.hover.stax;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,9 +20,8 @@ import com.hover.stax.database.Constants;
 import com.hover.stax.destruct.SelfDestructActivity;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.languages.SelectLanguageActivity;
-import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.schedules.ScheduleWorker;
-import com.hover.stax.security.BiometricChecker;
+import com.hover.stax.settings.BiometricChecker;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 

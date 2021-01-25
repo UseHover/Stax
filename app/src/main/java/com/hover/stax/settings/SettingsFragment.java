@@ -1,4 +1,4 @@
-package com.hover.stax.security;
+package com.hover.stax.settings;
 
 import android.content.Context;
 import android.content.Intent;
@@ -30,7 +30,7 @@ import java.util.List;
 
 import static android.view.View.GONE;
 
-public class SecurityFragment extends Fragment {
+public class SettingsFragment extends Fragment {
 	final public static String LANG_CHANGE = "Settings";
 
 	private ArrayAdapter<Channel> accountAdapter;
@@ -88,7 +88,7 @@ public class SecurityFragment extends Fragment {
 	private void goToAccountDetail(int channel_id) {
 		Bundle bundle = new Bundle();
 		bundle.putInt("channel_id", channel_id);
-		NavHostFragment.findNavController(SecurityFragment.this).navigate(R.id.pinUpdateFragment, bundle);
+		NavHostFragment.findNavController(SettingsFragment.this).navigate(R.id.pinUpdateFragment, bundle);
 	}
 
 	private void createDefaultSelector(List<Channel> channels, View root, PinsViewModel securityViewModel) {

@@ -70,7 +70,7 @@
 				android:text="@string/refresh_balances"
 			    	android:drawablePadding="@dimen/margin_5"
 			    	android:drawableStart="@drawable/ic_refresh_dark_24"
-			    	style="@style/StaxOrdinaryButtonColored"
+			    	style="@style/StaxButtonColored"
 				 />
 		</RelativeLayout>
 	</LinearLayout>

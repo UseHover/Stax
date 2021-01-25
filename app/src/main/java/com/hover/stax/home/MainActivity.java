@@ -10,7 +10,6 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,6 +30,8 @@ import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.balances.BalanceAdapter;
+import com.hover.stax.balances.BalancesViewModel;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.database.Constants;
@@ -38,8 +39,8 @@ import com.hover.stax.hover.HoverSession;
 import com.hover.stax.requests.AbstractMessageSendingActivity;
 import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.schedules.Schedule;
-import com.hover.stax.security.BiometricChecker;
-import com.hover.stax.security.SecurityFragment;
+import com.hover.stax.settings.BiometricChecker;
+import com.hover.stax.settings.SettingsFragment;
 import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.DateUtils;
@@ -273,7 +274,7 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 			}
 		});
 
-		if (getIntent().getBooleanExtra(SecurityFragment.LANG_CHANGE, false))
+		if (getIntent().getBooleanExtra(SettingsFragment.LANG_CHANGE, false))
 			navController.navigate(R.id.navigation_security);
 	}
 
