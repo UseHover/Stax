@@ -153,6 +153,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		else if (findViewById(R.id.amountRow) != null) {
 			setSummaryCard(stage);
 			setCurrentCard(stage);
+			setReasonEditTextVisibility();
 			setFab(stage);
 		}
 	}
@@ -168,9 +169,11 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	private void setCurrentCard(StagedViewModel.StagedEnum stage) {
 		findViewById(R.id.summaryCard).setVisibility(stage.compare(REVIEW) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.transactionFormCard).setVisibility(stage.compare(REVIEW) != 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.reasonEditText).setVisibility( transferViewModel.getActiveAction().getValue()!=null && transferViewModel.getActiveAction().getValue().allowsNote() ? View.VISIBLE : View.GONE);
 		//findViewById(R.id.futureCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && transferViewModel.getFutureDate().getValue() == null ? View.VISIBLE : View.GONE);
 		//findViewById(R.id.repeatCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && (transferViewModel.repeatSaved().getValue() == null || !transferViewModel.repeatSaved().getValue()) ? View.VISIBLE : View.GONE);
+	}
+	private void setReasonEditTextVisibility() {
+		findViewById(R.id.reasonEditText).setVisibility( transferViewModel.getActiveAction().getValue()!=null && transferViewModel.getActiveAction().getValue().allowsNote() ? View.VISIBLE : View.GONE);
 	}
 
 	private void setFab(StagedViewModel.StagedEnum stage) {
