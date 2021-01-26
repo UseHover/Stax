@@ -32,7 +32,7 @@ public class PermissionsActivity extends AppCompatActivity {
 		if (prev != null) { ft.remove(prev); }
 		ft.addToBackStack(null);
 
-		PermissionsFragment newFragment = PermissionsFragment.newInstance(getReason(), new PermissionHelper(this));
+		PermissionsFragment newFragment = PermissionsFragment.newInstance(getReason(), new PermissionHelper(this).hasOverlayPerm());
 		newFragment.show(ft, "dialog");
 	}
 

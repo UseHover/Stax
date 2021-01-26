@@ -24,15 +24,16 @@ public class PermissionsFragment extends DialogFragment {
 
 	public final static int PHONE = 0, SMS = 1, OVERLAY = 2, ACCESS = 3;
 
+	private PermissionHelper helper;
 	private StaxPermissionDialog dialog;
 	private int current;
-	private PermissionHelper helper;
+	private boolean hasLeft = false;
 
-	static PermissionsFragment newInstance(String reason, PermissionHelper ph) {
+	static PermissionsFragment newInstance(String reason, boolean onlyAccessibility) {
 		PermissionsFragment f = new PermissionsFragment();
 		Bundle args = new Bundle();
 		args.putString(REASON, reason);
-		args.putInt(STARTWITH, ph.hasOverlayPerm() ? ACCESS : OVERLAY);
+		args.putInt(STARTWITH, onlyAccessibility ? ACCESS : OVERLAY);
 		f.setArguments(args);
 		return f;
 	}
@@ -41,26 +42,25 @@ public class PermissionsFragment extends DialogFragment {
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		helper = new PermissionHelper(getContext());
 		current = helper.hasOverlayPerm() ? ACCESS : OVERLAY;
+		Amplitude.getInstance().logEvent(getString(current == OVERLAY ? R.string.perms_overlay_dialog : R.string.perms_accessibility_dialog));
 		dialog = (StaxPermissionDialog) new StaxPermissionDialog(getActivity())
 			.setDialogTitle(R.string.perm_dialoghead)
 			.setDialogMessage(getString(R.string.perm_dialogbody, getArguments().getString(REASON)))
-			.setNegButton(R.string.btn_cancel, onCancel)
-			.setPosButton(R.string.perm_cta1, clickedGoOverlay)
+			.setNegButton(R.string.btn_cancel, view -> cancel())
+			.setPosButton(R.string.perm_cta1, view -> requestOverlay())
 			.highlightPos();
 		maybeUpdateToNext();
 		return dialog.createIt();
 	}
 
-	private View.OnClickListener onCancel = view -> cancel();
-	private View.OnClickListener clickedGoOverlay = view -> requestOverlay();
-	private View.OnClickListener clickedGoAccess = view -> requestAccessibility();
-
 	public void requestOverlay() {
+		hasLeft = true;
 		Amplitude.getInstance().logEvent(getString(R.string.perms_overlay_requested));
 		helper.requestOverlayPerm();
 	}
 
 	public void requestAccessibility() {
+		hasLeft = true;
 		Amplitude.getInstance().logEvent(getString(R.string.perms_accessibility_requested));
 		Hover.setPermissionActivity("com.hover.stax.permissions.PermissionsActivity", getContext());
 		helper.requestAccessPerm();
@@ -68,9 +68,18 @@ public class PermissionsFragment extends DialogFragment {
 
 	@Override
 	public void onResume() {
-		Log.e(TAG, "on resume");
 		super.onResume();
+		logReturnEvent();
 		new Handler().postDelayed(() -> maybeUpdateToNext(), 500);
+	}
+
+	private void logReturnEvent() {
+		if (hasLeft) {
+			if (current == OVERLAY)
+				Amplitude.getInstance().logEvent(getString(helper.hasOverlayPerm() ? R.string.perms_overlay_granted : R.string.perms_overlay_notgranted));
+			else if (current == ACCESS)
+				Amplitude.getInstance().logEvent(getString(helper.hasOverlayPerm() ? R.string.perms_accessibility_granted : R.string.perms_accessibility_notgranted));
+		}
 	}
 
 	private void maybeUpdateToNext() {
@@ -87,21 +96,21 @@ public class PermissionsFragment extends DialogFragment {
 		dialog.getView().findViewById(R.id.progress_text).setVisibility(View.GONE);
 		dialog.getView().findViewById(R.id.progress_indicator).setVisibility(View.GONE);
 		dialog.setDialogMessage(getString(R.string.perm_accessibiltiy_dialogbody, getArguments().getString(REASON)));
-		dialog.setPosButton(R.string.perm_cta1, clickedGoAccess);
+		dialog.setPosButton(R.string.perm_cta1, view -> requestAccessibility());
 	}
 
 	private void animateToStep2() {
+		current = ACCESS;
 		if (dialog != null) {
 			dialog.animateProgressTo(81);
 			((TextView) dialog.getView().findViewById(R.id.progress_text)).setText(getContext() != null ? getString(R.string.perm_progress2) : "");
 			dialog.getView().findViewById(R.id.overlay_example).setVisibility(View.GONE);
 			dialog.getView().findViewById(R.id.accessibility_example).setVisibility(View.VISIBLE);
-			dialog.setPosButton(R.string.perm_cta2, clickedGoAccess);
+			dialog.setPosButton(R.string.perm_cta2, view -> requestAccessibility());
 		}
 	}
 
 	private void animateToDone() {
-		Amplitude.getInstance().logEvent(getString(R.string.perms_accessibility_granted));
 		if (dialog != null)
 			dialog.animateProgressTo(100);
 		getActivity().setResult(RESULT_OK);
@@ -109,8 +118,8 @@ public class PermissionsFragment extends DialogFragment {
 	}
 
 	private void cancel() {
-		if (dialog != null)
-			dialog.dismiss();
+		Amplitude.getInstance().logEvent(getString(current == OVERLAY ? R.string.perms_overlay_cancelled : R.string.perms_accessibility_cancelled));
+		if (dialog != null) dialog.dismiss();
 		getActivity().setResult(RESULT_CANCELED);
 		getActivity().finish();
 	}
