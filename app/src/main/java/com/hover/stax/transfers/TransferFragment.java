@@ -135,22 +135,15 @@ public class TransferFragment extends StagedFragment {
 		transferViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
 			if (actions == null || actions.size() == 0) return;
 			actionRadioGroup.removeAllViews();
-			for (Action a: actions){
+			for (int i = 0; i < actions.size(); i++){
+				Action a =  actions.get(i);
 				a.context = getContext();
 				RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.stax_radio_button, null);
 				radioButton.setText(a.getLabel(getContext()));
-				radioButton.setId(a.id);
-				if (stagedViewModel.getActiveChannel().getValue() != null && stagedViewModel.getActiveChannel().getValue().id == a.id) {
-					radioButton.setChecked(true);
-				}
+				radioButton.setId(i);
+				radioButton.setChecked(i==0);
 				actionRadioGroup.addView(radioButton);
 			}
-
-
-
-
-
-
 
 		});
 
@@ -170,7 +163,7 @@ public class TransferFragment extends StagedFragment {
 		root.findViewById(R.id.add_new_account).setOnClickListener(view -> startActivityForResult(new Intent(getActivity(), ChannelsActivity.class), Constants.ADD_SERVICE));
 
 		actionRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-			Action action = (Action) checkedId;
+			Action action = transferViewModel.getActions().getValue().get(checkedId);
 			transferViewModel.setActiveAction(action);
 			setRecipientHint(action);
 		});

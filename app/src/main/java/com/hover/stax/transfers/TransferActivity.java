@@ -168,7 +168,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	private void setCurrentCard(StagedViewModel.StagedEnum stage) {
 		findViewById(R.id.summaryCard).setVisibility(stage.compare(REVIEW) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.transactionFormCard).setVisibility(stage.compare(REVIEW) != 0 ? View.VISIBLE : View.GONE);
-		//findViewById(R.id.reasonEditText).setVisibility(!transferViewModel.getType().equals(Action.AIRTIME) ? View.VISIBLE : View.GONE);
+		findViewById(R.id.reasonEditText).setVisibility( transferViewModel.getActiveAction().getValue()!=null && transferViewModel.getActiveAction().getValue().allowsNote() ? View.VISIBLE : View.GONE);
 		//findViewById(R.id.reasonCard).setVisibility(stage.compare(NOTE) == 0 ? View.VISIBLE : View.GONE);
 		//findViewById(R.id.amountCard).setVisibility(stage.compare(AMOUNT) == 0 ? View.VISIBLE : View.GONE);
 		//findViewById(R.id.fromAccountCard).setVisibility(stage.compare(FROM_ACCOUNT) == 0 ? View.VISIBLE : View.GONE);
