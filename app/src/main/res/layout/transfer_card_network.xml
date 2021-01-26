@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RadioGroup
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+	<TextView
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/network_label"
+	    android:visibility="gone"
+	    android:paddingHorizontal="@dimen/margin_13"
+	    android:fontFamily="font-normal"
+	    android:id="@+id/networkLabel"/>
+
+<RadioGroup
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/margin_10"
     android:id="@+id/networkRadioGroup"/>
-
+</LinearLayout>

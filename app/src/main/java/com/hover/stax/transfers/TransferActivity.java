@@ -169,11 +169,6 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		findViewById(R.id.summaryCard).setVisibility(stage.compare(REVIEW) == 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.transactionFormCard).setVisibility(stage.compare(REVIEW) != 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.reasonEditText).setVisibility( transferViewModel.getActiveAction().getValue()!=null && transferViewModel.getActiveAction().getValue().allowsNote() ? View.VISIBLE : View.GONE);
-		//findViewById(R.id.reasonCard).setVisibility(stage.compare(NOTE) == 0 ? View.VISIBLE : View.GONE);
-		//findViewById(R.id.amountCard).setVisibility(stage.compare(AMOUNT) == 0 ? View.VISIBLE : View.GONE);
-		//findViewById(R.id.fromAccountCard).setVisibility(stage.compare(FROM_ACCOUNT) == 0 ? View.VISIBLE : View.GONE);
-		//findViewById(R.id.networkCard).setVisibility(stage.compare(TO_NETWORK) == 0 ? View.VISIBLE : View.GONE);
-		//findViewById(R.id.recipientCard).setVisibility(stage.compare(RECIPIENT) == 0 ? View.VISIBLE : View.GONE);
 		//findViewById(R.id.futureCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && transferViewModel.getFutureDate().getValue() == null ? View.VISIBLE : View.GONE);
 		//findViewById(R.id.repeatCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && (transferViewModel.repeatSaved().getValue() == null || !transferViewModel.repeatSaved().getValue()) ? View.VISIBLE : View.GONE);
 	}

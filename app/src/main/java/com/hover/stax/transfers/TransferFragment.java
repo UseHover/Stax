@@ -91,14 +91,7 @@ public class TransferFragment extends StagedFragment {
 	protected void startObservers(View root) {
 		super.startObservers(root);
 
-		transferViewModel.getStage().observe(getViewLifecycleOwner(), stage -> {
-			switch ((TransferStage) stage) {
-				case AMOUNT: amountInput.requestFocus(); break;
-				case RECIPIENT: recipientAutocomplete.requestFocus(); break;
-				case NOTE: noteInput.requestFocus(); break;
-				default: root.findViewById(R.id.mainLayout).requestFocus();
-			}
-		});
+		root.findViewById(R.id.mainLayout).requestFocus();
 
 		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> amountValue.setText(Utils.formatAmount(amount)));
 		transferViewModel.getAmountError().observe(getViewLifecycleOwner(), amountError -> {
@@ -135,11 +128,12 @@ public class TransferFragment extends StagedFragment {
 		transferViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
 			if (actions == null || actions.size() == 0) return;
 			actionRadioGroup.removeAllViews();
+			root.findViewById(R.id.networkLabel).setVisibility(View.VISIBLE);
 			for (int i = 0; i < actions.size(); i++){
 				Action a =  actions.get(i);
 				a.context = getContext();
 				RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.stax_radio_button, null);
-				radioButton.setText(a.getLabel(getContext()));
+				radioButton.setText(a.getLabel(transferViewModel.getType().equals(Action.AIRTIME) ? getContext() : null));
 				radioButton.setId(i);
 				radioButton.setChecked(i==0);
 				actionRadioGroup.addView(radioButton);
@@ -150,8 +144,8 @@ public class TransferFragment extends StagedFragment {
 		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
 			if (action != null) {
 				accountValue.setSubtitle(action.getNetworkSubtitle(getContext()));
-				if (!action.requiresRecipient())
-					recipientValue.setContent(action.getLabel(getContext()), "");
+				root.findViewById(R.id.recipientEntry).setVisibility(action.requiresRecipient() ? View.VISIBLE : View.GONE);
+				if (!action.requiresRecipient()) recipientValue.setContent(action.getLabel(getContext()), "");
 				else if (transferViewModel.getContact().getValue() != null)
 					recipientValue.setContact(transferViewModel.getContact().getValue(), transferViewModel.getRequest().getValue() != null);
 			}
