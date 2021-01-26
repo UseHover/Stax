@@ -54,7 +54,7 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> implements Tar
 	@Override
 	public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 		View view = convertView;
-		if(view == null) view = LayoutInflater.from(mContext).inflate(R.layout.stax_spinner_item_with_logo,parent,false);
+		if (view == null) view = LayoutInflater.from(mContext).inflate(R.layout.stax_spinner_item_with_logo, parent,false);
 		Channel channel = channels.get(position);
 
 		initItemViews(view);
@@ -63,6 +63,7 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> implements Tar
 
 		return view;
 	}
+
 	private  void initItemViews(View view) {
 		holder = new ViewHolder();
 		holder.logo = view.findViewById(R.id.service_item_image_id);
@@ -79,7 +80,7 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> implements Tar
 	}
 
 	private void segmentSelectedChannelsIfNeeded(Channel currentChannel, int pos) {
-		if(segmentSelectedChannels) {
+		if (segmentSelectedChannels) {
 			try{
 				Channel nextChannel = channels.get(pos + 1);
 				if (currentChannel.selected && !nextChannel.selected) addDivider();
@@ -87,6 +88,7 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> implements Tar
 			}catch (IndexOutOfBoundsException e) { removeDivider(); }
 		} else removeDivider();
 	}
+
 	private void addDivider() {holder.divider.setVisibility(View.VISIBLE);}
 	private void removeDivider() { holder.divider.setVisibility(View.GONE); }
 

@@ -3,23 +3,28 @@
 	<string name="custom_font_err_msg" translatable="false">At least one default font must be set</string>
 
 	<!--	Amplitude log events -->
+	<string name="perms_basic_dialog" translatable="false">Permission - Phone and SMS: dialog shown</string>
+	<string name="perms_basic_requested" translatable="false">Permission - Phone and SMS: requested</string>
+	<string name="perms_phone_requested" translatable="false">Permission - Phone: requested</string>
+	<string name="perms_sms_requested" translatable="false">Permission - SMS: requested</string>
+	<string name="perms_basic_cancelled" translatable="false">Permission - Phone and SMS: dialog canceled</string>
+	<string name="perms_basic_granted" translatable="false">Permission - Phone and SMS: granted</string>
+	<string name="perms_phone_denied" translatable="false">Permission - Phone: denied</string>
+	<string name="perms_sms_denied" translatable="false">Permission - SMS: denied</string>
+	<string name="perms_basic_denied" translatable="false">Permission - Phone and SMS: denied</string>
+	<string name="perms_overlay_dialog" translatable="false">Permission - Overlay: dialog shown</string>
+	<string name="perms_overlay_requested" translatable="false">Permission - Overlay: sent to settings</string>
+	<string name="perms_overlay_granted" translatable="false">Permission - Overlay: granted</string>
+	<string name="perms_overlay_notgranted" translatable="false">Permission - Overlay: returned to app without toggling</string>
+	<string name="perms_overlay_cancelled" translatable="false">Permission - Overlay: dialog canceled</string>
+	<string name="perms_accessibility_dialog" translatable="false">Permission - Accessibility: dialog shown</string>
+	<string name="perms_accessibility_requested" translatable="false">Permission - Accessibility: sent to settings</string>
+	<string name="perms_accessibility_granted" translatable="false">Permission - Accessibility: granted</string>
+	<string name="perms_accessibility_notgranted" translatable="false">Permission - Accessibility: returned to app without toggling</string>
+	<string name="perms_accessibility_cancelled" translatable="false">Permission - Accessibility: dialog canceled</string>
+
 	<string name="selected_language" translatable="false">Selected language</string>
-	<string name="selected_country" translatable="false">Selected country</string>
-	<string name="selected_network" translatable="false">Selected network</string>
-	<string name="click_add_account" translatable="false">Clicked add account</string>
-	<string name="finished_account_select" translatable="false">Completed account Select</string>
-	<string name="account_select_count_key" translatable="false">chosen_account_count</string>
-	<string name="request_add_service" translatable="false">Requested Stax add a service</string>
-	<string name="request_add_service_contact_info" translatable="false">Added contact info for requesting a service</string>
-	<string name="skipped_pin_entry" translatable="false">Clicked skip pin entry</string>
-	<string name="completed_pin_entry" translatable="false">Complete save pin</string>
-	<string name="request_permphone" translatable="false">Asking for phone permissions</string>
-	<string name="request_permsms" translatable="false">Asking for sms permissions</string>
-	<string name="request_permoverlay" translatable="false">Asking for overlay permissions</string>
-	<string name="request_permaccessibility" translatable="false">Asking for accessibility permissions</string>
-	<string name="request_permissions" translatable="false">Ask for all SDK permissions</string>
-	<string name="granted_sdk_permissions" translatable="false">Completed grant all SDK permissions</string>
-	<string name="denied_sdk_permissions" translatable="false">Denied SDK permissions</string>
+
 	<string name="start_load_screen" translatable="false">Visited load screen</string>
 	<string name="finish_load_screen" translatable="false">Complete load screen</string>
 	<string name="refresh_balance_single" translatable="false">Clicked refresh single balance</string>

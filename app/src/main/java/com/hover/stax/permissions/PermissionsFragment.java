@@ -56,12 +56,12 @@ public class PermissionsFragment extends DialogFragment {
 	private View.OnClickListener clickedGoAccess = view -> requestAccessibility();
 
 	public void requestOverlay() {
-		Amplitude.getInstance().logEvent(getString(R.string.request_permoverlay));
+		Amplitude.getInstance().logEvent(getString(R.string.perms_overlay_requested));
 		helper.requestOverlayPerm();
 	}
 
 	public void requestAccessibility() {
-		Amplitude.getInstance().logEvent(getString(R.string.request_permaccessibility));
+		Amplitude.getInstance().logEvent(getString(R.string.perms_accessibility_requested));
 		Hover.setPermissionActivity("com.hover.stax.permissions.PermissionsActivity", getContext());
 		helper.requestAccessPerm();
 	}
@@ -101,7 +101,7 @@ public class PermissionsFragment extends DialogFragment {
 	}
 
 	private void animateToDone() {
-		Amplitude.getInstance().logEvent(getString(R.string.granted_sdk_permissions));
+		Amplitude.getInstance().logEvent(getString(R.string.perms_accessibility_granted));
 		if (dialog != null)
 			dialog.animateProgressTo(100);
 		getActivity().setResult(RESULT_OK);

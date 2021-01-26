@@ -1,10 +1,8 @@
 package com.hover.stax.transfers;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,8 +19,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
-import com.hover.stax.channels.Channel;
-import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.contacts.StaxContactArrayAdapter;
 import com.hover.stax.database.Constants;
@@ -33,10 +27,6 @@ import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.Stax2LineItem;
 import com.hover.stax.views.StaxDialog;
-
-import static com.hover.stax.transfers.TransferStage.*;
-
-import java.util.List;
 
 public class TransferFragment extends StagedFragment {
 	private static final String TAG = "TransferFragment";
@@ -150,7 +140,6 @@ public class TransferFragment extends StagedFragment {
 
 	protected void startListeners(View root) {
 		super.startListeners(root);
-		root.findViewById(R.id.add_new_account).setOnClickListener(view -> startActivityForResult(new Intent(getActivity(), ChannelsActivity.class), Constants.ADD_SERVICE));
 
 		actionDropdown.setOnItemClickListener((adapterView, view, pos, id) -> {
 			Action action = (Action) adapterView.getItemAtPosition(pos);

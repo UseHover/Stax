@@ -141,7 +141,7 @@ public class RequestAccountActivity extends AppCompatActivity {
 		findViewById(R.id.continueAccountButton).setOnClickListener(v -> {
 			JSONObject data = new JSONObject();
 			try { data.put("network", networkValue.getText().toString()); } catch (JSONException ignored) { }
-			Amplitude.getInstance().logEvent(getResources().getString(R.string.selected_network), data);
+//			Amplitude.getInstance().logEvent(getResources().getString(R.string.selected_network), data);
 			requestAccountViewModel.sendAccountRequestInfoToAmplitude(countryValue.getText().toString(), networkValue.getText().toString(), this);
 			requestAccountViewModel.setNextRequestAccountStage(RequestAccountStage.SELECT_NETWORK);
 		

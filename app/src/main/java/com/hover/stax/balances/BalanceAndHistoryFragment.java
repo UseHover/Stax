@@ -66,7 +66,7 @@ public class BalanceAndHistoryFragment extends Fragment implements TransactionHi
 		linkAccountLayout = view.findViewById(R.id.linkAccountLayout);
 
 		setUpBalances(view);
-		setUpSimChannels(view);
+		setUpChannels(view);
 		setUpFuture(view);
 		setUpHistory(view);
 		setupRefreshBalance(view);
@@ -126,17 +126,22 @@ public class BalanceAndHistoryFragment extends Fragment implements TransactionHi
 		}
 	}
 
-	private void setUpSimChannels(View view) {
+	private void setUpChannels(View view) {
 		channelDropdown = view.findViewById(R.id.channelDropdown);
-		channelViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> {
-			if (channels == null || channels.size() == 0 || getContext() == null) return;
+		channelViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> {
+			if (channels != null && channels.size() > 0 && (channelViewModel.getSimChannels().getValue() == null || channelViewModel.getSimChannels().getValue().size() == 0))
+				updateChannelDropdown(channels);
+		});
+		channelViewModel.getSimChannels().observe(getViewLifecycleOwner(), this::updateChannelDropdown);
+	}
 
-			ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(channels,  false, getContext());
-			channelDropdown.setAdapter(channelDropdownAdapter);
-			channelDropdown.setOnItemClickListener((adapterView, view2, pos, id) -> {
-				Channel channel = (Channel) adapterView.getItemAtPosition(pos);
-				balancesViewModel.setChannelSelectedFromSpinner(channel);
-			});
+	private void updateChannelDropdown(List<Channel> channels) {
+		if (channels == null || channels.size() == 0 || getContext() == null) return;
+		ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(channels,  false, getContext());
+		channelDropdown.setAdapter(channelDropdownAdapter);
+		channelDropdown.setOnItemClickListener((adapterView, view2, pos, id) -> {
+			Channel channel = (Channel) adapterView.getItemAtPosition(pos);
+			balancesViewModel.setChannelSelectedFromSpinner(channel);
 		});
 	}
 

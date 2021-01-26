@@ -78,7 +78,7 @@ public class RequestAccountViewModel extends AndroidViewModel {
 			data.put("service", selectedNetwork);
 			data.put("timeStamp", DateUtils.now());
 		} catch (JSONException e) {}
-		Amplitude.getInstance().logEvent(c.getString(R.string.request_add_service), data);
+//		Amplitude.getInstance().logEvent(c.getString(R.string.request_add_service), data);
 	}
 	public void sendContactInfoToAmplitude(String phone, String email, Context c) {
 		JSONObject data = new JSONObject();
@@ -88,7 +88,7 @@ public class RequestAccountViewModel extends AndroidViewModel {
 			data.put("email", email);
 			data.put("timeStamp", DateUtils.now());
 		} catch (JSONException e) {}
-		Amplitude.getInstance().logEvent(c.getString(R.string.request_add_service_contact_info), data);
+//		Amplitude.getInstance().logEvent(c.getString(R.string.request_add_service_contact_info), data);
 	}
 
 	private List<SupportedCountries> getSupportedCountries() {

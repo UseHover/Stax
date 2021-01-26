@@ -12,13 +12,13 @@
 	    tools:layout="@layout/fragment_main" />
 
 	<fragment
-	    android:id="@+id/navigation_balance_history"
+	    android:id="@+id/navigation_balance"
 	    android:name="com.hover.stax.balances.BalanceAndHistoryFragment"
 	    android:label="@string/nav_balance_and_history"
 	    tools:layout="@layout/fragment_balance_history" />
 
 	<fragment
-	    android:id="@+id/navigation_security"
+	    android:id="@+id/navigation_settings"
 	    android:name="com.hover.stax.settings.SettingsFragment"
 	    android:label="@string/nav_security"
 	    tools:layout="@layout/fragment_settings" />

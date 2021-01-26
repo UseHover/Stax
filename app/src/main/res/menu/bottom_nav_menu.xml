@@ -10,13 +10,13 @@
 	    android:title="@string/nav_home" />
 
 	<item
-	    android:id="@+id/navigation_balance_history"
+	    android:id="@+id/navigation_balance"
 	    android:icon="@drawable/ic_baseline_list_24"
 	    app:showAsAction="ifRoom"
 	    android:title="@string/nav_balance_and_history" />
 
 	<item
-	    android:id="@+id/navigation_security"
+	    android:id="@+id/navigation_settings"
 	    android:icon="@drawable/ic_settings"
 	    app:showAsAction="always"
 	    android:title="@string/nav_security" />
