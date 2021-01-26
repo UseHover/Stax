@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 	android:layout_marginTop="@dimen/margin_13"
@@ -12,29 +14,35 @@
 		android:layout_marginBottom="@dimen/margin_89"
 	    android:orientation="vertical"
 		android:id="@+id/mainLayout"
-		android:descendantFocusability="beforeDescendants"
+		android:descendantFocusability="afterDescendants"
 		android:focusableInTouchMode="true" >
 
 		<include layout="@layout/transfer_card_summary"
 			android:id="@+id/summaryCard" />
 
-		<include layout="@layout/transfer_card_amount"
-			android:id="@+id/amountCard" />
+		<com.hover.stax.views.StaxCardView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/transactionFormCard"
+		    app:showBack="true"
+		    app:backClickable="true"
+		    app:title="@string/nav_airtime">
 
-		<include layout="@layout/transfer_card_from_channel"
-			android:id="@+id/fromAccountCard" />
+			<include layout="@layout/transfer_card_amount" />
 
-		<include layout="@layout/transfer_card_network"
-			android:id="@+id/networkCard" />
+			<include layout="@layout/transfer_card_from_channel" />
 
-		<include layout="@layout/transfer_card_recipient"
-			android:id="@+id/recipientCard" />
+			<include layout="@layout/transfer_card_network" />
 
-		<include layout="@layout/transfer_card_note"
-			android:id="@+id/reasonCard" />
+		<include  layout="@layout/recipient_input" />
+
+			<include layout="@layout/transfer_card_note"
+			    android:visibility="gone"
+			    android:id="@+id/reasonEditText"/>
+		</com.hover.stax.views.StaxCardView>
 
 		<include layout="@layout/transfer_card_future"
-			android:id="@+id/futureCard" />
+			android:id="@+id/futureCard" android:visibility="gone" />
 
 		<include layout="@layout/transfer_card_repeat"
 			android:id="@+id/repeatCard"

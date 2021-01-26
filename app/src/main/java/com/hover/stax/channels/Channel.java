@@ -3,12 +3,14 @@ package com.hover.stax.channels;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.hover.stax.utils.DateUtils;
+import com.hover.stax.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -122,6 +124,21 @@ public class Channel {
 		} else {
 			latestBalanceTimestamp = DateUtils.now();
 		}
+	}
+
+	public static void updateSimChannels(MediatorLiveData<List<Channel>> simChannels, List<Channel> channels, List<String> hniList) {
+		if (channels == null || hniList == null) return;
+		List<Channel> simChannelList = new ArrayList<>();
+		for (int i = 0; i < channels.size(); i++) {
+			String[] hniArr = channels.get(i).hniList.split(",");
+			for (String s : hniArr) {
+				if (hniList.contains(Utils.stripHniString(s))) {
+					if (!simChannelList.contains(channels.get(i)))
+						simChannelList.add(channels.get(i));
+				}
+			}
+		}
+		simChannels.setValue(simChannelList);
 	}
 
 	@Override

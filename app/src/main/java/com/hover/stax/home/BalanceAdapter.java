@@ -63,12 +63,12 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 		if (channel.latestBalance != null && showBalance) {
 			holder.subtitle.setVisibility(View.VISIBLE);
 			holder.subtitle.setText(DateUtils.humanFriendlyDate(channel.latestBalanceTimestamp));
-			holder.amount.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
 			holder.amount.setText(Utils.formatAmount(channel.latestBalance));
+			setColorForEmptyAmount(false, holder, 0);
 		}
 		else {
 			holder.amount.setText("");
-			holder.amount.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_remove_24,0);
+			setColorForEmptyAmount(true, holder, UIHelper.getColor(channel.secondaryColorHex, false, holder.itemView.getContext()));
 		}
 		if(showBalance && channel.latestBalance == null) {
 			holder.subtitle.setVisibility(View.VISIBLE);
@@ -92,6 +92,17 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 			DrawableCompat.setTint(drawable.mutate(), secondary);
 			holder.subtitle.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
 		}
+	}
+	private void setColorForEmptyAmount(boolean show, BalanceViewHolder holder, int secondary) {
+		if(show) {
+			Drawable drawable = ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.ic_remove_24);
+			if(drawable !=null) {
+				drawable = DrawableCompat.wrap(drawable);
+				DrawableCompat.setTint(drawable.mutate(), secondary);
+				holder.amount.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+			}
+		}else holder.amount.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+
 	}
 
 	class BalanceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

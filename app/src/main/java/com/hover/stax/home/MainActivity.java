@@ -181,7 +181,7 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 	}
 
 	public void maybeRunAShowcase() {
-		if (showCase == null)
+		/*if (showCase == null)
 			showCase = new ShowcaseExecutor(this, findViewById(R.id.home_root));
 		switch (ShowcaseExecutor.getStage(this)) {
 			case 0: showCase.showcaseAddAcctStage();
@@ -194,7 +194,7 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 				if (balancesViewModel.getSelectedChannels().getValue() != null && balancesViewModel.getSelectedChannels().getValue().size() > 0)
 					showCase.showcasePeekBalanceStage();
 				break;
-		}
+		} */
 	}
 
 	private void onProbableHoverCall(Intent data) {

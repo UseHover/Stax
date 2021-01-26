@@ -73,11 +73,11 @@ public class BalanceAndHistoryFragment extends Fragment implements TransactionHi
 		setupRefreshBalance(view);
 	}
 
-	void setAddAccountVisibilityStagTeToOnlyText(boolean isOnlyTextVisible) {
+	void setAddAccountVisibilityStageToOnlyText(boolean isOnlyTextVisible) {
 		if(isOnlyTextVisible) {
 			addAccountText.setVisibility(VISIBLE);
 			linkAccountLayout.setVisibility(GONE);
-			addAccountText.setOnClickListener(v -> setAddAccountVisibilityStagTeToOnlyText(false));
+			addAccountText.setOnClickListener(v -> setAddAccountVisibilityStageToOnlyText(false));
 
 		}else {
 			addAccountText.setVisibility(GONE);
@@ -95,7 +95,6 @@ public class BalanceAndHistoryFragment extends Fragment implements TransactionHi
 		balanceCard.backButton.setVisibility(GONE);
 		balanceCard.setActivated(false);
 
-
 		RecyclerView recyclerView = view.findViewById(R.id.balances_recyclerView);
 		recyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 		recyclerView.setHasFixedSize(true);
@@ -110,7 +109,7 @@ public class BalanceAndHistoryFragment extends Fragment implements TransactionHi
 				balanceCard.backButton.setActivated(!balanceCard.backButton.isActivated());
 				balanceAdapter.updateShowBalance();
 			});
-			setAddAccountVisibilityStagTeToOnlyText(channels !=null && channels.size() > 0);
+			setAddAccountVisibilityStageToOnlyText(channels !=null && channels.size() > 0);
 		});
 	}
 
@@ -119,7 +118,6 @@ public class BalanceAndHistoryFragment extends Fragment implements TransactionHi
 			if(showError) {
 				linkAccountLayout.setError(getString(R.string.refresh_balance_error));
 				linkAccountLayout.setErrorIconDrawable(R.drawable.ic_error_warning_24dp);
-				channelDropdown.setText(getString(R.string.link_an_account), false);
 			}else {
 				linkAccountLayout.setError(null);
 				linkAccountLayout.setErrorIconDrawable(0);
@@ -131,10 +129,9 @@ public class BalanceAndHistoryFragment extends Fragment implements TransactionHi
 		channelDropdown = view.findViewById(R.id.channelDropdown);
 		channelViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> {
 			if (channels == null || channels.size() == 0 || getContext() == null) return;
-
-
 			ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(channels,  false, getContext());
 			channelDropdown.setAdapter(channelDropdownAdapter);
+			channelDropdown.setText(getString(R.string.link_an_account), false);
 			channelDropdown.setOnItemClickListener((adapterView, view2, pos, id) -> {
 				Channel channel = (Channel) adapterView.getItemAtPosition(pos);
 				balancesViewModel.setChannelSelectedFromSpinner(channel);

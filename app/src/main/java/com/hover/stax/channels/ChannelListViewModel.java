@@ -134,26 +134,11 @@ public class ChannelListViewModel extends AndroidViewModel {
 	}
 
 	private void onChannelsUpdateHnis(List<Channel> channels) {
-		updateSimChannels(channels, simHniList.getValue());
+		Channel.updateSimChannels(simChannels, channels, simHniList.getValue());
 	}
 
 	private void onSimUpdate(List<String> hniList) {
-		updateSimChannels(allChannels.getValue(), hniList);
-	}
-
-	private void updateSimChannels(List<Channel> channels, List<String> hniList) {
-		if (channels == null || hniList == null) return;
-		List<Channel> simChannelList = new ArrayList<>();
-		for (int i = 0; i < channels.size(); i++) {
-			String[] hniArr = channels.get(i).hniList.split(",");
-			for (String s : hniArr) {
-				if (hniList.contains(Utils.stripHniString(s))) {
-					if (!simChannelList.contains(channels.get(i)))
-						simChannelList.add(channels.get(i));
-				}
-			}
-		}
-		simChannels.setValue(simChannelList);
+		Channel.updateSimChannels(simChannels, allChannels.getValue(), hniList);
 	}
 
 	public LiveData<List<Channel>> getSimChannels() {

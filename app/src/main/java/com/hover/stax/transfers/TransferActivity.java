@@ -92,11 +92,13 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 
 	public void onContinue(View view) {
 		if (transferViewModel.stageValidates()) {
+			Log.d("CONTINUE", "IT VALIDATED O");
 			if (transferViewModel.isDone())
 				submit();
 			else
-				transferViewModel.goToNextStage();
+				transferViewModel.setStage(REVIEW);
 		}
+		else Log.d("CONTINUE", "failed failed O");
 	}
 
 	private void submit() {
@@ -164,13 +166,16 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void setCurrentCard(StagedViewModel.StagedEnum stage) {
-		findViewById(R.id.amountCard).setVisibility(stage.compare(AMOUNT) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.fromAccountCard).setVisibility(stage.compare(FROM_ACCOUNT) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.networkCard).setVisibility(stage.compare(TO_NETWORK) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.recipientCard).setVisibility(stage.compare(RECIPIENT) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.reasonCard).setVisibility(stage.compare(NOTE) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.futureCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && transferViewModel.getFutureDate().getValue() == null ? View.VISIBLE : View.GONE);
-		findViewById(R.id.repeatCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && (transferViewModel.repeatSaved().getValue() == null || !transferViewModel.repeatSaved().getValue()) ? View.VISIBLE : View.GONE);
+		findViewById(R.id.summaryCard).setVisibility(stage.compare(REVIEW) == 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.transactionFormCard).setVisibility(stage.compare(REVIEW) != 0 ? View.VISIBLE : View.GONE);
+		//findViewById(R.id.reasonEditText).setVisibility(!transferViewModel.getType().equals(Action.AIRTIME) ? View.VISIBLE : View.GONE);
+		//findViewById(R.id.reasonCard).setVisibility(stage.compare(NOTE) == 0 ? View.VISIBLE : View.GONE);
+		//findViewById(R.id.amountCard).setVisibility(stage.compare(AMOUNT) == 0 ? View.VISIBLE : View.GONE);
+		//findViewById(R.id.fromAccountCard).setVisibility(stage.compare(FROM_ACCOUNT) == 0 ? View.VISIBLE : View.GONE);
+		//findViewById(R.id.networkCard).setVisibility(stage.compare(TO_NETWORK) == 0 ? View.VISIBLE : View.GONE);
+		//findViewById(R.id.recipientCard).setVisibility(stage.compare(RECIPIENT) == 0 ? View.VISIBLE : View.GONE);
+		//findViewById(R.id.futureCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && transferViewModel.getFutureDate().getValue() == null ? View.VISIBLE : View.GONE);
+		//findViewById(R.id.repeatCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && (transferViewModel.repeatSaved().getValue() == null || !transferViewModel.repeatSaved().getValue()) ? View.VISIBLE : View.GONE);
 	}
 
 	private void setFab(StagedViewModel.StagedEnum stage) {
@@ -181,7 +186,11 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 			else if (transferViewModel.getIsFuture().getValue() != null && transferViewModel.getIsFuture().getValue()) {
 				fab.setText(getString(R.string.fab_schedule));
 				if (transferViewModel.getFutureDate().getValue() == null) { fab.hide(); } else { fab.show(); }
-			} else {
+			} else if(transferViewModel.getType().equals(Action.AIRTIME)) {
+				fab.setText(getString(R.string.fab_sendnow));
+				fab.show();
+			}
+			else {
 				fab.setText(getString(R.string.fab_transfernow));
 				fab.show();
 			}
@@ -215,7 +224,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	public void onBackPressed() {
 		if (Navigation.findNavController(findViewById(R.id.nav_host_fragment)).getCurrentDestination().getId() != R.id.navigation_edit ||
 			    !Navigation.findNavController(findViewById(R.id.nav_host_fragment)).popBackStack()) {
-			if (transferViewModel.getStage().getValue().compare(AMOUNT) > 0 && transferViewModel.getSchedule().getValue() == null && transferViewModel.getRequest().getValue() == null)
+			if (transferViewModel.getStage().getValue().compare(REVIEW) == 0 && transferViewModel.getSchedule().getValue() == null && transferViewModel.getRequest().getValue() == null)
 				transferViewModel.goToPrevStage();
 			else
 				super.onBackPressed();

@@ -271,39 +271,26 @@ public class TransferViewModel extends StagedViewModel {
 
 	boolean hasActionsLoaded() {
 		return filteredActions.getValue() != null && filteredActions.getValue().size() > 0 &&
-			(filteredActions.getValue().size() > 1 || (activeAction.getValue() != null && activeAction.getValue().hasToInstitution()));
+					   (filteredActions.getValue().size() > 1 || (activeAction.getValue() != null && activeAction.getValue().hasToInstitution()));
 	}
 
 	boolean stageValidates() {
-		if (stage.getValue() == null) return false;
-		switch ((TransferStage) stage.getValue()) {
-			case AMOUNT:
-				return isErrorFree((MutableLiveData) amount, amountError, R.string.amount_fielderror);
-			case FROM_ACCOUNT:
-				return isErrorFree((MutableLiveData) activeChannel, pageError, R.string.fromacct_fielderror)
-					       && isErrorFree((MutableLiveData) filteredActions, pageError, R.string.actions_fielderror);
-			case TO_NETWORK:
-				return isErrorFree((MutableLiveData) activeAction, pageError, R.string.recipientnetwork_fielderror);
-			case RECIPIENT:
-				return isErrorFree((MutableLiveData) contact, recipientError, R.string.recipient_fielderror);
-			case NOTE: return true;
-			case REVIEW:
-			case REVIEW_DIRECT:
-			default:
-				Log.e(TAG, "active channel: " + activeChannel.getValue());
-				Log.e(TAG, "active action: " + activeAction.getValue());
-				Log.e(TAG, "contact: " + contact.getValue());
-			    return isErrorFree((MutableLiveData) activeChannel, pageError, R.string.whoopsie) &&
-				           isErrorFree((MutableLiveData) activeAction, pageError, R.string.whoopsie) &&
-				           (!activeAction.getValue().requiresRecipient() || isErrorFree((MutableLiveData) contact, pageError, R.string.whoopsie));
-		}
+		return 		 			 isErrorFree((MutableLiveData) amount, amountError, R.string.amount_fielderror) &&
+								 isErrorFree((MutableLiveData) activeChannel, pageError, R.string.fromacct_fielderror) &&
+								 isErrorFree((MutableLiveData) filteredActions, pageError, R.string.actions_fielderror)&&
+								 isErrorFree((MutableLiveData) activeAction, pageError, R.string.recipientnetwork_fielderror)&&
+								 (!activeAction.getValue().requiresRecipient() || isErrorFree((MutableLiveData) contact, recipientError, R.string.recipient_fielderror))&&
+								 isErrorFree((MutableLiveData) activeChannel, pageError, R.string.whoopsie) &&
+								 isErrorFree((MutableLiveData) activeAction, pageError, R.string.whoopsie) &&
+								 (!activeAction.getValue().requiresRecipient() || isErrorFree((MutableLiveData) contact, pageError, R.string.whoopsie));
+
 	}
 
 	private boolean isErrorFree(MutableLiveData<Object> whichProp, MutableLiveData<Integer> whichError, int errorString) {
 		if (whichProp.getValue() == null ||
-			    (whichProp.getValue() instanceof String && ((String) whichProp.getValue()).isEmpty()) ||
-			        (whichProp.getValue() instanceof StaxContact && ((StaxContact) whichProp.getValue()).getPhoneNumber().isEmpty()) ||
-			        (whichProp.getValue() instanceof List && ((List) whichProp.getValue()).size() == 0)) {
+					(whichProp.getValue() instanceof String && ((String) whichProp.getValue()).isEmpty()) ||
+					(whichProp.getValue() instanceof StaxContact && ((StaxContact) whichProp.getValue()).getPhoneNumber().isEmpty()) ||
+					(whichProp.getValue() instanceof List && ((List) whichProp.getValue()).size() == 0)) {
 			whichError.setValue(errorString);
 			return false;
 		} else
@@ -342,7 +329,7 @@ public class TransferViewModel extends StagedViewModel {
 
 	public void schedule() {
 		Schedule s = new Schedule(activeAction.getValue(), futureDate.getValue(), repeatSaved.getValue(), frequency.getValue(), endDate.getValue(),
-			contact.getValue(), amount.getValue(), note.getValue(), getApplication());
+				contact.getValue(), amount.getValue(), note.getValue(), getApplication());
 		saveSchedule(s);
 	}
 

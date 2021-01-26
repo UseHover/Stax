@@ -1,6 +1,10 @@
 package com.hover.stax.utils;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -8,14 +12,19 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.amplitude.api.Amplitude;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.schedules.Schedule;
+import com.hover.stax.sims.Sim;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class StagedViewModel extends AndroidViewModel {
@@ -39,11 +48,23 @@ public abstract class StagedViewModel extends AndroidViewModel {
 	protected MutableLiveData<Schedule> schedule = new MutableLiveData<>();
 	protected MutableLiveData<Boolean> isEditing = new MutableLiveData<>();
 
+	private MediatorLiveData<List<Channel>> simChannels;
+	private LiveData<List<String>> simHniList = new MutableLiveData<>();
+	private MutableLiveData<List<Sim>> sims;
+
 	public StagedViewModel(@NonNull Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
-		selectedChannels = repo.getSelected();
-		activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull);
+		selectedChannels = repo.getAllChannelsBySelectedOrder();
+		loadSims();
+		simHniList = Transformations.map(sims, this::getHnisAndSubscribeToEachOnFirebase);
+
+		simChannels = new MediatorLiveData<>();
+		simChannels.addSource(selectedChannels, this::onChannelsUpdateHnis);
+		simChannels.addSource(simHniList, this::onSimUpdate);
+
+		//Prevent auto select
+		//activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull);
 
 		futureDated.setValue(false);
 		futureDate.setValue(null);
@@ -56,6 +77,21 @@ public abstract class StagedViewModel extends AndroidViewModel {
 
 		recentContacts = repo.getAllContacts();
 	}
+
+	void loadSims() {
+		if (sims == null) {
+			sims = new MutableLiveData<>();
+		}
+		new Thread(() -> sims.postValue(repo.getSims())).start();
+		LocalBroadcastManager.getInstance(getApplication())
+				.registerReceiver(simReceiver, new IntentFilter(Utils.getPackage(getApplication()) + ".NEW_SIM_INFO_ACTION"));
+	}
+	private final BroadcastReceiver simReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			new Thread(() -> sims.postValue(repo.getSims())).start();
+		}
+	};
 
 	public LiveData<StagedEnum> getStage() {
 		return stage;
@@ -75,6 +111,31 @@ public abstract class StagedViewModel extends AndroidViewModel {
 		stage.postValue(prev);
 	}
 
+	private void onChannelsUpdateHnis(List<Channel> channels) {
+		Channel.updateSimChannels(simChannels,channels, simHniList.getValue());
+	}
+
+	private void onSimUpdate(List<String> hniList) {
+		Channel.updateSimChannels(simChannels,selectedChannels.getValue(), simHniList.getValue());
+	}
+
+	public LiveData<List<Channel>> getSimChannels() {
+		return simChannels;
+	}
+
+	private List<String> getHnisAndSubscribeToEachOnFirebase(List<Sim> sims) {
+		if (sims == null) return null;
+		List<String> hniList = new ArrayList<>();
+		for (Sim sim : sims) {
+			if (!hniList.contains(sim.hni)) {
+				FirebaseMessaging.getInstance().subscribeToTopic("sim-" + sim.hni);
+				hniList.add(sim.hni);
+			}
+		}
+		return hniList;
+	}
+
+
 	protected void setActiveChannelIfNull(List<Channel> channels) {
 		if (channels != null && channels.size() > 0 && activeChannel.getValue() == null)
 			activeChannel.setValue(channels.get(0));
@@ -84,6 +145,9 @@ public abstract class StagedViewModel extends AndroidViewModel {
 		if (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0)
 			return;
 		activeChannel.setValue(getChannelById(channel_id));
+	}
+	public void setActiveChannel(Channel channel) {
+		activeChannel.setValue(channel);
 	}
 
 	protected Channel getChannelById(int id) {

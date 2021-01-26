@@ -81,8 +81,10 @@ public class TransferFragment extends StagedFragment {
 	}
 
 	private void setTitle(View root) {
-		TextView tv = root.findViewById(R.id.summaryCard).findViewById(R.id.title);
-		if(tv !=null) { tv.setText(getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.fab_airtime : R.string.fab_transfer)); }
+		TextView summaryCardTitle = root.findViewById(R.id.summaryCard).findViewById(R.id.title);
+		TextView formCardTitle = root.findViewById(R.id.transactionFormCard).findViewById(R.id.title);
+		if(summaryCardTitle !=null) { summaryCardTitle.setText(getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.fab_airtime : R.string.fab_transfer)); }
+		if(formCardTitle !=null) { formCardTitle.setText(getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.fab_airtime : R.string.fab_transfer)); }
 	}
 
 	protected void startObservers(View root) {

@@ -31,6 +31,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.channels.ChannelDropdownAdapter;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.Constants;
 import com.hover.stax.permissions.PermissionUtils;
@@ -42,7 +43,7 @@ public abstract class StagedFragment extends Fragment {
 
 	protected StagedViewModel stagedViewModel;
 
-	protected RadioGroup channelRadioGroup;
+	protected AutoCompleteTextView channelDropdown;
 	protected MaterialDatePicker<Long> datePicker;
 	protected MaterialDatePicker<Long> endDatePicker;
 	private AutoCompleteTextView frequencyDropdown;
@@ -56,7 +57,7 @@ public abstract class StagedFragment extends Fragment {
 	}
 
 	protected void init(View root) {
-		channelRadioGroup = root.findViewById(R.id.channelRadioGroup);
+		channelDropdown = root.findViewById(R.id.channelDropdown);
 		repeatInput = root.findViewById(R.id.repeat_times_input);
 		accountValue = root.findViewById(R.id.account_value);
 		createFuturePicker();
@@ -68,7 +69,7 @@ public abstract class StagedFragment extends Fragment {
 	protected void startObservers(View root) {
 		stagedViewModel.getActiveChannel().observe(getViewLifecycleOwner(), this:: onActiveChannelChange);
 
-		stagedViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
+		stagedViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> {
 			if (channels != null) createChannelSelector(channels);
 		});
 
@@ -106,7 +107,6 @@ public abstract class StagedFragment extends Fragment {
 	protected void onActiveChannelChange(Channel c) {
 		if (c != null) {
 			accountValue.setTitle(c.name);
-			channelRadioGroup.check(c.id);
 		}
 	}
 
@@ -120,18 +120,15 @@ public abstract class StagedFragment extends Fragment {
 	}
 
 	protected void createChannelSelector(List<Channel> channels) {
-		channelRadioGroup.removeAllViews();
+		if (channels == null || channels.size() == 0 || getContext() == null) return;
+		ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(channels,  true, getContext());
+		channelDropdown.setAdapter(channelDropdownAdapter);
+		channelDropdown.setText(getString(R.string.channel_label), false);
+		channelDropdown.setOnItemClickListener((adapterView, view2, pos, id) -> {
+			Channel channel = (Channel) adapterView.getItemAtPosition(pos);
+			stagedViewModel.setActiveChannel(channel);
 
-		for (Channel c : channels) {
-			RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.stax_radio_button, null);
-			radioButton.setText(c.name);
-			radioButton.setId(c.id);
-			if (stagedViewModel.getActiveChannel().getValue() != null && stagedViewModel.getActiveChannel().getValue().id == c.id) {
-				radioButton.setChecked(true);
-			}
-			channelRadioGroup.addView(radioButton);
-		}
-		channelRadioGroup.setOnCheckedChangeListener((group, checkedId) -> stagedViewModel.setActiveChannel(checkedId));
+		});
 	}
 
 	protected void dateDetailListeners(View root) {
