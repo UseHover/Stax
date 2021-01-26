@@ -46,7 +46,8 @@ public class TransferFragment extends StagedFragment {
 	private RelativeLayout recipientEntry;
 	private TextInputLayout recipientLabel, amountEntry;
 	private EditText amountInput, noteInput;
-	private AutoCompleteTextView actionDropdown, recipientAutocomplete;
+	private RadioGroup actionRadioGroup;
+	private AutoCompleteTextView recipientAutocomplete;
 	private ImageButton contactButton;
 
 	private TextView amountValue, noteValue;
@@ -69,7 +70,7 @@ public class TransferFragment extends StagedFragment {
 		amountEntry = root.findViewById(R.id.amountEntry);
 		amountInput = root.findViewById(R.id.amount_input);
 		amountInput.setText(transferViewModel.getAmount().getValue());
-		actionDropdown = root.findViewById(R.id.networkDropdown);
+		actionRadioGroup = root.findViewById(R.id.networkRadioGroup);
 		recipientEntry = root.findViewById(R.id.recipientEntry);
 		recipientLabel = root.findViewById(R.id.recipientLabel);
 		recipientAutocomplete = root.findViewById(R.id.recipient_autocomplete);
@@ -133,25 +134,22 @@ public class TransferFragment extends StagedFragment {
 
 		transferViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
 			if (actions == null || actions.size() == 0) return;
-			for (Action a: actions) a.context = getContext();
-			ArrayAdapter<Action> adapter = new ArrayAdapter<>(requireActivity(), R.layout.stax_spinner_item, actions);
-			actionDropdown.setAdapter(adapter);
-			actionDropdown.setText(actionDropdown.getAdapter().getItem(0).toString(), false);
-
-
-
-			channelRadioGroup.removeAllViews();
-
-			for (Channel c : channels) {
+			actionRadioGroup.removeAllViews();
+			for (Action a: actions){
+				a.context = getContext();
 				RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.stax_radio_button, null);
-				radioButton.setText(c.name);
-				radioButton.setId(c.id);
-				if (stagedViewModel.getActiveChannel().getValue() != null && stagedViewModel.getActiveChannel().getValue().id == c.id) {
+				radioButton.setText(a.getLabel(getContext()));
+				radioButton.setId(a.id);
+				if (stagedViewModel.getActiveChannel().getValue() != null && stagedViewModel.getActiveChannel().getValue().id == a.id) {
 					radioButton.setChecked(true);
 				}
-				channelRadioGroup.addView(radioButton);
+				actionRadioGroup.addView(radioButton);
 			}
-			channelRadioGroup.setOnCheckedChangeListener((group, checkedId) -> stagedViewModel.setActiveChannel(checkedId));
+
+
+
+
+
 
 
 		});
@@ -171,8 +169,8 @@ public class TransferFragment extends StagedFragment {
 		super.startListeners(root);
 		root.findViewById(R.id.add_new_account).setOnClickListener(view -> startActivityForResult(new Intent(getActivity(), ChannelsActivity.class), Constants.ADD_SERVICE));
 
-		actionDropdown.setOnItemClickListener((adapterView, view, pos, id) -> {
-			Action action = (Action) adapterView.getItemAtPosition(pos);
+		actionRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+			Action action = (Action) checkedId;
 			transferViewModel.setActiveAction(action);
 			setRecipientHint(action);
 		});
