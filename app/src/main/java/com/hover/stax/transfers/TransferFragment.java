@@ -137,6 +137,23 @@ public class TransferFragment extends StagedFragment {
 			ArrayAdapter<Action> adapter = new ArrayAdapter<>(requireActivity(), R.layout.stax_spinner_item, actions);
 			actionDropdown.setAdapter(adapter);
 			actionDropdown.setText(actionDropdown.getAdapter().getItem(0).toString(), false);
+
+
+
+			channelRadioGroup.removeAllViews();
+
+			for (Channel c : channels) {
+				RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.stax_radio_button, null);
+				radioButton.setText(c.name);
+				radioButton.setId(c.id);
+				if (stagedViewModel.getActiveChannel().getValue() != null && stagedViewModel.getActiveChannel().getValue().id == c.id) {
+					radioButton.setChecked(true);
+				}
+				channelRadioGroup.addView(radioButton);
+			}
+			channelRadioGroup.setOnCheckedChangeListener((group, checkedId) -> stagedViewModel.setActiveChannel(checkedId));
+
+
 		});
 
 		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
