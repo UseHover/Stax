@@ -32,7 +32,8 @@ public class BalancesViewModel extends AndroidViewModel {
 
 	private DatabaseRepo repo;
 	private RunBalanceListener listener;
-	private List<Integer> hasRun = new ArrayList<>();
+	private List<Integer> hasRunList = new ArrayList<>();
+	private boolean hasActive = false;
 
 	private LiveData<List<Channel>> selectedChannels;
 	private LiveData<List<Action>> balanceActions = new MediatorLiveData<>();
@@ -155,25 +156,25 @@ public class BalancesViewModel extends AndroidViewModel {
 	}
 
 	void startRun(List<Action> actions) {
-		Log.e(TAG, "refreshing " + actions);
 		if (actions == null || actions.size() == 0) return;
-		Log.e(TAG, "action count: " + actions.size());
 		toRun.setValue(actions);
 		runNext(actions, 0);
 	}
 
 	private void runNext(List<Action> actions, int index) {
-		if (listener != null)
+		if (listener != null && !hasActive) {
+			hasActive = true;
 			listener.startRun(actions.get(index), index);
-		else
+		} else if (!hasActive)
 			UIHelper.flashMessage(getApplication(), "Failed to start run, please try again.");
 	}
 
 	public void setRan(int index) {
+		hasActive = false;
 		if (toRun.getValue().size() > index + 1) {
-			hasRun.add(toRun.getValue().get(index).id);
-			while (hasRun.contains(toRun.getValue().get(index + 1).id))
-				index += 1;
+			hasRunList.add(toRun.getValue().get(index).id);
+			while (hasRunList.contains(toRun.getValue().get(index + 1).id))
+				index = index + 1;
 			if (toRun.getValue().size() > index + 1)
 				runNext(toRun.getValue(), index + 1);
 			else endRun();
@@ -183,6 +184,7 @@ public class BalancesViewModel extends AndroidViewModel {
 	private void endRun() {
 		toRun.setValue(new ArrayList<>());
 		runFlag.setValue(NONE);
+		hasRunList = new ArrayList<>();
 	}
 
 	private List<Action> getChannelActions(int flag) {
