@@ -1,6 +1,7 @@
-package com.hover.stax.home;
+package com.hover.stax.balances;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
@@ -9,13 +10,19 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
+import com.amplitude.api.Amplitude;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.utils.UIHelper;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BalancesViewModel extends AndroidViewModel {
@@ -25,12 +32,14 @@ public class BalancesViewModel extends AndroidViewModel {
 
 	private DatabaseRepo repo;
 	private RunBalanceListener listener;
+	private List<Integer> hasRunList = new ArrayList<>();
+	private boolean hasActive = false;
 
 	private LiveData<List<Channel>> selectedChannels;
 	private LiveData<List<Action>> balanceActions = new MediatorLiveData<>();
 	private MutableLiveData<Integer> runFlag = new MutableLiveData<>();
 	private MediatorLiveData<List<Action>> toRun;
-	private MutableLiveData<Channel> selectedFromSpinner = new MutableLiveData<Channel>();
+	private MutableLiveData<Channel> highlightedChannel = new MutableLiveData<>();
 	private MutableLiveData<Boolean> runBalanceError = new MutableLiveData<>();
 
 	public BalancesViewModel(Application application) {
@@ -48,12 +57,16 @@ public class BalancesViewModel extends AndroidViewModel {
 		runBalanceError.setValue(false);
 	}
 
-	void setListener(RunBalanceListener l) {
+	public void setListener(RunBalanceListener l) {
 		listener = l;
 	}
 
 	public LiveData<List<Action>> getToRun() {
 		return toRun;
+	}
+
+	public LiveData<Integer> getRunFlag() {
+		return runFlag;
 	}
 
 	public LiveData<List<Channel>> getSelectedChannels() {
@@ -64,9 +77,11 @@ public class BalancesViewModel extends AndroidViewModel {
 	}
 
 	public LiveData<List<Action>> loadBalanceActions(List<Channel> channelList) {
+		Log.e(TAG, "attempting to load " + channelList.size() + " balance actions");
 		int[] ids = new int[channelList.size()];
 		for (int c = 0; c < channelList.size(); c++)
 			ids[c] = channelList.get(c).id;
+		Log.e(TAG, "attempting to load balance actions for channels: " + Arrays.toString(ids));
 		return repo.getLiveActions(ids, Action.BALANCE);
 	}
 
@@ -74,34 +89,33 @@ public class BalancesViewModel extends AndroidViewModel {
 		return balanceActions;
 	}
 
-	public void setChannelSelectedFromSpinner(Channel channel) {
-		setRunBalanceError(false);
-		selectedFromSpinner.postValue(channel);
+	public void highlightChannel(Channel channel) {
+		highlightedChannel.postValue(channel);
 	}
-	public void saveChannelSelectedFromSpinner() {
-		Channel channel = selectedFromSpinner.getValue() != null ? selectedFromSpinner.getValue() : null;
-		if(channel !=null) {
-					channel.selected = true;
-					channel.defaultAccount = true;
-					repo.update(channel);
-					FirebaseMessaging.getInstance().subscribeToTopic("channel-" + channel.id);
-		}
 
+	public Channel getHighlightedChannel() {
+		return highlightedChannel.getValue();
 	}
-	public boolean validateRun() {
-		List<Channel> allChannels = selectedChannels.getValue() != null ? selectedChannels.getValue() : new ArrayList<>();
-		Channel channel = selectedFromSpinner.getValue();
-		if(allChannels.size() > 0 || channel != null) {
-			setRunBalanceError(false);
-			setChannelSelectedFromSpinner(null);
-			return true;
-		}else {
-			setRunBalanceError(true);
-			return false;
-		}
 
-
+	public void selectChannel(Context c) {
+		if (highlightedChannel.getValue() == null) return;
+		Log.e(TAG, "saving channel as selected");
+		Channel channel = highlightedChannel.getValue();
+		logChoice(channel, c);
+		channel.selected = true;
+		channel.defaultAccount = true;
+		repo.update(channel);
 	}
+
+	private void logChoice(Channel channel, Context c) {
+		FirebaseMessaging.getInstance().subscribeToTopic("channel-" + channel.id);
+		JSONObject event = new JSONObject();
+		try { event.put(c.getString(R.string.added_channel_id), channel.id);
+		} catch (JSONException ignored) { }
+		Amplitude.getInstance().logEvent(c.getString(R.string.new_account_check_balance), event);
+	}
+
+
 	public Channel getChannel(int id) {
 		List<Channel> allChannels = selectedChannels.getValue() != null ? selectedChannels.getValue() : new ArrayList<>();
 		return getChannel(allChannels, id);
@@ -116,13 +130,14 @@ public class BalancesViewModel extends AndroidViewModel {
 		return null;
 	}
 
-	void setRunning(int channel_id) {
+	public void setRunning(int channel_id) {
 		runFlag.setValue(channel_id);
 	}
 
-	void setRunning() {
+	public void setAllRunning(Context c) {
+		Log.e(TAG, "triggering refresh");
+		Amplitude.getInstance().logEvent(c.getString(R.string.refresh_balance_all));
 		runFlag.setValue(ALL);
-
 	}
 
 	public void setRunBalanceError(boolean showError) {runBalanceError.postValue(showError);}
@@ -147,19 +162,29 @@ public class BalancesViewModel extends AndroidViewModel {
 	}
 
 	private void runNext(List<Action> actions, int index) {
-		if (listener != null)
+		if (listener != null && !hasActive) {
+			hasActive = true;
 			listener.startRun(actions.get(index), index);
-		else
+		} else if (!hasActive)
 			UIHelper.flashMessage(getApplication(), "Failed to start run, please try again.");
 	}
 
-	void setRan(int index) {
+	public void setRan(int index) {
+		hasActive = false;
 		if (toRun.getValue().size() > index + 1) {
-			runNext(toRun.getValue(), index + 1);
-		} else {
-			toRun.setValue(new ArrayList<>());
-			runFlag.setValue(NONE);
-		}
+			hasRunList.add(toRun.getValue().get(index).id);
+			while (hasRunList.contains(toRun.getValue().get(index + 1).id))
+				index = index + 1;
+			if (toRun.getValue().size() > index + 1)
+				runNext(toRun.getValue(), index + 1);
+			else endRun();
+		} else endRun();
+	}
+
+	private void endRun() {
+		toRun.setValue(new ArrayList<>());
+		runFlag.setValue(NONE);
+		hasRunList = new ArrayList<>();
 	}
 
 	private List<Action> getChannelActions(int flag) {

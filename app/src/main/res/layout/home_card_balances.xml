@@ -3,10 +3,10 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-    	app:backClickable="true"
-    	app:showBack="true"
-    	android:id="@+id/balance_card"
-      app:backRes="@drawable/visibility_icon"
+	app:backClickable="true"
+	app:showBack="true"
+	android:id="@+id/balance_card"
+	app:backRes="@drawable/visibility_icon"
 	app:title="@string/bal_cardhead">
 
 	<androidx.recyclerview.widget.RecyclerView
@@ -18,9 +18,7 @@
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-	    	android:orientation="vertical"
-
-	    >
+		android:orientation="vertical">
 
 		<TextView
 		    android:layout_width="match_parent"
@@ -53,15 +51,16 @@
 			    android:textSize="@dimen/text_21"
 			    android:fontFamily="font-normal"
 			    android:textColor="@color/offWhite"
-			    android:textCursorDrawable="@null" />
+			    android:textCursorDrawable="@null"
+				android:text="@string/allaccts_zerobody"/>
 
 		</com.google.android.material.textfield.TextInputLayout>
 
 		<RelativeLayout
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:layout_gravity="end"
-		    >
+		    android:layout_gravity="end" >
+
 			<androidx.appcompat.widget.AppCompatButton
 				android:id="@+id/refresh_accounts_btn"
 				android:layout_width="wrap_content"
@@ -70,7 +69,7 @@
 				android:text="@string/refresh_balances"
 			    	android:drawablePadding="@dimen/margin_5"
 			    	android:drawableStart="@drawable/ic_refresh_dark_24"
-			    	style="@style/StaxOrdinaryButtonColored"
+			    	style="@style/StaxButtonColored"
 				 />
 		</RelativeLayout>
 	</LinearLayout>

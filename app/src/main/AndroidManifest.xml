@@ -49,17 +49,15 @@
 		    android:theme="@style/StaxTheme" />
 
 		<activity android:name=".languages.SelectLanguageActivity" />
-		<activity android:name=".channels.ChannelsActivity"
-			android:launchMode="singleTask" />
 
-		<activity android:name=".security.PinsActivity" />
+		<activity android:name=".permissions.PermissionsActivity"
+			android:theme="@style/StaxTheme"
+			android:launchMode="singleTask" />
 
 		<activity
 		    android:name=".transfers.TransferActivity"
 		    android:theme="@style/StaxTheme"
-		    android:windowSoftInputMode="stateVisible|adjustResize">
-
-		</activity>
+		    android:windowSoftInputMode="stateVisible|adjustResize" />
 
 		<activity
 		    android:name=".requests.RequestActivity"

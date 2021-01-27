@@ -1,21 +1,14 @@
 package com.hover.stax.home;
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -26,20 +19,20 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.amplitude.api.Amplitude;
 import com.google.android.material.bottomappbar.BottomAppBar;
-import com.hover.sdk.permissions.PermissionDialog;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.balances.BalanceAdapter;
+import com.hover.stax.balances.BalancesViewModel;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.database.Constants;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.requests.AbstractMessageSendingActivity;
 import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.schedules.Schedule;
-import com.hover.stax.security.BiometricChecker;
-import com.hover.stax.security.SecurityFragment;
+import com.hover.stax.settings.BiometricChecker;
+import com.hover.stax.settings.SettingsFragment;
 import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.DateUtils;
@@ -49,18 +42,10 @@ import com.hover.stax.utils.UIHelper;
 import java.util.List;
 
 public class MainActivity extends AbstractMessageSendingActivity implements
-	BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener, HomeNavigationListener {
+	BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener {
 
 	final public static String TAG = "MainActivity";
 	private BalancesViewModel balancesViewModel;
-	private ShowcaseExecutor showCase;
-	private NavController navController;
-	private int navigateToWhere = 0;
-	private boolean askStarted = false;
-	private final static String BASIC_PERM = "basic_permission";
-	private boolean currentAskIsForBasicPermssion;
-	private AlertDialog dialog;
-	public final static int PHONE_REQUEST = 0, SMS_REQUEST = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,18 +54,13 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 
 		balancesViewModel = new ViewModelProvider(this).get(BalancesViewModel.class);
 		balancesViewModel.setListener(this);
+		balancesViewModel.getSelectedChannels().observe(this, channels -> Log.i(TAG, "Channels observer is neccessary to make updates fire, but all logic is in viewmodel. " + channels.size()));
 		balancesViewModel.getToRun().observe(this, actions -> Log.i(TAG, "RunActions observer is neccessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
-		balancesViewModel.getBalanceActions().observe(this, actions -> Log.i(TAG, "Actions observer is neccessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
-		balancesViewModel.getSelectedChannels().observe(this, channels -> maybeRunAShowcase());
+		balancesViewModel.getRunFlag().observe(this, flag -> Log.i(TAG, "Flag observer is neccessary to make updates fire, but all logic is in viewmodel. " + flag));
+		balancesViewModel.getBalanceActions().observe(this, actions -> Log.e(TAG, "Actions observer is neccessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
 
 		setUpNav();
 		checkForRequest(getIntent());
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		if (!currentAskIsForBasicPermssion && askStarted) requestNext();
 	}
 
 	@Override
@@ -94,11 +74,6 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 			startTransfer(Action.P2P, true, intent);
 	}
 
-	public void addAccount(View view) {
-		Amplitude.getInstance().logEvent(getString(R.string.click_add_account));
-		startActivityForResult(new Intent(this, ChannelsActivity.class), Constants.ADD_SERVICE);
-	}
-
 	@Override
 	public void onTapDetail(int channel_id) {
 		Bundle bundle = new Bundle();
@@ -108,18 +83,13 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 
 	@Override
 	public void triggerRefreshAll() {
-		runAllBalances(null);
+		balancesViewModel.setAllRunning(this);
 	}
 
 	@Override
 	public void onTapRefresh(int channel_id) {
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_single));
 		balancesViewModel.setRunning(channel_id);
-	}
-
-	public void runAllBalances(View view) {
-		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_all));
-		balancesViewModel.setRunning();
 	}
 
 	@Override
@@ -135,7 +105,7 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 		if (balancesViewModel.getChannel(action.channel_id) != null) {
 			new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), MainActivity.this, index)
 				.finalScreenTime(0).run();
-		} else { // Possible fix for auth issue on OnePlus 6
+		} else { // Fix for auth issue on OnePlus 6
 			new Handler(Looper.getMainLooper()).post(() -> {
 				balancesViewModel.getSelectedChannels().observe(MainActivity.this, new Observer<List<Channel>>() {
 					@Override
@@ -168,9 +138,6 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 				if (data != null) { onProbableHoverCall(data); }
 				else Amplitude.getInstance().logEvent(getString(R.string.sdk_failure));
 				break;
-			case Constants.ADD_SERVICE:
-				if (resultCode == RESULT_OK) { maybeRunAShowcase(); }
-				break;
 			case Constants.REQUEST_REQUEST:
 				if (resultCode == RESULT_OK) { onRequest(data); }
 				break;
@@ -178,23 +145,6 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 				balancesViewModel.setRan(requestCode);
 				if (resultCode == RESULT_OK && data != null && data.getAction() != null) onProbableHoverCall(data);
 		}
-	}
-
-	public void maybeRunAShowcase() {
-		/*if (showCase == null)
-			showCase = new ShowcaseExecutor(this, findViewById(R.id.home_root));
-		switch (ShowcaseExecutor.getStage(this)) {
-			case 0: showCase.showcaseAddAcctStage();
-				break;
-			case 1:
-				if (balancesViewModel.getSelectedChannels().getValue() != null && balancesViewModel.getSelectedChannels().getValue().size() > 0)
-					showCase.showcaseRefreshAccountStage();
-				break;
-			case 2:
-				if (balancesViewModel.getSelectedChannels().getValue() != null && balancesViewModel.getSelectedChannels().getValue().size() > 0)
-					showCase.showcasePeekBalanceStage();
-				break;
-		} */
 	}
 
 	private void onProbableHoverCall(Intent data) {
@@ -235,143 +185,76 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 
 	private void setUpNav() {
 		BottomAppBar nav = findViewById(R.id.nav_view);
-		navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 		AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
 		NavigationUI.setupWithNavController(nav, navController, appBarConfiguration);
 
 		nav.setOnMenuItemClickListener((Toolbar.OnMenuItemClickListener) item -> {
-			if(item.getItemId() == R.id.navigation_home) navController.navigate(R.id.navigation_home);
-			else {
-				navigateToWhere = item.getItemId();
-				navigateOutsideHomeScreen(item.getItemId(), navController);
-			}
-            return false;
+			checkPermissionsAndNavigate(getNavConst(item.getItemId()));
+            return true;
 		});
 
-		navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-			switch (destination.getId()) {
-				case R.id.navigation_home:
-					changeDrawableColor(nav.findViewById(R.id.navigation_home), R.color.brightBlue);
-					changeDrawableColor(nav.findViewById(R.id.navigation_balance_history), R.color.offWhite);
-					changeDrawableColor(nav.findViewById(R.id.navigation_security), R.color.offWhite);
-					break;
-				case R.id.navigation_balance_history:
-					changeDrawableColor(nav.findViewById(R.id.navigation_home), R.color.offWhite);
-					changeDrawableColor(nav.findViewById(R.id.navigation_balance_history), R.color.brightBlue);
-					changeDrawableColor(nav.findViewById(R.id.navigation_security), R.color.offWhite);
-					break;
-				case R.id.navigation_security:
-					changeDrawableColor(nav.findViewById(R.id.navigation_home), R.color.offWhite);
-					changeDrawableColor(nav.findViewById(R.id.navigation_balance_history), R.color.offWhite);
-					changeDrawableColor(nav.findViewById(R.id.navigation_security), R.color.brightBlue);
-					break;
+		navController.addOnDestinationChangedListener((controller, destination, arguments) -> setActiveNav(destination.getId(), nav));
 
-				default:
-					changeDrawableColor(nav.findViewById(R.id.navigation_security), R.color.offWhite);
-					changeDrawableColor(nav.findViewById(R.id.navigation_balance_history), R.color.offWhite);
-					changeDrawableColor(nav.findViewById(R.id.navigation_home), R.color.offWhite);
-			}
-		});
-
-		if (getIntent().getBooleanExtra(SecurityFragment.LANG_CHANGE, false))
-			navController.navigate(R.id.navigation_security);
+		if (getIntent().getBooleanExtra(SettingsFragment.LANG_CHANGE, false))
+			navController.navigate(R.id.navigation_settings);
 	}
 
-	private void changeDrawableColor(TextView tv, int color) {
-		for (Drawable d : tv.getCompoundDrawables()) {
-			if (d != null)
-				d.setColorFilter(new PorterDuffColorFilter(this.getResources().getColor(color), PorterDuff.Mode.SRC_IN));
-		}
+	private void setActiveNav(int destinationId, BottomAppBar nav) {
+		UIHelper.changeDrawableColor(nav.findViewById(R.id.navigation_home), destinationId == R.id.navigation_home ? R.color.brightBlue : R.color.offWhite, this);
+		UIHelper.changeDrawableColor(nav.findViewById(R.id.navigation_balance), destinationId == R.id.navigation_balance ? R.color.brightBlue : R.color.offWhite, this);
+		UIHelper.changeDrawableColor(nav.findViewById(R.id.navigation_settings), destinationId == R.id.navigation_settings ? R.color.brightBlue : R.color.offWhite, this);
 	}
 
-	private void navigateOutsideHomeScreen(int toWhere, NavController navController) {
+	void checkPermissionsAndNavigate(int toWhere) {
 		PermissionHelper permissionHelper = new PermissionHelper(this);
-		if(permissionHelper.hasPhonePerm() && permissionHelper.hasSmsPerm()) {
-			askStarted = false;
-			switch (toWhere) {
-				case R.id.transfer: startTransfer(Action.P2P, false, getIntent()); break;
-				case R.id.airtime: startTransfer(Action.AIRTIME, false, getIntent()); break;
-				case R.id.request: startActivityForResult(new Intent(this, RequestActivity.class), Constants.REQUEST_REQUEST); break;
-				case R.id.navigation_home: navController.navigate(R.id.navigation_home); break;
-				case R.id.navigation_balance_history: navController.navigate(R.id.navigation_balance_history); break;
-				case R.id.navigation_security: navController.navigate(R.id.navigation_security); break;
-				default: break;
-			}
+		if (toWhere == Constants.NAV_SETTINGS || toWhere == Constants.NAV_HOME || permissionHelper.hasBasicPerms()) {
+			navigate(toWhere);
+		} else
+			PermissionUtils.showInformativeBasicPermissionDialog(
+				pos -> PermissionUtils.requestPerms(getNavConst(toWhere), MainActivity.this),
+				neg -> Amplitude.getInstance().logEvent(getString(R.string.perms_basic_cancelled)),
+				this);
+	}
+
+	private void navigate(int toWhere) {
+		switch (toWhere) {
+			case Constants.NAV_TRANSFER:
+				startTransfer(Action.P2P, false, getIntent());
+				break;
+			case Constants.NAV_AIRTIME:
+				startTransfer(Action.AIRTIME, false, getIntent());
+				break;
+			case Constants.NAV_REQUEST:
+				startActivityForResult(new Intent(this, RequestActivity.class), Constants.REQUEST_REQUEST);
+				break;
+			case Constants.NAV_HOME:
+				Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.navigation_home);
+				break;
+			case Constants.NAV_BALANCE:
+				Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.navigation_balance);
+				break;
+			case Constants.NAV_SETTINGS:
+				Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.navigation_settings);
+				break;
+			default:
+				break;
 		}
-		else if (askStarted) requestNext();
-		else PermissionUtils.showInformativeBasicPermissionDialog(posBtn-> startRequest(true), null, this);
 	}
 
-	@Override
-	public void goToBuyAirtimeScreen(int resId) {
-		navigateToWhere = resId;
-		navigateOutsideHomeScreen(resId, null);
+	private int getNavConst(int destId) {
+		if (destId == R.id.navigation_balance) return Constants.NAV_BALANCE;
+		else if (destId == R.id.navigation_settings) return Constants.NAV_SETTINGS;
+		else if (destId == R.id.navigation_home) return Constants.NAV_HOME;
+		else return destId;
 	}
-
-	@Override
-	public void goToRequestMoneyScreen(int resId) {
-		navigateToWhere = resId;
-		navigateOutsideHomeScreen(resId, null);
-	}
-
-	@Override
-	public void goToSendMoneyScreen(int resId) {
-		navigateToWhere = resId;
-		navigateOutsideHomeScreen(resId, null);
-	}
-
-
-
-	//PERMISSIONS
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		if (PermissionUtils.permissionsGranted(grantResults)) navigateOutsideHomeScreen(navigateToWhere, navController);
-		else requestNext();
+		PermissionUtils.logPermissionsGranted(grantResults, this);
+		checkPermissionsAndNavigate(requestCode);
 	}
-
-	private void startRequest(boolean isForBasicPermission) {
-		askStarted = true;
-		currentAskIsForBasicPermssion = isForBasicPermission;
-		requestNext();
-	}
-
-	private void requestNext() {
-		PermissionHelper ph = new PermissionHelper(this);
-		if (currentAskIsForBasicPermssion && !ph.hasPhonePerm())
-			requestPhone(ph);
-		else if (!ph.hasSmsPerm())
-			requestSMS(ph);
-		else if (!currentAskIsForBasicPermssion && !ph.hasOverlayPerm())
-			requestOverlay();
-		else if (!currentAskIsForBasicPermssion && !ph.hasAccessPerm())
-			requestAccessibility();
-		else Amplitude.getInstance().logEvent(getString(R.string.granted_sdk_permissions));
-	}
-
-	private void requestPhone(PermissionHelper ph) {
-		Amplitude.getInstance().logEvent(getString(R.string.request_permphone));
-		ph.requestPhone(this, PHONE_REQUEST);
-	}
-
-	private void requestSMS(PermissionHelper ph) {
-		Amplitude.getInstance().logEvent(getString(R.string.request_permsms));
-		ph.requestBasicPerms(this, SMS_REQUEST);
-	}
-
-	public void requestOverlay() {
-		Amplitude.getInstance().logEvent(getString(R.string.request_permoverlay));
-		if (dialog != null) dialog.dismiss();
-		dialog = new PermissionDialog(this, PermissionDialog.OVERLAY).createDialog(this);
-	}
-
-	public void requestAccessibility() {
-		Amplitude.getInstance().logEvent(getString(R.string.request_permaccessibility));
-		if (dialog != null) dialog.dismiss();
-		dialog = new PermissionDialog(this, PermissionDialog.ACCESS).createDialog(this);
-	}
-
 }
 
 

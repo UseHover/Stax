@@ -59,15 +59,18 @@ public class ChannelListViewModel extends AndroidViewModel {
 
 	}
 
-	LiveData<List<Channel>> getChannels() {
-		return allChannels;
-	}
-
 	private void loadChannels() {
 		if (allChannels == null) {
 			allChannels = new MutableLiveData<>();
 		}
 		allChannels = repo.getAllChannels();
+	}
+
+	public LiveData<List<Channel>> getChannels() {
+		if (allChannels == null) {
+			allChannels = new MutableLiveData<>();
+		}
+		return allChannels;
 	}
 
 	private void initSelectedChannels() {
@@ -76,7 +79,6 @@ public class ChannelListViewModel extends AndroidViewModel {
 		}
 		selected.addSource(allChannels, this::loadSelectedChannels);
 	}
-
 
 	private void loadSelectedChannels(List<Channel> channels) {
 		List<Integer> ls = new ArrayList<>();

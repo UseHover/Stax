@@ -15,13 +15,14 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_gravity="bottom|start"
-	    	android:gravity="start"
+        android:gravity="start"
 		app:elevation="10dp"
 		style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
 		app:fabAlignmentMode="end"
 		app:fabAnimationMode="scale"
-	      app:paddingLeftSystemWindowInsets="true"
+		app:paddingLeftSystemWindowInsets="true"
 		app:menu="@menu/bottom_nav_menu" />
+
 	<com.google.android.material.floatingactionbutton.FloatingActionButton
 	    android:visibility="visible"
 	    android:layout_width="0dp"

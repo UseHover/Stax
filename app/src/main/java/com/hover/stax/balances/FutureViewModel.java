@@ -1,4 +1,4 @@
-package com.hover.stax.home;
+package com.hover.stax.balances;
 
 import android.app.Application;
 

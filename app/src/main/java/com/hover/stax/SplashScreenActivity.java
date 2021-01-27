@@ -3,10 +3,8 @@ package com.hover.stax;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,17 +17,13 @@ import com.hover.sdk.api.Hover;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.database.Constants;
-import com.hover.stax.destruct.SelfDestructActivity;
 import com.hover.stax.home.MainActivity;
-import com.hover.stax.languages.SelectLanguageActivity;
-import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.schedules.ScheduleWorker;
-import com.hover.stax.security.BiometricChecker;
+import com.hover.stax.settings.BiometricChecker;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
 import static com.hover.stax.database.Constants.AUTH_CHECK;
-import static com.hover.stax.database.Constants.LANGUAGE_CHECK;
 
 public class SplashScreenActivity extends AppCompatActivity implements BiometricChecker.AuthListener {
 
@@ -37,11 +31,11 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (SelfDestructActivity.isExpired(this)) {
-			startActivity(new Intent(this, SelfDestructActivity.class));
-			finish();
-			return;
-		}
+//		if (SelfDestructActivity.isExpired(this)) {
+//			startActivity(new Intent(this, SelfDestructActivity.class));
+//			finish();
+//			return;
+//		}
 
 		Amplitude.getInstance().initialize(this, getString(R.string.amp)).enableForegroundTracking(getApplication());
 		initHover();
@@ -77,17 +71,14 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	}
 
 	private void chooseNav() {
-		if (getIntent().getAction() !=null && getIntent().getAction().equals(Intent.ACTION_VIEW) && getIntent().getData() != null)
-			goToRequest(getIntent());
-		else if (Utils.getSharedPrefs(this).getInt(LANGUAGE_CHECK, 0) == 0)
-			startActivity(new Intent(this, SelectLanguageActivity.class));
-		else {
+		if (getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_VIEW) && getIntent().getData() != null)
+			goToFulfillRequest(getIntent());
+		else
 			startActivity(new Intent(this, MainActivity.class));
-		}
 		finish();
 	}
 
-	private void goToRequest(Intent intent) {
+	private void goToFulfillRequest(Intent intent) {
 		Intent i = new Intent(this, MainActivity.class);
 		i.putExtra(Constants.REQUEST_LINK, intent.getData().toString());
 		startActivity(i);

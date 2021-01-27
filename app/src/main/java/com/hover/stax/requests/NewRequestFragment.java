@@ -1,7 +1,6 @@
 package com.hover.stax.requests;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,9 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.contacts.StaxContact;
-import com.hover.stax.database.Constants;
 import com.hover.stax.utils.StagedFragment;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -138,7 +135,6 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		super.startListeners(root);
 		addRecipientBtn.setOnClickListener(v -> requestViewModel.addRecipient(new StaxContact("")));
 		amountInput.addTextChangedListener(amountWatcher);
-		root.findViewById(R.id.add_new_account).setOnClickListener(view -> startActivityForResult(new Intent(getActivity(), ChannelsActivity.class), Constants.ADD_SERVICE));
 		requesterAccountNo.addTextChangedListener(receivingAccountNumberWatcher);
 		noteInput.addTextChangedListener(noteWatcher);
 	}

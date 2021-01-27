@@ -1,4 +1,4 @@
-package com.hover.stax.security;
+package com.hover.stax.settings;
 
 import android.app.KeyguardManager;
 import android.content.Context;

@@ -9,10 +9,23 @@ import android.view.View;
 
 import androidx.core.app.ActivityCompat;
 
+import com.amplitude.api.Amplitude;
+import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.views.StaxDialog;
 
 public class PermissionUtils {
+
+	public static void requestPerms(int requestCode, Activity a) {
+		PermissionHelper ph = new PermissionHelper(a);
+		if (!ph.hasPhonePerm() && !ph.hasPhonePerm())
+			Amplitude.getInstance().logEvent(a.getString(R.string.perms_basic_requested));
+		else if (!ph.hasPhonePerm())
+			Amplitude.getInstance().logEvent(a.getString(R.string.perms_phone_requested));
+		else if (!ph.hasSmsPerm())
+			Amplitude.getInstance().logEvent(a.getString(R.string.perms_sms_requested));
+		ph.requestBasicPerms(a, requestCode);
+	}
 
 	public static boolean has(String[] permissions, Context context) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
@@ -25,13 +38,23 @@ public class PermissionUtils {
 		return true;
 	}
 
-	public static boolean permissionsGranted(int[] grantResults) {
+	public static void logPermissionsGranted(int[] grantResults, Activity a) {
+		PermissionHelper ph = new PermissionHelper(a);
 		for (int result : grantResults) {
 			if (result != PackageManager.PERMISSION_GRANTED) {
-				return false;
+				logDenyResult(ph, a);
 			}
 		}
-		return grantResults.length > 0;
+		Amplitude.getInstance().logEvent(a.getString(R.string.perms_basic_granted));
+	}
+
+	private static void logDenyResult(PermissionHelper ph, Activity a) {
+		if (!ph.hasPhonePerm() && !ph.hasPhonePerm())
+			Amplitude.getInstance().logEvent(a.getString(R.string.perms_basic_denied));
+		else if (!ph.hasPhonePerm())
+			Amplitude.getInstance().logEvent(a.getString(R.string.perms_phone_denied));
+		else if (!ph.hasSmsPerm())
+			Amplitude.getInstance().logEvent(a.getString(R.string.perms_sms_denied));
 	}
 
 	public static boolean hasContactPermission(Context c) {
@@ -47,6 +70,7 @@ public class PermissionUtils {
 	}
 
 	public static void showInformativeBasicPermissionDialog(View.OnClickListener posListener, View.OnClickListener negListener, Activity activity) {
+		Amplitude.getInstance().logEvent(activity.getString(R.string.perms_basic_dialog));
 		new StaxDialog(activity)
 				.setDialogTitle(R.string.permissions_title)
 				.setDialogMessage(R.string.permissions_basic_desc)

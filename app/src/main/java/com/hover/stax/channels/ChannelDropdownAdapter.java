@@ -54,7 +54,7 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> implements Tar
 	@Override
 	public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 		View view = convertView;
-		if(view == null) view = LayoutInflater.from(mContext).inflate(R.layout.stax_spinner_item_with_logo,parent,false);
+		if (view == null) view = LayoutInflater.from(mContext).inflate(R.layout.stax_spinner_item_with_logo, parent,false);
 		Channel channel = channels.get(position);
 
 		initItemViews(view);
@@ -63,6 +63,7 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> implements Tar
 
 		return view;
 	}
+
 	private  void initItemViews(View view) {
 		holder = new ViewHolder();
 		holder.logo = view.findViewById(R.id.service_item_image_id);
@@ -70,21 +71,24 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> implements Tar
 		holder.id = view.findViewById(R.id.service_item_id);
 		holder.divider = view.findViewById(R.id.service_item_divider);
 	}
+
 	@SuppressLint("SetTextI18n")
 	private void setViewData(Channel channel) {
 		holder.id.setText(Integer.toString(channel.id));
 		holder.channelText.setText(channel.name);
 		Picasso.get().load(channel.logoUrl).into(this);
 	}
+
 	private void segmentSelectedChannelsIfNeeded(Channel currentChannel, int pos) {
-		if(segmentSelectedChannels) {
+		if (segmentSelectedChannels) {
 			try{
 				Channel nextChannel = channels.get(pos + 1);
-				if (currentChannel.selected && !nextChannel.selected)  addDivider();
+				if (currentChannel.selected && !nextChannel.selected) addDivider();
 				else removeDivider();
 			}catch (IndexOutOfBoundsException e) { removeDivider(); }
 		} else removeDivider();
 	}
+
 	private void addDivider() {holder.divider.setVisibility(View.VISIBLE);}
 	private void removeDivider() { holder.divider.setVisibility(View.GONE); }
 
