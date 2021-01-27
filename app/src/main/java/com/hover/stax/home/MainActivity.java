@@ -1,16 +1,11 @@
 package com.hover.stax.home;
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -59,8 +54,10 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 
 		balancesViewModel = new ViewModelProvider(this).get(BalancesViewModel.class);
 		balancesViewModel.setListener(this);
+		balancesViewModel.getSelectedChannels().observe(this, channels -> Log.i(TAG, "Channels observer is neccessary to make updates fire, but all logic is in viewmodel. " + channels.size()));
 		balancesViewModel.getToRun().observe(this, actions -> Log.i(TAG, "RunActions observer is neccessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
-		balancesViewModel.getBalanceActions().observe(this, actions -> Log.i(TAG, "Actions observer is neccessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
+		balancesViewModel.getRunFlag().observe(this, flag -> Log.i(TAG, "Flag observer is neccessary to make updates fire, but all logic is in viewmodel. " + flag));
+		balancesViewModel.getBalanceActions().observe(this, actions -> Log.e(TAG, "Actions observer is neccessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
 
 		setUpNav();
 		checkForRequest(getIntent());
@@ -86,18 +83,13 @@ public class MainActivity extends AbstractMessageSendingActivity implements
 
 	@Override
 	public void triggerRefreshAll() {
-		runAllBalances(null);
+		balancesViewModel.setAllRunning(this);
 	}
 
 	@Override
 	public void onTapRefresh(int channel_id) {
 		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_single));
 		balancesViewModel.setRunning(channel_id);
-	}
-
-	public void runAllBalances(View view) {
-		Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_all));
-		balancesViewModel.setRunning();
 	}
 
 	@Override

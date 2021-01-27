@@ -24,6 +24,8 @@
 	<string name="perms_accessibility_cancelled" translatable="false">Permission - Accessibility: dialog canceled</string>
 
 	<string name="selected_language" translatable="false">Selected language</string>
+	<string name="new_account_check_balance" translatable="false">Added account and refreshed balances</string>
+	<string name="added_channel_id" translatable="false">channel_id</string>
 
 	<string name="start_load_screen" translatable="false">Visited load screen</string>
 	<string name="finish_load_screen" translatable="false">Complete load screen</string>

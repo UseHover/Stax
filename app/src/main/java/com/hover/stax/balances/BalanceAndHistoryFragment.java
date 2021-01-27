@@ -1,7 +1,7 @@
 package com.hover.stax.balances;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +23,6 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDropdownAdapter;
 import com.hover.stax.channels.ChannelListViewModel;
 import com.hover.stax.home.MainActivity;
-import com.hover.stax.permissions.PermissionsActivity;
 import com.hover.stax.requests.Request;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.transactions.TransactionHistoryAdapter;
@@ -38,7 +37,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 public class BalanceAndHistoryFragment extends Fragment implements TransactionHistoryAdapter.SelectListener, ScheduledAdapter.SelectListener, RequestsAdapter.SelectListener {
-	final public static String TAG = "BalanceAndHistoryFragment";
+	final public static String TAG = "BalanceFragment";
 
 	private BalancesViewModel balancesViewModel;
 	private FutureViewModel futureViewModel;
@@ -66,67 +65,56 @@ public class BalanceAndHistoryFragment extends Fragment implements TransactionHi
 		linkAccountLayout = view.findViewById(R.id.linkAccountLayout);
 
 		setUpBalances(view);
-		setUpChannels(view);
+		setUpAddAccount(view);
 		setUpFuture(view);
 		setUpHistory(view);
 		setupRefreshBalance(view);
 	}
 
 	private void setUpBalances(View view) {
-		observeBalanceChannels(view);
-		observeBalanceError();
+		initBalanceCard(view);
+		balancesViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> updateServices(channels, view));
+		balancesViewModel.getBalanceError().observe(getViewLifecycleOwner(), show -> showError(show));
 	}
 
-	private void observeBalanceError() {
-		balancesViewModel.getBalanceError().observe(getViewLifecycleOwner(), showError-> {
-			if (showError) {
-				linkAccountLayout.setError(getString(R.string.refresh_balance_error));
-				linkAccountLayout.setErrorIconDrawable(R.drawable.ic_error_warning_24dp);
-				channelDropdown.setText(getString(R.string.link_an_account), false);
-			} else {
-				linkAccountLayout.setError(null);
-				linkAccountLayout.setErrorIconDrawable(0);
-			}
-		});
-	}
-
-	private void observeBalanceChannels(View view) {
+	private void initBalanceCard(View view) {
 		StaxCardView balanceCard = view.findViewById(R.id.balance_card);
 		balanceCard.backButton.setVisibility(GONE);
 		balanceCard.setActivated(false);
-
+		balanceCard.backButton.setOnClickListener(v -> {
+			balanceCard.backButton.setActivated(!balanceCard.backButton.isActivated());
+			balanceAdapter.updateShowBalance();
+		});
 
 		RecyclerView recyclerView = view.findViewById(R.id.balances_recyclerView);
 		recyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 		recyclerView.setHasFixedSize(true);
-
-		balancesViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
-			balanceAdapter = new BalanceAdapter(channels, (MainActivity) getActivity());
-			recyclerView.setAdapter(balanceAdapter);
-			recyclerView.setVisibility(channels != null && channels.size() > 0 ? VISIBLE : GONE);
-
-			balanceCard.backButton.setVisibility(channels != null && channels.size() > 0  ? VISIBLE : GONE);
-			balanceCard.backButton.setOnClickListener(v -> {
-				balanceCard.backButton.setActivated(!balanceCard.backButton.isActivated());
-				balanceAdapter.updateShowBalance();
-			});
-			setAddAccountVisibilityStagTeToOnlyText(channels !=null && channels.size() > 0);
-		});
 	}
 
-	void setAddAccountVisibilityStagTeToOnlyText(boolean isOnlyTextVisible) {
-		if(isOnlyTextVisible) {
-			addAccountText.setVisibility(VISIBLE);
-			linkAccountLayout.setVisibility(GONE);
-			addAccountText.setOnClickListener(v -> setAddAccountVisibilityStagTeToOnlyText(false));
+	private void updateServices(List<Channel> channels, View view) {
+		RecyclerView recyclerView = view.findViewById(R.id.balances_recyclerView);
+		balanceAdapter = new BalanceAdapter(channels, (MainActivity) getActivity());
+		recyclerView.setAdapter(balanceAdapter);
+		recyclerView.setVisibility(channels != null && channels.size() > 0 ? VISIBLE : GONE);
 
-		}else {
-			addAccountText.setVisibility(GONE);
-			linkAccountLayout.setVisibility(VISIBLE);
-		}
+		((StaxCardView) view.findViewById(R.id.balance_card)).backButton.setVisibility(channels != null && channels.size() > 0  ? VISIBLE : GONE);
+		toggleAddAccountInput(channels != null && channels.size() > 0);
 	}
 
-	private void setUpChannels(View view) {
+	void toggleAddAccountInput(boolean showLink) {
+		addAccountText.setVisibility(showLink ? VISIBLE : GONE);
+		linkAccountLayout.setVisibility(showLink ? GONE : VISIBLE);
+		addAccountText.setOnClickListener(v -> toggleAddAccountInput(false));
+	}
+
+	private void showError(boolean show) {
+		linkAccountLayout.setError(show ? getString(R.string.refresh_balance_error) : null);
+		linkAccountLayout.setErrorIconDrawable(show ? R.drawable.ic_error_warning_24dp : 0);
+		if (show)
+			channelDropdown.setText(getString(R.string.link_an_account), false);
+	}
+
+	private void setUpAddAccount(View view) {
 		channelDropdown = view.findViewById(R.id.channelDropdown);
 		channelViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> {
 			if (channels != null && channels.size() > 0 && (channelViewModel.getSimChannels().getValue() == null || channelViewModel.getSimChannels().getValue().size() == 0))
@@ -137,23 +125,23 @@ public class BalanceAndHistoryFragment extends Fragment implements TransactionHi
 
 	private void updateChannelDropdown(List<Channel> channels) {
 		if (channels == null || channels.size() == 0 || getContext() == null) return;
+		channelDropdown.setText("");
 		ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(channels,  false, getContext());
 		channelDropdown.setAdapter(channelDropdownAdapter);
 		channelDropdown.setOnItemClickListener((adapterView, view2, pos, id) -> {
-			Channel channel = (Channel) adapterView.getItemAtPosition(pos);
-			balancesViewModel.setChannelSelectedFromSpinner(channel);
+			balancesViewModel.highlightChannel((Channel) adapterView.getItemAtPosition(pos));
 		});
 	}
 
 	private void setupRefreshBalance(View view) {
 		view.findViewById(R.id.refresh_accounts_btn).setOnClickListener(v -> {
-			startActivity(new Intent(getContext(), PermissionsActivity.class));
-//			BalanceAdapter.BalanceListener balanceListener = ((MainActivity) getActivity());
-//			if (balanceListener != null) {
-//				This needs to be threaded properly!
-//				balancesViewModel.saveChannelSelectedFromSpinner();
-//				if (balancesViewModel.validateRun()) balanceListener.triggerRefreshAll();
-//			}
+			if (balancesViewModel.getHighlightedChannel() != null) {
+				balancesViewModel.getBalanceActions().observe(getViewLifecycleOwner(), actions -> {
+					balancesViewModel.setAllRunning(v.getContext());
+				});
+				balancesViewModel.selectChannel(v.getContext());
+			} else
+				balancesViewModel.setAllRunning(v.getContext());
 		});
 	}
 
@@ -164,7 +152,6 @@ public class BalanceAndHistoryFragment extends Fragment implements TransactionHi
 			recyclerView.setAdapter(new ScheduledAdapter(schedules, this));
 			setFutureVisible(root, schedules, futureViewModel.getRequests().getValue());
 		});
-
 
 		futureViewModel.getRequests().observe(getViewLifecycleOwner(), requests -> {
 			RecyclerView rv = root.findViewById(R.id.requests_recyclerView);

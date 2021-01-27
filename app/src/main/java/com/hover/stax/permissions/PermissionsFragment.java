@@ -15,6 +15,7 @@ import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
+import com.hover.stax.database.Constants;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -62,7 +63,7 @@ public class PermissionsFragment extends DialogFragment {
 	public void requestAccessibility() {
 		hasLeft = true;
 		Amplitude.getInstance().logEvent(getString(R.string.perms_accessibility_requested));
-		Hover.setPermissionActivity("com.hover.stax.permissions.PermissionsActivity", getContext());
+		Hover.setPermissionActivity(Constants.PERM_ACTIVITY, getContext());
 		helper.requestAccessPerm();
 	}
 
@@ -78,7 +79,7 @@ public class PermissionsFragment extends DialogFragment {
 			if (current == OVERLAY)
 				Amplitude.getInstance().logEvent(getString(helper.hasOverlayPerm() ? R.string.perms_overlay_granted : R.string.perms_overlay_notgranted));
 			else if (current == ACCESS)
-				Amplitude.getInstance().logEvent(getString(helper.hasOverlayPerm() ? R.string.perms_accessibility_granted : R.string.perms_accessibility_notgranted));
+				Amplitude.getInstance().logEvent(getString(helper.hasAccessPerm() ? R.string.perms_accessibility_granted : R.string.perms_accessibility_notgranted));
 		}
 	}
 

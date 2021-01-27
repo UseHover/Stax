@@ -48,7 +48,8 @@
 		    android:textSize="@dimen/text_21"
 		    android:fontFamily="font-normal"
 		    android:textColor="@color/offWhite"
-		    android:textCursorDrawable="@null" />
+		    android:textCursorDrawable="@null"
+			android:text="@string/allaccts_zerobody" />
 
 	</com.google.android.material.textfield.TextInputLayout>
 

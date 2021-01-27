@@ -38,7 +38,6 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 		this.notifyDataSetChanged();
 	}
 
-
 	@NonNull
 	@Override
 	public BalanceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
