@@ -36,12 +36,14 @@ public class TransferViewModel extends StagedViewModel {
 	private MutableLiveData<Integer> amountError = new MutableLiveData<>();
 	private MutableLiveData<Integer> recipientError = new MutableLiveData<>();
 	private MutableLiveData<Integer> pageError = new MutableLiveData<>();
+	private MutableLiveData<Boolean> showEditScreen = new MutableLiveData<>();
 
 	protected LiveData<Request> request = new MutableLiveData<>();
 
 	public TransferViewModel(Application application) {
 		super(application);
 		stage.setValue(TransferStage.AMOUNT);
+		showEditScreen.setValue(false);
 
 		filteredActions.addSource(activeChannel, this::loadActions);
 		activeAction.addSource(filteredActions, this::setActiveActionIfOutOfDate);
@@ -54,6 +56,12 @@ public class TransferViewModel extends StagedViewModel {
 	String getType() {
 		return type;
 	}
+
+	void setShowEditScreen(Boolean shouldShow) {
+		showEditScreen.postValue(shouldShow);
+	}
+
+	LiveData<Boolean> getShowEditScreen() { return showEditScreen;}
 
 	protected void setActiveChannelIfNull(List<Channel> channels) {
 		if (channels != null && channels.size() > 0) {
@@ -308,7 +316,10 @@ public class TransferViewModel extends StagedViewModel {
 	public void view(Request r) {
 		setAmount(r.amount);
 		setRecipient(r.requester_number);
-		setStage(chooseRequestStage(r));
+		if (r.amount.isEmpty()) {
+			setShowEditScreen(true);
+		}
+		 setStage(REVIEW_DIRECT);
 	}
 
 	private TransferStage chooseRequestStage(Request r) {

@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.amplitude.api.Amplitude;
@@ -55,6 +56,11 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		transferViewModel.getIsEditing().observe(this, isEditing -> onUpdateStage(transferViewModel.getStage().getValue()));
 
 		transferViewModel.setType(getIntent().getAction());
+
+		transferViewModel.getShowEditScreen().observe(this, showEditScreen-> { if(showEditScreen){
+			NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+			navController.navigate(R.id.navigation_edit);
+		} });
 	}
 
 	private void checkIntent() {
@@ -222,7 +228,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	public void onBackPressed() {
 		if (Navigation.findNavController(findViewById(R.id.nav_host_fragment)).getCurrentDestination().getId() != R.id.navigation_edit ||
 			    !Navigation.findNavController(findViewById(R.id.nav_host_fragment)).popBackStack()) {
-			if (transferViewModel.getStage().getValue().compare(REVIEW) == 0 && transferViewModel.getSchedule().getValue() == null && transferViewModel.getRequest().getValue() == null)
+			if (transferViewModel.getStage().getValue().compare(REVIEW) >= 0 && transferViewModel.getSchedule().getValue() == null && transferViewModel.getRequest().getValue() == null)
 				transferViewModel.goToPrevStage();
 			else
 				super.onBackPressed();
