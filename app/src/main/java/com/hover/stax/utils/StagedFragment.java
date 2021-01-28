@@ -121,7 +121,7 @@ public abstract class StagedFragment extends Fragment {
 
 	protected void createChannelSelector(List<Channel> channels) {
 		if (channels == null || channels.size() == 0 || getContext() == null) return;
-		ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(channels,  true, getContext());
+		ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(channels, getContext());
 		channelDropdown.setAdapter(channelDropdownAdapter);
 		channelDropdown.setText(getString(R.string.channel_label), false);
 		channelDropdown.setOnItemClickListener((adapterView, view2, pos, id) -> {

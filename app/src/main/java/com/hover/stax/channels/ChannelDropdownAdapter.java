@@ -22,97 +22,101 @@ import com.hover.stax.R;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-public class ChannelDropdownAdapter extends ArrayAdapter<Channel> implements Target {
+public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
 	private List<Channel> channels;
-	private final Context mContext;
-	private boolean segmentSelectedChannels = false;
 	private ViewHolder holder;
 
-	public ChannelDropdownAdapter(@NonNull List<Channel> channels, boolean segmentSelectedChannels,  @NonNull Context context) {
-		super(context, 0, channels);
-		this.mContext = context;
-		this.channels = channels;
-		this.segmentSelectedChannels = segmentSelectedChannels;
+	public ChannelDropdownAdapter(@NonNull List<Channel> channelList, @NonNull Context context) {
+		super(context, 0, channelList);
+		channels = channelList;
 	}
 
-	@Override
-	public int getCount() { return channels.size();
-	}
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
-
-	@Override
-	public int getItemViewType(int position) {
-		return position;
+	public static List<Channel> sort(List<Channel> channels, boolean showSelected) {
+		ArrayList<Channel> selected_list = new ArrayList<>();
+		ArrayList<Channel> sorted_list = new ArrayList<>();
+		for (Channel c : channels) {
+			if (c.selected) selected_list.add(c);
+			else sorted_list.add(c);
+		}
+		Collections.sort(selected_list);
+		Collections.sort(sorted_list);
+		if (showSelected)
+			sorted_list.addAll(0, selected_list);
+		return sorted_list;
 	}
 
 	@NonNull
 	@Override
-	public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-		View view = convertView;
-		if (view == null) view = LayoutInflater.from(mContext).inflate(R.layout.stax_spinner_item_with_logo, parent,false);
-		Channel channel = channels.get(position);
+	public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
+		Channel c = channels.get(position);
+		view = LayoutInflater.from(parent.getContext()).inflate(R.layout.stax_spinner_item_with_logo, parent,false);
 
-		initItemViews(view);
-		setViewData(channel);
-		segmentSelectedChannelsIfNeeded(channel, position);
+		holder = new ViewHolder(view);
+		holder.setChannel(c);
+		updateDivider(c, position);
 
 		return view;
 	}
 
-	private  void initItemViews(View view) {
-		holder = new ViewHolder();
-		holder.logo = view.findViewById(R.id.service_item_image_id);
-		holder.channelText = view.findViewById(R.id.service_item_name_id);
-		holder.id = view.findViewById(R.id.service_item_id);
-		holder.divider = view.findViewById(R.id.service_item_divider);
-	}
-
-	@SuppressLint("SetTextI18n")
-	private void setViewData(Channel channel) {
-		holder.id.setText(Integer.toString(channel.id));
-		holder.channelText.setText(channel.name);
-		Picasso.get().load(channel.logoUrl).into(this);
-	}
-
-	private void segmentSelectedChannelsIfNeeded(Channel currentChannel, int pos) {
-		if (segmentSelectedChannels) {
-			try{
-				Channel nextChannel = channels.get(pos + 1);
-				if (currentChannel.selected && !nextChannel.selected) addDivider();
-				else removeDivider();
-			}catch (IndexOutOfBoundsException e) { removeDivider(); }
+	private void updateDivider(Channel currentChannel, int pos) {
+		if (pos > 0) {
+			Channel prevChannel = channels.get(pos - 1);
+			if (!currentChannel.selected && prevChannel.selected) addDivider();
+			else removeDivider();
 		} else removeDivider();
 	}
 
-	private void addDivider() {holder.divider.setVisibility(View.VISIBLE);}
+	private void addDivider() { holder.divider.setVisibility(View.VISIBLE); }
 	private void removeDivider() { holder.divider.setVisibility(View.GONE); }
 
-	private static class ViewHolder {
+	private static class ViewHolder implements Target {
 		TextView id;
 		ImageView logo;
 		AppCompatTextView channelText;
 		View divider;
+
+		private ViewHolder(View view) {
+			logo = view.findViewById(R.id.service_item_image_id);
+			channelText = view.findViewById(R.id.service_item_name_id);
+			id = view.findViewById(R.id.service_item_id);
+			divider = view.findViewById(R.id.service_item_divider);
+		}
+
+		@SuppressLint("SetTextI18n")
+		private void setChannel(Channel channel) {
+			id.setText(Integer.toString(channel.id));
+			channelText.setText(channel.toString());
+			Picasso.get().load(channel.logoUrl).into(this);
+		}
+
+		@Override
+		public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+			RoundedBitmapDrawable d = RoundedBitmapDrawableFactory.create(id.getContext().getResources(), bitmap);
+			d.setCircular(true);
+			logo.setImageDrawable(d);
+		}
+
+		@Override
+		public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+			Log.e("LogTag", e.getMessage());
+		}
+
+		@Override public void onPrepareLoad(Drawable placeHolderDrawable) { }
 	}
 
 	@Override
-	public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-		RoundedBitmapDrawable d = RoundedBitmapDrawableFactory.create(mContext.getResources(), bitmap);
-		d.setCircular(true);
-		holder.logo.setImageDrawable(d);
-	}
+	public int getCount() { return channels.size(); }
 
 	@Override
-	public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-		Log.e("LogTag", e.getMessage());
-	}
+	public long getItemId(int position) { return position; }
 
 	@Override
-	public void onPrepareLoad(Drawable placeHolderDrawable) {
-
+	public int getItemViewType(int position) {
+		return position;
 	}
 }

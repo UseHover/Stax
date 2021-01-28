@@ -13,26 +13,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
-import com.hover.stax.database.Constants;
 import com.hover.stax.requestAccount.RequestAccountActivity;
-import com.hover.stax.utils.UIHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ChannelListFragment extends Fragment implements ChannelsAdapter.SelectListener {
-	private ChannelListViewModel channelViewModel;
+	private ChannelDropdownViewModel channelViewModel;
 
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		channelViewModel = new ViewModelProvider(requireActivity()).get(ChannelListViewModel.class);
+		channelViewModel = new ViewModelProvider(requireActivity()).get(ChannelDropdownViewModel.class);
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_choose_channels)));
 		return inflater.inflate(R.layout.fragment_channels, container, false);
 	}

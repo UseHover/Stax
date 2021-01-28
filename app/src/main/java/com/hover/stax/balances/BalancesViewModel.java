@@ -39,7 +39,6 @@ public class BalancesViewModel extends AndroidViewModel {
 	private LiveData<List<Action>> balanceActions = new MediatorLiveData<>();
 	private MutableLiveData<Integer> runFlag = new MutableLiveData<>();
 	private MediatorLiveData<List<Action>> toRun;
-	private MutableLiveData<Channel> highlightedChannel = new MutableLiveData<>();
 	private MutableLiveData<Boolean> runBalanceError = new MutableLiveData<>();
 
 	public BalancesViewModel(Application application) {
@@ -89,18 +88,9 @@ public class BalancesViewModel extends AndroidViewModel {
 		return balanceActions;
 	}
 
-	public void highlightChannel(Channel channel) {
-		highlightedChannel.postValue(channel);
-	}
-
-	public Channel getHighlightedChannel() {
-		return highlightedChannel.getValue();
-	}
-
-	public void selectChannel(Context c) {
-		if (highlightedChannel.getValue() == null) return;
-		Log.e(TAG, "saving channel as selected");
-		Channel channel = highlightedChannel.getValue();
+	public void selectChannel(Channel channel, Context c) {
+		if (channel == null) return;
+		Log.e(TAG, "saving selected channel: " + channel);
 		logChoice(channel, c);
 		channel.selected = true;
 		channel.defaultAccount = true;

@@ -13,9 +13,9 @@
 
 	<fragment
 	    android:id="@+id/navigation_balance"
-	    android:name="com.hover.stax.balances.BalanceAndHistoryFragment"
+	    android:name="com.hover.stax.balances.BalancesFragment"
 	    android:label="@string/nav_balance_and_history"
-	    tools:layout="@layout/fragment_balance_history" />
+	    tools:layout="@layout/fragment_balance" />
 
 	<fragment
 	    android:id="@+id/navigation_settings"

@@ -60,9 +60,6 @@ public abstract class StagedViewModel extends AndroidViewModel {
 		simHniList = Transformations.map(sims, this::getHnisAndSubscribeToEachOnFirebase);
 
 		simChannels = new MediatorLiveData<>();
-		simChannels.addSource(selectedChannels, this::onChannelsUpdateHnis);
-		simChannels.addSource(simHniList, this::onSimUpdate);
-
 		//Prevent auto select
 		//activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull);
 
@@ -109,14 +106,6 @@ public abstract class StagedViewModel extends AndroidViewModel {
 	public void goToPrevStage() {
 		StagedEnum prev = stage.getValue().prev();
 		stage.postValue(prev);
-	}
-
-	private void onChannelsUpdateHnis(List<Channel> channels) {
-		Channel.updateSimChannels(simChannels,channels, simHniList.getValue());
-	}
-
-	private void onSimUpdate(List<String> hniList) {
-		Channel.updateSimChannels(simChannels,selectedChannels.getValue(), simHniList.getValue());
 	}
 
 	public LiveData<List<Channel>> getSimChannels() {

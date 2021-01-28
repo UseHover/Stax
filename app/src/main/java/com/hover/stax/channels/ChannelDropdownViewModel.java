@@ -24,8 +24,8 @@ import java.util.List;
 
 import static com.hover.stax.database.Constants.LANGUAGE_CHECK;
 
-public class ChannelListViewModel extends AndroidViewModel {
-	public final static String TAG = "ChannelViewModel";
+public class ChannelDropdownViewModel extends AndroidViewModel {
+	public final static String TAG = "ChannelDropdownViewModel";
 
 	private DatabaseRepo repo;
 
@@ -38,12 +38,13 @@ public class ChannelListViewModel extends AndroidViewModel {
 	private MediatorLiveData<List<Channel>> simChannels;
 	private MediatorLiveData<List<Channel>> countryChannels;
 
-	public ChannelListViewModel(Application application) {
+	public ChannelDropdownViewModel(Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
 		loadChannels();
 		initSelectedChannels();
 		loadSims();
+
 		simHniList = Transformations.map(sims, this::getHnisAndSubscribeToEachOnFirebase);
 		simCountryList = Transformations.map(sims, this::getSimCountriesAndSubscribeToEachOnFirebase);
 
@@ -54,9 +55,6 @@ public class ChannelListViewModel extends AndroidViewModel {
 		countryChannels = new MediatorLiveData<>();
 		countryChannels.addSource(allChannels, this::onChannelsUpdateCountries);
 		countryChannels.addSource(simCountryList, this::onCountryUpdate);
-	}
-	public void init(boolean byAlpha) {
-
 	}
 
 	private void loadChannels() {
@@ -136,11 +134,26 @@ public class ChannelListViewModel extends AndroidViewModel {
 	}
 
 	private void onChannelsUpdateHnis(List<Channel> channels) {
-		Channel.updateSimChannels(simChannels, channels, simHniList.getValue());
+		updateSimChannels(simChannels, channels, simHniList.getValue());
 	}
 
 	private void onSimUpdate(List<String> hniList) {
-		Channel.updateSimChannels(simChannels, allChannels.getValue(), hniList);
+		updateSimChannels(simChannels, allChannels.getValue(), hniList);
+	}
+
+	public void updateSimChannels(MediatorLiveData<List<Channel>> simChannels, List<Channel> channels, List<String> hniList) {
+		if (channels == null || hniList == null) return;
+		List<Channel> simChannelList = new ArrayList<>();
+		for (int i = 0; i < channels.size(); i++) {
+			String[] hniArr = channels.get(i).hniList.split(",");
+			for (String s : hniArr) {
+				if (hniList.contains(Utils.stripHniString(s))) {
+					if (!simChannelList.contains(channels.get(i)))
+						simChannelList.add(channels.get(i));
+				}
+			}
+		}
+		simChannels.setValue(simChannelList);
 	}
 
 	public LiveData<List<Channel>> getSimChannels() {

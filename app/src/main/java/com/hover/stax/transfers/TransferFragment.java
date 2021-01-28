@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -128,7 +130,6 @@ public class TransferFragment extends StagedFragment {
 				radioButton.setChecked(i==0);
 				actionRadioGroup.addView(radioButton);
 			}
-
 		});
 
 		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {

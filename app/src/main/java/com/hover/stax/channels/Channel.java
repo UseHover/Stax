@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Entity(tableName = "channels")
-public class Channel {
+public class Channel implements Comparable<Channel> {
 
 	public Channel() {}
 
@@ -126,23 +126,13 @@ public class Channel {
 		}
 	}
 
-	public static void updateSimChannels(MediatorLiveData<List<Channel>> simChannels, List<Channel> channels, List<String> hniList) {
-		if (channels == null || hniList == null) return;
-		List<Channel> simChannelList = new ArrayList<>();
-		for (int i = 0; i < channels.size(); i++) {
-			String[] hniArr = channels.get(i).hniList.split(",");
-			for (String s : hniArr) {
-				if (hniList.contains(Utils.stripHniString(s))) {
-					if (!simChannelList.contains(channels.get(i)))
-						simChannelList.add(channels.get(i));
-				}
-			}
-		}
-		simChannels.setValue(simChannelList);
-	}
-
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	@Override
+	public int compareTo(Channel cOther) {
+		return this.toString().compareTo(cOther.toString());
 	}
 }
