@@ -163,12 +163,12 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		findViewById(R.id.accountsRow).setVisibility(stage.compare(FROM_ACCOUNT) > 0 ? View.VISIBLE : View.GONE);
 		findViewById(R.id.recipientRow).setVisibility((stage.compare(RECIPIENT) > 0 || transferViewModel.getRequest().getValue() != null && transferViewModel.getRequest().getValue().hasRequesterInfo()) ? View.VISIBLE : View.GONE);
 		findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && transferViewModel.getNote().getValue() != null && !transferViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
-		findViewById(R.id.btnRow).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.btnRow).setVisibility(getIntent().hasExtra(Constants.REQUEST_LINK) ? View.VISIBLE : View.GONE);
 	}
 
 	private void setCurrentCard(StagedViewModel.StagedEnum stage) {
-		findViewById(R.id.summaryCard).setVisibility(stage.compare(REVIEW) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.transactionFormCard).setVisibility(stage.compare(REVIEW) != 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.summaryCard).setVisibility(stage.compare(REVIEW) >= 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.transactionFormCard).setVisibility(stage.compare(REVIEW) < 0 ? View.VISIBLE : View.GONE);
 		//findViewById(R.id.futureCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && transferViewModel.getFutureDate().getValue() == null ? View.VISIBLE : View.GONE);
 		//findViewById(R.id.repeatCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && (transferViewModel.repeatSaved().getValue() == null || !transferViewModel.repeatSaved().getValue()) ? View.VISIBLE : View.GONE);
 	}

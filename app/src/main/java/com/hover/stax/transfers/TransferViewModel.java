@@ -313,8 +313,8 @@ public class TransferViewModel extends StagedViewModel {
 
 	private TransferStage chooseRequestStage(Request r) {
 		if (r.amount.isEmpty()) return TransferStage.AMOUNT;
-		else if (filteredActions.getValue() == null || filteredActions.getValue().size() <= 0) return TransferStage.FROM_ACCOUNT;
-		else return TransferStage.REVIEW_DIRECT;
+		else  return REVIEW_DIRECT;
+		//else return TransferStage.REVIEW_DIRECT;
 	}
 
 	public void view(Schedule s) {
