@@ -20,6 +20,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.channels.ChannelDropdownAdapter;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.contacts.StaxContactArrayAdapter;
 import com.hover.stax.database.Constants;
@@ -106,10 +107,10 @@ public class EditTransferFragment extends EditStagedFragment {
 				recipientAutocomplete.setText(transferViewModel.getContact().getValue().toString());
 		});
 
-		transferViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
+		transferViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> {
 			if (channels == null || channels.size() == 0) return;
-			ArrayAdapter<Channel> adapter = new ArrayAdapter<>(requireActivity(), R.layout.stax_spinner_item, channels);
-			channelDropdown.setAdapter(adapter);
+			ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(channels,  true, getContext());
+			channelDropdown.setAdapter(channelDropdownAdapter);
 			channelDropdown.setText(channelDropdown.getAdapter().getItem(0).toString(), false);
 		});
 		transferViewModel.getActiveChannel().observe(getViewLifecycleOwner(), c -> {
