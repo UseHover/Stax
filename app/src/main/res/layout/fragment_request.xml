@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:layout_marginTop="@dimen/margin_13"
-	tools:context=".requests.NewRequestFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="@dimen/margin_13"
+    tools:context=".requests.NewRequestFragment">
 
 	<LinearLayout
 		android:layout_width="match_parent"
@@ -15,20 +16,25 @@
 		<include layout="@layout/request_card_summary"
 			android:id="@+id/summaryCard" />
 
-		<include layout="@layout/request_card_amount"
-		    android:id="@+id/amountCard" />
-
-		<include layout="@layout/request_card_requestee"
-			android:id="@+id/recipientCard" />
-
-		<include layout="@layout/request_card_requester"
-			android:id="@+id/requesterCard"/>
-
-		<include layout="@layout/transfer_card_note"
-			android:id="@+id/noteCard" />
-
 		<include layout="@layout/request_card_share"
 		    android:id="@+id/shareCard" />
+
+		<com.hover.stax.views.StaxCardView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    app:title="@string/req_cardhead"
+		    android:id="@+id/request_formCard"
+		    app:showBack="true">
+
+		<include layout="@layout/request_card_amount" />
+
+		<include layout="@layout/request_card_requestee" />
+
+		<include layout="@layout/request_card_requester" />
+
+		<include layout="@layout/transfer_card_note" />
+
+		</com.hover.stax.views.StaxCardView>
 
 		<include layout="@layout/transfer_card_future"
 			android:id="@+id/futureCard"

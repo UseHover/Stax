@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 	<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:orientation="vertical"
 	    >
 
-		<RadioGroup
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_marginHorizontal="@dimen/margin_10"
-		    android:id="@+id/channelRadioGroup"/>
+	<com.google.android.material.textfield.TextInputLayout
+	    style="@style/StaxLabeledDropdown"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:id="@+id/channelEntry"
+	    android:hint="@string/channel_label">
 
-		<TextView
+		<AutoCompleteTextView
+		    android:id="@+id/channelDropdown"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-		    android:layout_marginHorizontal="@dimen/margin_10"
-		    android:layout_marginBottom="@dimen/margin_8"
-		    android:id="@+id/add_new_account"
-		    android:textColor="@color/brightBlue"
-		    android:text="@string/link_addacct"
-		    android:textSize="@dimen/text_16"
-		    android:fontFamily="font-medium"/>
+		    android:padding="@dimen/margin_13"
+		    android:dropDownWidth="wrap_content"
+		    android:background="@null"
+		    android:editable="false"
+		    android:textSize="@dimen/text_21"
+		    android:fontFamily="font-normal"
+		    android:textColor="@color/offWhite"
+		    android:textCursorDrawable="@null" />
+
+	</com.google.android.material.textfield.TextInputLayout>
 
 	<com.google.android.material.textfield.TextInputLayout
 	    android:id="@+id/accountNumberEntry"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginTop="@dimen/margin_16"
-	    android:hint="@string/requester_number_label"
+	    android:hint="@string/requester_account_number_label"
 	    style="@style/StaxLabeledInput">
 
 		<com.google.android.material.textfield.TextInputEditText

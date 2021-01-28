@@ -93,7 +93,7 @@ public class RequestActivity extends AbstractMessageSendingActivity implements S
 		if (requestViewModel.isDone())
 			submit();
 		else if (requestViewModel.stageValidates())
-			requestViewModel.goToNextStage();
+			requestViewModel.setStage(REVIEW);
 	}
 
 	private void submit() {
@@ -167,13 +167,11 @@ public class RequestActivity extends AbstractMessageSendingActivity implements S
 	}
 
 	private void setCurrentCard(StagedViewModel.StagedEnum stage) {
-		findViewById(R.id.recipientCard).setVisibility(stage.compare(REQUESTEE) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.amountCard).setVisibility(stage.compare(AMOUNT) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.requesterCard).setVisibility(stage.compare(REQUESTER) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.noteCard).setVisibility(stage.compare(NOTE) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.shareCard).setVisibility(stage.compare(REVIEW) >= 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.futureCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && requestViewModel.getFutureDate().getValue() == null ? View.VISIBLE : View.GONE);
-		findViewById(R.id.repeatCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && (requestViewModel.repeatSaved().getValue() == null || !requestViewModel.repeatSaved().getValue()) ? View.VISIBLE : View.GONE);
+		findViewById(R.id.request_formCard).setVisibility(stage.compare(REVIEW) < 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.summaryCard).setVisibility(stage.compare(REVIEW) == 0 ? View.VISIBLE : View.GONE);
+		findViewById(R.id.shareCard).setVisibility(stage.compare(REVIEW) == 0 ? View.VISIBLE : View.GONE);
+		//findViewById(R.id.futureCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && requestViewModel.getFutureDate().getValue() == null ? View.VISIBLE : View.GONE);
+		//findViewById(R.id.repeatCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && (requestViewModel.repeatSaved().getValue() == null || !requestViewModel.repeatSaved().getValue()) ? View.VISIBLE : View.GONE);
 	}
 
 	private void setFab(StagedViewModel.StagedEnum stage) {
@@ -218,7 +216,7 @@ public class RequestActivity extends AbstractMessageSendingActivity implements S
 			if (requestViewModel.getStarted())
 				wasRequestSentDialog();
 			else if (requestViewModel.getStage().getValue().compare(AMOUNT) > 0)
-				requestViewModel.goToPrevStage();
+				requestViewModel.setStage(AMOUNT);
 			else
 				super.onBackPressed();
 		}

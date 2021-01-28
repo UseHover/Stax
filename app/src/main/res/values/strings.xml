@@ -219,7 +219,7 @@
 	<string name="req_cardhead">Request money</string>
 	<string name="amount_label_opt">Amount (Optional)</string>
 	<string name="reqfrom_label">To</string>
-	<string name="btn_addcontact">Add someone else</string>
+	<string name="btn_addcontact">+ Add another person</string>
 	<string name="sms_request_template">Kindly stax me %1$s at your earliest convenience. %2$s%3$s</string>
 	<string name="sms_amount_detail">%1$s </string>
 	<string name="sms_note_detail">Note: \"%1$s\" </string>
@@ -229,6 +229,7 @@
 	<string name="descrip_request">Request to %1$s</string>
 	<string name="editreq_cardhead">Edit Request</string>
 	<string name="requester_number_label">Account</string>
+	<string name="requester_account_number_label">Account number</string>
 	<string name="requester_number_fielderror">Please enter the account or phone number you\'d like to receive the money into</string>
 	<string name="requester_account_error">Please select an account or add a new one to receive your money</string>
 	<string name="request_processing_msg">Processing request, please wait…</string>

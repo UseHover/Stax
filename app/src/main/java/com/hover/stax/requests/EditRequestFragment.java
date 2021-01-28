@@ -43,8 +43,8 @@ public class EditRequestFragment extends EditStagedFragment implements Recipient
 	protected void init(View view) {
 		recipientInputList = view.findViewById(R.id.recipient_list);
 		recipientInputList.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-		RecipientAdapter recipientAdapter = new RecipientAdapter(requestViewModel.getRequestees().getValue(), requestViewModel.getRecentContacts().getValue(), this);
-		recipientInputList.setAdapter(recipientAdapter);
+		//RecipientAdapter recipientAdapter = new RecipientAdapter(requestViewModel.getRequestees().getValue(), requestViewModel.getRecentContacts().getValue(), this);
+		//recipientInputList.setAdapter(recipientAdapter);
 
 		amountInput = view.findViewById(R.id.amount_input);
 		amountInput.setText(requestViewModel.getAmount().getValue());

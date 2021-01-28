@@ -138,9 +138,7 @@ public class NewRequestViewModel extends StagedViewModel {
 	}
 
 	boolean stageValidates() {
-		if (stage.getValue() == null) return false;
-		switch ((RequestStage) stage.getValue()) {
-			case REQUESTEE:
+
 				if (requestees.getValue() == null || requestees.getValue().size() == 0 || requestees.getValue().get(0).getPhoneNumber().isEmpty()) {
 					requesteeError.setValue(R.string.recipient_fielderror);
 					return false;
@@ -153,8 +151,7 @@ public class NewRequestViewModel extends StagedViewModel {
 					}
 					requestees.postValue(cs);
 				}
-				break;
-			case REQUESTER:
+
 				if (getActiveChannel().getValue() == null) {
 					requesterAccountError.setValue(R.string.requester_account_error);
 					return false;
@@ -164,8 +161,7 @@ public class NewRequestViewModel extends StagedViewModel {
 					requesterNumberError.setValue(R.string.requester_number_fielderror);
 					return false;
 				} else requesterNumberError.setValue(null);
-				break;
-		}
+
 		return true;
 	}
 

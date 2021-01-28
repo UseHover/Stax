@@ -37,7 +37,7 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 	private LinearLayout recipientValueList;
 	private TextView amountValue, noteValue;
 	private EditText amountInput, requesterAccountNo, noteInput;
-	private Button addRecipientBtn;
+	private TextView addRecipientBtn;
 
 	private RecipientAdapter recipientAdapter;
 	private int recipientCount = 0;
@@ -77,13 +77,11 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 	@Override
 	protected void startObservers(View root) {
 		super.startObservers(root);
-		requestViewModel.getStage().observe(getViewLifecycleOwner(), stage -> {
-			switch ((RequestStage) stage) {
-				case AMOUNT: amountInput.requestFocus(); break;
-				case REQUESTER: requesterAccountNo.requestFocus(); break;
-				case NOTE: noteInput.requestFocus(); break;
-			}
-		});
+		amountInput.requestFocus();
+		requesterAccountNo.requestFocus();
+		noteInput.requestFocus();
+		recipientInputList.requestFocus();
+
 
 		requestViewModel.getRequestees().observe(getViewLifecycleOwner(), recipients -> {
 			if (recipients == null || recipients.size() == 0) return;
@@ -138,7 +136,6 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		super.startListeners(root);
 		addRecipientBtn.setOnClickListener(v -> requestViewModel.addRecipient(new StaxContact("")));
 		amountInput.addTextChangedListener(amountWatcher);
-		root.findViewById(R.id.add_new_account).setOnClickListener(view -> startActivityForResult(new Intent(getActivity(), ChannelsActivity.class), Constants.ADD_SERVICE));
 		requesterAccountNo.addTextChangedListener(receivingAccountNumberWatcher);
 		noteInput.addTextChangedListener(noteWatcher);
 	}
