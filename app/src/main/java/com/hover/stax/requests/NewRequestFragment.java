@@ -20,7 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.transfers.TransferViewModel;
 import com.hover.stax.utils.StagedFragment;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -41,10 +43,12 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		stagedViewModel = new ViewModelProvider(requireActivity()).get(NewRequestViewModel.class);
-		requestViewModel = (NewRequestViewModel) stagedViewModel;
+		channelDropdownViewModel = new ViewModelProvider(requireActivity()).get(ChannelDropdownViewModel.class);
+		requestViewModel = new ViewModelProvider(requireActivity()).get(NewRequestViewModel.class);
 		View view = inflater.inflate(R.layout.fragment_request, container, false);
 		init(view);
+		startObservers(view);
+		startListeners();
 		return view;
 	}
 
@@ -71,16 +75,7 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		super.init(view);
 	}
 
-	@Override
 	protected void startObservers(View root) {
-		super.startObservers(root);
-		requestViewModel.getStage().observe(getViewLifecycleOwner(), stage -> {
-			switch ((RequestStage) stage) {
-				case AMOUNT: amountInput.requestFocus(); break;
-				case REQUESTER: requesterAccountNo.requestFocus(); break;
-				case NOTE: noteInput.requestFocus(); break;
-			}
-		});
 
 		requestViewModel.getRequestees().observe(getViewLifecycleOwner(), recipients -> {
 			if (recipients == null || recipients.size() == 0) return;
@@ -130,9 +125,7 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 			requesterAccountNo.setText(c.accountNo);
 	}
 
-	@Override
-	protected void startListeners(View root) {
-		super.startListeners(root);
+	protected void startListeners() {
 		addRecipientBtn.setOnClickListener(v -> requestViewModel.addRecipient(new StaxContact("")));
 		amountInput.addTextChangedListener(amountWatcher);
 		requesterAccountNo.addTextChangedListener(receivingAccountNumberWatcher);

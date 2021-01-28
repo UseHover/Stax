@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -14,54 +15,61 @@ import androidx.lifecycle.Transformations;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.hover.stax.actions.Action;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.sims.Sim;
 import com.hover.stax.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.hover.stax.database.Constants.LANGUAGE_CHECK;
 
 public class ChannelDropdownViewModel extends AndroidViewModel {
-	public final static String TAG = "ChannelDropdownViewModel";
+	public final static String TAG = "ChannelDropdownVM";
 
 	private DatabaseRepo repo;
+	private MutableLiveData<String> type = new MutableLiveData<>();
 
 	private MutableLiveData<List<Sim>> sims;
 	private LiveData<List<String>> simHniList = new MutableLiveData<>();
-	LiveData<List<String>> simCountryList = new MutableLiveData<>();
 
 	private LiveData<List<Channel>> allChannels;
-	private MediatorLiveData<List<Integer>> selected;
+	private LiveData<List<Channel>> selectedChannels;
 	private MediatorLiveData<List<Channel>> simChannels;
-	private MediatorLiveData<List<Channel>> countryChannels;
+	private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
+	private LiveData<List<Action>> actions = new MediatorLiveData<>();
 
 	public ChannelDropdownViewModel(Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
+		type.setValue(Action.BALANCE);
+
 		loadChannels();
-		initSelectedChannels();
 		loadSims();
 
 		simHniList = Transformations.map(sims, this::getHnisAndSubscribeToEachOnFirebase);
-		simCountryList = Transformations.map(sims, this::getSimCountriesAndSubscribeToEachOnFirebase);
 
 		simChannels = new MediatorLiveData<>();
 		simChannels.addSource(allChannels, this::onChannelsUpdateHnis);
 		simChannels.addSource(simHniList, this::onSimUpdate);
 
-		countryChannels = new MediatorLiveData<>();
-		countryChannels.addSource(allChannels, this::onChannelsUpdateCountries);
-		countryChannels.addSource(simCountryList, this::onCountryUpdate);
+		activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull);
+
+		actions = Transformations.switchMap(type, this::loadActions);
+		actions = Transformations.switchMap(selectedChannels, this::loadActions);
+		actions = Transformations.switchMap(activeChannel, this::loadActions);
 	}
 
+	private void setType(String t) { type.setValue(t); }
+
 	private void loadChannels() {
-		if (allChannels == null) {
-			allChannels = new MutableLiveData<>();
-		}
+		if (allChannels == null) { allChannels = new MutableLiveData<>(); }
+		if (selectedChannels == null) { selectedChannels = new MutableLiveData<>(); }
 		allChannels = repo.getAllChannels();
+		selectedChannels = repo.getSelected();
 	}
 
 	public LiveData<List<Channel>> getChannels() {
@@ -69,28 +77,6 @@ public class ChannelDropdownViewModel extends AndroidViewModel {
 			allChannels = new MutableLiveData<>();
 		}
 		return allChannels;
-	}
-
-	private void initSelectedChannels() {
-		if (selected == null) {
-			selected = new MediatorLiveData<>();
-		}
-		selected.addSource(allChannels, this::loadSelectedChannels);
-	}
-
-	private void loadSelectedChannels(List<Channel> channels) {
-		List<Integer> ls = new ArrayList<>();
-		for (Channel channel : channels) {
-			if (channel.selected) ls.add(channel.id);
-		}
-		if (selected.getValue() != null) {
-			ls.addAll(selected.getValue());
-		}
-		selected.setValue(ls);
-	}
-
-	LiveData<List<Integer>> getSelected() {
-		return selected;
 	}
 
 	void loadSims() {
@@ -115,22 +101,11 @@ public class ChannelDropdownViewModel extends AndroidViewModel {
 		for (Sim sim : sims) {
 			if (!hniList.contains(sim.hni)) {
 				FirebaseMessaging.getInstance().subscribeToTopic("sim-" + sim.hni);
+				FirebaseMessaging.getInstance().subscribeToTopic(sim.country_iso);
 				hniList.add(sim.hni);
 			}
 		}
 		return hniList;
-	}
-
-	private List<String> getSimCountriesAndSubscribeToEachOnFirebase(List<Sim> sims) {
-		if (sims == null) return null;
-		List<String> countries = new ArrayList<>();
-		for (Sim sim : sims) {
-			if (sim.country_iso != null && !countries.contains(sim.country_iso.toUpperCase())) {
-				countries.add(sim.country_iso.toUpperCase());
-				FirebaseMessaging.getInstance().subscribeToTopic(sim.country_iso);
-			}
-		}
-		return countries;
 	}
 
 	private void onChannelsUpdateHnis(List<Channel> channels) {
@@ -160,50 +135,65 @@ public class ChannelDropdownViewModel extends AndroidViewModel {
 		return simChannels;
 	}
 
-	private void onChannelsUpdateCountries(List<Channel> channels) {
-		updateCountryChannels(channels, simCountryList.getValue());
-	}
-
-	private void onCountryUpdate(List<String> countryList) {
-		updateCountryChannels(allChannels.getValue(), countryList);
-	}
-
-	private void updateCountryChannels(List<Channel> channels, List<String> countryList) {
-		if (channels == null || countryList == null) return;
-		List<Channel> countryChannelList = new ArrayList<>();
-		for (int i = 0; i < channels.size(); i++) {
-			for (String country : countryList) {
-				if (country.equals(channels.get(i).countryAlpha2.toUpperCase()))
-					countryChannelList.add(channels.get(i));
-			}
+	protected void setActiveChannelIfNull(List<Channel> channels) {
+		if (channels != null && channels.size() > 0 && activeChannel.getValue() == null) {
+			for (Channel c: channels)
+				if (c.defaultAccount) { activeChannel.setValue(c); }
 		}
-		countryChannels.setValue(countryChannelList);
 	}
 
-	LiveData<List<Channel>> getCountryChannels() {
-		return countryChannels;
+	public void setActiveChannel(int channel_id) {
+//		activeChannel.setValue(getChannelById(channel_id));
 	}
+	public void setActiveChannel(Channel channel) {
+		activeChannel.setValue(channel);
+	}
+	public Channel getActiveChannel() { return activeChannel.getValue(); }
 
-	void setSelected(int id) {
-		List<Integer> list = selected.getValue() != null ? selected.getValue() : new ArrayList<>();
-		if (list.contains(id))
-			list.remove((Integer) id);
+	public LiveData<List<Action>> loadActions(String t) {
+		if ((t.equals(Action.BALANCE) && selectedChannels.getValue() == null) || (!t.equals(Action.BALANCE) && activeChannel.getValue() == null)) return null;
+		if (t.equals(Action.BALANCE))
+			return loadActions(selectedChannels.getValue(), t);
 		else
-			list.add(id);
-		selected.setValue(list);
+			return loadActions(activeChannel.getValue(), t);
 	}
 
-	public void saveSelected() {
-		List<Channel> saveChannelsTemp = allChannels.getValue() != null ? allChannels.getValue() : new ArrayList<>();
-		for (int i = 0; i < saveChannelsTemp.size(); i++) {
-			Channel channel = saveChannelsTemp.get(i);
-			if (selected.getValue().contains(channel.id)) {
-				channel.selected = true;
-				channel.defaultAccount = i==0;
-				repo.update(channel);
-				FirebaseMessaging.getInstance().subscribeToTopic("channel-" + channel.id);
-			}
-		}
+	public LiveData<List<Action>> loadActions(Channel channel) {
+		return repo.getLiveActions(channel.id, type.getValue());
+	}
+
+	private LiveData<List<Action>> loadActions(Channel c, String t) {
+		return repo.getLiveActions(c.id, t);
+	}
+
+	public LiveData<List<Action>> loadActions(List<Channel> channels) {
+		if (type.getValue().equals(Action.BALANCE))
+			return loadActions(channels, type.getValue());
+		else return actions;
+	}
+
+	public LiveData<List<Action>> loadActions(List<Channel> channels, String t) {
+		if (type.getValue() == null || !type.getValue().equals(Action.BALANCE)) return actions;
+		Log.e(TAG, "attempting to load " + channels.size() + " balance actions");
+		int[] ids = new int[channels.size()];
+		for (int c = 0; c < channels.size(); c++)
+			ids[c] = channels.get(c).id;
+		Log.e(TAG, "attempting to load balance actions for channels: " + Arrays.toString(ids));
+		return repo.getLiveActions(ids, t);
+	}
+
+	public LiveData<List<Action>> getActions() {
+		return actions;
+	}
+
+	public void selectChannel(Channel channel, Context c) {
+		if (channel == null) return;
+		Log.e(TAG, "saving selected channel: " + channel);
+//		logChoice(channel, c);
+		channel.selected = true;
+		channel.defaultAccount = selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0;
+		FirebaseMessaging.getInstance().subscribeToTopic("channel-" + channel.id);
+		repo.update(channel);
 	}
 
 	@Override

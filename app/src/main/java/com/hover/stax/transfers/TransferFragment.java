@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.contacts.StaxContactArrayAdapter;
 import com.hover.stax.database.Constants;
@@ -46,13 +47,15 @@ public class TransferFragment extends StagedFragment {
 	private Stax2LineItem recipientValue;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		stagedViewModel = new ViewModelProvider(requireActivity()).get(TransferViewModel.class);
-		transferViewModel = (TransferViewModel) stagedViewModel;
+		channelDropdownViewModel = new ViewModelProvider(requireActivity()).get(ChannelDropdownViewModel.class);
+		transferViewModel = new ViewModelProvider(requireActivity()).get(TransferViewModel.class);
 		View root = inflater.inflate(R.layout.fragment_transfer, container, false);
+		super.onCreateView(inflater, container, savedInstanceState);
 		init(root);
 		return root;
 	}
 
+	@Override
 	protected void init(View root) {
 		setTitle(root);
 		amountValue = root.findViewById(R.id.amountValue);
@@ -62,7 +65,7 @@ public class TransferFragment extends StagedFragment {
 		amountEntry = root.findViewById(R.id.amountEntry);
 		amountInput = root.findViewById(R.id.amount_input);
 		amountInput.setText(transferViewModel.getAmount().getValue());
-		actionRadioGroup = root.findViewById(R.id.networkRadioGroup);
+		actionRadioGroup = root.findViewById(R.id.isSelfRadioGroup);
 		recipientEntry = root.findViewById(R.id.recipientEntry);
 		recipientLabel = root.findViewById(R.id.recipientLabel);
 		recipientAutocomplete = root.findViewById(R.id.recipient_autocomplete);
@@ -75,14 +78,12 @@ public class TransferFragment extends StagedFragment {
 
 	private void setTitle(View root) {
 		TextView summaryCardTitle = root.findViewById(R.id.summaryCard).findViewById(R.id.title);
-		TextView formCardTitle = root.findViewById(R.id.transactionFormCard).findViewById(R.id.title);
-		if(summaryCardTitle !=null) { summaryCardTitle.setText(getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.fab_airtime : R.string.fab_transfer)); }
-		if(formCardTitle !=null) { formCardTitle.setText(getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.fab_airtime : R.string.fab_transfer)); }
+		TextView formCardTitle = root.findViewById(R.id.editCard).findViewById(R.id.title);
+		if (summaryCardTitle != null) { summaryCardTitle.setText(getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.fab_airtime : R.string.fab_transfer)); }
+		if (formCardTitle != null) { formCardTitle.setText(getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.fab_airtime : R.string.fab_transfer)); }
 	}
 
 	protected void startObservers(View root) {
-		super.startObservers(root);
-
 		root.findViewById(R.id.mainLayout).requestFocus();
 
 		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> amountValue.setText(Utils.formatAmount(amount)));
@@ -106,21 +107,14 @@ public class TransferFragment extends StagedFragment {
 			recipientLabel.setErrorIconDrawable(0);
 		});
 
-		transferViewModel.getPageError().observe(getViewLifecycleOwner(), error -> {
-			if (error != null) {
-				if ((transferViewModel.isDone()) && getActivity() != null)
-					new StaxDialog(getActivity()).setDialogMessage(error).setPosButton(R.string.btn_ok, null).showIt();
-				else
-					UIHelper.flashMessage(getContext(), getString(error));
-			}
-		});
+		transferViewModel.getPageError().observe(getViewLifecycleOwner(), error -> UIHelper.flashMessage(getContext(), getString(error)));
 
 		transferViewModel.getNote().observe(getViewLifecycleOwner(), reason -> noteValue.setText(reason));
 
 		transferViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
 			if (actions == null || actions.size() == 0) return;
 			actionRadioGroup.removeAllViews();
-			root.findViewById(R.id.networkLabel).setVisibility(View.VISIBLE);
+//			root.findViewById(R.id.networkLabel).setVisibility(View.VISIBLE);
 			for (int i = 0; i < actions.size(); i++){
 				Action a =  actions.get(i);
 				a.context = getContext();
@@ -130,6 +124,7 @@ public class TransferFragment extends StagedFragment {
 				radioButton.setChecked(i==0);
 				actionRadioGroup.addView(radioButton);
 			}
+
 		});
 
 		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
@@ -144,8 +139,6 @@ public class TransferFragment extends StagedFragment {
 	}
 
 	protected void startListeners(View root) {
-		super.startListeners(root);
-
 		actionRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
 			Action action = transferViewModel.getActions().getValue().get(checkedId);
 			transferViewModel.setActiveAction(action);

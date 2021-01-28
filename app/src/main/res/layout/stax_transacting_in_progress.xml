@@ -94,16 +94,6 @@
 			    android:layout_alignParentEnd="true"
 			    android:textSize="16sp"
 			    android:textColor="@color/colorPrimaryDark"/>
-
-
-
-			/*
-
-			XML tags below does that matter for this view, but preserving as GONE
-			to prevent null-pointer exceptions.
-			*/
-
-			<include android:visibility="gone" layout="@layout/unused_okra"/>
 		</LinearLayout>
 	</androidx.cardview.widget.CardView>
 

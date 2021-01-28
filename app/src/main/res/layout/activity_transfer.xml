@@ -7,11 +7,12 @@
 	tools:context=".transfers.TransferActivity">
 
 	<fragment
-		android:id="@+id/nav_host_fragment"
+		android:id="@+id/fragment"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:name="androidx.navigation.fragment.NavHostFragment"
-		app:navGraph="@navigation/transfer_navigation" />
+		android:name="com.hover.stax.transfers.TransferFragment"
+		android:label="@string/nav_transfer"
+		tools:layout="@layout/fragment_transfer" />
 
 	<androidx.coordinatorlayout.widget.CoordinatorLayout
 		android:layout_width="match_parent"

@@ -24,7 +24,7 @@
 		<include layout="@layout/request_card_requester"
 			android:id="@+id/requesterCard"/>
 
-		<include layout="@layout/transfer_card_note"
+		<include layout="@layout/transfer_note"
 			android:id="@+id/noteCard" />
 
 		<include layout="@layout/request_card_share"

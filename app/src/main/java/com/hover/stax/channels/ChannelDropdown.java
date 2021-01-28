@@ -48,6 +48,7 @@ public class ChannelDropdown extends TextInputLayout {
 	}
 
 	public void updateChannels(List<Channel> channels) {
+		if (channels == null || channels.size() == 0) return;
 		if (highlightedChannel == null)
 			textView.setText("");
 		ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(ChannelDropdownAdapter.sort(channels, showSelected), getContext());

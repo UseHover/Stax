@@ -9,32 +9,30 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 
 import com.amplitude.api.Amplitude;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.Constants;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.settings.BiometricChecker;
-import com.hover.stax.utils.StagedViewModel;
 import com.hover.stax.views.StaxDialog;
-
-import static com.hover.stax.transfers.TransferStage.*;
 
 public class TransferActivity extends AppCompatActivity implements BiometricChecker.AuthListener {
 	final public static String TAG = "TransferActivity";
 
+	private ChannelDropdownViewModel channelDropdownViewModel;
 	private TransferViewModel transferViewModel;
 	private ScheduleDetailViewModel scheduleViewModel = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		channelDropdownViewModel = new ViewModelProvider(this).get(ChannelDropdownViewModel.class);
 		transferViewModel = new ViewModelProvider(this).get(TransferViewModel.class);
 
 		startObservers();
@@ -43,17 +41,6 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void startObservers() {
-		transferViewModel.getSelectedChannels().observe(this, channels -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel."));
-		transferViewModel.getActiveChannel().observe(this, channel -> Log.i(TAG, "This observer is neccessary to make updates fire, but all logic is in viewmodel."));
-		transferViewModel.getActions().observe(this, actions -> onUpdateStage(transferViewModel.getStage().getValue()));
-		transferViewModel.getActiveAction().observe(this, action -> onUpdateStage(transferViewModel.getStage().getValue()));
-
-		transferViewModel.getStage().observe(this, this::onUpdateStage);
-		transferViewModel.getIsFuture().observe(this, isFuture -> onUpdateStage(transferViewModel.getStage().getValue()));
-		transferViewModel.getFutureDate().observe(this, date -> onUpdateStage(transferViewModel.getStage().getValue()));
-		transferViewModel.repeatSaved().observe(this, isSaved -> onUpdateStage(transferViewModel.getStage().getValue()));
-		transferViewModel.getIsEditing().observe(this, isEditing -> onUpdateStage(transferViewModel.getStage().getValue()));
-
 		transferViewModel.setType(getIntent().getAction());
 	}
 
@@ -90,27 +77,9 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_request_link));
 	}
 
-	public void onContinue(View view) {
-		if (transferViewModel.stageValidates()) {
-			Log.d("CONTINUE", "IT VALIDATED O");
-			if (transferViewModel.isDone())
-				submit();
-			else
-				transferViewModel.setStage(REVIEW);
-		}
-		else Log.d("CONTINUE", "failed failed O");
-	}
-
 	private void submit() {
 		transferViewModel.saveContact();
-		if (transferViewModel.getIsFuture().getValue() != null && transferViewModel.getIsFuture().getValue() && transferViewModel.getFutureDate().getValue() != null) {
-			transferViewModel.schedule();
-			returnResult(Constants.SCHEDULE_REQUEST, RESULT_OK, null);
-		} else {
-			if (transferViewModel.repeatSaved().getValue() != null && transferViewModel.repeatSaved().getValue())
-				transferViewModel.schedule();
-			authenticate();
-		}
+		authenticate();
 	}
 
 	private void authenticate() {
@@ -134,7 +103,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		makeCall(act);
 	}
 	private void makeCall(Action act) {
-		HoverSession.Builder hsb = new HoverSession.Builder(act, transferViewModel.getActiveChannel().getValue(),
+		HoverSession.Builder hsb = new HoverSession.Builder(act, channelDropdownViewModel.getActiveChannel(),
 				TransferActivity.this, Constants.TRANSFER_REQUEST)
 				.extra(Action.AMOUNT_KEY, transferViewModel.getAmount().getValue())
 				.extra(Action.NOTE_KEY, transferViewModel.getNote().getValue());
@@ -144,58 +113,11 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 	private void addRecipientInfo(HoverSession.Builder hsb) {
 		hsb.extra(Action.ACCOUNT_KEY, transferViewModel.getContact().getValue().phoneNumber)
-			.extra(Action.PHONE_KEY, transferViewModel.getContact().getValue().getNumberFormatForInput(transferViewModel.getActiveAction().getValue(), transferViewModel.getActiveChannel().getValue()));
+			.extra(Action.PHONE_KEY, transferViewModel.getContact().getValue().getNumberFormatForInput(transferViewModel.getActiveAction().getValue(), channelDropdownViewModel.getActiveChannel()));
 	}
 
-	private void onUpdateStage(@Nullable StagedViewModel.StagedEnum stage) {
-		if (Navigation.findNavController(this, R.id.nav_host_fragment).getCurrentDestination().getId() == R.id.navigation_edit)
-			((ExtendedFloatingActionButton) findViewById(R.id.fab)).hide();
-		else if (findViewById(R.id.amountRow) != null) {
-			setSummaryCard(stage);
-			setCurrentCard(stage);
-			setReasonEditTextVisibility();
-			setFab(stage);
-		}
-	}
-
-	private void setSummaryCard(@Nullable StagedViewModel.StagedEnum stage) {
-		findViewById(R.id.amountRow).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.accountsRow).setVisibility(stage.compare(FROM_ACCOUNT) > 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.recipientRow).setVisibility((stage.compare(RECIPIENT) > 0 || transferViewModel.getRequest().getValue() != null && transferViewModel.getRequest().getValue().hasRequesterInfo()) ? View.VISIBLE : View.GONE);
-		findViewById(R.id.noteRow).setVisibility((stage.compare(NOTE) > 0 && transferViewModel.getNote().getValue() != null && !transferViewModel.getNote().getValue().isEmpty()) ? View.VISIBLE : View.GONE);
-		findViewById(R.id.btnRow).setVisibility(stage.compare(AMOUNT) > 0 ? View.VISIBLE : View.GONE);
-	}
-
-	private void setCurrentCard(StagedViewModel.StagedEnum stage) {
-		findViewById(R.id.summaryCard).setVisibility(stage.compare(REVIEW) == 0 ? View.VISIBLE : View.GONE);
-		findViewById(R.id.transactionFormCard).setVisibility(stage.compare(REVIEW) != 0 ? View.VISIBLE : View.GONE);
-		//findViewById(R.id.futureCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && transferViewModel.getFutureDate().getValue() == null ? View.VISIBLE : View.GONE);
-		//findViewById(R.id.repeatCard).setVisibility(stage.compare(REVIEW_DIRECT) < 0 && (transferViewModel.repeatSaved().getValue() == null || !transferViewModel.repeatSaved().getValue()) ? View.VISIBLE : View.GONE);
-	}
 	private void setReasonEditTextVisibility() {
-		findViewById(R.id.reasonEditText).setVisibility( transferViewModel.getActiveAction().getValue()!=null && transferViewModel.getActiveAction().getValue().allowsNote() ? View.VISIBLE : View.GONE);
-	}
-
-	private void setFab(StagedViewModel.StagedEnum stage) {
-		ExtendedFloatingActionButton fab = findViewById(R.id.fab);
-		if (stage.compare(REVIEW) >= 0) {
-			if (transferViewModel.getPageError().getValue() != null)
-				fab.hide();
-			else if (transferViewModel.getIsFuture().getValue() != null && transferViewModel.getIsFuture().getValue()) {
-				fab.setText(getString(R.string.fab_schedule));
-				if (transferViewModel.getFutureDate().getValue() == null) { fab.hide(); } else { fab.show(); }
-			} else if(transferViewModel.getType().equals(Action.AIRTIME)) {
-				fab.setText(getString(R.string.fab_sendnow));
-				fab.show();
-			}
-			else {
-				fab.setText(getString(R.string.fab_transfernow));
-				fab.show();
-			}
-		} else {
-			fab.setText(R.string.btn_continue);
-			fab.show();
-		}
+		findViewById(R.id.reasonEditText).setVisibility(transferViewModel.getActiveAction().getValue()!= null && transferViewModel.getActiveAction().getValue().allowsNote() ? View.VISIBLE : View.GONE);
 	}
 
 	@Override
@@ -209,23 +131,10 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 
 	private void returnResult(int type, int result, Intent data) {
 		Intent i = data == null ? new Intent() : new Intent(data);
-		if (type == Constants.SCHEDULE_REQUEST)
-			i.putExtra(Schedule.DATE_KEY, transferViewModel.getFutureDate().getValue());
 		if (transferViewModel.getContact().getValue() != null)
 			i.putExtra(StaxContact.ID_KEY, transferViewModel.getContact().getValue().id);
 		i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);
 		setResult(result, i);
 		finish();
-	}
-
-	@Override
-	public void onBackPressed() {
-		if (Navigation.findNavController(findViewById(R.id.nav_host_fragment)).getCurrentDestination().getId() != R.id.navigation_edit ||
-			    !Navigation.findNavController(findViewById(R.id.nav_host_fragment)).popBackStack()) {
-			if (transferViewModel.getStage().getValue().compare(REVIEW) == 0 && transferViewModel.getSchedule().getValue() == null && transferViewModel.getRequest().getValue() == null)
-				transferViewModel.goToPrevStage();
-			else
-				super.onBackPressed();
-		}
 	}
 }

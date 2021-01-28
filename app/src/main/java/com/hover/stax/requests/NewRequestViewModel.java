@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.hover.stax.requests.RequestStage.*;
-
 public class NewRequestViewModel extends StagedViewModel {
 	public final static String TAG = "NewRequestViewModel";
 
@@ -39,11 +37,10 @@ public class NewRequestViewModel extends StagedViewModel {
 
 	public NewRequestViewModel(@NonNull Application application) {
 		super(application);
-		stage.setValue(AMOUNT);
 		requestees.setValue(new ArrayList<>(Collections.singletonList(new StaxContact(""))));
 		formulatedRequest.setValue(null);
 
-		requesterNumber.addSource(activeChannel, this::setRequesterNumber);
+//		requesterNumber.addSource(activeChannel, this::setRequesterNumber);
 	}
 
 	void setAmount(String a) {
@@ -66,8 +63,8 @@ public class NewRequestViewModel extends StagedViewModel {
 
 	void setRequesterNumber(String number) {
 		requesterNumber.postValue(number);
-		if (activeChannel.getValue() != null)
-			activeChannel.getValue().accountNo = number;
+//		if (activeChannel.getValue() != null)
+//			activeChannel.getValue().accountNo = number;
 	}
 	LiveData<String> getRequesterNumber() {
 		if (requesterNumber == null) { requesterNumber = new MediatorLiveData<>(); }
@@ -127,47 +124,44 @@ public class NewRequestViewModel extends StagedViewModel {
 		return note;
 	}
 
-	boolean isDone() { return stage.getValue() == REVIEW || stage.getValue() == REVIEW_DIRECT; }
-
 	public void setSchedule(Schedule s) {
 		schedule.setValue(s);
 		setAmount(s.amount);
 		new Thread(() -> requestees.postValue(repo.getContacts(s.recipient_ids.split(",")))).start();
 		setNote(s.note);
-		setStage(REVIEW_DIRECT);
 	}
 
-	boolean stageValidates() {
-		if (stage.getValue() == null) return false;
-		switch ((RequestStage) stage.getValue()) {
-			case REQUESTEE:
-				if (requestees.getValue() == null || requestees.getValue().size() == 0 || requestees.getValue().get(0).getPhoneNumber().isEmpty()) {
-					requesteeError.setValue(R.string.recipient_fielderror);
-					return false;
-				} else {
-					requesteeError.setValue(null);
-					List<StaxContact> cs = new ArrayList<>();
-					for (StaxContact r: requestees.getValue()) {
-						if (r != null && !r.getPhoneNumber().isEmpty())
-							cs.add(r);
-					}
-					requestees.postValue(cs);
-				}
-				break;
-			case REQUESTER:
-				if (getActiveChannel().getValue() == null) {
-					requesterAccountError.setValue(R.string.requester_account_error);
-					return false;
-				} else requesterAccountError.setValue(null);
-
-				if (requesterNumber.getValue() == null || requesterNumber.getValue().isEmpty()) {
-					requesterNumberError.setValue(R.string.requester_number_fielderror);
-					return false;
-				} else requesterNumberError.setValue(null);
-				break;
-		}
-		return true;
-	}
+//	boolean stageValidates() {
+//		if (stage.getValue() == null) return false;
+//		switch ((RequestStage) stage.getValue()) {
+//			case REQUESTEE:
+//				if (requestees.getValue() == null || requestees.getValue().size() == 0 || requestees.getValue().get(0).getPhoneNumber().isEmpty()) {
+//					requesteeError.setValue(R.string.recipient_fielderror);
+//					return false;
+//				} else {
+//					requesteeError.setValue(null);
+//					List<StaxContact> cs = new ArrayList<>();
+//					for (StaxContact r: requestees.getValue()) {
+//						if (r != null && !r.getPhoneNumber().isEmpty())
+//							cs.add(r);
+//					}
+//					requestees.postValue(cs);
+//				}
+//				break;
+//			case REQUESTER:
+//				if (getActiveChannel().getValue() == null) {
+//					requesterAccountError.setValue(R.string.requester_account_error);
+//					return false;
+//				} else requesterAccountError.setValue(null);
+//
+//				if (requesterNumber.getValue() == null || requesterNumber.getValue().isEmpty()) {
+//					requesterNumberError.setValue(R.string.requester_number_fielderror);
+//					return false;
+//				} else requesterNumberError.setValue(null);
+//				break;
+//		}
+//		return true;
+//	}
 
 	LiveData<Request> getRequest() {
 		if (formulatedRequest == null) { formulatedRequest = new MutableLiveData<>(); }
@@ -175,34 +169,34 @@ public class NewRequestViewModel extends StagedViewModel {
 	}
 
 	void saveToDatabase() {
-		repo.update(activeChannel.getValue());
+//		repo.update(activeChannel.getValue());
 
 		saveContacts();
 		for (StaxContact recipient : requestees.getValue())
 			repo.insert(new Request(formulatedRequest.getValue(), recipient, getApplication()));
 
-		if (repeatSaved.getValue() != null && repeatSaved.getValue()) {
-			schedule();
-		} else if (schedule.getValue() != null) {
-			Schedule s = schedule.getValue();
-			if (s.end_date <= DateUtils.today()) {
-				s.complete = true;
-				repo.update(s);
-			}
-		}
+//		if (repeatSaved.getValue() != null && repeatSaved.getValue()) {
+//			schedule();
+//		} else if (schedule.getValue() != null) {
+//			Schedule s = schedule.getValue();
+//			if (s.end_date <= DateUtils.today()) {
+//				s.complete = true;
+//				repo.update(s);
+//			}
+//		}
 	}
 
 	void setStarted() {
-		formulatedRequest.setValue(new Request(amount.getValue(), note.getValue(), getRequesterNumber().getValue(), getActiveChannel().getValue().institutionId));
+//		formulatedRequest.setValue(new Request(amount.getValue(), note.getValue(), getRequesterNumber().getValue(), getActiveChannel().getValue().institutionId));
 	}
 	Boolean getStarted() {
 		return formulatedRequest == null || formulatedRequest.getValue() != null;
 	}
 
 	public void schedule() {
-		Schedule s = new Schedule(futureDate.getValue(), repeatSaved.getValue(), frequency.getValue(), endDate.getValue(),
-			requestees.getValue(), amount.getValue(), note.getValue(), getApplication());
-		saveSchedule(s);
+//		Schedule s = new Schedule(futureDate.getValue(), repeatSaved.getValue(), frequency.getValue(), endDate.getValue(),
+//			requestees.getValue(), amount.getValue(), note.getValue(), getApplication());
+//		saveSchedule(s);
 	}
 
 	public void saveContacts() {

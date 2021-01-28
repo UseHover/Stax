@@ -36,7 +36,9 @@ public class BalancesViewModel extends AndroidViewModel {
 	private boolean hasActive = false;
 
 	private LiveData<List<Channel>> selectedChannels;
-	private LiveData<List<Action>> balanceActions = new MediatorLiveData<>();
+	private LiveData<Channel> activeChannel;
+	private LiveData<List<Action>> actions = new MediatorLiveData<>();
+
 	private MutableLiveData<Integer> runFlag = new MutableLiveData<>();
 	private MediatorLiveData<List<Action>> toRun;
 	private MutableLiveData<Boolean> runBalanceError = new MutableLiveData<>();
@@ -47,12 +49,12 @@ public class BalancesViewModel extends AndroidViewModel {
 		if (runFlag == null) runFlag.setValue(NONE);
 
 		selectedChannels = repo.getSelected();
-		balanceActions = Transformations.switchMap(selectedChannels, this::loadBalanceActions);
+		actions = Transformations.switchMap(selectedChannels, this::loadActions);
 
 		toRun = new MediatorLiveData<>();
 		toRun.setValue(new ArrayList<>());
 		toRun.addSource(runFlag, this::onSetRunning);
-		toRun.addSource(balanceActions, this::onActionsLoaded);
+		toRun.addSource(actions, this::onActionsLoaded);
 		runBalanceError.setValue(false);
 	}
 
@@ -75,7 +77,7 @@ public class BalancesViewModel extends AndroidViewModel {
 		return selectedChannels;
 	}
 
-	public LiveData<List<Action>> loadBalanceActions(List<Channel> channelList) {
+	public LiveData<List<Action>> loadActions(List<Channel> channelList) {
 		Log.e(TAG, "attempting to load " + channelList.size() + " balance actions");
 		int[] ids = new int[channelList.size()];
 		for (int c = 0; c < channelList.size(); c++)
@@ -84,8 +86,8 @@ public class BalancesViewModel extends AndroidViewModel {
 		return repo.getLiveActions(ids, Action.BALANCE);
 	}
 
-	public LiveData<List<Action>> getBalanceActions() {
-		return balanceActions;
+	public LiveData<List<Action>> getActions() {
+		return actions;
 	}
 
 	public void selectChannel(Channel channel, Context c) {
@@ -135,7 +137,7 @@ public class BalancesViewModel extends AndroidViewModel {
 
 	private void onSetRunning(Integer flag) {
 		if (flag == null || flag == NONE) toRun.setValue(new ArrayList<>());
-		else if (flag == ALL) startRun(balanceActions.getValue());
+		else if (flag == ALL) startRun(actions.getValue());
 		else startRun(getChannelActions(flag));
 	}
 
@@ -179,8 +181,8 @@ public class BalancesViewModel extends AndroidViewModel {
 
 	private List<Action> getChannelActions(int flag) {
 		List list = new ArrayList<Action>();
-		if (balanceActions.getValue() == null || balanceActions.getValue().size() == 0) return list;
-		for (Action action : balanceActions.getValue()) {
+		if (actions.getValue() == null || actions.getValue().size() == 0) return list;
+		for (Action action : actions.getValue()) {
 			if (action.channel_id == flag)
 				list.add(action);
 		}

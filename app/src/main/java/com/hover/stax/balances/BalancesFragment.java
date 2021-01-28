@@ -45,6 +45,7 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_balance_and_history)));
 		balancesViewModel = new ViewModelProvider(requireActivity()).get(BalancesViewModel.class);
 		channelDropdownViewModel = new ViewModelProvider(requireActivity()).get(ChannelDropdownViewModel.class);
+
 		futureViewModel = new ViewModelProvider(requireActivity()).get(FutureViewModel.class);
 		transactionsViewModel = new ViewModelProvider(requireActivity()).get(TransactionHistoryViewModel.class);
 		return inflater.inflate(R.layout.fragment_balance, container, false);
@@ -94,21 +95,13 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 	}
 
 	private void setUpChannelDropdown() {
-		channelDropdownViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> {
-			if (channels != null && channels.size() > 0 && (channelDropdownViewModel.getSimChannels().getValue() == null || channelDropdownViewModel.getSimChannels().getValue().size() == 0))
-				updateChannelDropdown(channels);
-		});
-		channelDropdownViewModel.getSimChannels().observe(getViewLifecycleOwner(), this::updateChannelDropdown);
-	}
-
-	private void updateChannelDropdown(List<Channel> channels) {
-		if (channels == null || channels.size() == 0) return;
-			channelDropdown.updateChannels(channels);
+		channelDropdownViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
+		channelDropdownViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
 	}
 
 	private void refreshBalances(View v) {
 		if (channelDropdown.getHighlighted() != null) {
-			balancesViewModel.getBalanceActions().observe(getViewLifecycleOwner(), actions -> {
+			balancesViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
 				balancesViewModel.setAllRunning(v.getContext());
 			});
 			balancesViewModel.selectChannel(channelDropdown.getHighlighted(), v.getContext());
