@@ -2,6 +2,7 @@ package com.hover.stax.actions;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActionSelect extends LinearLayout {
+	private static String TAG = "ActionSelect";
 
 	private TextInputLayout input;
 	private AutoCompleteTextView textView;
@@ -32,21 +34,22 @@ public class ActionSelect extends LinearLayout {
 		input = findViewById(R.id.action_dropdown_input);
 		textView = findViewById(R.id.action_autoComplete);
 		isSelfRadio = findViewById(R.id.isSelfRadioGroup);
-
-		isSelfRadio.setVisibility(GONE);
+		isSelfRadio.setVisibility(VISIBLE);
 	}
 
 	public void updateActions(List<Action> filteredActions) {
+		Log.e(TAG, "Updating to " + filteredActions);
 		actions = filteredActions;
 		uniqRecipientActions = sort(filteredActions);
 
 		ArrayAdapter actionDropdownAdapter = new ArrayAdapter<Action>(getContext(), R.layout.stax_spinner_item);
 		textView.setAdapter(actionDropdownAdapter);
-//		textView.setText(textView.getAdapter().getItem(0).toString(), false);
 		textView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelectRecipientNetwork((Action) adapterView.getItemAtPosition(pos)));
+		if (filteredActions.size() == 1)
+			onSelectRecipientNetwork((Action) uniqRecipientActions.get(0));
 	}
 
-	public List<Action> sort(List<Action> actions) {
+	public static List<Action> sort(List<Action> actions) {
 		ArrayList<Integer> uniqRecipInstIds = new ArrayList<>();
 		ArrayList<Action> uniqRecipActions = new ArrayList<>();
 		for (Action a : actions) {
@@ -58,11 +61,14 @@ public class ActionSelect extends LinearLayout {
 		return uniqRecipActions;
 	}
 
-	private void onSelectRecipientNetwork(Action action) {
+	public void onSelectRecipientNetwork(Action action) {
+		Log.e(TAG, "Selected " + action);
 		List<Action> options = getWhoMeOptions(action.recipientInstitutionId());
-		if (options.size() == 1)
+		if (options.size() == 1) {
 			selectedAction = action;
-		else
+			Log.e(TAG, "found only one");
+//			textView.setText(textView.getAdapter().getItem(0).toString(), false);
+		} else
 			createRadios(options);
 	}
 

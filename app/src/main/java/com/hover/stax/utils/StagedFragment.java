@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,7 @@ import com.hover.stax.permissions.PermissionUtils;
 import com.hover.stax.views.Stax2LineItem;
 
 public abstract class StagedFragment extends Fragment implements ChannelDropdown.HighlightListener {
+	private static String TAG = "StagedFragment";
 
 	protected ChannelDropdownViewModel channelDropdownViewModel;
 	protected ChannelDropdown channelDropdown;
@@ -33,6 +35,9 @@ public abstract class StagedFragment extends Fragment implements ChannelDropdown
 		channelDropdown.setListener(this);
 		channelDropdownViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
 		channelDropdownViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
+		channelDropdownViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
+		channelDropdownViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> Log.e(TAG, "Got new active channel: " + channel));
+		channelDropdownViewModel.getActions().observe(getViewLifecycleOwner(), actions -> Log.e(TAG, "Got new actions: " + actions.size()));
 	}
 
 	private void updateChannels() {

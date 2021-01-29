@@ -129,6 +129,7 @@ public class TransferFragment extends StagedFragment {
 		});
 
 		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
+			actionSelect.onSelectRecipientNetwork(action);
 			if (action != null) {
 				root.findViewById(R.id.recipientEntry).setVisibility(action.requiresRecipient() ? View.VISIBLE : View.GONE);
 				if (!action.requiresRecipient()) recipientValue.setContent(getString(R.string.self_choice), "");
@@ -139,6 +140,13 @@ public class TransferFragment extends StagedFragment {
 	}
 
 	protected void startListeners() {
+//		actionSelect.findViewById(R.id.action_autoComplete).setOnClickListener(v -> actionSelect
+//			ArrayAdapter actionDropdownAdapter = new ArrayAdapter<Action>(getContext(), R.layout.stax_spinner_item);
+//			actionSelect.findViewById(R.id.action_autoComplete).setAdapter(actionDropdownAdapter);
+//			textView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelectRecipientNetwork((Action) adapterView.getItemAtPosition(pos)));
+//			if (filteredActions.size() == 1)
+//				onSelectRecipientNetwork((Action) uniqRecipientActions.get(0));
+//		});
 		isSelfRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
 			Action action = transferViewModel.getActions().getValue().get(checkedId);
 			transferViewModel.setActiveAction(action);

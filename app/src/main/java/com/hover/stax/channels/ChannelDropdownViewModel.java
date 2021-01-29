@@ -79,6 +79,11 @@ public class ChannelDropdownViewModel extends AndroidViewModel {
 		return allChannels;
 	}
 
+	public LiveData<List<Channel>> getSelectedChannels() {
+		if (selectedChannels == null) { selectedChannels = new MutableLiveData<>(); }
+		return selectedChannels;
+	}
+
 	void loadSims() {
 		if (sims == null) {
 			sims = new MutableLiveData<>();

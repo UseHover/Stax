@@ -76,8 +76,9 @@ public class TransferViewModel extends StagedViewModel {
 	}
 
 	private void setActiveActionIfOutOfDate(List<Action> actions) {
-		if (actions != null && actions.size() > 0 && (activeAction.getValue() == null || !actions.contains(activeAction.getValue())))
+		if (actions != null && actions.size() > 0 && (activeAction.getValue() == null || !actions.contains(activeAction.getValue()))) {
 			activeAction.setValue(actions.get(0));
+		}
 	}
 
 	void setActiveAction(Action action) {
