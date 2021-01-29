@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,8 @@ import com.hover.stax.R;
 import com.hover.stax.permissions.PermissionUtils;
 import com.hover.stax.utils.Utils;
 
+import java.util.Date;
+
 public class SelfDestructActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,15 +31,15 @@ public class SelfDestructActivity extends AppCompatActivity {
 	}
 
 	public static boolean isExpired(Context c) {
-		return false;
-//		long currentTime = new Date().getTime();
-//		long selfDestructTime = Long.parseLong(Utils.getBuildConfigValue(c, "SELF_DESTRUCT").toString());
-//		return currentTime >= selfDestructTime;
+//		return false;
+		long currentTime = new Date().getTime();
+		long selfDestructTime = Long.parseLong(Utils.getBuildConfigValue(c, "SELF_DESTRUCT").toString());
+		return currentTime >= selfDestructTime;
 	}
 
 	private void attemptDownload() {
 		if (PermissionUtils.hasWritePermission(this)) {
-			downloadLatest();
+			downloadLatest(null);
 		} else {
 			requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
 		}
@@ -46,10 +49,10 @@ public class SelfDestructActivity extends AppCompatActivity {
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		if (new PermissionHelper(this).permissionsGranted(grantResults))
-			downloadLatest();
+			downloadLatest(null);
 	}
 
-	public void downloadLatest() {
+	public void downloadLatest(View v) {
 		DownloadManager downloadmanager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
 		Uri uri = Uri.parse("https://maven.usehover.com/apps/stax_release.apk");
 

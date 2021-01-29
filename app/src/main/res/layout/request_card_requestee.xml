@@ -25,7 +25,6 @@
 		    android:text="@string/btn_addcontact"
 		    android:textSize="@dimen/text_16"
 		    android:visibility="visible"
-		    android:onClick="addSomeone"
 		    android:fontFamily="font-medium"/>
 
 	</RelativeLayout>
