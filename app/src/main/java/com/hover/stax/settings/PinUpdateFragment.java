@@ -1,4 +1,4 @@
-package com.hover.stax.security;
+package com.hover.stax.settings;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;

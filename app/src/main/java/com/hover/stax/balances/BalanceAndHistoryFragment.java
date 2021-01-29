@@ -1,11 +1,10 @@
-package com.hover.stax.home;
+package com.hover.stax.balances;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
@@ -20,17 +19,17 @@ import com.amplitude.api.Amplitude;
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDropdownAdapter;
 import com.hover.stax.channels.ChannelListViewModel;
+import com.hover.stax.home.MainActivity;
+import com.hover.stax.permissions.PermissionsActivity;
 import com.hover.stax.requests.Request;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.transactions.TransactionHistoryAdapter;
 import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
-import com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout;
 import com.hover.stax.views.StaxCardView;
 
 import java.util.List;
@@ -73,23 +72,24 @@ public class BalanceAndHistoryFragment extends Fragment implements TransactionHi
 		setupRefreshBalance(view);
 	}
 
-	void setAddAccountVisibilityStageToOnlyText(boolean isOnlyTextVisible) {
-		if(isOnlyTextVisible) {
-			addAccountText.setVisibility(VISIBLE);
-			linkAccountLayout.setVisibility(GONE);
-			addAccountText.setOnClickListener(v -> setAddAccountVisibilityStageToOnlyText(false));
-
-		}else {
-			addAccountText.setVisibility(GONE);
-			linkAccountLayout.setVisibility(VISIBLE);
-		}
-	}
-
-
 	private void setUpBalances(View view) {
 		observeBalanceChannels(view);
 		observeBalanceError();
 	}
+
+	private void observeBalanceError() {
+		balancesViewModel.getBalanceError().observe(getViewLifecycleOwner(), showError-> {
+			if (showError) {
+				linkAccountLayout.setError(getString(R.string.refresh_balance_error));
+				linkAccountLayout.setErrorIconDrawable(R.drawable.ic_error_warning_24dp);
+				channelDropdown.setText(getString(R.string.link_an_account), false);
+			} else {
+				linkAccountLayout.setError(null);
+				linkAccountLayout.setErrorIconDrawable(0);
+			}
+		});
+	}
+
 	private void observeBalanceChannels(View view) {
 		StaxCardView balanceCard = view.findViewById(R.id.balance_card);
 		balanceCard.backButton.setVisibility(GONE);
@@ -109,26 +109,27 @@ public class BalanceAndHistoryFragment extends Fragment implements TransactionHi
 				balanceCard.backButton.setActivated(!balanceCard.backButton.isActivated());
 				balanceAdapter.updateShowBalance();
 			});
-			setAddAccountVisibilityStageToOnlyText(channels !=null && channels.size() > 0);
+			setAddAccountVisibilityStagTeToOnlyText(channels !=null && channels.size() > 0);
 		});
 	}
 
-	private void observeBalanceError() {
-		balancesViewModel.getBalanceError().observe(getViewLifecycleOwner(), showError-> {
-			if(showError) {
-				linkAccountLayout.setError(getString(R.string.refresh_balance_error));
-				linkAccountLayout.setErrorIconDrawable(R.drawable.ic_error_warning_24dp);
-			}else {
-				linkAccountLayout.setError(null);
-				linkAccountLayout.setErrorIconDrawable(0);
-			}
-		});
+	void setAddAccountVisibilityStagTeToOnlyText(boolean isOnlyTextVisible) {
+		if(isOnlyTextVisible) {
+			addAccountText.setVisibility(VISIBLE);
+			linkAccountLayout.setVisibility(GONE);
+			addAccountText.setOnClickListener(v -> setAddAccountVisibilityStagTeToOnlyText(false));
+
+		}else {
+			addAccountText.setVisibility(GONE);
+			linkAccountLayout.setVisibility(VISIBLE);
+		}
 	}
 
 	private void setUpSimChannels(View view) {
 		channelDropdown = view.findViewById(R.id.channelDropdown);
 		channelViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> {
 			if (channels == null || channels.size() == 0 || getContext() == null) return;
+
 			ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(channels,  false, getContext());
 			channelDropdown.setAdapter(channelDropdownAdapter);
 			channelDropdown.setText(getString(R.string.link_an_account), false);
@@ -141,11 +142,13 @@ public class BalanceAndHistoryFragment extends Fragment implements TransactionHi
 
 	private void setupRefreshBalance(View view) {
 		view.findViewById(R.id.refresh_accounts_btn).setOnClickListener(v -> {
-			BalanceAdapter.BalanceListener balanceListener = ((MainActivity) getActivity());
-			if(balanceListener !=null) {
-				balancesViewModel.saveChannelSelectedFromSpinner();
-				if(balancesViewModel.validateRun())balanceListener.triggerRefreshAll();
-			}
+			startActivity(new Intent(getContext(), PermissionsActivity.class));
+//			BalanceAdapter.BalanceListener balanceListener = ((MainActivity) getActivity());
+//			if (balanceListener != null) {
+//				This needs to be threaded properly!
+//				balancesViewModel.saveChannelSelectedFromSpinner();
+//				if (balancesViewModel.validateRun()) balanceListener.triggerRefreshAll();
+//			}
 		});
 	}
 

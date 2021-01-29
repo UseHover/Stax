@@ -70,17 +70,19 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> implements Tar
 		holder.id = view.findViewById(R.id.service_item_id);
 		holder.divider = view.findViewById(R.id.service_item_divider);
 	}
+
 	@SuppressLint("SetTextI18n")
 	private void setViewData(Channel channel) {
 		holder.id.setText(Integer.toString(channel.id));
 		holder.channelText.setText(channel.name);
 		Picasso.get().load(channel.logoUrl).into(this);
 	}
+
 	private void segmentSelectedChannelsIfNeeded(Channel currentChannel, int pos) {
 		if(segmentSelectedChannels) {
 			try{
 				Channel nextChannel = channels.get(pos + 1);
-				if (currentChannel.selected && !nextChannel.selected)  addDivider();
+				if (currentChannel.selected && !nextChannel.selected) addDivider();
 				else removeDivider();
 			}catch (IndexOutOfBoundsException e) { removeDivider(); }
 		} else removeDivider();

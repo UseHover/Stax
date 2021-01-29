@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="wrap_content"
+	android:layout_width="match_parent"
+	android:gravity="center"
+	android:padding="@dimen/hsdk__small_padding"
+	android:background="#F0F0F0">
+
+	<include android:id="@+id/access_list"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_weight="5"
+		layout="@layout/permission_mock_find_app" />
+
+	<ImageView android:id="@+id/arrow"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:contentDescription="@string/hsdk_next_ic"
+		android:src="@drawable/hsdk_ic_arrow_right"/>
+
+	<include android:id="@+id/overlay_example"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_weight="5"
+		layout="@layout/permission_mock_toggle" />
+</LinearLayout>

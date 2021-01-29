@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,12 +17,12 @@ import com.hover.stax.R;
 
 public class StaxDialog extends AlertDialog {
 
-	private Context context;
-	private View view;
+	protected Context context;
+	protected View view;
 	public AlertDialog dialog;
 
-	View.OnClickListener customNegListener;
-	View.OnClickListener customPosListener;
+	protected View.OnClickListener customNegListener;
+	protected View.OnClickListener customPosListener;
 
 	public StaxDialog(@NonNull Activity a) {
 		this(a, a.getLayoutInflater());
@@ -31,7 +32,7 @@ public class StaxDialog extends AlertDialog {
 		this(c, frag.getLayoutInflater());
 	}
 
-	public StaxDialog(Context c, LayoutInflater inflater) {
+	private StaxDialog(Context c, LayoutInflater inflater) {
 		super(c);
 		context = c;
 		view = inflater.inflate(R.layout.stax_dialog, null);
@@ -51,8 +52,13 @@ public class StaxDialog extends AlertDialog {
 	}
 
 	public StaxDialog setDialogMessage(int message) {
+		setDialogMessage(context.getString(message));
+		return this;
+	}
+
+	public StaxDialog setDialogMessage(String message) {
 		view.findViewById(R.id.message).setVisibility(View.VISIBLE);
-		((TextView) view.findViewById(R.id.message)).setText(context.getString(message));
+		((TextView) view.findViewById(R.id.message)).setText(message);
 		return this;
 	}
 
@@ -77,8 +83,19 @@ public class StaxDialog extends AlertDialog {
 		return this;
 	}
 
+	public StaxDialog highlightPos() {
+		((Button) view.findViewById(R.id.pos_btn)).setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+		view.findViewById(R.id.pos_btn).getBackground()
+			.setColorFilter(context.getResources().getColor(R.color.brightBlue), PorterDuff.Mode.SRC);
+		return this;
+	}
+
+	public AlertDialog createIt() {
+		return new AlertDialog.Builder(context, R.style.StaxDialog).setView(view).create();
+	}
+
 	public AlertDialog showIt() {
-		dialog = new AlertDialog.Builder(context, R.style.StaxDialog).setView(view).create();
+		dialog = createIt();
 		dialog.show();
 		return dialog;
 	}
@@ -86,12 +103,16 @@ public class StaxDialog extends AlertDialog {
 	private View.OnClickListener negListener = view -> {
 		if (customNegListener != null)
 			customNegListener.onClick(view);
-		dialog.dismiss();
+		if (dialog != null)
+			dialog.dismiss();
 	};
 
 	private View.OnClickListener posListener = view -> {
 		if (customPosListener != null)
 			customPosListener.onClick(view);
-		dialog.dismiss();
+		if (dialog != null)
+			dialog.dismiss();
 	};
+
+	public View getView() { return view; }
 }

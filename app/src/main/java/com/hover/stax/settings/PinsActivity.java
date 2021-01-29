@@ -1,4 +1,4 @@
-package com.hover.stax.security;
+package com.hover.stax.settings;
 
 import android.os.Bundle;
 import android.view.View;
@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.permissions.PermissionHelper;

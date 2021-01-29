@@ -21,7 +21,7 @@ import com.hover.stax.database.Constants;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
-import com.hover.stax.security.BiometricChecker;
+import com.hover.stax.settings.BiometricChecker;
 import com.hover.stax.utils.StagedViewModel;
 import com.hover.stax.views.StaxDialog;
 

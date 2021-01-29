@@ -16,9 +16,7 @@ import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
-import com.hover.stax.security.PermissionsFragment;
-import com.hover.stax.security.PinsActivity;
-import com.hover.stax.permissions.PermissionUtils;
+import com.hover.stax.settings.PinsActivity;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
@@ -54,8 +52,8 @@ public class ChannelsActivity extends AppCompatActivity {
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		if (requestCode == PermissionsFragment.PHONE_REQUEST && PermissionUtils.permissionsGranted(grantResults))
-			goToChannelSelection();
+//		if (requestCode == PermissionsFragment.PHONE && PermissionUtils.permissionsGranted(grantResults))
+//			goToChannelSelection();
 	}
 
 	private void goToChannelSelection() {

@@ -13,9 +13,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
-import com.hover.stax.SplashScreenActivity;
 import com.hover.stax.home.MainActivity;
-import com.hover.stax.security.SecurityFragment;
+import com.hover.stax.settings.SettingsFragment;
 import com.hover.stax.utils.Utils;
 import com.yariksoffice.lingver.Lingver;
 
@@ -32,7 +31,7 @@ public class SelectLanguageActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_language);
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_language)));
 
-		if (getIntent().hasExtra(SecurityFragment.LANG_CHANGE))
+		if (getIntent().hasExtra(SettingsFragment.LANG_CHANGE))
 			findViewById(R.id.backButton).setVisibility(View.VISIBLE);
 
 		selectedCode = Lingver.getInstance().getLanguage();
@@ -72,9 +71,9 @@ public class SelectLanguageActivity extends AppCompatActivity {
 		Lang.LogChange(selectedCode, SelectLanguageActivity.this);
 		Utils.saveInt(LANGUAGE_CHECK, 1, SelectLanguageActivity.this);
 		Intent i = new Intent(this, MainActivity.class);
-		if (getIntent().hasExtra(SecurityFragment.LANG_CHANGE)) {
+		if (getIntent().hasExtra(SettingsFragment.LANG_CHANGE)) {
 			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-			i.putExtra(SecurityFragment.LANG_CHANGE, true);
+			i.putExtra(SettingsFragment.LANG_CHANGE, true);
 		}
 		startActivity(i);
 		finish();
