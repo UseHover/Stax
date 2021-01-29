@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
@@ -19,8 +20,10 @@ public class ChannelDropdown extends TextInputLayout {
 	private AutoCompleteTextView textView;
 	private TextView link;
 
+	private String label;
 	private boolean showSelected, showLink, showError = false;
 	private Channel highlightedChannel;
+	private HighlightListener highlightListener;
 
 	public ChannelDropdown(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -35,6 +38,7 @@ public class ChannelDropdown extends TextInputLayout {
 	private void getAttrs(Context context, AttributeSet attrs) {
 		TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ChannelDropdown, 0, 0);
 		try {
+			label = a.getString(R.styleable.ChannelDropdown_label);
 			showSelected = a.getBoolean(R.styleable.ChannelDropdown_showSelected, true);
 			showLink = a.getBoolean(R.styleable.ChannelDropdown_showLink, false);
 		} finally {
@@ -43,9 +47,13 @@ public class ChannelDropdown extends TextInputLayout {
 	}
 
 	private void fillFromAttrs() {
+		if (label != null && !label.isEmpty())
+			input.setHint(label);
 		link.setOnClickListener(v -> toggleLink(false));
 		toggleLink(showLink);
 	}
+
+	public void setListener(HighlightListener hl) { highlightListener = hl; }
 
 	public void updateChannels(List<Channel> channels) {
 		if (channels == null || channels.size() == 0) return;
@@ -53,10 +61,13 @@ public class ChannelDropdown extends TextInputLayout {
 			textView.setText("");
 		ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(ChannelDropdownAdapter.sort(channels, showSelected), getContext());
 		textView.setAdapter(channelDropdownAdapter);
-		textView.setOnItemClickListener((adapterView, view2, pos, id) -> highlightChannel((Channel) adapterView.getItemAtPosition(pos)));
+		textView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((Channel) adapterView.getItemAtPosition(pos)));
 	}
 
-	private void highlightChannel(Channel channel) { highlightedChannel = channel; }
+	private void onSelect(Channel c) {
+		if (highlightListener != null) { highlightListener.highlightChannel(c); }
+		highlightedChannel = c;
+	}
 
 	public Channel getHighlighted() { return highlightedChannel; }
 
@@ -79,5 +90,9 @@ public class ChannelDropdown extends TextInputLayout {
 		if (VolleySingleton.isConnected(getContext()))
 			textView.setText("");
 		highlightedChannel = null;
+	}
+
+	public interface HighlightListener {
+		void highlightChannel(Channel c);
 	}
 }

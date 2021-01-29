@@ -21,7 +21,24 @@
 			android:id="@+id/editCard" />
 
 		<include layout="@layout/transfer_card_summary"
+			android:visibility="gone"
 			android:id="@+id/summaryCard" />
 
+		<androidx.coordinatorlayout.widget.CoordinatorLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+			<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+				android:id="@+id/fab"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginHorizontal="@dimen/margin_13"
+				android:layout_marginVertical="@dimen/margin_34"
+				android:layout_gravity="end|bottom"
+				app:layout_anchorGravity="end|bottom"
+				android:text="@string/btn_continue"
+				android:fontFamily="font-medium" />
+
+		</androidx.coordinatorlayout.widget.CoordinatorLayout>
 	</LinearLayout>
 </androidx.core.widget.NestedScrollView>

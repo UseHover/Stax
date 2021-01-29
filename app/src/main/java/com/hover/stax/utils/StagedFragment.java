@@ -4,14 +4,11 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.permissions.PermissionHelper;
@@ -22,28 +19,29 @@ import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.Constants;
 import com.hover.stax.permissions.PermissionUtils;
-import com.hover.stax.transfers.TransferViewModel;
 import com.hover.stax.views.Stax2LineItem;
 
-public abstract class StagedFragment extends Fragment {
+public abstract class StagedFragment extends Fragment implements ChannelDropdown.HighlightListener {
 
-	protected  ChannelDropdownViewModel channelDropdownViewModel;
-
+	protected ChannelDropdownViewModel channelDropdownViewModel;
 	protected ChannelDropdown channelDropdown;
+
 	protected Stax2LineItem accountValue;
 
 	protected void init(View root) {
 		channelDropdown = root.findViewById(R.id.channel_dropdown);
+		channelDropdown.setListener(this);
 		channelDropdownViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
 		channelDropdownViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
-
-		accountValue = root.findViewById(R.id.account_value);
 	}
 
-	protected void onActiveChannelChange(Channel c) {
-		if (c != null) {
-			accountValue.setTitle(c.name);
-		}
+	private void updateChannels() {
+
+	}
+
+	@Override
+	public void highlightChannel(Channel c) {
+		channelDropdownViewModel.setActiveChannel(c);
 	}
 
 	protected void contactPicker(int requestCode, Context c) {

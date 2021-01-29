@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -18,9 +19,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.actions.ActionSelect;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.contacts.StaxContactArrayAdapter;
@@ -29,7 +32,6 @@ import com.hover.stax.utils.StagedFragment;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.Stax2LineItem;
-import com.hover.stax.views.StaxDialog;
 
 public class TransferFragment extends StagedFragment {
 	private static final String TAG = "TransferFragment";
@@ -39,19 +41,25 @@ public class TransferFragment extends StagedFragment {
 	private RelativeLayout recipientEntry;
 	private TextInputLayout recipientLabel, amountEntry;
 	private EditText amountInput, noteInput;
-	private RadioGroup actionRadioGroup;
+	private ActionSelect actionSelect;
+	private RadioGroup isSelfRadioGroup;
 	private AutoCompleteTextView recipientAutocomplete;
 	private ImageButton contactButton;
+
+	private ExtendedFloatingActionButton fab;
 
 	private TextView amountValue, noteValue;
 	private Stax2LineItem recipientValue;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
 		channelDropdownViewModel = new ViewModelProvider(requireActivity()).get(ChannelDropdownViewModel.class);
 		transferViewModel = new ViewModelProvider(requireActivity()).get(TransferViewModel.class);
+
 		View root = inflater.inflate(R.layout.fragment_transfer, container, false);
-		super.onCreateView(inflater, container, savedInstanceState);
 		init(root);
+		startObservers(root);
+		startListeners();
 		return root;
 	}
 
@@ -65,7 +73,8 @@ public class TransferFragment extends StagedFragment {
 		amountEntry = root.findViewById(R.id.amountEntry);
 		amountInput = root.findViewById(R.id.amount_input);
 		amountInput.setText(transferViewModel.getAmount().getValue());
-		actionRadioGroup = root.findViewById(R.id.isSelfRadioGroup);
+		actionSelect = root.findViewById(R.id.action_select);
+		isSelfRadioGroup = root.findViewById(R.id.isSelfRadioGroup);
 		recipientEntry = root.findViewById(R.id.recipientEntry);
 		recipientLabel = root.findViewById(R.id.recipientLabel);
 		recipientAutocomplete = root.findViewById(R.id.recipient_autocomplete);
@@ -73,12 +82,14 @@ public class TransferFragment extends StagedFragment {
 		noteInput = root.findViewById(R.id.note_input);
 		noteInput.setText(transferViewModel.getNote().getValue());
 
+		fab = root.findViewById(R.id.fab);
+
 		super.init(root);
 	}
 
 	private void setTitle(View root) {
-		TextView summaryCardTitle = root.findViewById(R.id.summaryCard).findViewById(R.id.title);
 		TextView formCardTitle = root.findViewById(R.id.editCard).findViewById(R.id.title);
+		TextView summaryCardTitle = root.findViewById(R.id.summaryCard).findViewById(R.id.title);
 		if (summaryCardTitle != null) { summaryCardTitle.setText(getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.fab_airtime : R.string.fab_transfer)); }
 		if (formCardTitle != null) { formCardTitle.setText(getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.fab_airtime : R.string.fab_transfer)); }
 	}
@@ -111,35 +122,24 @@ public class TransferFragment extends StagedFragment {
 
 		transferViewModel.getNote().observe(getViewLifecycleOwner(), reason -> noteValue.setText(reason));
 
-		transferViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
+		channelDropdownViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
 			if (actions == null || actions.size() == 0) return;
-			actionRadioGroup.removeAllViews();
-//			root.findViewById(R.id.networkLabel).setVisibility(View.VISIBLE);
-			for (int i = 0; i < actions.size(); i++){
-				Action a =  actions.get(i);
-				a.context = getContext();
-				RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.stax_radio_button, null);
-				radioButton.setText(a.getLabel(transferViewModel.getType().equals(Action.AIRTIME) ? getContext() : null));
-				radioButton.setId(i);
-				radioButton.setChecked(i==0);
-				actionRadioGroup.addView(radioButton);
-			}
-
+			transferViewModel.setActions(actions);
+			actionSelect.updateActions(actions);
 		});
 
 		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
 			if (action != null) {
-				accountValue.setSubtitle(action.getNetworkSubtitle(getContext()));
 				root.findViewById(R.id.recipientEntry).setVisibility(action.requiresRecipient() ? View.VISIBLE : View.GONE);
-				if (!action.requiresRecipient()) recipientValue.setContent(action.getLabel(getContext()), "");
+				if (!action.requiresRecipient()) recipientValue.setContent(getString(R.string.self_choice), "");
 				else if (transferViewModel.getContact().getValue() != null)
 					recipientValue.setContact(transferViewModel.getContact().getValue(), transferViewModel.getRequest().getValue() != null);
 			}
 		});
 	}
 
-	protected void startListeners(View root) {
-		actionRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+	protected void startListeners() {
+		isSelfRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
 			Action action = transferViewModel.getActions().getValue().get(checkedId);
 			transferViewModel.setActiveAction(action);
 			setRecipientHint(action);
@@ -154,6 +154,8 @@ public class TransferFragment extends StagedFragment {
 		recipientAutocomplete.addTextChangedListener(recipientWatcher);
 		contactButton.setOnClickListener(view -> contactPicker(Constants.GET_CONTACT, view.getContext()));
 		noteInput.addTextChangedListener(noteWatcher);
+
+		fab.setOnClickListener(v -> transferViewModel.setEditing(!transferViewModel.getIsEditing().getValue()));
 	}
 
 	private void setRecipientHint(Action action) {

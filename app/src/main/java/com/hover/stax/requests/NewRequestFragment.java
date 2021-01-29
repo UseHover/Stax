@@ -120,7 +120,6 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 	}
 
 	protected void onActiveChannelChange(Channel c) {
-		super.onActiveChannelChange(c);
 		if (c != null && c.accountNo != null && !c.accountNo.isEmpty())
 			requesterAccountNo.setText(c.accountNo);
 	}

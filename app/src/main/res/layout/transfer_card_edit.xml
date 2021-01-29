@@ -15,7 +15,10 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" />
 
-	<include layout="@layout/transfer_action" />
+	<com.hover.stax.actions.ActionSelect
+		android:id="@+id/action_select"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" />
 
 	<include  layout="@layout/recipient_input" />
 

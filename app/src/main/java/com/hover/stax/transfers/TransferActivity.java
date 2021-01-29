@@ -3,7 +3,6 @@ package com.hover.stax.transfers;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -34,6 +33,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		super.onCreate(savedInstanceState);
 		channelDropdownViewModel = new ViewModelProvider(this).get(ChannelDropdownViewModel.class);
 		transferViewModel = new ViewModelProvider(this).get(TransferViewModel.class);
+		transferViewModel.setType(getIntent().getAction());
 
 		startObservers();
 		checkIntent();
@@ -41,7 +41,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void startObservers() {
-		transferViewModel.setType(getIntent().getAction());
+
 	}
 
 	private void checkIntent() {
@@ -102,8 +102,9 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		transferViewModel.checkSchedule();
 		makeCall(act);
 	}
+
 	private void makeCall(Action act) {
-		HoverSession.Builder hsb = new HoverSession.Builder(act, channelDropdownViewModel.getActiveChannel(),
+		HoverSession.Builder hsb = new HoverSession.Builder(act, channelDropdownViewModel.getActiveChannel().getValue(),
 				TransferActivity.this, Constants.TRANSFER_REQUEST)
 				.extra(Action.AMOUNT_KEY, transferViewModel.getAmount().getValue())
 				.extra(Action.NOTE_KEY, transferViewModel.getNote().getValue());
@@ -113,11 +114,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 	private void addRecipientInfo(HoverSession.Builder hsb) {
 		hsb.extra(Action.ACCOUNT_KEY, transferViewModel.getContact().getValue().phoneNumber)
-			.extra(Action.PHONE_KEY, transferViewModel.getContact().getValue().getNumberFormatForInput(transferViewModel.getActiveAction().getValue(), channelDropdownViewModel.getActiveChannel()));
-	}
-
-	private void setReasonEditTextVisibility() {
-		findViewById(R.id.reasonEditText).setVisibility(transferViewModel.getActiveAction().getValue()!= null && transferViewModel.getActiveAction().getValue().allowsNote() ? View.VISIBLE : View.GONE);
+			.extra(Action.PHONE_KEY, transferViewModel.getContact().getValue().getNumberFormatForInput(transferViewModel.getActiveAction().getValue(), channelDropdownViewModel.getActiveChannel().getValue()));
 	}
 
 	@Override

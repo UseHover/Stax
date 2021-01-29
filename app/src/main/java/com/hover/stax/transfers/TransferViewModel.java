@@ -7,7 +7,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.channels.Channel;
 import com.hover.stax.requests.Request;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.schedules.Schedule;
@@ -47,25 +49,27 @@ public class TransferViewModel extends StagedViewModel {
 		return type;
 	}
 
-//	public void loadActions(Request r) {
-//		if (r != null && selectedChannels.getValue() != null && selectedChannels.getValue().size() > 0) {
-//			new Thread(() -> {
-//				List<Action> actions = repo.getActions(getChannelIds(), r.requester_institution_id);
-//				filteredActions.postValue(actions);
-//				if (actions.size() <= 0)
-//					pageError.postValue(R.string.whoopsie);
-//			}).start();
-//			activeChannel.addSource(filteredActions, this::setActiveChannel);
-//		}
-//	}
+	public void setActions(List<Action> actions) {
+		filteredActions.postValue(actions);
+	}
 
-//	private int[] getChannelIds() {
-//		List<Channel> channels = selectedChannels.getValue();
-//		int[] ids = new int[channels.size()];
-//		for (int c = 0; c < channels.size(); c++)
-//			ids[c] = channels.get(c).id;
-//		return ids;
-//	}
+	public void loadActions(Request r, List<Channel> channels) {
+		if (r != null && channels != null && channels.size() > 0) {
+			new Thread(() -> {
+				List<Action> actions = repo.getActions(getChannelIds(channels), r.requester_institution_id);
+				filteredActions.postValue(actions);
+				if (actions.size() <= 0)
+					pageError.postValue(R.string.whoopsie);
+			}).start();
+		}
+	}
+
+	private int[] getChannelIds(List<Channel> channels) {
+		int[] ids = new int[channels.size()];
+		for (int c = 0; c < channels.size(); c++)
+			ids[c] = channels.get(c).id;
+		return ids;
+	}
 
 	LiveData<List<Action>> getActions() {
 		return filteredActions;

@@ -8,6 +8,7 @@
 	</declare-styleable>
 
 	<declare-styleable name="ChannelDropdown">
+		<attr name="label" format="string" />
 		<attr name="showError" format="boolean" />
 		<attr name="showSelected" format="boolean" />
 		<attr name="showLink" format="boolean" />

@@ -148,7 +148,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel {
 	public void setActiveChannel(Channel channel) {
 		activeChannel.setValue(channel);
 	}
-	public Channel getActiveChannel() { return activeChannel.getValue(); }
+	public LiveData<Channel> getActiveChannel() { return activeChannel; }
 
 	public LiveData<List<Action>> loadActions(String t) {
 		if ((t.equals(Action.BALANCE) && selectedChannels.getValue() == null) || (!t.equals(Action.BALANCE) && activeChannel.getValue() == null)) return null;
@@ -182,9 +182,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel {
 		return repo.getLiveActions(ids, t);
 	}
 
-	public LiveData<List<Action>> getActions() {
-		return actions;
-	}
+	public LiveData<List<Action>> getActions() { return actions; }
 
 	public void selectChannel(Channel channel, Context c) {
 		if (channel == null) return;
