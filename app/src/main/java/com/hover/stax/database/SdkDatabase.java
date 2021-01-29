@@ -38,7 +38,7 @@ public abstract class SdkDatabase extends RoomDatabase {
 						.addMigrations(M46_47)
 						.addMigrations(M47_48)
 						.addMigrations(M48_49)
-									   .addMigrations(M48_49)
+						.addMigrations(M49_50)
 						.build();
 				}
 			}

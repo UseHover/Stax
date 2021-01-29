@@ -108,7 +108,7 @@ public class PermissionsFragment extends Fragment {
 	public void requestAccessibility() {
 		Amplitude.getInstance().logEvent(getString(R.string.request_permaccessibility));
 		if (dialog != null) dialog.dismiss();
-		Hover.setAfterPermissionReturnActivity("com.hover.stax.security.PinsActivity", getContext());
+		Hover.setPermissionActivity("com.hover.stax.security.PinsActivity", getContext());
 		dialog = new PermissionDialog(getContext(), PermissionDialog.ACCESS).createDialog(getActivity());
 	}
 
