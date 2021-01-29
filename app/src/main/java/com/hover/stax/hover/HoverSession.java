@@ -31,7 +31,7 @@ final public class HoverSession {
 
 
 	private HoverSession(Builder b) {
-		Hover.setPermissionActivity("com.hover.stax.permissions.PermissionActivity", b.activity);
+		Hover.setPermissionActivity("com.hover.stax.permissions.PermissionsActivity", b.activity);
 		frag = b.fragment;
 		channel = b.channel;
 		requestCode = b.requestCode;
