@@ -83,6 +83,7 @@ public class TransferFragment extends StagedFragment {
 		noteInput.setText(transferViewModel.getNote().getValue());
 
 		fab = root.findViewById(R.id.fab);
+		root.findViewById(R.id.mainLayout).requestFocus();
 
 		super.init(root);
 	}
@@ -95,8 +96,6 @@ public class TransferFragment extends StagedFragment {
 	}
 
 	protected void startObservers(View root) {
-		root.findViewById(R.id.mainLayout).requestFocus();
-
 		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> amountValue.setText(Utils.formatAmount(amount)));
 		transferViewModel.getAmountError().observe(getViewLifecycleOwner(), amountError -> {
 			amountEntry.setError((amountError != null ? getString(amountError) : null));
@@ -122,7 +121,12 @@ public class TransferFragment extends StagedFragment {
 
 		transferViewModel.getNote().observe(getViewLifecycleOwner(), reason -> noteValue.setText(reason));
 
+		channelDropdownViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> {
+			actionSelect.setVisibility(channel == null ? View.GONE : View.VISIBLE);
+		});
+
 		channelDropdownViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
+			actionSelect.setVisibility(actions == null || actions.size() <= 1 ? View.GONE : View.VISIBLE);
 			if (actions == null || actions.size() == 0) return;
 			transferViewModel.setActions(actions);
 			actionSelect.updateActions(actions);
@@ -140,13 +144,7 @@ public class TransferFragment extends StagedFragment {
 	}
 
 	protected void startListeners() {
-//		actionSelect.findViewById(R.id.action_autoComplete).setOnClickListener(v -> actionSelect
-//			ArrayAdapter actionDropdownAdapter = new ArrayAdapter<Action>(getContext(), R.layout.stax_spinner_item);
-//			actionSelect.findViewById(R.id.action_autoComplete).setAdapter(actionDropdownAdapter);
-//			textView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelectRecipientNetwork((Action) adapterView.getItemAtPosition(pos)));
-//			if (filteredActions.size() == 1)
-//				onSelectRecipientNetwork((Action) uniqRecipientActions.get(0));
-//		});
+
 		isSelfRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
 			Action action = transferViewModel.getActions().getValue().get(checkedId);
 			transferViewModel.setActiveAction(action);

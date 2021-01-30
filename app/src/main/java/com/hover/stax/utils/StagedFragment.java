@@ -35,13 +35,9 @@ public abstract class StagedFragment extends Fragment implements ChannelDropdown
 		channelDropdown.setListener(this);
 		channelDropdownViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
 		channelDropdownViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
-		channelDropdownViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
+		channelDropdownViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> Log.e(TAG, "Got selected channels: " + channels.size()));
 		channelDropdownViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> Log.e(TAG, "Got new active channel: " + channel));
 		channelDropdownViewModel.getActions().observe(getViewLifecycleOwner(), actions -> Log.e(TAG, "Got new actions: " + actions.size()));
-	}
-
-	private void updateChannels() {
-
 	}
 
 	@Override

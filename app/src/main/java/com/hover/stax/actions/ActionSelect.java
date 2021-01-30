@@ -35,6 +35,7 @@ public class ActionSelect extends LinearLayout {
 		textView = findViewById(R.id.action_autoComplete);
 		isSelfRadio = findViewById(R.id.isSelfRadioGroup);
 		isSelfRadio.setVisibility(VISIBLE);
+		this.setVisibility(GONE);
 	}
 
 	public void updateActions(List<Action> filteredActions) {
@@ -42,11 +43,9 @@ public class ActionSelect extends LinearLayout {
 		actions = filteredActions;
 		uniqRecipientActions = sort(filteredActions);
 
-		ArrayAdapter actionDropdownAdapter = new ArrayAdapter<Action>(getContext(), R.layout.stax_spinner_item);
+		ArrayAdapter actionDropdownAdapter = new ArrayAdapter<>(getContext(), R.layout.stax_spinner_item, filteredActions);
 		textView.setAdapter(actionDropdownAdapter);
 		textView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelectRecipientNetwork((Action) adapterView.getItemAtPosition(pos)));
-		if (filteredActions.size() == 1)
-			onSelectRecipientNetwork((Action) uniqRecipientActions.get(0));
 	}
 
 	public static List<Action> sort(List<Action> actions) {
@@ -62,12 +61,10 @@ public class ActionSelect extends LinearLayout {
 	}
 
 	public void onSelectRecipientNetwork(Action action) {
-		Log.e(TAG, "Selected " + action);
 		List<Action> options = getWhoMeOptions(action.recipientInstitutionId());
 		if (options.size() == 1) {
 			selectedAction = action;
-			Log.e(TAG, "found only one");
-//			textView.setText(textView.getAdapter().getItem(0).toString(), false);
+			textView.setText(textView.getAdapter().getItem(0).toString(), false);
 		} else
 			createRadios(options);
 	}

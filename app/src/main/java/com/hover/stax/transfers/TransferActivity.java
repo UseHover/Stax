@@ -34,14 +34,10 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		channelDropdownViewModel = new ViewModelProvider(this).get(ChannelDropdownViewModel.class);
 		transferViewModel = new ViewModelProvider(this).get(TransferViewModel.class);
 		transferViewModel.setType(getIntent().getAction());
+		channelDropdownViewModel.setType(getIntent().getAction());
 
-		startObservers();
 		checkIntent();
 		setContentView(R.layout.activity_transfer);
-	}
-
-	private void startObservers() {
-
 	}
 
 	private void checkIntent() {
@@ -120,10 +116,8 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == Constants.TRANSFER_REQUEST) {
+		if (requestCode == Constants.TRANSFER_REQUEST)
 			returnResult(requestCode, resultCode, data);
-		} else if (requestCode == Constants.ADD_SERVICE)
-			startObservers();
 	}
 
 	private void returnResult(int type, int result, Intent data) {

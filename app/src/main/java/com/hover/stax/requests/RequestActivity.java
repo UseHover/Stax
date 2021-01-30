@@ -7,8 +7,8 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.permissions.PermissionHelper;
@@ -20,7 +20,7 @@ import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.StaxDialog;
 
 
-public class RequestActivity extends AbstractMessageSendingActivity implements SmsSentObserver.SmsSentListener {
+public class RequestActivity extends AppCompatActivity implements RequestSenderInterface, SmsSentObserver.SmsSentListener {
 	final public static String TAG = "TransferActivity";
 
 	private NewRequestViewModel requestViewModel;
@@ -85,25 +85,23 @@ public class RequestActivity extends AbstractMessageSendingActivity implements S
 		start();
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_send_sms_request));
 		new SmsSentObserver(this, requestViewModel.getRequestees().getValue(), new Handler(), this).start();
-		super.sendSms(view);
+		sendSms(requestViewModel.getRequest().getValue(), requestViewModel.getRequestees().getValue(), this);
 	}
 
 	public void sendWhatsapp(View view) {
 		start();
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_send_whatsapp_request));
-		super.sendWhatsapp(view);
+		sendWhatsapp(requestViewModel.getRequest().getValue(), requestViewModel.getRequestees().getValue(), null, this);
 	}
 
 	public void copyShareLink(View view) {
 		start();
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_copylink_request));
-		super.copyShareLink(view);
+		copyShareLink(requestViewModel.getRequest().getValue(), view.findViewById(R.id.copylink_share_selection), this);
 	}
 
 	private void start() {
 		requestViewModel.setStarted();
-		currentRequest = requestViewModel.getRequest().getValue();
-		requestees = requestViewModel.getRequestees().getValue();
 	}
 
 	@Override

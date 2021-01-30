@@ -63,7 +63,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel {
 		actions = Transformations.switchMap(activeChannel, this::loadActions);
 	}
 
-	private void setType(String t) { type.setValue(t); }
+	public void setType(String t) { type.setValue(t); }
 
 	private void loadChannels() {
 		if (allChannels == null) { allChannels = new MutableLiveData<>(); }
@@ -164,10 +164,12 @@ public class ChannelDropdownViewModel extends AndroidViewModel {
 	}
 
 	public LiveData<List<Action>> loadActions(Channel channel) {
+		Log.e(TAG, "Loading actions from channel. Type is: " + type.getValue());
 		return repo.getLiveActions(channel.id, type.getValue());
 	}
 
 	private LiveData<List<Action>> loadActions(Channel c, String t) {
+		Log.e(TAG, "Loading actions from channel. Type is: " + t);
 		return repo.getLiveActions(c.id, t);
 	}
 

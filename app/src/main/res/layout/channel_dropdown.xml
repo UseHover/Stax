@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:orientation="vertical">
 
 	<TextView
@@ -31,7 +32,6 @@
 			android:background="@null"
 			android:editable="false"
 			android:textSize="@dimen/text_21"
-			android:fontFamily="font-normal"
 			android:textColor="@color/offWhite"
 			android:textCursorDrawable="@null"
 			android:text="@string/allaccts_zerobody"/>

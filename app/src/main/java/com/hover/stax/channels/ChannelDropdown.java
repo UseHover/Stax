@@ -62,6 +62,9 @@ public class ChannelDropdown extends TextInputLayout {
 		ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(ChannelDropdownAdapter.sort(channels, showSelected), getContext());
 		textView.setAdapter(channelDropdownAdapter);
 		textView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((Channel) adapterView.getItemAtPosition(pos)));
+		for (Channel c: channels) {
+			if (c.defaultAccount) textView.setText(c.toString(), false);
+		}
 	}
 
 	private void onSelect(Channel c) {

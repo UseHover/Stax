@@ -30,10 +30,10 @@
 
 			<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 				android:id="@+id/fab"
+				style="@style/StaxFabExtended"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginHorizontal="@dimen/margin_13"
-				android:layout_marginVertical="@dimen/margin_34"
 				android:layout_gravity="end|bottom"
 				app:layout_anchorGravity="end|bottom"
 				android:text="@string/btn_continue"
