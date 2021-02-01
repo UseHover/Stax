@@ -143,12 +143,11 @@ public class BalanceAndHistoryFragment extends Fragment implements TransactionHi
 	private void setupRefreshBalance(View view) {
 		view.findViewById(R.id.refresh_accounts_btn).setOnClickListener(v -> {
 			startActivity(new Intent(getContext(), PermissionsActivity.class));
-//			BalanceAdapter.BalanceListener balanceListener = ((MainActivity) getActivity());
-//			if (balanceListener != null) {
-//				This needs to be threaded properly!
-//				balancesViewModel.saveChannelSelectedFromSpinner();
-//				if (balancesViewModel.validateRun()) balanceListener.triggerRefreshAll();
-//			}
+			BalanceAdapter.BalanceListener balanceListener = ((MainActivity) getActivity());
+			if (balanceListener != null) {
+				balancesViewModel.saveChannelSelectedFromSpinner();
+				if (balancesViewModel.validateRun()) balanceListener.triggerRefreshAll();
+			}
 		});
 	}
 

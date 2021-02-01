@@ -1,14 +1,12 @@
 package com.hover.stax.requests;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,10 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.contacts.StaxContact;
-import com.hover.stax.database.Constants;
-import com.hover.stax.utils.StagedFragment;
+import com.hover.stax.utils.abstractClasses.StagedFragment;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.Stax2LineItem;

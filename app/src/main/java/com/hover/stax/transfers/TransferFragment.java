@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,25 +18,19 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
-import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelsActivity;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.contacts.StaxContactArrayAdapter;
 import com.hover.stax.database.Constants;
-import com.hover.stax.utils.StagedFragment;
+import com.hover.stax.utils.abstractClasses.StagedFragment;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.Stax2LineItem;
 import com.hover.stax.views.StaxDialog;
-
-import static com.hover.stax.transfers.TransferStage.*;
-
-import java.util.List;
 
 public class TransferFragment extends StagedFragment {
 	private static final String TAG = "TransferFragment";

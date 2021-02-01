@@ -24,7 +24,7 @@ import com.hover.stax.channels.ChannelDropdownAdapter;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.contacts.StaxContactArrayAdapter;
 import com.hover.stax.database.Constants;
-import com.hover.stax.utils.EditStagedFragment;
+import com.hover.stax.utils.abstractClasses.EditStagedFragment;
 
 
 public class EditTransferFragment extends EditStagedFragment {

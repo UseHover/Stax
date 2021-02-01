@@ -1,4 +1,4 @@
-package com.hover.stax.utils;
+package com.hover.stax.utils.abstractClasses;
 
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 
 import com.hover.stax.R;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.utils.DateUtils;
 
 
 public abstract class EditStagedFragment extends StagedFragment {

@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
-import com.hover.stax.utils.EditStagedFragment;
+import com.hover.stax.utils.abstractClasses.EditStagedFragment;
 import com.hover.stax.utils.UIHelper;
 
 public class EditRequestFragment extends EditStagedFragment implements RecipientAdapter.UpdateListener {

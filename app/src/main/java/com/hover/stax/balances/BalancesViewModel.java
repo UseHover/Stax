@@ -81,10 +81,13 @@ public class BalancesViewModel extends AndroidViewModel {
 	public void saveChannelSelectedFromSpinner() {
 		Channel channel = selectedFromSpinner.getValue() != null ? selectedFromSpinner.getValue() : null;
 		if(channel !=null) {
-					channel.selected = true;
-					channel.defaultAccount = true;
-					repo.update(channel);
-					FirebaseMessaging.getInstance().subscribeToTopic("channel-" + channel.id);
+			new Thread(() -> {
+				channel.selected = true;
+				channel.defaultAccount = true;
+				repo.update(channel);
+				FirebaseMessaging.getInstance().subscribeToTopic("channel-" + channel.id);
+			}).start();
+
 		}
 
 	}
