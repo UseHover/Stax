@@ -1,6 +1,7 @@
 package com.hover.stax.transfers;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -21,8 +22,6 @@ import java.util.List;
 public class TransferViewModel extends StagedViewModel {
 	final private String TAG = "TransferViewModel";
 
-	private String type = Action.P2P;
-
 	private MediatorLiveData<List<Action>> filteredActions = new MediatorLiveData<>();
 	private MediatorLiveData<Action> activeAction = new MediatorLiveData<>();
 
@@ -30,15 +29,18 @@ public class TransferViewModel extends StagedViewModel {
 	private MutableLiveData<StaxContact> contact = new MutableLiveData<>();
 	private MutableLiveData<String> note = new MutableLiveData<>();
 
-	private MutableLiveData<Integer> amountError = new MutableLiveData<>();
-	private MutableLiveData<Integer> recipientError = new MutableLiveData<>();
-	private MutableLiveData<Integer> pageError = new MutableLiveData<>();
+	private MediatorLiveData<Integer> amountError = new MediatorLiveData<>();
+	private MediatorLiveData<String> actionError = new MediatorLiveData<>();
+	private MediatorLiveData<Integer> recipientError = new MediatorLiveData<>();
 
 	protected LiveData<Request> request = new MutableLiveData<>();
 
 	public TransferViewModel(Application application) {
 		super(application);
 		activeAction.addSource(filteredActions, this::setActiveActionIfOutOfDate);
+		amountError.addSource(amount, amount -> { if (amount != null) amountError.setValue(null); });
+		actionError.addSource(activeAction, activeAction -> { if (activeAction != null) actionError.setValue(null); });
+		recipientError.addSource(contact, contact -> { if (contact != null) recipientError.setValue(null); });
 	}
 
 	void setType(String transaction_type) {
@@ -53,50 +55,21 @@ public class TransferViewModel extends StagedViewModel {
 		filteredActions.postValue(actions);
 	}
 
-	public void loadActions(Request r, List<Channel> channels) {
-		if (r != null && channels != null && channels.size() > 0) {
-			new Thread(() -> {
-				List<Action> actions = repo.getActions(getChannelIds(channels), r.requester_institution_id);
-				filteredActions.postValue(actions);
-				if (actions.size() <= 0)
-					pageError.postValue(R.string.whoopsie);
-			}).start();
-		}
-	}
-
-	private int[] getChannelIds(List<Channel> channels) {
-		int[] ids = new int[channels.size()];
-		for (int c = 0; c < channels.size(); c++)
-			ids[c] = channels.get(c).id;
-		return ids;
-	}
-
 	LiveData<List<Action>> getActions() {
 		return filteredActions;
 	}
 
 	private void setActiveActionIfOutOfDate(List<Action> actions) {
+		Log.e(TAG, "maybe setting active action");
 		if (actions != null && actions.size() > 0 && (activeAction.getValue() == null || !actions.contains(activeAction.getValue()))) {
+			Log.e(TAG, actions.get(0).toString());
 			activeAction.setValue(actions.get(0));
 		}
 	}
 
 	void setActiveAction(Action action) {
+		Log.e(TAG, "setting active action " + action);
 		activeAction.postValue(action);
-	}
-	void setActiveAction(String actionString) {
-		if (filteredActions.getValue() == null || filteredActions.getValue().size() == 0) {
-			return;
-		}
-		for (Action a : filteredActions.getValue()) {
-			if (a.toString().equals(actionString))
-				activeAction.postValue(a);
-		}
-	}
-
-	void setActiveAction(List<Action> actions) {
-		if (actions == null || actions.size() == 0) return;
-		activeAction.postValue(actions.get(0));
 	}
 
 	LiveData<Action> getActiveAction() {
@@ -104,6 +77,11 @@ public class TransferViewModel extends StagedViewModel {
 			activeAction = new MediatorLiveData<>();
 		}
 		return activeAction;
+	}
+
+	LiveData<String> getActiveActionError() {
+		if (actionError == null) { actionError = new MediatorLiveData<>(); }
+		return actionError;
 	}
 
 	void setAmount(String a) {
@@ -116,8 +94,9 @@ public class TransferViewModel extends StagedViewModel {
 		}
 		return amount;
 	}
+
 	LiveData<Integer> getAmountError() {
-		if (amountError == null) { amountError = new MutableLiveData<>(); }
+		if (amountError == null) { amountError = new MediatorLiveData<>(); }
 		return amountError;
 	}
 
@@ -144,13 +123,8 @@ public class TransferViewModel extends StagedViewModel {
 	}
 
 	LiveData<Integer> getRecipientError() {
-		if (recipientError == null) { recipientError = new MutableLiveData<>(); }
+		if (recipientError == null) { recipientError = new MediatorLiveData<>(); }
 		return recipientError;
-	}
-
-	LiveData<Integer> getPageError() {
-		if (pageError == null) { pageError = new MutableLiveData<>(); }
-		return pageError;
 	}
 
 	public LiveData<Schedule> getSchedule() {
@@ -173,6 +147,22 @@ public class TransferViewModel extends StagedViewModel {
 			note.setValue(" ");
 		}
 		return note;
+	}
+
+	boolean validates() {
+		boolean valid = true;
+		if (amount.getValue() == null || amount.getValue().isEmpty()) {
+			valid = false;
+			amountError.setValue(R.string.amount_fielderror);
+		}
+		if (activeAction.getValue() == null) {
+			valid = false;
+			actionError.setValue(getApplication().getString(R.string.no_actions_fielderror, getHumanFriendlyType(getApplication())));
+		} else if (activeAction.getValue().requiresRecipient() && contact.getValue() == null) {
+			valid = false;
+			recipientError.setValue(R.string.recipient_fielderror);
+		}
+		return valid;
 	}
 
 	boolean requiresActionChoice() { // in last case, should have request network as choice

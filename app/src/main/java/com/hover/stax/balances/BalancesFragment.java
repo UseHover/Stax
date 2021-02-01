@@ -67,7 +67,6 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 	private void setUpBalances(View view) {
 		initBalanceCard(view);
 		balancesViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> updateServices(channels, view));
-		balancesViewModel.getBalanceError().observe(getViewLifecycleOwner(), show -> channelDropdown.showError(show));
 	}
 
 	private void initBalanceCard(View view) {

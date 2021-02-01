@@ -139,17 +139,19 @@
 	<style name="StaxLabeledDropdown" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 		<item name="android:layout_marginStart">@dimen/margin_10</item>
 		<item name="android:layout_marginEnd">@dimen/margin_10</item>
+		<item name="android:layout_marginBottom">@dimen/margin_8</item>
 		<item name="boxStrokeColor">@color/offWhite</item>
 		<item name="boxStrokeWidth">2dp</item>
 		<item name="boxBackgroundColor">@color/cardViewColor</item>
 		<item name="android:textColorHint">@color/offWhite</item>
 		<item name="hintTextColor">@color/offWhite</item>
 		<item name="android:textColor">@color/offWhite</item>
-		<item name="android:textSize">@dimen/text_21</item>
+		<item name="android:textSize">@dimen/text_13</item>
 		<item name="fontFamily">font-medium</item>
 		<item name="android:fontFamily">font-medium</item>
 		<item name="endIconTint">@color/offWhite</item>
 		<item name="materialThemeOverlay">@style/StaxDropdownPopup</item>
+		<item name="errorTextColor">@color/bright_red</item>
 		<item name="errorEnabled">true</item>
 	</style>
 

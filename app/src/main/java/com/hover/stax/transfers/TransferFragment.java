@@ -3,6 +3,7 @@ package com.hover.stax.transfers;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,16 +30,16 @@ import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.contacts.StaxContactArrayAdapter;
 import com.hover.stax.database.Constants;
 import com.hover.stax.utils.StagedFragment;
+import com.hover.stax.utils.StagedViewModel;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.Stax2LineItem;
 
-public class TransferFragment extends StagedFragment {
+public class TransferFragment extends StagedFragment implements ActionSelect.HighlightListener {
 	private static final String TAG = "TransferFragment";
 
 	private TransferViewModel transferViewModel;
 
-	private RelativeLayout recipientEntry;
 	private TextInputLayout recipientLabel, amountEntry;
 	private EditText amountInput, noteInput;
 	private ActionSelect actionSelect;
@@ -54,7 +55,8 @@ public class TransferFragment extends StagedFragment {
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		channelDropdownViewModel = new ViewModelProvider(requireActivity()).get(ChannelDropdownViewModel.class);
-		transferViewModel = new ViewModelProvider(requireActivity()).get(TransferViewModel.class);
+		stagedViewModel = new ViewModelProvider(requireActivity()).get(TransferViewModel.class);
+		transferViewModel = (TransferViewModel) stagedViewModel;
 
 		View root = inflater.inflate(R.layout.fragment_transfer, container, false);
 		init(root);
@@ -65,7 +67,10 @@ public class TransferFragment extends StagedFragment {
 
 	@Override
 	protected void init(View root) {
+		editCard = root.findViewById(R.id.editCard);
+		summaryCard = root.findViewById(R.id.summaryCard);
 		setTitle(root);
+
 		amountValue = root.findViewById(R.id.amountValue);
 		recipientValue = root.findViewById(R.id.recipientValue);
 		noteValue = root.findViewById(R.id.reasonValue);
@@ -75,7 +80,6 @@ public class TransferFragment extends StagedFragment {
 		amountInput.setText(transferViewModel.getAmount().getValue());
 		actionSelect = root.findViewById(R.id.action_select);
 		isSelfRadioGroup = root.findViewById(R.id.isSelfRadioGroup);
-		recipientEntry = root.findViewById(R.id.recipientEntry);
 		recipientLabel = root.findViewById(R.id.recipientLabel);
 		recipientAutocomplete = root.findViewById(R.id.recipient_autocomplete);
 		contactButton = root.findViewById(R.id.contact_button);
@@ -96,10 +100,25 @@ public class TransferFragment extends StagedFragment {
 	}
 
 	protected void startObservers(View root) {
+		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), this::setRecipientHint);
+
+		channelDropdownViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> {
+			actionSelect.setVisibility(channel == null ? View.GONE : View.VISIBLE);
+		});
+
+		channelDropdownViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
+			actionSelect.setVisibility(actions == null || actions.size() <= 1 ? View.GONE : View.VISIBLE);
+			if (actions == null || actions.size() == 0) return;
+			transferViewModel.setActions(actions);
+			actionSelect.updateActions(actions);
+		});
+		channelDropdownViewModel.getError().observe(getViewLifecycleOwner(), error -> channelDropdown.setError(error != null ? getString(error) : null));
+
+		transferViewModel.getActiveActionError().observe(getViewLifecycleOwner(), error -> actionSelect.setError(error));
+
 		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> amountValue.setText(Utils.formatAmount(amount)));
 		transferViewModel.getAmountError().observe(getViewLifecycleOwner(), amountError -> {
 			amountEntry.setError((amountError != null ? getString(amountError) : null));
-			amountEntry.setErrorIconDrawable(0);
 		});
 
 		transferViewModel.getRecentContacts().observe(getViewLifecycleOwner(), contacts -> {
@@ -117,39 +136,11 @@ public class TransferFragment extends StagedFragment {
 			recipientLabel.setErrorIconDrawable(0);
 		});
 
-		transferViewModel.getPageError().observe(getViewLifecycleOwner(), error -> UIHelper.flashMessage(getContext(), getString(error)));
-
 		transferViewModel.getNote().observe(getViewLifecycleOwner(), reason -> noteValue.setText(reason));
-
-		channelDropdownViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> {
-			actionSelect.setVisibility(channel == null ? View.GONE : View.VISIBLE);
-		});
-
-		channelDropdownViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
-			actionSelect.setVisibility(actions == null || actions.size() <= 1 ? View.GONE : View.VISIBLE);
-			if (actions == null || actions.size() == 0) return;
-			transferViewModel.setActions(actions);
-			actionSelect.updateActions(actions);
-		});
-
-		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
-			actionSelect.onSelectRecipientNetwork(action);
-			if (action != null) {
-				root.findViewById(R.id.recipientEntry).setVisibility(action.requiresRecipient() ? View.VISIBLE : View.GONE);
-				if (!action.requiresRecipient()) recipientValue.setContent(getString(R.string.self_choice), "");
-				else if (transferViewModel.getContact().getValue() != null)
-					recipientValue.setContact(transferViewModel.getContact().getValue(), transferViewModel.getRequest().getValue() != null);
-			}
-		});
 	}
 
 	protected void startListeners() {
-
-		isSelfRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-			Action action = transferViewModel.getActions().getValue().get(checkedId);
-			transferViewModel.setActiveAction(action);
-			setRecipientHint(action);
-		});
+		actionSelect.setListener(this);
 
 		recipientAutocomplete.setOnItemClickListener((adapterView, view, pos, id) -> {
 			StaxContact contact = (StaxContact) adapterView.getItemAtPosition(pos);
@@ -161,15 +152,32 @@ public class TransferFragment extends StagedFragment {
 		contactButton.setOnClickListener(view -> contactPicker(Constants.GET_CONTACT, view.getContext()));
 		noteInput.addTextChangedListener(noteWatcher);
 
-		fab.setOnClickListener(v -> transferViewModel.setEditing(!transferViewModel.getIsEditing().getValue()));
+		fab.setOnClickListener(v -> fabClicked());
+	}
+
+	@Override
+	public void highlightAction(Action a) { transferViewModel.setActiveAction(a); }
+
+	private void fabClicked() {
+		if (transferViewModel.getIsEditing().getValue()) {
+			if (!channelDropdownViewModel.validates() || !transferViewModel.validates()) {
+				UIHelper.flashMessage(getContext(), getString(R.string.toast_pleasefix));
+				return;
+			}
+			transferViewModel.setEditing(false);
+		} else
+			((TransferActivity) getActivity()).submit();
 	}
 
 	private void setRecipientHint(Action action) {
-		if (action.getRequiredParams().contains(Action.ACCOUNT_KEY)) {
-			recipientLabel.setHint(getString(R.string.recipientacct_label));
-		} else {
-			recipientLabel.setHint(getString(R.string.recipientphone_label));
-		}
+		Log.e(TAG, "update hint to " + action + ":" + action.getPronoun(getContext()));
+		Log.e(TAG, "requires recipient? " + action.requiresRecipient());
+		editCard.findViewById(R.id.recipient_entry).setVisibility(action.requiresRecipient() ? View.VISIBLE : View.GONE);
+		summaryCard.findViewById(R.id.recipientRow).setVisibility(action.requiresRecipient() ? View.VISIBLE : View.GONE);
+		if (!action.requiresRecipient())
+			recipientValue.setContent(getString(R.string.self_choice), "");
+		else
+			recipientLabel.setHint(action.getRequiredParams().contains(Action.ACCOUNT_KEY) ? getString(R.string.recipientacct_label) : getString(R.string.recipientphone_label));
 	}
 
 	protected void onContactSelected(int requestCode, StaxContact contact) {

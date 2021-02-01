@@ -18,6 +18,7 @@
 		android:id="@+id/channel_dropdown"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		app:showLink="true"
 		app:showSelected="false"/>
 
 	<RelativeLayout

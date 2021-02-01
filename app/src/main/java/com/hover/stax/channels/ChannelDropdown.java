@@ -3,6 +3,7 @@ package com.hover.stax.channels;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -15,6 +16,7 @@ import com.hover.stax.R;
 import java.util.List;
 
 public class ChannelDropdown extends TextInputLayout {
+	private static String TAG = "ChannelDropdown";
 
 	private TextInputLayout input;
 	private AutoCompleteTextView textView;
@@ -63,7 +65,7 @@ public class ChannelDropdown extends TextInputLayout {
 		textView.setAdapter(channelDropdownAdapter);
 		textView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((Channel) adapterView.getItemAtPosition(pos)));
 		for (Channel c: channels) {
-			if (c.defaultAccount) textView.setText(c.toString(), false);
+			if (c.defaultAccount && !showLink) textView.setText(c.toString(), false);
 		}
 	}
 
@@ -74,19 +76,17 @@ public class ChannelDropdown extends TextInputLayout {
 
 	public Channel getHighlighted() { return highlightedChannel; }
 
-	public void toggleLink(boolean showLink) {
-		link.setVisibility(showLink ? VISIBLE : GONE);
-		input.setVisibility(showLink ? GONE : VISIBLE);
-		if (showLink) {
+	public void toggleLink(boolean show) {
+		link.setVisibility(show ? VISIBLE : GONE);
+		input.setVisibility(show ? GONE : VISIBLE);
+		if (show) {
 			reset();
 		}
 	}
 
-	public void showError(boolean show) {
-		input.setError(show ? getContext().getString(R.string.refresh_balance_error) : null);
-		input.setErrorIconDrawable(show ? R.drawable.ic_error_warning_24dp : 0);
-		if (show)
-			textView.setText(getContext().getString(R.string.link_an_account), false);
+	public void setError(String message) {
+		input.setError(message);
+		input.setErrorIconDrawable(message != null ? R.drawable.ic_error_warning_24dp : 0);
 	}
 
 	public void reset() {

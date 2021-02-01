@@ -15,6 +15,7 @@ import androidx.lifecycle.Transformations;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.languages.SelectLanguageActivity;
@@ -27,7 +28,7 @@ import java.util.List;
 
 import static com.hover.stax.database.Constants.LANGUAGE_CHECK;
 
-public class ChannelDropdownViewModel extends AndroidViewModel {
+public class ChannelDropdownViewModel extends AndroidViewModel implements ChannelDropdown.HighlightListener {
 	public final static String TAG = "ChannelDropdownVM";
 
 	private DatabaseRepo repo;
@@ -41,6 +42,8 @@ public class ChannelDropdownViewModel extends AndroidViewModel {
 	private MediatorLiveData<List<Channel>> simChannels;
 	private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
 	private LiveData<List<Action>> actions = new MediatorLiveData<>();
+
+	private MediatorLiveData<Integer> error = new MediatorLiveData<>();
 
 	public ChannelDropdownViewModel(Application application) {
 		super(application);
@@ -57,10 +60,15 @@ public class ChannelDropdownViewModel extends AndroidViewModel {
 		simChannels.addSource(simHniList, this::onSimUpdate);
 
 		activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull);
+		error.addSource(activeChannel, channel -> { if (channel != null) error.setValue(null); });
 
 		actions = Transformations.switchMap(type, this::loadActions);
 		actions = Transformations.switchMap(selectedChannels, this::loadActions);
 		actions = Transformations.switchMap(activeChannel, this::loadActions);
+		error.addSource(actions, actions -> {
+			if (activeChannel.getValue() != null && (actions == null || actions.size() == 0))
+				error.setValue(R.string.no_actions_fielderror);
+		});
 	}
 
 	public void setType(String t) { type.setValue(t); }
@@ -147,13 +155,13 @@ public class ChannelDropdownViewModel extends AndroidViewModel {
 		}
 	}
 
-	public void setActiveChannel(int channel_id) {
-//		activeChannel.setValue(getChannelById(channel_id));
-	}
 	public void setActiveChannel(Channel channel) {
 		activeChannel.setValue(channel);
 	}
 	public LiveData<Channel> getActiveChannel() { return activeChannel; }
+
+	@Override
+	public void highlightChannel(Channel c) { setActiveChannel(c); }
 
 	public LiveData<List<Action>> loadActions(String t) {
 		if ((t.equals(Action.BALANCE) && selectedChannels.getValue() == null) || (!t.equals(Action.BALANCE) && activeChannel.getValue() == null)) return null;
@@ -199,6 +207,23 @@ public class ChannelDropdownViewModel extends AndroidViewModel {
 		channel.defaultAccount = selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0;
 		FirebaseMessaging.getInstance().subscribeToTopic("channel-" + channel.id);
 		repo.update(channel);
+	}
+
+	public boolean validates() {
+		boolean valid = true;
+		if (activeChannel.getValue() == null) {
+			valid = false;
+			error.setValue(R.string.channel_error_noselect);
+		} else if (actions.getValue() == null || actions.getValue().size() == 0) {
+			valid = false;
+			error.setValue(R.string.no_actions_fielderror);
+		}
+		return valid;
+	}
+
+	public LiveData<Integer> getError() {
+		if (error == null) { error = new MediatorLiveData<>(); }
+		return error;
 	}
 
 	@Override

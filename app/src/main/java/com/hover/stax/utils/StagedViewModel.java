@@ -18,6 +18,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.amplitude.api.Amplitude;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.stax.R;
+import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.DatabaseRepo;
@@ -30,6 +31,7 @@ import java.util.List;
 public abstract class StagedViewModel extends AndroidViewModel {
 
 	protected DatabaseRepo repo;
+	protected String type = Action.P2P;
 
 	protected LiveData<List<StaxContact>> recentContacts = new MutableLiveData<>();
 	protected MutableLiveData<Schedule> schedule = new MutableLiveData<>();
@@ -60,5 +62,16 @@ public abstract class StagedViewModel extends AndroidViewModel {
 	protected void saveSchedule(Schedule s) {
 		Amplitude.getInstance().logEvent(getApplication().getString(R.string.scheduled_complete, s.type));
 		repo.insert(s);
+	}
+
+	protected String getHumanFriendlyType(Context c) {
+		switch (type) {
+			case Action.P2P: return c.getString(R.string.send_money);
+			case Action.AIRTIME: return c.getString(R.string.buy_airtime);
+			case Action.ME2ME: return c.getString(R.string.move_money);
+			case Action.BALANCE:
+			default:
+				return c.getString(R.string.check_balance);
+		}
 	}
 }

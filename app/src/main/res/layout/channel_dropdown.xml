@@ -33,7 +33,9 @@
 			android:editable="false"
 			android:textSize="@dimen/text_21"
 			android:textColor="@color/offWhite"
+			android:fontFamily="font-normal"
 			android:textCursorDrawable="@null"
+			app:errorTextColor="@color/bright_red"
 			android:text="@string/allaccts_zerobody"/>
 
 	</com.google.android.material.textfield.TextInputLayout>

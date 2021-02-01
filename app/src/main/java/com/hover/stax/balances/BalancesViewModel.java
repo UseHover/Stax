@@ -132,9 +132,6 @@ public class BalancesViewModel extends AndroidViewModel {
 		runFlag.setValue(ALL);
 	}
 
-	public void setRunBalanceError(boolean showError) {runBalanceError.postValue(showError);}
-	public LiveData<Boolean> getBalanceError() { return runBalanceError; }
-
 	private void onSetRunning(Integer flag) {
 		if (flag == null || flag == NONE) toRun.setValue(new ArrayList<>());
 		else if (flag == ALL) startRun(actions.getValue());

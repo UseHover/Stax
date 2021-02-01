@@ -20,29 +20,36 @@ import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.Constants;
 import com.hover.stax.permissions.PermissionUtils;
+import com.hover.stax.transfers.TransferViewModel;
 import com.hover.stax.views.Stax2LineItem;
+import com.hover.stax.views.StaxCardView;
 
-public abstract class StagedFragment extends Fragment implements ChannelDropdown.HighlightListener {
+public abstract class StagedFragment extends Fragment {
 	private static String TAG = "StagedFragment";
 
+	protected StagedViewModel stagedViewModel;
 	protected ChannelDropdownViewModel channelDropdownViewModel;
+
+	protected StaxCardView editCard, summaryCard;
 	protected ChannelDropdown channelDropdown;
 
 	protected Stax2LineItem accountValue;
 
 	protected void init(View root) {
 		channelDropdown = root.findViewById(R.id.channel_dropdown);
-		channelDropdown.setListener(this);
+		channelDropdown.setListener(channelDropdownViewModel);
 		channelDropdownViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
 		channelDropdownViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
 		channelDropdownViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> Log.e(TAG, "Got selected channels: " + channels.size()));
 		channelDropdownViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> Log.e(TAG, "Got new active channel: " + channel));
 		channelDropdownViewModel.getActions().observe(getViewLifecycleOwner(), actions -> Log.e(TAG, "Got new actions: " + actions.size()));
+
+		stagedViewModel.getIsEditing().observe(getViewLifecycleOwner(), this::showEdit);
 	}
 
-	@Override
-	public void highlightChannel(Channel c) {
-		channelDropdownViewModel.setActiveChannel(c);
+	private void showEdit(boolean isEditing) {
+		editCard.setVisibility(isEditing ? View.VISIBLE : View.GONE);
+		summaryCard.setVisibility(isEditing ? View.GONE : View.VISIBLE);
 	}
 
 	protected void contactPicker(int requestCode, Context c) {

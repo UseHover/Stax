@@ -73,7 +73,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_request_link));
 	}
 
-	private void submit() {
+	void submit() {
 		transferViewModel.saveContact();
 		authenticate();
 	}

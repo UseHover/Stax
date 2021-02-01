@@ -90,7 +90,7 @@
 	<string name="countryaccts_cardhead">Other services in %1$s</string>
 	<string name="allaccts_cardhead">All services</string>
 	<string name="allaccts_zerobody">Please turn on data to load services.</string>
-	<string name="toast_error_noselect">You must select at least 1 service.</string>
+	<string name="channel_error_noselect">You must select a service.</string>
 	<string name="perm_cardbody">Stax runs USSD sessions in the background so you don\'t have to. To do this we need:</string>
 	<string name="sms_cardbody">SMS permissions</string>
 	<string name="overlay_cardbody">Overlay permission</string>
@@ -187,14 +187,13 @@
 	<string name="loading_dialoghead">Loading, one moment</string>
 	<string name="amount_cardhead">Amount</string>
 	<string name="amount_label">How much money?</string>
-	<string name="channel_label">Account</string>
+	<string name="channel_label">Select Account</string>
 	<string name="fromacct_cardhead">From this account</string>
 	<string name="fromacct_fielderror">You must select an sending account. If you have none please tap <u>add account</u>.</string>
 	<string name="actions_fielderror">This account does not support buy airtime. Please select a different account.</string>
 	<string name="link_addacct"><u>+ Link another account</u></string>
 	<string name="recipientnetwork_cardhead">To network</string>
 	<string name="recipientnetwork_label">To this network</string>
-	<string name="recipientnetwork_fielderror">No recipient network chosen.</string>
 	<string name="whoopsie">Something went wrong, the problem has been reported. Please try again.</string>
 	<string name="recipient_cardhead">To this number</string>
 	<string name="recipientphone_label">Contact phone number</string>
@@ -204,6 +203,8 @@
 	<string name="recipient_fielderror">Please enter a phone or account number for this contact.</string>
 	<string name="amount_fielderror">Please enter an amount.</string>
 	<string name="service_fielderror">Please select a service.</string>
+	<string name="no_actions_fielderror">This service cannot be used for %1$s.</string>
+	<string name="toast_pleasefix">Please fix the errors shown in red.</string>
 	<string name="self_choice">Myself</string>
 	<string name="other_choice">Someone else</string>
 	<string name="onnet_choice">On network</string>
