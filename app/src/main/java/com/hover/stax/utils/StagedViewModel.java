@@ -63,15 +63,4 @@ public abstract class StagedViewModel extends AndroidViewModel {
 		Amplitude.getInstance().logEvent(getApplication().getString(R.string.scheduled_complete, s.type));
 		repo.insert(s);
 	}
-
-	protected String getHumanFriendlyType(Context c) {
-		switch (type) {
-			case Action.P2P: return c.getString(R.string.send_money);
-			case Action.AIRTIME: return c.getString(R.string.buy_airtime);
-			case Action.ME2ME: return c.getString(R.string.move_money);
-			case Action.BALANCE:
-			default:
-				return c.getString(R.string.check_balance);
-		}
-	}
 }

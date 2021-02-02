@@ -11,10 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,7 +27,6 @@ import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.contacts.StaxContactArrayAdapter;
 import com.hover.stax.database.Constants;
 import com.hover.stax.utils.StagedFragment;
-import com.hover.stax.utils.StagedViewModel;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.Stax2LineItem;
@@ -40,16 +36,11 @@ public class TransferFragment extends StagedFragment implements ActionSelect.Hig
 
 	private TransferViewModel transferViewModel;
 
-	private TextInputLayout recipientLabel, amountEntry;
 	private EditText amountInput, noteInput;
 	private ActionSelect actionSelect;
-	private RadioGroup isSelfRadioGroup;
+	private TextInputLayout recipientLabel;
 	private AutoCompleteTextView recipientAutocomplete;
 	private ImageButton contactButton;
-
-	private ExtendedFloatingActionButton fab;
-
-	private TextView amountValue, noteValue;
 	private Stax2LineItem recipientValue;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,27 +58,21 @@ public class TransferFragment extends StagedFragment implements ActionSelect.Hig
 
 	@Override
 	protected void init(View root) {
-		editCard = root.findViewById(R.id.editCard);
-		summaryCard = root.findViewById(R.id.summaryCard);
 		setTitle(root);
 
-		amountValue = root.findViewById(R.id.amountValue);
 		recipientValue = root.findViewById(R.id.recipientValue);
-		noteValue = root.findViewById(R.id.reasonValue);
 
-		amountEntry = root.findViewById(R.id.amountEntry);
 		amountInput = root.findViewById(R.id.amount_input);
-		amountInput.setText(transferViewModel.getAmount().getValue());
 		actionSelect = root.findViewById(R.id.action_select);
-		isSelfRadioGroup = root.findViewById(R.id.isSelfRadioGroup);
 		recipientLabel = root.findViewById(R.id.recipientLabel);
 		recipientAutocomplete = root.findViewById(R.id.recipient_autocomplete);
 		contactButton = root.findViewById(R.id.contact_button);
 		noteInput = root.findViewById(R.id.note_input);
+
+		amountInput.setText(transferViewModel.getAmount().getValue());
 		noteInput.setText(transferViewModel.getNote().getValue());
 
-		fab = root.findViewById(R.id.fab);
-		root.findViewById(R.id.mainLayout).requestFocus();
+		amountInput.requestFocus();
 
 		super.init(root);
 	}
@@ -100,10 +85,14 @@ public class TransferFragment extends StagedFragment implements ActionSelect.Hig
 	}
 
 	protected void startObservers(View root) {
-		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), this::setRecipientHint);
+		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
+			((Stax2LineItem) root.findViewById(R.id.account_value)).setSubtitle(action.getNetworkSubtitle(root.getContext()));
+			setRecipientHint(action);
+		});
 
 		channelDropdownViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> {
 			actionSelect.setVisibility(channel == null ? View.GONE : View.VISIBLE);
+			((Stax2LineItem) root.findViewById(R.id.account_value)).setTitle(channel.toString());
 		});
 
 		channelDropdownViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
@@ -112,13 +101,13 @@ public class TransferFragment extends StagedFragment implements ActionSelect.Hig
 			transferViewModel.setActions(actions);
 			actionSelect.updateActions(actions);
 		});
-		channelDropdownViewModel.getError().observe(getViewLifecycleOwner(), error -> channelDropdown.setError(error != null ? getString(error) : null));
+		channelDropdownViewModel.getError().observe(getViewLifecycleOwner(), error -> channelDropdown.setError(error));
 
 		transferViewModel.getActiveActionError().observe(getViewLifecycleOwner(), error -> actionSelect.setError(error));
 
-		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> amountValue.setText(Utils.formatAmount(amount)));
+		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> ((TextView) root.findViewById(R.id.amountValue)).setText(Utils.formatAmount(amount)));
 		transferViewModel.getAmountError().observe(getViewLifecycleOwner(), amountError -> {
-			amountEntry.setError((amountError != null ? getString(amountError) : null));
+			((TextInputLayout) root.findViewById(R.id.amountEntry)).setError((amountError != null ? getString(amountError) : null));
 		});
 
 		transferViewModel.getRecentContacts().observe(getViewLifecycleOwner(), contacts -> {
@@ -136,7 +125,10 @@ public class TransferFragment extends StagedFragment implements ActionSelect.Hig
 			recipientLabel.setErrorIconDrawable(0);
 		});
 
-		transferViewModel.getNote().observe(getViewLifecycleOwner(), reason -> noteValue.setText(reason));
+		transferViewModel.getNote().observe(getViewLifecycleOwner(), note -> {
+			root.findViewById(R.id.noteRow).setVisibility(note == null ? View.GONE : View.VISIBLE);
+			((TextView) root.findViewById(R.id.noteValue)).setText(note);
+		});
 	}
 
 	protected void startListeners() {
@@ -152,13 +144,13 @@ public class TransferFragment extends StagedFragment implements ActionSelect.Hig
 		contactButton.setOnClickListener(view -> contactPicker(Constants.GET_CONTACT, view.getContext()));
 		noteInput.addTextChangedListener(noteWatcher);
 
-		fab.setOnClickListener(v -> fabClicked());
+		fab.setOnClickListener(v -> fabClicked(v));
 	}
 
 	@Override
 	public void highlightAction(Action a) { transferViewModel.setActiveAction(a); }
 
-	private void fabClicked() {
+	private void fabClicked(View v) {
 		if (transferViewModel.getIsEditing().getValue()) {
 			if (!channelDropdownViewModel.validates() || !transferViewModel.validates()) {
 				UIHelper.flashMessage(getContext(), getString(R.string.toast_pleasefix));

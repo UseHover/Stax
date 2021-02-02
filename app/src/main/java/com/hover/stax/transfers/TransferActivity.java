@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
@@ -127,5 +128,16 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 		i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);
 		setResult(result, i);
 		finish();
+	}
+
+	@Override
+	public void onBackPressed() {
+//		if (Navigation.findNavController(findViewById(R.id.nav_host_fragment)).getCurrentDestination().getId() != R.id.navigation_edit ||
+//			!Navigation.findNavController(findViewById(R.id.nav_host_fragment)).popBackStack()) {
+		if (!transferViewModel.getIsEditing().getValue())
+			transferViewModel.setEditing(true);
+		else
+			super.onBackPressed();
+//		}
 	}
 }

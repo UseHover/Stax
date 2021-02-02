@@ -157,7 +157,7 @@ public class TransferViewModel extends StagedViewModel {
 		}
 		if (activeAction.getValue() == null) {
 			valid = false;
-			actionError.setValue(getApplication().getString(R.string.no_actions_fielderror, getHumanFriendlyType(getApplication())));
+			actionError.setValue(getApplication().getString(R.string.action_fielderror));
 		} else if (activeAction.getValue().requiresRecipient() && contact.getValue() == null) {
 			valid = false;
 			recipientError.setValue(R.string.recipient_fielderror);

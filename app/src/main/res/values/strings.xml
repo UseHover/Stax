@@ -202,7 +202,8 @@
 	<string name="toast_error_contactselect">There was a problem selecting your contact. Please try again.</string>
 	<string name="recipient_fielderror">Please enter a phone or account number for this contact.</string>
 	<string name="amount_fielderror">Please enter an amount.</string>
-	<string name="service_fielderror">Please select a service.</string>
+	<string name="channel_fielderror">Please select a service.</string>
+	<string name="action_fielderror">Please select a recipient network.</string>
 	<string name="no_actions_fielderror">This service cannot be used for %1$s.</string>
 	<string name="toast_pleasefix">Please fix the errors shown in red.</string>
 	<string name="self_choice">Myself</string>

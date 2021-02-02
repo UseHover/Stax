@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.amplitude.api.Amplitude;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
@@ -32,11 +33,17 @@ public abstract class StagedFragment extends Fragment {
 
 	protected StaxCardView editCard, summaryCard;
 	protected ChannelDropdown channelDropdown;
+	protected ExtendedFloatingActionButton fab;
 
 	protected Stax2LineItem accountValue;
 
 	protected void init(View root) {
+		editCard = root.findViewById(R.id.editCard);
+		summaryCard = root.findViewById(R.id.summaryCard);
+		fab = root.findViewById(R.id.fab);
 		channelDropdown = root.findViewById(R.id.channel_dropdown);
+
+
 		channelDropdown.setListener(channelDropdownViewModel);
 		channelDropdownViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
 		channelDropdownViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
@@ -50,6 +57,7 @@ public abstract class StagedFragment extends Fragment {
 	private void showEdit(boolean isEditing) {
 		editCard.setVisibility(isEditing ? View.VISIBLE : View.GONE);
 		summaryCard.setVisibility(isEditing ? View.GONE : View.VISIBLE);
+		fab.setText(isEditing ? getString(R.string.btn_continue) : getString(R.string.fab_transfernow));
 	}
 
 	protected void contactPicker(int requestCode, Context c) {

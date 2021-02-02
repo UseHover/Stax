@@ -22,6 +22,7 @@ import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.utils.DateUtils;
+import com.hover.stax.utils.Utils;
 
 import java.util.List;
 import java.util.UUID;
@@ -133,7 +134,9 @@ public class StaxContact {
 
 	private Phonenumber.PhoneNumber getPhone(String country) throws NumberParseException {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-		return phoneUtil.parse(phoneNumber, country);
+//		try {
+			return phoneUtil.parse(phoneNumber, country);
+//		} catch (IllegalStateException e) { Utils.logErrorAndReportToFirebase(TAG, "Failed to parse phone number", e); }
 	}
 
 	public String shortName(boolean obfusicate) {

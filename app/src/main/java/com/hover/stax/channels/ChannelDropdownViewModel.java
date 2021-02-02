@@ -25,6 +25,7 @@ import com.hover.stax.utils.Utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static com.hover.stax.database.Constants.LANGUAGE_CHECK;
 
@@ -43,7 +44,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 	private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
 	private LiveData<List<Action>> actions = new MediatorLiveData<>();
 
-	private MediatorLiveData<Integer> error = new MediatorLiveData<>();
+	private MediatorLiveData<String> error = new MediatorLiveData<>();
 
 	public ChannelDropdownViewModel(Application application) {
 		super(application);
@@ -60,14 +61,16 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 		simChannels.addSource(simHniList, this::onSimUpdate);
 
 		activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull);
-		error.addSource(activeChannel, channel -> { if (channel != null) error.setValue(null); });
+		error.addSource(activeChannel, channel -> { if (channel != null && actions.getValue() != null && actions.getValue().size() > 0) error.setValue(null); });
 
 		actions = Transformations.switchMap(type, this::loadActions);
 		actions = Transformations.switchMap(selectedChannels, this::loadActions);
 		actions = Transformations.switchMap(activeChannel, this::loadActions);
 		error.addSource(actions, actions -> {
 			if (activeChannel.getValue() != null && (actions == null || actions.size() == 0))
-				error.setValue(R.string.no_actions_fielderror);
+				error.setValue(application.getString(R.string.no_actions_fielderror, getHumanFriendlyType()));
+			else error.setValue(null);
+
 		});
 	}
 
@@ -213,17 +216,29 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 		boolean valid = true;
 		if (activeChannel.getValue() == null) {
 			valid = false;
-			error.setValue(R.string.channel_error_noselect);
+			error.setValue(getApplication().getString(R.string.channel_error_noselect));
 		} else if (actions.getValue() == null || actions.getValue().size() == 0) {
 			valid = false;
-			error.setValue(R.string.no_actions_fielderror);
+			error.setValue(getApplication().getString(R.string.no_actions_fielderror, getHumanFriendlyType()));
 		}
 		return valid;
 	}
 
-	public LiveData<Integer> getError() {
+	public LiveData<String> getError() {
 		if (error == null) { error = new MediatorLiveData<>(); }
 		return error;
+	}
+
+	protected String getHumanFriendlyType() {
+		if (type == null || type.getValue() == null) return null;
+		switch (type.getValue()) {
+			case Action.P2P: return getApplication().getString(R.string.send_money);
+			case Action.AIRTIME: return getApplication().getString(R.string.buy_airtime);
+			case Action.ME2ME: return getApplication().getString(R.string.move_money);
+			case Action.BALANCE:
+			default:
+				return getApplication().getString(R.string.check_balance);
+		}
 	}
 
 	@Override
