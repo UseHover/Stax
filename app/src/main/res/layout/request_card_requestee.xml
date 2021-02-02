@@ -13,16 +13,19 @@
 	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/margin_21">
+		android:layout_marginVertical="@dimen/margin_13">
 
-		<androidx.appcompat.widget.AppCompatButton
-			android:id="@+id/add_recipient_button"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/btn_addcontact"
-			android:layout_alignParentEnd="true"
-			style="@style/StaxButton"
-			android:fontFamily="font-medium"
-			android:onClick="addSomeone" />
+		<TextView
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginHorizontal="@dimen/margin_10"
+		    android:layout_marginBottom="@dimen/margin_8"
+		    android:id="@+id/add_recipient_button"
+		    android:textColor="@color/brightBlue"
+		    android:text="@string/btn_addcontact"
+		    android:textSize="@dimen/text_16"
+		    android:visibility="visible"
+		    android:fontFamily="font-medium"/>
+
 	</RelativeLayout>
 </LinearLayout>

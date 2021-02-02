@@ -98,8 +98,6 @@
   	
   <!-- Accounts and Permissions -->
   	
-  <string name="perm_cardhead">Ongeza akaunti</string>
-  	
   <string name="simperm_cardbody">Tunahitaji ruhusa za simu ili tuone ni SIM kadi gani unazo.</string>
   	
   <string name="btn_grantperm">Toa Ruhusa</string>

@@ -45,8 +45,15 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
 
 	@Override
 	public void onBindViewHolder(final @NonNull RecipientViewHolder holder, int position) {
-		ArrayAdapter<StaxContact> adapter = new StaxContactArrayAdapter(holder.view.getContext(), allContacts);
-		holder.input.setAdapter(adapter);
+		holder.itemView.setVisibility(View.VISIBLE);
+
+		try{
+			ArrayAdapter<StaxContact> adapter = new StaxContactArrayAdapter(holder.view.getContext(), allContacts);
+			holder.input.setAdapter(adapter);
+		}catch (NullPointerException ignored) {
+			//All contact list may return null whilst loading. The updateContactList method auto refreshes this after load completes.
+		}
+
 
 		if (recipients != null && recipients.size() > position && recipients.get(position).getPhoneNumber() != null)
 			holder.input.setText(recipients.get(position).toString());
@@ -66,11 +73,6 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
 		});
 
 		holder.contactButton.setOnClickListener(view -> updateListener.onClickContact(position, holder.view.getContext()));
-
-		if (position == 0) {
-			holder.input.showDropDown();
-			holder.input.requestFocus();
-		}
 	}
 
 	public interface UpdateListener {

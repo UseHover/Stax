@@ -30,11 +30,11 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", "SELF_DESTRUCT", "\"1612055681000\""
+            buildConfigField "String", "SELF_DESTRUCT", "\"1614553200000\""
         }
         release {
             minifyEnabled false
-            buildConfigField "String", "SELF_DESTRUCT", "\"1612055681000\"" // Jan 31, 2021
+            buildConfigField "String", "SELF_DESTRUCT", "\"1614553200000\"" // Feb 28, 2021
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 //            signingConfig signingConfigs.debug
         }
@@ -45,9 +45,9 @@ android {
             enableSplit = false
         }
     }
-//    lintOptions{
-//        disable 'MissingTranslation'
-//    }
+    lintOptions{
+        disable 'MissingTranslation'
+    }
 //    buildFeatures.dataBinding = true
 }
 
@@ -94,7 +94,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     // Hover SDK
-    def sdk_version = "1.6.5-stax-rc1-pro"
+    def sdk_version = "1.6.6-stax-rc1.1.0-pro"
     releaseImplementation "com.hover:android-sdk:$sdk_version"
     debugImplementation project(":hover.sdk")
     debugImplementation 'com.android.volley:volley:1.1.1'

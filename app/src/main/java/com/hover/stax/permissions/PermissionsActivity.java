@@ -8,7 +8,6 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.hover.sdk.actions.ActionContract;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
@@ -37,8 +36,8 @@ public class PermissionsActivity extends AppCompatActivity {
 	}
 
 	private String getReason() {
-		if (getIntent() != null && getIntent().getStringExtra(ActionContract.COLUMN_TRANSACTION_TYPE) != null) {
-			String type = getIntent().getStringExtra(ActionContract.COLUMN_TRANSACTION_TYPE);
+		if (getIntent() != null && getIntent().getStringExtra("transaction_type") != null) {
+			String type = getIntent().getStringExtra("transaction_type");
 			if (type.equals(Action.AIRTIME)) return getString(R.string.buy_airtime);
 			else if (type.equals(Action.BALANCE)) return getString(R.string.check_balance);
 			else if (type.equals(Action.P2P)) return getString(R.string.send_money);

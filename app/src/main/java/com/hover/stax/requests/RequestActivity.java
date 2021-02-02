@@ -69,6 +69,22 @@ public class RequestActivity extends AppCompatActivity implements RequestSenderI
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_schedule_notification));
 	}
 
+//	public void onContinue(View view) {
+//		if (requestViewModel.isDone())
+//			submit();
+//		else if (requestViewModel.stageValidates())
+//			requestViewModel.setStage(REVIEW);
+//	}
+//
+//	private void submit() {
+//		if (requestViewModel.getIsFuture().getValue() != null && requestViewModel.getIsFuture().getValue() && requestViewModel.getFutureDate().getValue() != null) {
+//			requestViewModel.setStarted();
+//			requestViewModel.schedule();
+//			onFinished(Constants.SCHEDULE_REQUEST);
+//		} else
+//			sendSms(null);
+//	}
+
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);

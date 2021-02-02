@@ -36,7 +36,7 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 	private LinearLayout recipientValueList;
 	private TextView amountValue, noteValue;
 	private EditText amountInput, requesterAccountNo, noteInput;
-	private Button addRecipientBtn;
+	private TextView addRecipientBtn;
 
 	private RecipientAdapter recipientAdapter;
 	private int recipientCount = 0;
@@ -76,7 +76,6 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 	}
 
 	protected void startObservers(View root) {
-
 		requestViewModel.getRequestees().observe(getViewLifecycleOwner(), recipients -> {
 			if (recipients == null || recipients.size() == 0) return;
 			recipientValueList.removeAllViews();

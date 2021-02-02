@@ -98,8 +98,6 @@
   	
   <!-- Accounts and Permissions -->
   	
-  <string name="perm_cardhead">Ajouter des comptes</string>
-  	
   <string name="simperm_cardbody">Nous avons besoin des autorisations du téléphone pour voir quelles cartes SIM vous utilisez.</string>
   	
   <string name="btn_grantperm">Accorder la permission</string>
