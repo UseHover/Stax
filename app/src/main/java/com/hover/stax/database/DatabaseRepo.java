@@ -113,6 +113,10 @@ public class DatabaseRepo {
 		return actionDao.getLiveActions(channelIds, type);
 	}
 
+	public LiveData<List<Action>> getTransferActions(int channelId) {
+		return actionDao.getLiveTransferActions(channelId);
+	}
+
 	public List<Action> getActions(int channelId, String type) {
 		return actionDao.getActions(channelId, type);
 	}

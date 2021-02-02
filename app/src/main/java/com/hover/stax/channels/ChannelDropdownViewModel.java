@@ -176,12 +176,12 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 
 	public LiveData<List<Action>> loadActions(Channel channel) {
 		Log.e(TAG, "Loading actions from channel. Type is: " + type.getValue());
-		return repo.getLiveActions(channel.id, type.getValue());
+		return loadActions(channel, type.getValue());
 	}
 
 	private LiveData<List<Action>> loadActions(Channel c, String t) {
 		Log.e(TAG, "Loading actions from channel. Type is: " + t);
-		return repo.getLiveActions(c.id, t);
+		return t.equals(Action.P2P) ? repo.getTransferActions(c.id) : repo.getLiveActions(c.id, t);
 	}
 
 	public LiveData<List<Action>> loadActions(List<Channel> channels) {

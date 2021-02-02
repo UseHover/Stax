@@ -292,7 +292,7 @@
 	<string name="moneyin_label">Money in this month</string>
 	<string name="fees_label">Fees paid to %1$s this year</string>
 	<string name="transactions_cardhead">Transactions</string>
-	<string name="network_label">Network</string>
+	<string name="network_label">Recipient account</string>
 	<string name="id_label">Transaction ID</string>
 	<string name="session_cardhead">Messages</string>
 

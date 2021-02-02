@@ -51,10 +51,10 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 		ArrayAdapter actionDropdownAdapter = new ArrayAdapter<>(getContext(), R.layout.stax_spinner_item, uniqRecipientActions);
 		textView.setAdapter(actionDropdownAdapter);
 		textView.setOnItemClickListener((adapterView, view2, pos, id) -> selectRecipientNetwork((Action) adapterView.getItemAtPosition(pos)));
-		if (uniqRecipientActions.size() == 1) {
+		Log.e(TAG, "uniq recipient networks " + uniqRecipientActions.size());
+		input.setVisibility(uniqRecipientActions.size() <= 1 ? GONE: VISIBLE);
+		if (uniqRecipientActions.size() == 1)
 			selectRecipientNetwork(uniqRecipientActions.get(0));
-			input.setVisibility(GONE);
-		}
 	}
 
 	public static List<Action> sort(List<Action> actions) {
@@ -107,7 +107,8 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 		}
 		isSelfRadio.setOnCheckedChangeListener(this);
 		isSelfRadio.check(highlightedAction != null ? actions.indexOf(highlightedAction) : 0);
-		isSelfRadio.setVisibility(VISIBLE);
+		isSelfRadio.setVisibility(actions.size() > 1 ? VISIBLE : GONE);
+		findViewById(R.id.header).setVisibility(actions.size() > 1 ? VISIBLE : GONE);
 	}
 
 	@Override
