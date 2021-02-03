@@ -34,10 +34,10 @@ public class Stax2LineItem extends RelativeLayout {
 		((TextView) contentView.findViewById(R.id.subtitle)).setText(sub);
 	}
 
-	public void setContact(StaxContact contact, boolean obfusicate) {
+	public void setContact(StaxContact contact) {
 		if (contact == null) return;
-		setTitle(contact.shortName(obfusicate));
-		if (!contact.shortName(false).equals(contact.getPhoneNumber()))
-			setSubtitle(contact.getPhoneNumber(obfusicate));
+		setTitle(contact.shortName());
+		if (!contact.shortName().equals(contact.getPhoneNumber()))
+			setSubtitle(contact.getPhoneNumber());
 	}
 }

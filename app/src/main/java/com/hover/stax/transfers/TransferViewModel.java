@@ -172,20 +172,14 @@ public class TransferViewModel extends StagedViewModel {
 					   (filteredActions.getValue().size() > 1 || (activeAction.getValue() != null && activeAction.getValue().hasToInstitution()));
 	}
 
-	public void decrypt(String encryptedLink) {
+	public LiveData<Request> decrypt(String encryptedLink) {
 		request = repo.decrypt(encryptedLink, getApplication());
-	}
-
-	public void view(Request r) {
-		setAmount(r.amount);
-		setRecipient(r.requester_number);
-		setEditing(r.amount == null || r.amount.isEmpty());
+		return request;
 	}
 
 	public void view(Schedule s) {
 		schedule.setValue(s);
 		setType(s.type);
-//		setActiveChannel(s.channel_id);
 		setAmount(s.amount);
 		setContact(s.recipient_ids);
 		setNote(s.note);

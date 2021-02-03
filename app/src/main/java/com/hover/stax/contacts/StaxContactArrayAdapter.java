@@ -37,7 +37,7 @@ public class StaxContactArrayAdapter extends ArrayAdapter<StaxContact> {
 
 		StaxContact c = filteredContacts.get(position);
 
-		((TextView) v.findViewById(R.id.title)).setText(c.shortName(false));
+		((TextView) v.findViewById(R.id.title)).setText(c.shortName());
 		((TextView) v.findViewById(R.id.subtitle)).setText(c.getPhoneNumber());
 		v.findViewById(R.id.subtitle).setVisibility(c.hasName() ? View.VISIBLE : View.GONE);
 

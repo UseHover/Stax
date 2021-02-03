@@ -8,8 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
@@ -66,13 +64,18 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 
 	private void createFromRequest(String link) {
 		AlertDialog dialog = new StaxDialog(this).setDialogMessage(R.string.loading_dialoghead).showIt();
+		transferViewModel.decrypt(link);
 		transferViewModel.getRequest().observe(this, request -> {
+			Log.e(TAG, "maybe viewing request");
 			if (request == null) return;
-			channelDropdownViewModel.view(request);
-			transferViewModel.view(request);
+			Log.e(TAG, "viewing request " + request);
 			if (dialog != null) dialog.dismiss();
 		});
-		transferViewModel.decrypt(link);
+
+//		channelDropdownViewModel.getActiveChannel().observe(this, channel -> {
+//		if (!simChannels.contains(channel))
+//			setChannelDropdownError();
+//		);
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_request_link));
 	}
 

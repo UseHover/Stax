@@ -160,7 +160,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 		}
 	}
 
-	public void setActiveChannel(Channel channel) {
+	private void setActiveChannel(Channel channel) {
 		activeChannel.setValue(channel);
 	}
 	public LiveData<Channel> getActiveChannel() { return activeChannel; }
@@ -231,8 +231,9 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 		return error;
 	}
 
-	public void view(Request r) {
-		setActiveChannel(repo.getChannelByInstitutionId(r.requester_institution_id));
+	public void setChannelFromRequest(Request r) {
+		if (r != null)
+			new Thread(() -> activeChannel.postValue(repo.getChannelByInstitutionId(r.requester_institution_id))).start();
 	}
 
 	public void view(Schedule s) {

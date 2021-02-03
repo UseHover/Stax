@@ -144,12 +144,8 @@ public class StaxContact {
 //		} catch (IllegalStateException e) { Utils.logErrorAndReportToFirebase(TAG, "Failed to parse phone number", e); }
 	}
 
-	public String shortName(boolean obfusicate) {
-		return hasName() ? name : getPhoneNumber(obfusicate);
-	}
-
-	public String getPhoneNumber(boolean obfusicate) {
-		return obfusicate ? obfusicatePhone() : phoneNumber;
+	public String shortName() {
+		return hasName() ? name : getPhoneNumber();
 	}
 
 	public void setPhoneNumber(String number) { phoneNumber = number; }
@@ -161,7 +157,7 @@ public class StaxContact {
 
 	public static String shortName(List<StaxContact> contacts, Context c) {
 		if (contacts == null || contacts.size() == 0) return null;
-		else if (contacts.size() == 1) return contacts.get(0).shortName(false);
+		else if (contacts.size() == 1) return contacts.get(0).shortName();
 		else return c.getString(R.string.descrip_multcontacts, contacts.size());
 	}
 

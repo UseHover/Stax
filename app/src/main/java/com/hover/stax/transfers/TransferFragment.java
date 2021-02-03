@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.amplitude.api.Amplitude;
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
@@ -24,6 +25,7 @@ import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.contacts.StaxContactArrayAdapter;
 import com.hover.stax.database.Constants;
+import com.hover.stax.requests.Request;
 import com.hover.stax.utils.abstractClasses.StagedFragment;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -114,7 +116,7 @@ public class TransferFragment extends StagedFragment implements ActionSelect.Hig
 				recipientAutocomplete.setText(transferViewModel.getContact().getValue().toString());
 		});
 		transferViewModel.getContact().observe(getViewLifecycleOwner(), contact -> {
-			recipientValue.setContact(contact, transferViewModel.getRequest().getValue() != null && transferViewModel.getRequest().getValue().hasRequesterInfo());
+			recipientValue.setContact(contact);
 		});
 
 		transferViewModel.getRecipientError().observe(getViewLifecycleOwner(), recipientError -> {
@@ -126,6 +128,8 @@ public class TransferFragment extends StagedFragment implements ActionSelect.Hig
 			root.findViewById(R.id.noteRow).setVisibility((note == null || note.isEmpty()) ? View.GONE : View.VISIBLE);
 			((TextView) root.findViewById(R.id.noteValue)).setText(note);
 		});
+
+		transferViewModel.getRequest().observe(getViewLifecycleOwner(), request -> { if (request != null) load(request); });
 	}
 
 	protected void startListeners() {
@@ -197,4 +201,12 @@ public class TransferFragment extends StagedFragment implements ActionSelect.Hig
 			transferViewModel.setNote(charSequence.toString());
 		}
 	};
+
+	private void load(Request r) {
+		channelDropdownViewModel.setChannelFromRequest(r);
+		amountInput.setText(r.amount);
+		recipientAutocomplete.setText(r.requester_number);
+		transferViewModel.setEditing(r.amount == null || r.amount.isEmpty());
+		Amplitude.getInstance().logEvent(getString(R.string.loaded_request_link));
+	}
 }

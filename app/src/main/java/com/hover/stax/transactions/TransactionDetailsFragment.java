@@ -68,7 +68,7 @@ public class TransactionDetailsFragment extends Fragment {
 
 		viewModel.getContact().observe(getViewLifecycleOwner(), contact -> {
 			if (contact != null)
-				((Stax2LineItem) view.findViewById(R.id.details_recipient)).setContact(contact, false);
+				((Stax2LineItem) view.findViewById(R.id.details_recipient)).setContact(contact);
 		});
 
 		RecyclerView messagesView = view.findViewById(R.id.convo_recyclerView);

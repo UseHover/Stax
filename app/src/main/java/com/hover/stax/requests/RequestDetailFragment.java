@@ -76,7 +76,7 @@ public class RequestDetailFragment extends Fragment implements RequestSenderInte
 
 	private void createRecipientEntry(StaxContact c, View view) {
 		Stax2LineItem ss2li = new Stax2LineItem(getContext(), null);
-		ss2li.setContact(c, false);
+		ss2li.setContact(c);
 		((LinearLayout) view.findViewById(R.id.requesteeValueList)).addView(ss2li);
 	}
 

@@ -93,7 +93,7 @@ public class Request {
 		return requester_number != null && !requester_number.isEmpty();
 	}
 
-	public String getDescription(StaxContact contact, Context c) { return c.getString(R.string.descrip_request, contact.shortName(false)); }
+	public String getDescription(StaxContact contact, Context c) { return c.getString(R.string.descrip_request, contact.shortName()); }
 
 	String generateRecipientString(List<StaxContact> contacts) {
 		StringBuilder phones = new StringBuilder();
