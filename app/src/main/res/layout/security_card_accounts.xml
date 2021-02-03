@@ -35,5 +35,4 @@
 			android:textColor="@color/offWhite"
 			android:textCursorDrawable="@null" />
 	</com.google.android.material.textfield.TextInputLayout>
-
 </com.hover.stax.views.StaxCardView>
