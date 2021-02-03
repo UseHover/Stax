@@ -141,10 +141,10 @@
 	<string name="btn_request">Send request</string>
 	<string name="btn_nothanks">No, thanks</string>
 	<string name="toast_confirm_contact">Thanks! Contact info received. We\'ll be in touch soon.</string>
-	<string name="reqsave_head">Request sent?</string>
-	<string name="reqsave_msg">Have you sent the request link yet?</string>
-	<string name="btn_saveanyway">Yes</string>
-	<string name="btn_dontsave">No</string>
+	<string name="reqsave_head">Save request?</string>
+	<string name="reqsave_msg">Looks like you haven\'t sent your request. Would you like to save it anyway?</string>
+	<string name="btn_saveanyway">Save</string>
+	<string name="btn_dontsave">Abandon</string>
 	<string name="request_account">Request account</string>
 	<string name="request_account_desc">Can\’t find what you\’re looking for? We\’re adding new accounts to Stax every day, and if you let us know which one you\’re looking for, we\’ll add it as soon as possible.</string>
 	<string name="request_received_content">Request received. We\’ll add %1$s soon.</string>
@@ -200,8 +200,8 @@
 	<string name="recipientacct_label">Contact account number</string>
 	<string name="toast_error_contactperm">You must grant the read contacts permission to choose a number from your address book.</string>
 	<string name="toast_error_contactselect">There was a problem selecting your contact. Please try again.</string>
-	<string name="recipient_fielderror">Please enter a phone or account number for this contact.</string>
-	<string name="amount_fielderror">Please enter an amount.</string>
+	<string name="transfer_error_recipient">Please enter a phone or account number.</string>
+	<string name="amount_fielderror">Please enter a valid amount.</string>
 	<string name="channel_fielderror">Please select a service.</string>
 	<string name="action_fielderror">Please select a recipient network.</string>
 	<string name="no_actions_fielderror">This service cannot be used for %1$s.</string>
@@ -212,7 +212,7 @@
 	<string name="offnet_choice">To %1$s</string>
 	<string name="airtimeother_choice">Someone else</string>
 	<string name="note_cardhead">Description</string>
-	<string name="note_label_opt">What is your request for? (optional)</string>
+	<string name="request_note_label">What is your request for?</string>
 	<string name="recipient_label">To</string>
 	<string name="accounts_label">Pay from</string>
 	<string name="descrip_multcontacts">%1$d contacts</string>
@@ -243,6 +243,7 @@
 	<string name="editreq_cardhead">Edit Request</string>
 	<string name="requester_number_label">Account</string>
 	<string name="requester_account_number_label">Account number</string>
+	<string name="request_error_recipient">Please enter a phone number.</string>
 	<string name="requester_number_fielderror">Please enter the account or phone number you\'d like to receive the money into</string>
 	<string name="requester_account_error">Please select an account or add a new one to receive your money</string>
 	<string name="request_processing_msg">Processing request, please wait…</string>

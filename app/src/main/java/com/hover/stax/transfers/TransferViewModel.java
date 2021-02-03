@@ -1,7 +1,6 @@
 package com.hover.stax.transfers;
 
 import android.app.Application;
-import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -10,7 +9,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
-import com.hover.stax.channels.Channel;
 import com.hover.stax.requests.Request;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.schedules.Schedule;
@@ -149,7 +147,7 @@ public class TransferViewModel extends StagedViewModel {
 		return note;
 	}
 
-	boolean validates() {
+	protected boolean validates() {
 		boolean valid = true;
 		if (amount.getValue() == null || amount.getValue().isEmpty()) {
 			valid = false;
@@ -160,7 +158,7 @@ public class TransferViewModel extends StagedViewModel {
 			actionError.setValue(getApplication().getString(R.string.action_fielderror));
 		} else if (activeAction.getValue().requiresRecipient() && contact.getValue() == null) {
 			valid = false;
-			recipientError.setValue(R.string.recipient_fielderror);
+			recipientError.setValue(R.string.transfer_error_recipient);
 		}
 		return valid;
 	}
@@ -176,12 +174,12 @@ public class TransferViewModel extends StagedViewModel {
 
 	public void decrypt(String encryptedLink) {
 		request = repo.decrypt(encryptedLink, getApplication());
-//		filteredActions.addSource(request, this::loadActions);
 	}
 
 	public void view(Request r) {
 		setAmount(r.amount);
 		setRecipient(r.requester_number);
+		setEditing(r.amount == null || r.amount.isEmpty());
 	}
 
 	public void view(Schedule s) {

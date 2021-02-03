@@ -11,13 +11,11 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
@@ -126,7 +124,7 @@ public class TransferFragment extends StagedFragment implements ActionSelect.Hig
 		});
 
 		transferViewModel.getNote().observe(getViewLifecycleOwner(), note -> {
-			root.findViewById(R.id.noteRow).setVisibility(note == null ? View.GONE : View.VISIBLE);
+			root.findViewById(R.id.noteRow).setVisibility((note == null || note.isEmpty()) ? View.GONE : View.VISIBLE);
 			((TextView) root.findViewById(R.id.noteValue)).setText(note);
 		});
 	}

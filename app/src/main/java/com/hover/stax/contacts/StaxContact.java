@@ -111,7 +111,7 @@ public class StaxContact {
 		return phoneNumber;
 	}
 
-	private static String convertToCountry(String number, String country) throws NumberParseException {
+	private static String convertToCountry(String number, String country) throws NumberParseException, IllegalStateException {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 		try {
 			Phonenumber.PhoneNumber phone = phoneUtil.parse(number, country);
@@ -120,7 +120,7 @@ public class StaxContact {
 		return number;
 	}
 
-	public String getInternationalNumber(String country) throws NumberParseException {
+	private String getInternationalNumber(String country) throws NumberParseException, IllegalStateException {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 		Phonenumber.PhoneNumber phone = getPhone(country);
 		phone.getCountryCode();
@@ -128,11 +128,16 @@ public class StaxContact {
 		Log.e("CONTACT", "generated: " + str);
 		return str;
 	}
-	public String getInternationalNumberNoPlus(String country) throws NumberParseException {
-		return getInternationalNumber(country).replace("+", "");
+	public String getInternationalNumberNoPlus(String country) {
+		try {
+			return getInternationalNumber(country).replace("+", "");
+		} catch (NumberParseException | IllegalStateException e) {
+			Utils.logErrorAndReportToFirebase(TAG, "Failed to transform number for contact; doing it the old fashioned way.", e);
+			return phoneNumber.replace("+", "");
+		}
 	}
 
-	private Phonenumber.PhoneNumber getPhone(String country) throws NumberParseException {
+	private Phonenumber.PhoneNumber getPhone(String country) throws NumberParseException, IllegalStateException {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 //		try {
 			return phoneUtil.parse(phoneNumber, country);

@@ -304,7 +304,7 @@
   	
   <string name="toast_error_contactselect">Un problème est survenu lors de la sélection de votre contact. Veuillez réessayer.</string>
   	
-  <string name="recipient_fielderror">Veuillez saisir un numéro de téléphone ou de compte pour ce contact.</string>
+  <string name="transfer_error_recipient">Veuillez saisir un numéro de téléphone ou de compte pour ce contact.</string>
   	
   <string name="amount_fielderror">Veuillez saisir un montant.</string>
   	
@@ -320,7 +320,7 @@
   	
   <string name="note_cardhead">Remarque</string>
   	
-  <string name="note_label_opt">Saisir une remarque (facultatif)</string>
+  <string name="request_note_label">Saisir une remarque (facultatif)</string>
   	
   <string name="recipient_label">À qui ?</string>
   	

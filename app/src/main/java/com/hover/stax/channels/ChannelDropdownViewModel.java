@@ -19,6 +19,8 @@ import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.languages.SelectLanguageActivity;
+import com.hover.stax.requests.Request;
+import com.hover.stax.schedules.Schedule;
 import com.hover.stax.sims.Sim;
 import com.hover.stax.utils.Utils;
 
@@ -227,6 +229,15 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 	public LiveData<String> getError() {
 		if (error == null) { error = new MediatorLiveData<>(); }
 		return error;
+	}
+
+	public void view(Request r) {
+		setActiveChannel(repo.getChannelByInstitutionId(r.requester_institution_id));
+	}
+
+	public void view(Schedule s) {
+		setType(s.type);
+		setActiveChannel(repo.getChannel(s.channel_id));
 	}
 
 	protected String getHumanFriendlyType() {

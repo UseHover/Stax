@@ -13,7 +13,6 @@
 
 	<include layout="@layout/request_card_requester" />
 
-	<include layout="@layout/transfer_note"
-		android:id="@+id/noteCard" />
+	<include layout="@layout/transfer_note" />
 
 </com.hover.stax.views.StaxCardView>

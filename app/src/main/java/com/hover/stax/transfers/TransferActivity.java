@@ -66,12 +66,13 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 
 	private void createFromRequest(String link) {
 		AlertDialog dialog = new StaxDialog(this).setDialogMessage(R.string.loading_dialoghead).showIt();
-		transferViewModel.decrypt(link);
 		transferViewModel.getRequest().observe(this, request -> {
 			if (request == null) return;
+			channelDropdownViewModel.view(request);
 			transferViewModel.view(request);
 			if (dialog != null) dialog.dismiss();
 		});
+		transferViewModel.decrypt(link);
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_request_link));
 	}
 

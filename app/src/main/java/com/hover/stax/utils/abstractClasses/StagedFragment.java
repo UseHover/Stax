@@ -36,14 +36,11 @@ public abstract class StagedFragment extends Fragment {
 	protected ChannelDropdown channelDropdown;
 	protected ExtendedFloatingActionButton fab;
 
-	protected Stax2LineItem accountValue;
-
 	protected void init(View root) {
 		editCard = root.findViewById(R.id.editCard);
 		summaryCard = root.findViewById(R.id.summaryCard);
 		fab = root.findViewById(R.id.fab);
 		channelDropdown = root.findViewById(R.id.channel_dropdown);
-
 
 		channelDropdown.setListener(channelDropdownViewModel);
 		channelDropdownViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
@@ -55,7 +52,7 @@ public abstract class StagedFragment extends Fragment {
 		stagedViewModel.getIsEditing().observe(getViewLifecycleOwner(), this::showEdit);
 	}
 
-	private void showEdit(boolean isEditing) {
+	protected void showEdit(boolean isEditing) {
 		editCard.setVisibility(isEditing ? View.VISIBLE : View.GONE);
 		summaryCard.setVisibility(isEditing ? View.GONE : View.VISIBLE);
 		fab.setText(isEditing ? getString(R.string.btn_continue) : getString(R.string.fab_transfernow));

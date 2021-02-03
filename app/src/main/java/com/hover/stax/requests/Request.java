@@ -108,9 +108,7 @@ public class Request {
 		StringBuilder phones = new StringBuilder();
 		for (int r = 0; r < contacts.size(); r++) {
 			if (phones.length() > 0) phones.append(",");
-			try {
-				phones.append(contacts.get(r).getInternationalNumberNoPlus(c != null ? c.countryAlpha2 : Lingver.getInstance().getLocale().getCountry()));
-			} catch (NumberParseException e) { Log.e("Request", "Failed to add number for contact.", e); }
+			phones.append(contacts.get(r).getInternationalNumberNoPlus(c != null ? c.countryAlpha2 : Lingver.getInstance().getLocale().getCountry()));
 		}
 		return phones.toString();
 	}

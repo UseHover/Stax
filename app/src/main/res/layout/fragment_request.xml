@@ -17,10 +17,12 @@
 			android:id="@+id/editCard" />
 
 		<include layout="@layout/request_card_summary"
-			android:id="@+id/summaryCard" />
+			android:id="@+id/summaryCard"
+			android:visibility="gone"/>
 
 		<include layout="@layout/request_card_share"
-			android:id="@+id/shareCard" />
+			android:id="@+id/shareCard"
+			android:visibility="gone"/>
 
 		<androidx.coordinatorlayout.widget.CoordinatorLayout
 			android:layout_width="match_parent"

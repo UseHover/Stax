@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
@@ -36,22 +37,6 @@ public class RequestActivity extends AppCompatActivity implements RequestSenderI
 		checkIntent();
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		if (requestViewModel.getStarted())
-			wasRequestSentDialog();
-	}
-
-	private void wasRequestSentDialog() {
-		dialog = new StaxDialog(this)
-			.setDialogTitle(R.string.reqsave_head)
-			.setDialogMessage(R.string.reqsave_msg)
-			.setPosButton(R.string.btn_saveanyway, btn -> onFinished(-1))
-			.setNegButton(R.string.btn_dontsave, btn ->  cancel())
-			.showIt();
-	}
-
 	private void checkIntent() {
 		if (getIntent().hasExtra(Schedule.SCHEDULE_ID))
 			createFromSchedule(getIntent().getIntExtra(Schedule.SCHEDULE_ID, -1));
@@ -69,22 +54,6 @@ public class RequestActivity extends AppCompatActivity implements RequestSenderI
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_schedule_notification));
 	}
 
-//	public void onContinue(View view) {
-//		if (requestViewModel.isDone())
-//			submit();
-//		else if (requestViewModel.stageValidates())
-//			requestViewModel.setStage(REVIEW);
-//	}
-//
-//	private void submit() {
-//		if (requestViewModel.getIsFuture().getValue() != null && requestViewModel.getIsFuture().getValue() && requestViewModel.getFutureDate().getValue() != null) {
-//			requestViewModel.setStarted();
-//			requestViewModel.schedule();
-//			onFinished(Constants.SCHEDULE_REQUEST);
-//		} else
-//			sendSms(null);
-//	}
-
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -98,26 +67,22 @@ public class RequestActivity extends AppCompatActivity implements RequestSenderI
 	}
 
 	public void sendSms(View view) {
-		start();
+		requestViewModel.saveRequest();
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_send_sms_request));
 		new SmsSentObserver(this, requestViewModel.getRequestees().getValue(), new Handler(), this).start();
 		sendSms(requestViewModel.getRequest().getValue(), requestViewModel.getRequestees().getValue(), this);
 	}
 
 	public void sendWhatsapp(View view) {
-		start();
+		requestViewModel.saveRequest();
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_send_whatsapp_request));
 		sendWhatsapp(requestViewModel.getRequest().getValue(), requestViewModel.getRequestees().getValue(), null, this);
 	}
 
 	public void copyShareLink(View view) {
-		start();
+		requestViewModel.saveRequest();
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_copylink_request));
 		copyShareLink(requestViewModel.getRequest().getValue(), view.findViewById(R.id.copylink_share_selection), this);
-	}
-
-	private void start() {
-		requestViewModel.setStarted();
 	}
 
 	@Override
@@ -126,7 +91,6 @@ public class RequestActivity extends AppCompatActivity implements RequestSenderI
 	}
 
 	private void onFinished(int type) {
-		requestViewModel.saveToDatabase();
 		setResult(RESULT_OK, createSuccessIntent(type));
 		finish();
 	}
@@ -148,5 +112,24 @@ public class RequestActivity extends AppCompatActivity implements RequestSenderI
 			dialog.dismiss();
 			dialog = null;
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (!requestViewModel.getIsEditing().getValue() && requestViewModel.getRequest().getValue() == null)
+			requestViewModel.setEditing(true);
+		else if (!requestViewModel.getIsEditing().getValue() && requestViewModel.getRequests().getValue() != null)
+			askAreYouSure();
+		else
+			super.onBackPressed();
+	}
+
+	private void askAreYouSure() {
+		dialog = new StaxDialog(this)
+			.setDialogTitle(R.string.reqsave_head)
+			.setDialogMessage(R.string.reqsave_msg)
+			.setPosButton(R.string.btn_saveanyway, btn -> requestViewModel.saveRequest())
+			.setNegButton(R.string.btn_dontsave, btn ->  cancel())
+			.showIt();
 	}
 }

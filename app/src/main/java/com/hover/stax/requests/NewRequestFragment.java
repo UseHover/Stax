@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,16 +26,21 @@ import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.abstractClasses.StagedFragment;
 import com.hover.stax.views.Stax2LineItem;
+import com.hover.stax.views.StaxCardView;
 
 public class NewRequestFragment extends StagedFragment implements RecipientAdapter.UpdateListener {
 
 	protected NewRequestViewModel requestViewModel;
 
 	private RecyclerView recipientInputList;
-	private LinearLayout recipientValueList;
-	private TextView amountValue, noteValue;
+
 	private EditText amountInput, requesterAccountNo, noteInput;
 	private TextView addRecipientBtn;
+
+	private LinearLayout recipientValueList;
+	protected Stax2LineItem accountValue;
+
+	private StaxCardView shareCard;
 
 	private RecipientAdapter recipientAdapter;
 	private int recipientCount = 0;
@@ -42,7 +48,9 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		channelDropdownViewModel = new ViewModelProvider(requireActivity()).get(ChannelDropdownViewModel.class);
-		requestViewModel = new ViewModelProvider(requireActivity()).get(NewRequestViewModel.class);
+		stagedViewModel = new ViewModelProvider(requireActivity()).get(NewRequestViewModel.class);
+		requestViewModel = (NewRequestViewModel) stagedViewModel;
+
 		View view = inflater.inflate(R.layout.fragment_request, container, false);
 		init(view);
 		startObservers(view);
@@ -53,8 +61,7 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 	@Override
 	protected void init(View view) {
 		recipientValueList = view.findViewById(R.id.requesteeValueList);
-		amountValue = view.findViewById(R.id.amountValue);
-		noteValue = view.findViewById(R.id.noteValue);
+		accountValue = view.findViewById(R.id.account_value);
 
 		recipientInputList = view.findViewById(R.id.recipient_list);
 		amountInput = view.findViewById(R.id.amount_input);
@@ -70,10 +77,19 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		recipientAdapter = new RecipientAdapter(requestViewModel.getRequestees().getValue(), requestViewModel.getRecentContacts().getValue(), this);
 		recipientInputList.setAdapter(recipientAdapter);
 
+		shareCard = view.findViewById(R.id.shareCard);
+
 		super.init(view);
 	}
 
 	protected void startObservers(View root) {
+		channelDropdownViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> {
+			requestViewModel.setActiveChannel(channel);
+			accountValue.setTitle(channel.toString());
+		});
+
+		requestViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> Log.e("RequestFrag", "Got active channel " + channel));
+
 		requestViewModel.getRequestees().observe(getViewLifecycleOwner(), recipients -> {
 			if (recipients == null || recipients.size() == 0) return;
 			recipientValueList.removeAllViews();
@@ -89,6 +105,10 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		});
 		requestViewModel.getRecentContacts().observe(getViewLifecycleOwner(), contacts -> {
 			recipientAdapter.updateContactList(contacts);
+		});
+
+		requestViewModel.getAmountError().observe(getViewLifecycleOwner(), error -> {
+			amountInput.setError((error != null ? getString(error) : null));
 		});
 
 		requestViewModel.getRequesteeError().observe(getViewLifecycleOwner(), recipientError -> {
@@ -108,12 +128,24 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 			if(getContext() !=null && accountChoiceError !=null) UIHelper.flashMessage(getContext(), getString(accountChoiceError));
 		});
 
-		requestViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> amountValue.setText(Utils.formatAmount(amount)));
-
-		requestViewModel.getRequesterNumber().observe(getViewLifecycleOwner(), accountNumber -> {
-			accountValue.setSubtitle(accountNumber);
+		requestViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> {
+			root.findViewById(R.id.amountRow).setVisibility(requestViewModel.validAmount() ? View.VISIBLE : View.GONE);
+			((TextView) root.findViewById(R.id.amountValue)).setText(Utils.formatAmount(amount));
 		});
-		requestViewModel.getNote().observe(getViewLifecycleOwner(), note -> noteValue.setText(note));
+		requestViewModel.getRequesterNumber().observe(getViewLifecycleOwner(), accountNumber -> accountValue.setSubtitle(accountNumber));
+		requestViewModel.getNote().observe(getViewLifecycleOwner(), note -> {
+			root.findViewById(R.id.noteRow).setVisibility(requestViewModel.validNote() ? View.VISIBLE : View.GONE);
+			((TextView) root.findViewById(R.id.noteValue)).setText(note);
+		});
+
+		requestViewModel.getIsEditing().observe(getViewLifecycleOwner(), this::showEdit);
+	}
+
+	protected void showEdit(boolean isEditing) {
+		super.showEdit(isEditing);
+		if (!isEditing) requestViewModel.createRequest();
+		shareCard.setVisibility(isEditing ? View.GONE : View.VISIBLE);
+		fab.setVisibility(isEditing ? View.VISIBLE : View.GONE);
 	}
 
 	protected void onActiveChannelChange(Channel c) {
@@ -126,6 +158,8 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		amountInput.addTextChangedListener(amountWatcher);
 		requesterAccountNo.addTextChangedListener(receivingAccountNumberWatcher);
 		noteInput.addTextChangedListener(noteWatcher);
+
+		fab.setOnClickListener(v -> fabClicked(v));
 	}
 
 	@Override
@@ -167,4 +201,12 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 			requestViewModel.setNote(charSequence.toString());
 		}
 	};
+
+	private void fabClicked(View v) {
+		requestViewModel.removeInvalidRequestees();
+		if (requestViewModel.getIsEditing().getValue() && (!channelDropdownViewModel.validates() || !requestViewModel.validates()))
+			UIHelper.flashMessage(getContext(), getString(R.string.toast_pleasefix));
+		else
+			requestViewModel.setEditing(false);
+	}
 }

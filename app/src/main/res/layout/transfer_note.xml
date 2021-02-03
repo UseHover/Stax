@@ -5,7 +5,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
     android:fontFamily="font-normal"
-	android:hint="@string/note_label_opt"
+	android:hint="@string/request_note_label"
 	style="@style/StaxLabeledInput">
 
 	<com.google.android.material.textfield.TextInputEditText

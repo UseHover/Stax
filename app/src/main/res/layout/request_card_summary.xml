@@ -11,7 +11,7 @@
 		android:layout_height="wrap_content"
 		android:layout_marginHorizontal="@dimen/margin_10">
 
-		<TableRow android:id="@+id/amountRow">
+		<TableRow android:id="@+id/amountRow" android:visibility="gone">
 			<TextView
 			    android:text="@string/amount_cardhead"
 			    android:textColor="@color/offWhite"
@@ -51,7 +51,7 @@
 				android:textAlignment="viewEnd" />
 		</TableRow>
 
-		<TableRow android:id="@+id/noteRow" android:layout_marginTop="@dimen/margin_21">
+		<TableRow android:id="@+id/noteRow" android:layout_marginTop="@dimen/margin_21" android:visibility="gone">
 			<TextView
 				android:text="@string/note_cardhead"
 				android:textColor="@color/offWhite"
@@ -65,84 +65,5 @@
 				android:textSize="@dimen/text_21"
 				android:textAlignment="viewEnd" />
 		</TableRow>
-
-		<TableRow android:id="@+id/dateRow" android:layout_marginTop="@dimen/margin_21">
-			<TextView
-				android:text="@string/date_label"
-				android:textColor="@color/offWhite"
-				android:fontFamily="font-normal"
-				android:textSize="@dimen/text_16" />
-
-			<TextView android:id="@+id/dateValue"
-				android:layout_weight="1"
-				android:fontFamily="font-normal"
-				android:textColor="@color/offWhite"
-				android:textSize="@dimen/text_21"
-				android:textAlignment="viewEnd" />
-		</TableRow>
-
-		<TableRow android:id="@+id/frequencyRow" android:layout_marginTop="@dimen/margin_21">
-
-			<TextView
-				android:text="@string/repeatfreq_label"
-				android:textColor="@color/offWhite"
-			    	android:fontFamily="font-normal"
-				android:textSize="@dimen/text_16" />
-
-			<TextView android:id="@+id/frequencyValue"
-				android:layout_weight="1"
-				android:fontFamily="font-normal"
-				android:textColor="@color/offWhite"
-				android:textSize="@dimen/text_21"
-				android:textAlignment="viewEnd" />
-		</TableRow>
-
-		<TableRow android:id="@+id/endDateRow" android:layout_marginTop="@dimen/margin_21">
-
-			<TextView
-				android:text="@string/end_label"
-				android:textColor="@color/offWhite"
-			    	android:fontFamily="font-normal"
-				android:textSize="@dimen/text_16" />
-
-			<TextView android:id="@+id/endDateValue"
-				android:layout_weight="1"
-				android:fontFamily="font-normal"
-				android:textColor="@color/offWhite"
-				android:textSize="@dimen/text_21"
-				android:textAlignment="viewEnd" />
-		</TableRow>
-
-		<TableRow android:id="@+id/repeatTimesRow" android:layout_marginTop="@dimen/margin_21">
-
-			<TextView
-				android:text="@string/repeatnum_label"
-				android:textColor="@color/offWhite"
-			    	android:fontFamily="font-normal"
-				android:textSize="@dimen/text_16" />
-
-			<TextView android:id="@+id/repeatTimesValue"
-				android:layout_weight="1"
-				android:fontFamily="font-normal"
-				android:textColor="@color/offWhite"
-				android:textSize="@dimen/text_21"
-				android:textAlignment="viewEnd" />
-		</TableRow>
 	</TableLayout>
-
-	<RelativeLayout android:id="@+id/btnRow"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:visibility="gone"
-		android:layout_marginTop="@dimen/margin_21">
-
-		<androidx.appcompat.widget.AppCompatButton
-			android:id="@+id/edit_btn"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/btn_edit"
-			android:layout_alignParentEnd="true"
-			style="@style/StaxButton"
-			android:fontFamily="font-medium" />
-	</RelativeLayout>
 </com.hover.stax.views.StaxCardView>
