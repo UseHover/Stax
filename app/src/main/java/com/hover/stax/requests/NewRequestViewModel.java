@@ -1,6 +1,7 @@
 package com.hover.stax.requests;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -64,17 +65,13 @@ public class NewRequestViewModel extends StagedViewModel {
 
 	void setActiveChannel(Channel c) {
 		activeChannel.setValue(c);
-		setRequesterNumber(c);
 	}
 	LiveData<Channel> getActiveChannel() {
 		return activeChannel;
 	}
 
 	void setRequesterNumber(Channel c) {
-		if (c != null && c.accountNo != null && !c.accountNo.isEmpty())
-			requesterNumber.setValue(c.accountNo);
-		else if (c != null && requesterNumber.getValue() != null && !requesterNumber.getValue().isEmpty())
-			c.accountNo = requesterNumber.getValue();
+		if (c != null) requesterNumber.setValue(c.accountNo);
 	}
 
 	void setRequesterNumber(String number) {
@@ -89,7 +86,8 @@ public class NewRequestViewModel extends StagedViewModel {
 
 	public void onUpdate(int pos, StaxContact contact) {
 		List<StaxContact> cs = requestees.getValue() != null ? requestees.getValue() : new ArrayList<>();
-		cs.set(pos, contact);
+		try { cs.set(pos, contact);
+		} catch (IndexOutOfBoundsException e) { cs.add(contact); }
 		requestees.postValue(cs);
 	}
 
@@ -191,7 +189,9 @@ public class NewRequestViewModel extends StagedViewModel {
 	}
 
 	void saveRequest() {
-		ArrayList<Request> requests	= new ArrayList<>();
+		if (finalRequests.getValue() != null && finalRequests.getValue().size() > 0 && requestees.getValue() != null && finalRequests.getValue().size() == requestees.getValue().size())
+			return;
+		ArrayList<Request> requests = new ArrayList<>();
 		for (StaxContact recipient : requestees.getValue()) {
 			Request r = new Request(formulatedRequest.getValue(), recipient, getApplication());
 			requests.add(r);

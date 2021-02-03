@@ -99,7 +99,6 @@ public class TransferFragment extends StagedFragment implements ActionSelect.Hig
 			transferViewModel.setActions(actions);
 			actionSelect.updateActions(actions);
 		});
-		channelDropdownViewModel.getError().observe(getViewLifecycleOwner(), error -> channelDropdown.setError(error));
 
 		transferViewModel.getActiveActionError().observe(getViewLifecycleOwner(), error -> actionSelect.setError(error));
 

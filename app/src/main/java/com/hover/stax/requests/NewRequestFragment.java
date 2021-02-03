@@ -88,7 +88,7 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 			accountValue.setTitle(channel.toString());
 		});
 
-		requestViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> Log.e("RequestFrag", "Got active channel " + channel));
+		requestViewModel.getActiveChannel().observe(getViewLifecycleOwner(), this::updateAcctNo);
 
 		requestViewModel.getRequestees().observe(getViewLifecycleOwner(), recipients -> {
 			if (recipients == null || recipients.size() == 0) return;
@@ -124,10 +124,6 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 			v.setErrorIconDrawable(0);
 		});
 
-		requestViewModel.getRequesterAccountError().observe(getViewLifecycleOwner(), accountChoiceError-> {
-			if(getContext() !=null && accountChoiceError !=null) UIHelper.flashMessage(getContext(), getString(accountChoiceError));
-		});
-
 		requestViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> {
 			root.findViewById(R.id.amountRow).setVisibility(requestViewModel.validAmount() ? View.VISIBLE : View.GONE);
 			((TextView) root.findViewById(R.id.amountValue)).setText(Utils.formatAmount(amount));
@@ -148,10 +144,7 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		fab.setVisibility(isEditing ? View.VISIBLE : View.GONE);
 	}
 
-	protected void onActiveChannelChange(Channel c) {
-		if (c != null && c.accountNo != null && !c.accountNo.isEmpty())
-			requesterAccountNo.setText(c.accountNo);
-	}
+	protected void updateAcctNo(Channel c) { if (c != null) requesterAccountNo.setText(c.accountNo); }
 
 	protected void startListeners() {
 		addRecipientBtn.setOnClickListener(v -> requestViewModel.addRecipient(new StaxContact("")));

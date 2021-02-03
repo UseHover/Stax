@@ -118,7 +118,7 @@ public class RequestActivity extends AppCompatActivity implements RequestSenderI
 	public void onBackPressed() {
 		if (!requestViewModel.getIsEditing().getValue() && requestViewModel.getRequest().getValue() == null)
 			requestViewModel.setEditing(true);
-		else if (!requestViewModel.getIsEditing().getValue() && requestViewModel.getRequests().getValue() != null)
+		else if (!requestViewModel.getIsEditing().getValue() && requestViewModel.getRequests().getValue() == null)
 			askAreYouSure();
 		else
 			super.onBackPressed();
@@ -128,7 +128,7 @@ public class RequestActivity extends AppCompatActivity implements RequestSenderI
 		dialog = new StaxDialog(this)
 			.setDialogTitle(R.string.reqsave_head)
 			.setDialogMessage(R.string.reqsave_msg)
-			.setPosButton(R.string.btn_saveanyway, btn -> requestViewModel.saveRequest())
+			.setPosButton(R.string.btn_saveanyway, btn -> { requestViewModel.saveRequest(); super.onBackPressed(); })
 			.setNegButton(R.string.btn_dontsave, btn ->  cancel())
 			.showIt();
 	}
