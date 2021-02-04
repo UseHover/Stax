@@ -44,7 +44,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 	private LiveData<List<Channel>> selectedChannels;
 	private MediatorLiveData<List<Channel>> simChannels;
 	private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
-	private LiveData<List<Action>> actions = new MediatorLiveData<>();
+	private MediatorLiveData<List<Action>> actions = new MediatorLiveData<>();
 
 	private MediatorLiveData<String> error = new MediatorLiveData<>();
 
@@ -65,9 +65,9 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 		activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull);
 		error.addSource(activeChannel, channel -> { if (channel != null && actions.getValue() != null && actions.getValue().size() > 0) error.setValue(null); });
 
-		actions = Transformations.switchMap(type, this::loadActions);
-		actions = Transformations.switchMap(selectedChannels, this::loadActions);
-		actions = Transformations.switchMap(activeChannel, this::loadActions);
+		actions.addSource(type, this::loadActions);
+		actions.addSource(selectedChannels, this::loadActions);
+		actions.addSource(activeChannel, this::loadActions);
 		error.addSource(actions, actions -> {
 			if (activeChannel.getValue() != null && (actions == null || actions.size() == 0))
 				error.setValue(application.getString(R.string.no_actions_fielderror, getHumanFriendlyType()));
@@ -156,50 +156,54 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 	protected void setActiveChannelIfNull(List<Channel> channels) {
 		if (channels != null && channels.size() > 0 && activeChannel.getValue() == null) {
 			for (Channel c: channels)
-				if (c.defaultAccount) { activeChannel.setValue(c); }
+				if (c.defaultAccount) { activeChannel.postValue(c); }
 		}
 	}
 
 	private void setActiveChannel(Channel channel) {
 		activeChannel.setValue(channel);
 	}
+
+	void setActiveChannel(List<Action> acts) {
+		if (acts == null || acts.size() == 0) { return; }
+		activeChannel.removeSource(actions);
+		new Thread(() -> activeChannel.postValue(repo.getChannel(acts.get(0).channel_id))).start();
+	}
 	public LiveData<Channel> getActiveChannel() { return activeChannel; }
 
 	@Override
 	public void highlightChannel(Channel c) { setActiveChannel(c); }
 
-	public LiveData<List<Action>> loadActions(String t) {
-		if ((t.equals(Action.BALANCE) && selectedChannels.getValue() == null) || (!t.equals(Action.BALANCE) && activeChannel.getValue() == null)) return null;
+	public void loadActions(String t) {
+		if ((t.equals(Action.BALANCE) && selectedChannels.getValue() == null) || (!t.equals(Action.BALANCE) && activeChannel.getValue() == null)) return;
 		if (t.equals(Action.BALANCE))
-			return loadActions(selectedChannels.getValue(), t);
+			loadActions(selectedChannels.getValue(), t);
 		else
-			return loadActions(activeChannel.getValue(), t);
+			loadActions(activeChannel.getValue(), t);
 	}
 
-	public LiveData<List<Action>> loadActions(Channel channel) {
+	public void loadActions(Channel channel) {
 		Log.e(TAG, "Loading actions from channel. Type is: " + type.getValue());
-		return loadActions(channel, type.getValue());
+		loadActions(channel, type.getValue());
 	}
 
-	private LiveData<List<Action>> loadActions(Channel c, String t) {
+	private void loadActions(Channel c, String t) {
 		Log.e(TAG, "Loading actions from channel. Type is: " + t);
-		return t.equals(Action.P2P) ? repo.getTransferActions(c.id) : repo.getLiveActions(c.id, t);
+		new Thread(() -> actions.postValue(t.equals(Action.P2P) ? repo.getTransferActions(c.id) : repo.getActions(c.id, t))).start();
 	}
 
-	public LiveData<List<Action>> loadActions(List<Channel> channels) {
+	public void loadActions(List<Channel> channels) {
 		if (type.getValue().equals(Action.BALANCE))
-			return loadActions(channels, type.getValue());
-		else return actions;
+			loadActions(channels, type.getValue());
 	}
 
-	public LiveData<List<Action>> loadActions(List<Channel> channels, String t) {
-		if (type.getValue() == null || !type.getValue().equals(Action.BALANCE)) return actions;
-		Log.e(TAG, "attempting to load " + channels.size() + " balance actions");
+	public void loadActions(List<Channel> channels, String t) {
+		Log.e(TAG, "attempting to load " + channels.size() + " channels' actions with type " + t);
 		int[] ids = new int[channels.size()];
 		for (int c = 0; c < channels.size(); c++)
 			ids[c] = channels.get(c).id;
 		Log.e(TAG, "attempting to load balance actions for channels: " + Arrays.toString(ids));
-		return repo.getLiveActions(ids, t);
+		new Thread(() -> actions.postValue(repo.getActions(ids, t))).start();
 	}
 
 	public LiveData<List<Action>> getActions() { return actions; }
@@ -232,8 +236,25 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 	}
 
 	public void setChannelFromRequest(Request r) {
-		if (r != null)
-			new Thread(() -> activeChannel.postValue(repo.getChannelByInstitutionId(r.requester_institution_id))).start();
+		if (r != null && selectedChannels.getValue() != null && selectedChannels.getValue().size() > 0) {
+			new Thread(() -> {
+				List<Action> acts = repo.getActions(getChannelIds(selectedChannels.getValue()), r.requester_institution_id);
+				if (acts.size() <= 0) {
+					acts = repo.getActions(getChannelIds(simChannels.getValue()), r.requester_institution_id);
+					if (acts.size() <= 0)
+						error.postValue(getApplication().getString(R.string.channel_request_fielderror, String.valueOf(r.requester_institution_id)));
+				}
+				actions.postValue(acts);
+			}).start();
+			activeChannel.addSource(actions, this::setActiveChannel);
+		}
+	}
+
+	private int[] getChannelIds(List<Channel> channels) {
+		int[] ids = new int[channels.size()];
+		for (int c = 0; c < channels.size(); c++)
+			ids[c] = channels.get(c).id;
+		return ids;
 	}
 
 	public void view(Schedule s) {

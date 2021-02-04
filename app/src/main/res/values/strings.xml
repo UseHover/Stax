@@ -204,6 +204,7 @@
 	<string name="amount_fielderror">Please enter a valid amount.</string>
 	<string name="channel_fielderror">Please select a service.</string>
 	<string name="action_fielderror">Please select a recipient network.</string>
+	<string name="channel_request_fielderror">Please insert a sim card that can send to %1$s</string>
 	<string name="no_actions_fielderror">This service cannot be used for %1$s.</string>
 	<string name="toast_pleasefix">Please fix the errors shown in red.</string>
 	<string name="self_choice">Myself</string>
