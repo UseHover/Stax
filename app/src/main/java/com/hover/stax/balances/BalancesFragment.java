@@ -103,7 +103,7 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 			balancesViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
 				balancesViewModel.setAllRunning(v.getContext());
 			});
-			balancesViewModel.selectChannel(channelDropdown.getHighlighted(), v.getContext());
+			channelDropdownViewModel.setChannelSelected(channelDropdown.getHighlighted());
 		} else
 			balancesViewModel.setAllRunning(v.getContext());
 	}

@@ -20,10 +20,8 @@ import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.Constants;
 import com.hover.stax.permissions.PermissionUtils;
-import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.StagedViewModel;
 import com.hover.stax.utils.UIHelper;
-import com.hover.stax.views.Stax2LineItem;
 import com.hover.stax.views.StaxCardView;
 
 public abstract class StagedFragment extends Fragment {
@@ -54,6 +52,7 @@ public abstract class StagedFragment extends Fragment {
 	}
 
 	protected void showEdit(boolean isEditing) {
+		channelDropdownViewModel.setChannelSelected(channelDropdown.getHighlighted());
 		editCard.setVisibility(isEditing ? View.VISIBLE : View.GONE);
 		summaryCard.setVisibility(isEditing ? View.GONE : View.VISIBLE);
 		fab.setText(isEditing ? getString(R.string.btn_continue) : getString(R.string.fab_transfernow));

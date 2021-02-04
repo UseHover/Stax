@@ -31,9 +31,7 @@ public class PinsViewModel extends AndroidViewModel {
 	}
 
 	private void loadSelectedChannels() {
-		if (channels == null) {
-			channels = new MutableLiveData<>();
-		}
+		if (channels == null) { channels = new MutableLiveData<>(); }
 		channels = repo.getSelected();
 	}
 
@@ -82,6 +80,7 @@ public class PinsViewModel extends AndroidViewModel {
 		channel.selected = false;
 		channel.defaultAccount = false;
 		repo.update(channel);
+		if (channels.getValue() == null) return;
 		for (Channel c: channels.getValue()) {
 			if (c != channel) {
 				c.defaultAccount = true;

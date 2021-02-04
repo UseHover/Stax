@@ -3,6 +3,7 @@ package com.hover.stax.settings;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 public class PinUpdateFragment extends Fragment implements Target {
+	private static String TAG = "PinUpdateFragment";
 
 	private View view;
 	private TextInputEditText input;
@@ -38,6 +40,7 @@ public class PinUpdateFragment extends Fragment implements Target {
 		view = inflater.inflate(R.layout.fragment_pin_update, container, false);
 
 		pinViewModel = new ViewModelProvider(this).get(PinsViewModel.class);
+		pinViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> Log.e(TAG, "Observer ensures events fire."));
 		pinViewModel.loadChannel(getArguments().getInt("channel_id", 0));
 		pinViewModel.getChannel().observe(getViewLifecycleOwner(), this::initView);
 

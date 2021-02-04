@@ -90,24 +90,6 @@ public class BalancesViewModel extends AndroidViewModel {
 		return actions;
 	}
 
-	public void selectChannel(Channel channel, Context c) {
-		if (channel == null) return;
-		Log.e(TAG, "saving selected channel: " + channel);
-		logChoice(channel, c);
-		channel.selected = true;
-		channel.defaultAccount = true;
-		repo.update(channel);
-	}
-
-	private void logChoice(Channel channel, Context c) {
-		FirebaseMessaging.getInstance().subscribeToTopic("channel-" + channel.id);
-		JSONObject event = new JSONObject();
-		try { event.put(c.getString(R.string.added_channel_id), channel.id);
-		} catch (JSONException ignored) { }
-		Amplitude.getInstance().logEvent(c.getString(R.string.new_account_check_balance), event);
-	}
-
-
 	public Channel getChannel(int id) {
 		List<Channel> allChannels = selectedChannels.getValue() != null ? selectedChannels.getValue() : new ArrayList<>();
 		return getChannel(allChannels, id);

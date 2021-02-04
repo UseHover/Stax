@@ -14,22 +14,22 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.amplitude.api.Amplitude;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.database.DatabaseRepo;
-import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.requests.Request;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.sims.Sim;
 import com.hover.stax.utils.Utils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import static com.hover.stax.database.Constants.LANGUAGE_CHECK;
 
 public class ChannelDropdownViewModel extends AndroidViewModel implements ChannelDropdown.HighlightListener {
 	public final static String TAG = "ChannelDropdownVM";
@@ -208,14 +208,21 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 
 	public LiveData<List<Action>> getActions() { return actions; }
 
-	public void selectChannel(Channel channel, Context c) {
+	public void setChannelSelected(Channel channel) {
 		if (channel == null) return;
-		Log.e(TAG, "saving selected channel: " + channel);
-//		logChoice(channel, c);
+		logChoice(channel);
 		channel.selected = true;
 		channel.defaultAccount = selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0;
-		FirebaseMessaging.getInstance().subscribeToTopic("channel-" + channel.id);
 		repo.update(channel);
+	}
+
+	private void logChoice(Channel channel) {
+		Log.i(TAG, "saving selected channel: " + channel);
+		FirebaseMessaging.getInstance().subscribeToTopic("channel-" + channel.id);
+		JSONObject event = new JSONObject();
+		try { event.put(getApplication().getString(R.string.added_channel_id), channel.id);
+		} catch (JSONException ignored) { }
+		Amplitude.getInstance().logEvent(getApplication().getString(R.string.new_channel_selected), event);
 	}
 
 	public boolean validates() {
