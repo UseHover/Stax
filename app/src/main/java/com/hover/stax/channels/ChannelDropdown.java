@@ -3,9 +3,7 @@ package com.hover.stax.channels;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
@@ -19,11 +17,11 @@ public class ChannelDropdown extends TextInputLayout {
 	private static String TAG = "ChannelDropdown";
 
 	private TextInputLayout input;
-	private AutoCompleteTextView textView;
-	private TextView link;
+	private AutoCompleteTextView dropdownView;
+	private TextView linkView;
 
 	private String label;
-	private boolean showSelected, showLink, showError = false;
+	private boolean showSelected, showLink;
 	private Channel highlightedChannel;
 	private HighlightListener highlightListener;
 
@@ -32,8 +30,8 @@ public class ChannelDropdown extends TextInputLayout {
 		getAttrs(context, attrs);
 		LayoutInflater.from(context).inflate(R.layout.channel_dropdown, this);
 		input = findViewById(R.id.channel_dropdown_input);
-		textView = findViewById(R.id.channel_autoComplete);
-		link = findViewById(R.id.new_account_link);
+		dropdownView = findViewById(R.id.channel_autoComplete);
+		linkView = findViewById(R.id.new_account_link);
 		fillFromAttrs();
 	}
 
@@ -51,7 +49,7 @@ public class ChannelDropdown extends TextInputLayout {
 	private void fillFromAttrs() {
 		if (label != null && !label.isEmpty())
 			input.setHint(label);
-		link.setOnClickListener(v -> toggleLink(false));
+		linkView.setOnClickListener(v -> toggleLink(false));
 		toggleLink(showLink);
 	}
 
@@ -60,12 +58,12 @@ public class ChannelDropdown extends TextInputLayout {
 	public void updateChannels(List<Channel> channels) {
 		if (channels == null || channels.size() == 0) return;
 		if (highlightedChannel == null)
-			textView.setText("");
+			dropdownView.setText("");
 		ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(ChannelDropdownAdapter.sort(channels, showSelected), getContext());
-		textView.setAdapter(channelDropdownAdapter);
-		textView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((Channel) adapterView.getItemAtPosition(pos)));
+		dropdownView.setAdapter(channelDropdownAdapter);
+		dropdownView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((Channel) adapterView.getItemAtPosition(pos)));
 		for (Channel c: channels) {
-			if (c.defaultAccount && !showLink) textView.setText(c.toString(), false);
+			if (c.defaultAccount && !showLink) dropdownView.setText(c.toString(), false);
 		}
 	}
 
@@ -77,7 +75,7 @@ public class ChannelDropdown extends TextInputLayout {
 	public Channel getHighlighted() { return highlightedChannel; }
 
 	public void toggleLink(boolean show) {
-		link.setVisibility(show ? VISIBLE : GONE);
+		linkView.setVisibility(show ? VISIBLE : GONE);
 		input.setVisibility(show ? GONE : VISIBLE);
 		if (show) {
 			reset();
@@ -91,7 +89,7 @@ public class ChannelDropdown extends TextInputLayout {
 
 	public void reset() {
 		if (VolleySingleton.isConnected(getContext()))
-			textView.setText("");
+			dropdownView.setText("");
 		highlightedChannel = null;
 	}
 

@@ -72,7 +72,6 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 			if (activeChannel.getValue() != null && (actions == null || actions.size() == 0))
 				error.setValue(application.getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getApplication(), type.getValue())));
 			else error.setValue(null);
-
 		});
 	}
 
@@ -209,7 +208,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 	public LiveData<List<Action>> getActions() { return actions; }
 
 	public void setChannelSelected(Channel channel) {
-		if (channel == null) return;
+		if (channel == null || channel.selected) return;
 		logChoice(channel);
 		channel.selected = true;
 		channel.defaultAccount = selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0;

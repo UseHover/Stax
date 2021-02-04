@@ -71,11 +71,6 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 			Log.e(TAG, "viewing request " + request);
 			if (dialog != null) dialog.dismiss();
 		});
-
-//		channelDropdownViewModel.getActiveChannel().observe(this, channel -> {
-//		if (!simChannels.contains(channel))
-//			setChannelDropdownError();
-//		);
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_request_link));
 	}
 
