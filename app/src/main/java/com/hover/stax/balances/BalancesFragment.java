@@ -59,6 +59,8 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 
 		setUpBalances(view);
 		setUpChannelDropdown();
+		setUpFuture(view);
+		setUpHistory(view);
 		view.findViewById(R.id.refresh_accounts_btn).setOnClickListener(this::refreshBalances);
 	}
 
