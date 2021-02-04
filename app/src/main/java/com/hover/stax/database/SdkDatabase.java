@@ -14,7 +14,7 @@ import com.hover.stax.sims.Sim;
 import com.hover.stax.sims.SimDao;
 
 // This is a readonly database for accessing the DB created by SQL in the SDK
-@Database(entities = {Action.class, Sim.class}, version = 49, exportSchema = false)
+@Database(entities = {Action.class, Sim.class}, version = 51, exportSchema = false)
 public abstract class SdkDatabase extends RoomDatabase {
 
 	private static volatile SdkDatabase INSTANCE;
@@ -28,17 +28,18 @@ public abstract class SdkDatabase extends RoomDatabase {
 			synchronized (SdkDatabase.class) {
 				if (INSTANCE == null) {
 					INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SdkDatabase.class, "hoversdktransactions.db")
-						.setJournalMode(JournalMode.TRUNCATE)
-						.addMigrations(M40_41)
-						.addMigrations(M41_42)
-						.addMigrations(M42_43)
-						.addMigrations(M43_44)
-						.addMigrations(M44_45)
-						.addMigrations(M45_46)
-						.addMigrations(M46_47)
-						.addMigrations(M47_48)
-						.addMigrations(M48_49)
-						.build();
+									   .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
+									   .addMigrations(M40_41)
+									   .addMigrations(M41_42)
+									   .addMigrations(M42_43)
+									   .addMigrations(M43_44)
+									   .addMigrations(M44_45)
+									   .addMigrations(M45_46)
+									   .addMigrations(M46_47)
+									   .addMigrations(M47_48)
+									   .addMigrations(M48_49)
+									   .addMigrations(M50_51)
+									   .build();
 				}
 			}
 		}
@@ -94,6 +95,16 @@ public abstract class SdkDatabase extends RoomDatabase {
 	};
 
 	static final Migration M48_49 = new Migration(48, 49) {
+		@Override
+		public void migrate(SupportSQLiteDatabase database) {
+		}
+	};
+	static final Migration M49_50 = new Migration(49, 50) {
+		@Override
+		public void migrate(SupportSQLiteDatabase database) {
+		}
+	};
+	static final Migration M50_51 = new Migration(50, 51) {
 		@Override
 		public void migrate(SupportSQLiteDatabase database) {
 		}

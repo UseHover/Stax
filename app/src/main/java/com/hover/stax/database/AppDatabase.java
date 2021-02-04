@@ -5,6 +5,8 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
@@ -42,11 +44,18 @@ public abstract class AppDatabase extends RoomDatabase {
 			synchronized (AppDatabase.class) {
 				if (INSTANCE == null) {
 					INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "stax.db")
-									   .fallbackToDestructiveMigration()
+									   .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
+									   .addMigrations(M23_24)
 									   .build();
 				}
 			}
 		}
 		return INSTANCE;
 	}
+
+	static final Migration M23_24 = new Migration(23, 24) {
+		@Override
+		public void migrate(SupportSQLiteDatabase database) {
+		}
+	};
 }
