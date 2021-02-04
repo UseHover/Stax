@@ -71,7 +71,7 @@ public class PermissionsFragment extends DialogFragment {
 	public void onResume() {
 		super.onResume();
 		logReturnEvent();
-		new Handler().postDelayed(() -> maybeUpdateToNext(), 500);
+		maybeUpdateToNext();
 	}
 
 	private void logReturnEvent() {
@@ -87,7 +87,7 @@ public class PermissionsFragment extends DialogFragment {
 		if (getArguments().getInt(STARTWITH) == ACCESS && !helper.hasAccessPerm())
 			setOnlyNeedAccess();
 		else if (current == OVERLAY && helper.hasOverlayPerm() && !helper.hasAccessPerm())
-			animateToStep2();
+			new Handler().postDelayed(() -> animateToStep2(), 500);
 		else if (helper.hasAccessPerm())
 			animateToDone();
 	}
@@ -115,7 +115,7 @@ public class PermissionsFragment extends DialogFragment {
 		if (dialog != null)
 			dialog.animateProgressTo(100);
 		getActivity().setResult(RESULT_OK);
-		new Handler().postDelayed(() -> getActivity().finish(), 800);
+		new Handler().postDelayed(() -> getActivity().finish(), getArguments().getInt(STARTWITH) == ACCESS ? 10 : 800);
 	}
 
 	private void cancel() {

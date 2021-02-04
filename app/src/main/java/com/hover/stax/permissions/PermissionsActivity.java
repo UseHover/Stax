@@ -31,18 +31,7 @@ public class PermissionsActivity extends AppCompatActivity {
 		if (prev != null) { ft.remove(prev); }
 		ft.addToBackStack(null);
 
-		PermissionsFragment newFragment = PermissionsFragment.newInstance(getReason(), new PermissionHelper(this).hasOverlayPerm());
+		PermissionsFragment newFragment = PermissionsFragment.newInstance(Action.getHumanFriendlyType(this, getIntent() != null ? getIntent().getStringExtra("transaction_type") : null), new PermissionHelper(this).hasOverlayPerm());
 		newFragment.show(ft, "dialog");
-	}
-
-	private String getReason() {
-		if (getIntent() != null && getIntent().getStringExtra("transaction_type") != null) {
-			String type = getIntent().getStringExtra("transaction_type");
-			if (type.equals(Action.AIRTIME)) return getString(R.string.buy_airtime);
-			else if (type.equals(Action.BALANCE)) return getString(R.string.check_balance);
-			else if (type.equals(Action.P2P)) return getString(R.string.send_money);
-			else if (type.equals(Action.ME2ME)) return getString(R.string.move_money);
-		}
-		return getString(R.string.use_ussd);
 	}
 }

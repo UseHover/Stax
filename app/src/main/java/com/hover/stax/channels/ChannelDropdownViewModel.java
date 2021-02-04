@@ -70,7 +70,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 		actions.addSource(activeChannel, this::loadActions);
 		error.addSource(actions, actions -> {
 			if (activeChannel.getValue() != null && (actions == null || actions.size() == 0))
-				error.setValue(application.getString(R.string.no_actions_fielderror, getHumanFriendlyType()));
+				error.setValue(application.getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getApplication(), type.getValue())));
 			else error.setValue(null);
 
 		});
@@ -225,7 +225,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 			error.setValue(getApplication().getString(R.string.channel_error_noselect));
 		} else if (actions.getValue() == null || actions.getValue().size() == 0) {
 			valid = false;
-			error.setValue(getApplication().getString(R.string.no_actions_fielderror, getHumanFriendlyType()));
+			error.setValue(getApplication().getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getApplication(), type.getValue())));
 		}
 		return valid;
 	}
@@ -260,18 +260,6 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 	public void view(Schedule s) {
 		setType(s.type);
 		setActiveChannel(repo.getChannel(s.channel_id));
-	}
-
-	protected String getHumanFriendlyType() {
-		if (type == null || type.getValue() == null) return null;
-		switch (type.getValue()) {
-			case Action.P2P: return getApplication().getString(R.string.send_money);
-			case Action.AIRTIME: return getApplication().getString(R.string.buy_airtime);
-			case Action.ME2ME: return getApplication().getString(R.string.move_money);
-			case Action.BALANCE:
-			default:
-				return getApplication().getString(R.string.check_balance);
-		}
 	}
 
 	@Override

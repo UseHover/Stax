@@ -168,6 +168,16 @@ public class Action {
 		return params;
 	}
 
+	public static String getHumanFriendlyType(Context c, String type) {
+		switch (type) {
+			case Action.P2P: return c.getString(R.string.send_money);
+			case Action.AIRTIME: return c.getString(R.string.buy_airtime);
+			case Action.ME2ME: return c.getString(R.string.move_money);
+			case Action.BALANCE: return c.getString(R.string.check_balance);
+			default: return c.getString(R.string.use_ussd);
+		}
+	}
+
 	@Override
 	public boolean equals(Object other) {
 		if (other == null) return false;
