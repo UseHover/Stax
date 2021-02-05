@@ -3,6 +3,7 @@ package com.hover.stax.channels;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;

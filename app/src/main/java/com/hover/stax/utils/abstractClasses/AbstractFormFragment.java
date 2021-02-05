@@ -47,11 +47,14 @@ public abstract class AbstractFormFragment extends Fragment {
 
 	protected void startObservers(View root) {
 		channelDropdown.setListener(channelDropdownViewModel);
+		channelDropdownViewModel.getSims().observe(getViewLifecycleOwner(), sims -> Log.i(TAG, "Got sims: " + sims.size()));
+		channelDropdownViewModel.getSimHniList().observe(getViewLifecycleOwner(), simList -> Log.i(TAG, "Got new sim hni list: " + simList));
+		channelDropdownViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
 		channelDropdownViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
 		channelDropdownViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
-		channelDropdownViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> Log.e(TAG, "Got selected channels: " + channels.size()));
-		channelDropdownViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> Log.e(TAG, "Got new active channel: " + channel + " " + channel.countryAlpha2));
-		channelDropdownViewModel.getChannelActions().observe(getViewLifecycleOwner(), actions -> Log.e(TAG, "Got new actions: " + actions.size()));
+		channelDropdownViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> Log.i(TAG, "Got selected channels: " + channels.size()));
+		channelDropdownViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> Log.i(TAG, "Got new active channel: " + channel + " " + channel.countryAlpha2));
+		channelDropdownViewModel.getChannelActions().observe(getViewLifecycleOwner(), actions -> Log.i(TAG, "Got new actions: " + actions.size()));
 		channelDropdownViewModel.getError().observe(getViewLifecycleOwner(), error -> channelDropdown.setError(error));
 		channelDropdownViewModel.getHelper().observe(getViewLifecycleOwner(), helper -> channelDropdown.setHelper(helper != null ? getString(helper) : null));
 

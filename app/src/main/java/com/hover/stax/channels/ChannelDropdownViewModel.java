@@ -16,6 +16,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.amplitude.api.Amplitude;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.hover.sdk.api.Hover;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.database.DatabaseRepo;
@@ -106,12 +107,11 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 	}
 
 	void loadSims() {
-		if (sims == null) {
-			sims = new MutableLiveData<>();
-		}
+		if (sims == null) { sims = new MutableLiveData<>(); }
 		new Thread(() -> sims.postValue(repo.getSims())).start();
 		LocalBroadcastManager.getInstance(getApplication())
 				.registerReceiver(simReceiver, new IntentFilter(Utils.getPackage(getApplication()) + ".NEW_SIM_INFO_ACTION"));
+		Hover.updateSimInfo(getApplication());
 	}
 
 	private final BroadcastReceiver simReceiver = new BroadcastReceiver() {
@@ -120,6 +120,16 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 			new Thread(() -> sims.postValue(repo.getSims())).start();
 		}
 	};
+
+	public LiveData<List<Sim>> getSims() {
+		if (sims == null) { sims = new MutableLiveData<>(); }
+		return sims;
+	}
+
+	public LiveData<List<String>> getSimHniList() {
+		if (simHniList == null) { simHniList = new MutableLiveData<>(); }
+		return simHniList;
+	}
 
 	private List<String> getHnisAndSubscribeToEachOnFirebase(List<Sim> sims) {
 		if (sims == null) return null;
