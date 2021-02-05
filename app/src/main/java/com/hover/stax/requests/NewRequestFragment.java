@@ -198,7 +198,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 
 	private void fabClicked(View v) {
 		requestViewModel.removeInvalidRequestees();
-		if (!requestViewModel.getIsEditing().getValue() && channelDropdownViewModel.validates() && requestViewModel.validates())
+		if (requestViewModel.getIsEditing().getValue() & channelDropdownViewModel.validates() & requestViewModel.validates())
 			requestViewModel.setEditing(false);
 		else
 			UIHelper.flashMessage(getContext(), getString(R.string.toast_pleasefix));
