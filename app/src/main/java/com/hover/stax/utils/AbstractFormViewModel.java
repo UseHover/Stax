@@ -16,7 +16,7 @@ import com.hover.stax.schedules.Schedule;
 
 import java.util.List;
 
-public abstract class StagedViewModel extends AndroidViewModel {
+public abstract class AbstractFormViewModel extends AndroidViewModel {
 
 	protected DatabaseRepo repo;
 	protected String type = Action.P2P;
@@ -25,12 +25,16 @@ public abstract class StagedViewModel extends AndroidViewModel {
 	protected MutableLiveData<Schedule> schedule = new MutableLiveData<>();
 	protected MutableLiveData<Boolean> isEditing = new MutableLiveData<>();
 
-	public StagedViewModel(@NonNull Application application) {
+	public AbstractFormViewModel(@NonNull Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
 
 		isEditing.setValue(true);
 		recentContacts = repo.getAllContacts();
+	}
+
+	public String getType() {
+		return type;
 	}
 
 	public void setEditing(boolean isEdit) { isEditing.setValue(isEdit); }
@@ -51,6 +55,4 @@ public abstract class StagedViewModel extends AndroidViewModel {
 		Amplitude.getInstance().logEvent(getApplication().getString(R.string.scheduled_complete, s.type));
 		repo.insert(s);
 	}
-
-	abstract protected boolean validates();
 }

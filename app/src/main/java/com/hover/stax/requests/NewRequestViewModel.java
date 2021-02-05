@@ -1,7 +1,6 @@
 package com.hover.stax.requests;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -9,19 +8,17 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
-import com.hover.stax.database.Constants;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.utils.DateUtils;
-import com.hover.stax.utils.StagedViewModel;
+import com.hover.stax.utils.AbstractFormViewModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class NewRequestViewModel extends StagedViewModel {
+public class NewRequestViewModel extends AbstractFormViewModel {
 	public final static String TAG = "NewRequestViewModel";
 
 	private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();

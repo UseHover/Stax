@@ -278,9 +278,9 @@
   	
   <string name="loading_dialoghead">Inapakia, subiri kidogo</string>
   	
-  <string name="amount_cardhead">Kiasi</string>
+  <string name="transfer_amount_label">Kiasi</string>
   	
-  <string name="amount_label">Pesa ngapi?</string>
+  <string name="request_amount_label">Pesa ngapi?</string>
   	
   <string name="channel_label">Akaunti</string>
   	

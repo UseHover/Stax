@@ -35,7 +35,7 @@
 		android:layout_marginHorizontal="@dimen/margin_10"
 		android:layout_marginBottom="@dimen/margin_13"
 		android:textSize="@dimen/text_21"
-		android:text="@string/recipient_label"
+		android:text="@string/airtime_who_header"
 		android:visibility="gone"/>
 
 	<RadioGroup

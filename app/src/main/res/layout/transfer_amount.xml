@@ -5,7 +5,7 @@
 	android:id="@+id/amountEntry"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:hint="@string/amount_label"
+	android:hint="@string/transfer_amount_label"
     android:fontFamily="font-normal"
 	style="@style/StaxLabeledInput">
 

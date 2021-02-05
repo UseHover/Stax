@@ -10,11 +10,10 @@ import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
-import com.hover.stax.channels.Channel;
-import com.hover.stax.channels.ChannelDropdown;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,8 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 	private static String TAG = "ActionSelect";
 
 	private TextInputLayout input;
-	private AutoCompleteTextView textView;
+	private AutoCompleteTextView dropdownView;
+	private TextView radioHeader;
 	private RadioGroup isSelfRadio;
 
 	private List<Action> actions;
@@ -36,25 +36,27 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 		super(context, attrs);
 		LayoutInflater.from(context).inflate(R.layout.action_select, this);
 		input = findViewById(R.id.action_dropdown_input);
-		textView = findViewById(R.id.action_autoComplete);
+		dropdownView = findViewById(R.id.action_autoComplete);
+		radioHeader = findViewById(R.id.header);
 		isSelfRadio = findViewById(R.id.isSelfRadioGroup);
-		isSelfRadio.setVisibility(VISIBLE);
 		this.setVisibility(GONE);
 	}
 
 	public void updateActions(List<Action> filteredActions) {
 		Log.e(TAG, "Updating to " + filteredActions);
+		this.setVisibility(filteredActions == null || filteredActions.size() <= 0 ? View.GONE : View.VISIBLE);
+		if (filteredActions == null || filteredActions.size() <= 0) return;
+
 		actions = filteredActions;
 		highlightedAction = null;
 		uniqRecipientActions = sort(filteredActions);
 
 		ArrayAdapter actionDropdownAdapter = new ArrayAdapter<>(getContext(), R.layout.stax_spinner_item, uniqRecipientActions);
-		textView.setAdapter(actionDropdownAdapter);
-		textView.setOnItemClickListener((adapterView, view2, pos, id) -> selectRecipientNetwork((Action) adapterView.getItemAtPosition(pos)));
+		dropdownView.setAdapter(actionDropdownAdapter);
+		dropdownView.setOnItemClickListener((adapterView, view2, pos, id) -> selectRecipientNetwork((Action) adapterView.getItemAtPosition(pos)));
 		Log.e(TAG, "uniq recipient networks " + uniqRecipientActions.size());
-		input.setVisibility(uniqRecipientActions.size() <= 1 ? GONE: VISIBLE);
-		if (uniqRecipientActions.size() == 1)
-			selectRecipientNetwork(uniqRecipientActions.get(0));
+		input.setVisibility(showRecipientNetwork(uniqRecipientActions) ? VISIBLE : GONE);
+		radioHeader.setText(actions.get(0).transaction_type.equals(Action.AIRTIME) ? R.string.airtime_who_header : R.string.send_who_header);
 	}
 
 	public static List<Action> sort(List<Action> actions) {
@@ -69,17 +71,28 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 		return uniqRecipActions;
 	}
 
+	private boolean showRecipientNetwork(List<Action> actions) {
+		return actions.size() > 1 || (actions.size() == 1 && !actions.get(0).isOnNetwork());
+	}
+
 	public void selectRecipientNetwork(Action action) {
+		if (action.equals(highlightedAction)) return;
+		input.setHelperText(null);
+		dropdownView.setText(action.toString(), false);
 		List<Action> options = getWhoMeOptions(action.recipientInstitutionId());
 		if (options.size() == 1) {
-			selectAction(options.get(0));
-		} else createRadios(options);
+			if (!options.get(0).requiresRecipient())
+				input.setHelperText(getContext().getString(R.string.self_only_money_warning));
+			selectAction(action);
+			isSelfRadio.setVisibility(GONE);
+			radioHeader.setVisibility(GONE);
+		} else
+			createRadios(options);
 	}
 
 	public void selectAction(Action a) {
 		Log.e(TAG, "selecting action " + a);
 		highlightedAction = a;
-		textView.setText(a.toString(), false);
 		if (highlightListener != null) highlightListener.highlightAction(a);
 	}
 
@@ -108,7 +121,7 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 		isSelfRadio.setOnCheckedChangeListener(this);
 		isSelfRadio.check(highlightedAction != null ? actions.indexOf(highlightedAction) : 0);
 		isSelfRadio.setVisibility(actions.size() > 1 ? VISIBLE : GONE);
-		findViewById(R.id.header).setVisibility(actions.size() > 1 ? VISIBLE : GONE);
+		radioHeader.setVisibility(actions.size() > 1 ? VISIBLE : GONE);
 	}
 
 	@Override

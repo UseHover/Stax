@@ -278,9 +278,9 @@
   	
   <string name="loading_dialoghead">Chargement, un instant</string>
   	
-  <string name="amount_cardhead">Montant</string>
+  <string name="transfer_amount_label">Montant</string>
   	
-  <string name="amount_label">Combien d\'argent ?</string>
+  <string name="request_amount_label">Combien d\'argent ?</string>
   	
   <string name="channel_label">Compte</string>
   	

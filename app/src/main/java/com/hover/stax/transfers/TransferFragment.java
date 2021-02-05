@@ -21,20 +21,22 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionSelect;
+import com.hover.stax.actions.ActionSelectViewModel;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.contacts.StaxContactArrayAdapter;
 import com.hover.stax.database.Constants;
 import com.hover.stax.requests.Request;
-import com.hover.stax.utils.abstractClasses.StagedFragment;
+import com.hover.stax.utils.abstractClasses.AbstractFormFragment;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.Stax2LineItem;
 
-public class TransferFragment extends StagedFragment implements ActionSelect.HighlightListener {
+public class TransferFragment extends AbstractFormFragment implements ActionSelect.HighlightListener {
 	private static final String TAG = "TransferFragment";
 
 	private TransferViewModel transferViewModel;
+	private ActionSelectViewModel actionSelectViewModel;
 
 	private EditText amountInput, noteInput;
 	private ActionSelect actionSelect;
@@ -46,8 +48,9 @@ public class TransferFragment extends StagedFragment implements ActionSelect.Hig
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		channelDropdownViewModel = new ViewModelProvider(requireActivity()).get(ChannelDropdownViewModel.class);
-		stagedViewModel = new ViewModelProvider(requireActivity()).get(TransferViewModel.class);
-		transferViewModel = (TransferViewModel) stagedViewModel;
+		actionSelectViewModel = new ViewModelProvider(requireActivity()).get(ActionSelectViewModel.class);
+		abstractFormViewModel = new ViewModelProvider(requireActivity()).get(TransferViewModel.class);
+		transferViewModel = (TransferViewModel) abstractFormViewModel;
 
 		View root = inflater.inflate(R.layout.fragment_transfer, container, false);
 		init(root);
@@ -84,9 +87,13 @@ public class TransferFragment extends StagedFragment implements ActionSelect.Hig
 		if (formCardTitle != null) { formCardTitle.setText(getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.fab_airtime : R.string.fab_transfer)); }
 	}
 
+	@Override
 	protected void startObservers(View root) {
-		transferViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
+		super.startObservers(root);
+		actionSelectViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
+			Log.e(TAG, "observed active action update");
 			((Stax2LineItem) root.findViewById(R.id.account_value)).setSubtitle(action.getNetworkSubtitle(root.getContext()));
+			actionSelect.selectRecipientNetwork(action);
 			setRecipientHint(action);
 		});
 
@@ -95,14 +102,12 @@ public class TransferFragment extends StagedFragment implements ActionSelect.Hig
 			((Stax2LineItem) root.findViewById(R.id.account_value)).setTitle(channel.toString());
 		});
 
-		channelDropdownViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
-			actionSelect.setVisibility(actions == null || actions.size() <= 1 ? View.GONE : View.VISIBLE);
-			if (actions == null || actions.size() == 0) return;
-			transferViewModel.setActions(actions);
+		channelDropdownViewModel.getChannelActions().observe(getViewLifecycleOwner(), actions -> {
+			actionSelectViewModel.setActions(actions);
 			actionSelect.updateActions(actions);
 		});
 
-		transferViewModel.getActiveActionError().observe(getViewLifecycleOwner(), error -> actionSelect.setError(error));
+		actionSelectViewModel.getActiveActionError().observe(getViewLifecycleOwner(), error -> actionSelect.setError(error));
 
 		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> ((TextView) root.findViewById(R.id.amountValue)).setText(Utils.formatAmount(amount)));
 		transferViewModel.getAmountError().observe(getViewLifecycleOwner(), amountError -> {
@@ -149,15 +154,14 @@ public class TransferFragment extends StagedFragment implements ActionSelect.Hig
 	}
 
 	@Override
-	public void highlightAction(Action a) { transferViewModel.setActiveAction(a); }
+	public void highlightAction(Action a) { Log.e(TAG, "updating active action"); actionSelectViewModel.setActiveAction(a); }
 
 	private void fabClicked(View v) {
 		if (transferViewModel.getIsEditing().getValue()) {
-			if (!channelDropdownViewModel.validates() || !transferViewModel.validates()) {
+			if (channelDropdownViewModel.validates() && actionSelectViewModel.validates() && transferViewModel.validates(actionSelectViewModel.getActiveAction().getValue()))
+				transferViewModel.setEditing(false);
+			else
 				UIHelper.flashMessage(getContext(), getString(R.string.toast_pleasefix));
-				return;
-			}
-			transferViewModel.setEditing(false);
 		} else
 			((TransferActivity) getActivity()).submit();
 	}

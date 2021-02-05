@@ -63,7 +63,7 @@ public class ChannelDropdown extends TextInputLayout {
 		dropdownView.setAdapter(channelDropdownAdapter);
 		dropdownView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((Channel) adapterView.getItemAtPosition(pos)));
 		for (Channel c: channels) {
-			if (c.defaultAccount && !showLink) dropdownView.setText(c.toString(), false);
+			if (c.defaultAccount && !showLink) dropdownView.setText(c.toString() + " " + c.countryAlpha2.toUpperCase(), false);
 		}
 	}
 
@@ -85,6 +85,10 @@ public class ChannelDropdown extends TextInputLayout {
 	public void setError(String message) {
 		input.setError(message);
 		input.setErrorIconDrawable(message != null ? R.drawable.ic_error_warning_24dp : 0);
+	}
+
+	public void setHelper(String message) {
+		input.setHelperText(message);
 	}
 
 	public void reset() {

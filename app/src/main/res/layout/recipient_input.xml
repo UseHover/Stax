@@ -10,7 +10,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:id="@+id/recipientLabel"
-		android:hint="@string/reqfrom_label"
+		android:hint="@string/recipientphone_label"
 		style="@style/StaxLabeledDropdown">
 
 		<AutoCompleteTextView

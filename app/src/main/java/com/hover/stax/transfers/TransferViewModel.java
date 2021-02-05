@@ -13,73 +13,30 @@ import com.hover.stax.requests.Request;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.utils.DateUtils;
-import com.hover.stax.utils.StagedViewModel;
+import com.hover.stax.utils.AbstractFormViewModel;
 
 import java.util.List;
 
-public class TransferViewModel extends StagedViewModel {
+public class TransferViewModel extends AbstractFormViewModel {
 	final private String TAG = "TransferViewModel";
-
-	private MediatorLiveData<List<Action>> filteredActions = new MediatorLiveData<>();
-	private MediatorLiveData<Action> activeAction = new MediatorLiveData<>();
 
 	private MutableLiveData<String> amount = new MutableLiveData<>();
 	private MutableLiveData<StaxContact> contact = new MutableLiveData<>();
 	private MutableLiveData<String> note = new MutableLiveData<>();
 
 	private MediatorLiveData<Integer> amountError = new MediatorLiveData<>();
-	private MediatorLiveData<String> actionError = new MediatorLiveData<>();
 	private MediatorLiveData<Integer> recipientError = new MediatorLiveData<>();
 
 	protected LiveData<Request> request = new MutableLiveData<>();
 
 	public TransferViewModel(Application application) {
 		super(application);
-		activeAction.addSource(filteredActions, this::setActiveActionIfOutOfDate);
 		amountError.addSource(amount, amount -> { if (amount != null) amountError.setValue(null); });
-		actionError.addSource(activeAction, activeAction -> { if (activeAction != null) actionError.setValue(null); });
 		recipientError.addSource(contact, contact -> { if (contact != null) recipientError.setValue(null); });
 	}
 
 	void setType(String transaction_type) {
 		type = transaction_type;
-	}
-
-	String getType() {
-		return type;
-	}
-
-	public void setActions(List<Action> actions) {
-		filteredActions.postValue(actions);
-	}
-
-	LiveData<List<Action>> getActions() {
-		return filteredActions;
-	}
-
-	private void setActiveActionIfOutOfDate(List<Action> actions) {
-		Log.e(TAG, "maybe setting active action");
-		if (actions != null && actions.size() > 0 && (activeAction.getValue() == null || !actions.contains(activeAction.getValue()))) {
-			Log.e(TAG, actions.get(0).toString());
-			activeAction.setValue(actions.get(0));
-		}
-	}
-
-	void setActiveAction(Action action) {
-		Log.e(TAG, "setting active action " + action);
-		activeAction.postValue(action);
-	}
-
-	LiveData<Action> getActiveAction() {
-		if (activeAction == null) {
-			activeAction = new MediatorLiveData<>();
-		}
-		return activeAction;
-	}
-
-	LiveData<String> getActiveActionError() {
-		if (actionError == null) { actionError = new MediatorLiveData<>(); }
-		return actionError;
 	}
 
 	void setAmount(String a) {
@@ -147,29 +104,18 @@ public class TransferViewModel extends StagedViewModel {
 		return note;
 	}
 
-	protected boolean validates() {
+	protected boolean validates(Action a) {
 		boolean valid = true;
 		if (amount.getValue() == null || amount.getValue().isEmpty()) {
 			valid = false;
 			amountError.setValue(R.string.amount_fielderror);
 		}
-		if (activeAction.getValue() == null) {
-			valid = false;
-			actionError.setValue(getApplication().getString(R.string.action_fielderror));
-		} else if (activeAction.getValue().requiresRecipient() && contact.getValue() == null) {
+		if (a.requiresRecipient() && contact.getValue() == null) {
 			valid = false;
 			recipientError.setValue(R.string.transfer_error_recipient);
 		}
+		Log.e(TAG, "is valid? " + valid);
 		return valid;
-	}
-
-	boolean requiresActionChoice() { // in last case, should have request network as choice
-		return filteredActions.getValue() != null && filteredActions.getValue().size() > 0 && (filteredActions.getValue().size() > 1 || filteredActions.getValue().get(0).hasDiffToInstitution());
-	}
-
-	boolean hasActionsLoaded() {
-		return filteredActions.getValue() != null && filteredActions.getValue().size() > 0 &&
-					   (filteredActions.getValue().size() > 1 || (activeAction.getValue() != null && activeAction.getValue().hasToInstitution()));
 	}
 
 	public LiveData<Request> decrypt(String encryptedLink) {

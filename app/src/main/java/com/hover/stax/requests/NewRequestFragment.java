@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,11 +23,11 @@ import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
-import com.hover.stax.utils.abstractClasses.StagedFragment;
+import com.hover.stax.utils.abstractClasses.AbstractFormFragment;
 import com.hover.stax.views.Stax2LineItem;
 import com.hover.stax.views.StaxCardView;
 
-public class NewRequestFragment extends StagedFragment implements RecipientAdapter.UpdateListener {
+public class NewRequestFragment extends AbstractFormFragment implements RecipientAdapter.UpdateListener {
 
 	protected NewRequestViewModel requestViewModel;
 
@@ -48,8 +47,8 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		channelDropdownViewModel = new ViewModelProvider(requireActivity()).get(ChannelDropdownViewModel.class);
-		stagedViewModel = new ViewModelProvider(requireActivity()).get(NewRequestViewModel.class);
-		requestViewModel = (NewRequestViewModel) stagedViewModel;
+		abstractFormViewModel = new ViewModelProvider(requireActivity()).get(NewRequestViewModel.class);
+		requestViewModel = (NewRequestViewModel) abstractFormViewModel;
 
 		View view = inflater.inflate(R.layout.fragment_request, container, false);
 		init(view);
@@ -82,7 +81,9 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 		super.init(view);
 	}
 
+	@Override
 	protected void startObservers(View root) {
+		super.startObservers(root);
 		channelDropdownViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> {
 			requestViewModel.setActiveChannel(channel);
 			accountValue.setTitle(channel.toString());
@@ -197,9 +198,9 @@ public class NewRequestFragment extends StagedFragment implements RecipientAdapt
 
 	private void fabClicked(View v) {
 		requestViewModel.removeInvalidRequestees();
-		if (requestViewModel.getIsEditing().getValue() && (!channelDropdownViewModel.validates() || !requestViewModel.validates()))
-			UIHelper.flashMessage(getContext(), getString(R.string.toast_pleasefix));
-		else
+		if (!requestViewModel.getIsEditing().getValue() && channelDropdownViewModel.validates() && requestViewModel.validates())
 			requestViewModel.setEditing(false);
+		else
+			UIHelper.flashMessage(getContext(), getString(R.string.toast_pleasefix));
 	}
 }

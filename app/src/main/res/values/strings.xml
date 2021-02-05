@@ -185,9 +185,9 @@
 
 	<!-- Transfer -->
 	<string name="loading_dialoghead">Loading, one moment</string>
-	<string name="amount_cardhead">Amount</string>
-	<string name="amount_label">How much money?</string>
-	<string name="channel_label">Select Account</string>
+	<string name="transfer_amount_label">Amount</string>
+	<string name="request_amount_label">How much money?</string>
+	<string name="channel_label">Account</string>
 	<string name="fromacct_cardhead">From this account</string>
 	<string name="fromacct_fielderror">You must select an sending account. If you have none please tap <u>add account</u>.</string>
 	<string name="actions_fielderror">This account does not support buy airtime. Please select a different account.</string>
@@ -215,12 +215,18 @@
 	<string name="note_cardhead">Description</string>
 	<string name="request_note_label">What is your request for?</string>
 	<string name="recipient_label">To</string>
+	<string name="send_who_header">Send money to</string>
+	<string name="airtime_who_header">Buy airtime for</string>
 	<string name="accounts_label">Pay from</string>
+	<string name="self_only_money_warning">This can only be used to move money to your own account.</string>
+	<string name="self_only_airtime_warning">This can only be used to buy airtime for your own account.</string>
 	<string name="descrip_multcontacts">%1$d contacts</string>
 	<string name="descrip_airtime_sent">%1$s sent airtime to %2$s</string>
 	<string name="descrip_transfer_sent">%1$s sent money to %2$s</string>
 	<string name="descrip_transfer_received">received money from %1$s</string>
 	<string name="fab_transfernow">Send money now</string>
+	<string name="fab_airtimenow">Buy airtime now</string>
+	<string name="noworry_explain">Don\'t worry. You can review the info in the last step.</string>
 	<string name="fab_sendnow">Buy airtime now</string>
 	<string name="descrip_airtime_sched">Buy airtime with %1$s for %2$s</string>
 	<string name="pending_callout">Transaction sent. Waiting for confirmation.</string>

@@ -9,7 +9,7 @@
 			android:textColor="@color/offWhite"
 			android:textSize="@dimen/text_16"
 		      android:fontFamily="font-normal"
-			android:text="@string/amount_cardhead"/>
+			android:text="@string/transfer_amount_label"/>
 
 		<TextView android:id="@+id/details_amount"
 			android:layout_weight="1"

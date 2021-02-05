@@ -24,6 +24,28 @@
 			android:id="@+id/shareCard"
 			android:visibility="gone"/>
 
+		<LinearLayout android:id="@+id/noworry_text"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal">
+
+			<TextView
+				android:layout_height="wrap_content"
+				android:layout_width="0dp"
+				android:layout_weight=".62"
+				android:layout_marginHorizontal="@dimen/margin_13"
+				android:fontFamily="font-normal"
+				android:lineSpacingExtra="2sp"
+				android:textSize="@dimen/text_16"
+				android:textColor="@color/offWhite"
+				android:text="@string/noworry_explain" />
+
+			<View
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight=".38" />
+		</LinearLayout>
+
 		<androidx.coordinatorlayout.widget.CoordinatorLayout
 			android:layout_width="match_parent"
 			android:layout_height="match_parent">

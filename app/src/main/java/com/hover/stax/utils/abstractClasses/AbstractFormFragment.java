@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -15,47 +16,54 @@ import com.amplitude.api.Amplitude;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
+import com.hover.stax.actions.Action;
 import com.hover.stax.channels.ChannelDropdown;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.Constants;
 import com.hover.stax.permissions.PermissionUtils;
-import com.hover.stax.utils.StagedViewModel;
+import com.hover.stax.utils.AbstractFormViewModel;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.StaxCardView;
 
-public abstract class StagedFragment extends Fragment {
-	private static String TAG = "StagedFragment";
+public abstract class AbstractFormFragment extends Fragment {
+	private static String TAG = "AbstractFormFragment";
 
-	protected StagedViewModel stagedViewModel;
+	protected AbstractFormViewModel abstractFormViewModel;
 	protected ChannelDropdownViewModel channelDropdownViewModel;
 
+	private LinearLayout noworryText;
 	protected StaxCardView editCard, summaryCard;
 	protected ChannelDropdown channelDropdown;
 	protected ExtendedFloatingActionButton fab;
 
 	protected void init(View root) {
 		editCard = root.findViewById(R.id.editCard);
+		noworryText = root.findViewById(R.id.noworry_text);
 		summaryCard = root.findViewById(R.id.summaryCard);
 		fab = root.findViewById(R.id.fab);
 		channelDropdown = root.findViewById(R.id.channel_dropdown);
+	}
 
+	protected void startObservers(View root) {
 		channelDropdown.setListener(channelDropdownViewModel);
 		channelDropdownViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
 		channelDropdownViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
 		channelDropdownViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> Log.e(TAG, "Got selected channels: " + channels.size()));
-		channelDropdownViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> Log.e(TAG, "Got new active channel: " + channel));
-		channelDropdownViewModel.getActions().observe(getViewLifecycleOwner(), actions -> Log.e(TAG, "Got new actions: " + actions.size()));
+		channelDropdownViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> Log.e(TAG, "Got new active channel: " + channel + " " + channel.countryAlpha2));
+		channelDropdownViewModel.getChannelActions().observe(getViewLifecycleOwner(), actions -> Log.e(TAG, "Got new actions: " + actions.size()));
 		channelDropdownViewModel.getError().observe(getViewLifecycleOwner(), error -> channelDropdown.setError(error));
+		channelDropdownViewModel.getHelper().observe(getViewLifecycleOwner(), helper -> channelDropdown.setHelper(helper != null ? getString(helper) : null));
 
-		stagedViewModel.getIsEditing().observe(getViewLifecycleOwner(), this::showEdit);
+		abstractFormViewModel.getIsEditing().observe(getViewLifecycleOwner(), this::showEdit);
 	}
 
 	protected void showEdit(boolean isEditing) {
 		channelDropdownViewModel.setChannelSelected(channelDropdown.getHighlighted());
 		editCard.setVisibility(isEditing ? View.VISIBLE : View.GONE);
+		noworryText.setVisibility(isEditing ? View.VISIBLE : View.GONE);
 		summaryCard.setVisibility(isEditing ? View.GONE : View.VISIBLE);
-		fab.setText(isEditing ? getString(R.string.btn_continue) : getString(R.string.fab_transfernow));
+		fab.setText(isEditing ? getString(R.string.btn_continue) : abstractFormViewModel.getType().equals(Action.AIRTIME) ? getString(R.string.fab_airtimenow) : getString(R.string.fab_transfernow));
 	}
 
 	protected void contactPicker(int requestCode, Context c) {

@@ -13,7 +13,7 @@
 
 		<TableRow android:id="@+id/amountRow" android:visibility="gone">
 			<TextView
-			    android:text="@string/amount_cardhead"
+			    android:text="@string/transfer_amount_label"
 			    android:textColor="@color/offWhite"
 			    android:fontFamily="font-normal"
 			    android:textSize="@dimen/text_16" />

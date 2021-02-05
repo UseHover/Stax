@@ -134,6 +134,8 @@
 		<item name="android:fontFamily">font-medium</item>
 		<item name="errorTextColor">@color/bright_red</item>
 		<item name="errorEnabled">true</item>
+		<item name="helperTextTextColor">@color/offWhite</item>
+		<item name="helperTextEnabled">true</item>
 	</style>
 
 	<style name="StaxLabeledDropdown" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
@@ -153,6 +155,8 @@
 		<item name="materialThemeOverlay">@style/StaxDropdownPopup</item>
 		<item name="errorTextColor">@color/bright_red</item>
 		<item name="errorEnabled">true</item>
+		<item name="helperTextTextColor">@color/offWhite</item>
+		<item name="helperTextEnabled">true</item>
 	</style>
 
 	<style name="StaxDropdownPopup" parent="Theme.MaterialComponents.DayNight.DarkActionBar">

@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.actions.ActionSelectViewModel;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.Constants;
@@ -25,6 +26,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	final public static String TAG = "TransferActivity";
 
 	private ChannelDropdownViewModel channelDropdownViewModel;
+	private ActionSelectViewModel actionSelectViewModel;
 	private TransferViewModel transferViewModel;
 	private ScheduleDetailViewModel scheduleViewModel = null;
 
@@ -32,6 +34,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		channelDropdownViewModel = new ViewModelProvider(this).get(ChannelDropdownViewModel.class);
+		actionSelectViewModel = new ViewModelProvider(this).get(ActionSelectViewModel.class);
 		transferViewModel = new ViewModelProvider(this).get(TransferViewModel.class);
 		transferViewModel.setType(getIntent().getAction());
 		channelDropdownViewModel.setType(getIntent().getAction());
@@ -52,7 +55,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	private void createFromSchedule(int schedule_id) {
 		scheduleViewModel = new ViewModelProvider(this).get(ScheduleDetailViewModel.class);
 		scheduleViewModel.getAction().observe(this, action -> {
-			if (action != null) transferViewModel.setActiveAction(action);
+			if (action != null) actionSelectViewModel.setActiveAction(action);
 		});
 		scheduleViewModel.getSchedule().observe(this, schedule -> {
 			if (schedule == null) return;
@@ -80,7 +83,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 
 	private void authenticate() {
-		makeHoverCall(transferViewModel.getActiveAction().getValue());
+		makeHoverCall(actionSelectViewModel.getActiveAction().getValue());
 //		new BiometricChecker(this, this).startAuthentication(transferViewModel.getActiveAction().getValue());
 	}
 
@@ -111,7 +114,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 	}
 	private void addRecipientInfo(HoverSession.Builder hsb) {
 		hsb.extra(Action.ACCOUNT_KEY, transferViewModel.getContact().getValue().phoneNumber)
-			.extra(Action.PHONE_KEY, transferViewModel.getContact().getValue().getNumberFormatForInput(transferViewModel.getActiveAction().getValue(), channelDropdownViewModel.getActiveChannel().getValue()));
+			.extra(Action.PHONE_KEY, transferViewModel.getContact().getValue().getNumberFormatForInput(actionSelectViewModel.getActiveAction().getValue(), channelDropdownViewModel.getActiveChannel().getValue()));
 	}
 
 	@Override
