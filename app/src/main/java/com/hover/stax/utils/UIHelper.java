@@ -3,6 +3,8 @@ package com.hover.stax.utils;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -58,6 +60,13 @@ public class UIHelper {
 			return Color.parseColor(hex);
 		} catch (IllegalArgumentException e) {
 			return ContextCompat.getColor(c, isBackground ? R.color.offWhite : R.color.brightBlue);
+		}
+	}
+
+	public static void changeDrawableColor(TextView tv, int color, Context c) {
+		for (Drawable d : tv.getCompoundDrawables()) {
+			if (d != null)
+				d.setColorFilter(new PorterDuffColorFilter(c.getResources().getColor(color), PorterDuff.Mode.SRC_IN));
 		}
 	}
 

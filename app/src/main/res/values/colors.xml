@@ -3,6 +3,7 @@
 	<color name="colorPrimary" tools:override="true">#292E35</color>
 	<color name="colorPrimaryDark" tools:override="true">#1E232A</color>
 	<color name="brightBlue" tools:override="true">#39CBFC</color>
+	<color name="brightBluePressed" tools:override="true">#2AAFDC</color>
 	<color name="cardViewColor">#292E35</color>
 	<color name="cardDarkBlue">#1D2735</color>
 	<color name="buttonColor">#3A3E45</color>

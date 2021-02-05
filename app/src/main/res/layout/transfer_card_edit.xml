@@ -3,128 +3,28 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	app:title="@string/edittransfer_cardhead"
-	app:showBack="true">
+	android:id="@+id/editCard"
+	app:showBack="true"
+	app:backClickable="true"
+	app:title="@string/nav_airtime">
 
-	<com.google.android.material.textfield.TextInputLayout
-		android:id="@+id/amountEntry"
+	<include layout="@layout/transfer_amount" />
+
+	<com.hover.stax.channels.ChannelDropdown
+		android:id="@+id/channel_dropdown"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:hint="@string/amount_label_opt"
-		style="@style/StaxLabeledInput">
+		app:label="@string/channel_label"/>
 
-		<com.google.android.material.textfield.TextInputEditText
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:padding="@dimen/margin_13"
-			android:textSize="@dimen/text_21"
-		    	android:fontFamily="font-normal"
-			android:textColor="@color/offWhite"
-			android:textCursorDrawable="@null"
-			android:inputType="numberDecimal"
-			android:id="@+id/amount_input"/>
-	</com.google.android.material.textfield.TextInputLayout>
-
-	<com.google.android.material.textfield.TextInputLayout
-		style="@style/StaxLabeledDropdown"
+	<com.hover.stax.actions.ActionSelect
+		android:id="@+id/action_select"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:hint="@string/channel_label">
+		android:visibility="gone"/>
 
-		<AutoCompleteTextView
-			android:id="@+id/channelDropdown"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:padding="@dimen/margin_13"
-			android:dropDownWidth="wrap_content"
-			android:background="@null"
-			android:editable="false"
-			android:textSize="@dimen/text_21"
-		    	android:fontFamily="font-normal"
-			android:textColor="@color/offWhite"
-			android:textCursorDrawable="@null" />
+	<include  layout="@layout/recipient_input" />
 
-	</com.google.android.material.textfield.TextInputLayout>
-
-	<com.google.android.material.textfield.TextInputLayout
-		style="@style/StaxLabeledDropdown"
-		android:id="@+id/networkEntry"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:hint="@string/network_label">
-
-		<AutoCompleteTextView
-			android:id="@+id/networkDropdown"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:padding="@dimen/margin_13"
-			android:dropDownWidth="wrap_content"
-			android:background="@null"
-			android:editable="false"
-			android:textSize="@dimen/text_21"
-		    	android:fontFamily="font-normal"
-			android:textColor="@color/offWhite"
-			android:textCursorDrawable="@null" />
-
-	</com.google.android.material.textfield.TextInputLayout>
-
-	<include layout="@layout/recipient_input" />
-
-	<com.google.android.material.textfield.TextInputLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:hint="@string/note_label_opt"
-		style="@style/StaxLabeledInput"
-		android:id="@+id/noteEntry">
-
-		<com.google.android.material.textfield.TextInputEditText
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:padding="@dimen/margin_13"
-			android:textSize="@dimen/text_21"
-			android:textColor="@color/offWhite"
-			android:textCursorDrawable="@null"
-			android:inputType="text"
-		    	android:fontFamily="font-normal"
-			android:id="@+id/note_input"/>
-	</com.google.android.material.textfield.TextInputLayout>
-
-	<com.google.android.material.textfield.TextInputLayout
-		android:id="@+id/dateEntry"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:hint="@string/date_label"
-		style="@style/StaxLabeledInput">
-
-		<com.google.android.material.textfield.TextInputEditText
-			android:id="@+id/dateInput"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:padding="@dimen/margin_13"
-			android:textSize="@dimen/text_21"
-			android:textColor="@color/offWhite"
-			android:background="@null"
-		    	android:fontFamily="font-normal"
-			android:textCursorDrawable="@null"
-			android:drawableEnd="@drawable/ic_calendar"/>
-	</com.google.android.material.textfield.TextInputLayout>
-
-	<include layout="@layout/repeat_inputs"
-		android:id="@+id/repeatInputs"/>
-
-	<RelativeLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
-
-		<androidx.appcompat.widget.AppCompatButton
-			android:id="@+id/save_edits_btn"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/btn_save"
-			android:layout_alignParentEnd="true"
-			style="@style/StaxButton"
-			android:textColor="@color/colorPrimaryDark"
-			android:backgroundTint="@color/brightBlue" />
-	</RelativeLayout>
-
+	<include layout="@layout/transfer_note"
+		android:visibility="gone"
+		android:id="@+id/reasonEditText"/>
 </com.hover.stax.views.StaxCardView>

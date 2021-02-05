@@ -3,26 +3,37 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
+	app:backClickable="true"
+	app:showBack="true"
+	android:id="@+id/balance_card"
+	app:backRes="@drawable/visibility_icon"
 	app:title="@string/bal_cardhead">
 
 	<androidx.recyclerview.widget.RecyclerView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginHorizontal="@dimen/margin_10"
-		android:layout_marginBottom="@dimen/margin_21"
 		android:id="@+id/balances_recyclerView" />
 
-	<RelativeLayout
+	<com.hover.stax.channels.ChannelDropdown
+		android:id="@+id/channel_dropdown"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
+		android:layout_height="wrap_content"
+		app:showLink="true"
+		app:showSelected="false"/>
 
-			<androidx.appcompat.widget.AppCompatButton
-				android:id="@+id/add_accounts_btn"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/btn_addaccts"
-				android:layout_alignParentEnd="true"
-				style="@style/StaxButton"
-				android:onClick="addAccount" />
+	<RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="end" >
+
+		<androidx.appcompat.widget.AppCompatButton
+			android:id="@+id/refresh_accounts_btn"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginVertical="@dimen/margin_8"
+			android:text="@string/refresh_balances"
+			android:drawablePadding="@dimen/margin_5"
+			android:drawableStart="@drawable/ic_refresh_dark_24"
+			style="@style/StaxButtonColored" />
 	</RelativeLayout>
 </com.hover.stax.views.StaxCardView>

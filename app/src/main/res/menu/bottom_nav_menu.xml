@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
 	<item
 	    android:id="@+id/navigation_home"
@@ -9,7 +10,13 @@
 	    android:title="@string/nav_home" />
 
 	<item
-	    android:id="@+id/navigation_security"
+	    android:id="@+id/navigation_balance"
+	    android:icon="@drawable/ic_baseline_list_24"
+	    app:showAsAction="ifRoom"
+	    android:title="@string/nav_balance_and_history" />
+
+	<item
+	    android:id="@+id/navigation_settings"
 	    android:icon="@drawable/ic_settings"
 	    app:showAsAction="always"
 	    android:title="@string/nav_security" />

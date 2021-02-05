@@ -56,6 +56,10 @@ public class Utils {
 		}
 	}
 
+	public static String getAppName(Context c) {
+		return (c != null && c.getApplicationContext().getApplicationInfo() != null) ? c.getApplicationContext().getApplicationInfo().loadLabel(c.getPackageManager()).toString() : "Hover";
+	}
+
 	public static String formatAmount(String number) {
 		try {
 			return formatAmount(getAmount(number));

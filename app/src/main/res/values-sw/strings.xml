@@ -98,8 +98,6 @@
   	
   <!-- Accounts and Permissions -->
   	
-  <string name="perm_cardhead">Ongeza akaunti</string>
-  	
   <string name="simperm_cardbody">Tunahitaji ruhusa za simu ili tuone ni SIM kadi gani unazo.</string>
   	
   <string name="btn_grantperm">Toa Ruhusa</string>
@@ -280,9 +278,9 @@
   	
   <string name="loading_dialoghead">Inapakia, subiri kidogo</string>
   	
-  <string name="amount_cardhead">Kiasi</string>
+  <string name="transfer_amount_label">Kiasi</string>
   	
-  <string name="amount_label">Pesa ngapi?</string>
+  <string name="request_amount_label">Pesa ngapi?</string>
   	
   <string name="channel_label">Akaunti</string>
   	
@@ -306,7 +304,7 @@
   	
   <string name="toast_error_contactselect">Kulikuwa na tatizo wakati wa kuchagua anwani yako. Tafadhali jaribu tena.</string>
   	
-  <string name="recipient_fielderror">Tafadhali ingiza simu au nambari ya akaunti ya anwani hii.</string>
+  <string name="transfer_error_recipient">Tafadhali ingiza simu au nambari ya akaunti ya anwani hii.</string>
   	
   <string name="amount_fielderror">Tafadhali ingiza kiasi.</string>
   	
@@ -322,7 +320,7 @@
   	
   <string name="note_cardhead">Kumbuka</string>
   	
-  <string name="note_label_opt">Ingiza dokezo (hiari)</string>
+  <string name="request_note_label">Ingiza dokezo (hiari)</string>
   	
   <string name="recipient_label">Kwa nani?</string>
   	

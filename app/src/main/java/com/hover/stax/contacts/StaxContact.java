@@ -22,6 +22,7 @@ import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.utils.DateUtils;
+import com.hover.stax.utils.Utils;
 
 import java.util.List;
 import java.util.UUID;
@@ -110,7 +111,7 @@ public class StaxContact {
 		return phoneNumber;
 	}
 
-	private static String convertToCountry(String number, String country) throws NumberParseException {
+	private static String convertToCountry(String number, String country) throws NumberParseException, IllegalStateException {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 		try {
 			Phonenumber.PhoneNumber phone = phoneUtil.parse(number, country);
@@ -119,7 +120,7 @@ public class StaxContact {
 		return number;
 	}
 
-	public String getInternationalNumber(String country) throws NumberParseException {
+	private String getInternationalNumber(String country) throws NumberParseException, IllegalStateException {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 		Phonenumber.PhoneNumber phone = getPhone(country);
 		phone.getCountryCode();
@@ -127,21 +128,24 @@ public class StaxContact {
 		Log.e("CONTACT", "generated: " + str);
 		return str;
 	}
-	public String getInternationalNumberNoPlus(String country) throws NumberParseException {
-		return getInternationalNumber(country).replace("+", "");
+	public String getInternationalNumberNoPlus(String country) {
+		try {
+			return getInternationalNumber(country).replace("+", "");
+		} catch (NumberParseException | IllegalStateException e) {
+			Utils.logErrorAndReportToFirebase(TAG, "Failed to transform number for contact; doing it the old fashioned way.", e);
+			return phoneNumber.replace("+", "");
+		}
 	}
 
-	private Phonenumber.PhoneNumber getPhone(String country) throws NumberParseException {
+	private Phonenumber.PhoneNumber getPhone(String country) throws NumberParseException, IllegalStateException {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-		return phoneUtil.parse(phoneNumber, country);
+//		try {
+			return phoneUtil.parse(phoneNumber, country);
+//		} catch (IllegalStateException e) { Utils.logErrorAndReportToFirebase(TAG, "Failed to parse phone number", e); }
 	}
 
-	public String shortName(boolean obfusicate) {
-		return hasName() ? name : getPhoneNumber(obfusicate);
-	}
-
-	public String getPhoneNumber(boolean obfusicate) {
-		return obfusicate ? obfusicatePhone() : phoneNumber;
+	public String shortName() {
+		return hasName() ? name : getPhoneNumber();
 	}
 
 	public void setPhoneNumber(String number) { phoneNumber = number; }
@@ -153,7 +157,7 @@ public class StaxContact {
 
 	public static String shortName(List<StaxContact> contacts, Context c) {
 		if (contacts == null || contacts.size() == 0) return null;
-		else if (contacts.size() == 1) return contacts.get(0).shortName(false);
+		else if (contacts.size() == 1) return contacts.get(0).shortName();
 		else return c.getString(R.string.descrip_multcontacts, contacts.size());
 	}
 

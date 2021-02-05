@@ -7,6 +7,13 @@
 		<attr name="staxCardColor" format="color"/>
 	</declare-styleable>
 
+	<declare-styleable name="ChannelDropdown">
+		<attr name="label" format="string" />
+		<attr name="showError" format="boolean" />
+		<attr name="showSelected" format="boolean" />
+		<attr name="showLink" format="boolean" />
+	</declare-styleable>
+
 	<declare-styleable name="CustomSwipeRefreshLayout">
 		<attr name="enable_top_progress_bar" format="boolean" />
 		<attr name="refresh_mode" format="enum" >

@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,7 +28,7 @@ import com.hover.stax.views.StaxDialog;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class RequestDetailFragment extends Fragment {
+public class RequestDetailFragment extends Fragment implements RequestSenderInterface {
 	final public static String TAG = "RequestDetailFragment";
 
 	private RequestDetailViewModel viewModel;
@@ -52,8 +53,6 @@ public class RequestDetailFragment extends Fragment {
 			if (contacts != null && contacts.size() > 0) {
 				for (StaxContact c : contacts)
 					createRecipientEntry(c, view);
-				if (getActivity() != null)
-					((MainActivity) getActivity()).requestees = contacts;
 			}
 		});
 
@@ -62,16 +61,12 @@ public class RequestDetailFragment extends Fragment {
 			if (channel != null) {
 				((Stax2LineItem) view.findViewById(R.id.requesterValue)).setTitle(channel.name);
 				Log.e(TAG, "Activity is null? " + (getActivity() == null));
-				if (getActivity() != null)
-					((MainActivity) getActivity()).channel = channel;
 			}
 		});
 
 		viewModel.getRequest().observe(getViewLifecycleOwner(), request -> {
 			if (request != null) {
 				setUpSummary(view, request);
-				if (getActivity() != null)
-					((MainActivity) getActivity()).currentRequest = request;
 			}
 		});
 
@@ -81,7 +76,7 @@ public class RequestDetailFragment extends Fragment {
 
 	private void createRecipientEntry(StaxContact c, View view) {
 		Stax2LineItem ss2li = new Stax2LineItem(getContext(), null);
-		ss2li.setContact(c, false);
+		ss2li.setContact(c);
 		((LinearLayout) view.findViewById(R.id.requesteeValueList)).addView(ss2li);
 	}
 
@@ -123,21 +118,11 @@ public class RequestDetailFragment extends Fragment {
 	}
 
 	public void initShareButtons(View view) {
-		if(getContext() !=null && getActivity() !=null) {
-//			view.findViewById(R.id.sms_share_selection).setOnClickListener(v -> viewModel.getRequest().getValue().generateMessage(getActivity()));
-//			view.findViewById(R.id.whatsapp_share_selection).setOnClickListener(v -> viewModel.getCountryAlphaAndSendWithWhatsApp(getContext(), getActivity()));
-//			view.findViewById(R.id.copylink_share_selection).setOnClickListener(v -> {
-//				ImageView copyImage = v.findViewById(R.id.copyLinkImage);
-//				if (Utils.copyToClipboard(viewModel.generateSMS(), getActivity())) {
-//					copyImage.setActivated(true);
-//					copyImage.setImageResource(R.drawable.copy_icon_white);
-//
-//					TextView copyLabel = v.findViewById(R.id.copyLinkText);
-//					copyLabel.setText(getString(R.string.link_copied_label));
-//				} else {
-//					copyImage.setActivated(false);
-//				}
-//			});
+		if (getActivity() != null) {
+			view.findViewById(R.id.sms_share_selection).setOnClickListener(v -> sendSms(viewModel.getRequest().getValue(), viewModel.getRecipients().getValue(), getActivity()));
+			view.findViewById(R.id.whatsapp_share_selection).setOnClickListener(v ->
+				sendWhatsapp(viewModel.getRequest().getValue(), viewModel.getRecipients().getValue(), viewModel.getChannel().getValue(), getActivity()));
+			view.findViewById(R.id.copylink_share_selection).setOnClickListener(v -> copyShareLink(viewModel.getRequest().getValue(), v.findViewById(R.id.copylink_share_selection), getActivity()));
 		}
 	}
 

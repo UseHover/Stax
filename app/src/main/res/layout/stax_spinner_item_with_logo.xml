@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:id="@+id/service_item_divider"
+		android:background="@color/mediumGrey"/>
+
+	<RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:padding="@dimen/margin_13" >
+
+		<ImageView
+		    android:layout_width="32dp"
+		    android:layout_height="32dp"
+		    android:scaleType="centerCrop"
+		    android:layout_centerVertical="true"
+		    android:layout_gravity="center_vertical"
+		    android:id="@+id/service_item_image_id"
+		    app:srcCompat="@drawable/ic_grey_circle" />
+
+		<androidx.appcompat.widget.AppCompatTextView
+		    android:textColor="@drawable/spinner_state_selector"
+		    android:textSize="@dimen/text_16"
+		    android:background="?attr/selectableItemBackground"
+		    android:paddingStart="@dimen/margin_13"
+		    android:paddingEnd="@dimen/margin_34"
+		    android:layout_marginStart="@dimen/margin_3"
+		    android:layout_toEndOf="@id/service_item_image_id"
+		    android:singleLine="true"
+		    android:layout_centerVertical="true"
+		    android:id="@+id/service_item_name_id"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:ellipsize="marquee" />
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/service_item_id"
+		    android:textAlignment="center"
+		    android:textColor="@color/offWhite"
+		    android:textSize="@dimen/text_13"
+		    android:visibility="gone" />
+	</RelativeLayout>
+</LinearLayout>

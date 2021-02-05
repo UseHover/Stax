@@ -8,6 +8,7 @@
 	<string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
 
 	<string name="nav_home">Home</string>
+	<string name="nav_balance_and_history">Balance and history</string>
 	<string name="nav_airtime">Buy Airtime</string>
 	<string name="nav_money">Move Money</string>
 	<string name="nav_security">Security</string>
@@ -19,6 +20,8 @@
 	<string name="nav_edit_request">Edit Request Details</string>
 	<string name="nav_edit_transfer">Edit Transfer Details</string>
 	<string name="nav_language">Language Choice</string>
+	<string name="permissions_title">Permissions needed</string>
+	<string name="permissions_basic_desc">We need phone permissions to see which accounts you might have.</string>
 	<string name="nav_sim_permission">Grant SIM permission</string>
 	<string name="nav_hover_permissions">Grant Hover permissions</string>
 	<string name="nav_pins_entry">Enter Pins</string>
@@ -45,15 +48,23 @@
 	</string-array>
 
 	<!-- Home -->
+	<string name="welcome_to">Welcome to</string>
 	<string name="bal_cardhead">Balances</string>
 	<string name="btn_addaccts">Add accounts</string>
 	<string name="hist_cardhead">History</string>
 	<string name="hist_zerobody">You do not have any history yet. Send money or buy airtime to get started.</string>
 	<string name="future_cardhead">Future Transactions</string>
 	<string name="fab_transfer">Transfer</string>
+	<string name="fab_sendMoney">Send money</string>
 	<string name="fab_airtime">Buy airtime</string>
 	<string name="fab_request">Request money</string>
 	<string name="tool_histbody">These are all the transactions you have made with Stax</string>
+
+	<!-- Balances -->
+	<string name="refresh_balance_desc">Refresh balance to see your money</string>
+	<string name="refresh_balances">Refresh balances</string>
+	<string name="link_an_account">Link an account</string>
+	<string name="refresh_balance_error">Add an account to check your balance.</string>
 
 	<!-- Hover Session -->
 	<string name="balance_msg">Checking %1$s balance</string>
@@ -61,14 +72,25 @@
 	<string name="transfer_msg">Transferring money</string>
 
 	<!-- Accounts and Permissions -->
-	<string name="perm_cardhead">Add accounts</string>
+	<string name="perm_dialoghead">One last thing…</string>
+	<string name="perm_dialogbody">Stax needs 2 permissions to %1$s.</string>
+	<string name="use_ussd">use USSD</string>
+	<string name="buy_airtime">buy airtime</string>
+	<string name="check_balance">check balance</string>
+	<string name="send_money">send money</string>
+	<string name="move_money">move money</string>
+	<string name="perm_accessibiltiy_dialogbody">Stax needs accessibility permission to %1$s</string>
+	<string name="perm_progress1">Step 1 of 2: Display permission</string>
+	<string name="perm_progress2">Step 2 of 2: Accessibility permission</string>
+	<string name="perm_cta1">Show settings</string>
+	<string name="perm_cta2">Show settings again</string>
 	<string name="simperm_cardbody">We need phone permissions to see which SIM cards you have.</string>
 	<string name="btn_grantperm">Grant Permission</string>
 	<string name="simaccts_cardhead">Services on your SIMs</string>
 	<string name="countryaccts_cardhead">Other services in %1$s</string>
 	<string name="allaccts_cardhead">All services</string>
 	<string name="allaccts_zerobody">Please turn on data to load services.</string>
-	<string name="toast_error_noselect">You must select at least 1 service.</string>
+	<string name="channel_error_noselect">You must select a service.</string>
 	<string name="perm_cardbody">Stax runs USSD sessions in the background so you don\'t have to. To do this we need:</string>
 	<string name="sms_cardbody">SMS permissions</string>
 	<string name="overlay_cardbody">Overlay permission</string>
@@ -119,10 +141,10 @@
 	<string name="btn_request">Send request</string>
 	<string name="btn_nothanks">No, thanks</string>
 	<string name="toast_confirm_contact">Thanks! Contact info received. We\'ll be in touch soon.</string>
-	<string name="reqsave_head">Request sent?</string>
-	<string name="reqsave_msg">Have you sent the request link yet?</string>
-	<string name="btn_saveanyway">Yes</string>
-	<string name="btn_dontsave">No</string>
+	<string name="reqsave_head">Save request?</string>
+	<string name="reqsave_msg">Looks like you haven\'t sent your request. Would you like to save it anyway?</string>
+	<string name="btn_saveanyway">Save</string>
+	<string name="btn_dontsave">Abandon</string>
 	<string name="request_account">Request account</string>
 	<string name="request_account_desc">Can\’t find what you\’re looking for? We\’re adding new accounts to Stax every day, and if you let us know which one you\’re looking for, we\’ll add it as soon as possible.</string>
 	<string name="request_received_content">Request received. We\’ll add %1$s soon.</string>
@@ -163,39 +185,49 @@
 
 	<!-- Transfer -->
 	<string name="loading_dialoghead">Loading, one moment</string>
-	<string name="amount_cardhead">Amount</string>
-	<string name="amount_label">How much money?</string>
+	<string name="transfer_amount_label">Amount</string>
+	<string name="request_amount_label">How much money?</string>
 	<string name="channel_label">Account</string>
 	<string name="fromacct_cardhead">From this account</string>
 	<string name="fromacct_fielderror">You must select an sending account. If you have none please tap <u>add account</u>.</string>
 	<string name="actions_fielderror">This account does not support buy airtime. Please select a different account.</string>
-	<string name="link_addacct"><u>+ Add an account</u></string>
+	<string name="link_addacct"><u>+ Link another account</u></string>
 	<string name="recipientnetwork_cardhead">To network</string>
 	<string name="recipientnetwork_label">To this network</string>
-	<string name="recipientnetwork_fielderror">No recipient network chosen.</string>
 	<string name="whoopsie">Something went wrong, the problem has been reported. Please try again.</string>
 	<string name="recipient_cardhead">To this number</string>
 	<string name="recipientphone_label">Contact phone number</string>
 	<string name="recipientacct_label">Contact account number</string>
 	<string name="toast_error_contactperm">You must grant the read contacts permission to choose a number from your address book.</string>
 	<string name="toast_error_contactselect">There was a problem selecting your contact. Please try again.</string>
-	<string name="recipient_fielderror">Please enter a phone or account number for this contact.</string>
-	<string name="amount_fielderror">Please enter an amount.</string>
-	<string name="service_fielderror">Please select a service.</string>
+	<string name="transfer_error_recipient">Please enter a phone or account number.</string>
+	<string name="amount_fielderror">Please enter a valid amount.</string>
+	<string name="channel_fielderror">Please select a service.</string>
+	<string name="action_fielderror">Please select a recipient network.</string>
+	<string name="channel_request_fielderror">Please insert a sim card that can send to %1$s</string>
+	<string name="no_actions_fielderror">This service cannot be used for %1$s.</string>
+	<string name="toast_pleasefix">Please fix the errors shown in red.</string>
 	<string name="self_choice">Myself</string>
 	<string name="other_choice">Someone else</string>
 	<string name="onnet_choice">On network</string>
 	<string name="offnet_choice">To %1$s</string>
 	<string name="airtimeother_choice">Someone else</string>
 	<string name="note_cardhead">Description</string>
-	<string name="note_label_opt">What is your request for? (optional)</string>
+	<string name="request_note_label">What is your request for?</string>
 	<string name="recipient_label">To</string>
+	<string name="send_who_header">Send money to</string>
+	<string name="airtime_who_header">Buy airtime for</string>
 	<string name="accounts_label">Pay from</string>
+	<string name="self_only_money_warning">This can only be used to move money to your own account.</string>
+	<string name="self_only_airtime_warning">This can only be used to buy airtime for your own account.</string>
 	<string name="descrip_multcontacts">%1$d contacts</string>
 	<string name="descrip_airtime_sent">%1$s sent airtime to %2$s</string>
 	<string name="descrip_transfer_sent">%1$s sent money to %2$s</string>
 	<string name="descrip_transfer_received">received money from %1$s</string>
-	<string name="fab_transfernow">Transfer now</string>
+	<string name="fab_transfernow">Send money now</string>
+	<string name="fab_airtimenow">Buy airtime now</string>
+	<string name="noworry_explain">Don\'t worry. You can review the info in the last step.</string>
+	<string name="fab_sendnow">Buy airtime now</string>
 	<string name="descrip_airtime_sched">Buy airtime with %1$s for %2$s</string>
 	<string name="pending_callout">Transaction sent. Waiting for confirmation.</string>
 	<string name="pending_cardhead">Waiting for confirmation</string>
@@ -207,7 +239,7 @@
 	<string name="req_cardhead">Request money</string>
 	<string name="amount_label_opt">Amount (Optional)</string>
 	<string name="reqfrom_label">To</string>
-	<string name="btn_addcontact">Add someone else</string>
+	<string name="btn_addcontact">+ Add another person</string>
 	<string name="sms_request_template">Kindly stax me %1$s at your earliest convenience. %2$s%3$s</string>
 	<string name="sms_amount_detail">%1$s </string>
 	<string name="sms_note_detail">Note: \"%1$s\" </string>
@@ -217,6 +249,8 @@
 	<string name="descrip_request">Request to %1$s</string>
 	<string name="editreq_cardhead">Edit Request</string>
 	<string name="requester_number_label">Account</string>
+	<string name="requester_account_number_label">Account number</string>
+	<string name="request_error_recipient">Please enter a phone number.</string>
 	<string name="requester_number_fielderror">Please enter the account or phone number you\'d like to receive the money into</string>
 	<string name="requester_account_error">Please select an account or add a new one to receive your money</string>
 	<string name="request_processing_msg">Processing request, please wait…</string>
@@ -267,7 +301,7 @@
 	<string name="moneyin_label">Money in this month</string>
 	<string name="fees_label">Fees paid to %1$s this year</string>
 	<string name="transactions_cardhead">Transactions</string>
-	<string name="network_label">Network</string>
+	<string name="network_label">Recipient account</string>
 	<string name="id_label">Transaction ID</string>
 	<string name="session_cardhead">Messages</string>
 

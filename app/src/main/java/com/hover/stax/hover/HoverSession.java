@@ -3,7 +3,6 @@ package com.hover.stax.hover;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.util.Log;
 
 import androidx.fragment.app.Fragment;
@@ -11,14 +10,12 @@ import androidx.fragment.app.Fragment;
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.api.HoverParameters;
-//import com.hover.sdk.api.HoverTemplates;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.Constants;
-import com.hover.stax.security.KeyStoreExecutor;
-import com.hover.stax.utils.Utils;
+import com.hover.stax.settings.KeyStoreExecutor;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +32,7 @@ final public class HoverSession {
 
 
 	private HoverSession(Builder b) {
-		Hover.setAfterPermissionReturnActivity(Hover.DEFAULT_PERM_ACTIVITY, b.activity);
+		Hover.setPermissionActivity("com.hover.stax.permissions.PermissionsActivity", b.activity);
 		frag = b.fragment;
 		channel = b.channel;
 		requestCode = b.requestCode;
@@ -49,12 +46,12 @@ final public class HoverSession {
 	private HoverParameters.Builder getBasicBuilder(Builder b) {
 		HoverParameters.Builder builder = new HoverParameters.Builder(b.activity);
 		builder.request(b.action.public_id);
-//		builder.setEnvironment(HoverParameters.TEST_ENV);
+		builder.setEnvironment(HoverParameters.PROD_ENV);
 		builder.initialProcessingMessage(getMessage(b.action, b.activity));
 		builder.showUserStepDescriptions(true);
 		builder.finalMsgDisplayTime(finalScreenTime);
 		builder.style(R.style.StaxHoverTheme);
-//		builder.template(Constants.STYLE_MODE_FOR_STAX);
+		//builder.sty(Constants.STYLE_MODE_FOR_STAX);
 		builder.transactingImages(getSenderLogo(), getReceiverLogo(b.action));
 		builder.customBackgroundImage(R.drawable.stax_background);
 

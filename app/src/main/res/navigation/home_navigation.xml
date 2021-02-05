@@ -9,11 +9,17 @@
 	    android:id="@+id/navigation_home"
 	    android:name="com.hover.stax.home.HomeFragment"
 	    android:label="@string/nav_home"
-	    tools:layout="@layout/fragment_home" />
+	    tools:layout="@layout/fragment_main" />
 
 	<fragment
-	    android:id="@+id/navigation_security"
-	    android:name="com.hover.stax.security.SecurityFragment"
+	    android:id="@+id/navigation_balance"
+	    android:name="com.hover.stax.balances.BalancesFragment"
+	    android:label="@string/nav_balance_and_history"
+	    tools:layout="@layout/fragment_balance" />
+
+	<fragment
+	    android:id="@+id/navigation_settings"
+	    android:name="com.hover.stax.settings.SettingsFragment"
 	    android:label="@string/nav_security"
 	    tools:layout="@layout/fragment_settings" />
 
@@ -59,7 +65,7 @@
 
 	<fragment
 	    android:id="@+id/pinUpdateFragment"
-	    android:name="com.hover.stax.security.PinUpdateFragment"
+	    android:name="com.hover.stax.settings.PinUpdateFragment"
 	    android:label="PinUpdateFragment"
 		tools:layout="@layout/fragment_pin_update" >
 		<argument

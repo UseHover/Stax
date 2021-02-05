@@ -93,7 +93,7 @@ public class Request {
 		return requester_number != null && !requester_number.isEmpty();
 	}
 
-	public String getDescription(StaxContact contact, Context c) { return c.getString(R.string.descrip_request, contact.shortName(false)); }
+	public String getDescription(StaxContact contact, Context c) { return c.getString(R.string.descrip_request, contact.shortName()); }
 
 	String generateRecipientString(List<StaxContact> contacts) {
 		StringBuilder phones = new StringBuilder();
@@ -108,9 +108,7 @@ public class Request {
 		StringBuilder phones = new StringBuilder();
 		for (int r = 0; r < contacts.size(); r++) {
 			if (phones.length() > 0) phones.append(",");
-			try {
-				phones.append(contacts.get(r).getInternationalNumberNoPlus(c != null ? c.countryAlpha2 : Lingver.getInstance().getLocale().getCountry()));
-			} catch (NumberParseException e) { Log.e("Request", "Failed to add number for contact.", e); }
+			phones.append(contacts.get(r).getInternationalNumberNoPlus(c != null ? c.countryAlpha2 : Lingver.getInstance().getLocale().getCountry()));
 		}
 		return phones.toString();
 	}

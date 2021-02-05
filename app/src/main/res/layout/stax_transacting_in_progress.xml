@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="Overdraw"
+    android:fitsSystemWindows="true"
+    android:background="#03A9F4"
+    android:id="@+id/mainBackground">
+
+
+	<TextView
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:textColor="@color/white"
+	    android:id="@+id/progress_text_1"
+	    android:textSize="16sp"
+	    android:layout_gravity="center_vertical"
+	    android:gravity="center_horizontal"
+	    android:textStyle="bold"
+	    android:layout_marginTop="48dp"
+	    android:layout_centerHorizontal="true"
+	    android:text="@string/hsdk_average_transaction_text"/>
+
+	<androidx.cardview.widget.CardView
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginHorizontal="16dp"
+	    android:layout_marginTop="150dp"
+	    android:layout_marginBottom="115dp"
+	    android:id="@+id/transacting_cardview"
+	    app:cardElevation="3dp"
+	    app:cardCornerRadius="5dp"
+	    app:cardBackgroundColor="@color/colorHoverWhite"
+	    >
+
+		<LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="300dp"
+		    android:orientation="vertical"
+		    android:layout_gravity="center"
+		    android:gravity="center"
+		    >
+
+			<ProgressBar
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:id="@+id/progress_circular"
+			    android:layout_marginBottom="@dimen/hsdk__standard_padding"
+			    />
+			<TextSwitcher
+			    android:id="@+id/textswitcher"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_gravity="center"
+			    android:inAnimation="@android:anim/fade_in"
+			    android:outAnimation="@android:anim/fade_out" tools:ignore="UselessParent">
+
+				<TextView
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:textSize="16sp"
+				    android:layout_gravity="center"
+				    android:gravity="center"
+				    android:textAlignment="center"
+				    android:textColor="@color/white"
+				    android:text="@string/hsdk_overlay_header"/>
+
+				<TextView
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:textSize="16sp"
+				    android:layout_gravity="center"
+				    android:gravity="center"
+				    android:textAlignment="center"
+				    android:textColor="@color/white"
+				    android:text="@string/hsdk_complete"/>
+			</TextSwitcher>
+
+			<TextView
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:paddingHorizontal="20dp"
+			    android:paddingVertical="16dp"
+			    android:layout_marginHorizontal="@dimen/hsdk__standard_padding"
+			    android:layout_marginTop="32dp"
+			    android:visibility="gone"
+			    android:text="@string/hsdk_continue"
+			    android:id="@+id/continue_text"
+			    android:layout_gravity="center_horizontal"
+			    android:background="@color/white"
+			    android:gravity="center_horizontal"
+			    android:layout_alignParentEnd="true"
+			    android:textSize="16sp"
+			    android:textColor="@color/colorPrimaryDark"/>
+		</LinearLayout>
+	</androidx.cardview.widget.CardView>
+
+</RelativeLayout>

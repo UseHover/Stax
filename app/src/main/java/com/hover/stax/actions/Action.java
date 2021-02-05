@@ -90,16 +90,10 @@ public class Action {
 	@ColumnInfo(name = "root_code")
 	public String root_code;
 
-	@Ignore
-	public Context context;
-
 	@NotNull
 	@Override
 	public String toString() {
-		String val = getLabel(null), label = getLabel(context);
-		if (context != null)
-			val += ": " + label;
-		return val;
+		return isOnNetwork() ? from_institution_name : to_institution_name;
 	}
 
 	public boolean isOnNetwork() {
@@ -107,12 +101,11 @@ public class Action {
 	}
 
 	public String getNetworkSubtitle(Context c) {
-		return isOnNetwork() ? c.getString(R.string.onnet_choice) : c.getString(R.string.offnet_choice, getLabel(null));
+		return isOnNetwork() ? c.getString(R.string.onnet_choice) : c.getString(R.string.offnet_choice, this.toString());
 	}
 
-	public String getLabel(Context c) {
-		if (c != null) return requiresRecipient() ?  c.getString(R.string.other_choice) : c.getString(R.string.self_choice);
-		else return isOnNetwork() ? from_institution_name : to_institution_name;
+	public String getPronoun(Context c) {
+		return requiresRecipient() ?  c.getString(R.string.other_choice) : c.getString(R.string.self_choice);
 	}
 
 	public boolean hasToInstitution() {
@@ -173,6 +166,16 @@ public class Action {
 		} catch (JSONException e) {
 		}
 		return params;
+	}
+
+	public static String getHumanFriendlyType(Context c, String type) {
+		switch (type) {
+			case Action.P2P: return c.getString(R.string.send_money);
+			case Action.AIRTIME: return c.getString(R.string.buy_airtime);
+			case Action.ME2ME: return c.getString(R.string.move_money);
+			case Action.BALANCE: return c.getString(R.string.check_balance);
+			default: return c.getString(R.string.use_ussd);
+		}
 	}
 
 	@Override

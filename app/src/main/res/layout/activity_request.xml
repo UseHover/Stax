@@ -1,34 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-    	android:id="@+id/request_rootView"
 	tools:context=".requests.RequestActivity">
 
 	<fragment
-		android:id="@+id/nav_host_fragment"
+		android:id="@+id/fragment"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:name="androidx.navigation.fragment.NavHostFragment"
-		app:navGraph="@navigation/request_navigation"/>
-
-	<androidx.coordinatorlayout.widget.CoordinatorLayout
-		android:layout_width="match_parent"
-		android:layout_height="match_parent">
-
-		<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-			android:id="@+id/fab"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginHorizontal="@dimen/margin_13"
-			android:layout_marginVertical="@dimen/margin_34"
-			android:layout_gravity="end|bottom"
-			style="@style/StaxButtonColored"
-			android:text="@string/btn_continue"
-			android:fontFamily="font-medium"
-			android:onClick="onContinue"/>
-
-	</androidx.coordinatorlayout.widget.CoordinatorLayout>
+		android:name="com.hover.stax.requests.NewRequestFragment"
+		android:label="@string/nav_request"
+		tools:layout="@layout/fragment_request" />
 </FrameLayout>

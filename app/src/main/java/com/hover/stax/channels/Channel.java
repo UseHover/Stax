@@ -3,12 +3,14 @@ package com.hover.stax.channels;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.hover.stax.utils.DateUtils;
+import com.hover.stax.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Entity(tableName = "channels")
-public class Channel {
+public class Channel implements Comparable<Channel> {
 
 	public Channel() {}
 
@@ -127,5 +129,10 @@ public class Channel {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	@Override
+	public int compareTo(Channel cOther) {
+		return this.toString().compareTo(cOther.toString());
 	}
 }

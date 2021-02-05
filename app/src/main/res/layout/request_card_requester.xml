@@ -1,39 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:title="@string/requester_number_label">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:orientation="vertical">
 
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical"
-	    >
-
-		<RadioGroup
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_marginHorizontal="@dimen/margin_10"
-		    android:id="@+id/channelRadioGroup"/>
-
-		<TextView
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_marginHorizontal="@dimen/margin_10"
-		    android:layout_marginBottom="@dimen/margin_8"
-		    android:id="@+id/add_new_account"
-		    android:textColor="@color/brightBlue"
-		    android:text="@string/link_addacct"
-		    android:textSize="@dimen/text_16"
-		    android:fontFamily="font-medium"/>
+	<com.hover.stax.channels.ChannelDropdown
+		android:id="@+id/channel_dropdown"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:label="@string/channel_label"/>
 
 	<com.google.android.material.textfield.TextInputLayout
 	    android:id="@+id/accountNumberEntry"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginTop="@dimen/margin_16"
-	    android:hint="@string/requester_number_label"
+		android:fontFamily="font-normal"
+	    android:hint="@string/requester_account_number_label"
 	    style="@style/StaxLabeledInput">
 
 		<com.google.android.material.textfield.TextInputEditText
@@ -43,8 +27,8 @@
 		    android:textSize="@dimen/text_21"
 		    android:textColor="@color/offWhite"
 		    android:textCursorDrawable="@null"
+			android:fontFamily="font-normal"
 		    android:inputType="number"
 		    android:id="@+id/accountNumber_input"/>
 	</com.google.android.material.textfield.TextInputLayout>
 	</LinearLayout>
-</com.hover.stax.views.StaxCardView>
