@@ -22,6 +22,7 @@ import com.hover.stax.contacts.ContactDao;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.requests.Request;
 import com.hover.stax.requests.RequestDao;
+import com.hover.stax.requests.Shortlink;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDao;
 import com.hover.stax.sims.Sim;
@@ -249,6 +250,9 @@ public class DatabaseRepo {
 			Encryption e = Request.getEncryptionSettings().build();
 			e.decryptAsync(encrypted.replace(c.getString(R.string.payment_root_url, ""),"").replaceAll("[(]","+"), new Encryption.Callback() {
 				@Override public void onSuccess(String result) {
+					if(Request.isShortLink(result)) {
+						result = new Shortlink(result).expand();
+					}
 					decryptedRequest.postValue(new Request(result));
 				}
 
