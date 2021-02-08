@@ -15,6 +15,7 @@ import java.util.List;
 public class FutureViewModel extends AndroidViewModel {
 	private final String TAG = "ScheduledViewModel";
 
+	@SuppressWarnings("FieldCanBeLocal")
 	private DatabaseRepo repo;
 
 	private LiveData<List<Schedule>> schedules;

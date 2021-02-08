@@ -4,9 +4,9 @@
   	
   <string name="nav_airtime">Nunua Muda wa Maongezi</string>
   	
-  <string name="nav_money">Hamisha Pesa</string>
+  <string name="nav_transfer">Hamisha Pesa</string>
   	
-  <string name="nav_security">Usalama</string>
+  <string name="nav_settings">Usalama</string>
   	
   <string name="nav_channels">Chagua Huduma</string>
   	
@@ -16,7 +16,7 @@
   	
   <string name="nav_request">Omba Maelezo</string>
   	
-  <string name="nav_transfer">Maelezo ya Uhamisho</string>
+  <string name="nav_transfer_detail">Maelezo ya Uhamisho</string>
   	
   <string name="nav_edit_request">Hariri Maelezo ya Ombi</string>
   	
@@ -82,9 +82,9 @@
   	
   <string name="fab_transfer">Hamisha</string>
   	
-  <string name="fab_airtime">Nunua muda wa maongezi</string>
+  <string name="cta_airtime">Nunua muda wa maongezi</string>
   	
-  <string name="fab_request">Omba pesa</string>
+  <string name="cta_request">Omba pesa</string>
   	
   <string name="tool_histbody">Hizi ndizo miamala zote ulizofanya na Stax</string>
   	
@@ -108,7 +108,7 @@
   	
   <string name="allaccts_cardhead">Huduma zote</string>
   	
-  <string name="allaccts_zerobody">Tafadhali washa data ili kupakia huduma.</string>
+  <string name="channels_error_nodata">Tafadhali washa data ili kupakia huduma.</string>
   	
   <string name="toast_error_noselect">Lazima uchague angalau huduma 1.</string>
   	
@@ -276,7 +276,7 @@
   	
   <!-- Transfer -->
   	
-  <string name="loading_dialoghead">Inapakia, subiri kidogo</string>
+  <string name="loading_link_dialoghead">Inapakia, subiri kidogo</string>
   	
   <string name="transfer_amount_label">Kiasi</string>
   	
@@ -286,7 +286,7 @@
   	
   <string name="fromacct_cardhead">Kutoka kwa akaunti hii</string>
   	
-  <string name="link_addacct">
+  <string name="link_another">
     <u>+ Ongeza akaunti</u>
   </string>
   	

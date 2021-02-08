@@ -106,7 +106,7 @@ public class TransferViewModel extends AbstractFormViewModel {
 
 	protected boolean validates(Action a) {
 		boolean valid = true;
-		if (amount.getValue() == null || amount.getValue().isEmpty() || !amount.getValue().matches("[\\d\\.]+") || Double.parseDouble(amount.getValue()) < 1) {
+		if (amount.getValue() == null || amount.getValue().isEmpty() || !amount.getValue().matches("[\\d.]+") || Double.parseDouble(amount.getValue()) < 1) {
 			valid = false;
 			amountError.setValue(R.string.amount_fielderror);
 		}

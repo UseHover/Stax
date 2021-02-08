@@ -29,7 +29,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ChannelDropdownViewModel extends AndroidViewModel implements ChannelDropdown.HighlightListener {
@@ -243,7 +242,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 		boolean valid = true;
 		if (activeChannel.getValue() == null) {
 			valid = false;
-			error.setValue(getApplication().getString(R.string.channel_error_noselect));
+			error.setValue(getApplication().getString(R.string.channels_error_noselect));
 		} else if (channelActions.getValue() == null || channelActions.getValue().size() == 0) {
 			valid = false;
 			error.setValue(getApplication().getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getApplication(), type.getValue())));

@@ -128,7 +128,7 @@ public class RequestActivity extends AppCompatActivity implements RequestSenderI
 		dialog = new StaxDialog(this)
 			.setDialogTitle(R.string.reqsave_head)
 			.setDialogMessage(R.string.reqsave_msg)
-			.setPosButton(R.string.btn_saveanyway, btn -> { requestViewModel.saveRequest(); super.onBackPressed(); })
+			.setPosButton(R.string.btn_save, btn -> { requestViewModel.saveRequest(); super.onBackPressed(); })
 			.setNegButton(R.string.btn_dontsave, btn ->  cancel())
 			.showIt();
 	}

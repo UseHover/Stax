@@ -82,7 +82,7 @@
 		<TextView
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-		    android:text="@string/fab_request"
+		    android:text="@string/cta_request"
 		    android:fontFamily="font-normal"
 		    android:textSize="@dimen/text_21"
 		    android:background="@drawable/button_bg_grey"
@@ -107,7 +107,7 @@
 		<TextView
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-		    android:text="@string/fab_sendMoney"
+		    android:text="@string/cta_transfer"
 		    android:fontFamily="font-normal"
 		    android:background="@drawable/button_bg_grey"
 		    android:textSize="@dimen/text_21"

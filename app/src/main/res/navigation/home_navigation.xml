@@ -20,7 +20,7 @@
 	<fragment
 	    android:id="@+id/navigation_settings"
 	    android:name="com.hover.stax.settings.SettingsFragment"
-	    android:label="@string/nav_security"
+	    android:label="@string/nav_settings"
 	    tools:layout="@layout/fragment_settings" />
 
 	<fragment

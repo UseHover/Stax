@@ -99,6 +99,9 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 		channelDropdownViewModel.getSimHniList().observe(getViewLifecycleOwner(), simList -> Log.i(TAG, "Got new sim hni list: " + simList));
 		channelDropdownViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
 		channelDropdownViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
+		channelDropdownViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
+			if (channels != null && channels.size() > 0) channelDropdown.setError(null);
+		});
 	}
 
 	private void refreshBalances(View v) {
@@ -107,7 +110,9 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 				balancesViewModel.setAllRunning(v.getContext());
 			});
 			channelDropdownViewModel.setChannelSelected(channelDropdown.getHighlighted());
-		} else
+		} else if (channelDropdownViewModel.getSelectedChannels().getValue().size() == 0)
+			channelDropdown.setError(getString(R.string.refresh_balance_error));
+		else
 			balancesViewModel.setAllRunning(v.getContext());
 	}
 

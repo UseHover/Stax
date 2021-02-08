@@ -4,9 +4,9 @@
   	
   <string name="nav_airtime">Acheter du temps d\'antenne</string>
   	
-  <string name="nav_money">Déplacer de l\'argent</string>
+  <string name="nav_transfer">Déplacer de l\'argent</string>
   	
-  <string name="nav_security">Sécurité</string>
+  <string name="nav_settings">Sécurité</string>
   	
   <string name="nav_channels">Choisir les services</string>
   	
@@ -16,7 +16,7 @@
   	
   <string name="nav_request">Détails de la demande</string>
   	
-  <string name="nav_transfer">Détails du transfert</string>
+  <string name="nav_transfer_detail">Détails du transfert</string>
   	
   <string name="nav_edit_request">Modifier les détails de la demande</string>
   	
@@ -82,9 +82,9 @@
   	
   <string name="fab_transfer">Transfert</string>
   	
-  <string name="fab_airtime">Acheter du temps d\'antenne</string>
+  <string name="cta_airtime">Acheter du temps d\'antenne</string>
   	
-  <string name="fab_request">Demande de l\'argent</string>
+  <string name="cta_request">Demande de l\'argent</string>
   	
   <string name="tool_histbody">Voici toutes les transactions que vous avez effectuées avec Stax</string>
   	
@@ -108,7 +108,7 @@
   	
   <string name="allaccts_cardhead">Tous les services</string>
   	
-  <string name="allaccts_zerobody">Veuillez activer les données pour charger les services.</string>
+  <string name="channels_error_nodata">Veuillez activer les données pour charger les services.</string>
   	
   <string name="toast_error_noselect">Vous devez sélectionner au moins 1 service.</string>
   	
@@ -276,7 +276,7 @@
   	
   <!-- Transfer -->
   	
-  <string name="loading_dialoghead">Chargement, un instant</string>
+  <string name="loading_link_dialoghead">Chargement, un instant</string>
   	
   <string name="transfer_amount_label">Montant</string>
   	
@@ -286,7 +286,7 @@
   	
   <string name="fromacct_cardhead">À partir de ce compte</string>
   	
-  <string name="link_addacct">
+  <string name="link_another">
     <u>+ Ajouter un compte</u>
   </string>
   	
