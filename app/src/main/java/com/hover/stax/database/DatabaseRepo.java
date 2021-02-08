@@ -29,12 +29,14 @@ import com.hover.stax.sims.Sim;
 import com.hover.stax.sims.SimDao;
 import com.hover.stax.transactions.StaxTransaction;
 import com.hover.stax.transactions.TransactionDao;
+import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.paymentLinkCryptography.Encryption;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public class DatabaseRepo {
+	private static String TAG = "DatabaseRepo";
 	private ChannelDao channelDao;
 	private ActionDao actionDao;
 	private RequestDao requestDao;
@@ -153,7 +155,7 @@ public class DatabaseRepo {
 		return transactionDao.getTransaction(uuid);
 	}
 
-	public void insertOrUpdate(Intent intent, Context c) {
+	public void insertOrUpdateTransaction(Intent intent, Context c) {
 		AppDatabase.databaseWriteExecutor.execute(() -> {
 			try {
 				StaxTransaction t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID));
@@ -168,7 +170,7 @@ public class DatabaseRepo {
 				transactionDao.update(t);
 
 				updateRequests(t, intent);
-			} catch (Exception e) { Log.e("DatabaseRepo", "error", e); }
+			} catch (Exception e) { Log.e(TAG, "error", e); }
 		});
 	}
 
@@ -198,7 +200,8 @@ public class DatabaseRepo {
 		AppDatabase.databaseWriteExecutor.execute(() -> {
 			if (getContact(contact.id) == null) {
 				//For some reason, first time inserting crashes-then-save
-				try{ contactDao.insert(contact); }catch (Exception ignored) {}
+				try { contactDao.insert(contact); }
+				catch (Exception e) { Utils.logErrorAndReportToFirebase(TAG, "failed to insert contact", e); }
 			}
 			else
 				contactDao.update(contact);
@@ -250,7 +253,7 @@ public class DatabaseRepo {
 			Encryption e = Request.getEncryptionSettings().build();
 
 			String removedBaseUrlString =  encrypted.replace(c.getString(R.string.payment_root_url, ""),"");
-			if(Request.isShortLink(removedBaseUrlString)) {
+			if (Request.isShortLink(removedBaseUrlString)) {
 				removedBaseUrlString = new Shortlink(removedBaseUrlString).expand();
 			}
 
@@ -258,10 +261,11 @@ public class DatabaseRepo {
 				@Override public void onSuccess(String result) {
 					decryptedRequest.postValue(new Request(result));
 				}
-				@Override public void onError(Exception exception) { Log.e("repo", "failed decryption", exception);}
+				@Override public void onError(Exception exception) {
+					Utils.logErrorAndReportToFirebase(TAG, "failed link decryption", exception);}
 			});
 
-		} catch (NoSuchAlgorithmException e) { Log.e("DatabaseRepo", "decryption failure"); }
+		} catch (NoSuchAlgorithmException e) { Utils.logErrorAndReportToFirebase(TAG, "decryption failure", e); }
 		return decryptedRequest;
 	}
 

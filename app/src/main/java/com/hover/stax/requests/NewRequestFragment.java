@@ -84,8 +84,6 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 	@Override
 	protected void startObservers(View root) {
 		super.startObservers(root);
-		channelDropdownViewModel.getHelper().observe(getViewLifecycleOwner(), helper -> channelDropdown.setHelper(null));
-
 		channelDropdownViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> {
 			requestViewModel.setActiveChannel(channel);
 			accountValue.setTitle(channel.toString());
