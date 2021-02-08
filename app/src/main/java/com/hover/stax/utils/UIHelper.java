@@ -2,15 +2,20 @@ package com.hover.stax.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -21,11 +26,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.hover.stax.R;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -100,6 +110,27 @@ public class UIHelper {
 
 	public static int dpToPx(int dp) {
 		return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+	}
+
+	public static void setAutoCompleteTextDrawable(AutoCompleteTextView textView, String url, Context context) {
+		Target target = new Target() {
+			@Override
+			public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+				RoundedBitmapDrawable d = RoundedBitmapDrawableFactory.create (context.getResources(), bitmap);
+				d.setCircular(true);
+				textView.setCompoundDrawablesRelativeWithIntrinsicBounds(d, null, null, null);
+			}
+
+			@Override
+			public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+			}
+
+			@Override
+			public void onPrepareLoad(Drawable placeHolderDrawable) {
+				textView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0);
+			}
+		};
+		Picasso.get().load(url).resize(55,55) .into(target);
 	}
 
 }
