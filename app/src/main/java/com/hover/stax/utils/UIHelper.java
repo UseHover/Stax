@@ -112,25 +112,6 @@ public class UIHelper {
 		return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
 	}
 
-	public static void setAutoCompleteTextDrawable(AutoCompleteTextView textView, String url, Context context) {
-		Target target = new Target() {
-			@Override
-			public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-				RoundedBitmapDrawable d = RoundedBitmapDrawableFactory.create (context.getResources(), bitmap);
-				d.setCircular(true);
-				textView.setCompoundDrawablesRelativeWithIntrinsicBounds(d, null, null, null);
-			}
 
-			@Override
-			public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-			}
-
-			@Override
-			public void onPrepareLoad(Drawable placeHolderDrawable) {
-				textView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0);
-			}
-		};
-		Picasso.get().load(url).resize(55,55) .into(target);
-	}
 
 }
