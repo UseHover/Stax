@@ -15,9 +15,7 @@
 	swiperefresh:top_progress_bar_color_2="@color/brightBlue"
 	swiperefresh:top_progress_bar_color_3="@color/offWhite">
 
-	<androidx.core.widget.NestedScrollView
-	    xmlns:android="http://schemas.android.com/apk/res/android"
-	    xmlns:app="http://schemas.android.com/apk/res-auto"
+	<androidx.core.widget.NestedScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
 	    android:layout_height="wrap_content"
 	    android:layout_width="match_parent">
 

@@ -1,7 +1,6 @@
 package com.hover.stax.requests;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -13,7 +12,7 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.utils.DateUtils;
-import com.hover.stax.utils.AbstractFormViewModel;
+import com.hover.stax.transfers.AbstractFormViewModel;
 
 import java.util.ArrayList;
 import java.util.Collections;

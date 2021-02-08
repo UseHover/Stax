@@ -47,7 +47,7 @@ android {
     }
     lintOptions{
         disable 'MissingTranslation'
-        disable 'ExtraTranslation'
+//        disable 'ExtraTranslation'
     }
 //    buildFeatures.dataBinding = true
 }

@@ -68,20 +68,17 @@ public class RequestActivity extends AppCompatActivity implements RequestSenderI
 
 	public void sendSms(View view) {
 		requestViewModel.saveRequest();
-		Amplitude.getInstance().logEvent(getString(R.string.clicked_send_sms_request));
 		new SmsSentObserver(this, requestViewModel.getRequestees().getValue(), new Handler(), this).start();
 		sendSms(requestViewModel.getRequest().getValue(), requestViewModel.getRequestees().getValue(), this);
 	}
 
 	public void sendWhatsapp(View view) {
 		requestViewModel.saveRequest();
-		Amplitude.getInstance().logEvent(getString(R.string.clicked_send_whatsapp_request));
 		sendWhatsapp(requestViewModel.getRequest().getValue(), requestViewModel.getRequestees().getValue(), null, this);
 	}
 
 	public void copyShareLink(View view) {
 		requestViewModel.saveRequest();
-		Amplitude.getInstance().logEvent(getString(R.string.clicked_copylink_request));
 		copyShareLink(requestViewModel.getRequest().getValue(), view.findViewById(R.id.copylink_share_selection), this);
 	}
 
@@ -128,8 +125,14 @@ public class RequestActivity extends AppCompatActivity implements RequestSenderI
 		dialog = new StaxDialog(this)
 			.setDialogTitle(R.string.reqsave_head)
 			.setDialogMessage(R.string.reqsave_msg)
-			.setPosButton(R.string.btn_save, btn -> { requestViewModel.saveRequest(); super.onBackPressed(); })
+			.setPosButton(R.string.btn_save, btn -> saveUnsent())
 			.setNegButton(R.string.btn_dontsave, btn ->  cancel())
 			.showIt();
+	}
+
+	private void saveUnsent() {
+		requestViewModel.saveRequest();
+		Amplitude.getInstance().logEvent(getString(R.string.saved_unsent_request));
+		super.onBackPressed();
 	}
 }

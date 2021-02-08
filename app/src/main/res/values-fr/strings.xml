@@ -8,8 +8,6 @@
   	
   <string name="nav_settings">Sécurité</string>
   	
-  <string name="nav_channels">Choisir les services</string>
-  	
   <string name="nav_transaction">Détails de la transaction</string>
   	
   <string name="nav_schedule">Détails du programme</string>
@@ -18,37 +16,19 @@
   	
   <string name="nav_transfer_detail">Détails du transfert</string>
   	
-  <string name="nav_edit_request">Modifier les détails de la demande</string>
-  	
-  <string name="nav_edit_transfer">Modifier les détails du transfert</string>
-  	
-  <string name="nav_language">Choix de la langue</string>
-  	
   <string name="nav_sim_permission">Accorder l\'autorisation SIM</string>
   	
-  <string name="nav_hover_permissions">Accorder les autorisations de survol</string>
-  	
-  <string name="nav_pins_entry">Saisir les codes PIN</string>
-  	
   <string name="nav_account_detail">Détails du compte</string>
-  	
-  <string name="btn_done">Terminé</string>
-  	
+
   <string name="btn_cancel">Annuler</string>
   	
   <string name="btn_ok">D\'accord</string>
   	
   <string name="btn_save">Enregistrer</string>
   	
-  <string name="btn_skip">Sauter</string>
-  	
-  <string name="btn_resend">Renvoyer</string>
-  	
   <string name="btn_continue">Continuer</string>
   	
   <string name="btn_send">Envoyer</string>
-  	
-  <string name="no_thanks">Non merci</string>
   	
   <string name="btn_edit">Éditer</string>
   	
@@ -72,21 +52,15 @@
   	
   <string name="bal_cardhead">Soldes</string>
   	
-  <string name="btn_addaccts">Ajouter des comptes</string>
-  	
   <string name="hist_cardhead">Historique</string>
   	
   <string name="hist_zerobody">Vous n\'avez pas encore d\'historique. Envoyez de l\'argent ou achetez du temps d\'antenne pour commencer.</string>
   	
   <string name="future_cardhead">Transactions futures</string>
   	
-  <string name="fab_transfer">Transfert</string>
-  	
   <string name="cta_airtime">Acheter du temps d\'antenne</string>
   	
   <string name="cta_request">Demande de l\'argent</string>
-  	
-  <string name="tool_histbody">Voici toutes les transactions que vous avez effectuées avec Stax</string>
   	
   <!-- Hover Session -->
   	
@@ -97,28 +71,9 @@
   <string name="transfer_msg">Transférer de l\'argent</string>
   	
   <!-- Accounts and Permissions -->
-  	
-  <string name="simperm_cardbody">Nous avons besoin des autorisations du téléphone pour voir quelles cartes SIM vous utilisez.</string>
-  	
-  <string name="btn_grantperm">Accorder la permission</string>
-  	
-  <string name="simaccts_cardhead">Services sur vos SIM</string>
-  	
-  <string name="countryaccts_cardhead">Autres services dans %1$s</string>
-  	
-  <string name="allaccts_cardhead">Tous les services</string>
+
   	
   <string name="channels_error_nodata">Veuillez activer les données pour charger les services.</string>
-  	
-  <string name="toast_error_noselect">Vous devez sélectionner au moins 1 service.</string>
-  	
-  <string name="perm_cardbody">Stax exécute des sessions USSD en arrière-plan pour que vous n\'ayez pas à le faire. Pour ce faire, nous avons besoin de :</string>
-  	
-  <string name="sms_cardbody">Autorisations SMS</string>
-  	
-  <string name="overlay_cardbody">Permission de superposition</string>
-  	
-  <string name="access_cardbody">Autorisations d\'accessibilité</string>
   	
   <!-- SDK Overrides -->
   	
@@ -142,115 +97,19 @@
   	
   <string name="hsdk_enable_accessibility">Activer l\'accessibilité</string>
   	
-  <string name="hsdk_default_accessibility_name">Service de survol du menu</string>
-  	
-  <string name="hsdk_access_tip">Recherchez \"%1$s\" dans la liste et activez l\'option</string>
-  	
-  <string name="hsdk_access_find">Recherchez et appuyez sur %1$s, puis activez l\'option</string>
-  	
-  <string name="hsdk_access_step_1">Étape 1</string>
-  	
-  <string name="hsdk_access_step_1_explain">Touchez ce bouton</string>
-  	
-  <string name="hsdk_access_step_2">Étape 2</string>
-  	
-  <string name="hsdk_access_step_2_explain">Allumer</string>
-  	
   <string name="access_service_summary">Connectez-vous avec les services Mobile Money et Telecom en votre nom</string>
   	
   <string name="access_service_descript">Ceci est utilisé pour lire et interagir avec les menus USSD afin de fournir une expérience simplifiée et plus accessible.</string>
   	
   <!-- PIN Entry -->
   	
-  <string name="pin_cardhead">Entrez vos codes PIN</string>
-  	
-  <string name="pin_cardbody1">Une dernière étape : nous avons besoin des codes PIN de votre compte pour effectuer des tâches et maintenir les soldes à jour.</string>
-  	
-  <string name="pin_cardbody2">Les codes PIN sont cryptés et ne quittent jamais votre appareil. Vous pouvez supprimer les codes PIN de Stax à tout moment. &lt;font color="#39CBFC"&gt;&lt;u&gt;En savoir plus.&lt;/u&gt;&lt;/font&gt;</string>
-  	
   <string name="security_cardbody">Stax répond aux critères de la classification de sécurité 740.17(b)(3)(i) du Bureau of Industry and Security des États-Unis. Ce logiciel utilise HTTPS pour la communication avec le serveur ; cryptage RSA à clé symétrique pour stocker temporairement les informations d\'identification de l\'utilisateur sur son propre appareil à l\'aide d\'Android Keystore ; et obfuscation de code à l\'aide de DRM.</string>
   	
-  <string name="pin_label">%1$s PIN</string>
-  	
-  <string name="nopin_dialogbody">Il vous sera demandé votre PIN avant chaque transaction. Il ne sera pas stocké. Vous pouvez enregistrer vos codes PIN pour des transactions plus rapides à tout moment en accédant aux paramètres.</string>
-  	
-  <string name="balance_dialogbody">Nous allons maintenant vérifier votre solde sur chacun de vos services.</string>
-  	
-  <string name="btn_balances">Vérifier les soldes</string>
-  	
   <!-- Request Services -->
-  	
-  <string name="reqacct_cardhead">Demander une couverture</string>
-  	
-  <string name="reqacct_cardbody">Vous ne trouvez pas ce que vous cherchez ? Nous ajoutons chaque jour de nouveaux services à Stax, et si vous nous indiquez celui que vous recherchez, nous l\'ajouterons dès que possible.</string>
-  	
-  <string name="country_cardhead">Pays</string>
-  	
-  <string name="network_cardhead">Réseau</string>
-  	
-  <string name="service_cardhead">Service</string>
-  	
-  <string name="contact_cardhead">Contact</string>
-  	
-  <string name="phone_label">Téléphone (facultatif)</string>
-  	
-  <string name="email_label">E-mail (facultatif)</string>
-  	
-  <string name="reqcomplete_cardbody">Nous vous informerons dès que %1$s sera disponible</string>
-  	
-  <string name="btn_request">Envoyer une demande</string>
-  	
-  <string name="btn_nothanks">Non merci</string>
-  	
-  <string name="toast_confirm_contact">Merci ! Coordonnées reçues. Nous vous contacterons bientôt.</string>
   	
   <string name="reqsave_head">Enregistrer la demande ?</string>
   	
   <string name="reqsave_msg">Nous ne savons pas si votre message a été envoyé.</string>
-  	
-  <string name="btn_saveanyway">Enregistrer</string>
-  	
-  <string name="request_account">Demander un compte</string>
-  	
-  <string name="request_account_desc">Vous ne trouvez pas ce que vous cherchez ? Nous ajoutons chaque jour de nouveaux comptes à Stax, et si vous nous indiquez celui que vous recherchez, nous l\'ajouterons dès que possible.</string>
-  	
-  <string name="request_received_content">Demande reçue. Nous ajouterons bientôt %1$s.</string>
-  	
-  <string name="contact_optional">C\'est facultatif, mais si vous nous communiquez vos coordonnées, nous vous informerons dès que %1$s sera disponible sur Stax.</string>
-  	
-  <string name="phone_input_err">Format ou longueur du numéro de téléphone incorrect</string>
-  	
-  <string name="email_input_err">Adresse e-mail incorrecte, veuillez vérifier et réessayer</string>
-  	
-  <string name="phone_and_email_input_empty">Le téléphone et l\'e-mail ne doivent pas être vides</string>
-  	
-  <string-array name="supported_countries">
-    		
-    <item>Cameroun</item>
-    		
-    <item>Éthiopie</item>
-    		
-    <item>Ghana</item>
-    		
-    <item>Kenya</item>
-    		
-    <item>Nigeria</item>
-    		
-    <item>Indonésie</item>
-    		
-    <item>Sierra Leon</item>
-    		
-    <item>Sénégal</item>
-    		
-    <item>Afrique du Sud</item>
-    		
-    <item>Tanzanie</item>
-    		
-    <item>Zambie</item>
-    		
-    <item>Zimbabwe</item>
-    	
-  </string-array>
   	
   <!-- Onboarding showcase -->
   	
@@ -284,17 +143,9 @@
   	
   <string name="channel_label">Compte</string>
   	
-  <string name="fromacct_cardhead">À partir de ce compte</string>
-  	
   <string name="link_another">
     <u>+ Ajouter un compte</u>
   </string>
-  	
-  <string name="recipientnetwork_cardhead">Vers le réseau</string>
-  	
-  <string name="recipientnetwork_label">Vers ce réseau</string>
-  	
-  <string name="recipient_cardhead">Vers ce numéro</string>
   	
   <string name="recipientphone_label">Numéro de téléphone de contact</string>
   	
@@ -308,15 +159,11 @@
   	
   <string name="amount_fielderror">Veuillez saisir un montant.</string>
   	
-  <string name="service_fielderror">Veuillez sélectionner un service.</string>
-  	
   <string name="self_choice">Moi-même</string>
   	
   <string name="onnet_choice">Sur le réseau</string>
   	
   <string name="offnet_choice">À %1$s</string>
-  	
-  <string name="airtimeother_choice">Quelqu\'un d\'autre</string>
   	
   <string name="note_cardhead">Remarque</string>
   	
@@ -341,11 +188,7 @@
   <string name="pending_cardhead">En attente de confirmation</string>
   	
   <string name="pending_cardbody">La session USSD est terminée, mais nous n\'avons pas encore reçu de SMS de confirmation.</string>
-  	
-  <string name="edittransfer_cardhead">Modifier le transfert</string>
-  	
-  <string name="editairtime_cardhead">Modifier l\'achat du temps d\'antenne</string>
-  	
+
   <!-- Request -->
   	
   <string name="req_cardhead">Demander de l\'argent</string>
@@ -370,16 +213,12 @@
   	
   <string name="descrip_request">Demande à %1$s</string>
   	
-  <string name="editreq_cardhead">Modifier la demande</string>
-  	
   <string name="requester_number_label">Compte</string>
   	
   <string name="requester_number_fielderror">Veuillez saisir le compte ou le numéro de téléphone sur lequel vous souhaitez recevoir l\'argent</string>
   	
   <string name="requester_account_error">Veuillez sélectionner un compte ou en ajouter un nouveau pour recevoir votre argent</string>
-  	
-  <string name="request_processing_msg">Traitement de la demande, veuillez patienter…</string>
-  	
+
   <string name="sms_label">SMS</string>
   	
   <string name="whatsapp_label">WhatsApp</string>
@@ -592,9 +431,6 @@
   <string name="btn_dontsave">Ne sauve pas</string>
   <string name="onboard_addaccounthead">Ajoutez un compte pour commencer</string>
   <string name="onboard_addaccountbody">Stax met tous vos comptes bancaires et d\'argent mobile en un seul endroit sécurisé</string>
-  <string name="fromacct_fielderror">Vous devez sélectionner un compte d\'envoi. Si vous n\'en avez pas, appuyez sur <u>ajouter des comptes</u>.</string>
-  <string name="recipientnetwork_fielderror">Aucun réseau de destinataires choisi.</string>
-  <string name="whoopsie">Une erreur s\'est produite, le problème a été signalé. Veuillez réessayer.</string>
   <string name="other_choice">Quelqu\'un d\'autre</string>
   <string name="removepin_dialoghead">Supprimer le code PIN %1$s maintenant</string>
   <string name="btn_removeaccount">Supprimer le compte</string>

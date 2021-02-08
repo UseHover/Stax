@@ -1,4 +1,4 @@
-package com.hover.stax.utils.abstractClasses;
+package com.hover.stax.transfers;
 
 import android.Manifest;
 import android.app.Activity;
@@ -22,7 +22,6 @@ import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.Constants;
 import com.hover.stax.permissions.PermissionUtils;
-import com.hover.stax.utils.AbstractFormViewModel;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.StaxCardView;
 

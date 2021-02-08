@@ -1,7 +1,6 @@
 package com.hover.stax.transfers;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
@@ -13,7 +12,6 @@ import com.hover.stax.requests.Request;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.utils.DateUtils;
-import com.hover.stax.utils.AbstractFormViewModel;
 
 import java.util.List;
 

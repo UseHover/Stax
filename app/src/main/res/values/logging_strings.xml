@@ -33,8 +33,6 @@
 	<string name="refresh_balance_all" translatable="false">Clicked refresh all balances</string>
 	<string name="visit_screen" translatable="false">Visited %1$s screen</string>
 	<string name="visit_language" translatable="false">Language Choice</string>
-	<string name="visit_sim_permission" translatable="false">SIM permission</string>
-	<string name="visit_choose_channels" translatable="false">Choose Channel</string>
 	<string name="visit_security" translatable="false">Security</string>
 	<string name="visit_change_pin" translatable="false">Change PIN</string>
 	<string name="visit_transaction" translatable="false">Transaction Detail</string>
@@ -44,14 +42,14 @@
 	<string name="visit_new_request" translatable="false">New request</string>
 	<string name="visit_home" translatable="false">Home</string>
 	<string name="visit_balance_and_history" translatable="false">Balance and history</string>
-	<string name="finish_transfer" translatable="false">Completed submission %1$s transfer</string>
-	<string name="scheduled_complete" translatable="false">Completed scheduling %1$s</string>
-	<string name="clicked_schedule_notification" translatable="false">Clicked schedule notification</string>
-	<string name="finished_scheduled_transaction" translatable="false">Completed scheduled %1$s transfer</string>
+	<string name="finish_transfer" translatable="false">Sending %1$s request to the SDK</string>
+	<string name="scheduled_complete" translatable="false">Scheduled new %1$s</string>
+	<string name="clicked_schedule_notification" translatable="false">Clicked notification</string>
+	<string name="finished_scheduled_transaction" translatable="false">Sending scheduled %1$s transfer to the SDK</string>
 
 	<string name="clicked_request_link" translatable="false">Clicked link from request</string>
 	<string name="loaded_request_link" translatable="false">Loaded request from link</string>
-	<string name="clicked_send_request" translatable="false">Clicked send request</string>
+	<string name="saved_unsent_request" translatable="false">Saved unsent request</string>
 	<string name="clicked_send_sms_request" translatable="false">Clicked send sms request</string>
 	<string name="clicked_send_whatsapp_request" translatable="false">Clicked send whatsapp request</string>
 	<string name="clicked_copylink_request" translatable="false">Clicked copy link</string>
@@ -69,5 +67,4 @@
 	<string name="biometrics_succeeded" translatable="false">Device auth successful</string>
 	<string name="sdk_failure" translatable="false">No SDK response, returned null data on activity result</string>
 	<string name="link_encryptfail" translatable="false">Error creating encrypted Stax payment link</string>
-
 </resources>
