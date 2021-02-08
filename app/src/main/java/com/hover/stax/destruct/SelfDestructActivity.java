@@ -15,12 +15,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
-import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.permissions.PermissionUtils;
 import com.hover.stax.utils.Utils;
-
-import java.util.Date;
 
 public class SelfDestructActivity extends AppCompatActivity {
 	@Override
@@ -31,10 +28,10 @@ public class SelfDestructActivity extends AppCompatActivity {
 	}
 
 	public static boolean isExpired(Context c) {
-//		return false;
-		long currentTime = new Date().getTime();
-		long selfDestructTime = Long.parseLong(Utils.getBuildConfigValue(c, "SELF_DESTRUCT").toString());
-		return currentTime >= selfDestructTime;
+		return false;
+//		long currentTime = new Date().getTime();
+//		long selfDestructTime = Long.parseLong(Utils.getBuildConfigValue(c, "SELF_DESTRUCT").toString());
+//		return currentTime >= selfDestructTime;
 	}
 
 	private void attemptDownload() {
@@ -48,8 +45,8 @@ public class SelfDestructActivity extends AppCompatActivity {
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		if (new PermissionHelper(this).permissionsGranted(grantResults))
-			downloadLatest(null);
+//		if (new PermissionHelper(this).permissionsGranted(grantResults))
+//			downloadLatest(null);
 	}
 
 	public void downloadLatest(View v) {

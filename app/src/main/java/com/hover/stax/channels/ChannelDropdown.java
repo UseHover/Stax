@@ -9,8 +9,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputLayout;
-import com.hover.sdk.utils.VolleySingleton;
 import com.hover.stax.R;
+import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
@@ -93,7 +93,7 @@ public class ChannelDropdown extends TextInputLayout {
 	}
 
 	public void reset() {
-		if (VolleySingleton.isConnected(getContext()))
+		if (Utils.isConnected(getContext()))
 			dropdownView.setText("");
 		highlightedChannel = null;
 	}
