@@ -2,9 +2,6 @@ package com.hover.stax.channels;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,9 +9,10 @@ import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputLayout;
-import com.hover.sdk.utils.VolleySingleton;
 import com.hover.stax.R;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
+
 import java.util.List;
 
 public class ChannelDropdown extends TextInputLayout {
@@ -101,7 +99,7 @@ public class ChannelDropdown extends TextInputLayout {
 	}
 
 	public void reset() {
-		if (VolleySingleton.isConnected(getContext()))
+		if (Utils.isConnected(getContext()))
 			dropdownView.setText("");
 		highlightedChannel = null;
 	}
