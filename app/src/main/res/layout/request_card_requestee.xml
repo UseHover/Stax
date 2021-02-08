@@ -13,7 +13,7 @@
 	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginVertical="@dimen/margin_13">
+		android:layout_marginBottom="@dimen/margin_13">
 
 		<TextView
 		    android:layout_width="match_parent"
