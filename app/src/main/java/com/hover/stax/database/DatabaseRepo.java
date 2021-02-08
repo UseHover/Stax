@@ -195,8 +195,10 @@ public class DatabaseRepo {
 
 	public void insertOrUpdate(StaxContact contact) {
 		AppDatabase.databaseWriteExecutor.execute(() -> {
-			if (getContact(contact.id) == null)
-				contactDao.insert(contact);
+			if (getContact(contact.id) == null) {
+				//For some reason, first time inserting crashes-then-save
+				try{ contactDao.insert(contact); }catch (Exception ignored) {}
+			}
 			else
 				contactDao.update(contact);
 		});

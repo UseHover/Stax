@@ -80,7 +80,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 		});
 		helper.addSource(channelActions, actions -> {
 			if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient())
-				helper.setValue(actions.get(0).transaction_type.equals(Action.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning);
+				helper.setValue(actions.get(0).transaction_type.equals(Action.RECEIVE ) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning);
 			else helper.setValue(null);
 		});
 	}
