@@ -100,6 +100,7 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 
 	private List<Action> getWhoMeOptions(int recipientInstId) {
 		List<Action> options = new ArrayList<>();
+		if (actions == null) return options;
 		for (Action a: actions) {
 			if (a.recipientInstitutionId() == recipientInstId && !options.contains(a))
 				options.add(a);
