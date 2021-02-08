@@ -88,6 +88,7 @@ public class Request {
 		requester_number = splitString[2];
 		requester_institution_id = Integer.parseInt(splitString[1]);
 	}
+	public static boolean isShortLink(String link) { return link.length() <=25;}
 
 	public boolean hasRequesterInfo() {
 		return requester_number != null && !requester_number.isEmpty();

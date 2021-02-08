@@ -7,12 +7,9 @@ import android.content.Intent;
 
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.DatabaseRepo;
-import com.hover.stax.requests.Request;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class TransactionReceiver extends BroadcastReceiver {
 	final private static String TAG = "TransactionReceiver";
@@ -39,6 +36,6 @@ public class TransactionReceiver extends BroadcastReceiver {
 	}
 
 	private void updateTransaction(DatabaseRepo repo, Intent intent, Context c) {
-		repo.insertOrUpdate(intent, c);
+		repo.insertOrUpdateTransaction(intent, c);
 	}
 }

@@ -79,7 +79,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 			else error.setValue(null);
 		});
 		helper.addSource(channelActions, actions -> {
-			if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient())
+			if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !actions.get(0).transaction_type.equals(Action.BALANCE))
 				helper.setValue(actions.get(0).transaction_type.equals(Action.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning);
 			else helper.setValue(null);
 		});

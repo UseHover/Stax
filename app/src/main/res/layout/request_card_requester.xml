@@ -15,7 +15,6 @@
 	    android:id="@+id/accountNumberEntry"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:layout_marginTop="@dimen/margin_16"
 		android:fontFamily="font-normal"
 	    android:hint="@string/requester_account_number_label"
 	    style="@style/StaxLabeledInput">
