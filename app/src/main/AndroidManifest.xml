@@ -40,6 +40,10 @@
 					android:scheme="https"
 					android:host="stax.me"
 					android:pathPattern="/pay" />
+				<data
+				    android:scheme="https"
+				    android:host="stax.me"
+				    android:pathPattern="/pay/" />
 			</intent-filter>
 		</activity>
 

@@ -15,12 +15,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.hover.sdk.utils.VolleySingleton;
 import com.hover.stax.R;
 import com.hover.stax.utils.UIHelper;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
-
-import java.io.IOException;
 import java.util.List;
 
 public class ChannelDropdown extends TextInputLayout {

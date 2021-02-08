@@ -248,14 +248,16 @@ public class DatabaseRepo {
 		decryptedRequest.setValue(null);
 		try {
 			Encryption e = Request.getEncryptionSettings().build();
-			e.decryptAsync(encrypted.replace(c.getString(R.string.payment_root_url, ""),"").replaceAll("[(]","+"), new Encryption.Callback() {
+
+			String removedBaseUrlString =  encrypted.replace(c.getString(R.string.payment_root_url, ""),"");
+			if(Request.isShortLink(removedBaseUrlString)) {
+				removedBaseUrlString = new Shortlink(removedBaseUrlString).expand();
+			}
+
+			e.decryptAsync(removedBaseUrlString.replaceAll("[(]","+"), new Encryption.Callback() {
 				@Override public void onSuccess(String result) {
-					if(Request.isShortLink(result)) {
-						result = new Shortlink(result).expand();
-					}
 					decryptedRequest.postValue(new Request(result));
 				}
-
 				@Override public void onError(Exception exception) { Log.e("repo", "failed decryption", exception);}
 			});
 
