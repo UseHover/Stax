@@ -106,8 +106,9 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 	}
 	private void setDropDownValue(Action a) {
 		dropdownView.setText(a.toString(), false);
-		//TODO: PREPEND THE INSTITUTION LGO WITH PROPER BASE URL FOR IMAGES
-		Picasso.get().load(a.to_institution_logo).resize(55,55).into(this);
+		Picasso.get()
+				.load(getContext().getString(R.string.root_url)+ a.to_institution_logo)
+				.resize(55,55).into(this);
 	}
 
 	public void selectAction(Action a) {

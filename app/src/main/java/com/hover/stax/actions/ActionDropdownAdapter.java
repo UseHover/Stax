@@ -29,9 +29,11 @@ import java.util.List;
 public class ActionDropdownAdapter extends ArrayAdapter<Action> {
 	private List<Action> actions;
 
+
 	public ActionDropdownAdapter(@NonNull List<Action> actions, @NonNull Context context) {
 		super(context, 0, actions);
 		this.actions = actions;
+
 	}
 
 
@@ -42,7 +44,7 @@ public class ActionDropdownAdapter extends ArrayAdapter<Action> {
 		view = LayoutInflater.from(parent.getContext()).inflate(R.layout.stax_spinner_item_with_logo, parent,false);
 
 		ViewHolder holder = new ViewHolder(view);
-		holder.setAction(a);
+		holder.setAction(a, getContext().getString(R.string.root_url));
 		return view;
 	}
 
@@ -62,11 +64,10 @@ public class ActionDropdownAdapter extends ArrayAdapter<Action> {
 		}
 
 		@SuppressLint("SetTextI18n")
-		private void setAction(Action action) {
+		private void setAction(Action action, String baseUrl) {
 			id.setText(Integer.toString(action.id));
 			channelText.setText(action.toString());
-			//TODO: PREPEND THE INSTITUTION LOGO WITH PROPER BASE URL FOR IMAGES
-			Picasso.get().load(action.to_institution_logo).into(this);
+			Picasso.get().load(baseUrl+action.to_institution_logo).into(this);
 		}
 
 		@Override
