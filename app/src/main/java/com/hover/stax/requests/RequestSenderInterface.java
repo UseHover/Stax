@@ -31,12 +31,25 @@ public interface RequestSenderInterface {
 
 	default void sendWhatsapp(Request r, List<StaxContact> requestees, Channel channel, Activity a) {
 		if (r == null || requestees == null) { showError(a); return; }
+		if(requestees.size()  == 1) sendWhatsAppToSingleContact(r, requestees, channel, a);
+		else sendWhatsAppToMultipleContacts(r.generateMessage(a), a);
+	}
+
+	 default void sendWhatsAppToSingleContact(Request r, List<StaxContact> requestees, Channel channel, Activity a) {
 		Intent sendIntent = new Intent();
 		sendIntent.setAction(Intent.ACTION_VIEW);
 
 		String whatsapp = "https://api.whatsapp.com/send?phone=" + r.generateWhatsappRecipientString(requestees, channel) + "&text=" + r.generateMessage(a);
 		sendIntent.setData(Uri.parse(whatsapp));
 		a.startActivityForResult(sendIntent, Constants.SMS);
+	}
+	default void sendWhatsAppToMultipleContacts(String message, Activity a) {
+		Intent sendIntent = new Intent();
+		sendIntent.setAction(Intent.ACTION_SEND);
+		sendIntent.putExtra(Intent.EXTRA_TEXT, message);
+		sendIntent.setType("text/plain");
+		sendIntent.setPackage("com.whatsapp");
+		a.startActivity(sendIntent);
 	}
 
 	default void copyShareLink(Request r, TextView copyBtn, Activity a) {
