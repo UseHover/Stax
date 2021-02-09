@@ -84,7 +84,7 @@
 				android:text="@string/btn_cancel"
 				android:layout_toStartOf="@id/divider"
 				style="@style/StaxButton"
-				android:visibility="visible"/>
+				android:visibility="gone"/>
 
 			<View android:id="@+id/divider"
 				android:layout_width="@dimen/margin_21"

@@ -27,7 +27,7 @@ import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.contacts.StaxContactArrayAdapter;
 import com.hover.stax.database.Constants;
 import com.hover.stax.requests.Request;
-import com.hover.stax.utils.abstractClasses.AbstractFormFragment;
+import com.hover.stax.otherAbstracts.AbstractFormFragment;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.Stax2LineItem;

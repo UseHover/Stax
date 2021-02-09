@@ -1,4 +1,4 @@
-package com.hover.stax.utils;
+package com.hover.stax.otherAbstracts;
 
 import android.app.Application;
 
