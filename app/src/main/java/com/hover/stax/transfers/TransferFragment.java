@@ -27,7 +27,6 @@ import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.contacts.StaxContactArrayAdapter;
 import com.hover.stax.database.Constants;
 import com.hover.stax.requests.Request;
-import com.hover.stax.otherAbstracts.AbstractFormFragment;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.Stax2LineItem;
@@ -83,8 +82,8 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 	private void setTitle(View root) {
 		TextView formCardTitle = root.findViewById(R.id.editCard).findViewById(R.id.title);
 		TextView summaryCardTitle = root.findViewById(R.id.summaryCard).findViewById(R.id.title);
-		if (summaryCardTitle != null) { summaryCardTitle.setText(getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.fab_airtime : R.string.fab_transfer)); }
-		if (formCardTitle != null) { formCardTitle.setText(getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.fab_airtime : R.string.fab_transfer)); }
+		if (summaryCardTitle != null) { summaryCardTitle.setText(getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.cta_airtime : R.string.cta_transfer)); }
+		if (formCardTitle != null) { formCardTitle.setText(getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.cta_airtime : R.string.cta_transfer)); }
 	}
 
 	@Override

@@ -5,16 +5,6 @@
 	android:layout_height="wrap_content"
 	app:title="@string/security_cardhead">
 
-	<androidx.appcompat.widget.AppCompatButton
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/removepins_dialoghead"
-		android:id="@+id/removePinsButtonId"
-		style="@style/StaxButton"
-	      android:visibility="gone"
-		android:backgroundTint="@color/bright_red"
-		android:fontFamily="font-medium" />
-
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"

@@ -11,7 +11,7 @@
 		android:id="@+id/new_account_link"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:text="@string/link_addacct"
+	    android:text="@string/link_another"
 	    android:fontFamily="font-medium"
 	    android:textSize="@dimen/text_16"
 	    android:visibility="gone"
@@ -24,7 +24,7 @@
 		android:layout_height="wrap_content"
 		android:id="@+id/channel_dropdown_input"
 	      android:fontFamily="font-normal"
-		android:hint="@string/link_an_account">
+		android:hint="@string/link_account">
 
 		<AutoCompleteTextView
 			android:id="@+id/channel_autoComplete"
@@ -40,7 +40,7 @@
 		    	android:drawablePadding="@dimen/margin_13"
 			android:textCursorDrawable="@null"
 			app:errorTextColor="@color/bright_red"
-			android:text="@string/allaccts_zerobody"/>
+			android:text="@string/channels_error_nodata"/>
 
 	</com.google.android.material.textfield.TextInputLayout>
 </FrameLayout>

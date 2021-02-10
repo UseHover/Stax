@@ -193,17 +193,16 @@ public class DatabaseRepo {
 	public List<StaxContact> getContacts(String[] ids) { return contactDao.get(ids); }
 	public LiveData<List<StaxContact>> getLiveContacts(String[] ids) { return contactDao.getLive(ids); }
 
-	public StaxContact getContact(String id) { return contactDao.get(id); }
+	public StaxContact lookupContact(String lookupKey) { return contactDao.lookup(lookupKey); }
+	public StaxContact getContact(String lookupKey) { return contactDao.lookup(lookupKey); }
 	public LiveData<StaxContact> getLiveContact(String id) { return contactDao.getLive(id); }
 
 	public void insertOrUpdate(StaxContact contact) {
 		AppDatabase.databaseWriteExecutor.execute(() -> {
 			if (getContact(contact.id) == null) {
-				//For some reason, first time inserting crashes-then-save
 				try { contactDao.insert(contact); }
 				catch (Exception e) { Utils.logErrorAndReportToFirebase(TAG, "failed to insert contact", e); }
-			}
-			else
+			} else
 				contactDao.update(contact);
 		});
 	}

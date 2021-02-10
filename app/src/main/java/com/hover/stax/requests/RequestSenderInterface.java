@@ -3,11 +3,9 @@ package com.hover.stax.requests;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.view.View;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
@@ -26,6 +24,7 @@ public interface RequestSenderInterface {
 		sendIntent.setData(Uri.parse("smsto:" + r.generateRecipientString(requestees)));
 		sendIntent.putExtra(Intent.EXTRA_TEXT, r.generateMessage(a));
 		sendIntent.putExtra("sms_body", r.generateMessage(a));
+		Amplitude.getInstance().logEvent(a.getString(R.string.clicked_send_sms_request));
 		a.startActivityForResult(Intent.createChooser(sendIntent, "Request"), Constants.SMS);
 	}
 
@@ -36,11 +35,12 @@ public interface RequestSenderInterface {
 	}
 
 	 default void sendWhatsAppToSingleContact(Request r, List<StaxContact> requestees, Channel channel, Activity a) {
+		Amplitude.getInstance().logEvent(a.getString(R.string.clicked_send_whatsapp_request));
 		Intent sendIntent = new Intent();
 		sendIntent.setAction(Intent.ACTION_VIEW);
-
 		String whatsapp = "https://api.whatsapp.com/send?phone=" + r.generateWhatsappRecipientString(requestees, channel) + "&text=" + r.generateMessage(a);
 		sendIntent.setData(Uri.parse(whatsapp));
+		Amplitude.getInstance().logEvent(a.getString(R.string.clicked_copylink_request));
 		a.startActivityForResult(sendIntent, Constants.SMS);
 	}
 	default void sendWhatsAppToMultipleContacts(String message, Activity a) {
@@ -66,6 +66,6 @@ public interface RequestSenderInterface {
 	}
 
 	default void showError(Activity a) {
-		UIHelper.flashMessage(a, a.getString(R.string.loading_dialoghead));
+		UIHelper.flashMessage(a, a.getString(R.string.loading_link_dialoghead));
 	}
 }

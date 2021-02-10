@@ -14,11 +14,11 @@
     android:orientation="vertical"
 	>
 
-	<include layout="@layout/security_card_accounts" />
+	<include layout="@layout/settings_card_accounts" />
 
-	<include layout="@layout/security_card_pins" />
+	<include layout="@layout/settings_security_card" />
 
-	<include layout="@layout/security_card_language" />
+	<include layout="@layout/settings_card_language" />
 
 	<TextView
 		android:layout_width="match_parent"

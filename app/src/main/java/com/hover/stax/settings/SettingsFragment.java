@@ -43,7 +43,6 @@ public class SettingsFragment extends Fragment {
 
 		View root = inflater.inflate(R.layout.fragment_settings, container, false);
 		setUpAccounts(root, securityViewModel);
-		setUpRemovePins(root, securityViewModel);
 		setUpChooseLang(root);
 		return root;
 	}
@@ -100,20 +99,4 @@ public class SettingsFragment extends Fragment {
 			if (pos != 0) securityViewModel.setDefaultAccount(channels.get(pos));
 		});
 	}
-
-	private void setUpRemovePins(View root, PinsViewModel securityViewModel) {
-		root.findViewById(R.id.removePinsButtonId).setOnClickListener(view -> {
-			new StaxDialog(root.getContext(), this)
-					.setDialogTitle(R.string.removepins_dialoghead)
-					.setDialogMessage(R.string.removepins_dialogmes)
-					.setPosButton(R.string.btn_removepins, btn -> {
-						securityViewModel.clearAllPins();
-						UIHelper.flashMessage(getContext(), getContext().getResources().getString(R.string.toast_confirm_removepin));
-					})
-					.setNegButton(R.string.btn_cancel, null)
-					.isDestructive()
-					.showIt();
-		});
-	}
-
 }

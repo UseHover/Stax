@@ -4,11 +4,9 @@
   	
   <string name="nav_airtime">Nunua Muda wa Maongezi</string>
   	
-  <string name="nav_money">Hamisha Pesa</string>
+  <string name="nav_transfer">Hamisha Pesa</string>
   	
-  <string name="nav_security">Usalama</string>
-  	
-  <string name="nav_channels">Chagua Huduma</string>
+  <string name="nav_settings">Usalama</string>
   	
   <string name="nav_transaction">Maelezo ya Muamala</string>
   	
@@ -16,40 +14,22 @@
   	
   <string name="nav_request">Omba Maelezo</string>
   	
-  <string name="nav_transfer">Maelezo ya Uhamisho</string>
-  	
-  <string name="nav_edit_request">Hariri Maelezo ya Ombi</string>
-  	
-  <string name="nav_edit_transfer">Hariri Maelezo ya Uhamisho</string>
-  	
-  <string name="nav_language">Chaguo la Lugha</string>
+  <string name="nav_transfer_detail">Maelezo ya Uhamisho</string>
   	
   <string name="nav_sim_permission">Toa ruhusa ya SIM</string>
-  	
-  <string name="nav_hover_permissions">Toa ruhusa ya Hover</string>
-  	
-  <string name="nav_pins_entry">Ingiza Utambulisho fiche</string>
-  	
+
   <string name="nav_account_detail">Maelezo ya Akaunti</string>
-  	
-  <string name="btn_done">Imefanywa</string>
   	
   <string name="btn_cancel">Katisha</string>
   	
   <string name="btn_ok">SAWA</string>
   	
   <string name="btn_save">Hifadhi</string>
-  	
-  <string name="btn_skip">Ruka</string>
-  	
-  <string name="btn_resend">Tuma tena</string>
-  	
+
   <string name="btn_continue">Endelea</string>
   	
   <string name="btn_send">Tuma</string>
-  	
-  <string name="no_thanks">Hapana, asante</string>
-  	
+
   <string name="btn_edit">Hariri</string>
   	
   <string name="btn_back">Nyuma</string>
@@ -71,23 +51,17 @@
   <!-- Home -->
   	
   <string name="bal_cardhead">Masalio</string>
-  	
-  <string name="btn_addaccts">Ongeza akaunti</string>
-  	
+
   <string name="hist_cardhead">Historia</string>
   	
   <string name="hist_zerobody">Bado huna historia yoyote. Tuma pesa au nunua muda wa maongezi ili uanze.</string>
   	
   <string name="future_cardhead">Miamala ya Baadaye</string>
+
+  <string name="cta_airtime">Nunua muda wa maongezi</string>
   	
-  <string name="fab_transfer">Hamisha</string>
-  	
-  <string name="fab_airtime">Nunua muda wa maongezi</string>
-  	
-  <string name="fab_request">Omba pesa</string>
-  	
-  <string name="tool_histbody">Hizi ndizo miamala zote ulizofanya na Stax</string>
-  	
+  <string name="cta_request">Omba pesa</string>
+
   <!-- Hover Session -->
   	
   <string name="balance_msg">Inakagua salio ya %1$s</string>
@@ -97,29 +71,9 @@
   <string name="transfer_msg">Kuhamisha pesa</string>
   	
   <!-- Accounts and Permissions -->
-  	
-  <string name="simperm_cardbody">Tunahitaji ruhusa za simu ili tuone ni SIM kadi gani unazo.</string>
-  	
-  <string name="btn_grantperm">Toa Ruhusa</string>
-  	
-  <string name="simaccts_cardhead">Huduma kwenye SIM zako</string>
-  	
-  <string name="countryaccts_cardhead">Huduma zingine katika %1$s</string>
-  	
-  <string name="allaccts_cardhead">Huduma zote</string>
-  	
-  <string name="allaccts_zerobody">Tafadhali washa data ili kupakia huduma.</string>
-  	
-  <string name="toast_error_noselect">Lazima uchague angalau huduma 1.</string>
-  	
-  <string name="perm_cardbody">Stax inaendesha vikao vya USSD kwenye mandhari-nyuma kwa hivyo hauhitajiwi. Ili kufanya hivyo tunahitaji:</string>
-  	
-  <string name="sms_cardbody">Ruhusa za SMS</string>
-  	
-  <string name="overlay_cardbody">Ruhusa ya kufunika</string>
-  	
-  <string name="access_cardbody">Ruhusa za ufikiaji</string>
-  	
+
+  <string name="channels_error_nodata">Tafadhali washa data ili kupakia huduma.</string>
+
   <!-- SDK Overrides -->
   	
   <string name="hsdk_overlay_msg">&lt;font color="#1E232A"&gt;Onyesha sasisho za maendeleo kwa kuwasha &lt;b&gt;swichi ya ON&lt;/b&gt; kwenye skrini inayofuata.&lt;/font&gt;</string>
@@ -142,115 +96,19 @@
   	
   <string name="hsdk_enable_accessibility">Washa Ufikiaji</string>
   	
-  <string name="hsdk_default_accessibility_name">Menyu ya Huduma ya Hover</string>
-  	
-  <string name="hsdk_access_tip">Pata \"%1$s\" katika orodha na Uiwashe</string>
-  	
-  <string name="hsdk_access_find">Tafuta na Donoa %1$s kisha Uiwashe</string>
-  	
-  <string name="hsdk_access_step_1">Hatua ya 1</string>
-  	
-  <string name="hsdk_access_step_1_explain">Gusa kitufe hiki</string>
-  	
-  <string name="hsdk_access_step_2">Hatua ya 2</string>
-  	
-  <string name="hsdk_access_step_2_explain">Washa</string>
-  	
   <string name="access_service_summary">Ungana na huduma za Pesa za Simu na Mawasiliano kwa niaba yako</string>
   	
   <string name="access_service_descript">Hii hutumiwa kusoma na kuingiliana na menyu za USSD ili kutoa uzoefu uliorahisishwa na unaopatikana zaidi.</string>
   	
   <!-- PIN Entry -->
-  	
-  <string name="pin_cardhead">Ingiza PIN zako</string>
-  	
-  <string name="pin_cardbody1">Hatua moja ya mwisho: tunahitaji PIN za akaunti yako ili kukamilisha majukumu na kusasisha masalio .</string>
-  	
-  <string name="pin_cardbody2">PIN zimesimbwa kwa njia fiche na kamwe haziondoki kwenye kifaa chako. Unaweza kufuta PIN kutoka kwa Stax wakati wowote. &lt;font color="#39CBFC"&gt;&lt;u&gt;Pata maelezo zaidi.&lt;/u&gt;&lt;/font&gt;</string>
-  	
+
   <string name="security_cardbody">Stax inakidhi vigezo vya 740.17(b)(3) (i) uainishaji wa usalama wa Ofisi ya Viwanda na Usalama ya Marekani. Programu hii hutumia HTTPS kwa mawasiliano ya seva; usimbuaji fiche wa RSA muhimu ili kuhifadhi kwa muda vitambulisho vya mtumiaji kwenye kifaa chake kwa kutumia Android Keystore; na usimbuaji nambari kwa kutumia DRM.</string>
-  	
-  <string name="pin_label">PIN %1$s</string>
-  	
-  <string name="nopin_dialogbody">Utaulizwa PIN yako kabla ya kila shughuli. Haitahifadhiwa. Unaweza kuhifadhi PIN zako kuwezesha miamala ya haraka wakati wowote kwa kutembelea mipangilio.</string>
-  	
-  <string name="balance_dialogbody">Sasa tutaangalia salio zako kwenye kila huduma yako.</string>
-  	
-  <string name="btn_balances">Angalia masalio</string>
-  	
+
   <!-- Request Services -->
-  	
-  <string name="reqacct_cardhead">Omba usambazaji</string>
-  	
-  <string name="reqacct_cardbody">Huwezi kupata kile unachotafuta? Tunaongeza huduma mpya kwa Stax kila siku, na ikiwa utatujulisha ni ipi unayotafuta, tutaiongeza haraka iwezekanavyo.</string>
-  	
-  <string name="country_cardhead">Nchi</string>
-  	
-  <string name="network_cardhead">Mtandao</string>
-  	
-  <string name="service_cardhead">Huduma</string>
-  	
-  <string name="contact_cardhead">Mwasiliani</string>
-  	
-  <string name="phone_label">Simu (hiari)</string>
-  	
-  <string name="email_label">Barua pepe (hiari)</string>
-  	
-  <string name="reqcomplete_cardbody">Tutakujulisha mara tu %1$s itakapopatikana</string>
-  	
-  <string name="btn_request">Tuma ombi</string>
-  	
-  <string name="btn_nothanks">Hapana, asante</string>
-  	
-  <string name="toast_confirm_contact">Asante! Maelezo ya mawasiliano yamepokelewa. Tutawasiliana hivi karibuni.</string>
-  	
+
   <string name="reqsave_head">Hifadhi ombi?</string>
   	
   <string name="reqsave_msg">Hatuna uhakika ikiwa ujumbe wako umetumwa.</string>
-  	
-  <string name="btn_saveanyway">Hifadhi</string>
-  	
-  <string name="request_account">Omba akaunti</string>
-  	
-  <string name="request_account_desc">Huwezi kupata kile unachotafuta? Tunaongeza akaunti mpya kwa Stax kila siku, na ikiwa utatujulisha ni ipi unayotafuta, tutaiongeza haraka iwezekanavyo.</string>
-  	
-  <string name="request_received_content">Ombi limepokelewa. Tutaongeza %1$s hivi karibuni.</string>
-  	
-  <string name="contact_optional">Ni ya hiari, lakini ikiwa utatupa anwani yako ya mawasiliano na tutakujulisha mara tu %1$s itakapopatikana kwenye Stax.</string>
-  	
-  <string name="phone_input_err">Muundo wa nambari ya simu au urefu sio sahihi</string>
-  	
-  <string name="email_input_err">Barua pepe sio sahihi, tafadhali kagua na ujaribu tena</string>
-  	
-  <string name="phone_and_email_input_empty">Simu na barua pepe hazipaswi kuwa tupu</string>
-  	
-  <string-array name="supported_countries">
-    		
-    <item>Kamerun</item>
-    		
-    <item>Ethiopia</item>
-    		
-    <item>Ghana</item>
-    		
-    <item>Kenya</item>
-    		
-    <item>Nigeria</item>
-    		
-    <item>Indonesia</item>
-    		
-    <item>Sierra Leon</item>
-    		
-    <item>Senegal</item>
-    		
-    <item>Africa Kusini</item>
-    		
-    <item>Tanzania</item>
-    		
-    <item>Zambia</item>
-    		
-    <item>Zimbabwe</item>
-    	
-  </string-array>
   	
   <!-- Onboarding showcase -->
   	
@@ -276,26 +134,18 @@
   	
   <!-- Transfer -->
   	
-  <string name="loading_dialoghead">Inapakia, subiri kidogo</string>
+  <string name="loading_link_dialoghead">Inapakia, subiri kidogo</string>
   	
   <string name="transfer_amount_label">Kiasi</string>
   	
   <string name="request_amount_label">Pesa ngapi?</string>
   	
   <string name="channel_label">Akaunti</string>
-  	
-  <string name="fromacct_cardhead">Kutoka kwa akaunti hii</string>
-  	
-  <string name="link_addacct">
+
+  <string name="link_another">
     <u>+ Ongeza akaunti</u>
   </string>
-  	
-  <string name="recipientnetwork_cardhead">Kwa mtandao</string>
-  	
-  <string name="recipientnetwork_label">Kwa mtandao huu</string>
-  	
-  <string name="recipient_cardhead">Kwa nambari hii</string>
-  	
+
   <string name="recipientphone_label">Nambari ya simu ya mawasiliano</string>
   	
   <string name="recipientacct_label">Nambari ya akaunti ya mawasiliano</string>
@@ -307,17 +157,13 @@
   <string name="transfer_error_recipient">Tafadhali ingiza simu au nambari ya akaunti ya anwani hii.</string>
   	
   <string name="amount_fielderror">Tafadhali ingiza kiasi.</string>
-  	
-  <string name="service_fielderror">Tafadhali chagua huduma.</string>
-  	
+
   <string name="self_choice">Mimi mwenyewe</string>
   	
   <string name="onnet_choice">Kwenye mtandao</string>
   	
   <string name="offnet_choice">Kwa %1$s</string>
-  	
-  <string name="airtimeother_choice">Mtu mwingine</string>
-  	
+
   <string name="note_cardhead">Kumbuka</string>
   	
   <string name="request_note_label">Ingiza dokezo (hiari)</string>
@@ -341,11 +187,7 @@
   <string name="pending_cardhead">Inasubiri uthibitisho</string>
   	
   <string name="pending_cardbody">Kipindi cha USSD kimekamilika, lakini bado hatujapokea SMS ya uthibitisho.</string>
-  	
-  <string name="edittransfer_cardhead">Hariri Uhamisho</string>
-  	
-  <string name="editairtime_cardhead">Hariri Nunua Wakati wa Maongezi</string>
-  	
+
   <!-- Request -->
   	
   <string name="req_cardhead">Omba pesa</string>
@@ -369,17 +211,13 @@
   <string name="toast_request_scheduled">Ombi lako limepangwa. Utakumbushwa kutuma ujumbe mnamo %1$s</string>
   	
   <string name="descrip_request">Ombi kwa %1$s</string>
-  	
-  <string name="editreq_cardhead">Hariri Ombi</string>
-  	
+
   <string name="requester_number_label">Akaunti</string>
   	
   <string name="requester_number_fielderror">Tafadhali ingiza akaunti au nambari ya simu ambayo ungependa kupokea pesa</string>
   	
   <string name="requester_account_error">Tafadhali chagua akaunti au ongeza mpya ili kupokea pesa zako</string>
-  	
-  <string name="request_processing_msg">Inashughulikia ombi, tafadhali subiri…</string>
-  	
+
   <string name="sms_label">SMS</string>
   	
   <string name="whatsapp_label">WhatsApp</string>
@@ -597,9 +435,6 @@
   <string name="onboard_addaccountbody">Usihifadhi</string>
   <string name="hsdk_complete">Shughuli imekamilika</string>
   <string name="onboard_addaccounthead">Ongeza akaunti ili uanze</string>
-  <string name="fromacct_fielderror">Lazima uchague akaunti inayotuma. Ikiwa hauna chochote tafadhali gonga <u>ongeza akaunti</u>.</string>
-  <string name="recipientnetwork_fielderror">Hakuna mtandao wa mpokeaji uliochaguliwa</string>
-  <string name="whoopsie">Hitilafu imetokea, tatizo limeripotiwa. Tafadhali jaribu tena.</string>
   <string name="other_choice">Mtu mwingine</string>
   <string name="actions_fielderror">Akaunti hii haitumiki kununua muda wa maongezi. Tafadhali chagua akaunti tofauti.</string>
   <string name="descrip_transfer_received">umepokea pesa kutoka kwa %1$s</string>

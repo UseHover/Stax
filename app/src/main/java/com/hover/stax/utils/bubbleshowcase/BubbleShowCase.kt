@@ -16,7 +16,6 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import com.hover.stax.R
-import com.hover.stax.home.MainActivity
 import com.hover.stax.utils.Utils
 import java.lang.ref.WeakReference
 
