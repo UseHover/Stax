@@ -139,9 +139,7 @@ public class StaxContact {
 
 	private Phonenumber.PhoneNumber getPhone(String country) throws NumberParseException, IllegalStateException {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-//		try {
 			return phoneUtil.parse(phoneNumber, country);
-//		} catch (IllegalStateException e) { Utils.logErrorAndReportToFirebase(TAG, "Failed to parse phone number", e); }
 	}
 
 	public String shortName() {

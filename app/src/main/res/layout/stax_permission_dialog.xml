@@ -79,7 +79,7 @@
 			<androidx.appcompat.widget.AppCompatButton
 				android:id="@+id/neg_btn"
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
+				android:layout_height="54.5dp"
 				android:layout_marginEnd="@dimen/margin_21"
 				android:text="@string/btn_cancel"
 				android:layout_toStartOf="@id/divider"

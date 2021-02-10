@@ -1,6 +1,8 @@
 package com.hover.stax.actions;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,13 +14,18 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
+
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedChangeListener {
+public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedChangeListener, Target {
 	private static String TAG = "ActionSelect";
 
 	private TextInputLayout input;
@@ -27,7 +34,6 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 	private RadioGroup isSelfRadio;
 
 	private List<Action> actions;
-	private List<Action> uniqRecipientActions;
 	private int selectedRecipientId;
 	private Action highlightedAction;
 	private HighlightListener highlightListener;
@@ -35,6 +41,9 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 	public ActionSelect(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		LayoutInflater.from(context).inflate(R.layout.action_select, this);
+		init();
+	}
+	private void init() {
 		input = findViewById(R.id.action_dropdown_input);
 		dropdownView = findViewById(R.id.action_autoComplete);
 		radioHeader = findViewById(R.id.header);
@@ -49,9 +58,9 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 
 		actions = filteredActions;
 		highlightedAction = null;
-		uniqRecipientActions = sort(filteredActions);
+		List<Action> uniqRecipientActions = sort(filteredActions);
 
-		ArrayAdapter actionDropdownAdapter = new ArrayAdapter<>(getContext(), R.layout.stax_spinner_item, uniqRecipientActions);
+		ActionDropdownAdapter actionDropdownAdapter = new ActionDropdownAdapter(uniqRecipientActions, getContext());
 		dropdownView.setAdapter(actionDropdownAdapter);
 		dropdownView.setOnItemClickListener((adapterView, view2, pos, id) -> selectRecipientNetwork((Action) adapterView.getItemAtPosition(pos)));
 		Log.e(TAG, "uniq recipient networks " + uniqRecipientActions.size());
@@ -77,8 +86,14 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 
 	public void selectRecipientNetwork(Action action) {
 		if (action.equals(highlightedAction)) return;
-		input.setHelperText(null);
-		dropdownView.setText(action.toString(), false);
+
+		clearInputError();
+		setDropDownValue(action);
+		setRadioValuesIfRequired(action);
+	}
+
+	private void clearInputError() {input.setHelperText(null);}
+	private void setRadioValuesIfRequired(Action action) {
 		List<Action> options = getWhoMeOptions(action.recipientInstitutionId());
 		if (options.size() == 1) {
 			if (!options.get(0).requiresRecipient())
@@ -88,6 +103,12 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 			radioHeader.setVisibility(GONE);
 		} else
 			createRadios(options);
+	}
+	private void setDropDownValue(Action a) {
+		dropdownView.setText(a.toString(), false);
+		Picasso.get()
+				.load(getContext().getString(R.string.root_url)+ a.to_institution_logo)
+				.resize(55,55).into(this);
 	}
 
 	public void selectAction(Action a) {
@@ -133,6 +154,23 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 
 	public void setError(String message) {
 		input.setError(message);
+	}
+
+	@Override
+	public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+		RoundedBitmapDrawable d = RoundedBitmapDrawableFactory.create (getContext().getResources(), bitmap);
+		d.setCircular(true);
+		dropdownView.setCompoundDrawablesRelativeWithIntrinsicBounds(d, null, null, null);
+	}
+
+	@Override
+	public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+		Log.e("LogTag", e.getMessage());
+	}
+
+	@Override
+	public void onPrepareLoad(Drawable placeHolderDrawable) {
+		dropdownView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0);
 	}
 
 	public interface HighlightListener {
