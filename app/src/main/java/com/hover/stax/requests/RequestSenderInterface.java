@@ -30,17 +30,17 @@ public interface RequestSenderInterface {
 
 	default void sendWhatsapp(Request r, List<StaxContact> requestees, Channel channel, Activity a) {
 		if (r == null || requestees == null) { showError(a); return; }
-		if(requestees.size()  == 1) sendWhatsAppToSingleContact(r, requestees, channel, a);
+		Amplitude.getInstance().logEvent(a.getString(R.string.clicked_send_whatsapp_request));
+		if (requestees.size()  == 1)
+			sendWhatsAppToSingleContact(r, requestees, channel, a);
 		else sendWhatsAppToMultipleContacts(r.generateMessage(a), a);
 	}
 
 	 default void sendWhatsAppToSingleContact(Request r, List<StaxContact> requestees, Channel channel, Activity a) {
-		Amplitude.getInstance().logEvent(a.getString(R.string.clicked_send_whatsapp_request));
 		Intent sendIntent = new Intent();
 		sendIntent.setAction(Intent.ACTION_VIEW);
 		String whatsapp = "https://api.whatsapp.com/send?phone=" + r.generateWhatsappRecipientString(requestees, channel) + "&text=" + r.generateMessage(a);
 		sendIntent.setData(Uri.parse(whatsapp));
-		Amplitude.getInstance().logEvent(a.getString(R.string.clicked_copylink_request));
 		a.startActivityForResult(sendIntent, Constants.SMS);
 	}
 	default void sendWhatsAppToMultipleContacts(String message, Activity a) {
@@ -55,6 +55,7 @@ public interface RequestSenderInterface {
 	default void copyShareLink(Request r, TextView copyBtn, Activity a) {
 		if (r == null) showError(a);
 		if (Utils.copyToClipboard(r.generateMessage(a), a)) {
+			Amplitude.getInstance().logEvent(a.getString(R.string.clicked_copylink_request));
 			copyBtn.setActivated(true);
 			copyBtn.setCompoundDrawablesWithIntrinsicBounds(null, a.getResources().getDrawable(R.drawable.img_check), null, null);
 			copyBtn.setText(a.getString(R.string.link_copied_label));

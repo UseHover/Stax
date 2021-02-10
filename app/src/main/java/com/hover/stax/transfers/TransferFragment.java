@@ -157,9 +157,10 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 
 	private void fabClicked(View v) {
 		if (transferViewModel.getIsEditing().getValue()) {
-			if (channelDropdownViewModel.validates() & actionSelectViewModel.validates() & transferViewModel.validates(actionSelectViewModel.getActiveAction().getValue()))
+			if (channelDropdownViewModel.validates() & actionSelectViewModel.validates() & transferViewModel.validates(actionSelectViewModel.getActiveAction().getValue())) {
+				transferViewModel.saveContact();
 				transferViewModel.setEditing(false);
-			else
+			} else
 				UIHelper.flashMessage(getContext(), getString(R.string.toast_pleasefix));
 		} else
 			((TransferActivity) getActivity()).submit();

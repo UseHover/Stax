@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
+import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.database.Constants;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
@@ -74,7 +75,7 @@ public class RequestActivity extends AppCompatActivity implements RequestSenderI
 
 	public void sendWhatsapp(View view) {
 		requestViewModel.saveRequest();
-		sendWhatsapp(requestViewModel.getRequest().getValue(), requestViewModel.getRequestees().getValue(), null, this);
+		sendWhatsapp(requestViewModel.getRequest().getValue(), requestViewModel.getRequestees().getValue(), requestViewModel.getActiveChannel().getValue(), this);
 	}
 
 	public void copyShareLink(View view) {

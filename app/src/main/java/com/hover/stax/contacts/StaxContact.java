@@ -125,7 +125,6 @@ public class StaxContact {
 		Phonenumber.PhoneNumber phone = getPhone(country);
 		phone.getCountryCode();
 		String str = phoneUtil.format(phone, PhoneNumberUtil.PhoneNumberFormat.E164);
-		Log.e("CONTACT", "generated: " + str);
 		return str;
 	}
 	public String getInternationalNumberNoPlus(String country) {
@@ -139,7 +138,7 @@ public class StaxContact {
 
 	private Phonenumber.PhoneNumber getPhone(String country) throws NumberParseException, IllegalStateException {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-			return phoneUtil.parse(phoneNumber, country);
+		return phoneUtil.parse(phoneNumber, country);
 	}
 
 	public String shortName() {

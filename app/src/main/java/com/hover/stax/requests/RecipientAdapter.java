@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageButton;
@@ -49,16 +47,16 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
 
 		try{
 			ArrayAdapter<StaxContact> adapter = new StaxContactArrayAdapter(holder.view.getContext(), allContacts);
-			holder.input.setAdapter(adapter);
+			holder.dropdown.setAdapter(adapter);
 		}catch (NullPointerException ignored) {
 			//All contact list may return null whilst loading. The updateContactList method auto refreshes this after load completes.
 		}
 
 
 		if (recipients != null && recipients.size() > position && recipients.get(position).getPhoneNumber() != null)
-			holder.input.setText(recipients.get(position).toString());
+			holder.dropdown.setText(recipients.get(position).toString(), false);
 
-		holder.input.addTextChangedListener(new TextWatcher() {
+		holder.dropdown.addTextChangedListener(new TextWatcher() {
 			@Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
 			@Override public void afterTextChanged(Editable editable) { }
 			@Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -67,7 +65,7 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
 			}
 		});
 
-		holder.input.setOnItemClickListener((adapterView, view, pos, id) -> {
+		holder.dropdown.setOnItemClickListener((adapterView, view, pos, id) -> {
 			StaxContact contact = (StaxContact) adapterView.getItemAtPosition(pos);
 			updateListener.onUpdate(position, contact);
 		});
@@ -82,13 +80,13 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
 
 	static class RecipientViewHolder extends RecyclerView.ViewHolder {
 		final View view;
-		final AutoCompleteTextView input;
+		final AutoCompleteTextView dropdown;
 		final AppCompatImageButton contactButton;
 
 		RecipientViewHolder(@NonNull View itemView) {
 			super(itemView);
 			view = itemView;
-			input = itemView.findViewById(R.id.recipient_autocomplete);
+			dropdown = itemView.findViewById(R.id.recipient_autocomplete);
 			contactButton = itemView.findViewById(R.id.contact_button);
 		}
 	}
