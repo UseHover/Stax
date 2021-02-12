@@ -13,6 +13,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.home.MainActivity;
 import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.settings.SettingsFragment;
 import com.hover.stax.utils.Constants;
@@ -90,6 +91,14 @@ public interface NavigationInterface {
 		NavHostFragment.findNavController(fragment).navigate(R.id.pinUpdateFragment, bundle);
 	}
 
+	default  void navigateToMainActivity(Activity activity) {
+		activity.startActivity(new Intent(activity, MainActivity.class));
+	}
+	default void navigateToMainActivityAndRedirectToAFragment(Activity activity, int redirectToWhere) {
+		Intent intent = new Intent(activity, MainActivity.class);
+		intent.putExtra(Constants.FRAGMENT_DIRECT, redirectToWhere);
+		activity.startActivity(intent);
+	}
 	default void navigateToPreviousScreen(Activity activity) {
 		activity.onBackPressed();
 	}

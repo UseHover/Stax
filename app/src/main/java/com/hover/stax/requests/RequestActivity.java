@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
+import com.hover.stax.navigation.AbstractNavigationActivity;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
@@ -20,7 +21,7 @@ import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.StaxDialog;
 
 
-public class RequestActivity extends AppCompatActivity implements RequestSenderInterface, SmsSentObserver.SmsSentListener {
+public class RequestActivity extends AbstractNavigationActivity implements RequestSenderInterface, SmsSentObserver.SmsSentListener {
 	final public static String TAG = "TransferActivity";
 
 	private NewRequestViewModel requestViewModel;

@@ -47,6 +47,7 @@ public class MainActivity extends AbstractNavigationActivity implements
 
 		setUpNav();
 		checkForRequest(getIntent());
+		checkForFragmentDirection(getIntent());
 	}
 
 	@Override
@@ -57,6 +58,12 @@ public class MainActivity extends AbstractNavigationActivity implements
 
 	private void checkForRequest(Intent intent) {
 		if (intent.hasExtra(Constants.REQUEST_LINK)) navigateToTransferActivity(Action.P2P, true, intent, this);
+	}
+	private void checkForFragmentDirection(Intent intent) {
+		if (intent.hasExtra(Constants.FRAGMENT_DIRECT)) {
+			int toWhere = intent.getExtras().getInt(Constants.FRAGMENT_DIRECT);
+			navigate(this, toWhere);
+		}
 	}
 
 	@Override

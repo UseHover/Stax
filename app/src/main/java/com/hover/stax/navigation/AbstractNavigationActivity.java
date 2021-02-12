@@ -1,6 +1,7 @@
 package com.hover.stax.navigation;
 
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -70,6 +71,11 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 		else if (destId == R.id.navigation_home) return Constants.NAV_HOME;
 		else return destId;
 	}
+
+	public void onClickBackIcon(View v) { onBackPressed(); }
+	public void onClickHomeIcon(View v) { navigateToMainActivity(this); }
+	public void onClickBalanceIcon(View v) { navigateToMainActivityAndRedirectToAFragment(this, Constants.NAV_BALANCE); }
+	public void onClickSettingsIcon(View v) { navigateToMainActivityAndRedirectToAFragment(this, Constants.NAV_SETTINGS); }
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

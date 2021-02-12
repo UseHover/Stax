@@ -16,6 +16,7 @@ import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionSelectViewModel;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.navigation.AbstractNavigationActivity;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.hover.HoverSession;
@@ -24,7 +25,7 @@ import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.settings.BiometricChecker;
 import com.hover.stax.views.StaxDialog;
 
-public class TransferActivity extends AppCompatActivity implements NavigationInterface {
+public class TransferActivity extends AbstractNavigationActivity implements NavigationInterface {
 	final public static String TAG = "TransferActivity";
 
 	private ChannelDropdownViewModel channelDropdownViewModel;
@@ -52,10 +53,6 @@ public class TransferActivity extends AppCompatActivity implements NavigationInt
 			createFromRequest(getIntent().getStringExtra(Constants.REQUEST_LINK));
 		else
 			Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getIntent().getAction()));
-	}
-
-	public void backClicked(View view) {
-		onBackPressed();
 	}
 
 	private void createFromSchedule(int schedule_id) {
