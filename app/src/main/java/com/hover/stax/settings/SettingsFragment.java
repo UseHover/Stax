@@ -23,6 +23,8 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.languages.Lang;
 import com.hover.stax.languages.LanguageViewModel;
 import com.hover.stax.languages.SelectLanguageActivity;
+import com.hover.stax.navigation.NavigationInterface;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.StaxDialog;
 
@@ -30,7 +32,7 @@ import java.util.List;
 
 import static android.view.View.GONE;
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment implements NavigationInterface {
 	final public static String LANG_CHANGE = "Settings";
 
 	private ArrayAdapter<Channel> accountAdapter;
@@ -55,13 +57,9 @@ public class SettingsFragment extends Fragment {
 				if (lang.isSelected()) btn.setText(lang.name);
 			}
 		});
-		btn.setOnClickListener(view -> goToLanguageSelect(view.getContext()));
-	}
 
-	private void goToLanguageSelect(Context c) {
-		Intent intent = new Intent(c, SelectLanguageActivity.class);
-		intent.putExtra(LANG_CHANGE, true);
-		startActivity(intent);
+		assert getActivity()!=null;
+		btn.setOnClickListener(view -> navigateToLanguageSelectionFragment(getActivity()));
 	}
 
 	private void setUpAccounts(View root, PinsViewModel securityViewModel) {
@@ -80,15 +78,11 @@ public class SettingsFragment extends Fragment {
 		accountAdapter.clear();
 		accountAdapter.addAll(channels);
 		lv.setAdapter(accountAdapter);
-		lv.setOnItemClickListener((arg0, arg1, position, arg3) -> goToAccountDetail(channels.get(position).id));
+		lv.setOnItemClickListener((arg0, arg1, position, arg3) -> navigateToPinUpdateFragment(channels.get(position).id, SettingsFragment.this));
 		UIHelper.fixListViewHeight(lv);
 	}
 
-	private void goToAccountDetail(int channel_id) {
-		Bundle bundle = new Bundle();
-		bundle.putInt("channel_id", channel_id);
-		NavHostFragment.findNavController(SettingsFragment.this).navigate(R.id.pinUpdateFragment, bundle);
-	}
+
 
 	private void createDefaultSelector(List<Channel> channels, View root, PinsViewModel securityViewModel) {
 		AutoCompleteTextView spinner = root.findViewById(R.id.defaultAccountSpinner);

@@ -4,6 +4,7 @@
 	<color name="colorPrimaryDark" tools:override="true">#1E232A</color>
 	<color name="brightBlue" tools:override="true">#39CBFC</color>
 	<color name="brightBluePressed" tools:override="true">#2AAFDC</color>
+	<color name="info_blue">#1678FF</color>
 	<color name="cardViewColor">#292E35</color>
 	<color name="cardDarkBlue">#1D2735</color>
 	<color name="buttonColor">#3A3E45</color>
@@ -15,7 +16,7 @@
 	<color name="bright_red">#FF0028</color>
 	<color name="dividerColor">#333333</color>
 	<color name="transparent">#00000000</color>
-
+	<color name="nav_grey">#3F444A</color>
 	<color name="transparent_grey">#77000000</color>
 	<color name="transparent_overlay">#1E232AA3</color>
 

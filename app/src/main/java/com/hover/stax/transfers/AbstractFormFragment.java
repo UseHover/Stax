@@ -20,9 +20,10 @@ import com.hover.stax.actions.Action;
 import com.hover.stax.channels.ChannelDropdown;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
-import com.hover.stax.database.Constants;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.permissions.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.errors.NoticeType;
 import com.hover.stax.views.StaxCardView;
 
 public abstract class AbstractFormFragment extends Fragment {

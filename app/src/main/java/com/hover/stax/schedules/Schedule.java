@@ -4,15 +4,13 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
-import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.google.android.gms.common.util.CollectionUtils;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.contacts.StaxContact;
-import com.hover.stax.database.Constants;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.DateUtils;
 
 import org.jetbrains.annotations.NotNull;

@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
-import com.hover.stax.database.Constants;
+import com.hover.stax.utils.Constants;
 
 public class HomeFragment extends Fragment {
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

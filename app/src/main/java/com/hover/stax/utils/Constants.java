@@ -1,4 +1,4 @@
-package com.hover.stax.database;
+package com.hover.stax.utils;
 
 public class Constants {
 
@@ -8,6 +8,8 @@ public class Constants {
 	final public static int NAV_REQUEST = 603;
 	final public static int NAV_BALANCE = 604;
 	final public static int NAV_SETTINGS = 605;
+	final public static int NAV_LINK_ACCOUNT= 606;
+	final public static int NAV_LANGUAGE_SELECTION = 607;
 
 	final public static int BALANCE_MAX = 100;
 	final public static int ADD_SERVICE = 200;

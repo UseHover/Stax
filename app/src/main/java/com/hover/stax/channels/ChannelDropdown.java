@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -16,13 +17,17 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
+import com.hover.stax.navigation.NavigationInterface;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.utils.errors.NoticeDrawable;
+import com.hover.stax.utils.errors.NoticeType;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.List;
 
-public class ChannelDropdown extends TextInputLayout implements Target {
+public class ChannelDropdown extends TextInputLayout implements Target, NavigationInterface {
 	private static String TAG = "ChannelDropdown";
 
 	private TextInputLayout input;
@@ -63,7 +68,7 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 	private void fillFromAttrs() {
 		if (label != null && !label.isEmpty())
 			input.setHint(label);
-		linkView.setOnClickListener(v -> goToLinkAccountFragment());
+		linkView.setOnClickListener(v -> navigateToLinkAccountFragment(activity));
 		toggleLink(showLink);
 	}
 
@@ -98,9 +103,6 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 
 	public Channel getHighlighted() { return highlightedChannel; }
 
-	public void goToLinkAccountFragment() {
-		Navigation.findNavController(activity, R.id.nav_host_fragment).navigate(R.id.navigation_linkAccount);
-	}
 
 	public void toggleLink(boolean show) {
 		linkView.setVisibility(show ? VISIBLE : GONE);

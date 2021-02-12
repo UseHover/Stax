@@ -14,7 +14,6 @@ import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
-import com.hover.stax.database.Constants;
 import com.hover.stax.settings.KeyStoreExecutor;
 
 import org.json.JSONException;
