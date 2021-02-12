@@ -57,6 +57,7 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 		super.onViewCreated(view, savedInstanceState);
 
 		channelDropdown = view.findViewById(R.id.channel_dropdown);
+		channelDropdown.setActivity(getActivity());
 
 		setUpBalances(view);
 		setUpChannelDropdown();

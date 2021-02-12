@@ -1,5 +1,6 @@
 package com.hover.stax.channels;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
@@ -31,6 +33,7 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 	private boolean showSelected, showLink;
 	private Channel highlightedChannel;
 	private HighlightListener highlightListener;
+	private Activity activity;
 
 	public ChannelDropdown(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -40,6 +43,10 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		dropdownView = findViewById(R.id.channel_autoComplete);
 		linkView = findViewById(R.id.new_account_link);
 		fillFromAttrs();
+	}
+
+	public void setActivity(Activity activity) {
+		this.activity = activity;
 	}
 
 	private void getAttrs(Context context, AttributeSet attrs) {
@@ -56,7 +63,7 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 	private void fillFromAttrs() {
 		if (label != null && !label.isEmpty())
 			input.setHint(label);
-		linkView.setOnClickListener(v -> toggleLink(false));
+		linkView.setOnClickListener(v -> goToLinkAccountFragment());
 		toggleLink(showLink);
 	}
 
@@ -90,6 +97,10 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 	}
 
 	public Channel getHighlighted() { return highlightedChannel; }
+
+	public void goToLinkAccountFragment() {
+		Navigation.findNavController(activity, R.id.nav_host_fragment).navigate(R.id.navigation_linkAccount);
+	}
 
 	public void toggleLink(boolean show) {
 		linkView.setVisibility(show ? VISIBLE : GONE);

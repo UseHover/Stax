@@ -9,6 +9,7 @@
 
 	<string name="nav_home">Home</string>
 	<string name="nav_balance_and_history">Balance and history</string>
+	<string name="nav_link_account">Link an account</string>
 	<string name="nav_airtime">Buy Airtime</string>
 	<string name="nav_transfer">Transfer</string>
 	<string name="nav_settings">Settings</string>
@@ -45,7 +46,9 @@
 	<string name="bal_cardhead">Balances</string>
 	<string name="channels_error_nodata">Please turn on data to load services.</string>
 	<string name="channels_error_noselect">You must select a service.</string>
-	<string name="link_account">Link an account</string>
+	<string name="link_an_account">Link an account</string>
+	<string name="link_account">Link account</string>
+	<string name="link_account_error">Choose an account to link.</string>
 	<string name="link_another"><u>+ Link another account</u></string>
 	<string name="hist_cardhead">History</string>
 	<string name="hist_zerobody">You do not have any history yet. Send money or buy airtime to get started.</string>
