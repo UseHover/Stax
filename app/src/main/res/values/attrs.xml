@@ -12,7 +12,6 @@
 		<attr name="showError" format="boolean" />
 		<attr name="showSelected" format="boolean" />
 		<attr name="showLink" format="boolean"/>
-		<attr name="autoSetDropdownValue" format="boolean"/>
 	</declare-styleable>
 
 	<declare-styleable name="CustomSwipeRefreshLayout">

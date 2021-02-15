@@ -31,7 +31,7 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 	private TextView linkView;
 
 	private String label;
-	private boolean showSelected, showLink, autoSetDropdownValue;
+	private boolean showSelected, showLink;
 	private Channel highlightedChannel;
 	private HighlightListener highlightListener;
 	private LinkViewClickListener linkViewClickListener;
@@ -52,7 +52,6 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 			label = a.getString(R.styleable.ChannelDropdown_label);
 			showSelected = a.getBoolean(R.styleable.ChannelDropdown_showSelected, true);
 			showLink = a.getBoolean(R.styleable.ChannelDropdown_showLink, false);
-			autoSetDropdownValue = a.getBoolean(R.styleable.ChannelDropdown_autoSetDropdownValue, true);
 		} finally {
 			a.recycle();
 		}
@@ -78,7 +77,7 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		dropdownView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((Channel) adapterView.getItemAtPosition(pos)));
 
 		for (Channel c: channels) {
-			if (c.defaultAccount && !showLink && autoSetDropdownValue)
+			if (c.defaultAccount && !showLink && showSelected)
 				setDropdownValue(c);
 		}
 	}
