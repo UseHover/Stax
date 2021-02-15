@@ -23,7 +23,7 @@ public class LinkAccountFragment extends Fragment {
 	private BalancesViewModel balancesViewModel;
 	private ChannelDropdown channelDropdown;
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.link_an_account)));
+		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_link_account)));
 		channelDropdownViewModel = new ViewModelProvider(requireActivity()).get(ChannelDropdownViewModel.class);
 		balancesViewModel = new ViewModelProvider(requireActivity()).get(BalancesViewModel.class);
 		return inflater.inflate(R.layout.fragment_link_account, container, false);

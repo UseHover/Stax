@@ -46,7 +46,6 @@
 	<string name="bal_cardhead">Balances</string>
 	<string name="channels_error_nodata">Please turn on data to load services.</string>
 	<string name="channels_error_noselect">You must select a service.</string>
-	<string name="link_an_account">Link an account</string>
 	<string name="link_account">Link account</string>
 	<string name="link_account_error">Choose an account to link.</string>
 	<string name="link_another"><u>+ Link another account</u></string>

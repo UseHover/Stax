@@ -7,7 +7,7 @@
     app:backClickable="false"
     app:showBack="false"
     android:id="@+id/linkAccount_card"
-    app:title="@string/link_an_account">
+    app:title="@string/nav_link_account">
 
 	<com.hover.stax.channels.ChannelDropdown
 	    android:id="@+id/channel_dropdown"
