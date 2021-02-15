@@ -1,7 +1,6 @@
 package com.hover.stax.balances;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,15 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
-import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDropdown;
-import com.hover.stax.channels.ChannelDropdownObserverSetupInterface;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.navigation.NavigationInterface;
@@ -37,7 +33,6 @@ import static android.view.View.VISIBLE;
 public class BalancesFragment extends Fragment implements TransactionHistoryAdapter.SelectListener,
 																  ScheduledAdapter.SelectListener,
 																  RequestsAdapter.SelectListener,
-																  ChannelDropdownObserverSetupInterface,
 																  ChannelDropdown.LinkViewClickListener,
 																  NavigationInterface {
 	final public static String TAG = "BalanceFragment";
@@ -67,12 +62,15 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 		channelDropdown.setLinkViewClickListener(this);
 
 		setUpBalances(view);
-		setupChannelDropdownObservers(channelDropdownViewModel, channelDropdown, getViewLifecycleOwner(), getContext());
+		setUpChannelDropdown();
 		setUpFuture(view);
 		setUpHistory(view);
 		view.findViewById(R.id.refresh_accounts_btn).setOnClickListener(this::refreshBalances);
 	}
 
+	private void setUpChannelDropdown() {
+		channelDropdown.setObservers(channelDropdownViewModel, channelDropdown, getViewLifecycleOwner());
+	}
 	private void setUpBalances(View view) {
 		initBalanceCard(view);
 		balancesViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> updateServices(channels, view));

@@ -5,12 +5,14 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
+import androidx.lifecycle.LifecycleOwner;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
@@ -131,6 +133,18 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		if (Utils.isConnected(getContext()))
 			setDropdownValue(null);
 		highlightedChannel = null;
+	}
+	public void setObservers(ChannelDropdownViewModel viewModel, ChannelDropdown dropdown, LifecycleOwner lifecycleOwner) {
+		viewModel.getSims().observe(lifecycleOwner, sims -> Log.i(TAG, "Got sims: " + sims.size()));
+		viewModel.getSimHniList().observe(lifecycleOwner, simList -> Log.i(TAG, "Got new sim hni list: " + simList));
+		viewModel.getSimChannels().observe(lifecycleOwner, dropdown::updateChannels);
+		viewModel.getChannels().observe(lifecycleOwner, dropdown::updateChannels);
+		viewModel.getSimChannels().observe(lifecycleOwner, dropdown::updateChannels);
+		viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> {
+			if (channels != null && channels.size() > 0) dropdown.setError(null);
+		});
+		viewModel.getError().observe(lifecycleOwner, dropdown::setError);
+		viewModel.getHelper().observe(lifecycleOwner, helper -> dropdown.setHelper(helper != null ?  getContext().getString(helper) : null));
 	}
 
 	public interface HighlightListener {

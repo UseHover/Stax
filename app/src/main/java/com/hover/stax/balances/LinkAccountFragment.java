@@ -1,7 +1,6 @@
 package com.hover.stax.balances;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +14,8 @@ import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.channels.ChannelDropdown;
 import com.hover.stax.channels.ChannelDropdownViewModel;
-import com.hover.stax.channels.ChannelDropdownObserverSetupInterface;
 
-public class LinkAccountFragment extends Fragment implements ChannelDropdownObserverSetupInterface {
+public class LinkAccountFragment extends Fragment{
 	final public static String TAG = "LinkAccountFragment";
 
 	private ChannelDropdownViewModel channelDropdownViewModel;
@@ -35,12 +33,13 @@ public class LinkAccountFragment extends Fragment implements ChannelDropdownObse
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		init(view);
-		setupChannelDropdownObservers(channelDropdownViewModel, channelDropdown, getViewLifecycleOwner(), getContext());
+		setupChannelDropdown();
 		setUpCancelAndLinkAccountBtn(view);
 	}
 	private void init(View view) {
 		channelDropdown = view.findViewById(R.id.channel_dropdown);
 	}
+	private void setupChannelDropdown() { channelDropdown.setObservers(channelDropdownViewModel, channelDropdown, getViewLifecycleOwner()); }
 
 	private void setUpCancelAndLinkAccountBtn(View view) {
 		view.findViewById(R.id.neg_btn).setOnClickListener(v->getActivity().onBackPressed());
