@@ -3,12 +3,12 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-    	android:orientation="vertical"
+    android:orientation="vertical"
 	tools:context=".transfers.TransferActivity">
 
 	<androidx.fragment.app.FragmentContainerView
 		android:id="@+id/fragment"
-	    	android:layout_weight="1"
+        android:layout_weight="1"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
 		android:name="com.hover.stax.transfers.TransferFragment"
