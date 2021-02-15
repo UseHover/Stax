@@ -38,10 +38,11 @@ public class LinkAccountFragment extends Fragment{
 
 	private void setUpChannelDropdown(View view) {
 		channelDropdown = view.findViewById(R.id.channel_dropdown);
-		channelDropdown.setObservers(channelDropdownViewModel, channelDropdown, getViewLifecycleOwner()); }
+		channelDropdown.setObservers(channelDropdownViewModel, channelDropdown, getViewLifecycleOwner());
+	}
 
 	private void setUpCancelAndLinkAccountBtn(View view) {
-		view.findViewById(R.id.neg_btn).setOnClickListener(v->getActivity().onBackPressed());
+		view.findViewById(R.id.neg_btn).setOnClickListener(v->requireActivity().onBackPressed());
 		view.findViewById(R.id.pos_btn).setOnClickListener(this::linkAccount);
 	}
 

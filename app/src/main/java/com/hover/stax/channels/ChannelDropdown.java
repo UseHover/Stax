@@ -130,10 +130,10 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 	}
 
 	public void reset() {
-		if (Utils.isConnected(getContext()))
-			setDropdownValue(null);
+		if (Utils.isInternetConnected(getContext())) setDropdownValue(null);
 		highlightedChannel = null;
 	}
+
 	public void setObservers(ChannelDropdownViewModel viewModel, ChannelDropdown dropdown, LifecycleOwner lifecycleOwner) {
 		viewModel.getSims().observe(lifecycleOwner, sims -> Log.i(TAG, "Got sims: " + sims.size()));
 		viewModel.getSimHniList().observe(lifecycleOwner, simList -> Log.i(TAG, "Got new sim hni list: " + simList));

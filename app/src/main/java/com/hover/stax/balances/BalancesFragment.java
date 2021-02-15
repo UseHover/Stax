@@ -58,22 +58,20 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		channelDropdown = view.findViewById(R.id.channel_dropdown);
-		channelDropdown.setLinkViewClickListener(this);
-
 		setUpBalances(view);
-		setUpChannelDropdown();
+		setUpLinkNewAccount(view);
 		setUpFuture(view);
 		setUpHistory(view);
 		view.findViewById(R.id.refresh_accounts_btn).setOnClickListener(this::refreshBalances);
 	}
 
-	private void setUpChannelDropdown() {
-		channelDropdown.setObservers(channelDropdownViewModel, channelDropdown, getViewLifecycleOwner());
-	}
 	private void setUpBalances(View view) {
 		initBalanceCard(view);
 		balancesViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> updateServices(channels, view));
+	}
+	private void setUpLinkNewAccount(View view) {
+		channelDropdown = view.findViewById(R.id.channel_dropdown);
+		channelDropdown.setLinkViewClickListener(this);
 	}
 
 	private void initBalanceCard(View view) {
