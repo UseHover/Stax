@@ -15,8 +15,9 @@ import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.channels.ChannelDropdown;
 import com.hover.stax.channels.ChannelDropdownViewModel;
+import com.hover.stax.channels.ChannelDropdownObserverSetupInterface;
 
-public class LinkAccountFragment extends Fragment {
+public class LinkAccountFragment extends Fragment implements ChannelDropdownObserverSetupInterface {
 	final public static String TAG = "LinkAccountFragment";
 
 	private ChannelDropdownViewModel channelDropdownViewModel;
@@ -34,21 +35,11 @@ public class LinkAccountFragment extends Fragment {
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		init(view);
-		setUpChannelDropdown();
+		setupChannelDropdownObservers(channelDropdownViewModel, channelDropdown, getViewLifecycleOwner(), getContext());
 		setUpCancelAndLinkAccountBtn(view);
 	}
 	private void init(View view) {
 		channelDropdown = view.findViewById(R.id.channel_dropdown);
-	}
-
-	private void setUpChannelDropdown() {
-		channelDropdownViewModel.getSims().observe(getViewLifecycleOwner(), sims -> Log.i(TAG, "Got new sims: " + sims.size()));
-		channelDropdownViewModel.getSimHniList().observe(getViewLifecycleOwner(), simList -> Log.i(TAG, "Got new sim hni list: " + simList));
-		channelDropdownViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
-		channelDropdownViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
-		channelDropdownViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
-			if (channels != null && channels.size() > 0) channelDropdown.setError(null);
-		});
 	}
 
 	private void setUpCancelAndLinkAccountBtn(View view) {

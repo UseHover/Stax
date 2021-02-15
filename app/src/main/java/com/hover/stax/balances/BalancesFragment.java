@@ -18,6 +18,7 @@ import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDropdown;
+import com.hover.stax.channels.ChannelDropdownObserverSetupInterface;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.navigation.NavigationInterface;
@@ -36,6 +37,7 @@ import static android.view.View.VISIBLE;
 public class BalancesFragment extends Fragment implements TransactionHistoryAdapter.SelectListener,
 																  ScheduledAdapter.SelectListener,
 																  RequestsAdapter.SelectListener,
+																  ChannelDropdownObserverSetupInterface,
 																  ChannelDropdown.LinkViewClickListener,
 																  NavigationInterface {
 	final public static String TAG = "BalanceFragment";
@@ -65,7 +67,7 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 		channelDropdown.setLinkViewClickListener(this);
 
 		setUpBalances(view);
-		setUpChannelDropdown();
+		setupChannelDropdownObservers(channelDropdownViewModel, channelDropdown, getViewLifecycleOwner(), getContext());
 		setUpFuture(view);
 		setUpHistory(view);
 		view.findViewById(R.id.refresh_accounts_btn).setOnClickListener(this::refreshBalances);
@@ -98,16 +100,6 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 
 		((StaxCardView) view.findViewById(R.id.balance_card)).backButton.setVisibility(channels != null && channels.size() > 0  ? VISIBLE : GONE);
 		channelDropdown.toggleLink(channels != null && channels.size() > 0);
-	}
-
-	private void setUpChannelDropdown() {
-		channelDropdownViewModel.getSims().observe(getViewLifecycleOwner(), sims -> Log.i(TAG, "Got new sims: " + sims.size()));
-		channelDropdownViewModel.getSimHniList().observe(getViewLifecycleOwner(), simList -> Log.i(TAG, "Got new sim hni list: " + simList));
-		channelDropdownViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
-		channelDropdownViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
-		channelDropdownViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
-			if (channels != null && channels.size() > 0) channelDropdown.setError(null);
-		});
 	}
 
 	private void refreshBalances(View v) {

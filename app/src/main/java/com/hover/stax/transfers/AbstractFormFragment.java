@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -19,14 +18,14 @@ import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.ChannelDropdown;
 import com.hover.stax.channels.ChannelDropdownViewModel;
+import com.hover.stax.channels.ChannelDropdownObserverSetupInterface;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.permissions.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
-import com.hover.stax.utils.errors.NoticeType;
 import com.hover.stax.views.StaxCardView;
 
-public abstract class AbstractFormFragment extends Fragment {
+public abstract class AbstractFormFragment extends Fragment implements ChannelDropdownObserverSetupInterface {
 	private static String TAG = "AbstractFormFragment";
 
 	protected AbstractFormViewModel abstractFormViewModel;
@@ -47,16 +46,8 @@ public abstract class AbstractFormFragment extends Fragment {
 
 	protected void startObservers(View root) {
 		channelDropdown.setListener(channelDropdownViewModel);
-		channelDropdownViewModel.getSims().observe(getViewLifecycleOwner(), sims -> Log.i(TAG, "Got sims: " + sims.size()));
-		channelDropdownViewModel.getSimHniList().observe(getViewLifecycleOwner(), simList -> Log.i(TAG, "Got new sim hni list: " + simList));
-		channelDropdownViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
-		channelDropdownViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
-		channelDropdownViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
-		channelDropdownViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> Log.i(TAG, "Got selected channels: " + channels.size()));
-		channelDropdownViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> Log.i(TAG, "Got new active channel: " + channel + " " + channel.countryAlpha2));
-		channelDropdownViewModel.getChannelActions().observe(getViewLifecycleOwner(), actions -> Log.i(TAG, "Got new actions: " + actions.size()));
-		channelDropdownViewModel.getError().observe(getViewLifecycleOwner(), error -> channelDropdown.setError(error));
-		channelDropdownViewModel.getHelper().observe(getViewLifecycleOwner(), helper -> channelDropdown.setHelper(helper != null ? getString(helper) : null));
+		setupChannelDropdownObservers(channelDropdownViewModel, channelDropdown, getViewLifecycleOwner(), getContext());
+		setupActionDropdownObservers(channelDropdownViewModel, getViewLifecycleOwner());
 		abstractFormViewModel.getIsEditing().observe(getViewLifecycleOwner(), this::showEdit);
 	}
 

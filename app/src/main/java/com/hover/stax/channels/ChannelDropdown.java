@@ -68,8 +68,7 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 
 	public void updateChannels(List<Channel> channels) {
 		if (channels == null || channels.size() == 0) return;
-		if (highlightedChannel == null)
-			setDropdownValue(null);
+		if (highlightedChannel == null) setDropdownValue(null);
 		ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(ChannelDropdownAdapter.sort(channels, showSelected), getContext());
 		dropdownView.setAdapter(channelDropdownAdapter);
 		dropdownView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((Channel) adapterView.getItemAtPosition(pos)));
