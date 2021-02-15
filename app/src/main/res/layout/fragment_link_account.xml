@@ -14,6 +14,7 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    app:showLink="false"
+	    app:autoSetDropdownValue="false"
 	    app:showSelected="false"/>
 
 	<RelativeLayout

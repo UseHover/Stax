@@ -95,7 +95,13 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 		recyclerView.setVisibility(channels != null && channels.size() > 0 ? VISIBLE : GONE);
 
 		((StaxCardView) view.findViewById(R.id.balance_card)).backButton.setVisibility(channels != null && channels.size() > 0  ? VISIBLE : GONE);
-		channelDropdown.toggleLink(channels != null && channels.size() > 0);
+		if(channels != null && channels.size() > 0) {
+			channelDropdown.toggleLink(true);
+			channelDropdown.removeObservers(channelDropdownViewModel, getViewLifecycleOwner());
+		}else {
+			channelDropdown.toggleLink(false);
+			channelDropdown.setObservers(channelDropdownViewModel, channelDropdown, getViewLifecycleOwner());
+		}
 	}
 
 	private void refreshBalances(View v) {

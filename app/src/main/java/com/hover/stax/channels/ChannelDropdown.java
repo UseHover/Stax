@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.lifecycle.LifecycleOwner;
@@ -30,7 +31,7 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 	private TextView linkView;
 
 	private String label;
-	private boolean showSelected, showLink;
+	private boolean showSelected, showLink, autoSetDropdownValue;
 	private Channel highlightedChannel;
 	private HighlightListener highlightListener;
 	private LinkViewClickListener linkViewClickListener;
@@ -51,6 +52,7 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 			label = a.getString(R.styleable.ChannelDropdown_label);
 			showSelected = a.getBoolean(R.styleable.ChannelDropdown_showSelected, true);
 			showLink = a.getBoolean(R.styleable.ChannelDropdown_showLink, false);
+			autoSetDropdownValue = a.getBoolean(R.styleable.ChannelDropdown_autoSetDropdownValue, true);
 		} finally {
 			a.recycle();
 		}
@@ -74,8 +76,9 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(ChannelDropdownAdapter.sort(channels, showSelected), getContext());
 		dropdownView.setAdapter(channelDropdownAdapter);
 		dropdownView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((Channel) adapterView.getItemAtPosition(pos)));
+
 		for (Channel c: channels) {
-			if (c.defaultAccount && !showLink)
+			if (c.defaultAccount && !showLink && autoSetDropdownValue)
 				setDropdownValue(c);
 		}
 	}
@@ -134,7 +137,7 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		highlightedChannel = null;
 	}
 
-	public void setObservers(ChannelDropdownViewModel viewModel, ChannelDropdown dropdown, LifecycleOwner lifecycleOwner) {
+	public void setObservers(@NonNull ChannelDropdownViewModel viewModel, @NonNull ChannelDropdown dropdown, @NonNull LifecycleOwner lifecycleOwner) {
 		viewModel.getSims().observe(lifecycleOwner, sims -> Log.i(TAG, "Got sims: " + sims.size()));
 		viewModel.getSimHniList().observe(lifecycleOwner, simList -> Log.i(TAG, "Got new sim hni list: " + simList));
 		viewModel.getSimChannels().observe(lifecycleOwner, dropdown::updateChannels);
@@ -145,6 +148,16 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		});
 		viewModel.getError().observe(lifecycleOwner, dropdown::setError);
 		viewModel.getHelper().observe(lifecycleOwner, helper -> dropdown.setHelper(helper != null ?  getContext().getString(helper) : null));
+	}
+	public void removeObservers(@NonNull ChannelDropdownViewModel viewModel,  @NonNull LifecycleOwner lifecycleOwner) {
+		viewModel.getSims().removeObservers(lifecycleOwner);
+		viewModel.getSimHniList().removeObservers(lifecycleOwner);
+		viewModel.getSimChannels().removeObservers(lifecycleOwner);
+		viewModel.getChannels().removeObservers(lifecycleOwner);
+		viewModel.getSimChannels().removeObservers(lifecycleOwner);
+		viewModel.getSelectedChannels().removeObservers(lifecycleOwner);
+		viewModel.getError().removeObservers(lifecycleOwner);
+		viewModel.getHelper().removeObservers(lifecycleOwner);
 	}
 
 	public interface HighlightListener {

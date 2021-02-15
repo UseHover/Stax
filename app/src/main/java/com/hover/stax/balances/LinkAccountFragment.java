@@ -39,6 +39,7 @@ public class LinkAccountFragment extends Fragment{
 	private void setUpChannelDropdown(View view) {
 		channelDropdown = view.findViewById(R.id.channel_dropdown);
 		channelDropdown.setObservers(channelDropdownViewModel, channelDropdown, getViewLifecycleOwner());
+		channelDropdown.reset();
 	}
 
 	private void setUpCancelAndLinkAccountBtn(View view) {
