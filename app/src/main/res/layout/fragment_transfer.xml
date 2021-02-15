@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 	android:layout_marginTop="@dimen/margin_13"
-    tools:context=".transfers.TransferFragment">
+    tools:context=".transfers.TransferFragment" >
 
 	<LinearLayout
 	    android:layout_width="match_parent"

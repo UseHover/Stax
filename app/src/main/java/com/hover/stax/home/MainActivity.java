@@ -9,22 +9,19 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 
 import com.amplitude.api.Amplitude;
-import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.balances.BalanceAdapter;
 import com.hover.stax.balances.BalancesViewModel;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.database.Constants;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.hover.HoverSession;
-import com.hover.stax.requests.RequestSenderInterface;
+import com.hover.stax.navigation.AbstractNavigationActivity;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.settings.BiometricChecker;
 import com.hover.stax.transactions.TransactionHistoryViewModel;
-import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 
@@ -50,6 +47,7 @@ public class MainActivity extends AbstractNavigationActivity implements
 
 		setUpNav();
 		checkForRequest(getIntent());
+		checkForFragmentDirection(getIntent());
 	}
 
 	@Override
@@ -59,21 +57,17 @@ public class MainActivity extends AbstractNavigationActivity implements
 	}
 
 	private void checkForRequest(Intent intent) {
-		if (intent.hasExtra(Constants.REQUEST_LINK))
-			startTransfer(Action.P2P, true, intent);
+		if (intent.hasExtra(Constants.REQUEST_LINK)) navigateToTransferActivity(Action.P2P, true, intent, this);
+	}
+	private void checkForFragmentDirection(Intent intent) {
+		if (intent.hasExtra(Constants.FRAGMENT_DIRECT)) {
+			int toWhere = intent.getExtras().getInt(Constants.FRAGMENT_DIRECT);
+			navigate(this, toWhere);
+		}
 	}
 
 	@Override
-	public void onTapDetail(int channel_id) {
-		Bundle bundle = new Bundle();
-		bundle.putInt(TransactionContract.COLUMN_CHANNEL_ID, channel_id);
-		Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.channelsDetailsFragment, bundle);
-	}
-
-	@Override
-	public void triggerRefreshAll() {
-		balancesViewModel.setAllRunning(this);
-	}
+	public void onTapDetail(int channel_id) { navigateToChannelDetailsFragment(channel_id, this); }
 
 	@Override
 	public void onTapRefresh(int channel_id) {
@@ -83,9 +77,6 @@ public class MainActivity extends AbstractNavigationActivity implements
 
 	@Override
 	public void startRun(Action a, int i) {
-//		if (i == 0)
-//			new BiometricChecker(this, this).startAuthentication(a);
-//		else
 			run(a, i);
 	}
 
@@ -145,12 +136,6 @@ public class MainActivity extends AbstractNavigationActivity implements
 		}
 	}
 
-	public void startTransfer(String type, boolean isFromStaxLink, Intent received) {
-		Intent i = new Intent(this, TransferActivity.class);
-		i.setAction(type);
-		if (isFromStaxLink) i.putExtra(Constants.REQUEST_LINK, received.getExtras().getString(Constants.REQUEST_LINK));
-		startActivityForResult(i, Constants.TRANSFER_REQUEST);
-	}
 
 	private void onRequest(Intent data) {
 		if (data.getAction().equals(Constants.SCHEDULED))

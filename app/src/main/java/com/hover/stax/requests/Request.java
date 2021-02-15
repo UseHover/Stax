@@ -9,10 +9,9 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.amplitude.api.Amplitude;
-import com.google.i18n.phonenumbers.NumberParseException;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.database.Constants;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.Utils;
@@ -22,7 +21,6 @@ import com.yariksoffice.lingver.Lingver;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.Locale;
 
 @Entity(tableName = "requests")
 public class Request {

@@ -1,5 +1,6 @@
 package com.hover.stax.requests;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,7 +10,7 @@ import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
-import com.hover.stax.database.Constants;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
@@ -52,9 +53,10 @@ public interface RequestSenderInterface {
 		a.startActivity(sendIntent);
 	}
 
+	@SuppressLint("UseCompatLoadingForDrawables")
 	default void copyShareLink(Request r, TextView copyBtn, Activity a) {
 		if (r == null) showError(a);
-		if (Utils.copyToClipboard(r.generateMessage(a), a)) {
+		else if (Utils.copyToClipboard(r.generateMessage(a), a)) {
 			Amplitude.getInstance().logEvent(a.getString(R.string.clicked_copylink_request));
 			copyBtn.setActivated(true);
 			copyBtn.setCompoundDrawablesWithIntrinsicBounds(null, a.getResources().getDrawable(R.drawable.img_check), null, null);

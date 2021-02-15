@@ -20,7 +20,7 @@ import com.yariksoffice.lingver.Lingver;
 
 import java.util.List;
 
-import static com.hover.stax.database.Constants.LANGUAGE_CHECK;
+import static com.hover.stax.utils.Constants.LANGUAGE_CHECK;
 
 public class SelectLanguageActivity extends AppCompatActivity {
 	String selectedCode = null;

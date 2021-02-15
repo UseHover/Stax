@@ -5,12 +5,15 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
+import androidx.lifecycle.LifecycleOwner;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
@@ -31,6 +34,7 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 	private boolean showSelected, showLink;
 	private Channel highlightedChannel;
 	private HighlightListener highlightListener;
+	private LinkViewClickListener linkViewClickListener;
 
 	public ChannelDropdown(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -56,21 +60,24 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 	private void fillFromAttrs() {
 		if (label != null && !label.isEmpty())
 			input.setHint(label);
-		linkView.setOnClickListener(v -> toggleLink(false));
+		linkView.setOnClickListener(v -> {
+			if(linkViewClickListener !=null) linkViewClickListener.navigateLinkAccountFragment();
+		});
 		toggleLink(showLink);
 	}
 
 	public void setListener(HighlightListener hl) { highlightListener = hl; }
+	public void setLinkViewClickListener(LinkViewClickListener linkViewClickListener) {this.linkViewClickListener = linkViewClickListener;}
 
 	public void updateChannels(List<Channel> channels) {
 		if (channels == null || channels.size() == 0) return;
-		if (highlightedChannel == null)
-			setDropdownValue(null);
+		if (highlightedChannel == null) setDropdownValue(null);
 		ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(ChannelDropdownAdapter.sort(channels, showSelected), getContext());
 		dropdownView.setAdapter(channelDropdownAdapter);
 		dropdownView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((Channel) adapterView.getItemAtPosition(pos)));
+
 		for (Channel c: channels) {
-			if (c.defaultAccount && !showLink)
+			if (c.defaultAccount && !showLink && showSelected)
 				setDropdownValue(c);
 		}
 	}
@@ -90,6 +97,7 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 	}
 
 	public Channel getHighlighted() { return highlightedChannel; }
+
 
 	public void toggleLink(boolean show) {
 		linkView.setVisibility(show ? VISIBLE : GONE);
@@ -124,12 +132,38 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 	}
 
 	public void reset() {
-		if (Utils.isConnected(getContext()))
-			setDropdownValue(null);
+		if (Utils.isInternetConnected(getContext())) setDropdownValue(null);
 		highlightedChannel = null;
+	}
+
+	public void setObservers(@NonNull ChannelDropdownViewModel viewModel, @NonNull ChannelDropdown dropdown, @NonNull LifecycleOwner lifecycleOwner) {
+		viewModel.getSims().observe(lifecycleOwner, sims -> Log.i(TAG, "Got sims: " + sims.size()));
+		viewModel.getSimHniList().observe(lifecycleOwner, simList -> Log.i(TAG, "Got new sim hni list: " + simList));
+		viewModel.getSimChannels().observe(lifecycleOwner, dropdown::updateChannels);
+		viewModel.getChannels().observe(lifecycleOwner, dropdown::updateChannels);
+		viewModel.getSimChannels().observe(lifecycleOwner, dropdown::updateChannels);
+		viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> {
+			if (channels != null && channels.size() > 0) dropdown.setError(null);
+		});
+		viewModel.getError().observe(lifecycleOwner, dropdown::setError);
+		viewModel.getHelper().observe(lifecycleOwner, helper -> dropdown.setHelper(helper != null ?  getContext().getString(helper) : null));
+	}
+	public void removeObservers(@NonNull ChannelDropdownViewModel viewModel,  @NonNull LifecycleOwner lifecycleOwner) {
+		viewModel.getSims().removeObservers(lifecycleOwner);
+		viewModel.getSimHniList().removeObservers(lifecycleOwner);
+		viewModel.getSimChannels().removeObservers(lifecycleOwner);
+		viewModel.getChannels().removeObservers(lifecycleOwner);
+		viewModel.getSimChannels().removeObservers(lifecycleOwner);
+		viewModel.getSelectedChannels().removeObservers(lifecycleOwner);
+		viewModel.getError().removeObservers(lifecycleOwner);
+		viewModel.getHelper().removeObservers(lifecycleOwner);
 	}
 
 	public interface HighlightListener {
 		void highlightChannel(Channel c);
+	}
+	//Created a separate listener so it doesn't need to be called by channelDropdownViewModel
+	public interface LinkViewClickListener {
+		void navigateLinkAccountFragment();
 	}
 }

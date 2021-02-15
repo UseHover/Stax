@@ -81,6 +81,7 @@ public class PinsViewModel extends AndroidViewModel {
 		channel.selected = false;
 		channel.defaultAccount = false;
 		repo.update(channel);
+
 		if (channels.getValue() == null || !changeDefault) return;
 		for (Channel c: channels.getValue()) {
 			if (!c.equals(channel)) {

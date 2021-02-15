@@ -18,6 +18,12 @@
 	    tools:layout="@layout/fragment_balance" />
 
 	<fragment
+	    android:id="@+id/navigation_linkAccount"
+	    android:name="com.hover.stax.balances.LinkAccountFragment"
+	    android:label="@string/nav_link_account"
+	    tools:layout="@layout/fragment_link_account" />
+
+	<fragment
 	    android:id="@+id/navigation_settings"
 	    android:name="com.hover.stax.settings.SettingsFragment"
 	    android:label="@string/nav_settings"

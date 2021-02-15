@@ -3,6 +3,7 @@ package com.hover.stax.transfers;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -15,14 +16,16 @@ import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionSelectViewModel;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
-import com.hover.stax.database.Constants;
+import com.hover.stax.navigation.AbstractNavigationActivity;
+import com.hover.stax.navigation.NavigationInterface;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.settings.BiometricChecker;
 import com.hover.stax.views.StaxDialog;
 
-public class TransferActivity extends AppCompatActivity implements BiometricChecker.AuthListener {
+public class TransferActivity extends AbstractNavigationActivity implements NavigationInterface {
 	final public static String TAG = "TransferActivity";
 
 	private ChannelDropdownViewModel channelDropdownViewModel;
@@ -79,17 +82,6 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 
 	void submit() {
 		makeHoverCall(actionSelectViewModel.getActiveAction().getValue());
-//		new BiometricChecker(this, this).startAuthentication(transferViewModel.getActiveAction().getValue());
-	}
-
-	@Override
-	public void onAuthError(String error) {
-		Log.e(TAG, error);
-	}
-
-	@Override
-	public void onAuthSuccess(Action act) {
-		makeHoverCall(act);
 	}
 
 	private void makeHoverCall(Action act) {
@@ -130,12 +122,7 @@ public class TransferActivity extends AppCompatActivity implements BiometricChec
 
 	@Override
 	public void onBackPressed() {
-//		if (Navigation.findNavController(findViewById(R.id.nav_host_fragment)).getCurrentDestination().getId() != R.id.navigation_edit ||
-//			!Navigation.findNavController(findViewById(R.id.nav_host_fragment)).popBackStack()) {
-		if (!transferViewModel.getIsEditing().getValue())
-			transferViewModel.setEditing(true);
-		else
-			super.onBackPressed();
-//		}
+		if (!transferViewModel.getIsEditing().getValue()) transferViewModel.setEditing(true);
+		else super.onBackPressed();
 	}
 }

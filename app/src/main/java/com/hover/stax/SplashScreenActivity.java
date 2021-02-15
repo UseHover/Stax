@@ -16,14 +16,14 @@ import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.UpdateChannelsWorker;
-import com.hover.stax.database.Constants;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.schedules.ScheduleWorker;
 import com.hover.stax.settings.BiometricChecker;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
-import static com.hover.stax.database.Constants.AUTH_CHECK;
+import static com.hover.stax.utils.Constants.AUTH_CHECK;
 
 public class SplashScreenActivity extends AppCompatActivity implements BiometricChecker.AuthListener {
 

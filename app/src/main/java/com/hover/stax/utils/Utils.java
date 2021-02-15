@@ -142,7 +142,7 @@ public class Utils {
 		FirebaseCrashlytics.getInstance().recordException(e);
 	}
 
-	public static boolean isConnected(Context c) {
+	public static boolean isInternetConnected(Context c) {
 		ConnectivityManager cm = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 		return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
