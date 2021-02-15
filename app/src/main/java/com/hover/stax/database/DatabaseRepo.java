@@ -9,9 +9,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.room.Dao;
 
-import com.hover.sdk.transactions.Transaction;
 import com.hover.stax.R;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.actions.Action;
@@ -33,6 +31,7 @@ import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.paymentLinkCryptography.Encryption;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.List;
 
 public class DatabaseRepo {
@@ -159,8 +158,9 @@ public class DatabaseRepo {
 		AppDatabase.databaseWriteExecutor.execute(() -> {
 			try {
 				StaxTransaction t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID));
-				StaxContact contact = intent.hasExtra(StaxContact.ID_KEY) ? getContact(intent.getStringExtra(StaxContact.ID_KEY)) : null;
 				Action a = intent.hasExtra(Action.ID_KEY) ? getAction(intent.getStringExtra(Action.ID_KEY)) : null;
+				Channel channel = getChannel(a.channel_id);
+				StaxContact contact = contactLookup(intent, channel);
 
 				if (t == null) {
 					t = new StaxTransaction(intent, a, contact, c);
@@ -168,18 +168,51 @@ public class DatabaseRepo {
 				}
 				t.update(intent, a, contact, c);
 				transactionDao.update(t);
+				insertOrUpdate(contact);
 
-				updateRequests(t, intent);
+				updateRequests(t, contact, intent);
 			} catch (Exception e) { Log.e(TAG, "error", e); }
 		});
 	}
 
-	private void updateRequests(StaxTransaction t, Intent intent) {
+	private StaxContact contactLookup(Intent intent, Channel c) {
+		StaxContact sc = null;
+
+		if (intent.hasExtra(StaxContact.ID_KEY))
+			sc = getContact(intent.getStringExtra(StaxContact.ID_KEY));
+		if (sc == null && intent.hasExtra(TransactionContract.COLUMN_INPUT_EXTRAS))
+			sc = getContactIfKey((HashMap<String, String>) intent.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS), c);
+		if (sc == null && intent.hasExtra(TransactionContract.COLUMN_PARSED_VARIABLES))
+			sc = getContactIfKey((HashMap<String, String>) intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES), c);
+
+		if (sc == null && getPhone(intent) != null) sc = new StaxContact(getPhone(intent));
+		return sc;
+	}
+
+	private StaxContact getContactIfKey(HashMap<String, String> map, Channel c) {
+		if (map.containsKey(StaxContact.ID_KEY))
+			return getContact(map.get(StaxContact.ID_KEY));
+		else if (map.containsKey(Action.PHONE_KEY))
+			return getContactByPhone(StaxContact.getNationalNumber(map.get(Action.PHONE_KEY), c.countryAlpha2).substring(1));
+		else return null;
+	}
+
+	private String getPhone(Intent intent) {
+		if (intent.hasExtra(TransactionContract.COLUMN_INPUT_EXTRAS) && ((HashMap<String, String>) intent.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS)).containsKey(Action.PHONE_KEY))
+			return ((HashMap<String, String>) intent.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS)).get(Action.PHONE_KEY);
+		if (intent.hasExtra(TransactionContract.COLUMN_PARSED_VARIABLES) && ((HashMap<String, String>) intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES)).containsKey(Action.PHONE_KEY))
+			return ((HashMap<String, String>) intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES)).get(Action.PHONE_KEY);
+		return null;
+	}
+
+	private void updateRequests(StaxTransaction t, StaxContact sc, Intent intent) {
 		if (t.transaction_type.equals(Action.RECEIVE)) {
 			List<Request> rs = getRequests();
 			for (Request r: rs) {
-				StaxContact r_contact = getContact(r.requestee_ids);
-				if (r_contact != null && r_contact.equals(new StaxContact(intent.getStringExtra("senderPhone")))) {
+				StaxContact contact = getContact(r.requestee_ids);
+				if (contact == null) contact = sc;
+
+				if (contact != null && contact.equals(new StaxContact(intent.getStringExtra(Action.SENDER_KEY)))) {
 					r.matched_transaction_uuid = t.uuid;
 					update(r);
 				}
@@ -194,7 +227,8 @@ public class DatabaseRepo {
 	public LiveData<List<StaxContact>> getLiveContacts(String[] ids) { return contactDao.getLive(ids); }
 
 	public StaxContact lookupContact(String lookupKey) { return contactDao.lookup(lookupKey); }
-	public StaxContact getContact(String lookupKey) { return contactDao.lookup(lookupKey); }
+	public StaxContact getContact(String id) { return contactDao.get(id); }
+	public StaxContact getContactByPhone(String phone) { return contactDao.getByPhone("%" + phone + "%"); }
 	public LiveData<StaxContact> getLiveContact(String id) { return contactDao.getLive(id); }
 
 	public void insertOrUpdate(StaxContact contact) {
@@ -205,10 +239,6 @@ public class DatabaseRepo {
 			} else
 				contactDao.update(contact);
 		});
-	}
-
-	public void update(StaxContact contact) {
-		AppDatabase.databaseWriteExecutor.execute(() -> contactDao.update(contact));
 	}
 
 	// Schedules

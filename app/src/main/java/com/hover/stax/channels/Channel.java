@@ -118,7 +118,8 @@ public class Channel implements Comparable<Channel> {
 	}
 
 	public void updateBalance(HashMap<String, String> parsed_variables) {
-		latestBalance = parsed_variables.get("balance");
+		if (parsed_variables.containsKey("balance"))
+			latestBalance = parsed_variables.get("balance");
 		if (parsed_variables.containsKey("update_timestamp") && parsed_variables.get("update_timestamp") != null) {
 			latestBalanceTimestamp = Long.parseLong(parsed_variables.get("update_timestamp"));
 		} else {

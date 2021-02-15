@@ -29,6 +29,9 @@ public interface ContactDao {
 	@Query("SELECT * FROM stax_contacts WHERE lookup_key  = :lookupKey LIMIT 1")
 	StaxContact lookup(String lookupKey);
 
+	@Query("SELECT * FROM stax_contacts WHERE phone_number LIKE :phone LIMIT 1")
+	StaxContact getByPhone(String phone);
+
 	@Query("SELECT * FROM stax_contacts WHERE id  = :id LIMIT 1")
 	LiveData<StaxContact> getLive(String id);
 

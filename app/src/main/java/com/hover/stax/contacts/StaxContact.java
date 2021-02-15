@@ -29,7 +29,7 @@ import java.util.UUID;
 
 import static com.google.i18n.phonenumbers.PhoneNumberUtil.MatchType.NO_MATCH;
 
-@Entity(tableName = "stax_contacts", indices = {@Index(value= {"id", "phone_number"}, unique = true), @Index(value ="lookup_key", unique = true)} )
+@Entity(tableName = "stax_contacts", indices = {@Index(value ="id", unique = true), @Index(value ="phone_number", unique = true)} )
 public class StaxContact {
 	private final static String TAG = "StaxContact";
 	public final static String ID_KEY = "contact_id";
@@ -133,6 +133,17 @@ public class StaxContact {
 		} catch (NumberParseException | IllegalStateException e) {
 			Utils.logErrorAndReportToFirebase(TAG, "Failed to transform number for contact; doing it the old fashioned way.", e);
 			return phoneNumber.replace("+", "");
+		}
+	}
+
+	public static String getNationalNumber(String number, String country) {
+		try {
+			PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+			Phonenumber.PhoneNumber phone = phoneUtil.parse(number, country);
+			return phoneUtil.getNationalSignificantNumber(phone);
+		} catch (NumberParseException | IllegalStateException e) {
+			Utils.logErrorAndReportToFirebase(TAG, "Failed to transform number for contact; doing it the old fashioned way.", e);
+			return number.startsWith("+") ? number.substring(4) : number;
 		}
 	}
 
