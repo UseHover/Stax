@@ -90,7 +90,6 @@ public interface NavigationInterface {
 		bundle.putInt("channel_id", channel_id);
 		NavHostFragment.findNavController(fragment).navigate(R.id.pinUpdateFragment, bundle);
 	}
-
 	default  void navigateToMainActivity(Activity activity) {
 		activity.startActivity(new Intent(activity, MainActivity.class));
 	}
@@ -99,6 +98,22 @@ public interface NavigationInterface {
 		intent.putExtra(Constants.FRAGMENT_DIRECT, redirectToWhere);
 		activity.startActivity(intent);
 	}
+	default void navigateToTransactionDetailsFragment(String uuid, Fragment fragment) {
+		Bundle bundle = new Bundle();
+		bundle.putString(TransactionContract.COLUMN_UUID, uuid);
+		NavHostFragment.findNavController(fragment).navigate(R.id.transactionDetailsFragment, bundle);
+	}
+	default void navigateToScheduleDetailsFragment(int id, Fragment fragment) {
+		Bundle bundle = new Bundle();
+		bundle.putInt("id", id);
+		NavHostFragment.findNavController(fragment).navigate(R.id.scheduleDetailsFragment, bundle);
+	}
+	default void navigateToRequestDetailsFragment(int id, Fragment fragment) {
+		Bundle bundle = new Bundle();
+		bundle.putInt("id", id);
+		NavHostFragment.findNavController(fragment).navigate(R.id.requestDetailsFragment, bundle);
+	}
+
 	default void navigateToPreviousScreen(Activity activity) {
 		activity.onBackPressed();
 	}

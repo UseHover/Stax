@@ -20,6 +20,7 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDropdown;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.home.MainActivity;
+import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.requests.Request;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.transactions.TransactionHistoryAdapter;
@@ -32,7 +33,11 @@ import java.util.List;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class BalancesFragment extends Fragment implements TransactionHistoryAdapter.SelectListener, ScheduledAdapter.SelectListener, RequestsAdapter.SelectListener {
+public class BalancesFragment extends Fragment implements TransactionHistoryAdapter.SelectListener,
+																  ScheduledAdapter.SelectListener,
+																  RequestsAdapter.SelectListener,
+																  ChannelDropdown.LinkViewClickListener,
+																  NavigationInterface {
 	final public static String TAG = "BalanceFragment";
 
 	private BalancesViewModel balancesViewModel;
@@ -57,7 +62,7 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 		super.onViewCreated(view, savedInstanceState);
 
 		channelDropdown = view.findViewById(R.id.channel_dropdown);
-		channelDropdown.setActivity(getActivity());
+		channelDropdown.setLinkViewClickListener(this);
 
 		setUpBalances(view);
 		setUpChannelDropdown();
@@ -149,23 +154,14 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 	}
 
 	@Override
-	public void viewTransactionDetail(String uuid) {
-		Bundle bundle = new Bundle();
-		bundle.putString(TransactionContract.COLUMN_UUID, uuid);
-		NavHostFragment.findNavController(this).navigate(R.id.transactionDetailsFragment, bundle);
-	}
+	public void viewTransactionDetail(String uuid) { navigateToTransactionDetailsFragment(uuid, this); }
 
 	@Override
-	public void viewScheduledDetail(int id) {
-		Bundle bundle = new Bundle();
-		bundle.putInt("id", id);
-		NavHostFragment.findNavController(this).navigate(R.id.scheduleDetailsFragment, bundle);
-	}
+	public void viewScheduledDetail(int id) { navigateToScheduleDetailsFragment(id, this); }
 
 	@Override
-	public void viewRequestDetail(int id) {
-		Bundle bundle = new Bundle();
-		bundle.putInt("id", id);
-		NavHostFragment.findNavController(this).navigate(R.id.requestDetailsFragment, bundle);
-	}
+	public void viewRequestDetail(int id) { navigateToRequestDetailsFragment(id, this); }
+
+	@Override
+	public void navigateLinkAccountFragment() { navigateToLinkAccountFragment(getActivity()); }
 }

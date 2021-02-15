@@ -13,21 +13,16 @@ import android.widget.TextView;
 
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
-import androidx.navigation.Navigation;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
-import com.hover.stax.navigation.NavigationInterface;
-import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.Utils;
-import com.hover.stax.utils.errors.NoticeDrawable;
-import com.hover.stax.utils.errors.NoticeType;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.List;
 
-public class ChannelDropdown extends TextInputLayout implements Target, NavigationInterface {
+public class ChannelDropdown extends TextInputLayout implements Target {
 	private static String TAG = "ChannelDropdown";
 
 	private TextInputLayout input;
@@ -38,7 +33,7 @@ public class ChannelDropdown extends TextInputLayout implements Target, Navigati
 	private boolean showSelected, showLink;
 	private Channel highlightedChannel;
 	private HighlightListener highlightListener;
-	private Activity activity;
+	private LinkViewClickListener linkViewClickListener;
 
 	public ChannelDropdown(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -48,10 +43,6 @@ public class ChannelDropdown extends TextInputLayout implements Target, Navigati
 		dropdownView = findViewById(R.id.channel_autoComplete);
 		linkView = findViewById(R.id.new_account_link);
 		fillFromAttrs();
-	}
-
-	public void setActivity(Activity activity) {
-		this.activity = activity;
 	}
 
 	private void getAttrs(Context context, AttributeSet attrs) {
@@ -68,11 +59,14 @@ public class ChannelDropdown extends TextInputLayout implements Target, Navigati
 	private void fillFromAttrs() {
 		if (label != null && !label.isEmpty())
 			input.setHint(label);
-		linkView.setOnClickListener(v -> navigateToLinkAccountFragment(activity));
+		linkView.setOnClickListener(v -> {
+			if(linkViewClickListener !=null) linkViewClickListener.navigateLinkAccountFragment();
+		});
 		toggleLink(showLink);
 	}
 
 	public void setListener(HighlightListener hl) { highlightListener = hl; }
+	public void setLinkViewClickListener(LinkViewClickListener linkViewClickListener) {this.linkViewClickListener = linkViewClickListener;}
 
 	public void updateChannels(List<Channel> channels) {
 		if (channels == null || channels.size() == 0) return;
@@ -144,5 +138,9 @@ public class ChannelDropdown extends TextInputLayout implements Target, Navigati
 
 	public interface HighlightListener {
 		void highlightChannel(Channel c);
+	}
+	//Created a separate listener so it dosent need to be called by channelDropdownViewModel
+	public interface LinkViewClickListener {
+		void navigateLinkAccountFragment();
 	}
 }
