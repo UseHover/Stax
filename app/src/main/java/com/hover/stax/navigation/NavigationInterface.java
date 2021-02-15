@@ -114,8 +114,4 @@ public interface NavigationInterface {
 		NavHostFragment.findNavController(fragment).navigate(R.id.requestDetailsFragment, bundle);
 	}
 
-	default void navigateToPreviousScreen(Activity activity) {
-		activity.onBackPressed();
-	}
-
 }

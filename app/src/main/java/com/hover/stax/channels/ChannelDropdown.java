@@ -1,10 +1,8 @@
 package com.hover.stax.channels;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -139,7 +137,7 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 	public interface HighlightListener {
 		void highlightChannel(Channel c);
 	}
-	//Created a separate listener so it dosent need to be called by channelDropdownViewModel
+	//Created a separate listener so it doesn't need to be called by channelDropdownViewModel
 	public interface LinkViewClickListener {
 		void navigateLinkAccountFragment();
 	}
