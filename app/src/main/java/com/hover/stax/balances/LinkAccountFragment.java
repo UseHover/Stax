@@ -50,7 +50,7 @@ public class LinkAccountFragment extends Fragment{
 	public void linkAccount(View v) {
 		if (channelDropdown.getHighlighted() != null) {
 			channelDropdownViewModel.setChannelSelected(channelDropdown.getHighlighted());
-			if(getActivity() !=null) getActivity().onBackPressed();
+			requireActivity().onBackPressed();
 			balancesViewModel.getActions().observe(getViewLifecycleOwner(), actions ->  balancesViewModel.setRunning(channelDropdown.getHighlighted().id));
 		} else channelDropdown.setError(getString(R.string.refresh_balance_error));
 	}
