@@ -32,14 +32,13 @@ public class LinkAccountFragment extends Fragment{
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		init(view);
-		setupChannelDropdown();
+		setUpChannelDropdown(view);
 		setUpCancelAndLinkAccountBtn(view);
 	}
-	private void init(View view) {
+
+	private void setUpChannelDropdown(View view) {
 		channelDropdown = view.findViewById(R.id.channel_dropdown);
-	}
-	private void setupChannelDropdown() { channelDropdown.setObservers(channelDropdownViewModel, channelDropdown, getViewLifecycleOwner()); }
+		channelDropdown.setObservers(channelDropdownViewModel, channelDropdown, getViewLifecycleOwner()); }
 
 	private void setUpCancelAndLinkAccountBtn(View view) {
 		view.findViewById(R.id.neg_btn).setOnClickListener(v->getActivity().onBackPressed());
