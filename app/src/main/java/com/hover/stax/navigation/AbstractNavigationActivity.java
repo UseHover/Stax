@@ -1,10 +1,14 @@
 package com.hover.stax.navigation;
 
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -14,6 +18,8 @@ import com.amplitude.api.Amplitude;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
+import com.hover.stax.balances.BalancesViewModel;
+import com.hover.stax.home.MainActivity;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.permissions.PermissionUtils;
 import com.hover.stax.settings.SettingsFragment;
@@ -36,15 +42,20 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 		AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
 		NavigationUI.setupWithNavController(nav, navController, appBarConfiguration);
 
+		// Show back button if not in MainActivity
+		nav.getMenu().getItem(0).setVisible(!(this instanceof MainActivity));
+
 		nav.setOnMenuItemClickListener(item -> {
-			checkPermissionsAndNavigate(getNavConst(item.getItemId()));
+			if (this instanceof MainActivity)
+				checkPermissionsAndNavigate(getNavConst(item.getItemId()));
+			else
+				navigateThruHome(item.getItemId());
 			return true;
 		});
 
 		navController.addOnDestinationChangedListener((controller, destination, arguments) -> setActiveNav(destination.getId(), nav));
-
-		if (getIntent().getBooleanExtra(SettingsFragment.LANG_CHANGE, false)) navigate(this, Constants.NAV_SETTINGS);
-
+		if (getIntent().getBooleanExtra(SettingsFragment.LANG_CHANGE, false))
+			navigate(this, Constants.NAV_SETTINGS);
 	}
 
 	private void setActiveNav(int destinationId, BottomAppBar nav) {
@@ -64,6 +75,12 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 				this);
 	}
 
+	private void navigateThruHome(int destId) {
+		if (destId == R.id.navigation_balance) navigateToMainActivityAndRedirectToAFragment(this, Constants.NAV_BALANCE);
+		else if (destId == R.id.navigation_settings) navigateToMainActivityAndRedirectToAFragment(this, Constants.NAV_SETTINGS);
+		else if (destId == R.id.navigation_home) navigateToMainActivity(this);
+		else onBackPressed();
+	}
 
 	private int getNavConst(int destId) {
 		if (destId == R.id.navigation_balance) return Constants.NAV_BALANCE;
@@ -71,11 +88,6 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 		else if (destId == R.id.navigation_home) return Constants.NAV_HOME;
 		else return destId;
 	}
-
-	public void onClickBackIcon(View v) { onBackPressed(); }
-	public void onClickHomeIcon(View v) { navigateToMainActivity(this); }
-	public void onClickBalanceIcon(View v) { navigateToMainActivityAndRedirectToAFragment(this, Constants.NAV_BALANCE); }
-	public void onClickSettingsIcon(View v) { navigateToMainActivityAndRedirectToAFragment(this, Constants.NAV_SETTINGS); }
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
