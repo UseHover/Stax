@@ -25,7 +25,7 @@ import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.settings.BiometricChecker;
 import com.hover.stax.views.StaxDialog;
 
-public class TransferActivity extends AbstractNavigationActivity implements NavigationInterface {
+public class TransferActivity extends AbstractNavigationActivity {
 	final public static String TAG = "TransferActivity";
 
 	private ChannelDropdownViewModel channelDropdownViewModel;
@@ -44,6 +44,7 @@ public class TransferActivity extends AbstractNavigationActivity implements Navi
 
 		checkIntent();
 		setContentView(R.layout.activity_transfer);
+		setUpNav();
 	}
 
 	private void checkIntent() {

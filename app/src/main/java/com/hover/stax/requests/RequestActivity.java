@@ -33,6 +33,7 @@ public class RequestActivity extends AbstractNavigationActivity implements Reque
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_request);
+		setUpNav();
 		requestViewModel = new ViewModelProvider(this).get(NewRequestViewModel.class);
 		checkIntent();
 	}

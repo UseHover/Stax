@@ -12,6 +12,7 @@
 	<string name="nav_link_account">Link an account</string>
 	<string name="nav_airtime">Buy Airtime</string>
 	<string name="nav_transfer">Transfer</string>
+	<string name="nav_new_request">New Request</string>
 	<string name="nav_settings">Settings</string>
 	<string name="nav_account_detail">Account Details</string>
 	<string name="nav_transaction">Transaction Details</string>
