@@ -82,10 +82,9 @@ final public class HoverSession {
 		builder.extra(Action.PIN_KEY, KeyStoreExecutor.decrypt(channel.pin, a));
 	}
 
-	private byte[] getSenderLogo() {
-		byte[] l = getLogo(channel.logoUrl);
+	private String getSenderLogo() {
 //		Log.e(TAG, "logo array: " + l);
-		return l;
+		return channel.logoUrl;
 	}
 	private byte[] getReceiverLogo(Action a) {
 		if (a.to_institution_logo != null && !channel.logoUrl.equals(a.to_institution_logo))
