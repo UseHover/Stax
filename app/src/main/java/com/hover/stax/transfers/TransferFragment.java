@@ -29,6 +29,7 @@ import com.hover.stax.utils.Constants;
 import com.hover.stax.requests.Request;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.views.CustomTextInputLayout;
 import com.hover.stax.views.Stax2LineItem;
 
 public class TransferFragment extends AbstractFormFragment implements ActionSelect.HighlightListener {
@@ -64,7 +65,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 
 		recipientValue = root.findViewById(R.id.recipientValue);
 
-		amountInput = root.findViewById(R.id.amount_input);
+		amountInput = root.findViewById(R.id.amountEntry).findViewById(R.id.textInputEditTextId);
 		actionSelect = root.findViewById(R.id.action_select);
 		recipientLabel = root.findViewById(R.id.recipientLabel);
 		recipientAutocomplete = root.findViewById(R.id.recipient_autocomplete);
@@ -110,7 +111,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 
 		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> ((TextView) root.findViewById(R.id.amountValue)).setText(Utils.formatAmount(amount)));
 		transferViewModel.getAmountError().observe(getViewLifecycleOwner(), amountError -> {
-			((TextInputLayout) root.findViewById(R.id.amountEntry)).setError((amountError != null ? getString(amountError) : null));
+			((CustomTextInputLayout) root.findViewById(R.id.amountEntry)).setInfo((amountError != null ? getString(amountError) : null));
 		});
 
 		transferViewModel.getRecentContacts().observe(getViewLifecycleOwner(), contacts -> {

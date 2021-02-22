@@ -6,7 +6,13 @@
 	android:id="@+id/editCard"
 	app:title="@string/nav_airtime">
 
-	<include layout="@layout/transfer_amount" />
+	<com.hover.stax.views.CustomTextInputLayout
+	    android:id="@+id/amountEntry"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    app:hint="@string/transfer_amount_label"
+	    android:inputType="numberDecimal"
+	    />
 
 	<com.hover.stax.channels.ChannelDropdown
 		android:id="@+id/channel_dropdown"

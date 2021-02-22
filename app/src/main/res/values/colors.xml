@@ -19,6 +19,11 @@
 	<color name="nav_grey">#3F444A</color>
 	<color name="transparent_grey">#77000000</color>
 	<color name="transparent_overlay">#1E232AA3</color>
+	<color name="stax_state_green">#05EB8F</color>
+	<color name="stax_state_blue">#1678FF</color>
+	<color name="stax_state_yellow">#FFCA32</color>
+	<color name="stax_state_red">#FF0028</color>
+	
 
 	<color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/offWhite</color>
 </resources>
