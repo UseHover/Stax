@@ -29,6 +29,7 @@ import com.hover.stax.utils.Constants;
 import com.hover.stax.requests.Request;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.views.CustomDropdownLayout;
 import com.hover.stax.views.CustomTextInputLayout;
 import com.hover.stax.views.Stax2LineItem;
 
@@ -40,7 +41,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 
 	private EditText amountInput, noteInput;
 	private ActionSelect actionSelect;
-	private TextInputLayout recipientLabel;
+	private CustomDropdownLayout recipientLabel;
 	private AutoCompleteTextView recipientAutocomplete;
 	private ImageButton contactButton;
 	private Stax2LineItem recipientValue;
@@ -68,9 +69,9 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		amountInput = root.findViewById(R.id.amountEntry).findViewById(R.id.textInputEditTextId);
 		actionSelect = root.findViewById(R.id.action_select);
 		recipientLabel = root.findViewById(R.id.recipientLabel);
-		recipientAutocomplete = root.findViewById(R.id.recipient_autocomplete);
+		recipientAutocomplete = recipientLabel.findViewById(R.id.dropdownInputTextView);
 		contactButton = root.findViewById(R.id.contact_button);
-		noteInput = root.findViewById(R.id.note_input);
+		noteInput = root.findViewById(R.id.reasonEditText).findViewById(R.id.textInputEditTextId);
 
 		amountInput.setText(transferViewModel.getAmount().getValue());
 		noteInput.setText(transferViewModel.getNote().getValue());
@@ -111,7 +112,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 
 		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> ((TextView) root.findViewById(R.id.amountValue)).setText(Utils.formatAmount(amount)));
 		transferViewModel.getAmountError().observe(getViewLifecycleOwner(), amountError -> {
-			((CustomTextInputLayout) root.findViewById(R.id.amountEntry)).setInfo((amountError != null ? getString(amountError) : null));
+			((CustomTextInputLayout) root.findViewById(R.id.amountEntry)).setError((amountError != null ? getString(amountError) : null));
 		});
 
 		transferViewModel.getRecentContacts().observe(getViewLifecycleOwner(), contacts -> {
@@ -126,7 +127,6 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 
 		transferViewModel.getRecipientError().observe(getViewLifecycleOwner(), recipientError -> {
 			recipientLabel.setError((recipientError != null ? getString(recipientError) : null));
-			recipientLabel.setErrorIconDrawable(0);
 		});
 
 		transferViewModel.getNote().observe(getViewLifecycleOwner(), note -> {

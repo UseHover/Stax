@@ -18,6 +18,7 @@ import androidx.lifecycle.LifecycleOwner;
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.views.CustomDropdownLayout;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -26,7 +27,7 @@ import java.util.List;
 public class ChannelDropdown extends TextInputLayout implements Target {
 	private static String TAG = "ChannelDropdown";
 
-	private TextInputLayout input;
+	private CustomDropdownLayout input;
 	private AutoCompleteTextView dropdownView;
 	private TextView linkView;
 
@@ -41,7 +42,7 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		getAttrs(context, attrs);
 		LayoutInflater.from(context).inflate(R.layout.channel_dropdown, this);
 		input = findViewById(R.id.channel_dropdown_input);
-		dropdownView = findViewById(R.id.channel_autoComplete);
+		dropdownView =input.findViewById(R.id.dropdownInputTextView);
 		linkView = findViewById(R.id.new_account_link);
 		fillFromAttrs();
 	}
@@ -123,12 +124,11 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 	}
 
 	public void setError(String message) {
-		input.setError(message);
-		input.setErrorIconDrawable(message != null ? R.drawable.ic_error_warning_24dp : 0);
+		input.setInfo(message);
 	}
 
 	public void setHelper(String message) {
-		input.setHelperText(message);
+		input.setInfo(message);
 	}
 
 	public void reset() {

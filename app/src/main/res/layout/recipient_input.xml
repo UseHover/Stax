@@ -1,42 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:id="@+id/recipient_entry"
-	xmlns:tools="http://schemas.android.com/tools"
-	xmlns:app="http://schemas.android.com/apk/res-auto">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:id="@+id/recipient_entry"
+    android:layout_marginTop="-20dp"
+    >
 
-	<com.google.android.material.textfield.TextInputLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:id="@+id/recipientLabel"
-		android:hint="@string/recipientphone_label"
-		style="@style/StaxLabeledDropdown">
-
-		<AutoCompleteTextView
-			android:id="@+id/recipient_autocomplete"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:padding="@dimen/margin_13"
-			android:fontFamily="font-normal"
-			android:paddingEnd="@dimen/margin_68"
-			tools:ignore="RtlSymmetry"
-			android:dropDownWidth="wrap_content"
-			android:background="@null"
-			android:textSize="@dimen/text_21"
-			android:textColor="@color/offWhite"
-			android:textCursorDrawable="@null"
-			android:dropDownHeight="135dp"
-			android:completionThreshold="0"
-			android:inputType="textPersonName"/>
-	</com.google.android.material.textfield.TextInputLayout>
+	<com.hover.stax.views.CustomDropdownLayout
+	    android:layout_width="0dp"
+	    android:layout_height="wrap_content"
+	    android:id="@+id/recipientLabel"
+	    app:hint_value="@string/recipientphone_label"
+	    app:editable="true"
+	    android:layout_weight="1"
+	    />
 
 	<ImageButton android:id="@+id/contact_button"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="26dp"
-		android:layout_marginEnd="28dp"
-		android:layout_alignParentEnd="true"
-		app:srcCompat="@drawable/ic_contacts"
-		android:background="@color/transparent"/>
-</RelativeLayout>
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center"
+	    android:paddingVertical="@dimen/margin_13"
+	    android:paddingEnd="@dimen/margin_13"
+	    android:paddingStart="0dp"
+	    app:srcCompat="@drawable/ic_contacts"
+	    android:visibility="visible"
+	    android:background="@color/transparent"/>
+
+</LinearLayout>

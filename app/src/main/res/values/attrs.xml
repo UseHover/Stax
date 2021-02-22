@@ -19,6 +19,12 @@
 		<attr name="android:inputType" format="string"/>
 	</declare-styleable>
 
+	<declare-styleable name="CustomDropdownLayout">
+		<attr name="hint_value" format="string" />
+		<attr name="editable" format="boolean"/>
+		<attr name="defaultText" format="string"/>
+	</declare-styleable>
+
 	<declare-styleable name="CustomSwipeRefreshLayout">
 		<attr name="enable_top_progress_bar" format="boolean" />
 		<attr name="refresh_mode" format="enum" >

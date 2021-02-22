@@ -28,7 +28,12 @@
 
 	<include  layout="@layout/recipient_input" />
 
-	<include layout="@layout/transfer_note"
-		android:visibility="gone"
-		android:id="@+id/reasonEditText"/>
+	<com.hover.stax.views.CustomTextInputLayout
+	    android:id="@+id/reasonEditText"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    app:hint="@string/request_note_label"
+	    android:inputType="text"
+	    android:visibility="gone"
+	    />
 </com.hover.stax.views.StaxCardView>
