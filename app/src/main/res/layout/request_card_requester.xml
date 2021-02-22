@@ -11,23 +11,13 @@
 		android:layout_height="wrap_content"
 		app:label="@string/channel_label"/>
 
-	<com.google.android.material.textfield.TextInputLayout
+	<com.hover.stax.views.CustomTextInputLayout
 	    android:id="@+id/accountNumberEntry"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-		android:fontFamily="font-normal"
-	    android:hint="@string/requester_account_number_label"
-	    style="@style/StaxLabeledInput">
+	    android:layout_marginTop="-20dp"
+	    app:hint="@string/requester_account_number_label"
+	    android:inputType="number"
+	    />
 
-		<com.google.android.material.textfield.TextInputEditText
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:padding="@dimen/margin_13"
-		    android:textSize="@dimen/text_21"
-		    android:textColor="@color/offWhite"
-		    android:textCursorDrawable="@null"
-			android:fontFamily="font-normal"
-		    android:inputType="number"
-		    android:id="@+id/accountNumber_input"/>
-	</com.google.android.material.textfield.TextInputLayout>
 	</LinearLayout>

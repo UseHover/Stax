@@ -24,6 +24,8 @@ import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.transfers.AbstractFormFragment;
+import com.hover.stax.views.CustomDropdownLayout;
+import com.hover.stax.views.CustomTextInputLayout;
 import com.hover.stax.views.Stax2LineItem;
 import com.hover.stax.views.StaxCardView;
 
@@ -63,12 +65,12 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 		accountValue = view.findViewById(R.id.account_value);
 
 		recipientInputList = view.findViewById(R.id.recipient_list);
-		amountInput = view.findViewById(R.id.amount_input);
+		amountInput = view.findViewById(R.id.amountEntry).findViewById(R.id.textInputEditTextId);
 		amountInput.setText(requestViewModel.getAmount().getValue());
-		requesterAccountNo = view.findViewById(R.id.accountNumber_input);
+		requesterAccountNo = view.findViewById(R.id.accountNumberEntry).findViewById(R.id.textInputEditTextId);
 		requesterAccountNo.setText(requestViewModel.getRequesterNumber().getValue());
 
-		noteInput = view.findViewById(R.id.note_input);
+		noteInput = view.findViewById(R.id.reasonEditText).findViewById(R.id.textInputEditTextId);
 		noteInput.setText(requestViewModel.getNote().getValue());
 		addRecipientBtn = view.findViewById(R.id.add_recipient_button);
 
@@ -109,20 +111,18 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 		});
 
 		requestViewModel.getAmountError().observe(getViewLifecycleOwner(), error -> {
-			amountInput.setError((error != null ? getString(error) : null));
+			((CustomTextInputLayout) root.findViewById(R.id.amountEntry)).setError((error != null ? getString(error) : null));
 		});
 
 		requestViewModel.getRequesteeError().observe(getViewLifecycleOwner(), recipientError -> {
 			if (recipientInputList.getChildAt(0) == null) return;
-			TextInputLayout v = recipientInputList.getChildAt(0).findViewById(R.id.recipientLabel);
+			CustomDropdownLayout v = recipientInputList.getChildAt(0).findViewById(R.id.recipientLabel);
 			v.setError((recipientError != null ? getString(recipientError) : null));
-			v.setErrorIconDrawable(0);
 		});
 
 		requestViewModel.getRequesterNumberError().observe(getViewLifecycleOwner(), accountNumberError->{
-			TextInputLayout v = root.findViewById(R.id.accountNumberEntry);
+			CustomTextInputLayout v = root.findViewById(R.id.accountNumberEntry);
 			v.setError((accountNumberError != null ? getString(accountNumberError) : null));
-			v.setErrorIconDrawable(0);
 		});
 
 		requestViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> {
