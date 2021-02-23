@@ -50,9 +50,7 @@ final public class HoverSession {
 		builder.showUserStepDescriptions(true);
 		builder.finalMsgDisplayTime(finalScreenTime);
 		builder.style(R.style.StaxHoverTheme);
-		//builder.sty(Constants.STYLE_MODE_FOR_STAX);
-		builder.transactingImages(getSenderLogo(), getReceiverLogo(b.action));
-		builder.customBackgroundImage(R.drawable.stax_background);
+		builder.sessionOverlayLayout(R.layout.stax_transacting_in_progress);
 
 		return builder;
 	}

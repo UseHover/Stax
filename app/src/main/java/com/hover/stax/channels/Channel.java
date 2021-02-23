@@ -128,7 +128,7 @@ public class Channel implements Comparable<Channel> {
 
 	@Override
 	public String toString() {
-		return name;
+		return name + " " + countryAlpha2;
 	}
 
 	@Override
