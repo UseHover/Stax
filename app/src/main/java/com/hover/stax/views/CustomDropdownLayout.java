@@ -53,12 +53,14 @@ public class CustomDropdownLayout extends TextInputLayout {
 	}
 
 	private void fillAttr() {
-		if (hint != null) textInputLayout.setHint(hint);
+		if (hint != null) setHint(hint);
 		autoCompleteTextView.setInputType(editable ? InputType.TYPE_TEXT_VARIATION_NORMAL : InputType.TYPE_NULL);
-		if (defaultText != null && !defaultText.isEmpty())
-			autoCompleteTextView.setText(defaultText);
-
+		if (defaultText != null && !defaultText.isEmpty()) autoCompleteTextView.setText(defaultText);
 	}
+	public void setHint(String message) {
+		textInputLayout.setHint(message);
+	}
+
 
 	//SET STATES
 	public void setError(String message) {
