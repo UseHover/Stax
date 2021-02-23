@@ -1,6 +1,7 @@
 package com.hover.stax.transfers;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -22,6 +23,7 @@ import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionSelect;
 import com.hover.stax.actions.ActionSelectViewModel;
+import com.hover.stax.channels.ChannelDropdown;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.contacts.StaxContactArrayAdapter;
@@ -42,9 +44,11 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 	private EditText amountInput, noteInput;
 	private ActionSelect actionSelect;
 	private CustomDropdownLayout recipientLabel;
+	private ChannelDropdown channelDropdown;
 	private AutoCompleteTextView recipientAutocomplete;
 	private ImageButton contactButton;
 	private Stax2LineItem recipientValue;
+	private CustomTextInputLayout amountEntry;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
@@ -65,10 +69,11 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		setTitle(root);
 
 		recipientValue = root.findViewById(R.id.recipientValue);
-
-		amountInput = root.findViewById(R.id.amountEntry).findViewById(R.id.textInputEditTextId);
+		amountEntry = root.findViewById(R.id.amountEntry);
+		amountInput = amountEntry.findViewById(R.id.textInputEditTextId);
 		actionSelect = root.findViewById(R.id.action_select);
 		recipientLabel = root.findViewById(R.id.recipientLabel);
+		channelDropdown = root.findViewById(R.id.channel_dropdown);
 		recipientAutocomplete = recipientLabel.findViewById(R.id.dropdownInputTextView);
 		contactButton = root.findViewById(R.id.contact_button);
 		noteInput = root.findViewById(R.id.reasonEditText).findViewById(R.id.textInputEditTextId);
@@ -112,7 +117,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 
 		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> ((TextView) root.findViewById(R.id.amountValue)).setText(Utils.formatAmount(amount)));
 		transferViewModel.getAmountError().observe(getViewLifecycleOwner(), amountError -> {
-			((CustomTextInputLayout) root.findViewById(R.id.amountEntry)).setError((amountError != null ? getString(amountError) : null));
+			amountEntry.setError((amountError != null ? getString(amountError) : null));
 		});
 
 		transferViewModel.getRecentContacts().observe(getViewLifecycleOwner(), contacts -> {
@@ -134,7 +139,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 			((TextView) root.findViewById(R.id.noteValue)).setText(note);
 		});
 
-		transferViewModel.getRequest().observe(getViewLifecycleOwner(), request -> { if (request != null) load(request); });
+		transferViewModel.getRequest().observe(getViewLifecycleOwner(), request -> { if (request != null) loadAndIndicateFieldState(request); });
 	}
 
 	protected void startListeners() {
@@ -207,11 +212,27 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		}
 	};
 
-	private void load(Request r) {
+	private void loadAndIndicateFieldState(Request r) {
 		channelDropdownViewModel.setChannelFromRequest(r);
 		amountInput.setText(r.amount);
 		recipientAutocomplete.setText(r.requester_number);
 		transferViewModel.setEditing(r.amount == null || r.amount.isEmpty());
+		indicateFieldState(r.amount, r.requester_number);
+
 		Amplitude.getInstance().logEvent(getString(R.string.loaded_request_link));
+	}
+	private void indicateFieldState(String amount, String requesterNum) {
+		if(amount == null || amount.isEmpty()) amountEntry.requestFocus();
+
+		if(requesterNum !=null && !requesterNum.isEmpty()) {
+			new Handler().postDelayed(() -> {
+				recipientLabel.setSuccess("");
+				recipientLabel.requestLayout();
+
+				channelDropdown.setSuccess("");
+				channelDropdown.requestLayout();
+			}, 1500);
+		}
+
 	}
 }

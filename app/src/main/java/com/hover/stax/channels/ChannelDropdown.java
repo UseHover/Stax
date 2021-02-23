@@ -17,6 +17,7 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
+import com.hover.stax.fieldstates.FieldState;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.CustomDropdownLayout;
 import com.squareup.picasso.Picasso;
@@ -123,12 +124,27 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		dropdownView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0);
 	}
 
-	public void setError(String message) {
-		input.setInfo(message);
+	public void setFieldState(FieldState fieldState) {
+		if(fieldState == null) input.setSuccess("");
+		else {
+			switch (fieldState.getFieldStates()) {
+				case INFO: input.setInfo(fieldState.getMessage());
+				break;
+				case WARNING: input.setWarning(fieldState.getMessage());
+				break;
+				case ERROR: input.setError(fieldState.getMessage());
+				break;
+				case SUCCESS: input.setSuccess(fieldState.getMessage());
+				break;
+			}
+		}
 	}
 
 	public void setHelper(String message) {
 		input.setInfo(message);
+	}
+	public void setSuccess(String message) {
+		input.setSuccess(message);
 	}
 
 	public void reset() {
@@ -143,9 +159,9 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		viewModel.getChannels().observe(lifecycleOwner, dropdown::updateChannels);
 		viewModel.getSimChannels().observe(lifecycleOwner, dropdown::updateChannels);
 		viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> {
-			if (channels != null && channels.size() > 0) dropdown.setError(null);
+			if (channels != null && channels.size() > 0) dropdown.setFieldState(null);
 		});
-		viewModel.getError().observe(lifecycleOwner, dropdown::setError);
+		viewModel.getFieldState().observe(lifecycleOwner, dropdown::setFieldState);
 		viewModel.getHelper().observe(lifecycleOwner, helper -> dropdown.setHelper(helper != null ?  getContext().getString(helper) : null));
 	}
 	public void removeObservers(@NonNull ChannelDropdownViewModel viewModel,  @NonNull LifecycleOwner lifecycleOwner) {
@@ -155,7 +171,7 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		viewModel.getChannels().removeObservers(lifecycleOwner);
 		viewModel.getSimChannels().removeObservers(lifecycleOwner);
 		viewModel.getSelectedChannels().removeObservers(lifecycleOwner);
-		viewModel.getError().removeObservers(lifecycleOwner);
+		viewModel.getFieldState().removeObservers(lifecycleOwner);
 		viewModel.getHelper().removeObservers(lifecycleOwner);
 	}
 
