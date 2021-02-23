@@ -21,7 +21,7 @@ import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.fieldstates.FieldState;
-import com.hover.stax.fieldstates.FieldStates;
+import com.hover.stax.fieldstates.FieldStateType;
 import com.hover.stax.requests.Request;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.sims.Sim;
@@ -75,14 +75,18 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 		channelActions.addSource(selectedChannels, this::loadActions);
 		channelActions.addSource(activeChannel, this::loadActions);
 		fieldState.addSource(channelActions, actions -> {
-			if (activeChannel.getValue() != null && (actions == null || actions.size() == 0))
-				fieldState.setValue(new FieldState(application.getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getApplication(), type.getValue())), FieldStates.ERROR));
+			if (activeChannel.getValue() != null && (actions == null || actions.size() == 0)){
+				String fieldMessage = application.getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getApplication(), type.getValue()));
+				fieldState.setValue(new FieldState(FieldStateType.ERROR, fieldMessage));
+			}
 			else fieldState.setValue(null);
 		});
 		helper.addSource(channelActions, actions -> {
-			if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !actions.get(0).transaction_type.equals(Action.BALANCE))
-				helper.setValue(actions.get(0).transaction_type.equals(Action.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning);
-			else helper.setValue(null);
+			if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !actions.get(0).transaction_type.equals(Action.BALANCE)){
+				String fieldMessage = application.getString(actions.get(0).transaction_type.equals(Action.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning);
+				fieldState.setValue(new FieldState(FieldStateType.INFO, fieldMessage));
+			}
+			else fieldState.setValue(null);
 		});
 	}
 
@@ -244,10 +248,12 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 		boolean valid = true;
 		if (activeChannel.getValue() == null) {
 			valid = false;
-			fieldState.setValue(new FieldState(getApplication().getString(R.string.channels_error_noselect), FieldStates.ERROR ));
+			String fieldMessage = getApplication().getString(R.string.channels_error_noselect);
+			fieldState.setValue(new FieldState(FieldStateType.ERROR, fieldMessage ));
 		} else if (channelActions.getValue() == null || channelActions.getValue().size() == 0) {
 			valid = false;
-			fieldState.setValue(new FieldState(getApplication().getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getApplication(), type.getValue())), FieldStates.ERROR));
+			String fieldMessage = getApplication().getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getApplication(), type.getValue()));
+			fieldState.setValue(new FieldState(FieldStateType.ERROR, fieldMessage));
 		}
 		return valid;
 	}
@@ -268,8 +274,10 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 				List<Action> acts = repo.getActions(getChannelIds(selectedChannels.getValue()), r.requester_institution_id);
 				if (acts.size() <= 0) {
 					acts = repo.getActions(getChannelIds(simChannels.getValue()), r.requester_institution_id);
-					if (acts.size() <= 0)
-						fieldState.postValue(new FieldState(getApplication().getString(R.string.channel_request_fielderror, String.valueOf(r.requester_institution_id)), FieldStates.ERROR));
+					if (acts.size() <= 0){
+						String fieldMessage = getApplication().getString(R.string.channel_request_fielderror, String.valueOf(r.requester_institution_id));
+						fieldState.postValue(new FieldState(FieldStateType.ERROR, fieldMessage));
+					}
 				}
 				channelActions.postValue(acts);
 			}).start();

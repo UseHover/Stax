@@ -127,7 +127,7 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 	public void setFieldState(FieldState fieldState) {
 		if(fieldState == null) input.setSuccess("");
 		else {
-			switch (fieldState.getFieldStates()) {
+			switch (fieldState.getFieldStateType()) {
 				case INFO: input.setInfo(fieldState.getMessage());
 				break;
 				case WARNING: input.setWarning(fieldState.getMessage());

@@ -2,11 +2,11 @@ package com.hover.stax.fieldstates;
 
 public class FieldState {
 	private  String message;
-	private FieldStates fieldStates;
+	private FieldStateType fieldStateType;
 
-	public FieldState(String message, FieldStates fieldStates) {
+	public FieldState(FieldStateType fieldStateType, String message) {
 		this.message = message;
-		this.fieldStates = fieldStates;
+		this.fieldStateType = fieldStateType;
 	}
 
 	public String getMessage() {
@@ -17,11 +17,11 @@ public class FieldState {
 		this.message = message;
 	}
 
-	public FieldStates getFieldStates() {
-		return fieldStates;
+	public FieldStateType getFieldStateType() {
+		return fieldStateType;
 	}
 
-	public void setFieldStates(FieldStates fieldStates) {
-		this.fieldStates = fieldStates;
+	public void setFieldStateType(FieldStateType fieldStateType) {
+		this.fieldStateType = fieldStateType;
 	}
 }

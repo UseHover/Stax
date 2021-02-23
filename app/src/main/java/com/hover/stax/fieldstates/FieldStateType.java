@@ -1,6 +1,6 @@
 package com.hover.stax.fieldstates;
 
-public enum FieldStates {
+public enum FieldStateType {
 	INFO, WARNING, ERROR, SUCCESS
 
 }
