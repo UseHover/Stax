@@ -62,8 +62,7 @@ public class CustomTextInputLayout extends TextInputLayout {
 	public void setWarning(String message) {
 		if(message !=null) {
 			textInputLayout.setHelperText(message);
-			setHelperColorState(R.color.yellow_state_color, true);
-			textInputLayout.setBoxStrokeColor(getResources().getColor(R.color.stax_state_yellow));
+			setHelperColorState(R.color.yellow_state_color);
 			showWarningIcon();
 		}
 		else { setNormal(); }
@@ -72,8 +71,7 @@ public class CustomTextInputLayout extends TextInputLayout {
 	public void setInfo(String message) {
 		if(message !=null) {
 			textInputLayout.setHelperText(message);
-			setHelperColorState(R.color.blue_state_color, true);
-			textInputLayout.setBoxStrokeColor(getResources().getColor(R.color.stax_state_blue));
+			setHelperColorState(R.color.blue_state_color);
 			showInfoIcon();
 		}
 		else { setNormal(); }
@@ -82,28 +80,26 @@ public class CustomTextInputLayout extends TextInputLayout {
 	public void setSuccess(String message) {
 		if(message !=null) {
 			textInputLayout.setHelperText(message);
-			setHelperColorState(R.color.green_state_color, true);
-			textInputLayout.setBoxStrokeColor(getResources().getColor(R.color.stax_state_green));
+			setHelperColorState(R.color.green_state_color);
 			showSuccessIcon();
 		} else setNormal();
 	}
 	public void setNormal() {
-		setHelperColorState(R.color.offwhite_state_color, false);
+		setHelperColorState(R.color.offwhite_state_color);
 		textInputLayout.setHelperText(null);
 		textInputLayout.setError(null);
 		removeNoticeIcon();
-		textInputLayout.setBoxStrokeColor(getResources().getColor(R.color.offWhite));
 
 	}
 
 	//PRIVATE METHODS
-	private void setHelperColorState(int id, boolean requestFocus) {
+	private void setHelperColorState(int id) {
 		try {
 			XmlResourceParser parser = getResources().getXml(id);
 			ColorStateList colors = ColorStateList.createFromXml(getResources(), parser);
 			textInputLayout.setHelperTextColor(colors);
-			textInputLayout.setHintTextColor(colors);
-			if(requestFocus) textInputLayout.requestFocus();
+			textInputLayout.setDefaultHintTextColor(colors);
+			textInputLayout.setBoxStrokeColorStateList(colors);
 		} catch (Exception e) { Utils.logErrorAndReportToFirebase(TAG, e.getMessage(), e); }
 	}
 	private void showSuccessIcon() {

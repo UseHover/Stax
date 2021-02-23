@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-	<item  android:color="#F1F1F4"/>
+	<item android:state_hovered="true"  android:color="#F1F1F4"/>
+	<item android:state_hovered="false"  android:color="#F1F1F4"/>
+	<item android:state_enabled="true"  android:color="#F1F1F4"/>
+	<item android:state_enabled="false"  android:color="#F1F1F4"/>
+	<item android:state_activated="true"  android:color="#F1F1F4"/>
+	<item android:state_activated="false"  android:color="#F1F1F4"/>
+	<item android:state_active="true"  android:color="#F1F1F4"/>
+	<item android:state_active="false"  android:color="#F1F1F4"/>
+	<item android:state_focused="true"  android:color="#F1F1F4"/>
+	<item android:state_focused="false"  android:color="#F1F1F4"/>
+	<item android:state_window_focused="true"  android:color="#F1F1F4"/>
+	<item android:state_window_focused="false"  android:color="#F1F1F4"/>
 </selector>
