@@ -74,7 +74,6 @@ public class CustomDropdownLayout extends TextInputLayout {
 		if (message != null) {
 			textInputLayout.setHelperText(message);
 			setHelperColorState(R.color.yellow_state_color, true);
-			textInputLayout.setBoxStrokeColor(getResources().getColor(R.color.stax_state_yellow));
 			showWarningIcon();
 		} else {
 			setNormal();
@@ -85,7 +84,6 @@ public class CustomDropdownLayout extends TextInputLayout {
 		if (message != null) {
 			textInputLayout.setHelperText(message);
 			setHelperColorState(R.color.blue_state_color, true);
-			textInputLayout.setBoxStrokeColor(getResources().getColor(R.color.stax_state_blue));
 			showInfoIcon();
 		} else {
 			setNormal();
@@ -96,7 +94,6 @@ public class CustomDropdownLayout extends TextInputLayout {
 		if (message != null) {
 			textInputLayout.setHelperText(message);
 			setHelperColorState(R.color.green_state_color, true);
-			textInputLayout.setBoxStrokeColor(getResources().getColor(R.color.stax_state_green));
 			showSuccessIcon();
 		} else setNormal();
 	}
@@ -116,7 +113,8 @@ public class CustomDropdownLayout extends TextInputLayout {
 			XmlResourceParser parser = getResources().getXml(id);
 			ColorStateList colors = ColorStateList.createFromXml(getResources(), parser);
 			textInputLayout.setHelperTextColor(colors);
-			textInputLayout.setHintTextColor(colors);
+			textInputLayout.setDefaultHintTextColor(colors);
+			textInputLayout.setBoxStrokeColorStateList(colors);
 			if (requestFocus) textInputLayout.requestFocus();
 		} catch (Exception e) {
 			Utils.logErrorAndReportToFirebase(TAG, e.getMessage(), e);

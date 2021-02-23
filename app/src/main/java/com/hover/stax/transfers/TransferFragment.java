@@ -218,19 +218,14 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		recipientAutocomplete.setText(r.requester_number);
 		transferViewModel.setEditing(r.amount == null || r.amount.isEmpty());
 		indicateFieldState(r.amount, r.requester_number);
-
 		Amplitude.getInstance().logEvent(getString(R.string.loaded_request_link));
 	}
 	private void indicateFieldState(String amount, String requesterNum) {
-		//if(amount == null || amount.isEmpty()) amountEntry.requestFocus();
-
+		if(amount == null || amount.isEmpty()) amountEntry.requestFocus();
 		if(requesterNum !=null && !requesterNum.isEmpty()) {
 			new Handler().postDelayed(() -> {
 				recipientLabel.setSuccess("");
-				recipientLabel.requestLayout();
-
 				channelDropdown.setSuccess("");
-				channelDropdown.requestLayout();
 			}, 1500);
 		}
 
