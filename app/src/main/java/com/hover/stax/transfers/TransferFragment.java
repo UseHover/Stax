@@ -222,7 +222,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		Amplitude.getInstance().logEvent(getString(R.string.loaded_request_link));
 	}
 	private void indicateFieldState(String amount, String requesterNum) {
-		if(amount == null || amount.isEmpty()) amountEntry.requestFocus();
+		//if(amount == null || amount.isEmpty()) amountEntry.requestFocus();
 
 		if(requesterNum !=null && !requesterNum.isEmpty()) {
 			new Handler().postDelayed(() -> {
