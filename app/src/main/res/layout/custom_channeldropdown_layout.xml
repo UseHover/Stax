@@ -41,6 +41,6 @@
 	    android:layout_marginTop="@dimen/margin_26"
 	    android:layout_alignParentEnd="true"
 	    android:layout_alignParentTop="true"
-	    android:background="@color/transparent"
+	    android:background="@color/colorPrimary"
 	    />
 </RelativeLayout>

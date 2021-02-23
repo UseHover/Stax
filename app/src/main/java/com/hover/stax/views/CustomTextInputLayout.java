@@ -65,7 +65,7 @@ public class CustomTextInputLayout extends TextInputLayout {
 	public void setWarning(String message) {
 		if(message !=null) {
 			textInputLayout.setHelperText(message);
-			setHelperColorState(R.color.yellow_state_color);
+			setHelperColorState(R.color.yellow_state_color, true);
 			textInputLayout.setBoxStrokeColor(getResources().getColor(R.color.stax_state_yellow));
 			showWarningIcon();
 		}
@@ -75,7 +75,7 @@ public class CustomTextInputLayout extends TextInputLayout {
 	public void setInfo(String message) {
 		if(message !=null) {
 			textInputLayout.setHelperText(message);
-			setHelperColorState(R.color.blue_state_color);
+			setHelperColorState(R.color.blue_state_color, true);
 			textInputLayout.setBoxStrokeColor(getResources().getColor(R.color.stax_state_blue));
 			showInfoIcon();
 		}
@@ -85,13 +85,13 @@ public class CustomTextInputLayout extends TextInputLayout {
 	public void setSuccess(String message) {
 		if(message !=null) {
 			textInputLayout.setHelperText(message);
-			setHelperColorState(R.color.green_state_color);
+			setHelperColorState(R.color.green_state_color, true);
 			textInputLayout.setBoxStrokeColor(getResources().getColor(R.color.stax_state_green));
 			showSuccessIcon();
 		} else setNormal();
 	}
 	public void setNormal() {
-		setHelperColorState(R.color.offwhite_state_color);
+		setHelperColorState(R.color.offwhite_state_color, false);
 		textInputLayout.setHelperText(null);
 		textInputLayout.setError(null);
 		removeNoticeIcon();
@@ -100,13 +100,13 @@ public class CustomTextInputLayout extends TextInputLayout {
 	}
 
 	//PRIVATE METHODS
-	private void setHelperColorState(int id) {
+	private void setHelperColorState(int id, boolean requestFocus) {
 		try {
 			XmlResourceParser parser = getResources().getXml(id);
 			ColorStateList colors = ColorStateList.createFromXml(getResources(), parser);
 			textInputLayout.setHelperTextColor(colors);
 			textInputLayout.setHintTextColor(colors);
-			textInputLayout.requestFocus();
+			if(requestFocus) textInputLayout.requestFocus();
 		} catch (Exception e) { Utils.logErrorAndReportToFirebase(TAG, e.getMessage(), e); }
 	}
 	private void showSuccessIcon() {
