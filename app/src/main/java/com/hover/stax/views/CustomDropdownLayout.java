@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
-import android.text.Editable;
 import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -41,6 +40,7 @@ public class CustomDropdownLayout extends TextInputLayout {
 		autoCompleteTextView = findViewById(R.id.dropdownInputTextView);
 		dropDownIcon = findViewById(R.id.dropdownNoticeIcon);
 	}
+
 	private void getAttrs(Context context, AttributeSet attrs) {
 		TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CustomDropdownLayout, 0, 0);
 		try {
@@ -53,48 +53,54 @@ public class CustomDropdownLayout extends TextInputLayout {
 	}
 
 	private void fillAttr() {
-		if(hint !=null)  textInputLayout.setHint(hint);
+		if (hint != null) textInputLayout.setHint(hint);
 		autoCompleteTextView.setInputType(editable ? InputType.TYPE_TEXT_VARIATION_NORMAL : InputType.TYPE_NULL);
-		if(defaultText !=null && !defaultText.isEmpty()) autoCompleteTextView.setText(defaultText);
+		if (defaultText != null && !defaultText.isEmpty())
+			autoCompleteTextView.setText(defaultText);
 
 	}
+
 	//SET STATES
 	public void setError(String message) {
-		if(message !=null) {
+		if (message != null) {
 			textInputLayout.setError(message);
 			showErrorIcon();
+		} else {
+			setNormal();
 		}
-		else { setNormal(); }
 	}
 
 	public void setWarning(String message) {
-		if(message !=null) {
+		if (message != null) {
 			textInputLayout.setHelperText(message);
 			setHelperColorState(R.color.yellow_state_color, true);
 			textInputLayout.setBoxStrokeColor(getResources().getColor(R.color.stax_state_yellow));
 			showWarningIcon();
+		} else {
+			setNormal();
 		}
-		else { setNormal(); }
 	}
 
 	public void setInfo(String message) {
-		if(message !=null) {
+		if (message != null) {
 			textInputLayout.setHelperText(message);
 			setHelperColorState(R.color.blue_state_color, true);
 			textInputLayout.setBoxStrokeColor(getResources().getColor(R.color.stax_state_blue));
 			showInfoIcon();
+		} else {
+			setNormal();
 		}
-		else { setNormal(); }
 	}
 
 	public void setSuccess(String message) {
-		if(message !=null) {
+		if (message != null) {
 			textInputLayout.setHelperText(message);
 			setHelperColorState(R.color.green_state_color, true);
 			textInputLayout.setBoxStrokeColor(getResources().getColor(R.color.stax_state_green));
 			showSuccessIcon();
 		} else setNormal();
 	}
+
 	public void setNormal() {
 		setHelperColorState(R.color.offwhite_state_color, false);
 		textInputLayout.setHelperText(null);
@@ -105,32 +111,39 @@ public class CustomDropdownLayout extends TextInputLayout {
 	}
 
 	//PRIVATE METHODS
-	private void setHelperColorState(int id,  boolean requestFocus) {
+	private void setHelperColorState(int id, boolean requestFocus) {
 		try {
 			XmlResourceParser parser = getResources().getXml(id);
 			ColorStateList colors = ColorStateList.createFromXml(getResources(), parser);
 			textInputLayout.setHelperTextColor(colors);
 			textInputLayout.setHintTextColor(colors);
-			if(requestFocus) textInputLayout.requestFocus();
-		} catch (Exception e) { Utils.logErrorAndReportToFirebase(TAG, e.getMessage(), e); }
+			if (requestFocus) textInputLayout.requestFocus();
+		} catch (Exception e) {
+			Utils.logErrorAndReportToFirebase(TAG, e.getMessage(), e);
+		}
 	}
+
 	private void showSuccessIcon() {
 		dropDownIcon.setImageResource(R.drawable.ic_success_check_circle_24);
 		dropDownIcon.setVisibility(VISIBLE);
 	}
+
 	private void showErrorIcon() {
 		dropDownIcon.setImageResource(R.drawable.ic_error_warning_24dp);
 		dropDownIcon.setVisibility(VISIBLE);
 	}
+
 	private void showWarningIcon() {
 		dropDownIcon.setImageResource(R.drawable.ic_warning_yellow_24);
 		dropDownIcon.setVisibility(VISIBLE);
 	}
+
 	private void showInfoIcon() {
 		dropDownIcon.setImageResource(R.drawable.ic_info_24dp);
 		dropDownIcon.setVisibility(VISIBLE);
 	}
-	private void removeNoticeIcon(){
+
+	private void removeNoticeIcon() {
 		dropDownIcon.setImageResource(0);
 		dropDownIcon.setVisibility(GONE);
 	}
