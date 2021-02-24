@@ -95,27 +95,19 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 		recyclerView.setVisibility(channels != null && channels.size() > 0 ? VISIBLE : GONE);
 
 		((StaxCardView) view.findViewById(R.id.balance_card)).backButton.setVisibility(channels != null && channels.size() > 0  ? VISIBLE : GONE);
-		if(channels != null && channels.size() > 0) {
-			channelDropdown.toggleLink(true);
-			channelDropdown.removeObservers(channelDropdownViewModel, getViewLifecycleOwner());
-		}else {
-			channelDropdown.toggleLink(false);
-			channelDropdown.setObservers(channelDropdownViewModel, channelDropdown, getViewLifecycleOwner());
-		}
+
+		channelDropdown.toggleLink(channels != null && channels.size() > 0);
+		channelDropdown.setObservers(channelDropdownViewModel, getViewLifecycleOwner());
 	}
 
 	private void refreshBalances(View v) {
-		if (channelDropdown.getHighlighted() != null
-					|| (balancesViewModel.getActions().getValue() !=null
-					&& balancesViewModel.getActions().getValue().size() !=0)) {
-
+		if (channelDropdown.getHighlighted() != null) {
 			balancesViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
-					balancesViewModel.setAllRunning(v.getContext());
+				balancesViewModel.setAllRunning(v.getContext());
 			});
+			channelDropdownViewModel.setChannelSelected(channelDropdown.getHighlighted());
 
-			if(channelDropdown.getHighlighted() !=null) channelDropdownViewModel.setChannelSelected(channelDropdown.getHighlighted());
-
-		} else if (channelDropdownViewModel.getSelectedChannels().getValue() ==null || channelDropdownViewModel.getSelectedChannels().getValue().size() == 0)
+		} else if (channelDropdownViewModel.getSelectedChannels().getValue() == null || channelDropdownViewModel.getSelectedChannels().getValue().size() == 0)
 			channelDropdown.setError(getString(R.string.refresh_balance_error));
 		else
 			balancesViewModel.setAllRunning(v.getContext());

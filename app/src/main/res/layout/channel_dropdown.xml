@@ -18,11 +18,26 @@
 	    android:textColor="@color/brightBlue"
 	    android:padding="@dimen/margin_13"/>
 
-	<com.hover.stax.views.CustomDropdownLayout
+	<com.google.android.material.textfield.TextInputLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:id="@+id/channel_dropdown_input"
-	    app:editable="false"
-	    app:defaultText="@string/channels_error_nodata"
-	    app:hint_value="@string/link_account"/>
+		android:hint="@string/link_account">
+
+		<AutoCompleteTextView
+			android:id="@+id/channel_autoComplete"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:padding="@dimen/margin_13"
+			android:dropDownWidth="wrap_content"
+			android:background="@null"
+			android:editable="false"
+			android:textSize="@dimen/text_21"
+			android:textColor="@color/offWhite"
+			android:fontFamily="font-normal"
+			android:drawablePadding="@dimen/margin_13"
+			android:textCursorDrawable="@null"
+			app:errorTextColor="@color/bright_red"
+			android:text="@string/channels_error_nodata"/>
+	</com.google.android.material.textfield.TextInputLayout>
 </FrameLayout>

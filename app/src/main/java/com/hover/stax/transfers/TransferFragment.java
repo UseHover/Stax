@@ -18,7 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
-import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionSelect;
@@ -31,8 +30,7 @@ import com.hover.stax.utils.Constants;
 import com.hover.stax.requests.Request;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
-import com.hover.stax.views.CustomDropdownLayout;
-import com.hover.stax.views.CustomTextInputLayout;
+import com.hover.stax.views.StaxTextInputLayout;
 import com.hover.stax.views.Stax2LineItem;
 
 public class TransferFragment extends AbstractFormFragment implements ActionSelect.HighlightListener {
@@ -43,12 +41,12 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 
 	private EditText amountInput, noteInput;
 	private ActionSelect actionSelect;
-	private CustomDropdownLayout recipientLabel;
+	private StaxTextInputLayout recipientLabel;
 	private ChannelDropdown channelDropdown;
 	private AutoCompleteTextView recipientAutocomplete;
 	private ImageButton contactButton;
 	private Stax2LineItem recipientValue;
-	private CustomTextInputLayout amountEntry;
+	private StaxTextInputLayout amountEntry;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
@@ -70,13 +68,13 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 
 		recipientValue = root.findViewById(R.id.recipientValue);
 		amountEntry = root.findViewById(R.id.amountEntry);
-		amountInput = amountEntry.findViewById(R.id.textInputEditTextId);
+		amountInput = amountEntry.findViewById(R.id.amount_input);
 		actionSelect = root.findViewById(R.id.action_select);
 		recipientLabel = root.findViewById(R.id.recipientLabel);
 		channelDropdown = root.findViewById(R.id.channel_dropdown);
-		recipientAutocomplete = recipientLabel.findViewById(R.id.dropdownInputTextView);
+		recipientAutocomplete = recipientLabel.findViewById(R.id.recipient_autocomplete);
 		contactButton = root.findViewById(R.id.contact_button);
-		noteInput = root.findViewById(R.id.reasonEditText).findViewById(R.id.textInputEditTextId);
+		noteInput = root.findViewById(R.id.note_input);
 
 		amountInput.setText(transferViewModel.getAmount().getValue());
 		noteInput.setText(transferViewModel.getNote().getValue());
@@ -139,7 +137,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 			((TextView) root.findViewById(R.id.noteValue)).setText(note);
 		});
 
-		transferViewModel.getRequest().observe(getViewLifecycleOwner(), request -> { if (request != null) loadAndIndicateFieldState(request); });
+		transferViewModel.getRequest().observe(getViewLifecycleOwner(), request -> { if (request != null) load(request); });
 	}
 
 	protected void startListeners() {
@@ -212,22 +210,11 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		}
 	};
 
-	private void loadAndIndicateFieldState(Request r) {
+	private void load(Request r) {
 		channelDropdownViewModel.setChannelFromRequest(r);
 		amountInput.setText(r.amount);
 		recipientAutocomplete.setText(r.requester_number);
 		transferViewModel.setEditing(r.amount == null || r.amount.isEmpty());
-		indicateFieldState(r.amount, r.requester_number);
 		Amplitude.getInstance().logEvent(getString(R.string.loaded_request_link));
-	}
-	private void indicateFieldState(String amount, String requesterNum) {
-		if(amount == null || amount.isEmpty()) amountEntry.requestFocus();
-		if(requesterNum !=null && !requesterNum.isEmpty()) {
-			new Handler().postDelayed(() -> {
-				recipientLabel.setSuccess("");
-				channelDropdown.setSuccess("");
-			}, 1500);
-		}
-
 	}
 }

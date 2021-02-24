@@ -14,15 +14,8 @@
 		<attr name="showLink" format="boolean"/>
 	</declare-styleable>
 
-	<declare-styleable name="CustomTextInputLayout">
-		<attr name="hint" format="string" />
-		<attr name="android:inputType" format="string"/>
-	</declare-styleable>
-
-	<declare-styleable name="CustomDropdownLayout">
-		<attr name="hint_value" format="string" />
-		<attr name="editable" format="boolean"/>
-		<attr name="defaultText" format="string"/>
+	<declare-styleable name="StaxTextInputLayout">
+		<attr name="android:hint" />
 	</declare-styleable>
 
 	<declare-styleable name="CustomSwipeRefreshLayout">

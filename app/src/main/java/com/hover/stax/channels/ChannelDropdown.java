@@ -17,18 +17,17 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
-import com.hover.stax.fieldstates.FieldState;
 import com.hover.stax.utils.Utils;
-import com.hover.stax.views.CustomDropdownLayout;
+import com.hover.stax.views.StaxTextInputLayout;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.List;
 
-public class ChannelDropdown extends TextInputLayout implements Target {
+public class ChannelDropdown extends StaxTextInputLayout implements Target {
 	private static String TAG = "ChannelDropdown";
 
-	private CustomDropdownLayout input;
+	private TextInputLayout input;
 	private AutoCompleteTextView dropdownView;
 	private TextView linkView;
 
@@ -41,9 +40,9 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 	public ChannelDropdown(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		getAttrs(context, attrs);
-		LayoutInflater.from(context).inflate(R.layout.channel_dropdown, this);
+		inflate(context, R.layout.channel_dropdown, this);
 		input = findViewById(R.id.channel_dropdown_input);
-		dropdownView =input.findViewById(R.id.dropdownInputTextView);
+		dropdownView = findViewById(R.id.channel_autoComplete);
 		linkView = findViewById(R.id.new_account_link);
 		fillFromAttrs();
 	}
@@ -63,7 +62,7 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		if (label != null && !label.isEmpty())
 			input.setHint(label);
 		linkView.setOnClickListener(v -> {
-			if(linkViewClickListener !=null) linkViewClickListener.navigateLinkAccountFragment();
+			if (linkViewClickListener != null) linkViewClickListener.navigateLinkAccountFragment();
 		});
 		toggleLink(showLink);
 	}
@@ -73,6 +72,7 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 
 	public void updateChannels(List<Channel> channels) {
 		if (channels == null || channels.size() == 0) return;
+		Log.e(TAG, "found some channels " + channels.size());
 		if (highlightedChannel == null) setDropdownValue(null);
 		ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(ChannelDropdownAdapter.sort(channels, showSelected), getContext());
 		dropdownView.setAdapter(channelDropdownAdapter);
@@ -124,45 +124,22 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		dropdownView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0);
 	}
 
-	public void setFieldState(FieldState fieldState) {
-		if(fieldState == null) input.setNormal();
-		else {
-			switch (fieldState.getFieldStateType()) {
-				case INFO: input.setInfo(fieldState.getMessage());
-				break;
-				case WARNING: input.setWarning(fieldState.getMessage());
-				break;
-				case ERROR: input.setError(fieldState.getMessage());
-				break;
-				case SUCCESS: input.setSuccess(fieldState.getMessage());
-				break;
-			}
-		}
-	}
-
-	public void setHelper(String message) {
-		input.setInfo(message);
-	}
-	public void setSuccess(String message) {
-		input.setSuccess(message);
-	}
-
 	public void reset() {
 		if (Utils.isInternetConnected(getContext())) setDropdownValue(null);
 		highlightedChannel = null;
 	}
 
-	public void setObservers(@NonNull ChannelDropdownViewModel viewModel, @NonNull ChannelDropdown dropdown, @NonNull LifecycleOwner lifecycleOwner) {
+	public void setObservers(@NonNull ChannelDropdownViewModel viewModel, @NonNull LifecycleOwner lifecycleOwner) {
 		viewModel.getSims().observe(lifecycleOwner, sims -> Log.i(TAG, "Got sims: " + sims.size()));
 		viewModel.getSimHniList().observe(lifecycleOwner, simList -> Log.i(TAG, "Got new sim hni list: " + simList));
-		viewModel.getSimChannels().observe(lifecycleOwner, dropdown::updateChannels);
-		viewModel.getChannels().observe(lifecycleOwner, dropdown::updateChannels);
-		viewModel.getSimChannels().observe(lifecycleOwner, dropdown::updateChannels);
+		viewModel.getSimChannels().observe(lifecycleOwner, this::updateChannels);
+		viewModel.getChannels().observe(lifecycleOwner, this::updateChannels);
 		viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> {
-			if (channels != null && channels.size() > 0) dropdown.setFieldState(null);
+			if (channels != null && channels.size() > 0) this.setError(null);
 		});
-		viewModel.getFieldState().observe(lifecycleOwner, dropdown::setFieldState);
-		viewModel.getHelper().observe(lifecycleOwner, helper -> dropdown.setHelper(helper != null ?  getContext().getString(helper) : null));
+		viewModel.getChannelActions().observe(lifecycleOwner, actions -> Log.i(TAG, "Got new actions: " + actions));
+		viewModel.getHelper().observe(lifecycleOwner, helper -> this.setState(helper != null ?  getContext().getString(helper) : null, NONE));
+		viewModel.getError().observe(lifecycleOwner, this::setError);
 	}
 	public void removeObservers(@NonNull ChannelDropdownViewModel viewModel,  @NonNull LifecycleOwner lifecycleOwner) {
 		viewModel.getSims().removeObservers(lifecycleOwner);
@@ -171,8 +148,8 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		viewModel.getChannels().removeObservers(lifecycleOwner);
 		viewModel.getSimChannels().removeObservers(lifecycleOwner);
 		viewModel.getSelectedChannels().removeObservers(lifecycleOwner);
-		viewModel.getFieldState().removeObservers(lifecycleOwner);
 		viewModel.getHelper().removeObservers(lifecycleOwner);
+		viewModel.getError().removeObservers(lifecycleOwner);
 	}
 
 	public interface HighlightListener {

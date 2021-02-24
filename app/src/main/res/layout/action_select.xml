@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/actionSelect"
-    android:orientation="vertical">
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/actionSelect"
+	android:orientation="vertical">
 
-	<com.hover.stax.views.CustomDropdownLayout
+	<com.hover.stax.views.StaxTextInputLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:id="@+id/action_dropdown_input"
-	    app:editable="false"
 	    android:layout_marginTop="-20dp"
 	    android:visibility="gone"
-	    app:hint_value="@string/network_label"/>
+	    android:hint="@string/network_label">
+
+		<AutoCompleteTextView
+			android:id="@+id/action_autoComplete"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:padding="@dimen/margin_13"
+			android:drawablePadding="@dimen/margin_13"
+			android:dropDownWidth="wrap_content"
+			android:background="@null"
+			android:editable="false"
+			android:textSize="@dimen/text_21"
+			android:fontFamily="font-normal"
+			android:textColor="@color/offWhite"
+			android:textCursorDrawable="@null" />
+	</com.hover.stax.views.StaxTextInputLayout>
 
 	<TextView
 		android:id="@+id/header"
@@ -22,7 +36,7 @@
 		android:layout_marginHorizontal="@dimen/margin_10"
 		android:layout_marginBottom="@dimen/margin_13"
 		android:textSize="@dimen/text_21"
-	    	android:fontFamily="font-normal"
+        android:fontFamily="font-normal"
 		android:text="@string/airtime_who_header"
 		android:visibility="gone"/>
 

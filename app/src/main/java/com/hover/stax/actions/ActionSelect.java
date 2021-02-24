@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -17,9 +16,8 @@ import android.widget.TextView;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
-import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
-import com.hover.stax.views.CustomDropdownLayout;
+import com.hover.stax.views.StaxTextInputLayout;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -29,7 +27,7 @@ import java.util.List;
 public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedChangeListener, Target {
 	private static String TAG = "ActionSelect";
 
-	private CustomDropdownLayout input;
+	private StaxTextInputLayout input;
 	private AutoCompleteTextView dropdownView;
 	private TextView radioHeader;
 	private RadioGroup isSelfRadio;
@@ -46,7 +44,7 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 	}
 	private void init() {
 		input = findViewById(R.id.action_dropdown_input);
-		dropdownView = input.findViewById(R.id.dropdownInputTextView);
+		dropdownView = findViewById(R.id.action_autoComplete);
 		radioHeader = findViewById(R.id.header);
 		isSelfRadio = findViewById(R.id.isSelfRadioGroup);
 		this.setVisibility(GONE);
@@ -88,17 +86,15 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 	public void selectRecipientNetwork(Action action) {
 		if (action.equals(highlightedAction)) return;
 
-		clearInputError();
 		setDropDownValue(action);
 		setRadioValuesIfRequired(action);
 	}
 
-	private void clearInputError() {input.setNormal();}
 	private void setRadioValuesIfRequired(Action action) {
 		List<Action> options = getWhoMeOptions(action.recipientInstitutionId());
 		if (options.size() == 1) {
 			if (!options.get(0).requiresRecipient())
-				input.setInfo(getContext().getString(R.string.self_only_money_warning));
+				input.setHelperText(getContext().getString(R.string.self_only_money_warning));
 			selectAction(action);
 			isSelfRadio.setVisibility(GONE);
 			radioHeader.setVisibility(GONE);

@@ -86,7 +86,7 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
 		RecipientViewHolder(@NonNull View itemView) {
 			super(itemView);
 			view = itemView;
-			dropdown = itemView.findViewById(R.id.dropdownInputTextView);
+			dropdown = itemView.findViewById(R.id.recipient_autocomplete);
 			contactButton = itemView.findViewById(R.id.contact_button);
 		}
 	}
