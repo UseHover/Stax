@@ -1,7 +1,6 @@
 package com.hover.stax.transfers;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -18,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
-import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionSelect;
@@ -31,8 +29,8 @@ import com.hover.stax.utils.Constants;
 import com.hover.stax.requests.Request;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
-import com.hover.stax.views.CustomDropdownLayout;
-import com.hover.stax.views.CustomTextInputLayout;
+import com.hover.stax.views.StaxDropdownLayout;
+import com.hover.stax.views.StaxTextInputLayout;
 import com.hover.stax.views.Stax2LineItem;
 
 public class TransferFragment extends AbstractFormFragment implements ActionSelect.HighlightListener {
@@ -43,12 +41,12 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 
 	private EditText amountInput, noteInput;
 	private ActionSelect actionSelect;
-	private CustomDropdownLayout recipientLabel;
+	private StaxDropdownLayout recipientLabel;
 	private ChannelDropdown channelDropdown;
 	private AutoCompleteTextView recipientAutocomplete;
 	private ImageButton contactButton;
 	private Stax2LineItem recipientValue;
-	private CustomTextInputLayout amountEntry;
+	private StaxTextInputLayout amountEntry;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);

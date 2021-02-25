@@ -16,7 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDropdownViewModel;
@@ -24,8 +23,8 @@ import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.transfers.AbstractFormFragment;
-import com.hover.stax.views.CustomDropdownLayout;
-import com.hover.stax.views.CustomTextInputLayout;
+import com.hover.stax.views.StaxDropdownLayout;
+import com.hover.stax.views.StaxTextInputLayout;
 import com.hover.stax.views.Stax2LineItem;
 import com.hover.stax.views.StaxCardView;
 
@@ -111,17 +110,17 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 		});
 
 		requestViewModel.getAmountError().observe(getViewLifecycleOwner(), error -> {
-			((CustomTextInputLayout) root.findViewById(R.id.amountEntry)).setError((error != null ? getString(error) : null));
+			((StaxTextInputLayout) root.findViewById(R.id.amountEntry)).setError((error != null ? getString(error) : null));
 		});
 
 		requestViewModel.getRequesteeError().observe(getViewLifecycleOwner(), recipientError -> {
 			if (recipientInputList.getChildAt(0) == null) return;
-			CustomDropdownLayout v = recipientInputList.getChildAt(0).findViewById(R.id.recipientLabel);
+			StaxDropdownLayout v = recipientInputList.getChildAt(0).findViewById(R.id.recipientLabel);
 			v.setError((recipientError != null ? getString(recipientError) : null));
 		});
 
 		requestViewModel.getRequesterNumberError().observe(getViewLifecycleOwner(), accountNumberError->{
-			CustomTextInputLayout v = root.findViewById(R.id.accountNumberEntry);
+			StaxTextInputLayout v = root.findViewById(R.id.accountNumberEntry);
 			v.setError((accountNumberError != null ? getString(accountNumberError) : null));
 		});
 

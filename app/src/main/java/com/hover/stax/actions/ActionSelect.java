@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -17,9 +16,8 @@ import android.widget.TextView;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
-import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
-import com.hover.stax.views.CustomDropdownLayout;
+import com.hover.stax.views.StaxDropdownLayout;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -29,7 +27,7 @@ import java.util.List;
 public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedChangeListener, Target {
 	private static String TAG = "ActionSelect";
 
-	private CustomDropdownLayout input;
+	private StaxDropdownLayout input;
 	private AutoCompleteTextView dropdownView;
 	private TextView radioHeader;
 	private RadioGroup isSelfRadio;

@@ -15,14 +15,14 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.utils.Utils;
 
-public class CustomTextInputLayout extends TextInputLayout {
+public class StaxTextInputLayout extends TextInputLayout {
     private final String TAG = "CustomTextInputLayout";
 	private String hint;
 	private int inputType;
 	private TextInputLayout textInputLayout;
 	private TextInputEditText textInputEditText;
 
-	public CustomTextInputLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
+	public StaxTextInputLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
 		super(context, attrs);
 
 		getAttrs(context,attrs);
@@ -36,9 +36,9 @@ public class CustomTextInputLayout extends TextInputLayout {
 		textInputEditText = findViewById(R.id.textInputEditTextId);
 	}
 	private void getAttrs(Context context, AttributeSet attrs) {
-		TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CustomTextInputLayout, 0, 0);
+		TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.StaxTextInputLayout, 0, 0);
 		try {
-			hint = a.getString(R.styleable.CustomTextInputLayout_hint);
+			hint = a.getString(R.styleable.StaxTextInputLayout_hint);
 			inputType = a.getInt(R.styleable.CustomTextInputLayout_android_inputType, 0);
 		} finally {
 			a.recycle();

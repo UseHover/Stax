@@ -14,12 +14,12 @@
 		<attr name="showLink" format="boolean"/>
 	</declare-styleable>
 
-	<declare-styleable name="CustomTextInputLayout">
+	<declare-styleable name="StaxTextInputLayout">
 		<attr name="hint" format="string" />
 		<attr name="android:inputType" format="string"/>
 	</declare-styleable>
 
-	<declare-styleable name="CustomDropdownLayout">
+	<declare-styleable name="StaxDropdownLayout">
 		<attr name="hint_value" format="string" />
 		<attr name="editable" format="boolean"/>
 		<attr name="defaultText" format="string"/>

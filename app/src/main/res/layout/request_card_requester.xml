@@ -11,7 +11,7 @@
 		android:layout_height="wrap_content"
 		app:label="@string/channel_label"/>
 
-	<com.hover.stax.views.CustomTextInputLayout
+	<com.hover.stax.views.StaxTextInputLayout
 	    android:id="@+id/accountNumberEntry"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"

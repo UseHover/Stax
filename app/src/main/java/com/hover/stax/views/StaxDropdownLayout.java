@@ -17,7 +17,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.utils.Utils;
 
-public class CustomDropdownLayout extends TextInputLayout {
+public class StaxDropdownLayout extends TextInputLayout {
 
 	private final String TAG = "CustomDropdownLayout";
 	private String hint, defaultText;
@@ -26,7 +26,7 @@ public class CustomDropdownLayout extends TextInputLayout {
 	private AutoCompleteTextView autoCompleteTextView;
 	private ImageView dropDownIcon;
 
-	public CustomDropdownLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
+	public StaxDropdownLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
 		super(context, attrs);
 		getAttrs(context, attrs);
 		LayoutInflater.from(context).inflate(R.layout.custom_channeldropdown_layout, this);
@@ -41,11 +41,11 @@ public class CustomDropdownLayout extends TextInputLayout {
 	}
 
 	private void getAttrs(Context context, AttributeSet attrs) {
-		TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CustomDropdownLayout, 0, 0);
+		TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.StaxDropdownLayout, 0, 0);
 		try {
-			hint = a.getString(R.styleable.CustomDropdownLayout_hint_value);
-			defaultText = a.getString(R.styleable.CustomDropdownLayout_defaultText);
-			editable = a.getBoolean(R.styleable.CustomDropdownLayout_editable, true);
+			hint = a.getString(R.styleable.StaxDropdownLayout_hint_value);
+			defaultText = a.getString(R.styleable.StaxDropdownLayout_defaultText);
+			editable = a.getBoolean(R.styleable.StaxDropdownLayout_editable, true);
 		} finally {
 			a.recycle();
 		}

@@ -18,7 +18,7 @@
 	    android:textColor="@color/brightBlue"
 	    android:padding="@dimen/margin_13"/>
 
-	<com.hover.stax.views.CustomDropdownLayout
+	<com.hover.stax.views.StaxDropdownLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:id="@+id/channel_dropdown_input"

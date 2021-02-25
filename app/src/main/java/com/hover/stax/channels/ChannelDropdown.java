@@ -15,20 +15,19 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.lifecycle.LifecycleOwner;
 
-import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.fieldstates.FieldState;
 import com.hover.stax.utils.Utils;
-import com.hover.stax.views.CustomDropdownLayout;
+import com.hover.stax.views.StaxDropdownLayout;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.List;
 
-public class ChannelDropdown extends CustomDropdownLayout implements Target {
+public class ChannelDropdown extends StaxDropdownLayout implements Target {
 	private static String TAG = "ChannelDropdown";
 
-	private CustomDropdownLayout input;
+	private StaxDropdownLayout input;
 	private AutoCompleteTextView dropdownView;
 	private TextView linkView;
 

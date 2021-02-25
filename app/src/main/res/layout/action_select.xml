@@ -6,7 +6,7 @@
     android:id="@+id/actionSelect"
     android:orientation="vertical">
 
-	<com.hover.stax.views.CustomDropdownLayout
+	<com.hover.stax.views.StaxDropdownLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:id="@+id/action_dropdown_input"
