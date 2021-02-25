@@ -25,7 +25,7 @@ import com.squareup.picasso.Target;
 
 import java.util.List;
 
-public class ChannelDropdown extends TextInputLayout implements Target {
+public class ChannelDropdown extends CustomDropdownLayout implements Target {
 	private static String TAG = "ChannelDropdown";
 
 	private CustomDropdownLayout input;

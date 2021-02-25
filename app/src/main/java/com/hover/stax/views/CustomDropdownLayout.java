@@ -34,7 +34,6 @@ public class CustomDropdownLayout extends TextInputLayout {
 		fillAttr();
 	}
 
-	//INITIALIZATIONS
 	private void initViews() {
 		textInputLayout = findViewById(R.id.dropdownInputLayout);
 		autoCompleteTextView = findViewById(R.id.dropdownInputTextView);
@@ -62,7 +61,7 @@ public class CustomDropdownLayout extends TextInputLayout {
 	}
 
 
-	//SET STATES
+
 	public void setError(String message) {
 		if (message != null) {
 			textInputLayout.setError(message);
@@ -107,7 +106,6 @@ public class CustomDropdownLayout extends TextInputLayout {
 		removeNoticeIcon();
 	}
 
-	//PRIVATE METHODS
 	private void setHelperColorState(int id) {
 		try {
 			XmlResourceParser parser = getResources().getXml(id);

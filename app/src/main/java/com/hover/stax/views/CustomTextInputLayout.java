@@ -31,7 +31,6 @@ public class CustomTextInputLayout extends TextInputLayout {
 		fillAttr();
 	}
 
-	//INITIALIZATIONS
 	private void initViews() {
 		textInputLayout = findViewById(R.id.textInputLayoutId);
 		textInputEditText = findViewById(R.id.textInputEditTextId);
@@ -50,7 +49,6 @@ public class CustomTextInputLayout extends TextInputLayout {
 		if(inputType >0) textInputEditText.setInputType(inputType);
 	}
 
-	//SET STATES
 	public void setError(String message) {
 		if(message !=null) {
 			textInputLayout.setError(message);
@@ -92,7 +90,6 @@ public class CustomTextInputLayout extends TextInputLayout {
 
 	}
 
-	//PRIVATE METHODS
 	private void setHelperColorState(int id) {
 		try {
 			XmlResourceParser parser = getResources().getXml(id);

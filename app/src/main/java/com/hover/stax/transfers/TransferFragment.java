@@ -139,7 +139,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 			((TextView) root.findViewById(R.id.noteValue)).setText(note);
 		});
 
-		transferViewModel.getRequest().observe(getViewLifecycleOwner(), request -> { if (request != null) loadAndIndicateFieldState(request); });
+		transferViewModel.getRequest().observe(getViewLifecycleOwner(), request -> { if (request != null) load(request); });
 	}
 
 	protected void startListeners() {
@@ -212,22 +212,19 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		}
 	};
 
-	private void loadAndIndicateFieldState(Request r) {
+	private void load(Request r) {
 		channelDropdownViewModel.setChannelFromRequest(r);
 		amountInput.setText(r.amount);
 		recipientAutocomplete.setText(r.requester_number);
 		transferViewModel.setEditing(r.amount == null || r.amount.isEmpty());
-		indicateFieldState(r.amount, r.requester_number);
+		forceSetFieldStates(r.amount, r.requester_number);
 		Amplitude.getInstance().logEvent(getString(R.string.loaded_request_link));
 	}
-	private void indicateFieldState(String amount, String requesterNum) {
+	private void forceSetFieldStates(String amount, String requesterNum) {
 		if(amount == null || amount.isEmpty()) amountEntry.requestFocus();
 		if(requesterNum !=null && !requesterNum.isEmpty()) {
-			new Handler().postDelayed(() -> {
-				recipientLabel.setSuccess("");
-				channelDropdown.setSuccess("");
-			}, 1500);
+			recipientLabel.setSuccess("");
+			channelDropdown.setSuccess("");
 		}
-
 	}
 }
