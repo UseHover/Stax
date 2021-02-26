@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
+import com.hover.stax.fieldstates.FieldState;
 import com.hover.stax.utils.Utils;
 
 public class StaxDropdownLayout extends TextInputLayout {
@@ -56,11 +57,26 @@ public class StaxDropdownLayout extends TextInputLayout {
 		autoCompleteTextView.setInputType(editable ? InputType.TYPE_TEXT_VARIATION_NORMAL : InputType.TYPE_NULL);
 		if (defaultText != null && !defaultText.isEmpty()) autoCompleteTextView.setText(defaultText);
 	}
+
 	public void setHint(String message) {
 		textInputLayout.setHint(message);
 	}
 
-
+	public void setFieldState(FieldState fieldState) {
+		if(fieldState == null) setNormal();
+		else {
+			switch (fieldState.getFieldStateType()) {
+				case INFO: setInfo(fieldState.getMessage());
+					break;
+				case WARNING: setWarning(fieldState.getMessage());
+					break;
+				case ERROR: setError(fieldState.getMessage());
+					break;
+				case SUCCESS: setSuccess(fieldState.getMessage());
+					break;
+			}
+		}
+	}
 
 	public void setError(String message) {
 		if (message != null) {

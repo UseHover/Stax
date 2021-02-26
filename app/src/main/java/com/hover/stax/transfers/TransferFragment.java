@@ -42,7 +42,6 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 	private EditText amountInput, noteInput;
 	private ActionSelect actionSelect;
 	private StaxDropdownLayout recipientLabel;
-	private ChannelDropdown channelDropdown;
 	private AutoCompleteTextView recipientAutocomplete;
 	private ImageButton contactButton;
 	private Stax2LineItem recipientValue;
@@ -71,7 +70,6 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		amountInput = amountEntry.findViewById(R.id.textInputEditTextId);
 		actionSelect = root.findViewById(R.id.action_select);
 		recipientLabel = root.findViewById(R.id.recipientLabel);
-		channelDropdown = root.findViewById(R.id.channel_dropdown);
 		recipientAutocomplete = recipientLabel.findViewById(R.id.dropdownInputTextView);
 		contactButton = root.findViewById(R.id.contact_button);
 		noteInput = root.findViewById(R.id.reasonEditText).findViewById(R.id.textInputEditTextId);
@@ -114,8 +112,8 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		actionSelectViewModel.getActiveActionError().observe(getViewLifecycleOwner(), error -> actionSelect.setError(error));
 
 		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> ((TextView) root.findViewById(R.id.amountValue)).setText(Utils.formatAmount(amount)));
-		transferViewModel.getAmountError().observe(getViewLifecycleOwner(), amountError -> {
-			amountEntry.setError((amountError != null ? getString(amountError) : null));
+		transferViewModel.getAmountFieldState().observe(getViewLifecycleOwner(), amountState -> {
+			amountEntry.setFieldState(amountState);
 		});
 
 		transferViewModel.getRecentContacts().observe(getViewLifecycleOwner(), contacts -> {
@@ -128,8 +126,8 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 			recipientValue.setContact(contact);
 		});
 
-		transferViewModel.getRecipientError().observe(getViewLifecycleOwner(), recipientError -> {
-			recipientLabel.setError((recipientError != null ? getString(recipientError) : null));
+		transferViewModel.getRecipientFieldState().observe(getViewLifecycleOwner(), recipientState -> {
+			recipientLabel.setFieldState(recipientState);
 		});
 
 		transferViewModel.getNote().observe(getViewLifecycleOwner(), note -> {
@@ -215,14 +213,13 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		amountInput.setText(r.amount);
 		recipientAutocomplete.setText(r.requester_number);
 		transferViewModel.setEditing(r.amount == null || r.amount.isEmpty());
-		forceSetFieldStates(r.amount, r.requester_number);
+		if(r.amount == null || r.amount.isEmpty()) amountEntry.requestFocus();
+		forceRunValidations();
 		Amplitude.getInstance().logEvent(getString(R.string.loaded_request_link));
 	}
-	private void forceSetFieldStates(String amount, String requesterNum) {
-		if(amount == null || amount.isEmpty()) amountEntry.requestFocus();
-		if(requesterNum !=null && !requesterNum.isEmpty()) {
-			recipientLabel.setSuccess("");
-			channelDropdown.setSuccess("");
-		}
+	void forceRunValidations() {
+		channelDropdownViewModel.validates();
+		actionSelectViewModel.validates();
+		transferViewModel.validates(actionSelectViewModel.getActiveAction().getValue());
 	}
 }

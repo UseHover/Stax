@@ -15,6 +15,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.fieldstates.FieldState;
 import com.hover.stax.utils.Utils;
@@ -24,7 +25,7 @@ import com.squareup.picasso.Target;
 
 import java.util.List;
 
-public class ChannelDropdown extends StaxDropdownLayout implements Target {
+public class ChannelDropdown extends TextInputLayout implements Target {
 	private static String TAG = "ChannelDropdown";
 
 	private StaxDropdownLayout input;
@@ -123,22 +124,7 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 		dropdownView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0);
 	}
 
-	public void setFieldState(FieldState fieldState) {
-		if(fieldState == null) input.setNormal();
-		else {
-			switch (fieldState.getFieldStateType()) {
-				case INFO: input.setInfo(fieldState.getMessage());
-				break;
-				case WARNING: input.setWarning(fieldState.getMessage());
-				break;
-				case ERROR: input.setError(fieldState.getMessage());
-				break;
-				case SUCCESS: input.setSuccess(fieldState.getMessage());
-				break;
-			}
-		}
-	}
-
+	public void setFieldState(FieldState fieldState) { input.setFieldState(fieldState); }
 	public void setHelper(String message) {
 		input.setInfo(message);
 	}

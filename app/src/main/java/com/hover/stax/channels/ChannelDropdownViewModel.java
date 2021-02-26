@@ -254,7 +254,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 			valid = false;
 			String fieldMessage = getApplication().getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getApplication(), type.getValue()));
 			fieldState.setValue(new FieldState(FieldStateType.ERROR, fieldMessage));
-		}
+		} else fieldState.setValue(new FieldState(FieldStateType.SUCCESS, ""));
 		return valid;
 	}
 
