@@ -3,35 +3,17 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	xmlns:tools="http://schemas.android.com/tools"
 	android:orientation="horizontal"
 	android:id="@+id/recipient_entry"
 	android:layout_marginTop="-20dp">
 
-	<com.hover.stax.views.StaxTextInputLayout
-	    android:layout_width="0dp"
-	    android:layout_height="wrap_content"
-	    android:id="@+id/recipientLabel"
+	<com.hover.stax.views.StaxDropdownLayout
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:id="@+id/recipientLabel"
 		android:hint="@string/recipientphone_label"
-	    android:layout_weight="1" >
-
-		<AutoCompleteTextView
-			android:id="@+id/recipient_autocomplete"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:padding="@dimen/margin_13"
-			android:fontFamily="font-normal"
-			android:paddingEnd="@dimen/margin_68"
-			tools:ignore="RtlSymmetry"
-			android:dropDownWidth="wrap_content"
-			android:background="@null"
-			android:textSize="@dimen/text_21"
-			android:textColor="@color/offWhite"
-			android:textCursorDrawable="@null"
-			android:dropDownHeight="135dp"
-			android:completionThreshold="0"
-			android:inputType="textPersonName"/>
-	</com.hover.stax.views.StaxTextInputLayout>
+		android:editable="true"
+		android:layout_weight="1" />
 
 	<ImageButton android:id="@+id/contact_button"
 	    android:layout_width="wrap_content"

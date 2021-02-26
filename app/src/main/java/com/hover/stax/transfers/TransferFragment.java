@@ -1,7 +1,6 @@
 package com.hover.stax.transfers;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -30,6 +29,7 @@ import com.hover.stax.utils.Constants;
 import com.hover.stax.requests.Request;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.views.StaxDropdownLayout;
 import com.hover.stax.views.StaxTextInputLayout;
 import com.hover.stax.views.Stax2LineItem;
 
@@ -41,7 +41,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 
 	private EditText amountInput, noteInput;
 	private ActionSelect actionSelect;
-	private StaxTextInputLayout recipientLabel;
+	private StaxDropdownLayout recipientLabel;
 	private ChannelDropdown channelDropdown;
 	private AutoCompleteTextView recipientAutocomplete;
 	private ImageButton contactButton;
@@ -68,13 +68,13 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 
 		recipientValue = root.findViewById(R.id.recipientValue);
 		amountEntry = root.findViewById(R.id.amountEntry);
-		amountInput = amountEntry.findViewById(R.id.amount_input);
+		amountInput = amountEntry.findViewById(R.id.inputEditText);
 		actionSelect = root.findViewById(R.id.action_select);
 		recipientLabel = root.findViewById(R.id.recipientLabel);
 		channelDropdown = root.findViewById(R.id.channel_dropdown);
-		recipientAutocomplete = recipientLabel.findViewById(R.id.recipient_autocomplete);
+		recipientAutocomplete = recipientLabel.findViewById(R.id.autoCompleteView);
 		contactButton = root.findViewById(R.id.contact_button);
-		noteInput = root.findViewById(R.id.note_input);
+		noteInput = root.findViewById(R.id.noteInput).findViewById(R.id.inputEditText);
 
 		amountInput.setText(transferViewModel.getAmount().getValue());
 		noteInput.setText(transferViewModel.getNote().getValue());

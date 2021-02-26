@@ -2,8 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-     	android:layout_marginTop="-40dp"
-      android:layout_marginBottom="0dp"
+	android:layout_marginTop="-40dp"
+	android:layout_marginBottom="0dp"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:orientation="vertical">
 
@@ -18,26 +18,11 @@
 	    android:textColor="@color/brightBlue"
 	    android:padding="@dimen/margin_13"/>
 
-	<com.google.android.material.textfield.TextInputLayout
+	<com.hover.stax.views.StaxDropdownLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:id="@+id/channel_dropdown_input"
-		android:hint="@string/link_account">
-
-		<AutoCompleteTextView
-			android:id="@+id/channel_autoComplete"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:padding="@dimen/margin_13"
-			android:dropDownWidth="wrap_content"
-			android:background="@null"
-			android:editable="false"
-			android:textSize="@dimen/text_21"
-			android:textColor="@color/offWhite"
-			android:fontFamily="font-normal"
-			android:drawablePadding="@dimen/margin_13"
-			android:textCursorDrawable="@null"
-			app:errorTextColor="@color/bright_red"
-			android:text="@string/channels_error_nodata"/>
-	</com.google.android.material.textfield.TextInputLayout>
+		android:editable="false"
+		android:text="@string/channels_error_nodata"
+		android:hint="@string/link_account" />
 </FrameLayout>

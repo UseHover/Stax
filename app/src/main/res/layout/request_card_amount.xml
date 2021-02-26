@@ -5,17 +5,4 @@
     android:id="@+id/amountEntry"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-	android:hint="@string/amount_label_opt">
-
-	<com.google.android.material.textfield.TextInputEditText
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:padding="@dimen/margin_13"
-		android:textSize="@dimen/text_21"
-		android:fontFamily="font-normal"
-		android:textColor="@color/offWhite"
-		android:textCursorDrawable="@null"
-		android:inputType="numberDecimal"
-		android:id="@+id/amount_input"/>
-
-</com.hover.stax.views.StaxTextInputLayout>
+	android:hint="@string/amount_label_opt" />

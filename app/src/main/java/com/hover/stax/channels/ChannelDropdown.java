@@ -6,8 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.widget.AutoCompleteTextView;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,24 +15,26 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.lifecycle.LifecycleOwner;
 
-import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.utils.Utils;
-import com.hover.stax.views.StaxTextInputLayout;
+import com.hover.stax.views.AbstractColoredInput;
+import com.hover.stax.views.StaxDropdownLayout;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.List;
 
-public class ChannelDropdown extends StaxTextInputLayout implements Target {
+public class ChannelDropdown extends FrameLayout implements Target {
 	private static String TAG = "ChannelDropdown";
 
-	private TextInputLayout input;
 	private AutoCompleteTextView dropdownView;
 	private TextView linkView;
 
 	private String label;
 	private boolean showSelected, showLink;
+
+	private StaxDropdownLayout textInputLayout;
+
 	private Channel highlightedChannel;
 	private HighlightListener highlightListener;
 	private LinkViewClickListener linkViewClickListener;
@@ -41,8 +43,8 @@ public class ChannelDropdown extends StaxTextInputLayout implements Target {
 		super(context, attrs);
 		getAttrs(context, attrs);
 		inflate(context, R.layout.channel_dropdown, this);
-		input = findViewById(R.id.channel_dropdown_input);
-		dropdownView = findViewById(R.id.channel_autoComplete);
+		textInputLayout = findViewById(R.id.channel_dropdown_input);
+		dropdownView = findViewById(R.id.autoCompleteView);
 		linkView = findViewById(R.id.new_account_link);
 		fillFromAttrs();
 	}
@@ -60,7 +62,7 @@ public class ChannelDropdown extends StaxTextInputLayout implements Target {
 
 	private void fillFromAttrs() {
 		if (label != null && !label.isEmpty())
-			input.setHint(label);
+			textInputLayout.setHint(label);
 		linkView.setOnClickListener(v -> {
 			if (linkViewClickListener != null) linkViewClickListener.navigateLinkAccountFragment();
 		});
@@ -103,11 +105,13 @@ public class ChannelDropdown extends StaxTextInputLayout implements Target {
 
 	public void toggleLink(boolean show) {
 		linkView.setVisibility(show ? VISIBLE : GONE);
-		input.setVisibility(show ? GONE : VISIBLE);
+		textInputLayout.setVisibility(show ? GONE : VISIBLE);
 		if (show) {
 			reset();
 		}
 	}
+
+	public void setError(String message) { textInputLayout.setError(message); }
 
 	@Override
 	public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -135,11 +139,11 @@ public class ChannelDropdown extends StaxTextInputLayout implements Target {
 		viewModel.getSimChannels().observe(lifecycleOwner, this::updateChannels);
 		viewModel.getChannels().observe(lifecycleOwner, this::updateChannels);
 		viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> {
-			if (channels != null && channels.size() > 0) this.setError(null);
+			if (channels != null && channels.size() > 0) textInputLayout.setError(null);
 		});
 		viewModel.getChannelActions().observe(lifecycleOwner, actions -> Log.i(TAG, "Got new actions: " + actions));
-		viewModel.getHelper().observe(lifecycleOwner, helper -> this.setState(helper != null ?  getContext().getString(helper) : null, NONE));
-		viewModel.getError().observe(lifecycleOwner, this::setError);
+		viewModel.getHelper().observe(lifecycleOwner, helper -> textInputLayout.setState(helper != null ?  getContext().getString(helper) : null, AbstractColoredInput.NONE));
+		viewModel.getError().observe(lifecycleOwner, error -> textInputLayout.setError(error));
 	}
 	public void removeObservers(@NonNull ChannelDropdownViewModel viewModel,  @NonNull LifecycleOwner lifecycleOwner) {
 		viewModel.getSims().removeObservers(lifecycleOwner);
@@ -155,7 +159,7 @@ public class ChannelDropdown extends StaxTextInputLayout implements Target {
 	public interface HighlightListener {
 		void highlightChannel(Channel c);
 	}
-	//Created a separate listener so it doesn't need to be called by channelDropdownViewModel
+
 	public interface LinkViewClickListener {
 		void navigateLinkAccountFragment();
 	}

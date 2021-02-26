@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.hover.stax.views.StaxTextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/reasonEditText"
+    android:id="@+id/noteInput"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+	android:inputType="text"
 	android:hint="@string/request_note_label"
-    android:layout_marginTop="-20dp" >
-
-	<com.google.android.material.textfield.TextInputEditText
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:padding="@dimen/margin_13"
-		android:textSize="@dimen/text_21"
-		android:fontFamily="font-normal"
-		android:textColor="@color/offWhite"
-		android:textCursorDrawable="@null"
-		android:inputType="text"
-		android:id="@+id/note_input"/>
-</com.hover.stax.views.StaxTextInputLayout>
+    android:layout_marginTop="-20dp" />

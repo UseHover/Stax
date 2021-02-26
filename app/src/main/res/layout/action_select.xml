@@ -6,28 +6,14 @@
 	android:id="@+id/actionSelect"
 	android:orientation="vertical">
 
-	<com.hover.stax.views.StaxTextInputLayout
+	<com.hover.stax.views.StaxDropdownLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:id="@+id/action_dropdown_input"
 	    android:layout_marginTop="-20dp"
 	    android:visibility="gone"
-	    android:hint="@string/network_label">
-
-		<AutoCompleteTextView
-			android:id="@+id/action_autoComplete"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:padding="@dimen/margin_13"
-			android:drawablePadding="@dimen/margin_13"
-			android:dropDownWidth="wrap_content"
-			android:background="@null"
-			android:editable="false"
-			android:textSize="@dimen/text_21"
-			android:fontFamily="font-normal"
-			android:textColor="@color/offWhite"
-			android:textCursorDrawable="@null" />
-	</com.hover.stax.views.StaxTextInputLayout>
+	    android:hint="@string/network_label"
+		android:editable="false" />
 
 	<TextView
 		android:id="@+id/header"

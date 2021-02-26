@@ -4,4 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     style="@style/StaxLabeledInput"
-    android:id="@+id/textInputLayoutId" />
+    android:id="@+id/textInputLayoutId" >
+
+	<com.google.android.material.textfield.TextInputEditText
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/margin_13"
+		android:textSize="@dimen/text_21"
+		android:fontFamily="font-normal"
+		android:textColor="@color/offWhite"
+		android:textCursorDrawable="@null"
+		android:id="@+id/inputEditText" />
+
+</com.google.android.material.textfield.TextInputLayout>
+

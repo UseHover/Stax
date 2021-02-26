@@ -17,17 +17,16 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import com.hover.stax.R;
-import com.hover.stax.views.StaxTextInputLayout;
+import com.hover.stax.views.StaxDropdownLayout;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedChangeListener, Target {
+public class ActionSelect extends StaxDropdownLayout implements RadioGroup.OnCheckedChangeListener, Target {
 	private static String TAG = "ActionSelect";
 
-	private StaxTextInputLayout input;
 	private AutoCompleteTextView dropdownView;
 	private TextView radioHeader;
 	private RadioGroup isSelfRadio;
@@ -43,8 +42,8 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 		init();
 	}
 	private void init() {
-		input = findViewById(R.id.action_dropdown_input);
-		dropdownView = findViewById(R.id.action_autoComplete);
+		textInputLayout = findViewById(R.id.action_dropdown_input);
+		dropdownView = findViewById(R.id.autoCompleteView);
 		radioHeader = findViewById(R.id.header);
 		isSelfRadio = findViewById(R.id.isSelfRadioGroup);
 		this.setVisibility(GONE);
@@ -63,7 +62,7 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 		dropdownView.setAdapter(actionDropdownAdapter);
 		dropdownView.setOnItemClickListener((adapterView, view2, pos, id) -> selectRecipientNetwork((Action) adapterView.getItemAtPosition(pos)));
 		Log.e(TAG, "uniq recipient networks " + uniqRecipientActions.size());
-		input.setVisibility(showRecipientNetwork(uniqRecipientActions) ? VISIBLE : GONE);
+		textInputLayout.setVisibility(showRecipientNetwork(uniqRecipientActions) ? VISIBLE : GONE);
 		radioHeader.setText(actions.get(0).transaction_type.equals(Action.AIRTIME) ? R.string.airtime_who_header : R.string.send_who_header);
 	}
 
@@ -94,7 +93,7 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 		List<Action> options = getWhoMeOptions(action.recipientInstitutionId());
 		if (options.size() == 1) {
 			if (!options.get(0).requiresRecipient())
-				input.setHelperText(getContext().getString(R.string.self_only_money_warning));
+				textInputLayout.setHelperText(getContext().getString(R.string.self_only_money_warning));
 			selectAction(action);
 			isSelfRadio.setVisibility(GONE);
 			radioHeader.setVisibility(GONE);
@@ -147,10 +146,6 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
 		if (checkedId == -1) return;
 		selectAction(actions.get(checkedId));
-	}
-
-	public void setError(String message) {
-		input.setError(message);
 	}
 
 	@Override

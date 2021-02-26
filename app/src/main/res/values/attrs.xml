@@ -16,6 +16,13 @@
 
 	<declare-styleable name="StaxTextInputLayout">
 		<attr name="android:hint" />
+		<attr name="android:inputType" />
+	</declare-styleable>
+
+	<declare-styleable name="StaxDropdownLayout">
+		<attr name="android:hint" />
+		<attr name="android:editable" />
+		<attr name="android:text" />
 	</declare-styleable>
 
 	<declare-styleable name="CustomSwipeRefreshLayout">
