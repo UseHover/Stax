@@ -50,7 +50,6 @@ final public class HoverSession {
 		builder.showUserStepDescriptions(true);
 		builder.finalMsgDisplayTime(finalScreenTime);
 		builder.style(R.style.StaxHoverTheme);
-		builder.accountLogoUrl(getSenderLogo());
 		return builder;
 	}
 

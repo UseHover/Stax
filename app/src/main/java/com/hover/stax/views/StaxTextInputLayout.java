@@ -39,7 +39,7 @@ public class StaxTextInputLayout extends TextInputLayout {
 		TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.StaxTextInputLayout, 0, 0);
 		try {
 			hint = a.getString(R.styleable.StaxTextInputLayout_hint);
-			inputType = a.getInt(R.styleable.CustomTextInputLayout_android_inputType, 0);
+			inputType = a.getInt(R.styleable.StaxTextInputLayout_android_inputType, 0);
 		} finally {
 			a.recycle();
 		}
