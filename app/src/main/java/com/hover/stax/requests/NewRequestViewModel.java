@@ -10,9 +10,12 @@ import androidx.lifecycle.MutableLiveData;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.utils.fieldstates.FieldState;
+import com.hover.stax.utils.fieldstates.FieldStateType;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.transfers.AbstractFormViewModel;
+import com.hover.stax.utils.fieldstates.Validation;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,10 +31,11 @@ public class NewRequestViewModel extends AbstractFormViewModel {
 	private MediatorLiveData<String> requesterNumber = new MediatorLiveData<>();
 	private MutableLiveData<String> note = new MutableLiveData<>();
 
-	private MediatorLiveData<Integer> amountError = new MediatorLiveData<>();
-	private MediatorLiveData<Integer> requesteeError = new MediatorLiveData<>();
-	private MediatorLiveData<Integer> requesterAccountError = new MediatorLiveData<>();
-	private MediatorLiveData<Integer> requesterNumberError = new MediatorLiveData<>();
+	private MediatorLiveData<FieldState> amountFieldState = new MediatorLiveData<>();
+	private MediatorLiveData<FieldState> requesteeFieldState = new MediatorLiveData<>();
+	private MediatorLiveData<FieldState> requesterAccountFieldState = new MediatorLiveData<>();
+	private MediatorLiveData<FieldState> requesterNumberFieldState = new MediatorLiveData<>();
+	private MutableLiveData<FieldState> noteFieldState = new MutableLiveData<>();
 
 	private MutableLiveData<Request> formulatedRequest = new MutableLiveData<>();
 	private MutableLiveData<List<Request>> finalRequests = new MutableLiveData<>();
@@ -43,10 +47,10 @@ public class NewRequestViewModel extends AbstractFormViewModel {
 
 		requesterNumber.addSource(activeChannel, this::setRequesterNumber);
 
-		amountError.addSource(amount, amount -> { if (amount != null && !amount.isEmpty() && !amount.equals("0")) amountError.setValue(null); });
-		requesteeError.addSource(requestees, contacts -> { if (contacts != null && contacts.size() > 0) requesteeError.setValue(null); });
-		requesterAccountError.addSource(activeChannel, channel -> { if (channel != null) requesterAccountError.setValue(null); });
-		requesterNumberError.addSource(requesterNumber, number -> { if (number != null) requesterNumberError.setValue(null); });
+		amountFieldState.addSource(amount, amount -> { if (amount != null && !amount.isEmpty() && !amount.equals("0")) amountFieldState.setValue(null); });
+		requesteeFieldState.addSource(requestees, contacts -> { if (contacts != null && contacts.size() > 0) requesteeFieldState.setValue(null); });
+		requesterAccountFieldState.addSource(activeChannel, channel -> { if (channel != null) requesterAccountFieldState.setValue(null); });
+		requesterNumberFieldState.addSource(requesterNumber, number -> { if (number != null) requesterNumberFieldState.setValue(null); });
 	}
 
 	void setAmount(String a) {
@@ -103,29 +107,33 @@ public class NewRequestViewModel extends AbstractFormViewModel {
 
 	void resetRecipients() { requestees.setValue(new ArrayList<>()); }
 
-	LiveData<Integer> getAmountError() {
-		if (amountError == null) { amountError = new MediatorLiveData<>(); }
-		return amountError;
+	LiveData<FieldState> getAmountFieldState() {
+		if (amountFieldState == null) { amountFieldState = new MediatorLiveData<>(); }
+		return amountFieldState;
 	}
 
-	LiveData<Integer> getRequesteeError() {
-		if (requesteeError == null) {
-			requesteeError = new MediatorLiveData<>();
+	LiveData<FieldState> getRequesteeFieldState() {
+		if (requesteeFieldState == null) {
+			requesteeFieldState = new MediatorLiveData<>();
 		}
-		return requesteeError;
+		return requesteeFieldState;
 	}
 
-	LiveData<Integer> getRequesterAccountError() {
-		if(requesterAccountError == null) {
-			requesterAccountError = new MediatorLiveData<>();
+	LiveData<FieldState> getRequesterAccountFieldState() {
+		if(requesterAccountFieldState == null) {
+			requesterAccountFieldState = new MediatorLiveData<>();
 		}
-		return requesterAccountError;
+		return requesterAccountFieldState;
 	}
-	LiveData<Integer> getRequesterNumberError() {
-		if(requesterNumberError == null) {
-			requesterNumberError = new MediatorLiveData<>();
+	LiveData<FieldState> getRequesterNumberFieldState() {
+		if(requesterNumberFieldState == null) {
+			requesterNumberFieldState = new MediatorLiveData<>();
 		}
-		return requesterNumberError;
+		return requesterNumberFieldState;
+	}
+	LiveData<FieldState> getNoteFieldState() {
+		if(noteFieldState == null) noteFieldState = new MutableLiveData<>();
+		return noteFieldState;
 	}
 
 	void setNote(String n) {
@@ -140,20 +148,32 @@ public class NewRequestViewModel extends AbstractFormViewModel {
 		return note;
 	}
 
-	protected boolean validates() {
+
+	protected boolean validates(Validation validationType) {
 		boolean valid = true;
 		if (!validNumber()) {
-			valid = false;
-			requesterNumberError.setValue(R.string.requester_number_fielderror);
-		}
+			if(validationType == Validation.HARD) {
+				valid = false;
+				requesterNumberFieldState.setValue(new FieldState(FieldStateType.ERROR, getApplication().getString(R.string.requester_number_fielderror)));
+			}
+		} else requesterNumberFieldState.setValue(new FieldState(FieldStateType.SUCCESS, ""));
+
 		if (!validAccount()) {
-			valid = false;
-			requesterAccountError.setValue(R.string.requester_account_error);
-		}
+			if(validationType == Validation.HARD) {
+				valid = false;
+				requesterAccountFieldState.setValue(new FieldState(FieldStateType.ERROR,getApplication().getString(R.string.requester_account_error)));
+			}
+		}else requesterAccountFieldState.setValue(new FieldState(FieldStateType.SUCCESS, ""));
+
 		if (!validRequestees()) {
-			valid = false;
-			requesteeError.setValue(R.string.request_error_recipient);
-		}
+			if(validationType == Validation.HARD) {
+				valid = false;
+				requesteeFieldState.setValue(new FieldState(FieldStateType.ERROR,getApplication().getString(R.string.request_error_recipient)));
+			}
+		}else requesteeFieldState.setValue(new FieldState(FieldStateType.SUCCESS, ""));
+
+		if(validAmount()) amountFieldState.setValue(new FieldState(FieldStateType.SUCCESS, ""));
+		if(validNote()) noteFieldState.setValue(new FieldState(FieldStateType.SUCCESS, ""));
 		return valid;
 	}
 

@@ -17,15 +17,16 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
-import com.hover.stax.fieldstates.FieldState;
+import com.hover.stax.utils.fieldstates.FieldState;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxDropdownLayout;
+import com.hover.stax.views.StaxTextInputLayout;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.List;
 
-public class ChannelDropdown extends TextInputLayout implements Target {
+public class ChannelDropdown extends TextInputLayout implements Target { //Extend this because StaxTexInputLayout already implement a view which is causing double view bug
 	private static String TAG = "ChannelDropdown";
 
 	private StaxDropdownLayout input;
@@ -88,8 +89,7 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		dropdownView.setText(c == null ? "" : c.toString(), false);
 		if (c == null)
 			dropdownView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
-		else
-			Picasso.get().load(c.logoUrl).resize(55,55).into(this);
+		else Picasso.get().load(c.logoUrl).resize(55,55).into(this);
 	}
 
 	private void onSelect(Channel c) {
@@ -99,7 +99,6 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 	}
 
 	public Channel getHighlighted() { return highlightedChannel; }
-
 
 	public void toggleLink(boolean show) {
 		linkView.setVisibility(show ? VISIBLE : GONE);
@@ -124,7 +123,9 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		dropdownView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0);
 	}
 
-	public void setFieldState(FieldState fieldState) { input.setFieldState(fieldState); }
+	public void setFieldState(FieldState fieldState) {
+		if(!dropdownView.getText().toString().isEmpty()) //Added this check because this resolved a bug for link account fragment field state
+			input.setFieldState(fieldState); }
 	public void setHelper(String message) {
 		input.setInfo(message);
 	}
@@ -146,6 +147,9 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> {
 			if (channels != null && channels.size() > 0) dropdown.setFieldState(null);
 		});
+		viewModel.getActiveChannel().observe(lifecycleOwner, channel -> {
+			if(channel == null) dropdown.setFieldState(null);
+		});
 		viewModel.getFieldState().observe(lifecycleOwner, dropdown::setFieldState);
 		viewModel.getHelper().observe(lifecycleOwner, helper -> dropdown.setHelper(helper != null ?  getContext().getString(helper) : null));
 	}
@@ -156,6 +160,7 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		viewModel.getChannels().removeObservers(lifecycleOwner);
 		viewModel.getSimChannels().removeObservers(lifecycleOwner);
 		viewModel.getSelectedChannels().removeObservers(lifecycleOwner);
+		viewModel.getActiveChannel().removeObservers(lifecycleOwner);
 		viewModel.getFieldState().removeObservers(lifecycleOwner);
 		viewModel.getHelper().removeObservers(lifecycleOwner);
 	}

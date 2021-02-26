@@ -13,11 +13,11 @@ import androidx.annotation.Nullable;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
-import com.hover.stax.fieldstates.FieldState;
+import com.hover.stax.utils.fieldstates.FieldState;
 import com.hover.stax.utils.Utils;
 
 public class StaxTextInputLayout extends TextInputLayout {
-    private final String TAG = "CustomTextInputLayout";
+    private final String TAG = "StaxTextInputLayout";
 	private String hint;
 	private int inputType;
 	private TextInputLayout textInputLayout;

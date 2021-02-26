@@ -1,4 +1,4 @@
-package com.hover.stax.fieldstates;
+package com.hover.stax.utils.fieldstates;
 
 public class FieldState {
 	private  String message;

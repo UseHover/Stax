@@ -2,6 +2,7 @@ package com.hover.stax.requests;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.transfers.AbstractFormFragment;
+import com.hover.stax.utils.fieldstates.Validation;
 import com.hover.stax.views.StaxDropdownLayout;
 import com.hover.stax.views.StaxTextInputLayout;
 import com.hover.stax.views.Stax2LineItem;
@@ -55,7 +57,15 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 		init(view);
 		startObservers(view);
 		startListeners();
+		softValidateFields();
 		return view;
+	}
+
+	private void softValidateFields() {
+		//TODO: Please help here; Soft validation for fields is needed to run here, but this fires sometimes before channel loads complete, hence
+		//TODO: ...causes incorrect field state. Waiting 1 sec works, but isnt the best approach. Tried tieing it to view model but giving errors
+		//TODO: ...Kindly suggest better alternative.
+		new Handler().postDelayed(() -> requestViewModel.validates(Validation.SOFT), 1000);
 	}
 
 	@Override
@@ -109,30 +119,36 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 			recipientAdapter.updateContactList(contacts);
 		});
 
-		requestViewModel.getAmountError().observe(getViewLifecycleOwner(), error -> {
-			((StaxTextInputLayout) root.findViewById(R.id.amountEntry)).setError((error != null ? getString(error) : null));
+		requestViewModel.getAmountFieldState().observe(getViewLifecycleOwner(),fieldstate -> {
+			((StaxTextInputLayout) root.findViewById(R.id.amountEntry)).setFieldState(fieldstate);
 		});
 
-		requestViewModel.getRequesteeError().observe(getViewLifecycleOwner(), recipientError -> {
+		requestViewModel.getRequesteeFieldState().observe(getViewLifecycleOwner(), recipientFieldState -> {
 			if (recipientInputList.getChildAt(0) == null) return;
 			StaxDropdownLayout v = recipientInputList.getChildAt(0).findViewById(R.id.recipientLabel);
-			v.setError((recipientError != null ? getString(recipientError) : null));
+			v.setFieldState(recipientFieldState);
 		});
 
-		requestViewModel.getRequesterNumberError().observe(getViewLifecycleOwner(), accountNumberError->{
+		requestViewModel.getRequesterAccountFieldState().observe(getViewLifecycleOwner(), accountNumberFieldState->{
 			StaxTextInputLayout v = root.findViewById(R.id.accountNumberEntry);
-			v.setError((accountNumberError != null ? getString(accountNumberError) : null));
+			v.setFieldState(accountNumberFieldState);
+		});
+
+		requestViewModel.getNoteFieldState().observe(getViewLifecycleOwner(), noteFieldState-> {
+			((StaxTextInputLayout) root.findViewById(R.id.reasonEditText)).setFieldState(noteFieldState);
 		});
 
 		requestViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> {
 			root.findViewById(R.id.amountRow).setVisibility(requestViewModel.validAmount() ? View.VISIBLE : View.GONE);
 			((TextView) root.findViewById(R.id.amountValue)).setText(Utils.formatAmount(amount));
 		});
+
 		requestViewModel.getRequesterNumber().observe(getViewLifecycleOwner(), accountNumber -> accountValue.setSubtitle(accountNumber));
 		requestViewModel.getNote().observe(getViewLifecycleOwner(), note -> {
 			root.findViewById(R.id.noteRow).setVisibility(requestViewModel.validNote() ? View.VISIBLE : View.GONE);
 			((TextView) root.findViewById(R.id.noteValue)).setText(note);
 		});
+
 
 		requestViewModel.getIsEditing().observe(getViewLifecycleOwner(), this::showEdit);
 	}
@@ -197,7 +213,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 
 	private void fabClicked(View v) {
 		requestViewModel.removeInvalidRequestees();
-		if (requestViewModel.getIsEditing().getValue() & channelDropdownViewModel.validates() & requestViewModel.validates())
+		if (requestViewModel.getIsEditing().getValue() & channelDropdownViewModel.validates() & requestViewModel.validates(Validation.HARD))
 			requestViewModel.setEditing(false);
 		else
 			UIHelper.flashMessage(getContext(), getString(R.string.toast_pleasefix));

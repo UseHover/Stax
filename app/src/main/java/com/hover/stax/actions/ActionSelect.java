@@ -17,6 +17,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import com.hover.stax.R;
+import com.hover.stax.utils.fieldstates.FieldState;
 import com.hover.stax.views.StaxDropdownLayout;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -67,6 +68,7 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 		radioHeader.setText(actions.get(0).transaction_type.equals(Action.AIRTIME) ? R.string.airtime_who_header : R.string.send_who_header);
 	}
 
+	public void setFieldState(FieldState fieldState){input.setFieldState(fieldState);}
 	public static List<Action> sort(List<Action> actions) {
 		ArrayList<Integer> uniqRecipInstIds = new ArrayList<>();
 		ArrayList<Action> uniqRecipActions = new ArrayList<>();

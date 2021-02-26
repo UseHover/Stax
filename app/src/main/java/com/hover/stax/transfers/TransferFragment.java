@@ -1,6 +1,7 @@
 package com.hover.stax.transfers;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -21,10 +22,10 @@ import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionSelect;
 import com.hover.stax.actions.ActionSelectViewModel;
-import com.hover.stax.channels.ChannelDropdown;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.contacts.StaxContactArrayAdapter;
+import com.hover.stax.utils.fieldstates.Validation;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.requests.Request;
 import com.hover.stax.utils.UIHelper;
@@ -73,7 +74,6 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		recipientAutocomplete = recipientLabel.findViewById(R.id.dropdownInputTextView);
 		contactButton = root.findViewById(R.id.contact_button);
 		noteInput = root.findViewById(R.id.reasonEditText).findViewById(R.id.textInputEditTextId);
-
 		amountInput.setText(transferViewModel.getAmount().getValue());
 		noteInput.setText(transferViewModel.getNote().getValue());
 
@@ -109,7 +109,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 			actionSelect.updateActions(actions);
 		});
 
-		actionSelectViewModel.getActiveActionError().observe(getViewLifecycleOwner(), error -> actionSelect.setError(error));
+		actionSelectViewModel.getActiveActionFieldState().observe(getViewLifecycleOwner(), fieldState -> actionSelect.setFieldState(fieldState));
 
 		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> ((TextView) root.findViewById(R.id.amountValue)).setText(Utils.formatAmount(amount)));
 		transferViewModel.getAmountFieldState().observe(getViewLifecycleOwner(), amountState -> {
@@ -159,7 +159,10 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 
 	private void fabClicked(View v) {
 		if (transferViewModel.getIsEditing().getValue()) {
-			if (channelDropdownViewModel.validates() & actionSelectViewModel.validates() & transferViewModel.validates(actionSelectViewModel.getActiveAction().getValue())) {
+			if (channelDropdownViewModel.validates()
+						& actionSelectViewModel.validates(Validation.HARD)
+						& actionSelectViewModel.getActiveAction().getValue() !=null
+						& transferViewModel.validates(actionSelectViewModel.getActiveAction().getValue(), Validation.HARD)) {
 				transferViewModel.saveContact();
 				transferViewModel.setEditing(false);
 			} else
@@ -182,6 +185,8 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 	protected void onContactSelected(int requestCode, StaxContact contact) {
 		transferViewModel.setContact(contact);
 		recipientAutocomplete.setText(contact.toString());
+
+
 	}
 
 	private TextWatcher amountWatcher = new TextWatcher() {
@@ -213,13 +218,18 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		amountInput.setText(r.amount);
 		recipientAutocomplete.setText(r.requester_number);
 		transferViewModel.setEditing(r.amount == null || r.amount.isEmpty());
-		if(r.amount == null || r.amount.isEmpty()) amountEntry.requestFocus();
-		forceRunValidations();
+		runSoftValidations();
 		Amplitude.getInstance().logEvent(getString(R.string.loaded_request_link));
 	}
-	void forceRunValidations() {
-		channelDropdownViewModel.validates();
-		actionSelectViewModel.validates();
-		transferViewModel.validates(actionSelectViewModel.getActiveAction().getValue());
+	void runSoftValidations() {
+		//TODO: Please help here; Soft validation for fields is needed to run here, but this fires sometimes before channel loads complete, hence
+		//TODO: ...causes incorrect field state. Waiting 1 sec works, but isnt the best approach. Tried tieing it to view model but giving errors
+		//TODO: ...Kindly suggest better alternative.
+		new Handler().postDelayed(() -> {
+			actionSelectViewModel.validates(Validation.SOFT);
+			transferViewModel.validates(actionSelectViewModel.getActiveAction().getValue(), Validation.SOFT);
+			channelDropdownViewModel.validates();
+		}, 1000);
+
 	}
 }

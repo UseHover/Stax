@@ -15,12 +15,12 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
-import com.hover.stax.fieldstates.FieldState;
+import com.hover.stax.utils.fieldstates.FieldState;
 import com.hover.stax.utils.Utils;
 
 public class StaxDropdownLayout extends TextInputLayout {
 
-	private final String TAG = "CustomDropdownLayout";
+	private final String TAG = "StaxDropdownLayout";
 	private String hint, defaultText;
 	private boolean editable;
 	private TextInputLayout textInputLayout;
@@ -109,6 +109,7 @@ public class StaxDropdownLayout extends TextInputLayout {
 
 	public void setSuccess(String message) {
 		if (message != null) {
+			textInputLayout.setError(null);
 			textInputLayout.setHelperText(message);
 			setHelperColorState(R.color.green_state_color);
 			showSuccessIcon();

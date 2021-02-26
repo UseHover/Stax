@@ -8,8 +8,9 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
-import com.hover.stax.fieldstates.FieldState;
-import com.hover.stax.fieldstates.FieldStateType;
+import com.hover.stax.utils.fieldstates.FieldState;
+import com.hover.stax.utils.fieldstates.FieldStateType;
+import com.hover.stax.utils.fieldstates.Validation;
 import com.hover.stax.requests.Request;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.schedules.Schedule;
@@ -65,6 +66,7 @@ public class TransferViewModel extends AbstractFormViewModel {
 
 	void setContact(StaxContact c) {
 		contact.setValue(c);
+		recipientFieldState.postValue(new FieldState(FieldStateType.SUCCESS, ""));
 	}
 
 	LiveData<StaxContact> getContact() {
@@ -104,17 +106,24 @@ public class TransferViewModel extends AbstractFormViewModel {
 		return note;
 	}
 
-	protected boolean validates(Action a) {
+	protected boolean validates(Action a, Validation validationType) {
 		boolean valid = true;
 		if (amount.getValue() == null || amount.getValue().isEmpty() || !amount.getValue().matches("[\\d.]+") || Double.parseDouble(amount.getValue()) < 1) {
-			valid = false;
-			amountFieldState.setValue(new FieldState(FieldStateType.ERROR,getApplication().getString(R.string.amount_fielderror)));
+			if(validationType == Validation.HARD) {
+				valid = false;
+				amountFieldState.setValue(new FieldState(FieldStateType.ERROR,getApplication().getString(R.string.amount_fielderror)));
+			}
 		} else amountFieldState.setValue(new FieldState(FieldStateType.SUCCESS, ""));
 
-		if (a.requiresRecipient() && contact.getValue() == null) {
-			valid = false;
-			recipientFieldState.setValue(new FieldState(FieldStateType.ERROR, getApplication().getString(R.string.transfer_error_recipient)));
-		} else recipientFieldState.setValue(new FieldState(FieldStateType.SUCCESS, ""));
+		if(a!=null) {
+			if (a.requiresRecipient() && contact.getValue() == null) {
+				if(validationType == Validation.HARD) {
+					valid = false;
+					recipientFieldState.setValue(new FieldState(FieldStateType.ERROR, getApplication().getString(R.string.transfer_error_recipient)));
+				}
+			} else recipientFieldState.setValue(new FieldState(FieldStateType.SUCCESS, ""));
+		}else valid = false;
+
 		return valid;
 	}
 
