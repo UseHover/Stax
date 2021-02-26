@@ -26,7 +26,7 @@ import com.squareup.picasso.Target;
 
 import java.util.List;
 
-public class ChannelDropdown extends TextInputLayout implements Target { //Extend this because StaxTexInputLayout already implement a view which is causing double view bug
+public class ChannelDropdown extends StaxDropdownLayout implements Target { //Extend this because StaxDropdownLayout already implement a view which is causing double view bug
 	private static String TAG = "ChannelDropdown";
 
 	private StaxDropdownLayout input;
