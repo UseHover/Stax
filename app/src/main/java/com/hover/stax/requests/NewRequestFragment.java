@@ -129,7 +129,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 			v.setFieldState(recipientFieldState);
 		});
 
-		requestViewModel.getRequesterAccountFieldState().observe(getViewLifecycleOwner(), accountNumberFieldState->{
+		requestViewModel.getRequesterNumberFieldState().observe(getViewLifecycleOwner(), accountNumberFieldState->{
 			StaxTextInputLayout v = root.findViewById(R.id.accountNumberEntry);
 			v.setFieldState(accountNumberFieldState);
 		});
