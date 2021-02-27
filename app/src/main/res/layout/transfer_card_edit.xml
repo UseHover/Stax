@@ -12,7 +12,7 @@
 		android:id="@+id/channel_dropdown"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		app:label="@string/channel_label"/>
+		android:hint="@string/channel_label"/>
 
 	<com.hover.stax.actions.ActionSelect
 		android:id="@+id/action_select"

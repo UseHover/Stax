@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.textfield.TextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:id="@+id/dropdownInputLayout"
+	android:id="@+id/inputLayout"
 	style="@style/StaxLabeledDropdown"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
@@ -21,6 +21,7 @@
 	    android:textColor="@color/offWhite"
 	    android:textCursorDrawable="@null"
 	    android:textSize="@dimen/text_21"
-	    app:errorTextColor="@color/bright_red" />
+	    app:errorTextColor="@color/stax_state_red"
+		app:endIconMode="dropdown_menu" />
 
 </com.google.android.material.textfield.TextInputLayout>

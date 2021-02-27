@@ -18,14 +18,11 @@ public class StaxTextInputLayout extends AbstractColoredInput {
 	private String hint;
 	private int inputType;
 
-	private TextInputEditText textInputEditText;
-
 	public StaxTextInputLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
 		super(context, attrs);
 
 		getAttrs(context,attrs);
 		LayoutInflater.from(context).inflate(R.layout.stax_input, this);
-		initViews();
 		fillAttr();
 	}
 
@@ -39,13 +36,8 @@ public class StaxTextInputLayout extends AbstractColoredInput {
 		}
 	}
 
-	private void initViews() {
-		textInputLayout = findViewById(R.id.textInputLayoutId);
-		textInputEditText = findViewById(R.id.inputEditText);
-	}
-
 	private void fillAttr() {
-		if (hint != null) textInputLayout.setHint(hint);
-		if (inputType > 0) textInputEditText.setInputType(inputType);
+		if (hint != null) ((TextInputLayout) findViewById(R.id.inputLayout)).setHint(hint);
+		if (inputType > 0) ((TextInputEditText) findViewById(R.id.inputEditText)).setInputType(inputType);
 	}
 }

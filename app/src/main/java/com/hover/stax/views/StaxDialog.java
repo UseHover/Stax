@@ -79,7 +79,7 @@ public class StaxDialog extends AlertDialog {
 
 	public StaxDialog isDestructive() {
 		view.findViewById(R.id.pos_btn).getBackground()
-				.setColorFilter(context.getResources().getColor(R.color.bright_red), PorterDuff.Mode.SRC);
+				.setColorFilter(context.getResources().getColor(R.color.stax_state_red), PorterDuff.Mode.SRC);
 		return this;
 	}
 

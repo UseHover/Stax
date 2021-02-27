@@ -6,9 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.widget.AutoCompleteTextView;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
@@ -16,82 +13,53 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.hover.stax.R;
-import com.hover.stax.utils.Utils;
-import com.hover.stax.views.AbstractColoredInput;
 import com.hover.stax.views.StaxDropdownLayout;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.List;
 
-public class ChannelDropdown extends FrameLayout implements Target {
+public class ChannelDropdown extends StaxDropdownLayout implements Target {
 	private static String TAG = "ChannelDropdown";
 
-	private AutoCompleteTextView dropdownView;
-	private TextView linkView;
-
-	private String label;
-	private boolean showSelected, showLink;
-
-	private StaxDropdownLayout textInputLayout;
-
+	private boolean showSelected;
 	private Channel highlightedChannel;
 	private HighlightListener highlightListener;
-	private LinkViewClickListener linkViewClickListener;
 
 	public ChannelDropdown(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		getAttrs(context, attrs);
-		inflate(context, R.layout.channel_dropdown, this);
-		textInputLayout = findViewById(R.id.channel_dropdown_input);
-		dropdownView = findViewById(R.id.autoCompleteView);
-		linkView = findViewById(R.id.new_account_link);
-		fillFromAttrs();
 	}
 
 	private void getAttrs(Context context, AttributeSet attrs) {
 		TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ChannelDropdown, 0, 0);
 		try {
-			label = a.getString(R.styleable.ChannelDropdown_label);
-			showSelected = a.getBoolean(R.styleable.ChannelDropdown_showSelected, true);
-			showLink = a.getBoolean(R.styleable.ChannelDropdown_showLink, false);
+			showSelected = a.getBoolean(R.styleable.ChannelDropdown_show_selected, true);
 		} finally {
 			a.recycle();
 		}
 	}
 
-	private void fillFromAttrs() {
-		if (label != null && !label.isEmpty())
-			textInputLayout.setHint(label);
-		linkView.setOnClickListener(v -> {
-			if (linkViewClickListener != null) linkViewClickListener.navigateLinkAccountFragment();
-		});
-		toggleLink(showLink);
-	}
-
 	public void setListener(HighlightListener hl) { highlightListener = hl; }
-	public void setLinkViewClickListener(LinkViewClickListener linkViewClickListener) {this.linkViewClickListener = linkViewClickListener;}
 
 	public void updateChannels(List<Channel> channels) {
 		if (channels == null || channels.size() == 0) return;
 		Log.e(TAG, "found some channels " + channels.size());
 		if (highlightedChannel == null) setDropdownValue(null);
 		ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(ChannelDropdownAdapter.sort(channels, showSelected), getContext());
-		dropdownView.setAdapter(channelDropdownAdapter);
-		dropdownView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((Channel) adapterView.getItemAtPosition(pos)));
+		autoCompleteTextView.setAdapter(channelDropdownAdapter);
+		autoCompleteTextView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((Channel) adapterView.getItemAtPosition(pos)));
 
 		for (Channel c: channels) {
-			if (c.defaultAccount && !showLink && showSelected)
+			if (c.defaultAccount && showSelected)
 				setDropdownValue(c);
 		}
 	}
 
 	private void setDropdownValue(Channel c) {
-		dropdownView.setText(c == null ? "" : c.toString(), false);
-		if (c == null)
-			dropdownView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
-		else
-			Picasso.get().load(c.logoUrl).resize(55,55).into(this);
+		autoCompleteTextView.setText(c == null ? "" : c.toString(), false);
+		if (c != null)
+			Picasso.get().load(c.logoUrl).resize(55, 55).into(this);
 	}
 
 	private void onSelect(Channel c) {
@@ -102,22 +70,11 @@ public class ChannelDropdown extends FrameLayout implements Target {
 
 	public Channel getHighlighted() { return highlightedChannel; }
 
-
-	public void toggleLink(boolean show) {
-		linkView.setVisibility(show ? VISIBLE : GONE);
-		textInputLayout.setVisibility(show ? GONE : VISIBLE);
-		if (show) {
-			reset();
-		}
-	}
-
-	public void setError(String message) { textInputLayout.setError(message); }
-
 	@Override
 	public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
 		RoundedBitmapDrawable d = RoundedBitmapDrawableFactory.create (getContext().getResources(), bitmap);
 		d.setCircular(true);
-		dropdownView.setCompoundDrawablesRelativeWithIntrinsicBounds(d, null, null, null);
+		autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(d, null, null, null);
 	}
 
 	@Override
@@ -125,42 +82,23 @@ public class ChannelDropdown extends FrameLayout implements Target {
 
 	@Override
 	public void onPrepareLoad(Drawable placeHolderDrawable) {
-		dropdownView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0);
-	}
-
-	public void reset() {
-		if (Utils.isInternetConnected(getContext())) setDropdownValue(null);
-		highlightedChannel = null;
+		autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0);
 	}
 
 	public void setObservers(@NonNull ChannelDropdownViewModel viewModel, @NonNull LifecycleOwner lifecycleOwner) {
 		viewModel.getSims().observe(lifecycleOwner, sims -> Log.i(TAG, "Got sims: " + sims.size()));
 		viewModel.getSimHniList().observe(lifecycleOwner, simList -> Log.i(TAG, "Got new sim hni list: " + simList));
-		viewModel.getSimChannels().observe(lifecycleOwner, this::updateChannels);
 		viewModel.getChannels().observe(lifecycleOwner, this::updateChannels);
+		viewModel.getSimChannels().observe(lifecycleOwner, this::updateChannels);
 		viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> {
-			if (channels != null && channels.size() > 0) textInputLayout.setError(null);
+			if (channels != null && channels.size() > 0) setError(null);
 		});
-		viewModel.getChannelActions().observe(lifecycleOwner, actions -> Log.i(TAG, "Got new actions: " + actions));
-		viewModel.getHelper().observe(lifecycleOwner, helper -> textInputLayout.setState(helper != null ?  getContext().getString(helper) : null, AbstractColoredInput.NONE));
-		viewModel.getError().observe(lifecycleOwner, error -> textInputLayout.setError(error));
-	}
-	public void removeObservers(@NonNull ChannelDropdownViewModel viewModel,  @NonNull LifecycleOwner lifecycleOwner) {
-		viewModel.getSims().removeObservers(lifecycleOwner);
-		viewModel.getSimHniList().removeObservers(lifecycleOwner);
-		viewModel.getSimChannels().removeObservers(lifecycleOwner);
-		viewModel.getChannels().removeObservers(lifecycleOwner);
-		viewModel.getSimChannels().removeObservers(lifecycleOwner);
-		viewModel.getSelectedChannels().removeObservers(lifecycleOwner);
-		viewModel.getHelper().removeObservers(lifecycleOwner);
-		viewModel.getError().removeObservers(lifecycleOwner);
+		viewModel.getChannelActions().observe(lifecycleOwner, actions -> { if (actions != null && actions.size() > 0) setState(null, SUCCESS); });
+//		viewModel.getHelper().observe(lifecycleOwner, helper -> setState(helper != null ?  getContext().getString(helper) : null, AbstractColoredInput.NONE));
+		viewModel.getError().observe(lifecycleOwner, error -> setError(error));
 	}
 
 	public interface HighlightListener {
 		void highlightChannel(Channel c);
-	}
-
-	public interface LinkViewClickListener {
-		void navigateLinkAccountFragment();
 	}
 }

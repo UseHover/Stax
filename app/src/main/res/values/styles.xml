@@ -15,7 +15,7 @@
 		<item name="colorSurface">@color/cardViewColor</item>
 		<item name="colorOnSurface">@color/offWhite</item>
 		<item name="colorOnBackground">@color/darkGrey</item>
-		<item name="colorError">@color/bright_red</item>
+		<item name="colorError">@color/stax_state_red</item>
 		<item name="colorOnError">@color/offWhite</item>
 
 		<item name="colorControlNormal">@color/buttonColor</item>
@@ -132,9 +132,10 @@
 		<item name="android:textSize">@dimen/text_13</item>
 		<item name="fontFamily">font-medium</item>
 		<item name="android:fontFamily">font-medium</item>
-		<item name="errorTextColor">@color/bright_red</item>
+		<item name="errorTextColor">@color/stax_state_red</item>
+		<item name="errorIconDrawable">@drawable/ic_error</item>
 		<item name="errorEnabled">true</item>
-		<item name="helperTextTextColor">@color/offWhite</item>
+		<item name="helperTextTextColor">@color/stax_state_blue</item>
 		<item name="helperTextEnabled">true</item>
 	</style>
 
@@ -153,9 +154,10 @@
 		<item name="android:fontFamily">font-medium</item>
 		<item name="endIconTint">@color/offWhite</item>
 		<item name="materialThemeOverlay">@style/StaxDropdownPopup</item>
-		<item name="errorTextColor">@color/bright_red</item>
+		<item name="errorTextColor">@color/stax_state_red</item>
+		<item name="errorIconDrawable">@drawable/ic_error</item>
 		<item name="errorEnabled">true</item>
-		<item name="helperTextTextColor">@color/offWhite</item>
+		<item name="helperTextTextColor">@color/stax_state_blue</item>
 		<item name="helperTextEnabled">true</item>
 	</style>
 
@@ -181,7 +183,7 @@
 		<item name="colorSurface">@color/cardViewColor</item>
 		<item name="colorOnSurface">@color/offWhite</item>
 		<item name="colorOnBackground">@color/darkGrey</item>
-		<item name="colorError">@color/bright_red</item>
+		<item name="colorError">@color/stax_state_red</item>
 		<item name="colorOnError">@color/offWhite</item>
 
 		<item name="android:textColor">@color/offWhite</item>

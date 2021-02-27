@@ -3,6 +3,7 @@ package com.hover.stax.views;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,48 +11,60 @@ import androidx.annotation.Nullable;
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+
 public abstract class AbstractColoredInput extends TextInputLayout {
+	private final static String TAG = "AbstractColoredInput";
 	public final static int NONE = 0, INFO = 1, WARN = 2, ERROR = 3, SUCCESS = 4;
 
-	protected TextInputLayout textInputLayout;
+	private String currentMessage;
+	private int currentState;
 
 	public AbstractColoredInput(@NonNull Context context, @Nullable AttributeSet attrs) {
 		super(context, attrs, R.style.StaxLabeledInput);
 	}
 
-	public void setError(String message) {
-		textInputLayout.setError(message);
-		setState(message, message == null ? NONE : ERROR);
+	@Override
+	public void setError(@Nullable CharSequence errorText) {
+		setState(errorText == null ? null : errorText.toString(), errorText == null ? NONE : ERROR);
 	}
 
-	public void setNormal() {
-		setState(null, NONE);
+	@Override
+	public void setHelperText(@Nullable CharSequence helperText) {
+		super.setHelperText(helperText);
+		setState(helperText == null ? null : helperText.toString(), helperText == null ? NONE : INFO);
 	}
 
 	public void setState(String message, int state) {
-		if (state != ERROR) {
-			textInputLayout.setError(null);
-			textInputLayout.setHelperText(message);
-		}
+		if (currentState == state) return;
+		currentState = state;
+		Log.e(TAG, "setting state: " + state);
+		super.setError(null);
 		switch (state) {
-			case INFO: setColorAndIcon(R.color.stax_state_blue, R.drawable.ic_info); break;
-			case WARN: setColorAndIcon(R.color.stax_state_yellow, R.drawable.ic_warning); break;
-			case SUCCESS: setColorAndIcon(R.color.stax_state_green, R.drawable.ic_success); break;
-			case ERROR: setColorAndIcon(R.color.stax_state_red, R.drawable.ic_error); break;
+			case INFO: setColorAndIcon(R.color.blue_state_color, R.drawable.ic_info); break;
+			case WARN: setColorAndIcon(R.color.yellow_state_color, R.drawable.ic_warning); break;
+			case SUCCESS: setColorAndIcon(R.color.green_state_color, R.drawable.ic_success); break;
+			case ERROR: setColorAndIcon(R.color.red_state_color, R.drawable.ic_error); super.setError(message); break;
 			case NONE:
-			default: setColorAndIcon(R.color.offWhite, 0); break;
+			default: setColorAndIcon(R.color.offwhite_state_color, 0); break;
 		}
 	}
 
 	protected void setColorAndIcon(int color, int drawable) {
+		if (findViewById(R.id.inputLayout) != null)
+			((TextInputLayout) findViewById(R.id.inputLayout)).setEndIconDrawable(drawable);
 		setColor(color);
-		textInputLayout.setEndIconDrawable(drawable);
 	}
 
 	protected void setColor(int color) {
-		ColorStateList csl = new ColorStateList(new int[][]{new int[]{}}, new int[]{color});
-		textInputLayout.setHelperTextColor(csl);
-		textInputLayout.setDefaultHintTextColor(csl);
-		textInputLayout.setBoxStrokeColorStateList(csl);
+		try {
+			ColorStateList csl = ColorStateList.createFromXml(getResources(), getResources().getXml(color));
+			((TextInputLayout) findViewById(R.id.inputLayout)).setHelperTextColor(csl);
+			((TextInputLayout) findViewById(R.id.inputLayout)).setEndIconTintList(csl);
+			((TextInputLayout) findViewById(R.id.inputLayout)).setHintTextColor(csl);
+			((TextInputLayout) findViewById(R.id.inputLayout)).setBoxStrokeColorStateList(csl);
+		} catch (IOException | XmlPullParserException | NullPointerException e) { Log.e(TAG, "Failed to load color state list", e); }
 	}
 }

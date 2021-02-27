@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:id="@+id/actionSelect"
 	android:orientation="vertical">
 
@@ -10,10 +9,8 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:id="@+id/action_dropdown_input"
-	    android:layout_marginTop="-20dp"
 	    android:visibility="gone"
-	    android:hint="@string/network_label"
-		android:editable="false" />
+	    android:hint="@string/network_label" />
 
 	<TextView
 		android:id="@+id/header"

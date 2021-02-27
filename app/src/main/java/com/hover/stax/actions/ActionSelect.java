@@ -24,25 +24,25 @@ import com.squareup.picasso.Target;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActionSelect extends StaxDropdownLayout implements RadioGroup.OnCheckedChangeListener, Target {
+public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedChangeListener, Target {
 	private static String TAG = "ActionSelect";
 
+	private StaxDropdownLayout dropdownLayout;
 	private AutoCompleteTextView dropdownView;
 	private TextView radioHeader;
 	private RadioGroup isSelfRadio;
 
 	private List<Action> actions;
-	private int selectedRecipientId;
 	private Action highlightedAction;
 	private HighlightListener highlightListener;
 
 	public ActionSelect(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		LayoutInflater.from(context).inflate(R.layout.action_select, this);
+		inflate(context, R.layout.action_select, this);
 		init();
 	}
 	private void init() {
-		textInputLayout = findViewById(R.id.action_dropdown_input);
+		dropdownLayout = findViewById(R.id.action_dropdown_input);
 		dropdownView = findViewById(R.id.autoCompleteView);
 		radioHeader = findViewById(R.id.header);
 		isSelfRadio = findViewById(R.id.isSelfRadioGroup);
@@ -62,7 +62,7 @@ public class ActionSelect extends StaxDropdownLayout implements RadioGroup.OnChe
 		dropdownView.setAdapter(actionDropdownAdapter);
 		dropdownView.setOnItemClickListener((adapterView, view2, pos, id) -> selectRecipientNetwork((Action) adapterView.getItemAtPosition(pos)));
 		Log.e(TAG, "uniq recipient networks " + uniqRecipientActions.size());
-		textInputLayout.setVisibility(showRecipientNetwork(uniqRecipientActions) ? VISIBLE : GONE);
+		dropdownLayout.setVisibility(showRecipientNetwork(uniqRecipientActions) ? VISIBLE : GONE);
 		radioHeader.setText(actions.get(0).transaction_type.equals(Action.AIRTIME) ? R.string.airtime_who_header : R.string.send_who_header);
 	}
 
@@ -92,8 +92,7 @@ public class ActionSelect extends StaxDropdownLayout implements RadioGroup.OnChe
 	private void setRadioValuesIfRequired(Action action) {
 		List<Action> options = getWhoMeOptions(action.recipientInstitutionId());
 		if (options.size() == 1) {
-			if (!options.get(0).requiresRecipient())
-				textInputLayout.setHelperText(getContext().getString(R.string.self_only_money_warning));
+			dropdownLayout.setHelperText(options.get(0).requiresRecipient() ? null : getContext().getString(R.string.self_only_money_warning));
 			selectAction(action);
 			isSelfRadio.setVisibility(GONE);
 			radioHeader.setVisibility(GONE);
@@ -114,6 +113,8 @@ public class ActionSelect extends StaxDropdownLayout implements RadioGroup.OnChe
 	}
 
 	public void setListener(HighlightListener hl) { highlightListener = hl; }
+
+	public void setError(String message) { dropdownLayout.setError(message); }
 
 	private List<Action> getWhoMeOptions(int recipientInstId) {
 		List<Action> options = new ArrayList<>();
