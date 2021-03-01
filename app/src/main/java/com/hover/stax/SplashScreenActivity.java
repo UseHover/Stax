@@ -43,7 +43,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
 		if(shouldSelfDestructWhenAppVersionExpires(false)) {return;}
 		startBackgroundProcesses();
-		startSplashForegroundProcesses();
+		startSplashForegroundSequence();
 
 	}
 
@@ -53,7 +53,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 		createNotificationChannel();
 		startWorkers();
 	}
-	private void startSplashForegroundProcesses() {
+	private void startSplashForegroundSequence() {
 		initSplashAnimation();
 		authenticateBiometricOrNavigateScreenAfter120sec();
 	}
