@@ -55,7 +55,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	}
 	private void startSplashForegroundSequence() {
 		initSplashAnimation();
-		authenticateBiometricOrNavigateScreenAfter120sec();
+		authenticateBiometricOrNavigateScreenAfter110sec();
 	}
 
 	private void initSplashAnimation() {
@@ -65,12 +65,12 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	}
 	private void blurBackgroundAfter60sec() {
 		Bitmap bg = BitmapFactory.decodeResource(getResources(), R.drawable.stax_splash);
-		Bitmap bitmap = new StaxBlur(this,24, 1).transform(bg);
+		Bitmap bitmap = new StaxBlur(this,16, 1).transform(bg);
 		ImageView bgView = findViewById(R.id.splash_image_blur);
 		new Handler(Looper.getMainLooper()).postDelayed(() -> {
 			bgView.setImageBitmap(bitmap);
 			bgView.setVisibility(View.VISIBLE);
-			bgView.setAnimation(UIHelper.loadBlur(this));
+			bgView.setAnimation(UIHelper.loadFadeIn(this));
 		}, 1000);
 	}
 
@@ -78,15 +78,15 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 		TextView tv = findViewById(R.id.splash_content);
 		new Handler(Looper.getMainLooper()).postDelayed(() -> {
 			tv.setVisibility(View.VISIBLE);
-			tv.setAnimation(UIHelper.loadBlur(this));
-		}, 1500);
+			tv.setAnimation(UIHelper.loadFadeIn(this));
+		}, 1200);
 	}
 
-	private void authenticateBiometricOrNavigateScreenAfter120sec() {
+	private void authenticateBiometricOrNavigateScreenAfter110sec() {
 		new Handler().postDelayed(() -> {
 			if (Utils.getSharedPrefs(this).getInt(AUTH_CHECK, 0) == 1) new BiometricChecker(this, this).startAuthentication(null);
 			else chooseNav();
-		}, 2000);
+		}, 1800);
 
 	}
 
