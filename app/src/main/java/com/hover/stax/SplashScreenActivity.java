@@ -3,8 +3,16 @@ package com.hover.stax;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,10 +24,12 @@ import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
 import com.hover.stax.actions.Action;
 import com.hover.stax.channels.UpdateChannelsWorker;
+import com.hover.stax.destruct.SelfDestructActivity;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.schedules.ScheduleWorker;
 import com.hover.stax.settings.BiometricChecker;
+import com.hover.stax.utils.blur.StaxBlur;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
@@ -31,26 +41,70 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-//		if (SelfDestructActivity.isExpired(this)) {
-//			startActivity(new Intent(this, SelfDestructActivity.class));
-//			finish();
-//			return;
-//		}
+		if(shouldSelfDestructWhenAppVersionExpires(false)) {return;}
+		startBackgroundProcesses();
+		startSplashForegroundProcesses();
 
-		Amplitude.getInstance().initialize(this, getString(R.string.amp)).enableForegroundTracking(getApplication());
+	}
+
+	private void startBackgroundProcesses() {
+		initAmplitude();
 		initHover();
 		createNotificationChannel();
 		startWorkers();
+	}
+	private void startSplashForegroundProcesses() {
+		initSplashAnimation();
+		authenticateBiometricOrNavigateScreenAfter120sec();
+	}
 
-		if (Utils.getSharedPrefs(this).getInt(AUTH_CHECK, 0) == 1)
-			new BiometricChecker(this, this).startAuthentication(null);
-		else
-			chooseNav();
+	private void initSplashAnimation() {
+		setContentView(R.layout.splash_screen_layout);
+		blurBackgroundAfter60sec();
+		fadeInSplashContentAfter90sec();
+	}
+	private void blurBackgroundAfter60sec() {
+		Bitmap bg = BitmapFactory.decodeResource(getResources(), R.drawable.stax_splash);
+		Bitmap bitmap = new StaxBlur(this,24, 1).transform(bg);
+		ImageView bgView = findViewById(R.id.splash_image_blur);
+		new Handler(Looper.getMainLooper()).postDelayed(() -> {
+			bgView.setImageBitmap(bitmap);
+			bgView.setVisibility(View.VISIBLE);
+			bgView.setAnimation(UIHelper.loadBlur(this));
+		}, 1000);
+	}
+
+	private void fadeInSplashContentAfter90sec() {
+		TextView tv = findViewById(R.id.splash_content);
+		new Handler(Looper.getMainLooper()).postDelayed(() -> {
+			tv.setVisibility(View.VISIBLE);
+			tv.setAnimation(UIHelper.loadBlur(this));
+		}, 1500);
+	}
+
+	private void authenticateBiometricOrNavigateScreenAfter120sec() {
+		new Handler().postDelayed(() -> {
+			if (Utils.getSharedPrefs(this).getInt(AUTH_CHECK, 0) == 1) new BiometricChecker(this, this).startAuthentication(null);
+			else chooseNav();
+		}, 2000);
+
+	}
+
+	private void initAmplitude() {
+		Amplitude.getInstance().initialize(this, getString(R.string.amp)).enableForegroundTracking(getApplication());
 	}
 
 	private void initHover() {
 		Hover.initialize(this);
 		Hover.setBranding(getString(R.string.app_name), R.mipmap.stax, this);
+	}
+
+	private Boolean shouldSelfDestructWhenAppVersionExpires(Boolean value) {
+		if(value && SelfDestructActivity.isExpired(this)){
+			startActivity(new Intent(this, SelfDestructActivity.class));
+			finish();
+			return true;
+		} else return false;
 	}
 
 	private void createNotificationChannel() {
@@ -73,8 +127,8 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	private void chooseNav() {
 		if (getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_VIEW) && getIntent().getData() != null)
 			goToFulfillRequest(getIntent());
-		else
-			startActivity(new Intent(this, MainActivity.class));
+		else startActivity(new Intent(this, MainActivity.class));
+
 		finish();
 	}
 
