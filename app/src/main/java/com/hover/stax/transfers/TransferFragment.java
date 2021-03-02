@@ -1,6 +1,7 @@
 package com.hover.stax.transfers;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -21,10 +22,10 @@ import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionSelect;
 import com.hover.stax.actions.ActionSelectViewModel;
-import com.hover.stax.channels.ChannelDropdown;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.contacts.StaxContactArrayAdapter;
+import com.hover.stax.utils.fieldstates.Validation;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.requests.Request;
 import com.hover.stax.utils.UIHelper;
@@ -42,7 +43,6 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 	private EditText amountInput, noteInput;
 	private ActionSelect actionSelect;
 	private StaxDropdownLayout recipientLabel;
-	private ChannelDropdown channelDropdown;
 	private AutoCompleteTextView recipientAutocomplete;
 	private ImageButton contactButton;
 	private Stax2LineItem recipientValue;
@@ -71,11 +71,9 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		amountInput = amountEntry.findViewById(R.id.textInputEditTextId);
 		actionSelect = root.findViewById(R.id.action_select);
 		recipientLabel = root.findViewById(R.id.recipientLabel);
-		channelDropdown = root.findViewById(R.id.channel_dropdown);
 		recipientAutocomplete = recipientLabel.findViewById(R.id.dropdownInputTextView);
 		contactButton = root.findViewById(R.id.contact_button);
 		noteInput = root.findViewById(R.id.reasonEditText).findViewById(R.id.textInputEditTextId);
-
 		amountInput.setText(transferViewModel.getAmount().getValue());
 		noteInput.setText(transferViewModel.getNote().getValue());
 
@@ -111,11 +109,11 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 			actionSelect.updateActions(actions);
 		});
 
-		actionSelectViewModel.getActiveActionError().observe(getViewLifecycleOwner(), error -> actionSelect.setError(error));
+		actionSelectViewModel.getActiveActionFieldState().observe(getViewLifecycleOwner(), fieldState -> actionSelect.setFieldState(fieldState));
 
 		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> ((TextView) root.findViewById(R.id.amountValue)).setText(Utils.formatAmount(amount)));
-		transferViewModel.getAmountError().observe(getViewLifecycleOwner(), amountError -> {
-			amountEntry.setError((amountError != null ? getString(amountError) : null));
+		transferViewModel.getAmountFieldState().observe(getViewLifecycleOwner(), amountState -> {
+			amountEntry.setFieldState(amountState);
 		});
 
 		transferViewModel.getRecentContacts().observe(getViewLifecycleOwner(), contacts -> {
@@ -128,8 +126,8 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 			recipientValue.setContact(contact);
 		});
 
-		transferViewModel.getRecipientError().observe(getViewLifecycleOwner(), recipientError -> {
-			recipientLabel.setError((recipientError != null ? getString(recipientError) : null));
+		transferViewModel.getRecipientFieldState().observe(getViewLifecycleOwner(), recipientState -> {
+			recipientLabel.setFieldState(recipientState);
 		});
 
 		transferViewModel.getNote().observe(getViewLifecycleOwner(), note -> {
@@ -161,7 +159,10 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 
 	private void fabClicked(View v) {
 		if (transferViewModel.getIsEditing().getValue()) {
-			if (channelDropdownViewModel.validates() & actionSelectViewModel.validates() & transferViewModel.validates(actionSelectViewModel.getActiveAction().getValue())) {
+			if (channelDropdownViewModel.validates()
+						& actionSelectViewModel.validates(Validation.HARD)
+						& actionSelectViewModel.getActiveAction().getValue() !=null
+						& transferViewModel.validates(actionSelectViewModel.getActiveAction().getValue(), Validation.HARD)) {
 				transferViewModel.saveContact();
 				transferViewModel.setEditing(false);
 			} else
@@ -184,6 +185,8 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 	protected void onContactSelected(int requestCode, StaxContact contact) {
 		transferViewModel.setContact(contact);
 		recipientAutocomplete.setText(contact.toString());
+
+
 	}
 
 	private TextWatcher amountWatcher = new TextWatcher() {
@@ -215,14 +218,18 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		amountInput.setText(r.amount);
 		recipientAutocomplete.setText(r.requester_number);
 		transferViewModel.setEditing(r.amount == null || r.amount.isEmpty());
-		forceSetFieldStates(r.amount, r.requester_number);
+		runSoftValidations();
 		Amplitude.getInstance().logEvent(getString(R.string.loaded_request_link));
 	}
-	private void forceSetFieldStates(String amount, String requesterNum) {
-		if(amount == null || amount.isEmpty()) amountEntry.requestFocus();
-		if(requesterNum !=null && !requesterNum.isEmpty()) {
-			recipientLabel.setSuccess("");
-			channelDropdown.setSuccess("");
-		}
+	void runSoftValidations() {
+		//TODO: Please help here; Soft validation for fields is needed to run here, but this fires sometimes before channel loads complete, hence
+		//TODO: ...causes incorrect field state. Waiting 1 sec works, but isnt the best approach. Tried tieing it to view model but giving errors
+		//TODO: ...Kindly suggest better alternative.
+		new Handler().postDelayed(() -> {
+			actionSelectViewModel.validates(Validation.SOFT);
+			transferViewModel.validates(actionSelectViewModel.getActiveAction().getValue(), Validation.SOFT);
+			channelDropdownViewModel.validates();
+		}, 1000);
+
 	}
 }

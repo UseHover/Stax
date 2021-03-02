@@ -13,10 +13,11 @@ import androidx.annotation.Nullable;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
+import com.hover.stax.utils.fieldstates.FieldState;
 import com.hover.stax.utils.Utils;
 
 public class StaxTextInputLayout extends TextInputLayout {
-    private final String TAG = "CustomTextInputLayout";
+    private final String TAG = "StaxTextInputLayout";
 	private String hint;
 	private int inputType;
 	private TextInputLayout textInputLayout;
@@ -47,6 +48,22 @@ public class StaxTextInputLayout extends TextInputLayout {
 	private void fillAttr() {
 		if(hint !=null)  textInputLayout.setHint(hint);
 		if(inputType >0) textInputEditText.setInputType(inputType);
+	}
+
+	public void setFieldState(FieldState fieldState) {
+		if(fieldState == null) setNormal();
+		else {
+			switch (fieldState.getFieldStateType()) {
+				case INFO: setInfo(fieldState.getMessage());
+					break;
+				case WARNING: setWarning(fieldState.getMessage());
+					break;
+				case ERROR: setError(fieldState.getMessage());
+					break;
+				case SUCCESS: setSuccess(fieldState.getMessage());
+					break;
+			}
+		}
 	}
 
 	public void setError(String message) {
