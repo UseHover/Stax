@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -17,8 +16,9 @@ import android.widget.TextView;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
-import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
+import com.hover.stax.utils.fieldstates.FieldState;
+import com.hover.stax.views.StaxDropdownLayout;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -28,7 +28,7 @@ import java.util.List;
 public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedChangeListener, Target {
 	private static String TAG = "ActionSelect";
 
-	private TextInputLayout input;
+	private StaxDropdownLayout input;
 	private AutoCompleteTextView dropdownView;
 	private TextView radioHeader;
 	private RadioGroup isSelfRadio;
@@ -45,7 +45,7 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 	}
 	private void init() {
 		input = findViewById(R.id.action_dropdown_input);
-		dropdownView = findViewById(R.id.action_autoComplete);
+		dropdownView = input.findViewById(R.id.dropdownInputTextView);
 		radioHeader = findViewById(R.id.header);
 		isSelfRadio = findViewById(R.id.isSelfRadioGroup);
 		this.setVisibility(GONE);
@@ -68,6 +68,7 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 		radioHeader.setText(actions.get(0).transaction_type.equals(Action.AIRTIME) ? R.string.airtime_who_header : R.string.send_who_header);
 	}
 
+	public void setFieldState(FieldState fieldState){input.setFieldState(fieldState);}
 	public static List<Action> sort(List<Action> actions) {
 		ArrayList<Integer> uniqRecipInstIds = new ArrayList<>();
 		ArrayList<Action> uniqRecipActions = new ArrayList<>();
@@ -92,12 +93,12 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 		setRadioValuesIfRequired(action);
 	}
 
-	private void clearInputError() {input.setHelperText(null);}
+	private void clearInputError() {input.setNormal();}
 	private void setRadioValuesIfRequired(Action action) {
 		List<Action> options = getWhoMeOptions(action.recipientInstitutionId());
 		if (options.size() == 1) {
 			if (!options.get(0).requiresRecipient())
-				input.setHelperText(getContext().getString(R.string.self_only_money_warning));
+				input.setInfo(getContext().getString(R.string.self_only_money_warning));
 			selectAction(action);
 			isSelfRadio.setVisibility(GONE);
 			radioHeader.setVisibility(GONE);

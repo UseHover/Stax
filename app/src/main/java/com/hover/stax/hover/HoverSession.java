@@ -50,10 +50,6 @@ final public class HoverSession {
 		builder.showUserStepDescriptions(true);
 		builder.finalMsgDisplayTime(finalScreenTime);
 		builder.style(R.style.StaxHoverTheme);
-		//builder.sty(Constants.STYLE_MODE_FOR_STAX);
-		builder.transactingImages(getSenderLogo(), getReceiverLogo(b.action));
-		builder.customBackgroundImage(R.drawable.stax_background);
-
 		return builder;
 	}
 
@@ -82,10 +78,9 @@ final public class HoverSession {
 		builder.extra(Action.PIN_KEY, KeyStoreExecutor.decrypt(channel.pin, a));
 	}
 
-	private byte[] getSenderLogo() {
-		byte[] l = getLogo(channel.logoUrl);
+	private String getSenderLogo() {
 //		Log.e(TAG, "logo array: " + l);
-		return l;
+		return channel.logoUrl;
 	}
 	private byte[] getReceiverLogo(Action a) {
 		if (a.to_institution_logo != null && !channel.logoUrl.equals(a.to_institution_logo))

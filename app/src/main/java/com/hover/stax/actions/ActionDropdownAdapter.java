@@ -20,6 +20,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import com.hover.stax.R;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -67,7 +68,7 @@ public class ActionDropdownAdapter extends ArrayAdapter<Action> {
 		private void setAction(Action action, String baseUrl) {
 			id.setText(Integer.toString(action.id));
 			channelText.setText(action.toString());
-			Picasso.get().load(baseUrl+action.to_institution_logo).into(this);
+			Picasso.get().load(baseUrl+action.to_institution_logo).networkPolicy(NetworkPolicy.OFFLINE).into(this);
 		}
 
 		@Override
