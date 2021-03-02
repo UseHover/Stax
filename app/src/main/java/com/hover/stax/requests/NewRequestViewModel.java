@@ -114,7 +114,7 @@ public class NewRequestViewModel extends AbstractFormViewModel {
 	}
 
 	String requesterAcctNoError() {
-		if (requesterNumber.getValue() == null && !requesterNumber.getValue().isEmpty())
+		if (requesterNumber.getValue() != null && !requesterNumber.getValue().isEmpty())
 			return null;
 		return getApplication().getString(R.string.requester_number_fielderror);
 	}

@@ -205,7 +205,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 	private void load(Request r) {
 		channelDropdownViewModel.setChannelFromRequest(r);
 		amountInput.setText(r.amount);
-		contactInput.setText(r.requester_number);
+		contactInput.setText(r.requester_number, false);
 		transferViewModel.setEditing(r.amount == null || r.amount.isEmpty());
 		channelDropdown.setState(getString(R.string.channel_request_fieldinfo, String.valueOf(r.requester_institution_id)), AbstractStatefulInput.INFO);
 		Amplitude.getInstance().logEvent(getString(R.string.loaded_request_link));

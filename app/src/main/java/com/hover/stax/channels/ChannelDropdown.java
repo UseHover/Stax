@@ -98,11 +98,12 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 	}
 
 	private void setState(List<Action> actions, ChannelDropdownViewModel viewModel) {
+		Log.e(TAG, "setting channel state. Channel: " + viewModel.getActiveChannel().getValue() + ". Actions: " + actions.size());
 		if (viewModel.getActiveChannel().getValue() != null && (actions == null || actions.size() == 0))
 			setState(getContext().getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getContext(), viewModel.getType())), AbstractStatefulInput.ERROR);
-		else if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !actions.get(0).transaction_type.equals(Action.BALANCE))
+		else if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !viewModel.getType().equals(Action.BALANCE))
 			setState(getContext().getString(actions.get(0).transaction_type.equals(Action.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning), INFO);
-		else
+		else if (viewModel.getActiveChannel().getValue() != null && showSelected)
 			setState(null, AbstractStatefulInput.SUCCESS);
 	}
 

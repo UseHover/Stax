@@ -40,13 +40,13 @@ public class ContactInput extends LinearLayout {
 	}
 
 	public void setSelected(StaxContact contact) {
-		if (contact != null) setText(contact.toString());
+		if (contact != null) setText(contact.toString(), false);
 	}
 
-	public void setText(String number) {
+	public void setText(String number, boolean filter) {
 		if (number != null && !number.isEmpty())
 			setState(null, AbstractStatefulInput.SUCCESS);
-		contactAutocomplete.setText(number);
+		contactAutocomplete.setText(number, filter);
 	}
 
 	public void setHint(String hint) { contactInputLayout.setHint(hint); }

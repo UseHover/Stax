@@ -47,7 +47,11 @@ public class StaxTextInputLayout extends AbstractStatefulInput {
 		if (inputType > 0) ((TextInputEditText) findViewById(R.id.inputEditText)).setInputType(inputType);
 	}
 
-	public void setText(String text) { editText.setText(text); }
+	public void setText(String text) {
+		editText.setText(text);
+		if (text != null && !text.isEmpty())
+			setState(null, SUCCESS);
+	}
 
 	@Override
 	public void setOnFocusChangeListener(OnFocusChangeListener l) { editText.setOnFocusChangeListener(l); }

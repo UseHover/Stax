@@ -2,7 +2,6 @@ package com.hover.stax.requests;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -115,7 +114,6 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 
 		requestViewModel.getRequesterNumber().observe(getViewLifecycleOwner(), accountNumber -> {
 			accountValue.setSubtitle(accountNumber);
-			if (accountNumber != null) requesterNumberInput.setState(null, NONE);
 		});
 
 		requestViewModel.getNote().observe(getViewLifecycleOwner(), note -> {
@@ -205,7 +203,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 		String channelError = channelDropdownViewModel.errorCheck();
 		channelDropdown.setState(channelError, channelError == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.ERROR);
 		String requesterAcctNoError = requestViewModel.requesterAcctNoError();
-		requesterNumberInput.setState(channelError, requesterAcctNoError == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.ERROR);
+		requesterNumberInput.setState(requesterAcctNoError, requesterAcctNoError == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.ERROR);
 		String recipientError = requestViewModel.requesteeErrors();
 		((ContactInput) recipientInputList.getChildAt(0)).setState(recipientError, recipientError == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.ERROR);
 		return channelError == null && requesterAcctNoError == null && recipientError == null;

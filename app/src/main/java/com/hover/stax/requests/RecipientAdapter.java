@@ -14,19 +14,23 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
+import com.hover.stax.contacts.ContactInput;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.contacts.StaxContactArrayAdapter;
+import com.hover.stax.views.AbstractStatefulInput;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.CheckedOutputStream;
 
 public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.RecipientViewHolder> {
 	private List<StaxContact> recipients;
 	private List<StaxContact> allContacts;
 	private UpdateListener updateListener;
 
-	RecipientAdapter(List<StaxContact> recipients, List<StaxContact> contacts, UpdateListener listener) {
-		this.recipients = recipients;
-		allContacts = contacts;
+	RecipientAdapter(List<StaxContact> recips, List<StaxContact> contacts, UpdateListener listener) {
+		recipients = recips;
+		allContacts = contacts != null ? contacts : new ArrayList<>();
 		updateListener = listener;
 	}
 
@@ -37,26 +41,21 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
 	@NonNull
 	@Override
 	public RecipientViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_input, parent, false);
-		return new RecipientViewHolder(view);
+		ContactInput ci = new ContactInput(parent.getContext(), null);
+		ci.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+		return new RecipientViewHolder(ci);
 	}
 
 	@Override
 	public void onBindViewHolder(final @NonNull RecipientViewHolder holder, int position) {
-		holder.itemView.setVisibility(View.VISIBLE);
-
-		try{
-			ArrayAdapter<StaxContact> adapter = new StaxContactArrayAdapter(holder.view.getContext(), allContacts);
-			holder.dropdown.setAdapter(adapter);
-		}catch (NullPointerException ignored) {
-			//All contact list may return null whilst loading. The updateContactList method auto refreshes this after load completes.
-		}
+		ContactInput ci = (ContactInput) holder.itemView;
+		ci.setRecent(allContacts, ci.getContext());
 
 
 		if (recipients != null && recipients.size() > position && recipients.get(position).getPhoneNumber() != null)
-			holder.dropdown.setText(recipients.get(position).toString(), false);
+			ci.setText(recipients.get(position).toString(), false);
 
-		holder.dropdown.addTextChangedListener(new TextWatcher() {
+		ci.addTextChangedListener(new TextWatcher() {
 			@Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
 			@Override public void afterTextChanged(Editable editable) { }
 			@Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -65,12 +64,12 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
 			}
 		});
 
-		holder.dropdown.setOnItemClickListener((adapterView, view, pos, id) -> {
+		ci.setOnItemClickListener((adapterView, view, pos, id) -> {
 			StaxContact contact = (StaxContact) adapterView.getItemAtPosition(pos);
 			updateListener.onUpdate(position, contact);
 		});
 
-		holder.contactButton.setOnClickListener(view -> updateListener.onClickContact(position, holder.view.getContext()));
+		ci.setChooseContactListener(view -> updateListener.onClickContact(position, ci.getContext()));
 	}
 
 	public interface UpdateListener {
@@ -79,15 +78,8 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
 	}
 
 	static class RecipientViewHolder extends RecyclerView.ViewHolder {
-		final View view;
-		final AutoCompleteTextView dropdown;
-		final AppCompatImageButton contactButton;
-
-		RecipientViewHolder(@NonNull View itemView) {
+		RecipientViewHolder(@NonNull ContactInput itemView) {
 			super(itemView);
-			view = itemView;
-			dropdown = itemView.findViewById(R.id.autoCompleteView);
-			contactButton = itemView.findViewById(R.id.contact_button);
 		}
 	}
 
