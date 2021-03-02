@@ -2,8 +2,8 @@ package com.hover.stax.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,18 +12,24 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 
-public class StaxTextInputLayout extends AbstractColoredInput {
+public class StaxTextInputLayout extends AbstractStatefulInput {
     private final String TAG = "StaxTextInputLayout";
 
 	private String hint;
 	private int inputType;
+	private TextInputEditText editText;
 
 	public StaxTextInputLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
 		super(context, attrs);
-
 		getAttrs(context,attrs);
-		LayoutInflater.from(context).inflate(R.layout.stax_input, this);
+		inflate(context, R.layout.stax_input, this);
+		initView();
 		fillAttr();
+	}
+
+	protected void initView() {
+		super.initView();
+		editText = findViewById(R.id.inputEditText);
 	}
 
 	private void getAttrs(Context context, AttributeSet attrs) {
@@ -39,5 +45,11 @@ public class StaxTextInputLayout extends AbstractColoredInput {
 	private void fillAttr() {
 		if (hint != null) ((TextInputLayout) findViewById(R.id.inputLayout)).setHint(hint);
 		if (inputType > 0) ((TextInputEditText) findViewById(R.id.inputEditText)).setInputType(inputType);
+	}
+
+	public void setText(String text) { editText.setText(text); }
+
+	public void addTextChangedListener(TextWatcher listener) {
+		editText.addTextChangedListener(listener);
 	}
 }

@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 
-public class StaxDropdownLayout extends AbstractColoredInput {
+public class StaxDropdownLayout extends AbstractStatefulInput {
 	private final String TAG = "StaxDropdownLayout";
 
 	private String hint, defaultText;
@@ -24,12 +24,8 @@ public class StaxDropdownLayout extends AbstractColoredInput {
 		super(context, attrs);
 		getAttrs(context, attrs);
 		inflate(context, R.layout.stax_dropdown, this);
-		initViews();
+		initView();
 		fillAttr();
-	}
-
-	private void initViews() {
-		autoCompleteTextView = findViewById(R.id.autoCompleteView);
 	}
 
 	private void getAttrs(Context context, AttributeSet attrs) {
@@ -41,6 +37,11 @@ public class StaxDropdownLayout extends AbstractColoredInput {
 		} finally {
 			a.recycle();
 		}
+	}
+
+	protected void initView() {
+		super.initView();
+		autoCompleteTextView = findViewById(R.id.autoCompleteView);
 	}
 
 	private void fillAttr() {

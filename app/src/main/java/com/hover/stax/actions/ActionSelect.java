@@ -116,6 +116,8 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 
 	public void setError(String message) { dropdownLayout.setError(message); }
 
+	public void setState(String message, int state) { dropdownLayout.setState(message, state); }
+
 	private List<Action> getWhoMeOptions(int recipientInstId) {
 		List<Action> options = new ArrayList<>();
 		if (actions == null) return options;

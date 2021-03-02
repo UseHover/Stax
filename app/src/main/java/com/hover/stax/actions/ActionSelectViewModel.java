@@ -18,12 +18,9 @@ public class ActionSelectViewModel extends AndroidViewModel {
 	private MediatorLiveData<List<Action>> filteredActions = new MediatorLiveData<>();
 	private MediatorLiveData<Action> activeAction = new MediatorLiveData<>();
 
-	private MediatorLiveData<String> actionError = new MediatorLiveData<>();
-
 	public ActionSelectViewModel(Application application) {
 		super(application);
 		activeAction.addSource(filteredActions, this::setActiveActionIfOutOfDate);
-		actionError.addSource(activeAction, activeAction -> { if (activeAction != null) actionError.setValue(null); });
 	}
 
 	public void setActions(List<Action> actions) {
@@ -51,19 +48,8 @@ public class ActionSelectViewModel extends AndroidViewModel {
 		return activeAction;
 	}
 
-	public LiveData<String> getActiveActionError() {
-		if (actionError == null) { actionError = new MediatorLiveData<>(); }
-		return actionError;
-	}
-
-	public boolean validates() {
-		boolean valid = true;
-		if (activeAction.getValue() == null) {
-			valid = false;
-			actionError.setValue(getApplication().getString(R.string.action_fielderror));
-		}
-		Log.e(TAG, "is valid? " + valid);
-		return valid;
+	public String errorCheck() {
+		return activeAction.getValue() == null ? getApplication().getString(R.string.action_fielderror) : null;
 	}
 
 	boolean requiresActionChoice() { // in last case, should have request network as choice

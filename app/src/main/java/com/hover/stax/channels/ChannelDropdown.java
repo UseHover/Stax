@@ -13,6 +13,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.hover.stax.R;
+import com.hover.stax.actions.Action;
 import com.hover.stax.views.StaxDropdownLayout;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -90,12 +91,18 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 		viewModel.getSimHniList().observe(lifecycleOwner, simList -> Log.i(TAG, "Got new sim hni list: " + simList));
 		viewModel.getChannels().observe(lifecycleOwner, this::updateChannels);
 		viewModel.getSimChannels().observe(lifecycleOwner, this::updateChannels);
-		viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> {
-			if (channels != null && channels.size() > 0) setError(null);
-		});
-		viewModel.getChannelActions().observe(lifecycleOwner, actions -> { if (actions != null && actions.size() > 0) setState(null, SUCCESS); });
-//		viewModel.getHelper().observe(lifecycleOwner, helper -> setState(helper != null ?  getContext().getString(helper) : null, AbstractColoredInput.NONE));
-		viewModel.getError().observe(lifecycleOwner, error -> setError(error));
+		viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> Log.i(TAG, "Got new selected channels: " + channels.size()));
+		viewModel.getActiveChannel().observe(lifecycleOwner, channel -> { if (channel != null) setState(null, NONE); });
+		viewModel.getChannelActions().observe(lifecycleOwner, actions -> setState(actions, viewModel));
+	}
+
+	private void setState(List<Action> actions, ChannelDropdownViewModel viewModel) {
+		if (viewModel.getActiveChannel().getValue() != null && (actions == null || actions.size() == 0))
+			setState(getContext().getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getContext(), viewModel.getType())), ERROR);
+		else if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !actions.get(0).transaction_type.equals(Action.BALANCE))
+			setState(getContext().getString(actions.get(0).transaction_type.equals(Action.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning), INFO);
+		else if (viewModel.getActiveChannel().getValue() != null && actions != null && actions.size() > 0)
+			setState(null, SUCCESS);
 	}
 
 	public interface HighlightListener {

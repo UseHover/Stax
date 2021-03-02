@@ -37,7 +37,7 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
 	@NonNull
 	@Override
 	public RecipientViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipient_input, parent, false);
+		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_input, parent, false);
 		return new RecipientViewHolder(view);
 	}
 

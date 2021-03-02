@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.textfield.TextInputLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    style="@style/StaxLabeledInput"
-    android:id="@+id/inputLayout" >
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
-	<com.google.android.material.textfield.TextInputEditText
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:padding="@dimen/margin_13"
-		android:textSize="@dimen/text_21"
-		android:fontFamily="font-normal"
-		android:textColor="@color/offWhite"
-		android:textCursorDrawable="@null"
-		android:id="@+id/inputEditText" />
+	<com.google.android.material.textfield.TextInputLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    style="@style/StaxLabeledInput"
+		app:endIconMode="custom"
+	    android:id="@+id/inputLayout" >
 
-</com.google.android.material.textfield.TextInputLayout>
+		<com.google.android.material.textfield.TextInputEditText
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:padding="@dimen/margin_13"
+			android:textSize="@dimen/text_21"
+			android:fontFamily="font-normal"
+			android:textColor="@color/offWhite"
+			android:textCursorDrawable="@null"
+			android:id="@+id/inputEditText" />
 
+	</com.google.android.material.textfield.TextInputLayout>
+</FrameLayout>

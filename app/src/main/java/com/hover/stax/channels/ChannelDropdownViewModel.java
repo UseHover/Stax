@@ -46,9 +46,6 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 	private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
 	private MediatorLiveData<List<Action>> channelActions = new MediatorLiveData<>();
 
-	private MediatorLiveData<String> error = new MediatorLiveData<>();
-	private MediatorLiveData<Integer> helper = new MediatorLiveData<>();
-
 	public ChannelDropdownViewModel(Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
@@ -64,27 +61,14 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 		simChannels.addSource(simHniList, this::onSimUpdate);
 
 		activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull);
-		error.addSource(activeChannel, channel -> {
-			if (channel != null && channelActions.getValue() != null && channelActions.getValue().size() > 0)
-			error.setValue(null);
-		});
 
 		channelActions.addSource(type, this::loadActions);
 		channelActions.addSource(selectedChannels, this::loadActions);
 		channelActions.addSource(activeChannel, this::loadActions);
-		helper.addSource(channelActions, actions -> {
-			if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !actions.get(0).transaction_type.equals(Action.BALANCE))
-				helper.setValue(actions.get(0).transaction_type.equals(Action.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning);
-			else helper.setValue(null);
-		});
-		error.addSource(channelActions, actions -> {
-			if (activeChannel.getValue() != null && (actions == null || actions.size() == 0))
-				error.setValue(application.getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getApplication(), type.getValue())));
-			else error.setValue(null);
-		});
 	}
 
 	public void setType(String t) { type.setValue(t); }
+	public String getType() { return type.getValue(); }
 
 	private void loadChannels() {
 		if (allChannels == null) { allChannels = new MutableLiveData<>(); }
@@ -238,26 +222,12 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 		Amplitude.getInstance().logEvent(getApplication().getString(R.string.new_channel_selected), event);
 	}
 
-	public boolean validates() {
-		boolean valid = true;
-		if (activeChannel.getValue() == null) {
-			valid = false;
-			error.setValue(getApplication().getString(R.string.channels_error_noselect));
-		} else if (channelActions.getValue() == null || channelActions.getValue().size() == 0) {
-			valid = false;
-			error.setValue(getApplication().getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getApplication(), type.getValue())));
-		}
-		return valid;
-	}
-
-	public LiveData<String> getError() {
-		if (error == null) { error = new MediatorLiveData<>(); }
-		return error;
-	}
-
-	public LiveData<Integer> getHelper() {
-		if (helper == null) { helper = new MediatorLiveData<>(); }
-		return helper;
+	public String errorCheck() {
+		if (activeChannel.getValue() == null)
+			return getApplication().getString(R.string.channels_error_noselect);
+		else if (channelActions.getValue() == null || channelActions.getValue().size() == 0) {
+			return getApplication().getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getApplication(), type.getValue()));
+		} else return null;
 	}
 
 	public void setChannelFromRequest(Request r) {
@@ -266,8 +236,8 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 				List<Action> acts = repo.getActions(getChannelIds(selectedChannels.getValue()), r.requester_institution_id);
 				if (acts.size() <= 0) {
 					acts = repo.getActions(getChannelIds(simChannels.getValue()), r.requester_institution_id);
-					if (acts.size() <= 0)
-						error.postValue(getApplication().getString(R.string.channel_request_fielderror, String.valueOf(r.requester_institution_id)));
+//					if (acts.size() <= 0)
+//						error.postValue(getApplication().getString(R.string.channel_request_fielderror, String.valueOf(r.requester_institution_id)));
 				}
 				channelActions.postValue(acts);
 			}).start();

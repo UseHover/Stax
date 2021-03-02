@@ -22,15 +22,10 @@ public class TransferViewModel extends AbstractFormViewModel {
 	private MutableLiveData<StaxContact> contact = new MutableLiveData<>();
 	private MutableLiveData<String> note = new MutableLiveData<>();
 
-	private MediatorLiveData<Integer> amountError = new MediatorLiveData<>();
-	private MediatorLiveData<Integer> recipientError = new MediatorLiveData<>();
-
 	protected LiveData<Request> request = new MutableLiveData<>();
 
 	public TransferViewModel(Application application) {
 		super(application);
-		amountError.addSource(amount, amount -> { if (amount != null) amountError.setValue(null); });
-		recipientError.addSource(contact, contact -> { if (contact != null) recipientError.setValue(null); });
 	}
 
 	void setType(String transaction_type) {
@@ -46,11 +41,6 @@ public class TransferViewModel extends AbstractFormViewModel {
 			amount = new MutableLiveData<>();
 		}
 		return amount;
-	}
-
-	LiveData<Integer> getAmountError() {
-		if (amountError == null) { amountError = new MediatorLiveData<>(); }
-		return amountError;
 	}
 
 	void setContact(String contact_ids) {
@@ -75,11 +65,6 @@ public class TransferViewModel extends AbstractFormViewModel {
 		contact.setValue(new StaxContact(r));
 	}
 
-	LiveData<Integer> getRecipientError() {
-		if (recipientError == null) { recipientError = new MediatorLiveData<>(); }
-		return recipientError;
-	}
-
 	public LiveData<Schedule> getSchedule() {
 		if (schedule == null) { schedule = new MutableLiveData<>(); }
 		return schedule;
@@ -102,17 +87,16 @@ public class TransferViewModel extends AbstractFormViewModel {
 		return note;
 	}
 
-	protected boolean validates(Action a) {
-		boolean valid = true;
-		if (amount.getValue() == null || amount.getValue().isEmpty() || !amount.getValue().matches("[\\d.]+") || Double.parseDouble(amount.getValue()) < 1) {
-			valid = false;
-			amountError.setValue(R.string.amount_fielderror);
-		}
-		if (a.requiresRecipient() && contact.getValue() == null) {
-			valid = false;
-			recipientError.setValue(R.string.transfer_error_recipient);
-		}
-		return valid;
+	String amountErrors() {
+		if (amount.getValue() != null && !amount.getValue().isEmpty() && amount.getValue().matches("[\\d.]+") && !amount.getValue().matches("[0]+"))
+			return null;
+		return getApplication().getString(R.string.amount_fielderror);
+	}
+
+	String recipientErrors(Action a) {
+		if (a.requiresRecipient() && contact.getValue() == null)
+			return getApplication().getString(a.isPhoneBased() ? R.string.transfer_error_recipient_phone : R.string.transfer_error_recipient_account);
+		return null;
 	}
 
 	public LiveData<Request> decrypt(String encryptedLink) {

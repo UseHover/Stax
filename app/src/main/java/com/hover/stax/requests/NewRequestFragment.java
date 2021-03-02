@@ -19,27 +19,29 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDropdownViewModel;
+import com.hover.stax.contacts.ContactInput;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.transfers.AbstractFormFragment;
+import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDropdownLayout;
 import com.hover.stax.views.StaxTextInputLayout;
 import com.hover.stax.views.Stax2LineItem;
 import com.hover.stax.views.StaxCardView;
 
+import static com.hover.stax.views.AbstractStatefulInput.NONE;
+
 public class NewRequestFragment extends AbstractFormFragment implements RecipientAdapter.UpdateListener {
 
 	protected NewRequestViewModel requestViewModel;
 
+	private StaxTextInputLayout amountInput, requesterAccountNo, noteInput;
 	private RecyclerView recipientInputList;
-
-	private EditText amountInput, requesterAccountNo, noteInput;
 	private TextView addRecipientBtn;
 
 	private LinearLayout recipientValueList;
 	protected Stax2LineItem accountValue;
-
 	private StaxCardView shareCard;
 
 	private RecipientAdapter recipientAdapter;
@@ -60,23 +62,21 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 
 	@Override
 	protected void init(View view) {
-		recipientValueList = view.findViewById(R.id.requesteeValueList);
-		accountValue = view.findViewById(R.id.account_value);
-
+		amountInput = view.findViewById(R.id.amountInput);
 		recipientInputList = view.findViewById(R.id.recipient_list);
-		amountInput = view.findViewById(R.id.amountEntry).findViewById(R.id.inputEditText);
-		amountInput.setText(requestViewModel.getAmount().getValue());
+		addRecipientBtn = view.findViewById(R.id.add_recipient_button);
 		requesterAccountNo = view.findViewById(R.id.accountNumber_input);
 		requesterAccountNo.setText(requestViewModel.getRequesterNumber().getValue());
+		noteInput = view.findViewById(R.id.noteInput);
 
-		noteInput = view.findViewById(R.id.noteInput).findViewById(R.id.inputEditText);
-		noteInput.setText(requestViewModel.getNote().getValue());
-		addRecipientBtn = view.findViewById(R.id.add_recipient_button);
-
+		amountInput.setText(requestViewModel.getAmount().getValue());
 		recipientInputList.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 		recipientAdapter = new RecipientAdapter(requestViewModel.getRequestees().getValue(), requestViewModel.getRecentContacts().getValue(), this);
 		recipientInputList.setAdapter(recipientAdapter);
+		noteInput.setText(requestViewModel.getNote().getValue());
 
+		recipientValueList = view.findViewById(R.id.requesteeValueList);
+		accountValue = view.findViewById(R.id.account_value);
 		shareCard = view.findViewById(R.id.shareCard);
 
 		super.init(view);
@@ -109,26 +109,14 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 			recipientAdapter.updateContactList(contacts);
 		});
 
-		requestViewModel.getAmountError().observe(getViewLifecycleOwner(), error -> {
-			((StaxTextInputLayout) root.findViewById(R.id.amountEntry)).setError((error != null ? getString(error) : null));
-		});
-
-		requestViewModel.getRequesteeError().observe(getViewLifecycleOwner(), recipientError -> {
-			if (recipientInputList.getChildAt(0) == null) return;
-			StaxDropdownLayout v = recipientInputList.getChildAt(0).findViewById(R.id.recipientLabel);
-			v.setError((recipientError != null ? getString(recipientError) : null));
-		});
-
-		requestViewModel.getRequesterNumberError().observe(getViewLifecycleOwner(), accountNumberError->{
-			StaxTextInputLayout v = root.findViewById(R.id.accountNumberEntry);
-			v.setError((accountNumberError != null ? getString(accountNumberError) : null));
-		});
-
 		requestViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> {
 			root.findViewById(R.id.amountRow).setVisibility(requestViewModel.validAmount() ? View.VISIBLE : View.GONE);
 			((TextView) root.findViewById(R.id.amountValue)).setText(Utils.formatAmount(amount));
 		});
-		requestViewModel.getRequesterNumber().observe(getViewLifecycleOwner(), accountNumber -> accountValue.setSubtitle(accountNumber));
+		requestViewModel.getRequesterNumber().observe(getViewLifecycleOwner(), accountNumber -> {
+			accountValue.setSubtitle(accountNumber);
+			if (accountNumber != null) requesterAccountNo.setState(null, NONE);
+		});
 		requestViewModel.getNote().observe(getViewLifecycleOwner(), note -> {
 			root.findViewById(R.id.noteRow).setVisibility(requestViewModel.validNote() ? View.VISIBLE : View.GONE);
 			((TextView) root.findViewById(R.id.noteValue)).setText(note);
@@ -144,7 +132,10 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 		fab.setVisibility(isEditing ? View.VISIBLE : View.GONE);
 	}
 
-	protected void updateAcctNo(Channel c) { if (c != null) requesterAccountNo.setText(c.accountNo); }
+	protected void updateAcctNo(Channel c) {
+		if (c != null)
+			requesterAccountNo.setText(c.accountNo);
+	}
 
 	protected void startListeners() {
 		addRecipientBtn.setOnClickListener(v -> requestViewModel.addRecipient(new StaxContact("")));
@@ -197,9 +188,19 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 
 	private void fabClicked(View v) {
 		requestViewModel.removeInvalidRequestees();
-		if (requestViewModel.getIsEditing().getValue() & channelDropdownViewModel.validates() & requestViewModel.validates())
+		if (requestViewModel.getIsEditing().getValue() && validates())
 			requestViewModel.setEditing(false);
 		else
 			UIHelper.flashMessage(getContext(), getString(R.string.toast_pleasefix));
+	}
+
+	private boolean validates() {
+		String channelError = channelDropdownViewModel.errorCheck();
+		channelDropdown.setState(channelError, channelError == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.ERROR);
+		String requesterAcctNoError = requestViewModel.requesterAcctNoError();
+		requesterAccountNo.setState(channelError, requesterAcctNoError == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.ERROR);
+		String recipientError = requestViewModel.requesteeErrors();
+		((ContactInput) recipientInputList.getChildAt(0)).setState(recipientError, recipientError == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.ERROR);
+		return channelError == null && requesterAcctNoError == null && recipientError == null;
 	}
 }
