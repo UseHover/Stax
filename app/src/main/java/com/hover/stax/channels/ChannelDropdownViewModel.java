@@ -234,12 +234,10 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 		if (r != null && selectedChannels.getValue() != null && selectedChannels.getValue().size() > 0) {
 			new Thread(() -> {
 				List<Action> acts = repo.getActions(getChannelIds(selectedChannels.getValue()), r.requester_institution_id);
-				if (acts.size() <= 0) {
+				if (acts.size() <= 0)
 					acts = repo.getActions(getChannelIds(simChannels.getValue()), r.requester_institution_id);
-//					if (acts.size() <= 0)
-//						error.postValue(getApplication().getString(R.string.channel_request_fielderror, String.valueOf(r.requester_institution_id)));
-				}
-				channelActions.postValue(acts);
+				if (acts.size() > 0)
+					channelActions.postValue(acts);
 			}).start();
 			activeChannel.addSource(channelActions, this::setActiveChannel);
 		}

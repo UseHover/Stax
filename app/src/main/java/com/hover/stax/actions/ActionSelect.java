@@ -17,6 +17,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import com.hover.stax.R;
+import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDropdownLayout;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -90,9 +91,11 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 	}
 
 	private void setRadioValuesIfRequired(Action action) {
+		dropdownLayout.setState(null, AbstractStatefulInput.SUCCESS);
 		List<Action> options = getWhoMeOptions(action.recipientInstitutionId());
 		if (options.size() == 1) {
-			dropdownLayout.setHelperText(options.get(0).requiresRecipient() ? null : getContext().getString(R.string.self_only_money_warning));
+			if (!options.get(0).requiresRecipient())
+				dropdownLayout.setState(getContext().getString(R.string.self_only_money_warning), AbstractStatefulInput.INFO);
 			selectAction(action);
 			isSelfRadio.setVisibility(GONE);
 			radioHeader.setVisibility(GONE);
@@ -113,8 +116,6 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 	}
 
 	public void setListener(HighlightListener hl) { highlightListener = hl; }
-
-	public void setError(String message) { dropdownLayout.setError(message); }
 
 	public void setState(String message, int state) { dropdownLayout.setState(message, state); }
 
