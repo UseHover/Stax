@@ -40,11 +40,13 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		if(shouldSelfDestructWhenAppVersionExpires(false)) {return;}
-		startBackgroundProcesses();
 		startSplashForegroundSequence();
+		startBackgroundProcesses();
+	}
 
+	private void startSplashForegroundSequence() {
+		initSplashAnimation();
+		authenticateBiometricOrNavigateScreenAfter110sec();
 	}
 
 	private void startBackgroundProcesses() {
@@ -53,24 +55,23 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 		createNotificationChannel();
 		startWorkers();
 	}
-	private void startSplashForegroundSequence() {
-		initSplashAnimation();
-		authenticateBiometricOrNavigateScreenAfter110sec();
-	}
 
 	private void initSplashAnimation() {
 		setContentView(R.layout.splash_screen_layout);
 		blurBackgroundAfter60sec();
 		fadeInSplashContentAfter90sec();
 	}
+
 	private void blurBackgroundAfter60sec() {
-		Bitmap bg = BitmapFactory.decodeResource(getResources(), R.drawable.stax_splash);
-		Bitmap bitmap = new StaxBlur(this,16, 1).transform(bg);
-		ImageView bgView = findViewById(R.id.splash_image_blur);
 		new Handler(Looper.getMainLooper()).postDelayed(() -> {
-			bgView.setImageBitmap(bitmap);
-			bgView.setVisibility(View.VISIBLE);
-			bgView.setAnimation(UIHelper.loadFadeIn(this));
+			Bitmap bg = BitmapFactory.decodeResource(getResources(), R.drawable.stax_splash);
+			Bitmap bitmap = new StaxBlur(this,16, 1).transform(bg);
+			ImageView bgView = findViewById(R.id.splash_image_blur);
+			if (bgView != null) {
+				bgView.setImageBitmap(bitmap);
+				bgView.setVisibility(View.VISIBLE);
+				bgView.setAnimation(UIHelper.loadFadeIn(this));
+			}
 		}, 1000);
 	}
 

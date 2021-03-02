@@ -51,7 +51,8 @@
 	</style>
 
 	<style name="SplashTheme" parent="StaxTheme">
-		<item name="android:windowBackground">@drawable/splash_background</item>
+<!--		<item name="android:windowBackground">@drawable/splash_background</item>-->
+		<item name="android:navigationBarColor" tools:targetApi="lollipop">@color/transparent</item>
 	</style>
 
 	<style name="StaxButton" parent="Widget.AppCompat.Button.Borderless">
