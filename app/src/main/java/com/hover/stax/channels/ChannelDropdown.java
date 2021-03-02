@@ -17,16 +17,19 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
+import com.hover.stax.utils.fieldstates.FieldState;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.views.StaxDropdownLayout;
+import com.hover.stax.views.StaxTextInputLayout;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.List;
 
-public class ChannelDropdown extends TextInputLayout implements Target {
+public class ChannelDropdown extends TextInputLayout implements Target { //Extend this because StaxDropdownLayout already implement a view which is causing double view bug
 	private static String TAG = "ChannelDropdown";
 
-	private TextInputLayout input;
+	private StaxDropdownLayout input;
 	private AutoCompleteTextView dropdownView;
 	private TextView linkView;
 
@@ -41,7 +44,7 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		getAttrs(context, attrs);
 		LayoutInflater.from(context).inflate(R.layout.channel_dropdown, this);
 		input = findViewById(R.id.channel_dropdown_input);
-		dropdownView = findViewById(R.id.channel_autoComplete);
+		dropdownView =input.findViewById(R.id.dropdownInputTextView);
 		linkView = findViewById(R.id.new_account_link);
 		fillFromAttrs();
 	}
@@ -86,8 +89,7 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		dropdownView.setText(c == null ? "" : c.toString(), false);
 		if (c == null)
 			dropdownView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
-		else
-			Picasso.get().load(c.logoUrl).resize(55,55).into(this);
+		else Picasso.get().load(c.logoUrl).resize(55,55).into(this);
 	}
 
 	private void onSelect(Channel c) {
@@ -97,7 +99,6 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 	}
 
 	public Channel getHighlighted() { return highlightedChannel; }
-
 
 	public void toggleLink(boolean show) {
 		linkView.setVisibility(show ? VISIBLE : GONE);
@@ -122,13 +123,14 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		dropdownView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0);
 	}
 
-	public void setError(String message) {
-		input.setError(message);
-		input.setErrorIconDrawable(message != null ? R.drawable.ic_error_warning_24dp : 0);
-	}
-
+	public void setFieldState(FieldState fieldState) {
+		if(!dropdownView.getText().toString().isEmpty()) //Added this check because this resolved a bug for link account fragment field state
+			input.setFieldState(fieldState); }
 	public void setHelper(String message) {
-		input.setHelperText(message);
+		input.setInfo(message);
+	}
+	public void setSuccess(String message) {
+		input.setSuccess(message);
 	}
 
 	public void reset() {
@@ -143,9 +145,12 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		viewModel.getChannels().observe(lifecycleOwner, dropdown::updateChannels);
 		viewModel.getSimChannels().observe(lifecycleOwner, dropdown::updateChannels);
 		viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> {
-			if (channels != null && channels.size() > 0) dropdown.setError(null);
+			if (channels != null && channels.size() > 0) dropdown.setFieldState(null);
 		});
-		viewModel.getError().observe(lifecycleOwner, dropdown::setError);
+		viewModel.getActiveChannel().observe(lifecycleOwner, channel -> {
+			if(channel == null) dropdown.setFieldState(null);
+		});
+		viewModel.getFieldState().observe(lifecycleOwner, dropdown::setFieldState);
 		viewModel.getHelper().observe(lifecycleOwner, helper -> dropdown.setHelper(helper != null ?  getContext().getString(helper) : null));
 	}
 	public void removeObservers(@NonNull ChannelDropdownViewModel viewModel,  @NonNull LifecycleOwner lifecycleOwner) {
@@ -155,7 +160,8 @@ public class ChannelDropdown extends TextInputLayout implements Target {
 		viewModel.getChannels().removeObservers(lifecycleOwner);
 		viewModel.getSimChannels().removeObservers(lifecycleOwner);
 		viewModel.getSelectedChannels().removeObservers(lifecycleOwner);
-		viewModel.getError().removeObservers(lifecycleOwner);
+		viewModel.getActiveChannel().removeObservers(lifecycleOwner);
+		viewModel.getFieldState().removeObservers(lifecycleOwner);
 		viewModel.getHelper().removeObservers(lifecycleOwner);
 	}
 

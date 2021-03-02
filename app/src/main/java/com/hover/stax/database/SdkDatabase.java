@@ -41,6 +41,7 @@ public abstract class SdkDatabase extends RoomDatabase {
 						.addMigrations(M49_50)
 						.addMigrations(M50_51)
 						.addMigrations(M51_52)
+						.addMigrations(M52_53)
 						.build();
 				}
 			}
@@ -117,6 +118,13 @@ public abstract class SdkDatabase extends RoomDatabase {
 	static final Migration M51_52 = new Migration(51, 52) {
 		@Override
 		public void migrate(SupportSQLiteDatabase database) {
+		}
+	};
+
+	static final Migration M52_53 = new Migration(52, 53) {
+		@Override
+		public void migrate(SupportSQLiteDatabase database) {
+		//	database.execSQL("ALTER TABLE hsdk_actions ADD COLUMN from_institution_logo TEXT");
 		}
 	};
 }

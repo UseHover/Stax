@@ -14,6 +14,17 @@
 		<attr name="showLink" format="boolean"/>
 	</declare-styleable>
 
+	<declare-styleable name="StaxTextInputLayout">
+		<attr name="hint" format="string" />
+		<attr name="android:inputType" format="string"/>
+	</declare-styleable>
+
+	<declare-styleable name="StaxDropdownLayout">
+		<attr name="hint_value" format="string" />
+		<attr name="editable" format="boolean"/>
+		<attr name="defaultText" format="string"/>
+	</declare-styleable>
+
 	<declare-styleable name="CustomSwipeRefreshLayout">
 		<attr name="enable_top_progress_bar" format="boolean" />
 		<attr name="refresh_mode" format="enum" >

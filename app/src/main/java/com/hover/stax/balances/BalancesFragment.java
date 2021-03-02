@@ -105,12 +105,15 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 	}
 
 	private void refreshBalances(View v) {
-		if (channelDropdown.getHighlighted() != null) {
-			balancesViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
-				balancesViewModel.setAllRunning(v.getContext());
-			});
-			channelDropdownViewModel.setChannelSelected(channelDropdown.getHighlighted());
-		} else if (channelDropdownViewModel.getSelectedChannels().getValue().size() == 0)
+		if (channelDropdown.getHighlighted() != null
+					|| (balancesViewModel.getActions().getValue() !=null
+					&& balancesViewModel.getActions().getValue().size() !=0)) {
+
+					balancesViewModel.setAllRunning(v.getContext());
+
+			if(channelDropdown.getHighlighted() !=null) channelDropdownViewModel.setChannelSelected(channelDropdown.getHighlighted());
+
+		} else if (channelDropdownViewModel.getSelectedChannels().getValue() ==null || channelDropdownViewModel.getSelectedChannels().getValue().size() == 0)
 			channelDropdown.setError(getString(R.string.refresh_balance_error));
 		else
 			balancesViewModel.setAllRunning(v.getContext());

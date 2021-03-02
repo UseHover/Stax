@@ -50,6 +50,7 @@ public abstract class AbstractFormFragment extends Fragment {
 		channelDropdown.setObservers(channelDropdownViewModel, channelDropdown, getViewLifecycleOwner());
 		setupActionDropdownObservers(channelDropdownViewModel, getViewLifecycleOwner());
 		abstractFormViewModel.getIsEditing().observe(getViewLifecycleOwner(), this::showEdit);
+
 	}
 	
 	private void setupActionDropdownObservers(ChannelDropdownViewModel viewModel, LifecycleOwner lifecycleOwner)  {
