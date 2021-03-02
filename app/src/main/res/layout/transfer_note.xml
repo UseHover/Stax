@@ -4,5 +4,4 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
 	android:inputType="text"
-	android:hint="@string/request_note_label"
-    android:layout_marginTop="-20dp" />
+	android:hint="@string/request_note_label" />

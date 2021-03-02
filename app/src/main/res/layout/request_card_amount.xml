@@ -5,4 +5,5 @@
     android:id="@+id/amountInput"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+	android:inputType="numberDecimal"
 	android:hint="@string/amount_label_opt" />
