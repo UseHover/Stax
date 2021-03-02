@@ -8,6 +8,9 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.utils.fieldstates.FieldState;
+import com.hover.stax.utils.fieldstates.FieldStateType;
+import com.hover.stax.utils.fieldstates.Validation;
 import com.hover.stax.requests.Request;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.schedules.Schedule;
@@ -22,15 +25,15 @@ public class TransferViewModel extends AbstractFormViewModel {
 	private MutableLiveData<StaxContact> contact = new MutableLiveData<>();
 	private MutableLiveData<String> note = new MutableLiveData<>();
 
-	private MediatorLiveData<Integer> amountError = new MediatorLiveData<>();
-	private MediatorLiveData<Integer> recipientError = new MediatorLiveData<>();
+	private MediatorLiveData<FieldState> amountFieldState = new MediatorLiveData<>();
+	private MediatorLiveData<FieldState> recipientFieldState = new MediatorLiveData<>();
 
 	protected LiveData<Request> request = new MutableLiveData<>();
 
 	public TransferViewModel(Application application) {
 		super(application);
-		amountError.addSource(amount, amount -> { if (amount != null) amountError.setValue(null); });
-		recipientError.addSource(contact, contact -> { if (contact != null) recipientError.setValue(null); });
+		amountFieldState.addSource(amount, amount -> { if (amount != null) amountFieldState.setValue(null); });
+		amountFieldState.addSource(contact, contact -> { if (contact != null) amountFieldState.setValue(null); });
 	}
 
 	void setType(String transaction_type) {
@@ -48,9 +51,9 @@ public class TransferViewModel extends AbstractFormViewModel {
 		return amount;
 	}
 
-	LiveData<Integer> getAmountError() {
-		if (amountError == null) { amountError = new MediatorLiveData<>(); }
-		return amountError;
+	LiveData<FieldState> getAmountFieldState() {
+		if (amountFieldState == null) { amountFieldState = new MediatorLiveData<>(); }
+		return amountFieldState;
 	}
 
 	void setContact(String contact_ids) {
@@ -63,6 +66,7 @@ public class TransferViewModel extends AbstractFormViewModel {
 
 	void setContact(StaxContact c) {
 		contact.setValue(c);
+		recipientFieldState.postValue(new FieldState(FieldStateType.SUCCESS, ""));
 	}
 
 	LiveData<StaxContact> getContact() {
@@ -75,9 +79,9 @@ public class TransferViewModel extends AbstractFormViewModel {
 		contact.setValue(new StaxContact(r));
 	}
 
-	LiveData<Integer> getRecipientError() {
-		if (recipientError == null) { recipientError = new MediatorLiveData<>(); }
-		return recipientError;
+	LiveData<FieldState> getRecipientFieldState() {
+		if (recipientFieldState == null) { recipientFieldState = new MediatorLiveData<>(); }
+		return recipientFieldState;
 	}
 
 	public LiveData<Schedule> getSchedule() {
@@ -102,16 +106,24 @@ public class TransferViewModel extends AbstractFormViewModel {
 		return note;
 	}
 
-	protected boolean validates(Action a) {
+	protected boolean validates(Action a, Validation validationType) {
 		boolean valid = true;
 		if (amount.getValue() == null || amount.getValue().isEmpty() || !amount.getValue().matches("[\\d.]+") || Double.parseDouble(amount.getValue()) < 1) {
-			valid = false;
-			amountError.setValue(R.string.amount_fielderror);
-		}
-		if (a.requiresRecipient() && contact.getValue() == null) {
-			valid = false;
-			recipientError.setValue(R.string.transfer_error_recipient);
-		}
+			if(validationType == Validation.HARD) {
+				valid = false;
+				amountFieldState.setValue(new FieldState(FieldStateType.ERROR,getApplication().getString(R.string.amount_fielderror)));
+			}
+		} else amountFieldState.setValue(new FieldState(FieldStateType.SUCCESS, ""));
+
+		if(a!=null) {
+			if (a.requiresRecipient() && contact.getValue() == null) {
+				if(validationType == Validation.HARD) {
+					valid = false;
+					recipientFieldState.setValue(new FieldState(FieldStateType.ERROR, getApplication().getString(R.string.transfer_error_recipient)));
+				}
+			} else recipientFieldState.setValue(new FieldState(FieldStateType.SUCCESS, ""));
+		}else valid = false;
+
 		return valid;
 	}
 

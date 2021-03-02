@@ -20,8 +20,8 @@ import com.hover.sdk.api.Hover;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.database.DatabaseRepo;
-import com.hover.stax.fieldstates.FieldState;
-import com.hover.stax.fieldstates.FieldStateType;
+import com.hover.stax.utils.fieldstates.FieldState;
+import com.hover.stax.utils.fieldstates.FieldStateType;
 import com.hover.stax.requests.Request;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.sims.Sim;
@@ -47,6 +47,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 	private MediatorLiveData<List<Channel>> simChannels;
 	private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
 	private MediatorLiveData<List<Action>> channelActions = new MediatorLiveData<>();
+
 
 	private MediatorLiveData<FieldState> fieldState = new MediatorLiveData<>();
 	private MediatorLiveData<Integer> helper = new MediatorLiveData<>();
@@ -79,14 +80,14 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 				String fieldMessage = application.getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getApplication(), type.getValue()));
 				fieldState.setValue(new FieldState(FieldStateType.ERROR, fieldMessage));
 			}
-			else fieldState.setValue(null);
+			else fieldState.setValue(activeChannel.getValue() !=null ?new FieldState(FieldStateType.SUCCESS, "") : null);
 		});
 		helper.addSource(channelActions, actions -> {
 			if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !actions.get(0).transaction_type.equals(Action.BALANCE)){
 				String fieldMessage = application.getString(actions.get(0).transaction_type.equals(Action.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning);
 				fieldState.setValue(new FieldState(FieldStateType.INFO, fieldMessage));
 			}
-			else fieldState.setValue(null);
+			else fieldState.setValue(activeChannel.getValue()!=null? new FieldState(FieldStateType.SUCCESS, "") :null);
 		});
 	}
 
