@@ -78,27 +78,6 @@ final public class HoverSession {
 		builder.extra(Action.PIN_KEY, KeyStoreExecutor.decrypt(channel.pin, a));
 	}
 
-	private String getSenderLogo() {
-//		Log.e(TAG, "logo array: " + l);
-		return channel.logoUrl;
-	}
-	private byte[] getReceiverLogo(Action a) {
-		if (a.to_institution_logo != null && !channel.logoUrl.equals(a.to_institution_logo))
-			return getLogo(a.to_institution_logo);
-		return null;
-	}
-	private byte[] getLogo(String url) {
-//		try {
-//			Log.e(TAG, "logo url: " + url);
-//			Bitmap b = Picasso.get().load(url).networkPolicy(NetworkPolicy.OFFLINE).get();
-//			Log.e(TAG, "bitmap: " + b);
-//			return Utils.bitmapToByteArray(b);
-//		} catch (Exception ignored) {
-//			Log.e(TAG, "exception", ignored);
-			return null;
-//		}
-	}
-
 	private String getMessage(Action a, Context c) {
 		switch (a.transaction_type) {
 			case Action.BALANCE: return c.getString(R.string.balance_msg, a.from_institution_name);

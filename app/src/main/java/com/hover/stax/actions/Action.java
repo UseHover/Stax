@@ -127,6 +127,10 @@ public class Action {
 		return requiresInput(ACCOUNT_KEY) || requiresInput(PHONE_KEY);
 	}
 
+	public boolean isPhoneBased() {
+		return !requiresInput(ACCOUNT_KEY) && requiresInput(PHONE_KEY);
+	}
+
 	public boolean allowsNote() {
 		return requiresInput(NOTE_KEY);
 	}

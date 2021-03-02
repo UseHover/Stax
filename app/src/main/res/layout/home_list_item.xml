@@ -61,5 +61,5 @@
 	    android:textSize="@dimen/text_13"
 	    android:visibility="gone"
 	    android:text="@string/pending_callout"
-	    app:drawableStartCompat="@drawable/ic_warning" />
+	    app:drawableStartCompat="@drawable/ic_info" />
 </LinearLayout>

@@ -55,6 +55,7 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
 	@Override
 	public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
 		Channel c = channels.get(position);
+		Log.e("ADAPTER", "getting view for pos " + position);
 		view = LayoutInflater.from(parent.getContext()).inflate(R.layout.stax_spinner_item_with_logo, parent,false);
 
 		holder = new ViewHolder(view);

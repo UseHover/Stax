@@ -10,12 +10,9 @@ import androidx.lifecycle.MutableLiveData;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
-import com.hover.stax.utils.fieldstates.FieldState;
-import com.hover.stax.utils.fieldstates.FieldStateType;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.transfers.AbstractFormViewModel;
-import com.hover.stax.utils.fieldstates.Validation;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,12 +28,6 @@ public class NewRequestViewModel extends AbstractFormViewModel {
 	private MediatorLiveData<String> requesterNumber = new MediatorLiveData<>();
 	private MutableLiveData<String> note = new MutableLiveData<>();
 
-	private MediatorLiveData<FieldState> amountFieldState = new MediatorLiveData<>();
-	private MediatorLiveData<FieldState> requesteeFieldState = new MediatorLiveData<>();
-	private MediatorLiveData<FieldState> requesterAccountFieldState = new MediatorLiveData<>();
-	private MediatorLiveData<FieldState> requesterNumberFieldState = new MediatorLiveData<>();
-	private MutableLiveData<FieldState> noteFieldState = new MutableLiveData<>();
-
 	private MutableLiveData<Request> formulatedRequest = new MutableLiveData<>();
 	private MutableLiveData<List<Request>> finalRequests = new MutableLiveData<>();
 
@@ -46,11 +37,6 @@ public class NewRequestViewModel extends AbstractFormViewModel {
 		formulatedRequest.setValue(null);
 
 		requesterNumber.addSource(activeChannel, this::setRequesterNumber);
-
-		amountFieldState.addSource(amount, amount -> { if (amount != null && !amount.isEmpty() && !amount.equals("0")) amountFieldState.setValue(null); });
-		requesteeFieldState.addSource(requestees, contacts -> { if (contacts != null && contacts.size() > 0) requesteeFieldState.setValue(null); });
-		requesterAccountFieldState.addSource(activeChannel, channel -> { if (channel != null) requesterAccountFieldState.setValue(null); });
-		requesterNumberFieldState.addSource(requesterNumber, number -> { if (number != null) requesterNumberFieldState.setValue(null); });
 	}
 
 	void setAmount(String a) {
@@ -107,35 +93,6 @@ public class NewRequestViewModel extends AbstractFormViewModel {
 
 	void resetRecipients() { requestees.setValue(new ArrayList<>()); }
 
-	LiveData<FieldState> getAmountFieldState() {
-		if (amountFieldState == null) { amountFieldState = new MediatorLiveData<>(); }
-		return amountFieldState;
-	}
-
-	LiveData<FieldState> getRequesteeFieldState() {
-		if (requesteeFieldState == null) {
-			requesteeFieldState = new MediatorLiveData<>();
-		}
-		return requesteeFieldState;
-	}
-
-	LiveData<FieldState> getRequesterAccountFieldState() {
-		if(requesterAccountFieldState == null) {
-			requesterAccountFieldState = new MediatorLiveData<>();
-		}
-		return requesterAccountFieldState;
-	}
-	LiveData<FieldState> getRequesterNumberFieldState() {
-		if(requesterNumberFieldState == null) {
-			requesterNumberFieldState = new MediatorLiveData<>();
-		}
-		return requesterNumberFieldState;
-	}
-	LiveData<FieldState> getNoteFieldState() {
-		if(noteFieldState == null) noteFieldState = new MutableLiveData<>();
-		return noteFieldState;
-	}
-
 	void setNote(String n) {
 		note.postValue(n);
 	}
@@ -148,42 +105,19 @@ public class NewRequestViewModel extends AbstractFormViewModel {
 		return note;
 	}
 
-
-	protected boolean validates(Validation validationType) {
-		boolean valid = true;
-		if (!validNumber()) {
-			if(validationType == Validation.HARD) {
-				valid = false;
-				requesterNumberFieldState.setValue(new FieldState(FieldStateType.ERROR, getApplication().getString(R.string.requester_number_fielderror)));
-			}
-		} else requesterNumberFieldState.setValue(new FieldState(FieldStateType.SUCCESS, ""));
-
-		if (!validAccount()) {
-			if(validationType == Validation.HARD) {
-				valid = false;
-				requesterAccountFieldState.setValue(new FieldState(FieldStateType.ERROR,getApplication().getString(R.string.requester_account_error)));
-			}
-		}else requesterAccountFieldState.setValue(new FieldState(FieldStateType.SUCCESS, ""));
-
-		if (!validRequestees()) {
-			if(validationType == Validation.HARD) {
-				valid = false;
-				requesteeFieldState.setValue(new FieldState(FieldStateType.ERROR,getApplication().getString(R.string.request_error_recipient)));
-			}
-		}else requesteeFieldState.setValue(new FieldState(FieldStateType.SUCCESS, ""));
-
-		if(validAmount()) amountFieldState.setValue(new FieldState(FieldStateType.SUCCESS, ""));
-		if(validNote()) noteFieldState.setValue(new FieldState(FieldStateType.SUCCESS, ""));
-		return valid;
-	}
-
 	boolean validAmount() { return (amount.getValue() != null && !amount.getValue().isEmpty() && amount.getValue().matches("\\d+") && !amount.getValue().matches("[0]+")); }
 
-	boolean validRequestees() { return (requestees.getValue() != null && requestees.getValue().size() > 0 && !requestees.getValue().get(0).getPhoneNumber().isEmpty()); }
+	String requesteeErrors() {
+		if (requestees.getValue() != null && requestees.getValue().size() > 0 && !requestees.getValue().get(0).getPhoneNumber().isEmpty())
+			return null;
+		return getApplication().getString(R.string.request_error_recipient);
+	}
 
-	boolean validAccount() { return (activeChannel.getValue() != null); }
-
-	boolean validNumber() { return (requesterNumber.getValue() != null && !requesterNumber.getValue().isEmpty()); }
+	String requesterAcctNoError() {
+		if (requesterNumber.getValue() != null && !requesterNumber.getValue().isEmpty())
+			return null;
+		return getApplication().getString(R.string.requester_number_fielderror);
+	}
 
 	boolean validNote() { return (note.getValue() != null && !note.getValue().isEmpty()); }
 
@@ -221,7 +155,6 @@ public class NewRequestViewModel extends AbstractFormViewModel {
 		if (finalRequests == null) { finalRequests = new MutableLiveData<>(); }
 		return finalRequests;
 	}
-
 
 	void removeInvalidRequestees() {
 		if (requestees.getValue() != null && requestees.getValue().size() > 0) {

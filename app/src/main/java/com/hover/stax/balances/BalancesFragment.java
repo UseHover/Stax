@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
+import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDropdown;
@@ -33,7 +35,6 @@ import static android.view.View.VISIBLE;
 public class BalancesFragment extends Fragment implements TransactionHistoryAdapter.SelectListener,
 																  ScheduledAdapter.SelectListener,
 																  RequestsAdapter.SelectListener,
-																  ChannelDropdown.LinkViewClickListener,
 																  NavigationInterface {
 	final public static String TAG = "BalanceFragment";
 
@@ -42,6 +43,8 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 	private TransactionHistoryViewModel transactionsViewModel;
 	private BalanceAdapter balanceAdapter;
 	private ChannelDropdownViewModel channelDropdownViewModel;
+
+	private TextView addChannelLink;
 	private ChannelDropdown channelDropdown;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,8 +73,9 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 		balancesViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> updateServices(channels, view));
 	}
 	private void setUpLinkNewAccount(View view) {
+		addChannelLink = view.findViewById(R.id.new_account_link);
+		addChannelLink.setOnClickListener(v -> navigateToLinkAccountFragment(getActivity()));
 		channelDropdown = view.findViewById(R.id.channel_dropdown);
-		channelDropdown.setLinkViewClickListener(this);
 	}
 
 	private void initBalanceCard(View view) {
@@ -95,25 +99,24 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 		recyclerView.setVisibility(channels != null && channels.size() > 0 ? VISIBLE : GONE);
 
 		((StaxCardView) view.findViewById(R.id.balance_card)).backButton.setVisibility(channels != null && channels.size() > 0  ? VISIBLE : GONE);
-		if(channels != null && channels.size() > 0) {
-			channelDropdown.toggleLink(true);
-			channelDropdown.removeObservers(channelDropdownViewModel, getViewLifecycleOwner());
-		}else {
-			channelDropdown.toggleLink(false);
-			channelDropdown.setObservers(channelDropdownViewModel, channelDropdown, getViewLifecycleOwner());
-		}
+
+		toggleLink(channels != null && channels.size() > 0);
+		channelDropdown.setObservers(channelDropdownViewModel, getActivity());
+	}
+
+	public void toggleLink(boolean show) {
+		addChannelLink.setVisibility(show ? VISIBLE : GONE);
+		channelDropdown.setVisibility(show ? GONE : VISIBLE);
 	}
 
 	private void refreshBalances(View v) {
-		if (channelDropdown.getHighlighted() != null
-					|| (balancesViewModel.getActions().getValue() !=null
-					&& balancesViewModel.getActions().getValue().size() !=0)) {
+		if (channelDropdown.getHighlighted() != null) {
+			balancesViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
+				balancesViewModel.setAllRunning(v.getContext());
+			});
+			channelDropdownViewModel.setChannelSelected(channelDropdown.getHighlighted());
 
-					balancesViewModel.setAllRunning(v.getContext());
-
-			if(channelDropdown.getHighlighted() !=null) channelDropdownViewModel.setChannelSelected(channelDropdown.getHighlighted());
-
-		} else if (channelDropdownViewModel.getSelectedChannels().getValue() ==null || channelDropdownViewModel.getSelectedChannels().getValue().size() == 0)
+		} else if (channelDropdownViewModel.getSelectedChannels().getValue() == null || channelDropdownViewModel.getSelectedChannels().getValue().size() == 0)
 			channelDropdown.setError(getString(R.string.refresh_balance_error));
 		else
 			balancesViewModel.setAllRunning(v.getContext());
@@ -158,7 +161,4 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 
 	@Override
 	public void viewRequestDetail(int id) { navigateToRequestDetailsFragment(id, this); }
-
-	@Override
-	public void navigateLinkAccountFragment() { navigateToLinkAccountFragment(getActivity()); }
 }

@@ -3,14 +3,10 @@ package com.hover.stax.transfers;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
-import com.hover.stax.utils.fieldstates.FieldState;
-import com.hover.stax.utils.fieldstates.FieldStateType;
-import com.hover.stax.utils.fieldstates.Validation;
 import com.hover.stax.requests.Request;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.schedules.Schedule;
@@ -25,15 +21,10 @@ public class TransferViewModel extends AbstractFormViewModel {
 	private MutableLiveData<StaxContact> contact = new MutableLiveData<>();
 	private MutableLiveData<String> note = new MutableLiveData<>();
 
-	private MediatorLiveData<FieldState> amountFieldState = new MediatorLiveData<>();
-	private MediatorLiveData<FieldState> recipientFieldState = new MediatorLiveData<>();
-
 	protected LiveData<Request> request = new MutableLiveData<>();
 
 	public TransferViewModel(Application application) {
 		super(application);
-		amountFieldState.addSource(amount, amount -> { if (amount != null) amountFieldState.setValue(null); });
-		amountFieldState.addSource(contact, contact -> { if (contact != null) amountFieldState.setValue(null); });
 	}
 
 	void setType(String transaction_type) {
@@ -51,11 +42,6 @@ public class TransferViewModel extends AbstractFormViewModel {
 		return amount;
 	}
 
-	LiveData<FieldState> getAmountFieldState() {
-		if (amountFieldState == null) { amountFieldState = new MediatorLiveData<>(); }
-		return amountFieldState;
-	}
-
 	void setContact(String contact_ids) {
 		if (contact_ids == null) return;
 		new Thread(() -> {
@@ -66,7 +52,6 @@ public class TransferViewModel extends AbstractFormViewModel {
 
 	void setContact(StaxContact c) {
 		contact.setValue(c);
-		recipientFieldState.postValue(new FieldState(FieldStateType.SUCCESS, ""));
 	}
 
 	LiveData<StaxContact> getContact() {
@@ -77,11 +62,6 @@ public class TransferViewModel extends AbstractFormViewModel {
 	void setRecipient(String r) {
 		if (contact.getValue() != null && contact.getValue().toString().equals(r)) { return; }
 		contact.setValue(new StaxContact(r));
-	}
-
-	LiveData<FieldState> getRecipientFieldState() {
-		if (recipientFieldState == null) { recipientFieldState = new MediatorLiveData<>(); }
-		return recipientFieldState;
 	}
 
 	public LiveData<Schedule> getSchedule() {
@@ -106,25 +86,16 @@ public class TransferViewModel extends AbstractFormViewModel {
 		return note;
 	}
 
-	protected boolean validates(Action a, Validation validationType) {
-		boolean valid = true;
-		if (amount.getValue() == null || amount.getValue().isEmpty() || !amount.getValue().matches("[\\d.]+") || Double.parseDouble(amount.getValue()) < 1) {
-			if(validationType == Validation.HARD) {
-				valid = false;
-				amountFieldState.setValue(new FieldState(FieldStateType.ERROR,getApplication().getString(R.string.amount_fielderror)));
-			}
-		} else amountFieldState.setValue(new FieldState(FieldStateType.SUCCESS, ""));
+	String amountErrors() {
+		if (amount.getValue() != null && !amount.getValue().isEmpty() && amount.getValue().matches("[\\d.]+") && !amount.getValue().matches("[0]+"))
+			return null;
+		return getApplication().getString(R.string.amount_fielderror);
+	}
 
-		if(a!=null) {
-			if (a.requiresRecipient() && contact.getValue() == null) {
-				if(validationType == Validation.HARD) {
-					valid = false;
-					recipientFieldState.setValue(new FieldState(FieldStateType.ERROR, getApplication().getString(R.string.transfer_error_recipient)));
-				}
-			} else recipientFieldState.setValue(new FieldState(FieldStateType.SUCCESS, ""));
-		}else valid = false;
-
-		return valid;
+	String recipientErrors(Action a) {
+		if (a.requiresRecipient() && contact.getValue() == null)
+			return getApplication().getString(a.isPhoneBased() ? R.string.transfer_error_recipient_phone : R.string.transfer_error_recipient_account);
+		return null;
 	}
 
 	public LiveData<Request> decrypt(String encryptedLink) {
