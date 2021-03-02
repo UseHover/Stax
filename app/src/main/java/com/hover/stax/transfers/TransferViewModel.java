@@ -3,7 +3,6 @@ package com.hover.stax.transfers;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.hover.stax.R;

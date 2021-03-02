@@ -19,6 +19,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import com.hover.stax.R;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -92,7 +93,7 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
 		private void setChannel(Channel channel) {
 			id.setText(Integer.toString(channel.id));
 			channelText.setText(channel.toString());
-			Picasso.get().load(channel.logoUrl).into(this);
+			Picasso.get().load(channel.logoUrl).networkPolicy(NetworkPolicy.OFFLINE).into(this);
 		}
 
 		@Override

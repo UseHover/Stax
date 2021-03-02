@@ -2,7 +2,6 @@ package com.hover.stax.actions;
 
 import android.app.Application;
 import android.util.Log;
-import android.view.View;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;

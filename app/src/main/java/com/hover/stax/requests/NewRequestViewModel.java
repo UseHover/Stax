@@ -8,7 +8,6 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.schedules.Schedule;
@@ -156,7 +155,6 @@ public class NewRequestViewModel extends AbstractFormViewModel {
 		if (finalRequests == null) { finalRequests = new MutableLiveData<>(); }
 		return finalRequests;
 	}
-
 
 	void removeInvalidRequestees() {
 		if (requestees.getValue() != null && requestees.getValue().size() > 0) {

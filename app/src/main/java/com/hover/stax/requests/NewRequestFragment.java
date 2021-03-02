@@ -2,6 +2,7 @@ package com.hover.stax.requests;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -111,14 +112,17 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 			root.findViewById(R.id.amountRow).setVisibility(requestViewModel.validAmount() ? View.VISIBLE : View.GONE);
 			((TextView) root.findViewById(R.id.amountValue)).setText(Utils.formatAmount(amount));
 		});
+
 		requestViewModel.getRequesterNumber().observe(getViewLifecycleOwner(), accountNumber -> {
 			accountValue.setSubtitle(accountNumber);
 			if (accountNumber != null) requesterNumberInput.setState(null, NONE);
 		});
+
 		requestViewModel.getNote().observe(getViewLifecycleOwner(), note -> {
 			root.findViewById(R.id.noteRow).setVisibility(requestViewModel.validNote() ? View.VISIBLE : View.GONE);
 			((TextView) root.findViewById(R.id.noteValue)).setText(note);
 		});
+
 
 		requestViewModel.getIsEditing().observe(getViewLifecycleOwner(), this::showEdit);
 	}

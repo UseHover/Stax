@@ -14,6 +14,7 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDropdownLayout;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -98,11 +99,11 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 
 	private void setState(List<Action> actions, ChannelDropdownViewModel viewModel) {
 		if (viewModel.getActiveChannel().getValue() != null && (actions == null || actions.size() == 0))
-			setState(getContext().getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getContext(), viewModel.getType())), ERROR);
+			setState(getContext().getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getContext(), viewModel.getType())), AbstractStatefulInput.ERROR);
 		else if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !actions.get(0).transaction_type.equals(Action.BALANCE))
 			setState(getContext().getString(actions.get(0).transaction_type.equals(Action.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning), INFO);
 		else
-			setState(null, SUCCESS);
+			setState(null, AbstractStatefulInput.SUCCESS);
 	}
 
 	public interface HighlightListener {
