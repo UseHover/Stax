@@ -4,8 +4,6 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:id="@+id/editCard"
-	app:showBack="true"
-	app:backClickable="true"
 	app:title="@string/nav_airtime">
 
 	<include layout="@layout/transfer_amount" />
@@ -14,7 +12,7 @@
 		android:id="@+id/channel_dropdown"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		app:label="@string/channel_label"/>
+		android:hint="@string/channel_label"/>
 
 	<com.hover.stax.actions.ActionSelect
 		android:id="@+id/action_select"
@@ -22,9 +20,12 @@
 		android:layout_height="wrap_content"
 		android:visibility="gone"/>
 
-	<include  layout="@layout/recipient_input" />
+	<com.hover.stax.contacts.ContactInput
+		android:id="@+id/contact_select"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" />
 
 	<include layout="@layout/transfer_note"
-		android:visibility="gone"
-		android:id="@+id/reasonEditText"/>
+	    android:visibility="gone" />
+
 </com.hover.stax.views.StaxCardView>

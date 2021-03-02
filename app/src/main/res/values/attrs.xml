@@ -3,15 +3,23 @@
 		<attr name="title" format="string" />
 		<attr name="showBack" format="string" />
 		<attr name="backRes" format="reference"/>
-		<attr name="backClickable" format="string"/>
+		<attr name="defaultBackPress" format="string"/>
 		<attr name="staxCardColor" format="color"/>
 	</declare-styleable>
 
 	<declare-styleable name="ChannelDropdown">
-		<attr name="label" format="string" />
-		<attr name="showError" format="boolean" />
-		<attr name="showSelected" format="boolean" />
-		<attr name="showLink" format="boolean" />
+		<attr name="show_selected" format="boolean" />
+	</declare-styleable>
+
+	<declare-styleable name="StaxTextInputLayout">
+		<attr name="android:hint" />
+		<attr name="android:inputType" />
+	</declare-styleable>
+
+	<declare-styleable name="StaxDropdownLayout">
+		<attr name="android:hint" />
+		<attr name="android:editable" />
+		<attr name="android:text" />
 	</declare-styleable>
 
 	<declare-styleable name="CustomSwipeRefreshLayout">

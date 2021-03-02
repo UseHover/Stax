@@ -1,25 +1,25 @@
 package com.hover.stax.balances;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
-import com.hover.sdk.transactions.TransactionContract;
+import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDropdown;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.home.MainActivity;
+import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.requests.Request;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.transactions.TransactionHistoryAdapter;
@@ -32,7 +32,10 @@ import java.util.List;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class BalancesFragment extends Fragment implements TransactionHistoryAdapter.SelectListener, ScheduledAdapter.SelectListener, RequestsAdapter.SelectListener {
+public class BalancesFragment extends Fragment implements TransactionHistoryAdapter.SelectListener,
+																  ScheduledAdapter.SelectListener,
+																  RequestsAdapter.SelectListener,
+																  NavigationInterface {
 	final public static String TAG = "BalanceFragment";
 
 	private BalancesViewModel balancesViewModel;
@@ -40,6 +43,8 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 	private TransactionHistoryViewModel transactionsViewModel;
 	private BalanceAdapter balanceAdapter;
 	private ChannelDropdownViewModel channelDropdownViewModel;
+
+	private TextView addChannelLink;
 	private ChannelDropdown channelDropdown;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,10 +61,8 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		channelDropdown = view.findViewById(R.id.channel_dropdown);
-
 		setUpBalances(view);
-		setUpChannelDropdown();
+		setUpLinkNewAccount(view);
 		setUpFuture(view);
 		setUpHistory(view);
 		view.findViewById(R.id.refresh_accounts_btn).setOnClickListener(this::refreshBalances);
@@ -68,6 +71,11 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 	private void setUpBalances(View view) {
 		initBalanceCard(view);
 		balancesViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> updateServices(channels, view));
+	}
+	private void setUpLinkNewAccount(View view) {
+		addChannelLink = view.findViewById(R.id.new_account_link);
+		addChannelLink.setOnClickListener(v -> navigateToLinkAccountFragment(getActivity()));
+		channelDropdown = view.findViewById(R.id.channel_dropdown);
 	}
 
 	private void initBalanceCard(View view) {
@@ -91,17 +99,14 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 		recyclerView.setVisibility(channels != null && channels.size() > 0 ? VISIBLE : GONE);
 
 		((StaxCardView) view.findViewById(R.id.balance_card)).backButton.setVisibility(channels != null && channels.size() > 0  ? VISIBLE : GONE);
-		channelDropdown.toggleLink(channels != null && channels.size() > 0);
+
+		toggleLink(channels != null && channels.size() > 0);
+		channelDropdown.setObservers(channelDropdownViewModel, getActivity());
 	}
 
-	private void setUpChannelDropdown() {
-		channelDropdownViewModel.getSims().observe(getViewLifecycleOwner(), sims -> Log.i(TAG, "Got new sims: " + sims.size()));
-		channelDropdownViewModel.getSimHniList().observe(getViewLifecycleOwner(), simList -> Log.i(TAG, "Got new sim hni list: " + simList));
-		channelDropdownViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
-		channelDropdownViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
-		channelDropdownViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
-			if (channels != null && channels.size() > 0) channelDropdown.setError(null);
-		});
+	public void toggleLink(boolean show) {
+		addChannelLink.setVisibility(show ? VISIBLE : GONE);
+		channelDropdown.setVisibility(show ? GONE : VISIBLE);
 	}
 
 	private void refreshBalances(View v) {
@@ -110,7 +115,8 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 				balancesViewModel.setAllRunning(v.getContext());
 			});
 			channelDropdownViewModel.setChannelSelected(channelDropdown.getHighlighted());
-		} else if (channelDropdownViewModel.getSelectedChannels().getValue().size() == 0)
+
+		} else if (channelDropdownViewModel.getSelectedChannels().getValue() == null || channelDropdownViewModel.getSelectedChannels().getValue().size() == 0)
 			channelDropdown.setError(getString(R.string.refresh_balance_error));
 		else
 			balancesViewModel.setAllRunning(v.getContext());
@@ -148,23 +154,11 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 	}
 
 	@Override
-	public void viewTransactionDetail(String uuid) {
-		Bundle bundle = new Bundle();
-		bundle.putString(TransactionContract.COLUMN_UUID, uuid);
-		NavHostFragment.findNavController(this).navigate(R.id.transactionDetailsFragment, bundle);
-	}
+	public void viewTransactionDetail(String uuid) { navigateToTransactionDetailsFragment(uuid, this); }
 
 	@Override
-	public void viewScheduledDetail(int id) {
-		Bundle bundle = new Bundle();
-		bundle.putInt("id", id);
-		NavHostFragment.findNavController(this).navigate(R.id.scheduleDetailsFragment, bundle);
-	}
+	public void viewScheduledDetail(int id) { navigateToScheduleDetailsFragment(id, this); }
 
 	@Override
-	public void viewRequestDetail(int id) {
-		Bundle bundle = new Bundle();
-		bundle.putInt("id", id);
-		NavHostFragment.findNavController(this).navigate(R.id.requestDetailsFragment, bundle);
-	}
+	public void viewRequestDetail(int id) { navigateToRequestDetailsFragment(id, this); }
 }

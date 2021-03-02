@@ -55,6 +55,9 @@ public class Action {
 	@ColumnInfo(name = "from_institution_name")
 	public String from_institution_name;
 
+	@ColumnInfo(name = "from_institution_logo")
+	public String from_institution_logo;
+
 	@ColumnInfo(name = "to_institution_name")
 	public String to_institution_name;
 
@@ -122,6 +125,10 @@ public class Action {
 
 	public boolean requiresRecipient() {
 		return requiresInput(ACCOUNT_KEY) || requiresInput(PHONE_KEY);
+	}
+
+	public boolean isPhoneBased() {
+		return !requiresInput(ACCOUNT_KEY) && requiresInput(PHONE_KEY);
 	}
 
 	public boolean allowsNote() {

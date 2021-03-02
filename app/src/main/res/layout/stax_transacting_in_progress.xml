@@ -1,100 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:ignore="Overdraw"
-    android:fitsSystemWindows="true"
-    android:background="#03A9F4"
-    android:id="@+id/mainBackground">
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:layout_gravity="center"
+	android:gravity="center"
+	android:background="@drawable/stax_background"
+	tools:ignore="Overdraw"
+	android:fitsSystemWindows="true"
+	android:id="@+id/content">
 
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@drawable/hsdk_card_background"
+		android:radius="5dp"
+		app:elevation="@dimen/hsdk__small_padding"
+		android:layout_marginHorizontal="38dp"
+		android:padding="3dp"
+		android:layout_marginTop="115dp"
+		android:layout_marginBottom="315dp">
 
-	<TextView
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:textColor="@color/white"
-	    android:id="@+id/progress_text_1"
-	    android:textSize="16sp"
-	    android:layout_gravity="center_vertical"
-	    android:gravity="center_horizontal"
-	    android:textStyle="bold"
-	    android:layout_marginTop="48dp"
-	    android:layout_centerHorizontal="true"
-	    android:text="@string/hsdk_average_transaction_text"/>
-
-	<androidx.cardview.widget.CardView
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_marginHorizontal="16dp"
-	    android:layout_marginTop="150dp"
-	    android:layout_marginBottom="115dp"
-	    android:id="@+id/transacting_cardview"
-	    app:cardElevation="3dp"
-	    app:cardCornerRadius="5dp"
-	    app:cardBackgroundColor="@color/colorHoverWhite"
-	    >
+		<FrameLayout
+			android:layout_width="match_parent"
+			android:layout_centerInParent="true"
+			android:id="@+id/animationBackground"
+			android:background="@drawable/hsdk_card_background"
+			android:radius="@dimen/hsdk__border_radius"
+			android:layout_height="0dp" />
 
 		<LinearLayout
-		    android:layout_width="match_parent"
-		    android:layout_height="300dp"
-		    android:orientation="vertical"
-		    android:layout_gravity="center"
-		    android:gravity="center"
-		    >
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_margin="@dimen/hsdk__standard_padding"
+			android:layout_alignParentTop="true"
+			android:layout_above="@id/btns"
+			android:gravity="start"
+			android:orientation="vertical">
 
-			<ProgressBar
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:id="@+id/progress_circular"
-			    android:layout_marginBottom="@dimen/hsdk__standard_padding"
-			    />
+			<ImageView android:id="@+id/logo"
+				android:layout_width="92dp"
+				android:layout_height="29dp"
+				app:srcCompat="@mipmap/stax"
+				android:gravity="center"
+				android:layout_gravity="start"
+				android:visibility="visible"
+				android:layout_marginBottom="@dimen/hsdk__processing_large_padding"
+				android:contentDescription="@string/hsdk_response_ic"/>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:layout_marginBottom="@dimen/hsdk__large_padding" >
+
+				<FrameLayout android:id="@+id/logosFrame"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" >
+
+					<ImageView android:id="@+id/imageSender"
+						android:layout_width="34dp"
+						android:layout_height="34dp"
+						app:srcCompat="@drawable/ic_runner_logo"
+						android:gravity="center"
+						android:layout_gravity="center"
+						android:visibility="gone"
+						android:contentDescription="@string/hsdk_response_ic"/>
+
+					<ImageView android:id="@+id/imageReceiver"
+						android:layout_width="34dp"
+						android:layout_height="34dp"
+						app:srcCompat="@drawable/ic_runner_logo"
+						android:gravity="center"
+						android:layout_gravity="center"
+						android:visibility="gone"
+						android:layout_marginStart="17dp"
+						android:layout_marginEnd="@dimen/hsdk__small_padding"
+						android:contentDescription="@string/hsdk_response_ic"/>
+				</FrameLayout>
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textColor="?attr/titleTextColor"
+					android:id="@+id/progress_text_1"
+					android:textSize="14sp"
+					android:layout_gravity="center_vertical"
+					android:gravity="center_vertical"
+					android:textStyle="bold"
+					android:text="@string/hsdk_average_transaction_text"/>
+			</LinearLayout>
+
 			<TextSwitcher
-			    android:id="@+id/textswitcher"
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:layout_gravity="center"
-			    android:inAnimation="@android:anim/fade_in"
-			    android:outAnimation="@android:anim/fade_out" tools:ignore="UselessParent">
+				android:id="@+id/textswitcher"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_gravity="start|center_vertical"
+				android:visibility="invisible"
+				android:inAnimation="@android:anim/fade_in"
+				android:outAnimation="@android:anim/fade_out" tools:ignore="UselessParent">
 
 				<TextView
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"
-				    android:textSize="16sp"
-				    android:layout_gravity="center"
-				    android:gravity="center"
-				    android:textAlignment="center"
-				    android:textColor="@color/white"
-				    android:text="@string/hsdk_overlay_header"/>
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:textSize="16sp"
+					android:layout_gravity="center_horizontal"
+					android:gravity="start"
+					android:textAlignment="textStart"
+					android:textColor="?attr/titleTextColor"
+					android:text=""/>
 
 				<TextView
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"
-				    android:textSize="16sp"
-				    android:layout_gravity="center"
-				    android:gravity="center"
-				    android:textAlignment="center"
-				    android:textColor="@color/white"
-				    android:text="@string/hsdk_complete"/>
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:textSize="16sp"
+					android:layout_gravity="start"
+					android:gravity="start"
+					android:textAlignment="textStart"
+					android:textColor="?attr/titleTextColor"
+					android:text="@string/hsdk_complete"/>
 			</TextSwitcher>
-
-			<TextView
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:paddingHorizontal="20dp"
-			    android:paddingVertical="16dp"
-			    android:layout_marginHorizontal="@dimen/hsdk__standard_padding"
-			    android:layout_marginTop="32dp"
-			    android:visibility="gone"
-			    android:text="@string/hsdk_continue"
-			    android:id="@+id/continue_text"
-			    android:layout_gravity="center_horizontal"
-			    android:background="@color/white"
-			    android:gravity="center_horizontal"
-			    android:layout_alignParentEnd="true"
-			    android:textSize="16sp"
-			    android:textColor="@color/colorPrimaryDark"/>
 		</LinearLayout>
-	</androidx.cardview.widget.CardView>
 
+		<RelativeLayout android:id="@+id/btns"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="32dp"
+			android:layout_alignParentBottom="true">
+
+			<Button
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="@dimen/hsdk__standard_padding"
+				android:visibility="gone"
+				android:text="@string/hsdk_continue"
+				android:id="@+id/continue_text"
+				style="?attr/buttonStyle"
+				android:background="@drawable/hsdk_button_pos"
+				android:textColor="?attr/colorPrimaryDark"
+				android:layout_alignParentEnd="true"/>
+		</RelativeLayout>
+	</RelativeLayout>
 </RelativeLayout>

@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 
 import com.amplitude.api.Amplitude;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -20,7 +21,7 @@ import com.hover.stax.actions.Action;
 import com.hover.stax.channels.ChannelDropdown;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
-import com.hover.stax.database.Constants;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.permissions.PermissionUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.StaxCardView;
@@ -46,17 +47,15 @@ public abstract class AbstractFormFragment extends Fragment {
 
 	protected void startObservers(View root) {
 		channelDropdown.setListener(channelDropdownViewModel);
-		channelDropdownViewModel.getSims().observe(getViewLifecycleOwner(), sims -> Log.i(TAG, "Got sims: " + sims.size()));
-		channelDropdownViewModel.getSimHniList().observe(getViewLifecycleOwner(), simList -> Log.i(TAG, "Got new sim hni list: " + simList));
-		channelDropdownViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
-		channelDropdownViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
-		channelDropdownViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> channelDropdown.updateChannels(channels));
-		channelDropdownViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> Log.i(TAG, "Got selected channels: " + channels.size()));
-		channelDropdownViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> Log.i(TAG, "Got new active channel: " + channel + " " + channel.countryAlpha2));
-		channelDropdownViewModel.getChannelActions().observe(getViewLifecycleOwner(), actions -> Log.i(TAG, "Got new actions: " + actions.size()));
-		channelDropdownViewModel.getError().observe(getViewLifecycleOwner(), error -> channelDropdown.setError(error));
-		channelDropdownViewModel.getHelper().observe(getViewLifecycleOwner(), helper -> channelDropdown.setHelper(helper != null ? getString(helper) : null));
+		channelDropdown.setObservers(channelDropdownViewModel, getViewLifecycleOwner());
+		setupActionDropdownObservers(channelDropdownViewModel, getViewLifecycleOwner());
 		abstractFormViewModel.getIsEditing().observe(getViewLifecycleOwner(), this::showEdit);
+
+	}
+	
+	private void setupActionDropdownObservers(ChannelDropdownViewModel viewModel, LifecycleOwner lifecycleOwner)  {
+		viewModel.getActiveChannel().observe(lifecycleOwner, channel -> Log.i(TAG, "Got new active channel: " + channel + " " + channel.countryAlpha2));
+		viewModel.getChannelActions().observe(lifecycleOwner, actions -> Log.i(TAG, "Got new actions: " + actions.size()));
 	}
 
 	protected void showEdit(boolean isEditing) {

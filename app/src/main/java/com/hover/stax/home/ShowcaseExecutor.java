@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.hover.stax.R;
-import com.hover.stax.database.Constants;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.bubbleshowcase.BubbleShowCase;
 import com.hover.stax.utils.bubbleshowcase.BubbleShowCaseListener;

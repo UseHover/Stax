@@ -7,28 +7,25 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
-import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionSelect;
 import com.hover.stax.actions.ActionSelectViewModel;
 import com.hover.stax.channels.ChannelDropdownViewModel;
+import com.hover.stax.contacts.ContactInput;
 import com.hover.stax.contacts.StaxContact;
-import com.hover.stax.contacts.StaxContactArrayAdapter;
-import com.hover.stax.database.Constants;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.requests.Request;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.views.AbstractStatefulInput;
+import com.hover.stax.views.StaxTextInputLayout;
 import com.hover.stax.views.Stax2LineItem;
 
 public class TransferFragment extends AbstractFormFragment implements ActionSelect.HighlightListener {
@@ -37,11 +34,10 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 	private TransferViewModel transferViewModel;
 	private ActionSelectViewModel actionSelectViewModel;
 
-	private EditText amountInput, noteInput;
+	private StaxTextInputLayout amountInput, noteInput;
 	private ActionSelect actionSelect;
-	private TextInputLayout recipientLabel;
-	private AutoCompleteTextView recipientAutocomplete;
-	private ImageButton contactButton;
+	private ContactInput contactInput;
+
 	private Stax2LineItem recipientValue;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,18 +58,15 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 	protected void init(View root) {
 		setTitle(root);
 
-		recipientValue = root.findViewById(R.id.recipientValue);
-
-		amountInput = root.findViewById(R.id.amount_input);
+		amountInput = root.findViewById(R.id.amountInput);
+		contactInput = root.findViewById(R.id.contact_select);
 		actionSelect = root.findViewById(R.id.action_select);
-		recipientLabel = root.findViewById(R.id.recipientLabel);
-		recipientAutocomplete = root.findViewById(R.id.recipient_autocomplete);
-		contactButton = root.findViewById(R.id.contact_button);
-		noteInput = root.findViewById(R.id.note_input);
+		noteInput = root.findViewById(R.id.noteInput);
+
+		recipientValue = root.findViewById(R.id.recipientValue);
 
 		amountInput.setText(transferViewModel.getAmount().getValue());
 		noteInput.setText(transferViewModel.getNote().getValue());
-
 		amountInput.requestFocus();
 
 		super.init(root);
@@ -106,27 +99,14 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 			actionSelect.updateActions(actions);
 		});
 
-		actionSelectViewModel.getActiveActionError().observe(getViewLifecycleOwner(), error -> actionSelect.setError(error));
-
 		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> ((TextView) root.findViewById(R.id.amountValue)).setText(Utils.formatAmount(amount)));
-		transferViewModel.getAmountError().observe(getViewLifecycleOwner(), amountError -> {
-			((TextInputLayout) root.findViewById(R.id.amountEntry)).setError((amountError != null ? getString(amountError) : null));
-		});
 
 		transferViewModel.getRecentContacts().observe(getViewLifecycleOwner(), contacts -> {
-			ArrayAdapter<StaxContact> adapter = new StaxContactArrayAdapter(requireActivity(), contacts);
-			recipientAutocomplete.setAdapter(adapter);
+			contactInput.setRecent(contacts, requireActivity());
 			if (transferViewModel.getContact().getValue() != null)
-				recipientAutocomplete.setText(transferViewModel.getContact().getValue().toString());
+				contactInput.setSelected(transferViewModel.getContact().getValue());
 		});
-		transferViewModel.getContact().observe(getViewLifecycleOwner(), contact -> {
-			recipientValue.setContact(contact);
-		});
-
-		transferViewModel.getRecipientError().observe(getViewLifecycleOwner(), recipientError -> {
-			recipientLabel.setError((recipientError != null ? getString(recipientError) : null));
-			recipientLabel.setErrorIconDrawable(0);
-		});
+		transferViewModel.getContact().observe(getViewLifecycleOwner(), contact -> recipientValue.setContact(contact));
 
 		transferViewModel.getNote().observe(getViewLifecycleOwner(), note -> {
 			root.findViewById(R.id.noteRow).setVisibility((note == null || note.isEmpty()) ? View.GONE : View.VISIBLE);
@@ -137,19 +117,23 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 	}
 
 	protected void startListeners() {
+		amountInput.addTextChangedListener(amountWatcher);
+		amountInput.setOnFocusChangeListener((v, hasFocus) -> {
+			if (!hasFocus)
+				amountInput.setState(null,
+					transferViewModel.amountErrors() == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.NONE);
+		});
 		actionSelect.setListener(this);
 
-		recipientAutocomplete.setOnItemClickListener((adapterView, view, pos, id) -> {
+		contactInput.setOnItemClickListener((adapterView, view, pos, id) -> {
 			StaxContact contact = (StaxContact) adapterView.getItemAtPosition(pos);
 			transferViewModel.setContact(contact);
 		});
-
-		amountInput.addTextChangedListener(amountWatcher);
-		recipientAutocomplete.addTextChangedListener(recipientWatcher);
-		contactButton.setOnClickListener(view -> contactPicker(Constants.GET_CONTACT, view.getContext()));
+		contactInput.addTextChangedListener(recipientWatcher);
+		contactInput.setChooseContactListener(view -> contactPicker(Constants.GET_CONTACT, view.getContext()));
 		noteInput.addTextChangedListener(noteWatcher);
 
-		fab.setOnClickListener(v -> fabClicked(v));
+		fab.setOnClickListener(this::fabClicked);
 	}
 
 	@Override
@@ -157,13 +141,25 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 
 	private void fabClicked(View v) {
 		if (transferViewModel.getIsEditing().getValue()) {
-			if (channelDropdownViewModel.validates() & actionSelectViewModel.validates() & transferViewModel.validates(actionSelectViewModel.getActiveAction().getValue())) {
+			if (validates()) {
 				transferViewModel.saveContact();
 				transferViewModel.setEditing(false);
 			} else
 				UIHelper.flashMessage(getContext(), getString(R.string.toast_pleasefix));
 		} else
 			((TransferActivity) getActivity()).submit();
+	}
+
+	private boolean validates() {
+		String amountError = transferViewModel.amountErrors();
+		amountInput.setState(amountError, amountError == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.ERROR);
+		String channelError = channelDropdownViewModel.errorCheck();
+		channelDropdown.setState(channelError, channelError == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.ERROR);
+		String actionError = actionSelectViewModel.errorCheck();
+		actionSelect.setState(actionError, actionError == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.ERROR);
+		String recipientError = transferViewModel.recipientErrors(actionSelectViewModel.getActiveAction().getValue());
+		contactInput.setState(recipientError, recipientError == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.ERROR);
+		return channelError == null && actionError == null && amountError == null && recipientError == null;
 	}
 
 	private void setRecipientHint(Action action) {
@@ -174,12 +170,12 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		if (!action.requiresRecipient())
 			recipientValue.setContent(getString(R.string.self_choice), "");
 		else
-			recipientLabel.setHint(action.getRequiredParams().contains(Action.ACCOUNT_KEY) ? getString(R.string.recipientacct_label) : getString(R.string.recipientphone_label));
+			contactInput.setHint(action.getRequiredParams().contains(Action.ACCOUNT_KEY) ? getString(R.string.recipientacct_label) : getString(R.string.recipientphone_label));
 	}
 
 	protected void onContactSelected(int requestCode, StaxContact contact) {
 		transferViewModel.setContact(contact);
-		recipientAutocomplete.setText(contact.toString());
+		contactInput.setSelected(contact);
 	}
 
 	private TextWatcher amountWatcher = new TextWatcher() {
@@ -209,8 +205,9 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 	private void load(Request r) {
 		channelDropdownViewModel.setChannelFromRequest(r);
 		amountInput.setText(r.amount);
-		recipientAutocomplete.setText(r.requester_number);
+		contactInput.setText(r.requester_number, false);
 		transferViewModel.setEditing(r.amount == null || r.amount.isEmpty());
+		channelDropdown.setState(getString(R.string.channel_request_fieldinfo, String.valueOf(r.requester_institution_id)), AbstractStatefulInput.INFO);
 		Amplitude.getInstance().logEvent(getString(R.string.loaded_request_link));
 	}
 }

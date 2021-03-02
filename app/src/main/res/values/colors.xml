@@ -12,12 +12,16 @@
 	<color name="mediumGrey">#838385</color>
 	<color name="darkGrey">#777777</color>
 	<color name="white">#FFFFFF</color>
-	<color name="bright_red">#FF0028</color>
 	<color name="dividerColor">#333333</color>
 	<color name="transparent">#00000000</color>
-
+	<color name="nav_grey">#3F444A</color>
 	<color name="transparent_grey">#77000000</color>
 	<color name="transparent_overlay">#1E232AA3</color>
+	<color name="stax_state_green">#05EB8F</color>
+	<color name="stax_state_blue">#1878F9</color>
+	<color name="stax_state_yellow">#FFCA32</color>
+	<color name="stax_state_red">#FF0028</color>
+	
 
 	<color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/offWhite</color>
 </resources>

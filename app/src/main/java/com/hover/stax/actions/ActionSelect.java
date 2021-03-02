@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -17,8 +16,9 @@ import android.widget.TextView;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
-import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
+import com.hover.stax.views.AbstractStatefulInput;
+import com.hover.stax.views.StaxDropdownLayout;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -28,24 +28,23 @@ import java.util.List;
 public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedChangeListener, Target {
 	private static String TAG = "ActionSelect";
 
-	private TextInputLayout input;
+	private StaxDropdownLayout dropdownLayout;
 	private AutoCompleteTextView dropdownView;
 	private TextView radioHeader;
 	private RadioGroup isSelfRadio;
 
 	private List<Action> actions;
-	private int selectedRecipientId;
 	private Action highlightedAction;
 	private HighlightListener highlightListener;
 
 	public ActionSelect(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		LayoutInflater.from(context).inflate(R.layout.action_select, this);
+		inflate(context, R.layout.action_select, this);
 		init();
 	}
 	private void init() {
-		input = findViewById(R.id.action_dropdown_input);
-		dropdownView = findViewById(R.id.action_autoComplete);
+		dropdownLayout = findViewById(R.id.action_dropdown_input);
+		dropdownView = findViewById(R.id.autoCompleteView);
 		radioHeader = findViewById(R.id.header);
 		isSelfRadio = findViewById(R.id.isSelfRadioGroup);
 		this.setVisibility(GONE);
@@ -64,7 +63,7 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 		dropdownView.setAdapter(actionDropdownAdapter);
 		dropdownView.setOnItemClickListener((adapterView, view2, pos, id) -> selectRecipientNetwork((Action) adapterView.getItemAtPosition(pos)));
 		Log.e(TAG, "uniq recipient networks " + uniqRecipientActions.size());
-		input.setVisibility(showRecipientNetwork(uniqRecipientActions) ? VISIBLE : GONE);
+		dropdownLayout.setVisibility(showRecipientNetwork(uniqRecipientActions) ? VISIBLE : GONE);
 		radioHeader.setText(actions.get(0).transaction_type.equals(Action.AIRTIME) ? R.string.airtime_who_header : R.string.send_who_header);
 	}
 
@@ -87,17 +86,16 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 	public void selectRecipientNetwork(Action action) {
 		if (action.equals(highlightedAction)) return;
 
-		clearInputError();
 		setDropDownValue(action);
 		setRadioValuesIfRequired(action);
 	}
 
-	private void clearInputError() {input.setHelperText(null);}
 	private void setRadioValuesIfRequired(Action action) {
+		dropdownLayout.setState(null, AbstractStatefulInput.SUCCESS);
 		List<Action> options = getWhoMeOptions(action.recipientInstitutionId());
 		if (options.size() == 1) {
 			if (!options.get(0).requiresRecipient())
-				input.setHelperText(getContext().getString(R.string.self_only_money_warning));
+				dropdownLayout.setState(getContext().getString(R.string.self_only_money_warning), AbstractStatefulInput.INFO);
 			selectAction(action);
 			isSelfRadio.setVisibility(GONE);
 			radioHeader.setVisibility(GONE);
@@ -118,6 +116,8 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 	}
 
 	public void setListener(HighlightListener hl) { highlightListener = hl; }
+
+	public void setState(String message, int state) { dropdownLayout.setState(message, state); }
 
 	private List<Action> getWhoMeOptions(int recipientInstId) {
 		List<Action> options = new ArrayList<>();
@@ -150,10 +150,6 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
 		if (checkedId == -1) return;
 		selectAction(actions.get(checkedId));
-	}
-
-	public void setError(String message) {
-		input.setError(message);
 	}
 
 	@Override

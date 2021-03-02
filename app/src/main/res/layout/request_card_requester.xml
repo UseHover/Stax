@@ -9,25 +9,13 @@
 		android:id="@+id/channel_dropdown"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		app:label="@string/channel_label"/>
+		android:hint="@string/channel_label"/>
 
-	<com.google.android.material.textfield.TextInputLayout
-	    android:id="@+id/accountNumberEntry"
+	<com.hover.stax.views.StaxTextInputLayout
+	    android:id="@+id/accountNumberInput"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-		android:fontFamily="font-normal"
-	    android:hint="@string/requester_account_number_label"
-	    style="@style/StaxLabeledInput">
+		android:inputType="number"
+		android:hint="@string/requester_account_number_label" />
 
-		<com.google.android.material.textfield.TextInputEditText
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:padding="@dimen/margin_13"
-		    android:textSize="@dimen/text_21"
-		    android:textColor="@color/offWhite"
-		    android:textCursorDrawable="@null"
-			android:fontFamily="font-normal"
-		    android:inputType="number"
-		    android:id="@+id/accountNumber_input"/>
-	</com.google.android.material.textfield.TextInputLayout>
-	</LinearLayout>
+</LinearLayout>

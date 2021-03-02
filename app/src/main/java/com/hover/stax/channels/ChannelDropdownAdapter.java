@@ -19,6 +19,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import com.hover.stax.R;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -54,6 +55,7 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
 	@Override
 	public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
 		Channel c = channels.get(position);
+		Log.e("ADAPTER", "getting view for pos " + position);
 		view = LayoutInflater.from(parent.getContext()).inflate(R.layout.stax_spinner_item_with_logo, parent,false);
 
 		holder = new ViewHolder(view);
@@ -91,7 +93,7 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
 		private void setChannel(Channel channel) {
 			id.setText(Integer.toString(channel.id));
 			channelText.setText(channel.toString());
-			Picasso.get().load(channel.logoUrl).into(this);
+			Picasso.get().load(channel.logoUrl).networkPolicy(NetworkPolicy.OFFLINE).into(this);
 		}
 
 		@Override

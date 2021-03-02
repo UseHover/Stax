@@ -7,10 +7,14 @@
 	<string name="channels_endpoint" translatable="false">/channels?published=true</string>
 	<string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
 
+	<string name="stax_tagline">Selling made simple</string>
+	<string name="splash_screen_img_desc">Stax background</string>
 	<string name="nav_home">Home</string>
 	<string name="nav_balance_and_history">Balance and history</string>
+	<string name="nav_link_account">Link an account</string>
 	<string name="nav_airtime">Buy Airtime</string>
 	<string name="nav_transfer">Transfer</string>
+	<string name="nav_new_request">New Request</string>
 	<string name="nav_settings">Settings</string>
 	<string name="nav_account_detail">Account Details</string>
 	<string name="nav_transaction">Transaction Details</string>
@@ -45,7 +49,8 @@
 	<string name="bal_cardhead">Balances</string>
 	<string name="channels_error_nodata">Please turn on data to load services.</string>
 	<string name="channels_error_noselect">You must select a service.</string>
-	<string name="link_account">Link an account</string>
+	<string name="link_account">Link account</string>
+	<string name="link_account_error">Choose an account to link.</string>
 	<string name="link_another"><u>+ Link another account</u></string>
 	<string name="hist_cardhead">History</string>
 	<string name="hist_zerobody">You do not have any history yet. Send money or buy airtime to get started.</string>
@@ -115,11 +120,12 @@
 	<string name="recipientacct_label">Contact account number</string>
 	<string name="toast_error_contactperm">You must grant the read contacts permission to choose a number from your address book.</string>
 	<string name="toast_error_contactselect">There was a problem selecting your contact. Please try again.</string>
-	<string name="transfer_error_recipient">Please enter a phone or account number.</string>
+	<string name="transfer_error_recipient_phone">Please enter a phone number.</string>
+	<string name="transfer_error_recipient_account">Please enter an account number.</string>
 	<string name="amount_fielderror">Please enter a valid amount.</string>
 	<string name="channel_fielderror">Please select a service.</string>
 	<string name="action_fielderror">Please select a recipient network.</string>
-	<string name="channel_request_fielderror">Please insert a sim card that can send to %1$s</string>
+	<string name="channel_request_fieldinfo">Please check that your choice can send to %1$s</string>
 	<string name="no_actions_fielderror">This service cannot be used for %1$s.</string>
 	<string name="toast_pleasefix">Please fix the errors shown in red.</string>
 	<string name="self_choice">Myself</string>

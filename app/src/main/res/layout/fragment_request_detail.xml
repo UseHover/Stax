@@ -27,7 +27,7 @@
 			    android:layout_height="wrap_content"
 			    android:text="@string/btn_cancelreq"
 			    style="@style/StaxButton"
-			    android:backgroundTint="@color/bright_red"
+			    android:backgroundTint="@color/stax_state_red"
 			    android:layout_marginTop="@dimen/margin_21"
 			    android:fontFamily="font-medium" />
 		</FrameLayout>

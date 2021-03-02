@@ -3,7 +3,6 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	app:backClickable="true"
 	app:showBack="true"
 	android:id="@+id/balance_card"
 	app:backRes="@drawable/visibility_icon"
@@ -12,15 +11,27 @@
 	<androidx.recyclerview.widget.RecyclerView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-	    	android:layout_marginBottom="@dimen/margin_13"
+        android:layout_marginBottom="@dimen/margin_26"
 		android:id="@+id/balances_recyclerView" />
+
+	<TextView
+		android:id="@+id/new_account_link"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/link_another"
+		android:fontFamily="font-medium"
+		android:textSize="@dimen/text_16"
+		android:visibility="gone"
+		android:textColor="@color/brightBlue"
+		android:padding="@dimen/margin_13"/>
 
 	<com.hover.stax.channels.ChannelDropdown
 		android:id="@+id/channel_dropdown"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		app:showLink="true"
-		app:showSelected="false"/>
+		app:show_selected="false"
+		android:text="@string/channels_error_nodata"
+		android:hint="@string/link_account"/>
 
 	<RelativeLayout
 	    android:layout_width="match_parent"

@@ -16,6 +16,7 @@ import android.util.Log;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.hover.sdk.permissions.PermissionHelper;
+import com.hover.stax.BuildConfig;
 import com.hover.stax.R;
 
 import java.io.ByteArrayOutputStream;
@@ -139,10 +140,10 @@ public class Utils {
 	}
 	public static void logErrorAndReportToFirebase(String tag, String message, Exception e) {
 		Log.e(tag, message, e);
-		FirebaseCrashlytics.getInstance().recordException(e);
+		if(BuildConfig.BUILD_TYPE.equals("release")) FirebaseCrashlytics.getInstance().recordException(e);
 	}
 
-	public static boolean isConnected(Context c) {
+	public static boolean isInternetConnected(Context c) {
 		ConnectivityManager cm = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 		return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
