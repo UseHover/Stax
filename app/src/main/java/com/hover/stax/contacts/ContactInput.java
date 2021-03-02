@@ -3,9 +3,11 @@ package com.hover.stax.contacts;
 import android.content.Context;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -29,6 +31,7 @@ public class ContactInput extends LinearLayout {
 		contactButton = findViewById(R.id.contact_button);
 		contactInputLayout = findViewById(R.id.contactDropdownLayout);
 		contactAutocomplete = findViewById(R.id.autoCompleteView);
+		contactAutocomplete.setOnFocusChangeListener(this::setState);
 	}
 
 	public void setRecent(List<StaxContact> contacts, Context c) {
@@ -41,10 +44,9 @@ public class ContactInput extends LinearLayout {
 	}
 
 	public void setText(String number) {
-		if (number != null && !number.isEmpty()) {
+		if (number != null && !number.isEmpty())
 			setState(null, AbstractStatefulInput.SUCCESS);
-			contactAutocomplete.setText(number);
-		}
+		contactAutocomplete.setText(number);
 	}
 
 	public void setHint(String hint) { contactInputLayout.setHint(hint); }
@@ -63,5 +65,9 @@ public class ContactInput extends LinearLayout {
 
 	public void setState(String message, int state) { contactInputLayout.setState(message, state); }
 
-	public void resetState() { setState(null, AbstractStatefulInput.NONE); }
+	private void setState(View v, boolean hasFocus) {
+		if (!hasFocus)
+			contactInputLayout.setState(null,
+				contactAutocomplete.getText() != null && contactAutocomplete.getText().toString() != null && !contactAutocomplete.getText().toString().isEmpty() ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.NONE);
+	}
 }

@@ -33,8 +33,6 @@ public abstract class AbstractStatefulInput extends FrameLayout {
 		setState(errorText == null ? null : errorText.toString(), errorText == null ? NONE : ERROR);
 	}
 
-	public void resetState() { setState(null, NONE); }
-
 	public void setHelperText(@Nullable CharSequence helperText) {
 		setState(helperText == null ? null : helperText.toString(), helperText == null ? NONE : INFO);
 	}
@@ -43,9 +41,6 @@ public abstract class AbstractStatefulInput extends FrameLayout {
 
 	public void setState(String message, int state) {
 		Log.e(TAG, "setting state: " + state);
-//		if (currentState != ERROR && state == NONE && message == null) return;
-//		if (currentState == state && message == null) state = NONE;
-
 		currentState = state;
 		inputLayout.setHelperText(message);
 		switch (state) {

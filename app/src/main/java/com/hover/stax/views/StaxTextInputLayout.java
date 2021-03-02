@@ -49,7 +49,8 @@ public class StaxTextInputLayout extends AbstractStatefulInput {
 
 	public void setText(String text) { editText.setText(text); }
 
-	public void addTextChangedListener(TextWatcher listener) {
-		editText.addTextChangedListener(listener);
-	}
+	@Override
+	public void setOnFocusChangeListener(OnFocusChangeListener l) { editText.setOnFocusChangeListener(l); }
+
+	public void addTextChangedListener(TextWatcher listener) { editText.addTextChangedListener(listener); }
 }

@@ -49,4 +49,7 @@ public class StaxDropdownLayout extends AbstractStatefulInput {
 		autoCompleteTextView.setInputType(editable ? InputType.TYPE_TEXT_VARIATION_NORMAL : InputType.TYPE_NULL);
 		if (defaultText != null && !defaultText.isEmpty()) autoCompleteTextView.setText(defaultText);
 	}
+
+	@Override
+	public void setOnFocusChangeListener(OnFocusChangeListener l) { autoCompleteTextView.setOnFocusChangeListener(l); }
 }

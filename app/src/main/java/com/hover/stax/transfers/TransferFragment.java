@@ -120,7 +120,8 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		amountInput.addTextChangedListener(amountWatcher);
 		amountInput.setOnFocusChangeListener((v, hasFocus) -> {
 			if (!hasFocus)
-				amountInput.setState(null, transferViewModel.amountErrors() == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.NONE);
+				amountInput.setState(null,
+					transferViewModel.amountErrors() == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.NONE);
 		});
 		actionSelect.setListener(this);
 
@@ -182,7 +183,6 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		@Override public void afterTextChanged(Editable editable) { }
 		@Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 			transferViewModel.setAmount(charSequence.toString());
-			amountInput.resetState();
 		}
 	};
 
@@ -191,7 +191,6 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		@Override public void afterTextChanged(Editable editable) { }
 		@Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 			transferViewModel.setRecipient(charSequence.toString());
-			contactInput.resetState();
 		}
 	};
 

@@ -101,7 +101,7 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 			setState(getContext().getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getContext(), viewModel.getType())), ERROR);
 		else if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !actions.get(0).transaction_type.equals(Action.BALANCE))
 			setState(getContext().getString(actions.get(0).transaction_type.equals(Action.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning), INFO);
-		else if (viewModel.getActiveChannel().getValue() != null && actions != null && actions.size() > 0)
+		else
 			setState(null, SUCCESS);
 	}
 
