@@ -20,6 +20,10 @@ public class Constants {
 	final public static int REQUEST_REQUEST = 301;
 	final public static int SMS = 303;
 
+	final public static int BLUR_RADIUS = 16;
+	final public static int BLUR_SAMPLING = 1;
+
+
 	final public static String LANGUAGE_CHECK = "Language";
 	final public static String AUTH_CHECK = "Authenticate";
 	final public static String PERM_ACTIVITY = "com.hover.stax.permissions.PermissionsActivity";

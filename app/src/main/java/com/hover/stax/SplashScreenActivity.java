@@ -65,7 +65,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	private void blurBackgroundAfter60sec() {
 		new Handler(Looper.getMainLooper()).postDelayed(() -> {
 			Bitmap bg = BitmapFactory.decodeResource(getResources(), R.drawable.stax_splash);
-			Bitmap bitmap = new StaxBlur(this,16, 1).transform(bg);
+			Bitmap bitmap = new StaxBlur(this,Constants.BLUR_RADIUS, Constants.BLUR_SAMPLING).transform(bg);
 			ImageView bgView = findViewById(R.id.splash_image_blur);
 			if (bgView != null) {
 				bgView.setImageBitmap(bitmap);
