@@ -154,8 +154,10 @@
   <string name="toast_error_contactperm">Vous devez autoriser la lecture des contacts pour choisir un numéro dans votre carnet d\'adresses.</string>
   	
   <string name="toast_error_contactselect">Un problème est survenu lors de la sélection de votre contact. Veuillez réessayer.</string>
-  	
-  <string name="transfer_error_recipient">Veuillez saisir un numéro de téléphone ou de compte pour ce contact.</string>
+
+  <string name="transfer_error_recipient_phone">Veuillez saisir un numéro de téléphone pour ce contact.</string>
+
+  <string name="transfer_error_recipient_account">Veuillez saisir un numéro de compte pour ce contact.</string>
   	
   <string name="amount_fielderror">Veuillez saisir un montant.</string>
   	
