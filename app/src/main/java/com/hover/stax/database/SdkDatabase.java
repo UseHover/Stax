@@ -28,7 +28,6 @@ public abstract class SdkDatabase extends RoomDatabase {
 			synchronized (SdkDatabase.class) {
 				if (INSTANCE == null) {
 					INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SdkDatabase.class, "hoversdktransactions.db")
-						.setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
 						.addMigrations(M40_41)
 						.addMigrations(M41_42)
 						.addMigrations(M42_43)
@@ -124,6 +123,7 @@ public abstract class SdkDatabase extends RoomDatabase {
 	static final Migration M52_53 = new Migration(52, 53) {
 		@Override
 		public void migrate(SupportSQLiteDatabase database) {
+			database.execSQL("ALTER TABLE hsdk_actions ADD COLUMN from_institution_logo TEXT;");
 		}
 	};
 }
