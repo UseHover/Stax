@@ -50,11 +50,6 @@
 		<item name="buttonStyle">@style/HoverButton</item>
 	</style>
 
-	<style name="SplashTheme" parent="StaxTheme">
-<!--		<item name="android:windowBackground">@drawable/splash_background</item>-->
-		<item name="android:navigationBarColor" tools:targetApi="lollipop">@color/transparent</item>
-	</style>
-
 	<style name="StaxButton" parent="Widget.AppCompat.Button.Borderless">
 		<item name="android:layout_marginStart">@dimen/margin_3</item>
 		<item name="android:layout_marginEnd">@dimen/margin_10</item>

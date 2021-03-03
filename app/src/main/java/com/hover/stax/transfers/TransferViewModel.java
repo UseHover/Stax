@@ -93,6 +93,7 @@ public class TransferViewModel extends AbstractFormViewModel {
 	}
 
 	String recipientErrors(Action a) {
+		if(a == null) return getApplication().getString(R.string.transfer_error_recipient_general);
 		if (a.requiresRecipient() && contact.getValue() == null)
 			return getApplication().getString(a.isPhoneBased() ? R.string.transfer_error_recipient_phone : R.string.transfer_error_recipient_account);
 		return null;

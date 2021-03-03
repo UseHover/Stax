@@ -120,6 +120,7 @@
 	<string name="recipientacct_label">Contact account number</string>
 	<string name="toast_error_contactperm">You must grant the read contacts permission to choose a number from your address book.</string>
 	<string name="toast_error_contactselect">There was a problem selecting your contact. Please try again.</string>
+	<string name="transfer_error_recipient_general">Please enter a recipient number.</string>
 	<string name="transfer_error_recipient_phone">Please enter a phone number.</string>
 	<string name="transfer_error_recipient_account">Please enter an account number.</string>
 	<string name="amount_fielderror">Please enter a valid amount.</string>

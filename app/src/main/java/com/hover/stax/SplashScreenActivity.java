@@ -65,7 +65,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	private void blurBackgroundAfter60sec() {
 		new Handler(Looper.getMainLooper()).postDelayed(() -> {
 			Bitmap bg = BitmapFactory.decodeResource(getResources(), R.drawable.stax_splash);
-			Bitmap bitmap = new StaxBlur(this,16, 1).transform(bg);
+			Bitmap bitmap = new StaxBlur(this,Constants.BLUR_RADIUS, Constants.BLUR_SAMPLING).transform(bg);
 			ImageView bgView = findViewById(R.id.splash_image_blur);
 			if (bgView != null) {
 				bgView.setImageBitmap(bitmap);
@@ -86,7 +86,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	private void authenticateBiometricOrNavigateScreenAfter110sec() {
 		new Handler().postDelayed(() -> {
 			if (Utils.getSharedPrefs(this).getInt(AUTH_CHECK, 0) == 1) new BiometricChecker(this, this).startAuthentication(null);
-			else chooseNav();
+			else navigateMainActivityOrRequestActivity(getIntent());
 		}, 1800);
 
 	}
@@ -125,9 +125,9 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 		wm.enqueueUniquePeriodicWork(ScheduleWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, ScheduleWorker.makeToil());
 	}
 
-	private void chooseNav() {
-		if (getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_VIEW) && getIntent().getData() != null)
-			goToFulfillRequest(getIntent());
+	private void navigateMainActivityOrRequestActivity(Intent intent) {
+		if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW) && intent.getData() != null)
+			goToFulfillRequest(intent);
 		else startActivity(new Intent(this, MainActivity.class));
 
 		finish();
@@ -146,6 +146,6 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
 	@Override
 	public void onAuthSuccess(Action act) {
-		chooseNav();
+		navigateMainActivityOrRequestActivity(getIntent());
 	}
 }
