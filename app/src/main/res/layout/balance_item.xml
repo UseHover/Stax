@@ -52,7 +52,7 @@
 	    android:fontFamily="font-normal"
 	    android:gravity="center_vertical"
 	    android:textColor="@color/offWhite"
-	    app:drawableEndCompat="@drawable/ic_remove_24" />
+	    app:drawableEndCompat="@drawable/ic_remove" />
 
 
 

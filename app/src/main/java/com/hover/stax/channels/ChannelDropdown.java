@@ -44,9 +44,24 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 
 	public void setListener(HighlightListener hl) { highlightListener = hl; }
 
-	public void updateChannels(List<Channel> channels) {
-		if (channels == null || channels.size() == 0) return;
+	public void channelUpdate(List<Channel> channels) {
+		if (channels == null || channels.size() == 0) {
+			setState(getContext().getString(R.string.channels_error_nodata), ERROR);
+			return;
+		}
+		setState(null, NONE);
 		Log.e(TAG, "found some channels " + channels.size());
+		if (autoCompleteTextView.getAdapter() != null && channels.size() > autoCompleteTextView.getAdapter().getCount()) return;
+		updateChoices(channels);
+	}
+
+	private void setDropdownValue(Channel c) {
+		autoCompleteTextView.setText(c == null ? "" : c.toString(), false);
+		if (c != null)
+			Picasso.get().load(c.logoUrl).resize(55, 55).into(this);
+	}
+
+	private void updateChoices(List<Channel> channels) {
 		if (highlightedChannel == null) setDropdownValue(null);
 		ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(ChannelDropdownAdapter.sort(channels, showSelected), getContext());
 		autoCompleteTextView.setAdapter(channelDropdownAdapter);
@@ -56,12 +71,6 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 			if (c.defaultAccount && showSelected)
 				setDropdownValue(c);
 		}
-	}
-
-	private void setDropdownValue(Channel c) {
-		autoCompleteTextView.setText(c == null ? "" : c.toString(), false);
-		if (c != null)
-			Picasso.get().load(c.logoUrl).resize(55, 55).into(this);
 	}
 
 	private void onSelect(Channel c) {
@@ -90,8 +99,8 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 	public void setObservers(@NonNull ChannelDropdownViewModel viewModel, @NonNull LifecycleOwner lifecycleOwner) {
 		viewModel.getSims().observe(lifecycleOwner, sims -> Log.i(TAG, "Got sims: " + sims.size()));
 		viewModel.getSimHniList().observe(lifecycleOwner, simList -> Log.i(TAG, "Got new sim hni list: " + simList));
-		viewModel.getChannels().observe(lifecycleOwner, this::updateChannels);
-		viewModel.getSimChannels().observe(lifecycleOwner, this::updateChannels);
+		viewModel.getChannels().observe(lifecycleOwner, this::channelUpdate);
+		viewModel.getSimChannels().observe(lifecycleOwner, this::channelUpdate);
 		viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> Log.i(TAG, "Got new selected channels: " + channels.size()));
 		viewModel.getActiveChannel().observe(lifecycleOwner, channel -> { if (channel != null) setState(null, NONE); });
 		viewModel.getChannelActions().observe(lifecycleOwner, actions -> setState(actions, viewModel));

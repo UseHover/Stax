@@ -45,6 +45,10 @@
 		<item name="snackbarTextViewStyle">@style/StaxSnackbarText</item>
 	</style>
 
+	<style name="SplashTheme" parent="StaxTheme">
+		<item name="android:windowBackground">@drawable/splash_window_background</item>
+	</style>
+
 	<style name="StaxHoverTheme" parent="StaxTheme">
 		<item name="android:buttonStyle">@style/HoverButton</item>
 		<item name="buttonStyle">@style/HoverButton</item>

@@ -9,8 +9,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,9 +33,12 @@ import com.hover.stax.utils.blur.StaxBlur;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
+import java.io.File;
+
 import static com.hover.stax.utils.Constants.AUTH_CHECK;
 
 public class SplashScreenActivity extends AppCompatActivity implements BiometricChecker.AuthListener {
+	private final static String TAG = "SplashScreenActivity";
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,13 +61,13 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
 	private void initSplashAnimation() {
 		setContentView(R.layout.splash_screen_layout);
-		blurBackgroundAfter60sec();
-		fadeInSplashContentAfter90sec();
+		blurBackground();
+		fadeInLogo();
 	}
 
-	private void blurBackgroundAfter60sec() {
+	private void blurBackground() {
 		new Handler(Looper.getMainLooper()).postDelayed(() -> {
-			Bitmap bg = BitmapFactory.decodeResource(getResources(), R.drawable.stax_splash);
+			Bitmap bg = BitmapFactory.decodeResource(getResources(), R.drawable.splash_background);
 			Bitmap bitmap = new StaxBlur(this,Constants.BLUR_RADIUS, Constants.BLUR_SAMPLING).transform(bg);
 			ImageView bgView = findViewById(R.id.splash_image_blur);
 			if (bgView != null) {
@@ -75,7 +78,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 		}, 1000);
 	}
 
-	private void fadeInSplashContentAfter90sec() {
+	private void fadeInLogo() {
 		TextView tv = findViewById(R.id.splash_content);
 		new Handler(Looper.getMainLooper()).postDelayed(() -> {
 			tv.setVisibility(View.VISIBLE);

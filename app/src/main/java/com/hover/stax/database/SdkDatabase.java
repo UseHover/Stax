@@ -8,26 +8,35 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.hover.sdk.database.DbHelper;
 import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionDao;
 import com.hover.stax.sims.Sim;
 import com.hover.stax.sims.SimDao;
 
+import java.io.File;
+
 // This is a readonly database for accessing the DB created by SQL in the SDK
-@Database(entities = {Action.class, Sim.class}, version = 53, exportSchema = false)
+@Database(entities = {Action.class, Sim.class}, version = DbHelper.DATABASE_VERSION, exportSchema = false)
 public abstract class SdkDatabase extends RoomDatabase {
 
 	private static volatile SdkDatabase INSTANCE;
 
 	public abstract ActionDao actionDao();
-
 	public abstract SimDao simDao();
 
 	public static synchronized SdkDatabase getInstance(Context context) {
 		if (INSTANCE == null) {
 			synchronized (SdkDatabase.class) {
 				if (INSTANCE == null) {
-					INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SdkDatabase.class, "hoversdktransactions.db")
+			        RoomDatabase.Builder<SdkDatabase> builder = Room.databaseBuilder(context.getApplicationContext(), SdkDatabase.class, DbHelper.DATABASE_NAME);
+//					RoomDatabase.Builder<SdkDatabase> builder = Room.inMemoryDatabaseBuilder(context.getApplicationContext(), SdkDatabase.class);
+//					File existingDb = new File(context.getApplicationInfo().dataDir + "/databases/hoversdktransactions.db");
+//					if (existingDb.exists())
+//						builder.createFromFile(existingDb);
+
+					INSTANCE = builder
+//						.setJournalMode(JournalMode.TRUNCATE)
 						.addMigrations(M40_41)
 						.addMigrations(M41_42)
 						.addMigrations(M42_43)
@@ -41,6 +50,8 @@ public abstract class SdkDatabase extends RoomDatabase {
 						.addMigrations(M50_51)
 						.addMigrations(M51_52)
 						.addMigrations(M52_53)
+//						.addMigrations(M53_54)
+//						.fallbackToDestructiveMigration()
 						.build();
 				}
 			}
@@ -123,7 +134,13 @@ public abstract class SdkDatabase extends RoomDatabase {
 	static final Migration M52_53 = new Migration(52, 53) {
 		@Override
 		public void migrate(SupportSQLiteDatabase database) {
-			database.execSQL("ALTER TABLE hsdk_actions ADD COLUMN from_institution_logo TEXT;");
+//			database.execSQL("ALTER TABLE hsdk_actions ADD COLUMN from_institution_logo TEXT;");
+		}
+	};
+
+	static final Migration M53_54 = new Migration(53, 54) {
+		@Override
+		public void migrate(SupportSQLiteDatabase database) {
 		}
 	};
 }
