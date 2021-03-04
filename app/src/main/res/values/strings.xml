@@ -288,4 +288,9 @@
 	<string name="csr_text_state_refresh">Refreshing balance…</string>
 	<string name="csr_text_state_complete">Refreshing balance complete</string>
 	<string name="csr_text_last_refresh">last update:</string>
+
+	<!-- BOUNTY -->
+  	<string name="bounty_title">💸 GET PAID! MAP USSD FLOWS</string>
+	<string name="bounty_desc">Stax will pay you USD $5 - $50 to go through a USSD flow.</string>
+	<string name="get_started">Get started</string>
 </resources>
