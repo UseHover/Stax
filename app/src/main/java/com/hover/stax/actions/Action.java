@@ -93,6 +93,15 @@ public class Action {
 	@ColumnInfo(name = "root_code")
 	public String root_code;
 
+	@ColumnInfo(name = "bounty_amount", defaultValue = "0")
+	public int bounty_amount;
+
+	@ColumnInfo(name = "bounty_is_open", defaultValue = "0")
+	public int bounty_is_open;
+
+	@ColumnInfo(name = "is_ready", defaultValue = "1")
+	public int is_ready;
+
 	@NotNull
 	@Override
 	public String toString() {
