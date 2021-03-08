@@ -8,6 +8,8 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.hover.stax.bounty.BountyUser;
+import com.hover.stax.bounty.BountyUserDao;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
 import com.hover.stax.contacts.ContactDao;
@@ -22,7 +24,7 @@ import com.hover.stax.transactions.TransactionDao;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class}, version = 23)
+@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class, BountyUser.class}, version = 24)
 public abstract class AppDatabase extends RoomDatabase {
 	private static final int NUMBER_OF_THREADS = 8;
 	static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -38,6 +40,8 @@ public abstract class AppDatabase extends RoomDatabase {
 	public abstract RequestDao requestDao();
 
 	public abstract ScheduleDao scheduleDao();
+
+	public abstract BountyUserDao bountyDao();
 
 	public static synchronized AppDatabase getInstance(Context context) {
 		if (INSTANCE == null) {

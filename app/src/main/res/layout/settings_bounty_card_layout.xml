@@ -10,7 +10,7 @@
 	    android:layout_height="wrap_content"
 	    android:textSize="@dimen/text_16"
 	    android:fontFamily="font-normal"
-	    android:paddingHorizontal="@dimen/margin_16"
+	    android:paddingHorizontal="@dimen/margin_13"
 	    android:text="@string/bounty_desc"/>
 
 	<RelativeLayout

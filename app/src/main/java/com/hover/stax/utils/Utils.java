@@ -47,6 +47,18 @@ public class Utils {
 		editor.apply();
 	}
 
+	public static void saveBoolean(String key, boolean value, Context c) {
+		SharedPreferences.Editor editor = getSharedPrefs(c).edit();
+		editor.putBoolean(key, value);
+		editor.apply();
+	}
+
+	public static Boolean getBoolean(String key, Context c) {
+		SharedPreferences sharedPreferences = getSharedPrefs(c);
+		return sharedPreferences.getBoolean(key, false);
+	}
+
+
 	public static String stripHniString(String hni) {
 		return hni.replace("[", "").replace("]", "").replace("\"", "");
 	}

@@ -19,10 +19,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.WorkManager;
+import androidx.work.Worker;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
 import com.hover.stax.actions.Action;
+import com.hover.stax.bounty.UpdateBountyWorker;
 import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.destruct.SelfDestructActivity;
 import com.hover.stax.utils.Constants;
@@ -120,9 +122,20 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
 	private void startWorkers() {
 		WorkManager wm = WorkManager.getInstance(this);
+		startChannelWorker(wm);
+		startScheduleWorker(wm);
+		startBountyUserWorker(wm);
+	}
+	private void startChannelWorker(WorkManager wm) {
 		wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue();
 		wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, UpdateChannelsWorker.makeToil());
+	}
+	private void startScheduleWorker(WorkManager wm) {
 		wm.enqueueUniquePeriodicWork(ScheduleWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, ScheduleWorker.makeToil());
+	}
+	private void startBountyUserWorker(WorkManager wm) {
+		wm.beginUniqueWork(UpdateBountyWorker.BOUNTY_WORK_ID, ExistingWorkPolicy.KEEP, UpdateBountyWorker.makeWork()).enqueue();
+		wm.enqueueUniquePeriodicWork(UpdateBountyWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, UpdateBountyWorker.makeToil());
 	}
 
 	private void navigateMainActivityOrRequestActivity(Intent intent) {

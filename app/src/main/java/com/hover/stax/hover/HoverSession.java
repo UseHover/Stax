@@ -50,7 +50,7 @@ final public class HoverSession {
 		builder.showUserStepDescriptions(true);
 		builder.finalMsgDisplayTime(finalScreenTime);
 		builder.style(R.style.StaxHoverTheme);
-		builder.sessionOverlayLayout(R.layout.stax_transacting_in_progress);
+		//builder.sessionOverlayLayout(R.layout.stax_transacting_in_progress);
 		return builder;
 	}
 
