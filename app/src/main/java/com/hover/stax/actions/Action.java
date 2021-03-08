@@ -116,7 +116,25 @@ public class Action {
 		return isOnNetwork() ? c.getString(R.string.onnet_choice) : c.getString(R.string.offnet_choice, this.toString());
 	}
 
+	public String getFullDescription(Context c) {
+		return root_code + " - "+ from_institution_name.toUpperCase() + getHumanFriendlyType(c, transaction_type) + lastWordForDescription(c);
+	}
+	private String lastWordForDescription(Context c) {
+		if(transaction_type.equals(P2P) || transaction_type.equals(ME2ME)) {
+			return c.getString(R.string.to) + to_institution_name.toUpperCase();
+		}
+		else if (transaction_type.equals(AIRTIME)) {
+			if(requiresRecipient()) return c.getString(R.string.for_someone_else);
+			else return c.getString(R.string.for_yourself);
+		}
+		return "";
+	}
+
 	public String getPronoun(Context c) {
+		return requiresRecipient() ?  c.getString(R.string.other_choice) : c.getString(R.string.self_choice);
+	}
+
+	public String getFullPronoun(Context c) {
 		return requiresRecipient() ?  c.getString(R.string.other_choice) : c.getString(R.string.self_choice);
 	}
 

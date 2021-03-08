@@ -71,6 +71,7 @@
 	<string name="buy_airtime">buy airtime</string>
 	<string name="check_balance">check balance</string>
 	<string name="send_money">send money</string>
+	<string name="send_money_to">send money to</string>
 	<string name="move_money">move money</string>
 	<string name="perm_accessibiltiy_dialogbody">Stax needs accessibility permission to %1$s</string>
 	<string name="perm_progress1">Step 1 of 2: Display permission</string>
@@ -299,4 +300,7 @@
 	<string name="bounty_email_stage_desc2">
 		1. Enter your email so we can pay you.\n2. Choose a USSD flow like “check balance” from your bank or mobile money service on the next page.\n3. Go through the USSD flow as normal.\n4. Stax will check the flow.\n5. You get paid.
 	</string>
+	<string name="to">to</string>
+	<string name="for_someone_else">for someone else.r</string>
+	<string name="for_yourself">for yourself. </string>
 </resources>
