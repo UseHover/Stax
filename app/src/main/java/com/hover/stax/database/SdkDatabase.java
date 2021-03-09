@@ -130,9 +130,8 @@ public abstract class SdkDatabase extends RoomDatabase {
 	static final Migration M53_54 = new Migration(53, 54) {
 		@Override
 		public void migrate(SupportSQLiteDatabase database) {
-			database.execSQL("ALTER TABLE 'hsdk_actions' ADD COLUMN 'bounty_amount' INTEGER DEFAULT 0");
-			database.execSQL("ALTER TABLE 'hsdk_actions' ADD COLUMN 'bounty_is_open' INTEGER DEFAULT 0");
-			database.execSQL("ALTER TABLE 'hsdk_actions' ADD COLUMN 'is_ready' INTEGER DEFAULT 1");
+
 		}
 	};
+
 }

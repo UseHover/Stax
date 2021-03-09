@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.bounty.BountyActivity;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.settings.SettingsFragment;
@@ -103,6 +105,9 @@ public interface NavigationInterface {
 		bundle.putString(TransactionContract.COLUMN_UUID, uuid);
 		NavHostFragment.findNavController(fragment).navigate(R.id.transactionDetailsFragment, bundle);
 	}
+	default void navigateToBountyListFragment(Fragment fragment) {
+		NavHostFragment.findNavController(fragment).navigate(R.id.bountyListFragment);
+	}
 	default void navigateToScheduleDetailsFragment(int id, Fragment fragment) {
 		Bundle bundle = new Bundle();
 		bundle.putInt("id", id);
@@ -112,6 +117,9 @@ public interface NavigationInterface {
 		Bundle bundle = new Bundle();
 		bundle.putInt("id", id);
 		NavHostFragment.findNavController(fragment).navigate(R.id.requestDetailsFragment, bundle);
+	}
+	default void navigateToBountyActivity(Context c) {
+		c.startActivity(new Intent(c, BountyActivity.class));
 	}
 
 }

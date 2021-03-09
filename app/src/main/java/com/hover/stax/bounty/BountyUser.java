@@ -17,6 +17,7 @@ public class BountyUser {
 		this.email = email;
 	}
 
+	@NonNull
 	@PrimaryKey
 	@ColumnInfo(name = "deviceId")
 	public String deviceId;

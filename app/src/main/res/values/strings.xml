@@ -292,15 +292,17 @@
 	<string name="csr_text_last_refresh">last update:</string>
 
 	<!-- BOUNTY -->
+	<string name="nav_bounty">Bounty</string>
   	<string name="bounty_title">💸  GET PAID! MAP USSD FLOWS</string>
 	<string name="bounty_desc">Stax will pay you USD $5 - $50 to go through a USSD flow.</string>
 	<string name="get_started">Get started</string>
 	<string name="bounty_email_stage_title">🗺️  MAP USSD FLOWS</string>
-	<string name="bounty_email_stage_desc1">Stax wants to make digital money available to anyone anywhere offline. To bring Stax to more people in more countries, we need to build a map of all the USSD services in the world.<b><i>That is why Stax will pay you USD $10-50 to go through any of the USSD flows on the next page.</i> </b></string>
-	<string name="bounty_email_stage_desc2">
-		1. Enter your email so we can pay you.\n2. Choose a USSD flow like “check balance” from your bank or mobile money service on the next page.\n3. Go through the USSD flow as normal.\n4. Stax will check the flow.\n5. You get paid.
+	<string name="bounty_email_stage_desc1">Stax wants to make digital money available to anyone anywhere offline. To bring Stax to more people in more countries, we need to build a map of all the USSD services in the world.<b> That is why Stax will pay you USD $10-50 to go through any of the USSD flows on the next page.</b></string>
+	<string name="bounty_email_stage_desc2"><b>1.</b>   Enter your email so we can pay you.\n<b>2.</b>   Choose a USSD flow like “check balance” from your bank or mobile money service on the next page.\n<b>3.</b>   Go through the USSD flow as normal.\n<b>4.</b>   Stax will check the flow.\n<b>5.</b>   You get paid.
 	</string>
 	<string name="to">to</string>
 	<string name="for_someone_else">for someone else.r</string>
 	<string name="for_yourself">for yourself. </string>
+	<string name="email">Email</string>
+	<string name="email_error">Please enter a valid email address</string>
 </resources>

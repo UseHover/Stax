@@ -13,7 +13,10 @@ public interface BountyUserDao {
 	BountyUser getUser();
 
 	@Query("SELECT COUNT(deviceId) FROM bountyUser")
-	LiveData<Integer> getEntriesCount();
+	Integer getEntriesCount();
+
+	@Query("SELECT COUNT(deviceId) FROM bountyUser")
+	LiveData<Integer> getEntriesCountLive();
 
 	@Insert(onConflict = OnConflictStrategy.ABORT)
 	void insert(BountyUser bountyUser);

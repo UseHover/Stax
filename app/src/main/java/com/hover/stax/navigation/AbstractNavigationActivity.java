@@ -1,5 +1,6 @@
 package com.hover.stax.navigation;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -19,6 +20,7 @@ import com.google.android.material.bottomappbar.BottomAppBar;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.balances.BalancesViewModel;
+import com.hover.stax.bounty.BountyActivity;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.permissions.PermissionUtils;
@@ -88,6 +90,9 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 		else if (destId == R.id.navigation_home) return Constants.NAV_HOME;
 		else return destId;
 	}
+
+	public void getStartedWithBountyButton(View view) { navigateToBountyActivity(view.getContext()); }
+
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

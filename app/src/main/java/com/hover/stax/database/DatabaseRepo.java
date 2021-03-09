@@ -235,8 +235,7 @@ public class DatabaseRepo {
 	}
 
 	//Bounty user
-	public BountyUser getBountyUser() {return bountyUserDao.getUser();}
-	public LiveData<Integer> getBountyUserEntryCount() {return bountyUserDao.getEntriesCount();}
+	public Integer getBountyUserCount() {return bountyUserDao.getEntriesCount();}
 	public void insert(BountyUser bountyUser) {
 		AppDatabase.databaseWriteExecutor.execute(()->bountyUserDao.insert(bountyUser));
 	}

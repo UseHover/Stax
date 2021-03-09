@@ -24,7 +24,7 @@ import com.hover.stax.transactions.TransactionDao;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class, BountyUser.class}, version = 24)
+@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class, BountyUser.class}, version = 25)
 public abstract class AppDatabase extends RoomDatabase {
 	private static final int NUMBER_OF_THREADS = 8;
 	static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -50,6 +50,7 @@ public abstract class AppDatabase extends RoomDatabase {
 					INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "stax.db")
 									   .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
 									   .addMigrations(M23_24)
+									   .addMigrations(M24_25)
 									   .build();
 				}
 			}
@@ -60,6 +61,17 @@ public abstract class AppDatabase extends RoomDatabase {
 	static final Migration M23_24 = new Migration(23, 24) {
 		@Override
 		public void migrate(SupportSQLiteDatabase database) {
+		}
+	};
+
+	static final Migration M24_25 = new Migration(24, 25) {
+		@Override
+		public void migrate(SupportSQLiteDatabase database) {
+			database.execSQL("CREATE TABLE bountyUser (deviceId TEXT not null primary key," +
+									 "email TEXT not null," +
+									 "timestamp INTEGER  default CURRENT_TIMESTAMP," +
+									 "uploadedTimestamp INTEGER default CURRENT_TIMESTAMP," +
+									 "isUploaded INTEGER not null default 0)");
 		}
 	};
 }
