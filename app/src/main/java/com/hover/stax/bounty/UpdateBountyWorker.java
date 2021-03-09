@@ -14,9 +14,9 @@ import androidx.work.WorkerParameters;
 
 import com.android.volley.Request;
 import com.hover.sdk.utils.AnalyticsSingleton;
-import com.hover.sdk.utils.VolleySingleton;
 import com.hover.stax.R;
 import com.hover.stax.database.AppDatabase;
+import com.hover.stax.utils.StaxVolleySingleton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,8 +25,6 @@ import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import okhttp3.OkHttpClient;
 
 public class UpdateBountyWorker extends Worker {
 	public final static String TAG = "UpdateBountyWorker";
@@ -74,7 +72,7 @@ public class UpdateBountyWorker extends Worker {
 	public Result uploadBountyUser(BountyUser bountyUser) {
 		try {
 			Log.v(TAG, "Uploading: " + bountyUser.toJson().toString());
-			JSONObject response = VolleySingleton.uploadNow(getApplicationContext(), Request.Method.POST, getUrl(), bountyUser.toJson());
+			JSONObject response = StaxVolleySingleton.uploadNow(getApplicationContext(), Request.Method.POST, getUrl(), bountyUser.toJson());
 			Log.v(TAG, response.toString());
 			return processResponse(bountyUser, response);
 		} catch (NullPointerException | JSONException je) {
@@ -82,7 +80,7 @@ public class UpdateBountyWorker extends Worker {
 			Log.d(TAG, "Failed to process response JSON", je);
 			return ListenableWorker.Result.retry();
 		} catch (TimeoutException | ExecutionException | InterruptedException e) {
-			VolleySingleton.exceptionHandler(getApplicationContext(), e);
+			StaxVolleySingleton.exceptionHandler(getApplicationContext(), e);
 			return ListenableWorker.Result.retry();
 		}
 	}
