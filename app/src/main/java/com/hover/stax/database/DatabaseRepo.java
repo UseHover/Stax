@@ -133,6 +133,9 @@ public class DatabaseRepo {
 	public List<Action> getActions(int[] channelIds, int recipientInstitutionId) {
 		return actionDao.getActions(channelIds, recipientInstitutionId, Action.P2P);
 	}
+	public List<Action> getBountyActions() {
+		return actionDao.getAllBountyActions();
+	}
 
 	// Transactions
 	public LiveData<List<StaxTransaction>> getCompleteAndPendingTransferTransactions() {

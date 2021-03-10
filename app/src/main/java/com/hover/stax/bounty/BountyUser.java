@@ -26,7 +26,7 @@ public class BountyUser {
 	@ColumnInfo(name = "email")
 	public String email;
 
-	@ColumnInfo(name = "isUploaded",  defaultValue = "0")
+	@ColumnInfo(name = "isUploaded", defaultValue = "0")
 	public boolean isUploaded;
 
 	@ColumnInfo(name = "timestamp", defaultValue = "CURRENT_TIMESTAMP")
@@ -36,7 +36,7 @@ public class BountyUser {
 	public Long uploadedTimestamp;
 
 	protected JSONObject toJson() throws JSONException {
-		String format = "{ \"stax_bounty_hunter\": { \"device_id\": "+deviceId+", \"email\": "+email+"} }";
+		String format = "{ \"stax_bounty_hunter\": { \"device_id\": " + deviceId + ", \"email\": " + email + "} }";
 		return new JSONObject(format);
 	}
 

@@ -298,11 +298,23 @@
 	<string name="get_started">Get started</string>
 	<string name="bounty_email_stage_title">🗺️  MAP USSD FLOWS</string>
 	<string name="bounty_email_stage_desc1">Stax wants to make digital money available to anyone anywhere offline. To bring Stax to more people in more countries, we need to build a map of all the USSD services in the world.<b> That is why Stax will pay you USD $10-50 to go through any of the USSD flows on the next page.</b></string>
-	<string name="bounty_email_stage_desc2"><b>1.</b>   Enter your email so we can pay you.\n<b>2.</b>   Choose a USSD flow like “check balance” from your bank or mobile money service on the next page.\n<b>3.</b>   Go through the USSD flow as normal.\n<b>4.</b>   Stax will check the flow.\n<b>5.</b>   You get paid.
-	</string>
-	<string name="to">to</string>
-	<string name="for_someone_else">for someone else.r</string>
-	<string name="for_yourself">for yourself. </string>
+	<string name="bounty_email_stage_desc2"><b>1.</b>   Enter your email so we can pay you.\n<b>2.</b>   Choose a USSD flow like “check balance” from your bank or mobile money service on the next page.\n<b>3.</b>   Go through the USSD flow as normal.\n<b>4.</b>   Stax will check the flow.\n<b>5.</b>   You get paid.</string>
+	<string name="bounty_action_fulldescription">%1$s - use %2$s to %3$s to a %4$s account</string>
+	<string name="to">to </string>
+	<string name="to_explained">to any person using </string>
+	<string name="for_someone_else">for someone else </string>
+	<string name="for_someone_else_explained">for someone else. Ensure to enter recipients phone number </string>
+	<string name="for_yourself">for yourself </string>
+	<string name="for_yourself_explained">for yourself. This action does not require you to manually enter your phone number </string>
 	<string name="email">Email</string>
 	<string name="email_error">Please enter a valid email address</string>
+	<string name="bounty_pending_short_desc">We are checking this flow. Expect payment in 1–3 business days.</string>
+	<string name="done">Done</string>
+	<string name="available_flows">AVAILABLE FLOWS</string>
+	<string name="bounty_claim_title">%1$s - %2$s - %3$s</string>
+	<string name="bounty_claim_explained">To claim %1$s, %2$s.\n\nAs soon as you\’re done, we will send you an email to collect information for payment. You will be paid in 1–3 business days </string>
+	<string name="start_USSD_Flow">Start USSD Flow</string>
+	<string name="bounty_flow_completed_dialog_msg">Thank you for going through this flow. We sent an email with instructions for payment. We will pay you after we verify and check the flow.\n\nIf you don\’t hear from us, email us at &lt;a href="mailto://ussd@stax.me">ussd@stax.me&lt;/a></string>
+	<string name="go_through_another_flow">Go through another flow</string>
+	<string name="flow_recorded">FLOW RECORDED</string>
 </resources>

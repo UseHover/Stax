@@ -10,6 +10,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.hover.stax.R;
+import com.hover.stax.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -120,11 +121,34 @@ public class Action {
 	}
 
 	public String getFullDescription(Context c) {
-		return root_code + " - "+ from_institution_name.toUpperCase() + getHumanFriendlyType(c, transaction_type) + lastWordForDescription(c);
+		return c.getString(R.string.bounty_action_fulldescription,
+				root_code,
+				from_institution_name.toUpperCase(),
+				getHumanFriendlyType(c, transaction_type),
+				lastWordForDescription(c));
 	}
+	public String getExplainedFullDescription(Context c){
+		return c.getString(R.string.bounty_action_fulldescription,
+				"",
+				from_institution_name.toUpperCase(),
+				getHumanFriendlyType(c, transaction_type),
+				lastWordForExplainedDescription(c));
+	}
+
+	private String lastWordForExplainedDescription(Context c) {
+		if(transaction_type.equals(P2P) || transaction_type.equals(ME2ME)) {
+			return to_institution_name.toUpperCase();
+		}
+		else if (transaction_type.equals(AIRTIME)) {
+			if(requiresRecipient()) return c.getString(R.string.for_someone_else_explained);
+			else return c.getString(R.string.for_yourself_explained);
+		}
+		return "";
+	}
+
 	private String lastWordForDescription(Context c) {
 		if(transaction_type.equals(P2P) || transaction_type.equals(ME2ME)) {
-			return c.getString(R.string.to) + to_institution_name.toUpperCase();
+			return to_institution_name.toUpperCase();
 		}
 		else if (transaction_type.equals(AIRTIME)) {
 			if(requiresRecipient()) return c.getString(R.string.for_someone_else);
@@ -213,6 +237,13 @@ public class Action {
 			case Action.BALANCE: return c.getString(R.string.check_balance);
 			default: return c.getString(R.string.use_ussd);
 		}
+	}
+	public String getHumanFriendlyType(Context c) {
+		return getHumanFriendlyType(c, this.transaction_type);
+	}
+
+	public String getBountyAmountWithCurrency() {
+		return "USD $"+ Utils.formatAmount(String.valueOf(bounty_amount));
 	}
 
 	@Override

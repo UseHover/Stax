@@ -18,6 +18,7 @@ public class Constants {
 	final public static int TRANSFER_REQUEST = 203;
 	final public static int SCHEDULE_REQUEST = 204;
 	final public static int REQUEST_REQUEST = 301;
+	final public static int BOUNTY_REQUEST = 302;
 	final public static int SMS = 303;
 
 	final public static int BLUR_RADIUS = 16;

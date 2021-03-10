@@ -38,20 +38,23 @@ final public class HoverSession {
 		finalScreenTime = b.finalScreenTime;
 		HoverParameters.Builder builder = getBasicBuilder(b);
 		addExtras(builder, b.extras, b.action);
-		addPin(builder, b.activity);
+		if(isNormalAction(b.action)) addPin(builder, b.activity);
 		startHover(builder, b.activity);
 	}
 
 	private HoverParameters.Builder getBasicBuilder(Builder b) {
 		HoverParameters.Builder builder = new HoverParameters.Builder(b.activity);
 		builder.request(b.action.public_id);
-		builder.setEnvironment(HoverParameters.PROD_ENV);
+		builder.setEnvironment(isNormalAction(b.action) ? HoverParameters.PROD_ENV : HoverParameters.MANUAL_ENV) ;
 		builder.initialProcessingMessage(getMessage(b.action, b.activity));
 		builder.showUserStepDescriptions(true);
 		builder.finalMsgDisplayTime(finalScreenTime);
 		builder.style(R.style.StaxHoverTheme);
 		//builder.sessionOverlayLayout(R.layout.stax_transacting_in_progress);
 		return builder;
+	}
+	private boolean isNormalAction(Action a) {
+		return a.is_ready == 1;
 	}
 
 	private void addExtras(HoverParameters.Builder builder, JSONObject extras, Action action) {

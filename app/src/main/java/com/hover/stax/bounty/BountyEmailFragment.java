@@ -36,10 +36,11 @@ public class BountyEmailFragment extends Fragment implements BountyViewModel.Lis
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-	 	initEmailInput();
-	 	initContinueButton();
+		initEmailInput();
+		initContinueButton();
 	}
-	private void initEmailInput(){
+
+	private void initEmailInput() {
 		emailInput = view.findViewById(R.id.emailInput);
 		emailInput.addTextChangedListener(emailWatcher);
 	}
@@ -55,7 +56,7 @@ public class BountyEmailFragment extends Fragment implements BountyViewModel.Lis
 		return emailError == null;
 	}
 
-	private void saveUserAndNavigateBountyList()  {
+	private void saveUserAndNavigateBountyList() {
 		bountyViewModel.saveBountyUser();
 		navigateToBountyListFragment(this);
 	}
@@ -71,15 +72,24 @@ public class BountyEmailFragment extends Fragment implements BountyViewModel.Lis
 	}
 
 	private TextWatcher emailWatcher = new TextWatcher() {
-		@Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
-		@Override public void afterTextChanged(Editable editable) { }
-		@Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+		@Override
+		public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+		}
+
+		@Override
+		public void afterTextChanged(Editable editable) {
+		}
+
+		@Override
+		public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 			bountyViewModel.setEmail(charSequence.toString());
 		}
 	};
 
 	@Override
 	public void onClick(View v) {
-		if(isContinueButton(v) && validates()) { saveUserAndNavigateBountyList(); }
+		if (isContinueButton(v) && validates()) {
+			saveUserAndNavigateBountyList();
+		}
 	}
 }
