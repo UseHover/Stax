@@ -20,10 +20,6 @@ public class Constants {
 	final public static int REQUEST_REQUEST = 301;
 	final public static int SMS = 303;
 
-	final public static int BLUR_RADIUS = 16;
-	final public static int BLUR_SAMPLING = 1;
-
-
 	final public static String LANGUAGE_CHECK = "Language";
 	final public static String AUTH_CHECK = "Authenticate";
 	final public static String PERM_ACTIVITY = "com.hover.stax.permissions.PermissionsActivity";
@@ -32,7 +28,6 @@ public class Constants {
 	final public static String TRANSFERED = "TRANSFERED";
 	final public static String SCHEDULED = "SCHEDULED";
 	final public static String REQUEST_TYPE = "request";
-	final public static String PENDING = "pending";
 	final public static String REQUEST_LINK = "request_link";
 	final public static String FRAGMENT_DIRECT = "fragment_direct";
 	final public static String PAYMENT_LINK_SEPERATOR = "-";

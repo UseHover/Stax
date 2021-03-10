@@ -7,8 +7,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.DateUtils;
@@ -71,7 +71,7 @@ public class Schedule {
 
 	public Schedule() {}
 
-	public Schedule(Action action, Long start, Boolean isRepeat, int frequency, Long end, StaxContact contact, String a, String n, Context c) {
+	public Schedule(HoverAction action, Long start, Boolean isRepeat, int frequency, Long end, StaxContact contact, String a, String n, Context c) {
 		this(start, Collections.singletonList(contact), a, n);
 		setRepeatVals(isRepeat, frequency, end);
 		type = action.transaction_type;
@@ -105,13 +105,13 @@ public class Schedule {
 		end_date = isRepeat ? end : start_date;
 	}
 
-	private String generateDescription(Action action, List<StaxContact> contacts, Context c) {
+	private String generateDescription(HoverAction action, List<StaxContact> contacts, Context c) {
 		switch (type) {
-			case Action.AIRTIME:
+			case HoverAction.AIRTIME:
 				return c.getString(R.string.descrip_airtime_sched, action.from_institution_name, !action.requiresRecipient() ? c.getString(R.string.self_choice) : StaxContact.shortName(contacts, c));
-			case Action.P2P:
+			case HoverAction.P2P:
 				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, StaxContact.shortName(contacts, c));
-			case Action.ME2ME:
+			case HoverAction.ME2ME:
 				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, action.to_institution_name);
 			case Constants.REQUEST_TYPE:
 				return c.getString(R.string.descrip_request, StaxContact.shortName(contacts, c));
@@ -129,10 +129,10 @@ public class Schedule {
 
 	public String title(Context c) {
 		switch (type) {
-			case Action.P2P:
-			case Action.ME2ME:
+			case HoverAction.P2P:
+			case HoverAction.ME2ME:
 				return c.getString(R.string.notify_transfer_cta);
-			case Action.AIRTIME:
+			case HoverAction.AIRTIME:
 				return c.getString(R.string.notify_airtime_cta);
 			case Constants.REQUEST_TYPE:
 				return c.getString(R.string.notify_request_cta);
@@ -143,10 +143,10 @@ public class Schedule {
 
 	public String notificationMsg(Context c, List<StaxContact> contacts) {
 		switch (type) {
-			case Action.P2P:
-			case Action.ME2ME:
+			case HoverAction.P2P:
+			case HoverAction.ME2ME:
 				return c.getString(R.string.notify_transfer, description);
-			case Action.AIRTIME:
+			case HoverAction.AIRTIME:
 				return c.getString(R.string.notify_airtime);
 			case Constants.REQUEST_TYPE:
 				return c.getString(R.string.notify_request, StaxContact.shortName(contacts, c));

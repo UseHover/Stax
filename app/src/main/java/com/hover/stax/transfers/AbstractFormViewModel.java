@@ -8,8 +8,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.amplitude.api.Amplitude;
+import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.schedules.Schedule;
@@ -19,7 +19,7 @@ import java.util.List;
 public abstract class AbstractFormViewModel extends AndroidViewModel {
 
 	protected DatabaseRepo repo;
-	protected String type = Action.P2P;
+	protected String type = HoverAction.P2P;
 
 	protected LiveData<List<StaxContact>> recentContacts = new MutableLiveData<>();
 	protected MutableLiveData<Schedule> schedule = new MutableLiveData<>();

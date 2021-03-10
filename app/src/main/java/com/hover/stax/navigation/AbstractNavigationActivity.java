@@ -1,5 +1,6 @@
 package com.hover.stax.navigation;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -76,10 +77,14 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 	}
 
 	private void navigateThruHome(int destId) {
-		if (destId == R.id.navigation_balance) navigateToMainActivityAndRedirectToAFragment(this, Constants.NAV_BALANCE);
-		else if (destId == R.id.navigation_settings) navigateToMainActivityAndRedirectToAFragment(this, Constants.NAV_SETTINGS);
-		else if (destId == R.id.navigation_home) navigateToMainActivity(this);
-		else onBackPressed();
+		Intent intent = new Intent(this, MainActivity.class);
+		if (destId == R.id.navigation_balance) intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_BALANCE);
+		else if (destId == R.id.navigation_settings) intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_SETTINGS);
+		else if (destId != R.id.navigation_home) {
+			onBackPressed();
+			return;
+		}
+		startActivity(intent);
 	}
 
 	private int getNavConst(int destId) {
