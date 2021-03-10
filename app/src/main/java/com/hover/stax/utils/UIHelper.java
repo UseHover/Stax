@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
@@ -110,6 +112,9 @@ public class UIHelper {
 
 	public static int dpToPx(int dp) {
 		return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+	}
+	public static Animation loadFadeIn(Context context) {
+		return AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
 	}
 
 
