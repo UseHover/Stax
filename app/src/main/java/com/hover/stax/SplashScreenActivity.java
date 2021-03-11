@@ -25,6 +25,7 @@ import androidx.work.WorkManager;
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
+import com.hover.sdk.database.HoverRoomDatabase;
 import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.destruct.SelfDestructActivity;
 import com.hover.stax.utils.Constants;
@@ -105,6 +106,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	}
 
 	private void initHover() {
+		HoverRoomDatabase.getInstance(this);
 		Hover.initialize(this);
 		Hover.setBranding(getString(R.string.app_name), R.mipmap.stax, this);
 	}

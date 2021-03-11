@@ -38,7 +38,7 @@ final public class HoverSession {
 		finalScreenTime = b.finalScreenTime;
 		HoverParameters.Builder builder = getBasicBuilder(b);
 		addExtras(builder, b.extras, b.action);
-		addPin(builder, b.activity);
+//		addPin(builder, b.activity);
 		startHover(builder, b.activity);
 	}
 

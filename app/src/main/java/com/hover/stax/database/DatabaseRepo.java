@@ -29,7 +29,7 @@ import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.paymentLinkCryptography.Encryption;
 
 import com.hover.sdk.actions.HoverActionDao;
-import com.hover.sdk.database.PublicRoomDb;
+import com.hover.sdk.database.HoverRoomDatabase;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -58,7 +58,7 @@ public class DatabaseRepo {
 		requestDao = db.requestDao();
 		scheduleDao = db.scheduleDao();
 
-		PublicRoomDb sdkDb = PublicRoomDb.getInstance(application);
+		HoverRoomDatabase sdkDb = HoverRoomDatabase.getInstance(application);
 		actionDao = sdkDb.actionDao();
 		simDao = sdkDb.simDao();
 
