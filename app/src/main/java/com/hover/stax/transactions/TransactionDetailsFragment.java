@@ -50,8 +50,8 @@ public class TransactionDetailsFragment extends Fragment {
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		setHeaderAndDefaultPendingCardsObserver(view);
-		setActionForNetworkNameAndBountyPendingCardObserver(view);
+		setHeaderAndNormalActionPendingCardsObserver(view);
+		setActionForNetworkNameAndBountyActionPendingCardObserver(view);
 		setContactObserver(view);
 		setUSSDMessagesRecyclerView(view);
 		setSmsMessagesRecyclerView(view);
@@ -71,7 +71,7 @@ public class TransactionDetailsFragment extends Fragment {
 	}
 
 
-	private void setActionForNetworkNameAndBountyPendingCardObserver(View view) {
+	private void setActionForNetworkNameAndBountyActionPendingCardObserver(View view) {
 		viewModel.getAction().observe(getViewLifecycleOwner(), action -> {
 			if (action != null) {
 				((TextView) view.findViewById(R.id.details_network)).setText(action.network_name);
@@ -132,17 +132,17 @@ public class TransactionDetailsFragment extends Fragment {
 		viewModel.setTransaction(getArguments().getString(TransactionContract.COLUMN_UUID));
 	}
 
-	private void setPendingStateCard(View view, StaxTransaction transaction) {
+	private void setNormalActionPendingStateCard(View view, StaxTransaction transaction) {
 		if(!transaction.is_action_bounty) {
 			view.findViewById(R.id.pending_notify_in_details)
 					.setVisibility(transaction.status.equals(Constants.PENDING) ? View.VISIBLE : View.GONE);
 		}
 	}
-	private void setHeaderAndDefaultPendingCardsObserver(View view) {
+	private void setHeaderAndNormalActionPendingCardsObserver(View view) {
 		viewModel.getTransaction().observe(getViewLifecycleOwner(), transaction -> {
 			if (transaction != null) {
 				setHeaderTexts(view, transaction);
-				setPendingStateCard(view, transaction);
+				setNormalActionPendingStateCard(view, transaction);
 			}
 		});
 	}
