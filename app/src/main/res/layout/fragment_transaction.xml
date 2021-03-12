@@ -112,6 +112,7 @@
 			    android:layout_width="match_parent"
 			    android:text="@string/pending_cardbody"
 			    android:textSize="@dimen/text_16"
+			    android:id="@+id/transaction_Detail_pendingText"
 			    android:fontFamily="font-normal"
 			    android:layout_marginHorizontal="@dimen/margin_10"
 			    android:layout_marginBottom="@dimen/margin_3"

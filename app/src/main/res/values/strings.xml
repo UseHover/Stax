@@ -314,7 +314,10 @@
 	<string name="bounty_claim_title">%1$s - %2$s - %3$s</string>
 	<string name="bounty_claim_explained">To claim %1$s, %2$s.\n\nAs soon as you\’re done, we will send you an email to collect information for payment. You will be paid in 1–3 business days </string>
 	<string name="start_USSD_Flow">Start USSD Flow</string>
-	<string name="bounty_flow_completed_dialog_msg">Thank you for going through this flow. We sent an email with instructions for payment. We will pay you after we verify and check the flow.\n\nIf you don\’t hear from us, email us at &lt;a href="mailto://ussd@stax.me">ussd@stax.me&lt;/a></string>
+	<string name="checking_your_flow">Checking your flow</string>
+	<string name="bounty_flow_pending_dialog_msg">Thank you for going through this flow. We sent an email with instructions for payment. We will pay you after we verify and check the flow.\n\nIf you don\’t hear from us, email us at &lt;a href="mailto://ussd@stax.me">ussd@stax.me&lt;/a></string>
+	<string name="flow_done_title">FLOW DONE</string>
+	<string name="flow_done_desc">We checked the flow and it looks good! You should have an email in your inbox with payment information.</string>
 	<string name="go_through_another_flow">Go through another flow</string>
 	<string name="flow_recorded">FLOW RECORDED</string>
 	<string name="bounty_amount_with_currency">USD $%1$s</string>

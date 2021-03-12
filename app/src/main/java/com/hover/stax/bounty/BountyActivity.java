@@ -52,7 +52,7 @@ public class BountyActivity extends AbstractNavigationActivity implements Bounty
 		if (requestCode == Constants.BOUNTY_REQUEST && resultCode == RESULT_OK) {
 			new StaxDialog(this)
 					.setDialogTitle(R.string.flow_recorded)
-					.setDialogMessage(R.string.bounty_flow_completed_dialog_msg)
+					.setDialogMessage(R.string.bounty_flow_pending_dialog_msg)
 					.setPosButton(R.string.go_through_another_flow, null)
 					.showIt();
 		}

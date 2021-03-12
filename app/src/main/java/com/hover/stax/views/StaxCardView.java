@@ -1,5 +1,6 @@
 package com.hover.stax.views;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -11,6 +12,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
 
 import com.hover.stax.R;
 
@@ -44,6 +48,13 @@ public class StaxCardView extends FrameLayout {
 		} finally {
 			a.recycle();
 		}
+	}
+
+
+	@SuppressLint("ResourceType")
+	public void setBackgroundColor(int colorRes) {
+		bgColor = getContext().getResources().getColor(colorRes);
+		contentView.setBackgroundColor(bgColor);
 	}
 
 	private void fillFromAttrs() {

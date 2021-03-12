@@ -49,36 +49,30 @@ class BountyListAdapter extends RecyclerView.Adapter<BountyListAdapter.BountyLis
 	private void updateStatusLayoutAndSetClickListener(BountyListViewHolder holder, BountyAction ba) {
 		if (ba.a.bounty_is_open == 0 && ba.lastTransactionUUID !=null) { //Bounty is closed and done by current user
 			updateBgColor(holder, R.color.muted_green);
-			updatePendingNoticeText(holder.pendingNotice, R.string.done, R.drawable.ic_check, View.VISIBLE);
+			UIHelper.setTextWithDrawable(holder.pendingNotice, context.getString(R.string.done), R.drawable.ic_check, View.VISIBLE);
 			UIHelper.strikeThroughTextView(holder.content, holder.amount);
 			holder.itemView.setOnClickListener(null);
 		}
 		else if(ba.a.bounty_is_open == 0) { //This bounty is closed and done by another user
 			updateBgColor(holder, R.color.lighter_grey);
-			updatePendingNoticeText(holder.pendingNotice, 0, 0, View.GONE);
+			UIHelper.setTextWithDrawable(holder.pendingNotice, "", 0, View.GONE);
 			holder.itemView.setOnClickListener(null);
 			UIHelper.strikeThroughTextView(holder.content, holder.amount);
 		}
 		else if (ba.lastTransactionUUID != null) { //Bounty is open and with a transaction by current user
 			updateBgColor(holder, R.color.pending_brown);
-			updatePendingNoticeText(holder.pendingNotice, R.string.bounty_pending_short_desc, R.drawable.ic_warning, View.VISIBLE);
+			UIHelper.setTextWithDrawable(holder.pendingNotice, context.getString(R.string.bounty_pending_short_desc), R.drawable.ic_warning, View.VISIBLE);
 			holder.pendingNotice.setOnClickListener(view -> { selectListener.viewTransactionDetail(ba.lastTransactionUUID); });
 			holder.content.setOnClickListener(v -> selectListener.runAction(ba.a));
 		}
 		else { //default state
 			updateBgColor(holder,R.color.colorPrimary);
-			updatePendingNoticeText(holder.pendingNotice, 0, 0, View.GONE);
+			UIHelper.setTextWithDrawable(holder.pendingNotice, "", 0, View.GONE);
 			holder.itemView.setOnClickListener(view -> { selectListener.runAction(ba.a); });
 		}
 	}
 	private void updateBgColor(BountyListViewHolder holder, int color) {
 		if(color!=0)holder.parentLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(color));
-	}
-
-	private void updatePendingNoticeText(TextView pendingNotice, int textRes, int iconDrawRes, int visibility) {
-		pendingNotice.setVisibility(visibility);
-		if(textRes != 0) pendingNotice.setText(context.getString(textRes));
-		if(iconDrawRes != 0)pendingNotice.setCompoundDrawablesWithIntrinsicBounds(iconDrawRes, 0,0, 0);
 	}
 
 	@Override

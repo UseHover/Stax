@@ -122,6 +122,11 @@ public class UIHelper {
 			textView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 		}
 	}
+	public static void setTextWithDrawable(TextView textView, String value, int iconDrawRes, int visibility) {
+		textView.setVisibility(visibility);
+		textView.setText(value);
+		if(iconDrawRes != 0)textView.setCompoundDrawablesWithIntrinsicBounds(iconDrawRes, 0,0, 0);
+	}
 
 
 

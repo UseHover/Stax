@@ -30,12 +30,14 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 	private MediatorLiveData<List<UssdCallResponse>> messages;
 	private LiveData<List<UssdCallResponse>> sms;
 
+
 	public TransactionDetailsViewModel(@NonNull Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
 		transaction = new MutableLiveData<>();
 		action = new MutableLiveData<>();
 		messages = new MediatorLiveData<>();
+
 
 		action = Transformations.switchMap(transaction, t -> repo.getLiveAction(t.action_id));
 		contact = Transformations.switchMap(transaction, t -> repo.getLiveContact(t.counterparty_id));
