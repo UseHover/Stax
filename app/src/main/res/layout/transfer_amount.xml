@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hover.stax.views.StaxTextInputLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/amountInput"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+	android:hint="@string/transfer_amount_label"
+    android:inputType="numberDecimal" />

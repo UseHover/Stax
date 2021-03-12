@@ -20,8 +20,6 @@ import com.hover.sdk.api.Hover;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.database.DatabaseRepo;
-import com.hover.stax.utils.fieldstates.FieldState;
-import com.hover.stax.utils.fieldstates.FieldStateType;
 import com.hover.stax.requests.Request;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.sims.Sim;
@@ -48,10 +46,6 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 	private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
 	private MediatorLiveData<List<Action>> channelActions = new MediatorLiveData<>();
 
-
-	private MediatorLiveData<FieldState> fieldState = new MediatorLiveData<>();
-	private MediatorLiveData<Integer> helper = new MediatorLiveData<>();
-
 	public ChannelDropdownViewModel(Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
@@ -67,31 +61,14 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 		simChannels.addSource(simHniList, this::onSimUpdate);
 
 		activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull);
-		fieldState.addSource(activeChannel, channel -> {
-			if (channel != null && channelActions.getValue() != null && channelActions.getValue().size() > 0)
-				fieldState.setValue(null);
-		});
 
 		channelActions.addSource(type, this::loadActions);
 		channelActions.addSource(selectedChannels, this::loadActions);
 		channelActions.addSource(activeChannel, this::loadActions);
-		fieldState.addSource(channelActions, actions -> {
-			if (activeChannel.getValue() != null && (actions == null || actions.size() == 0)){
-				String fieldMessage = application.getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getApplication(), type.getValue()));
-				fieldState.setValue(new FieldState(FieldStateType.ERROR, fieldMessage));
-			}
-			else fieldState.setValue(activeChannel.getValue() !=null ?new FieldState(FieldStateType.SUCCESS, "") : null);
-		});
-		helper.addSource(channelActions, actions -> {
-			if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !actions.get(0).transaction_type.equals(Action.BALANCE)){
-				String fieldMessage = application.getString(actions.get(0).transaction_type.equals(Action.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning);
-				fieldState.setValue(new FieldState(FieldStateType.INFO, fieldMessage));
-			}
-			else fieldState.setValue(activeChannel.getValue()!=null? new FieldState(FieldStateType.SUCCESS, "") :null);
-		});
 	}
 
 	public void setType(String t) { type.setValue(t); }
+	public String getType() { return type.getValue(); }
 
 	private void loadChannels() {
 		if (allChannels == null) { allChannels = new MutableLiveData<>(); }
@@ -245,42 +222,22 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 		Amplitude.getInstance().logEvent(getApplication().getString(R.string.new_channel_selected), event);
 	}
 
-	public boolean validates() {
-		boolean valid = true;
-		if (activeChannel.getValue() == null) {
-			valid = false;
-			String fieldMessage = getApplication().getString(R.string.channels_error_noselect);
-			fieldState.setValue(new FieldState(FieldStateType.ERROR, fieldMessage ));
-		} else if (channelActions.getValue() == null || channelActions.getValue().size() == 0) {
-			valid = false;
-			String fieldMessage = getApplication().getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getApplication(), type.getValue()));
-			fieldState.setValue(new FieldState(FieldStateType.ERROR, fieldMessage));
-		}
-		return valid;
-	}
-
-	public LiveData<FieldState> getFieldState() {
-		if (fieldState == null) { fieldState = new MediatorLiveData<>(); }
-		return fieldState;
-	}
-
-	public LiveData<Integer> getHelper() {
-		if (helper == null) { helper = new MediatorLiveData<>(); }
-		return helper;
+	public String errorCheck() {
+		if (activeChannel.getValue() == null)
+			return getApplication().getString(R.string.channels_error_noselect);
+		else if (channelActions.getValue() == null || channelActions.getValue().size() == 0) {
+			return getApplication().getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getApplication(), type.getValue()));
+		} else return null;
 	}
 
 	public void setChannelFromRequest(Request r) {
 		if (r != null && selectedChannels.getValue() != null && selectedChannels.getValue().size() > 0) {
 			new Thread(() -> {
 				List<Action> acts = repo.getActions(getChannelIds(selectedChannels.getValue()), r.requester_institution_id);
-				if (acts.size() <= 0) {
+				if (acts.size() <= 0)
 					acts = repo.getActions(getChannelIds(simChannels.getValue()), r.requester_institution_id);
-					if (acts.size() <= 0){
-						String fieldMessage = getApplication().getString(R.string.channel_request_fielderror, String.valueOf(r.requester_institution_id));
-						fieldState.postValue(new FieldState(FieldStateType.ERROR, fieldMessage));
-					}
-				}
-				channelActions.postValue(acts);
+				if (acts.size() > 0)
+					channelActions.postValue(acts);
 			}).start();
 			activeChannel.addSource(channelActions, this::setActiveChannel);
 		}

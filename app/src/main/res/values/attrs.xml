@@ -8,21 +8,18 @@
 	</declare-styleable>
 
 	<declare-styleable name="ChannelDropdown">
-		<attr name="label" format="string" />
-		<attr name="showError" format="boolean" />
-		<attr name="showSelected" format="boolean" />
-		<attr name="showLink" format="boolean"/>
+		<attr name="show_selected" format="boolean" />
 	</declare-styleable>
 
 	<declare-styleable name="StaxTextInputLayout">
-		<attr name="hint" format="string" />
-		<attr name="android:inputType" format="string"/>
+		<attr name="android:hint" />
+		<attr name="android:inputType" />
 	</declare-styleable>
 
 	<declare-styleable name="StaxDropdownLayout">
-		<attr name="hint_value" format="string" />
-		<attr name="editable" format="boolean"/>
-		<attr name="defaultText" format="string"/>
+		<attr name="android:hint" />
+		<attr name="android:editable" />
+		<attr name="android:text" />
 	</declare-styleable>
 
 	<declare-styleable name="CustomSwipeRefreshLayout">

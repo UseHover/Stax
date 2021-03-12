@@ -15,7 +15,7 @@
 		<item name="colorSurface">@color/cardViewColor</item>
 		<item name="colorOnSurface">@color/offWhite</item>
 		<item name="colorOnBackground">@color/darkGrey</item>
-		<item name="colorError">@color/bright_red</item>
+		<item name="colorError">@color/stax_state_red</item>
 		<item name="colorOnError">@color/offWhite</item>
 
 		<item name="colorControlNormal">@color/buttonColor</item>
@@ -45,13 +45,13 @@
 		<item name="snackbarTextViewStyle">@style/StaxSnackbarText</item>
 	</style>
 
+	<style name="SplashTheme" parent="StaxTheme">
+		<item name="android:windowBackground">@drawable/splash_window_background</item>
+	</style>
+
 	<style name="StaxHoverTheme" parent="StaxTheme">
 		<item name="android:buttonStyle">@style/HoverButton</item>
 		<item name="buttonStyle">@style/HoverButton</item>
-	</style>
-
-	<style name="SplashTheme" parent="StaxTheme">
-		<item name="android:windowBackground">@drawable/splash_background</item>
 	</style>
 
 	<style name="StaxButton" parent="Widget.AppCompat.Button.Borderless">
@@ -132,31 +132,19 @@
 		<item name="android:textSize">@dimen/text_13</item>
 		<item name="fontFamily">font-medium</item>
 		<item name="android:fontFamily">font-medium</item>
-		<item name="errorTextColor">@color/bright_red</item>
+		<item name="errorTextColor">@color/stax_state_red</item>
+		<item name="errorIconDrawable">@drawable/ic_error</item>
+		<item name="endIconTint">@color/offWhite</item>
 		<item name="errorEnabled">true</item>
-		<item name="helperTextTextColor">@color/offWhite</item>
+		<item name="helperTextTextColor">@color/stax_state_blue</item>
 		<item name="helperTextEnabled">true</item>
 	</style>
 
-	<style name="StaxLabeledDropdown" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-		<item name="android:layout_marginStart">@dimen/margin_10</item>
-		<item name="android:layout_marginEnd">@dimen/margin_10</item>
-		<item name="android:layout_marginBottom">@dimen/margin_8</item>
-		<item name="boxStrokeColor">@color/offWhite</item>
-		<item name="boxStrokeWidth">2dp</item>
-		<item name="boxBackgroundColor">@color/cardViewColor</item>
-		<item name="android:textColorHint">@color/offWhite</item>
-		<item name="hintTextColor">@color/offWhite</item>
-		<item name="android:textColor">@color/offWhite</item>
-		<item name="android:textSize">@dimen/text_13</item>
-		<item name="fontFamily">font-medium</item>
-		<item name="android:fontFamily">font-medium</item>
-		<item name="endIconTint">@color/offWhite</item>
-		<item name="materialThemeOverlay">@style/StaxDropdownPopup</item>
-		<item name="errorTextColor">@color/bright_red</item>
-		<item name="errorEnabled">true</item>
-		<item name="helperTextTextColor">@color/offWhite</item>
-		<item name="helperTextEnabled">true</item>
+	<style name="StaxLabeledDropdown" parent="StaxLabeledInput">
+		<!-- <item name="materialThemeOverlay">@style/StaxDropdownPopup</item> -->
+		<!-- Below is Equivalent of Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu -->
+		<item name="materialThemeOverlay">@style/ThemeOverlay.MaterialComponents.AutoCompleteTextView.OutlinedBox</item>
+		<item name="endIconMode">dropdown_menu</item>
 	</style>
 
 	<style name="StaxDropdownPopup" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
@@ -181,7 +169,7 @@
 		<item name="colorSurface">@color/cardViewColor</item>
 		<item name="colorOnSurface">@color/offWhite</item>
 		<item name="colorOnBackground">@color/darkGrey</item>
-		<item name="colorError">@color/bright_red</item>
+		<item name="colorError">@color/stax_state_red</item>
 		<item name="colorOnError">@color/offWhite</item>
 
 		<item name="android:textColor">@color/offWhite</item>

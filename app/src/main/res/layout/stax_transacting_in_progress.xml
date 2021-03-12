@@ -6,7 +6,7 @@
 	android:layout_height="match_parent"
 	android:layout_gravity="center"
 	android:gravity="center"
-	android:background="@drawable/stax_background"
+	android:background="@drawable/processing_background"
 	tools:ignore="Overdraw"
 	android:fitsSystemWindows="true"
 	android:id="@+id/content">

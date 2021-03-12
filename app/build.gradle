@@ -16,7 +16,7 @@ android {
         applicationId "com.hover.stax"
         minSdkVersion 18
         targetSdkVersion 29
-        versionCode 35
+        versionCode 36
         versionName "1.1.5"
 
         vectorDrawables.useSupportLibrary = true
@@ -64,10 +64,10 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation "androidx.work:work-runtime:2.4.0"
-    implementation "androidx.room:room-runtime:2.2.5"
     implementation "androidx.biometric:biometric:1.1.0-beta01"
     implementation 'com.google.android.material:material:1.2.1'
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:2.2.0"
+    implementation "androidx.room:room-runtime:2.2.5"
     annotationProcessor "androidx.room:room-compiler:2.2.5"
     androidTestImplementation "androidx.room:room-testing:2.2.5"
     
@@ -95,7 +95,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     // Hover SDK
-    def sdk_version = "1.7.2-stax-1.1.4-pro"
+    def sdk_version = "1.7.2-stax-1.1.5-pro"
     releaseImplementation "com.hover:android-sdk:$sdk_version"
     debugImplementation project(":hover.sdk")
     debugImplementation 'com.android.volley:volley:1.1.1'

@@ -50,6 +50,7 @@ final public class HoverSession {
 		builder.showUserStepDescriptions(true);
 		builder.finalMsgDisplayTime(finalScreenTime);
 		builder.style(R.style.StaxHoverTheme);
+		builder.sessionOverlayLayout(R.layout.stax_transacting_in_progress);
 		return builder;
 	}
 
@@ -76,27 +77,6 @@ final public class HoverSession {
 
 	private void addPin(HoverParameters.Builder builder, Activity a) {
 		builder.extra(Action.PIN_KEY, KeyStoreExecutor.decrypt(channel.pin, a));
-	}
-
-	private String getSenderLogo() {
-//		Log.e(TAG, "logo array: " + l);
-		return channel.logoUrl;
-	}
-	private byte[] getReceiverLogo(Action a) {
-		if (a.to_institution_logo != null && !channel.logoUrl.equals(a.to_institution_logo))
-			return getLogo(a.to_institution_logo);
-		return null;
-	}
-	private byte[] getLogo(String url) {
-//		try {
-//			Log.e(TAG, "logo url: " + url);
-//			Bitmap b = Picasso.get().load(url).networkPolicy(NetworkPolicy.OFFLINE).get();
-//			Log.e(TAG, "bitmap: " + b);
-//			return Utils.bitmapToByteArray(b);
-//		} catch (Exception ignored) {
-//			Log.e(TAG, "exception", ignored);
-			return null;
-//		}
 	}
 
 	private String getMessage(Action a, Context c) {

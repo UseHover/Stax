@@ -1,12 +1,10 @@
 package com.hover.stax.actions;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.hover.stax.R;
@@ -125,6 +123,10 @@ public class Action {
 
 	public boolean requiresRecipient() {
 		return requiresInput(ACCOUNT_KEY) || requiresInput(PHONE_KEY);
+	}
+
+	public boolean isPhoneBased() {
+		return !requiresInput(ACCOUNT_KEY) && requiresInput(PHONE_KEY);
 	}
 
 	public boolean allowsNote() {

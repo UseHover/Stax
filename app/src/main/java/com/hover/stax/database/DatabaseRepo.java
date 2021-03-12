@@ -108,10 +108,6 @@ public class DatabaseRepo {
 		return actionDao.getLiveAction(public_id);
 	}
 
-	public LiveData<List<Action>> getLiveActions(int channelId, String type) {
-		return actionDao.getLiveActions(channelId, type);
-	}
-
 	public LiveData<List<Action>> getLiveActions(int[] channelIds, String type) {
 		return actionDao.getLiveActions(channelIds, type);
 	}
