@@ -127,15 +127,15 @@ public class Action {
 				getHumanFriendlyType(c, transaction_type),
 				lastWordForDescription(c));
 	}
-	public String getExplainedFullDescription(Context c){
+	public String getDetailedFullDescription(Context c){
 		return c.getString(R.string.bounty_action_fulldescription,
 				"",
 				from_institution_name.toUpperCase(),
 				getHumanFriendlyType(c, transaction_type),
-				lastWordForExplainedDescription(c));
+				detailedLastWord(c));
 	}
 
-	private String lastWordForExplainedDescription(Context c) {
+	private String detailedLastWord(Context c) {
 		if(transaction_type.equals(P2P) || transaction_type.equals(ME2ME)) {
 			return to_institution_name.toUpperCase();
 		}
@@ -158,10 +158,6 @@ public class Action {
 	}
 
 	public String getPronoun(Context c) {
-		return requiresRecipient() ?  c.getString(R.string.other_choice) : c.getString(R.string.self_choice);
-	}
-
-	public String getFullPronoun(Context c) {
 		return requiresRecipient() ?  c.getString(R.string.other_choice) : c.getString(R.string.self_choice);
 	}
 
@@ -242,8 +238,8 @@ public class Action {
 		return getHumanFriendlyType(c, this.transaction_type);
 	}
 
-	public String getBountyAmountWithCurrency() {
-		return "USD $"+ Utils.formatAmount(String.valueOf(bounty_amount));
+	public String getBountyAmountWithCurrency(Context c) {
+		return c.getString(R.string.bounty_amount_with_currency, Utils.formatAmount(String.valueOf(bounty_amount)));
 	}
 
 	@Override

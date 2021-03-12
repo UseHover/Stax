@@ -43,7 +43,7 @@ class BountyListAdapter extends RecyclerView.Adapter<BountyListAdapter.BountyLis
 		Action a = ba.a;
 		updateStatusLayoutAndSetClickListener(holder, ba);
 		holder.content.setText(a.getFullDescription(context));
-		holder.amount.setText(a.getBountyAmountWithCurrency());
+		holder.amount.setText(a.getBountyAmountWithCurrency(context));
 	}
 
 	private void updateStatusLayoutAndSetClickListener(BountyListViewHolder holder, BountyAction ba) {

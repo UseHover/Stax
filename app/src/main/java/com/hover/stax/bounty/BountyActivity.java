@@ -35,8 +35,10 @@ public class BountyActivity extends AbstractNavigationActivity implements Bounty
 	@Override
 	public void runAction(Action a) {
 		new StaxDialog(this)
-				.setDialogTitle(getString(R.string.bounty_claim_title, a.root_code, a.getHumanFriendlyType(this), a.getBountyAmountWithCurrency()))
-				.setDialogMessage(getString(R.string.bounty_claim_explained, a.getBountyAmountWithCurrency(), a.getExplainedFullDescription(this)))
+				.setDialogTitle(getString(R.string.bounty_claim_title,
+						a.root_code, a.getHumanFriendlyType(this),
+						a.getBountyAmountWithCurrency(this) ))
+				.setDialogMessage(getString(R.string.bounty_claim_explained, a.getBountyAmountWithCurrency(this), a.getDetailedFullDescription(this)))
 				.setPosButton(R.string.start_USSD_Flow, v -> {
 					makeCall(a);
 				})

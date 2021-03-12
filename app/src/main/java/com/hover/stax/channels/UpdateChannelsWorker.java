@@ -13,13 +13,16 @@ import androidx.work.WorkerParameters;
 
 import com.hover.stax.R;
 import com.hover.stax.database.AppDatabase;
+import com.hover.stax.utils.StaxVolleySingleton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -58,7 +61,7 @@ public class UpdateChannelsWorker extends Worker {
 	public Worker.Result doWork() {
 		try {
 			Log.v(TAG, "Downloading channels...");
-			JSONObject channelsJson = downloadChannels(getUrl());
+			JSONObject channelsJson = StaxVolleySingleton.downloadNow(getApplicationContext(), getUrl());
 			JSONArray data = channelsJson.getJSONArray("data");
 			for (int j = 0; j < data.length(); j++) {
 				Channel channel = channelDao.getChannel(data.getJSONObject(j).getJSONObject("attributes").getInt("id"));
@@ -73,7 +76,13 @@ public class UpdateChannelsWorker extends Worker {
 		} catch (JSONException | NullPointerException e) {
 			Log.e(TAG, "Error parsing channel data.", e);
 			return Result.failure();
-		} catch (IOException e) {
+		}  catch (InterruptedException e) {
+			Log.e(TAG, "Interrupted failure downloading channel data, will try again.", e);
+			return Result.retry();
+		} catch (ExecutionException e) {
+			Log.e(TAG, "Execution failure downloading channel data, will try again.", e);
+			return Result.retry();
+		} catch (TimeoutException e) {
 			Log.e(TAG, "Timeout downloading channel data, will try again.", e);
 			return Result.retry();
 		}
@@ -81,12 +90,5 @@ public class UpdateChannelsWorker extends Worker {
 
 	private String getUrl() {
 		return getApplicationContext().getString(R.string.api_url) + getApplicationContext().getString(R.string.channels_endpoint);
-	}
-
-	private JSONObject downloadChannels(String url) throws IOException, JSONException {
-		Request request = new Request.Builder().url(url).build();
-		Response response = client.newCall(request).execute();
-		JSONObject data = new JSONObject(response.body().string());
-		return data;
 	}
 }
