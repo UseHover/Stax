@@ -39,6 +39,10 @@ public class StaxTransaction {
 	public String action_id;
 
 	@NonNull
+	@ColumnInfo(name = "is_action_bounty", defaultValue = "0")
+	public boolean is_action_bounty;
+
+	@NonNull
 	@ColumnInfo(name = "transaction_type")
 	public String transaction_type;
 
@@ -103,8 +107,8 @@ public class StaxTransaction {
 
 			Log.e("Transaction", "creating transaction with uuid: " + uuid);
 
-			if (transaction_type != null)
-				description = generateDescription(action, contact, c);
+			if (transaction_type != null) description = generateDescription(action, contact, c);
+			is_action_bounty = action.bounty_amount > 0;
 		}
 	}
 

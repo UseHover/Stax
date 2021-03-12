@@ -23,6 +23,9 @@ public interface TransactionDao {
 	@Query("SELECT * FROM stax_transactions WHERE transaction_type != 'balance' AND status != 'failed' ORDER BY initiated_at DESC")
 	LiveData<List<StaxTransaction>> getCompleteAndPendingTransfers();
 
+	@Query("SELECT * FROM stax_transactions WHERE is_action_bounty = 1 ORDER BY	 initiated_at DESC")
+	LiveData<List<StaxTransaction>> getBountyTransactions();
+
 	@Query("SELECT * FROM stax_transactions WHERE uuid = :uuid LIMIT 1")
 	StaxTransaction getTransaction(String uuid);
 

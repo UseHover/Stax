@@ -133,13 +133,20 @@ public class DatabaseRepo {
 	public List<Action> getActions(int[] channelIds, int recipientInstitutionId) {
 		return actionDao.getActions(channelIds, recipientInstitutionId, Action.P2P);
 	}
-	public List<Action> getBountyActions() {
-		return actionDao.getAllBountyActions();
+	public List<Action> getActionsForBounty() {
+		return actionDao.getAllActionsForBounty();
+	}
+	public LiveData<List<Action>> getLiveActionsForBounty() {
+		return actionDao.getAllLiveActionsForBounty();
 	}
 
 	// Transactions
 	public LiveData<List<StaxTransaction>> getCompleteAndPendingTransferTransactions() {
 		return transactionDao.getCompleteAndPendingTransfers();
+	}
+
+	public LiveData<List<StaxTransaction>> getBountyTransactions() {
+		return transactionDao.getBountyTransactions();
 	}
 
 	public LiveData<List<StaxTransaction>> getCompleteTransferTransactions(int channelId) {

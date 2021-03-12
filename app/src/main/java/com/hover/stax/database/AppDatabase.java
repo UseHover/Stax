@@ -24,7 +24,7 @@ import com.hover.stax.transactions.TransactionDao;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class, BountyUser.class}, version = 25)
+@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class, BountyUser.class}, version = 26)
 public abstract class AppDatabase extends RoomDatabase {
 	private static final int NUMBER_OF_THREADS = 8;
 	static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -51,6 +51,7 @@ public abstract class AppDatabase extends RoomDatabase {
 									   .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
 									   .addMigrations(M23_24)
 									   .addMigrations(M24_25)
+									   .addMigrations(M25_26)
 									   .build();
 				}
 			}
@@ -74,4 +75,12 @@ public abstract class AppDatabase extends RoomDatabase {
 									 "isUploaded INTEGER not null default 0)");
 		}
 	};
+
+	static final Migration M25_26 = new Migration(25, 26) {
+		@Override
+		public void migrate(SupportSQLiteDatabase database) {
+			database.execSQL("ALTER TABLE stax_transactions ADD COLUMN is_action_bounty DEFAULT 0");
+		}
+	};
+
 }

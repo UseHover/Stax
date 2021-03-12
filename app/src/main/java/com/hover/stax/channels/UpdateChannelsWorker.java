@@ -61,7 +61,7 @@ public class UpdateChannelsWorker extends Worker {
 	public Worker.Result doWork() {
 		try {
 			Log.v(TAG, "Downloading channels...");
-			JSONObject channelsJson = StaxVolleySingleton.downloadNow(getApplicationContext(), getUrl());
+			JSONObject channelsJson = downloadChannels(getUrl());
 			JSONArray data = channelsJson.getJSONArray("data");
 			for (int j = 0; j < data.length(); j++) {
 				Channel channel = channelDao.getChannel(data.getJSONObject(j).getJSONObject("attributes").getInt("id"));
@@ -76,13 +76,7 @@ public class UpdateChannelsWorker extends Worker {
 		} catch (JSONException | NullPointerException e) {
 			Log.e(TAG, "Error parsing channel data.", e);
 			return Result.failure();
-		}  catch (InterruptedException e) {
-			Log.e(TAG, "Interrupted failure downloading channel data, will try again.", e);
-			return Result.retry();
-		} catch (ExecutionException e) {
-			Log.e(TAG, "Execution failure downloading channel data, will try again.", e);
-			return Result.retry();
-		} catch (TimeoutException e) {
+		}  catch (IOException e) {
 			Log.e(TAG, "Timeout downloading channel data, will try again.", e);
 			return Result.retry();
 		}
@@ -90,5 +84,12 @@ public class UpdateChannelsWorker extends Worker {
 
 	private String getUrl() {
 		return getApplicationContext().getString(R.string.api_url) + getApplicationContext().getString(R.string.channels_endpoint);
+	}
+
+	private JSONObject downloadChannels(String url) throws IOException, JSONException {
+		Request request = new Request.Builder().url(url).build();
+		Response response = client.newCall(request).execute();
+		JSONObject data = new JSONObject(response.body().string());
+		return data;
 	}
 }

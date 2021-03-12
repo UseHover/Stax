@@ -42,5 +42,8 @@ public interface ActionDao {
 	LiveData<List<Action>> getLiveActionsByInst(int[] channel_ids, int from_institution_id, String transaction_type);
 
 	@Query("SELECT * FROM hsdk_actions WHERE bounty_amount > 0")
-	List<Action> getAllBountyActions();
+	List<Action> getAllActionsForBounty();
+
+	@Query("SELECT * FROM hsdk_actions WHERE bounty_amount > 0")
+	LiveData<List<Action>> getAllLiveActionsForBounty();
 }

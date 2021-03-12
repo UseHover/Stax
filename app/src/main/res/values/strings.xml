@@ -318,4 +318,5 @@
 	<string name="go_through_another_flow">Go through another flow</string>
 	<string name="flow_recorded">FLOW RECORDED</string>
 	<string name="bounty_amount_with_currency">USD $%1$s</string>
+	<string name="strike_text"><strike>%1$s</strike></string>
 </resources>

@@ -1,6 +1,7 @@
 package com.hover.stax.bounty;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +45,7 @@ public class BountyListFragment extends Fragment implements BountyListAdapter.Se
 	}
 
 	private void startObservers() {
-		bountyViewModel.getFilteredBountyActionsLiveData().observe(getViewLifecycleOwner(), actions -> {
+		bountyViewModel.getBountyActionsLiveData().observe(getViewLifecycleOwner(), actions -> {
 			if (actions != null && actions.size() > 0) {
 				BountyListAdapter bountyListAdapter = new BountyListAdapter(actions, this, getContext());
 				bountyRecyclerView.setAdapter(bountyListAdapter);
