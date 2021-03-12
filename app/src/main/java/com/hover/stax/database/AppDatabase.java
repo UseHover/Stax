@@ -8,8 +8,6 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.hover.stax.bounty.BountyUser;
-import com.hover.stax.bounty.BountyUserDao;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
 import com.hover.stax.contacts.ContactDao;
@@ -24,7 +22,7 @@ import com.hover.stax.transactions.TransactionDao;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class, BountyUser.class}, version = 26)
+@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class}, version = 27)
 public abstract class AppDatabase extends RoomDatabase {
 	private static final int NUMBER_OF_THREADS = 8;
 	static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -41,8 +39,6 @@ public abstract class AppDatabase extends RoomDatabase {
 
 	public abstract ScheduleDao scheduleDao();
 
-	public abstract BountyUserDao bountyDao();
-
 	public static synchronized AppDatabase getInstance(Context context) {
 		if (INSTANCE == null) {
 			synchronized (AppDatabase.class) {
@@ -52,6 +48,7 @@ public abstract class AppDatabase extends RoomDatabase {
 									   .addMigrations(M23_24)
 									   .addMigrations(M24_25)
 									   .addMigrations(M25_26)
+									   .addMigrations(M26_27)
 									   .build();
 				}
 			}
@@ -80,6 +77,12 @@ public abstract class AppDatabase extends RoomDatabase {
 		@Override
 		public void migrate(SupportSQLiteDatabase database) {
 			database.execSQL("ALTER TABLE stax_transactions ADD COLUMN is_action_bounty DEFAULT 0");
+		}
+	};
+
+	static final Migration M26_27 = new Migration(26, 27) {
+		@Override
+		public void migrate(SupportSQLiteDatabase database) {
 		}
 	};
 

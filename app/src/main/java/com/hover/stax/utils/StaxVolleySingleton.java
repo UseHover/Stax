@@ -73,61 +73,6 @@ final public class StaxVolleySingleton {
 		StaxVolleySingleton.getInstance(c).addToRequestQueue(new JsonObjectRequest(requestType, url, json, future, future));
 		return future.get(TIMEOUT_S, TimeUnit.SECONDS);
 	}
-	public static JSONObject uploadNow(Context c, int requestType, String url, JSONObject json, Response.Listener<JSONObject> listener, Response.ErrorListener eListener) throws InterruptedException, ExecutionException, TimeoutException {
-		RequestFuture<JSONObject> future = RequestFuture.newFuture();
-		StaxVolleySingleton.getInstance(c).addToRequestQueue(new JsonObjectRequest(requestType, url, json, listener, eListener));
-		return future.get(TIMEOUT_S, TimeUnit.SECONDS);
-	}
-
-	public static JSONObject downloadNow(Context c, String url) throws InterruptedException, ExecutionException, TimeoutException {
-		RequestFuture<JSONObject> future = RequestFuture.newFuture();
-		JsonObjectRequest request = new JsonObjectRequest(url, null, future, future) {
-			@Override
-			protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
-				try {
-					byte[] data = response.data;
-					if (response.statusCode == 304) {
-						String emptyObject = "{}";
-						data = emptyObject.getBytes();
-					}
-					String jsonString = new String(
-							data,
-							HttpHeaderParser.parseCharset(response.headers, PROTOCOL_CHARSET));
-					return Response.success(
-							new JSONObject(jsonString), HttpHeaderParser.parseCacheHeaders(response)
-					);
-				} catch (UnsupportedEncodingException e) {
-					return Response.error(new ParseError(e));
-				} catch (JSONException je) {
-					return Response.error(new ParseError(je));
-				}
-
-			}
-		};
-		StaxVolleySingleton.getInstance(c).addToRequestQueue(request);
-		return future.get(TIMEOUT_S, TimeUnit.SECONDS);
-	}
-	public static JSONArray downloadArrayNow(Context c, String url) throws InterruptedException, ExecutionException, TimeoutException {
-		RequestFuture<JSONArray> future = RequestFuture.newFuture();
-		JsonArrayRequest r = new JsonArrayRequest(url, future, future);
-		r.setRetryPolicy(new DefaultRetryPolicy((int) TIMEOUT_S*100, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-		StaxVolleySingleton.getInstance(c).addToRequestQueue(r);
-		return future.get(TIMEOUT_S, TimeUnit.SECONDS);
-	}
-
-	public static String uploadJsonNow(Context c, String url, final JSONObject json) throws InterruptedException, ExecutionException, TimeoutException {
-		RequestFuture<String> future = RequestFuture.newFuture();
-		StaxVolleySingleton.getInstance(c).addToRequestQueue(new StringRequest(Request.Method.POST, url, future, future) {
-			@Override
-			public byte[] getBody() throws AuthFailureError { return json.toString().getBytes(); }
-			@Override
-			public String getBodyContentType() { return "application/json"; }
-		});
-		return future.get(TIMEOUT_S, TimeUnit.SECONDS);
-	}
-	public static void download(Context c, String url, Response.Listener<JSONObject> listener, Response.ErrorListener eListener) {
-		StaxVolleySingleton.getInstance(c).addToRequestQueue(new JsonObjectRequest(Request.Method.GET, url, null, listener, eListener));
-	}
 
 	class CustomHurlStack extends HurlStack {
 		@Override

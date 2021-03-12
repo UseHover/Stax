@@ -14,6 +14,7 @@ import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.transactions.StaxTransaction;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.Utils;
 
 import java.util.ArrayList;
@@ -26,15 +27,17 @@ public class BountyViewModel extends AndroidViewModel {
 
 	private DatabaseRepo repo;
 	private MutableLiveData<String> emailLiveData;
-	private Listener listener;
 	private LiveData<List<Action>> actionsForBountyLiveData;
 	private MutableLiveData<List<StaxTransaction>> staxTransactionsLiveData;
 	private MediatorLiveData<List<BountyAction>> bountyActionsLiveData;
+	private MutableLiveData<String> uploadBountyUserResultLiveData;
 
 	public BountyViewModel(@NonNull Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
 		emailLiveData = new MutableLiveData<>();
+		uploadBountyUserResultLiveData = new MutableLiveData<>();
+
 		staxTransactionsLiveData = new MutableLiveData<>();
 		bountyActionsLiveData = new MediatorLiveData<>();
 
@@ -70,13 +73,11 @@ public class BountyViewModel extends AndroidViewModel {
 		return bountyActionsLiveData;
 	}
 
-
-	public void setListener(Listener listener) {
-		this.listener = listener;
-	}
-
 	public void setEmail(String email) {
 		emailLiveData.postValue(email);
+	}
+	public String getEmail() {
+		return emailLiveData.getValue();
 	}
 
 	public String emailError() {
@@ -84,24 +85,11 @@ public class BountyViewModel extends AndroidViewModel {
 		else return getApplication().getString(R.string.email_error);
 	}
 
-	public void saveBountyUser() {
-		String emailValue = emailLiveData.getValue();
-		String deviceId = com.hover.sdk.utils.Utils.getDeviceId(getApplication().getApplicationContext());
-		assert emailValue != null;
-		emailValue = emailValue.replace(" ", ""); //Remove un-necessary spacing causing bug
-		repo.insert(new BountyUser(deviceId, emailValue));
+	public void setUploadBountyUserResultLiveData(String result) {
+		uploadBountyUserResultLiveData.postValue(result);
 	}
-
-	void setBountyUserSize() {
-		DatabaseRepo repo = new DatabaseRepo(getApplication());
-		new Thread(() -> {
-			int count = repo.getBountyUserCount();
-			listener.promptEmailOrNavigateBountyList(count);
-		}).start();
-	}
-
-	public interface Listener {
-		void promptEmailOrNavigateBountyList(int bountyUserEntrySize);
+	public LiveData<String> getUploadBountyResult() {
+		return uploadBountyUserResultLiveData;
 	}
 
 

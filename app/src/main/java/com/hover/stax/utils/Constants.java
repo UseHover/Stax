@@ -39,4 +39,7 @@ public class Constants {
 	final public static String PAYMENT_LINK_SEPERATOR = "-";
 
 	final public static String BOUNTY_EMAIL = "bounty_email";
+	final public static String SUCCESS = "success";
+	final public static String NO_INTERNET = "no internet";
+
 }

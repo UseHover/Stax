@@ -14,8 +14,6 @@ import com.hover.stax.R;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionDao;
-import com.hover.stax.bounty.BountyUser;
-import com.hover.stax.bounty.BountyUserDao;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
 import com.hover.stax.contacts.ContactDao;
@@ -44,7 +42,6 @@ public class DatabaseRepo {
 	private SimDao simDao;
 	private TransactionDao transactionDao;
 	private ContactDao contactDao;
-	private BountyUserDao bountyUserDao;
 
 	private LiveData<List<Channel>> allChannels;
 	private LiveData<List<Channel>> allChannelsBySelected;
@@ -60,7 +57,6 @@ public class DatabaseRepo {
 		contactDao = db.contactDao();
 		requestDao = db.requestDao();
 		scheduleDao = db.scheduleDao();
-		bountyUserDao = db.bountyDao();
 
 		SdkDatabase sdkDb = SdkDatabase.getInstance(application);
 		actionDao = sdkDb.actionDao();
@@ -242,15 +238,6 @@ public class DatabaseRepo {
 
 	public void delete(Schedule schedule) {
 		AppDatabase.databaseWriteExecutor.execute(() -> scheduleDao.delete(schedule));
-	}
-
-	//Bounty user
-	public Integer getBountyUserCount() {return bountyUserDao.getEntriesCount();}
-	public void insert(BountyUser bountyUser) {
-		AppDatabase.databaseWriteExecutor.execute(()->bountyUserDao.insert(bountyUser));
-	}
-	public void update(BountyUser bountyUser) {
-		AppDatabase.databaseWriteExecutor.execute(()->bountyUserDao.insert(bountyUser));
 	}
 
 	// Requests

@@ -15,10 +15,15 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.hover.stax.R;
 import com.hover.stax.navigation.NavigationInterface;
+import com.hover.stax.utils.Constants;
+import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxTextInputLayout;
 
-public class BountyEmailFragment extends Fragment implements BountyViewModel.Listener, NavigationInterface, View.OnClickListener {
+import java.lang.ref.WeakReference;
+
+public class BountyEmailFragment extends Fragment implements NavigationInterface, View.OnClickListener {
 	private BountyViewModel bountyViewModel;
 	private View view;
 	private StaxTextInputLayout emailInput;
@@ -27,9 +32,8 @@ public class BountyEmailFragment extends Fragment implements BountyViewModel.Lis
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_bounty_enter_email_layout, container, false);
+		promptEmailOrNavigateBountyList();
 		bountyViewModel = new ViewModelProvider(requireActivity()).get(BountyViewModel.class);
-		bountyViewModel.setListener(this);
-		bountyViewModel.setBountyUserSize();
 		return view;
 	}
 
@@ -38,8 +42,17 @@ public class BountyEmailFragment extends Fragment implements BountyViewModel.Lis
 		super.onViewCreated(view, savedInstanceState);
 		initEmailInput();
 		initContinueButton();
+		uploadBountyUserObserver();
 	}
 
+	private void uploadBountyUserObserver() {
+		bountyViewModel.getUploadBountyResult().observe(getViewLifecycleOwner(), result-> {
+			if(result.equals(Constants.SUCCESS)) {
+				promptEmailOrNavigateBountyList();
+			}
+			else UIHelper.flashMessage(getContext(), result);
+		});
+	}
 	private void initEmailInput() {
 		emailInput = view.findViewById(R.id.emailInput);
 		emailInput.addTextChangedListener(emailWatcher);
@@ -56,18 +69,13 @@ public class BountyEmailFragment extends Fragment implements BountyViewModel.Lis
 		return emailError == null;
 	}
 
-	private void saveUserAndNavigateBountyList() {
-		bountyViewModel.saveBountyUser();
-		navigateToBountyListFragment(this);
-	}
-
 	private boolean isContinueButton(View v) {
 		return v.getId() == R.id.continueEmailBountyButton;
 	}
 
-	@Override
-	public void promptEmailOrNavigateBountyList(int bountyUserEntrySize) {
-		if (bountyUserEntrySize > 0) navigateToBountyListFragment(this);
+
+	private void promptEmailOrNavigateBountyList() {
+		if (Utils.getBoolean(Constants.BOUNTY_EMAIL, getContext())) navigateToBountyListFragment(this);
 		else view.findViewById(R.id.bounty_email_layout_id).setVisibility(View.VISIBLE);
 	}
 
@@ -89,7 +97,10 @@ public class BountyEmailFragment extends Fragment implements BountyViewModel.Lis
 	@Override
 	public void onClick(View v) {
 		if (isContinueButton(v) && validates()) {
-			saveUserAndNavigateBountyList();
+			new BountyAsyncCaller(
+					new WeakReference<>(getContext()),
+					bountyViewModel)
+					.execute();
 		}
 	}
 }

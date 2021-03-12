@@ -36,7 +36,6 @@ public class TransactionDetailsFragment extends Fragment {
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		viewModel = new ViewModelProvider(requireActivity()).get(TransactionDetailsViewModel.class);
-
 		JSONObject data = new JSONObject();
 		try {
 			assert getArguments() != null;
@@ -85,6 +84,21 @@ public class TransactionDetailsFragment extends Fragment {
 		});
 	}
 
+	private void setNormalActionPendingStateCard(View view, StaxTransaction transaction) {
+		if(!transaction.is_action_bounty) {
+			view.findViewById(R.id.pending_notify_in_details)
+					.setVisibility(transaction.status.equals(Constants.PENDING) ? View.VISIBLE : View.GONE);
+		}
+	}
+	private void setHeaderAndNormalActionPendingCardsObserver(View view) {
+		viewModel.getTransaction().observe(getViewLifecycleOwner(), transaction -> {
+			if (transaction != null) {
+				setHeaderTexts(view, transaction);
+				setNormalActionPendingStateCard(view, transaction);
+			}
+		});
+	}
+
 	@SuppressLint("ResourceAsColor")
 	private void setPendingCardBgAndText(boolean isFlowDone, StaxCardView pendingCard, TextView pendingStatusText) {
 		if(isFlowDone){
@@ -93,7 +107,8 @@ public class TransactionDetailsFragment extends Fragment {
 					getString(R.string.flow_done_desc),
 					R.drawable.ic_check,
 					View.VISIBLE);
-		}else {
+		}
+		else {
 			pendingCard.setBackgroundColor(R.color.pending_brown);
 			UIHelper.setTextWithDrawable(pendingStatusText,
 					getString(R.string.bounty_flow_pending_dialog_msg),
@@ -132,18 +147,4 @@ public class TransactionDetailsFragment extends Fragment {
 		viewModel.setTransaction(getArguments().getString(TransactionContract.COLUMN_UUID));
 	}
 
-	private void setNormalActionPendingStateCard(View view, StaxTransaction transaction) {
-		if(!transaction.is_action_bounty) {
-			view.findViewById(R.id.pending_notify_in_details)
-					.setVisibility(transaction.status.equals(Constants.PENDING) ? View.VISIBLE : View.GONE);
-		}
-	}
-	private void setHeaderAndNormalActionPendingCardsObserver(View view) {
-		viewModel.getTransaction().observe(getViewLifecycleOwner(), transaction -> {
-			if (transaction != null) {
-				setHeaderTexts(view, transaction);
-				setNormalActionPendingStateCard(view, transaction);
-			}
-		});
-	}
 }
