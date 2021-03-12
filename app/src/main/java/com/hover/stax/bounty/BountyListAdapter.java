@@ -2,6 +2,7 @@ package com.hover.stax.bounty;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
 import java.util.List;
@@ -47,28 +49,38 @@ class BountyListAdapter extends RecyclerView.Adapter<BountyListAdapter.BountyLis
 	}
 
 	private void updateStatusLayoutAndSetClickListener(BountyListViewHolder holder, BountyAction ba) {
-		if (ba.a.bounty_is_open == 0) { //Bounty is closed and done
-			holder.parentLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.muted_green));
-			holder.pendingNotice.setVisibility(View.VISIBLE);
-			holder.pendingNotice.setText(context.getString(R.string.done));
-			holder.pendingNotice.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check, 0);
+		if (ba.a.bounty_is_open == 0 && ba.lastTransactionUUID !=null) { //Bounty is closed and done by the user
+			updateBgColor(holder, R.color.muted_green);
+			updatePendingNoticeText(holder.pendingNotice, R.string.done, R.drawable.ic_check, View.VISIBLE);
+			UIHelper.strikeThroughTextView(holder.content, holder.amount);
 			holder.itemView.setOnClickListener(null);
-		} else if (ba.lastTransactionUUID != null) { //Bounty is open and with a transaction
-			holder.parentLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.pending_brown));
-			holder.pendingNotice.setVisibility(View.VISIBLE);
-			holder.pendingNotice.setText(context.getString(R.string.bounty_pending_short_desc));
-			holder.pendingNotice.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_warning, 0);
-			holder.pendingNotice.setOnClickListener(view -> {
-				selectListener.viewTransactionDetail(ba.lastTransactionUUID);
-			});
+		}
+		else if(ba.a.bounty_is_open == 0) { //This bounty is closed and done by another user
+			updateBgColor(holder, R.color.lighter_grey);
+			updatePendingNoticeText(holder.pendingNotice, 0, 0, View.GONE);
+			holder.itemView.setOnClickListener(null);
+			UIHelper.strikeThroughTextView(holder.content, holder.amount);
+		}
+		else if (ba.lastTransactionUUID != null) { //Bounty is open and with a transaction
+			updateBgColor(holder, R.color.pending_brown);
+			updatePendingNoticeText(holder.pendingNotice, R.string.bounty_pending_short_desc, R.drawable.ic_warning, View.VISIBLE);
+			holder.pendingNotice.setOnClickListener(view -> { selectListener.viewTransactionDetail(ba.lastTransactionUUID); });
 			holder.content.setOnClickListener(v -> selectListener.runAction(ba.a));
 		} else {
-			holder.parentLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.colorPrimary));
-			holder.pendingNotice.setVisibility(View.GONE);
-			holder.itemView.setOnClickListener(view -> {
-				selectListener.runAction(ba.a);
-			});
+			updateBgColor(holder,R.color.colorPrimary);
+			updatePendingNoticeText(holder.pendingNotice, 0, 0, View.GONE);
+			holder.itemView.setOnClickListener(view -> { selectListener.runAction(ba.a); });
 		}
+	}
+
+	private void updateBgColor(BountyListViewHolder holder, int color) {
+		holder.parentLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(color));
+	}
+
+	private void updatePendingNoticeText(TextView pendingNotice, int textRes, int iconDrawRes, int visibility) {
+		pendingNotice.setVisibility(visibility);
+		pendingNotice.setText(context.getString(textRes));
+		pendingNotice.setCompoundDrawablesWithIntrinsicBounds(iconDrawRes, 0,0, 0);
 	}
 
 	@Override

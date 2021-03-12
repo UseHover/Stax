@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.BitmapDrawable;
@@ -115,6 +116,11 @@ public class UIHelper {
 	}
 	public static Animation loadFadeIn(Context context) {
 		return AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
+	}
+	public static void strikeThroughTextView(TextView... textViews) {
+		for(TextView textView : textViews) {
+			textView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+		}
 	}
 
 
