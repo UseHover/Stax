@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricPrompt;
 
 import com.amplitude.api.Amplitude;
+import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -22,14 +22,14 @@ import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTI
 public class BiometricChecker extends BiometricPrompt.AuthenticationCallback {
 	private AppCompatActivity a;
 	private AuthListener listener;
-	private Action action;
+	private HoverAction action;
 
 	public BiometricChecker(AuthListener authListener, AppCompatActivity activity) {
 		listener = authListener;
 		a = activity;
 	}
 
-	public void startAuthentication(Action act) {
+	public void startAuthentication(HoverAction act) {
 		action = act;
 		if (!((KeyguardManager) a.getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardSecure()) {
 			listener.onAuthSuccess(action);
@@ -72,6 +72,6 @@ public class BiometricChecker extends BiometricPrompt.AuthenticationCallback {
 	public interface AuthListener {
 		void onAuthError(String error);
 
-		void onAuthSuccess(Action action);
+		void onAuthSuccess(HoverAction action);
 	}
 }

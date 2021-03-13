@@ -12,8 +12,8 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDropdownLayout;
 import com.squareup.picasso.Picasso;
@@ -106,12 +106,12 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 		viewModel.getChannelActions().observe(lifecycleOwner, actions -> setState(actions, viewModel));
 	}
 
-	private void setState(List<Action> actions, ChannelDropdownViewModel viewModel) {
+	private void setState(List<HoverAction> actions, ChannelDropdownViewModel viewModel) {
 		Log.e(TAG, "setting channel state. Channel: " + viewModel.getActiveChannel().getValue() + ". Actions: " + actions.size());
 		if (viewModel.getActiveChannel().getValue() != null && (actions == null || actions.size() == 0))
-			setState(getContext().getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getContext(), viewModel.getType())), AbstractStatefulInput.ERROR);
-		else if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !viewModel.getType().equals(Action.BALANCE))
-			setState(getContext().getString(actions.get(0).transaction_type.equals(Action.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning), INFO);
+			setState(getContext().getString(R.string.no_actions_fielderror, HoverAction.getHumanFriendlyType(getContext(), viewModel.getType())), AbstractStatefulInput.ERROR);
+		else if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !viewModel.getType().equals(HoverAction.BALANCE))
+			setState(getContext().getString(actions.get(0).transaction_type.equals(HoverAction.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning), INFO);
 		else if (viewModel.getActiveChannel().getValue() != null && showSelected)
 			setState(null, AbstractStatefulInput.SUCCESS);
 	}

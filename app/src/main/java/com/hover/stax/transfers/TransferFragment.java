@@ -13,8 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
+import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionSelect;
 import com.hover.stax.actions.ActionSelectViewModel;
 import com.hover.stax.channels.ChannelDropdownViewModel;
@@ -75,8 +75,8 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 	private void setTitle(View root) {
 		TextView formCardTitle = root.findViewById(R.id.editCard).findViewById(R.id.title);
 		TextView summaryCardTitle = root.findViewById(R.id.summaryCard).findViewById(R.id.title);
-		if (summaryCardTitle != null) { summaryCardTitle.setText(getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.cta_airtime : R.string.cta_transfer)); }
-		if (formCardTitle != null) { formCardTitle.setText(getString(transferViewModel.getType().equals(Action.AIRTIME) ? R.string.cta_airtime : R.string.cta_transfer)); }
+		if (summaryCardTitle != null) { summaryCardTitle.setText(getString(transferViewModel.getType().equals(HoverAction.AIRTIME) ? R.string.cta_airtime : R.string.cta_transfer)); }
+		if (formCardTitle != null) { formCardTitle.setText(getString(transferViewModel.getType().equals(HoverAction.AIRTIME) ? R.string.cta_airtime : R.string.cta_transfer)); }
 	}
 
 	@Override
@@ -137,7 +137,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 	}
 
 	@Override
-	public void highlightAction(Action a) { Log.e(TAG, "updating active action"); actionSelectViewModel.setActiveAction(a); }
+	public void highlightAction(HoverAction a) { Log.e(TAG, "updating active action"); actionSelectViewModel.setActiveAction(a); }
 
 	private void fabClicked(View v) {
 		if (transferViewModel.getIsEditing().getValue()) {
@@ -162,7 +162,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		return channelError == null && actionError == null && amountError == null && recipientError == null;
 	}
 
-	private void setRecipientHint(Action action) {
+	private void setRecipientHint(HoverAction action) {
 		Log.e(TAG, "update hint to " + action + ":" + action.getPronoun(getContext()));
 		Log.e(TAG, "requires recipient? " + action.requiresRecipient());
 		editCard.findViewById(R.id.recipient_entry).setVisibility(action.requiresRecipient() ? View.VISIBLE : View.GONE);
@@ -170,7 +170,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		if (!action.requiresRecipient())
 			recipientValue.setContent(getString(R.string.self_choice), "");
 		else
-			contactInput.setHint(action.getRequiredParams().contains(Action.ACCOUNT_KEY) ? getString(R.string.recipientacct_label) : getString(R.string.recipientphone_label));
+			contactInput.setHint(action.getRequiredParams().contains(HoverAction.ACCOUNT_KEY) ? getString(R.string.recipientacct_label) : getString(R.string.recipientphone_label));
 	}
 
 	protected void onContactSelected(int requestCode, StaxContact contact) {

@@ -13,10 +13,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
+import com.hover.sdk.actions.HoverAction;
+import com.hover.sdk.transactions.Transaction;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
-import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -48,7 +48,7 @@ public class TransactionDetailsFragment extends Fragment {
 		viewModel.getTransaction().observe(getViewLifecycleOwner(), transaction -> {
 			if (transaction != null) {
 				((TextView) view.findViewById(R.id.title)).setText(transaction.description);
-				((TextView) view.findViewById(R.id.details_amount)).setText((transaction.transaction_type.equals(Action.RECEIVE) ? "" : "-") + Utils.formatAmount(transaction.amount));
+				((TextView) view.findViewById(R.id.details_amount)).setText((transaction.transaction_type.equals(HoverAction.RECEIVE) ? "" : "-") + Utils.formatAmount(transaction.amount));
 				((TextView) view.findViewById(R.id.details_date)).setText(DateUtils.humanFriendlyDate(transaction.initiated_at));
 
 				if (transaction.confirm_code != null && !transaction.confirm_code.isEmpty())
@@ -56,7 +56,7 @@ public class TransactionDetailsFragment extends Fragment {
 				else
 					((TextView) view.findViewById(R.id.details_transactionNumber)).setText(transaction.uuid);
 
-				view.findViewById(R.id.pending_notify_in_details).setVisibility(transaction.status.equals(Constants.PENDING) ? View.VISIBLE : View.GONE);
+				view.findViewById(R.id.pending_notify_in_details).setVisibility(transaction.status.equals(Transaction.PENDING) ? View.VISIBLE : View.GONE);
 			}
 		});
 

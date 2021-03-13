@@ -9,9 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hover.sdk.actions.HoverAction;
+import com.hover.sdk.transactions.Transaction;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
-import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.Utils;
 
@@ -36,7 +36,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 	@Override
 	public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
 		StaxTransaction t = transactionList.get(position);
-			if(t.status.equals(Constants.PENDING)) {
+			if(t.status.equals(Transaction.PENDING)) {
 				holder.parentLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.cardDarkBlue));
 				holder.pendingNotice.setVisibility(View.VISIBLE);
 			}
@@ -46,7 +46,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 			}
 
 		holder.content.setText(t.description.substring(0, 1).toUpperCase() + t.description.substring(1));
-		holder.amount.setText((t.transaction_type.equals(Action.RECEIVE) ? "" : "-") + Utils.formatAmount(t.amount));
+		holder.amount.setText((t.transaction_type.equals(HoverAction.RECEIVE) ? "" : "-") + Utils.formatAmount(t.amount));
 		holder.date.setVisibility(shouldShowDate(t, position) ? View.VISIBLE : View.GONE);
 		holder.date.setText(DateUtils.humanFriendlyDate(t.initiated_at));
 		holder.itemView.setOnClickListener(view -> {

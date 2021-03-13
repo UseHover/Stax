@@ -2,6 +2,7 @@ package com.hover.stax;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,8 +10,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,8 +23,9 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.WorkManager;
 
 import com.amplitude.api.Amplitude;
+import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
-import com.hover.stax.actions.Action;
+import com.hover.sdk.database.HoverRoomDatabase;
 import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.destruct.SelfDestructActivity;
 import com.hover.stax.utils.Constants;
@@ -33,12 +36,12 @@ import com.hover.stax.utils.blur.StaxBlur;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
-import java.io.File;
-
 import static com.hover.stax.utils.Constants.AUTH_CHECK;
 
 public class SplashScreenActivity extends AppCompatActivity implements BiometricChecker.AuthListener {
 	private final static String TAG = "SplashScreenActivity";
+
+	private final static int BLUR_DELAY = 1000, LOGO_DELAY = 1200, NAV_DELAY = 1800;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,29 +71,33 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	private void blurBackground() {
 		new Handler(Looper.getMainLooper()).postDelayed(() -> {
 			Bitmap bg = BitmapFactory.decodeResource(getResources(), R.drawable.splash_background);
-			Bitmap bitmap = new StaxBlur(this,Constants.BLUR_RADIUS, Constants.BLUR_SAMPLING).transform(bg);
+			Bitmap bitmap = new StaxBlur(this, 16, 1).transform(bg);
 			ImageView bgView = findViewById(R.id.splash_image_blur);
 			if (bgView != null) {
 				bgView.setImageBitmap(bitmap);
 				bgView.setVisibility(View.VISIBLE);
-				bgView.setAnimation(UIHelper.loadFadeIn(this));
+				bgView.setAnimation(loadFadeIn(this));
 			}
-		}, 1000);
+		}, BLUR_DELAY);
 	}
 
 	private void fadeInLogo() {
 		TextView tv = findViewById(R.id.splash_content);
 		new Handler(Looper.getMainLooper()).postDelayed(() -> {
 			tv.setVisibility(View.VISIBLE);
-			tv.setAnimation(UIHelper.loadFadeIn(this));
-		}, 1200);
+			tv.setAnimation(loadFadeIn(this));
+		}, LOGO_DELAY);
+	}
+
+	private Animation loadFadeIn(Context context) {
+		return AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
 	}
 
 	private void authenticateBiometricOrNavigateScreenAfter110sec() {
 		new Handler().postDelayed(() -> {
 			if (Utils.getSharedPrefs(this).getInt(AUTH_CHECK, 0) == 1) new BiometricChecker(this, this).startAuthentication(null);
 			else navigateMainActivityOrRequestActivity(getIntent());
-		}, 1800);
+		}, NAV_DELAY);
 
 	}
 
@@ -99,6 +106,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	}
 
 	private void initHover() {
+		HoverRoomDatabase.getInstance(this);
 		Hover.initialize(this);
 		Hover.setBranding(getString(R.string.app_name), R.mipmap.stax, this);
 	}
@@ -148,7 +156,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	}
 
 	@Override
-	public void onAuthSuccess(Action act) {
+	public void onAuthSuccess(HoverAction act) {
 		navigateMainActivityOrRequestActivity(getIntent());
 	}
 }
