@@ -1,4 +1,4 @@
-package com.hover.stax.bounty;
+package com.hover.stax.bounties;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -80,13 +80,8 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
 	}
 
 	private TextWatcher emailWatcher = new TextWatcher() {
-		@Override
-		public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-		}
-
-		@Override
-		public void afterTextChanged(Editable editable) {
-		}
+		@Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+		@Override public void afterTextChanged(Editable editable) {}
 
 		@Override
 		public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {

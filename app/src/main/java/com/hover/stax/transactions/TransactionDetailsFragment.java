@@ -14,20 +14,20 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
+import com.hover.sdk.actions.HoverAction;
+import com.hover.sdk.api.HoverParameters;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.Stax2LineItem;
-import com.hover.stax.views.StaxCardView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.List;
 
 public class TransactionDetailsFragment extends Fragment {
 	final public static String TAG = "TransDetailsFragment";
@@ -49,16 +49,16 @@ public class TransactionDetailsFragment extends Fragment {
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		setHeaderAndNormalActionPendingCardsObserver(view);
-		setActionForNetworkNameAndBountyActionPendingCardObserver(view);
-		setContactObserver(view);
+		viewModel.getTransaction().observe(getViewLifecycleOwner(), transaction -> showTransaction(transaction, view));
+		viewModel.getAction().observe(getViewLifecycleOwner(), action -> showActionDetails(action, view));
+		viewModel.getContact().observe(getViewLifecycleOwner(), contact -> updateRecipient(contact, view));
 		setUSSDMessagesRecyclerView(view);
 		setSmsMessagesRecyclerView(view);
-		setTransactionUUID();
+		viewModel.setTransaction(getArguments().getString(TransactionContract.COLUMN_UUID));
 	}
 
 	@SuppressLint("SetTextI18n")
-	private void setHeaderTexts(View view, StaxTransaction transaction) {
+	private void updateDetails(View view, StaxTransaction transaction) {
 		((TextView) view.findViewById(R.id.title)).setText(transaction.description);
 		((TextView) view.findViewById(R.id.details_amount)).setText((transaction.transaction_type.equals(Action.RECEIVE) ? "" : "-") + Utils.formatAmount(transaction.amount));
 		((TextView) view.findViewById(R.id.details_date)).setText(DateUtils.humanFriendlyDate(transaction.initiated_at));
@@ -69,59 +69,37 @@ public class TransactionDetailsFragment extends Fragment {
 			((TextView) view.findViewById(R.id.details_transactionNumber)).setText(transaction.uuid);
 	}
 
-
-	private void setActionForNetworkNameAndBountyActionPendingCardObserver(View view) {
-		viewModel.getAction().observe(getViewLifecycleOwner(), action -> {
-			if (action != null) {
-				((TextView) view.findViewById(R.id.details_network)).setText(action.network_name);
-				if(action.bounty_amount> 0) {
-					StaxCardView pendingCard =  view.findViewById(R.id.pending_notify_in_details);
-					pendingCard.setVisibility(View.VISIBLE);
-					TextView pendingStatusText = view.findViewById(R.id.transaction_Detail_pendingText);
-					setPendingCardBgAndText(action.bounty_is_open == 0, pendingCard, pendingStatusText);
-				}
-			}
-		});
-	}
-
-	private void setNormalActionPendingStateCard(View view, StaxTransaction transaction) {
-		if(!transaction.is_action_bounty) {
-			view.findViewById(R.id.pending_notify_in_details)
-					.setVisibility(transaction.status.equals(Constants.PENDING) ? View.VISIBLE : View.GONE);
+	private void showTransaction(StaxTransaction transaction, View view) {
+		if (transaction != null) {
+			updateDetails(view, transaction);
+			showNotificationCard(transaction.isRecorded() || transaction.status.equals(Constants.PENDING), view);
+			if (transaction.isRecorded() && viewModel.getAction().getValue() != null)
+				updateNotificationCard(viewModel.getAction().getValue(), view);
 		}
 	}
-	private void setHeaderAndNormalActionPendingCardsObserver(View view) {
-		viewModel.getTransaction().observe(getViewLifecycleOwner(), transaction -> {
-			if (transaction != null) {
-				setHeaderTexts(view, transaction);
-				setNormalActionPendingStateCard(view, transaction);
-			}
-		});
+
+	private void showActionDetails(Action action, View view) {
+		if (action != null) {
+			((TextView) view.findViewById(R.id.details_network)).setText(action.network_name);
+			if (viewModel.getTransaction().getValue() != null && viewModel.getTransaction().getValue().isRecorded())
+				updateNotificationCard(action, view);
+		}
+	}
+
+	private void showNotificationCard(boolean show, View view) {
+			view.findViewById(R.id.notification_card).setVisibility(show ? View.VISIBLE : View.GONE);
 	}
 
 	@SuppressLint("ResourceAsColor")
-	private void setPendingCardBgAndText(boolean isFlowDone, StaxCardView pendingCard, TextView pendingStatusText) {
-		if(isFlowDone){
-			pendingCard.setBackgroundColor(R.color.muted_green);
-			UIHelper.setTextWithDrawable(pendingStatusText,
-					getString(R.string.flow_done_desc),
-					R.drawable.ic_check,
-					View.VISIBLE);
-		}
-		else {
-			pendingCard.setBackgroundColor(R.color.pending_brown);
-			UIHelper.setTextWithDrawable(pendingStatusText,
-					getString(R.string.bounty_flow_pending_dialog_msg),
-					R.drawable.ic_warning,
-					View.VISIBLE);
-		}
+	private void updateNotificationCard(Action action, View view) {
+		view.findViewById(R.id.notification_card).setBackgroundColor(action.bounty_is_open == 0 ? R.color.pending_brown : R.color.muted_green);
+		((TextView) view.findViewById(R.id.notification_detail)).setText(action.bounty_is_open == 0 ? R.string.bounty_flow_pending_dialog_msg : R.string.flow_done_desc);
+		((TextView) view.findViewById(R.id.notification_detail)).setCompoundDrawablesWithIntrinsicBounds(action.bounty_is_open == 0 ? R.drawable.ic_warning : R.drawable.ic_check, 0, 0, 0);
 	}
 
-	private void setContactObserver(View view){
-		viewModel.getContact().observe(getViewLifecycleOwner(), contact -> {
-			if (contact != null)
-				((Stax2LineItem) view.findViewById(R.id.details_recipient)).setContact(contact);
-		});
+	private void updateRecipient(StaxContact contact, View view){
+		if (contact != null)
+			((Stax2LineItem) view.findViewById(R.id.details_recipient)).setContact(contact);
 	}
 
 	private void setUSSDMessagesRecyclerView(View view){
@@ -143,8 +121,4 @@ public class TransactionDetailsFragment extends Fragment {
 			if (smses != null) smsView.setAdapter(new MessagesAdapter(smses));
 		});
 	}
-	private void setTransactionUUID() {
-		viewModel.setTransaction(getArguments().getString(TransactionContract.COLUMN_UUID));
-	}
-
 }

@@ -1,13 +1,12 @@
-package com.hover.stax.bounty;
+package com.hover.stax.bounties;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.hover.sdk.api.HoverParameters;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.hover.HoverSession;
@@ -15,8 +14,9 @@ import com.hover.stax.navigation.AbstractNavigationActivity;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.views.StaxDialog;
 
-public class BountyActivity extends AbstractNavigationActivity implements BountyRunInterface {
+public class BountyActivity extends AbstractNavigationActivity {
 	private static final String TAG = "BountyActivity";
+	private static final int BOUNTY_REQUEST = 3000;
 	public BountyViewModel bountyViewModel;
 
 	@Override
@@ -28,18 +28,14 @@ public class BountyActivity extends AbstractNavigationActivity implements Bounty
 	}
 
 	private void makeCall(Action a) {
-		HoverSession.Builder hsb = new HoverSession.Builder(a, null,
-				BountyActivity.this, Constants.BOUNTY_REQUEST);
-		hsb.run();
+		Intent i = new HoverParameters.Builder(this).request(a.public_id).setEnvironment(HoverParameters.MANUAL_ENV).buildIntent();
+		startActivityForResult(i, BOUNTY_REQUEST);
 	}
 
-	@Override
 	public void runAction(Action a) {
 		new StaxDialog(this)
-				.setDialogTitle(getString(R.string.bounty_claim_title,
-						a.root_code, a.getHumanFriendlyType(this),
-						a.getBountyAmountWithCurrency(this) ))
-				.setDialogMessage(getString(R.string.bounty_claim_explained, a.getBountyAmountWithCurrency(this), a.getDetailedFullDescription(this)))
+				.setDialogTitle(getString(R.string.bounty_claim_title, a.root_code, a.getHumanFriendlyType(this), a.bounty_amount))
+				.setDialogMessage(getString(R.string.bounty_claim_explained, a.bounty_amount, a.getInstructions(this)))
 				.setPosButton(R.string.start_USSD_Flow, v -> {
 					makeCall(a);
 				})
@@ -49,7 +45,7 @@ public class BountyActivity extends AbstractNavigationActivity implements Bounty
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == Constants.BOUNTY_REQUEST && resultCode == RESULT_OK) {
+		if (requestCode == BOUNTY_REQUEST && resultCode == RESULT_OK) {
 			new StaxDialog(this)
 					.setDialogTitle(R.string.flow_recorded)
 					.setDialogMessage(R.string.bounty_flow_pending_dialog_msg)

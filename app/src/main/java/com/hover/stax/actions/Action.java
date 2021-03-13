@@ -1,16 +1,13 @@
 package com.hover.stax.actions;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.hover.stax.R;
-import com.hover.stax.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -120,43 +117,6 @@ public class Action {
 		return isOnNetwork() ? c.getString(R.string.onnet_choice) : c.getString(R.string.offnet_choice, this.toString());
 	}
 
-	public String getFullDescription(Context c) {
-		return c.getString(R.string.bounty_action_fulldescription,
-				root_code,
-				from_institution_name.toUpperCase(),
-				getHumanFriendlyType(c, transaction_type),
-				lastWordForDescription(c));
-	}
-	public String getDetailedFullDescription(Context c){
-		return c.getString(R.string.bounty_action_fulldescription,
-				"",
-				from_institution_name.toUpperCase(),
-				getHumanFriendlyType(c, transaction_type),
-				detailedLastWord(c));
-	}
-
-	private String detailedLastWord(Context c) {
-		if(transaction_type.equals(P2P) || transaction_type.equals(ME2ME)) {
-			return to_institution_name.toUpperCase();
-		}
-		else if (transaction_type.equals(AIRTIME)) {
-			if(requiresRecipient()) return c.getString(R.string.for_someone_else_explained);
-			else return c.getString(R.string.for_yourself_explained);
-		}
-		return "";
-	}
-
-	private String lastWordForDescription(Context c) {
-		if(transaction_type.equals(P2P) || transaction_type.equals(ME2ME)) {
-			return to_institution_name.toUpperCase();
-		}
-		else if (transaction_type.equals(AIRTIME)) {
-			if(requiresRecipient()) return c.getString(R.string.for_someone_else);
-			else return c.getString(R.string.for_yourself);
-		}
-		return "";
-	}
-
 	public String getPronoun(Context c) {
 		return requiresRecipient() ?  c.getString(R.string.other_choice) : c.getString(R.string.self_choice);
 	}
@@ -238,8 +198,19 @@ public class Action {
 		return getHumanFriendlyType(c, this.transaction_type);
 	}
 
-	public String getBountyAmountWithCurrency(Context c) {
-		return c.getString(R.string.bounty_amount_with_currency, Utils.formatAmount(String.valueOf(bounty_amount)));
+	public String getInstructions(Context c) {
+		switch (transaction_type) {
+			case Action.AIRTIME:
+				return c.getString(R.string.bounty_airtime_explain);
+			case Action.P2P:
+				return c.getString(R.string.bounty_p2p_explain, (isOnNetwork() ? c.getString(R.string.onnet_choice) : c.getString(R.string.descrip_bounty_offnet, to_institution_name)));
+			case Action.ME2ME:
+				return c.getString(R.string.bounty_me2me_explain, to_institution_name);
+			case Action.C2B:
+				return c.getString(R.string.bounty_c2b_explain);
+			default: // Balance
+				return c.getString(R.string.bounty_balance_explain);
+		}
 	}
 
 	@Override

@@ -4,20 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
-import com.hover.stax.bounty.BountyActivity;
+import com.hover.stax.bounties.BountyActivity;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.languages.SelectLanguageActivity;
-import com.hover.stax.settings.SettingsFragment;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.transfers.TransferActivity;

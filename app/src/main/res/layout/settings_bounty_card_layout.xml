@@ -11,7 +11,7 @@
 	    android:textSize="@dimen/text_16"
 	    android:fontFamily="font-normal"
 	    android:paddingHorizontal="@dimen/margin_13"
-	    android:text="@string/bounty_desc"/>
+	    android:text="@string/bounty_msg"/>
 
 	<RelativeLayout
 	    android:layout_width="match_parent"

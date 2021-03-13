@@ -68,7 +68,7 @@
 		    android:windowSoftInputMode="stateVisible|adjustResize" />
 
 		<activity
-		    android:name=".bounty.BountyActivity"
+		    android:name=".bounties.BountyActivity"
 		    android:theme="@style/StaxTheme"
 		    />
 

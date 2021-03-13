@@ -10,6 +10,7 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.hover.sdk.api.HoverParameters;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
@@ -39,8 +40,8 @@ public class StaxTransaction {
 	public String action_id;
 
 	@NonNull
-	@ColumnInfo(name = "is_action_bounty", defaultValue = "0")
-	public boolean is_action_bounty;
+	@ColumnInfo(name = "environment", defaultValue = "0")
+	public Integer environment;
 
 	@NonNull
 	@ColumnInfo(name = "transaction_type")
@@ -88,6 +89,7 @@ public class StaxTransaction {
 			uuid = data.getStringExtra(TransactionContract.COLUMN_UUID);
 			action_id = data.getStringExtra(TransactionContract.COLUMN_ACTION_ID);
 			transaction_type = data.getStringExtra(TransactionContract.COLUMN_TYPE);
+			environment = data.getIntExtra(TransactionContract.COLUMN_ENVIRONMENT, 0);
 			channel_id = data.getIntExtra(TransactionContract.COLUMN_CHANNEL_ID, -1);
 			status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
 			initiated_at = data.getLongExtra(TransactionContract.COLUMN_REQUEST_TIMESTAMP, DateUtils.now());
@@ -108,7 +110,6 @@ public class StaxTransaction {
 			Log.e("Transaction", "creating transaction with uuid: " + uuid);
 
 			if (transaction_type != null) description = generateDescription(action, contact, c);
-			is_action_bounty = action.bounty_amount > 0;
 		}
 	}
 
@@ -146,6 +147,8 @@ public class StaxTransaction {
 				return "Other";
 		}
 	}
+
+	public boolean isRecorded() { return environment == HoverParameters.MANUAL_ENV; }
 
 	@NotNull
 	@Override

@@ -114,20 +114,4 @@ public class UIHelper {
 	public static int dpToPx(int dp) {
 		return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
 	}
-	public static Animation loadFadeIn(Context context) {
-		return AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
-	}
-	public static void strikeThroughTextView(TextView... textViews) {
-		for(TextView textView : textViews) {
-			textView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-		}
-	}
-	public static void setTextWithDrawable(TextView textView, String value, int iconDrawRes, int visibility) {
-		textView.setVisibility(visibility);
-		textView.setText(value);
-		if(iconDrawRes != 0)textView.setCompoundDrawablesWithIntrinsicBounds(iconDrawRes, 0,0, 0);
-	}
-
-
-
 }

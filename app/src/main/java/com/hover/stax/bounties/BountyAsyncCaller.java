@@ -1,4 +1,4 @@
-package com.hover.stax.bounty;
+package com.hover.stax.bounties;
 
 import android.content.Context;
 import android.os.AsyncTask;

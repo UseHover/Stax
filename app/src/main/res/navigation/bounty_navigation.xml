@@ -7,13 +7,13 @@
 
 	<fragment
 	    android:id="@+id/bountyEmailFragment"
-	    android:name="com.hover.stax.bounty.BountyEmailFragment"
+	    android:name="com.hover.stax.bounties.BountyEmailFragment"
 	    android:label="@string/nav_bounty"
 	    tools:layout="@layout/fragment_bounty_enter_email_layout" />
 
 	<fragment
 	    android:id="@+id/bountyListFragment"
-	    android:name="com.hover.stax.bounty.BountyListFragment"
+	    android:name="com.hover.stax.bounties.BountyListFragment"
 	    android:label="@string/nav_bounty"
 	    tools:layout="@layout/fragment_bounty_list_layout" />
 

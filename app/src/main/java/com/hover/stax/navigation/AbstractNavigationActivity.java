@@ -1,15 +1,10 @@
 package com.hover.stax.navigation;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -19,8 +14,6 @@ import com.amplitude.api.Amplitude;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
-import com.hover.stax.balances.BalancesViewModel;
-import com.hover.stax.bounty.BountyActivity;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.permissions.PermissionUtils;

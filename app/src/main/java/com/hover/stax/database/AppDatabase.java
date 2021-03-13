@@ -30,13 +30,9 @@ public abstract class AppDatabase extends RoomDatabase {
 	private static volatile AppDatabase INSTANCE;
 
 	public abstract ChannelDao channelDao();
-
 	public abstract TransactionDao transactionDao();
-
 	public abstract ContactDao contactDao();
-
 	public abstract RequestDao requestDao();
-
 	public abstract ScheduleDao scheduleDao();
 
 	public static synchronized AppDatabase getInstance(Context context) {
@@ -65,18 +61,13 @@ public abstract class AppDatabase extends RoomDatabase {
 	static final Migration M24_25 = new Migration(24, 25) {
 		@Override
 		public void migrate(SupportSQLiteDatabase database) {
-			database.execSQL("CREATE TABLE bountyUser (deviceId TEXT not null primary key," +
-									 "email TEXT not null," +
-									 "timestamp INTEGER  default CURRENT_TIMESTAMP," +
-									 "uploadedTimestamp INTEGER default CURRENT_TIMESTAMP," +
-									 "isUploaded INTEGER not null default 0)");
 		}
 	};
 
 	static final Migration M25_26 = new Migration(25, 26) {
 		@Override
 		public void migrate(SupportSQLiteDatabase database) {
-			database.execSQL("ALTER TABLE stax_transactions ADD COLUMN is_action_bounty DEFAULT 0");
+			database.execSQL("ALTER TABLE stax_transactions ADD COLUMN environment DEFAULT 0");
 		}
 	};
 

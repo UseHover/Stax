@@ -1,4 +1,4 @@
-package com.hover.stax.bounty;
+package com.hover.stax.bounties;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -21,14 +21,12 @@ public class BountyListFragment extends Fragment implements BountyListAdapter.Se
 	private BountyViewModel bountyViewModel;
 	private View view;
 	private RecyclerView bountyRecyclerView;
-	private BountyRunInterface bountyRunInterface;
 
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_bounty_list_layout, container, false);
 		bountyViewModel = new ViewModelProvider(this).get(BountyViewModel.class);
-		bountyRunInterface = (BountyRunInterface) getActivity();
 		return view;
 	}
 
@@ -45,9 +43,11 @@ public class BountyListFragment extends Fragment implements BountyListAdapter.Se
 	}
 
 	private void startObservers() {
-		bountyViewModel.getBountyActionsLiveData().observe(getViewLifecycleOwner(), actions -> {
-			if (actions != null && actions.size() > 0) {
-				BountyListAdapter bountyListAdapter = new BountyListAdapter(actions, this, getContext());
+		bountyViewModel.getActions().observe(getViewLifecycleOwner(), actions -> Log.e(TAG, "actions update: " + actions.size()));
+		bountyViewModel.getTransactions().observe(getViewLifecycleOwner(), transactions -> Log.e(TAG, "transactions update: " + transactions.size()));
+		bountyViewModel.getMap().observe(getViewLifecycleOwner(), actionTransactionsMap -> {
+			if (actionTransactionsMap != null && actionTransactionsMap.size() > 0) {
+				BountyListAdapter bountyListAdapter = new BountyListAdapter(actionTransactionsMap, this);
 				bountyRecyclerView.setAdapter(bountyListAdapter);
 			}
 		});
@@ -60,6 +60,7 @@ public class BountyListFragment extends Fragment implements BountyListAdapter.Se
 
 	@Override
 	public void runAction(Action a) {
-		bountyRunInterface.runAction(a);
+		if (getActivity() != null)
+			((BountyActivity) getActivity()).runAction(a);
 	}
 }

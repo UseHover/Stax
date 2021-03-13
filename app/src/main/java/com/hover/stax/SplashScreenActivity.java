@@ -2,6 +2,7 @@ package com.hover.stax;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -69,7 +72,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 			if (bgView != null) {
 				bgView.setImageBitmap(bitmap);
 				bgView.setVisibility(View.VISIBLE);
-				bgView.setAnimation(UIHelper.loadFadeIn(this));
+				bgView.setAnimation(loadFadeIn(this));
 			}
 		}, 1000);
 	}
@@ -78,8 +81,12 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 		TextView tv = findViewById(R.id.splash_content);
 		new Handler(Looper.getMainLooper()).postDelayed(() -> {
 			tv.setVisibility(View.VISIBLE);
-			tv.setAnimation(UIHelper.loadFadeIn(this));
+			tv.setAnimation(loadFadeIn(this));
 		}, 1200);
+	}
+
+	public static Animation loadFadeIn(Context context) {
+		return AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
 	}
 
 	private void authenticateBiometricOrNavigateScreenAfter110sec() {
