@@ -13,16 +13,13 @@ import androidx.work.WorkerParameters;
 
 import com.hover.stax.R;
 import com.hover.stax.database.AppDatabase;
-import com.hover.stax.utils.StaxVolleySingleton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

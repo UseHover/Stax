@@ -73,7 +73,6 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
 		return v.getId() == R.id.continueEmailBountyButton;
 	}
 
-
 	private void promptEmailOrNavigateBountyList() {
 		if (Utils.getBoolean(Constants.BOUNTY_EMAIL, getContext())) navigateToBountyListFragment(this);
 		else view.findViewById(R.id.bounty_email_layout_id).setVisibility(View.VISIBLE);

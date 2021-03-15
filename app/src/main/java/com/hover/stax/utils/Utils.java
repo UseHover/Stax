@@ -6,6 +6,8 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -16,10 +18,12 @@ import android.util.Log;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.hover.sdk.permissions.PermissionHelper;
+import com.hover.sdk.security.KeyHelper;
 import com.hover.stax.BuildConfig;
 import com.hover.stax.R;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 
@@ -138,6 +142,20 @@ public class Utils {
 	public static void logErrorAndReportToFirebase(String tag, String message, Exception e) {
 		Log.e(tag, message, e);
 		if(BuildConfig.BUILD_TYPE.equals("release")) FirebaseCrashlytics.getInstance().recordException(e);
+	}
+
+	public static String getApiKey(Context ctx) throws IOException {
+		try {
+			String key;
+			if (KeyHelper.getApiKey(ctx) == null) {
+				ApplicationInfo ai = ctx.getPackageManager().getApplicationInfo(Utils.getPackage(ctx), PackageManager.GET_META_DATA);
+				key = ai.metaData.getString("com.hover.ApiKey");
+			} else
+				key = KeyHelper.getApiKey(ctx);
+			Log.v(TAG, "apikey found: " + key);
+			return key;
+		} catch (PackageManager.NameNotFoundException e) { throw new IOException(ctx.getString(com.hover.sdk.R.string.hsdk_log_no_package_name) + e); }
+		catch (NullPointerException e) { throw new IOException(ctx.getString(com.hover.sdk.R.string.hsdk_log_no_api_key) + e); }
 	}
 
 	public static boolean isInternetConnected(Context c) {
