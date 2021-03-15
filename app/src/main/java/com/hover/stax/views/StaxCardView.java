@@ -49,8 +49,7 @@ public class StaxCardView extends FrameLayout {
 			a.recycle();
 		}
 	}
-
-
+	
 	@SuppressLint("ResourceType")
 	public void setBackgroundColor(int colorRes) {
 		bgColor = getContext().getResources().getColor(colorRes);

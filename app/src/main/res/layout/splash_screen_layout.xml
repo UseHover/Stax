@@ -32,8 +32,8 @@
 	    android:gravity="center"
 	    android:text="@string/stax_tagline"
 	    android:textAlignment="center"
-	    android:textSize="@dimen/text_34"
+	    android:textSize="@dimen/text_21"
 	    android:visibility="gone"
-	    app:drawableTopCompat="@mipmap/stax" />
+	    />
 
 </RelativeLayout>

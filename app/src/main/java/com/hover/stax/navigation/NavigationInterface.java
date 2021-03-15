@@ -11,6 +11,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
+import com.hover.stax.bounties.BountyActivity;
 import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.requests.RequestActivity;
@@ -47,6 +48,8 @@ public interface NavigationInterface {
 			case Constants.NAV_LINK_ACCOUNT: navigateToLinkAccountFragment(activity);
 				break;
 			case Constants.NAV_LANGUAGE_SELECTION: navigateToLanguageSelectionFragment(activity);
+				break;
+			case Constants.NAV_BOUNTY: activity.startActivity(new Intent(activity, BountyActivity.class));
 				break;
 			default:
 				break;

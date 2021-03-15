@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.WorkManager;
@@ -41,7 +44,8 @@ import static com.hover.stax.utils.Constants.AUTH_CHECK;
 public class SplashScreenActivity extends AppCompatActivity implements BiometricChecker.AuthListener {
 	private final static String TAG = "SplashScreenActivity";
 
-	private final static int BLUR_DELAY = 1000, LOGO_DELAY = 1200, NAV_DELAY = 1800;
+	private final static int BLUR_DELAY = 1000, LOGO_DELAY = 1200, NAV_DELAY = 1800,
+		SPLASH_ICON_WIDTH = 177, SPLASH_ICON_HEIGHT = 57;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,6 +87,8 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
 	private void fadeInLogo() {
 		TextView tv = findViewById(R.id.splash_content);
+		setSplashContentTopDrawable(tv);
+
 		new Handler(Looper.getMainLooper()).postDelayed(() -> {
 			tv.setVisibility(View.VISIBLE);
 			tv.setAnimation(loadFadeIn(this));
@@ -91,6 +97,14 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
 	private Animation loadFadeIn(Context context) {
 		return AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
+	}
+
+	private void setSplashContentTopDrawable(TextView tv) {
+		Drawable dr = ResourcesCompat.getDrawable (getResources(), R.mipmap.stax, null);
+		assert dr != null;
+		Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
+		Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, SPLASH_ICON_WIDTH, SPLASH_ICON_HEIGHT, true));
+		tv.setCompoundDrawablesWithIntrinsicBounds(null,d,null,null);
 	}
 
 	private void authenticateBiometricOrNavigateScreenAfter110sec() {
