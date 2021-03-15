@@ -22,7 +22,7 @@ import com.hover.stax.transactions.TransactionDao;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class}, version = 27)
+@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class}, version = 28)
 public abstract class AppDatabase extends RoomDatabase {
 	private static final int NUMBER_OF_THREADS = 8;
 	static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -40,12 +40,13 @@ public abstract class AppDatabase extends RoomDatabase {
 			synchronized (AppDatabase.class) {
 				if (INSTANCE == null) {
 					INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "stax.db")
-									   .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
-									   .addMigrations(M23_24)
-									   .addMigrations(M24_25)
-									   .addMigrations(M25_26)
-									   .addMigrations(M26_27)
-									   .build();
+						.setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
+						.addMigrations(M23_24)
+						.addMigrations(M24_25)
+						.addMigrations(M25_26)
+						.addMigrations(M26_27)
+						.addMigrations(M27_28)
+						.build();
 				}
 			}
 		}
@@ -77,4 +78,10 @@ public abstract class AppDatabase extends RoomDatabase {
 		}
 	};
 
+	static final Migration M27_28 = new Migration(27, 28) {
+		@Override
+		public void migrate(SupportSQLiteDatabase database) {
+			database.execSQL("ALTER TABLE channels ADD COLUMN root_code TEXT");
+		}
+	};
 }

@@ -80,8 +80,9 @@ public class DatabaseRepo {
 	public LiveData<List<Channel>> getAllChannels() {
 		return allChannels;
 	}
-	public LiveData<List<Channel>> getAllChannelsBySelectedOrder() {
-		return allChannelsBySelected;
+
+	public LiveData<List<Channel>> getChannels(int[] ids) {
+		return channelDao.getChannels(ids);
 	}
 
 	public LiveData<List<Channel>> getSelected() {

@@ -19,6 +19,21 @@ class Bounty {
 
 	public int transactionCount() { return transactions.size(); }
 
+	String generateDescription(Context c) {
+		switch (action.transaction_type) {
+			case HoverAction.AIRTIME:
+				return c.getString(R.string.descrip_bounty_airtime);
+			case HoverAction.P2P:
+				return c.getString(R.string.descrip_bounty_p2p, (action.isOnNetwork() ? c.getString(R.string.onnet_choice) : c.getString(R.string.descrip_bounty_offnet, action.to_institution_name)));
+			case HoverAction.ME2ME:
+				return c.getString(R.string.descrip_bounty_me2me, action.to_institution_name);
+			case HoverAction.C2B:
+				return c.getString(R.string.descrip_bounty_c2b);
+			default: // Balance
+				return c.getString(R.string.check_balance);
+		}
+	}
+
 	public String getInstructions(Context c) {
 		switch (action.transaction_type) {
 			case HoverAction.AIRTIME:

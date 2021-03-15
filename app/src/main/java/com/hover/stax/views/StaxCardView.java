@@ -56,6 +56,10 @@ public class StaxCardView extends FrameLayout {
 		contentView.setBackgroundColor(bgColor);
 	}
 
+	public void setHeader(String title) {
+		if (title != null) ((TextView) findViewById(R.id.title)).setText(title);
+	}
+
 	private void fillFromAttrs() {
 		if (title != null) ((TextView) findViewById(R.id.title)).setText(title);
 		else findViewById(R.id.header).setVisibility(GONE);

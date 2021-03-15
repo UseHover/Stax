@@ -37,6 +37,7 @@ public class Channel implements Comparable<Channel> {
 		try {
 			id = jsonObject.getInt("id");
 			name = jsonObject.getString("name");
+			rootCode = jsonObject.getString("root_code");
 			countryAlpha2 = jsonObject.getString("country_alpha2").toUpperCase();
 			currency = jsonObject.getString("currency");
 			hniList = jsonObject.getString("hni_list");
@@ -61,6 +62,9 @@ public class Channel implements Comparable<Channel> {
 	@NonNull
 	@ColumnInfo(name = "country_alpha2")
 	public String countryAlpha2;
+
+	@ColumnInfo(name = "root_code")
+	public String rootCode;
 
 	@NonNull
 	@ColumnInfo(name = "currency")
@@ -124,6 +128,10 @@ public class Channel implements Comparable<Channel> {
 		} else {
 			latestBalanceTimestamp = DateUtils.now();
 		}
+	}
+
+	public String getUssdName() {
+		return name + " - " + rootCode;
 	}
 
 	@Override

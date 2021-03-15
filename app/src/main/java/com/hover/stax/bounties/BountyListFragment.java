@@ -12,21 +12,24 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
+import com.hover.stax.channels.Channel;
+import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.StaxDialog;
 
-public class BountyListFragment extends Fragment implements BountyListAdapter.SelectListener {
+import java.util.List;
+
+public class BountyListFragment extends Fragment implements NavigationInterface, BountyArrayAdapter.SelectListener {
 	private static final String TAG = "BountyListFragment";
 	private BountyViewModel bountyViewModel;
 	private View view;
-	private RecyclerView bountyRecyclerView;
+	private RecyclerView channelRecyclerView;
 
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		view = inflater.inflate(R.layout.fragment_bounty_list_layout, container, false);
+		view = inflater.inflate(R.layout.fragment_bounty_list, container, false);
 		bountyViewModel = new ViewModelProvider(this).get(BountyViewModel.class);
 		return view;
 	}
@@ -39,24 +42,32 @@ public class BountyListFragment extends Fragment implements BountyListAdapter.Se
 	}
 
 	private void initRecyclerView() {
-		bountyRecyclerView = view.findViewById(R.id.bountyList_recyclerView_id);
-		bountyRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
+		channelRecyclerView = view.findViewById(R.id.bountiesRecyclerView);
+		channelRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 	}
 
 	private void startObservers() {
 		bountyViewModel.getActions().observe(getViewLifecycleOwner(), actions -> Log.e(TAG, "actions update: " + actions.size()));
 		bountyViewModel.getTransactions().observe(getViewLifecycleOwner(), transactions -> Log.e(TAG, "transactions update: " + transactions.size()));
-		bountyViewModel.getMap().observe(getViewLifecycleOwner(), actionTransactionsMap -> {
-			if (actionTransactionsMap != null && actionTransactionsMap.size() > 0) {
-				BountyListAdapter bountyListAdapter = new BountyListAdapter(actionTransactionsMap, this);
-				bountyRecyclerView.setAdapter(bountyListAdapter);
-			}
+		bountyViewModel.getBounties().observe(getViewLifecycleOwner(), bounties -> {
+			if (bounties != null && bounties.size() > 0 && bountyViewModel.getChannels().getValue() != null && bountyViewModel.getChannels().getValue().size() > 0)
+				createList(bountyViewModel.getChannels().getValue(), bountyViewModel.getBounties().getValue());
 		});
+
+		bountyViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> {
+			if (channels != null && channels.size() > 0 && bountyViewModel.getBounties().getValue() != null && bountyViewModel.getBounties().getValue().size() > 0)
+				createList(channels, bountyViewModel.getBounties().getValue());
+		});
+	}
+
+	private void createList(List<Channel> channels, List<Bounty> bounties) {
+		BountyChannelsAdapter adapter = new BountyChannelsAdapter(channels, bounties, this);
+		channelRecyclerView.setAdapter(adapter);
 	}
 
 	@Override
 	public void viewTransactionDetail(String uuid) {
-
+		navigateToTransactionDetailsFragment(uuid, this);
 	}
 
 	@Override

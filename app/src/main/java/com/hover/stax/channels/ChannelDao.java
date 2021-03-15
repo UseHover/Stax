@@ -8,6 +8,8 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.hover.sdk.actions.HoverAction;
+
 import java.util.List;
 
 @Dao
@@ -29,6 +31,9 @@ public interface ChannelDao {
 
 //	@Query("SELECT * FROM channels WHERE hni_list IN :hniList")
 //	MutableLiveData<List<Channel>> getByHniList(String[] hniList);
+
+	@Query("SELECT * FROM channels WHERE id IN (:channel_ids)")
+	LiveData<List<Channel>> getChannels(int[] channel_ids);
 
 	@Query("SELECT * FROM channels WHERE id = :id LIMIT 1")
 	Channel getChannel(int id);

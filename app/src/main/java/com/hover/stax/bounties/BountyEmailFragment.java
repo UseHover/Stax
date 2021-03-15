@@ -8,12 +8,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.hover.stax.R;
 import com.hover.stax.navigation.NavigationInterface;
-import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxTextInputLayout;
@@ -32,7 +30,7 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_bounty_enter_email_layout, container, false);
+		return inflater.inflate(R.layout.fragment_bounty_email, container, false);
 	}
 
 	@Override
