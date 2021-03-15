@@ -22,6 +22,8 @@ public class Constants {
 	final public static int BOUNTY_REQUEST = 302;
 	final public static int SMS = 303;
 
+	final public static int SPLASH_ICON_WIDTH = 177;
+	final public static int SPLASH_ICON_HEIGHT = 57;
 	final public static int BLUR_RADIUS = 16;
 	final public static int BLUR_SAMPLING = 1;
 

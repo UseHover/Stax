@@ -5,6 +5,8 @@ import android.app.NotificationManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.WorkManager;
@@ -33,6 +36,8 @@ import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
 import static com.hover.stax.utils.Constants.AUTH_CHECK;
+import static com.hover.stax.utils.Constants.SPLASH_ICON_HEIGHT;
+import static com.hover.stax.utils.Constants.SPLASH_ICON_WIDTH;
 
 public class SplashScreenActivity extends AppCompatActivity implements BiometricChecker.AuthListener {
 
@@ -76,10 +81,20 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
 	private void fadeInSplashContentAfter90sec() {
 		TextView tv = findViewById(R.id.splash_content);
+		setSplashContentTopDrawable(tv);
+
 		new Handler(Looper.getMainLooper()).postDelayed(() -> {
 			tv.setVisibility(View.VISIBLE);
 			tv.setAnimation(UIHelper.loadFadeIn(this));
 		}, 1200);
+	}
+
+	private void setSplashContentTopDrawable(TextView tv) {
+		Drawable dr = ResourcesCompat.getDrawable (getResources(), R.mipmap.stax, null);
+		assert dr != null;
+		Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
+		Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, SPLASH_ICON_WIDTH, SPLASH_ICON_HEIGHT, true));
+		tv.setCompoundDrawablesWithIntrinsicBounds(null,d,null,null);
 	}
 
 	private void authenticateBiometricOrNavigateScreenAfter110sec() {
