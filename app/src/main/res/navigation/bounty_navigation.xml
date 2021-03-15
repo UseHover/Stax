@@ -17,4 +17,13 @@
 	    android:label="@string/nav_bounty"
 	    tools:layout="@layout/fragment_bounty_list_layout" />
 
+	<fragment
+	    android:id="@+id/transactionDetailsFragment"
+	    android:name="com.hover.stax.transactions.TransactionDetailsFragment"
+	    android:label="TransactionDetailsFragment"
+	    tools:layout="@layout/fragment_transaction" >
+		<argument
+		    android:name="uuid"
+		    app:argType="string" />
+	</fragment>
 </navigation>

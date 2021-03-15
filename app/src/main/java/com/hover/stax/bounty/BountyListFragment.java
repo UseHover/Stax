@@ -14,9 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
+import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.UIHelper;
 
-public class BountyListFragment extends Fragment implements BountyListAdapter.SelectListener {
+public class BountyListFragment extends Fragment implements NavigationInterface, BountyListAdapter.SelectListener {
 	private static final String TAG = "BountyListFragment";
 	private BountyViewModel bountyViewModel;
 	private View view;
@@ -55,7 +56,7 @@ public class BountyListFragment extends Fragment implements BountyListAdapter.Se
 
 	@Override
 	public void viewTransactionDetail(String uuid) {
-
+	navigateToTransactionDetailsFragment(uuid, this);
 	}
 
 	@Override
