@@ -103,16 +103,18 @@ public class TransactionDetailsFragment extends Fragment {
 	private void setPendingCardBgAndText(boolean isFlowDone, StaxCardView pendingCard, TextView pendingStatusText) {
 		if(isFlowDone){
 			pendingCard.setBackgroundColor(R.color.muted_green);
+			pendingCard.setBackDrawableNonClickable(R.drawable.ic_check);
 			UIHelper.setTextWithDrawable(pendingStatusText,
 					getString(R.string.flow_done_desc),
-					R.drawable.ic_check,
+					0,
 					View.VISIBLE);
 		}
 		else {
 			pendingCard.setBackgroundColor(R.color.pending_brown);
+			pendingCard.setBackDrawableNonClickable(R.drawable.ic_warning);
 			UIHelper.setTextWithDrawable(pendingStatusText,
 					getString(R.string.bounty_flow_pending_dialog_msg),
-					R.drawable.ic_warning,
+					0,
 					View.VISIBLE);
 		}
 	}
