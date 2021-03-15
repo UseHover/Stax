@@ -53,6 +53,7 @@ public interface NavigationInterface {
 			case Constants.NAV_LANGUAGE_SELECTION: navigateToLanguageSelectionFragment(activity);
 				break;
 			case Constants.NAV_BOUNTY: navigateToBountyActivity(activity);
+			break;
 			default:
 				break;
 		}
