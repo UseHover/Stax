@@ -1,21 +1,25 @@
 package com.hover.stax.bounties;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
+import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.HoverParameters;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
-import com.hover.stax.hover.HoverSession;
 import com.hover.stax.navigation.AbstractNavigationActivity;
 import com.hover.stax.utils.Constants;
+import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxDialog;
 
 public class BountyActivity extends AbstractNavigationActivity {
 	private static final String TAG = "BountyActivity";
+	static final String EMAIL_KEY = "email_for_bounties";
 	private static final int BOUNTY_REQUEST = 3000;
 	public BountyViewModel bountyViewModel;
 
@@ -25,21 +29,13 @@ public class BountyActivity extends AbstractNavigationActivity {
 		bountyViewModel = new ViewModelProvider(this).get(BountyViewModel.class);
 		setContentView(R.layout.activity_bounty);
 		setUpNav();
+		if (!Utils.getString(EMAIL_KEY, this).isEmpty())
+			Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.bountyListFragment);
 	}
 
-	private void makeCall(Action a) {
+	void makeCall(HoverAction a) {
 		Intent i = new HoverParameters.Builder(this).request(a.public_id).setEnvironment(HoverParameters.MANUAL_ENV).buildIntent();
 		startActivityForResult(i, BOUNTY_REQUEST);
-	}
-
-	public void runAction(Action a) {
-		new StaxDialog(this)
-				.setDialogTitle(getString(R.string.bounty_claim_title, a.root_code, a.getHumanFriendlyType(this), a.bounty_amount))
-				.setDialogMessage(getString(R.string.bounty_claim_explained, a.bounty_amount, a.getInstructions(this)))
-				.setPosButton(R.string.start_USSD_Flow, v -> {
-					makeCall(a);
-				})
-				.showIt();
 	}
 
 	@Override

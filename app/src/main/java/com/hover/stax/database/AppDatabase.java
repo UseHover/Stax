@@ -67,7 +67,7 @@ public abstract class AppDatabase extends RoomDatabase {
 	static final Migration M25_26 = new Migration(25, 26) {
 		@Override
 		public void migrate(SupportSQLiteDatabase database) {
-			database.execSQL("ALTER TABLE stax_transactions ADD COLUMN environment DEFAULT 0");
+			database.execSQL("ALTER TABLE stax_transactions ADD COLUMN environment INTEGER DEFAULT 0 NOT NULL");
 		}
 	};
 

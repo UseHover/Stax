@@ -5,8 +5,8 @@ import android.app.Application;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.requests.Request;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.schedules.Schedule;
@@ -92,9 +92,8 @@ public class TransferViewModel extends AbstractFormViewModel {
 		return getApplication().getString(R.string.amount_fielderror);
 	}
 
-	String recipientErrors(Action a) {
-		if(a == null) return getApplication().getString(R.string.transfer_error_recipient_general);
-		if (a.requiresRecipient() && contact.getValue() == null)
+	String recipientErrors(HoverAction a) {
+		if (a != null && a.requiresRecipient() && contact.getValue() == null)
 			return getApplication().getString(a.isPhoneBased() ? R.string.transfer_error_recipient_phone : R.string.transfer_error_recipient_account);
 		return null;
 	}

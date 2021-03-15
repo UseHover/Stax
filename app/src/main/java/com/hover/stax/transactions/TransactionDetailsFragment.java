@@ -15,12 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.actions.HoverAction;
-import com.hover.sdk.api.HoverParameters;
+import com.hover.sdk.transactions.Transaction;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.contacts.StaxContact;
-import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -56,11 +54,11 @@ public class TransactionDetailsFragment extends Fragment {
 		setSmsMessagesRecyclerView(view);
 		viewModel.setTransaction(getArguments().getString(TransactionContract.COLUMN_UUID));
 	}
-
+	
 	@SuppressLint("SetTextI18n")
 	private void updateDetails(View view, StaxTransaction transaction) {
 		((TextView) view.findViewById(R.id.title)).setText(transaction.description);
-		((TextView) view.findViewById(R.id.details_amount)).setText((transaction.transaction_type.equals(Action.RECEIVE) ? "" : "-") + Utils.formatAmount(transaction.amount));
+		((TextView) view.findViewById(R.id.details_amount)).setText((transaction.transaction_type.equals(HoverAction.RECEIVE) ? "" : "-") + Utils.formatAmount(transaction.amount));
 		((TextView) view.findViewById(R.id.details_date)).setText(DateUtils.humanFriendlyDate(transaction.initiated_at));
 
 		if (transaction.confirm_code != null && !transaction.confirm_code.isEmpty())
@@ -72,13 +70,13 @@ public class TransactionDetailsFragment extends Fragment {
 	private void showTransaction(StaxTransaction transaction, View view) {
 		if (transaction != null) {
 			updateDetails(view, transaction);
-			showNotificationCard(transaction.isRecorded() || transaction.status.equals(Constants.PENDING), view);
+			showNotificationCard(transaction.isRecorded() || transaction.status.equals(Transaction.PENDING), view);
 			if (transaction.isRecorded() && viewModel.getAction().getValue() != null)
 				updateNotificationCard(viewModel.getAction().getValue(), view);
 		}
 	}
 
-	private void showActionDetails(Action action, View view) {
+	private void showActionDetails(HoverAction action, View view) {
 		if (action != null) {
 			((TextView) view.findViewById(R.id.details_network)).setText(action.network_name);
 			if (viewModel.getTransaction().getValue() != null && viewModel.getTransaction().getValue().isRecorded())
@@ -91,10 +89,10 @@ public class TransactionDetailsFragment extends Fragment {
 	}
 
 	@SuppressLint("ResourceAsColor")
-	private void updateNotificationCard(Action action, View view) {
-		view.findViewById(R.id.notification_card).setBackgroundColor(action.bounty_is_open == 0 ? R.color.pending_brown : R.color.muted_green);
-		((TextView) view.findViewById(R.id.notification_detail)).setText(action.bounty_is_open == 0 ? R.string.bounty_flow_pending_dialog_msg : R.string.flow_done_desc);
-		((TextView) view.findViewById(R.id.notification_detail)).setCompoundDrawablesWithIntrinsicBounds(action.bounty_is_open == 0 ? R.drawable.ic_warning : R.drawable.ic_check, 0, 0, 0);
+	private void updateNotificationCard(HoverAction action, View view) {
+		view.findViewById(R.id.notification_card).setBackgroundColor(action.bounty_is_open ? R.color.pending_brown : R.color.muted_green);
+		((TextView) view.findViewById(R.id.notification_detail)).setText(action.bounty_is_open ? R.string.bounty_flow_pending_dialog_msg : R.string.flow_done_desc);
+		((TextView) view.findViewById(R.id.notification_detail)).setCompoundDrawablesWithIntrinsicBounds(action.bounty_is_open ? R.drawable.ic_warning : R.drawable.ic_check, 0, 0, 0);
 	}
 
 	private void updateRecipient(StaxContact contact, View view){

@@ -1,7 +1,6 @@
 package com.hover.stax.schedules;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -9,7 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
-import com.hover.stax.actions.Action;
+import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.DatabaseRepo;
 
@@ -20,7 +19,7 @@ public class ScheduleDetailViewModel extends AndroidViewModel {
 
 	private DatabaseRepo repo;
 	private MutableLiveData<Schedule> schedule;
-	private LiveData<Action> action;
+	private LiveData<HoverAction> action;
 	private LiveData<List<StaxContact>> contacts;
 
 	public ScheduleDetailViewModel(@NonNull Application application) {
@@ -42,14 +41,14 @@ public class ScheduleDetailViewModel extends AndroidViewModel {
 		return schedule;
 	}
 
-	private LiveData<Action> loadAction(Schedule s) {
+	private LiveData<HoverAction> loadAction(Schedule s) {
 		if (s != null) {
 			return repo.getLiveAction(s.action_id);
 		}
 		return new MutableLiveData<>();
 	}
 
-	public LiveData<Action> getAction() {
+	public LiveData<HoverAction> getAction() {
 		if (action == null) {
 			action = new MutableLiveData<>();
 		}

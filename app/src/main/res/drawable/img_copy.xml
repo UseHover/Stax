@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:drawable="@drawable/circle_white_background"/>
+	<item android:drawable="@drawable/ic_white_circle"/>
 	<item android:drawable="@drawable/ic_copy_dark" android:gravity="center"/>
 </layer-list>

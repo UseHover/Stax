@@ -19,6 +19,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
+import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -27,21 +28,18 @@ import com.squareup.picasso.Target;
 import java.util.List;
 
 
-public class ActionDropdownAdapter extends ArrayAdapter<Action> {
-	private List<Action> actions;
+public class ActionDropdownAdapter extends ArrayAdapter<HoverAction> {
+	private List<HoverAction> actions;
 
-
-	public ActionDropdownAdapter(@NonNull List<Action> actions, @NonNull Context context) {
+	public ActionDropdownAdapter(@NonNull List<HoverAction> actions, @NonNull Context context) {
 		super(context, 0, actions);
 		this.actions = actions;
-
 	}
-
 
 	@NonNull
 	@Override
 	public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
-		Action a = actions.get(position);
+		HoverAction a = actions.get(position);
 		view = LayoutInflater.from(parent.getContext()).inflate(R.layout.stax_spinner_item_with_logo, parent,false);
 
 		ViewHolder holder = new ViewHolder(view);
@@ -65,7 +63,7 @@ public class ActionDropdownAdapter extends ArrayAdapter<Action> {
 		}
 
 		@SuppressLint("SetTextI18n")
-		private void setAction(Action action, String baseUrl) {
+		private void setAction(HoverAction action, String baseUrl) {
 			id.setText(Integer.toString(action.id));
 			channelText.setText(action.toString());
 			Picasso.get().load(baseUrl+action.to_institution_logo).networkPolicy(NetworkPolicy.OFFLINE).into(this);

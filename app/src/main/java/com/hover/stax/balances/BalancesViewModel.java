@@ -11,15 +11,11 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
 import com.amplitude.api.Amplitude;
-import com.google.firebase.messaging.FirebaseMessaging;
+import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.utils.UIHelper;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,10 +33,10 @@ public class BalancesViewModel extends AndroidViewModel {
 
 	private LiveData<List<Channel>> selectedChannels;
 	private LiveData<Channel> activeChannel;
-	private LiveData<List<Action>> actions = new MediatorLiveData<>();
+	private LiveData<List<HoverAction>> actions = new MediatorLiveData<>();
 
 	private MutableLiveData<Integer> runFlag = new MutableLiveData<>();
-	private MediatorLiveData<List<Action>> toRun;
+	private MediatorLiveData<List<HoverAction>> toRun;
 	private MutableLiveData<Boolean> runBalanceError = new MutableLiveData<>();
 
 	public BalancesViewModel(Application application) {
@@ -62,7 +58,7 @@ public class BalancesViewModel extends AndroidViewModel {
 		listener = l;
 	}
 
-	public LiveData<List<Action>> getToRun() {
+	public LiveData<List<HoverAction>> getToRun() {
 		return toRun;
 	}
 
@@ -77,16 +73,16 @@ public class BalancesViewModel extends AndroidViewModel {
 		return selectedChannels;
 	}
 
-	public LiveData<List<Action>> loadActions(List<Channel> channelList) {
+	public LiveData<List<HoverAction>> loadActions(List<Channel> channelList) {
 		Log.e(TAG, "attempting to load " + channelList.size() + " balance actions");
 		int[] ids = new int[channelList.size()];
 		for (int c = 0; c < channelList.size(); c++)
 			ids[c] = channelList.get(c).id;
 		Log.e(TAG, "attempting to load balance actions for channels: " + Arrays.toString(ids));
-		return repo.getLiveActions(ids, Action.BALANCE);
+		return repo.getLiveActions(ids, HoverAction.BALANCE);
 	}
 
-	public LiveData<List<Action>> getActions() {
+	public LiveData<List<HoverAction>> getActions() {
 		return actions;
 	}
 
@@ -120,19 +116,19 @@ public class BalancesViewModel extends AndroidViewModel {
 		else startRun(getChannelActions(flag));
 	}
 
-	private void onActionsLoaded(List<Action> actions) {
+	private void onActionsLoaded(List<HoverAction> actions) {
 		if (runFlag.getValue() == null || toRun.getValue().size() > 0) return;
 		if (runFlag.getValue() == ALL) startRun(actions);
 		else if (runFlag.getValue() != NONE) startRun(getChannelActions(runFlag.getValue()));
 	}
 
-	void startRun(List<Action> actions) {
+	void startRun(List<HoverAction> actions) {
 		if (actions == null || actions.size() == 0) return;
 		toRun.setValue(actions);
 		runNext(actions, 0);
 	}
 
-	private void runNext(List<Action> actions, int index) {
+	private void runNext(List<HoverAction> actions, int index) {
 		if (listener != null && !hasActive) {
 			hasActive = true;
 			listener.startRun(actions.get(index), index);
@@ -158,10 +154,10 @@ public class BalancesViewModel extends AndroidViewModel {
 		hasRunList = new ArrayList<>();
 	}
 
-	private List<Action> getChannelActions(int flag) {
-		List list = new ArrayList<Action>();
+	private List<HoverAction> getChannelActions(int flag) {
+		List list = new ArrayList<HoverAction>();
 		if (actions.getValue() == null || actions.getValue().size() == 0) return list;
-		for (Action action : actions.getValue()) {
+		for (HoverAction action : actions.getValue()) {
 			if (action.channel_id == flag)
 				list.add(action);
 		}
@@ -169,7 +165,7 @@ public class BalancesViewModel extends AndroidViewModel {
 	}
 
 	public interface RunBalanceListener {
-		void startRun(Action a, int index);
+		void startRun(HoverAction a, int index);
 	}
 
 	public boolean hasChannels() {

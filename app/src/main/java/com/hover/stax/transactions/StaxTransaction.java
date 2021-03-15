@@ -11,11 +11,11 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.hover.sdk.api.HoverParameters;
+import com.hover.sdk.actions.HoverAction;
+import com.hover.sdk.transactions.Transaction;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.contacts.StaxContact;
-import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.Utils;
 
@@ -52,7 +52,7 @@ public class StaxTransaction {
 	public int channel_id;
 
 	@NonNull
-	@ColumnInfo(name = "status", defaultValue = Constants.PENDING)
+	@ColumnInfo(name = "status", defaultValue = Transaction.PENDING)
 	public String status;
 
 	@NonNull
@@ -84,7 +84,7 @@ public class StaxTransaction {
 	public StaxTransaction() {
 	}
 
-	public StaxTransaction(Intent data, Action action, StaxContact contact, Context c) {
+	public StaxTransaction(Intent data, HoverAction action, StaxContact contact, Context c) {
 		if (data.hasExtra(TransactionContract.COLUMN_UUID) && data.getStringExtra(TransactionContract.COLUMN_UUID) != null) {
 			uuid = data.getStringExtra(TransactionContract.COLUMN_UUID);
 			action_id = data.getStringExtra(TransactionContract.COLUMN_ACTION_ID);
@@ -97,12 +97,12 @@ public class StaxTransaction {
 
 			HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS);
 			if (extras != null) {
-				if (extras.containsKey(Action.AMOUNT_KEY))
-					amount = Utils.getAmount((extras.get(Action.AMOUNT_KEY)));
-				if (extras.containsKey(Action.PHONE_KEY))
-					counterparty = extras.get(Action.PHONE_KEY);
-				else if (extras.containsKey(Action.ACCOUNT_KEY))
-					counterparty = extras.get(Action.ACCOUNT_KEY);
+				if (extras.containsKey(HoverAction.AMOUNT_KEY))
+					amount = Utils.getAmount((extras.get(HoverAction.AMOUNT_KEY)));
+				if (extras.containsKey(HoverAction.PHONE_KEY))
+					counterparty = extras.get(HoverAction.PHONE_KEY);
+				else if (extras.containsKey(HoverAction.ACCOUNT_KEY))
+					counterparty = extras.get(HoverAction.ACCOUNT_KEY);
 			}
 			if (data.hasExtra(StaxContact.ID_KEY))
 				counterparty_id = data.getStringExtra(StaxContact.ID_KEY);
@@ -113,14 +113,14 @@ public class StaxTransaction {
 		}
 	}
 
-	public void update(Intent data, Action action, StaxContact contact, Context c) {
+	public void update(Intent data, HoverAction action, StaxContact contact, Context c) {
 		status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
 		updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, initiated_at);
 
 		HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES);
 		if (extras != null) {
-			if (extras.containsKey(Action.FEE_KEY))
-				fee = Utils.getAmount(extras.get(Action.FEE_KEY));
+			if (extras.containsKey(HoverAction.FEE_KEY))
+				fee = Utils.getAmount(extras.get(HoverAction.FEE_KEY));
 			if (extras.containsKey(CONFIRM_CODE_KEY))
 				confirm_code = extras.get(CONFIRM_CODE_KEY);
 		}
@@ -132,16 +132,16 @@ public class StaxTransaction {
 			description = generateDescription(action, contact, c);
 	}
 
-	private String generateDescription(Action action, StaxContact contact, Context c) {
+	private String generateDescription(HoverAction action, StaxContact contact, Context c) {
 		String recipientStr = contact != null ? contact.shortName() : counterparty;
 		switch (transaction_type) {
-			case Action.AIRTIME:
+			case HoverAction.AIRTIME:
 				return c.getString(R.string.descrip_airtime_sent, action.from_institution_name, ((counterparty == null || counterparty.equals("")) ? "myself" : recipientStr));
-			case Action.P2P:
+			case HoverAction.P2P:
 				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, recipientStr);
-			case Action.ME2ME:
+			case HoverAction.ME2ME:
 				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, action.to_institution_name);
-			case Action.RECEIVE:
+			case HoverAction.RECEIVE:
 				return c.getString(R.string.descrip_transfer_received, counterparty);
 			default:
 				return "Other";

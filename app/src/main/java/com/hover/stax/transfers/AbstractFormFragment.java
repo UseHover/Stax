@@ -15,9 +15,9 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.amplitude.api.Amplitude;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.channels.ChannelDropdown;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
@@ -63,7 +63,7 @@ public abstract class AbstractFormFragment extends Fragment {
 		editCard.setVisibility(isEditing ? View.VISIBLE : View.GONE);
 		noworryText.setVisibility(isEditing ? View.VISIBLE : View.GONE);
 		summaryCard.setVisibility(isEditing ? View.GONE : View.VISIBLE);
-		fab.setText(isEditing ? getString(R.string.btn_continue) : abstractFormViewModel.getType().equals(Action.AIRTIME) ? getString(R.string.fab_airtimenow) : getString(R.string.fab_transfernow));
+		fab.setText(isEditing ? getString(R.string.btn_continue) : abstractFormViewModel.getType().equals(HoverAction.AIRTIME) ? getString(R.string.fab_airtimenow) : getString(R.string.fab_transfernow));
 	}
 
 	protected void contactPicker(int requestCode, Context c) {

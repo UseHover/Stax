@@ -49,20 +49,11 @@ public class StaxCardView extends FrameLayout {
 			a.recycle();
 		}
 	}
-
-
+	
 	@SuppressLint("ResourceType")
 	public void setBackgroundColor(int colorRes) {
 		bgColor = getContext().getResources().getColor(colorRes);
 		contentView.setBackgroundColor(bgColor);
-	}
-	public void setBackDrawableNonClickable(int drawableRes) {
-		if (drawableRes != 0) {
-			backButton.setVisibility(VISIBLE);
-			backButton.setImageResource(drawableRes);
-			backButton.setOnClickListener(null);
-		}
-
 	}
 
 	private void fillFromAttrs() {

@@ -11,8 +11,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
+import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.balances.BalanceAdapter;
 import com.hover.stax.balances.BalancesViewModel;
 import com.hover.stax.channels.Channel;
@@ -57,7 +57,7 @@ public class MainActivity extends AbstractNavigationActivity implements
 	}
 
 	private void checkForRequest(Intent intent) {
-		if (intent.hasExtra(Constants.REQUEST_LINK)) navigateToTransferActivity(Action.P2P, true, intent, this);
+		if (intent.hasExtra(Constants.REQUEST_LINK)) navigateToTransferActivity(HoverAction.P2P, true, intent, this);
 	}
 	private void checkForFragmentDirection(Intent intent) {
 		if (intent.hasExtra(Constants.FRAGMENT_DIRECT)) {
@@ -76,11 +76,11 @@ public class MainActivity extends AbstractNavigationActivity implements
 	}
 
 	@Override
-	public void startRun(Action a, int i) {
+	public void startRun(HoverAction a, int i) {
 			run(a, i);
 	}
 
-	private void run(Action action, int index) {
+	private void run(HoverAction action, int index) {
 		Log.e(TAG, "running index: " + index);
 		if (balancesViewModel.getChannel(action.channel_id) != null) {
 			new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), MainActivity.this, index)
@@ -106,7 +106,7 @@ public class MainActivity extends AbstractNavigationActivity implements
 	}
 
 	@Override
-	public void onAuthSuccess(Action act) {
+	public void onAuthSuccess(HoverAction act) {
 			run(act, 0);
 	}
 

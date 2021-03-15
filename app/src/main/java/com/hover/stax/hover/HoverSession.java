@@ -8,10 +8,10 @@ import android.util.Log;
 import androidx.fragment.app.Fragment;
 
 import com.amplitude.api.Amplitude;
+import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.api.HoverParameters;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.settings.KeyStoreExecutor;
@@ -53,7 +53,7 @@ final public class HoverSession {
 		return builder;
 	}
 
-	private void addExtras(HoverParameters.Builder builder, JSONObject extras, Action action) {
+	private void addExtras(HoverParameters.Builder builder, JSONObject extras, HoverAction action) {
 		List<String> required_extras = action.getRequiredParams();
 		Iterator<?> keys = extras.keys();
 		while (keys.hasNext()) {
@@ -68,20 +68,20 @@ final public class HoverSession {
 		if (value == null || !requiredExtras.contains(key)) {
 			return null;
 		}
-		if (key.equals(Action.PHONE_KEY)) {
+		if (key.equals(HoverAction.PHONE_KEY)) {
 			return StaxContact.normalizeNumberByCountry(value, channel.countryAlpha2);
 		}
 		return value;
 	}
 
 	private void addPin(HoverParameters.Builder builder, Activity a) {
-		builder.extra(Action.PIN_KEY, KeyStoreExecutor.decrypt(channel.pin, a));
+		builder.extra(HoverAction.PIN_KEY, KeyStoreExecutor.decrypt(channel.pin, a));
 	}
 
-	private String getMessage(Action a, Context c) {
+	private String getMessage(HoverAction a, Context c) {
 		switch (a.transaction_type) {
-			case Action.BALANCE: return c.getString(R.string.balance_msg, a.from_institution_name);
-			case Action.AIRTIME: return c.getString(R.string.airtime_msg);
+			case HoverAction.BALANCE: return c.getString(R.string.balance_msg, a.from_institution_name);
+			case HoverAction.AIRTIME: return c.getString(R.string.airtime_msg);
 			default: return c.getString(R.string.transfer_msg);
 		}
 	}
@@ -99,11 +99,11 @@ final public class HoverSession {
 		private final Activity activity;
 		private Fragment fragment;
 		private Channel channel;
-		private Action action;
+		private HoverAction action;
 		private JSONObject extras;
 		private int requestCode, finalScreenTime = 2000;
 
-		public Builder(Action a, Channel c, Activity act, int code) {
+		public Builder(HoverAction a, Channel c, Activity act, int code) {
 			if (a == null) throw new IllegalArgumentException("Action must not be null");
 			activity = act;
 			channel = c;
@@ -112,7 +112,7 @@ final public class HoverSession {
 			requestCode = code;
 		}
 
-		public Builder(Action a, Channel c, Activity act, int requestCode, Fragment frag) {
+		public Builder(HoverAction a, Channel c, Activity act, int requestCode, Fragment frag) {
 			this(a, c, act, requestCode);
 			fragment = frag;
 		}

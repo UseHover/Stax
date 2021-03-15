@@ -10,7 +10,7 @@
 	    android:layout_height="match_parent"
 	    android:contentDescription="@string/splash_screen_img_desc"
 	    android:scaleType="centerCrop"
-	    android:src="@drawable/stax_splash" />
+	    android:src="@drawable/splash_background" />
 
 	<ImageView
 	    android:id="@+id/splash_image_blur"

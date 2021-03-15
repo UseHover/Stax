@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/bounty_list_layout_id">
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/bounty_list_layout_id"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
 
 	<com.hover.stax.views.StaxCardView
 	    android:layout_width="match_parent"
@@ -16,4 +16,4 @@
 		  android:layout_height="wrap_content"
 		  android:id="@+id/bountyList_recyclerView_id"/>
 	</com.hover.stax.views.StaxCardView>
-</FrameLayout>
+</androidx.core.widget.NestedScrollView>

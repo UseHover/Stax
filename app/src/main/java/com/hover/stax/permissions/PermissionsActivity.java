@@ -8,9 +8,9 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 
 public class PermissionsActivity extends AppCompatActivity {
 
@@ -31,7 +31,7 @@ public class PermissionsActivity extends AppCompatActivity {
 		if (prev != null) { ft.remove(prev); }
 		ft.addToBackStack(null);
 
-		PermissionsFragment newFragment = PermissionsFragment.newInstance(Action.getHumanFriendlyType(this, getIntent() != null ? getIntent().getStringExtra("transaction_type") : null), new PermissionHelper(this).hasOverlayPerm());
+		PermissionsFragment newFragment = PermissionsFragment.newInstance(HoverAction.getHumanFriendlyType(this, getIntent() != null ? getIntent().getStringExtra("transaction_type") : null), new PermissionHelper(this).hasOverlayPerm());
 		newFragment.show(ft, "dialog");
 	}
 }

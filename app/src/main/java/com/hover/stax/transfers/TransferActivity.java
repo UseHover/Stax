@@ -3,26 +3,22 @@ package com.hover.stax.transfers;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
+import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.actions.ActionSelectViewModel;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.navigation.AbstractNavigationActivity;
-import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
-import com.hover.stax.settings.BiometricChecker;
 import com.hover.stax.views.StaxDialog;
 
 public class TransferActivity extends AbstractNavigationActivity {
@@ -85,24 +81,24 @@ public class TransferActivity extends AbstractNavigationActivity {
 		makeHoverCall(actionSelectViewModel.getActiveAction().getValue());
 	}
 
-	private void makeHoverCall(Action act) {
+	private void makeHoverCall(HoverAction act) {
 		Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
 		transferViewModel.checkSchedule();
 		makeCall(act);
 	}
 
-	private void makeCall(Action act) {
+	private void makeCall(HoverAction act) {
 		HoverSession.Builder hsb = new HoverSession.Builder(act, channelDropdownViewModel.getActiveChannel().getValue(),
 				TransferActivity.this, Constants.TRANSFER_REQUEST)
-				.extra(Action.AMOUNT_KEY, transferViewModel.getAmount().getValue())
-				.extra(Action.NOTE_KEY, transferViewModel.getNote().getValue());
+				.extra(HoverAction.AMOUNT_KEY, transferViewModel.getAmount().getValue())
+				.extra(HoverAction.NOTE_KEY, transferViewModel.getNote().getValue());
 
 		if (transferViewModel.getContact().getValue() != null) { addRecipientInfo(hsb); }
 		hsb.run();
 	}
 	private void addRecipientInfo(HoverSession.Builder hsb) {
-		hsb.extra(Action.ACCOUNT_KEY, transferViewModel.getContact().getValue().phoneNumber)
-			.extra(Action.PHONE_KEY, transferViewModel.getContact().getValue().getNumberFormatForInput(actionSelectViewModel.getActiveAction().getValue(), channelDropdownViewModel.getActiveChannel().getValue()));
+		hsb.extra(HoverAction.ACCOUNT_KEY, transferViewModel.getContact().getValue().phoneNumber)
+			.extra(HoverAction.PHONE_KEY, transferViewModel.getContact().getValue().getNumberFormatForInput(actionSelectViewModel.getActiveAction().getValue(), channelDropdownViewModel.getActiveChannel().getValue()));
 	}
 
 	@Override
