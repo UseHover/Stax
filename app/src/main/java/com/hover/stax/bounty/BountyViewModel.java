@@ -13,9 +13,7 @@ import androidx.lifecycle.Transformations;
 import com.hover.stax.R;
 import com.hover.stax.actions.Action;
 import com.hover.stax.database.DatabaseRepo;
-import com.hover.stax.languages.Lang;
 import com.hover.stax.transactions.StaxTransaction;
-import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.Utils;
 import com.yariksoffice.lingver.Lingver;
 

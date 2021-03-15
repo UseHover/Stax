@@ -46,14 +46,12 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
 	}
 
 	private void uploadBountyUserObserver() {
-		navigateToBountyListFragment(this);
-
-		/* bountyViewModel.getUploadBountyResult().observe(getViewLifecycleOwner(), result-> {
+		bountyViewModel.getUploadBountyResult().observe(getViewLifecycleOwner(), result-> {
 			if(result.equals(Constants.SUCCESS)) {
 				promptEmailOrNavigateBountyList();
 			}
-			else UIHelper.flashMessage(getContext(), result);
-		}); */
+			else UIHelper.flashMessage(requireContext(), result);
+		});
 	}
 	private void initEmailInput() {
 		emailInput = view.findViewById(R.id.emailInput);
