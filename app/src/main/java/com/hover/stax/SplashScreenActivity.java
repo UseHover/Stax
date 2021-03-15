@@ -89,7 +89,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 		}, LOGO_DELAY);
 	}
 
-	public static Animation loadFadeIn(Context context) {
+	private Animation loadFadeIn(Context context) {
 		return AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
 	}
 

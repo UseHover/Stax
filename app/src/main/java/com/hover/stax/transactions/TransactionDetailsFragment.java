@@ -54,7 +54,7 @@ public class TransactionDetailsFragment extends Fragment {
 		setSmsMessagesRecyclerView(view);
 		viewModel.setTransaction(getArguments().getString(TransactionContract.COLUMN_UUID));
 	}
-
+	
 	@SuppressLint("SetTextI18n")
 	private void updateDetails(View view, StaxTransaction transaction) {
 		((TextView) view.findViewById(R.id.title)).setText(transaction.description);

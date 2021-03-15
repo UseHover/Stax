@@ -1,7 +1,6 @@
 package com.hover.stax.navigation;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -12,7 +11,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
-import com.hover.stax.bounties.BountyActivity;
 import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.requests.RequestActivity;

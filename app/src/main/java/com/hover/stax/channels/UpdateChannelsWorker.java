@@ -12,6 +12,8 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.hover.stax.R;
+import com.hover.stax.channels.Channel;
+import com.hover.stax.channels.ChannelDao;
 import com.hover.stax.database.AppDatabase;
 
 import org.json.JSONArray;
