@@ -15,7 +15,7 @@
 	    android:id="@+id/bountyListFragment"
 	    android:name="com.hover.stax.bounty.BountyListFragment"
 	    android:label="@string/nav_bounty"
-	    tools:layout="@layout/fragment_bounty_list_layout" />
+	    tools:layout="@layout/bounty_inner_list_layout" />
 
 	<fragment
 	    android:id="@+id/transactionDetailsFragment"

@@ -62,7 +62,9 @@ public class StaxCardView extends FrameLayout {
 			backButton.setImageResource(drawableRes);
 			backButton.setOnClickListener(null);
 		}
-
+	}
+	public void setHeader(String title) {
+		if (title != null) ((TextView) findViewById(R.id.title)).setText(title);
 	}
 
 	private void fillFromAttrs() {
