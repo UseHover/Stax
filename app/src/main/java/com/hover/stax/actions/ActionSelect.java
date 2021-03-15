@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
+import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDropdownLayout;
@@ -33,8 +34,8 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 	private TextView radioHeader;
 	private RadioGroup isSelfRadio;
 
-	private List<Action> actions;
-	private Action highlightedAction;
+	private List<HoverAction> actions;
+	private HoverAction highlightedAction;
 	private HighlightListener highlightListener;
 
 	public ActionSelect(Context context, AttributeSet attrs) {
@@ -50,27 +51,27 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 		this.setVisibility(GONE);
 	}
 
-	public void updateActions(List<Action> filteredActions) {
+	public void updateActions(List<HoverAction> filteredActions) {
 		Log.e(TAG, "Updating to " + filteredActions);
 		this.setVisibility(filteredActions == null || filteredActions.size() <= 0 ? View.GONE : View.VISIBLE);
 		if (filteredActions == null || filteredActions.size() <= 0) return;
 
 		actions = filteredActions;
 		highlightedAction = null;
-		List<Action> uniqRecipientActions = sort(filteredActions);
+		List<HoverAction> uniqRecipientActions = sort(filteredActions);
 
 		ActionDropdownAdapter actionDropdownAdapter = new ActionDropdownAdapter(uniqRecipientActions, getContext());
 		dropdownView.setAdapter(actionDropdownAdapter);
-		dropdownView.setOnItemClickListener((adapterView, view2, pos, id) -> selectRecipientNetwork((Action) adapterView.getItemAtPosition(pos)));
+		dropdownView.setOnItemClickListener((adapterView, view2, pos, id) -> selectRecipientNetwork((HoverAction) adapterView.getItemAtPosition(pos)));
 		Log.e(TAG, "uniq recipient networks " + uniqRecipientActions.size());
 		dropdownLayout.setVisibility(showRecipientNetwork(uniqRecipientActions) ? VISIBLE : GONE);
-		radioHeader.setText(actions.get(0).transaction_type.equals(Action.AIRTIME) ? R.string.airtime_who_header : R.string.send_who_header);
+		radioHeader.setText(actions.get(0).transaction_type.equals(HoverAction.AIRTIME) ? R.string.airtime_who_header : R.string.send_who_header);
 	}
 
-	public static List<Action> sort(List<Action> actions) {
+	public static List<HoverAction> sort(List<HoverAction> actions) {
 		ArrayList<Integer> uniqRecipInstIds = new ArrayList<>();
-		ArrayList<Action> uniqRecipActions = new ArrayList<>();
-		for (Action a : actions) {
+		ArrayList<HoverAction> uniqRecipActions = new ArrayList<>();
+		for (HoverAction a : actions) {
 			if (!uniqRecipInstIds.contains(a.recipientInstitutionId())) {
 				uniqRecipInstIds.add(a.recipientInstitutionId());
 				uniqRecipActions.add(a);
@@ -79,20 +80,20 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 		return uniqRecipActions;
 	}
 
-	private boolean showRecipientNetwork(List<Action> actions) {
+	private boolean showRecipientNetwork(List<HoverAction> actions) {
 		return actions.size() > 1 || (actions.size() == 1 && !actions.get(0).isOnNetwork());
 	}
 
-	public void selectRecipientNetwork(Action action) {
+	public void selectRecipientNetwork(HoverAction action) {
 		if (action.equals(highlightedAction)) return;
 
 		setDropDownValue(action);
 		setRadioValuesIfRequired(action);
 	}
 
-	private void setRadioValuesIfRequired(Action action) {
+	private void setRadioValuesIfRequired(HoverAction action) {
 		dropdownLayout.setState(null, AbstractStatefulInput.SUCCESS);
-		List<Action> options = getWhoMeOptions(action.recipientInstitutionId());
+		List<HoverAction> options = getWhoMeOptions(action.recipientInstitutionId());
 		if (options.size() == 1) {
 			if (!options.get(0).requiresRecipient())
 				dropdownLayout.setState(getContext().getString(R.string.self_only_money_warning), AbstractStatefulInput.INFO);
@@ -102,14 +103,14 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 		} else
 			createRadios(options);
 	}
-	private void setDropDownValue(Action a) {
+	private void setDropDownValue(HoverAction a) {
 		dropdownView.setText(a.toString(), false);
 		Picasso.get()
 				.load(getContext().getString(R.string.root_url)+ a.to_institution_logo)
 				.resize(55,55).into(this);
 	}
 
-	public void selectAction(Action a) {
+	public void selectAction(HoverAction a) {
 		Log.e(TAG, "selecting action " + a);
 		highlightedAction = a;
 		if (highlightListener != null) highlightListener.highlightAction(a);
@@ -119,22 +120,22 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 
 	public void setState(String message, int state) { dropdownLayout.setState(message, state); }
 
-	private List<Action> getWhoMeOptions(int recipientInstId) {
-		List<Action> options = new ArrayList<>();
+	private List<HoverAction> getWhoMeOptions(int recipientInstId) {
+		List<HoverAction> options = new ArrayList<>();
 		if (actions == null) return options;
-		for (Action a: actions) {
+		for (HoverAction a: actions) {
 			if (a.recipientInstitutionId() == recipientInstId && !options.contains(a))
 				options.add(a);
 		}
 		return options;
 	}
 
-	private void createRadios(List<Action> actions) {
+	private void createRadios(List<HoverAction> actions) {
 		Log.e(TAG, "creating radios. " + actions.size());
 		isSelfRadio.removeAllViews();
 		isSelfRadio.clearCheck();
 		for (int i = 0; i < actions.size(); i++){
-			Action a =  actions.get(i);
+			HoverAction a =  actions.get(i);
 			RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.stax_radio_button, null);
 			radioButton.setText(a.getPronoun(getContext()));
 			radioButton.setId(i);
@@ -170,6 +171,6 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 	}
 
 	public interface HighlightListener {
-		void highlightAction(Action a);
+		void highlightAction(HoverAction a);
 	}
 }

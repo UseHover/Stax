@@ -39,7 +39,7 @@
 			    android:id="@+id/emailInput"
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
-			    android:hint="@string/email"
+			    android:hint="@string/bounty_email"
 			    android:layout_marginTop="@dimen/margin_13"
 			    android:inputType="text" />
 
@@ -50,7 +50,8 @@
 			    android:layout_height="wrap_content"
 			    android:layout_gravity="end"
 			    android:layout_marginTop="@dimen/margin_13"
-			    android:text="@string/btn_continue" />
+			    android:text="@string/btn_continue"
+				android:onClick="submitEmail"/>
 		</LinearLayout>
 	</com.hover.stax.views.StaxCardView>
 </androidx.core.widget.NestedScrollView>

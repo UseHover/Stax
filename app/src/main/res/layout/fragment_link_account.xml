@@ -13,7 +13,6 @@
 	    android:id="@+id/channel_dropdown"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-		android:text="@string/channels_error_nodata"
 		android:hint="@string/link_account"
 	    app:show_selected="false"/>
 

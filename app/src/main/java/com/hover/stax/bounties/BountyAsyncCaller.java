@@ -6,74 +6,76 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.android.volley.Request;
-import com.hover.sdk.utils.AnalyticsSingleton;
+import com.hover.sdk.utils.Utils;
+import com.hover.sdk.utils.VolleySingleton;
 import com.hover.stax.R;
-import com.hover.stax.utils.Constants;
-import com.hover.stax.utils.StaxVolleySingleton;
-import com.hover.stax.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
 
-class BountyAsyncCaller extends AsyncTask<Void, Void, String> {
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+class BountyAsyncCaller extends AsyncTask<String, Void, Integer> {
     private static final String TAG = "BountyAsyncCaller";
-    private WeakReference<Context> mWeakContext;
-    private BountyViewModel viewModel;
-    public BountyAsyncCaller(@NonNull WeakReference<Context> mWeakContext, @NonNull BountyViewModel viewModel) {
-        this.mWeakContext = mWeakContext;
-        this.viewModel = viewModel;
+
+    private WeakReference<Context> context;
+    private AsyncResponseListener responseListener;
+    private final OkHttpClient client = new OkHttpClient();
+
+    public BountyAsyncCaller(@NonNull WeakReference<Context> mWeakContext, AsyncResponseListener listener) {
+        this.context = mWeakContext;
+        this.responseListener = listener;
+    }
+
+    public interface AsyncResponseListener {
+        void onComplete(Integer responseCode);
     }
 
     @Override
-    protected String doInBackground(Void... params) {
-        String email = viewModel.getEmail();
-        String deviceId = com.hover.sdk.utils.Utils.getDeviceId(mWeakContext.get());
-        Log.d(TAG,  "email: "+email + "device id: "+deviceId);
-        return uploadBountyUser(email, deviceId);
+    protected Integer doInBackground(String... params) {
+        return uploadBountyUser(getUrl(), getJson(params[0]));
     }
-
-    @Override
-    protected void onPostExecute(String s) {
-        super.onPostExecute(s);
-        viewModel.setUploadBountyUserResultLiveData(s);
-    }
-
 
     private String getUrl() {
-        return mWeakContext.get().getString(R.string.api_url) + mWeakContext.get().getString(R.string.bounty_endpoint);
+        return context.get().getString(R.string.api_url) + context.get().getString(R.string.bounty_endpoint);
     }
-    private String uploadBountyUser(String email, String deviceId) {
+
+    private JSONObject getJson(String email) {
+        JSONObject root = new JSONObject();
         try {
-            Log.v(TAG, "Uploading: " + toJson(email, deviceId));
-            JSONObject response = StaxVolleySingleton.uploadNow(mWeakContext.get(), Request.Method.POST, getUrl(), toJson(email, deviceId));
+            JSONObject stax_bounty_hunter = new JSONObject();
+            stax_bounty_hunter.put("email", email);
+            stax_bounty_hunter.put("device_id", Utils.getDeviceId(context.get()));
+            root.put("stax_bounty_hunter", stax_bounty_hunter);
+            Log.d(TAG, "uploading " + root);
+        } catch (JSONException e) { }
+        return root;
+    }
+
+    private Integer uploadBountyUser(String url, JSONObject json) {
+        try {
+            RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
+            Request request = new Request.Builder().url(url)
+                .addHeader("Authorization", "Token token=" + VolleySingleton.getInstance(context.get()).getApiKey())
+                .post(body)
+                .build();
+            Response response = client.newCall(request).execute();
             Log.v(TAG, response.toString());
-            return processResponse(response);
-        } catch (NullPointerException | JSONException je) {
-            AnalyticsSingleton.capture(mWeakContext.get(), je);
-            Log.d(TAG, "Failed to process response JSON", je);
-            return mWeakContext.get().getString(R.string.bounty_api_json_error);
-        } catch (TimeoutException | ExecutionException | InterruptedException e) {
-            StaxVolleySingleton.exceptionHandler(mWeakContext.get(), e);
-            return e.getMessage();
-        }
+            return response.code();
+        } catch (IOException e) { return 0; }
     }
 
-    private String processResponse(JSONObject response) {
-        Log.v(TAG, "parsing bounty user response: " + response);
-        if (response.has("created_or_updated")) {
-            Utils.saveBoolean(Constants.BOUNTY_EMAIL, true, mWeakContext.get());
-            return Constants.SUCCESS;
-        }
-        return mWeakContext.get().getString(R.string.bounty_api_other_error);
-    }
-
-    private JSONObject toJson(String email, String deviceId) throws JSONException {
-        String format = "{ \"stax_bounty_hunter\": { \"device_id\": " + deviceId + ", \"email\": " + email + "} }";
-        return new JSONObject(format);
+    @Override
+    protected void onPostExecute(Integer responseCode) {
+        super.onPostExecute(responseCode);
+        if (responseCode != 0)
+            responseListener.onComplete(responseCode);
     }
 }

@@ -1,66 +1,55 @@
 package com.hover.stax.bounties;
 
 import android.app.Application;
-import android.view.SurfaceControl;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.MutableLiveData;
 
-import com.hover.stax.R;
-import com.hover.stax.actions.Action;
+import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.transactions.StaxTransaction;
-import com.hover.stax.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
 
 public class BountyViewModel extends AndroidViewModel {
 	private static String TAG = "BountyViewModel";
 
 	private DatabaseRepo repo;
-	private MutableLiveData<String> emailLiveData;
-	private MutableLiveData<String> uploadBountyUserResultLiveData;
 
-	private LiveData<List<Action>> bountyActions;
+	private LiveData<List<HoverAction>> bountyActions;
 	private LiveData<List<StaxTransaction>> bountyTransactions;
-	private MediatorLiveData<Map<Action, List<StaxTransaction>>> bountyMap = new MediatorLiveData<>();
+	private MediatorLiveData<List<Bounty>> bountyList = new MediatorLiveData<>();
 
 	public BountyViewModel(@NonNull Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
-		emailLiveData = new MutableLiveData<>();
-		uploadBountyUserResultLiveData = new MutableLiveData<>();
 
 		bountyActions = repo.getBountyActions();
 		bountyTransactions = repo.getBountyTransactions();
 
-		bountyMap.addSource(bountyActions, this::makeMap);
-		bountyMap.addSource(bountyTransactions, this::makeMapIfActions);
+		bountyList.addSource(bountyActions, this::makeMap);
+		bountyList.addSource(bountyTransactions, this::makeMapIfActions);
 	}
 
-	public LiveData<List<Action>> getActions() { return bountyActions; }
+	public LiveData<List<HoverAction>> getActions() { return bountyActions; }
 	public LiveData<List<StaxTransaction>> getTransactions() { return bountyTransactions; }
-	public LiveData<Map<Action, List<StaxTransaction>>> getMap() { return bountyMap; }
+	public LiveData<List<Bounty>> getMap() { return bountyList; }
 
 	private void makeMapIfActions(List<StaxTransaction> transactions) {
 		if (bountyActions.getValue() != null && transactions != null)
 			makeMap(bountyActions.getValue(), transactions);
 	}
-	private void makeMap(List<Action> actions) {
+	private void makeMap(List<HoverAction> actions) {
 		if (actions != null)
 			makeMap(actions, bountyTransactions.getValue());
 	}
 
-	private void makeMap(List<Action> actions, List<StaxTransaction> transactions) {
-		Map<Action, List<StaxTransaction>> actionTransactionMap = new HashMap<>();
-		for (Action action : actions) {
+	private void makeMap(List<HoverAction> actions, List<StaxTransaction> transactions) {
+		List<Bounty> bounties = new ArrayList<>();
+		for (HoverAction action : actions) {
 			List<StaxTransaction> transactionsCopy = transactions == null ? new ArrayList<>() : transactions;
 			List<StaxTransaction> filterTransactions = new ArrayList<>();
 
@@ -70,27 +59,8 @@ public class BountyViewModel extends AndroidViewModel {
 					transactions.remove(transaction);
 				}
 			}
-			actionTransactionMap.put(action, filterTransactions);
+			bounties.add(new Bounty(action, filterTransactions));
 		}
-		bountyMap.setValue(actionTransactionMap);
-	}
-
-	public void setEmail(String email) {
-		emailLiveData.postValue(email);
-	}
-	public String getEmail() {
-		return emailLiveData.getValue();
-	}
-
-	public String emailError() {
-		if (Utils.validateEmail(emailLiveData.getValue())) return null;
-		else return getApplication().getString(R.string.email_error);
-	}
-
-	public void setUploadBountyUserResultLiveData(String result) {
-		uploadBountyUserResultLiveData.postValue(result);
-	}
-	public LiveData<String> getUploadBountyResult() {
-		return uploadBountyUserResultLiveData;
+		bountyList.setValue(bounties);
 	}
 }

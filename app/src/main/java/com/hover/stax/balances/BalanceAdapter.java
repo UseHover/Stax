@@ -90,7 +90,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 	}
 	private void setColorForEmptyAmount(boolean show, BalanceViewHolder holder, int secondary) {
 		if(show) {
-			Drawable drawable = ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.ic_remove_24);
+			Drawable drawable = ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.ic_remove);
 			if(drawable !=null) {
 				drawable = DrawableCompat.wrap(drawable);
 				DrawableCompat.setTint(drawable.mutate(), secondary);

@@ -1,5 +1,6 @@
 package com.hover.stax.navigation;
 
+import android.content.Intent;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -14,6 +15,7 @@ import com.amplitude.api.Amplitude;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
+import com.hover.stax.bounties.BountyActivity;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.permissions.PermissionUtils;
@@ -71,10 +73,14 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 	}
 
 	private void navigateThruHome(int destId) {
-		if (destId == R.id.navigation_balance) navigateToMainActivityAndRedirectToAFragment(this, Constants.NAV_BALANCE);
-		else if (destId == R.id.navigation_settings) navigateToMainActivityAndRedirectToAFragment(this, Constants.NAV_SETTINGS);
-		else if (destId == R.id.navigation_home) navigateToMainActivity(this);
-		else onBackPressed();
+		Intent intent = new Intent(this, MainActivity.class);
+		if (destId == R.id.navigation_balance) intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_BALANCE);
+		else if (destId == R.id.navigation_settings) intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_SETTINGS);
+		else if (destId != R.id.navigation_home) {
+			onBackPressed();
+			return;
+		}
+		startActivity(intent);
 	}
 
 	private int getNavConst(int destId) {
@@ -84,8 +90,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 		else return destId;
 	}
 
-	public void getStartedWithBountyButton(View view) { navigateToBountyActivity(view.getContext()); }
-
+	public void getStartedWithBountyButton(View view) { startActivity(new Intent(this, BountyActivity.class)); }
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

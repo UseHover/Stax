@@ -1,101 +1,76 @@
 package com.hover.stax.bounties;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.hover.stax.R;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.Constants;
-import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxTextInputLayout;
 
 import java.lang.ref.WeakReference;
 
-public class BountyEmailFragment extends Fragment implements NavigationInterface, View.OnClickListener {
-	private BountyViewModel bountyViewModel;
-	private View view;
+public class BountyEmailFragment extends Fragment implements NavigationInterface, View.OnClickListener,  BountyAsyncCaller.AsyncResponseListener {
 	private StaxTextInputLayout emailInput;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
+	}
 
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		view = inflater.inflate(R.layout.fragment_bounty_enter_email_layout, container, false);
-		promptEmailOrNavigateBountyList();
-		bountyViewModel = new ViewModelProvider(requireActivity()).get(BountyViewModel.class);
-		return view;
+		return inflater.inflate(R.layout.fragment_bounty_enter_email_layout, container, false);
 	}
 
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		initEmailInput();
-		initContinueButton();
-		uploadBountyUserObserver();
-	}
-
-	private void uploadBountyUserObserver() {
-		bountyViewModel.getUploadBountyResult().observe(getViewLifecycleOwner(), result-> {
-			if(result.equals(Constants.SUCCESS)) {
-				promptEmailOrNavigateBountyList();
-			}
-			else UIHelper.flashMessage(getContext(), result);
-		});
-	}
-	private void initEmailInput() {
 		emailInput = view.findViewById(R.id.emailInput);
-		emailInput.addTextChangedListener(emailWatcher);
+		emailInput.setText(Utils.getString(BountyActivity.EMAIL_KEY, getContext()));
+		view.findViewById(R.id.continueEmailBountyButton).setOnClickListener(this);
 	}
-
-	private void initContinueButton() {
-		AppCompatButton continueButton = view.findViewById(R.id.continueEmailBountyButton);
-		continueButton.setOnClickListener(this);
-	}
-
-	private boolean validates() {
-		String emailError = bountyViewModel.emailError();
-		emailInput.setState(emailError, emailError == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.ERROR);
-		return emailError == null;
-	}
-
-	private boolean isContinueButton(View v) {
-		return v.getId() == R.id.continueEmailBountyButton;
-	}
-
-
-	private void promptEmailOrNavigateBountyList() {
-		if (Utils.getBoolean(Constants.BOUNTY_EMAIL, getContext())) navigateToBountyListFragment(this);
-		else view.findViewById(R.id.bounty_email_layout_id).setVisibility(View.VISIBLE);
-	}
-
-	private TextWatcher emailWatcher = new TextWatcher() {
-		@Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-		@Override public void afterTextChanged(Editable editable) {}
-
-		@Override
-		public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-			bountyViewModel.setEmail(charSequence.toString());
-		}
-	};
 
 	@Override
 	public void onClick(View v) {
-		if (isContinueButton(v) && validates()) {
-			new BountyAsyncCaller(
-					new WeakReference<>(getContext()),
-					bountyViewModel)
-					.execute();
+		if (validates()) {
+			emailInput.setEnabled(false);
+			new BountyAsyncCaller(new WeakReference<>(getContext()), this).execute(emailInput.getText());
+			emailInput.setState(getString(R.string.bounty_uploading_email), AbstractStatefulInput.INFO);
+		} else
+			emailInput.setState(getString(R.string.bounty_email_error), AbstractStatefulInput.ERROR);
+	}
+
+	private boolean validates() {
+		if (emailInput.getText() == null) return false;
+		String email = emailInput.getText().replace(" ", "");
+		return email.matches("(?:[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)])");
+	}
+
+	@Override
+	public void onComplete(Integer responseCode) {
+		if (responseCode >= 200 && responseCode < 300)
+			saveAndContinue();
+		else {
+			emailInput.setEnabled(true);
+			emailInput.setState(getString(R.string.bounty_api_internet_error), AbstractStatefulInput.ERROR);
 		}
+	}
+
+	private void saveAndContinue() {
+		Utils.saveString(BountyActivity.EMAIL_KEY, emailInput.getText(), getContext());
+		NavHostFragment.findNavController(this).navigate(R.id.bountyListFragment);
 	}
 }

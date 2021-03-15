@@ -2,6 +2,7 @@ package com.hover.stax.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 
@@ -52,6 +53,8 @@ public class StaxTextInputLayout extends AbstractStatefulInput {
 		if (text != null && !text.isEmpty())
 			setState(null, SUCCESS);
 	}
+
+	public String getText() { return editText.getText().toString(); }
 
 	@Override
 	public void setOnFocusChangeListener(OnFocusChangeListener l) { editText.setOnFocusChangeListener(l); }

@@ -12,8 +12,8 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDropdownLayout;
 import com.squareup.picasso.Picasso;
@@ -44,9 +44,24 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 
 	public void setListener(HighlightListener hl) { highlightListener = hl; }
 
-	public void updateChannels(List<Channel> channels) {
-		if (channels == null || channels.size() == 0) return;
+	public void channelUpdate(List<Channel> channels) {
+		if (channels == null || channels.size() == 0) {
+			setState(getContext().getString(R.string.channels_error_nodata), ERROR);
+			return;
+		}
+		setState(null, NONE);
 		Log.e(TAG, "found some channels " + channels.size());
+		if (autoCompleteTextView.getAdapter() != null && channels.size() > autoCompleteTextView.getAdapter().getCount()) return;
+		updateChoices(channels);
+	}
+
+	private void setDropdownValue(Channel c) {
+		autoCompleteTextView.setText(c == null ? "" : c.toString(), false);
+		if (c != null)
+			Picasso.get().load(c.logoUrl).resize(55, 55).into(this);
+	}
+
+	private void updateChoices(List<Channel> channels) {
 		if (highlightedChannel == null) setDropdownValue(null);
 		ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(ChannelDropdownAdapter.sort(channels, showSelected), getContext());
 		autoCompleteTextView.setAdapter(channelDropdownAdapter);
@@ -56,12 +71,6 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 			if (c.defaultAccount && showSelected)
 				setDropdownValue(c);
 		}
-	}
-
-	private void setDropdownValue(Channel c) {
-		autoCompleteTextView.setText(c == null ? "" : c.toString(), false);
-		if (c != null)
-			Picasso.get().load(c.logoUrl).resize(55, 55).into(this);
 	}
 
 	private void onSelect(Channel c) {
@@ -90,19 +99,19 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 	public void setObservers(@NonNull ChannelDropdownViewModel viewModel, @NonNull LifecycleOwner lifecycleOwner) {
 		viewModel.getSims().observe(lifecycleOwner, sims -> Log.i(TAG, "Got sims: " + sims.size()));
 		viewModel.getSimHniList().observe(lifecycleOwner, simList -> Log.i(TAG, "Got new sim hni list: " + simList));
-		viewModel.getChannels().observe(lifecycleOwner, this::updateChannels);
-		viewModel.getSimChannels().observe(lifecycleOwner, this::updateChannels);
+		viewModel.getChannels().observe(lifecycleOwner, this::channelUpdate);
+		viewModel.getSimChannels().observe(lifecycleOwner, this::channelUpdate);
 		viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> Log.i(TAG, "Got new selected channels: " + channels.size()));
 		viewModel.getActiveChannel().observe(lifecycleOwner, channel -> { if (channel != null) setState(null, NONE); });
 		viewModel.getChannelActions().observe(lifecycleOwner, actions -> setState(actions, viewModel));
 	}
 
-	private void setState(List<Action> actions, ChannelDropdownViewModel viewModel) {
+	private void setState(List<HoverAction> actions, ChannelDropdownViewModel viewModel) {
 		Log.e(TAG, "setting channel state. Channel: " + viewModel.getActiveChannel().getValue() + ". Actions: " + actions.size());
 		if (viewModel.getActiveChannel().getValue() != null && (actions == null || actions.size() == 0))
-			setState(getContext().getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getContext(), viewModel.getType())), AbstractStatefulInput.ERROR);
-		else if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !viewModel.getType().equals(Action.BALANCE))
-			setState(getContext().getString(actions.get(0).transaction_type.equals(Action.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning), INFO);
+			setState(getContext().getString(R.string.no_actions_fielderror, HoverAction.getHumanFriendlyType(getContext(), viewModel.getType())), AbstractStatefulInput.ERROR);
+		else if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !viewModel.getType().equals(HoverAction.BALANCE))
+			setState(getContext().getString(actions.get(0).transaction_type.equals(HoverAction.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning), INFO);
 		else if (viewModel.getActiveChannel().getValue() != null && showSelected)
 			setState(null, AbstractStatefulInput.SUCCESS);
 	}

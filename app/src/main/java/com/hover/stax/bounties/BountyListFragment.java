@@ -12,9 +12,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.views.StaxDialog;
 
 public class BountyListFragment extends Fragment implements BountyListAdapter.SelectListener {
 	private static final String TAG = "BountyListFragment";
@@ -59,8 +60,15 @@ public class BountyListFragment extends Fragment implements BountyListAdapter.Se
 	}
 
 	@Override
-	public void runAction(Action a) {
-		if (getActivity() != null)
-			((BountyActivity) getActivity()).runAction(a);
+	public void bountyDetail(Bounty b) {
+		Log.e(TAG, "showing dialog " + b.action);
+		new StaxDialog(requireActivity())
+			.setDialogTitle(getString(R.string.bounty_claim_title, b.action.root_code, b.action.getHumanFriendlyType(getContext(), b.action.transaction_type), b.action.bounty_amount))
+			.setDialogMessage(getString(R.string.bounty_claim_explained, b.action.bounty_amount, b.getInstructions(getContext())))
+			.setPosButton(R.string.start_USSD_Flow, v -> {
+				if (getActivity() != null)
+					((BountyActivity) getActivity()).makeCall(b.action);
+			})
+			.showIt();
 	}
 }
