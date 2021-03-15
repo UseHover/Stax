@@ -11,6 +11,7 @@ public class Constants {
 	final public static int NAV_BACK = 608;
 	final public static int NAV_LINK_ACCOUNT= 606;
 	final public static int NAV_LANGUAGE_SELECTION = 607;
+	final public static int NAV_BOUNTY = 608;
 
 	final public static int BALANCE_MAX = 100;
 	final public static int ADD_SERVICE = 200;
