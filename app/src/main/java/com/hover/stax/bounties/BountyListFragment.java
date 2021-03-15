@@ -20,7 +20,7 @@ import com.hover.stax.views.StaxDialog;
 
 import java.util.List;
 
-public class BountyListFragment extends Fragment implements NavigationInterface, BountyArrayAdapter.SelectListener {
+public class BountyListFragment extends Fragment implements NavigationInterface, BountyListItem.SelectListener {
 	private static final String TAG = "BountyListFragment";
 	private BountyViewModel bountyViewModel;
 	private View view;
@@ -47,8 +47,8 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 	}
 
 	private void startObservers() {
-		bountyViewModel.getActions().observe(getViewLifecycleOwner(), actions -> Log.e(TAG, "actions update: " + actions.size()));
-		bountyViewModel.getTransactions().observe(getViewLifecycleOwner(), transactions -> Log.e(TAG, "transactions update: " + transactions.size()));
+		bountyViewModel.getActions().observe(getViewLifecycleOwner(), actions -> Log.v(TAG, "actions update: " + actions.size()));
+		bountyViewModel.getTransactions().observe(getViewLifecycleOwner(), transactions -> Log.v(TAG, "transactions update: " + transactions.size()));
 		bountyViewModel.getBounties().observe(getViewLifecycleOwner(), bounties -> {
 			if (bounties != null && bounties.size() > 0 && bountyViewModel.getChannels().getValue() != null && bountyViewModel.getChannels().getValue().size() > 0)
 				createList(bountyViewModel.getChannels().getValue(), bountyViewModel.getBounties().getValue());

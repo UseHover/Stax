@@ -3,7 +3,7 @@ package com.hover.stax.bounties;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,9 +19,9 @@ class BountyChannelsAdapter extends RecyclerView.Adapter<BountyChannelsAdapter.C
 
 	private List<Channel> channelList;
 	private List<Bounty> allBountiesList;
-	private BountyArrayAdapter.SelectListener selectListener;
+	private BountyListItem.SelectListener selectListener;
 
-	public BountyChannelsAdapter(List<Channel> channels, List<Bounty> bounties, BountyArrayAdapter.SelectListener listener) {
+	public BountyChannelsAdapter(List<Channel> channels, List<Bounty> bounties, BountyListItem.SelectListener listener) {
 		channelList = channels;
 		allBountiesList = bounties;
 		selectListener = listener;
@@ -39,7 +39,11 @@ class BountyChannelsAdapter extends RecyclerView.Adapter<BountyChannelsAdapter.C
 		Channel c = channelList.get(position);
 		holder.staxCardView.setHeader(c.getUssdName());
 		List<Bounty> channelBounties = filterBounties(c.id);
-		holder.bountyListView.setAdapter(new BountyArrayAdapter(holder.staxCardView.getContext(), channelBounties, selectListener));
+		for (Bounty b: channelBounties) {
+			BountyListItem bountyLi = new BountyListItem(holder.staxCardView.getContext(), null);
+			bountyLi.setBounty(b, selectListener);
+			holder.bountyListView.addView(bountyLi);
+		}
 	}
 
 	private List<Bounty> filterBounties(int channelId) {
@@ -58,7 +62,7 @@ class BountyChannelsAdapter extends RecyclerView.Adapter<BountyChannelsAdapter.C
 
 	static class CardedBountyListViewHolder extends RecyclerView.ViewHolder {
 		private StaxCardView staxCardView;
-		private ListView bountyListView;
+		private LinearLayout bountyListView;
 
 		public CardedBountyListViewHolder(@NonNull View itemView) {
 			super(itemView);

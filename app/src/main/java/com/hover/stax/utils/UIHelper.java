@@ -43,7 +43,7 @@ import com.squareup.picasso.Target;
 import org.jetbrains.annotations.NotNull;
 
 public class UIHelper {
-
+	private static final String TAG = "UIHelper";
 	private static final int INITIAL_ITEMS_FETCH = 30;
 
 	public static void flashMessage(Context context, @Nullable View view, String message) {
@@ -103,8 +103,9 @@ public class UIHelper {
 			View listItem = listAdapter.getView(i, null, listView);
 			listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
 			totalHeight += listItem.getMeasuredHeight();
+			Log.e(TAG, "item height " + listItem.getHeight());
 		}
-
+		
 		ViewGroup.LayoutParams params = listView.getLayoutParams();
 		params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
 		listView.setLayoutParams(params);
