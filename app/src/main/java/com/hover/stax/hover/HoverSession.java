@@ -15,6 +15,7 @@ import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.settings.KeyStoreExecutor;
+import com.hover.stax.utils.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +32,7 @@ final public class HoverSession {
 
 
 	private HoverSession(Builder b) {
-		Hover.setPermissionActivity("com.hover.stax.permissions.PermissionsActivity", b.activity);
+		Hover.setPermissionActivity(Constants.PERM_ACTIVITY, b.activity);
 		frag = b.fragment;
 		channel = b.channel;
 		requestCode = b.requestCode;

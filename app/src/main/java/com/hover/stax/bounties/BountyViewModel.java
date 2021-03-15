@@ -16,6 +16,7 @@ import com.hover.stax.transactions.StaxTransaction;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 public class BountyViewModel extends AndroidViewModel {
 	private static String TAG = "BountyViewModel";
@@ -63,14 +64,17 @@ public class BountyViewModel extends AndroidViewModel {
 
 	private void makeBounties(List<HoverAction> actions, List<StaxTransaction> transactions) {
 		List<Bounty> bounties = new ArrayList<>();
+		List<StaxTransaction> transactionsCopy = transactions == null ? new ArrayList<>() : new ArrayList<>(transactions);
+
 		for (HoverAction action : actions) {
-			List<StaxTransaction> transactionsCopy = transactions == null ? new ArrayList<>() : transactions;
 			List<StaxTransaction> filterTransactions = new ArrayList<>();
 
-			for (StaxTransaction transaction : transactionsCopy) {
-				if (transaction.action_id.equals(action.public_id)) {
-					filterTransactions.add(transaction);
-					transactions.remove(transaction);
+			ListIterator<StaxTransaction> iter = transactionsCopy.listIterator();
+			while(iter.hasNext()) {
+				StaxTransaction t = iter.next();
+				if (t.action_id.equals(action.public_id)) {
+					filterTransactions.add(t);
+					iter.remove();
 				}
 			}
 			bounties.add(new Bounty(action, filterTransactions));

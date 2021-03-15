@@ -119,9 +119,9 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	}
 
 	private void initHover() {
-		HoverRoomDatabase.getInstance(this);
 		Hover.initialize(this);
 		Hover.setBranding(getString(R.string.app_name), R.mipmap.stax, this);
+		Hover.setPermissionActivity(Constants.PERM_ACTIVITY, this);
 	}
 
 	private Boolean shouldSelfDestructWhenAppVersionExpires(Boolean value) {
