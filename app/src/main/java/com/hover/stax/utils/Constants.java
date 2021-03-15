@@ -11,6 +11,7 @@ public class Constants {
 	final public static int NAV_BACK = 608;
 	final public static int NAV_LINK_ACCOUNT= 606;
 	final public static int NAV_LANGUAGE_SELECTION = 607;
+	final public static int NAV_BOUNTY = 608;
 
 	final public static int BALANCE_MAX = 100;
 	final public static int ADD_SERVICE = 200;
@@ -20,6 +21,8 @@ public class Constants {
 	final public static int REQUEST_REQUEST = 301;
 	final public static int SMS = 303;
 
+	final public static int SPLASH_ICON_WIDTH = 177;
+	final public static int SPLASH_ICON_HEIGHT = 57;
 	final public static int BLUR_RADIUS = 16;
 	final public static int BLUR_SAMPLING = 1;
 

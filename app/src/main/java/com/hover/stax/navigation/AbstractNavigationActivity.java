@@ -84,7 +84,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 		else return destId;
 	}
 
-	public void getStartedWithBountyButton(View view) { navigateToBountyActivity(view.getContext()); }
+	public void getStartedWithBountyButton(View view) { checkPermissionsAndNavigate(Constants.NAV_BOUNTY); }
 
 
 	@Override

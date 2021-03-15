@@ -49,9 +49,14 @@ public interface NavigationInterface {
 				break;
 			case Constants.NAV_LANGUAGE_SELECTION: navigateToLanguageSelectionFragment(activity);
 				break;
+			case Constants.NAV_BOUNTY: navigateToBountyActivity(activity);
+			break;
 			default:
 				break;
 		}
+	}
+	default void navigateToBountyActivity(Activity activity) {
+		activity.startActivity(new Intent(activity, BountyActivity.class));
 	}
 	default void navigateToRequestFragment(Activity activity) {
 		activity.startActivityForResult(new Intent(activity, RequestActivity.class), Constants.REQUEST_REQUEST);
@@ -114,9 +119,6 @@ public interface NavigationInterface {
 		Bundle bundle = new Bundle();
 		bundle.putInt("id", id);
 		NavHostFragment.findNavController(fragment).navigate(R.id.requestDetailsFragment, bundle);
-	}
-	default void navigateToBountyActivity(Context c) {
-		c.startActivity(new Intent(c, BountyActivity.class));
 	}
 
 }
