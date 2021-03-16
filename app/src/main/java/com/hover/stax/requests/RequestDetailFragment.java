@@ -32,6 +32,7 @@ public class RequestDetailFragment extends Fragment implements RequestSenderInte
 	final public static String TAG = "RequestDetailFragment";
 
 	private RequestDetailViewModel viewModel;
+	private View view;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		viewModel = new ViewModelProvider(this).get(RequestDetailViewModel.class);
@@ -41,7 +42,8 @@ public class RequestDetailFragment extends Fragment implements RequestSenderInte
 		catch (JSONException ignored) { }
 
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_request_detail)), data);
-		return inflater.inflate(R.layout.fragment_request_detail, container, false);
+		view = inflater.inflate(R.layout.fragment_request_detail, container, false);
+		return view;
 	}
 
 	@Override
@@ -126,4 +128,9 @@ public class RequestDetailFragment extends Fragment implements RequestSenderInte
 		}
 	}
 
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		view = null;
+	}
 }

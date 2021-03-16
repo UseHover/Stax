@@ -20,17 +20,19 @@ import java.lang.ref.WeakReference;
 
 public class BountyEmailFragment extends Fragment implements NavigationInterface, View.OnClickListener,  BountyAsyncCaller.AsyncResponseListener {
 	private StaxTextInputLayout emailInput;
+	private View view;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setRetainInstance(true);
+		setRetainInstance(false);
 	}
 
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_bounty_email, container, false);
+		view =  inflater.inflate(R.layout.fragment_bounty_email, container, false);
+		return view;
 	}
 
 	@Override
@@ -70,5 +72,15 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
 	private void saveAndContinue() {
 		Utils.saveString(BountyActivity.EMAIL_KEY, emailInput.getText(), getContext());
 		NavHostFragment.findNavController(this).navigate(R.id.bountyListFragment);
+	}
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		view = null;
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
 	}
 }

@@ -39,6 +39,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 	private ContactInput contactInput;
 
 	private Stax2LineItem recipientValue;
+	private  View root;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
@@ -47,7 +48,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		abstractFormViewModel = new ViewModelProvider(requireActivity()).get(TransferViewModel.class);
 		transferViewModel = (TransferViewModel) abstractFormViewModel;
 
-		View root = inflater.inflate(R.layout.fragment_transfer, container, false);
+		root = inflater.inflate(R.layout.fragment_transfer, container, false);
 		init(root);
 		startObservers(root);
 		startListeners();
@@ -209,5 +210,11 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		transferViewModel.setEditing(r.amount == null || r.amount.isEmpty());
 		channelDropdown.setState(getString(R.string.channel_request_fieldinfo, String.valueOf(r.requester_institution_id)), AbstractStatefulInput.INFO);
 		Amplitude.getInstance().logEvent(getString(R.string.loaded_request_link));
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		root = null;
 	}
 }

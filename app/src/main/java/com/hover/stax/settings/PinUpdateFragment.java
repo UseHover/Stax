@@ -107,4 +107,10 @@ public class PinUpdateFragment extends Fragment implements Target {
 
 	@Override public void onBitmapFailed(Exception e, Drawable errorDrawable) {	}
 	@Override public void onPrepareLoad(Drawable placeHolderDrawable) {	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		view = null;
+	}
 }

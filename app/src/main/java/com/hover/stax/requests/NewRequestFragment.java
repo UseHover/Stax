@@ -44,6 +44,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 
 	private RecipientAdapter recipientAdapter;
 	private int recipientCount = 0;
+	private  View view;
 
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,7 +52,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 		abstractFormViewModel = new ViewModelProvider(requireActivity()).get(NewRequestViewModel.class);
 		requestViewModel = (NewRequestViewModel) abstractFormViewModel;
 
-		View view = inflater.inflate(R.layout.fragment_request, container, false);
+		view = inflater.inflate(R.layout.fragment_request, container, false);
 		init(view);
 		startObservers(view);
 		startListeners();
@@ -207,5 +208,11 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 		String recipientError = requestViewModel.requesteeErrors();
 		((ContactInput) recipientInputList.getChildAt(0)).setState(recipientError, recipientError == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.ERROR);
 		return channelError == null && requesterAcctNoError == null && recipientError == null;
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		view = null;
 	}
 }

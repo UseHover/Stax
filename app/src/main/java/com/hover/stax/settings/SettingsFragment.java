@@ -36,14 +36,14 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
 	final public static String LANG_CHANGE = "Settings";
 
 	private ArrayAdapter<Channel> accountAdapter;
-
+	private View root;
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_security)));
 		PinsViewModel securityViewModel = new ViewModelProvider(this).get(PinsViewModel.class);
 
-		View root = inflater.inflate(R.layout.fragment_settings, container, false);
+		root = inflater.inflate(R.layout.fragment_settings, container, false);
 		setUpAccounts(root, securityViewModel);
 		setUpChooseLang(root);
 		return root;
@@ -93,5 +93,11 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
 		spinner.setOnItemClickListener((adapterView, view, pos, id) -> {
 			if (pos != 0) securityViewModel.setDefaultAccount(channels.get(pos));
 		});
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		root = null;
 	}
 }
