@@ -116,7 +116,7 @@ public class UIHelper {
 		return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
 	}
 
-	public static void picassoLoad(String url, int size, Target target) {
+	public static void loadPicasso(String url, int size, Target target) {
 		Picasso.get()
 				.load(url)
 				.config(Bitmap.Config.RGB_565)

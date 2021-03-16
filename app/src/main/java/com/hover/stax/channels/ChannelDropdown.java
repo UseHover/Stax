@@ -62,7 +62,7 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 	private void setDropdownValue(Channel c) {
 		autoCompleteTextView.setText(c == null ? "" : c.toString(), false);
 		if (c != null)
-			UIHelper.picassoLoad(c.logoUrl, size55, this);
+			UIHelper.loadPicasso(c.logoUrl, size55, this);
 	}
 
 	private void updateChoices(List<Channel> channels) {

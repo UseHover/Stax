@@ -96,7 +96,7 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
 		private void setChannel(Channel channel) {
 			id.setText(Integer.toString(channel.id));
 			channelText.setText(channel.toString());
-			UIHelper.picassoLoad(channel.logoUrl, size55, this);
+			UIHelper.loadPicasso(channel.logoUrl, size55, this);
 		}
 
 		@Override

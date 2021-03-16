@@ -109,7 +109,7 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 	}
 	private void setDropDownValue(HoverAction a) {
 		dropdownView.setText(a.toString(), false);
-		UIHelper.picassoLoad(getContext().getString(R.string.root_url)+ a.to_institution_logo, size55, this);
+		UIHelper.loadPicasso(getContext().getString(R.string.root_url)+ a.to_institution_logo, size55, this);
 	}
 
 	public void selectAction(HoverAction a) {

@@ -69,7 +69,7 @@ public class ActionDropdownAdapter extends ArrayAdapter<HoverAction> {
 		private void setAction(HoverAction action, String baseUrl) {
 			id.setText(Integer.toString(action.id));
 			channelText.setText(action.toString());
-			UIHelper.picassoLoad(baseUrl+action.to_institution_logo, size55, this);
+			UIHelper.loadPicasso(baseUrl+action.to_institution_logo, size55, this);
 		}
 
 		@Override
