@@ -21,15 +21,19 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content">
 
-			<androidx.appcompat.widget.AppCompatButton
+			<com.hover.stax.views.StaxButton
 			    android:id="@+id/continueLanguageButton"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
-				android:text="@string/btn_continue"
-				android:layout_alignParentEnd="true"
-				android:layout_marginTop="@dimen/margin_21"
-				style="@style/StaxButton"
-				android:fontFamily="font-medium" />
+			    android:layout_alignParentEnd="true"
+			    android:layout_marginTop="@dimen/margin_21"
+			    android:layout_marginBottom="@dimen/margin_5"
+			    android:layout_marginHorizontal="@dimen/margin_13"
+			    app:button_text="@string/btn_continue"
+			    app:cardElevation="1dp"
+			    app:cardCornerRadius="@dimen/margin_5"
+			    app:button_text_color="@color/offWhite"
+			    app:button_background="@drawable/button_bg" />
 		</RelativeLayout>
 	</com.hover.stax.views.StaxCardView>
 </LinearLayout>

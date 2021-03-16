@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    android:layout_width="wrap_content"
+<androidx.cardview.widget.CardView android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:minWidth="100dp"
     android:layout_height="55dp"
     android:layout_gravity="end"
-    app:cardElevation="5dp"
     android:id="@+id/button_cardview"
+    app:cardElevation="2dp"
     app:cardCornerRadius="@dimen/margin_5"
     android:background="@drawable/button_bg_colored"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<ProgressBar
@@ -17,6 +16,7 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:indeterminate="false"
+	    android:visibility="gone"
 	    android:progressDrawable="@drawable/progress_button_style" />
 
 	<TextView
@@ -29,6 +29,7 @@
 	    android:layout_gravity="center"
 	    android:fontFamily="font-medium"
 	    android:text="@string/btn_continue"
+	    android:textAllCaps="false"
 	    android:textColor="@color/colorPrimaryDark"
 	    android:textSize="@dimen/text_16"
 	    />

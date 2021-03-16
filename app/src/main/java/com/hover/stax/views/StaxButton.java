@@ -31,7 +31,6 @@ public class StaxButton extends CardView {
 		LayoutInflater.from(context).inflate(R.layout.stax_button_layout, this);
 		initViews();
 		fillFromAttr();
-
 	}
 	private void getAttrs(Context context, AttributeSet attrs) {
 		TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.StaxButton, 0, 0);
@@ -58,9 +57,17 @@ public class StaxButton extends CardView {
 		cardView.setCardElevation(buttonElevation);
 		if(button_backgroundRes !=0) cardView.setBackgroundResource(button_backgroundRes);
 	}
+	public void setText(String string) {
+		textView.setText(string);
+	}
+
+	public void setTextColor(int colorRes) {
+		textView.setTextColor(colorRes);
+	}
 
 	public void startAnimation(int duration) {
 		if(objectAnimator == null) {
+			progressBar.setVisibility(VISIBLE);
 			objectAnimator = ObjectAnimator.ofInt(progressBar, "progress", progressBar.getProgress(), 100).setDuration(duration);
 			objectAnimator.addUpdateListener(valueAnimator -> {
 				int progress = (int) valueAnimator.getAnimatedValue();

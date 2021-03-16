@@ -63,7 +63,7 @@ public class StaxDialog extends AlertDialog {
 	}
 
 	public StaxDialog setPosButton(int label, View.OnClickListener listener) {
-		((AppCompatButton) view.findViewById(R.id.pos_btn)).setText(context.getString(label));
+		((StaxButton) view.findViewById(R.id.pos_btn)).setText(context.getString(label));
 		customPosListener = listener;
 		view.findViewById(R.id.pos_btn).setOnClickListener(posListener);
 		return this;
@@ -71,7 +71,7 @@ public class StaxDialog extends AlertDialog {
 
 	public StaxDialog setNegButton(int label, View.OnClickListener listener) {
 		view.findViewById(R.id.neg_btn).setVisibility(View.VISIBLE);
-		((AppCompatButton) view.findViewById(R.id.neg_btn)).setText(context.getString(label));
+		((StaxButton) view.findViewById(R.id.neg_btn)).setText(context.getString(label));
 		customNegListener = listener;
 		view.findViewById(R.id.neg_btn).setOnClickListener(negListener);
 		return this;
@@ -84,7 +84,7 @@ public class StaxDialog extends AlertDialog {
 	}
 
 	public StaxDialog highlightPos() {
-		((Button) view.findViewById(R.id.pos_btn)).setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+		((StaxButton) view.findViewById(R.id.pos_btn)).setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
 		view.findViewById(R.id.pos_btn).getBackground()
 			.setColorFilter(context.getResources().getColor(R.color.brightBlue), PorterDuff.Mode.SRC);
 		return this;

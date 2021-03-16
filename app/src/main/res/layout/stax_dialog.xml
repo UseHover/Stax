@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:fillViewport="false">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fillViewport="false">
 
 	<LinearLayout
 		android:layout_width="match_parent"
@@ -44,14 +45,19 @@
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/margin_55">
 
-			<androidx.appcompat.widget.AppCompatButton
+			<com.hover.stax.views.StaxButton
 				android:id="@+id/neg_btn"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginEnd="@dimen/margin_21"
 				android:text="@string/btn_cancel"
 				android:layout_toStartOf="@id/divider"
-				style="@style/StaxButton"
+			    app:button_text="@string/btn_cancel"
+			    app:button_text_color="@color/offWhite"
+			    android:layout_marginHorizontal="@dimen/margin_13"
+			    app:cardElevation="1dp"
+			    app:cardCornerRadius="@dimen/margin_5"
+			    app:button_background="@drawable/button_bg"
 				android:visibility="gone"/>
 
 			<View android:id="@+id/divider"
@@ -60,13 +66,16 @@
 				android:background="@color/transparent"
 				android:layout_toStartOf="@+id/pos_btn"/>
 
-			<androidx.appcompat.widget.AppCompatButton
+			<com.hover.stax.views.StaxButton
 				android:id="@+id/pos_btn"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@string/btn_ok"
 				android:layout_alignParentEnd="true"
-				style="@style/StaxButton" />
+			    app:button_text="@string/btn_ok"
+			    app:cardElevation="4dp"
+			    app:cardCornerRadius="@dimen/margin_5"
+				 />
 		</RelativeLayout>
 
 	</LinearLayout>
