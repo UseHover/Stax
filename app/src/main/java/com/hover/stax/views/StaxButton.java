@@ -76,7 +76,6 @@ public class StaxButton extends CardView {
 				else textView.setTextColor(getResources().getColor(R.color.offWhite));
 			});
 		}
-
 		objectAnimator.start();
 	}
 

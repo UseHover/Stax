@@ -15,10 +15,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.hover.stax.R;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.Constants;
-import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxButton;
+import com.hover.stax.views.StaxDialog;
 import com.hover.stax.views.StaxTextInputLayout;
 
 import java.lang.ref.WeakReference;
@@ -50,13 +50,19 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
 
 	private void uploadBountyUserObserver() {
 		bountyViewModel.getUploadBountyResult().observe(getViewLifecycleOwner(), result-> {
-			if(result.equals(Constants.SUCCESS)) {
+			if(!result.equals(Constants.SUCCESS)) {
+				emailInput.setState("", AbstractStatefulInput.SUCCESS);
 				continueButton.endAnimation();
 				promptEmailOrNavigateBountyList();
 			}
-			else UIHelper.flashMessage(requireContext(), result);
+			else {
+				emailInput.setFocusable(true);
+				emailInput.setState("", AbstractStatefulInput.NONE);
+				showErrorDialog();
+			}
 		});
 	}
+
 	private void initEmailInput() {
 		emailInput = view.findViewById(R.id.emailInput);
 		emailInput.addTextChangedListener(emailWatcher);
@@ -97,9 +103,23 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
 		}
 	};
 
+	private void showErrorDialog() {
+		new StaxDialog(requireActivity())
+				.setDialogTitle(R.string.no_internet_title)
+				.setDialogTitleDrawable(R.drawable.ic_warning)
+				.setDialogMessage(R.string.no_internet_desc)
+				.setNegButton(R.string.btn_cancel, null)
+				.setPosButton(R.string.retry, v -> {
+					onClick(view.findViewById(R.id.continueEmailBountyButton));
+				})
+				.showIt();
+	}
+
 	@Override
 	public void onClick(View v) {
 		if (isContinueButton(v) && validates()) {
+			emailInput.setFocusable(false);
+			emailInput.setState("", AbstractStatefulInput.DISABLED);
 			continueButton.startAnimation(COUNT_FIVE_SECS);
 			new BountyAsyncCaller(
 					new WeakReference<>(getContext()),

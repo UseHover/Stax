@@ -51,6 +51,12 @@ public class StaxDialog extends AlertDialog {
 		return this;
 	}
 
+	public StaxDialog setDialogTitleDrawable(int resId) {
+		view.findViewById(R.id.header).setVisibility(View.VISIBLE);
+		((TextView) view.findViewById(R.id.title)).setCompoundDrawablesWithIntrinsicBounds(resId, 0, 0, 0);
+		return this;
+	}
+
 	public StaxDialog setDialogMessage(int message) {
 		setDialogMessage(context.getString(message));
 		return this;

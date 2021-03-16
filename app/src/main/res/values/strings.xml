@@ -325,4 +325,9 @@
 	<string name="bounty_api_json_error">Failed to process response JSON</string>
 	<string name="bounty_api_internet_error">Please turn on your internet connection</string>
 	<string name="bounty_api_other_error">Something went wrong, please try again. If this persist, kindly contact Stax</string>
+
+	<!-- INTERNET CONNECTION -->
+	<string name="no_internet_title">NO CONNECTION</string>
+	<string name="no_internet_desc">You need an internet connection to use this feature of Stax. Please connect and try again.</string>
+	<string name="retry">Retry</string>
 </resources>

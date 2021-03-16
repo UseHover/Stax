@@ -18,7 +18,7 @@ import java.io.IOException;
 
 public abstract class AbstractStatefulInput extends FrameLayout {
 	private final static String TAG = "AbstractColoredInput";
-	public final static int NONE = 0, INFO = 1, WARN = 2, ERROR = 3, SUCCESS = 4;
+	public final static int NONE = 0, INFO = 1, WARN = 2, ERROR = 3, SUCCESS = 4, DISABLED = 5;
 
 	private int currentState;
 	private TextInputLayout inputLayout;
@@ -44,14 +44,14 @@ public abstract class AbstractStatefulInput extends FrameLayout {
 			case WARN: setColorAndIcon(R.color.yellow_state_color, R.drawable.ic_warning); break;
 			case SUCCESS: setColorAndIcon(R.color.green_state_color, R.drawable.ic_success); break;
 			case ERROR: setColorAndIcon(R.color.red_state_color, R.drawable.ic_error); break;
-			case NONE:
+			case DISABLED: setColorAndIcon(R.color.grey_state_color, 1); break;
 			default: setColorAndIcon(R.color.offwhite_state_color, 0); break;
 		}
 	}
 
 	private void setColorAndIcon(int color, int drawable) {
 		if (inputLayout != null) {
-			inputLayout.setEndIconDrawable(drawable);
+			if(drawable != 0) inputLayout.setEndIconDrawable(drawable);
 			setColor(color);
 		}
 	}
