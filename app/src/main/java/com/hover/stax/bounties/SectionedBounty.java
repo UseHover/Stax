@@ -20,19 +20,20 @@ class SectionedBounty {
 	//FIXME: THIS SEARCH SHOULD NOT OCCUR IN THE UI, INSTEAD THE END OBJECT THAT BOUNTY_VIEW_MODEL SENDS.
 	public static List<SectionedBounty> get(List<Channel> channels, List<Bounty> bounties) {
 		List<SectionedBounty> sectionedBounties = new ArrayList<>();
-		Map<Integer, List<Bounty>> channelMap = new HashMap<>();
-		Map<Integer, String> channelHeaderMap = new HashMap<>();
+		Map<Integer, List<Bounty>> channelIdAndBountyListMap = new HashMap<>();
+		Map<Integer, String> channelIdAndTitleMap = new HashMap<>();
+
 		for(Channel channel: channels) {
-			channelMap.put(channel.id, new ArrayList<>());
-			channelHeaderMap.put(channel.id, channel.getUssdName());
+			channelIdAndBountyListMap.put(channel.id, new ArrayList<>());
+			channelIdAndTitleMap.put(channel.id, channel.getUssdName());
 		}
 		for(Bounty bounty: bounties) {
-			if (channelMap.containsKey(bounty.action.channel_id)) {
-				Objects.requireNonNull(channelMap.get(bounty.action.channel_id)).add(bounty);
+			if (channelIdAndBountyListMap.containsKey(bounty.action.channel_id)) {
+				Objects.requireNonNull(channelIdAndBountyListMap.get(bounty.action.channel_id)).add(bounty);
 			}
 		}
-		for (Map.Entry<Integer, List<Bounty>> entry : channelMap.entrySet()) {
-			String header = channelHeaderMap.get(entry.getKey());
+		for (Map.Entry<Integer, List<Bounty>> entry : channelIdAndBountyListMap.entrySet()) {
+			String header = channelIdAndTitleMap.get(entry.getKey());
 			sectionedBounties.add(new SectionedBounty(header, entry.getValue()));
 		}
 		return sectionedBounties;
