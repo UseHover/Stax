@@ -44,7 +44,7 @@ public abstract class AbstractStatefulInput extends FrameLayout {
 			case WARN: setColorAndIcon(R.color.yellow_state_color, R.drawable.ic_warning); break;
 			case SUCCESS: setColorAndIcon(R.color.green_state_color, R.drawable.ic_success); break;
 			case ERROR: setColorAndIcon(R.color.red_state_color, R.drawable.ic_error); break;
-			case DISABLED: setColorAndIcon(R.color.grey_state_color, 1); break;
+			case DISABLED: setColorAndIcon(R.color.grey_state_color, 0); break;
 			default: setColorAndIcon(R.color.offwhite_state_color, 0); break;
 		}
 	}
