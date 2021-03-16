@@ -17,13 +17,11 @@ import java.util.List;
 
 class BountyChannelsAdapter extends RecyclerView.Adapter<BountyChannelsAdapter.CardedBountyListViewHolder> {
 
-	private List<Channel> channelList;
-	private List<Bounty> allBountiesList;
+	private List<SectionedBounty> sectionedBounties;
 	private BountyListItem.SelectListener selectListener;
 
-	public BountyChannelsAdapter(List<Channel> channels, List<Bounty> bounties, BountyListItem.SelectListener listener) {
-		channelList = channels;
-		allBountiesList = bounties;
+	public BountyChannelsAdapter(List<SectionedBounty> sectionedBounties, BountyListItem.SelectListener listener) {
+		this.sectionedBounties = sectionedBounties;
 		selectListener = listener;
 	}
 
@@ -36,28 +34,18 @@ class BountyChannelsAdapter extends RecyclerView.Adapter<BountyChannelsAdapter.C
 
 	@Override
 	public void onBindViewHolder(@NonNull CardedBountyListViewHolder holder, int position) {
-		Channel c = channelList.get(position);
-		holder.staxCardView.setTitle(c.getUssdName());
-		List<Bounty> channelBounties = filterBounties(c.id);
-		for (Bounty b: channelBounties) {
+		SectionedBounty sectionedBounty = sectionedBounties.get(position);
+		holder.staxCardView.setTitle(sectionedBounty.header);
+		for (Bounty b: sectionedBounty.channelBounties) {
 			BountyListItem bountyLi = new BountyListItem(holder.staxCardView.getContext(), null);
 			bountyLi.setBounty(b, selectListener);
 			holder.bountyListView.addView(bountyLi);
 		}
 	}
 
-	private List<Bounty> filterBounties(int channelId) {
-		List<Bounty> matches = new ArrayList<>();
-		for (Bounty b: allBountiesList) {
-			if (b.action.channel_id == channelId)
-				matches.add(b);
-		}
-		return matches;
-	}
-
 	@Override
 	public int getItemCount() {
-		return channelList == null ? 0 : channelList.size();
+		return sectionedBounties == null ? 0 : sectionedBounties.size();
 	}
 
 	static class CardedBountyListViewHolder extends RecyclerView.ViewHolder {

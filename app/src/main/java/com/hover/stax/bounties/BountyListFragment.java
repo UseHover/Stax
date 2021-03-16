@@ -18,7 +18,11 @@ import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.StaxDialog;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class BountyListFragment extends Fragment implements NavigationInterface, BountyListItem.SelectListener {
 	private static final String TAG = "BountyListFragment";
@@ -61,7 +65,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 	}
 
 	private void createList(List<Channel> channels, List<Bounty> bounties) {
-		BountyChannelsAdapter adapter = new BountyChannelsAdapter(channels, bounties, this);
+		BountyChannelsAdapter adapter = new BountyChannelsAdapter(SectionedBounty.get(channels, bounties), this);
 		channelRecyclerView.setAdapter(adapter);
 	}
 

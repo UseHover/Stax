@@ -10,14 +10,14 @@ import java.util.List;
 
 class Bounty {
 	HoverAction action;
-	List<StaxTransaction> transactions;
+	String lastTransactionUUID;
+	int transactionCount;
 
-	public Bounty(HoverAction a, List<StaxTransaction> ts) {
-		action = a;
-		transactions = ts;
+	public Bounty(HoverAction action, String lastTransactionUUID, int transactionCount) {
+		this.action = action;
+		this.lastTransactionUUID = lastTransactionUUID;
+		this.transactionCount = transactionCount;
 	}
-
-	public int transactionCount() { return transactions.size(); }
 
 	String generateDescription(Context c) {
 		switch (action.transaction_type) {

@@ -15,8 +15,11 @@ import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.transactions.StaxTransaction;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
+import java.util.Objects;
 
 public class BountyViewModel extends AndroidViewModel {
 	private static String TAG = "BountyViewModel";
@@ -77,7 +80,8 @@ public class BountyViewModel extends AndroidViewModel {
 					iter.remove();
 				}
 			}
-			bounties.add(new Bounty(action, filterTransactions));
+			String mostRecentTransactionUUID = filterTransactions.size() > 0 ? filterTransactions.get(filterTransactions.size()-1).uuid : null;
+			bounties.add(new Bounty(action, mostRecentTransactionUUID, filterTransactions.size()));
 		}
 		bountyList.setValue(bounties);
 	}
