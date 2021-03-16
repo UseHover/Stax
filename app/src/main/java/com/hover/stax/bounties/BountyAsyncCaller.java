@@ -6,8 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.hover.sdk.utils.Utils;
-import com.hover.sdk.utils.VolleySingleton;
+import com.hover.sdk.api.Hover;
 import com.hover.stax.R;
 
 import org.json.JSONException;
@@ -52,7 +51,7 @@ class BountyAsyncCaller extends AsyncTask<String, Void, Integer> {
         try {
             JSONObject stax_bounty_hunter = new JSONObject();
             stax_bounty_hunter.put("email", email);
-            stax_bounty_hunter.put("device_id", Utils.getDeviceId(context.get()));
+            stax_bounty_hunter.put("device_id", Hover.getDeviceId(context.get()));
             root.put("stax_bounty_hunter", stax_bounty_hunter);
             Log.d(TAG, "uploading " + root);
         } catch (JSONException e) { }
@@ -63,7 +62,7 @@ class BountyAsyncCaller extends AsyncTask<String, Void, Integer> {
         try {
             RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
             Request request = new Request.Builder().url(url)
-                .addHeader("Authorization", "Token token=" + VolleySingleton.getInstance(context.get()).getApiKey())
+                .addHeader("Authorization", "Token token=" + Hover.getApiKey(context.get()))
                 .post(body)
                 .build();
             Response response = client.newCall(request).execute();
