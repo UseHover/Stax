@@ -48,7 +48,7 @@ public class PinUpdateFragment extends Fragment implements Target {
 		view.findViewById(R.id.editBtn).setOnClickListener(v -> showChoiceCard(false));
 		view.findViewById(R.id.cancelBtn).setOnClickListener(v -> showChoiceCard(true));
 
-		return inflater.inflate(R.layout.fragment_pin_update, container, false);
+		return view;
 	}
 
 	private void initView(Channel c) {
