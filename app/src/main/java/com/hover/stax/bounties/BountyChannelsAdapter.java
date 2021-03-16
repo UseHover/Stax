@@ -37,7 +37,7 @@ class BountyChannelsAdapter extends RecyclerView.Adapter<BountyChannelsAdapter.C
 	@Override
 	public void onBindViewHolder(@NonNull CardedBountyListViewHolder holder, int position) {
 		Channel c = channelList.get(position);
-		holder.staxCardView.setHeader(c.getUssdName());
+		holder.staxCardView.setTitle(c.getUssdName());
 		List<Bounty> channelBounties = filterBounties(c.id);
 		for (Bounty b: channelBounties) {
 			BountyListItem bountyLi = new BountyListItem(holder.staxCardView.getContext(), null);

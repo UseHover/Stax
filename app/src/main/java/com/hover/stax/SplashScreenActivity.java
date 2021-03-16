@@ -28,7 +28,6 @@ import androidx.work.WorkManager;
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
-import com.hover.sdk.database.HoverRoomDatabase;
 import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.destruct.SelfDestructActivity;
 import com.hover.stax.utils.Constants;
@@ -55,8 +54,10 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	}
 
 	private void startSplashForegroundSequence() {
-		initSplashAnimation();
-		authenticateBiometricOrNavigateScreenAfter110sec();
+		setContentView(R.layout.splash_screen_layout);
+		blurBackground();
+		fadeInLogo();
+		continueOn();
 	}
 
 	private void startBackgroundProcesses() {
@@ -64,12 +65,6 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 		initHover();
 		createNotificationChannel();
 		startWorkers();
-	}
-
-	private void initSplashAnimation() {
-		setContentView(R.layout.splash_screen_layout);
-		blurBackground();
-		fadeInLogo();
 	}
 
 	private void blurBackground() {
@@ -104,10 +99,10 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 		assert dr != null;
 		Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
 		Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, SPLASH_ICON_WIDTH, SPLASH_ICON_HEIGHT, true));
-		tv.setCompoundDrawablesWithIntrinsicBounds(null,d,null,null);
+		tv.setCompoundDrawablesWithIntrinsicBounds(null, d,null,null);
 	}
 
-	private void authenticateBiometricOrNavigateScreenAfter110sec() {
+	private void continueOn() {
 		new Handler().postDelayed(() -> {
 			if (Utils.getSharedPrefs(this).getInt(AUTH_CHECK, 0) == 1) new BiometricChecker(this, this).startAuthentication(null);
 			else navigateMainActivityOrRequestActivity(getIntent());

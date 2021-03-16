@@ -17,6 +17,8 @@ import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.bounties.BountyActivity;
 import com.hover.stax.home.MainActivity;
+import com.hover.stax.requests.RequestActivity;
+import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.permissions.PermissionUtils;
 import com.hover.stax.settings.SettingsFragment;
@@ -39,9 +41,6 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 		AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
 		NavigationUI.setupWithNavController(nav, navController, appBarConfiguration);
 
-		// Show back button if not in MainActivity
-		nav.getMenu().getItem(0).setVisible(!(this instanceof MainActivity));
-
 		nav.setOnMenuItemClickListener(item -> {
 			if (this instanceof MainActivity)
 				checkPermissionsAndNavigate(getNavConst(item.getItemId()));
@@ -56,6 +55,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 	}
 
 	private void setActiveNav(int destinationId, BottomAppBar nav) {
+		nav.getMenu().getItem(0).setVisible(destinationId == R.id.bountyEmailFragment || destinationId == R.id.navigation_transfer || destinationId == R.id.navigation_request);
 		UIHelper.changeDrawableColor(nav.findViewById(R.id.navigation_home), destinationId == R.id.navigation_home ? R.color.brightBlue : R.color.offWhite, this);
 		UIHelper.changeDrawableColor(nav.findViewById(R.id.navigation_balance), destinationId == R.id.navigation_balance ? R.color.brightBlue : R.color.offWhite, this);
 		UIHelper.changeDrawableColor(nav.findViewById(R.id.navigation_settings), destinationId == R.id.navigation_settings ? R.color.brightBlue : R.color.offWhite, this);

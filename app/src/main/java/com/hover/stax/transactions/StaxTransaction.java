@@ -133,6 +133,9 @@ public class StaxTransaction {
 	}
 
 	private String generateDescription(HoverAction action, StaxContact contact, Context c) {
+		if (isRecorded())
+			return c.getString(R.string.descrip_recorded, action.from_institution_name);
+
 		String recipientStr = contact != null ? contact.shortName() : counterparty;
 		switch (transaction_type) {
 			case HoverAction.AIRTIME:
