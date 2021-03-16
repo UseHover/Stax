@@ -20,6 +20,7 @@ import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDropdownLayout;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -107,6 +108,8 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 		dropdownView.setText(a.toString(), false);
 		Picasso.get()
 				.load(getContext().getString(R.string.root_url)+ a.to_institution_logo)
+				.config(Bitmap.Config.RGB_565)
+				.networkPolicy(NetworkPolicy.OFFLINE)
 				.resize(55,55).into(this);
 	}
 

@@ -23,25 +23,23 @@ import java.util.List;
 public class BountyListFragment extends Fragment implements NavigationInterface, BountyListItem.SelectListener {
 	private static final String TAG = "BountyListFragment";
 	private BountyViewModel bountyViewModel;
-	private View view;
 	private RecyclerView channelRecyclerView;
 
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		view = inflater.inflate(R.layout.fragment_bounty_list, container, false);
 		bountyViewModel = new ViewModelProvider(this).get(BountyViewModel.class);
-		return view;
+		return inflater.inflate(R.layout.fragment_bounty_list, container, false);
 	}
 
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		initRecyclerView();
+		initRecyclerView(view);
 		startObservers();
 	}
 
-	private void initRecyclerView() {
+	private void initRecyclerView(View view) {
 		channelRecyclerView = view.findViewById(R.id.bountiesRecyclerView);
 		channelRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 	}

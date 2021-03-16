@@ -66,7 +66,7 @@ public class ActionDropdownAdapter extends ArrayAdapter<HoverAction> {
 		private void setAction(HoverAction action, String baseUrl) {
 			id.setText(Integer.toString(action.id));
 			channelText.setText(action.toString());
-			Picasso.get().load(baseUrl+action.to_institution_logo).networkPolicy(NetworkPolicy.OFFLINE).into(this);
+			Picasso.get().load(baseUrl+action.to_institution_logo).config(Bitmap.Config.RGB_565).networkPolicy(NetworkPolicy.OFFLINE).into(this);
 		}
 
 		@Override
