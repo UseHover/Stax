@@ -7,6 +7,13 @@
 		<attr name="staxCardColor" format="color"/>
 	</declare-styleable>
 
+	<declare-styleable name="StaxButton">
+		<attr name="button_elevation" format="integer"/>
+		<attr name="button_background" format="reference"/>
+		<attr name="button_text" format="string"/>
+		<attr name="button_text_color" format="color"/>
+	</declare-styleable>
+
 	<declare-styleable name="ChannelDropdown">
 		<attr name="show_selected" format="boolean" />
 	</declare-styleable>

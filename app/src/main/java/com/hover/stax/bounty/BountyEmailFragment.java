@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -19,14 +18,18 @@ import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.AbstractStatefulInput;
+import com.hover.stax.views.StaxButton;
 import com.hover.stax.views.StaxTextInputLayout;
 
 import java.lang.ref.WeakReference;
+
+import static com.hover.stax.utils.Constants.COUNT_FIVE_SECS;
 
 public class BountyEmailFragment extends Fragment implements NavigationInterface, View.OnClickListener {
 	private BountyViewModel bountyViewModel;
 	private View view;
 	private StaxTextInputLayout emailInput;
+	private StaxButton continueButton;
 
 	@Nullable
 	@Override
@@ -48,6 +51,7 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
 	private void uploadBountyUserObserver() {
 		bountyViewModel.getUploadBountyResult().observe(getViewLifecycleOwner(), result-> {
 			if(result.equals(Constants.SUCCESS)) {
+				continueButton.endAnimation();
 				promptEmailOrNavigateBountyList();
 			}
 			else UIHelper.flashMessage(requireContext(), result);
@@ -59,7 +63,7 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
 	}
 
 	private void initContinueButton() {
-		AppCompatButton continueButton = view.findViewById(R.id.continueEmailBountyButton);
+		continueButton = view.findViewById(R.id.continueEmailBountyButton);
 		continueButton.setOnClickListener(this);
 	}
 
@@ -96,6 +100,7 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
 	@Override
 	public void onClick(View v) {
 		if (isContinueButton(v) && validates()) {
+			continueButton.startAnimation(COUNT_FIVE_SECS);
 			new BountyAsyncCaller(
 					new WeakReference<>(getContext()),
 					bountyViewModel)

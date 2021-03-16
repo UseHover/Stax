@@ -43,14 +43,14 @@
 			    android:layout_marginTop="@dimen/margin_13"
 			    android:inputType="text" />
 
-			<androidx.appcompat.widget.AppCompatButton
+			<com.hover.stax.views.StaxButton
 			    android:id="@+id/continueEmailBountyButton"
-			    style="@style/StaxButtonColored"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
 			    android:layout_gravity="end"
-			    android:layout_marginTop="@dimen/margin_13"
-			    android:text="@string/btn_continue" />
+			    android:layout_margin="@dimen/margin_13"
+			    app:button_text="@string/btn_continue"
+			    />
 		</LinearLayout>
 	</com.hover.stax.views.StaxCardView>
 </androidx.core.widget.NestedScrollView>

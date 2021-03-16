@@ -45,4 +45,6 @@ public class Constants {
 	final public static String SUCCESS = "success";
 	final public static String NO_INTERNET = "no internet";
 
+	final public static int COUNT_FIVE_SECS = 5000;
+
 }
