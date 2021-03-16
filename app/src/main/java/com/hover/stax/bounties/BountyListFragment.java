@@ -24,14 +24,12 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 	private static final String TAG = "BountyListFragment";
 	private BountyViewModel bountyViewModel;
 	private RecyclerView channelRecyclerView;
-	private View view;
 
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		bountyViewModel = new ViewModelProvider(this).get(BountyViewModel.class);
-		view =  inflater.inflate(R.layout.fragment_bounty_list, container, false);
-		return view;
+		return inflater.inflate(R.layout.fragment_bounty_list, container, false);
 	}
 
 	@Override
@@ -81,16 +79,5 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 					((BountyActivity) getActivity()).makeCall(b.action);
 			})
 			.showIt();
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		view = null;
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
 	}
 }

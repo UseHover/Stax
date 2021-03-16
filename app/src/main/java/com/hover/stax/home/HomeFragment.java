@@ -14,11 +14,9 @@ import com.hover.stax.R;
 import com.hover.stax.utils.Constants;
 
 public class HomeFragment extends Fragment {
-	private View view;
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_home)));
-		view = inflater.inflate(R.layout.fragment_main, container, false);
-		return view;
+		return inflater.inflate(R.layout.fragment_main, container, false);
 	}
 
 	@Override
@@ -32,11 +30,5 @@ public class HomeFragment extends Fragment {
 	private void navigateTo(int destination) {
 		MainActivity act = ((MainActivity) getActivity());
 		if (act != null) act.checkPermissionsAndNavigate(destination);
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		view = null;
 	}
 }
