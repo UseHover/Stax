@@ -50,7 +50,7 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
 
 	private void uploadBountyUserObserver() {
 		bountyViewModel.getUploadBountyResult().observe(getViewLifecycleOwner(), result-> {
-			if(!result.equals(Constants.SUCCESS)) {
+			if(result.equals(Constants.SUCCESS)) {
 				emailInput.setState("", AbstractStatefulInput.SUCCESS);
 				continueButton.endAnimation();
 				promptEmailOrNavigateBountyList();
