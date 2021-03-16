@@ -21,11 +21,14 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
+import com.hover.stax.utils.UIHelper;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.List;
+
+import static com.hover.stax.utils.Constants.size55;
 
 
 public class ActionDropdownAdapter extends ArrayAdapter<HoverAction> {
@@ -66,7 +69,7 @@ public class ActionDropdownAdapter extends ArrayAdapter<HoverAction> {
 		private void setAction(HoverAction action, String baseUrl) {
 			id.setText(Integer.toString(action.id));
 			channelText.setText(action.toString());
-			Picasso.get().load(baseUrl+action.to_institution_logo).config(Bitmap.Config.RGB_565).networkPolicy(NetworkPolicy.OFFLINE).into(this);
+			UIHelper.picassoLoad(baseUrl+action.to_institution_logo, size55, this);
 		}
 
 		@Override

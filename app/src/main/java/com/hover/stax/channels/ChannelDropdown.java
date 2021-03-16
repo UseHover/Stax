@@ -14,6 +14,7 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
+import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDropdownLayout;
 import com.squareup.picasso.NetworkPolicy;
@@ -21,6 +22,8 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.List;
+
+import static com.hover.stax.utils.Constants.size55;
 
 public class ChannelDropdown extends StaxDropdownLayout implements Target {
 	private static String TAG = "ChannelDropdown";
@@ -59,9 +62,7 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 	private void setDropdownValue(Channel c) {
 		autoCompleteTextView.setText(c == null ? "" : c.toString(), false);
 		if (c != null)
-			Picasso.get().load(c.logoUrl).config(Bitmap.Config.RGB_565)
-					.networkPolicy(NetworkPolicy.OFFLINE)
-					.resize(55, 55).into(this);
+			UIHelper.picassoLoad(c.logoUrl, size55, this);
 	}
 
 	private void updateChoices(List<Channel> channels) {
