@@ -93,7 +93,7 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
 		private void setChannel(Channel channel) {
 			id.setText(Integer.toString(channel.id));
 			channelText.setText(channel.toString());
-			Picasso.get().load(channel.logoUrl).networkPolicy(NetworkPolicy.OFFLINE).into(this);
+			Picasso.get().load(channel.logoUrl).config(Bitmap.Config.RGB_565).networkPolicy(NetworkPolicy.OFFLINE).into(this);
 		}
 
 		@Override
