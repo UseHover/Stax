@@ -149,7 +149,7 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 
 	@Override
 	public void onCheckedChanged(RadioGroup group, int checkedId) {
-		if (checkedId == -1) return;
+		if (checkedId == -1 && actions != null) return;
 		selectAction(actions.get(checkedId));
 	}
 
