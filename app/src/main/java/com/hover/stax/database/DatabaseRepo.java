@@ -44,7 +44,6 @@ public class DatabaseRepo {
 	private ContactDao contactDao;
 
 	private LiveData<List<Channel>> allChannels;
-	private LiveData<List<Channel>> allChannelsBySelected;
 	private LiveData<List<Channel>> selectedChannels;
 
 	private MutableLiveData<Request> decryptedRequest= new MutableLiveData<>();
@@ -62,7 +61,6 @@ public class DatabaseRepo {
 		simDao = sdkDb.simDao();
 
 		allChannels = channelDao.getAllInAlphaOrder();
-		allChannelsBySelected = channelDao.getAllInSelectedOrder();
 		selectedChannels = channelDao.getSelected(true);
 	}
 
@@ -70,7 +68,6 @@ public class DatabaseRepo {
 	public Channel getChannel(int id) {
 		return channelDao.getChannel(id);
 	}
-	public Channel getChannelByInstitutionId(int id) { return channelDao.getChannelByInstitutionId(id); }
 
 	public LiveData<Channel> getLiveChannel(int id) {
 		return channelDao.getLiveChannel(id);

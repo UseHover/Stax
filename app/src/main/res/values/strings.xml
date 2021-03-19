@@ -4,7 +4,7 @@
 	<string name="payment_url_end" translatable="false">%1$s-%2$d-%3$s-%4$d</string>
 	<string name="root_url" translatable="false">https://www.usehover.com</string>
 	<string name="api_url" translatable="false">https://www.usehover.com/api</string>
-	<string name="channels_endpoint" translatable="false">/channels?published=true</string>
+	<string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
 	<string name="bounty_endpoint">/stax_bounty_hunters</string>
 	<string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
 

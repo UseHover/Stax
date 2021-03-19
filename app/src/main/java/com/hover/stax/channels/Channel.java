@@ -41,6 +41,7 @@ public class Channel implements Comparable<Channel> {
 			countryAlpha2 = jsonObject.getString("country_alpha2").toUpperCase();
 			currency = jsonObject.getString("currency");
 			hniList = jsonObject.getString("hni_list");
+			published = jsonObject.getBoolean("published");
 			logoUrl = rootUrl + jsonObject.getString("logo_url");
 			institutionId = jsonObject.getInt("institution_id");
 			primaryColorHex = jsonObject.getString("primary_color_hex");
@@ -85,6 +86,10 @@ public class Channel implements Comparable<Channel> {
 	@NonNull
 	@ColumnInfo(name = "primary_color_hex")
 	public String primaryColorHex;
+
+	@NonNull
+	@ColumnInfo(name = "published", defaultValue = "0")
+	public Boolean published;
 
 	@NonNull
 	@ColumnInfo(name = "secondary_color_hex")

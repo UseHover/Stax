@@ -14,32 +14,18 @@ import java.util.List;
 
 @Dao
 public interface ChannelDao {
-	@Query("SELECT * FROM channels ORDER BY defaultAccount DESC, selected DESC, name ASC")
-	LiveData<List<Channel>> getAllInSelectedOrder();
 
-	@Query("SELECT * FROM channels ORDER BY name ASC")
+	@Query("SELECT * FROM channels WHERE published = 1 ORDER BY name ASC")
 	LiveData<List<Channel>> getAllInAlphaOrder();
 
 	@Query("SELECT * FROM channels WHERE selected = :selected ORDER BY defaultAccount DESC, name ASC")
 	LiveData<List<Channel>> getSelected(boolean selected);
-
-	@Query("SELECT * FROM channels WHERE defaultAccount = 1 LIMIT 1")
-	LiveData<Channel> getLiveDefault();
-
-	@Query("SELECT * FROM channels WHERE country_alpha2 = :countryAlpha2")
-	LiveData<List<Channel>> getByCountry(String countryAlpha2);
-
-//	@Query("SELECT * FROM channels WHERE hni_list IN :hniList")
-//	MutableLiveData<List<Channel>> getByHniList(String[] hniList);
 
 	@Query("SELECT * FROM channels WHERE id IN (:channel_ids)")
 	LiveData<List<Channel>> getChannels(int[] channel_ids);
 
 	@Query("SELECT * FROM channels WHERE id = :id LIMIT 1")
 	Channel getChannel(int id);
-
-	@Query("SELECT * FROM channels WHERE institution_id = :id LIMIT 1")
-	Channel getChannelByInstitutionId(int id);
 
 	@Query("SELECT * FROM channels WHERE id = :id LIMIT 1")
 	LiveData<Channel> getLiveChannel(int id);
