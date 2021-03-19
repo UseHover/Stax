@@ -4,8 +4,11 @@ import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.hover.sdk.actions.HoverAction;
+import com.hover.sdk.transactions.Transaction;
+import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.DatabaseRepo;
 

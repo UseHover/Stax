@@ -68,7 +68,7 @@ public class TransactionDetailsFragment extends Fragment {
 	@SuppressLint("SetTextI18n")
 	private void updateDetails(View view, StaxTransaction transaction) {
 		((TextView) view.findViewById(R.id.title)).setText(transaction.description);
-		((TextView) view.findViewById(R.id.details_amount)).setText((transaction.transaction_type.equals(HoverAction.RECEIVE) ? "" : "-") + Utils.formatAmount(transaction.amount));
+		((TextView) view.findViewById(R.id.details_amount)).setText(transaction.getDisplayAmount());
 		((TextView) view.findViewById(R.id.details_date)).setText(DateUtils.humanFriendlyDate(transaction.initiated_at));
 
 		if (transaction.confirm_code != null && !transaction.confirm_code.isEmpty())

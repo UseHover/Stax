@@ -50,7 +50,6 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 			return;
 		}
 		setState(null, NONE);
-		Log.e(TAG, "found some channels " + channels.size());
 		if (autoCompleteTextView.getAdapter() != null && channels.size() > autoCompleteTextView.getAdapter().getCount()) return;
 		updateChoices(channels);
 	}
@@ -107,7 +106,6 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 	}
 
 	private void setState(List<HoverAction> actions, ChannelDropdownViewModel viewModel) {
-		Log.e(TAG, "setting channel state. Channel: " + viewModel.getActiveChannel().getValue() + ". Actions: " + actions.size());
 		if (viewModel.getActiveChannel().getValue() != null && (actions == null || actions.size() == 0))
 			setState(getContext().getString(R.string.no_actions_fielderror, HoverAction.getHumanFriendlyType(getContext(), viewModel.getType())), AbstractStatefulInput.ERROR);
 		else if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !viewModel.getType().equals(HoverAction.BALANCE))

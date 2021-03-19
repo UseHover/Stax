@@ -153,6 +153,15 @@ public class StaxTransaction {
 
 	public boolean isRecorded() { return environment == HoverParameters.MANUAL_ENV; }
 
+	public String getDisplayAmount() {
+		String a = Utils.formatAmount(amount);
+		if (!transaction_type.equals(HoverAction.RECEIVE))
+			a = "-" + a;
+		else if (isRecorded())
+			return "\\u2014";
+		return a;
+	}
+
 	@NotNull
 	@Override
 	public String toString() {

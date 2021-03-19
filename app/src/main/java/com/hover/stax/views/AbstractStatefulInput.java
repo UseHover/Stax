@@ -17,7 +17,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 
 public abstract class AbstractStatefulInput extends FrameLayout {
-	private final static String TAG = "AbstractColoredInput";
+	private final static String TAG = "AbstractStatefulInput";
 	public final static int NONE = 0, INFO = 1, WARN = 2, ERROR = 3, SUCCESS = 4;
 
 	private int currentState;
@@ -36,7 +36,6 @@ public abstract class AbstractStatefulInput extends FrameLayout {
 	public void setHint(@Nullable CharSequence helperText) { inputLayout.setHint(helperText); }
 
 	public void setState(String message, int state) {
-		Log.e(TAG, "setting state: " + state);
 		currentState = state;
 		inputLayout.setHelperText(message);
 		switch (state) {

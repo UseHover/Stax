@@ -46,7 +46,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 			}
 
 		holder.content.setText(t.description.substring(0, 1).toUpperCase() + t.description.substring(1));
-		holder.amount.setText((t.transaction_type.equals(HoverAction.RECEIVE) ? "" : "-") + Utils.formatAmount(t.amount));
+		holder.amount.setText(t.getDisplayAmount());
 		holder.date.setVisibility(shouldShowDate(t, position) ? View.VISIBLE : View.GONE);
 		holder.date.setText(DateUtils.humanFriendlyDate(t.initiated_at));
 		holder.itemView.setOnClickListener(view -> {
