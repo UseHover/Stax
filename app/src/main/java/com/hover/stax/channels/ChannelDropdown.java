@@ -44,13 +44,16 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 
 	public void setListener(HighlightListener hl) { highlightListener = hl; }
 
+	public void channelUpdateIfNull(List<Channel> channels) {
+		if (channels != null && channels.size() > 0 && (autoCompleteTextView.getAdapter() == null || autoCompleteTextView.getAdapter().getCount() == 0))
+			channelUpdate(channels);
+	}
 	public void channelUpdate(List<Channel> channels) {
-		if (channels == null || channels.size() == 0) {
+		if ((channels == null || channels.size() == 0) && (autoCompleteTextView.getAdapter() == null || autoCompleteTextView.getAdapter().getCount() == 0)) {
 			setState(getContext().getString(R.string.channels_error_nodata), ERROR);
 			return;
 		}
 		setState(null, NONE);
-		if (autoCompleteTextView.getAdapter() != null && channels.size() > autoCompleteTextView.getAdapter().getCount()) return;
 		updateChoices(channels);
 	}
 
@@ -98,7 +101,7 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 	public void setObservers(@NonNull ChannelDropdownViewModel viewModel, @NonNull LifecycleOwner lifecycleOwner) {
 		viewModel.getSims().observe(lifecycleOwner, sims -> Log.i(TAG, "Got sims: " + sims.size()));
 		viewModel.getSimHniList().observe(lifecycleOwner, simList -> Log.i(TAG, "Got new sim hni list: " + simList));
-		viewModel.getChannels().observe(lifecycleOwner, this::channelUpdate);
+		viewModel.getChannels().observe(lifecycleOwner, this::channelUpdateIfNull);
 		viewModel.getSimChannels().observe(lifecycleOwner, this::channelUpdate);
 		viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> Log.i(TAG, "Got new selected channels: " + channels.size()));
 		viewModel.getActiveChannel().observe(lifecycleOwner, channel -> { if (channel != null) setState(null, NONE); });

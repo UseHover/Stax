@@ -13,15 +13,12 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.ColorRes;
-
 import com.hover.stax.R;
 
 public class StaxCardView extends FrameLayout {
 
 	private String title;
-	private boolean showBack, contextBackPress;
+	private boolean showBack, useContextBackPress;
 
 	private LinearLayout contentView;
 	public ImageButton backButton;
@@ -42,7 +39,7 @@ public class StaxCardView extends FrameLayout {
 		try {
 			title = a.getString(R.styleable.StaxCardView_title);
 			showBack = a.getBoolean(R.styleable.StaxCardView_showBack, false);
-			contextBackPress = a.getBoolean(R.styleable.StaxCardView_defaultBackPress, true);
+			useContextBackPress = a.getBoolean(R.styleable.StaxCardView_defaultBackPress, true);
 			backDrawable = a.getResourceId(R.styleable.StaxCardView_backRes, 0);
 			bgColor = a.getColor(R.styleable.StaxCardView_staxCardColor, context.getResources().getColor(R.color.colorPrimary));
 		} finally {
@@ -68,11 +65,15 @@ public class StaxCardView extends FrameLayout {
 		if (icon != 0) { backButton.setImageResource(icon); }
 	}
 
+	public void setOnClickIcon(OnClickListener listener) {
+		if (listener != null) { backButton.setOnClickListener(listener); }
+	}
+
 	private void fillFromAttrs() {
 		if (title != null) ((TextView) findViewById(R.id.title)).setText(title);
 		else findViewById(R.id.header).setVisibility(GONE);
 
-		if (contextBackPress) backButton.setOnClickListener(view -> triggerBack());
+		if (useContextBackPress) backButton.setOnClickListener(view -> triggerBack());
 		if (showBack) backButton.setVisibility(VISIBLE);
 		if (backDrawable != 0) backButton.setImageResource(backDrawable);
 		contentView.setBackgroundColor(bgColor);

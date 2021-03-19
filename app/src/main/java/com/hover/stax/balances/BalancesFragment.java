@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
-import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDropdown;
@@ -46,6 +45,7 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 
 	private TextView addChannelLink;
 	private ChannelDropdown channelDropdown;
+	private boolean balancesVisible = false;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_balance_and_history)));
@@ -80,11 +80,11 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 
 	private void initBalanceCard(View view) {
 		StaxCardView balanceCard = view.findViewById(R.id.balance_card);
-		balanceCard.backButton.setVisibility(GONE);
-		balanceCard.setActivated(false);
-		balanceCard.backButton.setOnClickListener(v -> {
-			balanceCard.backButton.setActivated(!balanceCard.backButton.isActivated());
-			balanceAdapter.updateShowBalance();
+		balanceCard.setIcon(balancesVisible ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_off);
+		balanceCard.setOnClickIcon(v -> {
+			balancesVisible = !balancesVisible;
+			balanceCard.setIcon(balancesVisible ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_off);
+			balanceAdapter.showBalance(balancesVisible);
 		});
 
 		RecyclerView recyclerView = view.findViewById(R.id.balances_recyclerView);
