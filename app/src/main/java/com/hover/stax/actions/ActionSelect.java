@@ -18,13 +18,17 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
+import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDropdownLayout;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.hover.stax.utils.Constants.size55;
 
 public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedChangeListener, Target {
 	private static String TAG = "ActionSelect";
@@ -105,9 +109,7 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 	}
 	private void setDropDownValue(HoverAction a) {
 		dropdownView.setText(a.toString(), false);
-		Picasso.get()
-				.load(getContext().getString(R.string.root_url)+ a.to_institution_logo)
-				.resize(55,55).into(this);
+		UIHelper.loadPicasso(getContext().getString(R.string.root_url)+ a.to_institution_logo, size55, this);
 	}
 
 	public void selectAction(HoverAction a) {
