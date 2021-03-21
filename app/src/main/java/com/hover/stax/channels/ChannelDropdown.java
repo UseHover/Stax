@@ -14,6 +14,8 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
+import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDropdownLayout;
 import com.squareup.picasso.Picasso;
@@ -45,16 +47,26 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 	public void setListener(HighlightListener hl) { highlightListener = hl; }
 
 	public void channelUpdateIfNull(List<Channel> channels) {
-		if (channels != null && channels.size() > 0 && (autoCompleteTextView.getAdapter() == null || autoCompleteTextView.getAdapter().getCount() == 0))
-			channelUpdate(channels);
+		if (channels != null && channels.size() > 0 && !hasExistingContent()) {
+			setState(getContext().getString(R.string.channels_error_nosim), INFO);
+			updateChoices(channels);
+		} else if (!hasExistingContent())
+			setEmptyState();
 	}
+
 	public void channelUpdate(List<Channel> channels) {
-		if ((channels == null || channels.size() == 0) && (autoCompleteTextView.getAdapter() == null || autoCompleteTextView.getAdapter().getCount() == 0)) {
-			setState(getContext().getString(R.string.channels_error_nodata), ERROR);
-			return;
-		}
-		setState(null, NONE);
-		updateChoices(channels);
+		if (channels != null && channels.size() > 0) {
+			setState(null, NONE);
+			updateChoices(channels);
+		} else if (!hasExistingContent())
+			setEmptyState();
+	}
+
+	private boolean hasExistingContent() { return autoCompleteTextView.getAdapter() != null && autoCompleteTextView.getAdapter().getCount() > 0; }
+
+	private void setEmptyState() {
+		autoCompleteTextView.setDropDownHeight(0);
+		setState(getContext().getString(R.string.channels_error_nodata), ERROR);
 	}
 
 	private void setDropdownValue(Channel c) {
@@ -67,6 +79,7 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 		if (highlightedChannel == null) setDropdownValue(null);
 		ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(ChannelDropdownAdapter.sort(channels, showSelected), getContext());
 		autoCompleteTextView.setAdapter(channelDropdownAdapter);
+		autoCompleteTextView.setDropDownHeight(UIHelper.dpToPx(300));
 		autoCompleteTextView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((Channel) adapterView.getItemAtPosition(pos)));
 
 		for (Channel c: channels) {
@@ -104,7 +117,7 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 		viewModel.getChannels().observe(lifecycleOwner, this::channelUpdateIfNull);
 		viewModel.getSimChannels().observe(lifecycleOwner, this::channelUpdate);
 		viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> Log.i(TAG, "Got new selected channels: " + channels.size()));
-		viewModel.getActiveChannel().observe(lifecycleOwner, channel -> { if (channel != null) setState(null, NONE); });
+		viewModel.getActiveChannel().observe(lifecycleOwner, channel -> { if (channel != null && showSelected) setState(null, NONE); });
 		viewModel.getChannelActions().observe(lifecycleOwner, actions -> setState(actions, viewModel));
 	}
 
