@@ -115,4 +115,12 @@ public class UIHelper {
 	public static int dpToPx(int dp) {
 		return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
 	}
+
+	public static void loadPicasso(String url, int size, Target target) {
+		Picasso.get()
+				.load(url)
+				.config(Bitmap.Config.RGB_565)
+				.networkPolicy(NetworkPolicy.OFFLINE)
+				.resize(size,size).into(target);
+	}
 }

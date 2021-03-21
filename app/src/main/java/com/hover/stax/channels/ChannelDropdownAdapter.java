@@ -19,6 +19,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import com.hover.stax.R;
+import com.hover.stax.utils.UIHelper;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -27,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import static com.hover.stax.utils.Constants.size55;
 
 public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
 	private List<Channel> channels;
@@ -93,7 +96,7 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
 		private void setChannel(Channel channel) {
 			id.setText(Integer.toString(channel.id));
 			channelText.setText(channel.toString());
-			Picasso.get().load(channel.logoUrl).config(Bitmap.Config.RGB_565).networkPolicy(NetworkPolicy.OFFLINE).into(this);
+			UIHelper.loadPicasso(channel.logoUrl, size55, this);
 		}
 
 		@Override
