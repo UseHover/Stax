@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.amplitude.api.Amplitude;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.HoverParameters;
 import com.hover.stax.R;
@@ -26,11 +27,14 @@ public class BountyActivity extends AbstractNavigationActivity {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, TAG));
 		bountyViewModel = new ViewModelProvider(this).get(BountyViewModel.class);
 		setContentView(R.layout.activity_bounty);
 		setUpNav();
 		if (!Utils.getString(EMAIL_KEY, this).isEmpty())
 			Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.bountyListFragment);
+		else
+			Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_email)));
 	}
 
 	void makeCall(HoverAction a) {

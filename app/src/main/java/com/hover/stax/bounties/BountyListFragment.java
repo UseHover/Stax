@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.navigation.NavigationInterface;
@@ -28,6 +29,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_list)));
 		bountyViewModel = new ViewModelProvider(this).get(BountyViewModel.class);
 		return inflater.inflate(R.layout.fragment_bounty_list, container, false);
 	}
@@ -75,8 +77,10 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 			.setDialogTitle(getString(R.string.bounty_claim_title, b.action.root_code, b.action.getHumanFriendlyType(getContext(), b.action.transaction_type), b.action.bounty_amount))
 			.setDialogMessage(getString(R.string.bounty_claim_explained, b.action.bounty_amount, b.getInstructions(getContext())))
 			.setPosButton(R.string.start_USSD_Flow, v -> {
-				if (getActivity() != null)
+				if (getActivity() != null){
+					Amplitude.getInstance().logEvent(getString(R.string.clicked_run_bounty_session, b.action.from_institution_name, b.action.root_code));
 					((BountyActivity) getActivity()).makeCall(b.action);
+				}
 			})
 			.showIt();
 	}
