@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/country_text_id"
+    android:textSize="@dimen/text_21"
+    android:padding="@dimen/margin_13"
+    android:textColor="@color/offWhite"
+    android:fontFamily="font-normal"
+    android:drawablePadding="@dimen/margin_8"/>

@@ -14,16 +14,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.countries.CountryAdapter;
+import com.hover.stax.countries.CountryDropdown;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.StaxDialog;
 
 import java.util.List;
 
-public class BountyListFragment extends Fragment implements NavigationInterface, BountyListItem.SelectListener {
+public class BountyListFragment extends Fragment implements NavigationInterface, BountyListItem.SelectListener, CountryAdapter.SelectListener {
 	private static final String TAG = "BountyListFragment";
 	private BountyViewModel bountyViewModel;
 	private RecyclerView channelRecyclerView;
+	private CountryDropdown countryDropdown;
 
 	@Nullable
 	@Override
@@ -35,8 +38,14 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		initCountryDropdown(view);
 		initRecyclerView(view);
 		startObservers();
+	}
+
+	public void initCountryDropdown(View view) {
+		countryDropdown = view.findViewById(R.id.bounty_country_dropdown);
+		countryDropdown.setListener(this);
 	}
 
 	private void initRecyclerView(View view) {
@@ -48,13 +57,18 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 		bountyViewModel.getActions().observe(getViewLifecycleOwner(), actions -> Log.v(TAG, "actions update: " + actions.size()));
 		bountyViewModel.getTransactions().observe(getViewLifecycleOwner(), transactions -> Log.v(TAG, "transactions update: " + transactions.size()));
 		bountyViewModel.getBounties().observe(getViewLifecycleOwner(), bounties -> {
-			if (bounties != null && bounties.size() > 0 && bountyViewModel.getChannels().getValue() != null && bountyViewModel.getChannels().getValue().size() > 0)
-				createList(bountyViewModel.getChannels().getValue(), bountyViewModel.getBounties().getValue());
+			List<Channel> channels = bountyViewModel.getChannels().getValue();
+			if (bounties != null && bounties.size() > 0 && channels != null && bountyViewModel.getChannels().getValue().size() > 0){
+				countryDropdown.updateChoicesByChannels(channels);
+				createList(channels, bountyViewModel.getBounties().getValue());
+			}
 		});
 
 		bountyViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> {
-			if (channels != null && channels.size() > 0 && bountyViewModel.getBounties().getValue() != null && bountyViewModel.getBounties().getValue().size() > 0)
+			if (channels != null && channels.size() > 0 && bountyViewModel.getBounties().getValue() != null && bountyViewModel.getBounties().getValue().size() > 0) {
+				countryDropdown.updateChoicesByChannels(channels);
 				createList(channels, bountyViewModel.getBounties().getValue());
+			}
 		});
 	}
 
@@ -79,5 +93,10 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 					((BountyActivity) getActivity()).makeCall(b.action);
 			})
 			.showIt();
+	}
+
+	@Override
+	public void countrySelect(String countryCode) {
+	Log.d(TAG, "country clicked");
 	}
 }
