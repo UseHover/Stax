@@ -27,6 +27,7 @@
 	<string name="new_channel_selected" translatable="false">Added channel</string>
 	<string name="added_channel_id" translatable="false">channel_id</string>
 
+	<string name="from_push_notification">From push notification: %1$s</string>
 	<string name="start_load_screen" translatable="false">Visited load screen</string>
 	<string name="finish_load_screen" translatable="false">Complete load screen</string>
 	<string name="refresh_balance_single" translatable="false">Clicked refresh single balance</string>
@@ -76,6 +77,7 @@
 	<string name="bounty_email_err" translatable="false">Bounty email error due to: %1$s</string>
 
 	<!--FIREBASE MESSAGING-->
+
 	<string name="firebase_topic_everyone">EVERYONE</string>
 	<string name="firebase_topic_no_balance_check">NO-BALANCE-CHECK</string>
 	<string name="firebase_topic_no_balance_toggle">NO-BALANCE-TOGGLE</string>

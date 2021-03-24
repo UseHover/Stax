@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -26,6 +27,7 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.WorkManager;
 
 import com.amplitude.api.Amplitude;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
@@ -67,7 +69,9 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 		createNotificationChannel();
 		startWorkers();
 		Utils.setFirebaseMessagingTopic(getString(R.string.firebase_topic_everyone));
+		FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this, s -> Log.d(TAG, "Firebase ID is: "+s));
 	}
+
 
 	private void blurBackground() {
 		new Handler(Looper.getMainLooper()).postDelayed(() -> {
@@ -113,6 +117,13 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
 	private void initAmplitude() {
 		Amplitude.getInstance().initialize(this, getString(R.string.amp)).enableForegroundTracking(getApplication());
+
+		if(getIntent().getExtras() !=null) {
+			String fcmTitle = getIntent().getExtras().getString(Constants.FROM_FCM);
+			if(fcmTitle !=null) {
+				Amplitude.getInstance().logEvent(getString(R.string.from_push_notification, fcmTitle));
+			}
+		}
 	}
 
 	private void initHover() {
