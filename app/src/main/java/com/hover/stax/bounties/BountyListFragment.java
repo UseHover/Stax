@@ -56,6 +56,10 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 			if (channels != null && channels.size() > 0 && bountyViewModel.getBounties().getValue() != null && bountyViewModel.getBounties().getValue().size() > 0)
 				createList(channels, bountyViewModel.getBounties().getValue());
 		});
+		bountyViewModel.getSimSupportedBounty().observe(getViewLifecycleOwner(), bounty -> {
+			if(bounty.presentSimsSupported == 0) showSimErrorDialog(bounty);
+			else if(bounty.presentSimsSupported > 0) showBountyDescDialog(bounty);
+		});
 	}
 
 	private void createList(List<Channel> channels, List<Bounty> bounties) {
@@ -70,14 +74,29 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 
 	@Override
 	public void bountyDetail(Bounty b) {
+		bountyViewModel.setSimPresentBounty(b);
+	}
+
+	void showSimErrorDialog(Bounty b) {
+		Log.e(TAG, "showing sim error dialog "+ b.action.root_code);
+		new StaxDialog(requireActivity())
+				.setDialogTitle(getString(R.string.bounty_sim_err_header, b.action.root_code))
+				.setDialogMessage(getString(R.string.bounty_sim_err_desc, b.action.root_code))
+				.setNegButton(R.string.btn_cancel, null)
+				.setPosButton(R.string.retry, v -> {
+					bountyViewModel.setSimPresentBounty(b);
+				}).showIt();
+	}
+
+	void showBountyDescDialog(Bounty b) {
 		Log.e(TAG, "showing dialog " + b.action);
 		new StaxDialog(requireActivity())
-			.setDialogTitle(getString(R.string.bounty_claim_title, b.action.root_code, b.action.getHumanFriendlyType(getContext(), b.action.transaction_type), b.action.bounty_amount))
-			.setDialogMessage(getString(R.string.bounty_claim_explained, b.action.bounty_amount, b.getInstructions(getContext())))
-			.setPosButton(R.string.start_USSD_Flow, v -> {
-				if (getActivity() != null)
-					((BountyActivity) getActivity()).makeCall(b.action);
-			})
-			.showIt();
+				.setDialogTitle(getString(R.string.bounty_claim_title, b.action.root_code, b.action.getHumanFriendlyType(getContext(), b.action.transaction_type), b.action.bounty_amount))
+				.setDialogMessage(getString(R.string.bounty_claim_explained, b.action.bounty_amount, b.getInstructions(getContext())))
+				.setPosButton(R.string.start_USSD_Flow, v -> {
+					if (getActivity() != null)
+						((BountyActivity) getActivity()).makeCall(b.action);
+				})
+				.showIt();
 	}
 }

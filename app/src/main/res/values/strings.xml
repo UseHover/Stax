@@ -330,4 +330,7 @@
 	<string name="go_through_another_flow">Go through another flow</string>
 	<string name="flow_recorded">FLOW RECORDED</string>
 	<string name="bounty_amount_with_currency">USD $%1$d</string>
+	<string name="bounty_sim_err_header">NO %1$s SIM</string>
+	<string name="bounty_sim_err_desc">You need a SIM card from %1$s in your device to map this flow. Please put a SIM card from %1$s in your device and try again.</string>
+	<string name="retry">Retry</string>
 </resources>
