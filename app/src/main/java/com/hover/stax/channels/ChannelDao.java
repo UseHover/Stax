@@ -25,7 +25,7 @@ public interface ChannelDao {
 	LiveData<List<Channel>> getChannels(int[] channel_ids);
 
 	@Query("SELECT * FROM channels WHERE country_alpha2 =:countryCode AND id IN (:channel_ids)")
-	LiveData<List<Channel>> getChannelsByCountry(String countryCode,int[] channel_ids );
+	LiveData<List<Channel>> getChannels(String countryCode,int[] channel_ids );
 
 	@Query("SELECT * FROM channels WHERE id = :id LIMIT 1")
 	Channel getChannel(int id);

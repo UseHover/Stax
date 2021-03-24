@@ -59,27 +59,26 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 		bountyViewModel.getBounties().observe(getViewLifecycleOwner(), bounties -> {
 			List<Channel> channels = bountyViewModel.getChannels().getValue();
 			if (bounties != null && bounties.size() > 0 && channels != null && bountyViewModel.getChannels().getValue().size() > 0){
-				countryDropdown.updateChoicesByChannels(channels);
-				createList(channels, bountyViewModel.getBounties().getValue());
+				createList(channels, bountyViewModel.getBounties().getValue(), true);
 			}
 		});
 
 		bountyViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> {
 			if (channels != null && channels.size() > 0 && bountyViewModel.getBounties().getValue() != null && bountyViewModel.getBounties().getValue().size() > 0) {
-				countryDropdown.updateChoicesByChannels(channels);
-				createList(channels, bountyViewModel.getBounties().getValue());
+				createList(channels, bountyViewModel.getBounties().getValue(), true);
 			}
 		});
 	}
 	private void filterBounties(String countryCode) {
 		bountyViewModel.filterChannels(countryCode).observe(getViewLifecycleOwner(), channels -> {
 			if (channels != null && channels.size() > 0 && bountyViewModel.getBounties().getValue() != null && bountyViewModel.getBounties().getValue().size() > 0) {
-				createList(channels, bountyViewModel.getBounties().getValue());
+				createList(channels, bountyViewModel.getBounties().getValue(), false);
 			}
 		});
 	}
 
-	private void createList(List<Channel> channels, List<Bounty> bounties) {
+	private void createList(List<Channel> channels, List<Bounty> bounties, boolean shouldUpdateCountryList) {
+		if(shouldUpdateCountryList) countryDropdown.updateChoicesByChannels(channels);
 		BountyChannelsAdapter adapter = new BountyChannelsAdapter(channels, bounties, this);
 		channelRecyclerView.setAdapter(adapter);
 	}

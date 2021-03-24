@@ -35,6 +35,7 @@ public class CountryAdapter extends ArrayAdapter<String> {
 
 	}
 
+	@SuppressLint("ViewHolder")
 	@NonNull
 	@Override
 	public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
