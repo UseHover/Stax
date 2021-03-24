@@ -12,6 +12,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.hover.stax.utils.UIHelper;
@@ -94,6 +95,11 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 		setDropdownValue(c);
 		if (highlightListener != null) { highlightListener.highlightChannel(c); }
 		highlightedChannel = c;
+		if(c!=null) {
+			FirebaseMessaging.getInstance().subscribeToTopic(
+					getContext().getString(R.string.firebase_topic_institution,
+					String.valueOf(c.institutionId)));
+		}
 	}
 
 	public Channel getHighlighted() { return highlightedChannel; }
