@@ -2,6 +2,7 @@ package com.hover.stax.transactions;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,7 +103,7 @@ public class TransactionDetailsFragment extends Fragment {
 		view.findViewById(R.id.notification_card).setBackgroundColor(action.bounty_is_open ? R.color.pending_brown : R.color.muted_green);
 		((StaxCardView) view.findViewById(R.id.notification_card)).setTitle(R.string.checking_your_flow);
 		((StaxCardView) view.findViewById(R.id.notification_card)).setIcon(action.bounty_is_open ? R.drawable.ic_warning : R.drawable.ic_check);
-		((TextView) view.findViewById(R.id.notification_detail)).setText(action.bounty_is_open ? R.string.bounty_flow_pending_dialog_msg : R.string.flow_done_desc);
+		((TextView) view.findViewById(R.id.notification_detail)).setText(Html.fromHtml(action.bounty_is_open ? getString(R.string.bounty_flow_pending_dialog_msg) : getString(R.string.flow_done_desc)));
 	}
 
 	private void updateRecipient(StaxContact contact, View view){
