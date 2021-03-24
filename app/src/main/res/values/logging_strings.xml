@@ -74,4 +74,24 @@
 	<string name="link_encryptfail" translatable="false">Error creating encrypted Stax payment link</string>
 	<string name="bounty_email_success" translatable="false">Bounty email provided successfully</string>
 	<string name="bounty_email_err" translatable="false">Bounty email error due to: %1$s</string>
+
+	<!--FIREBASE MESSAGING-->
+	<string name="firebase_topic_everyone">EVERYONE</string>
+	<string name="firebase_topic_no_balance_check">NO-BALANCE-CHECK</string>
+	<string name="firebase_topic_no_balance_toggle">NO-BALANCE-TOGGLE</string>
+	<string name="firebase_topic_no_request_money">NO-REQUEST-MONEY</string>
+	<string name="firebase_topic_yes_request_money">YES-REQUEST-MONEY</string>
+	<string name="firebase_topic_no_transaction">NO-TRANSACTION</string>
+	<string name="firebase_topic_yes_transaction">YES-TRANSACTION</string>
+	<string name="firebase_topic_transaction_5">TRANSACTION-5</string>
+	<string name="firebase_topic_transaction_10">TRANSACTION-10</string>
+	<string name="firebase_topic_transaction_many">TRANSACTION-MANY</string>
+	<string name="firebase_topic_no_fulfil_request">NO-FULFIL-REQUEST</string>
+	<string name="firebase_topic_yes_fulfil_request">YES-FULFIL-REQUEST</string>
+	<string name="firebase_topic_no_bounty">NO-BOUNTY</string>
+	<string name="firebase_topic_no_bounty_email">NO-BOUNTY-EMAIL</string>
+	<string name="firebase_topic_yes_bounty_no_try">YES-BOUNTY-NO-TRY</string>
+	<string name="firebase_topic_yes_bounty_yes_try">YES-BOUNTY-YES-TRY</string>
+
+
 </resources>

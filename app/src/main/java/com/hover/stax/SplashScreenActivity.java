@@ -26,6 +26,7 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.WorkManager;
 
 import com.amplitude.api.Amplitude;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.stax.channels.UpdateChannelsWorker;
@@ -65,6 +66,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 		initHover();
 		createNotificationChannel();
 		startWorkers();
+		Utils.setFirebaseMessagingTopic(getString(R.string.firebase_topic_everyone));
 	}
 
 	private void blurBackground() {

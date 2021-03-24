@@ -3,6 +3,7 @@ package com.hover.stax;
 import android.app.Application;
 
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.stax.utils.fonts.FontReplacer;
 import com.hover.stax.utils.fonts.Replacer;
 import com.yariksoffice.lingver.Lingver;
@@ -23,5 +24,7 @@ public class ApplicationInstance extends Application {
 		Lingver.init(this, Locale.getDefault());
 
 		FirebaseApp.initializeApp(this);
+		FirebaseMessaging.getInstance().setAutoInitEnabled(true);
+		FirebaseMessaging.getInstance().setDeliveryMetricsExportToBigQuery(true);
 	}
 }
