@@ -104,9 +104,9 @@ final public class HoverSession {
 		private JSONObject extras;
 		private int requestCode, finalScreenTime = 2000;
 
-		public Builder(HoverAction a, Channel c, Activity act, int code) {
+		public Builder(HoverAction a, Channel c, Activity activity, int code) {
 			if (a == null) throw new IllegalArgumentException("Action must not be null");
-			activity = act;
+			this.activity = activity;
 			channel = c;
 			action = a;
 			extras = new JSONObject();
