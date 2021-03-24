@@ -71,6 +71,13 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 			}
 		});
 	}
+	private void filterBounties(String countryCode) {
+		bountyViewModel.filterChannels(countryCode).observe(getViewLifecycleOwner(), channels -> {
+			if (channels != null && channels.size() > 0 && bountyViewModel.getBounties().getValue() != null && bountyViewModel.getBounties().getValue().size() > 0) {
+				createList(channels, bountyViewModel.getBounties().getValue());
+			}
+		});
+	}
 
 	private void createList(List<Channel> channels, List<Bounty> bounties) {
 		BountyChannelsAdapter adapter = new BountyChannelsAdapter(channels, bounties, this);
@@ -97,6 +104,6 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 
 	@Override
 	public void countrySelect(String countryCode) {
-	Log.d(TAG, "country clicked");
+		filterBounties(countryCode);
 	}
 }
