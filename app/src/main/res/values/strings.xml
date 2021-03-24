@@ -334,4 +334,5 @@
 	<string name="filter_by_country">Filter by country</string>
 	<string name="country">Country</string>
 	<string name="country_error_nodata">Please turn on data to load services and countries.</string>
+	<string name="country_with_emoji">%1$s  %2$s </string>
 </resources>

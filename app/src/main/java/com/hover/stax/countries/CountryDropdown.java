@@ -1,27 +1,19 @@
 package com.hover.stax.countries;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.AutoCompleteTextView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.hover.stax.bounties.Bounty;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.utils.StaxFlags;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.StaxDropdownLayout;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 import com.yariksoffice.lingver.Lingver;
 
 import java.util.HashSet;
@@ -29,10 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import static com.hover.stax.utils.Constants.size55;
-
-
-public class CountryDropdown extends StaxDropdownLayout implements Target {
+public class CountryDropdown extends StaxDropdownLayout {
 	private static final String TAG = "CountryDropdown";
 	private CountryAdapter.SelectListener selectListener;
 
@@ -107,28 +96,11 @@ public class CountryDropdown extends StaxDropdownLayout implements Target {
 	}
 
 	private void setCountryTextAndFlag(AutoCompleteTextView tv, String code) {
-			int countryRes = StaxFlags.getResId(getContext(), code);
-			UIHelper.loadPicasso(countryRes, size55, this);
-			tv.setText(getFullCountryName(code), false);
+			// int countryRes = StaxFlags.getResId(getContext(), code);
+			tv.setText(getContext().getString(R.string.country_with_emoji, UIHelper.countryCodeToEmoji(code), getFullCountryName(code)), false);
 	}
 	public static String getFullCountryName(String code){
 		Locale loc = new Locale(Lingver.getInstance().getLanguage(), code);
 		return loc.getDisplayCountry();
-	}
-
-	@Override
-	public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-		RoundedBitmapDrawable d = RoundedBitmapDrawableFactory.create (getContext().getResources(), bitmap);
-		autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(d, null, null, null);
-	}
-
-	@Override
-	public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-	}
-
-	@Override
-	public void onPrepareLoad(Drawable placeHolderDrawable) {
-
 	}
 }
