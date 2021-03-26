@@ -116,7 +116,6 @@ public class MainActivity extends AbstractNavigationActivity implements
 		switch (requestCode) {
 			case Constants.TRANSFER_REQUEST:
 				if (data != null) { onProbableHoverCall(data); }
-				else Amplitude.getInstance().logEvent(getString(R.string.sdk_failure));
 				break;
 			case Constants.REQUEST_REQUEST:
 				if (resultCode == RESULT_OK) { onRequest(data); }

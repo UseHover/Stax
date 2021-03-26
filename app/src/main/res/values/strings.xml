@@ -151,7 +151,7 @@
 	<string name="descrip_recorded">Recorded USSD session on %1$s</string>
 	<string name="fab_transfernow">Send money now</string>
 	<string name="fab_airtimenow">Buy airtime now</string>
-	<string name="noworry_explain">Don\'t worry. You can review the info in the last step.</string>
+	<string name="noworry_explain">Don\'t worry. You can review the info after you press the Continue button.</string>
 	<string name="descrip_airtime_sched">Buy airtime with %1$s for %2$s</string>
 
 	<!-- Request -->
@@ -302,29 +302,29 @@
 	<string name="bounty_email_stage_desc1">Stax wants to make digital money available to anyone anywhere offline. To bring Stax to more people in more countries, we need to build a map of all the USSD services in the world.<b> That is why Stax will pay you USD $5-50 to go through any of the USSD flows on the next page.</b></string>
 	<string name="bounty_email_stage_desc2"><b>1.</b>   Enter your email so we can pay you.\n<b>2.</b>   Choose a USSD flow like “check balance” from your bank or mobile money service on the next page.\n<b>3.</b>   Go through the USSD flow as normal.\n<b>4.</b>   Stax will check the flow.\n<b>5.</b>   You get paid.</string>
 	<string name="descrip_bounty_airtime">Buy airtime for any person</string>
-	<string name="bounty_airtime_explain">buy airtime for someone else</string>
+	<string name="bounty_airtime_explain">Buy airtime for someone else</string>
 	<string name="descrip_bounty_p2p">Send money to someone else %1$s</string>
-	<string name="bounty_p2p_explain">send any amount to any person %1$s</string>
+	<string name="bounty_p2p_explain">Send any amount to any person %1$s</string>
 	<string name="descrip_bounty_me2me">Move money to your %1$s account</string>
-	<string name="bounty_me2me_explain">send any amount to your own %1$s account</string>
+	<string name="bounty_me2me_explain">Send any amount to your own %1$s account</string>
 	<string name="descrip_bounty_c2b">Pay a bill</string>
-	<string name="bounty_c2b_explain">send any amount to any business</string>
+	<string name="bounty_c2b_explain">Send any amount to any business</string>
 	<string name="descrip_bounty_balance">Check balance</string>
-	<string name="bounty_balance_explain">check your balance</string>
+	<string name="bounty_balance_explain">Check your balance</string>
 	<string name="descrip_bounty_offnet">on %1$s</string>
 	<string name="bounty_email">Email</string>
 	<string name="bounty_email_error">Please enter a valid email address</string>
 	<string name="bounty_uploading_email">Connecting, please wait…</string>
 	<string name="bounty_api_internet_error">Please ensure you have a data internet connection</string>
-	<string name="bounty_api_other_error">Please try again. If this persists, kindly contact us.</string>
-	<string name="bounty_pending_short_desc">We are checking this flow. Expect payment in 1–3 business days.</string>
+	<string name="bounty_api_other_error">Please try again. If this persists, kindly contact us at ussd@stax.me.</string>
+	<string name="bounty_pending_short_desc">We are checking this flow. Expect payment in 1–5 business days.</string>
 	<string name="done">Done</string>
 	<string name="available_flows">AVAILABLE FLOWS</string>
 	<string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
-	<string name="bounty_claim_explained">To claim USD $%1$d, %2$s.\n\nAs soon as you\’re done, we will send you an email to collect information for payment. You will be paid in 1–3 business days </string>
+	<string name="bounty_claim_explained">To claim USD $%1$d, %2$s.\n\nAs soon as you\’re done, we will send you an email to collect information for payment. You will be paid in 1–5 business days </string>
 	<string name="start_USSD_Flow">Start USSD Flow</string>
 	<string name="checking_your_flow">Checking your flow</string>
-	<string name="bounty_flow_pending_dialog_msg"><![CDATA[<p>Thank you for going through this flow. We sent an email with instructions for payment. We will pay you after we verify and check the flow.\n\nIf you don\’t hear from us, email us at <a href="mailto://ussd@stax.me">ussd@stax.me /></p>]]></string>
+	<string name="bounty_flow_pending_dialog_msg"><![CDATA[Thank you for going through this flow. We sent an email with instructions for payment. We will pay you after we verify and check the flow.<br/><br/>If you don\’t hear from us, email us at <a href="https://ussd@stax.me"> <b><font color=#1878F9> ussd@stax.me </b></a>]]></string>
 	<string name="flow_done_title">FLOW DONE</string>
 	<string name="flow_done_desc">We checked the flow and it looks good! You should have an email in your inbox with payment information.</string>
 	<string name="go_through_another_flow">Go through another flow</string>
