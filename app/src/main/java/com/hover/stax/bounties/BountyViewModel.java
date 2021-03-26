@@ -1,6 +1,9 @@
 package com.hover.stax.bounties;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -10,6 +13,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
 import com.hover.sdk.actions.HoverAction;
+import com.hover.sdk.api.Hover;
 import com.hover.sdk.sims.SimInfo;
 import com.hover.sdk.utils.Utils;
 import com.hover.stax.channels.Channel;
@@ -36,6 +40,7 @@ public class BountyViewModel extends AndroidViewModel {
 	public BountyViewModel(@NonNull Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
+		Hover.updateSimInfo(getApplication());
 
 		bountyActions = repo.getBountyActions();
 		bountyChannels = Transformations.switchMap(bountyActions, this::loadChannels);
