@@ -120,7 +120,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 		for (SimInfo sim : sims) {
 			if (!hniList.contains(sim.getOSReportedHni())) {
 				FirebaseMessaging.getInstance().subscribeToTopic("sim-" + sim.getOSReportedHni());
-				FirebaseMessaging.getInstance().subscribeToTopic(sim.getCountryIso());
+				FirebaseMessaging.getInstance().subscribeToTopic(sim.getCountryIso().toUpperCase());
 				hniList.add(sim.getOSReportedHni());
 			}
 		}
