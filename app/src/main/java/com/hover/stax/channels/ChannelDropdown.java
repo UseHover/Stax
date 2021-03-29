@@ -95,11 +95,6 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 		setDropdownValue(c);
 		if (highlightListener != null) { highlightListener.highlightChannel(c); }
 		highlightedChannel = c;
-		if(c!=null) {
-			FirebaseMessaging.getInstance().subscribeToTopic(
-					getContext().getString(R.string.firebase_topic_institution,
-					String.valueOf(c.institutionId)));
-		}
 	}
 
 	public Channel getHighlighted() { return highlightedChannel; }

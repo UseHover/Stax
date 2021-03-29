@@ -162,6 +162,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 	}
 
 	private void setActiveChannel(Channel channel) {
+		FirebaseMessaging.getInstance().subscribeToTopic(getApplication().getString(R.string.firebase_topic_institution, String.valueOf(channel.institutionId)));
 		activeChannel.setValue(channel);
 	}
 

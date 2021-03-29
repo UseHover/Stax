@@ -24,7 +24,6 @@ public class ApplicationInstance extends Application {
 		Lingver.init(this, Locale.getDefault());
 
 		FirebaseApp.initializeApp(this);
-		FirebaseMessaging.getInstance().setAutoInitEnabled(true);
 		FirebaseMessaging.getInstance().setDeliveryMetricsExportToBigQuery(true);
 	}
 }
