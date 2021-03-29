@@ -27,7 +27,6 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.WorkManager;
 
 import com.amplitude.api.Amplitude;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
@@ -188,7 +187,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	}
 	private void goToMainActivity(String redirectLink) {
 		Intent intent = new Intent(this, MainActivity.class);
-		intent.putExtra(FRAGMENT_DIRECT, redirectLink);
+		if(redirectLink !=null) intent.putExtra(FRAGMENT_DIRECT, Integer.parseInt(redirectLink));
 		startActivity(intent);
 	}
 
