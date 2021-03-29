@@ -14,7 +14,10 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.hover.sdk.utils.AnalyticsSingleton;
 import com.hover.stax.BuildConfig;
+
+import org.json.JSONArray;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
@@ -124,5 +127,22 @@ public class Utils {
 		ConnectivityManager cm = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 		return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+	}
+	public static double[] convertJsonArrToDoubleArr(JSONArray arr) {
+		if (arr == null) {
+			return null;
+		} else {
+			double[] doubleArr = new double[arr.length()];
+
+			for(int i = 0; i < arr.length(); ++i) {
+				try {
+					doubleArr[i] = Double.parseDouble(arr.optString(i));
+				} catch (NullPointerException e) {
+					Log.e(TAG,e.getMessage());
+				}
+			}
+			Log.d(TAG, "convertJsonArrToDoubleArr size: "+doubleArr.length);
+			return doubleArr;
+		}
 	}
 }

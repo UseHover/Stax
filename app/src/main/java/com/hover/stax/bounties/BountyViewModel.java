@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -11,20 +13,22 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.sims.SimInfo;
-import com.hover.sdk.utils.Utils;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.transactions.StaxTransaction;
-
-import org.json.JSONArray;
+import com.hover.stax.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
 public class BountyViewModel extends AndroidViewModel {
 	private static String TAG = "BountyViewModel";
@@ -36,14 +40,19 @@ public class BountyViewModel extends AndroidViewModel {
 	private MutableLiveData<List<Channel>> filteredBountyChannels;
 	private LiveData<List<StaxTransaction>> bountyTransactions;
 	private MutableLiveData<Bounty> simPresentBounty;
+	private MutableLiveData<List<SimInfo>> sims;
+	private LiveData<Double[]> simHniList = new MutableLiveData<>();
 	private MediatorLiveData<List<Bounty>> bountyList = new MediatorLiveData<>();
 
 	public BountyViewModel(@NonNull Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
+
+		loadSims();
+		simHniList = Transformations.map(sims, this::setHnis);
+
 		filteredBountyChannels = new MutableLiveData<>();
 		filteredBountyChannels.setValue(null);
-		Hover.updateSimInfo(getApplication());
 
 
 		bountyActions = repo.getBountyActions();
@@ -53,6 +62,14 @@ public class BountyViewModel extends AndroidViewModel {
 		bountyList.addSource(bountyActions, this::makeBounties);
 		bountyList.addSource(bountyTransactions, this::makeBountiesIfActions);
 
+	}
+
+	public LiveData<Double[]> getSimHniList() {
+		return simHniList;
+	}
+
+	public MutableLiveData<List<SimInfo>> getSims() {
+		return sims;
 	}
 
 	private LiveData<List<Channel>> loadChannels(List<HoverAction> actions) {
@@ -114,13 +131,46 @@ public class BountyViewModel extends AndroidViewModel {
 		bountyList.setValue(bounties);
 	}
 
+	private Double[] setHnis(List<SimInfo> sims) {
+		if (sims == null) return null;
+		Set<Double> hniList = new HashSet<>();
+		for (SimInfo sim : sims) {
+				hniList.add(Double.parseDouble(sim.getOSReportedHni()));
+		}
+		Double[] result =  hniList.toArray(new Double[0]);
+		Arrays.sort(result);
+		return result;
+	}
+	void loadSims() {
+		if (sims == null) { sims = new MutableLiveData<>(); }
+		new Thread(() -> sims.postValue(repo.getSims())).start();
+		LocalBroadcastManager.getInstance(getApplication())
+				.registerReceiver(simReceiver, new IntentFilter(com.hover.stax.utils.Utils.getPackage(getApplication()) + ".NEW_SIM_INFO_ACTION"));
+		Hover.updateSimInfo(getApplication());
+	}
+
+	private final BroadcastReceiver simReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			new Thread(() -> sims.postValue(repo.getSims())).start();
+		}
+	};
 
 	public void setSimPresentBounty(Bounty b) {
 		new Thread(() -> {
-		String[] hnis =	Utils.convertJsonArrToStringArr(b.action.hni_list);
-		List<SimInfo> sims = repo.getSims(hnis);
-		b.presentSimsSupported = sims.size();
-		simPresentBounty.postValue(b);
+			double[] hnis = Utils.convertJsonArrToDoubleArr(b.action.hni_list);
+			Double[] simHnis = simHniList.getValue();
+			b.presentSimsSupported = getArrayJoints(simHnis, hnis);
+			simPresentBounty.postValue(b);
 		}).start();
+	}
+
+	private int getArrayJoints(Double[] array1, double[] array2) {
+		if(array1 ==null || array2 == null) return 0;
+		int jointSize = 0;
+		for(double value: array1) {
+			if(Arrays.binarySearch(array2, value) !=-1) jointSize = jointSize+1;
+		}
+		return  jointSize;
 	}
 }

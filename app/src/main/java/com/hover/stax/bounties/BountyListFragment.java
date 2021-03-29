@@ -56,6 +56,8 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 	}
 
 	private void startObservers() {
+		bountyViewModel.getSims().observe(getViewLifecycleOwner(), value->Log.v(TAG, "sims update: "+value.size()));
+		bountyViewModel.getSimHniList().observe(getViewLifecycleOwner(), value->Log.v(TAG, "sim hnis update: "+value.length));
 		bountyViewModel.getActions().observe(getViewLifecycleOwner(), actions -> Log.v(TAG, "actions update: " + actions.size()));
 		bountyViewModel.getTransactions().observe(getViewLifecycleOwner(), transactions -> Log.v(TAG, "transactions update: " + transactions.size()));
 		bountyViewModel.getBounties().observe(getViewLifecycleOwner(), bounties -> {
