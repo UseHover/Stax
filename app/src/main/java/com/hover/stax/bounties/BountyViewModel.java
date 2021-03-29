@@ -160,12 +160,12 @@ public class BountyViewModel extends AndroidViewModel {
 		new Thread(() -> {
 			double[] hnis = Utils.convertJsonArrToDoubleArr(b.action.hni_list);
 			Double[] simHnis = simHniList.getValue();
-			b.presentSimsSupported = getArrayJoints(simHnis, hnis);
+			b.presentSimsSupported = getArraysJointSize(simHnis, hnis);
 			simPresentBounty.postValue(b);
 		}).start();
 	}
 
-	private int getArrayJoints(Double[] array1, double[] array2) {
+	private int getArraysJointSize(Double[] array1, double[] array2) {
 		if(array1 ==null || array2 == null) return 0;
 		int jointSize = 0;
 		for(double value: array1) {
