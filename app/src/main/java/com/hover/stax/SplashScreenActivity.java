@@ -41,7 +41,10 @@ import com.hover.stax.utils.blur.StaxBlur;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
+import java.util.Objects;
+
 import static com.hover.stax.utils.Constants.AUTH_CHECK;
+import static com.hover.stax.utils.Constants.FRAGMENT_DIRECT;
 
 public class SplashScreenActivity extends AppCompatActivity implements BiometricChecker.AuthListener {
 	private final static String TAG = "SplashScreenActivity";
@@ -111,7 +114,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	private void continueOn() {
 		new Handler().postDelayed(() -> {
 			if (Utils.getSharedPrefs(this).getInt(AUTH_CHECK, 0) == 1) new BiometricChecker(this, this).startAuthentication(null);
-			else navigateMainActivityOrRequestActivity(getIntent());
+			else chooseNavigation(getIntent());
 		}, NAV_DELAY);
 	}
 
@@ -163,18 +166,30 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 		wm.enqueueUniquePeriodicWork(ScheduleWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, ScheduleWorker.makeToil());
 	}
 
-	private void navigateMainActivityOrRequestActivity(Intent intent) {
-		if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW) && intent.getData() != null)
-			goToFulfillRequest(intent);
-		else startActivity(new Intent(this, MainActivity.class));
+	private void chooseNavigation(Intent intent) {
+		if(isToRedirectFromMainActivity(intent)) {
+			assert intent.getExtras() !=null;
+			assert intent.getExtras().getString(FRAGMENT_DIRECT) !=null;
+			String redirectLink = Objects.requireNonNull(intent.getExtras().getString(FRAGMENT_DIRECT));
+
+			if(redirectionIsExternal(redirectLink)) com.hover.sdk.utils.Utils.openUrl(redirectLink, this);
+			else goToMainActivity(redirectLink);
+		}
+		else if(isForFulfilRequest(intent)) goToFulfillRequestActivity(intent);
+		else goToMainActivity(null);
 
 		finish();
 	}
 
-	private void goToFulfillRequest(Intent intent) {
+	private void goToFulfillRequestActivity(Intent intent) {
 		Intent i = new Intent(this, MainActivity.class);
 		i.putExtra(Constants.REQUEST_LINK, intent.getData().toString());
 		startActivity(i);
+	}
+	private void goToMainActivity(String redirectLink) {
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.putExtra(FRAGMENT_DIRECT, redirectLink);
+		startActivity(intent);
 	}
 
 	@Override
@@ -184,6 +199,16 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
 	@Override
 	public void onAuthSuccess(HoverAction act) {
-		navigateMainActivityOrRequestActivity(getIntent());
+		chooseNavigation(getIntent());
+	}
+
+	private boolean redirectionIsExternal(String redirectTo) {
+		return redirectTo.contains("https");
+	}
+	private boolean isToRedirectFromMainActivity(Intent intent) {
+		return intent.getExtras() !=null && intent.getExtras().getString(FRAGMENT_DIRECT) !=null;
+	}
+	private boolean isForFulfilRequest(Intent intent) {
+		return intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW) && intent.getData() != null;
 	}
 }

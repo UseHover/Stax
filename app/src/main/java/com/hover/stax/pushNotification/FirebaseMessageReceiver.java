@@ -19,6 +19,8 @@ import com.hover.stax.SplashScreenActivity;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.DateUtils;
 
+import java.util.Map;
+
 public class FirebaseMessageReceiver extends FirebaseMessagingService {
 	@Override
 	public void onNewToken(@NonNull String s) {
@@ -28,8 +30,13 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
 	@Override
 	public void
 	onMessageReceived(RemoteMessage remoteMessage) {
+		String redirect = null;
+		if(remoteMessage.getData() !=null) {
+			Map<String, String> data = remoteMessage.getData();
+			 redirect = data.get("redirect");
+		}
 		if (remoteMessage.getNotification() != null) {
-			showNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
+			showNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), redirect);
 		}
 	}
 
@@ -41,12 +48,13 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
 		return remoteViews;
 	}
 
-	private void showNotification(String title, String message) {
+	private void showNotification(String title, String message, String redirect) {
 		String channel_id = String.valueOf(DateUtils.now());
 
 		Intent intent = new Intent(this, SplashScreenActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.putExtra(Constants.FROM_FCM, title);
+		intent.putExtra(Constants.FRAGMENT_DIRECT, redirect);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), channel_id)
