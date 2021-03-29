@@ -29,27 +29,6 @@ public class CountryDropdown extends StaxDropdownLayout {
 		super(context, attrs);
 	}
 
-	public void updateChoicesByHoverActions(List<HoverAction> actionList) {
-		if (actionList == null) setEmptyState();
-		else {
-			Set<String> countryCodeHashset = new HashSet<>();
-			for (HoverAction action : actionList) {
-				countryCodeHashset.add(action.country_alpha2);
-			}
-			String[] codesArray = countryCodeHashset.toArray(new String[0]);
-			updateChoices(codesArray);
-		}
-	}
-
-	public void updateChoicesByBounties(List<Bounty> bountyList) {
-		Set<String> countryCodeHashset = new HashSet<>();
-		for (Bounty bounty : bountyList) {
-			countryCodeHashset.add(bounty.getAction().country_alpha2);
-		}
-		String[] codesArray = countryCodeHashset.toArray(new String[0]);
-		updateChoices(codesArray);
-	}
-
 	public void updateChoicesByChannels(List<Channel> channelList) {
 		Log.d(TAG, "loading countries by channels");
 		if (channelList == null) setEmptyState();
@@ -97,10 +76,15 @@ public class CountryDropdown extends StaxDropdownLayout {
 
 	private void setCountryTextAndFlag(AutoCompleteTextView tv, String code) {
 			// int countryRes = StaxFlags.getResId(getContext(), code);
-			tv.setText(getContext().getString(R.string.country_with_emoji, UIHelper.countryCodeToEmoji(code), getFullCountryName(code)), false);
+			tv.setText(getContext().getString(R.string.country_with_emoji, CountryDropdown.countryCodeToEmoji(code), getFullCountryName(code)), false);
 	}
 	public static String getFullCountryName(String code){
 		Locale loc = new Locale(Lingver.getInstance().getLanguage(), code);
 		return loc.getDisplayCountry();
+	}
+	public static String countryCodeToEmoji(String countryCode) {
+		int firstLetter = Character.codePointAt(countryCode, 0) - 0x41 + 0x1F1E6;
+		int secondLetter = Character.codePointAt(countryCode, 1) - 0x41 + 0x1F1E6;
+		return new String(Character.toChars(firstLetter)) + new String(Character.toChars(secondLetter));
 	}
 }

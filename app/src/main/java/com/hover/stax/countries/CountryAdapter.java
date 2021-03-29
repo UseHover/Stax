@@ -57,7 +57,7 @@ public class CountryAdapter extends ArrayAdapter<String> {
 			textView = itemView.findViewById(R.id.country_text_id);
 		}
 		void setTextAndFlag(String code) {
-			String countryWithEmoji = textView.getContext().getString(R.string.country_with_emoji, UIHelper.countryCodeToEmoji(code),CountryDropdown.getFullCountryName(code) );
+			String countryWithEmoji = textView.getContext().getString(R.string.country_with_emoji, CountryDropdown.countryCodeToEmoji(code),CountryDropdown.getFullCountryName(code) );
 			textView.setText(countryWithEmoji);
 		}
 	}
