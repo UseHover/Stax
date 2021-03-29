@@ -97,6 +97,10 @@ public class DatabaseRepo {
 		return simDao.getPresent();
 	}
 
+	public List<SimInfo> getSims(String[] hnis) {
+		return  simDao.getPresentByHnis(hnis);
+	}
+
 	// Actions
 	public HoverAction getAction(String public_id) {
 		return actionDao.getAction(public_id);

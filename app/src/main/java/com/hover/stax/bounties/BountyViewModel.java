@@ -1,6 +1,9 @@
 package com.hover.stax.bounties;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -10,9 +13,14 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
 import com.hover.sdk.actions.HoverAction;
+import com.hover.sdk.api.Hover;
+import com.hover.sdk.sims.SimInfo;
+import com.hover.sdk.utils.Utils;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.transactions.StaxTransaction;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +35,7 @@ public class BountyViewModel extends AndroidViewModel {
 	private LiveData<List<Channel>> bountyChannels;
 	private MutableLiveData<List<Channel>> filteredBountyChannels;
 	private LiveData<List<StaxTransaction>> bountyTransactions;
+	private MutableLiveData<Bounty> simPresentBounty;
 	private MediatorLiveData<List<Bounty>> bountyList = new MediatorLiveData<>();
 
 	public BountyViewModel(@NonNull Application application) {
@@ -34,6 +43,8 @@ public class BountyViewModel extends AndroidViewModel {
 		repo = new DatabaseRepo(application);
 		filteredBountyChannels = new MutableLiveData<>();
 		filteredBountyChannels.setValue(null);
+		Hover.updateSimInfo(getApplication());
+
 
 		bountyActions = repo.getBountyActions();
 		bountyChannels = Transformations.switchMap(bountyActions, this::loadChannels);
@@ -41,6 +52,7 @@ public class BountyViewModel extends AndroidViewModel {
 
 		bountyList.addSource(bountyActions, this::makeBounties);
 		bountyList.addSource(bountyTransactions, this::makeBountiesIfActions);
+
 	}
 
 	private LiveData<List<Channel>> loadChannels(List<HoverAction> actions) {
@@ -54,6 +66,10 @@ public class BountyViewModel extends AndroidViewModel {
 	public LiveData<List<Channel>> getChannels() { return bountyChannels; }
 	public LiveData<List<StaxTransaction>> getTransactions() { return bountyTransactions; }
 	public LiveData<List<Bounty>> getBounties() { return bountyList; }
+	public LiveData<Bounty> getSimSupportedBounty() {
+		 if(simPresentBounty == null) simPresentBounty = new MutableLiveData<>();
+		 return simPresentBounty;
+	}
 
 	public LiveData<List<Channel>> filterChannels(String countryCode){
 		List<HoverAction> actions = bountyActions.getValue();
@@ -99,4 +115,12 @@ public class BountyViewModel extends AndroidViewModel {
 	}
 
 
+	public void setSimPresentBounty(Bounty b) {
+		new Thread(() -> {
+		String[] hnis =	Utils.convertJsonArrToStringArr(b.action.hni_list);
+		List<SimInfo> sims = repo.getSims(hnis);
+		b.presentSimsSupported = sims.size();
+		simPresentBounty.postValue(b);
+		}).start();
+	}
 }

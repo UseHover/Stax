@@ -1,8 +1,17 @@
 package com.hover.stax.bounties;
 
 import android.content.Context;
+import android.telephony.SubscriptionInfo;
+
+import androidx.lifecycle.LiveData;
 
 import com.hover.sdk.actions.HoverAction;
+import com.hover.sdk.api.Hover;
+import com.hover.sdk.api.SimHelper;
+import com.hover.sdk.sims.MultiSimTelephonyWorker;
+import com.hover.sdk.sims.SimInfo;
+import com.hover.sdk.sims.SimInfoDao;
+import com.hover.sdk.sims.SimInfoDao_Impl;
 import com.hover.stax.R;
 import com.hover.stax.transactions.StaxTransaction;
 
@@ -11,6 +20,7 @@ import java.util.List;
 public class Bounty {
 	HoverAction action;
 	List<StaxTransaction> transactions;
+	int presentSimsSupported = -1;
 
 	public Bounty(HoverAction a, List<StaxTransaction> ts) {
 		action = a;
@@ -22,6 +32,7 @@ public class Bounty {
 	}
 
 	public int transactionCount() { return transactions.size(); }
+
 
 	String generateDescription(Context c) {
 		switch (action.transaction_type) {

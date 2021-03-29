@@ -38,6 +38,7 @@ public class BountyActivity extends AbstractNavigationActivity {
 	}
 
 	void makeCall(HoverAction a) {
+		Amplitude.getInstance().logEvent(getString(R.string.clicked_run_bounty_session, a.from_institution_name, a.root_code));
 		Intent i = new HoverParameters.Builder(this).request(a.public_id).setEnvironment(HoverParameters.MANUAL_ENV).buildIntent();
 		startActivityForResult(i, BOUNTY_REQUEST);
 	}
