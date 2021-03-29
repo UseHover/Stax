@@ -138,7 +138,7 @@ public class BountyViewModel extends AndroidViewModel {
 				hniList.add(Double.parseDouble(sim.getOSReportedHni()));
 		}
 		Double[] result =  hniList.toArray(new Double[0]);
-		Arrays.sort(result);
+		Arrays.sort(result); //Required for binary search in getArraysJointSize();
 		return result;
 	}
 	void loadSims() {
