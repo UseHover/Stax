@@ -8,13 +8,17 @@ import com.hover.stax.transactions.StaxTransaction;
 
 import java.util.List;
 
-class Bounty {
+public class Bounty {
 	HoverAction action;
 	List<StaxTransaction> transactions;
 
 	public Bounty(HoverAction a, List<StaxTransaction> ts) {
 		action = a;
 		transactions = ts;
+	}
+
+	public HoverAction getAction() {
+		return action;
 	}
 
 	public int transactionCount() { return transactions.size(); }

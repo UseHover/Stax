@@ -25,12 +25,15 @@ public class BountyViewModel extends AndroidViewModel {
 
 	private LiveData<List<HoverAction>> bountyActions;
 	private LiveData<List<Channel>> bountyChannels;
+	private MutableLiveData<List<Channel>> filteredBountyChannels;
 	private LiveData<List<StaxTransaction>> bountyTransactions;
 	private MediatorLiveData<List<Bounty>> bountyList = new MediatorLiveData<>();
 
 	public BountyViewModel(@NonNull Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
+		filteredBountyChannels = new MutableLiveData<>();
+		filteredBountyChannels.setValue(null);
 
 		bountyActions = repo.getBountyActions();
 		bountyChannels = Transformations.switchMap(bountyActions, this::loadChannels);
@@ -42,16 +45,29 @@ public class BountyViewModel extends AndroidViewModel {
 
 	private LiveData<List<Channel>> loadChannels(List<HoverAction> actions) {
 		if (actions == null) return new MutableLiveData<>();
-		int[] ids = new int[actions.size()];
-		for (int a = 0; a < actions.size(); a++)
-			ids[a] = actions.get(a).channel_id;
+		int[] ids = getChannelIdArray(actions);
 		return repo.getChannels(ids);
 	}
+
 
 	public LiveData<List<HoverAction>> getActions() { return bountyActions; }
 	public LiveData<List<Channel>> getChannels() { return bountyChannels; }
 	public LiveData<List<StaxTransaction>> getTransactions() { return bountyTransactions; }
 	public LiveData<List<Bounty>> getBounties() { return bountyList; }
+
+	public LiveData<List<Channel>> filterChannels(String countryCode){
+		List<HoverAction> actions = bountyActions.getValue();
+		if(actions == null) return null;
+		return repo.getChannelsByCountry(getChannelIdArray(actions), countryCode);
+	}
+
+	private int[] getChannelIdArray(List<HoverAction> actions) {
+		int[] ids = new int[actions.size()];
+		for (int a = 0; a < actions.size(); a++)
+			ids[a] = actions.get(a).channel_id;
+
+		return ids;
+	}
 
 	private void makeBountiesIfActions(List<StaxTransaction> transactions) {
 		if (bountyActions.getValue() != null && transactions != null)
@@ -81,4 +97,6 @@ public class BountyViewModel extends AndroidViewModel {
 		}
 		bountyList.setValue(bounties);
 	}
+
+
 }

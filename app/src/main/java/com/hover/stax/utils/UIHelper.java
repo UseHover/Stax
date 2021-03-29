@@ -123,4 +123,12 @@ public class UIHelper {
 				.networkPolicy(NetworkPolicy.OFFLINE)
 				.resize(size,size).into(target);
 	}
+
+	public static void loadPicasso(int resId, int size, Target target) {
+		Picasso.get()
+				.load(resId)
+				.config(Bitmap.Config.RGB_565)
+				.networkPolicy(NetworkPolicy.OFFLINE)
+				.resize(size,size).into(target);
+	}
 }

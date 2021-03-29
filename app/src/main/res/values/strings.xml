@@ -330,4 +330,9 @@
 	<string name="go_through_another_flow">Go through another flow</string>
 	<string name="flow_recorded">FLOW RECORDED</string>
 	<string name="bounty_amount_with_currency">USD $%1$d</string>
+	<string name="select_country">Select country</string>
+	<string name="filter_by_country">Filter by country</string>
+	<string name="country">Country</string>
+	<string name="country_error_nodata">Please turn on data to load services and countries.</string>
+	<string name="country_with_emoji">%1$s  %2$s </string>
 </resources>

@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:id="@+id/bounty_list_layout_id"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:layout_marginTop="@dimen/margin_13"
-	android:layout_marginBottom="@dimen/margin_55">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bounty_list_layout_id"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/margin_13"
+    android:layout_marginBottom="@dimen/margin_55">
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-	  android:layout_width="match_parent"
-	  android:layout_height="wrap_content"
-	  android:id="@+id/bountiesRecyclerView" />
+	<com.hover.stax.views.StaxCardView
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    app:showBack="false"
+	    app:title="@string/filter_by_country">
+		<com.hover.stax.countries.CountryDropdown
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/bounty_country_dropdown"
+		    android:hint="@string/select_country"
+		    android:text="@string/country" />
+	</com.hover.stax.views.StaxCardView>
 
+	<androidx.recyclerview.widget.RecyclerView
+	    android:id="@+id/bountiesRecyclerView"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content" />
+
+	</LinearLayout>
 </androidx.core.widget.NestedScrollView>
