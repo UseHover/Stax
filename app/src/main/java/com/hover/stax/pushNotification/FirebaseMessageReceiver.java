@@ -19,6 +19,7 @@ import com.hover.stax.SplashScreenActivity;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.DateUtils;
 
+import java.util.Date;
 import java.util.Map;
 
 public class FirebaseMessageReceiver extends FirebaseMessagingService {
@@ -77,6 +78,9 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
 			if (notificationManager != null)
 				notificationManager.createNotificationChannel(notificationChannel);
 		}
-		if (notificationManager != null) notificationManager.notify(0, builder.build());
+		if (notificationManager != null) {
+			int randId = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
+			notificationManager.notify(randId, builder.build());
+		}
 	}
 }
