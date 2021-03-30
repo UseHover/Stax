@@ -32,7 +32,7 @@ public class BountyActivity extends AbstractNavigationActivity {
 		setContentView(R.layout.activity_bounty);
 		setUpNav();
 		if (!Utils.getString(EMAIL_KEY, this).isEmpty())
-			Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.bountyListFragment);
+			navigateToBountyListFragment(this);
 		else
 			Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_email)));
 	}

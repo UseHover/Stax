@@ -114,4 +114,7 @@ public interface NavigationInterface {
 		bundle.putInt("id", id);
 		NavHostFragment.findNavController(fragment).navigate(R.id.requestDetailsFragment, bundle);
 	}
+	default void navigateToBountyListFragment(Activity activity) {
+		Navigation.findNavController(activity, R.id.nav_host_fragment).navigate(R.id.bountyListFragment);
+	}
 }

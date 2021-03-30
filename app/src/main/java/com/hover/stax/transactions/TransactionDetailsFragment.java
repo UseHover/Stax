@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
@@ -26,6 +27,7 @@ import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.bounties.BountyActivity;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -35,7 +37,7 @@ import com.hover.stax.views.StaxCardView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class TransactionDetailsFragment extends Fragment {
+public class TransactionDetailsFragment extends Fragment implements NavigationInterface {
 	final public static String TAG = "TransDetailsFragment";
 
 	private TransactionDetailsViewModel viewModel;
@@ -154,12 +156,14 @@ public class TransactionDetailsFragment extends Fragment {
 			if (smses != null) smsView.setAdapter(new MessagesAdapter(smses));
 		});
 	}
+
 	private void retryBountyClicked(View v) {
+		if(viewModel.getTransaction().getValue() !=null)
 		((BountyActivity) requireActivity()).retryCall(viewModel.getTransaction().getValue().action_id);
 	}
 	private void submitBountyFlowClicked(View v) {
 		viewModel.submitBountyFlow();
 		UIHelper.flashMessage(requireContext(), R.string.bounty_submitted_successfully);
-		requireActivity().onBackPressed();
+		navigateToBountyListFragment(requireActivity());
 	}
 }
