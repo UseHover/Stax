@@ -61,8 +61,8 @@ public class MainActivity extends AbstractNavigationActivity implements
 	}
 	private void checkForFragmentDirection(Intent intent) {
 		if (intent.hasExtra(Constants.FRAGMENT_DIRECT)) {
-			int toWhere = intent.getExtras().getInt(Constants.FRAGMENT_DIRECT);
-			navigate(this, toWhere);
+			int toWhere = intent.getExtras().getInt(Constants.FRAGMENT_DIRECT, 0);
+			checkPermissionsAndNavigate(toWhere);
 		}
 	}
 

@@ -14,6 +14,7 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.stax.BuildConfig;
 
 import java.io.ByteArrayOutputStream;
@@ -125,4 +126,11 @@ public class Utils {
 		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 		return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
 	}
+	public static void setFirebaseMessagingTopic(String topic){
+		FirebaseMessaging.getInstance().subscribeToTopic(topic);
+	}
+	public static void removeFirebaseMessagingTopic(String topic){
+		FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
+	}
+
 }

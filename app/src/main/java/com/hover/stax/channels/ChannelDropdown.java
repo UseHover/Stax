@@ -12,6 +12,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.hover.stax.utils.UIHelper;
