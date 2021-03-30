@@ -96,6 +96,7 @@
 	<string name="firebase_topic_no_bounty_email">NO-BOUNTY-EMAIL</string>
 	<string name="firebase_topic_yes_bounty_no_try">YES-BOUNTY-NO-TRY</string>
 	<string name="firebase_topic_yes_bounty_yes_try">YES-BOUNTY-YES-TRY</string>
+	<string name="firebase_fcm_redirect_format_err">Push notification redirection bad format</string>
 
 
 </resources>

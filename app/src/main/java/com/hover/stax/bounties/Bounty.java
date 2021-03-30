@@ -30,7 +30,7 @@ public class Bounty {
 			case HoverAction.AIRTIME:
 				return c.getString(R.string.descrip_bounty_airtime);
 			case HoverAction.P2P:
-				return c.getString(R.string.descrip_bounty_p2p, (action.isOnNetwork() ? c.getString(R.string.onnet_choice) : c.getString(R.string.descrip_bounty_offnet, action.to_institution_name)));
+				return c.getString(R.string.descrip_bounty_p2p, (c.getString(R.string.descrip_bounty_offnet,  action.isOnNetwork() ? action.from_institution_name:  action.to_institution_name)));
 			case HoverAction.ME2ME:
 				return c.getString(R.string.descrip_bounty_me2me, action.to_institution_name);
 			case HoverAction.C2B:
