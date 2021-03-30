@@ -6,19 +6,25 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.transactions.Transaction;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
+import com.hover.stax.bounties.BountyActivity;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
@@ -49,16 +55,34 @@ public class TransactionDetailsFragment extends Fragment {
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		startObservers(view);
+		setUssdSessionMessagesRecyclerView(view);
+		viewModel.setTransaction(getArguments().getString(TransactionContract.COLUMN_UUID));
+	}
+	private void setUssdSessionMessagesRecyclerView(View view) {
+		setUSSDMessagesRecyclerView(view);
+		setSmsMessagesRecyclerView(view);
+	}
+	private void startObservers(View view) {
 		viewModel.getTransaction().observe(getViewLifecycleOwner(), transaction -> showTransaction(transaction, view));
 		viewModel.getAction().observe(getViewLifecycleOwner(), action -> showActionDetails(action, view));
 		viewModel.getContact().observe(getViewLifecycleOwner(), contact -> updateRecipient(contact, view));
-		setUSSDMessagesRecyclerView(view);
-		setSmsMessagesRecyclerView(view);
-		viewModel.setTransaction(getArguments().getString(TransactionContract.COLUMN_UUID));
+	}
+
+	private void setupRetryAndSubmitBountyButtons(View v) {
+		LinearLayout bountyButtonsLayout = v.findViewById(R.id.bountyButtonsId);
+		AppCompatButton submitBounty = v.findViewById(R.id.btnSubmitFlow);
+		AppCompatButton retryButton = v.findViewById(R.id.btnRetry);
+
+		bountyButtonsLayout.setVisibility(View.VISIBLE);
+
+		submitBounty.setOnClickListener(this::submitBountyFlowClicked);
+		retryButton.setOnClickListener(this::retryBountyClicked);
 	}
 
 	private void showTransaction(StaxTransaction transaction, View view) {
 		if (transaction != null) {
+			if(transaction.isRecorded() && !transaction.submitted) setupRetryAndSubmitBountyButtons(view);
 			updateDetails(view, transaction);
 			showNotificationCard(transaction.isRecorded() || transaction.status.equals(Transaction.PENDING), view);
 			if (transaction.isRecorded() && viewModel.getAction().getValue() != null)
@@ -129,5 +153,13 @@ public class TransactionDetailsFragment extends Fragment {
 		viewModel.getSms().observe(getViewLifecycleOwner(), smses -> {
 			if (smses != null) smsView.setAdapter(new MessagesAdapter(smses));
 		});
+	}
+	private void retryBountyClicked(View v) {
+		((BountyActivity) requireActivity()).retryCall(viewModel.getTransaction().getValue().action_id);
+	}
+	private void submitBountyFlowClicked(View v) {
+		viewModel.submitBountyFlow();
+		UIHelper.flashMessage(requireContext(), R.string.bounty_submitted_successfully);
+		requireActivity().onBackPressed();
 	}
 }

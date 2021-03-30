@@ -109,8 +109,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 			.setDialogTitle(getString(R.string.bounty_claim_title, b.action.root_code, b.action.getHumanFriendlyType(getContext(), b.action.transaction_type), b.action.bounty_amount))
 			.setDialogMessage(getString(R.string.bounty_claim_explained, b.action.bounty_amount, b.getInstructions(getContext())))
 			.setPosButton(R.string.start_USSD_Flow, v -> {
-				if (getActivity() != null)
-					((BountyActivity) getActivity()).makeCall(b.action);
+					((BountyActivity) requireActivity()).makeCall(b.action);
 			})
 			.showIt();
 	}

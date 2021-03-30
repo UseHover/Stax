@@ -81,6 +81,10 @@ public class StaxTransaction {
 	@ColumnInfo(name = "recipient_id")
 	public String counterparty_id;
 
+	@ColumnInfo(name = "submitted", defaultValue = "0")
+	public boolean submitted;
+
+
 	public StaxTransaction() {
 	}
 

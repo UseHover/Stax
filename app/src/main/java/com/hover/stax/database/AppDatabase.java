@@ -47,6 +47,7 @@ public abstract class AppDatabase extends RoomDatabase {
 						.addMigrations(M26_27)
 						.addMigrations(M27_28)
 						.addMigrations(M28_29)
+						.addMigrations(M29_30)
 						.build();
 				}
 			}
@@ -92,4 +93,13 @@ public abstract class AppDatabase extends RoomDatabase {
 			database.execSQL("ALTER TABLE channels ADD COLUMN published INTEGER DEFAULT 0 NOT NULL");
 		}
 	};
+
+	static final Migration M29_30 = new Migration(29, 30) {
+		@Override
+		public void migrate(SupportSQLiteDatabase database) {
+			database.execSQL("ALTER TABLE channels ADD COLUMN submitted INTEGER DEFAULT 0");
+		}
+	};
+
+
 }

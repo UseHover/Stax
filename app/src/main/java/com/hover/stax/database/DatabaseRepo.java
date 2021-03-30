@@ -147,6 +147,10 @@ public class DatabaseRepo {
 		return transactionDao.getCompleteAndPendingTransfers(channelId);
 	}
 
+	public void update(StaxTransaction transaction) {
+		AppDatabase.databaseWriteExecutor.execute(() -> transactionDao.update(transaction));
+	}
+
 	@SuppressLint("DefaultLocale")
 	public LiveData<Double> getSpentAmount(int channelId, int month, int year) {
 		return transactionDao.getTotalAmount(channelId, String.format("%02d", month), String.valueOf(year));
