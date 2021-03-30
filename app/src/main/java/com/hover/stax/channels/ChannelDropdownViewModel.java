@@ -162,7 +162,6 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 	}
 
 	private void setActiveChannel(Channel channel) {
-		FirebaseMessaging.getInstance().subscribeToTopic(getApplication().getString(R.string.firebase_topic_institution, String.valueOf(channel.institutionId)));
 		activeChannel.setValue(channel);
 	}
 
@@ -216,7 +215,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 
 	private void logChoice(Channel channel) {
 		Log.i(TAG, "saving selected channel: " + channel);
-		FirebaseMessaging.getInstance().subscribeToTopic("channel-" + channel.id);
+		FirebaseMessaging.getInstance().subscribeToTopic(getApplication().getString(R.string.firebase_topic_channel, channel.id));
 		JSONObject event = new JSONObject();
 		try { event.put(getApplication().getString(R.string.added_channel_id), channel.id);
 		} catch (JSONException ignored) { }

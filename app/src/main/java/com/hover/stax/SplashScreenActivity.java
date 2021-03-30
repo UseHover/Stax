@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -171,13 +172,19 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 			assert intent.getExtras().getString(FRAGMENT_DIRECT) !=null;
 			String redirectLink = Objects.requireNonNull(intent.getExtras().getString(FRAGMENT_DIRECT));
 
-			if(redirectionIsExternal(redirectLink)) com.hover.sdk.utils.Utils.openUrl(redirectLink, this);
+			if(redirectionIsExternal(redirectLink)) openUrl(redirectLink, this);
 			else goToMainActivity(redirectLink);
 		}
 		else if(isForFulfilRequest(intent)) goToFulfillRequestActivity(intent);
 		else goToMainActivity(null);
 
 		finish();
+	}
+
+	public static void openUrl(String url, Context ctx) {
+		Intent i = new Intent(Intent.ACTION_VIEW);
+		i.setData(Uri.parse(url));
+		ctx.startActivity(i);
 	}
 
 	private void goToFulfillRequestActivity(Intent intent) {

@@ -15,12 +15,9 @@ import androidx.lifecycle.Transformations;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.sims.SimInfo;
-import com.hover.sdk.utils.Utils;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.transactions.StaxTransaction;
-
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,10 +114,13 @@ public class BountyViewModel extends AndroidViewModel {
 
 	public void setSimPresentBounty(Bounty b) {
 		new Thread(() -> {
-		String[] hnis =	Utils.convertJsonArrToStringArr(b.action.hni_list);
-		List<SimInfo> sims = repo.getSims(hnis);
-		b.presentSimsSupported = sims.size();
-		simPresentBounty.postValue(b);
+			String[] strArr = new String[b.action.hni_list.length()];
+
+			for (int i = 0; i < b.action.hni_list.length(); ++i)
+				strArr[i] = b.action.hni_list.optString(i);
+			List<SimInfo> sims = repo.getSims(strArr);
+			b.presentSimsSupported = sims.size();
+			simPresentBounty.postValue(b);
 		}).start();
 	}
 }

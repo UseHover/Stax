@@ -99,6 +99,7 @@
 	<string name="access_service_summary">Connect with Mobile Money and Telecom services on your behalf</string>
 	<string name="access_service_descript">This is used to read and interact with USSD menus to provide a simplified and more accessible experience.</string>
 	<string name="hsdk_complete">Transaction complete</string>
+	<string name="hsdk_manual_env">Manual environment active. This session will be recorded.</string>
 
 	<!-- Onboarding showcase -->
 	<string name="onboard_addaccounthead">Add an account to get started.</string>

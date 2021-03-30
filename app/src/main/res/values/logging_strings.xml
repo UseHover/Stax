@@ -79,7 +79,7 @@
 	<!--FIREBASE MESSAGING-->
 
 	<string name="firebase_topic_everyone">EVERYONE</string>
-	<string name="firebase_topic_institution">INSTITUTION-%1$s </string>
+	<string name="firebase_topic_channel">CHANNEL-%1$d</string>
 	<string name="firebase_topic_no_balance_check">NO-BALANCE-CHECK</string>
 	<string name="firebase_topic_no_balance_toggle">NO-BALANCE-TOGGLE</string>
 	<string name="firebase_topic_no_request_money">NO-REQUEST-MONEY</string>
