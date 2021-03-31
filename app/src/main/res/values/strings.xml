@@ -340,4 +340,14 @@
 	<string name="bounty_sim_err_header">NO %1$s SIM</string>
 	<string name="bounty_sim_err_desc">You need a SIM card from %1$s in your device to map this flow. Please put a SIM card from %1$s in your device and try again.</string>
 	<string name="retry">Retry</string>
+
+
+	<!-- ONBOARDING -->
+
+	<string name="slide_1_title">Never dial a code again!</string>
+	<string name="slide_1_desc">Move money between dozens of banks and mobile money options</string>
+	<string name="slide_2_title">No data?\nNo problem!</string>
+	<string name="slide_2_desc">Payments through Stax work without wifi or data.</string>
+	<string name="slide_3_title">Forget your SMS inbox.</string>
+	<string name="slide_3_desc">Stax organizes all your transactions in one place</string>
 </resources>

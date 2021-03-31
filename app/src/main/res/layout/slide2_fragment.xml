@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+	<ImageView
+	    android:id="@+id/slide_Img"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:contentDescription="@string/slide_3_title"
+	    android:scaleType="centerCrop"
+	    android:src="@drawable/stax_slide_2" />
+
+	<TextView
+	    android:id="@+id/slide_text_title"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentStart="true"
+	    android:layout_marginHorizontal="@dimen/margin_34"
+	    android:text="@string/slide_2_title"
+	    android:textSize="55sp"
+	    android:lineHeight="46dp"
+	    android:fontFamily="font-bold"
+	    android:textColor="@color/brightBlue"
+	    android:layout_marginBottom="@dimen/margin_34"
+	    android:layout_alignBottom="@+id/slide_text_desc"
+	    android:textStyle="bold" />
+
+	<TextView
+	    android:id="@+id/slide_text_desc"
+	    android:layout_width="301dp"
+	    android:layout_alignParentStart="true"
+	    android:layout_height="wrap_content"
+	    android:fontFamily="font-normal"
+	    android:layout_marginHorizontal="@dimen/margin_34"
+	    android:text="@string/slide_2_desc"
+	    android:layout_alignParentBottom="true"
+	    android:layout_marginBottom="@dimen/margin_176"
+	    android:textSize="@dimen/text_21" />
+
+</RelativeLayout>

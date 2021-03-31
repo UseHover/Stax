@@ -39,10 +39,17 @@ public class Utils {
 	}
 
 	public static String getString(String key, Context c) { return getSharedPrefs(c).getString(key, ""); }
+	public static boolean getBoolean(String key, Context c) { return getSharedPrefs(c).getBoolean(key, false); }
 
 	public static void saveInt(String key, int value, Context c) {
 		SharedPreferences.Editor editor = getSharedPrefs(c).edit();
 		editor.putInt(key, value);
+		editor.apply();
+	}
+
+	public static void saveBoolean(String key, boolean value, Context c) {
+		SharedPreferences.Editor editor = getSharedPrefs(c).edit();
+		editor.putBoolean(key, value);
 		editor.apply();
 	}
 

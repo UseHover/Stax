@@ -66,6 +66,7 @@ dependencies {
     implementation "androidx.work:work-runtime:2.4.0"
     implementation "androidx.biometric:biometric:1.1.0-beta01"
     implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.viewpager:viewpager:1.0.0'
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:2.2.0"
     implementation "androidx.room:room-runtime:2.2.5"
     annotationProcessor "androidx.room:room-compiler:2.2.5"

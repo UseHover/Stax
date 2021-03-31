@@ -33,6 +33,7 @@
 	<string name="refresh_balance_single" translatable="false">Clicked refresh single balance</string>
 	<string name="refresh_balance_all" translatable="false">Clicked refresh all balances</string>
 	<string name="visit_screen" translatable="false">Visited %1$s screen</string>
+	<string name="visit_onboarding" translatable="false">Onboarding</string>
 	<string name="visit_language" translatable="false">Language Choice</string>
 	<string name="visit_security" translatable="false">Security</string>
 	<string name="visit_change_pin" translatable="false">Change PIN</string>
@@ -50,6 +51,7 @@
 	<string name="scheduled_complete" translatable="false">Scheduled new %1$s</string>
 	<string name="clicked_schedule_notification" translatable="false">Clicked notification</string>
 	<string name="finished_scheduled_transaction" translatable="false">Sending scheduled %1$s transfer to the SDK</string>
+	<string name="viewing_onboarding_slide" translatable="false">Viewing slide %1$s</string>
 
 	<string name="clicked_request_link" translatable="false">Clicked link from request</string>
 	<string name="loaded_request_link" translatable="false">Loaded request from link</string>
@@ -59,6 +61,7 @@
 	<string name="clicked_copylink_request" translatable="false">Clicked copy link</string>
 	<string name="clicked_bounty_email_continue_btn" translatable="false">Clicked bounty email continue button</string>
 	<string name="clicked_run_bounty_session">Clicked run bounty USSD session button for account: $%1$s - $%2$s </string>
+	<string name="clicked_onboarding_getstarted_btn">Clicked onboarding get-started button</string>
 
 	<string name="sms_perm_success" translatable="false">Completed grant send SMS permission</string>
 	<string name="sms_perm_denied" translatable="false">Denied send SMS permission</string>
@@ -75,6 +78,7 @@
 	<string name="link_encryptfail" translatable="false">Error creating encrypted Stax payment link</string>
 	<string name="bounty_email_success" translatable="false">Bounty email provided successfully</string>
 	<string name="bounty_email_err" translatable="false">Bounty email error due to: %1$s</string>
+
 
 	<!--FIREBASE MESSAGING-->
 
@@ -97,5 +101,6 @@
 	<string name="firebase_topic_yes_bounty_yes_try">YES-BOUNTY-YES-TRY</string>
 	<string name="firebase_fcm_redirect_format_err">Push notification redirection bad format</string>
 
+	//Onboarding
 
 </resources>
