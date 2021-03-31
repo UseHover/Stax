@@ -97,12 +97,6 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 		}
 		return smses;
 	}
-	void submitBountyFlow() {
-		assert  transaction.getValue() !=null;
-		transaction.getValue().submitted = true;
-		repo.update(transaction.getValue());
-		transaction.postValue(transaction.getValue());
-	}
 
 	LiveData<List<UssdCallResponse>> getSms() {
 		if (messages == null) {

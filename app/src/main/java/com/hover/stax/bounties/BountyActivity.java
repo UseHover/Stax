@@ -54,12 +54,11 @@ public class BountyActivity extends AbstractNavigationActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == BOUNTY_REQUEST && resultCode == RESULT_OK) {
-			new StaxDialog(this)
-					.setDialogTitle(R.string.flow_recorded)
-					.setDialogMessage(R.string.bounty_flow_pending_dialog_msg)
-					.setPosButton(R.string.go_through_another_flow, null)
-					.showIt();
+		if (requestCode == BOUNTY_REQUEST) {
+			if(data !=null) {
+				String transactionUUID = data.getStringExtra("uuid");
+				if(transactionUUID !=null) navigateToTransactionDetailsFragment(transactionUUID, this, true);
+			}
 		}
 	}
 }

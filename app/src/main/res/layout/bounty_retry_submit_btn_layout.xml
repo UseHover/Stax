@@ -33,6 +33,7 @@
 	    android:layout_height="wrap_content"
 	    android:layout_marginHorizontal="@dimen/margin_13"
 	    android:text="@string/submit_flow"
+	    android:visibility="gone"
 	    android:fontFamily="font-medium" />
 
 </LinearLayout>

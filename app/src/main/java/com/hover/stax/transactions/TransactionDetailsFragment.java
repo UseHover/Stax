@@ -39,6 +39,7 @@ import org.json.JSONObject;
 
 public class TransactionDetailsFragment extends Fragment implements NavigationInterface {
 	final public static String TAG = "TransDetailsFragment";
+	final public static String SHOW_BOUNTY_SUBMIT = "bounty_submit_button";
 
 	private TransactionDetailsViewModel viewModel;
 
@@ -77,6 +78,9 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
 		AppCompatButton retryButton = v.findViewById(R.id.btnRetry);
 
 		bountyButtonsLayout.setVisibility(View.VISIBLE);
+		if(getArguments() !=null && getArguments().getBoolean(SHOW_BOUNTY_SUBMIT, false)) {
+		submitBounty.setVisibility(View.VISIBLE);
+		}
 
 		submitBounty.setOnClickListener(this::submitBountyFlowClicked);
 		retryButton.setOnClickListener(this::retryBountyClicked);
@@ -84,7 +88,7 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
 
 	private void showTransaction(StaxTransaction transaction, View view) {
 		if (transaction != null) {
-			if(transaction.isRecorded() && !transaction.submitted) setupRetryAndSubmitBountyButtons(view);
+			if(transaction.isRecorded()) setupRetryAndSubmitBountyButtons(view);
 			updateDetails(view, transaction);
 			showNotificationCard(transaction.isRecorded() || transaction.status.equals(Transaction.PENDING), view);
 			if (transaction.isRecorded() && viewModel.getAction().getValue() != null)
@@ -162,7 +166,6 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
 		((BountyActivity) requireActivity()).retryCall(viewModel.getTransaction().getValue().action_id);
 	}
 	private void submitBountyFlowClicked(View v) {
-		viewModel.submitBountyFlow();
 		UIHelper.flashMessage(requireContext(), R.string.bounty_submitted_successfully);
 		navigateToBountyListFragment(requireActivity());
 	}
