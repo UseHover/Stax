@@ -13,6 +13,7 @@ import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.bounties.BountyActivity;
 import com.hover.stax.languages.SelectLanguageActivity;
+import com.hover.stax.transactions.TransactionDetailsFragment;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.transfers.TransferActivity;
@@ -103,6 +104,13 @@ public interface NavigationInterface {
 		NavHostFragment.findNavController(fragment).navigate(R.id.transactionDetailsFragment, bundle);
 	}
 
+	default void navigateToTransactionDetailsFragment(String uuid, Activity activity, boolean showBountyButton) {
+		Bundle bundle = new Bundle();
+		bundle.putString(TransactionContract.COLUMN_UUID, uuid);
+		bundle.putBoolean(TransactionDetailsFragment.SHOW_BOUNTY_SUBMIT, showBountyButton);
+		Navigation.findNavController(activity, R.id.nav_host_fragment).navigate(R.id.transactionDetailsFragment, bundle);
+	}
+
 	default void navigateToScheduleDetailsFragment(int id, Fragment fragment) {
 		Bundle bundle = new Bundle();
 		bundle.putInt("id", id);
@@ -113,5 +121,8 @@ public interface NavigationInterface {
 		Bundle bundle = new Bundle();
 		bundle.putInt("id", id);
 		NavHostFragment.findNavController(fragment).navigate(R.id.requestDetailsFragment, bundle);
+	}
+	default void navigateToBountyListFragment(Activity activity) {
+		Navigation.findNavController(activity, R.id.nav_host_fragment).navigate(R.id.bountyListFragment);
 	}
 }

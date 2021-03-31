@@ -340,4 +340,6 @@
 	<string name="bounty_sim_err_header">NO %1$s SIM</string>
 	<string name="bounty_sim_err_desc">You need a SIM card from %1$s in your device to map this flow. Please put a SIM card from %1$s in your device and try again.</string>
 	<string name="retry">Retry</string>
+	<string name="submit_flow">Submit flow</string>
+	<string name="bounty_submitted_successfully">Bounty submitted successfully</string>
 </resources>

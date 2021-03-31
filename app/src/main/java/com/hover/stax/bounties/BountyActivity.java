@@ -32,26 +32,33 @@ public class BountyActivity extends AbstractNavigationActivity {
 		setContentView(R.layout.activity_bounty);
 		setUpNav();
 		if (!Utils.getString(EMAIL_KEY, this).isEmpty())
-			Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.bountyListFragment);
+			navigateToBountyListFragment(this);
 		else
 			Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_email)));
 	}
 
-	void makeCall(HoverAction a) {
-		Amplitude.getInstance().logEvent(getString(R.string.clicked_run_bounty_session, a.from_institution_name, a.root_code));
-		Intent i = new HoverParameters.Builder(this).request(a.public_id).setEnvironment(HoverParameters.MANUAL_ENV).buildIntent();
+	public void makeCall(HoverAction a) {
+		Amplitude.getInstance().logEvent(getString(R.string.clicked_run_bounty_session));
+		call(a.public_id);
+	}
+
+	public void retryCall(String actionId) {
+		Amplitude.getInstance().logEvent(getString(R.string.clicked_retry_bounty_session));
+		call(actionId);
+	}
+	private void call(String actionId) {
+		Intent i = new HoverParameters.Builder(this).request(actionId).setEnvironment(HoverParameters.MANUAL_ENV).buildIntent();
 		startActivityForResult(i, BOUNTY_REQUEST);
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == BOUNTY_REQUEST && resultCode == RESULT_OK) {
-			new StaxDialog(this)
-					.setDialogTitle(R.string.flow_recorded)
-					.setDialogMessage(R.string.bounty_flow_pending_dialog_msg)
-					.setPosButton(R.string.go_through_another_flow, null)
-					.showIt();
+		if (requestCode == BOUNTY_REQUEST) {
+			if(data !=null) {
+				String transactionUUID = data.getStringExtra("uuid");
+				if(transactionUUID !=null) navigateToTransactionDetailsFragment(transactionUUID, this, true);
+			}
 		}
 	}
 }

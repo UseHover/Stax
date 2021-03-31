@@ -81,6 +81,8 @@ public class StaxTransaction {
 	@ColumnInfo(name = "recipient_id")
 	public String counterparty_id;
 
+
+
 	public StaxTransaction() {
 	}
 
