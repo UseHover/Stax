@@ -39,7 +39,7 @@ public class OnboardingActivity extends AppCompatActivity implements ViewPager.O
 	}
 	private void setupOnboardingSlides() {
 		viewPager = findViewById(R.id.vpPager);
-		FragmentPagerAdapter adapterViewPager = new MyPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+		FragmentPagerAdapter adapterViewPager = new SlidesPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 		viewPager.startAutoScroll(FIRST_SCROLL_DELAY);
 		viewPager.setInterval(OTHER_SCROLL_DELAY);
 		viewPager.setCycle(true);

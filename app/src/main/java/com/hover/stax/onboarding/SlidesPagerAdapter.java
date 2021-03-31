@@ -9,10 +9,10 @@ import com.hover.stax.R;
 
 import org.jetbrains.annotations.NotNull;
 
-public class MyPagerAdapter extends FragmentPagerAdapter {
+public class SlidesPagerAdapter extends FragmentPagerAdapter {
 	private static final int SLIDES_SIZE = 3;
 
-	public MyPagerAdapter(@NonNull FragmentManager fm, int behavior) {
+	public SlidesPagerAdapter(@NonNull FragmentManager fm, int behavior) {
 		super(fm, behavior);
 	}
 
