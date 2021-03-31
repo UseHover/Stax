@@ -22,6 +22,9 @@ public class OnboardingActivity extends AppCompatActivity implements ViewPager.O
 
 	private static final int FIRST_SCROLL_DELAY = 4000;
 	private static final int OTHER_SCROLL_DELAY = 5000;
+	private static final double SWIPE_DURATION_FACTOR = 2.0;
+	private static final double AUTOSCROLL_EASE_DURACTION_FACTOR = 5.0;
+
 	private StaxAutoScrollViewPager viewPager;
 
 	@Override
@@ -43,9 +46,9 @@ public class OnboardingActivity extends AppCompatActivity implements ViewPager.O
 		viewPager.startAutoScroll(FIRST_SCROLL_DELAY);
 		viewPager.setInterval(OTHER_SCROLL_DELAY);
 		viewPager.setCycle(true);
-		viewPager.setAutoScrollDurationFactor(5.0);
-		viewPager.setSwipeScrollDurationFactor(2.0);
-		viewPager.setStopScrollWhenTouch(false);
+		viewPager.setAutoScrollDurationFactor(AUTOSCROLL_EASE_DURACTION_FACTOR);
+		viewPager.setSwipeScrollDurationFactor(SWIPE_DURATION_FACTOR);
+		viewPager.setStopScrollWhenTouch(true);
 		viewPager.addOnPageChangeListener(this);
 		viewPager.setAdapter(adapterViewPager);
 	}
