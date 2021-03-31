@@ -38,7 +38,7 @@ public class BountyActivity extends AbstractNavigationActivity {
 	}
 
 	public void makeCall(HoverAction a) {
-		Amplitude.getInstance().logEvent(getString(R.string.clicked_run_bounty_session, a.from_institution_name, a.root_code));
+		Amplitude.getInstance().logEvent(getString(R.string.clicked_run_bounty_session));
 		call(a.public_id);
 	}
 
