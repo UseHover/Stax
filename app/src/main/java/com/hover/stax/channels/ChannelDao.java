@@ -36,7 +36,7 @@ public interface ChannelDao {
 	@Insert(onConflict = OnConflictStrategy.IGNORE)
 	void insertAll(Channel... channels);
 
-	@Insert(onConflict = OnConflictStrategy.IGNORE)
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	void insert(Channel channel);
 
 	@Update

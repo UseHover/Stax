@@ -6,7 +6,6 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.actions.HoverAction;
@@ -14,7 +13,6 @@ import com.hover.sdk.api.HoverParameters;
 import com.hover.stax.R;
 import com.hover.stax.navigation.AbstractNavigationActivity;
 import com.hover.stax.utils.Utils;
-import com.hover.stax.views.StaxDialog;
 
 public class BountyActivity extends AbstractNavigationActivity {
 	private static final String TAG = "BountyActivity";
@@ -44,6 +42,7 @@ public class BountyActivity extends AbstractNavigationActivity {
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_retry_bounty_session));
 		call(actionId);
 	}
+
 	private void call(String actionId) {
 		Intent i = new HoverParameters.Builder(this).request(actionId).setEnvironment(HoverParameters.MANUAL_ENV).buildIntent();
 		startActivityForResult(i, BOUNTY_REQUEST);
