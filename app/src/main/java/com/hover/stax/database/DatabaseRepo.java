@@ -93,7 +93,7 @@ public class DatabaseRepo {
 	}
 
 	// SIMs
-	public List<SimInfo> getSims() {
+	public List<SimInfo> getPresentSims() {
 		return simDao.getPresent();
 	}
 

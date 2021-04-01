@@ -47,7 +47,7 @@ class BountyListItem extends LinearLayout {
 			setState(R.color.pending_brown, R.string.bounty_pending_short_desc, R.drawable.ic_warning, true,
 				(view) -> selectListener.viewTransactionDetail(bounty.transactions.get(0).uuid));
 		} else
-			setState(R.color.cardViewColor, 0, 0, true, (view) -> selectListener.bountyDetail(bounty));
+			setState(R.color.cardViewColor, 0, 0, true, (view) -> selectListener.viewBountyDetail(bounty));
 	}
 
 	private void setState(int color, int noticeString, int noticeIcon, boolean isOpen, View.OnClickListener listener) {
@@ -61,6 +61,6 @@ class BountyListItem extends LinearLayout {
 
 	public interface SelectListener {
 		void viewTransactionDetail(String uuid);
-		void bountyDetail(Bounty b);
+		void viewBountyDetail(Bounty b);
 	}
 }

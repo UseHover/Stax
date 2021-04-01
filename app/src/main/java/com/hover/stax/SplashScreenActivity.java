@@ -57,13 +57,13 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 		super.onCreate(savedInstanceState);
 		startSplashForegroundSequence();
 		startBackgroundProcesses();
+		continueOn();
 	}
 
 	private void startSplashForegroundSequence() {
 		setContentView(R.layout.splash_screen_layout);
 		blurBackground();
 		fadeInLogo();
-		continueOn();
 	}
 
 	private void startBackgroundProcesses() {
@@ -74,8 +74,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 		Utils.setFirebaseMessagingTopic(getString(R.string.firebase_topic_everyone));
 		FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this, s -> Log.d(TAG, "Firebase ID is: "+s));
 	}
-
-
+	
 	private void blurBackground() {
 		new Handler(Looper.getMainLooper()).postDelayed(() -> {
 			Bitmap bg = BitmapFactory.decodeResource(getResources(), R.drawable.splash_background);

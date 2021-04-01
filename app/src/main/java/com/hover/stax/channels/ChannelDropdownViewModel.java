@@ -91,7 +91,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 
 	void loadSims() {
 		if (sims == null) { sims = new MutableLiveData<>(); }
-		new Thread(() -> sims.postValue(repo.getSims())).start();
+		new Thread(() -> sims.postValue(repo.getPresentSims())).start();
 		LocalBroadcastManager.getInstance(getApplication())
 				.registerReceiver(simReceiver, new IntentFilter(Utils.getPackage(getApplication()) + ".NEW_SIM_INFO_ACTION"));
 		Hover.updateSimInfo(getApplication());
@@ -100,7 +100,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 	private final BroadcastReceiver simReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			new Thread(() -> sims.postValue(repo.getSims())).start();
+			new Thread(() -> sims.postValue(repo.getPresentSims())).start();
 		}
 	};
 

@@ -1,6 +1,5 @@
 package com.hover.stax.bounties;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +13,6 @@ import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.HoverParameters;
 import com.hover.stax.R;
 import com.hover.stax.navigation.AbstractNavigationActivity;
-import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxDialog;
 
