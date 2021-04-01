@@ -58,7 +58,8 @@
 	<string name="clicked_send_whatsapp_request" translatable="false">Clicked send whatsapp request</string>
 	<string name="clicked_copylink_request" translatable="false">Clicked copy link</string>
 	<string name="clicked_bounty_email_continue_btn" translatable="false">Clicked bounty email continue button</string>
-	<string name="clicked_run_bounty_session">Clicked run bounty USSD session button for account: $%1$s - $%2$s </string>
+	<string name="clicked_run_bounty_session">Clicked run bounty USSD session button </string>
+	<string name="clicked_retry_bounty_session">Clicked retry bounty from transaction detail page </string>
 
 	<string name="sms_perm_success" translatable="false">Completed grant send SMS permission</string>
 	<string name="sms_perm_denied" translatable="false">Denied send SMS permission</string>
