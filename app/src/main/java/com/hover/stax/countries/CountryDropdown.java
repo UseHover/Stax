@@ -16,6 +16,8 @@ import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.StaxDropdownLayout;
 import com.yariksoffice.lingver.Lingver;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -23,37 +25,40 @@ import java.util.Set;
 
 public class CountryDropdown extends StaxDropdownLayout {
 	private static final String TAG = "CountryDropdown";
+
+	CountryAdapter adapter;
 	private CountryAdapter.SelectListener selectListener;
 
 	public CountryDropdown(@NonNull Context context, @Nullable AttributeSet attrs) {
 		super(context, attrs);
 	}
 
-	public void updateChoicesByChannels(List<Channel> channelList) {
-		Log.d(TAG, "loading countries by channels");
-		if (channelList == null) setEmptyState();
-		else {
-			Set<String> countryCodeHashset = new HashSet<>();
-			for (Channel channel : channelList) {
-				countryCodeHashset.add(channel.countryAlpha2);
-			}
-			String[] codesArray = countryCodeHashset.toArray(new String[0]);
-			updateChoices(codesArray);
-		}
-	}
-
-	public void updateChoices(String[] countryCodes) {
+	public void updateChoices(List<Channel> channels) {
 		Log.d(TAG, "loading countries");
-		if (!hasExistingContent()) {
-			CountryAdapter countryAdapter = new CountryAdapter(countryCodes, getContext());
-			autoCompleteTextView.setAdapter(countryAdapter);
-			autoCompleteTextView.setDropDownHeight(UIHelper.dpToPx(600));
-			autoCompleteTextView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((String) adapterView.getItemAtPosition(pos)));
+		if (channels == null || channels.size() == 0) {
+			setEmptyState();
+			return;
 		}
+		adapter = new CountryAdapter(getCountryCodes(channels), getContext());
+		autoCompleteTextView.setAdapter(adapter);
+		autoCompleteTextView.setDropDownHeight(UIHelper.dpToPx(600));
+		autoCompleteTextView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((String) adapterView.getItemAtPosition(pos)));
 	}
 
-	private boolean hasExistingContent() {
-		return autoCompleteTextView.getAdapter() != null && autoCompleteTextView.getAdapter().getCount() > 0;
+	private String[] getCountryCodes(List<Channel> channelList) {
+		Log.d(TAG, "loading countries by channels");
+		List<String> countryCodes = new ArrayList<>();
+		for (Channel channel : channelList) {
+			if (!countryCodes.contains(channel.countryAlpha2))
+				countryCodes.add(channel.countryAlpha2);
+		}
+		Collections.sort(countryCodes);
+		return countryCodes.toArray(new String[0]);
+	}
+
+	private void setEmptyState() {
+		autoCompleteTextView.setDropDownHeight(0);
+		setState(getContext().getString(R.string.channels_error_nodata), ERROR);
 	}
 
 	public void setListener(CountryAdapter.SelectListener sl) {
@@ -65,26 +70,8 @@ public class CountryDropdown extends StaxDropdownLayout {
 		if (selectListener != null) selectListener.countrySelect(code);
 	}
 
-	private void setEmptyState() {
-		autoCompleteTextView.setDropDownHeight(0);
-		setState(getContext().getString(R.string.channels_error_nodata), ERROR);
-	}
-
-	private void setDropdownValue(String value) {
-		if (value != null) setCountryTextAndFlag(autoCompleteTextView, value);
-	}
-
-	private void setCountryTextAndFlag(AutoCompleteTextView tv, String code) {
-			// int countryRes = StaxFlags.getResId(getContext(), code);
-			tv.setText(getContext().getString(R.string.country_with_emoji, CountryDropdown.countryCodeToEmoji(code), getFullCountryName(code)), false);
-	}
-	public static String getFullCountryName(String code){
-		Locale loc = new Locale(Lingver.getInstance().getLanguage(), code);
-		return loc.getDisplayCountry();
-	}
-	public static String countryCodeToEmoji(String countryCode) {
-		int firstLetter = Character.codePointAt(countryCode, 0) - 0x41 + 0x1F1E6;
-		int secondLetter = Character.codePointAt(countryCode, 1) - 0x41 + 0x1F1E6;
-		return new String(Character.toChars(firstLetter)) + new String(Character.toChars(secondLetter));
+	private void setDropdownValue(String countryCode) {
+		if (countryCode != null && adapter != null)
+			autoCompleteTextView.setText(adapter.getCountryString(countryCode));
 	}
 }

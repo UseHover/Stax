@@ -6,20 +6,28 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.transactions.Transaction;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
+import com.hover.stax.bounties.BountyActivity;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -29,8 +37,9 @@ import com.hover.stax.views.StaxCardView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class TransactionDetailsFragment extends Fragment {
+public class TransactionDetailsFragment extends Fragment implements NavigationInterface {
 	final public static String TAG = "TransDetailsFragment";
+	final public static String SHOW_BOUNTY_SUBMIT = "bounty_submit_button";
 
 	private TransactionDetailsViewModel viewModel;
 
@@ -49,16 +58,37 @@ public class TransactionDetailsFragment extends Fragment {
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		startObservers(view);
+		setUssdSessionMessagesRecyclerView(view);
+		viewModel.setTransaction(getArguments().getString(TransactionContract.COLUMN_UUID));
+	}
+	private void setUssdSessionMessagesRecyclerView(View view) {
+		setUSSDMessagesRecyclerView(view);
+		setSmsMessagesRecyclerView(view);
+	}
+	private void startObservers(View view) {
 		viewModel.getTransaction().observe(getViewLifecycleOwner(), transaction -> showTransaction(transaction, view));
 		viewModel.getAction().observe(getViewLifecycleOwner(), action -> showActionDetails(action, view));
 		viewModel.getContact().observe(getViewLifecycleOwner(), contact -> updateRecipient(contact, view));
-		setUSSDMessagesRecyclerView(view);
-		setSmsMessagesRecyclerView(view);
-		viewModel.setTransaction(getArguments().getString(TransactionContract.COLUMN_UUID));
+	}
+
+	private void setupRetryAndSubmitBountyButtons(View v) {
+		LinearLayout bountyButtonsLayout = v.findViewById(R.id.bountyButtonsId);
+		AppCompatButton submitBounty = v.findViewById(R.id.btnSubmitFlow);
+		AppCompatButton retryButton = v.findViewById(R.id.btnRetry);
+
+		bountyButtonsLayout.setVisibility(View.VISIBLE);
+		if(getArguments() !=null && getArguments().getBoolean(SHOW_BOUNTY_SUBMIT, false)) {
+		submitBounty.setVisibility(View.VISIBLE);
+		}
+
+		submitBounty.setOnClickListener(this::submitBountyFlowClicked);
+		retryButton.setOnClickListener(this::retryBountyClicked);
 	}
 
 	private void showTransaction(StaxTransaction transaction, View view) {
 		if (transaction != null) {
+			if(transaction.isRecorded()) setupRetryAndSubmitBountyButtons(view);
 			updateDetails(view, transaction);
 			showNotificationCard(transaction.isRecorded() || transaction.status.equals(Transaction.PENDING), view);
 			if (transaction.isRecorded() && viewModel.getAction().getValue() != null)
@@ -129,5 +159,14 @@ public class TransactionDetailsFragment extends Fragment {
 		viewModel.getSms().observe(getViewLifecycleOwner(), smses -> {
 			if (smses != null) smsView.setAdapter(new MessagesAdapter(smses));
 		});
+	}
+
+	private void retryBountyClicked(View v) {
+		if(viewModel.getTransaction().getValue() !=null)
+		((BountyActivity) requireActivity()).retryCall(viewModel.getTransaction().getValue().action_id);
+	}
+	private void submitBountyFlowClicked(View v) {
+		UIHelper.flashMessage(requireContext(), R.string.bounty_submitted_successfully);
+		navigateToBountyListFragment(requireActivity());
 	}
 }
