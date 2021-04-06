@@ -15,7 +15,7 @@
 	>
 
 	<include layout="@layout/settings_card_accounts" />
-	<include layout="@layout/settings_bounty_card_layout"/>
+	<include layout="@layout/settings_bounty_card_layout" android:visibility="gone"/>
 	<include layout="@layout/settings_security_card" />
 
 	<include layout="@layout/settings_card_language" />
