@@ -124,7 +124,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 		if(getIntent().getExtras() !=null) {
 			String fcmTitle = getIntent().getExtras().getString(Constants.FROM_FCM);
 			if(fcmTitle !=null) {
-				Amplitude.getInstance().logEvent(getString(R.string.from_push_notification, fcmTitle));
+				Amplitude.getInstance().logEvent(getString(R.string.cliucked_push_notification, fcmTitle));
 			}
 		}
 	}

@@ -72,7 +72,7 @@ public class OnboardingActivity extends AppCompatActivity implements ViewPager.O
 	@Override
 	public void onClick(View v) {
 		viewPager.stopAutoScroll();
-		Amplitude.getInstance().logEvent(getString(R.string.clicked_onboarding_getstarted_btn));
+		Amplitude.getInstance().logEvent(getString(R.string.clicked_getstarted));
 		setPassedThrough();
 		goToMainActivity();
 	}

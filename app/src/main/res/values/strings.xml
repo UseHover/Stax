@@ -8,8 +8,6 @@
 	<string name="bounty_endpoint">/stax_bounty_hunters</string>
 	<string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
 
-	<string name="stax_tagline">USSD made simple</string>
-	<string name="splash_screen_img_desc">Stax background</string>
 	<string name="nav_home">Home</string>
 	<string name="nav_balance_and_history">Balance and history</string>
 	<string name="nav_link_account">Link an account</string>
@@ -39,6 +37,16 @@
 	<string name="btn_edit">Edit</string>
 	<string name="btn_back">Back</string>
 	<string name="btn_test">Test</string>
+
+	<!-- ONBOARDING -->
+	<string name="stax_tagline">USSD made simple</string>
+	<string name="splash_screen_img_desc">Stax background</string>
+	<string name="slide_1_title">Never dial a code again!</string>
+	<string name="slide_1_desc">Move money between dozens of banks and mobile money options</string>
+	<string name="slide_2_title">No data?\nNo problem!</string>
+	<string name="slide_2_desc">Payments through Stax work without wifi or data.</string>
+	<string name="slide_3_title">Forget your SMS inbox.</string>
+	<string name="slide_3_desc">Stax organizes all your transactions in one place</string>
 
 	<!-- Home -->
 	<string name="welcome_to">Welcome to</string>
@@ -331,7 +339,6 @@
 	<string name="go_through_another_flow">Go through another flow</string>
 	<string name="flow_recorded">FLOW RECORDED</string>
 	<string name="bounty_amount_with_currency">USD $%1$d</string>
-
 	<string name="select_country">Select country</string>
 	<string name="filter_by_country">Filter by country</string>
 	<string name="country">Country</string>
@@ -340,12 +347,6 @@
 	<string name="bounty_sim_err_header">NO %1$s SIM</string>
 	<string name="bounty_sim_err_desc">You need a SIM card from %1$s in your device to map this flow. Please put a SIM card from %1$s in your device and try again.</string>
 	<string name="retry">Retry</string>
-
-	<!-- ONBOARDING -->
-	<string name="slide_1_title">Never dial a code again!</string>
-	<string name="slide_1_desc">Move money between dozens of banks and mobile money options</string>
-	<string name="slide_2_title">No data?\nNo problem!</string>
-	<string name="slide_2_desc">Payments through Stax work without wifi or data.</string>
-	<string name="slide_3_title">Forget your SMS inbox.</string>
-	<string name="slide_3_desc">Stax organizes all your transactions in one place</string>
+	<string name="submit_flow">Submit flow</string>
+	<string name="bounty_submitted_successfully">Bounty submitted successfully</string>
 </resources>
