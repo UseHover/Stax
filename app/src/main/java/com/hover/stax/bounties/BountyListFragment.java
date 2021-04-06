@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amplitude.api.Amplitude;
+import com.hover.sdk.api.Hover;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.countries.CountryAdapter;
@@ -25,6 +26,7 @@ import java.util.List;
 
 public class BountyListFragment extends Fragment implements NavigationInterface, BountyListItem.SelectListener, CountryAdapter.SelectListener {
 	private static final String TAG = "BountyListFragment";
+
 	private BountyViewModel bountyViewModel;
 	private RecyclerView channelRecyclerView;
 	private CountryDropdown countryDropdown;
@@ -58,28 +60,20 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 	private void startObservers() {
 		bountyViewModel.getActions().observe(getViewLifecycleOwner(), actions -> Log.v(TAG, "actions update: " + actions.size()));
 		bountyViewModel.getTransactions().observe(getViewLifecycleOwner(), transactions -> Log.v(TAG, "transactions update: " + transactions.size()));
-		bountyViewModel.getBounties().observe(getViewLifecycleOwner(), bounties -> {
-			List<Channel> channels = bountyViewModel.getChannels().getValue();
-			if (bounties != null && bounties.size() > 0 && channels != null && bountyViewModel.getChannels().getValue().size() > 0){
-				setBountyListAdapter(channels, bountyViewModel.getBounties().getValue());
-			}
-		});
+		bountyViewModel.getSims().observe(getViewLifecycleOwner(), sims -> Log.v(TAG, "sim update: " + sims.size()));
+		bountyViewModel.getBounties().observe(getViewLifecycleOwner(), bounties -> updateChannelList(bountyViewModel.getChannels().getValue(), bounties));
 
 		bountyViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> {
-			if (channels != null && channels.size() > 0 && bountyViewModel.getBounties().getValue() != null && bountyViewModel.getBounties().getValue().size() > 0) {
-				countryDropdown.updateChoicesByChannels(channels);
-				setBountyListAdapter(channels, bountyViewModel.getBounties().getValue());
-			}
-		});
-		bountyViewModel.getSimSupportedBounty().observe(getViewLifecycleOwner(), bounty -> {
-			if(bounty.presentSimsSupported == 0) showSimErrorDialog(bounty);
-			else if(bounty.presentSimsSupported > 0) showBountyDescDialog(bounty);
+			countryDropdown.updateChoices(channels);
+			updateChannelList(channels, bountyViewModel.getBounties().getValue());
 		});
 	}
 
-	private void setBountyListAdapter(List<Channel> channels, List<Bounty> bounties) {
-		BountyChannelsAdapter adapter = new BountyChannelsAdapter(channels, bounties, this);
-		channelRecyclerView.setAdapter(adapter);
+	private void updateChannelList(List<Channel> channels, List<Bounty> bounties) {
+		if (bounties != null && bounties.size() > 0 && channels != null && channels.size() > 0) {
+			BountyChannelsAdapter adapter = new BountyChannelsAdapter(channels, bounties, this);
+			channelRecyclerView.setAdapter(adapter);
+		}
 	}
 
 	@Override
@@ -88,8 +82,9 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 	}
 
 	@Override
-	public void bountyDetail(Bounty b) {
-		bountyViewModel.setSimPresentBounty(b);
+	public void viewBountyDetail(Bounty b) {
+		if (bountyViewModel.isSimPresent(b)) showBountyDescDialog(b);
+		else showSimErrorDialog(b);
 	}
 
 	void showSimErrorDialog(Bounty b) {
@@ -98,9 +93,8 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 				.setDialogTitle(getString(R.string.bounty_sim_err_header, b.action.root_code))
 				.setDialogMessage(getString(R.string.bounty_sim_err_desc, b.action.root_code))
 				.setNegButton(R.string.btn_cancel, null)
-				.setPosButton(R.string.retry, v -> {
-					bountyViewModel.setSimPresentBounty(b);
-				}).showIt();
+				.setPosButton(R.string.retry, v -> retrySimMatch(b))
+				.showIt();
 	}
 
 	void showBountyDescDialog(Bounty b) {
@@ -109,18 +103,20 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 			.setDialogTitle(getString(R.string.bounty_claim_title, b.action.root_code, b.action.getHumanFriendlyType(getContext(), b.action.transaction_type), b.action.bounty_amount))
 			.setDialogMessage(getString(R.string.bounty_claim_explained, b.action.bounty_amount, b.getInstructions(getContext())))
 			.setPosButton(R.string.start_USSD_Flow, v -> {
-				if (getActivity() != null)
-					((BountyActivity) getActivity()).makeCall(b.action);
+					((BountyActivity) requireActivity()).makeCall(b.action);
 			})
 			.showIt();
 	}
 
+	void retrySimMatch(Bounty b) {
+		bountyViewModel.getSims().removeObservers(getViewLifecycleOwner());
+		bountyViewModel.getSims().observe(getViewLifecycleOwner(), sims -> viewBountyDetail(b));
+		Hover.updateSimInfo(getContext());
+	}
+
 	@Override
 	public void countrySelect(String countryCode) {
-		bountyViewModel.filterChannels(countryCode).observe(getViewLifecycleOwner(), channels -> {
-			if (channels != null && channels.size() > 0 && bountyViewModel.getBounties().getValue() != null && bountyViewModel.getBounties().getValue().size() > 0) {
-				setBountyListAdapter(channels, bountyViewModel.getBounties().getValue());
-			}
-		});
+		bountyViewModel.filterChannels(countryCode).observe(getViewLifecycleOwner(), channels ->
+			updateChannelList(channels, bountyViewModel.getBounties().getValue()));
 	}
 }

@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent">
+<RelativeLayout
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+	    xmlns:app="http://schemas.android.com/apk/res-auto"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:descendantFocusability="afterDescendants"
+	    android:orientation="vertical">
 
+	<androidx.core.widget.NestedScrollView
+	    android:layout_height="match_parent"
+	    android:layout_width="match_parent"
+	   >
 	<LinearLayout
-		android:layout_height="wrap_content"
+		android:layout_height="match_parent"
 		android:layout_width="match_parent"
 		android:layout_marginTop="@dimen/margin_13"
 		android:layout_marginBottom="@dimen/margin_55"
+
 		android:orientation="vertical">
+
 
 		<com.hover.stax.views.StaxCardView
 			android:layout_width="match_parent"
@@ -94,7 +102,10 @@
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_13" />
 				</TableRow>
+
 			</TableLayout>
+
+
 		</com.hover.stax.views.StaxCardView>
 
 		<com.hover.stax.views.StaxCardView
@@ -140,4 +151,7 @@
 
 		</com.hover.stax.views.StaxCardView>
 	</LinearLayout>
-</androidx.core.widget.NestedScrollView>
+	</androidx.core.widget.NestedScrollView>
+
+	<include layout="@layout/bounty_retry_submit_btn_layout" />
+</RelativeLayout>

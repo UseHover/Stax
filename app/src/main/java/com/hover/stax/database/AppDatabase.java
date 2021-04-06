@@ -92,4 +92,5 @@ public abstract class AppDatabase extends RoomDatabase {
 			database.execSQL("ALTER TABLE channels ADD COLUMN published INTEGER DEFAULT 0 NOT NULL");
 		}
 	};
+
 }

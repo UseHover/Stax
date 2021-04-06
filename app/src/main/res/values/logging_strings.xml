@@ -3,6 +3,8 @@
 	<string name="custom_font_err_msg" translatable="false">At least one default font must be set</string>
 
 	<!--	Amplitude log events -->
+	<string name="viewing_onboarding_slide" translatable="false">Viewing slide %1$s</string>
+	<string name="clicked_getstarted">Clicked get started</string>
 	<string name="perms_basic_dialog" translatable="false">Permission - Phone and SMS: dialog shown</string>
 	<string name="perms_basic_requested" translatable="false">Permission - Phone and SMS: requested</string>
 	<string name="perms_phone_requested" translatable="false">Permission - Phone: requested</string>
@@ -10,6 +12,7 @@
 	<string name="perms_basic_cancelled" translatable="false">Permission - Phone and SMS: dialog canceled</string>
 	<string name="perms_basic_granted" translatable="false">Permission - Phone and SMS: granted</string>
 	<string name="perms_phone_denied" translatable="false">Permission - Phone: denied</string>
+	<string name="perms_sms_granted" translatable="false">Permission - SMS: granted</string>
 	<string name="perms_sms_denied" translatable="false">Permission - SMS: denied</string>
 	<string name="perms_basic_denied" translatable="false">Permission - Phone and SMS: denied</string>
 	<string name="perms_overlay_dialog" translatable="false">Permission - Overlay: dialog shown</string>
@@ -26,8 +29,18 @@
 	<string name="selected_language" translatable="false">Selected language</string>
 	<string name="new_channel_selected" translatable="false">Added channel</string>
 	<string name="added_channel_id" translatable="false">channel_id</string>
+	<string name="link_encryptfail" translatable="false">Error creating encrypted Stax payment link</string>
+	<string name="sms_sent_success" translatable="false">Detected SMS sent</string>
+	<string name="try_contact_select" translatable="false">Visited contact select screen</string>
+	<string name="contact_perm_success" translatable="false">Completed grant contacts permissions</string>
+	<string name="contact_perm_denied" translatable="false">Denied contact permission</string>
+	<string name="contact_select_success" translatable="false">Completed choosing contact</string>
+	<string name="contact_select_error" translatable="false">Choose contact error</string>
+	<string name="biometrics_not_setup" translatable="false">Device auth not setup</string>
+	<string name="biometrics_failed" translatable="false">Device auth failed</string>
+	<string name="biometrics_succeeded" translatable="false">Device auth successful</string>
+	<string name="sdk_failure" translatable="false">No SDK response, returned null data on activity result</string>
 
-	<string name="from_push_notification">From push notification: %1$s</string>
 	<string name="start_load_screen" translatable="false">Visited load screen</string>
 	<string name="finish_load_screen" translatable="false">Complete load screen</string>
 	<string name="refresh_balance_single" translatable="false">Clicked refresh single balance</string>
@@ -47,60 +60,43 @@
 	<string name="visit_bounty_list" translatable="false">Bounty List</string>
 	<string name="visit_balance_and_history" translatable="false">Balance and history</string>
 	<string name="visit_link_account" translatable="false">Link an account</string>
+
 	<string name="finish_transfer" translatable="false">Sending %1$s request to the SDK</string>
 	<string name="scheduled_complete" translatable="false">Scheduled new %1$s</string>
 	<string name="clicked_schedule_notification" translatable="false">Clicked notification</string>
 	<string name="finished_scheduled_transaction" translatable="false">Sending scheduled %1$s transfer to the SDK</string>
-	<string name="viewing_onboarding_slide" translatable="false">Viewing slide %1$s</string>
 
+	<string name="cliucked_push_notification">From push notification: %1$s</string>
 	<string name="clicked_request_link" translatable="false">Clicked link from request</string>
 	<string name="loaded_request_link" translatable="false">Loaded request from link</string>
 	<string name="saved_unsent_request" translatable="false">Saved unsent request</string>
 	<string name="clicked_send_sms_request" translatable="false">Clicked send sms request</string>
 	<string name="clicked_send_whatsapp_request" translatable="false">Clicked send whatsapp request</string>
 	<string name="clicked_copylink_request" translatable="false">Clicked copy link</string>
-	<string name="clicked_bounty_email_continue_btn" translatable="false">Clicked bounty email continue button</string>
-	<string name="clicked_run_bounty_session">Clicked run bounty USSD session button for account: $%1$s - $%2$s </string>
-	<string name="clicked_onboarding_getstarted_btn">Clicked onboarding get-started button</string>
 
-	<string name="sms_perm_success" translatable="false">Completed grant send SMS permission</string>
-	<string name="sms_perm_denied" translatable="false">Denied send SMS permission</string>
-	<string name="sms_sent_success" translatable="false">Detected SMS sent</string>
-	<string name="try_contact_select" translatable="false">Visited contact select screen</string>
-	<string name="contact_perm_success" translatable="false">Completed grant contacts permissions</string>
-	<string name="contact_perm_denied" translatable="false">Denied contact permission</string>
-	<string name="contact_select_success" translatable="false">Completed choosing contact</string>
-	<string name="contact_select_error" translatable="false">Choose contact error</string>
-	<string name="biometrics_not_setup" translatable="false">Device auth not setup</string>
-	<string name="biometrics_failed" translatable="false">Device auth failed</string>
-	<string name="biometrics_succeeded" translatable="false">Device auth successful</string>
-	<string name="sdk_failure" translatable="false">No SDK response, returned null data on activity result</string>
-	<string name="link_encryptfail" translatable="false">Error creating encrypted Stax payment link</string>
+	<string name="clicked_bounty_email_continue_btn" translatable="false">Clicked bounty email continue button</string>
+	<string name="clicked_run_bounty_session">Clicked run bounty USSD session</string>
+	<string name="clicked_retry_bounty_session">Clicked retry bounty from transaction detail page</string>
 	<string name="bounty_email_success" translatable="false">Bounty email provided successfully</string>
 	<string name="bounty_email_err" translatable="false">Bounty email error due to: %1$s</string>
 
-
 	<!--FIREBASE MESSAGING-->
-
-	<string name="firebase_topic_everyone">EVERYONE</string>
-	<string name="firebase_topic_channel">CHANNEL-%1$d</string>
-	<string name="firebase_topic_no_balance_check">NO-BALANCE-CHECK</string>
-	<string name="firebase_topic_no_balance_toggle">NO-BALANCE-TOGGLE</string>
-	<string name="firebase_topic_no_request_money">NO-REQUEST-MONEY</string>
-	<string name="firebase_topic_yes_request_money">YES-REQUEST-MONEY</string>
-	<string name="firebase_topic_no_transaction">NO-TRANSACTION</string>
-	<string name="firebase_topic_yes_transaction">YES-TRANSACTION</string>
-	<string name="firebase_topic_transaction_5">TRANSACTION-5</string>
-	<string name="firebase_topic_transaction_10">TRANSACTION-10</string>
-	<string name="firebase_topic_transaction_many">TRANSACTION-MANY</string>
-	<string name="firebase_topic_no_fulfil_request">NO-FULFIL-REQUEST</string>
-	<string name="firebase_topic_yes_fulfil_request">YES-FULFIL-REQUEST</string>
-	<string name="firebase_topic_no_bounty">NO-BOUNTY</string>
-	<string name="firebase_topic_no_bounty_email">NO-BOUNTY-EMAIL</string>
-	<string name="firebase_topic_yes_bounty_no_try">YES-BOUNTY-NO-TRY</string>
-	<string name="firebase_topic_yes_bounty_yes_try">YES-BOUNTY-YES-TRY</string>
-	<string name="firebase_fcm_redirect_format_err">Push notification redirection bad format</string>
-
-	//Onboarding
-
+	<string name="firebase_topic_everyone" translatable="false">EVERYONE</string>
+	<string name="firebase_topic_channel" translatable="false">CHANNEL-%1$d</string>
+	<string name="firebase_topic_no_balance_check" translatable="false">NO-BALANCE-CHECK</string>
+	<string name="firebase_topic_no_balance_toggle" translatable="false">NO-BALANCE-TOGGLE</string>
+	<string name="firebase_topic_no_request_money" translatable="false">NO-REQUEST-MONEY</string>
+	<string name="firebase_topic_yes_request_money" translatable="false">YES-REQUEST-MONEY</string>
+	<string name="firebase_topic_no_transaction" translatable="false">NO-TRANSACTION</string>
+	<string name="firebase_topic_yes_transaction" translatable="false">YES-TRANSACTION</string>
+	<string name="firebase_topic_transaction_5" translatable="false">TRANSACTION-5</string>
+	<string name="firebase_topic_transaction_10" translatable="false">TRANSACTION-10</string>
+	<string name="firebase_topic_transaction_many" translatable="false">TRANSACTION-MANY</string>
+	<string name="firebase_topic_no_fulfil_request" translatable="false">NO-FULFIL-REQUEST</string>
+	<string name="firebase_topic_yes_fulfil_request" translatable="false">YES-FULFIL-REQUEST</string>
+	<string name="firebase_topic_no_bounty" translatable="false">NO-BOUNTY</string>
+	<string name="firebase_topic_no_bounty_email" translatable="false">NO-BOUNTY-EMAIL</string>
+	<string name="firebase_topic_yes_bounty_no_try" translatable="false">YES-BOUNTY-NO-TRY</string>
+	<string name="firebase_topic_yes_bounty_yes_try" translatable="false">YES-BOUNTY-YES-TRY</string>
+	<string name="firebase_fcm_redirect_format_err" translatable="false">Push notification redirection bad format</string>
 </resources>

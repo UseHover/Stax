@@ -60,6 +60,9 @@ public class UIHelper {
 	public static void flashMessage(@NotNull Context context, String message) {
 		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 	}
+	public static void flashMessage(@NotNull Context context, int messageRes) {
+		Toast.makeText(context, context.getString(messageRes), Toast.LENGTH_SHORT).show();
+	}
 
 	public static LinearLayoutManager setMainLinearManagers(Context context) {
 		LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);

@@ -59,10 +59,10 @@ public class RequestActivity extends AbstractNavigationActivity implements Reque
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		if (requestCode == Constants.SMS && new PermissionHelper(this).permissionsGranted(grantResults)) {
-			Amplitude.getInstance().logEvent(getString(R.string.sms_perm_success));
+			Amplitude.getInstance().logEvent(getString(R.string.perms_sms_granted));
 			sendSms(null);
 		} else if (requestCode == Constants.SMS) {
-			Amplitude.getInstance().logEvent(getString(R.string.sms_perm_denied));
+			Amplitude.getInstance().logEvent(getString(R.string.perms_sms_denied));
 			UIHelper.flashMessage(this, getResources().getString(R.string.toast_error_smsperm));
 		}
 	}
