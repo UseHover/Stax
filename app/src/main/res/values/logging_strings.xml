@@ -33,6 +33,7 @@
 	<string name="refresh_balance_single" translatable="false">Clicked refresh single balance</string>
 	<string name="refresh_balance_all" translatable="false">Clicked refresh all balances</string>
 	<string name="visit_screen" translatable="false">Visited %1$s screen</string>
+	<string name="visit_onboarding" translatable="false">Onboarding</string>
 	<string name="visit_language" translatable="false">Language Choice</string>
 	<string name="visit_security" translatable="false">Security</string>
 	<string name="visit_change_pin" translatable="false">Change PIN</string>
@@ -50,6 +51,7 @@
 	<string name="scheduled_complete" translatable="false">Scheduled new %1$s</string>
 	<string name="clicked_schedule_notification" translatable="false">Clicked notification</string>
 	<string name="finished_scheduled_transaction" translatable="false">Sending scheduled %1$s transfer to the SDK</string>
+	<string name="viewing_onboarding_slide" translatable="false">Viewing slide %1$s</string>
 
 	<string name="clicked_request_link" translatable="false">Clicked link from request</string>
 	<string name="loaded_request_link" translatable="false">Loaded request from link</string>
@@ -77,8 +79,8 @@
 	<string name="bounty_email_success" translatable="false">Bounty email provided successfully</string>
 	<string name="bounty_email_err" translatable="false">Bounty email error due to: %1$s</string>
 
-	<!--FIREBASE MESSAGING-->
 
+	<!--FIREBASE MESSAGING-->
 	<string name="firebase_topic_everyone">EVERYONE</string>
 	<string name="firebase_topic_channel">CHANNEL-%1$d</string>
 	<string name="firebase_topic_no_balance_check">NO-BALANCE-CHECK</string>
@@ -97,6 +99,4 @@
 	<string name="firebase_topic_yes_bounty_no_try">YES-BOUNTY-NO-TRY</string>
 	<string name="firebase_topic_yes_bounty_yes_try">YES-BOUNTY-YES-TRY</string>
 	<string name="firebase_fcm_redirect_format_err">Push notification redirection bad format</string>
-
-
 </resources>
