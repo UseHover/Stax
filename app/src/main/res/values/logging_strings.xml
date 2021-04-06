@@ -74,9 +74,10 @@
 	<string name="clicked_send_whatsapp_request" translatable="false">Clicked send whatsapp request</string>
 	<string name="clicked_copylink_request" translatable="false">Clicked copy link</string>
 
+
 	<string name="clicked_bounty_email_continue_btn" translatable="false">Clicked bounty email continue button</string>
-	<string name="clicked_run_bounty_session">Clicked run bounty USSD session</string>
-	<string name="clicked_retry_bounty_session">Clicked retry bounty from transaction detail page</string>
+	<string name="clicked_run_bounty_session" translatable="false">Clicked run bounty USSD session</string>
+	<string name="clicked_retry_bounty_session" translatable="false">Clicked retry bounty from transaction detail page</string>
 	<string name="bounty_email_success" translatable="false">Bounty email provided successfully</string>
 	<string name="bounty_email_err" translatable="false">Bounty email error due to: %1$s</string>
 
