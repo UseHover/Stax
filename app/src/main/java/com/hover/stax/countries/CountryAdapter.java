@@ -1,6 +1,7 @@
 package com.hover.stax.countries;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +21,9 @@ public class CountryAdapter extends ArrayAdapter<String> {
 
 	private String[] countryCodes;
 
-	public CountryAdapter(@NonNull  String[] countryCodes, @NonNull Context context) {
-		super(context, 0, countryCodes);
-		this.countryCodes = countryCodes;
+	public CountryAdapter(@NonNull  String[] codes, @NonNull Context context) {
+		super(context, 0, codes);
+		this.countryCodes = codes;
 	}
 
 	@NonNull
@@ -48,6 +49,13 @@ public class CountryAdapter extends ArrayAdapter<String> {
 		int firstLetter = Character.codePointAt(countryCode, 0) - 0x41 + 0x1F1E6;
 		int secondLetter = Character.codePointAt(countryCode, 1) - 0x41 + 0x1F1E6;
 		return new String(Character.toChars(firstLetter)) + new String(Character.toChars(secondLetter));
+	}
+
+	@Nullable
+	@Override
+	public String getItem(int position) {
+		if (getCount() > 0) return countryCodes[position];
+		else return null;
 	}
 
 	@Override
