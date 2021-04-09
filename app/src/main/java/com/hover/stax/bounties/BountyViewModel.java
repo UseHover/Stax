@@ -18,6 +18,7 @@ import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.sims.SimInfo;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.countries.CountryAdapter;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.transactions.StaxTransaction;
 import com.hover.stax.utils.Utils;
@@ -100,7 +101,9 @@ public class BountyViewModel extends AndroidViewModel {
 	public LiveData<List<Channel>> filterChannels(String countryCode){
 		List<HoverAction> actions = bountyActions.getValue();
 		if(actions == null) return null;
-		return repo.getChannelsByCountry(getChannelIdArray(actions), countryCode);
+
+		if(countryCode.equals(CountryAdapter.codeRepresentingAllCountries())) return loadChannels(actions);
+		else return repo.getChannelsByCountry(getChannelIdArray(actions), countryCode);
 	}
 
 	private int[] getChannelIdArray(List<HoverAction> actions) {
