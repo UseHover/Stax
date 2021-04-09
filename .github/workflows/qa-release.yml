@@ -14,6 +14,9 @@ jobs:
   build:
     # The type of runner the job will run on
     runs-on: ubuntu-latest
+    env:
+      HoverUsername: "alexkombo@gmail.com"
+      HoverPassword: "*DZU#h&@m4xv"
 
     # Sequence of tasks that will be executed as part of the job
     steps:
