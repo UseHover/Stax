@@ -20,6 +20,7 @@ jobs:
 
     # Sequence of tasks that will be executed as part of the job
     steps:
+
       # Checkout the repository so that the job can access it
       - name: checkout
         uses: actions/checkout@v2

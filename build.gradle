@@ -24,8 +24,8 @@ allprojects {
             url 'https://pro.maven.usehover.com/snapshots'
             credentials {
                 //TODO revert back to original once secrets are set
-                username "alexkombo@gmail.com"
-                password "*DZU#h&@m4xv"
+                username = "alexkombo@gmail.com"
+                password = "*DZU#h&@m4xv"
             }
             authentication { basic(BasicAuthentication) }
             content { includeGroup "com.hover" }
