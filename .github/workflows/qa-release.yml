@@ -1,0 +1,69 @@
+# This is a workflow to help with continuous delivery of Stax App to the testing tracks and release track on Play Store
+
+name: Stax App Continuous Delivery Workflow
+
+# Define when the action will run
+on:
+  # Triggers the workflow on push events to the specified branch
+  push:
+    branches: [ 177626129-continuous-delivery ]
+
+# Define jobs to be run sequentially or parallel
+jobs:
+  # First job to be run called "build"
+  build:
+    # The type of runner the job will run on
+    runs-on: ubuntu-latest
+
+    # Sequence of tasks that will be executed as part of the job
+    steps:
+      # Checkout the repository so that the job can access it
+      - name: checkout
+        uses: actions/checkout@v2
+
+      # Set up JDK 1.8 for use
+      - name: set up JDK 1.8
+        uses: actions/setup@v1
+        with:
+          # Specific java version to run
+          - java-version: 1.8
+
+      # Run the assembleRelease gradle command to start the build process for our buildVariant
+      - name: Build artifact
+        id: buildApk
+        uses: eskatos/gradle-command-action@v1.3.3
+        with:
+          # Can be overridden with the desired gradle version
+          gradle-version: 6.1.1
+          wrapper-cache-enabled: true
+          dependencies-cache-enabled: true
+          configuration-cache-enabled: true
+          # Specifies the gradle command to be run, can be replaced with any desired task
+          arguments: assembleRelease
+
+
+      # Sign the generated apk
+      - name: Sign artifact
+        id: signArtifact
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      # Upload artifact
+      - name: Upload Release
+        uses: actions/upload-artifact@v2
+        with:
+          name: Signed app bundle
+          path: ${{steps.signArtifact.outputs.signedReleaseFile}}
+
+
+
+
+
+
+
+
