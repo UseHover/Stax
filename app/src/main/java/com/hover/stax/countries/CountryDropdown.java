@@ -48,6 +48,8 @@ public class CountryDropdown extends StaxDropdownLayout {
 	private String[] getCountryCodes(List<Channel> channelList) {
 		Log.d(TAG, "loading countries by channels");
 		List<String> countryCodes = new ArrayList<>();
+
+		countryCodes.add(CountryAdapter.codeRepresentingAllCountries());
 		for (Channel channel : channelList) {
 			if (!countryCodes.contains(channel.countryAlpha2))
 				countryCodes.add(channel.countryAlpha2);
@@ -55,6 +57,7 @@ public class CountryDropdown extends StaxDropdownLayout {
 		Collections.sort(countryCodes);
 		return countryCodes.toArray(new String[0]);
 	}
+
 
 	private void setEmptyState() {
 		autoCompleteTextView.setDropDownHeight(0);

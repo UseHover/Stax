@@ -36,8 +36,8 @@ public class CountryAdapter extends ArrayAdapter<String> {
 	}
 
 	String getCountryString(String code) {
-		return getContext().getString(R.string.country_with_emoji,
-			countryCodeToEmoji(code), getFullCountryName(code));
+		if(code.equals(codeRepresentingAllCountries())) return getContext().getString(R.string.all_countries_with_emoji);
+		return getContext().getString(R.string.country_with_emoji, countryCodeToEmoji(code), getFullCountryName(code));
 	}
 
 	private static String getFullCountryName(String code){
@@ -45,10 +45,17 @@ public class CountryAdapter extends ArrayAdapter<String> {
 		return loc.getDisplayCountry();
 	}
 
+	private static String worldEmoji() {
+		int worldUnicode = 0x41 +0x1F30E;
+		return new String(Character.toChars(worldUnicode));
+	}
 	private static String countryCodeToEmoji(String countryCode) {
 		int firstLetter = Character.codePointAt(countryCode, 0) - 0x41 + 0x1F1E6;
 		int secondLetter = Character.codePointAt(countryCode, 1) - 0x41 + 0x1F1E6;
 		return new String(Character.toChars(firstLetter)) + new String(Character.toChars(secondLetter));
+	}
+	public static String codeRepresentingAllCountries(){
+		return "00";
 	}
 
 	@Nullable
