@@ -45,10 +45,6 @@ public class CountryAdapter extends ArrayAdapter<String> {
 		return loc.getDisplayCountry();
 	}
 
-	private static String worldEmoji() {
-		int worldUnicode = 0x41 +0x1F30E;
-		return new String(Character.toChars(worldUnicode));
-	}
 	private static String countryCodeToEmoji(String countryCode) {
 		int firstLetter = Character.codePointAt(countryCode, 0) - 0x41 + 0x1F1E6;
 		int secondLetter = Character.codePointAt(countryCode, 1) - 0x41 + 0x1F1E6;
