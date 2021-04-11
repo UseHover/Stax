@@ -14,15 +14,6 @@ jobs:
   build:
     # The type of runner the job will run on
     runs-on: ubuntu-latest
-    env:
-      HoverUsername: ${{ secrets.HOVER_USERNAME }}
-      HoverPassword: ${{ secrets.HOVER_PASSWORD }}
-    shell: bash
-    run: |
-      touch ~/.gradle/gradle.properties
-      echo "::set-env name=GRADLE_USER_HOME::$HOME/.gradle"
-      echo "HoverUsername=$HoverUsername HoverPassword =$HoverPassword" > ~/.gradle/gradle.properties
-
 
     # Sequence of tasks that will be executed as part of the job
     steps:
@@ -30,6 +21,16 @@ jobs:
       # Checkout the repository so that the job can access it
       - name: checkout
         uses: actions/checkout@v2
+
+      - name: set up gradle properties
+        env:
+          HoverUsername: ${{ secrets.HOVER_USERNAME }}
+          HoverPassword: ${{ secrets.HOVER_PASSWORD }}
+        shell: bash
+        run: |
+          mkdir ~/.gradle
+          echo "::set-env name=GRADLE_USER_HOME::$HOME/.gradle"
+          echo "HoverUsername=$HoverUsername HoverPassword =$HoverPassword" > ~/.gradle/gradle.properties
 
       # Set up JDK 1.8 for use
       - name: set up JDK 1.8
