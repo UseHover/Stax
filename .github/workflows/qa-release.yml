@@ -17,6 +17,12 @@ jobs:
     env:
       HoverUsername: ${{ secrets.HOVER_USERNAME }}
       HoverPassword: ${{ secrets.HOVER_PASSWORD }}
+    shell: bash
+    run: |
+      touch ~/.gradle/gradle.properties
+      echo "::set-env name=GRADLE_USER_HOME::$HOME/.gradle"
+      echo "HoverUsername=$HoverUsername HoverPassword =$HoverPassword" > ~/.gradle/gradle.properties
+
 
     # Sequence of tasks that will be executed as part of the job
     steps:
