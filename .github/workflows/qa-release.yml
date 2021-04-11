@@ -29,7 +29,7 @@ jobs:
         shell: bash
         run: |
           mkdir ~/.gradle
-          echo "::set-env name=GRADLE_USER_HOME::$HOME/.gradle"
+          echo "GRADLE_USER_HOME=$HOME/.gradle" >> $GITHUB_ENV
           echo "HoverUsername=$HoverUsername HoverPassword =$HoverPassword" > ~/.gradle/gradle.properties
 
       # Set up JDK 1.8 for use
