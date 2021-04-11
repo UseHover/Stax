@@ -4,7 +4,21 @@ apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+//def userHome = Paths.get(System.getProperty('user.home'))
+//def keystorePropertiesFile = file(userHome.resolve('.stax/keystore.properties'))
+//def keystoreProperties = new Properties()
+//keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
+//    signingConfigs {
+//        releaseConfig {
+//            keyAlias keystoreProperties['keyAlias']
+//            keyPassword keystoreProperties['keyPassword']
+//            storeFile file(keystoreProperties['storeFile'])
+//            storePassword keystoreProperties['storePassword']
+//        }
+//    }
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
@@ -31,12 +45,16 @@ android {
     buildTypes {
         debug {
             buildConfigField "String", "SELF_DESTRUCT", "\"1617235140000\""
+
+            dependencies {
+                debugImplementation project(":hover.sdk")
+            }
         }
         release {
-            minifyEnabled false
+            minifyEnabled true
             buildConfigField "String", "SELF_DESTRUCT", "\"1617235140000\"" // Mar 31, 2021
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-//            signingConfig signingConfigs.debug
+//            signingConfig signingConfigs.releaseConfig
         }
     }
     bundle {
@@ -98,7 +116,6 @@ dependencies {
     // Hover SDK
     def sdk_version = "1.7.2-stax-1.2.1-pro"
     releaseImplementation "com.hover:android-sdk:$sdk_version"
-    debugImplementation project(":hover.sdk")
     debugImplementation 'com.android.volley:volley:1.1.1'
     debugImplementation 'com.google.android.gms:play-services-analytics:17.0.0'
     debugImplementation 'io.sentry:sentry-android:1.7.21'
