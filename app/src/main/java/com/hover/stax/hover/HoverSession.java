@@ -103,7 +103,7 @@ final public class HoverSession {
 		private Channel channel;
 		private HoverAction action;
 		private JSONObject extras;
-		private int requestCode, finalScreenTime = 2000;
+		private int requestCode, finalScreenTime = 4000;
 
 		public Builder(HoverAction a, Channel c, Activity activity, int code) {
 			if (a == null) throw new IllegalArgumentException("Action must not be null");
