@@ -1,12 +1,12 @@
 # This is a workflow to help with continuous delivery of Stax App to the testing tracks and release track on Play Store
 
-name: Stax App QA Release Workflow
+name: Stax App Prod Release Workflow
 
 # Define when the action will run
 on:
   # Triggers the workflow on push events to the specified branch
   push:
-    branches: [ qa ]
+    branches: [ master ]
 
 # Define jobs to be run sequentially or parallel
 jobs:
@@ -82,7 +82,7 @@ jobs:
           serviceAccountJson: service_account.json
           packageName: com.hover.stax
           releaseFiles: app/build/outputs/bundle/release/*.aab
-          track: alpha
+          track: production
           whatsNewDirectory: whatsnew/
 
 
@@ -95,7 +95,7 @@ jobs:
           SLACK_CHANNEL: development
           SLACK_AVATAR: sender
           with:
-            args: 'Stax has just been deployed to Play Store alpha track. :truck:'
+            args: 'Stax has just been deployed to Play Store production track. :truck:'
 
 
 
