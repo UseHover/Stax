@@ -6,6 +6,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -72,23 +73,17 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
 		viewModel.getContact().observe(getViewLifecycleOwner(), contact -> updateRecipient(contact, view));
 	}
 
-	private void setupRetryAndSubmitBountyButtons(View v) {
-		LinearLayout bountyButtonsLayout = v.findViewById(R.id.bountyButtonsId);
-		AppCompatButton submitBounty = v.findViewById(R.id.btnSubmitFlow);
+	private void setupRetryBountyButton(View v) {
+		RelativeLayout bountyButtonsLayout = v.findViewById(R.id.bountyRetryButtonLayoutId);
 		AppCompatButton retryButton = v.findViewById(R.id.btnRetry);
 
 		bountyButtonsLayout.setVisibility(View.VISIBLE);
-		if(getArguments() !=null && getArguments().getBoolean(SHOW_BOUNTY_SUBMIT, false)) {
-		submitBounty.setVisibility(View.VISIBLE);
-		}
-
-		submitBounty.setOnClickListener(this::submitBountyFlowClicked);
 		retryButton.setOnClickListener(this::retryBountyClicked);
 	}
 
 	private void showTransaction(StaxTransaction transaction, View view) {
 		if (transaction != null) {
-			if(transaction.isRecorded()) setupRetryAndSubmitBountyButtons(view);
+			if(transaction.isRecorded()) setupRetryBountyButton(view);
 			updateDetails(view, transaction);
 			showNotificationCard(transaction.isRecorded() || transaction.status.equals(Transaction.PENDING), view);
 			if (transaction.isRecorded() && viewModel.getAction().getValue() != null)
@@ -164,9 +159,5 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
 	private void retryBountyClicked(View v) {
 		if(viewModel.getTransaction().getValue() !=null)
 		((BountyActivity) requireActivity()).retryCall(viewModel.getTransaction().getValue().action_id);
-	}
-	private void submitBountyFlowClicked(View v) {
-		UIHelper.flashMessage(requireContext(), R.string.bounty_submitted_successfully);
-		navigateToBountyListFragment(requireActivity());
 	}
 }

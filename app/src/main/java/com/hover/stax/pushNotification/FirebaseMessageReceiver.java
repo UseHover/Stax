@@ -31,22 +31,11 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
 	@Override
 	public void
 	onMessageReceived(RemoteMessage remoteMessage) {
-		String redirect = null;
-		if(remoteMessage.getData() !=null) {
-			Map<String, String> data = remoteMessage.getData();
-			 redirect = data.get("redirect");
-		}
+		Map<String, String> data = remoteMessage.getData();
+		String redirect = data.get("redirect");
 		if (remoteMessage.getNotification() != null) {
 			showNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), redirect);
 		}
-	}
-
-	private RemoteViews getCustomDesign(String title, String message) {
-		RemoteViews remoteViews = new RemoteViews(getApplicationContext().getPackageName(), R.layout.notification);
-		remoteViews.setTextViewText(R.id.title, title);
-		remoteViews.setTextViewText(R.id.message, message);
-		remoteViews.setImageViewResource(R.id.icon, R.drawable.ic_stax);
-		return remoteViews;
 	}
 
 	private void showNotification(String title, String message, String redirect) {
@@ -65,12 +54,12 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
 													 .setPriority(2)
 													 .setTicker(title)
 													 .setOngoing(false)
-													 .setUsesChronometer(true)
+													 .setUsesChronometer(false)
 													 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
 													 .setOnlyAlertOnce(false)
+													 .setContentTitle(title)
+													 .setContentText(message)
 													 .setContentIntent(pendingIntent);
-
-		builder = builder.setContent(getCustomDesign(title, message));
 
 		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

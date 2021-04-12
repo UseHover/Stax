@@ -18,12 +18,14 @@ class BountyListItem extends LinearLayout {
 	private Bounty bounty;
 	private SelectListener selectListener;
 
-	TextView notice;
+	private TextView noticeText, descriptionText, amountText;
 
 	BountyListItem(@NonNull Context context, @Nullable AttributeSet attrs) {
 		super(context, attrs);
 		View v = inflate(context, R.layout.home_list_item, this);
-		notice = v.findViewById(R.id.li_callout);
+		noticeText = v.findViewById(R.id.li_callout);
+		descriptionText = v.findViewById(R.id.li_description);
+		amountText = v.findViewById(R.id.li_amount);
 	}
 
 	public void setBounty(Bounty b, SelectListener listener) {
@@ -34,8 +36,8 @@ class BountyListItem extends LinearLayout {
 	}
 
 	private void setContent() {
-		((TextView) findViewById(R.id.li_description)).setText(bounty.generateDescription(getContext()));
-		((TextView) findViewById(R.id.li_amount)).setText(getContext().getString(R.string.bounty_amount_with_currency, bounty.action.bounty_amount));
+		descriptionText.setText(bounty.generateDescription(getContext()));
+		amountText.setText(getContext().getString(R.string.bounty_amount_with_currency, bounty.action.bounty_amount));
 	}
 
 	private void chooseState() {
@@ -52,10 +54,11 @@ class BountyListItem extends LinearLayout {
 
 	private void setState(int color, int noticeString, int noticeIcon, boolean isOpen, View.OnClickListener listener) {
 		setBackgroundColor(getContext().getResources().getColor(color));
-		if (noticeString != 0) notice.setText(noticeString);
-		notice.setCompoundDrawablesWithIntrinsicBounds(noticeIcon, 0, 0, 0);
-		notice.setPaintFlags(isOpen ? 0 : Paint.STRIKE_THRU_TEXT_FLAG);
-		notice.setVisibility(noticeString != 0 ? View.VISIBLE : View.GONE);
+		if (noticeString != 0) noticeText.setText(noticeString);
+		noticeText.setCompoundDrawablesWithIntrinsicBounds(noticeIcon, 0, 0, 0);
+		noticeText.setVisibility(noticeString != 0 ? View.VISIBLE : View.GONE);
+		descriptionText.setPaintFlags(isOpen ? 0 : Paint.STRIKE_THRU_TEXT_FLAG);
+		amountText.setPaintFlags(isOpen ? 0 : Paint.STRIKE_THRU_TEXT_FLAG);
 		setOnClickListener(listener);
 	}
 
