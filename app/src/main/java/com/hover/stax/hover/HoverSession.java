@@ -46,7 +46,8 @@ final public class HoverSession {
 	private HoverParameters.Builder getBasicBuilder(Builder b) {
 		HoverParameters.Builder builder = new HoverParameters.Builder(b.activity);
 		builder.request(b.action.public_id);
-		builder.initialProcessingMessage(getMessage(b.action, b.activity));
+		builder.setHeader(getMessage(b.action, b.activity));
+		builder.initialProcessingMessage("");
 		builder.showUserStepDescriptions(true);
 		builder.finalMsgDisplayTime(finalScreenTime);
 		builder.style(R.style.StaxHoverTheme);
