@@ -7,6 +7,8 @@ on:
   # Triggers the workflow on push events to the specified branch
   push:
     branches: [ master ]
+    tags:
+      - 'v*'
 
 # Define jobs to be run sequentially or parallel
 jobs:
@@ -70,6 +72,19 @@ jobs:
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
 
+      # Create release with tag on Github
+      - name: Create Release
+        id: createRelease
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+
       # Copy service account json to env
       - name: Add service account
         run: echo '${{ secrets.PLAYSTORE_SERVICE_ACCOUNT }}' > service_account.json
@@ -90,9 +105,9 @@ jobs:
       - name: Send Slack notification
         uses: Ilshidur/action-slack@2.0.2
         env:
-          SLACK_WEBHOOK: ${{ secrets.ANDROID_SLACK_WEBHOOK }}
-          SLACK_USERNAME: AndroidDeploymentBot
-          SLACK_CHANNEL: development
+          SLACK_WEBHOOK: ${{ secrets.STAX_SLACK_WEBHOOK }}
+          SLACK_USERNAME: StaxDeploymentBot
+          SLACK_CHANNEL: stax
           SLACK_AVATAR: sender
           with:
             args: 'Stax has just been deployed to Play Store production track. :truck:'
