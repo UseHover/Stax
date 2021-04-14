@@ -83,8 +83,10 @@ public class MainActivity extends AbstractNavigationActivity implements
 	private void run(HoverAction action, int index) {
 		Log.e(TAG, "running index: " + index);
 		if (balancesViewModel.getChannel(action.channel_id) != null) {
-			new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), MainActivity.this, index)
-				.finalScreenTime(0).run();
+			HoverSession.Builder hsb = new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), MainActivity.this, index);
+			if (index + 1 < balancesViewModel.getSelectedChannels().getValue().size())
+				hsb.finalScreenTime(0);
+		    hsb.run();
 		} else { // Fix for auth issue on OnePlus 6
 			new Handler(Looper.getMainLooper()).post(() -> {
 				balancesViewModel.getSelectedChannels().observe(MainActivity.this, new Observer<List<Channel>>() {

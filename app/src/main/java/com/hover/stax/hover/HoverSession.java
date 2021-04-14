@@ -46,7 +46,8 @@ final public class HoverSession {
 	private HoverParameters.Builder getBasicBuilder(Builder b) {
 		HoverParameters.Builder builder = new HoverParameters.Builder(b.activity);
 		builder.request(b.action.public_id);
-		builder.initialProcessingMessage(getMessage(b.action, b.activity));
+		builder.setHeader(getMessage(b.action, b.activity));
+		builder.initialProcessingMessage("");
 		builder.showUserStepDescriptions(true);
 		builder.finalMsgDisplayTime(finalScreenTime);
 		builder.style(R.style.StaxHoverTheme);
@@ -102,7 +103,7 @@ final public class HoverSession {
 		private Channel channel;
 		private HoverAction action;
 		private JSONObject extras;
-		private int requestCode, finalScreenTime = 2000;
+		private int requestCode, finalScreenTime = 4000;
 
 		public Builder(HoverAction a, Channel c, Activity activity, int code) {
 			if (a == null) throw new IllegalArgumentException("Action must not be null");

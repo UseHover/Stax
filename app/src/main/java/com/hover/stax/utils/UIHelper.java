@@ -123,7 +123,6 @@ public class UIHelper {
 		Picasso.get()
 				.load(url)
 				.config(Bitmap.Config.RGB_565)
-				.networkPolicy(NetworkPolicy.OFFLINE)
 				.resize(size,size).into(target);
 	}
 
@@ -131,7 +130,6 @@ public class UIHelper {
 		Picasso.get()
 				.load(resId)
 				.config(Bitmap.Config.RGB_565)
-				.networkPolicy(NetworkPolicy.OFFLINE)
 				.resize(size,size).into(target);
 	}
 }
