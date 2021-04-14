@@ -95,7 +95,7 @@ jobs:
           SLACK_CHANNEL: stax
           SLACK_AVATAR: sender
           with:
-            args: 'Stax has just been deployed to Play Store alpha track. :truck:'
+            args: 'Stax has just been deployed to Play Store alpha track.'
 
 
 
