@@ -90,8 +90,8 @@ jobs:
       - name: Send Slack notification
         uses: Ilshidur/action-slack@2.0.2
         env:
-          SLACK_WEBHOOK: ${{ secrets.ANDROID_SLACK_WEBHOOK }}
-          SLACK_USERNAME: AndroidDeploymentBot
+          SLACK_WEBHOOK: ${{ secrets.STAX_SLACK_WEBHOOK }}
+          SLACK_USERNAME: StaxDeploymentBot
           SLACK_CHANNEL: stax
           SLACK_AVATAR: sender
         with:
