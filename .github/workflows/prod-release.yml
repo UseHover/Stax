@@ -47,7 +47,7 @@ jobs:
 
 
       # Run the assembleRelease gradle command to start the build process for our buildVariant
-      - name: Assemble QA Bubdle
+      - name: Assemble QA Bundle
         id: buildBundle
         uses: eskatos/gradle-command-action@v1.3.3
         with:
@@ -65,7 +65,7 @@ jobs:
         id: signArtifact
         uses: r0adkll/sign-android-release@v1
         with:
-          releaseDirectory: app/build/outputs/apk/release
+          releaseDirectory: app/build/outputs/bundle/release
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
@@ -91,13 +91,13 @@ jobs:
 
 
       # Deploy to alpha track
-      - name: Deploy to alpha test track
+      - name: Deploy to beta test track
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJson: service_account.json
           packageName: com.hover.stax
           releaseFiles: app/build/outputs/bundle/release/*.aab
-          track: production
+          track: beta
           whatsNewDirectory: whatsnew/
 
 
