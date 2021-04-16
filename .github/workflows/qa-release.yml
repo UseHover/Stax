@@ -70,16 +70,16 @@ jobs:
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
 
-      #Copy service account json to env
-      - name: Add service account
-        run: echo '${{ secrets.PLAYSTORE_SERVICE_ACCOUNT }}' > service_account.json
+#      #Copy service account json to env
+#      - name: Add service account
+#        run: echo '${{ secrets.PLAYSTORE_SERVICE_ACCOUNT }}' > service_account.json
 
 
       #Deploy to alpha track
       - name: Deploy to internal test track
         uses: r0adkll/upload-google-play@v1
         with:
-          serviceAccountJson: service_account.json
+          serviceAccountJson: ${{ secrets.PLAYSTORE_SERVICE_ACCOUNT }}
           packageName: com.hover.stax
           releaseFiles: app/build/outputs/bundle/release/*.aab
           track: internal
