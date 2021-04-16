@@ -79,7 +79,7 @@ jobs:
       - name: Deploy to internal test track
         uses: r0adkll/upload-google-play@v1
         with:
-          serviceAccountJson: ${{ secrets.PLAYSTORE_SERVICE_ACCOUNT }}
+          serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_SERVICE_ACCOUNT }}
           packageName: com.hover.stax
           releaseFiles: app/build/outputs/bundle/release/*.aab
           track: internal
