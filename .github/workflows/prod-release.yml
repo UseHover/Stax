@@ -98,7 +98,7 @@ jobs:
           packageName: com.hover.stax
           releaseFiles: app/build/outputs/bundle/release/*.aab
           track: beta
-          whatsNewDirectory: whatsnew/
+#          whatsNewDirectory: whatsnew/
 
 
       # Send slack notification
