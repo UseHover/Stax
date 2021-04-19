@@ -126,7 +126,7 @@ public class TransferActivity extends AbstractNavigationActivity {
 	private void returnResult(int type, int result, Intent data) {
 		Intent i = data == null ? new Intent() : new Intent(data);
 		if (transferViewModel.getContact().getValue() != null)
-			i.putExtra(StaxContact.ID_KEY, transferViewModel.getContact().getValue().id);
+			i.putExtra(StaxContact.LOOKUP_KEY, transferViewModel.getContact().getValue().lookupKey);
 		i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);
 		setResult(result, i);
 		finish();

@@ -165,7 +165,7 @@ public class DatabaseRepo {
 		AppDatabase.databaseWriteExecutor.execute(() -> {
 			try {
 				StaxTransaction t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID));
-				StaxContact contact = intent.hasExtra(StaxContact.ID_KEY) ? getContact(intent.getStringExtra(StaxContact.ID_KEY)) : null;
+				StaxContact contact = intent.hasExtra(StaxContact.LOOKUP_KEY) ? getContact(intent.getStringExtra(StaxContact.LOOKUP_KEY)) : null;
 				HoverAction a = intent.hasExtra(HoverAction.ID_KEY) ? getAction(intent.getStringExtra(HoverAction.ID_KEY)) : null;
 
 				if (t == null) {
