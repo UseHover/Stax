@@ -155,8 +155,9 @@ public class BalancesViewModel extends AndroidViewModel {
 	}
 
 	private List<HoverAction> getChannelActions(int flag) {
-		List list = new ArrayList<HoverAction>();
+		List<HoverAction> list = new ArrayList<>();
 		if (actions.getValue() == null || actions.getValue().size() == 0) return list;
+
 		for (HoverAction action : actions.getValue()) {
 			if (action.channel_id == flag)
 				list.add(action);
