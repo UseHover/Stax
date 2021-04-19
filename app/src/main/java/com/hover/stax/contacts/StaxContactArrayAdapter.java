@@ -15,7 +15,6 @@ import com.hover.stax.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
 public class StaxContactArrayAdapter extends ArrayAdapter<StaxContact> {
 

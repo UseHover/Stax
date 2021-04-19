@@ -8,23 +8,27 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
 
 import com.hover.stax.R;
+import com.hover.stax.databinding.SelfDestructLayoutBinding;
 import com.hover.stax.permissions.PermissionUtils;
 import com.hover.stax.utils.Utils;
 
 public class SelfDestructActivity extends AppCompatActivity {
+
+	private SelfDestructLayoutBinding binding;
+
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.self_destruct_layout);
-		findViewById(R.id.continue_btn).setOnClickListener(view -> attemptDownload());
+		binding = SelfDestructLayoutBinding.inflate(getLayoutInflater());
+
+		setContentView(binding.getRoot());
+		binding.continueBtn.setOnClickListener(view -> attemptDownload());
 	}
 
 	public static boolean isExpired(Context c) {
@@ -68,9 +72,9 @@ public class SelfDestructActivity extends AppCompatActivity {
 	}
 
 	private void updateView() {
-		((TextView) findViewById(R.id.explainer)).setText(R.string.uninstall_cardbody);
-		((AppCompatButton) findViewById(R.id.continue_btn)).setText(R.string.btn_uninstall);
-		findViewById(R.id.continue_btn).setOnClickListener(view -> uninstall());
+		binding.explainer.setText(R.string.uninstall_cardbody);
+		binding.continueBtn.setText(R.string.btn_uninstall);
+		binding.continueBtn.setOnClickListener(view -> uninstall());
 	}
 
 	public void uninstall() {
