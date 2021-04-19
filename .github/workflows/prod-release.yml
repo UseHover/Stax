@@ -85,16 +85,11 @@ jobs:
           prerelease: false
 
 
-      # Copy service account json to env
-      - name: Add service account
-        run: echo '${{ secrets.PLAYSTORE_SERVICE_ACCOUNT }}' > service_account.json
-
-
       # Deploy to alpha track
       - name: Deploy to beta test track
         uses: r0adkll/upload-google-play@v1
         with:
-          serviceAccountJson: service_account.json
+          serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_SERVICE_ACCOUNT }}
           packageName: com.hover.stax
           releaseFiles: app/build/outputs/bundle/release/*.aab
           track: beta
