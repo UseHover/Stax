@@ -202,6 +202,7 @@ public class DatabaseRepo {
 	public StaxContact lookupContact(String lookupKey) { return contactDao.lookup(lookupKey); }
 	public StaxContact getContact(String lookupKey) { return contactDao.lookup(lookupKey); }
 	public LiveData<StaxContact> getLiveContact(String id) { return contactDao.getLive(id); }
+	public StaxContact getContactFromPhone(String phone) {return contactDao.getContact(phone);}
 
 	public void insertOrUpdate(StaxContact contact) {
 		AppDatabase.databaseWriteExecutor.execute(() -> {
@@ -265,6 +266,7 @@ public class DatabaseRepo {
 			e.decryptAsync(removedBaseUrlString.replaceAll("[(]","+"), new Encryption.Callback() {
 				@Override public void onSuccess(String result) {
 					decryptedRequest.postValue(new Request(result));
+
 				}
 				@Override public void onError(Exception exception) {
 					Utils.logErrorAndReportToFirebase(TAG, "failed link decryption", exception);}

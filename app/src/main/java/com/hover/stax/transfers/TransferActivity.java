@@ -66,16 +66,31 @@ public class TransferActivity extends AbstractNavigationActivity {
 	}
 
 	private void createFromRequest(String link) {
-		AlertDialog dialog = new StaxDialog(this).setDialogMessage(R.string.loading_link_dialoghead).showIt();
 		transferViewModel.decrypt(link);
+		observeRequest();
+		observeActiveChannel();
+		Amplitude.getInstance().logEvent(getString(R.string.clicked_request_link));
+	}
+
+	private void observeRequest() {
+		AlertDialog dialog = new StaxDialog(this).setDialogMessage(R.string.loading_link_dialoghead).showIt();
 		transferViewModel.getRequest().observe(this, request -> {
 			Log.e(TAG, "maybe viewing request");
 			if (request == null) return;
+
 			Log.e(TAG, "viewing request " + request);
-			if (dialog != null) dialog.dismiss();
+			if (dialog != null) {
+				transferViewModel.setRecipientSmartly(request, channelDropdownViewModel.getActiveChannel().getValue());
+				dialog.dismiss();
+			}
 		});
-		Amplitude.getInstance().logEvent(getString(R.string.clicked_request_link));
 	}
+	private void observeActiveChannel() {
+		channelDropdownViewModel.getActiveChannel().observe(this, channel -> {
+			transferViewModel.setRecipientSmartly(transferViewModel.getRequest().getValue(), channelDropdownViewModel.getActiveChannel().getValue());
+		});
+	}
+
 
 	void submit() {
 		makeHoverCall(actionSelectViewModel.getActiveAction().getValue());
