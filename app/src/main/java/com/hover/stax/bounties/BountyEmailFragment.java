@@ -12,6 +12,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
+import com.hover.stax.databinding.FragmentBountyEmailBinding;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.AbstractStatefulInput;
@@ -20,7 +21,9 @@ import com.hover.stax.views.StaxTextInputLayout;
 import java.lang.ref.WeakReference;
 
 public class BountyEmailFragment extends Fragment implements NavigationInterface, View.OnClickListener,  BountyAsyncCaller.AsyncResponseListener {
+
 	private StaxTextInputLayout emailInput;
+	private FragmentBountyEmailBinding binding;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -31,15 +34,16 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_bounty_email, container, false);
+		binding = FragmentBountyEmailBinding.inflate(inflater, container, false);
+		return binding.getRoot();
 	}
 
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		emailInput = view.findViewById(R.id.emailInput);
+		emailInput = binding.emailInput;
 		emailInput.setText(Utils.getString(BountyActivity.EMAIL_KEY, getContext()));
-		view.findViewById(R.id.continueEmailBountyButton).setOnClickListener(this);
+		binding.continueEmailBountyButton.setOnClickListener(this);
 	}
 
 	@Override
