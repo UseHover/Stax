@@ -11,7 +11,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.hover.stax.R;
 
-class StaxNavView extends CoordinatorLayout {
+public class StaxNavView extends CoordinatorLayout {
 	private FrameLayout contentView;
 
 	public StaxNavView(Context context, AttributeSet attrs) {
