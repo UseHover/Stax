@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bounty_email_layout_id"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="visible">
+
+	<com.hover.stax.views.StaxCardView
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    app:title="@string/bounty_email_stage_title">
+
+		<LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="vertical">
+
+			<TextView
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_marginBottom="@dimen/margin_16"
+			    android:fontFamily="font-normal"
+			    android:paddingHorizontal="@dimen/margin_13"
+			    android:text="@string/bounty_email_stage_desc1"
+			    android:lineSpacingExtra="1.5dp"
+			    android:textSize="@dimen/text_16" />
+
+			<TextView
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:fontFamily="font-normal"
+			    android:paddingHorizontal="@dimen/margin_13"
+			    android:lineSpacingExtra="1.5dp"
+			    android:text="@string/bounty_email_stage_desc2"
+			    android:textSize="@dimen/text_16" />
+
+			<com.hover.stax.views.StaxTextInputLayout
+			    android:id="@+id/emailInput"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:hint="@string/bounty_email"
+			    android:layout_marginTop="@dimen/margin_13"
+			    android:inputType="text" />
+
+			<androidx.appcompat.widget.AppCompatButton
+			    android:id="@+id/continueEmailBountyButton"
+			    style="@style/StaxButtonColored"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_gravity="end"
+			    android:layout_marginTop="@dimen/margin_13"
+			    android:text="@string/btn_continue"
+				android:onClick="submitEmail"/>
+		</LinearLayout>
+	</com.hover.stax.views.StaxCardView>
+</androidx.core.widget.NestedScrollView>

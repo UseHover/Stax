@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.BitmapDrawable;
@@ -42,7 +43,7 @@ import com.squareup.picasso.Target;
 import org.jetbrains.annotations.NotNull;
 
 public class UIHelper {
-
+	private static final String TAG = "UIHelper";
 	private static final int INITIAL_ITEMS_FETCH = 30;
 
 	public static void flashMessage(Context context, @Nullable View view, String message) {
@@ -58,6 +59,9 @@ public class UIHelper {
 
 	public static void flashMessage(@NotNull Context context, String message) {
 		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+	}
+	public static void flashMessage(@NotNull Context context, int messageRes) {
+		Toast.makeText(context, context.getString(messageRes), Toast.LENGTH_SHORT).show();
 	}
 
 	public static LinearLayoutManager setMainLinearManagers(Context context) {
@@ -102,6 +106,7 @@ public class UIHelper {
 			View listItem = listAdapter.getView(i, null, listView);
 			listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
 			totalHeight += listItem.getMeasuredHeight();
+			Log.e(TAG, "item height " + listItem.getHeight());
 		}
 
 		ViewGroup.LayoutParams params = listView.getLayoutParams();
@@ -113,10 +118,18 @@ public class UIHelper {
 	public static int dpToPx(int dp) {
 		return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
 	}
-	public static Animation loadFadeIn(Context context) {
-		return AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
+
+	public static void loadPicasso(String url, int size, Target target) {
+		Picasso.get()
+				.load(url)
+				.config(Bitmap.Config.RGB_565)
+				.resize(size,size).into(target);
 	}
 
-
-
+	public static void loadPicasso(int resId, int size, Target target) {
+		Picasso.get()
+				.load(resId)
+				.config(Bitmap.Config.RGB_565)
+				.resize(size,size).into(target);
+	}
 }

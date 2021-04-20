@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:visibility="gone"
+    android:orientation="horizontal"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentEnd="true"
+    android:id="@+id/bountyRetryButtonLayoutId"
+    android:paddingBottom="@dimen/margin_65"
+    android:layout_gravity="end"
+    android:gravity="end"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<androidx.appcompat.widget.AppCompatButton
+	    android:id="@+id/btnRetry"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="@string/retry"
+	    android:fontFamily="font-medium"
+	    style="@style/StaxButton" />
+
+</RelativeLayout>

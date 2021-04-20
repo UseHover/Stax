@@ -6,7 +6,7 @@
 	android:layout_height="match_parent"
 	android:layout_gravity="center"
 	android:gravity="center"
-	android:background="@drawable/stax_background"
+	android:background="@drawable/processing_background"
 	tools:ignore="Overdraw"
 	android:fitsSystemWindows="true"
 	android:id="@+id/content">
@@ -14,7 +14,7 @@
 	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:background="@drawable/hsdk_card_background"
+		android:background="@drawable/processing_card_background"
 		android:radius="5dp"
 		app:elevation="@dimen/hsdk__small_padding"
 		android:layout_marginHorizontal="38dp"
@@ -26,7 +26,7 @@
 			android:layout_width="match_parent"
 			android:layout_centerInParent="true"
 			android:id="@+id/animationBackground"
-			android:background="@drawable/hsdk_card_background"
+			android:background="@drawable/processing_card_background"
 			android:radius="@dimen/hsdk__border_radius"
 			android:layout_height="0dp" />
 
@@ -80,41 +80,55 @@
 						android:contentDescription="@string/hsdk_response_ic"/>
 				</FrameLayout>
 
-				<TextView
-					android:layout_width="wrap_content"
+				<TextSwitcher
+					android:id="@+id/text_header"
+					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:textColor="?attr/titleTextColor"
-					android:id="@+id/progress_text_1"
-					android:textSize="14sp"
-					android:layout_gravity="center_vertical"
-					android:gravity="center_vertical"
-					android:textStyle="bold"
-					android:text="@string/hsdk_average_transaction_text"/>
+					android:layout_gravity="center_horizontal"
+					android:inAnimation="@android:anim/fade_in"
+					android:outAnimation="@android:anim/fade_out" tools:ignore="UselessParent">
+
+					<TextView
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:textSize="14sp"
+						android:textStyle="bold"
+						android:textColor="?attr/titleTextColor"
+						android:text="@string/hsdk_overlay_header"/>
+
+					<TextView
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:textSize="14sp"
+						android:textStyle="bold"
+						android:textColor="?attr/titleTextColor"
+						android:text=""/>
+				</TextSwitcher>
 			</LinearLayout>
 
 			<TextSwitcher
-				android:id="@+id/textswitcher"
+				android:id="@+id/progress_text"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_gravity="start|center_vertical"
-				android:visibility="invisible"
 				android:inAnimation="@android:anim/fade_in"
-				android:outAnimation="@android:anim/fade_out" tools:ignore="UselessParent">
+				android:outAnimation="@android:anim/fade_out"
+				tools:ignore="UselessParent">
 
 				<TextView
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:textSize="16sp"
+					android:textSize="14sp"
 					android:layout_gravity="center_horizontal"
 					android:gravity="start"
 					android:textAlignment="textStart"
 					android:textColor="?attr/titleTextColor"
-					android:text=""/>
+					android:text="@string/hsdk_average_transaction_text"/>
 
 				<TextView
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:textSize="16sp"
+					android:textSize="14sp"
 					android:layout_gravity="start"
 					android:gravity="start"
 					android:textAlignment="textStart"

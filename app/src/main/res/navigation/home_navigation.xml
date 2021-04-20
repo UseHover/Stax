@@ -78,4 +78,6 @@
 		    android:name="channel_id"
 		    app:argType="integer" />
 	</fragment>
+
+
 </navigation>

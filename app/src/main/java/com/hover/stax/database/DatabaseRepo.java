@@ -7,13 +7,15 @@ import android.content.Intent;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.hover.sdk.actions.HoverAction;
+import com.hover.sdk.actions.HoverActionDao;
+import com.hover.sdk.database.HoverRoomDatabase;
+import com.hover.sdk.sims.SimInfo;
+import com.hover.sdk.sims.SimInfoDao;
 import com.hover.stax.R;
 import com.hover.sdk.transactions.TransactionContract;
-import com.hover.stax.actions.Action;
-import com.hover.stax.actions.ActionDao;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
 import com.hover.stax.contacts.ContactDao;
@@ -23,8 +25,6 @@ import com.hover.stax.requests.RequestDao;
 import com.hover.stax.requests.Shortlink;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDao;
-import com.hover.stax.sims.Sim;
-import com.hover.stax.sims.SimDao;
 import com.hover.stax.transactions.StaxTransaction;
 import com.hover.stax.transactions.TransactionDao;
 import com.hover.stax.utils.Utils;
@@ -37,17 +37,15 @@ import java.util.List;
 public class DatabaseRepo {
 	private static String TAG = "DatabaseRepo";
 	private ChannelDao channelDao;
-	private ActionDao actionDao;
+	private HoverActionDao actionDao;
 	private RequestDao requestDao;
 	private ScheduleDao scheduleDao;
-	private SimDao simDao;
+	private SimInfoDao simDao;
 	private TransactionDao transactionDao;
 	private ContactDao contactDao;
 
 	private LiveData<List<Channel>> allChannels;
-	private LiveData<List<Channel>> allChannelsBySelected;
 	private LiveData<List<Channel>> selectedChannels;
-	private MediatorLiveData<List<Action>> filteredActions = new MediatorLiveData<>();
 
 	private MutableLiveData<Request> decryptedRequest= new MutableLiveData<>();
 
@@ -59,12 +57,11 @@ public class DatabaseRepo {
 		requestDao = db.requestDao();
 		scheduleDao = db.scheduleDao();
 
-		SdkDatabase sdkDb = SdkDatabase.getInstance(application);
+		HoverRoomDatabase sdkDb = HoverRoomDatabase.getInstance(application);
 		actionDao = sdkDb.actionDao();
 		simDao = sdkDb.simDao();
 
 		allChannels = channelDao.getAllInAlphaOrder();
-		allChannelsBySelected = channelDao.getAllInSelectedOrder();
 		selectedChannels = channelDao.getSelected(true);
 	}
 
@@ -72,7 +69,6 @@ public class DatabaseRepo {
 	public Channel getChannel(int id) {
 		return channelDao.getChannel(id);
 	}
-	public Channel getChannelByInstitutionId(int id) { return channelDao.getChannelByInstitutionId(id); }
 
 	public LiveData<Channel> getLiveChannel(int id) {
 		return channelDao.getLiveChannel(id);
@@ -81,8 +77,12 @@ public class DatabaseRepo {
 	public LiveData<List<Channel>> getAllChannels() {
 		return allChannels;
 	}
-	public LiveData<List<Channel>> getAllChannelsBySelectedOrder() {
-		return allChannelsBySelected;
+
+	public LiveData<List<Channel>> getChannels(int[] ids) {
+		return channelDao.getChannels(ids);
+	}
+	public LiveData<List<Channel>> getChannelsByCountry(int[] channelIds, String countryCode) {
+		return channelDao.getChannels(countryCode, channelIds);
 	}
 
 	public LiveData<List<Channel>> getSelected() {
@@ -94,46 +94,54 @@ public class DatabaseRepo {
 	}
 
 	// SIMs
-	public List<Sim> getSims() {
+	public List<SimInfo> getPresentSims() {
 		return simDao.getPresent();
 	}
 
+	public List<SimInfo> getSims(String[] hnis) {
+		return  simDao.getPresentByHnis(hnis);
+	}
+
 	// Actions
-	public Action getAction(String public_id) {
+	public HoverAction getAction(String public_id) {
 		return actionDao.getAction(public_id);
 	}
 
-	public LiveData<Action> getLiveAction(String public_id) {
+	public LiveData<HoverAction> getLiveAction(String public_id) {
 		return actionDao.getLiveAction(public_id);
 	}
 
-	public LiveData<List<Action>> getLiveActions(int channelId, String type) {
-		return actionDao.getLiveActions(channelId, type);
-	}
-
-	public LiveData<List<Action>> getLiveActions(int[] channelIds, String type) {
+	public LiveData<List<HoverAction>> getLiveActions(int[] channelIds, String type) {
 		return actionDao.getLiveActions(channelIds, type);
 	}
 
-	public List<Action> getTransferActions(int channelId) {
+	public List<HoverAction> getTransferActions(int channelId) {
 		return actionDao.getTransferActions(channelId);
 	}
 
-	public List<Action> getActions(int channelId, String type) {
+	public List<HoverAction> getActions(int channelId, String type) {
 		return actionDao.getActions(channelId, type);
 	}
 
-	public List<Action> getActions(int[] channelIds, String type) {
+	public List<HoverAction> getActions(int[] channelIds, String type) {
 		return actionDao.getActions(channelIds, type);
 	}
 
-	public List<Action> getActions(int[] channelIds, int recipientInstitutionId) {
-		return actionDao.getActions(channelIds, recipientInstitutionId, Action.P2P);
+	public List<HoverAction> getActions(int[] channelIds, int recipientInstitutionId) {
+		return actionDao.getActions(channelIds, recipientInstitutionId, HoverAction.P2P);
+	}
+
+	public LiveData<List<HoverAction>> getBountyActions() {
+		return actionDao.getBountyActions();
 	}
 
 	// Transactions
 	public LiveData<List<StaxTransaction>> getCompleteAndPendingTransferTransactions() {
 		return transactionDao.getCompleteAndPendingTransfers();
+	}
+
+	public LiveData<List<StaxTransaction>> getBountyTransactions() {
+		return transactionDao.getBountyTransactions();
 	}
 
 	public LiveData<List<StaxTransaction>> getCompleteTransferTransactions(int channelId) {
@@ -158,7 +166,10 @@ public class DatabaseRepo {
 		AppDatabase.databaseWriteExecutor.execute(() -> {
 			try {
 				StaxTransaction t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID));
-				Action a = intent.hasExtra(Action.ID_KEY) ? getAction(intent.getStringExtra(Action.ID_KEY)) : null;
+
+//					intent.hasExtra(StaxContact.ID_KEY) ? getContact(intent.getStringExtra(StaxContact.ID_KEY)) : null;
+
+				HoverAction a = intent.hasExtra(HoverAction.ID_KEY) ? getAction(intent.getStringExtra(HoverAction.ID_KEY)) : null;
 				Channel channel = getChannel(a.channel_id);
 				StaxContact contact = contactLookup(intent, channel);
 
@@ -192,27 +203,24 @@ public class DatabaseRepo {
 	private StaxContact getContactIfKey(HashMap<String, String> map, Channel c) {
 		if (map.containsKey(StaxContact.ID_KEY))
 			return getContact(map.get(StaxContact.ID_KEY));
-		else if (map.containsKey(Action.PHONE_KEY))
-			return getContactByPhone(StaxContact.getNationalNumber(map.get(Action.PHONE_KEY), c.countryAlpha2).substring(1));
+		else if (map.containsKey(HoverAction.PHONE_KEY))
+			return getContactByPhone(StaxContact.getNationalNumber(map.get(HoverAction.PHONE_KEY), c.countryAlpha2).substring(1));
 		else return null;
 	}
 
 	private String getPhone(Intent intent) {
-		if (intent.hasExtra(TransactionContract.COLUMN_INPUT_EXTRAS) && ((HashMap<String, String>) intent.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS)).containsKey(Action.PHONE_KEY))
-			return ((HashMap<String, String>) intent.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS)).get(Action.PHONE_KEY);
-		if (intent.hasExtra(TransactionContract.COLUMN_PARSED_VARIABLES) && ((HashMap<String, String>) intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES)).containsKey(Action.PHONE_KEY))
-			return ((HashMap<String, String>) intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES)).get(Action.PHONE_KEY);
+		if (intent.hasExtra(TransactionContract.COLUMN_INPUT_EXTRAS) && ((HashMap<String, String>) intent.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS)).containsKey(HoverAction.PHONE_KEY))
+			return ((HashMap<String, String>) intent.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS)).get(HoverAction.PHONE_KEY);
+		if (intent.hasExtra(TransactionContract.COLUMN_PARSED_VARIABLES) && ((HashMap<String, String>) intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES)).containsKey(HoverAction.PHONE_KEY))
+			return ((HashMap<String, String>) intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES)).get(HoverAction.PHONE_KEY);
 		return null;
 	}
 
-	private void updateRequests(StaxTransaction t, StaxContact sc, Intent intent) {
-		if (t.transaction_type.equals(Action.RECEIVE)) {
+	private void updateRequests(StaxTransaction t, StaxContact contact, Intent intent) {
+		if (t.transaction_type.equals(HoverAction.RECEIVE)) {
 			List<Request> rs = getRequests();
 			for (Request r: rs) {
-				StaxContact contact = getContact(r.requestee_ids);
-				if (contact == null) contact = sc;
-
-				if (contact != null && contact.equals(new StaxContact(intent.getStringExtra(Action.SENDER_KEY)))) {
+				if (contact != null && contact.equals(new StaxContact(intent.getStringExtra("senderPhone")))) {
 					r.matched_transaction_uuid = t.uuid;
 					update(r);
 				}

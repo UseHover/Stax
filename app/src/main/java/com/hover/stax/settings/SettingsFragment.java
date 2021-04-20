@@ -73,6 +73,7 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
 		});
 	}
 
+
 	private void showAccounts(List<Channel> channels, View root) {
 		ListView lv = root.findViewById(R.id.accounts_list);
 		accountAdapter.clear();

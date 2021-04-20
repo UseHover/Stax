@@ -9,10 +9,10 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
+import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.sms.MessageLog;
 import com.hover.sdk.transactions.Transaction;
-import com.hover.stax.actions.Action;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.DatabaseRepo;
 
@@ -25,10 +25,11 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 	private DatabaseRepo repo;
 
 	private MutableLiveData<StaxTransaction> transaction;
-	private LiveData<Action> action;
+	private LiveData<HoverAction> action;
 	private LiveData<StaxContact> contact;
 	private MediatorLiveData<List<UssdCallResponse>> messages;
 	private LiveData<List<UssdCallResponse>> sms;
+
 
 	public TransactionDetailsViewModel(@NonNull Application application) {
 		super(application);
@@ -36,6 +37,7 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 		transaction = new MutableLiveData<>();
 		action = new MutableLiveData<>();
 		messages = new MediatorLiveData<>();
+
 
 		action = Transformations.switchMap(transaction, t -> repo.getLiveAction(t.action_id));
 		contact = Transformations.switchMap(transaction, t -> repo.getLiveContact(t.counterparty_id));
@@ -52,7 +54,7 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 		return transaction;
 	}
 
-	LiveData<Action> getAction() {
+	LiveData<HoverAction> getAction() {
 		if (action == null) {
 			action = new MutableLiveData<>();
 		}
@@ -68,11 +70,11 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 		if (action.getValue() != null && t != null) loadMessages(t, action.getValue());
 	}
 
-	void loadMessages(Action a) {
+	void loadMessages(HoverAction a) {
 		if (transaction.getValue() != null && a != null) loadMessages(transaction.getValue(), a);
 	}
 
-	void loadMessages(StaxTransaction t, Action a) {
+	void loadMessages(StaxTransaction t, HoverAction a) {
 		List<UssdCallResponse> ussds = UssdCallResponse.generateConvo(Hover.getTransaction(t.uuid, getApplication()), a);
 		messages.setValue(ussds);
 	}

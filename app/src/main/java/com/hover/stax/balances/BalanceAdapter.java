@@ -2,6 +2,7 @@ package com.hover.stax.balances;
 
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import java.util.List;
 import static android.view.View.GONE;
 
 public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceViewHolder> {
+	private final static String TAG = "BalanceAdapter";
 	private List<Channel> channels;
 
 	private final BalanceListener balanceListener;
@@ -33,8 +35,8 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 		this.channels = channels;
 		this.balanceListener = listener;
 	}
-	public void updateShowBalance() {
-		this.showBalance = !showBalance;
+	public void showBalance(boolean show) {
+		this.showBalance = show;
 		this.notifyDataSetChanged();
 	}
 
@@ -53,7 +55,6 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 		holder.channelName.setText(channel.name);
 		holder.channelId.setText(Integer.toString(channel.id));
 
-
 		if(!showBalance)holder.subtitle.setVisibility(GONE);
 		if (channel.latestBalance != null && showBalance) {
 			holder.subtitle.setVisibility(View.VISIBLE);
@@ -65,7 +66,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 			holder.amount.setText("");
 			setColorForEmptyAmount(true, holder, UIHelper.getColor(channel.secondaryColorHex, false, holder.itemView.getContext()));
 		}
-		if(showBalance && channel.latestBalance == null) {
+		if (showBalance && channel.latestBalance == null) {
 			holder.subtitle.setVisibility(View.VISIBLE);
 			holder.subtitle.setText(holder.itemView.getContext().getString(R.string.refresh_balance_desc));
 		}
@@ -90,7 +91,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 	}
 	private void setColorForEmptyAmount(boolean show, BalanceViewHolder holder, int secondary) {
 		if(show) {
-			Drawable drawable = ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.ic_remove_24);
+			Drawable drawable = ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.ic_remove);
 			if(drawable !=null) {
 				drawable = DrawableCompat.wrap(drawable);
 				DrawableCompat.setTint(drawable.mutate(), secondary);

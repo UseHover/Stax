@@ -16,13 +16,13 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.amplitude.api.Amplitude;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
+import com.hover.sdk.sims.SimInfo;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.requests.Request;
 import com.hover.stax.schedules.Schedule;
-import com.hover.stax.sims.Sim;
 import com.hover.stax.utils.Utils;
 
 import org.json.JSONException;
@@ -37,19 +37,19 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 	private DatabaseRepo repo;
 	private MutableLiveData<String> type = new MutableLiveData<>();
 
-	private MutableLiveData<List<Sim>> sims;
+	private MutableLiveData<List<SimInfo>> sims;
 	private LiveData<List<String>> simHniList = new MutableLiveData<>();
 
 	private LiveData<List<Channel>> allChannels;
 	private LiveData<List<Channel>> selectedChannels;
 	private MediatorLiveData<List<Channel>> simChannels;
 	private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
-	private MediatorLiveData<List<Action>> channelActions = new MediatorLiveData<>();
+	private MediatorLiveData<List<HoverAction>> channelActions = new MediatorLiveData<>();
 
 	public ChannelDropdownViewModel(Application application) {
 		super(application);
 		repo = new DatabaseRepo(application);
-		type.setValue(Action.BALANCE);
+		type.setValue(HoverAction.BALANCE);
 
 		loadChannels();
 		loadSims();
@@ -91,7 +91,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 
 	void loadSims() {
 		if (sims == null) { sims = new MutableLiveData<>(); }
-		new Thread(() -> sims.postValue(repo.getSims())).start();
+		new Thread(() -> sims.postValue(repo.getPresentSims())).start();
 		LocalBroadcastManager.getInstance(getApplication())
 				.registerReceiver(simReceiver, new IntentFilter(Utils.getPackage(getApplication()) + ".NEW_SIM_INFO_ACTION"));
 		Hover.updateSimInfo(getApplication());
@@ -100,11 +100,11 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 	private final BroadcastReceiver simReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			new Thread(() -> sims.postValue(repo.getSims())).start();
+			new Thread(() -> sims.postValue(repo.getPresentSims())).start();
 		}
 	};
 
-	public LiveData<List<Sim>> getSims() {
+	public LiveData<List<SimInfo>> getSims() {
 		if (sims == null) { sims = new MutableLiveData<>(); }
 		return sims;
 	}
@@ -114,14 +114,14 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 		return simHniList;
 	}
 
-	private List<String> getHnisAndSubscribeToEachOnFirebase(List<Sim> sims) {
+	private List<String> getHnisAndSubscribeToEachOnFirebase(List<SimInfo> sims) {
 		if (sims == null) return null;
 		List<String> hniList = new ArrayList<>();
-		for (Sim sim : sims) {
-			if (!hniList.contains(sim.hni)) {
-				FirebaseMessaging.getInstance().subscribeToTopic("sim-" + sim.hni);
-				FirebaseMessaging.getInstance().subscribeToTopic(sim.country_iso);
-				hniList.add(sim.hni);
+		for (SimInfo sim : sims) {
+			if (!hniList.contains(sim.getOSReportedHni())) {
+				FirebaseMessaging.getInstance().subscribeToTopic("sim-" + sim.getOSReportedHni());
+				FirebaseMessaging.getInstance().subscribeToTopic(sim.getCountryIso().toUpperCase());
+				hniList.add(sim.getOSReportedHni());
 			}
 		}
 		return hniList;
@@ -165,7 +165,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 		activeChannel.setValue(channel);
 	}
 
-	void setActiveChannel(List<Action> acts) {
+	void setActiveChannel(List<HoverAction> acts) {
 		if (acts == null || acts.size() == 0) { return; }
 		activeChannel.removeSource(channelActions);
 		new Thread(() -> activeChannel.postValue(repo.getChannel(acts.get(0).channel_id))).start();
@@ -176,8 +176,8 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 	public void highlightChannel(Channel c) { setActiveChannel(c); }
 
 	public void loadActions(String t) {
-		if ((t.equals(Action.BALANCE) && selectedChannels.getValue() == null) || (!t.equals(Action.BALANCE) && activeChannel.getValue() == null)) return;
-		if (t.equals(Action.BALANCE))
+		if ((t.equals(HoverAction.BALANCE) && selectedChannels.getValue() == null) || (!t.equals(HoverAction.BALANCE) && activeChannel.getValue() == null)) return;
+		if (t.equals(HoverAction.BALANCE))
 			loadActions(selectedChannels.getValue(), t);
 		else
 			loadActions(activeChannel.getValue(), t);
@@ -188,11 +188,11 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 	}
 
 	private void loadActions(Channel c, String t) {
-		new Thread(() -> channelActions.postValue(t.equals(Action.P2P) ? repo.getTransferActions(c.id) : repo.getActions(c.id, t))).start();
+		new Thread(() -> channelActions.postValue(t.equals(HoverAction.P2P) ? repo.getTransferActions(c.id) : repo.getActions(c.id, t))).start();
 	}
 
 	public void loadActions(List<Channel> channels) {
-		if (type.getValue().equals(Action.BALANCE))
+		if (type.getValue().equals(HoverAction.BALANCE))
 			loadActions(channels, type.getValue());
 	}
 
@@ -203,7 +203,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 		new Thread(() -> channelActions.postValue(repo.getActions(ids, t))).start();
 	}
 
-	public LiveData<List<Action>> getChannelActions() { return channelActions; }
+	public LiveData<List<HoverAction>> getChannelActions() { return channelActions; }
 
 	public void setChannelSelected(Channel channel) {
 		if (channel == null || channel.selected) return;
@@ -215,7 +215,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 
 	private void logChoice(Channel channel) {
 		Log.i(TAG, "saving selected channel: " + channel);
-		FirebaseMessaging.getInstance().subscribeToTopic("channel-" + channel.id);
+		FirebaseMessaging.getInstance().subscribeToTopic(getApplication().getString(R.string.firebase_topic_channel, channel.id));
 		JSONObject event = new JSONObject();
 		try { event.put(getApplication().getString(R.string.added_channel_id), channel.id);
 		} catch (JSONException ignored) { }
@@ -226,14 +226,14 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 		if (activeChannel.getValue() == null)
 			return getApplication().getString(R.string.channels_error_noselect);
 		else if (channelActions.getValue() == null || channelActions.getValue().size() == 0) {
-			return getApplication().getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getApplication(), type.getValue()));
+			return getApplication().getString(R.string.no_actions_fielderror, HoverAction.getHumanFriendlyType(getApplication(), type.getValue()));
 		} else return null;
 	}
 
 	public void setChannelFromRequest(Request r) {
 		if (r != null && selectedChannels.getValue() != null && selectedChannels.getValue().size() > 0) {
 			new Thread(() -> {
-				List<Action> acts = repo.getActions(getChannelIds(selectedChannels.getValue()), r.requester_institution_id);
+				List<HoverAction> acts = repo.getActions(getChannelIds(selectedChannels.getValue()), r.requester_institution_id);
 				if (acts.size() <= 0)
 					acts = repo.getActions(getChannelIds(simChannels.getValue()), r.requester_institution_id);
 				if (acts.size() > 0)

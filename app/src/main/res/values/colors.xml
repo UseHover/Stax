@@ -21,6 +21,9 @@
 	<color name="stax_state_blue">#1878F9</color>
 	<color name="stax_state_yellow">#FFCA32</color>
 	<color name="stax_state_red">#FF0028</color>
+	<color name="pending_brown">#343734</color>
+	<color name="muted_green">#2A3932</color>
+	<color name="lighter_grey">#3F434A</color>
 	
 
 	<color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/offWhite</color>

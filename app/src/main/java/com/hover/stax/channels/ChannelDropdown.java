@@ -12,14 +12,19 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
+import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDropdownLayout;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.List;
+
+import static com.hover.stax.utils.Constants.size55;
 
 public class ChannelDropdown extends StaxDropdownLayout implements Target {
 	private static String TAG = "ChannelDropdown";
@@ -44,24 +49,46 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 
 	public void setListener(HighlightListener hl) { highlightListener = hl; }
 
-	public void updateChannels(List<Channel> channels) {
-		if (channels == null || channels.size() == 0) return;
-		Log.e(TAG, "found some channels " + channels.size());
+	public void channelUpdateIfNull(List<Channel> channels) {
+		if (channels != null && channels.size() > 0 && !hasExistingContent()) {
+			setState(getContext().getString(R.string.channels_error_nosim), INFO);
+			updateChoices(channels);
+		} else if (!hasExistingContent())
+			setEmptyState();
+	}
+
+	public void channelUpdate(List<Channel> channels) {
+		if (channels != null && channels.size() > 0) {
+			setState(null, NONE);
+			updateChoices(channels);
+		} else if (!hasExistingContent())
+			setEmptyState();
+	}
+
+	private boolean hasExistingContent() { return autoCompleteTextView.getAdapter() != null && autoCompleteTextView.getAdapter().getCount() > 0; }
+
+	private void setEmptyState() {
+		autoCompleteTextView.setDropDownHeight(0);
+		setState(getContext().getString(R.string.channels_error_nodata), ERROR);
+	}
+
+	private void setDropdownValue(Channel c) {
+		autoCompleteTextView.setText(c == null ? "" : c.toString(), false);
+		if (c != null)
+			UIHelper.loadPicasso (c.logoUrl, size55, this);
+	}
+
+	private void updateChoices(List<Channel> channels) {
 		if (highlightedChannel == null) setDropdownValue(null);
 		ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(ChannelDropdownAdapter.sort(channels, showSelected), getContext());
 		autoCompleteTextView.setAdapter(channelDropdownAdapter);
+		autoCompleteTextView.setDropDownHeight(UIHelper.dpToPx(300));
 		autoCompleteTextView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((Channel) adapterView.getItemAtPosition(pos)));
 
 		for (Channel c: channels) {
 			if (c.defaultAccount && showSelected)
 				setDropdownValue(c);
 		}
-	}
-
-	private void setDropdownValue(Channel c) {
-		autoCompleteTextView.setText(c == null ? "" : c.toString(), false);
-		if (c != null)
-			Picasso.get().load(c.logoUrl).resize(55, 55).into(this);
 	}
 
 	private void onSelect(Channel c) {
@@ -90,24 +117,28 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 	public void setObservers(@NonNull ChannelDropdownViewModel viewModel, @NonNull LifecycleOwner lifecycleOwner) {
 		viewModel.getSims().observe(lifecycleOwner, sims -> Log.i(TAG, "Got sims: " + sims.size()));
 		viewModel.getSimHniList().observe(lifecycleOwner, simList -> Log.i(TAG, "Got new sim hni list: " + simList));
-		viewModel.getChannels().observe(lifecycleOwner, this::updateChannels);
-		viewModel.getSimChannels().observe(lifecycleOwner, this::updateChannels);
+		viewModel.getChannels().observe(lifecycleOwner, this::channelUpdateIfNull);
+		viewModel.getSimChannels().observe(lifecycleOwner, this::channelUpdate);
 		viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> Log.i(TAG, "Got new selected channels: " + channels.size()));
-		viewModel.getActiveChannel().observe(lifecycleOwner, channel -> { if (channel != null) setState(null, NONE); });
+		viewModel.getActiveChannel().observe(lifecycleOwner, channel -> { if (channel != null && showSelected) setState(null, NONE); });
 		viewModel.getChannelActions().observe(lifecycleOwner, actions -> setState(actions, viewModel));
 	}
 
-	private void setState(List<Action> actions, ChannelDropdownViewModel viewModel) {
-		Log.e(TAG, "setting channel state. Channel: " + viewModel.getActiveChannel().getValue() + ". Actions: " + actions.size());
+	private void setState(List<HoverAction> actions, ChannelDropdownViewModel viewModel) {
 		if (viewModel.getActiveChannel().getValue() != null && (actions == null || actions.size() == 0))
-			setState(getContext().getString(R.string.no_actions_fielderror, Action.getHumanFriendlyType(getContext(), viewModel.getType())), AbstractStatefulInput.ERROR);
-		else if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !viewModel.getType().equals(Action.BALANCE))
-			setState(getContext().getString(actions.get(0).transaction_type.equals(Action.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning), INFO);
+			setState(getContext().getString(R.string.no_actions_fielderror, HoverAction.getHumanFriendlyType(getContext(), viewModel.getType())), AbstractStatefulInput.ERROR);
+		else if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !viewModel.getType().equals(HoverAction.BALANCE))
+			setState(getContext().getString(actions.get(0).transaction_type.equals(HoverAction.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning), INFO);
 		else if (viewModel.getActiveChannel().getValue() != null && showSelected)
 			setState(null, AbstractStatefulInput.SUCCESS);
 	}
 
 	public interface HighlightListener {
 		void highlightChannel(Channel c);
+	}
+	public static String countryCodeToEmoji(String countryCode) {
+		int firstLetter = Character.codePointAt(countryCode, 0) - 0x41 + 0x1F1E6;
+		int secondLetter = Character.codePointAt(countryCode, 1) - 0x41 + 0x1F1E6;
+		return new String(Character.toChars(firstLetter)) + new String(Character.toChars(secondLetter));
 	}
 }

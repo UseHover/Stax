@@ -10,7 +10,7 @@
 	    android:layout_height="match_parent"
 	    android:contentDescription="@string/splash_screen_img_desc"
 	    android:scaleType="centerCrop"
-	    android:src="@drawable/stax_splash" />
+	    android:src="@drawable/splash_background" />
 
 	<ImageView
 	    android:id="@+id/splash_image_blur"
@@ -32,8 +32,7 @@
 	    android:gravity="center"
 	    android:text="@string/stax_tagline"
 	    android:textAlignment="center"
-	    android:textSize="@dimen/text_34"
-	    android:visibility="gone"
-	    app:drawableTopCompat="@mipmap/stax" />
+	    android:textSize="@dimen/text_21"
+	    android:visibility="gone" />
 
 </RelativeLayout>

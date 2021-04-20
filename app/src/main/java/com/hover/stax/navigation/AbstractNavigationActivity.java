@@ -1,14 +1,11 @@
 package com.hover.stax.navigation;
 
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
+import android.content.Intent;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -18,8 +15,10 @@ import com.amplitude.api.Amplitude;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
-import com.hover.stax.balances.BalancesViewModel;
+import com.hover.stax.bounties.BountyActivity;
 import com.hover.stax.home.MainActivity;
+import com.hover.stax.requests.RequestActivity;
+import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.permissions.PermissionUtils;
 import com.hover.stax.settings.SettingsFragment;
@@ -42,9 +41,6 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 		AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
 		NavigationUI.setupWithNavController(nav, navController, appBarConfiguration);
 
-		// Show back button if not in MainActivity
-		nav.getMenu().getItem(0).setVisible(!(this instanceof MainActivity));
-
 		nav.setOnMenuItemClickListener(item -> {
 			if (this instanceof MainActivity)
 				checkPermissionsAndNavigate(getNavConst(item.getItemId()));
@@ -59,6 +55,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 	}
 
 	private void setActiveNav(int destinationId, BottomAppBar nav) {
+		nav.getMenu().getItem(0).setVisible(destinationId == R.id.bountyEmailFragment || destinationId == R.id.navigation_transfer || destinationId == R.id.navigation_request);
 		UIHelper.changeDrawableColor(nav.findViewById(R.id.navigation_home), destinationId == R.id.navigation_home ? R.color.brightBlue : R.color.offWhite, this);
 		UIHelper.changeDrawableColor(nav.findViewById(R.id.navigation_balance), destinationId == R.id.navigation_balance ? R.color.brightBlue : R.color.offWhite, this);
 		UIHelper.changeDrawableColor(nav.findViewById(R.id.navigation_settings), destinationId == R.id.navigation_settings ? R.color.brightBlue : R.color.offWhite, this);
@@ -76,10 +73,14 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 	}
 
 	private void navigateThruHome(int destId) {
-		if (destId == R.id.navigation_balance) navigateToMainActivityAndRedirectToAFragment(this, Constants.NAV_BALANCE);
-		else if (destId == R.id.navigation_settings) navigateToMainActivityAndRedirectToAFragment(this, Constants.NAV_SETTINGS);
-		else if (destId == R.id.navigation_home) navigateToMainActivity(this);
-		else onBackPressed();
+		Intent intent = new Intent(this, MainActivity.class);
+		if (destId == R.id.navigation_balance) intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_BALANCE);
+		else if (destId == R.id.navigation_settings) intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_SETTINGS);
+		else if (destId != R.id.navigation_home) {
+			onBackPressed();
+			return;
+		}
+		startActivity(intent);
 	}
 
 	private int getNavConst(int destId) {
@@ -88,6 +89,9 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 		else if (destId == R.id.navigation_home) return Constants.NAV_HOME;
 		else return destId;
 	}
+
+
+	public void getStartedWithBountyButton(View view) { checkPermissionsAndNavigate(Constants.NAV_BOUNTY); }
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

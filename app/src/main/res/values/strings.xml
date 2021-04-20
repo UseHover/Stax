@@ -4,11 +4,10 @@
 	<string name="payment_url_end" translatable="false">%1$s-%2$d-%3$s-%4$d</string>
 	<string name="root_url" translatable="false">https://www.usehover.com</string>
 	<string name="api_url" translatable="false">https://www.usehover.com/api</string>
-	<string name="channels_endpoint" translatable="false">/channels?published=true</string>
+	<string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
+	<string name="bounty_endpoint">/stax_bounty_hunters</string>
 	<string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
 
-	<string name="stax_tagline">Selling made simple</string>
-	<string name="splash_screen_img_desc">Stax background</string>
 	<string name="nav_home">Home</string>
 	<string name="nav_balance_and_history">Balance and history</string>
 	<string name="nav_link_account">Link an account</string>
@@ -39,6 +38,16 @@
 	<string name="btn_back">Back</string>
 	<string name="btn_test">Test</string>
 
+	<!-- ONBOARDING -->
+	<string name="stax_tagline">USSD made simple</string>
+	<string name="splash_screen_img_desc">Stax background</string>
+	<string name="slide_1_title">Never dial a code again!</string>
+	<string name="slide_1_desc">Move money between dozens of banks and mobile money options</string>
+	<string name="slide_2_title">No data?\nNo problem!</string>
+	<string name="slide_2_desc">Payments through Stax work without wifi or data.</string>
+	<string name="slide_3_title">Forget your SMS inbox.</string>
+	<string name="slide_3_desc">Stax organizes all your transactions in one place</string>
+
 	<!-- Home -->
 	<string name="welcome_to">Welcome to</string>
 	<string name="cta_transfer">Send money</string>
@@ -48,6 +57,7 @@
 	<!-- Balances -->
 	<string name="bal_cardhead">Balances</string>
 	<string name="channels_error_nodata">Please turn on data to load services.</string>
+	<string name="channels_error_nosim">Please insert a supported SIM to filter choices.</string>
 	<string name="channels_error_noselect">You must select a service.</string>
 	<string name="link_account">Link account</string>
 	<string name="link_account_error">Choose an account to link.</string>
@@ -70,6 +80,7 @@
 	<string name="buy_airtime">buy airtime</string>
 	<string name="check_balance">check balance</string>
 	<string name="send_money">send money</string>
+	<string name="send_money_to">send money to</string>
 	<string name="move_money">move money</string>
 	<string name="perm_accessibiltiy_dialogbody">Stax needs accessibility permission to %1$s</string>
 	<string name="perm_progress1">Step 1 of 2: Display permission</string>
@@ -95,6 +106,8 @@
 	<string name="hsdk_enable_accessibility">Enable Accessibility</string>
 	<string name="access_service_summary">Connect with Mobile Money and Telecom services on your behalf</string>
 	<string name="access_service_descript">This is used to read and interact with USSD menus to provide a simplified and more accessible experience.</string>
+	<string name="hsdk_manual_env">Manual environment active. This session will be recorded.</string>
+	<string name="hsdk_overlay_header">Transacting</string>
 	<string name="hsdk_complete">Transaction complete</string>
 
 	<!-- Onboarding showcase -->
@@ -120,6 +133,7 @@
 	<string name="recipientacct_label">Contact account number</string>
 	<string name="toast_error_contactperm">You must grant the read contacts permission to choose a number from your address book.</string>
 	<string name="toast_error_contactselect">There was a problem selecting your contact. Please try again.</string>
+	<string name="transfer_error_recipient_general">Please enter a recipient number.</string>
 	<string name="transfer_error_recipient_phone">Please enter a phone number.</string>
 	<string name="transfer_error_recipient_account">Please enter an account number.</string>
 	<string name="amount_fielderror">Please enter a valid amount.</string>
@@ -130,7 +144,7 @@
 	<string name="toast_pleasefix">Please fix the errors shown in red.</string>
 	<string name="self_choice">Myself</string>
 	<string name="other_choice">Someone else</string>
-	<string name="onnet_choice">On network</string>
+	<string name="onnet_choice">on network</string>
 	<string name="offnet_choice">To %1$s</string>
 	<string name="note_cardhead">Description</string>
 	<string name="request_note_label">What is your request for?</string>
@@ -144,9 +158,10 @@
 	<string name="descrip_airtime_sent">%1$s sent airtime to %2$s</string>
 	<string name="descrip_transfer_sent">%1$s sent money to %2$s</string>
 	<string name="descrip_transfer_received">received money from %1$s</string>
+	<string name="descrip_recorded">Recorded USSD session on %1$s</string>
 	<string name="fab_transfernow">Send money now</string>
 	<string name="fab_airtimenow">Buy airtime now</string>
-	<string name="noworry_explain">Don\'t worry. You can review the info in the last step.</string>
+	<string name="noworry_explain">Don\'t worry. You can review the info after you press the Continue button.</string>
 	<string name="descrip_airtime_sched">Buy airtime with %1$s for %2$s</string>
 
 	<!-- Request -->
@@ -287,4 +302,53 @@
 	<string name="csr_text_state_refresh">Refreshing balance…</string>
 	<string name="csr_text_state_complete">Refreshing balance complete</string>
 	<string name="csr_text_last_refresh">last update:</string>
+
+	<!-- BOUNTY -->
+	<string name="nav_bounty">Bounty</string>
+  	<string name="bounty_title">💸  GET PAID! MAP USSD FLOWS</string>
+	<string name="bounty_msg">Stax will pay you USD $5 - $50 to go through a USSD flow.</string>
+	<string name="get_started">Get started</string>
+	<string name="bounty_email_stage_title">🗺️  MAP USSD FLOWS</string>
+	<string name="bounty_email_stage_desc1">Stax wants to make digital money available to anyone anywhere offline. To bring Stax to more people in more countries, we need to build a map of all the USSD services in the world.<b> That is why Stax will pay you USD $5-50 to go through any of the USSD flows on the next page.</b></string>
+	<string name="bounty_email_stage_desc2"><b>1.</b>   Enter your email so we can pay you.\n<b>2.</b>   Choose a USSD flow like “check balance” from your bank or mobile money service on the next page.\n<b>3.</b>   Go through the USSD flow as normal.\n<b>4.</b>   Stax will check the flow.\n<b>5.</b>   You get paid.</string>
+	<string name="descrip_bounty_airtime">Buy airtime for any person</string>
+	<string name="bounty_airtime_explain">Buy airtime for someone else</string>
+	<string name="descrip_bounty_p2p">Send money to someone else %1$s</string>
+	<string name="bounty_p2p_explain">Send any amount to any person %1$s</string>
+	<string name="descrip_bounty_me2me">Move money to your %1$s account</string>
+	<string name="bounty_me2me_explain">Send any amount to your own %1$s account</string>
+	<string name="descrip_bounty_c2b">Pay a bill</string>
+	<string name="bounty_c2b_explain">Send any amount to any business</string>
+	<string name="descrip_bounty_balance">Check balance</string>
+	<string name="bounty_balance_explain">Check your balance</string>
+	<string name="descrip_bounty_offnet">on %1$s</string>
+	<string name="bounty_email">Email</string>
+	<string name="bounty_email_error">Please enter a valid email address</string>
+	<string name="bounty_uploading_email">Connecting, please wait…</string>
+	<string name="bounty_api_internet_error">Please ensure you have a data internet connection</string>
+	<string name="bounty_api_other_error">Please try again. If this persists, kindly contact us at ussd@stax.me.</string>
+	<string name="bounty_pending_short_desc">We are checking this flow. Expect payment in 1–5 business days.</string>
+	<string name="done">Done</string>
+	<string name="available_flows">AVAILABLE FLOWS</string>
+	<string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
+	<string name="bounty_claim_explained">To claim USD $%1$d, %2$s.\n\nAs soon as you\’re done, we will send you an email to collect information for payment. You will be paid in 1–5 business days </string>
+	<string name="start_USSD_Flow">Start USSD Flow</string>
+	<string name="checking_your_flow">Checking your flow</string>
+	<string name="bounty_flow_pending_dialog_msg"><![CDATA[Thank you for going through this flow. We sent an email with instructions for payment. We will pay you after we verify and check the flow.<br/><br/>If you don\’t hear from us, email us at <a href="https://ussd@stax.me"> <b><font color=#1878F9> ussd@stax.me </b></a>]]></string>
+	<string name="flow_done_title">FLOW DONE</string>
+	<string name="flow_done_desc">We checked the flow and it looks good! You should have an email in your inbox with payment information.</string>
+	<string name="go_through_another_flow">Go through another flow</string>
+	<string name="flow_recorded">FLOW RECORDED</string>
+	<string name="bounty_amount_with_currency">USD $%1$d</string>
+	<string name="select_country">Select country</string>
+	<string name="filter_by_country">Filter by country</string>
+	<string name="country">Country</string>
+	<string name="country_error_nodata">Please turn on data to load services and countries.</string>
+	<string name="country_with_emoji">%1$s  %2$s </string>
+	<string name="all_countries_with_emoji">🌎 All countries</string>
+	<string name="bounty_sim_err_header">NO %1$s SIM</string>
+	<string name="bounty_sim_err_desc">You need a SIM card from %1$s in your device to map this flow. Please put a SIM card from %1$s in your device and try again.</string>
+	<string name="retry">Retry</string>
+	<string name="submit_flow">Submit flow</string>
+	<string name="bounty_submitted_successfully">Bounty submitted successfully</string>
 </resources>

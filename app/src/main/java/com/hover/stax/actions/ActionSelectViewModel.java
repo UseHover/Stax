@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
+import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 
 import java.util.List;
@@ -14,23 +15,23 @@ import java.util.List;
 public class ActionSelectViewModel extends AndroidViewModel {
 	final private String TAG = "ActionSelectViewModel";
 
-	private MediatorLiveData<List<Action>> filteredActions = new MediatorLiveData<>();
-	private MediatorLiveData<Action> activeAction = new MediatorLiveData<>();
+	private MediatorLiveData<List<HoverAction>> filteredActions = new MediatorLiveData<>();
+	private MediatorLiveData<HoverAction> activeAction = new MediatorLiveData<>();
 
 	public ActionSelectViewModel(Application application) {
 		super(application);
 		activeAction.addSource(filteredActions, this::setActiveActionIfOutOfDate);
 	}
 
-	public void setActions(List<Action> actions) {
+	public void setActions(List<HoverAction> actions) {
 		filteredActions.postValue(actions);
 	}
 
-	public LiveData<List<Action>> getActions() {
+	public LiveData<List<HoverAction>> getActions() {
 		return filteredActions;
 	}
 
-	private void setActiveActionIfOutOfDate(List<Action> actions) {
+	private void setActiveActionIfOutOfDate(List<HoverAction> actions) {
 		Log.e(TAG, "maybe setting active action");
 		if (actions != null && actions.size() > 0 && (activeAction.getValue() == null || !actions.contains(activeAction.getValue()))) {
 			Log.e(TAG, "Auto selecting: " + actions.get(0) + " " + actions.get(0).transaction_type + " " + actions.get(0).recipientInstitutionId() + " " + actions.get(0).public_id);
@@ -38,11 +39,11 @@ public class ActionSelectViewModel extends AndroidViewModel {
 		}
 	}
 
-	public void setActiveAction(Action action) {
+	public void setActiveAction(HoverAction action) {
 		activeAction.postValue(action);
 	}
 
-	public LiveData<Action> getActiveAction() {
+	public LiveData<HoverAction> getActiveAction() {
 		if (activeAction == null) { activeAction = new MediatorLiveData<>(); }
 		return activeAction;
 	}

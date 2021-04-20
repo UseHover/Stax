@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent">
+<RelativeLayout
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+	    xmlns:app="http://schemas.android.com/apk/res-auto"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:descendantFocusability="afterDescendants"
+	    android:orientation="vertical">
 
+	<androidx.core.widget.NestedScrollView
+	    android:layout_height="match_parent"
+	    android:layout_width="match_parent"
+	   >
 	<LinearLayout
-		android:layout_height="wrap_content"
+		android:layout_height="match_parent"
 		android:layout_width="match_parent"
 		android:layout_marginTop="@dimen/margin_13"
 		android:layout_marginBottom="@dimen/margin_55"
+
 		android:orientation="vertical">
+
 
 		<com.hover.stax.views.StaxCardView
 			android:layout_width="match_parent"
@@ -22,7 +30,7 @@
 			    android:layout_height="wrap_content"
 				android:layout_marginHorizontal="@dimen/margin_13">
 
-				<TableRow android:layout_marginTop="@dimen/margin_24">
+				<TableRow android:id="@+id/amountRow" android:layout_marginTop="@dimen/margin_24">
 					<TextView
 					    android:textColor="@color/offWhite"
 					    android:textSize="@dimen/text_16"
@@ -37,7 +45,7 @@
 					    android:textSize="@dimen/text_21" />
 				</TableRow>
 
-				<TableRow android:layout_marginTop="@dimen/margin_24">
+				<TableRow android:id="@+id/recipientRow" android:layout_marginTop="@dimen/margin_24">
 					<TextView
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_16"
@@ -65,7 +73,7 @@
 						android:textSize="@dimen/text_21" />
 				</TableRow>
 
-				<TableRow android:layout_marginTop="@dimen/margin_24">
+				<TableRow android:id="@+id/recipAccountRow" android:layout_marginTop="@dimen/margin_24">
 					<TextView
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_16"
@@ -94,14 +102,17 @@
 						android:textColor="@color/offWhite"
 						android:textSize="@dimen/text_13" />
 				</TableRow>
+
 			</TableLayout>
+
+
 		</com.hover.stax.views.StaxCardView>
 
 		<com.hover.stax.views.StaxCardView
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:visibility="gone"
-		    android:id="@+id/pending_notify_in_details"
+		    android:id="@+id/notification_card"
 		    app:title="@string/pending_cardhead"
 		    app:backRes="@drawable/ic_info"
 		    app:staxCardColor="@color/cardDarkBlue"
@@ -112,6 +123,7 @@
 			    android:layout_width="match_parent"
 			    android:text="@string/pending_cardbody"
 			    android:textSize="@dimen/text_16"
+			    android:id="@+id/notification_detail"
 			    android:fontFamily="font-normal"
 			    android:layout_marginHorizontal="@dimen/margin_10"
 			    android:layout_marginBottom="@dimen/margin_3"
@@ -139,4 +151,7 @@
 
 		</com.hover.stax.views.StaxCardView>
 	</LinearLayout>
-</androidx.core.widget.NestedScrollView>
+	</androidx.core.widget.NestedScrollView>
+
+	<include layout="@layout/bounty_retry_submit_btn_layout" />
+</RelativeLayout>

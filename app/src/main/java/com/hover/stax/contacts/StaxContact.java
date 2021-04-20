@@ -17,9 +17,8 @@ import androidx.room.PrimaryKey;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
-import com.hover.sdk.transactions.Transaction;
+import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.Utils;
@@ -87,9 +86,9 @@ public class StaxContact {
 		}
 	}
 
-	public String getNumberFormatForInput(Action a, Channel c) {
+	public String getNumberFormatForInput(HoverAction a, Channel c) {
 		try {
-			String format = a.getFormatInfo(Action.PHONE_KEY);
+			String format = a.getFormatInfo(HoverAction.PHONE_KEY);
 			if (format != null && format.startsWith(String.valueOf(getPhone(c.countryAlpha2).getCountryCode())))
 				return getInternationalNumberNoPlus(c.countryAlpha2);
 			else

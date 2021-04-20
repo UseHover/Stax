@@ -11,8 +11,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
+import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
-import com.hover.stax.actions.Action;
 import com.hover.stax.balances.BalanceAdapter;
 import com.hover.stax.balances.BalancesViewModel;
 import com.hover.stax.channels.Channel;
@@ -57,12 +57,12 @@ public class MainActivity extends AbstractNavigationActivity implements
 	}
 
 	private void checkForRequest(Intent intent) {
-		if (intent.hasExtra(Constants.REQUEST_LINK)) navigateToTransferActivity(Action.P2P, true, intent, this);
+		if (intent.hasExtra(Constants.REQUEST_LINK)) navigateToTransferActivity(HoverAction.P2P, true, intent, this);
 	}
 	private void checkForFragmentDirection(Intent intent) {
 		if (intent.hasExtra(Constants.FRAGMENT_DIRECT)) {
-			int toWhere = intent.getExtras().getInt(Constants.FRAGMENT_DIRECT);
-			navigate(this, toWhere);
+			int toWhere = intent.getExtras().getInt(Constants.FRAGMENT_DIRECT, 0);
+			checkPermissionsAndNavigate(toWhere);
 		}
 	}
 
@@ -76,15 +76,17 @@ public class MainActivity extends AbstractNavigationActivity implements
 	}
 
 	@Override
-	public void startRun(Action a, int i) {
+	public void startRun(HoverAction a, int i) {
 			run(a, i);
 	}
 
-	private void run(Action action, int index) {
+	private void run(HoverAction action, int index) {
 		Log.e(TAG, "running index: " + index);
 		if (balancesViewModel.getChannel(action.channel_id) != null) {
-			new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), MainActivity.this, index)
-				.finalScreenTime(0).run();
+			HoverSession.Builder hsb = new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), MainActivity.this, index);
+			if (index + 1 < balancesViewModel.getSelectedChannels().getValue().size())
+				hsb.finalScreenTime(0);
+		    hsb.run();
 		} else { // Fix for auth issue on OnePlus 6
 			new Handler(Looper.getMainLooper()).post(() -> {
 				balancesViewModel.getSelectedChannels().observe(MainActivity.this, new Observer<List<Channel>>() {
@@ -106,7 +108,7 @@ public class MainActivity extends AbstractNavigationActivity implements
 	}
 
 	@Override
-	public void onAuthSuccess(Action act) {
+	public void onAuthSuccess(HoverAction act) {
 			run(act, 0);
 	}
 
@@ -116,7 +118,6 @@ public class MainActivity extends AbstractNavigationActivity implements
 		switch (requestCode) {
 			case Constants.TRANSFER_REQUEST:
 				if (data != null) { onProbableHoverCall(data); }
-				else Amplitude.getInstance().logEvent(getString(R.string.sdk_failure));
 				break;
 			case Constants.REQUEST_REQUEST:
 				if (resultCode == RESULT_OK) { onRequest(data); }

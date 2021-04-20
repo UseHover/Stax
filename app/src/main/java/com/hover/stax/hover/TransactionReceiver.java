@@ -4,8 +4,11 @@ import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
-import com.hover.stax.actions.Action;
+import com.hover.sdk.actions.HoverAction;
+import com.hover.sdk.transactions.Transaction;
+import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.DatabaseRepo;
 
@@ -26,7 +29,7 @@ public class TransactionReceiver extends BroadcastReceiver {
 			HashMap<String, String> parsed_variables = (HashMap<String, String>) intent.getSerializableExtra("parsed_variables");
 			if (parsed_variables != null && parsed_variables.containsKey("balance")) {
 				new Thread(() -> {
-					Action action = repo.getAction(intent.getStringExtra("action_id"));
+					HoverAction action = repo.getAction(intent.getStringExtra("action_id"));
 					Channel channel = repo.getChannel(action.channel_id);
 					channel.updateBalance(parsed_variables);
 					repo.update(channel);
