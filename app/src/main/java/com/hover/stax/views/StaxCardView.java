@@ -50,6 +50,8 @@ public class StaxCardView extends FrameLayout {
 		binding.content.setBackgroundColor(bgColor);
 	}
 
+	public void setBackButtonVisibility(int visibility) { binding.backButton.setVisibility(visibility);}
+
 	public void setTitle(String t) {
 		if (t != null) binding.title.setText(t);
 	}

@@ -104,7 +104,7 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 		balancesRecyclerView.setAdapter(balanceAdapter);
 		balancesRecyclerView.setVisibility(channels != null && channels.size() > 0 ? VISIBLE : GONE);
 
-		binding.homeCardBalances.balanceCard.backButton.setVisibility(channels != null && channels.size() > 0  ? VISIBLE : GONE);
+		binding.homeCardBalances.balanceCard.setBackButtonVisibility(channels != null && channels.size() > 0  ? VISIBLE : GONE);
 
 		toggleLink(channels != null && channels.size() > 0);
 		channelDropdown.setObservers(channelDropdownViewModel, getActivity());
