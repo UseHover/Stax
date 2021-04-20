@@ -117,4 +117,11 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         bountyViewModel.filterChannels(countryCode).observe(getViewLifecycleOwner(), channels ->
                 updateChannelList(channels, bountyViewModel.getBounties().getValue()));
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        binding = null;
+    }
 }

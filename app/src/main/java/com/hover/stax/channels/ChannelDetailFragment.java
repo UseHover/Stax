@@ -89,4 +89,11 @@ public class ChannelDetailFragment extends Fragment implements TransactionHistor
 		if (getActivity() != null && viewModel.getChannel().getValue() != null)
 			((MainActivity) getActivity()).onTapRefresh(viewModel.getChannel().getValue().id);
 	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+
+		binding = null;
+	}
 }

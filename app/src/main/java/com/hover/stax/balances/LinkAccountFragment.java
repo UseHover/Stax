@@ -59,4 +59,10 @@ public class LinkAccountFragment extends Fragment {
         } else channelDropdown.setError(getString(R.string.refresh_balance_error));
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        binding = null;
+    }
 }

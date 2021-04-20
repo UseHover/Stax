@@ -37,4 +37,11 @@ public class HomeFragment extends Fragment {
 		MainActivity act = ((MainActivity) getActivity());
 		if (act != null) act.checkPermissionsAndNavigate(destination);
 	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+
+		binding = null;
+	}
 }
