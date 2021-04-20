@@ -33,7 +33,7 @@ import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.destruct.SelfDestructActivity;
-import com.hover.stax.onboarding.OnboardingActivity;
+import com.hover.stax.onboarding.OnBoardingActivity;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.schedules.ScheduleWorker;
@@ -167,7 +167,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	}
 
 	private void chooseNavigation(Intent intent) {
-		 if(!OnboardingActivity.hasPassedThrough(this)) goToOnboardingActivity();
+		 if(!OnBoardingActivity.hasPassedThrough(this)) goToOnboardingActivity();
 		 else if(isToRedirectFromMainActivity(intent)) {
 			assert intent.getExtras() !=null;
 			assert intent.getExtras().getString(FRAGMENT_DIRECT) !=null;
@@ -189,7 +189,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	}
 
 	private void goToOnboardingActivity() {
-		startActivity(new Intent(this, OnboardingActivity.class));
+		startActivity(new Intent(this, OnBoardingActivity.class));
 	}
 	private void goToFulfillRequestActivity(Intent intent) {
 		Intent i = new Intent(this, MainActivity.class);
