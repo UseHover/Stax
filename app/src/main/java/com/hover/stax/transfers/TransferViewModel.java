@@ -1,16 +1,20 @@
 package com.hover.stax.transfers;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.i18n.phonenumbers.NumberParseException;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
+import com.hover.stax.channels.Channel;
 import com.hover.stax.requests.Request;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.utils.DateUtils;
+import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
@@ -109,6 +113,12 @@ public class TransferViewModel extends AbstractFormViewModel {
 		setAmount(s.amount);
 		setContact(s.recipient_ids);
 		setNote(s.note);
+	}
+
+	public void view(Request r) {
+		setAmount(r.amount);
+		setContact(r.requestee_ids);
+		setNote(r.note);
 	}
 
 	public void checkSchedule() {

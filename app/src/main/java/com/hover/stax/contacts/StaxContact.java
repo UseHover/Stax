@@ -59,9 +59,9 @@ public class StaxContact {
 
 	public StaxContact(String phone) {
 		id = UUID.randomUUID().toString();
-		name = "";
-		phoneNumber = phone.replaceAll(" ", "");
 		lastUsedTimestamp = DateUtils.now();
+		phoneNumber = phone.replaceAll(" ", "");
+		name = "";
 	}
 
 	public StaxContact(Intent data, Context c) {
@@ -78,7 +78,7 @@ public class StaxContact {
 				if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
 					Cursor phones = c.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id, null, null);
 					if (phones != null && phones.moveToNext())
-						phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+						phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)).replaceAll(" ", "");
 					if (phones != null) phones.close();
 				}
 			}
@@ -119,13 +119,15 @@ public class StaxContact {
 		return number;
 	}
 
-	private String getInternationalNumber(String country) throws NumberParseException, IllegalStateException {
+	public String getInternationalNumber(String country) throws NumberParseException, IllegalStateException {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 		Phonenumber.PhoneNumber phone = getPhone(country);
 		phone.getCountryCode();
 		String str = phoneUtil.format(phone, PhoneNumberUtil.PhoneNumberFormat.E164);
 		return str;
 	}
+
+
 	public String getInternationalNumberNoPlus(String country) {
 		try {
 			return getInternationalNumber(country).replace("+", "");
