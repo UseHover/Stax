@@ -20,15 +20,14 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.ContactInput;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.databinding.FragmentRequestBinding;
+import com.hover.stax.transfers.AbstractFormFragment;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
-import com.hover.stax.transfers.AbstractFormFragment;
 import com.hover.stax.views.AbstractStatefulInput;
-import com.hover.stax.views.StaxTextInputLayout;
 import com.hover.stax.views.Stax2LineItem;
 import com.hover.stax.views.StaxCardView;
-
-import static com.hover.stax.views.AbstractStatefulInput.NONE;
+import com.hover.stax.views.StaxTextInputLayout;
 
 public class NewRequestFragment extends AbstractFormFragment implements RecipientAdapter.UpdateListener {
 
@@ -45,30 +44,33 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 	private RecipientAdapter recipientAdapter;
 	private int recipientCount = 0;
 
+	private FragmentRequestBinding binding;
+
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		channelDropdownViewModel = new ViewModelProvider(requireActivity()).get(ChannelDropdownViewModel.class);
 		abstractFormViewModel = new ViewModelProvider(requireActivity()).get(NewRequestViewModel.class);
 		requestViewModel = (NewRequestViewModel) abstractFormViewModel;
 
-		View view = inflater.inflate(R.layout.fragment_request, container, false);
-		init(view);
-		startObservers(view);
+		binding = FragmentRequestBinding.inflate(inflater, container, false);
+
+		init(binding.getRoot());
+		startObservers(binding.getRoot());
 		startListeners();
-		return view;
+		return binding.getRoot();
 	}
 
 	@Override
 	protected void init(View view) {
-		amountInput = view.findViewById(R.id.amountInput);
-		recipientInputList = view.findViewById(R.id.recipient_list);
-		addRecipientBtn = view.findViewById(R.id.add_recipient_button);
-		requesterNumberInput = view.findViewById(R.id.accountNumberInput);
-		noteInput = view.findViewById(R.id.noteInput);
+		amountInput = binding.editCard.cardAmount.amountInput;
+		recipientInputList = binding.editCard.cardRequestee.recipientList;
+		addRecipientBtn = binding.editCard.cardRequestee.addRecipientButton;
+		requesterNumberInput = binding.editCard.cardRequester.accountNumberInput;
+		noteInput =	binding.editCard.transferNote.noteInput;
 
-		recipientValueList = view.findViewById(R.id.requesteeValueList);
-		accountValue = view.findViewById(R.id.account_value);
-		shareCard = view.findViewById(R.id.shareCard);
+		recipientValueList = binding.summaryCard.requesteeValueList;
+		accountValue = binding.summaryCard.accountValue;
+		shareCard = binding.shareCard.getRoot();
 
 		amountInput.setText(requestViewModel.getAmount().getValue());
 		recipientInputList.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
@@ -108,8 +110,8 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 		});
 
 		requestViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> {
-			root.findViewById(R.id.amountRow).setVisibility(requestViewModel.validAmount() ? View.VISIBLE : View.GONE);
-			((TextView) root.findViewById(R.id.amountValue)).setText(Utils.formatAmount(amount));
+			binding.summaryCard.amountRow.setVisibility(requestViewModel.validAmount() ? View.VISIBLE : View.GONE);
+			binding.summaryCard.amountValue.setText(Utils.formatAmount(amount));
 		});
 
 		requestViewModel.getRequesterNumber().observe(getViewLifecycleOwner(), accountNumber -> {
@@ -117,8 +119,8 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 		});
 
 		requestViewModel.getNote().observe(getViewLifecycleOwner(), note -> {
-			root.findViewById(R.id.noteRow).setVisibility(requestViewModel.validNote() ? View.VISIBLE : View.GONE);
-			((TextView) root.findViewById(R.id.noteValue)).setText(note);
+			binding.summaryCard.noteRow.setVisibility(requestViewModel.validNote() ? View.VISIBLE : View.GONE);
+			binding.summaryCard.noteValue.setText(note);
 		});
 
 
@@ -148,7 +150,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 		});
 		noteInput.addTextChangedListener(noteWatcher);
 
-		fab.setOnClickListener(v -> fabClicked(v));
+		fab.setOnClickListener(this::fabClicked);
 	}
 
 	@Override
@@ -162,7 +164,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 		recipientAdapter.notifyDataSetChanged();
 	}
 
-	private TextWatcher amountWatcher = new TextWatcher() {
+	private final TextWatcher amountWatcher = new TextWatcher() {
 		@Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
 		@Override public void afterTextChanged(Editable editable) { }
 
@@ -171,7 +173,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 		}
 	};
 
-	private TextWatcher receivingAccountNumberWatcher = new TextWatcher() {
+	private final TextWatcher receivingAccountNumberWatcher = new TextWatcher() {
 		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 		@Override
@@ -182,7 +184,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 		}
 	};
 
-	private TextWatcher noteWatcher = new TextWatcher() {
+	private final TextWatcher noteWatcher = new TextWatcher() {
 		@Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
 		@Override public void afterTextChanged(Editable editable) { }
 
@@ -207,5 +209,12 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 		String recipientError = requestViewModel.requesteeErrors();
 		((ContactInput) recipientInputList.getChildAt(0)).setState(recipientError, recipientError == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.ERROR);
 		return channelError == null && requesterAcctNoError == null && recipientError == null;
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+
+		binding = null;
 	}
 }

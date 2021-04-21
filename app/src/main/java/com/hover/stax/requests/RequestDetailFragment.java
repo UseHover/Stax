@@ -5,9 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +16,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.contacts.StaxContact;
-import com.hover.stax.home.MainActivity;
+import com.hover.stax.databinding.FragmentRequestDetailBinding;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -32,6 +30,7 @@ public class RequestDetailFragment extends Fragment implements RequestSenderInte
 	final public static String TAG = "RequestDetailFragment";
 
 	private RequestDetailViewModel viewModel;
+	private FragmentRequestDetailBinding binding;
 
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		viewModel = new ViewModelProvider(this).get(RequestDetailViewModel.class);
@@ -41,13 +40,15 @@ public class RequestDetailFragment extends Fragment implements RequestSenderInte
 		catch (JSONException ignored) { }
 
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_request_detail)), data);
-		return inflater.inflate(R.layout.fragment_request_detail, container, false);
+
+		binding = FragmentRequestDetailBinding.inflate(inflater, container, false);
+		return binding.getRoot();
 	}
 
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		((TextView) view.findViewById(R.id.shareCard).findViewById(R.id.title)).setText(getString(R.string.share_again_cardhead));
+		binding.shareCard.requestLinkCardView.setTitle(getString(R.string.share_again_cardhead));
 
 		viewModel.getRecipients().observe(getViewLifecycleOwner(), contacts -> {
 			if (contacts != null && contacts.size() > 0) {
@@ -57,7 +58,7 @@ public class RequestDetailFragment extends Fragment implements RequestSenderInte
 		});
 
 		viewModel.getChannel().observe(getViewLifecycleOwner(), channel-> {
-			view.findViewById(R.id.requesterAccountRow).setVisibility(channel != null ? View.VISIBLE : View.GONE);
+			binding.summaryCard.requesterAccountRow.setVisibility(channel != null ? View.VISIBLE : View.GONE);
 			if (channel != null) {
 				((Stax2LineItem) view.findViewById(R.id.requesterValue)).setTitle(channel.name);
 				Log.e(TAG, "Activity is null? " + (getActivity() == null));
@@ -71,7 +72,7 @@ public class RequestDetailFragment extends Fragment implements RequestSenderInte
 		});
 
 		viewModel.setRequest(getArguments().getInt("id"));
-		initShareButtons(view);
+		initShareButtons();
 	}
 
 	private void createRecipientEntry(StaxContact c, View view) {
@@ -81,23 +82,24 @@ public class RequestDetailFragment extends Fragment implements RequestSenderInte
 	}
 
 	private void setUpSummary(View view, Request request) {
-		((TextView) view.findViewById(R.id.title)).setText(request.description);
-		((TextView) view.findViewById(R.id.dateValue)).setText(DateUtils.humanFriendlyDate(request.date_sent));
+		binding.summaryCard.requestMoneyCard.setTitle(request.description);
+//		((TextView) view.findViewById(R.id.title)).setText(request.description);
+		binding.summaryCard.dateValue.setText(DateUtils.humanFriendlyDate(request.date_sent));
 
 		if (request.amount != null && !request.amount.isEmpty()) {
-			view.findViewById(R.id.amountRow).setVisibility(View.VISIBLE);
-			((TextView) view.findViewById(R.id.amountValue)).setText(Utils.formatAmount(request.amount));
+			binding.summaryCard.amountRow.setVisibility(View.VISIBLE);
+			binding.summaryCard.amountValue.setText(Utils.formatAmount(request.amount));
 		} else
-			view.findViewById(R.id.amountRow).setVisibility(View.GONE);
+			binding.summaryCard.amountRow.setVisibility(View.GONE);
 
 		if (request.requester_number != null && !request.requester_number.isEmpty())
-			((Stax2LineItem) view.findViewById(R.id.requesterValue)).setSubtitle(request.requester_number);
+			binding.summaryCard.requesterValue.setSubtitle(request.requester_number);
 
 
 		view.findViewById(R.id.noteRow).setVisibility(request.note == null || request.note.isEmpty() ? View.GONE : View.VISIBLE);
-		((TextView) view.findViewById(R.id.noteValue)).setText(request.note);
+		binding.summaryCard.noteValue.setText(request.note);
 
-		view.findViewById(R.id.cancel_btn).setOnClickListener(btn -> showConfirmDialog());
+		binding.cancelBtn.setOnClickListener(btn -> showConfirmDialog());
 	}
 
 	private void showConfirmDialog() {
@@ -117,13 +119,19 @@ public class RequestDetailFragment extends Fragment implements RequestSenderInte
 		}
 	}
 
-	public void initShareButtons(View view) {
+	public void initShareButtons() {
 		if (getActivity() != null) {
-			view.findViewById(R.id.sms_share_selection).setOnClickListener(v -> sendSms(viewModel.getRequest().getValue(), viewModel.getRecipients().getValue(), getActivity()));
-			view.findViewById(R.id.whatsapp_share_selection).setOnClickListener(v ->
+			binding.shareCard.smsShareSelection.setOnClickListener(v -> sendSms(viewModel.getRequest().getValue(), viewModel.getRecipients().getValue(), getActivity()));
+			binding.shareCard.whatsappShareSelection.setOnClickListener(v ->
 				sendWhatsapp(viewModel.getRequest().getValue(), viewModel.getRecipients().getValue(), viewModel.getChannel().getValue(), getActivity()));
-			view.findViewById(R.id.copylink_share_selection).setOnClickListener(v -> copyShareLink(viewModel.getRequest().getValue(), v.findViewById(R.id.copylink_share_selection), getActivity()));
+			binding.shareCard.copylinkShareSelection.setOnClickListener(v -> copyShareLink(viewModel.getRequest().getValue(), binding.shareCard.copylinkShareSelection, getActivity()));
 		}
 	}
 
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+
+		binding = null;
+	}
 }

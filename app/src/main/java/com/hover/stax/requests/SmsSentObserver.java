@@ -58,9 +58,7 @@ class SmsSentObserver extends ContentObserver {
 	public void onChange(boolean selfChange) {
 		if (wasSent) return;
 
-		Cursor cursor = null;
-		try {
-			cursor = resolver.query(uri, PROJECTION, null, null, null);
+		try (Cursor cursor = resolver.query(uri, PROJECTION, null, null, null)) {
 
 			if (cursor != null && cursor.moveToFirst()) {
 				final String address = cursor.getString(cursor.getColumnIndex(COLUMN_ADDRESS));
@@ -74,8 +72,9 @@ class SmsSentObserver extends ContentObserver {
 					}
 				}
 			}
-		} catch (Exception e) { Log.e(TAG, "FAILURE", e);
-		} finally { if (cursor != null) cursor.close(); }
+		} catch (Exception e) {
+			Log.e(TAG, "FAILURE", e);
+		}
 	}
 
 	public interface SmsSentListener {
