@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +20,7 @@ import com.amplitude.api.Amplitude;
 import com.google.android.material.textfield.TextInputEditText;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.databinding.FragmentPinUpdateBinding;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.StaxDialog;
 import com.squareup.picasso.Picasso;
@@ -33,6 +33,8 @@ public class PinUpdateFragment extends Fragment implements Target {
 	private TextInputEditText input;
 	PinsViewModel pinViewModel;
 
+	private FragmentPinUpdateBinding binding;
+
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -44,17 +46,17 @@ public class PinUpdateFragment extends Fragment implements Target {
 		pinViewModel.loadChannel(getArguments().getInt("channel_id", 0));
 		pinViewModel.getChannel().observe(getViewLifecycleOwner(), this::initView);
 
-		input = view.findViewById(R.id.pin_input);
-		view.findViewById(R.id.editBtn).setOnClickListener(v -> showChoiceCard(false));
-		view.findViewById(R.id.cancelBtn).setOnClickListener(v -> showChoiceCard(true));
+		input = binding.pinInput;
+		binding.editBtn.setOnClickListener(v -> showChoiceCard(false));
+		binding.cancelBtn.setOnClickListener(v -> showChoiceCard(true));
 
 		return view;
 	}
 
 	private void initView(Channel c) {
 		if (c == null) { return; }
-		((TextView) view.findViewById(R.id.choice_card).findViewById(R.id.title)).setText(c.name);
-		((TextView) view.findViewById(R.id.edit_card).findViewById(R.id.title)).setText(c.name);
+		binding.choiceCard.setTitle(c.name);
+		binding.editCard.setTitle(c.name);
 		Picasso.get().load(c.logoUrl).into(PinUpdateFragment.this);
 		if (c.pin != null && !c.pin.isEmpty())
 			input.setText(KeyStoreExecutor.decrypt(c.pin, getContext()));
@@ -63,7 +65,7 @@ public class PinUpdateFragment extends Fragment implements Target {
 	}
 
 	private void setupSavePin(Channel channel) {
-		view.findViewById(R.id.saveBtn).setOnClickListener(v -> {
+		binding.saveBtn.setOnClickListener(v -> {
 			if (input.getText() != null) {
 				channel.pin = input.getText().toString();
 				pinViewModel.savePin(channel, getContext());
@@ -74,7 +76,7 @@ public class PinUpdateFragment extends Fragment implements Target {
 	}
 
 	private void setUpRemoveAccount(Channel channel) {
-		view.findViewById(R.id.removeAcct).setOnClickListener(v -> {
+		binding.removeAcct.setOnClickListener(v -> {
 			new StaxDialog(getContext(), this)
 				.setDialogTitle(getContext().getString(R.string.removepin_dialoghead, channel.name))
 				.setDialogMessage(R.string.removepins_dialogmes)
@@ -92,8 +94,8 @@ public class PinUpdateFragment extends Fragment implements Target {
 	}
 
 	private void showChoiceCard(boolean show) {
-		view.findViewById(R.id.choice_card).setVisibility(show ? View.VISIBLE : View.GONE);
-		view.findViewById(R.id.edit_card).setVisibility(show ? View.GONE : View.VISIBLE);
+		binding.choiceCard.setVisibility(show ? View.VISIBLE : View.GONE);
+		binding.editCard.setVisibility(show ? View.GONE : View.VISIBLE);
 		if (!show) input.requestFocus();
 	}
 
@@ -107,4 +109,11 @@ public class PinUpdateFragment extends Fragment implements Target {
 
 	@Override public void onBitmapFailed(Exception e, Drawable errorDrawable) {	}
 	@Override public void onPrepareLoad(Drawable placeHolderDrawable) {	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+
+		binding = null;
+	}
 }
