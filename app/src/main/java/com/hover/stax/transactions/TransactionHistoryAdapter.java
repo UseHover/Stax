@@ -3,22 +3,20 @@ package com.hover.stax.transactions;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.transactions.Transaction;
 import com.hover.stax.R;
+import com.hover.stax.databinding.HomeListItemBinding;
 import com.hover.stax.utils.DateUtils;
-import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
 public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionHistoryAdapter.HistoryViewHolder> {
-	private List<StaxTransaction> transactionList;
+
+	private final List<StaxTransaction> transactionList;
 	private final SelectListener selectListener;
 
 	public TransactionHistoryAdapter( List<StaxTransaction> transactions, SelectListener selectListener) {
@@ -29,29 +27,28 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 	@NonNull
 	@Override
 	public HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_list_item, parent, false);
-		return new HistoryViewHolder(view);
+		HomeListItemBinding binding = HomeListItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+		return new HistoryViewHolder(binding);
 	}
 
 	@Override
 	public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
 		StaxTransaction t = transactionList.get(position);
 			if(t.status.equals(Transaction.PENDING)) {
-				holder.parentLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.cardDarkBlue));
-				holder.pendingNotice.setVisibility(View.VISIBLE);
+				holder.binding.transactionItemLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.cardDarkBlue));
+				holder.binding.liCallout.setVisibility(View.VISIBLE);
 			}
 			else {
-				holder.parentLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.colorPrimary));
-				holder.pendingNotice.setVisibility(View.GONE);
+				holder.binding.transactionItemLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.colorPrimary));
+				holder.binding.liCallout.setVisibility(View.GONE);
 			}
 
-		holder.content.setText(t.description.substring(0, 1).toUpperCase() + t.description.substring(1));
-		holder.amount.setText(t.getDisplayAmount());
-		holder.date.setVisibility(shouldShowDate(t, position) ? View.VISIBLE : View.GONE);
-		holder.date.setText(DateUtils.humanFriendlyDate(t.initiated_at));
-		holder.itemView.setOnClickListener(view -> {
-			selectListener.viewTransactionDetail(t.uuid);
-		});
+		holder.binding.liDescription.setText(String.format("%s%s", t.description.substring(0, 1).toUpperCase(), t.description.substring(1)));
+		holder.binding.liAmount.setText(t.getDisplayAmount());
+		holder.binding.liHeader.setVisibility(shouldShowDate(t, position) ? View.VISIBLE : View.GONE);
+		holder.binding.liHeader.setText(DateUtils.humanFriendlyDate(t.initiated_at));
+
+		holder.itemView.setOnClickListener(view -> selectListener.viewTransactionDetail(t.uuid));
 	}
 
 	private boolean shouldShowDate(StaxTransaction t, int position) {
@@ -66,16 +63,12 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 	}
 
 	static class HistoryViewHolder extends RecyclerView.ViewHolder {
-		private TextView content, amount, date, pendingNotice;
-		private LinearLayout parentLayout;
 
-		HistoryViewHolder(@NonNull View itemView) {
-			super(itemView);
-			parentLayout = itemView.findViewById(R.id.transaction_item_layout);
-			content = itemView.findViewById(R.id.li_description);
-			amount = itemView.findViewById(R.id.li_amount);
-			date = itemView.findViewById(R.id.li_header);
-			pendingNotice = itemView.findViewById(R.id.li_callout);
+		public HomeListItemBinding binding;
+
+		HistoryViewHolder(HomeListItemBinding binding) {
+			super(binding.getRoot());
+			this.binding = binding;
 		}
 	}
 

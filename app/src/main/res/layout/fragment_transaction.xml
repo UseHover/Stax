@@ -1,157 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-	    xmlns:android="http://schemas.android.com/apk/res/android"
-	    xmlns:app="http://schemas.android.com/apk/res-auto"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:descendantFocusability="afterDescendants"
-	    android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="afterDescendants"
+    android:orientation="vertical">
 
-	<androidx.core.widget.NestedScrollView
-	    android:layout_height="match_parent"
-	    android:layout_width="match_parent"
-	   >
-	<LinearLayout
-		android:layout_height="match_parent"
-		android:layout_width="match_parent"
-		android:layout_marginTop="@dimen/margin_13"
-		android:layout_marginBottom="@dimen/margin_55"
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-		android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/margin_13"
+            android:layout_marginBottom="@dimen/margin_55"
+            android:orientation="vertical">
 
+            <com.hover.stax.views.StaxCardView
+                android:id="@+id/transactionDetailsCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/nav_transaction">
 
-		<com.hover.stax.views.StaxCardView
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			app:title="@string/nav_transaction">
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_13">
 
-			<TableLayout
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-				android:layout_marginHorizontal="@dimen/margin_13">
+                    <TableRow
+                        android:id="@+id/amountRow"
+                        android:layout_marginTop="@dimen/margin_24">
 
-				<TableRow android:id="@+id/amountRow" android:layout_marginTop="@dimen/margin_24">
-					<TextView
-					    android:textColor="@color/offWhite"
-					    android:textSize="@dimen/text_16"
-					    android:fontFamily="font-normal"
-					    android:text="@string/transfer_amount_label"/>
+                        <TextView
+                            android:fontFamily="font-normal"
+                            android:text="@string/transfer_amount_label"
+                            android:textColor="@color/offWhite"
+                            android:textSize="@dimen/text_16" />
 
-					<TextView android:id="@+id/details_amount"
-					    android:layout_weight="1"
-					    android:textAlignment="viewEnd"
-					    android:fontFamily="font-normal"
-					    android:textColor="@color/offWhite"
-					    android:textSize="@dimen/text_21" />
-				</TableRow>
+                        <TextView
+                            android:id="@+id/details_amount"
+                            android:layout_weight="1"
+                            android:fontFamily="font-normal"
+                            android:textAlignment="viewEnd"
+                            android:textColor="@color/offWhite"
+                            android:textSize="@dimen/text_21" />
+                    </TableRow>
 
-				<TableRow android:id="@+id/recipientRow" android:layout_marginTop="@dimen/margin_24">
-					<TextView
-						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_16"
-					    	android:fontFamily="font-normal"
-						android:text="@string/recipient_label"/>
+                    <TableRow
+                        android:id="@+id/recipientRow"
+                        android:layout_marginTop="@dimen/margin_24">
 
-					<com.hover.stax.views.Stax2LineItem android:id="@+id/details_recipient"
-						android:layout_weight="1"
-						android:textAlignment="viewEnd" />
+                        <TextView
+                            android:fontFamily="font-normal"
+                            android:text="@string/recipient_label"
+                            android:textColor="@color/offWhite"
+                            android:textSize="@dimen/text_16" />
 
-				</TableRow>
+                        <com.hover.stax.views.Stax2LineItem
+                            android:id="@+id/details_recipient"
+                            android:layout_weight="1"
+                            android:textAlignment="viewEnd" />
 
-				<TableRow android:layout_marginTop="@dimen/margin_24">
-					<TextView
-						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_16"
-					    	android:fontFamily="font-normal"
-						android:text="@string/date_label"/>
+                    </TableRow>
 
-					<TextView android:id="@+id/details_date"
-						android:layout_weight="1"
-						android:textAlignment="viewEnd"
-						android:fontFamily="font-normal"
-						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_21" />
-				</TableRow>
+                    <TableRow android:layout_marginTop="@dimen/margin_24">
 
-				<TableRow android:id="@+id/recipAccountRow" android:layout_marginTop="@dimen/margin_24">
-					<TextView
-						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_16"
-					    	android:fontFamily="font-normal"
-						android:text="@string/network_label"/>
+                        <TextView
+                            android:fontFamily="font-normal"
+                            android:text="@string/date_label"
+                            android:textColor="@color/offWhite"
+                            android:textSize="@dimen/text_16" />
 
-					<TextView android:id="@+id/details_network"
-						android:layout_weight="1"
-						android:textAlignment="viewEnd"
-						android:fontFamily="font-normal"
-						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_21" />
-				</TableRow>
+                        <TextView
+                            android:id="@+id/details_date"
+                            android:layout_weight="1"
+                            android:fontFamily="font-normal"
+                            android:textAlignment="viewEnd"
+                            android:textColor="@color/offWhite"
+                            android:textSize="@dimen/text_21" />
+                    </TableRow>
 
-				<TableRow android:layout_marginTop="@dimen/margin_24">
-					<TextView
-						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_16"
-					    	android:fontFamily="font-normal"
-						android:text="@string/id_label"/>
+                    <TableRow
+                        android:id="@+id/recipAccountRow"
+                        android:layout_marginTop="@dimen/margin_24">
 
-					<TextView android:id="@+id/details_transactionNumber"
-						android:layout_weight="1"
-						android:textAlignment="viewEnd"
-						android:fontFamily="font-normal"
-						android:textColor="@color/offWhite"
-						android:textSize="@dimen/text_13" />
-				</TableRow>
+                        <TextView
+                            android:fontFamily="font-normal"
+                            android:text="@string/network_label"
+                            android:textColor="@color/offWhite"
+                            android:textSize="@dimen/text_16" />
 
-			</TableLayout>
+                        <TextView
+                            android:id="@+id/details_network"
+                            android:layout_weight="1"
+                            android:fontFamily="font-normal"
+                            android:textAlignment="viewEnd"
+                            android:textColor="@color/offWhite"
+                            android:textSize="@dimen/text_21" />
+                    </TableRow>
 
+                    <TableRow android:layout_marginTop="@dimen/margin_24">
 
-		</com.hover.stax.views.StaxCardView>
+                        <TextView
+                            android:fontFamily="font-normal"
+                            android:text="@string/id_label"
+                            android:textColor="@color/offWhite"
+                            android:textSize="@dimen/text_16" />
 
-		<com.hover.stax.views.StaxCardView
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:visibility="gone"
-		    android:id="@+id/notification_card"
-		    app:title="@string/pending_cardhead"
-		    app:backRes="@drawable/ic_info"
-		    app:staxCardColor="@color/cardDarkBlue"
-		    app:defaultBackPress="false"
-		    app:showBack="true">
+                        <TextView
+                            android:id="@+id/details_transactionNumber"
+                            android:layout_weight="1"
+                            android:fontFamily="font-normal"
+                            android:textAlignment="viewEnd"
+                            android:textColor="@color/offWhite"
+                            android:textSize="@dimen/text_13" />
+                    </TableRow>
 
-			<TextView
-			    android:layout_width="match_parent"
-			    android:text="@string/pending_cardbody"
-			    android:textSize="@dimen/text_16"
-			    android:id="@+id/notification_detail"
-			    android:fontFamily="font-normal"
-			    android:layout_marginHorizontal="@dimen/margin_10"
-			    android:layout_marginBottom="@dimen/margin_3"
-			    android:layout_height="wrap_content"/>
-		</com.hover.stax.views.StaxCardView>
+                </TableLayout>
 
 
-		<com.hover.stax.views.StaxCardView
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			app:title="@string/session_cardhead">
+            </com.hover.stax.views.StaxCardView>
 
-			<androidx.recyclerview.widget.RecyclerView
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:layout_marginHorizontal="@dimen/margin_10"
-			    android:id="@+id/convo_recyclerView" />
+            <com.hover.stax.views.StaxCardView
+                android:id="@+id/notification_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:backRes="@drawable/ic_info"
+                app:defaultBackPress="false"
+                app:showBack="true"
+                app:staxCardColor="@color/cardDarkBlue"
+                app:title="@string/pending_cardhead">
 
-			<androidx.recyclerview.widget.RecyclerView
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:layout_marginHorizontal="@dimen/margin_10"
-			    android:layout_marginBottom="@dimen/margin_21"
-			    android:id="@+id/sms_recyclerView" />
+                <TextView
+                    android:id="@+id/notification_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_3"
+                    android:fontFamily="font-normal"
+                    android:text="@string/pending_cardbody"
+                    android:textSize="@dimen/text_16" />
+            </com.hover.stax.views.StaxCardView>
 
-		</com.hover.stax.views.StaxCardView>
-	</LinearLayout>
-	</androidx.core.widget.NestedScrollView>
 
-	<include layout="@layout/bounty_retry_submit_btn_layout" />
+            <com.hover.stax.views.StaxCardView
+                android:id="@+id/messagesCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/session_cardhead">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/convo_recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_10" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/sms_recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_21" />
+
+            </com.hover.stax.views.StaxCardView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <include
+        android:id="@+id/retrySubmit"
+        layout="@layout/bounty_retry_submit_btn_layout" />
 </RelativeLayout>
