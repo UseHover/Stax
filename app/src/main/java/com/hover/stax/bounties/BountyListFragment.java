@@ -67,6 +67,8 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 			countryDropdown.updateChoices(channels);
 			updateChannelList(channels, bountyViewModel.getBounties().getValue());
 		});
+
+
 	}
 
 	private void updateChannelList(List<Channel> channels, List<Bounty> bounties) {
