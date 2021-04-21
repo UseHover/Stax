@@ -68,7 +68,6 @@ public class TransferActivity extends AbstractNavigationActivity {
 	private void createFromRequest(String link) {
 		transferViewModel.decrypt(link);
 		observeRequest();
-		observeActiveChannel();
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_request_link));
 	}
 
@@ -80,17 +79,10 @@ public class TransferActivity extends AbstractNavigationActivity {
 
 			Log.e(TAG, "viewing request " + request);
 			if (dialog != null) {
-				transferViewModel.setRecipientSmartly(request, channelDropdownViewModel.getActiveChannel().getValue());
 				dialog.dismiss();
 			}
 		});
 	}
-	private void observeActiveChannel() {
-		channelDropdownViewModel.getActiveChannel().observe(this, channel -> {
-			transferViewModel.setRecipientSmartly(transferViewModel.getRequest().getValue(), channelDropdownViewModel.getActiveChannel().getValue());
-		});
-	}
-
 
 	void submit() {
 		makeHoverCall(actionSelectViewModel.getActiveAction().getValue());
