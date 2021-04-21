@@ -92,8 +92,8 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 	void showSimErrorDialog(Bounty b) {
 		Log.e(TAG, "showing sim error dialog "+ b.action.root_code);
 		new StaxDialog(requireActivity())
-				.setDialogTitle(getString(R.string.bounty_sim_err_header, b.action.root_code))
-				.setDialogMessage(getString(R.string.bounty_sim_err_desc, b.action.root_code))
+				.setDialogTitle(getString(R.string.bounty_sim_err_header, b.action.network_name))
+				.setDialogMessage(getString(R.string.bounty_sim_err_desc, b.action.network_name))
 				.setNegButton(R.string.btn_cancel, null)
 				.setPosButton(R.string.retry, v -> retrySimMatch(b))
 				.showIt();
