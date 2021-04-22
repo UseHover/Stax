@@ -70,7 +70,7 @@ public class StaxCardView extends FrameLayout {
 
 	private void fillFromAttrs() {
 		if (title != null) binding.title.setText(title);
-		else findViewById(R.id.header).setVisibility(GONE);
+		else binding.header.setVisibility(GONE);
 
 		if (useContextBackPress) binding.backButton.setOnClickListener(view -> triggerBack());
 		if (showBack) binding.backButton.setVisibility(VISIBLE);
@@ -80,10 +80,12 @@ public class StaxCardView extends FrameLayout {
 
 	@Override
 	public void addView(View child, int index, ViewGroup.LayoutParams params) {
-		if (binding.content == null)
-			super.addView(child, index, params);
-		else
+		// Since ViewBinding serves to eliminate null with views,this is the only way to catch this
+		try {
 			binding.content.addView(child, index, params);
+		} catch(NullPointerException npe){
+			super.addView(child, index, params);
+		}
 	}
 
 	private void triggerBack() {
