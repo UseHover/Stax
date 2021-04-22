@@ -18,6 +18,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
+import com.hover.stax.databinding.ActionSelectBinding;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDropdownLayout;
@@ -41,17 +42,21 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
     private HoverAction highlightedAction;
     private HighlightListener highlightListener;
 
+    private ActionSelectBinding binding;
+
     public ActionSelect(Context context, AttributeSet attrs) {
         super(context, attrs);
-        inflate(context, R.layout.action_select, this);
+
+        binding = ActionSelectBinding.inflate(LayoutInflater.from(context), this, true);
+
         init();
     }
 
     private void init() {
-        dropdownLayout = findViewById(R.id.action_dropdown_input);
-        dropdownView = findViewById(R.id.autoCompleteView);
-        radioHeader = findViewById(R.id.header);
-        isSelfRadio = findViewById(R.id.isSelfRadioGroup);
+        dropdownLayout = binding.actionDropdownInput;
+        dropdownView = binding.actionDropdownInput.autoCompleteTextView;
+        radioHeader = binding.header;
+        isSelfRadio = binding.isSelfRadioGroup;
         this.setVisibility(GONE);
     }
 

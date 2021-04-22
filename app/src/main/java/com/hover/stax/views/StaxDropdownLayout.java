@@ -21,7 +21,7 @@ public class StaxDropdownLayout extends AbstractStatefulInput {
 	private boolean editable;
 	private int imeOptions;
 
-	protected AutoCompleteTextView autoCompleteTextView;
+	public AutoCompleteTextView autoCompleteTextView;
 
 	private final StaxDropdownBinding binding;
 
@@ -30,7 +30,7 @@ public class StaxDropdownLayout extends AbstractStatefulInput {
 		getAttrs(context, attrs);
 
 		binding = StaxDropdownBinding.inflate(LayoutInflater.from(context), this, true);
-//		inflate(context, R.layout.stax_dropdown, this);
+
 		initView();
 		fillAttr();
 	}

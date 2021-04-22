@@ -96,6 +96,7 @@ public class TransferActivity extends AbstractNavigationActivity {
 		if (transferViewModel.getContact().getValue() != null) { addRecipientInfo(hsb); }
 		hsb.run();
 	}
+
 	private void addRecipientInfo(HoverSession.Builder hsb) {
 		hsb.extra(HoverAction.ACCOUNT_KEY, transferViewModel.getContact().getValue().phoneNumber)
 			.extra(HoverAction.PHONE_KEY, transferViewModel.getContact().getValue().getNumberFormatForInput(actionSelectViewModel.getActiveAction().getValue(), channelDropdownViewModel.getActiveChannel().getValue()));
