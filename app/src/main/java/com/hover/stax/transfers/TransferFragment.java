@@ -90,6 +90,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		});
 
 		channelDropdownViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> {
+			transferViewModel.setRecipientSmartly(transferViewModel.getRequest().getValue(), channel);
 			actionSelect.setVisibility(channel == null ? View.GONE : View.VISIBLE);
 			((Stax2LineItem) root.findViewById(R.id.account_value)).setTitle(channel.toString());
 		});
@@ -203,6 +204,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 	};
 
 	private void load(Request r) {
+		transferViewModel.setRecipientSmartly(r, channelDropdownViewModel.getActiveChannel().getValue());
 		channelDropdownViewModel.setChannelFromRequest(r);
 		amountInput.setText(r.amount);
 		contactInput.setText(r.requester_number, false);
