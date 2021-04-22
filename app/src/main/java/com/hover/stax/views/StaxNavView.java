@@ -13,13 +13,12 @@ import com.hover.stax.databinding.StaxNavViewBinding;
 
 public class StaxNavView extends CoordinatorLayout {
 
-	private FrameLayout contentView;
+	private final FrameLayout contentView;
 
 	public StaxNavView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
-		StaxNavViewBinding binding = StaxNavViewBinding.inflate(LayoutInflater.from(context));
-//		LayoutInflater.from(context).inflate(R.layout.stax_nav_view, this);
+		StaxNavViewBinding binding = StaxNavViewBinding.inflate(LayoutInflater.from(context), this, true);
 		contentView = binding.content;
 	}
 

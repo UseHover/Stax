@@ -26,7 +26,7 @@ public class StaxTextInputLayout extends AbstractStatefulInput {
 		super(context, attrs);
 		getAttrs(context,attrs);
 
-		binding = StaxInputBinding.inflate(LayoutInflater.from(context));
+		binding = StaxInputBinding.inflate(LayoutInflater.from(context), this, true);
 
 //		inflate(context, R.layout.stax_input, this);
 		initView();
