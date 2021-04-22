@@ -14,10 +14,6 @@
         android:imeOptions="actionNext"
         android:inputType="numberDecimal" />
 
-    <!--    <include-->
-    <!--        android:id="@+id/transferAmount"-->
-    <!--        layout="@layout/transfer_amount" />-->
-
     <com.hover.stax.channels.ChannelDropdown
         android:id="@+id/channel_dropdown"
         android:layout_width="match_parent"
@@ -33,20 +29,14 @@
     <com.hover.stax.contacts.ContactInput
         android:id="@+id/contact_select"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content" />
 
     <com.hover.stax.views.StaxTextInputLayout
         android:id="@+id/noteInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/request_note_label"
-        android:inputType="text"
-        android:imeOptions="actionDone" />
-
-
-    <!--    <include-->
-    <!--        layout="@layout/transfer_note"-->
-    <!--        android:visibility="gone" />-->
+        android:imeOptions="actionDone"
+        android:inputType="textCapSentences" />
 
 </com.hover.stax.views.StaxCardView>

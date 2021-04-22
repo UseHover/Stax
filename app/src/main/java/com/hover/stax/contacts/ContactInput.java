@@ -3,17 +3,18 @@ package com.hover.stax.contacts;
 import android.content.Context;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
 import com.hover.stax.R;
+import com.hover.stax.databinding.ContactInputBinding;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDropdownLayout;
 
@@ -25,12 +26,16 @@ public class ContactInput extends LinearLayout {
 	private StaxDropdownLayout contactInputLayout;
 	private AutoCompleteTextView contactAutocomplete;
 
+	private ContactInputBinding binding;
+
 	public ContactInput(Context context, @Nullable AttributeSet attrs) {
 		super(context, attrs);
-		inflate(context, R.layout.contact_input, this);
-		contactButton = findViewById(R.id.contact_button);
-		contactInputLayout = findViewById(R.id.contactDropdownLayout);
-		contactAutocomplete = findViewById(R.id.autoCompleteView);
+
+		binding = ContactInputBinding.inflate(LayoutInflater.from(context), this, true);
+
+		contactButton = binding.contactButton;
+		contactInputLayout = binding.contactDropdownLayout;
+		contactAutocomplete = binding.contactDropdownLayout.findViewById(R.id.autoCompleteView);
 		contactAutocomplete.setOnFocusChangeListener(this::setState);
 	}
 

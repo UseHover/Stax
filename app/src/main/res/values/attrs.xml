@@ -21,6 +21,7 @@
 		<attr name="android:hint" />
 		<attr name="android:editable" />
 		<attr name="android:text" />
+		<attr name="android:imeOptions"/>
 	</declare-styleable>
 
 	<declare-styleable name="CustomSwipeRefreshLayout">
