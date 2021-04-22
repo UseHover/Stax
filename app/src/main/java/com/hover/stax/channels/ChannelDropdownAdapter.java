@@ -59,16 +59,20 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
         Channel c = channels.get(position);
         Log.e("ADAPTER", "getting view for pos " + position);
 
-        if (binding == null)
+        if (view == null) {
             binding = StaxSpinnerItemWithLogoBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-//        if (view == null)
-//            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.stax_spinner_item_with_logo, parent, false);
+            view = binding.getRoot();
+            holder = new ViewHolder(binding);
 
-        holder = new ViewHolder(binding);
+            view.setTag(holder);
+        } else {
+            holder = (ViewHolder) view.getTag();
+        }
+
         holder.setChannel(c);
         updateDivider(c, position);
 
-        return binding.getRoot();
+        return view;
     }
 
     private void updateDivider(Channel currentChannel, int pos) {
