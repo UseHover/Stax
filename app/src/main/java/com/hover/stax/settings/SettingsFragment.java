@@ -45,6 +45,8 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
 
         setUpAccounts(securityViewModel);
         setUpChooseLang();
+        setUpContactStax();
+
         return binding.getRoot();
     }
 
@@ -72,6 +74,9 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
         });
     }
 
+    private void setUpContactStax() {
+        binding.contactStax.twitterContact.setOnClickListener(v -> Utils.openUrl(getString(R.string.stax_twitter_url), requireContext()));
+    }
 
     private void showAccounts(List<Channel> channels) {
         ListView lv = binding.cardAccounts.accountsList;

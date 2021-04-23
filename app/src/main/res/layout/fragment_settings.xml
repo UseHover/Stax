@@ -20,8 +20,6 @@
             android:id="@+id/bountyCard"
             layout="@layout/settings_bounty_card_layout" />
 
-        <include layout="@layout/settings_card_accounts" />
-
         <include layout="@layout/settings_bounty_card_layout" />
 
         <include
@@ -32,7 +30,8 @@
             android:id="@+id/languageCard"
             layout="@layout/settings_card_language" />
 
-        <include layout="@layout/contact_stax_layout" />
+        <include layout="@layout/contact_stax_layout"
+            android:id="@+id/contactStax"/>
 
         <TextView
             android:layout_width="match_parent"
