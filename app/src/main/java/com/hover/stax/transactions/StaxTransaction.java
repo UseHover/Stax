@@ -106,8 +106,8 @@ public class StaxTransaction {
 				else if (extras.containsKey(HoverAction.ACCOUNT_KEY))
 					counterparty = extras.get(HoverAction.ACCOUNT_KEY);
 			}
-			if (data.hasExtra(StaxContact.ID_KEY))
-				counterparty_id = data.getStringExtra(StaxContact.ID_KEY);
+			if (data.hasExtra(StaxContact.LOOKUP_KEY))
+				counterparty_id = data.getStringExtra(StaxContact.LOOKUP_KEY);
 
 			Log.e("Transaction", "creating transaction with uuid: " + uuid);
 
@@ -127,8 +127,8 @@ public class StaxTransaction {
 				confirm_code = extras.get(CONFIRM_CODE_KEY);
 		}
 
-		if (data.hasExtra(StaxContact.ID_KEY))
-			counterparty_id = data.getStringExtra(StaxContact.ID_KEY);
+		if (data.hasExtra(StaxContact.LOOKUP_KEY))
+			counterparty_id = data.getStringExtra(StaxContact.LOOKUP_KEY);
 
 		if (contact != null)
 			description = generateDescription(action, contact, c);

@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
+import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
@@ -24,6 +25,7 @@ import com.hover.stax.views.StaxDialog;
 import java.util.List;
 
 public class BountyListFragment extends Fragment implements NavigationInterface, BountyListItem.SelectListener, CountryAdapter.SelectListener {
+
     private static final String TAG = "BountyListFragment";
 
     private BountyViewModel bountyViewModel;
@@ -98,11 +100,9 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     void showBountyDescDialog(Bounty b) {
         Log.e(TAG, "showing dialog " + b.action);
         new StaxDialog(requireActivity())
-                .setDialogTitle(getString(R.string.bounty_claim_title, b.action.root_code, b.action.getHumanFriendlyType(getContext(), b.action.transaction_type), b.action.bounty_amount))
+                .setDialogTitle(getString(R.string.bounty_claim_title, b.action.root_code, HoverAction.getHumanFriendlyType(getContext(), b.action.transaction_type), b.action.bounty_amount))
                 .setDialogMessage(getString(R.string.bounty_claim_explained, b.action.bounty_amount, b.getInstructions(getContext())))
-                .setPosButton(R.string.start_USSD_Flow, v -> {
-                    ((BountyActivity) requireActivity()).makeCall(b.action);
-                })
+                .setPosButton(R.string.start_USSD_Flow, v -> ((BountyActivity) requireActivity()).makeCall(b.action))
                 .showIt();
     }
 

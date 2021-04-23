@@ -31,7 +31,7 @@ import static com.google.i18n.phonenumbers.PhoneNumberUtil.MatchType.NO_MATCH;
 @Entity(tableName = "stax_contacts", indices = {@Index(value= {"id", "phone_number"}, unique = true), @Index(value ="lookup_key", unique = true)} )
 public class StaxContact {
 	private final static String TAG = "StaxContact";
-	public final static String ID_KEY = "contact_id";
+	public final static String LOOKUP_KEY = "contact_id";
 
 	@PrimaryKey
 	@NonNull
@@ -59,9 +59,12 @@ public class StaxContact {
 
 	public StaxContact(String phone) {
 		id = UUID.randomUUID().toString();
-		name = "";
-		phoneNumber = phone.replaceAll(" ", "");
 		lastUsedTimestamp = DateUtils.now();
+		phoneNumber = stripPhone(phone);
+		name = "";
+	}
+	public static String stripPhone(String phone){
+		return phone.replaceAll(" ", "");
 	}
 
 	public StaxContact(Intent data, Context c) {
@@ -79,6 +82,7 @@ public class StaxContact {
 					Cursor phones = c.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id, null, null);
 					if (phones != null && phones.moveToNext())
 						phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+						phoneNumber = stripPhone(phoneNumber);
 					if (phones != null) phones.close();
 				}
 			}
@@ -89,7 +93,7 @@ public class StaxContact {
 	public String getNumberFormatForInput(HoverAction a, Channel c) {
 		try {
 			String format = a.getFormatInfo(HoverAction.PHONE_KEY);
-			if (format != null && format.startsWith(String.valueOf(getPhone(c.countryAlpha2).getCountryCode())))
+			if (format != null && format.startsWith(String.valueOf(getPhone(c.countryAlpha2, phoneNumber).getCountryCode())))
 				return getInternationalNumberNoPlus(c.countryAlpha2);
 			else
 				return normalizeNumberByCountry(c.countryAlpha2);
@@ -119,23 +123,24 @@ public class StaxContact {
 		return number;
 	}
 
-	private String getInternationalNumber(String country) throws NumberParseException, IllegalStateException {
+	public static String getInternationalNumber(String country, String phoneNumber) throws NumberParseException, IllegalStateException {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-		Phonenumber.PhoneNumber phone = getPhone(country);
+		Phonenumber.PhoneNumber phone = getPhone(country, phoneNumber);
 		phone.getCountryCode();
-		String str = phoneUtil.format(phone, PhoneNumberUtil.PhoneNumberFormat.E164);
-		return str;
+		return phoneUtil.format(phone, PhoneNumberUtil.PhoneNumberFormat.E164);
 	}
+
+
 	public String getInternationalNumberNoPlus(String country) {
 		try {
-			return getInternationalNumber(country).replace("+", "");
+			return getInternationalNumber(country, phoneNumber).replace("+", "");
 		} catch (NumberParseException | IllegalStateException e) {
 			Utils.logErrorAndReportToFirebase(TAG, "Failed to transform number for contact; doing it the old fashioned way.", e);
 			return phoneNumber.replace("+", "");
 		}
 	}
 
-	private Phonenumber.PhoneNumber getPhone(String country) throws NumberParseException, IllegalStateException {
+	private static Phonenumber.PhoneNumber getPhone(String country, String phoneNumber) throws NumberParseException, IllegalStateException {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 		return phoneUtil.parse(phoneNumber, country);
 	}

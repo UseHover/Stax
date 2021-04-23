@@ -25,7 +25,8 @@ import java.util.List;
 import static com.hover.stax.utils.Constants.size55;
 
 public class ChannelDropdown extends StaxDropdownLayout implements Target {
-    private static String TAG = "ChannelDropdown";
+
+    private static final String TAG = "ChannelDropdown";
 
     private boolean showSelected;
     private Channel highlightedChannel;

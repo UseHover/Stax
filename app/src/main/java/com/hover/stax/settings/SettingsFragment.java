@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
+import com.hover.sdk.utils.Utils;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.databinding.FragmentSettingsBinding;

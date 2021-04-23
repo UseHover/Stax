@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_13"
         android:layout_marginBottom="@dimen/margin_89"
         android:orientation="vertical">
@@ -20,6 +20,10 @@
             android:id="@+id/bountyCard"
             layout="@layout/settings_bounty_card_layout" />
 
+        <include layout="@layout/settings_card_accounts" />
+
+        <include layout="@layout/settings_bounty_card_layout" />
+
         <include
             android:id="@+id/securityCard"
             layout="@layout/settings_security_card" />
@@ -27,6 +31,8 @@
         <include
             android:id="@+id/languageCard"
             layout="@layout/settings_card_language" />
+
+        <include layout="@layout/contact_stax_layout" />
 
         <TextView
             android:layout_width="match_parent"
