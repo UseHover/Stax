@@ -20,8 +20,6 @@
             android:id="@+id/bountyCard"
             layout="@layout/settings_bounty_card_layout" />
 
-        <include layout="@layout/settings_bounty_card_layout" />
-
         <include
             android:id="@+id/securityCard"
             layout="@layout/settings_security_card" />
