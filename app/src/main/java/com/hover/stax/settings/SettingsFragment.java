@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.amplitude.api.Amplitude;
+import com.hover.sdk.utils.Utils;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.languages.Lang;
@@ -46,6 +47,7 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
 		View root = inflater.inflate(R.layout.fragment_settings, container, false);
 		setUpAccounts(root, securityViewModel);
 		setUpChooseLang(root);
+		setUpContactStax(root);
 		return root;
 	}
 
@@ -71,6 +73,11 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
 			else
 				root.findViewById(R.id.defaultAccountEntry).setVisibility(GONE);
 		});
+	}
+
+	private void setUpContactStax(View root) {
+		root.findViewById(R.id.twitterContact).setOnClickListener(v -> {
+			Utils.openUrl(getString(R.string.stax_twitter_url), requireContext());});
 	}
 
 

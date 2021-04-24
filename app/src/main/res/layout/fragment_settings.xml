@@ -17,8 +17,8 @@
 	<include layout="@layout/settings_card_accounts" />
 	<include layout="@layout/settings_bounty_card_layout"/>
 	<include layout="@layout/settings_security_card" />
-
 	<include layout="@layout/settings_card_language" />
+	<include layout="@layout/contact_stax_layout" />
 
 	<TextView
 		android:layout_width="match_parent"

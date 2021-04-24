@@ -84,8 +84,8 @@ public class Request {
 		Log.v(TAG, "Creating request from link: " + paymentLink);
 		String[] splitString = paymentLink.split(PAYMENT_LINK_SEPERATOR);
 		amount = splitString[0].equals("0.00") ? "" : Utils.formatAmount(splitString[0]);
-		requester_number = splitString[2];
 		requester_institution_id = Integer.parseInt(splitString[1]);
+		requester_number = splitString[2];
 	}
 	public static boolean isShortLink(String link) { return link.length() <=25;}
 
