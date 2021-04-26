@@ -1,7 +1,6 @@
 package com.hover.stax.countries;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.hover.stax.R;
+import com.hover.stax.databinding.CountryItemBinding;
 import com.yariksoffice.lingver.Lingver;
 
 import java.util.Locale;
@@ -29,10 +29,29 @@ public class CountryAdapter extends ArrayAdapter<String> {
 	@NonNull
 	@Override
 	public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
-		if (view == null)
-			view =  LayoutInflater.from(parent.getContext()).inflate(R.layout.country_item, parent, false);
-		((TextView) view.findViewById(R.id.country_text_id)).setText(getCountryString(countryCodes[position]));
+		ViewHolder holder;
+
+		if (view == null) {
+			CountryItemBinding binding = CountryItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+			view = binding.getRoot();
+
+			holder = new ViewHolder(binding);
+			view.setTag(holder);
+		} else {
+			holder = (ViewHolder) view.getTag();
+		}
+
+		holder.countryText.setText(getCountryString(countryCodes[position]));
+
 		return view;
+	}
+
+	private static class ViewHolder {
+		TextView countryText;
+
+		public ViewHolder(CountryItemBinding binding){
+			countryText = binding.countryTextId;
+		}
 	}
 
 	String getCountryString(String code) {

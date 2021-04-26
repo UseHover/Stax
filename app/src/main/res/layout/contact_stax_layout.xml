@@ -4,14 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:title="@string/contact_stax_cardhead">
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/twitter"
-    android:fontFamily="font-normal"
-    android:padding="@dimen/margin_10"
-    android:textSize="@dimen/text_16"
-    android:id="@+id/twitterContact"
-    app:drawableEndCompat="@drawable/ic_baseline_open_in_new_24" />
+
+    <TextView
+        android:id="@+id/twitterContact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="font-normal"
+        android:padding="@dimen/margin_10"
+        android:text="@string/twitter"
+        android:textSize="@dimen/text_16"
+        app:drawableEndCompat="@drawable/ic_baseline_open_in_new_24" />
 
 </com.hover.stax.views.StaxCardView>

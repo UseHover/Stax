@@ -11,7 +11,6 @@ import androidx.room.PrimaryKey;
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.utils.Constants;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.Utils;

@@ -73,7 +73,7 @@
 		    />
 
 		<activity android:name=".destruct.SelfDestructActivity" />
-		<activity android:name=".onboarding.OnboardingActivity" android:theme="@style/StaxTheme" />
+		<activity android:name=".onboarding.OnBoardingActivity" android:theme="@style/StaxTheme" />
 
 		<receiver
 		    android:name=".hover.TransactionReceiver"

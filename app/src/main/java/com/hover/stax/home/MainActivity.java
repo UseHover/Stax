@@ -16,6 +16,7 @@ import com.hover.stax.R;
 import com.hover.stax.balances.BalanceAdapter;
 import com.hover.stax.balances.BalancesViewModel;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.databinding.ActivityMainBinding;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.navigation.AbstractNavigationActivity;
@@ -33,17 +34,21 @@ public class MainActivity extends AbstractNavigationActivity implements
 	final public static String TAG = "MainActivity";
 	private BalancesViewModel balancesViewModel;
 
+	private ActivityMainBinding binding;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+
+		binding = ActivityMainBinding.inflate(getLayoutInflater());
+		setContentView(binding.getRoot());
 
 		balancesViewModel = new ViewModelProvider(this).get(BalancesViewModel.class);
 		balancesViewModel.setListener(this);
-		balancesViewModel.getSelectedChannels().observe(this, channels -> Log.i(TAG, "Channels observer is neccessary to make updates fire, but all logic is in viewmodel. " + channels.size()));
-		balancesViewModel.getToRun().observe(this, actions -> Log.i(TAG, "RunActions observer is neccessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
-		balancesViewModel.getRunFlag().observe(this, flag -> Log.i(TAG, "Flag observer is neccessary to make updates fire, but all logic is in viewmodel. " + flag));
-		balancesViewModel.getActions().observe(this, actions -> Log.i(TAG, "Actions observer is neccessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
+		balancesViewModel.getSelectedChannels().observe(this, channels -> Log.i(TAG, "Channels observer is necessary to make updates fire, but all logic is in viewmodel. " + channels.size()));
+		balancesViewModel.getToRun().observe(this, actions -> Log.i(TAG, "RunActions observer is necessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
+		balancesViewModel.getRunFlag().observe(this, flag -> Log.i(TAG, "Flag observer is necessary to make updates fire, but all logic is in viewmodel. " + flag));
+		balancesViewModel.getActions().observe(this, actions -> Log.i(TAG, "Actions observer is necessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
 
 		setUpNav();
 		checkForRequest(getIntent());

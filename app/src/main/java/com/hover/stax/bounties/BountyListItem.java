@@ -3,29 +3,25 @@ package com.hover.stax.bounties;
 import android.content.Context;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.hover.stax.R;
+import com.hover.stax.databinding.HomeListItemBinding;
 
 class BountyListItem extends LinearLayout {
-	private static final String TAG = "BountyListItem";
-
 	private Bounty bounty;
 	private SelectListener selectListener;
 
-	private TextView noticeText, descriptionText, amountText;
+	private final HomeListItemBinding binding;
 
 	BountyListItem(@NonNull Context context, @Nullable AttributeSet attrs) {
 		super(context, attrs);
-		View v = inflate(context, R.layout.home_list_item, this);
-		noticeText = v.findViewById(R.id.li_callout);
-		descriptionText = v.findViewById(R.id.li_description);
-		amountText = v.findViewById(R.id.li_amount);
+		binding = HomeListItemBinding.inflate(LayoutInflater.from(context), this, true);
 	}
 
 	public void setBounty(Bounty b, SelectListener listener) {
@@ -36,8 +32,8 @@ class BountyListItem extends LinearLayout {
 	}
 
 	private void setContent() {
-		descriptionText.setText(bounty.generateDescription(getContext()));
-		amountText.setText(getContext().getString(R.string.bounty_amount_with_currency, bounty.action.bounty_amount));
+		binding.liDescription.setText(bounty.generateDescription(getContext()));
+		binding.liAmount.setText(getContext().getString(R.string.bounty_amount_with_currency, bounty.action.bounty_amount));
 	}
 
 	private void chooseState() {
@@ -54,11 +50,11 @@ class BountyListItem extends LinearLayout {
 
 	private void setState(int color, int noticeString, int noticeIcon, boolean isOpen, View.OnClickListener listener) {
 		setBackgroundColor(getContext().getResources().getColor(color));
-		if (noticeString != 0) noticeText.setText(noticeString);
-		noticeText.setCompoundDrawablesWithIntrinsicBounds(noticeIcon, 0, 0, 0);
-		noticeText.setVisibility(noticeString != 0 ? View.VISIBLE : View.GONE);
-		descriptionText.setPaintFlags(isOpen ? 0 : Paint.STRIKE_THRU_TEXT_FLAG);
-		amountText.setPaintFlags(isOpen ? 0 : Paint.STRIKE_THRU_TEXT_FLAG);
+		if (noticeString != 0) binding.liCallout.setText(noticeString);
+		binding.liCallout.setCompoundDrawablesWithIntrinsicBounds(noticeIcon, 0, 0, 0);
+		binding.liCallout.setVisibility(noticeString != 0 ? View.VISIBLE : View.GONE);
+		binding.liDescription.setPaintFlags(isOpen ? 0 : Paint.STRIKE_THRU_TEXT_FLAG);
+		binding.liAmount.setPaintFlags(isOpen ? 0 : Paint.STRIKE_THRU_TEXT_FLAG);
 		setOnClickListener(listener);
 	}
 

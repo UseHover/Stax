@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
+import com.hover.stax.databinding.ActivityLanguageBinding;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.settings.SettingsFragment;
 import com.hover.stax.utils.Utils;
@@ -23,12 +24,16 @@ import java.util.List;
 import static com.hover.stax.utils.Constants.LANGUAGE_CHECK;
 
 public class SelectLanguageActivity extends AppCompatActivity {
+
 	String selectedCode = null;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_language);
+
+		ActivityLanguageBinding binding = ActivityLanguageBinding.inflate(getLayoutInflater());
+
+		setContentView(binding.getRoot());
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_language)));
 
 		if (getIntent().hasExtra(SettingsFragment.LANG_CHANGE))
@@ -37,25 +42,22 @@ public class SelectLanguageActivity extends AppCompatActivity {
 		selectedCode = Lingver.getInstance().getLanguage();
 		final RadioGroup radioGrp = findViewById(R.id.languageRadioGroup);
 
-
 		LanguageViewModel languageViewModel = new ViewModelProvider(this).get(LanguageViewModel.class);
 		languageViewModel.loadLanguages().observe(this, languages -> {
-			creatRadios(languages, radioGrp);
+			createRadios(languages, radioGrp);
 			radioGrp.setOnCheckedChangeListener((group, checkedId) -> onSelect(checkedId));
 		});
 
-		findViewById(R.id.continueLanguageButton).setOnClickListener(v -> onContinue());
+		binding.continueLanguageButton.setOnClickListener(v -> onContinue());
 	}
 
-	private void creatRadios(List<Lang> languages, RadioGroup radioGrp) {
+	private void createRadios(List<Lang> languages, RadioGroup radioGrp) {
 		for (int l = 0; l < languages.size(); l++) {
 			RadioButton radioButton = (RadioButton) LayoutInflater.from(this).inflate(R.layout.stax_radio_button, null);
 			radioButton.setId(l);
 			radioButton.setText(languages.get(l).name);
 			radioButton.setTag(languages.get(l).code);
-			if (languages.get(l).code.equals(selectedCode))
-				radioButton.setChecked(true);
-			else radioButton.setChecked(false);
+			radioButton.setChecked(languages.get(l).code.equals(selectedCode));
 
 			radioGrp.addView(radioButton);
 		}

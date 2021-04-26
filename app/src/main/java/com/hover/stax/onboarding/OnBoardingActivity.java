@@ -13,11 +13,12 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
+import com.hover.stax.databinding.OnboardingLayoutBinding;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.utils.Utils;
 
 
-public class OnboardingActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener {
+public class OnBoardingActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener {
 	private static final String TAG = "OnboardingActivity";
 
 	private static final int FIRST_SCROLL_DELAY = 4000;
@@ -27,21 +28,25 @@ public class OnboardingActivity extends AppCompatActivity implements ViewPager.O
 
 	private StaxAutoScrollViewPager viewPager;
 
+	private OnboardingLayoutBinding binding;
+
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_onboarding)));
-		setContentView(R.layout.onboarding_layout);
+
+		binding = OnboardingLayoutBinding.inflate(getLayoutInflater());
+		setContentView(binding.getRoot());
 
 		setupOnboardingSlides();
 		initContinueButton();
 	}
 
 	private void initContinueButton() {
-		findViewById(R.id.onboarding_continue_btn).setOnClickListener(this);
+		binding.onboardingContinueBtn.setOnClickListener(this);
 	}
 	private void setupOnboardingSlides() {
-		viewPager = findViewById(R.id.vpPager);
+		viewPager = binding.vpPager;
 		FragmentPagerAdapter adapterViewPager = new SlidesPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 		viewPager.startAutoScroll(FIRST_SCROLL_DELAY);
 		viewPager.setInterval(OTHER_SCROLL_DELAY);
@@ -78,7 +83,7 @@ public class OnboardingActivity extends AppCompatActivity implements ViewPager.O
 	}
 
 	private void goToMainActivity() {
-		startActivity(new Intent(this, MainActivity.class));
+		startActivity(new Intent(this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 		finish();
 	}
 	public static boolean hasPassedThrough(Context context) {

@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Shortlink {
 	private String link;
-	private Map<String, String> linksMap = new HashMap();
+	private Map<String, String> linksMap = new HashMap<>();
 
 	public Shortlink(String link) {
 		this.link = link;

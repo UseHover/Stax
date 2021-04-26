@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.TextView;
 
@@ -86,7 +87,7 @@ public class PermissionsFragment extends DialogFragment {
 		if (getArguments().getInt(STARTWITH) == ACCESS && !helper.hasAccessPerm())
 			setOnlyNeedAccess();
 		else if (current == OVERLAY && helper.hasOverlayPerm() && !helper.hasAccessPerm())
-			new Handler().postDelayed(() -> animateToStep2(), 500);
+			new Handler(Looper.getMainLooper()).postDelayed(this::animateToStep2, 500);
 		else if (helper.hasAccessPerm())
 			animateToDone();
 	}
@@ -114,7 +115,7 @@ public class PermissionsFragment extends DialogFragment {
 		if (dialog != null)
 			dialog.animateProgressTo(100);
 		getActivity().setResult(RESULT_OK);
-		new Handler().postDelayed(() -> getActivity().finish(), getArguments().getInt(STARTWITH) == ACCESS ? 10 : 800);
+		new Handler(Looper.getMainLooper()).postDelayed(() -> getActivity().finish(), getArguments().getInt(STARTWITH) == ACCESS ? 10 : 800);
 	}
 
 	private void cancel() {
@@ -127,7 +128,6 @@ public class PermissionsFragment extends DialogFragment {
 	@Override
 	public void onDismiss(@NonNull DialogInterface dialog) {
 		super.onDismiss(dialog);
-		dialog = null;
 		cancel();
 	}
 }

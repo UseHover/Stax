@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
+import com.hover.stax.databinding.FragmentChannelBinding;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.transactions.TransactionHistoryAdapter;
 import com.hover.stax.utils.UIHelper;
@@ -23,42 +23,48 @@ import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout;
 
 public class ChannelDetailFragment extends Fragment implements TransactionHistoryAdapter.SelectListener, CustomSwipeRefreshLayout.OnRefreshListener {
+
 	private RecyclerView transactionHistoryRecyclerView;
 	private ChannelDetailViewModel viewModel;
+
+	private FragmentChannelBinding binding;
 
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		viewModel = new ViewModelProvider(requireActivity()).get(ChannelDetailViewModel.class);
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_channel)));
-		return inflater.inflate(R.layout.fragment_channel, container, false);
+
+		binding = FragmentChannelBinding.inflate(inflater, container, false);
+		return binding.getRoot();
 	}
 
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		transactionHistoryRecyclerView = view.findViewById(R.id.transaction_history_recyclerView);
+		transactionHistoryRecyclerView = binding.homeCardTransactions.transactionHistoryRecyclerView;
 		setupPullRefresh(view);
 
 		viewModel.getChannel().observe(getViewLifecycleOwner(), channel -> {
-			((TextView) view.findViewById(R.id.title)).setText(channel.name);
-			((TextView) view.findViewById(R.id.fees_description)).setText(getString(R.string.fees_label, channel.name));
-			((TextView) view.findViewById(R.id.details_balance)).setText(channel.latestBalance);
+			binding.staxCardView.setTitle(channel.name);
+			binding.feesDescription.setText(getString(R.string.fees_label, channel.name));
+			binding.detailsBalance.setText(channel.latestBalance);
 		});
 
 		viewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
-			view.findViewById(R.id.no_history).setVisibility(staxTransactions == null || staxTransactions.size() == 0 ? View.VISIBLE : View.GONE);
+			binding.homeCardTransactions.noHistory.setVisibility(staxTransactions == null || staxTransactions.size() == 0 ? View.VISIBLE : View.GONE);
 			transactionHistoryRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
 			transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions, this));
 		});
 
 		viewModel.getSpentThisMonth().observe(getViewLifecycleOwner(), sum -> {
-			((TextView) view.findViewById(R.id.details_money_out)).setText(Utils.formatAmount(sum != null ? sum : 0));
+			binding.detailsMoneyOut.setText(Utils.formatAmount(sum != null ? sum : 0));
 		});
 
 		viewModel.getFeesThisYear().observe(getViewLifecycleOwner(), sum -> {
-			((TextView) view.findViewById(R.id.details_fees)).setText(Utils.formatAmount(sum != null ? sum : 0));
+			binding.detailsFees.setText(Utils.formatAmount(sum != null ? sum : 0));
 		});
+
 		viewModel.setChannel(getArguments().getInt(TransactionContract.COLUMN_CHANNEL_ID));
 	}
 
@@ -82,5 +88,12 @@ public class ChannelDetailFragment extends Fragment implements TransactionHistor
 	public void onRefresh() {
 		if (getActivity() != null && viewModel.getChannel().getValue() != null)
 			((MainActivity) getActivity()).onTapRefresh(viewModel.getChannel().getValue().id);
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+
+		binding = null;
 	}
 }

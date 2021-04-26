@@ -127,8 +127,7 @@ public class StaxContact {
 		PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 		Phonenumber.PhoneNumber phone = getPhone(country, phoneNumber);
 		phone.getCountryCode();
-		String str = phoneUtil.format(phone, PhoneNumberUtil.PhoneNumberFormat.E164);
-		return str;
+		return phoneUtil.format(phone, PhoneNumberUtil.PhoneNumberFormat.E164);
 	}
 
 

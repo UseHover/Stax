@@ -12,13 +12,11 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.lifecycle.LifecycleOwner;
 
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDropdownLayout;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -27,113 +25,131 @@ import java.util.List;
 import static com.hover.stax.utils.Constants.size55;
 
 public class ChannelDropdown extends StaxDropdownLayout implements Target {
-	private static String TAG = "ChannelDropdown";
 
-	private boolean showSelected;
-	private Channel highlightedChannel;
-	private HighlightListener highlightListener;
+    private static final String TAG = "ChannelDropdown";
 
-	public ChannelDropdown(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		getAttrs(context, attrs);
-	}
+    private boolean showSelected;
+    private Channel highlightedChannel;
+    private HighlightListener highlightListener;
 
-	private void getAttrs(Context context, AttributeSet attrs) {
-		TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ChannelDropdown, 0, 0);
-		try {
-			showSelected = a.getBoolean(R.styleable.ChannelDropdown_show_selected, true);
-		} finally {
-			a.recycle();
-		}
-	}
+    public ChannelDropdown(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        getAttrs(context, attrs);
+    }
 
-	public void setListener(HighlightListener hl) { highlightListener = hl; }
+    private void getAttrs(Context context, AttributeSet attrs) {
+        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ChannelDropdown, 0, 0);
+        try {
+            showSelected = a.getBoolean(R.styleable.ChannelDropdown_show_selected, true);
+        } finally {
+            a.recycle();
+        }
+    }
 
-	public void channelUpdateIfNull(List<Channel> channels) {
-		if (channels != null && channels.size() > 0 && !hasExistingContent()) {
-			setState(getContext().getString(R.string.channels_error_nosim), INFO);
-			updateChoices(channels);
-		} else if (!hasExistingContent())
-			setEmptyState();
-	}
+    public void setListener(HighlightListener hl) {
+        highlightListener = hl;
+    }
 
-	public void channelUpdate(List<Channel> channels) {
-		if (channels != null && channels.size() > 0) {
-			setState(null, NONE);
-			updateChoices(channels);
-		} else if (!hasExistingContent())
-			setEmptyState();
-	}
+    public void channelUpdateIfNull(List<Channel> channels) {
+        if (channels != null && channels.size() > 0 && !hasExistingContent()) {
+            setState(getContext().getString(R.string.channels_error_nosim), INFO);
+            updateChoices(channels);
+        } else if (!hasExistingContent())
+            setEmptyState();
+    }
 
-	private boolean hasExistingContent() { return autoCompleteTextView.getAdapter() != null && autoCompleteTextView.getAdapter().getCount() > 0; }
+    public void channelUpdate(List<Channel> channels) {
+        if (channels != null && channels.size() > 0) {
+            setState(null, NONE);
+            updateChoices(channels);
+        } else if (!hasExistingContent())
+            setEmptyState();
+    }
 
-	private void setEmptyState() {
-		autoCompleteTextView.setDropDownHeight(0);
-		setState(getContext().getString(R.string.channels_error_nodata), ERROR);
-	}
+    private boolean hasExistingContent() {
+        return autoCompleteTextView.getAdapter() != null && autoCompleteTextView.getAdapter().getCount() > 0;
+    }
 
-	private void setDropdownValue(Channel c) {
-		autoCompleteTextView.setText(c == null ? "" : c.toString(), false);
-		if (c != null)
-			UIHelper.loadPicasso (c.logoUrl, size55, this);
-	}
+    private void setEmptyState() {
+        autoCompleteTextView.setDropDownHeight(0);
+        setState(getContext().getString(R.string.channels_error_nodata), ERROR);
+    }
 
-	private void updateChoices(List<Channel> channels) {
-		if (highlightedChannel == null) setDropdownValue(null);
-		ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(ChannelDropdownAdapter.sort(channels, showSelected), getContext());
-		autoCompleteTextView.setAdapter(channelDropdownAdapter);
-		autoCompleteTextView.setDropDownHeight(UIHelper.dpToPx(300));
-		autoCompleteTextView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((Channel) adapterView.getItemAtPosition(pos)));
+    private void setDropdownValue(Channel c) {
+        autoCompleteTextView.setText(c == null ? "" : c.toString(), false);
+        if (c != null)
+            UIHelper.loadPicasso(c.logoUrl, size55, this);
+    }
 
-		for (Channel c: channels) {
-			if (c.defaultAccount && showSelected)
-				setDropdownValue(c);
-		}
-	}
+    private void updateChoices(List<Channel> channels) {
+        if (highlightedChannel == null) setDropdownValue(null);
+        ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(ChannelDropdownAdapter.sort(channels, showSelected), getContext());
+        autoCompleteTextView.setAdapter(channelDropdownAdapter);
+        autoCompleteTextView.setDropDownHeight(UIHelper.dpToPx(300));
+        autoCompleteTextView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((Channel) adapterView.getItemAtPosition(pos)));
 
-	private void onSelect(Channel c) {
-		setDropdownValue(c);
-		if (highlightListener != null) { highlightListener.highlightChannel(c); }
-		highlightedChannel = c;
-	}
+        for (Channel c : channels) {
+            if (c.defaultAccount && showSelected)
+                setDropdownValue(c);
+        }
+    }
 
-	public Channel getHighlighted() { return highlightedChannel; }
+    private void onSelect(Channel c) {
+        setDropdownValue(c);
+        if (highlightListener != null) {
+            highlightListener.highlightChannel(c);
+        }
+        highlightedChannel = c;
+    }
 
-	@Override
-	public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-		RoundedBitmapDrawable d = RoundedBitmapDrawableFactory.create (getContext().getResources(), bitmap);
-		d.setCircular(true);
-		autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(d, null, null, null);
-	}
+    public Channel getHighlighted() {
+        return highlightedChannel;
+    }
 
-	@Override
-	public void onBitmapFailed(Exception e, Drawable errorDrawable) {}
+    @Override
+    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+        RoundedBitmapDrawable d = RoundedBitmapDrawableFactory.create(getContext().getResources(), bitmap);
+        d.setCircular(true);
+        autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(d, null, null, null);
+    }
 
-	@Override
-	public void onPrepareLoad(Drawable placeHolderDrawable) {
-		autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0);
-	}
+    @Override
+    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+    }
 
-	public void setObservers(@NonNull ChannelDropdownViewModel viewModel, @NonNull LifecycleOwner lifecycleOwner) {
-		viewModel.getSims().observe(lifecycleOwner, sims -> Log.i(TAG, "Got sims: " + sims.size()));
-		viewModel.getSimHniList().observe(lifecycleOwner, simList -> Log.i(TAG, "Got new sim hni list: " + simList));
-		viewModel.getChannels().observe(lifecycleOwner, this::channelUpdateIfNull);
-		viewModel.getSimChannels().observe(lifecycleOwner, this::channelUpdate);
-		viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> Log.i(TAG, "Got new selected channels: " + channels.size()));
-		viewModel.getActiveChannel().observe(lifecycleOwner, channel -> { if (channel != null && showSelected) setState(null, NONE); });
-		viewModel.getChannelActions().observe(lifecycleOwner, actions -> setState(actions, viewModel));
-	}
+    @Override
+    public void onPrepareLoad(Drawable placeHolderDrawable) {
+        autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0);
+    }
 
-	private void setState(List<HoverAction> actions, ChannelDropdownViewModel viewModel) {
-		if (viewModel.getActiveChannel().getValue() != null && (actions == null || actions.size() == 0))
-			setState(getContext().getString(R.string.no_actions_fielderror, HoverAction.getHumanFriendlyType(getContext(), viewModel.getType())), AbstractStatefulInput.ERROR);
-		else if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !viewModel.getType().equals(HoverAction.BALANCE))
-			setState(getContext().getString(actions.get(0).transaction_type.equals(HoverAction.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning), INFO);
-		else if (viewModel.getActiveChannel().getValue() != null && showSelected)
-			setState(null, AbstractStatefulInput.SUCCESS);
-	}
+    public void setObservers(@NonNull ChannelDropdownViewModel viewModel, @NonNull LifecycleOwner lifecycleOwner) {
+        viewModel.getSims().observe(lifecycleOwner, sims -> Log.i(TAG, "Got sims: " + sims.size()));
+        viewModel.getSimHniList().observe(lifecycleOwner, simList -> Log.i(TAG, "Got new sim hni list: " + simList));
+        viewModel.getChannels().observe(lifecycleOwner, this::channelUpdateIfNull);
+        viewModel.getSimChannels().observe(lifecycleOwner, this::channelUpdate);
+        viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> Log.i(TAG, "Got new selected channels: " + channels.size()));
+        viewModel.getActiveChannel().observe(lifecycleOwner, channel -> {
+            if (channel != null && showSelected) setState(null, NONE);
+        });
+        viewModel.getChannelActions().observe(lifecycleOwner, actions -> setState(actions, viewModel));
+    }
 
-	public interface HighlightListener {
-		void highlightChannel(Channel c);
-	}
+    private void setState(List<HoverAction> actions, ChannelDropdownViewModel viewModel) {
+        if (viewModel.getActiveChannel().getValue() != null && (actions == null || actions.size() == 0))
+            setState(getContext().getString(R.string.no_actions_fielderror, HoverAction.getHumanFriendlyType(getContext(), viewModel.getType())), AbstractStatefulInput.ERROR);
+        else if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !viewModel.getType().equals(HoverAction.BALANCE))
+            setState(getContext().getString(actions.get(0).transaction_type.equals(HoverAction.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning), INFO);
+        else if (viewModel.getActiveChannel().getValue() != null && showSelected)
+            setState(null, AbstractStatefulInput.SUCCESS);
+    }
+
+    public interface HighlightListener {
+        void highlightChannel(Channel c);
+    }
+
+    public static String countryCodeToEmoji(String countryCode) {
+        int firstLetter = Character.codePointAt(countryCode, 0) - 0x41 + 0x1F1E6;
+        int secondLetter = Character.codePointAt(countryCode, 1) - 0x41 + 0x1F1E6;
+        return new String(Character.toChars(firstLetter)) + new String(Character.toChars(secondLetter));
+    }
 }

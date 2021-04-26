@@ -20,6 +20,7 @@ import com.hover.stax.actions.ActionSelectViewModel;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.ContactInput;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.databinding.FragmentTransferBinding;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.requests.Request;
 import com.hover.stax.utils.UIHelper;
@@ -40,6 +41,8 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 
 	private Stax2LineItem recipientValue;
 
+	private FragmentTransferBinding binding;
+
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		channelDropdownViewModel = new ViewModelProvider(requireActivity()).get(ChannelDropdownViewModel.class);
@@ -47,23 +50,24 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		abstractFormViewModel = new ViewModelProvider(requireActivity()).get(TransferViewModel.class);
 		transferViewModel = (TransferViewModel) abstractFormViewModel;
 
-		View root = inflater.inflate(R.layout.fragment_transfer, container, false);
-		init(root);
-		startObservers(root);
+		binding = FragmentTransferBinding.inflate(inflater, container, false);
+
+		init(binding.getRoot());
+		startObservers(binding.getRoot());
 		startListeners();
-		return root;
+		return binding.getRoot();
 	}
 
 	@Override
 	protected void init(View root) {
-		setTitle(root);
+		setTitle();
 
-		amountInput = root.findViewById(R.id.amountInput);
-		contactInput = root.findViewById(R.id.contact_select);
-		actionSelect = root.findViewById(R.id.action_select);
-		noteInput = root.findViewById(R.id.noteInput);
+		amountInput = binding.editCard.amountInput;
+		contactInput = binding.editCard.contactSelect;
+		actionSelect = binding.editCard.actionSelect;
+		noteInput = binding.editCard.noteInput;
 
-		recipientValue = root.findViewById(R.id.recipientValue);
+		recipientValue = binding.summaryCard.recipientValue;
 
 		amountInput.setText(transferViewModel.getAmount().getValue());
 		noteInput.setText(transferViewModel.getNote().getValue());
@@ -72,11 +76,9 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		super.init(root);
 	}
 
-	private void setTitle(View root) {
-		TextView formCardTitle = root.findViewById(R.id.editCard).findViewById(R.id.title);
-		TextView summaryCardTitle = root.findViewById(R.id.summaryCard).findViewById(R.id.title);
-		if (summaryCardTitle != null) { summaryCardTitle.setText(getString(transferViewModel.getType().equals(HoverAction.AIRTIME) ? R.string.cta_airtime : R.string.cta_transfer)); }
-		if (formCardTitle != null) { formCardTitle.setText(getString(transferViewModel.getType().equals(HoverAction.AIRTIME) ? R.string.cta_airtime : R.string.cta_transfer)); }
+	private void setTitle() {
+		binding.editCard.transferCard.setTitle(getString(transferViewModel.getType().equals(HoverAction.AIRTIME) ? R.string.cta_airtime : R.string.cta_transfer));
+		binding.summaryCard.transferSummaryCard.setTitle(getString(transferViewModel.getType().equals(HoverAction.AIRTIME) ? R.string.cta_airtime : R.string.cta_transfer));
 	}
 
 	@Override
@@ -84,7 +86,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		super.startObservers(root);
 		actionSelectViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
 			Log.e(TAG, "observed active action update");
-			((Stax2LineItem) root.findViewById(R.id.account_value)).setSubtitle(action.getNetworkSubtitle(root.getContext()));
+			binding.summaryCard.accountValue.setSubtitle(action.getNetworkSubtitle(root.getContext()));
 			actionSelect.selectRecipientNetwork(action);
 			setRecipientHint(action);
 		});
@@ -92,7 +94,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		channelDropdownViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> {
 			transferViewModel.setRecipientSmartly(transferViewModel.getRequest().getValue(), channel);
 			actionSelect.setVisibility(channel == null ? View.GONE : View.VISIBLE);
-			((Stax2LineItem) root.findViewById(R.id.account_value)).setTitle(channel.toString());
+			binding.summaryCard.accountValue.setTitle(channel.toString());
 		});
 
 		channelDropdownViewModel.getChannelActions().observe(getViewLifecycleOwner(), actions -> {
@@ -110,8 +112,8 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		transferViewModel.getContact().observe(getViewLifecycleOwner(), contact -> recipientValue.setContact(contact));
 
 		transferViewModel.getNote().observe(getViewLifecycleOwner(), note -> {
-			root.findViewById(R.id.noteRow).setVisibility((note == null || note.isEmpty()) ? View.GONE : View.VISIBLE);
-			((TextView) root.findViewById(R.id.noteValue)).setText(note);
+			binding.summaryCard.noteRow.setVisibility((note == null || note.isEmpty()) ? View.GONE : View.VISIBLE);
+			binding.summaryCard.noteValue.setText(note);
 		});
 
 		transferViewModel.getRequest().observe(getViewLifecycleOwner(), request -> { if (request != null) load(request); });
@@ -179,7 +181,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		contactInput.setSelected(contact);
 	}
 
-	private TextWatcher amountWatcher = new TextWatcher() {
+	private final TextWatcher amountWatcher = new TextWatcher() {
 		@Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
 		@Override public void afterTextChanged(Editable editable) { }
 		@Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -187,7 +189,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		}
 	};
 
-	private TextWatcher recipientWatcher = new TextWatcher() {
+	private final TextWatcher recipientWatcher = new TextWatcher() {
 		@Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
 		@Override public void afterTextChanged(Editable editable) { }
 		@Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -195,7 +197,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		}
 	};
 
-	private TextWatcher noteWatcher = new TextWatcher() {
+	private final TextWatcher noteWatcher = new TextWatcher() {
 		@Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
 		@Override public void afterTextChanged(Editable editable) { }
 		@Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {

@@ -3,18 +3,17 @@ package com.hover.stax.transactions;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hover.stax.R;
+import com.hover.stax.databinding.TransactionMessagesItemsBinding;
 
 import java.util.List;
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.TransactionMessageViewHolder> {
 
-	private List<UssdCallResponse> messagesList;
+	private final List<UssdCallResponse> messagesList;
 
 	MessagesAdapter(List<UssdCallResponse> messagesList) {
 		this.messagesList = messagesList;
@@ -23,20 +22,20 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Transa
 	@NonNull
 	@Override
 	public TransactionMessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.transaction_messages_items, parent, false);
-		return new TransactionMessageViewHolder(view);
+		TransactionMessagesItemsBinding binding = TransactionMessagesItemsBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+		return new TransactionMessageViewHolder(binding);
 	}
 
 	@Override
 	public void onBindViewHolder(@NonNull TransactionMessageViewHolder holder, int position) {
 		UssdCallResponse model = messagesList.get(position);
 		if (!model.enteredValue.isEmpty())
-			holder.enteredValueText.setText(model.enteredValue);
-		else holder.enteredValueText.setVisibility(View.GONE);
+			holder.binding.messageEnteredValue.setText(model.enteredValue);
+		else holder.binding.messageEnteredValue.setVisibility(View.GONE);
 
 		if (!model.responseMessage.isEmpty())
-			holder.messageContentText.setText(model.responseMessage);
-		else holder.messageContentText.setVisibility(View.GONE);
+			holder.binding.messageContent.setText(model.responseMessage);
+		else holder.binding.messageContent.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -56,12 +55,11 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Transa
 	}
 
 	static class TransactionMessageViewHolder extends RecyclerView.ViewHolder {
-		TextView enteredValueText, messageContentText;
+		TransactionMessagesItemsBinding binding;
 
-		TransactionMessageViewHolder(@NonNull View itemView) {
-			super(itemView);
-			enteredValueText = itemView.findViewById(R.id.message_enteredValue);
-			messageContentText = itemView.findViewById(R.id.message_content);
+		TransactionMessageViewHolder(TransactionMessagesItemsBinding binding) {
+			super(binding.getRoot());
+			this.binding = binding;
 		}
 	}
 }
