@@ -1,6 +1,7 @@
 package com.hover.stax.navigation;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -24,6 +25,8 @@ import com.hover.stax.utils.Constants;
 public abstract class AbstractNavigationActivity extends AppCompatActivity implements NavigationInterface {
 
     protected NavController navController;
+    protected AppBarConfiguration appBarConfiguration;
+    protected NavHostFragment navHostFragment;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -39,14 +42,20 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         Toolbar toolbar = findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle("");
 
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
 
-        if (navHostFragment != null)
+        if (navHostFragment != null) {
             navController = navHostFragment.getNavController();
 
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupWithNavController(nav, navController);
+            NavigationUI.setupWithNavController(nav, navController);
+            appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
+            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        } else {
+            Log.d(AbstractNavigationActivity.class.getSimpleName(), "Navhost fragment is null");
+        }
 
         nav.setOnNavigationItemSelectedListener(item -> {
             if (this instanceof MainActivity)
@@ -56,16 +65,19 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
             return true;
         });
 
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> setActiveNav(destination.getId(), nav));
+//        navController.addOnDestinationChangedListener((controller, destination, arguments) -> setActiveNav(destination.getId(), nav));
         if (getIntent().getBooleanExtra(SettingsFragment.LANG_CHANGE, false))
             navigate(this, Constants.NAV_SETTINGS);
     }
 
-    private void setActiveNav(int destinationId, BottomNavigationView nav) {
-        nav.getMenu().getItem(0).setVisible(destinationId == R.id.bountyEmailFragment || destinationId == R.id.navigation_transfer || destinationId == R.id.navigation_request);
-//		UIHelper.changeDrawableColor(nav.findViewById(R.id.navigation_home), destinationId == R.id.navigation_home ? R.color.brightBlue : R.color.offWhite, this);
-//		UIHelper.changeDrawableColor(nav.findViewById(R.id.navigation_balance), destinationId == R.id.navigation_balance ? R.color.brightBlue : R.color.offWhite, this);
-//		UIHelper.changeDrawableColor(nav.findViewById(R.id.navigation_settings), destinationId == R.id.navigation_settings ? R.color.brightBlue : R.color.offWhite, this);
+    private void setActiveNav(int destinationId, BottomNavigationView navigationView) {
+//        if(destinationId == R.id.bountyEmailFragment || destinationId == R.id.navigation_transfer || destinationId == R.id.navigation_request){
+
+//            for(int i = 0; i < navigationView.getMenu().size(); i++){
+//                MenuItem item = navigationView.getMenu().getItem(i);
+//                item.setChecked(destinationId == item.getItemId());
+//            }
+//        }
     }
 
     public void checkPermissionsAndNavigate(int toWhere) {
@@ -87,6 +99,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
             onBackPressed();
             return;
         }
+
         startActivity(intent);
     }
 
@@ -96,7 +109,6 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         else if (destId == R.id.navigation_home) return Constants.NAV_HOME;
         else return destId;
     }
-
 
     public void getStartedWithBountyButton(View view) {
         checkPermissionsAndNavigate(Constants.NAV_BOUNTY);
@@ -111,6 +123,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 
     @Override
     public boolean onSupportNavigateUp() {
-        return navController.navigateUp();
+//        navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        return NavigationUI.navigateUp(navHostFragment.getNavController(), appBarConfiguration) || super.onSupportNavigateUp();
     }
 }

@@ -34,7 +34,7 @@ public class BountyActivity extends AbstractNavigationActivity {
         setUpNav();
 
         if (!Utils.getString(EMAIL_KEY, this).isEmpty())
-            navigateToBountyListFragment(this);
+            navigateToBountyListFragment(navController);
         else
             Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_email)));
     }
@@ -60,7 +60,7 @@ public class BountyActivity extends AbstractNavigationActivity {
         if (requestCode == BOUNTY_REQUEST) {
             if (data != null) {
                 String transactionUUID = data.getStringExtra("uuid");
-                if (transactionUUID != null) navigateToTransactionDetailsFragment(transactionUUID, this, true);
+                if (transactionUUID != null) navigateToTransactionDetailsFragment(transactionUUID, navController, true);
             }
         }
     }
