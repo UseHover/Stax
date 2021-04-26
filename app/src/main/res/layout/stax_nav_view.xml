@@ -1,33 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimaryDark"
+            app:title="" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
     <FrameLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+        app:layout_constraintBottom_toTopOf="@id/nav_view"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <com.google.android.material.bottomappbar.BottomAppBar
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
-        style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:gravity="start"
-        app:elevation="10dp"
-        app:fabAlignmentMode="end"
-        app:fabAnimationMode="scale"
-        app:menu="@menu/nav_main"
-        app:paddingLeftSystemWindowInsets="true" />
+        android:layout_gravity="bottom"
+        app:itemIconTint="@drawable/selector_icon_tint"
+        app:itemTextColor="@drawable/selector_icon_tint"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/nav_main" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="visible"
-        app:backgroundTint="?attr/colorSecondary"
-        app:layout_anchor="@id/nav_view" />
+    <!--    <com.google.android.material.bottomappbar.BottomAppBar-->
+    <!--        android:id="@+id/nav_view"-->
+    <!--        style="@style/Widget.MaterialComponents.BottomAppBar.Colored"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="bottom|start"-->
+    <!--        android:gravity="start"-->
+    <!--        app:elevation="10dp"-->
+    <!--        app:fabAlignmentMode="end"-->
+    <!--        app:fabAnimationMode="scale"-->
+    <!--        app:menu="@menu/nav_main"-->
+    <!--        app:paddingLeftSystemWindowInsets="true" />-->
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:visibility="visible"-->
+    <!--        app:backgroundTint="?attr/colorSecondary"-->
+    <!--        app:layout_anchor="@id/nav_view" />-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

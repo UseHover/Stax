@@ -33,14 +33,14 @@ import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.destruct.SelfDestructActivity;
-import com.hover.stax.onboarding.OnBoardingActivity;
-import com.hover.stax.utils.Constants;
 import com.hover.stax.home.MainActivity;
+import com.hover.stax.onboarding.OnBoardingActivity;
 import com.hover.stax.schedules.ScheduleWorker;
 import com.hover.stax.settings.BiometricChecker;
-import com.hover.stax.utils.blur.StaxBlur;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.utils.blur.StaxBlur;
 
 import java.util.Objects;
 
@@ -56,6 +56,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		startSplashForegroundSequence();
 		startBackgroundProcesses();
 		continueOn();
