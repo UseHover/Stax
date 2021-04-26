@@ -52,7 +52,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 	public void onBindViewHolder(@NonNull BalanceViewHolder holder, int position) {
 		Channel channel = channels.get(position);
 
-		holder.binding.balanceChannel.setText(channel.name);
+		holder.binding.balanceChannelName.setText(channel.name);
 		holder.binding.channelId.setText(String.valueOf(channel.id));
 
 		if(!showBalance)
@@ -82,7 +82,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 		holder.itemView.setBackgroundColor(primary);
 		holder.binding.balanceSubtitle.setTextColor(secondary);
 		holder.binding.balanceAmount.setTextColor(secondary);
-		holder.binding.balanceChannel.setTextColor(secondary);
+		holder.binding.balanceChannelName.setTextColor(secondary);
 
 		Drawable drawable = ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.ic_refresh_white_13dp);
 		if(drawable !=null) {
@@ -109,12 +109,12 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
 		public BalanceViewHolder(BalanceItemBinding binding) {
 			super(binding.getRoot());
 			this.binding = binding;
-			binding.balanceChannel.setOnClickListener(this);
+			binding.balanceChannelName.setOnClickListener(this);
 		}
 
 		@Override
 		public void onClick(View v) {
-			if (balanceListener != null && v.getId() == R.id.balance_channel)
+			if (balanceListener != null && v.getId() == R.id.balance_channel_name)
 				balanceListener.onTapDetail(Integer.parseInt(binding.channelId.getText().toString()));
 			else if (balanceListener != null)
 				balanceListener.onTapRefresh(Integer.parseInt(binding.channelId.getText().toString()));
