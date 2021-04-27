@@ -51,7 +51,8 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
             navController = navHostFragment.getNavController();
 
             NavigationUI.setupWithNavController(nav, navController);
-            appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
+
+            appBarConfiguration = new AppBarConfiguration.Builder(R.id.navigation_home, R.id.navigation_balance, R.id.navigation_settings).build();
             NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         } else {
             Log.d(AbstractNavigationActivity.class.getSimpleName(), "Navhost fragment is null");
