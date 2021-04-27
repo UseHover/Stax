@@ -49,9 +49,11 @@
         <activity
             android:name=".home.MainActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:theme="@style/StaxTheme" />
 
-        <activity android:name=".languages.SelectLanguageActivity" />
+        <activity android:name=".languages.SelectLanguageActivity"
+            android:label="@string/language"/>
 
         <activity
             android:name=".permissions.PermissionsActivity"

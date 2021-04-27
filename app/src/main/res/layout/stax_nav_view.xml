@@ -42,24 +42,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/nav_main" />
 
-    <!--    <com.google.android.material.bottomappbar.BottomAppBar-->
-    <!--        android:id="@+id/nav_view"-->
-    <!--        style="@style/Widget.MaterialComponents.BottomAppBar.Colored"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_gravity="bottom|start"-->
-    <!--        android:gravity="start"-->
-    <!--        app:elevation="10dp"-->
-    <!--        app:fabAlignmentMode="end"-->
-    <!--        app:fabAnimationMode="scale"-->
-    <!--        app:menu="@menu/nav_main"-->
-    <!--        app:paddingLeftSystemWindowInsets="true" />-->
-
-    <!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        android:visibility="visible"-->
-    <!--        app:backgroundTint="?attr/colorSecondary"-->
-    <!--        app:layout_anchor="@id/nav_view" />-->
-
 </androidx.constraintlayout.widget.ConstraintLayout>

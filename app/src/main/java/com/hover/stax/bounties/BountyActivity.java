@@ -32,6 +32,7 @@ public class BountyActivity extends AbstractNavigationActivity {
         setContentView(binding.getRoot());
 
         setUpNav();
+        getSupportActionBar().setTitle(null);
 
         if (!Utils.getString(EMAIL_KEY, this).isEmpty())
             navigateToBountyListFragment(navController);

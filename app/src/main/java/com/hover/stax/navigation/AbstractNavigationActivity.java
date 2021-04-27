@@ -1,7 +1,6 @@
 package com.hover.stax.navigation;
 
 import android.content.Intent;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -43,7 +42,6 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("");
 
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
 
@@ -54,8 +52,6 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 
             appBarConfiguration = new AppBarConfiguration.Builder(R.id.navigation_home, R.id.navigation_balance, R.id.navigation_settings).build();
             NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        } else {
-            Log.d(AbstractNavigationActivity.class.getSimpleName(), "Navhost fragment is null");
         }
 
         nav.setOnNavigationItemSelectedListener(item -> {

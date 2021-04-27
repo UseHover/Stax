@@ -74,6 +74,9 @@ dependencies {
     implementation "androidx.room:room-runtime:2.2.6"
     annotationProcessor "androidx.room:room-compiler:2.2.6"
     androidTestImplementation "androidx.room:room-testing:2.2.6"
+
+    //logging
+    implementation 'com.jakewharton.timber:timber:4.7.1'
     
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:26.0.0')

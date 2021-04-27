@@ -7,16 +7,15 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.navigation.AbstractNavigationActivity;
-import com.hover.stax.utils.Constants;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.StaxDialog;
 
@@ -33,7 +32,10 @@ public class RequestActivity extends AbstractNavigationActivity implements Reque
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_request);
+
 		setUpNav();
+		getSupportActionBar().setTitle(null);
+
 		requestViewModel = new ViewModelProvider(this).get(NewRequestViewModel.class);
 		checkIntent();
 	}

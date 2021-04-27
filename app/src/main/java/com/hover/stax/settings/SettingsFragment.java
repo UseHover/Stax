@@ -19,6 +19,7 @@ import com.hover.sdk.utils.Utils;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.databinding.FragmentSettingsBinding;
+import com.hover.stax.home.MainActivity;
 import com.hover.stax.languages.Lang;
 import com.hover.stax.languages.LanguageViewModel;
 import com.hover.stax.navigation.NavigationInterface;
@@ -48,6 +49,13 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
         setUpContactStax();
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle(null);
     }
 
     private void setUpChooseLang() {

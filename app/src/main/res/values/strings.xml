@@ -355,4 +355,6 @@
 	<string name="retry">Retry</string>
 	<string name="submit_flow">Submit flow</string>
 	<string name="bounty_submitted_successfully">Bounty submitted successfully</string>
+	<string name="language">Language</string>
+	<string name="bounty">Bounty</string>
 </resources>
