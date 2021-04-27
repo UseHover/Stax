@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -44,6 +43,8 @@ import com.hover.stax.utils.blur.StaxBlur;
 
 import java.util.Objects;
 
+import timber.log.Timber;
+
 import static com.hover.stax.utils.Constants.AUTH_CHECK;
 import static com.hover.stax.utils.Constants.FRAGMENT_DIRECT;
 
@@ -55,11 +56,21 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
+		setFullscreenView();
+
 		super.onCreate(savedInstanceState);
 
 		startSplashForegroundSequence();
 		startBackgroundProcesses();
 		continueOn();
+	}
+
+	private void setFullscreenView(){
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+			getWindow().setDecorFitsSystemWindows(false);
+		} else {
+			getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+		}
 	}
 
 	private void startSplashForegroundSequence() {
@@ -74,7 +85,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 		createNotificationChannel();
 		startWorkers();
 		Utils.setFirebaseMessagingTopic(getString(R.string.firebase_topic_everyone));
-		FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this, s -> Log.d(TAG, "Firebase ID is: "+s));
+		FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this, s -> Timber.i("Firebase ID is: %s", s));
 	}
 	
 	private void blurBackground() {
