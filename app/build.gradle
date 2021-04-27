@@ -56,12 +56,12 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", "SELF_DESTRUCT", "\"1617235140000\""
+            buildConfigField "String", "SELF_DESTRUCT", "\"1620033789\""
         }
 
         release {
             minifyEnabled true
-            buildConfigField "String", "SELF_DESTRUCT", "\"1617235140000\"" // Mar 31, 2021
+            buildConfigField "String", "SELF_DESTRUCT", "\"1620033789\"" // May 03, 2021
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             file(keystorePath).with { propertiesFile ->

@@ -49,190 +49,200 @@ import static com.hover.stax.utils.Constants.AUTH_CHECK;
 import static com.hover.stax.utils.Constants.FRAGMENT_DIRECT;
 
 public class SplashScreenActivity extends AppCompatActivity implements BiometricChecker.AuthListener {
-	private final static String TAG = "SplashScreenActivity";
+    private final static String TAG = "SplashScreenActivity";
 
-	private final static int BLUR_DELAY = 1000, LOGO_DELAY = 1200, NAV_DELAY = 1800,
-		SPLASH_ICON_WIDTH = 177, SPLASH_ICON_HEIGHT = 57;
+    private final static int BLUR_DELAY = 1000, LOGO_DELAY = 1200, NAV_DELAY = 1800,
+            SPLASH_ICON_WIDTH = 177, SPLASH_ICON_HEIGHT = 57;
 
-	@Override
-	protected void onCreate(@Nullable Bundle savedInstanceState) {
-		setFullscreenView();
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        setFullscreenView();
 
-		super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
 
-		startSplashForegroundSequence();
-		startBackgroundProcesses();
-		continueOn();
-	}
+        startSplashForegroundSequence();
+        startBackgroundProcesses();
 
-	private void setFullscreenView(){
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-			getWindow().setDecorFitsSystemWindows(false);
-		} else {
-			getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-		}
-	}
+        if (!shouldSelfDestructWhenAppVersionExpires(BuildConfig.BUILD_TYPE.equalsIgnoreCase("Release")))
+            continueOn();
+    }
 
-	private void startSplashForegroundSequence() {
-		setContentView(R.layout.splash_screen_layout);
-		blurBackground();
-		fadeInLogo();
-	}
+    private void setFullscreenView() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            getWindow().setDecorFitsSystemWindows(false);
+        } else {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        }
+    }
 
-	private void startBackgroundProcesses() {
-		initAmplitude();
-		initHover();
-		createNotificationChannel();
-		startWorkers();
-		Utils.setFirebaseMessagingTopic(getString(R.string.firebase_topic_everyone));
-		FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this, s -> Timber.i("Firebase ID is: %s", s));
-	}
-	
-	private void blurBackground() {
-		new Handler(Looper.getMainLooper()).postDelayed(() -> {
-			Bitmap bg = BitmapFactory.decodeResource(getResources(), R.drawable.splash_background);
-			Bitmap bitmap = new StaxBlur(this, 16, 1).transform(bg);
-			ImageView bgView = findViewById(R.id.splash_image_blur);
-			if (bgView != null) {
-				bgView.setImageBitmap(bitmap);
-				bgView.setVisibility(View.VISIBLE);
-				bgView.setAnimation(loadFadeIn(this));
-			}
-		}, BLUR_DELAY);
-	}
+    private void startSplashForegroundSequence() {
+        setContentView(R.layout.splash_screen_layout);
+        blurBackground();
+        fadeInLogo();
+    }
 
-	private void fadeInLogo() {
-		TextView tv = findViewById(R.id.splash_content);
-		setSplashContentTopDrawable(tv);
+    private void startBackgroundProcesses() {
+        initAmplitude();
+        initHover();
+        createNotificationChannel();
+        startWorkers();
+        Utils.setFirebaseMessagingTopic(getString(R.string.firebase_topic_everyone));
+        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this, s -> Timber.i("Firebase ID is: %s", s));
+    }
 
-		new Handler(Looper.getMainLooper()).postDelayed(() -> {
-			tv.setVisibility(View.VISIBLE);
-			tv.setAnimation(loadFadeIn(this));
-		}, LOGO_DELAY);
-	}
+    private void blurBackground() {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            Bitmap bg = BitmapFactory.decodeResource(getResources(), R.drawable.splash_background);
+            Bitmap bitmap = new StaxBlur(this, 16, 1).transform(bg);
+            ImageView bgView = findViewById(R.id.splash_image_blur);
+            if (bgView != null) {
+                bgView.setImageBitmap(bitmap);
+                bgView.setVisibility(View.VISIBLE);
+                bgView.setAnimation(loadFadeIn(this));
+            }
+        }, BLUR_DELAY);
+    }
 
-	private Animation loadFadeIn(Context context) {
-		return AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
-	}
+    private void fadeInLogo() {
+        TextView tv = findViewById(R.id.splash_content);
+        setSplashContentTopDrawable(tv);
 
-	private void setSplashContentTopDrawable(TextView tv) {
-		Drawable dr = ResourcesCompat.getDrawable (getResources(), R.mipmap.stax, null);
-		assert dr != null;
-		Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
-		Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, SPLASH_ICON_WIDTH, SPLASH_ICON_HEIGHT, true));
-		tv.setCompoundDrawablesWithIntrinsicBounds(null, d,null,null);
-	}
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            tv.setVisibility(View.VISIBLE);
+            tv.setAnimation(loadFadeIn(this));
+        }, LOGO_DELAY);
+    }
 
-	private void continueOn() {
-		new Handler().postDelayed(() -> {
-			if (Utils.getSharedPrefs(this).getInt(AUTH_CHECK, 0) == 1) new BiometricChecker(this, this).startAuthentication(null);
-			else chooseNavigation(getIntent());
-		}, NAV_DELAY);
-	}
+    private Animation loadFadeIn(Context context) {
+        return AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
+    }
 
-	private void initAmplitude() {
-		Amplitude.getInstance().initialize(this, getString(R.string.amp)).enableForegroundTracking(getApplication());
+    private void setSplashContentTopDrawable(TextView tv) {
+        Drawable dr = ResourcesCompat.getDrawable(getResources(), R.mipmap.stax, null);
+        assert dr != null;
+        Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
+        Drawable d = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, SPLASH_ICON_WIDTH, SPLASH_ICON_HEIGHT, true));
+        tv.setCompoundDrawablesWithIntrinsicBounds(null, d, null, null);
+    }
 
-		if(getIntent().getExtras() !=null) {
-			String fcmTitle = getIntent().getExtras().getString(Constants.FROM_FCM);
-			if(fcmTitle !=null) {
-				Amplitude.getInstance().logEvent(getString(R.string.cliucked_push_notification, fcmTitle));
-			}
-		}
-	}
+    private void continueOn() {
+        new Handler().postDelayed(() -> {
+            if (Utils.getSharedPrefs(this).getInt(AUTH_CHECK, 0) == 1) new BiometricChecker(this, this).startAuthentication(null);
+            else chooseNavigation(getIntent());
+        }, NAV_DELAY);
+    }
 
-	private void initHover() {
-		Hover.initialize(this);
-		Hover.setBranding(getString(R.string.app_name), R.mipmap.stax, this);
-		Hover.setPermissionActivity(Constants.PERM_ACTIVITY, this);
-	}
+    private void initAmplitude() {
+        Amplitude.getInstance().initialize(this, getString(R.string.amp)).enableForegroundTracking(getApplication());
 
-	private Boolean shouldSelfDestructWhenAppVersionExpires(Boolean value) {
-		if(value && SelfDestructActivity.isExpired(this)){
-			startActivity(new Intent(this, SelfDestructActivity.class));
-			finish();
-			return true;
-		} else return false;
-	}
+        if (getIntent().getExtras() != null) {
+            String fcmTitle = getIntent().getExtras().getString(Constants.FROM_FCM);
+            if (fcmTitle != null) {
+                Amplitude.getInstance().logEvent(getString(R.string.cliucked_push_notification, fcmTitle));
+            }
+        }
+    }
 
-	private void createNotificationChannel() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			int importance = NotificationManager.IMPORTANCE_DEFAULT;
-			NotificationChannel channel = new NotificationChannel("DEFAULT", getString(R.string.notify_default_title), importance);
-			channel.setDescription(getString(R.string.notify_default_channel_descrip));
-			NotificationManager notificationManager = getSystemService(NotificationManager.class);
-			notificationManager.createNotificationChannel(channel);
-		}
-	}
+    private void initHover() {
+        Hover.initialize(this);
+        Hover.setBranding(getString(R.string.app_name), R.mipmap.stax, this);
+        Hover.setPermissionActivity(Constants.PERM_ACTIVITY, this);
+    }
 
-	private void startWorkers() {
-		WorkManager wm = WorkManager.getInstance(this);
-		startChannelWorker(wm);
-		startScheduleWorker(wm);
-	}
-	private void startChannelWorker(WorkManager wm) {
-		wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue();
-		wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, UpdateChannelsWorker.makeToil());
-	}
-	private void startScheduleWorker(WorkManager wm) {
-		wm.enqueueUniquePeriodicWork(ScheduleWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, ScheduleWorker.makeToil());
-	}
+    private Boolean shouldSelfDestructWhenAppVersionExpires(Boolean value) {
+        if (value && SelfDestructActivity.isExpired(this)) {
+            startActivity(new Intent(this, SelfDestructActivity.class));
+            finish();
+            return true;
+        } else return false;
+    }
 
-	private void chooseNavigation(Intent intent) {
-		 if(!OnBoardingActivity.hasPassedThrough(this)) goToOnboardingActivity();
-		 else if(isToRedirectFromMainActivity(intent)) {
-			assert intent.getExtras() !=null;
-			assert intent.getExtras().getString(FRAGMENT_DIRECT) !=null;
-			String redirectLink = Objects.requireNonNull(intent.getExtras().getString(FRAGMENT_DIRECT));
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("DEFAULT", getString(R.string.notify_default_title), importance);
+            channel.setDescription(getString(R.string.notify_default_channel_descrip));
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 
-			if(redirectionIsExternal(redirectLink)) openUrl(redirectLink, this);
-			else goToMainActivity(redirectLink);
-		}
-		else if(isForFulfilRequest(intent)) goToFulfillRequestActivity(intent);
-		else goToMainActivity(null);
+    private void startWorkers() {
+        WorkManager wm = WorkManager.getInstance(this);
+        startChannelWorker(wm);
+        startScheduleWorker(wm);
+    }
 
-		finish();
-	}
+    private void startChannelWorker(WorkManager wm) {
+        wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue();
+        wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, UpdateChannelsWorker.makeToil());
+    }
 
-	public static void openUrl(String url, Context ctx) {
-		Intent i = new Intent(Intent.ACTION_VIEW);
-		i.setData(Uri.parse(url));
-		ctx.startActivity(i);
-	}
+    private void startScheduleWorker(WorkManager wm) {
+        wm.enqueueUniquePeriodicWork(ScheduleWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, ScheduleWorker.makeToil());
+    }
 
-	private void goToOnboardingActivity() {
-		startActivity(new Intent(this, OnBoardingActivity.class));
-	}
-	private void goToFulfillRequestActivity(Intent intent) {
-		Intent i = new Intent(this, MainActivity.class);
-		i.putExtra(Constants.REQUEST_LINK, intent.getData().toString());
-		startActivity(i);
-	}
-	private void goToMainActivity(String redirectLink) {
-		Intent intent = new Intent(this, MainActivity.class);
-		try{ if(redirectLink !=null) intent.putExtra(FRAGMENT_DIRECT, Integer.parseInt(redirectLink));
-		}catch (NumberFormatException e){Utils.logErrorAndReportToFirebase(TAG, getString(R.string.firebase_fcm_redirect_format_err), e);}
+    private void chooseNavigation(Intent intent) {
+        if (!OnBoardingActivity.hasPassedThrough(this)) goToOnboardingActivity();
+        else if (isToRedirectFromMainActivity(intent)) {
+            assert intent.getExtras() != null;
+            assert intent.getExtras().getString(FRAGMENT_DIRECT) != null;
+            String redirectLink = Objects.requireNonNull(intent.getExtras().getString(FRAGMENT_DIRECT));
 
-		startActivity(intent);
-	}
+            if (redirectionIsExternal(redirectLink)) openUrl(redirectLink, this);
+            else goToMainActivity(redirectLink);
+        } else if (isForFulfilRequest(intent)) goToFulfillRequestActivity(intent);
+        else goToMainActivity(null);
 
-	@Override
-	public void onAuthError(String error) {
-		UIHelper.flashMessage(this, getString(R.string.toast_error_auth));
-	}
+        finish();
+    }
 
-	@Override
-	public void onAuthSuccess(HoverAction act) {
-		chooseNavigation(getIntent());
-	}
+    public static void openUrl(String url, Context ctx) {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        ctx.startActivity(i);
+    }
 
-	private boolean redirectionIsExternal(String redirectTo) {
-		return redirectTo.contains("https");
-	}
-	private boolean isToRedirectFromMainActivity(Intent intent) {
-		return intent.getExtras() !=null && intent.getExtras().getString(FRAGMENT_DIRECT) !=null;
-	}
-	private boolean isForFulfilRequest(Intent intent) {
-		return intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW) && intent.getData() != null;
-	}
+    private void goToOnboardingActivity() {
+        startActivity(new Intent(this, OnBoardingActivity.class));
+    }
+
+    private void goToFulfillRequestActivity(Intent intent) {
+        Intent i = new Intent(this, MainActivity.class);
+        i.putExtra(Constants.REQUEST_LINK, intent.getData().toString());
+        startActivity(i);
+    }
+
+    private void goToMainActivity(String redirectLink) {
+        Intent intent = new Intent(this, MainActivity.class);
+        try {
+            if (redirectLink != null) intent.putExtra(FRAGMENT_DIRECT, Integer.parseInt(redirectLink));
+        } catch (NumberFormatException e) {
+            Utils.logErrorAndReportToFirebase(TAG, getString(R.string.firebase_fcm_redirect_format_err), e);
+        }
+
+        startActivity(intent);
+    }
+
+    @Override
+    public void onAuthError(String error) {
+        UIHelper.flashMessage(this, getString(R.string.toast_error_auth));
+    }
+
+    @Override
+    public void onAuthSuccess(HoverAction act) {
+        chooseNavigation(getIntent());
+    }
+
+    private boolean redirectionIsExternal(String redirectTo) {
+        return redirectTo.contains("https");
+    }
+
+    private boolean isToRedirectFromMainActivity(Intent intent) {
+        return intent.getExtras() != null && intent.getExtras().getString(FRAGMENT_DIRECT) != null;
+    }
+
+    private boolean isForFulfilRequest(Intent intent) {
+        return intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW) && intent.getData() != null;
+    }
 }
