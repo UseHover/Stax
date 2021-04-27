@@ -37,7 +37,7 @@ public class SelectLanguageActivity extends AppCompatActivity {
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_language)));
 
 		if (getIntent().hasExtra(SettingsFragment.LANG_CHANGE))
-			findViewById(R.id.backButton).setVisibility(View.VISIBLE);
+			binding.staxCardView.setBackButtonVisibility(View.VISIBLE);
 
 		selectedCode = Lingver.getInstance().getLanguage();
 		final RadioGroup radioGrp = findViewById(R.id.languageRadioGroup);
