@@ -18,9 +18,9 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     signingConfigs {
-        file(keystorePath).with { propertiesFile ->
-            if(propertiesFile.canRead()){
-                releaseConfig {
+        releaseConfig {
+            file(keystorePath).with { propertiesFile ->
+                if (propertiesFile.canRead()) {
                     keyAlias keystoreProperties['keyAlias']
                     keyPassword keystoreProperties['keyPassword']
                     storeFile file(keystoreProperties['storeFile'])
@@ -65,11 +65,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             file(keystorePath).with { propertiesFile ->
-                if(propertiesFile.canRead()){
+                if (propertiesFile.canRead()) {
                     signingConfig signingConfigs.releaseConfig
                 }
             }
-
         }
     }
 
