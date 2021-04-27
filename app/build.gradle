@@ -1,10 +1,35 @@
+import java.nio.file.Paths
+
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+def userHome = Paths.get(System.getProperty('user.home'))
+def keystorePath = userHome.resolve('.stax/keystore.properties')
+def keystorePropertiesFile = file(keystorePath)
+
+def keystoreProperties = new Properties()
+
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
+    signingConfigs {
+        releaseConfig {
+            file(keystorePath).with { propertiesFile ->
+                if (propertiesFile.canRead()) {
+                    keyAlias keystoreProperties['keyAlias']
+                    keyPassword keystoreProperties['keyPassword']
+                    storeFile file(keystoreProperties['storeFile'])
+                    storePassword keystoreProperties['storePassword']
+                }
+            }
+        }
+    }
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
@@ -23,6 +48,7 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
@@ -30,22 +56,30 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", "SELF_DESTRUCT", "\"1617235140000\""
+            buildConfigField "String", "SELF_DESTRUCT", "\"1620033789\""
         }
+
         release {
             minifyEnabled true
-            buildConfigField "String", "SELF_DESTRUCT", "\"1617235140000\"" // Mar 31, 2021
+            buildConfigField "String", "SELF_DESTRUCT", "\"1620033789\"" // May 03, 2021
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-//            signingConfig signingConfigs.releaseConfig
+
+            file(keystorePath).with { propertiesFile ->
+                if (propertiesFile.canRead()) {
+                    signingConfig signingConfigs.releaseConfig
+                }
+            }
         }
     }
+
     bundle {
         language {
             //Ensures all language string resources is bundled in the aab.
             enableSplit = false
         }
     }
-    lintOptions{
+
+    lintOptions {
         disable 'MissingTranslation'
 //        disable 'ExtraTranslation'
     }
@@ -77,7 +111,7 @@ dependencies {
 
     //logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
-    
+
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:26.0.0')
     implementation 'com.google.firebase:firebase-crashlytics'
