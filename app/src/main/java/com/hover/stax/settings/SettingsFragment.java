@@ -15,10 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.amplitude.api.Amplitude;
-import com.hover.sdk.utils.Utils;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.languages.Lang;
@@ -27,6 +25,7 @@ import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxDialog;
 
 import java.util.List;

@@ -5,12 +5,14 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.util.Log;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -138,6 +140,11 @@ public class Utils {
 	}
 	public static void removeFirebaseMessagingTopic(String topic){
 		FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
+	}
+	public static void openUrl(String url, Context ctx) {
+		Intent i = new Intent(Intent.ACTION_VIEW);
+		i.setData(Uri.parse(url));
+		ctx.startActivity(i);
 	}
 
 }
