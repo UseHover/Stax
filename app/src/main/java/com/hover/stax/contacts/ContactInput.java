@@ -5,6 +5,7 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -15,6 +16,7 @@ import androidx.annotation.Nullable;
 
 import com.hover.stax.R;
 import com.hover.stax.databinding.ContactInputBinding;
+import com.hover.stax.utils.Utils;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDropdownLayout;
 
@@ -22,21 +24,22 @@ import java.util.List;
 
 public class ContactInput extends LinearLayout {
 
-	private ImageButton contactButton;
-	private StaxDropdownLayout contactInputLayout;
-	private AutoCompleteTextView contactAutocomplete;
-
-	private ContactInputBinding binding;
+	private final ImageButton contactButton;
+	private final StaxDropdownLayout contactInputLayout;
+	private final AutoCompleteTextView contactAutocomplete;
 
 	public ContactInput(Context context, @Nullable AttributeSet attrs) {
 		super(context, attrs);
 
-		binding = ContactInputBinding.inflate(LayoutInflater.from(context), this, true);
+		ContactInputBinding binding = ContactInputBinding.inflate(LayoutInflater.from(context), this, true);
 
 		contactButton = binding.contactButton;
 		contactInputLayout = binding.contactDropdownLayout;
 		contactAutocomplete = binding.contactDropdownLayout.findViewById(R.id.autoCompleteView);
 		contactAutocomplete.setOnFocusChangeListener(this::setState);
+
+		contactAutocomplete.setOnClickListener(v -> Utils.showSoftKeyboard(context, v));
+		contactAutocomplete.setImeOptions(EditorInfo.IME_ACTION_DONE);
 	}
 
 	public void setRecent(List<StaxContact> contacts, Context c) {
