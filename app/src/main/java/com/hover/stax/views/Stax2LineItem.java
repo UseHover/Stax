@@ -17,7 +17,6 @@ public class Stax2LineItem extends RelativeLayout {
 		super(context, attrs);
 		binding = Stax2lineitemBinding.inflate(LayoutInflater.from(context), this, true);
 
-//		LayoutInflater.from(context).inflate(R.layout.stax_2lineitem, this);
 		binding.title.setTextAlignment(TEXT_ALIGNMENT_TEXT_END);
 		binding.subtitle.setTextAlignment(TEXT_ALIGNMENT_TEXT_END);
 		binding.subtitle.setTextColor(getResources().getColor(R.color.offWhite));

@@ -7,16 +7,16 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
+import com.hover.stax.databinding.ActivityRequestBinding;
 import com.hover.stax.navigation.AbstractNavigationActivity;
-import com.hover.stax.utils.Constants;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.StaxDialog;
 
@@ -29,10 +29,15 @@ public class RequestActivity extends AbstractNavigationActivity implements Reque
 
 	AlertDialog dialog;
 
+	private ActivityRequestBinding binding;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_request);
+
+		binding = ActivityRequestBinding.inflate(getLayoutInflater());
+		setContentView(binding.getRoot());
+
 		setUpNav();
 		requestViewModel = new ViewModelProvider(this).get(NewRequestViewModel.class);
 		checkIntent();
@@ -80,7 +85,7 @@ public class RequestActivity extends AbstractNavigationActivity implements Reque
 
 	public void copyShareLink(View view) {
 		requestViewModel.saveRequest();
-		copyShareLink(requestViewModel.getRequest().getValue(), view.findViewById(R.id.copylink_share_selection), this);
+		copyShareLink(requestViewModel.getRequest().getValue(),  view.findViewById(R.id.copylink_share_selection), this);
 	}
 
 	@Override
