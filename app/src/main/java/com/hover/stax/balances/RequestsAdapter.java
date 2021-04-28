@@ -40,9 +40,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.Reques
 		holder.binding.liHeader.setVisibility(shouldShowDate(r, position) ? View.VISIBLE : View.GONE);
 		holder.binding.liHeader.setText(DateUtils.humanFriendlyDate(r.date_sent));
 
-		holder.itemView.setOnClickListener(view -> {
-			selectListener.viewRequestDetail(r.id);
-		});
+		holder.itemView.setOnClickListener(view -> selectListener.viewRequestDetail(r.id));
 	}
 
 	private boolean shouldShowDate(Request r, int position) {

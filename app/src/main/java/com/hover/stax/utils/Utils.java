@@ -3,11 +3,15 @@ package com.hover.stax.utils;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -142,6 +146,23 @@ public class Utils {
 
     public static void removeFirebaseMessagingTopic(String topic) {
         FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
+    }
+
+    public static void showSoftKeyboard(Context context, View view) {
+        if(view.requestFocus()){
+            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+
+    public static void hideSoftKeyboard(Context context, View view){
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+    public static void openUrl(String url, Context ctx) {
+        Intent i = new Intent("android.intent.action.VIEW");
+        i.setData(Uri.parse(url));
+        ctx.startActivity(i);
     }
 
 }

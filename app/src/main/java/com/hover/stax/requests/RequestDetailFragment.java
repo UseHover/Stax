@@ -1,11 +1,9 @@
 package com.hover.stax.requests;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,7 +51,7 @@ public class RequestDetailFragment extends Fragment implements RequestSenderInte
 		viewModel.getRecipients().observe(getViewLifecycleOwner(), contacts -> {
 			if (contacts != null && contacts.size() > 0) {
 				for (StaxContact c : contacts)
-					createRecipientEntry(c, view);
+					createRecipientEntry(c);
 			}
 		});
 
@@ -61,13 +59,13 @@ public class RequestDetailFragment extends Fragment implements RequestSenderInte
 			binding.summaryCard.requesterAccountRow.setVisibility(channel != null ? View.VISIBLE : View.GONE);
 			if (channel != null) {
 				((Stax2LineItem) view.findViewById(R.id.requesterValue)).setTitle(channel.name);
-				Log.e(TAG, "Activity is null? " + (getActivity() == null));
+//				Timber.e("Activity is null? %s", (getActivity() == null));
 			}
 		});
 
 		viewModel.getRequest().observe(getViewLifecycleOwner(), request -> {
 			if (request != null) {
-				setUpSummary(view, request);
+				setUpSummary(request);
 			}
 		});
 
@@ -75,15 +73,14 @@ public class RequestDetailFragment extends Fragment implements RequestSenderInte
 		initShareButtons();
 	}
 
-	private void createRecipientEntry(StaxContact c, View view) {
+	private void createRecipientEntry(StaxContact c) {
 		Stax2LineItem ss2li = new Stax2LineItem(getContext(), null);
 		ss2li.setContact(c);
-		((LinearLayout) view.findViewById(R.id.requesteeValueList)).addView(ss2li);
+		binding.summaryCard.requesteeValueList.addView(ss2li);
 	}
 
-	private void setUpSummary(View view, Request request) {
+	private void setUpSummary(Request request) {
 		binding.summaryCard.requestMoneyCard.setTitle(request.description);
-//		((TextView) view.findViewById(R.id.title)).setText(request.description);
 		binding.summaryCard.dateValue.setText(DateUtils.humanFriendlyDate(request.date_sent));
 
 		if (request.amount != null && !request.amount.isEmpty()) {
@@ -96,7 +93,7 @@ public class RequestDetailFragment extends Fragment implements RequestSenderInte
 			binding.summaryCard.requesterValue.setSubtitle(request.requester_number);
 
 
-		view.findViewById(R.id.noteRow).setVisibility(request.note == null || request.note.isEmpty() ? View.GONE : View.VISIBLE);
+		binding.summaryCard.noteRow.setVisibility(request.note == null || request.note.isEmpty() ? View.GONE : View.VISIBLE);
 		binding.summaryCard.noteValue.setText(request.note);
 
 		binding.cancelBtn.setOnClickListener(btn -> showConfirmDialog());
