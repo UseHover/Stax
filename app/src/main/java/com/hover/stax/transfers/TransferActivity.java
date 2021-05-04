@@ -91,15 +91,12 @@ public class TransferActivity extends AbstractNavigationActivity implements Push
 
 	private void makeHoverCall(HoverAction act) {
 		Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
-		stopReceivingNoActivityTopicNotification(this);
+		stopReceivingNoActivityTopicNotifGroup(this);
 		transferViewModel.checkSchedule();
 		makeCall(act);
 	}
 
 	private void makeCall(HoverAction act) {
-
-
-
 		HoverSession.Builder hsb = new HoverSession.Builder(act, channelDropdownViewModel.getActiveChannel().getValue(),
 				TransferActivity.this, Constants.TRANSFER_REQUEST)
 				.extra(HoverAction.AMOUNT_KEY, transferViewModel.getAmount().getValue())
@@ -108,6 +105,7 @@ public class TransferActivity extends AbstractNavigationActivity implements Push
 		if (transferViewModel.getContact().getValue() != null) { addRecipientInfo(hsb); }
 		hsb.run();
 	}
+
 	private void addRecipientInfo(HoverSession.Builder hsb) {
 		hsb.extra(HoverAction.ACCOUNT_KEY, transferViewModel.getContact().getValue().phoneNumber)
 			.extra(HoverAction.PHONE_KEY, transferViewModel.getContact().getValue().getNumberFormatForInput(actionSelectViewModel.getActiveAction().getValue(), channelDropdownViewModel.getActiveChannel().getValue()));

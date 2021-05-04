@@ -195,11 +195,16 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 	private void fabClicked(View v) {
 		requestViewModel.removeInvalidRequestees();
 		if (requestViewModel.getIsEditing().getValue() && validates()) {
-			stopReceivingNoActivityTopicNotification(requireContext());
+			updatePushNotificationStatus();
 			requestViewModel.setEditing(false);
 		}
 		else
 			UIHelper.flashMessage(getContext(), getString(R.string.toast_pleasefix));
+	}
+	private void updatePushNotificationStatus() {
+		stopReceivingNoActivityTopicNotifGroup(requireContext());
+		stopReceivingNoRequestMoneyNotifGroup(requireContext());
+		joinByRequestMoneyNotifGroup(requireContext());
 	}
 
 	private boolean validates() {

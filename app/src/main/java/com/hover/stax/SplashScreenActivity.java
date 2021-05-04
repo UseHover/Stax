@@ -77,8 +77,9 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 		FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this, s -> Log.d(TAG, "Firebase ID is: "+s));
 	}
 	private void initFirebaseMessagingTopics() {
-		receiveAllNotifications(this);
-		receiveNoActivityTopicNotificationIfValid(this);
+		joinAllNotifications(this);
+		joinByNoActivityTopicNotifGroup(this);
+		joinByNoRequestMoneyNotifGroup(this);
 	}
 	private void blurBackground() {
 		new Handler(Looper.getMainLooper()).postDelayed(() -> {

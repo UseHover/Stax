@@ -12,9 +12,10 @@ import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.HoverParameters;
 import com.hover.stax.R;
 import com.hover.stax.navigation.AbstractNavigationActivity;
+import com.hover.stax.pushNotification.PushNotificationTopicsInterface;
 import com.hover.stax.utils.Utils;
 
-public class BountyActivity extends AbstractNavigationActivity {
+public class BountyActivity extends AbstractNavigationActivity implements PushNotificationTopicsInterface {
 	private static final String TAG = "BountyActivity";
 	static final String EMAIL_KEY = "email_for_bounties";
 	private static final int BOUNTY_REQUEST = 3000;
@@ -35,6 +36,9 @@ public class BountyActivity extends AbstractNavigationActivity {
 
 	public void makeCall(HoverAction a) {
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_run_bounty_session));
+		joinAllBountiesTopicNotifGroup(this);
+		joinByBountyCountryTopicNotifGroup(a.country_alpha2.toUpperCase(), this);
+
 		call(a.public_id);
 	}
 

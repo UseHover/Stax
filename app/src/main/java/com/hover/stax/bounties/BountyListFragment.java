@@ -106,8 +106,6 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 			.setDialogTitle(getString(R.string.bounty_claim_title, b.action.root_code, b.action.getHumanFriendlyType(getContext(), b.action.transaction_type), b.action.bounty_amount))
 			.setDialogMessage(getString(R.string.bounty_claim_explained, b.action.bounty_amount, b.getInstructions(getContext())))
 			.setPosButton(R.string.start_USSD_Flow, v -> {
-					Utils.setFirebaseMessagingTopic(getString(R.string.firebase_topic_yes_bounty_yes_try));
-					Utils.setFirebaseMessagingTopic(getString(R.string.firebase_topic_bounty_in_country, b.action.country_alpha2.toUpperCase()));
 					((BountyActivity) requireActivity()).makeCall(b.action);
 			})
 			.showIt();
