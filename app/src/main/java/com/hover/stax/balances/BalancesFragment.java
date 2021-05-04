@@ -76,13 +76,6 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
         binding.homeCardBalances.refreshAccountsBtn.setOnClickListener(this::refreshBalances);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle(null);
-    }
-
     private void setUpBalances() {
         initBalanceCard();
         balancesViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), this::updateServices);

@@ -45,8 +45,6 @@ public class TransferActivity extends AbstractNavigationActivity {
         checkIntent();
         setContentView(R.layout.activity_transfer);
         setUpNav();
-
-        getSupportActionBar().setTitle(null);
     }
 
     private void checkIntent() {

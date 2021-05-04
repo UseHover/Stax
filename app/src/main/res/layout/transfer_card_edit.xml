@@ -4,6 +4,7 @@
     android:id="@+id/transferCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    app:showBack="true"
     app:title="@string/nav_airtime">
 
     <com.hover.stax.views.StaxTextInputLayout

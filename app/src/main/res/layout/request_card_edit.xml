@@ -4,6 +4,7 @@
     android:id="@+id/request_formCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    app:showBack="true"
     app:title="@string/req_cardhead">
 
     <include

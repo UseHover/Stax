@@ -52,7 +52,6 @@ public class MainActivity extends AbstractNavigationActivity implements
 		balancesViewModel.getActions().observe(this, actions -> Timber.i("Actions observer is necessary to make updates fire, but all logic is in viewmodel. %s", actions.size()));
 
 		setUpNav();
-		getSupportActionBar().setTitle(null);
 
 		checkForRequest(getIntent());
 		checkForFragmentDirection(getIntent());

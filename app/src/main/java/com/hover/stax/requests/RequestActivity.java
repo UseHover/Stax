@@ -39,7 +39,6 @@ public class RequestActivity extends AbstractNavigationActivity implements Reque
 		setContentView(binding.getRoot());
 
 		setUpNav();
-		getSupportActionBar().setTitle(null);
 
 		requestViewModel = new ViewModelProvider(this).get(NewRequestViewModel.class);
 		checkIntent();

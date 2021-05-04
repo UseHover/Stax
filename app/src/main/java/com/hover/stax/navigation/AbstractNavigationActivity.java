@@ -6,7 +6,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -38,11 +37,6 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 
     protected void setUpNav() {
         BottomNavigationView nav = findViewById(R.id.nav_view);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
 
         if (navHostFragment != null) {
@@ -51,7 +45,6 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
             NavigationUI.setupWithNavController(nav, navController);
 
             appBarConfiguration = new AppBarConfiguration.Builder(R.id.navigation_home, R.id.navigation_balance, R.id.navigation_settings).build();
-            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         }
 
         nav.setOnNavigationItemSelectedListener(item -> {
@@ -120,7 +113,6 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 
     @Override
     public boolean onSupportNavigateUp() {
-//        navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navHostFragment.getNavController(), appBarConfiguration) || super.onSupportNavigateUp();
     }
 }

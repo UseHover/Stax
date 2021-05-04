@@ -21,13 +21,15 @@ import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.ContactInput;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.databinding.FragmentTransferBinding;
-import com.hover.stax.utils.Constants;
 import com.hover.stax.requests.Request;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.AbstractStatefulInput;
-import com.hover.stax.views.StaxTextInputLayout;
 import com.hover.stax.views.Stax2LineItem;
+import com.hover.stax.views.StaxTextInputLayout;
+
+import timber.log.Timber;
 
 public class TransferFragment extends AbstractFormFragment implements ActionSelect.HighlightListener {
 	private static final String TAG = "TransferFragment";
@@ -85,7 +87,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 	protected void startObservers(View root) {
 		super.startObservers(root);
 		actionSelectViewModel.getActiveAction().observe(getViewLifecycleOwner(), action -> {
-			Log.e(TAG, "observed active action update");
+			Timber.e("observed active action update");
 			binding.summaryCard.accountValue.setSubtitle(action.getNetworkSubtitle(root.getContext()));
 			actionSelect.selectRecipientNetwork(action);
 			setRecipientHint(action);

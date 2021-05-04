@@ -33,13 +33,6 @@ public class HomeFragment extends Fragment {
         binding.request.setOnClickListener(v -> navigateTo(Constants.NAV_REQUEST));
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle(null);
-    }
-
     private void navigateTo(int destination) {
         MainActivity act = ((MainActivity) getActivity());
         if (act != null) act.checkPermissionsAndNavigate(destination);

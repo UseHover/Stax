@@ -21,6 +21,7 @@
                 android:id="@+id/transactionDetailsCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:showBack="true"
                 app:title="@string/nav_transaction">
 
                 <TableLayout
@@ -143,7 +144,6 @@
                     android:text="@string/pending_cardbody"
                     android:textSize="@dimen/text_16" />
             </com.hover.stax.views.StaxCardView>
-
 
             <com.hover.stax.views.StaxCardView
                 android:id="@+id/messagesCard"
