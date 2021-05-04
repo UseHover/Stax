@@ -47,7 +47,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
 
         if (navHostFragment != null) {
-            navController = navHostFragment.getNavController();
+            navController = getNavController();
 
             NavigationUI.setupWithNavController(nav, navController);
 
@@ -72,6 +72,10 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         nav.setOnNavigationItemReselectedListener(item -> {
             //do nothing
         });
+    }
+
+    protected NavController getNavController(){
+        return navHostFragment.getNavController();
     }
 
     public void checkPermissionsAndNavigate(int toWhere) {
@@ -117,6 +121,6 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 
     @Override
     public boolean onSupportNavigateUp() {
-        return NavigationUI.navigateUp(navHostFragment.getNavController(), appBarConfiguration) || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(getNavController(), appBarConfiguration) || super.onSupportNavigateUp();
     }
 }
