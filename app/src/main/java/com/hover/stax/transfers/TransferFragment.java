@@ -179,15 +179,15 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		contactInput.setSelected(contact);
 	}
 
-	private TextWatcher amountWatcher = new TextWatcher() {
+	private final TextWatcher amountWatcher = new TextWatcher() {
 		@Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
 		@Override public void afterTextChanged(Editable editable) { }
 		@Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-			transferViewModel.setAmount(charSequence.toString());
+			transferViewModel.setAmount(charSequence.toString().replaceAll(",", ""));
 		}
 	};
 
-	private TextWatcher recipientWatcher = new TextWatcher() {
+	private final TextWatcher recipientWatcher = new TextWatcher() {
 		@Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
 		@Override public void afterTextChanged(Editable editable) { }
 		@Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -195,7 +195,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		}
 	};
 
-	private TextWatcher noteWatcher = new TextWatcher() {
+	private final TextWatcher noteWatcher = new TextWatcher() {
 		@Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
 		@Override public void afterTextChanged(Editable editable) { }
 		@Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
