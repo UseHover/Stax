@@ -170,8 +170,18 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		summaryCard.findViewById(R.id.recipientRow).setVisibility(action.requiresRecipient() ? View.VISIBLE : View.GONE);
 		if (!action.requiresRecipient())
 			recipientValue.setContent(getString(R.string.self_choice), "");
-		else
+		else {
+			addRecipientsValue();
 			contactInput.setHint(action.getRequiredParams().contains(HoverAction.ACCOUNT_KEY) ? getString(R.string.recipientacct_label) : getString(R.string.recipientphone_label));
+		}
+	}
+
+	private void addRecipientsValue() {
+		StaxContact contact = transferViewModel.getContact().getValue();
+		if(contact !=null) {
+			if(contact.name == null) recipientValue.setContent(contact.phoneNumber);
+			else recipientValue.setContent(contact.name, contact.phoneNumber);
+		}
 	}
 
 	protected void onContactSelected(int requestCode, StaxContact contact) {
