@@ -15,13 +15,14 @@ import com.hover.stax.actions.ActionSelectViewModel;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.navigation.AbstractNavigationActivity;
+import com.hover.stax.pushNotification.PushNotificationTopicsInterface;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.views.StaxDialog;
 
-public class TransferActivity extends AbstractNavigationActivity {
+public class TransferActivity extends AbstractNavigationActivity implements PushNotificationTopicsInterface {
 	final public static String TAG = "TransferActivity";
 
 	private ChannelDropdownViewModel channelDropdownViewModel;
@@ -90,11 +91,15 @@ public class TransferActivity extends AbstractNavigationActivity {
 
 	private void makeHoverCall(HoverAction act) {
 		Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
+		stopReceivingNoActivityTopicNotification(this);
 		transferViewModel.checkSchedule();
 		makeCall(act);
 	}
 
 	private void makeCall(HoverAction act) {
+
+
+
 		HoverSession.Builder hsb = new HoverSession.Builder(act, channelDropdownViewModel.getActiveChannel().getValue(),
 				TransferActivity.this, Constants.TRANSFER_REQUEST)
 				.extra(HoverAction.AMOUNT_KEY, transferViewModel.getAmount().getValue())

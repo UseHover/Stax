@@ -20,6 +20,7 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.ContactInput;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.pushNotification.PushNotificationTopicsInterface;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.transfers.AbstractFormFragment;
@@ -30,7 +31,7 @@ import com.hover.stax.views.StaxCardView;
 
 import static com.hover.stax.views.AbstractStatefulInput.NONE;
 
-public class NewRequestFragment extends AbstractFormFragment implements RecipientAdapter.UpdateListener {
+public class NewRequestFragment extends AbstractFormFragment implements RecipientAdapter.UpdateListener, PushNotificationTopicsInterface {
 
 	protected NewRequestViewModel requestViewModel;
 
@@ -148,7 +149,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 		});
 		noteInput.addTextChangedListener(noteWatcher);
 
-		fab.setOnClickListener(v -> fabClicked(v));
+		fab.setOnClickListener(this::fabClicked);
 	}
 
 	@Override
@@ -162,7 +163,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 		recipientAdapter.notifyDataSetChanged();
 	}
 
-	private TextWatcher amountWatcher = new TextWatcher() {
+	private final TextWatcher amountWatcher = new TextWatcher() {
 		@Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
 		@Override public void afterTextChanged(Editable editable) { }
 
@@ -171,7 +172,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 		}
 	};
 
-	private TextWatcher receivingAccountNumberWatcher = new TextWatcher() {
+	private final TextWatcher receivingAccountNumberWatcher = new TextWatcher() {
 		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 		@Override
@@ -182,7 +183,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 		}
 	};
 
-	private TextWatcher noteWatcher = new TextWatcher() {
+	private final TextWatcher noteWatcher = new TextWatcher() {
 		@Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
 		@Override public void afterTextChanged(Editable editable) { }
 
@@ -193,8 +194,10 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 
 	private void fabClicked(View v) {
 		requestViewModel.removeInvalidRequestees();
-		if (requestViewModel.getIsEditing().getValue() && validates())
+		if (requestViewModel.getIsEditing().getValue() && validates()) {
+			stopReceivingNoActivityTopicNotification(requireContext());
 			requestViewModel.setEditing(false);
+		}
 		else
 			UIHelper.flashMessage(getContext(), getString(R.string.toast_pleasefix));
 	}
