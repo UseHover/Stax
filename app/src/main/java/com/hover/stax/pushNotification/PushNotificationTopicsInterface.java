@@ -33,6 +33,9 @@ public interface PushNotificationTopicsInterface {
 	default void joinByRequestMoneyNotifGroup(Context c) {
 		Utils.setFirebaseMessagingTopic(c.getString(R.string.firebase_topic_yes_request_money));
 	}
+	default void joinAnyTransactionNotifGroup(Context c) {
+		Utils.setFirebaseMessagingTopic(c.getString(R.string.firebase_topic_yes_transaction));
+	}
 
 	default void stopReceivingNoRequestMoneyNotifGroup(Context c) {
 		Utils.removeFirebaseMessagingTopic(c.getString(R.string.firebase_topic_no_request_money));

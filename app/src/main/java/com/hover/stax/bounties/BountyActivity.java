@@ -36,15 +36,18 @@ public class BountyActivity extends AbstractNavigationActivity implements PushNo
 
 	public void makeCall(HoverAction a) {
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_run_bounty_session));
-		joinAllBountiesTopicNotifGroup(this);
-		joinByBountyCountryTopicNotifGroup(a.country_alpha2.toUpperCase(), this);
-
+		updatePushNotifGroupStatus(a);
 		call(a.public_id);
 	}
 
 	public void retryCall(String actionId) {
 		Amplitude.getInstance().logEvent(getString(R.string.clicked_retry_bounty_session));
 		call(actionId);
+	}
+	private void updatePushNotifGroupStatus(HoverAction a) {
+		joinAllBountiesTopicNotifGroup(this);
+		joinByBountyCountryTopicNotifGroup(a.country_alpha2.toUpperCase(), this);
+
 	}
 
 	private void call(String actionId) {

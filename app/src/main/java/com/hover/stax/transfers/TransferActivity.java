@@ -91,9 +91,14 @@ public class TransferActivity extends AbstractNavigationActivity implements Push
 
 	private void makeHoverCall(HoverAction act) {
 		Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
-		stopReceivingNoActivityTopicNotifGroup(this);
+		updatePushNotifGroupStatus();
+
 		transferViewModel.checkSchedule();
 		makeCall(act);
+	}
+	private void updatePushNotifGroupStatus() {
+		joinAnyTransactionNotifGroup(this);
+		stopReceivingNoActivityTopicNotifGroup(this);
 	}
 
 	private void makeCall(HoverAction act) {
