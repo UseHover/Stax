@@ -36,6 +36,13 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
     }
 
     protected void setUpNav() {
+        setBottomBar();
+
+        if (getIntent().getBooleanExtra(SettingsFragment.LANG_CHANGE, false))
+            navigate(this, Constants.NAV_SETTINGS);
+    }
+
+    private void setBottomBar(){
         BottomNavigationView nav = findViewById(R.id.nav_view);
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
 
@@ -47,6 +54,11 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
             appBarConfiguration = new AppBarConfiguration.Builder(R.id.navigation_home, R.id.navigation_balance, R.id.navigation_settings).build();
         }
 
+        setNavClickListener(nav);
+        setNavReselectListener(nav);
+    }
+
+    private void setNavClickListener(BottomNavigationView nav){
         nav.setOnNavigationItemSelectedListener(item -> {
             if (this instanceof MainActivity)
                 checkPermissionsAndNavigate(getNavConst(item.getItemId()));
@@ -54,20 +66,12 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
                 navigateThruHome(item.getItemId());
             return true;
         });
-
-//        navController.addOnDestinationChangedListener((controller, destination, arguments) -> setActiveNav(destination.getId(), nav));
-        if (getIntent().getBooleanExtra(SettingsFragment.LANG_CHANGE, false))
-            navigate(this, Constants.NAV_SETTINGS);
     }
 
-    private void setActiveNav(int destinationId, BottomNavigationView navigationView) {
-//        if(destinationId == R.id.bountyEmailFragment || destinationId == R.id.navigation_transfer || destinationId == R.id.navigation_request){
-
-//            for(int i = 0; i < navigationView.getMenu().size(); i++){
-//                MenuItem item = navigationView.getMenu().getItem(i);
-//                item.setChecked(destinationId == item.getItemId());
-//            }
-//        }
+    private void setNavReselectListener(BottomNavigationView nav){
+        nav.setOnNavigationItemReselectedListener(item -> {
+            //do nothing
+        });
     }
 
     public void checkPermissionsAndNavigate(int toWhere) {
