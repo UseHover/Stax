@@ -82,26 +82,30 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         PermissionHelper permissionHelper = new PermissionHelper(this);
         if (toWhere == Constants.NAV_SETTINGS || toWhere == Constants.NAV_HOME || permissionHelper.hasBasicPerms()) {
             navigate(this, toWhere, getIntent(), false);
-        } else
+        } else {
             PermissionUtils.showInformativeBasicPermissionDialog(
                     pos -> PermissionUtils.requestPerms(getNavConst(toWhere), AbstractNavigationActivity.this),
                     neg -> Amplitude.getInstance().logEvent(getString(R.string.perms_basic_cancelled)),
                     this);
+        }
     }
 
     private void navigateThruHome(int destId) {
         Intent intent = new Intent(this, MainActivity.class);
-        if (destId == R.id.navigation_balance) intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_BALANCE);
-        else if (destId == R.id.navigation_settings) intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_SETTINGS);
+        if (destId == R.id.navigation_balance)
+            intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_BALANCE);
+        else if (destId == R.id.navigation_settings)
+            intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_SETTINGS);
         else if (destId != R.id.navigation_home) {
             onBackPressed();
             return;
         }
 
         startActivity(intent);
+        this.finish();
     }
 
-    private int getNavConst(int destId) {
+    protected int getNavConst(int destId) {
         if (destId == R.id.navigation_balance) return Constants.NAV_BALANCE;
         else if (destId == R.id.navigation_settings) return Constants.NAV_SETTINGS;
         else if (destId == R.id.navigation_home) return Constants.NAV_HOME;
@@ -117,10 +121,5 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         PermissionUtils.logPermissionsGranted(grantResults, this);
         checkPermissionsAndNavigate(requestCode);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        return NavigationUI.navigateUp(getNavController(), appBarConfiguration) || super.onSupportNavigateUp();
     }
 }

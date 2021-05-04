@@ -20,6 +20,8 @@ import com.hover.stax.transactions.TransactionDetailsFragment;
 import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.Constants;
 
+import timber.log.Timber;
+
 import static com.hover.stax.settings.SettingsFragment.LANG_CHANGE;
 
 public interface NavigationInterface {
@@ -64,6 +66,7 @@ public interface NavigationInterface {
 
 	default void navigateToRequestFragment(Activity activity) {
 		activity.startActivityForResult(new Intent(activity, RequestActivity.class), Constants.REQUEST_REQUEST);
+		activity.finish();
 	}
 
 	default void navigateToHomeFragment(NavController navController) {
@@ -75,6 +78,7 @@ public interface NavigationInterface {
 	}
 
 	default void navigateToBalanceFragment(NavController navController) {
+		Timber.e("Navigating to balance");
 		navController.navigate(R.id.navigation_balance);
 	}
 	default void navigateToLinkAccountFragment(NavController navController) {
@@ -87,6 +91,7 @@ public interface NavigationInterface {
 		if (isFromStaxLink) i.putExtra(Constants.REQUEST_LINK, received.getExtras().getString(Constants.REQUEST_LINK));
 
 		activity.startActivityForResult(i, Constants.TRANSFER_REQUEST);
+		activity.finish();
 	}
 
 	default void navigateToChannelDetailsFragment(int channel_id, Activity activity) {

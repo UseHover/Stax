@@ -94,7 +94,7 @@ public class ScheduleDetailFragment extends Fragment {
 	}
 
 	private void showConfirmDialog(View v) {
-		new StaxDialog(v.getContext(), this)
+		new StaxDialog(v.getContext())
 				.setDialogTitle(R.string.cancelfuture_head)
 				.setDialogMessage(R.string.cancelfuture_msg)
 				.setNegButton(R.string.btn_back, btn -> {

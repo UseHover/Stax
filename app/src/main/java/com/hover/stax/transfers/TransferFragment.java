@@ -3,11 +3,9 @@ package com.hover.stax.transfers;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
@@ -32,7 +30,6 @@ import com.hover.stax.views.StaxTextInputLayout;
 import timber.log.Timber;
 
 public class TransferFragment extends AbstractFormFragment implements ActionSelect.HighlightListener {
-	private static final String TAG = "TransferFragment";
 
 	private TransferViewModel transferViewModel;
 	private ActionSelectViewModel actionSelectViewModel;
@@ -104,7 +101,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 			actionSelect.updateActions(actions);
 		});
 
-		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> ((TextView) root.findViewById(R.id.amountValue)).setText(Utils.formatAmount(amount)));
+		transferViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> binding.summaryCard.amountValue.setText(Utils.formatAmount(amount)));
 
 		transferViewModel.getRecentContacts().observe(getViewLifecycleOwner(), contacts -> {
 			contactInput.setRecent(contacts, requireActivity());
@@ -142,7 +139,8 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 	}
 
 	@Override
-	public void highlightAction(HoverAction a) { Log.e(TAG, "updating active action"); actionSelectViewModel.setActiveAction(a); }
+	public void highlightAction(HoverAction a) {
+		Timber.e("updating active action"); actionSelectViewModel.setActiveAction(a); }
 
 	private void fabClicked(View v) {
 		if (transferViewModel.getIsEditing().getValue()) {
@@ -168,10 +166,10 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 	}
 
 	private void setRecipientHint(HoverAction action) {
-		Log.e(TAG, "update hint to " + action + ":" + action.getPronoun(getContext()));
-		Log.e(TAG, "requires recipient? " + action.requiresRecipient());
+		Timber.e("update hint to " + action + ":" + action.getPronoun(getContext()));
+		Timber.e("requires recipient? %s", action.requiresRecipient());
 		editCard.findViewById(R.id.recipient_entry).setVisibility(action.requiresRecipient() ? View.VISIBLE : View.GONE);
-		summaryCard.findViewById(R.id.recipientRow).setVisibility(action.requiresRecipient() ? View.VISIBLE : View.GONE);
+		binding.summaryCard.recipientRow.setVisibility(action.requiresRecipient() ? View.VISIBLE : View.GONE);
 		if (!action.requiresRecipient())
 			recipientValue.setContent(getString(R.string.self_choice), "");
 		else

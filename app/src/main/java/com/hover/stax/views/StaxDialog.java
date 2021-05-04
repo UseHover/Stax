@@ -1,14 +1,11 @@
 package com.hover.stax.views;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
 
 import com.hover.stax.R;
 import com.hover.stax.databinding.StaxDialogBinding;
@@ -24,20 +21,12 @@ public class StaxDialog extends AlertDialog {
 
 	private StaxDialogBinding binding;
 
-	public StaxDialog(@NonNull Activity a) {
-		this(a, a.getLayoutInflater());
-	}
-
-	public StaxDialog(@NonNull Context c, Fragment frag) {
-		this(c, frag.getLayoutInflater());
-	}
-
-	private StaxDialog(Context c, LayoutInflater inflater) {
+	public StaxDialog(Context c) {
 		super(c);
 		context = c;
 
 		binding = StaxDialogBinding.inflate(LayoutInflater.from(context));
-//		view = inflater.inflate(R.layout.stax_dialog, null);
+
 		customNegListener = null;
 		customPosListener = null;
 	}
@@ -102,14 +91,14 @@ public class StaxDialog extends AlertDialog {
 		return dialog;
 	}
 
-	private View.OnClickListener negListener = view -> {
+	private final View.OnClickListener negListener = view -> {
 		if (customNegListener != null)
 			customNegListener.onClick(view);
 		if (dialog != null)
 			dialog.dismiss();
 	};
 
-	private View.OnClickListener posListener = view -> {
+	private final View.OnClickListener posListener = view -> {
 		if (customPosListener != null)
 			customPosListener.onClick(view);
 		if (dialog != null)

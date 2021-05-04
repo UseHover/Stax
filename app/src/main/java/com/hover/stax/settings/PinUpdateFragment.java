@@ -77,7 +77,7 @@ public class PinUpdateFragment extends Fragment implements Target {
 
 	private void setUpRemoveAccount(Channel channel) {
 		binding.removeAcct.setOnClickListener(v -> {
-			new StaxDialog(getContext(), this)
+			new StaxDialog(getContext())
 				.setDialogTitle(getContext().getString(R.string.removepin_dialoghead, channel.name))
 				.setDialogMessage(R.string.removepins_dialogmes)
 				.setPosButton(R.string.btn_removeaccount, btn -> removeAccount(channel))
