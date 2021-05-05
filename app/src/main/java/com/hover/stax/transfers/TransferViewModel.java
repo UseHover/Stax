@@ -57,6 +57,7 @@ public class TransferViewModel extends AbstractFormViewModel {
 	void setContact(StaxContact c) {
 		contact.setValue(c);
 	}
+	void forceUpdateContactUI() {contact.postValue(contact.getValue());}
 
 	LiveData<StaxContact> getContact() {
 		if (contact == null) { contact = new MutableLiveData<>(); }
