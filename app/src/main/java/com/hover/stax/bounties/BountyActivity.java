@@ -15,8 +15,6 @@ import com.hover.stax.databinding.ActivityBountyBinding;
 import com.hover.stax.navigation.AbstractNavigationActivity;
 import com.hover.stax.utils.Utils;
 
-import timber.log.Timber;
-
 public class BountyActivity extends AbstractNavigationActivity {
     private static final String TAG = "BountyActivity";
     static final String EMAIL_KEY = "email_for_bounties";
@@ -72,10 +70,6 @@ public class BountyActivity extends AbstractNavigationActivity {
     @Override
     public void onBackPressed() {
         NavController controller = getNavController();
-
-        if (controller.getCurrentDestination() == null) {
-            Timber.e("Current dest is null");
-        }
 
         if (controller.getCurrentDestination() != null && controller.getCurrentDestination().getId() == R.id.bountyListFragment)
             navigateThruHome(R.id.navigation_settings);
