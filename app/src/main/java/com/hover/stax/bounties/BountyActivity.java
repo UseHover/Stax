@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.actions.HoverAction;
@@ -13,6 +14,8 @@ import com.hover.stax.R;
 import com.hover.stax.databinding.ActivityBountyBinding;
 import com.hover.stax.navigation.AbstractNavigationActivity;
 import com.hover.stax.utils.Utils;
+
+import timber.log.Timber;
 
 public class BountyActivity extends AbstractNavigationActivity {
     private static final String TAG = "BountyActivity";
@@ -60,8 +63,23 @@ public class BountyActivity extends AbstractNavigationActivity {
         if (requestCode == BOUNTY_REQUEST) {
             if (data != null) {
                 String transactionUUID = data.getStringExtra("uuid");
-                if (transactionUUID != null) navigateToTransactionDetailsFragment(transactionUUID, getNavController(), true);
+                if (transactionUUID != null)
+                    navigateToTransactionDetailsFragment(transactionUUID, getNavController(), true);
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        NavController controller = getNavController();
+
+        if (controller.getCurrentDestination() == null) {
+            Timber.e("Current dest is null");
+        }
+
+        if (controller.getCurrentDestination() != null && controller.getCurrentDestination().getId() == R.id.bountyListFragment)
+            navigateThruHome(R.id.navigation_settings);
+        else
+            super.onBackPressed();
     }
 }
