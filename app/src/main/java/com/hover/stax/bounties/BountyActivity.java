@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.actions.HoverAction;
@@ -60,8 +61,19 @@ public class BountyActivity extends AbstractNavigationActivity {
         if (requestCode == BOUNTY_REQUEST) {
             if (data != null) {
                 String transactionUUID = data.getStringExtra("uuid");
-                if (transactionUUID != null) navigateToTransactionDetailsFragment(transactionUUID, getNavController(), true);
+                if (transactionUUID != null)
+                    navigateToTransactionDetailsFragment(transactionUUID, getNavController(), true);
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        NavController controller = getNavController();
+
+        if (controller.getCurrentDestination() != null && controller.getCurrentDestination().getId() == R.id.bountyListFragment)
+            navigateThruHome(R.id.navigation_settings);
+        else
+            super.onBackPressed();
     }
 }
