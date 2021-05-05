@@ -32,235 +32,266 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChannelDropdownViewModel extends AndroidViewModel implements ChannelDropdown.HighlightListener {
-	public final static String TAG = "ChannelDropdownVM";
+    public final static String TAG = "ChannelDropdownVM";
 
-	private DatabaseRepo repo;
-	private MutableLiveData<String> type = new MutableLiveData<>();
+    private DatabaseRepo repo;
+    private MutableLiveData<String> type = new MutableLiveData<>();
 
-	private MutableLiveData<List<SimInfo>> sims;
-	private LiveData<List<String>> simHniList = new MutableLiveData<>();
+    private MutableLiveData<List<SimInfo>> sims;
+    private LiveData<List<String>> simHniList = new MutableLiveData<>();
 
-	private LiveData<List<Channel>> allChannels;
-	private LiveData<List<Channel>> selectedChannels;
-	private MediatorLiveData<List<Channel>> simChannels;
-	private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
-	private MediatorLiveData<List<HoverAction>> channelActions = new MediatorLiveData<>();
+    private LiveData<List<Channel>> allChannels;
+    private LiveData<List<Channel>> selectedChannels;
+    private MediatorLiveData<List<Channel>> simChannels;
+    private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
+    private MediatorLiveData<List<HoverAction>> channelActions = new MediatorLiveData<>();
 
-	public ChannelDropdownViewModel(Application application) {
-		super(application);
-		repo = new DatabaseRepo(application);
-		type.setValue(HoverAction.BALANCE);
+    public ChannelDropdownViewModel(Application application) {
+        super(application);
+        repo = new DatabaseRepo(application);
+        type.setValue(HoverAction.BALANCE);
 
-		loadChannels();
-		loadSims();
+        loadChannels();
+        loadSims();
 
-		simHniList = Transformations.map(sims, this::getHnisAndSubscribeToEachOnFirebase);
+        simHniList = Transformations.map(sims, this::getHnisAndSubscribeToEachOnFirebase);
 
-		simChannels = new MediatorLiveData<>();
-		simChannels.addSource(allChannels, this::onChannelsUpdateHnis);
-		simChannels.addSource(simHniList, this::onSimUpdate);
+        simChannels = new MediatorLiveData<>();
+        simChannels.addSource(allChannels, this::onChannelsUpdateHnis);
+        simChannels.addSource(simHniList, this::onSimUpdate);
 
-		activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull);
+        activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull);
 
-		channelActions.addSource(type, this::loadActions);
-		channelActions.addSource(selectedChannels, this::loadActions);
-		channelActions.addSource(activeChannel, this::loadActions);
-	}
+        channelActions.addSource(type, this::loadActions);
+        channelActions.addSource(selectedChannels, this::loadActions);
+        channelActions.addSource(activeChannel, this::loadActions);
+    }
 
-	public void setType(String t) { type.setValue(t); }
-	public String getType() { return type.getValue(); }
+    public void setType(String t) {
+        type.setValue(t);
+    }
 
-	private void loadChannels() {
-		if (allChannels == null) { allChannels = new MutableLiveData<>(); }
-		if (selectedChannels == null) { selectedChannels = new MutableLiveData<>(); }
-		allChannels = repo.getAllChannels();
-		selectedChannels = repo.getSelected();
-	}
+    public String getType() {
+        return type.getValue();
+    }
 
-	public LiveData<List<Channel>> getChannels() {
-		if (allChannels == null) {
-			allChannels = new MutableLiveData<>();
-		}
-		return allChannels;
-	}
+    private void loadChannels() {
+        if (allChannels == null) {
+            allChannels = new MutableLiveData<>();
+        }
+        if (selectedChannels == null) {
+            selectedChannels = new MutableLiveData<>();
+        }
+        allChannels = repo.getAllChannels();
+        selectedChannels = repo.getSelected();
+    }
 
-	public LiveData<List<Channel>> getSelectedChannels() {
-		if (selectedChannels == null) { selectedChannels = new MutableLiveData<>(); }
-		return selectedChannels;
-	}
+    public LiveData<List<Channel>> getChannels() {
+        if (allChannels == null) {
+            allChannels = new MutableLiveData<>();
+        }
+        return allChannels;
+    }
 
-	void loadSims() {
-		if (sims == null) { sims = new MutableLiveData<>(); }
-		new Thread(() -> sims.postValue(repo.getPresentSims())).start();
-		LocalBroadcastManager.getInstance(getApplication())
-				.registerReceiver(simReceiver, new IntentFilter(Utils.getPackage(getApplication()) + ".NEW_SIM_INFO_ACTION"));
-		Hover.updateSimInfo(getApplication());
-	}
+    public LiveData<List<Channel>> getSelectedChannels() {
+        if (selectedChannels == null) {
+            selectedChannels = new MutableLiveData<>();
+        }
+        return selectedChannels;
+    }
 
-	private final BroadcastReceiver simReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			new Thread(() -> sims.postValue(repo.getPresentSims())).start();
-		}
-	};
+    void loadSims() {
+        if (sims == null) {
+            sims = new MutableLiveData<>();
+        }
+        new Thread(() -> sims.postValue(repo.getPresentSims())).start();
+        LocalBroadcastManager.getInstance(getApplication())
+                .registerReceiver(simReceiver, new IntentFilter(Utils.getPackage(getApplication()) + ".NEW_SIM_INFO_ACTION"));
+        Hover.updateSimInfo(getApplication());
+    }
 
-	public LiveData<List<SimInfo>> getSims() {
-		if (sims == null) { sims = new MutableLiveData<>(); }
-		return sims;
-	}
+    private final BroadcastReceiver simReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            new Thread(() -> sims.postValue(repo.getPresentSims())).start();
+        }
+    };
 
-	public LiveData<List<String>> getSimHniList() {
-		if (simHniList == null) { simHniList = new MutableLiveData<>(); }
-		return simHniList;
-	}
+    public LiveData<List<SimInfo>> getSims() {
+        if (sims == null) {
+            sims = new MutableLiveData<>();
+        }
+        return sims;
+    }
 
-	private List<String> getHnisAndSubscribeToEachOnFirebase(List<SimInfo> sims) {
-		if (sims == null) return null;
-		List<String> hniList = new ArrayList<>();
-		for (SimInfo sim : sims) {
-			if (!hniList.contains(sim.getOSReportedHni())) {
-				FirebaseMessaging.getInstance().subscribeToTopic("sim-" + sim.getOSReportedHni());
-				FirebaseMessaging.getInstance().subscribeToTopic(sim.getCountryIso().toUpperCase());
-				hniList.add(sim.getOSReportedHni());
-			}
-		}
-		return hniList;
-	}
+    public LiveData<List<String>> getSimHniList() {
+        if (simHniList == null) {
+            simHniList = new MutableLiveData<>();
+        }
+        return simHniList;
+    }
 
-	private void onChannelsUpdateHnis(List<Channel> channels) {
-		updateSimChannels(simChannels, channels, simHniList.getValue());
-	}
+    private List<String> getHnisAndSubscribeToEachOnFirebase(List<SimInfo> sims) {
+        if (sims == null) return null;
+        List<String> hniList = new ArrayList<>();
+        for (SimInfo sim : sims) {
+            if (!hniList.contains(sim.getOSReportedHni())) {
+                FirebaseMessaging.getInstance().subscribeToTopic("sim-" + sim.getOSReportedHni());
+                FirebaseMessaging.getInstance().subscribeToTopic(sim.getCountryIso().toUpperCase());
+                hniList.add(sim.getOSReportedHni());
+            }
+        }
+        return hniList;
+    }
 
-	private void onSimUpdate(List<String> hniList) {
-		updateSimChannels(simChannels, allChannels.getValue(), hniList);
-	}
+    private void onChannelsUpdateHnis(List<Channel> channels) {
+        updateSimChannels(simChannels, channels, simHniList.getValue());
+    }
 
-	public void updateSimChannels(MediatorLiveData<List<Channel>> simChannels, List<Channel> channels, List<String> hniList) {
-		if (channels == null || hniList == null) return;
-		List<Channel> simChannelList = new ArrayList<>();
-		for (int i = 0; i < channels.size(); i++) {
-			String[] hniArr = channels.get(i).hniList.split(",");
-			for (String s : hniArr) {
-				if (hniList.contains(Utils.stripHniString(s))) {
-					if (!simChannelList.contains(channels.get(i)))
-						simChannelList.add(channels.get(i));
-				}
-			}
-		}
-		simChannels.setValue(simChannelList);
-	}
+    private void onSimUpdate(List<String> hniList) {
+        updateSimChannels(simChannels, allChannels.getValue(), hniList);
+    }
 
-	public LiveData<List<Channel>> getSimChannels() {
-		return simChannels;
-	}
+    public void updateSimChannels(MediatorLiveData<List<Channel>> simChannels, List<Channel> channels, List<String> hniList) {
+        if (channels == null || hniList == null) return;
+        List<Channel> simChannelList = new ArrayList<>();
+        for (int i = 0; i < channels.size(); i++) {
+            String[] hniArr = channels.get(i).hniList.split(",");
+            for (String s : hniArr) {
+                if (hniList.contains(Utils.stripHniString(s))) {
+                    if (!simChannelList.contains(channels.get(i)))
+                        simChannelList.add(channels.get(i));
+                }
+            }
+        }
+        simChannels.setValue(simChannelList);
+    }
 
-	protected void setActiveChannelIfNull(List<Channel> channels) {
-		if (channels != null && channels.size() > 0 && activeChannel.getValue() == null) {
-			for (Channel c: channels)
-				if (c.defaultAccount) { activeChannel.postValue(c); }
-		}
-	}
+    public LiveData<List<Channel>> getSimChannels() {
+        return simChannels;
+    }
 
-	private void setActiveChannel(Channel channel) {
-		activeChannel.setValue(channel);
-	}
+    protected void setActiveChannelIfNull(List<Channel> channels) {
+        if (channels != null && channels.size() > 0 && activeChannel.getValue() == null) {
+            for (Channel c : channels)
+                if (c.defaultAccount) {
+                    activeChannel.postValue(c);
+                }
+        }
+    }
 
-	void setActiveChannel(List<HoverAction> acts) {
-		if (acts == null || acts.size() == 0) { return; }
-		activeChannel.removeSource(channelActions);
-		new Thread(() -> activeChannel.postValue(repo.getChannel(acts.get(0).channel_id))).start();
-	}
-	public LiveData<Channel> getActiveChannel() { return activeChannel; }
+    private void setActiveChannel(Channel channel) {
+        activeChannel.setValue(channel);
+    }
 
-	@Override
-	public void highlightChannel(Channel c) { setActiveChannel(c); }
+    void setActiveChannel(List<HoverAction> acts) {
+        if (acts == null || acts.size() == 0) {
+            return;
+        }
+        activeChannel.removeSource(channelActions);
+        new Thread(() -> activeChannel.postValue(repo.getChannel(acts.get(0).channel_id))).start();
+    }
 
-	public void loadActions(String t) {
-		if ((t.equals(HoverAction.BALANCE) && selectedChannels.getValue() == null) || (!t.equals(HoverAction.BALANCE) && activeChannel.getValue() == null)) return;
-		if (t.equals(HoverAction.BALANCE))
-			loadActions(selectedChannels.getValue(), t);
-		else
-			loadActions(activeChannel.getValue(), t);
-	}
+    public LiveData<Channel> getActiveChannel() {
+        return activeChannel;
+    }
 
-	public void loadActions(Channel channel) {
-		loadActions(channel, type.getValue());
-	}
+    @Override
+    public void highlightChannel(Channel c) {
+        setActiveChannel(c);
+    }
 
-	private void loadActions(Channel c, String t) {
-		new Thread(() -> channelActions.postValue(t.equals(HoverAction.P2P) ? repo.getTransferActions(c.id) : repo.getActions(c.id, t))).start();
-	}
+    public void loadActions(String t) {
+        if ((t.equals(HoverAction.BALANCE) && selectedChannels.getValue() == null) || (!t.equals(HoverAction.BALANCE) && activeChannel.getValue() == null))
+            return;
+        if (t.equals(HoverAction.BALANCE))
+            loadActions(selectedChannels.getValue(), t);
+        else
+            loadActions(activeChannel.getValue(), t);
+    }
 
-	public void loadActions(List<Channel> channels) {
-		if (type.getValue().equals(HoverAction.BALANCE))
-			loadActions(channels, type.getValue());
-	}
+    public void loadActions(Channel channel) {
+        loadActions(channel, type.getValue());
+    }
 
-	public void loadActions(List<Channel> channels, String t) {
-		int[] ids = new int[channels.size()];
-		for (int c = 0; c < channels.size(); c++)
-			ids[c] = channels.get(c).id;
-		new Thread(() -> channelActions.postValue(repo.getActions(ids, t))).start();
-	}
+    private void loadActions(Channel c, String t) {
+        new Thread(() -> channelActions.postValue(t.equals(HoverAction.P2P) ? repo.getTransferActions(c.id) : repo.getActions(c.id, t))).start();
+    }
 
-	public LiveData<List<HoverAction>> getChannelActions() { return channelActions; }
+    public void loadActions(List<Channel> channels) {
+        if (type.getValue().equals(HoverAction.BALANCE))
+            loadActions(channels, type.getValue());
+    }
 
-	public void setChannelSelected(Channel channel) {
-		if (channel == null || channel.selected) return;
-		logChoice(channel);
-		channel.selected = true;
-		channel.defaultAccount = selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0;
-		repo.update(channel);
-	}
+    public void loadActions(List<Channel> channels, String t) {
+        int[] ids = new int[channels.size()];
+        for (int c = 0; c < channels.size(); c++)
+            ids[c] = channels.get(c).id;
+        new Thread(() -> channelActions.postValue(repo.getActions(ids, t))).start();
+    }
 
-	private void logChoice(Channel channel) {
-		Log.i(TAG, "saving selected channel: " + channel);
-		FirebaseMessaging.getInstance().subscribeToTopic(getApplication().getString(R.string.firebase_topic_channel, channel.id));
-		JSONObject event = new JSONObject();
-		try { event.put(getApplication().getString(R.string.added_channel_id), channel.id);
-		} catch (JSONException ignored) { }
-		Amplitude.getInstance().logEvent(getApplication().getString(R.string.new_channel_selected), event);
-	}
+    public LiveData<List<HoverAction>> getChannelActions() {
+        return channelActions;
+    }
 
-	public String errorCheck() {
-		if (activeChannel.getValue() == null)
-			return getApplication().getString(R.string.channels_error_noselect);
-		else if (channelActions.getValue() == null || channelActions.getValue().size() == 0) {
-			return getApplication().getString(R.string.no_actions_fielderror, HoverAction.getHumanFriendlyType(getApplication(), type.getValue()));
-		} else return null;
-	}
+    public void setChannelSelected(Channel channel) {
+        if (channel == null || channel.selected) return;
+        logChoice(channel);
+        channel.selected = true;
+        channel.defaultAccount = selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0;
+        repo.update(channel);
+    }
 
-	public void setChannelFromRequest(Request r) {
-		if (r != null && selectedChannels.getValue() != null && selectedChannels.getValue().size() > 0) {
-			new Thread(() -> {
-				List<HoverAction> acts = repo.getActions(getChannelIds(selectedChannels.getValue()), r.requester_institution_id);
-				if (acts.size() <= 0)
-					acts = repo.getActions(getChannelIds(simChannels.getValue()), r.requester_institution_id);
-				if (acts.size() > 0)
-					channelActions.postValue(acts);
-			}).start();
-			activeChannel.addSource(channelActions, this::setActiveChannel);
-		}
-	}
+    private void logChoice(Channel channel) {
+        Log.i(TAG, "saving selected channel: " + channel);
+        FirebaseMessaging.getInstance().subscribeToTopic(getApplication().getString(R.string.firebase_topic_channel, channel.id));
+        JSONObject event = new JSONObject();
+        try {
+            event.put(getApplication().getString(R.string.added_channel_id), channel.id);
+        } catch (JSONException ignored) {
+        }
+        Amplitude.getInstance().logEvent(getApplication().getString(R.string.new_channel_selected), event);
+    }
 
-	private int[] getChannelIds(List<Channel> channels) {
-		int[] ids = new int[channels.size()];
-		for (int c = 0; c < channels.size(); c++)
-			ids[c] = channels.get(c).id;
-		return ids;
-	}
+    public String errorCheck() {
+        if (activeChannel.getValue() == null)
+            return getApplication().getString(R.string.channels_error_noselect);
+        else if (channelActions.getValue() == null || channelActions.getValue().size() == 0) {
+            return getApplication().getString(R.string.no_actions_fielderror, HoverAction.getHumanFriendlyType(getApplication(), type.getValue()));
+        } else return null;
+    }
 
-	public void view(Schedule s) {
-		setType(s.type);
-		setActiveChannel(repo.getChannel(s.channel_id));
-	}
+    public void setChannelFromRequest(Request r) {
+        if (r != null && selectedChannels.getValue() != null && selectedChannels.getValue().size() > 0) {
+            new Thread(() -> {
+                List<HoverAction> acts = repo.getActions(getChannelIds(selectedChannels.getValue()), r.requester_institution_id);
+                if (acts.size() <= 0)
+                    acts = repo.getActions(getChannelIds(simChannels.getValue()), r.requester_institution_id);
+                if (acts.size() > 0)
+                    channelActions.postValue(acts);
+            }).start();
+            activeChannel.addSource(channelActions, this::setActiveChannel);
+        }
+    }
 
-	@Override
-	protected void onCleared() {
-		try {
-			LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(simReceiver);
-		} catch (Exception ignored) {
-		}
-		super.onCleared();
-	}
+    private int[] getChannelIds(List<Channel> channels) {
+        int[] ids = new int[channels.size()];
+        for (int c = 0; c < channels.size(); c++)
+            ids[c] = channels.get(c).id;
+        return ids;
+    }
+
+    public void view(Schedule s) {
+        setType(s.type);
+        setActiveChannel(repo.getChannel(s.channel_id));
+    }
+
+    @Override
+    protected void onCleared() {
+        try {
+            LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(simReceiver);
+        } catch (Exception ignored) {
+        }
+        super.onCleared();
+    }
 }

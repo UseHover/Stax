@@ -68,7 +68,7 @@ public class ActionDropdownAdapter extends ArrayAdapter<HoverAction> {
 
         StaxSpinnerItemWithLogoBinding binding;
 
-        private ViewHolder(StaxSpinnerItemWithLogoBinding binding ) {
+        private ViewHolder(StaxSpinnerItemWithLogoBinding binding) {
             this.binding = binding;
 
             logo = binding.serviceItemImageId;

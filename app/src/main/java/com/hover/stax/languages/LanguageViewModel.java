@@ -13,27 +13,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LanguageViewModel extends AndroidViewModel {
-	private MutableLiveData<List<Lang>> languages;
+    private MutableLiveData<List<Lang>> languages;
 
-	public LanguageViewModel(Application application) {
-		super(application);
-		languages = new MutableLiveData<>();
-		languages.setValue(getLanguages());
-	}
+    public LanguageViewModel(Application application) {
+        super(application);
+        languages = new MutableLiveData<>();
+        languages.setValue(getLanguages());
+    }
 
-	public LiveData<List<Lang>> loadLanguages() {
-		return languages;
-	}
+    public LiveData<List<Lang>> loadLanguages() {
+        return languages;
+    }
 
-	private List<Lang> getLanguages() {
-		String[] languageCodes = getApplication().getResources().getStringArray(R.array.supported_lang_codes);
-		ArrayList<Lang> langs = new ArrayList<>();
-		langs.add(new Lang(Lingver.getInstance().getLanguage()));
-		for (String code : languageCodes) {
-			Lang toAdd = new Lang(code);
-			if (!langs.contains(toAdd))
-				langs.add(toAdd);
-		}
-		return langs;
-	}
+    private List<Lang> getLanguages() {
+        String[] languageCodes = getApplication().getResources().getStringArray(R.array.supported_lang_codes);
+        ArrayList<Lang> langs = new ArrayList<>();
+        langs.add(new Lang(Lingver.getInstance().getLanguage()));
+        for (String code : languageCodes) {
+            Lang toAdd = new Lang(code);
+            if (!langs.contains(toAdd))
+                langs.add(toAdd);
+        }
+        return langs;
+    }
 }

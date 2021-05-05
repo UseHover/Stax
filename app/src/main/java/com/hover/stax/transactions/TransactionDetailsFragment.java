@@ -32,136 +32,140 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class TransactionDetailsFragment extends Fragment implements NavigationInterface {
-	final public static String TAG = "TransDetailsFragment";
-	final public static String SHOW_BOUNTY_SUBMIT = "bounty_submit_button";
+    final public static String TAG = "TransDetailsFragment";
+    final public static String SHOW_BOUNTY_SUBMIT = "bounty_submit_button";
 
-	private TransactionDetailsViewModel viewModel;
+    private TransactionDetailsViewModel viewModel;
 
-	private FragmentTransactionBinding binding;
+    private FragmentTransactionBinding binding;
 
-	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		viewModel = new ViewModelProvider(requireActivity()).get(TransactionDetailsViewModel.class);
-		JSONObject data = new JSONObject();
-		try {
-			assert getArguments() != null;
-			data.put("uuid", getArguments().getString(TransactionContract.COLUMN_UUID)); }
-		catch (JSONException e) { Utils.logErrorAndReportToFirebase(TAG,e.getMessage(), e); }
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        viewModel = new ViewModelProvider(requireActivity()).get(TransactionDetailsViewModel.class);
+        JSONObject data = new JSONObject();
+        try {
+            assert getArguments() != null;
+            data.put("uuid", getArguments().getString(TransactionContract.COLUMN_UUID));
+        } catch (JSONException e) {
+            Utils.logErrorAndReportToFirebase(TAG, e.getMessage(), e);
+        }
 
-		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_transaction)), data);
+        Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_transaction)), data);
 
-		binding = FragmentTransactionBinding.inflate(inflater, container, false);
-		return binding.getRoot();
-	}
+        binding = FragmentTransactionBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
 
-	@Override
-	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		startObservers();
-		setUssdSessionMessagesRecyclerView();
-		viewModel.setTransaction(getArguments().getString(TransactionContract.COLUMN_UUID));
-	}
-	private void setUssdSessionMessagesRecyclerView() {
-		setUSSDMessagesRecyclerView();
-		setSmsMessagesRecyclerView();
-	}
-	private void startObservers() {
-		viewModel.getTransaction().observe(getViewLifecycleOwner(), this::showTransaction);
-		viewModel.getAction().observe(getViewLifecycleOwner(), this::showActionDetails);
-		viewModel.getContact().observe(getViewLifecycleOwner(), this::updateRecipient);
-	}
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        startObservers();
+        setUssdSessionMessagesRecyclerView();
+        viewModel.setTransaction(getArguments().getString(TransactionContract.COLUMN_UUID));
+    }
 
-	private void setupRetryBountyButton() {
-		RelativeLayout bountyButtonsLayout = binding.retrySubmit.bountyRetryButtonLayoutId;
-		AppCompatButton retryButton = binding.retrySubmit.btnRetry;
+    private void setUssdSessionMessagesRecyclerView() {
+        setUSSDMessagesRecyclerView();
+        setSmsMessagesRecyclerView();
+    }
 
-		bountyButtonsLayout.setVisibility(View.VISIBLE);
-		retryButton.setOnClickListener(this::retryBountyClicked);
-	}
+    private void startObservers() {
+        viewModel.getTransaction().observe(getViewLifecycleOwner(), this::showTransaction);
+        viewModel.getAction().observe(getViewLifecycleOwner(), this::showActionDetails);
+        viewModel.getContact().observe(getViewLifecycleOwner(), this::updateRecipient);
+    }
 
-	private void showTransaction(StaxTransaction transaction) {
-		if (transaction != null) {
-			if(transaction.isRecorded()) setupRetryBountyButton();
-			updateDetails(transaction);
-			showNotificationCard(transaction.isRecorded() || transaction.status.equals(Transaction.PENDING));
-			if (transaction.isRecorded() && viewModel.getAction().getValue() != null)
-				updateNotificationCard(viewModel.getAction().getValue());
-		}
-	}
+    private void setupRetryBountyButton() {
+        RelativeLayout bountyButtonsLayout = binding.retrySubmit.bountyRetryButtonLayoutId;
+        AppCompatButton retryButton = binding.retrySubmit.btnRetry;
 
-	@SuppressLint("SetTextI18n")
-	private void updateDetails(StaxTransaction transaction) {
-		binding.transactionDetailsCard.setTitle(transaction.description);
-		binding.detailsAmount.setText(transaction.getDisplayAmount());
-		binding.detailsDate.setText(DateUtils.humanFriendlyDate(transaction.initiated_at));
+        bountyButtonsLayout.setVisibility(View.VISIBLE);
+        retryButton.setOnClickListener(this::retryBountyClicked);
+    }
 
-		if (transaction.confirm_code != null && !transaction.confirm_code.isEmpty())
-			binding.detailsTransactionNumber.setText(transaction.confirm_code);
-		else
-			binding.detailsTransactionNumber.setText(transaction.uuid);
+    private void showTransaction(StaxTransaction transaction) {
+        if (transaction != null) {
+            if (transaction.isRecorded()) setupRetryBountyButton();
+            updateDetails(transaction);
+            showNotificationCard(transaction.isRecorded() || transaction.status.equals(Transaction.PENDING));
+            if (transaction.isRecorded() && viewModel.getAction().getValue() != null)
+                updateNotificationCard(viewModel.getAction().getValue());
+        }
+    }
 
-		if (transaction.isRecorded()) hideDetails();
-	}
+    @SuppressLint("SetTextI18n")
+    private void updateDetails(StaxTransaction transaction) {
+        binding.transactionDetailsCard.setTitle(transaction.description);
+        binding.detailsAmount.setText(transaction.getDisplayAmount());
+        binding.detailsDate.setText(DateUtils.humanFriendlyDate(transaction.initiated_at));
 
-	private void hideDetails() {
-		binding.amountRow.setVisibility(View.GONE);
-		binding.recipientRow.setVisibility(View.GONE);
-		binding.recipAccountRow.setVisibility(View.GONE);
-	}
+        if (transaction.confirm_code != null && !transaction.confirm_code.isEmpty())
+            binding.detailsTransactionNumber.setText(transaction.confirm_code);
+        else
+            binding.detailsTransactionNumber.setText(transaction.uuid);
 
-	private void showActionDetails(HoverAction action) {
-		if (action != null) {
-			binding.detailsNetwork.setText(action.network_name);
-			if (viewModel.getTransaction().getValue() != null && viewModel.getTransaction().getValue().isRecorded())
-				updateNotificationCard(action);
-		}
-	}
+        if (transaction.isRecorded()) hideDetails();
+    }
 
-	private void showNotificationCard(boolean show) {
-			binding.notificationCard.setVisibility(show ? View.VISIBLE : View.GONE);
-	}
+    private void hideDetails() {
+        binding.amountRow.setVisibility(View.GONE);
+        binding.recipientRow.setVisibility(View.GONE);
+        binding.recipAccountRow.setVisibility(View.GONE);
+    }
 
-	@SuppressLint("ResourceAsColor")
-	private void updateNotificationCard(HoverAction action) {
-		binding.notificationCard.setBackgroundColor(action.bounty_is_open ? R.color.pending_brown : R.color.muted_green);
-		binding.notificationCard.setTitle(R.string.checking_your_flow);
-		binding.notificationCard.setIcon(action.bounty_is_open ? R.drawable.ic_warning : R.drawable.ic_check);
-		binding.notificationDetail.setText(Html.fromHtml(action.bounty_is_open ? getString(R.string.bounty_flow_pending_dialog_msg) : getString(R.string.flow_done_desc)));
-	}
+    private void showActionDetails(HoverAction action) {
+        if (action != null) {
+            binding.detailsNetwork.setText(action.network_name);
+            if (viewModel.getTransaction().getValue() != null && viewModel.getTransaction().getValue().isRecorded())
+                updateNotificationCard(action);
+        }
+    }
 
-	private void updateRecipient(StaxContact contact){
-		if (contact != null)
-			binding.detailsRecipient.setContact(contact);
-	}
+    private void showNotificationCard(boolean show) {
+        binding.notificationCard.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
 
-	private void setUSSDMessagesRecyclerView(){
-		RecyclerView messagesView = binding.convoRecyclerView;
-		messagesView.setLayoutManager(UIHelper.setMainLinearManagers(requireActivity()));
-		messagesView.setHasFixedSize(true);
+    @SuppressLint("ResourceAsColor")
+    private void updateNotificationCard(HoverAction action) {
+        binding.notificationCard.setBackgroundColor(action.bounty_is_open ? R.color.pending_brown : R.color.muted_green);
+        binding.notificationCard.setTitle(R.string.checking_your_flow);
+        binding.notificationCard.setIcon(action.bounty_is_open ? R.drawable.ic_warning : R.drawable.ic_check);
+        binding.notificationDetail.setText(Html.fromHtml(action.bounty_is_open ? getString(R.string.bounty_flow_pending_dialog_msg) : getString(R.string.flow_done_desc)));
+    }
 
-		viewModel.getMessages().observe(getViewLifecycleOwner(), ussdCallResponses -> {
-			if (ussdCallResponses != null)
-				messagesView.setAdapter(new MessagesAdapter(ussdCallResponses));
-		});
-	}
+    private void updateRecipient(StaxContact contact) {
+        if (contact != null)
+            binding.detailsRecipient.setContact(contact);
+    }
 
-	private void setSmsMessagesRecyclerView() {
-		RecyclerView smsView = binding.smsRecyclerView;
-		smsView.setLayoutManager(UIHelper.setMainLinearManagers(requireActivity()));
-		smsView.setHasFixedSize(true);
-		viewModel.getSms().observe(getViewLifecycleOwner(), smses -> {
-			if (smses != null) smsView.setAdapter(new MessagesAdapter(smses));
-		});
-	}
+    private void setUSSDMessagesRecyclerView() {
+        RecyclerView messagesView = binding.convoRecyclerView;
+        messagesView.setLayoutManager(UIHelper.setMainLinearManagers(requireActivity()));
+        messagesView.setHasFixedSize(true);
 
-	private void retryBountyClicked(View v) {
-		if(viewModel.getTransaction().getValue() !=null)
-		((BountyActivity) requireActivity()).retryCall(viewModel.getTransaction().getValue().action_id);
-	}
+        viewModel.getMessages().observe(getViewLifecycleOwner(), ussdCallResponses -> {
+            if (ussdCallResponses != null)
+                messagesView.setAdapter(new MessagesAdapter(ussdCallResponses));
+        });
+    }
 
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
+    private void setSmsMessagesRecyclerView() {
+        RecyclerView smsView = binding.smsRecyclerView;
+        smsView.setLayoutManager(UIHelper.setMainLinearManagers(requireActivity()));
+        smsView.setHasFixedSize(true);
+        viewModel.getSms().observe(getViewLifecycleOwner(), smses -> {
+            if (smses != null) smsView.setAdapter(new MessagesAdapter(smses));
+        });
+    }
 
-		binding = null;
-	}
+    private void retryBountyClicked(View v) {
+        if (viewModel.getTransaction().getValue() != null)
+            ((BountyActivity) requireActivity()).retryCall(viewModel.getTransaction().getValue().action_id);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        binding = null;
+    }
 }

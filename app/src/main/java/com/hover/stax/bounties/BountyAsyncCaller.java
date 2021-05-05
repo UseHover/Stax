@@ -54,7 +54,8 @@ class BountyAsyncCaller extends AsyncTask<String, Void, Integer> {
             stax_bounty_hunter.put("device_id", Hover.getDeviceId(context.get()));
             root.put("stax_bounty_hunter", stax_bounty_hunter);
             Log.d(TAG, "uploading " + root);
-        } catch (JSONException e) { }
+        } catch (JSONException e) {
+        }
         return root;
     }
 
@@ -62,13 +63,15 @@ class BountyAsyncCaller extends AsyncTask<String, Void, Integer> {
         try {
             RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
             Request request = new Request.Builder().url(url)
-                .addHeader("Authorization", "Token token=" + Hover.getApiKey(context.get()))
-                .post(body)
-                .build();
+                    .addHeader("Authorization", "Token token=" + Hover.getApiKey(context.get()))
+                    .post(body)
+                    .build();
             Response response = client.newCall(request).execute();
             Log.v(TAG, response.toString());
             return response.code();
-        } catch (IOException e) { return 0; }
+        } catch (IOException e) {
+            return 0;
+        }
     }
 
     @Override

@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-
 import com.hover.stax.R;
 import com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout.CustomSwipeRefreshHeadLayout;
 
@@ -132,5 +131,5 @@ public class DefaultCustomHeadView extends LinearLayout implements CustomSwipeRe
     public String fetchData() {
         return getResources().getString(R.string.csr_text_last_refresh) + " " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
     }
-    
+
 }

@@ -1,4 +1,5 @@
 package com.hover.stax.utils.customSwipeRefresh;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
@@ -244,7 +245,7 @@ public class CustomSwipeRefreshLayout extends ViewGroup {
      * Constructor that is called when inflating CustomSwipeRefreshLayout from XML.
      *
      * @param context as context
-     * @param attrs as attribute
+     * @param attrs   as attribute
      */
     public CustomSwipeRefreshLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);

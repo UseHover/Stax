@@ -91,7 +91,8 @@ public interface NavigationInterface {
     default void navigateToTransferActivity(String type, boolean isFromStaxLink, Intent received, Activity activity) {
         Intent i = new Intent(activity, TransferActivity.class);
         i.setAction(type);
-        if (isFromStaxLink) i.putExtra(Constants.REQUEST_LINK, received.getExtras().getString(Constants.REQUEST_LINK));
+        if (isFromStaxLink)
+            i.putExtra(Constants.REQUEST_LINK, received.getExtras().getString(Constants.REQUEST_LINK));
 
         activity.startActivityForResult(i, Constants.TRANSFER_REQUEST);
     }

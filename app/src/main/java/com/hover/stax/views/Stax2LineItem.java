@@ -11,34 +11,34 @@ import com.hover.stax.databinding.Stax2lineitemBinding;
 
 public class Stax2LineItem extends RelativeLayout {
 
-	private final Stax2lineitemBinding binding;
+    private final Stax2lineitemBinding binding;
 
-	public Stax2LineItem(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		binding = Stax2lineitemBinding.inflate(LayoutInflater.from(context), this, true);
+    public Stax2LineItem(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        binding = Stax2lineitemBinding.inflate(LayoutInflater.from(context), this, true);
 
-		binding.title.setTextAlignment(TEXT_ALIGNMENT_TEXT_END);
-		binding.subtitle.setTextAlignment(TEXT_ALIGNMENT_TEXT_END);
-		binding.subtitle.setTextColor(getResources().getColor(R.color.offWhite));
-	}
+        binding.title.setTextAlignment(TEXT_ALIGNMENT_TEXT_END);
+        binding.subtitle.setTextAlignment(TEXT_ALIGNMENT_TEXT_END);
+        binding.subtitle.setTextColor(getResources().getColor(R.color.offWhite));
+    }
 
-	public void setContent(String title, String sub) {
-		setTitle(title);
-		setSubtitle(sub);
-	}
+    public void setContent(String title, String sub) {
+        setTitle(title);
+        setSubtitle(sub);
+    }
 
-	public void setTitle(String title) {
-		binding.title.setText(title);
-	}
+    public void setTitle(String title) {
+        binding.title.setText(title);
+    }
 
-	public void setSubtitle(String sub) {
-		binding.subtitle.setText(sub);
-	}
+    public void setSubtitle(String sub) {
+        binding.subtitle.setText(sub);
+    }
 
-	public void setContact(StaxContact contact) {
-		if (contact == null) return;
-		setTitle(contact.shortName());
-		if (!contact.shortName().equals(contact.getPhoneNumber()))
-			setSubtitle(contact.getPhoneNumber());
-	}
+    public void setContact(StaxContact contact) {
+        if (contact == null) return;
+        setTitle(contact.shortName());
+        if (!contact.shortName().equals(contact.getPhoneNumber()))
+            setSubtitle(contact.getPhoneNumber());
+    }
 }

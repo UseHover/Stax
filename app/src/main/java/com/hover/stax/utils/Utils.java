@@ -131,7 +131,8 @@ public class Utils {
 
     public static void logErrorAndReportToFirebase(String tag, String message, Exception e) {
         Log.e(tag, message, e);
-        if (BuildConfig.BUILD_TYPE.equals("release")) FirebaseCrashlytics.getInstance().recordException(e);
+        if (BuildConfig.BUILD_TYPE.equals("release"))
+            FirebaseCrashlytics.getInstance().recordException(e);
     }
 
     public static boolean isInternetConnected(Context c) {
@@ -149,16 +150,17 @@ public class Utils {
     }
 
     public static void showSoftKeyboard(Context context, View view) {
-        if(view.requestFocus()){
+        if (view.requestFocus()) {
             InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
         }
     }
 
-    public static void hideSoftKeyboard(Context context, View view){
+    public static void hideSoftKeyboard(Context context, View view) {
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
+
     public static void openUrl(String url, Context ctx) {
         Intent i = new Intent("android.intent.action.VIEW");
         i.setData(Uri.parse(url));

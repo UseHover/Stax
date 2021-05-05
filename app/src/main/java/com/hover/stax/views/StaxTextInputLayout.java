@@ -25,7 +25,7 @@ public class StaxTextInputLayout extends AbstractStatefulInput {
 
     public StaxTextInputLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        getAttrs(context,attrs);
+        getAttrs(context, attrs);
 
         binding = StaxInputBinding.inflate(LayoutInflater.from(context), this, true);
 
@@ -50,7 +50,8 @@ public class StaxTextInputLayout extends AbstractStatefulInput {
 
     private void fillAttr() {
         if (hint != null) ((TextInputLayout) findViewById(R.id.inputLayout)).setHint(hint);
-        if (inputType > 0) ((TextInputEditText) findViewById(R.id.inputEditText)).setInputType(inputType);
+        if (inputType > 0)
+            ((TextInputEditText) findViewById(R.id.inputEditText)).setInputType(inputType);
     }
 
     public void setText(String text) {
@@ -59,10 +60,16 @@ public class StaxTextInputLayout extends AbstractStatefulInput {
             setState(null, SUCCESS);
     }
 
-    public String getText() { return editText.getText().toString(); }
+    public String getText() {
+        return editText.getText().toString();
+    }
 
     @Override
-    public void setOnFocusChangeListener(OnFocusChangeListener l) { editText.setOnFocusChangeListener(l); }
+    public void setOnFocusChangeListener(OnFocusChangeListener l) {
+        editText.setOnFocusChangeListener(l);
+    }
 
-    public void addTextChangedListener(TextWatcher listener) { editText.addTextChangedListener(listener); }
+    public void addTextChangedListener(TextWatcher listener) {
+        editText.addTextChangedListener(listener);
+    }
 }

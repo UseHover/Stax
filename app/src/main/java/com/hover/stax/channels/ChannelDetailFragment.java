@@ -24,76 +24,76 @@ import com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout;
 
 public class ChannelDetailFragment extends Fragment implements TransactionHistoryAdapter.SelectListener, CustomSwipeRefreshLayout.OnRefreshListener {
 
-	private RecyclerView transactionHistoryRecyclerView;
-	private ChannelDetailViewModel viewModel;
+    private RecyclerView transactionHistoryRecyclerView;
+    private ChannelDetailViewModel viewModel;
 
-	private FragmentChannelBinding binding;
+    private FragmentChannelBinding binding;
 
-	@Nullable
-	@Override
-	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		viewModel = new ViewModelProvider(requireActivity()).get(ChannelDetailViewModel.class);
-		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_channel)));
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        viewModel = new ViewModelProvider(requireActivity()).get(ChannelDetailViewModel.class);
+        Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_channel)));
 
-		binding = FragmentChannelBinding.inflate(inflater, container, false);
-		return binding.getRoot();
-	}
+        binding = FragmentChannelBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
 
-	@Override
-	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		transactionHistoryRecyclerView = binding.homeCardTransactions.transactionHistoryRecyclerView;
-		setupPullRefresh(view);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        transactionHistoryRecyclerView = binding.homeCardTransactions.transactionHistoryRecyclerView;
+        setupPullRefresh(view);
 
-		viewModel.getChannel().observe(getViewLifecycleOwner(), channel -> {
-			binding.staxCardView.setTitle(channel.name);
-			binding.feesDescription.setText(getString(R.string.fees_label, channel.name));
-			binding.detailsBalance.setText(channel.latestBalance);
-		});
+        viewModel.getChannel().observe(getViewLifecycleOwner(), channel -> {
+            binding.staxCardView.setTitle(channel.name);
+            binding.feesDescription.setText(getString(R.string.fees_label, channel.name));
+            binding.detailsBalance.setText(channel.latestBalance);
+        });
 
-		viewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
-			binding.homeCardTransactions.noHistory.setVisibility(staxTransactions == null || staxTransactions.size() == 0 ? View.VISIBLE : View.GONE);
-			transactionHistoryRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-			transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions, this));
-		});
+        viewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
+            binding.homeCardTransactions.noHistory.setVisibility(staxTransactions == null || staxTransactions.size() == 0 ? View.VISIBLE : View.GONE);
+            transactionHistoryRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
+            transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions, this));
+        });
 
-		viewModel.getSpentThisMonth().observe(getViewLifecycleOwner(), sum -> {
-			binding.detailsMoneyOut.setText(Utils.formatAmount(sum != null ? sum : 0));
-		});
+        viewModel.getSpentThisMonth().observe(getViewLifecycleOwner(), sum -> {
+            binding.detailsMoneyOut.setText(Utils.formatAmount(sum != null ? sum : 0));
+        });
 
-		viewModel.getFeesThisYear().observe(getViewLifecycleOwner(), sum -> {
-			binding.detailsFees.setText(Utils.formatAmount(sum != null ? sum : 0));
-		});
+        viewModel.getFeesThisYear().observe(getViewLifecycleOwner(), sum -> {
+            binding.detailsFees.setText(Utils.formatAmount(sum != null ? sum : 0));
+        });
 
-		viewModel.setChannel(getArguments().getInt(TransactionContract.COLUMN_CHANNEL_ID));
-	}
+        viewModel.setChannel(getArguments().getInt(TransactionContract.COLUMN_CHANNEL_ID));
+    }
 
-	private void setupPullRefresh(View view) {
-		CustomSwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipelayout);
-		if (swipeRefreshLayout != null) {
-			swipeRefreshLayout.setRefreshCompleteTimeout(1000);
-			swipeRefreshLayout.enableTopProgressBar(false);
-			swipeRefreshLayout.setOnRefreshListener(this);
-		}
-	}
+    private void setupPullRefresh(View view) {
+        CustomSwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipelayout);
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshCompleteTimeout(1000);
+            swipeRefreshLayout.enableTopProgressBar(false);
+            swipeRefreshLayout.setOnRefreshListener(this);
+        }
+    }
 
-	@Override
-	public void viewTransactionDetail(String uuid) {
-		Bundle bundle = new Bundle();
-		bundle.putString(TransactionContract.COLUMN_UUID, uuid);
-		NavHostFragment.findNavController(this).navigate(R.id.transactionDetailsFragment, bundle);
-	}
+    @Override
+    public void viewTransactionDetail(String uuid) {
+        Bundle bundle = new Bundle();
+        bundle.putString(TransactionContract.COLUMN_UUID, uuid);
+        NavHostFragment.findNavController(this).navigate(R.id.transactionDetailsFragment, bundle);
+    }
 
-	@Override
-	public void onRefresh() {
-		if (getActivity() != null && viewModel.getChannel().getValue() != null)
-			((MainActivity) getActivity()).onTapRefresh(viewModel.getChannel().getValue().id);
-	}
+    @Override
+    public void onRefresh() {
+        if (getActivity() != null && viewModel.getChannel().getValue() != null)
+            ((MainActivity) getActivity()).onTapRefresh(viewModel.getChannel().getValue().id);
+    }
 
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
 
-		binding = null;
-	}
+        binding = null;
+    }
 }

@@ -34,9 +34,9 @@ public class SelfDestructActivity extends AppCompatActivity {
     }
 
     public static boolean isExpired(Context c) {
-		long currentTime = new Date().getTime();
-		long selfDestructTime = Long.parseLong(Utils.getBuildConfigValue(c, "SELF_DESTRUCT").toString());
-		return currentTime >= selfDestructTime;
+        long currentTime = new Date().getTime();
+        long selfDestructTime = Long.parseLong(Utils.getBuildConfigValue(c, "SELF_DESTRUCT").toString());
+        return currentTime >= selfDestructTime;
     }
 
     private void attemptDownload() {
