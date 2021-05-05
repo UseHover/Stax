@@ -92,6 +92,9 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 
     private void navigateThruHome(int destId) {
         Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
         if (destId == R.id.navigation_balance)
             intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_BALANCE);
         else if (destId == R.id.navigation_settings)
@@ -102,7 +105,6 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         }
 
         startActivity(intent);
-        this.finish();
     }
 
     protected int getNavConst(int destId) {

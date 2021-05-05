@@ -38,6 +38,7 @@ public abstract class AbstractFormViewModel extends AndroidViewModel {
 	}
 
 	public void setEditing(boolean isEdit) { isEditing.setValue(isEdit); }
+
 	public LiveData<Boolean> getIsEditing() {
 		if (isEditing == null) {
 			isEditing = new MutableLiveData<>();
