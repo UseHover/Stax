@@ -103,7 +103,7 @@ public class PinUpdateFragment extends Fragment implements Target {
 	public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
 		Bitmap b = Bitmap.createScaledBitmap(bitmap, UIHelper.dpToPx(34), UIHelper.dpToPx(34), true);
 
-		if(binding != null) { //wait for binding to happen when fragment is resumed before setting the image 
+		if(binding != null) { //wait for binding to happen when fragment is resumed before setting the image
 			RoundedBitmapDrawable d = RoundedBitmapDrawableFactory.create(binding.getRoot().getContext().getResources(), b);
 			d.setCircular(true);
 			input.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
