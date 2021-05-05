@@ -148,7 +148,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 				transferViewModel.saveContact();
 				transferViewModel.setEditing(false);
 			} else
-				UIHelper.flashMessage(getContext(), getString(R.string.toast_pleasefix));
+				UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix));
 		} else
 			((TransferActivity) getActivity()).submit();
 	}
