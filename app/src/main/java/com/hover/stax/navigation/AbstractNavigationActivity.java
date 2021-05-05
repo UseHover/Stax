@@ -42,7 +42,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
             navigate(this, Constants.NAV_SETTINGS);
     }
 
-    private void setBottomBar(){
+    private void setBottomBar() {
         BottomNavigationView nav = findViewById(R.id.nav_view);
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
 
@@ -56,9 +56,10 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 
         setNavClickListener(nav);
         setNavReselectListener(nav);
+        setDestinationChangedListener(nav);
     }
 
-    private void setNavClickListener(BottomNavigationView nav){
+    private void setNavClickListener(BottomNavigationView nav) {
         nav.setOnNavigationItemSelectedListener(item -> {
             if (this instanceof MainActivity)
                 checkPermissionsAndNavigate(getNavConst(item.getItemId()));
@@ -68,13 +69,21 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         });
     }
 
-    private void setNavReselectListener(BottomNavigationView nav){
+    private void setDestinationChangedListener(BottomNavigationView nav) {
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            if (controller.getGraph().getId() == R.id.bounty_navigation) {
+               nav.getMenu().findItem(R.id.navigation_settings).setChecked(true);
+            }
+        });
+    }
+
+    private void setNavReselectListener(BottomNavigationView nav) {
         nav.setOnNavigationItemReselectedListener(item -> {
             //do nothing
         });
     }
 
-    protected NavController getNavController(){
+    protected NavController getNavController() {
         return navHostFragment.getNavController();
     }
 

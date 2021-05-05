@@ -70,7 +70,6 @@ public interface NavigationInterface {
 
     default void navigateToRequestFragment(Activity activity) {
         activity.startActivityForResult(new Intent(activity, RequestActivity.class), Constants.REQUEST_REQUEST);
-        activity.finish();
     }
 
     default void navigateToHomeFragment(NavController navController) {
@@ -92,7 +91,6 @@ public interface NavigationInterface {
     default void navigateToTransferActivity(String type, boolean isFromStaxLink, Intent received, Activity activity) {
         Intent i = new Intent(activity, TransferActivity.class);
         i.setAction(type);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         if (isFromStaxLink) i.putExtra(Constants.REQUEST_LINK, received.getExtras().getString(Constants.REQUEST_LINK));
 
         activity.startActivityForResult(i, Constants.TRANSFER_REQUEST);

@@ -4,7 +4,7 @@
     android:id="@+id/linkAccount_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:defaultBackPress="false"
+    app:defaultBackPress="true"
     app:showBack="true"
     app:title="@string/nav_link_account">
 

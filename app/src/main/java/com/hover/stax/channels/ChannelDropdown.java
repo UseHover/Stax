@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
@@ -22,11 +21,11 @@ import com.squareup.picasso.Target;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 import static com.hover.stax.utils.Constants.size55;
 
 public class ChannelDropdown extends StaxDropdownLayout implements Target {
-
-    private static final String TAG = "ChannelDropdown";
 
     private boolean showSelected;
     private Channel highlightedChannel;
@@ -123,11 +122,11 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
     }
 
     public void setObservers(@NonNull ChannelDropdownViewModel viewModel, @NonNull LifecycleOwner lifecycleOwner) {
-        viewModel.getSims().observe(lifecycleOwner, sims -> Log.i(TAG, "Got sims: " + sims.size()));
-        viewModel.getSimHniList().observe(lifecycleOwner, simList -> Log.i(TAG, "Got new sim hni list: " + simList));
+        viewModel.getSims().observe(lifecycleOwner, sims -> Timber.i("Got sims: %s", sims.size()));
+        viewModel.getSimHniList().observe(lifecycleOwner, simList -> Timber.i("Got new sim hni list: %s", simList));
         viewModel.getChannels().observe(lifecycleOwner, this::channelUpdateIfNull);
         viewModel.getSimChannels().observe(lifecycleOwner, this::channelUpdate);
-        viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> Log.i(TAG, "Got new selected channels: " + channels.size()));
+        viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> Timber.i("Got new selected channels: %s", channels.size()));
         viewModel.getActiveChannel().observe(lifecycleOwner, channel -> {
             if (channel != null && showSelected) setState(null, NONE);
         });
