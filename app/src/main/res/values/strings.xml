@@ -10,6 +10,7 @@
 
 	<string name="nav_home">Home</string>
 	<string name="nav_balance_and_history">Balance and history</string>
+	<string name="nav_balances">Balances</string>
 	<string name="nav_link_account">Link an account</string>
 	<string name="nav_airtime">Buy Airtime</string>
 	<string name="nav_transfer">Transfer</string>
@@ -354,4 +355,6 @@
 	<string name="retry">Retry</string>
 	<string name="submit_flow">Submit flow</string>
 	<string name="bounty_submitted_successfully">Bounty submitted successfully</string>
+	<string name="language">Language</string>
+	<string name="bounty">Bounty</string>
 </resources>

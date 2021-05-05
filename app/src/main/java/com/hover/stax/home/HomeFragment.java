@@ -16,32 +16,32 @@ import com.hover.stax.utils.Constants;
 
 public class HomeFragment extends Fragment {
 
-	private FragmentMainBinding binding;
+    private FragmentMainBinding binding;
 
-	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_home)));
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_home)));
 
-		binding = FragmentMainBinding.inflate(inflater, container, false);
-		return binding.getRoot();
-	}
+        binding = FragmentMainBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
 
-	@Override
-	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		binding.airtime.setOnClickListener(v -> navigateTo(Constants.NAV_AIRTIME));
-		binding.transfer.setOnClickListener(v -> navigateTo(Constants.NAV_TRANSFER));
-		binding.request.setOnClickListener(v -> navigateTo(Constants.NAV_REQUEST));
-	}
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        binding.airtime.setOnClickListener(v -> navigateTo(Constants.NAV_AIRTIME));
+        binding.transfer.setOnClickListener(v -> navigateTo(Constants.NAV_TRANSFER));
+        binding.request.setOnClickListener(v -> navigateTo(Constants.NAV_REQUEST));
+    }
 
-	private void navigateTo(int destination) {
-		MainActivity act = ((MainActivity) getActivity());
-		if (act != null) act.checkPermissionsAndNavigate(destination);
-	}
+    private void navigateTo(int destination) {
+        MainActivity act = ((MainActivity) getActivity());
+        if (act != null) act.checkPermissionsAndNavigate(destination);
+    }
 
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
 
-		binding = null;
-	}
+        binding = null;
+    }
 }

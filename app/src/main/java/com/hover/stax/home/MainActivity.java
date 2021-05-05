@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
@@ -17,16 +16,18 @@ import com.hover.stax.balances.BalanceAdapter;
 import com.hover.stax.balances.BalancesViewModel;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.databinding.ActivityMainBinding;
-import com.hover.stax.utils.Constants;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.navigation.AbstractNavigationActivity;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.settings.BiometricChecker;
 import com.hover.stax.transactions.TransactionHistoryViewModel;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 
 import java.util.List;
+
+import timber.log.Timber;
 
 public class MainActivity extends AbstractNavigationActivity implements
 	BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener {
@@ -45,12 +46,13 @@ public class MainActivity extends AbstractNavigationActivity implements
 
 		balancesViewModel = new ViewModelProvider(this).get(BalancesViewModel.class);
 		balancesViewModel.setListener(this);
-		balancesViewModel.getSelectedChannels().observe(this, channels -> Log.i(TAG, "Channels observer is necessary to make updates fire, but all logic is in viewmodel. " + channels.size()));
-		balancesViewModel.getToRun().observe(this, actions -> Log.i(TAG, "RunActions observer is necessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
-		balancesViewModel.getRunFlag().observe(this, flag -> Log.i(TAG, "Flag observer is necessary to make updates fire, but all logic is in viewmodel. " + flag));
-		balancesViewModel.getActions().observe(this, actions -> Log.i(TAG, "Actions observer is necessary to make updates fire, but all logic is in viewmodel. " + actions.size()));
+		balancesViewModel.getSelectedChannels().observe(this, channels -> Timber.i("Channels observer is necessary to make updates fire, but all logic is in viewmodel. %s", channels.size()));
+		balancesViewModel.getToRun().observe(this, actions -> Timber.i("RunActions observer is necessary to make updates fire, but all logic is in viewmodel. %s", actions.size()));
+		balancesViewModel.getRunFlag().observe(this, flag -> Timber.i("Flag observer is necessary to make updates fire, but all logic is in viewmodel. %s", flag));
+		balancesViewModel.getActions().observe(this, actions -> Timber.i("Actions observer is necessary to make updates fire, but all logic is in viewmodel. %s", actions.size()));
 
 		setUpNav();
+
 		checkForRequest(getIntent());
 		checkForFragmentDirection(getIntent());
 	}
@@ -64,15 +66,18 @@ public class MainActivity extends AbstractNavigationActivity implements
 	private void checkForRequest(Intent intent) {
 		if (intent.hasExtra(Constants.REQUEST_LINK)) navigateToTransferActivity(HoverAction.P2P, true, intent, this);
 	}
+
 	private void checkForFragmentDirection(Intent intent) {
 		if (intent.hasExtra(Constants.FRAGMENT_DIRECT)) {
 			int toWhere = intent.getExtras().getInt(Constants.FRAGMENT_DIRECT, 0);
+			Timber.e("Dest %s", getNavConst(toWhere));
+
 			checkPermissionsAndNavigate(toWhere);
 		}
 	}
 
 	@Override
-	public void onTapDetail(int channel_id) { navigateToChannelDetailsFragment(channel_id, this); }
+	public void onTapDetail(int channel_id) { navigateToChannelDetailsFragment(channel_id, getNavController()); }
 
 	@Override
 	public void onTapRefresh(int channel_id) {
@@ -86,7 +91,8 @@ public class MainActivity extends AbstractNavigationActivity implements
 	}
 
 	private void run(HoverAction action, int index) {
-		Log.e(TAG, "running index: " + index);
+		Timber.e("running index: %s", index);
+
 		if (balancesViewModel.getChannel(action.channel_id) != null) {
 			HoverSession.Builder hsb = new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), MainActivity.this, index);
 			if (index + 1 < balancesViewModel.getSelectedChannels().getValue().size())
@@ -109,7 +115,7 @@ public class MainActivity extends AbstractNavigationActivity implements
 
 	@Override
 	public void onAuthError(String error) {
-		Log.e(TAG, "error: " + error);
+		Timber.e("error: %s", error);
 	}
 
 	@Override

@@ -3,7 +3,6 @@ package com.hover.stax.settings;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,10 +25,10 @@ import com.hover.stax.views.StaxDialog;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-public class PinUpdateFragment extends Fragment implements Target {
-	private static String TAG = "PinUpdateFragment";
+import timber.log.Timber;
 
-	private View view;
+public class PinUpdateFragment extends Fragment implements Target {
+
 	private TextInputEditText input;
 	PinsViewModel pinViewModel;
 
@@ -39,10 +38,11 @@ public class PinUpdateFragment extends Fragment implements Target {
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_change_pin)));
-		view = inflater.inflate(R.layout.fragment_pin_update, container, false);
+
+		binding = FragmentPinUpdateBinding.inflate(inflater, container, false);
 
 		pinViewModel = new ViewModelProvider(this).get(PinsViewModel.class);
-		pinViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> Log.e(TAG, "Observer ensures events fire."));
+		pinViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> Timber.e("Observer ensures events fire."));
 		pinViewModel.loadChannel(getArguments().getInt("channel_id", 0));
 		pinViewModel.getChannel().observe(getViewLifecycleOwner(), this::initView);
 
@@ -50,7 +50,7 @@ public class PinUpdateFragment extends Fragment implements Target {
 		binding.editBtn.setOnClickListener(v -> showChoiceCard(false));
 		binding.cancelBtn.setOnClickListener(v -> showChoiceCard(true));
 
-		return view;
+		return binding.getRoot();
 	}
 
 	private void initView(Channel c) {
@@ -68,17 +68,17 @@ public class PinUpdateFragment extends Fragment implements Target {
 		binding.saveBtn.setOnClickListener(v -> {
 			if (input.getText() != null) {
 				channel.pin = input.getText().toString();
-				pinViewModel.savePin(channel, getContext());
+				pinViewModel.savePin(channel, requireActivity());
 			}
-			UIHelper.flashMessage(view.getContext(), getResources().getString(R.string.toast_confirm_pinupdate));
+			UIHelper.flashMessage(requireActivity(), getResources().getString(R.string.toast_confirm_pinupdate));
 			showChoiceCard(true);
 		});
 	}
 
 	private void setUpRemoveAccount(Channel channel) {
 		binding.removeAcct.setOnClickListener(v -> {
-			new StaxDialog(getContext(), this)
-				.setDialogTitle(getContext().getString(R.string.removepin_dialoghead, channel.name))
+			new StaxDialog(requireActivity())
+				.setDialogTitle(getString(R.string.removepin_dialoghead, channel.name))
 				.setDialogMessage(R.string.removepins_dialogmes)
 				.setPosButton(R.string.btn_removeaccount, btn -> removeAccount(channel))
 				.setNegButton(R.string.btn_cancel, null)
@@ -90,7 +90,7 @@ public class PinUpdateFragment extends Fragment implements Target {
 	private void removeAccount(Channel channel) {
 		pinViewModel.removeAccount(channel);
 		NavHostFragment.findNavController(PinUpdateFragment.this).popBackStack();
-		UIHelper.flashMessage(getContext(), getResources().getString(R.string.toast_confirm_acctremoved));
+		UIHelper.flashMessage(requireActivity(), getResources().getString(R.string.toast_confirm_acctremoved));
 	}
 
 	private void showChoiceCard(boolean show) {
@@ -102,9 +102,12 @@ public class PinUpdateFragment extends Fragment implements Target {
 	@Override
 	public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
 		Bitmap b = Bitmap.createScaledBitmap(bitmap, UIHelper.dpToPx(34), UIHelper.dpToPx(34), true);
-		RoundedBitmapDrawable d = RoundedBitmapDrawableFactory.create(view.getContext().getResources(), b);
-		d.setCircular(true);
-		input.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
+
+		if(binding != null) { //wait for binding to happen when fragment is resumed before setting the image
+			RoundedBitmapDrawable d = RoundedBitmapDrawableFactory.create(binding.getRoot().getContext().getResources(), b);
+			d.setCircular(true);
+			input.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
+		}
 	}
 
 	@Override public void onBitmapFailed(Exception e, Drawable errorDrawable) {	}

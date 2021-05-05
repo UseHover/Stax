@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
 import com.hover.stax.databinding.StaxInputBinding;
 
@@ -18,19 +19,16 @@ public class StaxTextInputLayout extends AbstractStatefulInput {
 
     private String hint;
     private int inputType;
-    private int imeOptions;
-
     private TextInputEditText editText;
 
-    private StaxInputBinding binding;
+    StaxInputBinding binding;
 
     public StaxTextInputLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        getAttrs(context, attrs);
+        getAttrs(context,attrs);
 
         binding = StaxInputBinding.inflate(LayoutInflater.from(context), this, true);
 
-//		inflate(context, R.layout.stax_input, this);
         initView();
         fillAttr();
     }
@@ -45,16 +43,14 @@ public class StaxTextInputLayout extends AbstractStatefulInput {
         try {
             hint = a.getString(R.styleable.StaxTextInputLayout_android_hint);
             inputType = a.getInt(R.styleable.StaxTextInputLayout_android_inputType, 0);
-            imeOptions = a.getInt(R.styleable.StaxTextInputLayout_android_imeOptions, 0);
         } finally {
             a.recycle();
         }
     }
 
     private void fillAttr() {
-        if (hint != null) binding.inputEditText.setHint(hint);
-        if (inputType > 0) binding.inputEditText.setInputType(inputType);
-        if (imeOptions > 0) binding.inputEditText.setImeOptions(imeOptions);
+        if (hint != null) ((TextInputLayout) findViewById(R.id.inputLayout)).setHint(hint);
+        if (inputType > 0) ((TextInputEditText) findViewById(R.id.inputEditText)).setInputType(inputType);
     }
 
     public void setText(String text) {
@@ -63,16 +59,10 @@ public class StaxTextInputLayout extends AbstractStatefulInput {
             setState(null, SUCCESS);
     }
 
-    public String getText() {
-        return editText.getText().toString();
-    }
+    public String getText() { return editText.getText().toString(); }
 
     @Override
-    public void setOnFocusChangeListener(OnFocusChangeListener l) {
-        editText.setOnFocusChangeListener(l);
-    }
+    public void setOnFocusChangeListener(OnFocusChangeListener l) { editText.setOnFocusChangeListener(l); }
 
-    public void addTextChangedListener(TextWatcher listener) {
-        editText.addTextChangedListener(listener);
-    }
+    public void addTextChangedListener(TextWatcher listener) { editText.addTextChangedListener(listener); }
 }

@@ -24,6 +24,8 @@ import com.hover.stax.views.StaxDialog;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 public class BountyListFragment extends Fragment implements NavigationInterface, BountyListItem.SelectListener, CountryAdapter.SelectListener {
 
     private static final String TAG = "BountyListFragment";
@@ -88,7 +90,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     }
 
     void showSimErrorDialog(Bounty b) {
-        Log.e(TAG, "showing sim error dialog " + b.action.root_code);
+        Timber.e("showing sim error dialog %s", b.action.root_code);
         new StaxDialog(requireActivity())
                 .setDialogTitle(getString(R.string.bounty_sim_err_header, b.action.network_name))
                 .setDialogMessage(getString(R.string.bounty_sim_err_desc, b.action.network_name))
@@ -98,7 +100,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     }
 
     void showBountyDescDialog(Bounty b) {
-        Log.e(TAG, "showing dialog " + b.action);
+        Timber.e("showing dialog %s", b.action);
         new StaxDialog(requireActivity())
                 .setDialogTitle(getString(R.string.bounty_claim_title, b.action.root_code, HoverAction.getHumanFriendlyType(getContext(), b.action.transaction_type), b.action.bounty_amount))
                 .setDialogMessage(getString(R.string.bounty_claim_explained, b.action.bounty_amount, b.getInstructions(getContext())))
