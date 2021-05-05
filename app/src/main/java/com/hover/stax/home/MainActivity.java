@@ -77,7 +77,7 @@ public class MainActivity extends AbstractNavigationActivity implements
 	}
 
 	@Override
-	public void onTapDetail(int channel_id) { navigateToChannelDetailsFragment(channel_id, this); }
+	public void onTapDetail(int channel_id) { navigateToChannelDetailsFragment(channel_id, getNavController()); }
 
 	@Override
 	public void onTapRefresh(int channel_id) {
