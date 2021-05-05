@@ -107,7 +107,9 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 			if (transferViewModel.getContact().getValue() != null)
 				contactInput.setSelected(transferViewModel.getContact().getValue());
 		});
-		transferViewModel.getContact().observe(getViewLifecycleOwner(), contact -> recipientValue.setContact(contact));
+		transferViewModel.getContact().observe(getViewLifecycleOwner(), contact -> {
+			recipientValue.setContact(contact);
+		});
 
 		transferViewModel.getNote().observe(getViewLifecycleOwner(), note -> {
 			root.findViewById(R.id.noteRow).setVisibility((note == null || note.isEmpty()) ? View.GONE : View.VISIBLE);
@@ -170,8 +172,10 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 		summaryCard.findViewById(R.id.recipientRow).setVisibility(action.requiresRecipient() ? View.VISIBLE : View.GONE);
 		if (!action.requiresRecipient())
 			recipientValue.setContent(getString(R.string.self_choice), "");
-		else
+		else {
+			transferViewModel.forceUpdateContactUI();
 			contactInput.setHint(action.getRequiredParams().contains(HoverAction.ACCOUNT_KEY) ? getString(R.string.recipientacct_label) : getString(R.string.recipientphone_label));
+		}
 	}
 
 	protected void onContactSelected(int requestCode, StaxContact contact) {

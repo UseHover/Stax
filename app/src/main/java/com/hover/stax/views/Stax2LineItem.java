@@ -25,13 +25,16 @@ public class Stax2LineItem extends RelativeLayout {
 		setTitle(title);
 		setSubtitle(sub);
 	}
+	public void setContent(String title) {
+		setTitle(title);
+	}
 
 	public void setTitle(String title) {
-		((TextView) contentView.findViewById(R.id.title)).setText(title);
+		if(title !=null) ((TextView) contentView.findViewById(R.id.title)).setText(title);
 	}
 
 	public void setSubtitle(String sub) {
-		((TextView) contentView.findViewById(R.id.subtitle)).setText(sub);
+		if(sub !=null) ((TextView) contentView.findViewById(R.id.subtitle)).setText(sub);
 	}
 
 	public void setContact(StaxContact contact) {
