@@ -11,19 +11,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.hover.stax.R;
+import com.hover.stax.databinding.StaxSpinner2lineBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class StaxContactArrayAdapter extends ArrayAdapter<StaxContact> {
 
-    private List<StaxContact> allContacts;
+    private final List<StaxContact> allContacts;
     private final List<StaxContact> filteredContacts;
-    private static int resource = R.layout.stax_spinner_2line;
 
     public StaxContactArrayAdapter(@NonNull Context context, List<StaxContact> list) {
-        super(context, resource, list);
+        super(context, 0, list);
         allContacts = new ArrayList<>(list);
         filteredContacts = new ArrayList<>(list);
     }
@@ -34,9 +33,11 @@ public class StaxContactArrayAdapter extends ArrayAdapter<StaxContact> {
         ViewHolder holder;
 
         if (v == null) {
-            v = LayoutInflater.from(parent.getContext()).inflate(resource, parent, false);
+            StaxSpinner2lineBinding binding = StaxSpinner2lineBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            v = binding.getRoot();
 
-            holder = new ViewHolder(v);
+            holder = new ViewHolder(binding);
+
             v.setTag(holder);
         } else {
             holder = (ViewHolder) v.getTag();
@@ -51,13 +52,13 @@ public class StaxContactArrayAdapter extends ArrayAdapter<StaxContact> {
         return v;
     }
 
-    private static class ViewHolder {
+    static class ViewHolder {
+        TextView title;
+        TextView subtitle;
 
-        TextView title, subtitle;
-
-        public ViewHolder(View view) {
-            title = (TextView) view.findViewById(R.id.title);
-            subtitle = (TextView) view.findViewById(R.id.subtitle);
+        public ViewHolder(StaxSpinner2lineBinding binding) {
+            title = binding.title;
+            subtitle = binding.subtitle;
         }
     }
 

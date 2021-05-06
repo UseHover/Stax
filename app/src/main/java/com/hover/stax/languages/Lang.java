@@ -13,38 +13,38 @@ import org.json.JSONObject;
 import java.util.Locale;
 
 public class Lang {
-	public String code, name;
+    public String code, name;
 
-	public Lang(String code) {
-		this.code = code;
-		Locale l = new Locale(code);
-		name = l.getDisplayLanguage(l);
-		name = name.substring(0, 1).toUpperCase() + name.substring(1);
-	}
+    public Lang(String code) {
+        this.code = code;
+        Locale l = new Locale(code);
+        name = l.getDisplayLanguage(l);
+        name = name.substring(0, 1).toUpperCase() + name.substring(1);
+    }
 
-	public boolean isSelected() {
-		return code.equals(Lingver.getInstance().getLanguage());
-	}
+    public boolean isSelected() {
+        return code.equals(Lingver.getInstance().getLanguage());
+    }
 
-	@NotNull
-	@Override
-	public String toString() {
-		return name;
-	}
+    @NotNull
+    @Override
+    public String toString() {
+        return name;
+    }
 
-	@Override
-	public boolean equals(Object other) {
-		if (!(other instanceof Lang)) return false;
-		Lang l = (Lang) other;
-		return code.equals(l.code);
-	}
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Lang)) return false;
+        Lang l = (Lang) other;
+        return code.equals(l.code);
+    }
 
-	public static void LogChange(String code, Context c) {
-		JSONObject data = new JSONObject();
-		try {
-			data.put("language", code);
-		} catch (JSONException ignored) {
-		}
-		Amplitude.getInstance().logEvent(c.getString(R.string.selected_language), data);
-	}
+    public static void LogChange(String code, Context c) {
+        JSONObject data = new JSONObject();
+        try {
+            data.put("language", code);
+        } catch (JSONException ignored) {
+        }
+        Amplitude.getInstance().logEvent(c.getString(R.string.selected_language), data);
+    }
 }

@@ -14,44 +14,55 @@ import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.channels.ChannelDropdown;
 import com.hover.stax.channels.ChannelDropdownViewModel;
+import com.hover.stax.databinding.FragmentLinkAccountBinding;
 
-public class LinkAccountFragment extends Fragment{
-	final public static String TAG = "LinkAccountFragment";
+public class LinkAccountFragment extends Fragment {
+    final public static String TAG = "LinkAccountFragment";
 
-	private ChannelDropdownViewModel channelDropdownViewModel;
-	private BalancesViewModel balancesViewModel;
-	private ChannelDropdown channelDropdown;
+    private ChannelDropdownViewModel channelDropdownViewModel;
+    private BalancesViewModel balancesViewModel;
+    private ChannelDropdown channelDropdown;
 
-	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_link_account)));
-		channelDropdownViewModel = new ViewModelProvider(requireActivity()).get(ChannelDropdownViewModel.class);
-		balancesViewModel = new ViewModelProvider(requireActivity()).get(BalancesViewModel.class);
-		return inflater.inflate(R.layout.fragment_link_account, container, false);
-	}
+    private FragmentLinkAccountBinding binding;
 
-	@Override
-	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		setUpChannelDropdown(view);
-		setUpCancelAndLinkAccountBtn(view);
-	}
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_link_account)));
+        channelDropdownViewModel = new ViewModelProvider(requireActivity()).get(ChannelDropdownViewModel.class);
+        balancesViewModel = new ViewModelProvider(requireActivity()).get(BalancesViewModel.class);
 
-	private void setUpChannelDropdown(View view) {
-		channelDropdown = view.findViewById(R.id.channel_dropdown);
-		channelDropdown.setObservers(channelDropdownViewModel, getActivity());
-	}
+        binding = FragmentLinkAccountBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
 
-	private void setUpCancelAndLinkAccountBtn(View view) {
-		view.findViewById(R.id.neg_btn).setOnClickListener(v->requireActivity().onBackPressed());
-		view.findViewById(R.id.pos_btn).setOnClickListener(this::linkAccount);
-	}
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setUpChannelDropdown();
+        setUpCancelAndLinkAccountBtn();
+    }
 
-	public void linkAccount(View v) {
-		if (channelDropdown.getHighlighted() != null) {
-			channelDropdownViewModel.setChannelSelected(channelDropdown.getHighlighted());
-			requireActivity().onBackPressed();
-			balancesViewModel.getActions().observe(getViewLifecycleOwner(), actions ->  balancesViewModel.setRunning(channelDropdown.getHighlighted().id));
-		} else channelDropdown.setError(getString(R.string.refresh_balance_error));
-	}
+    private void setUpChannelDropdown() {
+        channelDropdown = binding.channelDropdown;
+        channelDropdown.setObservers(channelDropdownViewModel, requireActivity());
+    }
 
+    private void setUpCancelAndLinkAccountBtn() {
+        binding.negBtn.setOnClickListener(v -> requireActivity().onBackPressed());
+        binding.posBtn.setOnClickListener(this::linkAccount);
+    }
+
+    public void linkAccount(View v) {
+        if (channelDropdown.getHighlighted() != null) {
+            channelDropdownViewModel.setChannelSelected(channelDropdown.getHighlighted());
+            requireActivity().onBackPressed();
+            balancesViewModel.getActions().observe(getViewLifecycleOwner(), actions -> balancesViewModel.setRunning(channelDropdown.getHighlighted().id));
+        } else channelDropdown.setError(getString(R.string.refresh_balance_error));
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        binding = null;
+    }
 }

@@ -20,58 +20,58 @@ import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTI
 
 
 public class BiometricChecker extends BiometricPrompt.AuthenticationCallback {
-	private AppCompatActivity a;
-	private AuthListener listener;
-	private HoverAction action;
+    private AppCompatActivity a;
+    private AuthListener listener;
+    private HoverAction action;
 
-	public BiometricChecker(AuthListener authListener, AppCompatActivity activity) {
-		listener = authListener;
-		a = activity;
-	}
+    public BiometricChecker(AuthListener authListener, AppCompatActivity activity) {
+        listener = authListener;
+        a = activity;
+    }
 
-	public void startAuthentication(HoverAction act) {
-		action = act;
-		if (!((KeyguardManager) a.getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardSecure()) {
-			listener.onAuthSuccess(action);
-			return;
-		}
+    public void startAuthentication(HoverAction act) {
+        action = act;
+        if (!((KeyguardManager) a.getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardSecure()) {
+            listener.onAuthSuccess(action);
+            return;
+        }
 
-		Executor newExecutor = Executors.newSingleThreadExecutor();
-		final BiometricPrompt myBiometricPrompt = new BiometricPrompt(a, newExecutor, this);
+        Executor newExecutor = Executors.newSingleThreadExecutor();
+        final BiometricPrompt myBiometricPrompt = new BiometricPrompt(a, newExecutor, this);
 
-		final BiometricPrompt.PromptInfo promptInfo =
-				new BiometricPrompt.PromptInfo.Builder()
-						.setTitle(a.getString(R.string.auth_title))
-						.setAllowedAuthenticators(BIOMETRIC_STRONG | BIOMETRIC_WEAK | DEVICE_CREDENTIAL)
-						.build();
+        final BiometricPrompt.PromptInfo promptInfo =
+                new BiometricPrompt.PromptInfo.Builder()
+                        .setTitle(a.getString(R.string.auth_title))
+                        .setAllowedAuthenticators(BIOMETRIC_STRONG | BIOMETRIC_WEAK | DEVICE_CREDENTIAL)
+                        .build();
 
-		myBiometricPrompt.authenticate(promptInfo);
-	}
+        myBiometricPrompt.authenticate(promptInfo);
+    }
 
-	@Override
-	public void onAuthenticationError(int errorCode, @NonNull CharSequence error) {
-		super.onAuthenticationError(errorCode, error);
-		if (errorCode == BiometricPrompt.ERROR_NO_BIOMETRICS) {
-			listener.onAuthError(error.toString());
-		} else Amplitude.getInstance().logEvent(a.getString(R.string.biometrics_not_setup));
-	}
+    @Override
+    public void onAuthenticationError(int errorCode, @NonNull CharSequence error) {
+        super.onAuthenticationError(errorCode, error);
+        if (errorCode == BiometricPrompt.ERROR_NO_BIOMETRICS) {
+            listener.onAuthError(error.toString());
+        } else Amplitude.getInstance().logEvent(a.getString(R.string.biometrics_not_setup));
+    }
 
-	@Override
-	public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
-		super.onAuthenticationSucceeded(result);
-		Amplitude.getInstance().logEvent(a.getString(R.string.biometrics_succeeded));
-		listener.onAuthSuccess(action);
-	}
+    @Override
+    public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+        super.onAuthenticationSucceeded(result);
+        Amplitude.getInstance().logEvent(a.getString(R.string.biometrics_succeeded));
+        listener.onAuthSuccess(action);
+    }
 
-	@Override
-	public void onAuthenticationFailed() {
-		super.onAuthenticationFailed();
-		Amplitude.getInstance().logEvent(a.getString(R.string.biometrics_failed));
-	}
+    @Override
+    public void onAuthenticationFailed() {
+        super.onAuthenticationFailed();
+        Amplitude.getInstance().logEvent(a.getString(R.string.biometrics_failed));
+    }
 
-	public interface AuthListener {
-		void onAuthError(String error);
+    public interface AuthListener {
+        void onAuthError(String error);
 
-		void onAuthSuccess(HoverAction action);
-	}
+        void onAuthSuccess(HoverAction action);
+    }
 }
