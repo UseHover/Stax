@@ -83,6 +83,8 @@
 	<!--FIREBASE MESSAGING-->
 	<string name="firebase_topic_everyone" translatable="false">EVERYONE</string>
 	<string name="firebase_topic_channel" translatable="false">CHANNEL-%1$d</string>
+	<string name="firebase_topic_bounty_in_country" translatable="false">BOUNTY-%1$s</string>
+	<string name="firebase_topic_no_usage_activity" translatable="false">NO-USAGE-ACTIVITY</string>
 	<string name="firebase_topic_no_balance_check" translatable="false">NO-BALANCE-CHECK</string>
 	<string name="firebase_topic_no_balance_toggle" translatable="false">NO-BALANCE-TOGGLE</string>
 	<string name="firebase_topic_no_request_money" translatable="false">NO-REQUEST-MONEY</string>

@@ -22,6 +22,8 @@ import com.hover.stax.contacts.ContactInput;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.databinding.FragmentRequestBinding;
 import com.hover.stax.transfers.AbstractFormFragment;
+import com.hover.stax.pushNotification.PushNotificationTopicsInterface;
+
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.AbstractStatefulInput;
@@ -29,7 +31,7 @@ import com.hover.stax.views.Stax2LineItem;
 import com.hover.stax.views.StaxCardView;
 import com.hover.stax.views.StaxTextInputLayout;
 
-public class NewRequestFragment extends AbstractFormFragment implements RecipientAdapter.UpdateListener {
+public class NewRequestFragment extends AbstractFormFragment implements RecipientAdapter.UpdateListener, PushNotificationTopicsInterface {
 
     protected NewRequestViewModel requestViewModel;
 
@@ -216,11 +218,18 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
     private void fabClicked(View v) {
         requestViewModel.removeInvalidRequestees();
 
-        if (requestViewModel.getIsEditing().getValue() && validates())
+        if (requestViewModel.getIsEditing().getValue() && validates()){
+          updatePushNotifGroupStatus()
             requestViewModel.setEditing(false);
-        else
+        } else
             UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix));
     }
+  
+  	private void updatePushNotifGroupStatus() {
+		joinByRequestMoneyNotifGroup(requireContext());
+		stopReceivingNoActivityTopicNotifGroup(requireContext());
+		stopReceivingNoRequestMoneyNotifGroup(requireContext());
+	}
 
     private boolean validates() {
         String channelError = channelDropdownViewModel.errorCheck();

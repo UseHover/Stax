@@ -44,6 +44,7 @@ public class StaxContactArrayAdapter extends ArrayAdapter<StaxContact> {
         }
 
         StaxContact c = filteredContacts.get(position);
+
         holder.title.setText(c.shortName());
         holder.subtitle.setText(c.getPhoneNumber());
         holder.subtitle.setVisibility(c.hasName() ? View.VISIBLE : View.GONE);
@@ -105,7 +106,7 @@ public class StaxContactArrayAdapter extends ArrayAdapter<StaxContact> {
     }
 
     public StaxContact getItem(int position) {
-        return filteredContacts.get(position);
+        return filteredContacts.isEmpty() ? null : filteredContacts.get(position);
     }
 
     public long getItemId(int position) {

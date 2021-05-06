@@ -69,7 +69,6 @@ jobs:
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
-
       #Deploy to alpha track
       - name: Deploy to internal test track
         uses: r0adkll/upload-google-play@v1

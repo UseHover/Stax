@@ -13,6 +13,11 @@ import com.hover.stax.R;
 import com.hover.stax.actions.ActionSelectViewModel;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
+
+import com.hover.stax.navigation.AbstractNavigationActivity;
+import com.hover.stax.pushNotification.PushNotificationTopicsInterface;
+import com.hover.stax.utils.Constants;
+
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.navigation.AbstractNavigationActivity;
 import com.hover.stax.schedules.Schedule;
@@ -22,7 +27,7 @@ import com.hover.stax.views.StaxDialog;
 
 import timber.log.Timber;
 
-public class TransferActivity extends AbstractNavigationActivity {
+public class TransferActivity extends AbstractNavigationActivity  implements PushNotificationTopicsInterface {
     final public static String TAG = "TransferActivity";
 
     private ChannelDropdownViewModel channelDropdownViewModel;
@@ -94,10 +99,17 @@ public class TransferActivity extends AbstractNavigationActivity {
 
     private void makeHoverCall(HoverAction act) {
         Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
+      updatePushNotifGroupStatus();
+      
         transferViewModel.checkSchedule();
         makeCall(act);
     }
 
+  private void updatePushNotifGroupStatus() {
+		joinAnyTransactionNotifGroup(this);
+		stopReceivingNoActivityTopicNotifGroup(this);
+	}
+  
     private void makeCall(HoverAction act) {
         HoverSession.Builder hsb = new HoverSession.Builder(act, channelDropdownViewModel.getActiveChannel().getValue(),
                 TransferActivity.this, Constants.TRANSFER_REQUEST)

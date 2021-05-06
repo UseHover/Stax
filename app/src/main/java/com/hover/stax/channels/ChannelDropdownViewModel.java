@@ -21,6 +21,7 @@ import com.hover.sdk.api.Hover;
 import com.hover.sdk.sims.SimInfo;
 import com.hover.stax.R;
 import com.hover.stax.database.DatabaseRepo;
+import com.hover.stax.pushNotification.PushNotificationTopicsInterface;
 import com.hover.stax.requests.Request;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.utils.Utils;
@@ -31,7 +32,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChannelDropdownViewModel extends AndroidViewModel implements ChannelDropdown.HighlightListener {
+public class ChannelDropdownViewModel extends AndroidViewModel implements ChannelDropdown.HighlightListener, PushNotificationTopicsInterface {
     public final static String TAG = "ChannelDropdownVM";
 
     private DatabaseRepo repo;
@@ -244,7 +245,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 
     private void logChoice(Channel channel) {
         Log.i(TAG, "saving selected channel: " + channel);
-        FirebaseMessaging.getInstance().subscribeToTopic(getApplication().getString(R.string.firebase_topic_channel, channel.id));
+       joinByChannelNotifGroup(channel.id, getApplication().getApplicationContext());
         JSONObject event = new JSONObject();
         try {
             event.put(getApplication().getString(R.string.added_channel_id), channel.id);

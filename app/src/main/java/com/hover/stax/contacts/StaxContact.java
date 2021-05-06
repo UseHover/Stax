@@ -30,6 +30,7 @@ import static com.google.i18n.phonenumbers.PhoneNumberUtil.MatchType.NO_MATCH;
 
 @Entity(tableName = "stax_contacts", indices = {@Index(value = {"id", "phone_number"}, unique = true), @Index(value = "lookup_key", unique = true)})
 public class StaxContact {
+  
     private final static String TAG = "StaxContact";
     public final static String LOOKUP_KEY = "contact_id";
 
@@ -209,4 +210,5 @@ public class StaxContact {
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
         return phoneUtil.isNumberMatch(phoneNumber, other.phoneNumber) != NO_MATCH;
     }
+
 }

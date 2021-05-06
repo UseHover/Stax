@@ -19,13 +19,14 @@ import com.hover.stax.views.StaxDropdownLayout;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+
 import java.util.List;
 
 import timber.log.Timber;
 
 import static com.hover.stax.utils.Constants.size55;
 
-public class ChannelDropdown extends StaxDropdownLayout implements Target {
+public class ChannelDropdown extends StaxDropdownLayout implements Target{
 
     private boolean showSelected;
     private Channel highlightedChannel;
@@ -144,11 +145,5 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target {
 
     public interface HighlightListener {
         void highlightChannel(Channel c);
-    }
-
-    public static String countryCodeToEmoji(String countryCode) {
-        int firstLetter = Character.codePointAt(countryCode, 0) - 0x41 + 0x1F1E6;
-        int secondLetter = Character.codePointAt(countryCode, 1) - 0x41 + 0x1F1E6;
-        return new String(Character.toChars(firstLetter)) + new String(Character.toChars(secondLetter));
     }
 }

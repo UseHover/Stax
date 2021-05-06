@@ -25,6 +25,7 @@ import java.util.HashMap;
 
 @Entity(tableName = "stax_transactions", indices = {@Index(value = {"uuid"}, unique = true)})
 public class StaxTransaction {
+
     public final static String CONFIRM_CODE_KEY = "confirmCode";
 
     @PrimaryKey(autoGenerate = true)

@@ -28,11 +28,11 @@ public class Stax2LineItem extends RelativeLayout {
     }
 
     public void setTitle(String title) {
-        binding.title.setText(title);
+        if(title != null) binding.title.setText(title);
     }
 
     public void setSubtitle(String sub) {
-        binding.subtitle.setText(sub);
+        if(sub != null) binding.subtitle.setText(sub);
     }
 
     public void setContact(StaxContact contact) {

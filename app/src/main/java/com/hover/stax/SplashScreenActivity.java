@@ -34,6 +34,7 @@ import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.destruct.SelfDestructActivity;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.onboarding.OnBoardingActivity;
+import com.hover.stax.pushNotification.PushNotificationTopicsInterface;
 import com.hover.stax.schedules.ScheduleWorker;
 import com.hover.stax.settings.BiometricChecker;
 import com.hover.stax.utils.Constants;
@@ -48,7 +49,7 @@ import timber.log.Timber;
 import static com.hover.stax.utils.Constants.AUTH_CHECK;
 import static com.hover.stax.utils.Constants.FRAGMENT_DIRECT;
 
-public class SplashScreenActivity extends AppCompatActivity implements BiometricChecker.AuthListener {
+public class SplashScreenActivity extends AppCompatActivity implements BiometricChecker.AuthListener, PushNotificationTopicsInterface {
     private final static String TAG = "SplashScreenActivity";
 
     private final static int BLUR_DELAY = 1000, LOGO_DELAY = 1200, NAV_DELAY = 1800,
@@ -86,9 +87,15 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
         initHover();
         createNotificationChannel();
         startWorkers();
-        Utils.setFirebaseMessagingTopic(getString(R.string.firebase_topic_everyone));
+        initFirebaseMessagingTopics();
         FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this, s -> Timber.i("Firebase ID is: %s", s));
     }
+  
+  private void initFirebaseMessagingTopics() {
+		joinAllNotifications(this);
+		joinByNoActivityTopicNotifGroup(this);
+		joinByNoRequestMoneyNotifGroup(this);
+	}
 
     private void blurBackground() {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {

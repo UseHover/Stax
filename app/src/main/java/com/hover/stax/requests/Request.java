@@ -23,6 +23,7 @@ import java.util.List;
 
 @Entity(tableName = "requests")
 public class Request {
+  
     private final static String TAG = "Request";
     final public static String PAYMENT_LINK_SEPERATOR = "-";
 
