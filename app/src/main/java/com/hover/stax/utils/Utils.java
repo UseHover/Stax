@@ -1,19 +1,17 @@
 package com.hover.stax.utils;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -22,6 +20,8 @@ import com.hover.stax.BuildConfig;
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
+
+import timber.log.Timber;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
 
@@ -136,7 +136,7 @@ public class Utils {
 		return false;
 	}
 	public static void logErrorAndReportToFirebase(String tag, String message, Exception e) {
-		Log.e(tag, message, e);
+		Timber.e(e, message);
 		if(BuildConfig.BUILD_TYPE.equals("release")) FirebaseCrashlytics.getInstance().recordException(e);
 	}
 
@@ -148,9 +148,23 @@ public class Utils {
 	public static void setFirebaseMessagingTopic(String topic){
 		FirebaseMessaging.getInstance().subscribeToTopic(topic);
 	}
+
 	public static void removeFirebaseMessagingTopic(String topic){
 		FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
 	}
+
+	public static void showSoftKeyboard(Context context, View view) {
+		if(view.requestFocus()){
+			InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+			inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+		}
+	}
+
+	public static void hideSoftKeyboard(Context context, View view){
+		InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+	}
+
 	public static void openUrl(String url, Context ctx) {
 		Intent i = new Intent(Intent.ACTION_VIEW);
 		i.setData(Uri.parse(url));
