@@ -61,7 +61,7 @@ android {
 
         release {
             minifyEnabled true
-            buildConfigField "String", "SELF_DESTRUCT", "\"1620033789\"" // May 03, 2021
+            buildConfigField "String", "SELF_DESTRUCT", "\"1622450539\"" // May 31, 2021
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             file(keystorePath).with { propertiesFile ->
