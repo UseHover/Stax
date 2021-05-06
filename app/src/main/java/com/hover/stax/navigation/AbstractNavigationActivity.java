@@ -77,6 +77,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         });
     }
 
+    // convenience method to prevent fragments from sometimes refiring
     private void setNavReselectListener(BottomNavigationView nav) {
         nav.setOnNavigationItemReselectedListener(item -> {
             //do nothing

@@ -1,121 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:swiperefresh="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/swipelayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    swiperefresh:enable_top_progress_bar="false"
-    swiperefresh:keep_refresh_head="true"
-    swiperefresh:layout_behavior="@string/appbar_scrolling_view_behavior"
-    swiperefresh:refresh_mode="pull_mode"
-    swiperefresh:return_to_header_duration="500"
-    swiperefresh:return_to_top_duration="500"
-    swiperefresh:time_out_refresh_complete="2000"
-    swiperefresh:time_out_return_to_top="1000"
-    swiperefresh:top_progress_bar_color_2="@color/brightBlue"
-    swiperefresh:top_progress_bar_color_3="@color/offWhite">
+        xmlns:swiperefresh="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/swipelayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        swiperefresh:enable_top_progress_bar="false"
+        swiperefresh:keep_refresh_head="true"
+        swiperefresh:layout_behavior="@string/appbar_scrolling_view_behavior"
+        swiperefresh:refresh_mode="pull_mode"
+        swiperefresh:return_to_header_duration="500"
+        swiperefresh:return_to_top_duration="500"
+        swiperefresh:time_out_refresh_complete="2000"
+        swiperefresh:time_out_return_to_top="1000"
+        swiperefresh:top_progress_bar_color_2="@color/brightBlue"
+        swiperefresh:top_progress_bar_color_3="@color/offWhite">
 
     <androidx.core.widget.NestedScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_13"
-            android:layout_marginBottom="@dimen/margin_55"
-            android:orientation="vertical">
-
-            <com.hover.stax.views.StaxCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/staxCardView"
-                app:title="@string/nav_account_detail">
+                android:layout_marginTop="@dimen/margin_13"
+                android:layout_marginBottom="@dimen/margin_55"
+                android:orientation="vertical">
 
-                <TableLayout
+            <com.hover.stax.views.StaxCardView
+                    android:id="@+id/staxCardView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/margin_10">
+                    app:showBack="true"
+                    app:title="@string/nav_account_detail">
+
+                <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_10">
 
                     <TableRow android:layout_marginVertical="@dimen/margin_21">
 
                         <TextView
-                            android:layout_weight="1"
-                            android:fontFamily="font-normal"
-                            android:text="@string/balance_label"
-                            android:textColor="@color/offWhite"
-                            android:textSize="@dimen/text_16" />
+                                android:layout_weight="1"
+                                android:fontFamily="font-normal"
+                                android:text="@string/balance_label"
+                                android:textColor="@color/offWhite"
+                                android:textSize="@dimen/text_16" />
 
                         <TextView
-                            android:id="@+id/details_balance"
-                            android:fontFamily="font-normal"
-                            android:textAlignment="viewEnd"
-                            android:textColor="@color/offWhite"
-                            android:textSize="@dimen/text_21"
-                            android:textStyle="bold" />
+                                android:id="@+id/details_balance"
+                                android:fontFamily="font-normal"
+                                android:textAlignment="viewEnd"
+                                android:textColor="@color/offWhite"
+                                android:textSize="@dimen/text_21"
+                                android:textStyle="bold" />
                     </TableRow>
 
                     <TableRow android:layout_marginVertical="@dimen/margin_21">
 
                         <TextView
-                            android:layout_weight="1"
-                            android:fontFamily="font-normal"
-                            android:text="@string/moneyout_label"
-                            android:textColor="@color/offWhite"
-                            android:textSize="@dimen/text_16" />
+                                android:layout_weight="1"
+                                android:fontFamily="font-normal"
+                                android:text="@string/moneyout_label"
+                                android:textColor="@color/offWhite"
+                                android:textSize="@dimen/text_16" />
 
                         <TextView
-                            android:id="@+id/details_money_out"
-                            android:fontFamily="font-normal"
-                            android:textAlignment="viewEnd"
-                            android:textColor="@color/offWhite"
-                            android:textSize="@dimen/text_21"
-                            android:textStyle="bold" />
+                                android:id="@+id/details_money_out"
+                                android:fontFamily="font-normal"
+                                android:textAlignment="viewEnd"
+                                android:textColor="@color/offWhite"
+                                android:textSize="@dimen/text_21"
+                                android:textStyle="bold" />
                     </TableRow>
 
                     <TableRow
-                        android:layout_marginVertical="@dimen/margin_21"
-                        android:visibility="gone">
+                            android:layout_marginVertical="@dimen/margin_21"
+                            android:visibility="gone">
 
                         <TextView
-                            android:layout_weight="1"
-                            android:fontFamily="font-normal"
-                            android:text="@string/moneyin_label"
-                            android:textColor="@color/offWhite"
-                            android:textSize="@dimen/text_16" />
+                                android:layout_weight="1"
+                                android:fontFamily="font-normal"
+                                android:text="@string/moneyin_label"
+                                android:textColor="@color/offWhite"
+                                android:textSize="@dimen/text_16" />
 
                         <TextView
-                            android:id="@+id/details_money_in"
-                            android:fontFamily="font-normal"
-                            android:textAlignment="viewEnd"
-                            android:textColor="@color/offWhite"
-                            android:textSize="@dimen/text_21"
-                            android:textStyle="bold" />
+                                android:id="@+id/details_money_in"
+                                android:fontFamily="font-normal"
+                                android:textAlignment="viewEnd"
+                                android:textColor="@color/offWhite"
+                                android:textSize="@dimen/text_21"
+                                android:textStyle="bold" />
                     </TableRow>
 
                     <TableRow android:layout_marginVertical="@dimen/margin_21">
 
                         <TextView
-                            android:id="@+id/fees_description"
-                            android:layout_weight="1"
-                            android:fontFamily="font-normal"
-                            android:text="@string/fees_label"
-                            android:textColor="@color/offWhite"
-                            android:textSize="@dimen/text_16" />
+                                android:id="@+id/fees_description"
+                                android:layout_weight="1"
+                                android:fontFamily="font-normal"
+                                android:text="@string/fees_label"
+                                android:textColor="@color/offWhite"
+                                android:textSize="@dimen/text_16" />
 
                         <TextView
-                            android:id="@+id/details_fees"
-                            android:fontFamily="font-normal"
-                            android:textAlignment="viewEnd"
-                            android:textColor="@color/offWhite"
-                            android:textSize="@dimen/text_21"
-                            android:textStyle="bold" />
+                                android:id="@+id/details_fees"
+                                android:fontFamily="font-normal"
+                                android:textAlignment="viewEnd"
+                                android:textColor="@color/offWhite"
+                                android:textSize="@dimen/text_21"
+                                android:textStyle="bold" />
                     </TableRow>
                 </TableLayout>
             </com.hover.stax.views.StaxCardView>
 
-            <include layout="@layout/home_card_transactions"
-                android:id="@+id/homeCardTransactions"/>
+            <include
+                    android:id="@+id/homeCardTransactions"
+                    layout="@layout/home_card_transactions" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
