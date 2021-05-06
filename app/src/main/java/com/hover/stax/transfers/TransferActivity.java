@@ -15,13 +15,14 @@ import com.hover.stax.actions.ActionSelectViewModel;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.navigation.AbstractNavigationActivity;
+import com.hover.stax.pushNotification.PushNotificationTopicsInterface;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.views.StaxDialog;
 
-public class TransferActivity extends AbstractNavigationActivity {
+public class TransferActivity extends AbstractNavigationActivity implements PushNotificationTopicsInterface {
 	final public static String TAG = "TransferActivity";
 
 	private ChannelDropdownViewModel channelDropdownViewModel;
@@ -90,8 +91,14 @@ public class TransferActivity extends AbstractNavigationActivity {
 
 	private void makeHoverCall(HoverAction act) {
 		Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
+		updatePushNotifGroupStatus();
+
 		transferViewModel.checkSchedule();
 		makeCall(act);
+	}
+	private void updatePushNotifGroupStatus() {
+		joinAnyTransactionNotifGroup(this);
+		stopReceivingNoActivityTopicNotifGroup(this);
 	}
 
 	private void makeCall(HoverAction act) {
@@ -103,6 +110,7 @@ public class TransferActivity extends AbstractNavigationActivity {
 		if (transferViewModel.getContact().getValue() != null) { addRecipientInfo(hsb); }
 		hsb.run();
 	}
+
 	private void addRecipientInfo(HoverSession.Builder hsb) {
 		hsb.extra(HoverAction.ACCOUNT_KEY, transferViewModel.getContact().getValue().phoneNumber)
 			.extra(HoverAction.PHONE_KEY, transferViewModel.getContact().getValue().getNumberFormatForInput(actionSelectViewModel.getActiveAction().getValue(), channelDropdownViewModel.getActiveChannel().getValue()));

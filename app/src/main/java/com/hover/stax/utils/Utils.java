@@ -55,6 +55,16 @@ public class Utils {
 		editor.apply();
 	}
 
+	public static boolean isFirebaseTopicInDefaultState(String topic, Context c) {
+		return getSharedPrefs(c).getBoolean(topic, true);
+	}
+
+	public static void alterFirebaseTopicState(String topic, Context c) {
+		SharedPreferences.Editor editor = getSharedPrefs(c).edit();
+		editor.putBoolean(topic, false);
+		editor.apply();
+	}
+
 	public static String stripHniString(String hni) {
 		return hni.replace("[", "").replace("]", "").replace("\"", "");
 	}
