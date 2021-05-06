@@ -72,11 +72,12 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
     private void setDestinationChangedListener(BottomNavigationView nav) {
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             if (controller.getGraph().getId() == R.id.bounty_navigation) {
-               nav.getMenu().findItem(R.id.navigation_settings).setChecked(true);
+                nav.getMenu().findItem(R.id.navigation_settings).setChecked(true);
             }
         });
     }
 
+    // convenience method to prevent fragments from sometimes refiring
     private void setNavReselectListener(BottomNavigationView nav) {
         nav.setOnNavigationItemReselectedListener(item -> {
             //do nothing
