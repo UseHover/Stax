@@ -12,6 +12,7 @@
 /.idea/misc.xml
 /.idea/compiler.xml
 /.idea/*
+.idea/runConfigurations.xml
 .DS_Store
 /build
 app/build
