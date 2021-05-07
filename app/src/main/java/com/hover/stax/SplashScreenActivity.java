@@ -64,8 +64,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
         startSplashForegroundSequence();
         startBackgroundProcesses();
 
-        if (!shouldSelfDestructWhenAppVersionExpires(BuildConfig.BUILD_TYPE.equalsIgnoreCase("Release")))
-            continueOn();
+        continueOn();
     }
 
     private void setFullscreenView() {
@@ -90,12 +89,12 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
         initFirebaseMessagingTopics();
         FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this, s -> Timber.i("Firebase ID is: %s", s));
     }
-  
-  private void initFirebaseMessagingTopics() {
-		joinAllNotifications(this);
-		joinByNoActivityTopicNotifGroup(this);
-		joinByNoRequestMoneyNotifGroup(this);
-	}
+
+    private void initFirebaseMessagingTopics() {
+        joinAllNotifications(this);
+        joinByNoActivityTopicNotifGroup(this);
+        joinByNoRequestMoneyNotifGroup(this);
+    }
 
     private void blurBackground() {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
