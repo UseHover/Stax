@@ -118,6 +118,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-inappmessaging-display'
 
     //implementation 'io.sentry:sentry-android:3.1.0'
     implementation 'com.amplitude:android-sdk:2.23.2'
