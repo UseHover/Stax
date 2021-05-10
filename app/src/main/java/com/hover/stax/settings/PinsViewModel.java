@@ -83,14 +83,18 @@ public class PinsViewModel extends AndroidViewModel {
     }
 
     public void removeAccount(Channel channel) {
-        boolean changeDefault = channel.defaultAccount;
+        boolean channelDefaultChanged = channel.defaultAccount;
         channel.selected = false;
         channel.defaultAccount = false;
         repo.update(channel);
 
-        if (channels.getValue() == null || !changeDefault) return;
+        if (channels.getValue() != null && channelDefaultChanged) {
+            setRandomAccountAsDefault(channel.id);
+        }
+    }
+    private void setRandomAccountAsDefault(int excludedChannelId) {
         for (Channel c : channels.getValue()) {
-            if (!c.equals(channel)) {
+            if (c.id != excludedChannelId) {
                 c.defaultAccount = true;
                 repo.update(c);
                 return;
