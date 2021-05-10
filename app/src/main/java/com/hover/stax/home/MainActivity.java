@@ -55,12 +55,34 @@ public class MainActivity extends AbstractNavigationActivity implements
 
         checkForRequest(getIntent());
         checkForFragmentDirection(getIntent());
+        checkForDeepLinking();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         checkForRequest(intent);
+    }
+    private void checkForDeepLinking() {
+        Intent intent = getIntent();
+        if(intent.getAction()!=null && intent.getAction().equals(Intent.ACTION_VIEW) && intent.getData() != null) {
+            String deepLinkRoute = intent.getData().toString();
+            if(deepLinkRoute.contains(getString(R.string.deeplink_sendmoney))) {
+                navigateToTransferActivity(HoverAction.P2P, false, intent, this);
+            }
+            else if(deepLinkRoute.contains(getString(R.string.deeplink_airtime))) {
+                navigateToTransferActivity(HoverAction.AIRTIME, false, intent, this);
+            }
+            else if(deepLinkRoute.contains(getString(R.string.deeplink_linkaccount))) {
+                navigateToLinkAccountFragment(getNavController());
+            }
+            else if(deepLinkRoute.contains(getString(R.string.deeplink_balance)) || deepLinkRoute.contains(getString(R.string.deeplink_history))) {
+                navigateToBalanceFragment(getNavController());
+            }
+            else if(deepLinkRoute.contains(getString(R.string.deeplink_settings))) {
+                navigateToSettingsFragment(getNavController());
+            }
+        }
     }
 
     private void checkForRequest(Intent intent) {
