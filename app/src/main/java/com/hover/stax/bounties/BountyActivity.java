@@ -27,7 +27,7 @@ public class BountyActivity extends AbstractNavigationActivity implements PushNo
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Amplitude.getInstance().logEvent(getString(R.string.visit_screen, TAG));
+        Utils.logAnalyticsEvent(getString(R.string.visit_screen, TAG), this);
 
         bountyViewModel = new ViewModelProvider(this).get(BountyViewModel.class);
         binding = ActivityBountyBinding.inflate(getLayoutInflater());
@@ -38,12 +38,12 @@ public class BountyActivity extends AbstractNavigationActivity implements PushNo
         if (!Utils.getString(EMAIL_KEY, this).isEmpty())
             navigateToBountyListFragment(getNavController());
         else
-            Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_email)));
+            Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_email)), this);
     }
 
     public void makeCall(HoverAction a) {
-        Amplitude.getInstance().logEvent(getString(R.string.clicked_run_bounty_session));
-      updatePushNotifGroupStatus(a);
+        Utils.logAnalyticsEvent(getString(R.string.clicked_run_bounty_session), this);
+        updatePushNotifGroupStatus(a);
         call(a.public_id);
     }
   
@@ -54,7 +54,7 @@ public class BountyActivity extends AbstractNavigationActivity implements PushNo
 	}
 
     public void retryCall(String actionId) {
-        Amplitude.getInstance().logEvent(getString(R.string.clicked_retry_bounty_session));
+        Utils.logAnalyticsEvent(getString(R.string.clicked_retry_bounty_session), this);
         call(actionId);
     }
 

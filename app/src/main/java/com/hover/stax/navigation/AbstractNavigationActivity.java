@@ -19,6 +19,7 @@ import com.hover.stax.home.MainActivity;
 import com.hover.stax.permissions.PermissionUtils;
 import com.hover.stax.settings.SettingsFragment;
 import com.hover.stax.utils.Constants;
+import com.hover.stax.utils.Utils;
 
 public abstract class AbstractNavigationActivity extends AppCompatActivity implements NavigationInterface {
 
@@ -87,7 +88,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         } else {
             PermissionUtils.showInformativeBasicPermissionDialog(
                     pos -> PermissionUtils.requestPerms(getNavConst(toWhere), AbstractNavigationActivity.this),
-                    neg -> Amplitude.getInstance().logEvent(getString(R.string.perms_basic_cancelled)),
+                    neg -> Utils.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), AbstractNavigationActivity.this),
                     this);
         }
     }

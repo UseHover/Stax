@@ -10,12 +10,12 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
-import com.amplitude.api.Amplitude;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -106,7 +106,7 @@ public class BalancesViewModel extends AndroidViewModel {
 
     public void setAllRunning(Context c) {
         Log.e(TAG, "triggering refresh");
-        Amplitude.getInstance().logEvent(c.getString(R.string.refresh_balance_all));
+        Utils.logAnalyticsEvent(c.getString(R.string.refresh_balance_all), c);
         runFlag.setValue(ALL);
     }
 

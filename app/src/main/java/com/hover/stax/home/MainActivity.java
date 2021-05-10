@@ -24,6 +24,7 @@ import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
@@ -84,7 +85,7 @@ public class MainActivity extends AbstractNavigationActivity implements
 
     @Override
     public void onTapRefresh(int channel_id) {
-        Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_single));
+        Utils.logAnalyticsEvent(getString(R.string.refresh_balance_single), this);
         balancesViewModel.setRunning(channel_id);
     }
 
@@ -151,7 +152,7 @@ public class MainActivity extends AbstractNavigationActivity implements
         if (data.getAction() != null && data.getAction().equals(Constants.SCHEDULED)) {
             showMessage(getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))));
         } else {
-            Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
+            Utils.logAnalyticsEvent(getString(R.string.finish_load_screen), this);
             new ViewModelProvider(this).get(TransactionHistoryViewModel.class).saveTransaction(data, this);
         }
     }

@@ -13,6 +13,7 @@ import com.hover.stax.R;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.schedules.Schedule;
+import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
@@ -57,7 +58,7 @@ public abstract class AbstractFormViewModel extends AndroidViewModel {
     }
 
     protected void saveSchedule(Schedule s) {
-        Amplitude.getInstance().logEvent(getApplication().getString(R.string.scheduled_complete, s.type));
+        Utils.logAnalyticsEvent(getApplication().getString(R.string.scheduled_complete, s.type), getApplication().getBaseContext());
         repo.insert(s);
     }
 }
