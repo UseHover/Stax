@@ -2,10 +2,14 @@ package com.hover.stax.bounties;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.text.Spannable;
+import android.text.Spanned;
+import android.text.style.StrikethroughSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,11 +57,16 @@ class BountyListItem extends LinearLayout {
         if (noticeString != 0) binding.liCallout.setText(noticeString);
         binding.liCallout.setCompoundDrawablesWithIntrinsicBounds(noticeIcon, 0, 0, 0);
         binding.liCallout.setVisibility(noticeString != 0 ? View.VISIBLE : View.GONE);
-        binding.liDescription.setPaintFlags(isOpen ? 0 : Paint.STRIKE_THRU_TEXT_FLAG);
-        binding.liAmount.setPaintFlags(isOpen ? 0 : Paint.STRIKE_THRU_TEXT_FLAG);
+        if(!isOpen) strikeThrough(binding.liAmount);
+        if(!isOpen)strikeThrough(binding.liDescription);
         setOnClickListener(listener);
     }
 
+    private void strikeThrough(TextView textView) {
+        textView.setText(textView.getText(), TextView.BufferType.SPANNABLE);
+        Spannable spannable = (Spannable) textView.getText();
+        spannable.setSpan(new StrikethroughSpan(), 0, textView.getText().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
     public interface SelectListener {
         void viewTransactionDetail(String uuid);
 

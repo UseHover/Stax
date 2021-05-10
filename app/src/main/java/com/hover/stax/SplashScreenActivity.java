@@ -223,8 +223,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
     private void goToMainActivity(String redirectLink) {
         Intent intent = new Intent(this, MainActivity.class);
         try {
-            if (redirectLink != null)
-                intent.putExtra(FRAGMENT_DIRECT, Integer.parseInt(redirectLink));
+            if (redirectLink != null) intent.putExtra(FRAGMENT_DIRECT, Integer.parseInt(redirectLink));
         } catch (NumberFormatException e) {
             Utils.logErrorAndReportToFirebase(TAG, getString(R.string.firebase_fcm_redirect_format_err), e);
         }
