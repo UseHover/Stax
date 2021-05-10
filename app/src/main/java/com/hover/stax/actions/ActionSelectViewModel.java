@@ -33,6 +33,7 @@ public class ActionSelectViewModel extends AndroidViewModel {
 
     private void setActiveActionIfOutOfDate(List<HoverAction> actions) {
         Log.e(TAG, "maybe setting active action");
+
         if (actions != null && actions.size() > 0 && (activeAction.getValue() == null || !actions.contains(activeAction.getValue()))) {
             Log.e(TAG, "Auto selecting: " + actions.get(0) + " " + actions.get(0).transaction_type + " " + actions.get(0).recipientInstitutionId() + " " + actions.get(0).public_id);
             activeAction.setValue(actions.get(0));
