@@ -137,7 +137,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     // Hover SDK
-//    debugImplementation project(":hover.sdk")
+    debugImplementation project(":hover.sdk")
     def sdk_version = "1.7.2-stax-1.2.3-pro"
 
     releaseImplementation "com.hover:android-sdk:$sdk_version"
