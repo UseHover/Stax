@@ -1,14 +1,22 @@
 package com.hover.stax.navigation;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.play.core.review.ReviewInfo;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
+import com.google.android.play.core.tasks.OnCompleteListener;
+import com.google.android.play.core.tasks.Task;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
@@ -18,6 +26,9 @@ import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.transactions.TransactionDetailsFragment;
 import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.Constants;
+import com.hover.stax.utils.Utils;
+
+import org.jetbrains.annotations.NotNull;
 
 import static com.hover.stax.settings.SettingsFragment.LANG_CHANGE;
 
@@ -142,5 +153,15 @@ public interface NavigationInterface {
 
     default void navigateToBountyListFragment(NavController navController) {
         navController.navigate(R.id.bountyListFragment);
+    }
+    default  void openStaxReviewPage(Activity activity) {
+        Utils.logAnalyticsEvent(activity.getBaseContext().getString(R.string.visited_rating_review_screen), activity.getBaseContext());
+        ReviewManager reviewManager = ReviewManagerFactory.create(activity.getBaseContext());
+        reviewManager.requestReviewFlow().addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                Utils.logAnalyticsEvent(activity.getBaseContext().getString(R.string.clicked_rating_star), activity.getBaseContext());
+                reviewManager.launchReviewFlow(activity, task.getResult());
+            }
+        });
     }
 }

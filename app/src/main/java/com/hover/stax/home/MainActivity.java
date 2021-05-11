@@ -1,6 +1,8 @@
 package com.hover.stax.home;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -82,6 +84,9 @@ public class MainActivity extends AbstractNavigationActivity implements
             }
             else if(deepLinkRoute.contains(getString(R.string.deeplink_settings))) {
                 navigateToSettingsFragment(getNavController());
+            }
+            else if(deepLinkRoute.contains(getString(R.string.deeplink_reviews))) {
+                openStaxReviewPage(this);
             }
         }
     }
