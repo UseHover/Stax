@@ -49,7 +49,7 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
             Utils.logErrorAndReportToFirebase(TAG, e.getMessage(), e);
         }
 
-        Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_transaction)), data);
+        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_transaction)), data, requireContext());
 
         binding = FragmentTransactionBinding.inflate(inflater, container, false);
         return binding.getRoot();

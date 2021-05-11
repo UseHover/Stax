@@ -38,7 +38,8 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_security)));
+        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_security)), requireContext());
+
         PinsViewModel securityViewModel = new ViewModelProvider(this).get(PinsViewModel.class);
 
         binding = FragmentSettingsBinding.inflate(inflater, container, false);

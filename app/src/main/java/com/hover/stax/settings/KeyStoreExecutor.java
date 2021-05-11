@@ -29,15 +29,10 @@ final public class KeyStoreExecutor {
     private final static String TAG = "KeyStoreHelper";
 
     public static String createNewKey(final String value, final Context c) {
-//		new Thread(new Runnable() {
-//			@Override
-//			public void run() {
         String encryptedPin = encrypt(value, c);
         if (encryptedPin == null)
             encryptedPin = encrypt(value, c); // Try again then give up
         return encryptedPin;
-//			}
-//		}).start();
     }
 
     private static String encrypt(String value, Context c) {

@@ -34,7 +34,7 @@ public class SelectLanguageActivity extends AppCompatActivity {
         ActivityLanguageBinding binding = ActivityLanguageBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
-        Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_language)));
+        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_language)), this);
 
         if (getIntent().hasExtra(SettingsFragment.LANG_CHANGE))
             binding.staxCardView.setBackButtonVisibility(View.VISIBLE);

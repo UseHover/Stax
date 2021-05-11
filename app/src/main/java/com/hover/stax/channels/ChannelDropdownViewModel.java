@@ -246,12 +246,12 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
     private void logChoice(Channel channel) {
         Log.i(TAG, "saving selected channel: " + channel);
        joinByChannelNotifGroup(channel.id, getApplication().getApplicationContext());
-        JSONObject event = new JSONObject();
+        JSONObject args = new JSONObject();
         try {
-            event.put(getApplication().getString(R.string.added_channel_id), channel.id);
+            args.put(getApplication().getString(R.string.added_channel_id), channel.id);
         } catch (JSONException ignored) {
         }
-        Amplitude.getInstance().logEvent(getApplication().getString(R.string.new_channel_selected), event);
+        Utils.logAnalyticsEvent(getApplication().getString(R.string.new_channel_selected), args, getApplication().getBaseContext());
     }
 
     public String errorCheck() {
