@@ -28,6 +28,7 @@ import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.transactions.TransactionDetailsFragment;
 import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.Constants;
+import com.hover.stax.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -154,27 +155,5 @@ public interface NavigationInterface {
 
     default void navigateToBountyListFragment(NavController navController) {
         navController.navigate(R.id.bountyListFragment);
-    }
-
-    default  void navigateToOpenStaxReviewPage(Activity activity) {
-        ReviewManager reviewManager = ReviewManagerFactory.create(activity.getBaseContext());
-        reviewManager.requestReviewFlow().addOnCompleteListener(task -> {
-            if(task.isSuccessful()){
-                reviewManager.launchReviewFlow(activity, task.getResult());
-            }
-            //After user reviews first time, Playstore caches this and dialog dosen't show again. Therefore redirect to playstore page.
-            //Waiting for at least 1sec ensures it redirects.
-        }).addOnSuccessListener(result -> new Handler().postDelayed(() -> openStaxPlaystorePage(activity), 1000));
-    }
-    default void openStaxPlaystorePage(Activity activity) {
-        Uri link = Uri.parse(activity.getString(R.string.stax_market_playstore_link));
-        Intent goToMarket = new Intent(Intent.ACTION_VIEW, link);
-
-        goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-        try {
-            activity.startActivity(goToMarket);
-        } catch (ActivityNotFoundException e) {
-            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(activity.getString(R.string.stax_url_playstore_review_link))));
-        }
     }
 }

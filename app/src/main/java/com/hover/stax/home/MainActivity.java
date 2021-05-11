@@ -1,5 +1,6 @@
 package com.hover.stax.home;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,6 +13,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.hover.stax.balances.BalanceAdapter;
@@ -87,8 +90,29 @@ public class MainActivity extends AbstractNavigationActivity implements
             }
             else if(deepLinkRoute.contains(getString(R.string.deeplink_reviews))) {
                 Utils.logAnalyticsEvent(getString(R.string.visited_rating_review_screen), this);
-                navigateToOpenStaxReviewPage(this);
+                if(!Utils.getBoolean(Constants.APP_RATED, this)) launchRatingAndReviewDialog();
+                else openStaxPlaystorePage();
             }
+        }
+    }
+
+    private void launchRatingAndReviewDialog() {
+        ReviewManager reviewManager = ReviewManagerFactory.create(this);
+        reviewManager.requestReviewFlow().addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                reviewManager.launchReviewFlow(MainActivity.this, task.getResult()).addOnCompleteListener(
+                        task1 -> Utils.saveBoolean(Constants.APP_RATED, true, MainActivity.this));
+            }
+        });
+    }
+    private void openStaxPlaystorePage() {
+        Uri link = Uri.parse(getString(R.string.stax_market_playstore_link));
+        Intent goToMarket = new Intent(Intent.ACTION_VIEW, link);
+        goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+        try {
+            startActivity(goToMarket);
+        } catch (ActivityNotFoundException e) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.stax_url_playstore_review_link))));
         }
     }
 
