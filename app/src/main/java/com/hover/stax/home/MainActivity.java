@@ -86,6 +86,7 @@ public class MainActivity extends AbstractNavigationActivity implements
                 navigateToSettingsFragment(getNavController());
             }
             else if(deepLinkRoute.contains(getString(R.string.deeplink_reviews))) {
+                Utils.logAnalyticsEvent(getString(R.string.visited_rating_review_screen), this);
                 navigateToOpenStaxReviewPage(this);
             }
         }

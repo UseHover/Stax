@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +27,6 @@ import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.transactions.TransactionDetailsFragment;
 import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.Constants;
-import com.hover.stax.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -154,14 +154,25 @@ public interface NavigationInterface {
     default void navigateToBountyListFragment(NavController navController) {
         navController.navigate(R.id.bountyListFragment);
     }
+
     default  void navigateToOpenStaxReviewPage(Activity activity) {
-        Utils.logAnalyticsEvent(activity.getBaseContext().getString(R.string.visited_rating_review_screen), activity.getBaseContext());
         ReviewManager reviewManager = ReviewManagerFactory.create(activity.getBaseContext());
         reviewManager.requestReviewFlow().addOnCompleteListener(task -> {
             if(task.isSuccessful()){
-                Utils.logAnalyticsEvent(activity.getBaseContext().getString(R.string.clicked_rating_star), activity.getBaseContext());
                 reviewManager.launchReviewFlow(activity, task.getResult());
             }
-        });
+            //After user reviews first time, Playstore caches this and dialog dosen't show again. Therefore redirect to playstore page.
+        }).addOnSuccessListener(result -> openStaxPlaystorePage(activity));
+    }
+    default void openStaxPlaystorePage(Activity activity) {
+        Uri link = Uri.parse("market://details?id=com.hover.stax&showAllReviews=true");
+        Intent goToMarket = new Intent(Intent.ACTION_VIEW, link);
+
+        goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+        try {
+            activity.startActivity(goToMarket);
+        } catch (ActivityNotFoundException e) {
+            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.hover.stax&showAllReviews=true")));
+        }
     }
 }
