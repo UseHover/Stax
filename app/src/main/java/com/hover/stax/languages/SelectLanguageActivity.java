@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
+import com.appsflyer.AppsFlyerLib;
 import com.hover.stax.R;
 import com.hover.stax.databinding.ActivityLanguageBinding;
 import com.hover.stax.home.MainActivity;
@@ -49,6 +50,12 @@ public class SelectLanguageActivity extends AppCompatActivity {
         });
 
         binding.continueLanguageButton.setOnClickListener(v -> onContinue());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        AppsFlyerLib.getInstance().start(this);
     }
 
     private void createRadios(List<Lang> languages, RadioGroup radioGrp) {
