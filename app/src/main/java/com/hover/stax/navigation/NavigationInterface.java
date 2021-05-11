@@ -154,7 +154,7 @@ public interface NavigationInterface {
     default void navigateToBountyListFragment(NavController navController) {
         navController.navigate(R.id.bountyListFragment);
     }
-    default  void openStaxReviewPage(Activity activity) {
+    default  void navigateToOpenStaxReviewPage(Activity activity) {
         Utils.logAnalyticsEvent(activity.getBaseContext().getString(R.string.visited_rating_review_screen), activity.getBaseContext());
         ReviewManager reviewManager = ReviewManagerFactory.create(activity.getBaseContext());
         reviewManager.requestReviewFlow().addOnCompleteListener(task -> {
