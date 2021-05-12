@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -32,6 +31,8 @@ import com.hover.stax.utils.paymentLinkCryptography.Encryption;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+
+import timber.log.Timber;
 
 public class DatabaseRepo {
     private static String TAG = "DatabaseRepo";
@@ -178,7 +179,7 @@ public class DatabaseRepo {
 
                 updateRequests(t, intent);
             } catch (Exception e) {
-                Log.e(TAG, "error", e);
+                Timber.e(e, "error");
             }
         });
     }

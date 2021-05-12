@@ -47,7 +47,7 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), channel_id)
                 .setSmallIcon(R.drawable.ic_stax)
-                .setAutoCancel(false)
+                .setAutoCancel(true)
                 .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
                 .setPriority(2)
                 .setTicker(title)

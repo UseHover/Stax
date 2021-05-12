@@ -92,7 +92,7 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_SERVICE_ACCOUNT }}
           packageName: com.hover.stax
           releaseFiles: app/build/outputs/bundle/release/*.aab
-          track: beta
+          track: production
 #          whatsNewDirectory: whatsnew/
 
 

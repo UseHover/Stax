@@ -29,6 +29,8 @@ import com.hover.stax.views.StaxTextInputLayout;
 
 import timber.log.Timber;
 
+import static org.koin.androidx.viewmodel.compat.ViewModelCompat.getViewModel;
+
 public class TransferFragment extends AbstractFormFragment implements ActionSelect.HighlightListener {
 
     private TransferViewModel transferViewModel;
@@ -44,8 +46,10 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+
+        actionSelectViewModel = getViewModel(this, ActionSelectViewModel.class);
+
         channelDropdownViewModel = new ViewModelProvider(requireActivity()).get(ChannelDropdownViewModel.class);
-        actionSelectViewModel = new ViewModelProvider(requireActivity()).get(ActionSelectViewModel.class);
         abstractFormViewModel = new ViewModelProvider(requireActivity()).get(TransferViewModel.class);
         transferViewModel = (TransferViewModel) abstractFormViewModel;
 

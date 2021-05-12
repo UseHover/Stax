@@ -13,13 +13,9 @@ import com.hover.stax.R;
 import com.hover.stax.actions.ActionSelectViewModel;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.contacts.StaxContact;
-
-import com.hover.stax.navigation.AbstractNavigationActivity;
-import com.hover.stax.pushNotification.PushNotificationTopicsInterface;
-import com.hover.stax.utils.Constants;
-
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.navigation.AbstractNavigationActivity;
+import com.hover.stax.pushNotification.PushNotificationTopicsInterface;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.utils.Constants;
@@ -27,11 +23,14 @@ import com.hover.stax.views.StaxDialog;
 
 import timber.log.Timber;
 
+import static org.koin.androidx.viewmodel.compat.ViewModelCompat.getViewModel;
+
 public class TransferActivity extends AbstractNavigationActivity  implements PushNotificationTopicsInterface {
     final public static String TAG = "TransferActivity";
 
-    private ChannelDropdownViewModel channelDropdownViewModel;
     private ActionSelectViewModel actionSelectViewModel;
+
+    private ChannelDropdownViewModel channelDropdownViewModel;
     private TransferViewModel transferViewModel;
     private ScheduleDetailViewModel scheduleViewModel = null;
 
@@ -39,8 +38,8 @@ public class TransferActivity extends AbstractNavigationActivity  implements Pus
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         channelDropdownViewModel = new ViewModelProvider(this).get(ChannelDropdownViewModel.class);
-        actionSelectViewModel = new ViewModelProvider(this).get(ActionSelectViewModel.class);
         transferViewModel = new ViewModelProvider(this).get(TransferViewModel.class);
+        actionSelectViewModel = getViewModel(this, ActionSelectViewModel.class);
 
         String action = getIntent().getAction();
 
@@ -66,10 +65,12 @@ public class TransferActivity extends AbstractNavigationActivity  implements Pus
         scheduleViewModel.getAction().observe(this, action -> {
             if (action != null) actionSelectViewModel.setActiveAction(action);
         });
+
         scheduleViewModel.getSchedule().observe(this, schedule -> {
             if (schedule == null) return;
             transferViewModel.view(schedule);
         });
+
         scheduleViewModel.setSchedule(schedule_id);
         Amplitude.getInstance().logEvent(getString(R.string.clicked_schedule_notification));
     }
