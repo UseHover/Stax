@@ -3,6 +3,7 @@ package com.hover.stax
 import android.app.Application
 import com.google.firebase.FirebaseApp
 import com.hover.stax.di.appModule
+import com.hover.stax.di.dataModule
 import com.hover.stax.utils.fonts.FontReplacer
 import com.yariksoffice.lingver.Lingver
 import org.koin.android.ext.koin.androidContext
@@ -37,7 +38,7 @@ class ApplicationInstance : Application() {
     private fun initDI(){
         startKoin {
             androidContext(this@ApplicationInstance)
-            modules(listOf(appModule))
+            modules(listOf(appModule, dataModule))
         }
     }
 
