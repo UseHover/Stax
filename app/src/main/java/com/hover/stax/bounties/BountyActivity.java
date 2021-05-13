@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 
 import com.amplitude.api.Amplitude;
+import com.appsflyer.AppsFlyerLib;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.HoverParameters;
 import com.hover.stax.R;
@@ -39,6 +40,12 @@ public class BountyActivity extends AbstractNavigationActivity implements PushNo
             navigateToBountyListFragment(getNavController());
         else
             Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_email)), this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        AppsFlyerLib.getInstance().start(this);
     }
 
     public void makeCall(HoverAction a) {

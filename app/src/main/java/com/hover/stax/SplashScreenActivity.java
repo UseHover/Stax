@@ -27,6 +27,7 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.WorkManager;
 
 import com.amplitude.api.Amplitude;
+import com.appsflyer.AppsFlyerLib;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.sdk.actions.HoverAction;
@@ -66,6 +67,12 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
         startBackgroundProcesses();
 
         continueOn();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        AppsFlyerLib.getInstance().start(this);
     }
 
     private void setFullscreenView() {
