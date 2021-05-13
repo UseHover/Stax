@@ -9,17 +9,27 @@ import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import androidx.annotation.NonNull;
+
+import com.amplitude.api.Amplitude;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.stax.BuildConfig;
+import com.hover.stax.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
+import java.util.Iterator;
 
 import timber.log.Timber;
 
@@ -151,6 +161,30 @@ public class Utils {
 
 	public static void removeFirebaseMessagingTopic(String topic){
 		FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
+	}
+	public static void logAnalyticsEvent(String event, Context context) {
+		Amplitude.getInstance().logEvent(event);
+		FirebaseAnalytics.getInstance(context).logEvent(event, null);
+	}
+	public static void logAnalyticsEvent(@NonNull  String event, @NonNull JSONObject args, @NonNull Context context) {
+		Bundle bundle = convertJSONObjectToBundle(args);
+		Amplitude.getInstance().logEvent(event, args);
+		FirebaseAnalytics.getInstance(context).logEvent(event, bundle);
+	}
+	private static Bundle convertJSONObjectToBundle(JSONObject args) {
+		Bundle bundle = new Bundle();
+		Iterator<String> iter = args.keys();
+		while(iter.hasNext()){
+			String key = iter.next();
+			String value = null;
+			try {
+				value = args.get(key).toString();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			bundle.putString(key,value);
+		}
+		return bundle;
 	}
 
 	public static void showSoftKeyboard(Context context, View view) {

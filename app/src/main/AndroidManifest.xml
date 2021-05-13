@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -49,10 +50,90 @@
         <activity
             android:name=".home.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/StaxTheme" />
+            android:theme="@style/StaxTheme">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="stax.me"
+                    android:pathPattern="@string/deeplink_sendmoney"
+                    android:scheme="https" />
+                <data
+                    android:host="stax.me"
+                    android:pathPattern="@string/deeplink_sendmoney"
+                    android:scheme="http" />
+                <data
+                    android:host="stax.me"
+                    android:pathPattern="@string/deeplink_airtime"
+                    android:scheme="https" />
+                <data
+                    android:host="stax.me"
+                    android:pathPattern="@string/deeplink_airtime"
+                    android:scheme="http" />
+                <data
+                    android:host="stax.me"
+                    android:pathPattern="@string/deeplink_balance"
+                    android:scheme="https" />
+                <data
+                    android:host="stax.me"
+                    android:pathPattern="@string/deeplink_balance"
+                    android:scheme="http" />
+                <data
+                    android:host="stax.me"
+                    android:pathPattern="@string/deeplink_settings"
+                    android:scheme="https" />
+                <data
+                    android:host="stax.me"
+                    android:pathPattern="@string/deeplink_settings"
+                    android:scheme="http" />
+                <data
+                    android:host="stax.me"
+                    android:pathPattern="@string/deeplink_linkaccount"
+                    android:scheme="https" />
+                <data
+                    android:host="stax.me"
+                    android:pathPattern="@string/deeplink_linkaccount"
+                    android:scheme="http" />
+                <data
+                    android:host="stax.me"
+                    android:pathPattern="@string/deeplink_history"
+                    android:scheme="https" />
+                <data
+                    android:host="stax.me"
+                    android:pathPattern="@string/deeplink_history"
+                    android:scheme="http" />
+                <data
+                    android:host="stax.me"
+                    android:pathPattern="@string/deeplink_reviews"
+                    android:scheme="https" />
+                <data
+                    android:host="stax.me"
+                    android:pathPattern="@string/deeplink_reviews"
+                    android:scheme="http" />
+            </intent-filter>
+        </activity>
 
         <activity android:name=".languages.SelectLanguageActivity"
-            android:label="@string/language"/>
+            android:label="@string/language">
+            <intent-filter >
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="stax.me"
+                    android:pathPattern="@string/deeplink_language"
+                    android:scheme="https" />
+                <data
+                    android:host="stax.me"
+                    android:pathPattern="@string/deeplink_language"
+                    android:scheme="http" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".permissions.PermissionsActivity"
@@ -62,16 +143,48 @@
         <activity
             android:name=".transfers.TransferActivity"
             android:theme="@style/StaxTheme"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
 
         <activity
             android:name=".requests.RequestActivity"
             android:theme="@style/StaxTheme"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
+            android:windowSoftInputMode="stateVisible|adjustResize">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="stax.me"
+                    android:pathPattern="@string/deeplink_request"
+                    android:scheme="https" />
+                <data
+                    android:host="stax.me"
+                    android:pathPattern="@string/deeplink_request"
+                    android:scheme="http" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".bounties.BountyActivity"
-            android:theme="@style/StaxTheme" />
+            android:theme="@style/StaxTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="stax.me"
+                    android:pathPattern="@string/deeplink_bounty"
+                    android:scheme="https" />
+                <data
+                    android:host="stax.me"
+                    android:pathPattern="@string/deeplink_bounty"
+                    android:scheme="http" />
+            </intent-filter>
+        </activity>
 
         <activity android:name=".destruct.SelfDestructActivity" />
         <activity
@@ -96,6 +209,13 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
+
+        <receiver android:name="com.appsflyer.SingleInstallBroadcastReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
 
         <service
             android:name=".pushNotification.FirebaseMessageReceiver"

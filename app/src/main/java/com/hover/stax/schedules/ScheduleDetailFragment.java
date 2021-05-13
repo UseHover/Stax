@@ -40,12 +40,11 @@ public class ScheduleDetailFragment extends Fragment {
             data.put("id", getArguments().getInt("id"));
         } catch (JSONException ignored) {
         }
-        Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_schedule)), data);
+        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_schedule)), data, requireContext());
 
         binding = FragmentScheduleBinding.inflate(inflater, container, false);
 
         return binding.getRoot();
-//				inflater.inflate(R.layout.fragment_schedule, container, false);
     }
 
     @Override

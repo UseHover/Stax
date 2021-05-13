@@ -33,8 +33,7 @@ public class OnBoardingActivity extends AppCompatActivity implements ViewPager.O
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_onboarding)));
-
+        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_onboarding)), this);
         binding = OnboardingLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -67,7 +66,7 @@ public class OnBoardingActivity extends AppCompatActivity implements ViewPager.O
     @Override
     public void onPageSelected(int position) {
         Log.d(TAG, "pager selected onboarding slide: " + position);
-        Amplitude.getInstance().logEvent(getString(R.string.viewing_onboarding_slide, String.valueOf(position)));
+        Utils.logAnalyticsEvent(getString(R.string.viewing_onboarding_slide, String.valueOf(position)), this);
     }
 
     @Override
@@ -78,7 +77,7 @@ public class OnBoardingActivity extends AppCompatActivity implements ViewPager.O
     @Override
     public void onClick(View v) {
         viewPager.stopAutoScroll();
-        Amplitude.getInstance().logEvent(getString(R.string.clicked_getstarted));
+        Utils.logAnalyticsEvent(getString(R.string.clicked_getstarted), this);
         setPassedThrough();
         goToMainActivity();
     }

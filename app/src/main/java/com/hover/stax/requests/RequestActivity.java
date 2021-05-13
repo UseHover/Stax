@@ -18,6 +18,7 @@ import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxDialog;
 
 
@@ -48,7 +49,7 @@ public class RequestActivity extends AbstractNavigationActivity implements Reque
         if (getIntent().hasExtra(Schedule.SCHEDULE_ID))
             createFromSchedule(getIntent().getIntExtra(Schedule.SCHEDULE_ID, -1));
         else
-            Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_new_request)));
+            Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_new_request)), this);
     }
 
     private void createFromSchedule(int schedule_id) {
@@ -58,17 +59,17 @@ public class RequestActivity extends AbstractNavigationActivity implements Reque
             requestViewModel.setSchedule(schedule);
         });
         scheduleViewModel.setSchedule(schedule_id);
-        Amplitude.getInstance().logEvent(getString(R.string.clicked_schedule_notification));
+        Utils.logAnalyticsEvent(getString(R.string.clicked_schedule_notification), this);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == Constants.SMS && new PermissionHelper(this).permissionsGranted(grantResults)) {
-            Amplitude.getInstance().logEvent(getString(R.string.perms_sms_granted));
+            Utils.logAnalyticsEvent(getString(R.string.perms_sms_granted), this);
             sendSms(null);
         } else if (requestCode == Constants.SMS) {
-            Amplitude.getInstance().logEvent(getString(R.string.perms_sms_denied));
+            Utils.logAnalyticsEvent(getString(R.string.perms_sms_denied), this);
             UIHelper.flashMessage(this, getResources().getString(R.string.toast_error_smsperm));
         }
     }
@@ -139,7 +140,7 @@ public class RequestActivity extends AbstractNavigationActivity implements Reque
 
     private void saveUnsent() {
         requestViewModel.saveRequest();
-        Amplitude.getInstance().logEvent(getString(R.string.saved_unsent_request));
+        Utils.logAnalyticsEvent(getString(R.string.saved_unsent_request), this);
         super.onBackPressed();
     }
 }

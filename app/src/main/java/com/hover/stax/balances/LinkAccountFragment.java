@@ -15,6 +15,7 @@ import com.hover.stax.R;
 import com.hover.stax.channels.ChannelDropdown;
 import com.hover.stax.channels.ChannelDropdownViewModel;
 import com.hover.stax.databinding.FragmentLinkAccountBinding;
+import com.hover.stax.utils.Utils;
 
 public class LinkAccountFragment extends Fragment {
     final public static String TAG = "LinkAccountFragment";
@@ -26,7 +27,7 @@ public class LinkAccountFragment extends Fragment {
     private FragmentLinkAccountBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_link_account)));
+        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_link_account)), requireContext());
         channelDropdownViewModel = new ViewModelProvider(requireActivity()).get(ChannelDropdownViewModel.class);
         balancesViewModel = new ViewModelProvider(requireActivity()).get(BalancesViewModel.class);
 

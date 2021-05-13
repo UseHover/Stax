@@ -27,6 +27,8 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.WorkManager;
 
 import com.amplitude.api.Amplitude;
+import com.appsflyer.AppsFlyerLib;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
@@ -67,6 +69,12 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
         continueOn();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        AppsFlyerLib.getInstance().start(this);
+    }
+
     private void setFullscreenView() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             getWindow().setDecorFitsSystemWindows(false);
@@ -83,6 +91,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
     private void startBackgroundProcesses() {
         initAmplitude();
+        logPushNotificationIfRequired();
         initHover();
         createNotificationChannel();
         startWorkers();
@@ -141,11 +150,12 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
     private void initAmplitude() {
         Amplitude.getInstance().initialize(this, getString(R.string.amp)).enableForegroundTracking(getApplication());
-
+    }
+    private void logPushNotificationIfRequired() {
         if (getIntent().getExtras() != null) {
             String fcmTitle = getIntent().getExtras().getString(Constants.FROM_FCM);
             if (fcmTitle != null) {
-                Amplitude.getInstance().logEvent(getString(R.string.cliucked_push_notification, fcmTitle));
+                Utils.logAnalyticsEvent(getString(R.string.cliucked_push_notification, fcmTitle), this);
             }
         }
     }
@@ -223,8 +233,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
     private void goToMainActivity(String redirectLink) {
         Intent intent = new Intent(this, MainActivity.class);
         try {
-            if (redirectLink != null)
-                intent.putExtra(FRAGMENT_DIRECT, Integer.parseInt(redirectLink));
+            if (redirectLink != null) intent.putExtra(FRAGMENT_DIRECT, Integer.parseInt(redirectLink));
         } catch (NumberFormatException e) {
             Utils.logErrorAndReportToFirebase(TAG, getString(R.string.firebase_fcm_redirect_format_err), e);
         }

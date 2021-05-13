@@ -12,6 +12,7 @@ import android.util.Log;
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.utils.Utils;
 
 import java.util.List;
 

@@ -7,6 +7,9 @@
 	<string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
 	<string name="bounty_endpoint">/stax_bounty_hunters</string>
 	<string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
+	<string name="appsflyer_key" public="false" translatable="false">4B6DDdYFw55PmVPTwr8Ski</string>
+	<string name="stax_market_playstore_link" translatable="false">market://details?id=com.hover.stax</string>
+	<string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
 
 	<string name="nav_home">Home</string>
 	<string name="nav_balance_and_history">Balance and history</string>
@@ -357,4 +360,7 @@
 	<string name="bounty_submitted_successfully">Bounty submitted successfully</string>
 	<string name="language">Language</string>
 	<string name="bounty">Bounty</string>
+
+
+
 </resources>

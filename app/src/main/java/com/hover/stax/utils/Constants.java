@@ -33,5 +33,6 @@ public class Constants {
     final public static String REQUEST_LINK = "request_link";
     final public static String FRAGMENT_DIRECT = "fragment_direct";
     final public static String FROM_FCM = "from_notification";
+    final public static String APP_RATED = "app_has_been_rated";
 
 }

@@ -37,7 +37,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_list)));
+        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_list)), requireContext());
         bountyViewModel = new ViewModelProvider(this).get(BountyViewModel.class);
 
         binding = FragmentBountyListBinding.inflate(inflater, container, false);
