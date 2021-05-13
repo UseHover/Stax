@@ -31,8 +31,15 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
     onMessageReceived(RemoteMessage remoteMessage) {
         Map<String, String> data = remoteMessage.getData();
         String redirect = data.get("redirect");
+
         if (remoteMessage.getNotification() != null) {
             showNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), redirect);
+        }
+        else {
+            //Supports notification coming from custom servers.
+            String title = data.get("title");
+            String body = data.get("body");
+            showNotification(title, body, redirect);
         }
     }
 
@@ -47,7 +54,7 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), channel_id)
                 .setSmallIcon(R.drawable.ic_stax)
-                .setAutoCancel(false)
+                .setAutoCancel(true)
                 .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
                 .setPriority(2)
                 .setTicker(title)
