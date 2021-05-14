@@ -86,7 +86,6 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
         blurBackground();
         fadeInLogo();
     }
-
     private void startBackgroundProcesses() {
         initAmplitude();
         logPushNotificationIfRequired();
