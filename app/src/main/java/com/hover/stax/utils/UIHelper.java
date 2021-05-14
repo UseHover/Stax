@@ -1,5 +1,6 @@
 package com.hover.stax.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -7,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,5 +121,13 @@ public class UIHelper {
                 .load(resId)
                 .config(Bitmap.Config.RGB_565)
                 .resize(size, size).into(target);
+    }
+
+    public static void setFullscreenView(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            activity.getWindow().setDecorFitsSystemWindows(false);
+        } else {
+            activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        }
     }
 }

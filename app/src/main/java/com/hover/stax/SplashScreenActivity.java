@@ -66,8 +66,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setFullscreenView();
-
+        UIHelper.setFullscreenView(this);
         super.onCreate(savedInstanceState);
 
         startSplashForegroundSequence();
@@ -80,14 +79,6 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
     protected void onStart() {
         super.onStart();
         AppsFlyerLib.getInstance().start(this);
-    }
-
-    private void setFullscreenView() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            getWindow().setDecorFitsSystemWindows(false);
-        } else {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-        }
     }
 
     private void startSplashForegroundSequence() {
