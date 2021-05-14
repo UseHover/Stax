@@ -17,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import androidx.annotation.NonNull;
 
 import com.amplitude.api.Amplitude;
+import com.appsflyer.AppsFlyerLib;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -29,7 +30,9 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import timber.log.Timber;
 
@@ -165,11 +168,14 @@ public class Utils {
 	public static void logAnalyticsEvent(String event, Context context) {
 		Amplitude.getInstance().logEvent(event);
 		FirebaseAnalytics.getInstance(context).logEvent(event, null);
+		AppsFlyerLib.getInstance().logEvent(context, event, null);
 	}
 	public static void logAnalyticsEvent(@NonNull  String event, @NonNull JSONObject args, @NonNull Context context) {
 		Bundle bundle = convertJSONObjectToBundle(args);
+		Map<String, Object> map = convertJSONObjectToHashMap(args);
 		Amplitude.getInstance().logEvent(event, args);
 		FirebaseAnalytics.getInstance(context).logEvent(event, bundle);
+		AppsFlyerLib.getInstance().logEvent(context, event, map);
 	}
 	private static Bundle convertJSONObjectToBundle(JSONObject args) {
 		Bundle bundle = new Bundle();
@@ -185,6 +191,21 @@ public class Utils {
 			bundle.putString(key,value);
 		}
 		return bundle;
+	}
+	private static Map<String, Object> convertJSONObjectToHashMap(JSONObject args) {
+		Map<String, Object> map = new HashMap<>();
+		Iterator<String> iter = args.keys();
+		while(iter.hasNext()){
+			String key = iter.next();
+			String value = null;
+			try {
+				value = args.get(key).toString();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			map.put(key,value);
+		}
+		return map;
 	}
 
 	public static void showSoftKeyboard(Context context, View view) {
