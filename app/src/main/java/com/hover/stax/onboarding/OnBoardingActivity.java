@@ -2,6 +2,7 @@ package com.hover.stax.onboarding;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.databinding.OnboardingLayoutBinding;
 import com.hover.stax.home.MainActivity;
+import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
 
@@ -32,9 +34,9 @@ public class OnBoardingActivity extends AppCompatActivity implements ViewPager.O
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        UIHelper.setFullscreenView(this);
         super.onCreate(savedInstanceState);
-        Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_onboarding)));
-
+        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_onboarding)), this);
         binding = OnboardingLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -42,9 +44,17 @@ public class OnBoardingActivity extends AppCompatActivity implements ViewPager.O
         initContinueButton();
     }
 
+    private void setFullscreenView() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            getWindow().setDecorFitsSystemWindows(false);
+        } else {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        }
+    }
     private void initContinueButton() {
         binding.onboardingContinueBtn.setOnClickListener(this);
     }
+
 
     private void setupOnboardingSlides() {
         viewPager = binding.vpPager;
@@ -67,7 +77,7 @@ public class OnBoardingActivity extends AppCompatActivity implements ViewPager.O
     @Override
     public void onPageSelected(int position) {
         Log.d(TAG, "pager selected onboarding slide: " + position);
-        Amplitude.getInstance().logEvent(getString(R.string.viewing_onboarding_slide, String.valueOf(position)));
+        Utils.logAnalyticsEvent(getString(R.string.viewing_onboarding_slide, String.valueOf(position)), this);
     }
 
     @Override
@@ -78,7 +88,7 @@ public class OnBoardingActivity extends AppCompatActivity implements ViewPager.O
     @Override
     public void onClick(View v) {
         viewPager.stopAutoScroll();
-        Amplitude.getInstance().logEvent(getString(R.string.clicked_getstarted));
+        Utils.logAnalyticsEvent(getString(R.string.clicked_getstarted), this);
         setPassedThrough();
         goToMainActivity();
     }

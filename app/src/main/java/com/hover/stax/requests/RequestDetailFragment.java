@@ -39,7 +39,7 @@ public class RequestDetailFragment extends Fragment implements RequestSenderInte
         } catch (JSONException ignored) {
         }
 
-        Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_request_detail)), data);
+        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_request_detail)), data, requireContext());
 
         binding = FragmentRequestDetailBinding.inflate(inflater, container, false);
         return binding.getRoot();

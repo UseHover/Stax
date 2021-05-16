@@ -13,14 +13,14 @@ import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.databinding.FragmentMainBinding;
 import com.hover.stax.utils.Constants;
+import com.hover.stax.utils.Utils;
 
 public class HomeFragment extends Fragment {
 
     private FragmentMainBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_home)));
-
+        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext());
         binding = FragmentMainBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }

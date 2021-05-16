@@ -13,12 +13,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
@@ -27,6 +29,11 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.WorkManager;
 
 import com.amplitude.api.Amplitude;
+import com.appsflyer.AppsFlyerLib;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.installations.FirebaseInstallations;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
@@ -41,6 +48,8 @@ import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.blur.StaxBlur;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -57,8 +66,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setFullscreenView();
-
+        UIHelper.setFullscreenView(this);
         super.onCreate(savedInstanceState);
 
         startSplashForegroundSequence();
@@ -67,12 +75,10 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
         continueOn();
     }
 
-    private void setFullscreenView() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            getWindow().setDecorFitsSystemWindows(false);
-        } else {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-        }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        AppsFlyerLib.getInstance().start(this);
     }
 
     private void startSplashForegroundSequence() {
@@ -80,14 +86,15 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
         blurBackground();
         fadeInLogo();
     }
-
     private void startBackgroundProcesses() {
         initAmplitude();
+        logPushNotificationIfRequired();
         initHover();
         createNotificationChannel();
         startWorkers();
         initFirebaseMessagingTopics();
         FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this, s -> Timber.i("Firebase ID is: %s", s));
+        FirebaseInstallations.getInstance().getId().addOnCompleteListener(task -> Log.d(TAG, "Firebase installation id is: "+task.getResult())); //Adding this line somewhat force pulls IAM to show up.
     }
 
     private void initFirebaseMessagingTopics() {
@@ -141,11 +148,12 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
     private void initAmplitude() {
         Amplitude.getInstance().initialize(this, getString(R.string.amp)).enableForegroundTracking(getApplication());
-
+    }
+    private void logPushNotificationIfRequired() {
         if (getIntent().getExtras() != null) {
             String fcmTitle = getIntent().getExtras().getString(Constants.FROM_FCM);
             if (fcmTitle != null) {
-                Amplitude.getInstance().logEvent(getString(R.string.cliucked_push_notification, fcmTitle));
+                Utils.logAnalyticsEvent(getString(R.string.cliucked_push_notification, fcmTitle), this);
             }
         }
     }
@@ -223,8 +231,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
     private void goToMainActivity(String redirectLink) {
         Intent intent = new Intent(this, MainActivity.class);
         try {
-            if (redirectLink != null)
-                intent.putExtra(FRAGMENT_DIRECT, Integer.parseInt(redirectLink));
+            if (redirectLink != null) intent.putExtra(FRAGMENT_DIRECT, Integer.parseInt(redirectLink));
         } catch (NumberFormatException e) {
             Utils.logErrorAndReportToFirebase(TAG, getString(R.string.firebase_fcm_redirect_format_err), e);
         }
