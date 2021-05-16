@@ -12,6 +12,7 @@ val appModule = module(true) {
     single { HoverRoomDatabase.getInstance(get()) }
 
     viewModel { ActionSelectViewModel(get()) }
+
 }
 
 val dataModule = module {

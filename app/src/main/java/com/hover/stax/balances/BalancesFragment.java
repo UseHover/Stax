@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDropdown;
@@ -26,6 +25,7 @@ import com.hover.stax.schedules.Schedule;
 import com.hover.stax.transactions.TransactionHistoryAdapter;
 import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxCardView;
 
 import java.util.List;
@@ -54,7 +54,7 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
     private FragmentBalanceBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_balance_and_history)));
+        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_balance_and_history)), requireContext());
         balancesViewModel = new ViewModelProvider(requireActivity()).get(BalancesViewModel.class);
         channelDropdownViewModel = new ViewModelProvider(requireActivity()).get(ChannelDropdownViewModel.class);
 

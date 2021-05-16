@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="deeplink_bounty" translatable="false">/bounty</string>
+	<string name="deeplink_request" translatable="false">/request</string>
+	<string name="deeplink_airtime" translatable="false">/airtime</string>
+	<string name="deeplink_sendmoney" translatable="false">/sendmoney</string>
+	<string name="deeplink_balance" translatable="false">/balance</string>
+	<string name="deeplink_history" translatable="false">/history</string>
+	<string name="deeplink_linkaccount" translatable="false">/linkaccount</string>
+	<string name="deeplink_language" translatable="false">/language</string>
+	<string name="deeplink_settings" translatable="false">/settings</string>
+</resources>

@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 
-import com.amplitude.api.Amplitude;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.permissions.PermissionHelper;
@@ -24,6 +23,7 @@ import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.permissions.PermissionUtils;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxCardView;
 
 public abstract class AbstractFormFragment extends Fragment {
@@ -67,7 +67,7 @@ public abstract class AbstractFormFragment extends Fragment {
     }
 
     protected void contactPicker(int requestCode, Context c) {
-        Amplitude.getInstance().logEvent(getString(R.string.try_contact_select));
+        Utils.logAnalyticsEvent(getString(R.string.try_contact_select), c);
         if (PermissionUtils.hasContactPermission(c))
             startContactIntent(requestCode);
         else
@@ -83,11 +83,11 @@ public abstract class AbstractFormFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (new PermissionHelper(getContext()).permissionsGranted(grantResults)) {
-            Amplitude.getInstance().logEvent(getString(R.string.contact_perm_success));
+            Utils.logAnalyticsEvent(getString(R.string.contact_perm_success), getContext());
             startContactIntent(requestCode);
         } else {
-            Amplitude.getInstance().logEvent(getString(R.string.contact_perm_denied));
-            UIHelper.flashMessage(getContext(), getResources().getString(R.string.toast_error_contactperm));
+            Utils.logAnalyticsEvent(getString(R.string.contact_perm_denied), getContext());
+            UIHelper.flashMessage(requireContext(), getResources().getString(R.string.toast_error_contactperm));
         }
     }
 
@@ -97,11 +97,11 @@ public abstract class AbstractFormFragment extends Fragment {
         if (requestCode != Constants.ADD_SERVICE && resultCode == Activity.RESULT_OK) {
             StaxContact staxContact = new StaxContact(data, getContext());
             if (staxContact.getPhoneNumber() != null) {
-                Amplitude.getInstance().logEvent(getString(R.string.contact_select_success));
+                Utils.logAnalyticsEvent(getString(R.string.contact_select_success), getContext());
                 onContactSelected(requestCode, staxContact);
             } else {
-                Amplitude.getInstance().logEvent(getString(R.string.contact_select_error));
-                UIHelper.flashMessage(getContext(), getResources().getString(R.string.toast_error_contactselect));
+                Utils.logAnalyticsEvent(getString(R.string.contact_select_error), getContext());
+                UIHelper.flashMessage(requireContext(), getResources().getString(R.string.toast_error_contactselect));
             }
         }
     }

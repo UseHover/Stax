@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.amplitude.api.Amplitude;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.hover.stax.actions.ActionSelect;
@@ -243,6 +242,6 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
         contactInput.setText(r.requester_number, false);
         transferViewModel.setEditing(r.amount == null || r.amount.isEmpty());
         channelDropdown.setState(getString(R.string.channel_request_fieldinfo, String.valueOf(r.requester_institution_id)), AbstractStatefulInput.INFO);
-        Amplitude.getInstance().logEvent(getString(R.string.loaded_request_link));
+        Utils.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext());
     }
 }

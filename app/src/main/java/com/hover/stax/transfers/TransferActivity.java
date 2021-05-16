@@ -19,6 +19,7 @@ import com.hover.stax.pushNotification.PushNotificationTopicsInterface;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.utils.Constants;
+import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxDialog;
 
 import timber.log.Timber;
@@ -57,7 +58,8 @@ public class TransferActivity extends AbstractNavigationActivity  implements Pus
         else if (getIntent().hasExtra(Constants.REQUEST_LINK))
             createFromRequest(getIntent().getStringExtra(Constants.REQUEST_LINK));
         else
-            Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getIntent().getAction()));
+            Utils.logAnalyticsEvent(getString(R.string.visit_screen, getIntent().getAction()), this);
+
     }
 
     private void createFromSchedule(int schedule_id) {
@@ -72,13 +74,13 @@ public class TransferActivity extends AbstractNavigationActivity  implements Pus
         });
 
         scheduleViewModel.setSchedule(schedule_id);
-        Amplitude.getInstance().logEvent(getString(R.string.clicked_schedule_notification));
+        Utils.logAnalyticsEvent(getString(R.string.clicked_schedule_notification), this);
     }
 
     private void createFromRequest(String link) {
         transferViewModel.decrypt(link);
         observeRequest();
-        Amplitude.getInstance().logEvent(getString(R.string.clicked_request_link));
+        Utils.logAnalyticsEvent(getString(R.string.clicked_request_link), this);
     }
 
     private void observeRequest() {
@@ -99,8 +101,8 @@ public class TransferActivity extends AbstractNavigationActivity  implements Pus
     }
 
     private void makeHoverCall(HoverAction act) {
-        Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
-      updatePushNotifGroupStatus();
+        Utils.logAnalyticsEvent(getString(R.string.finish_transfer, transferViewModel.getType()), this);
+        updatePushNotifGroupStatus();
       
         transferViewModel.checkSchedule();
         makeCall(act);

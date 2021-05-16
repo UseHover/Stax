@@ -10,6 +10,7 @@ import androidx.biometric.BiometricPrompt;
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
+import com.hover.stax.utils.Utils;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -53,20 +54,20 @@ public class BiometricChecker extends BiometricPrompt.AuthenticationCallback {
         super.onAuthenticationError(errorCode, error);
         if (errorCode == BiometricPrompt.ERROR_NO_BIOMETRICS) {
             listener.onAuthError(error.toString());
-        } else Amplitude.getInstance().logEvent(a.getString(R.string.biometrics_not_setup));
+        } else Utils.logAnalyticsEvent(a.getString(R.string.biometrics_not_setup), a.getBaseContext());
     }
 
     @Override
     public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
         super.onAuthenticationSucceeded(result);
-        Amplitude.getInstance().logEvent(a.getString(R.string.biometrics_succeeded));
+        Utils.logAnalyticsEvent(a.getString(R.string.biometrics_succeeded), a.getBaseContext());
         listener.onAuthSuccess(action);
     }
 
     @Override
     public void onAuthenticationFailed() {
         super.onAuthenticationFailed();
-        Amplitude.getInstance().logEvent(a.getString(R.string.biometrics_failed));
+        Utils.logAnalyticsEvent(a.getString(R.string.biometrics_failed), a.getBaseContext());
     }
 
     public interface AuthListener {
