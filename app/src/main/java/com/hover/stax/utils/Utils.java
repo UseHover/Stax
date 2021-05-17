@@ -167,15 +167,18 @@ public class Utils {
 	}
 	public static void logAnalyticsEvent(String event, Context context) {
 		Amplitude.getInstance().logEvent(event);
-		FirebaseAnalytics.getInstance(context).logEvent(event, null);
+		FirebaseAnalytics.getInstance(context).logEvent(strippedForFireAnalytics(event), null);
 		AppsFlyerLib.getInstance().logEvent(context, event, null);
 	}
 	public static void logAnalyticsEvent(@NonNull  String event, @NonNull JSONObject args, @NonNull Context context) {
 		Bundle bundle = convertJSONObjectToBundle(args);
 		Map<String, Object> map = convertJSONObjectToHashMap(args);
 		Amplitude.getInstance().logEvent(event, args);
-		FirebaseAnalytics.getInstance(context).logEvent(event, bundle);
+		FirebaseAnalytics.getInstance(context).logEvent(strippedForFireAnalytics(event), bundle);
 		AppsFlyerLib.getInstance().logEvent(context, event, map);
+	}
+	private static String strippedForFireAnalytics(String firebaseEventLog) {
+		return firebaseEventLog.replace(" ","_").toLowerCase();
 	}
 	private static Bundle convertJSONObjectToBundle(JSONObject args) {
 		Bundle bundle = new Bundle();
@@ -188,7 +191,7 @@ public class Utils {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			bundle.putString(key,value);
+			bundle.putString(strippedForFireAnalytics(key),value);
 		}
 		return bundle;
 	}
