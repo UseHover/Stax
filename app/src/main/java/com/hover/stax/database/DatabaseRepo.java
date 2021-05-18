@@ -282,8 +282,8 @@ public class DatabaseRepo {
         String removedBaseUrlString = encrypted.replace(c.getString(R.string.payment_root_url, ""), "");
 
         //Only old stax versions contains ( in the link
-        if (removedBaseUrlString.contains("(")) decryptRequest(removedBaseUrlString, c);
-        else decryptRequestForOldVersions(removedBaseUrlString);
+        if (removedBaseUrlString.contains("(")) decryptRequestForOldVersions(removedBaseUrlString);
+        else decryptRequest(removedBaseUrlString, c);
         return decryptedRequest;
     }
 
