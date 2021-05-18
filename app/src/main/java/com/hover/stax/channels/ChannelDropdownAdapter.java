@@ -30,7 +30,6 @@ import java.util.List;
 import static com.hover.stax.utils.Constants.size55;
 
 public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
-
     private List<Channel> channels;
     private ViewHolder holder;
     private StaxSpinnerItemWithLogoBinding binding;
@@ -43,18 +42,14 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
     public static List<Channel> sort(List<Channel> channels, boolean showSelected) {
         ArrayList<Channel> selected_list = new ArrayList<>();
         ArrayList<Channel> sorted_list = new ArrayList<>();
-
         for (Channel c : channels) {
             if (c.selected) selected_list.add(c);
             else sorted_list.add(c);
         }
-
         Collections.sort(selected_list);
         Collections.sort(sorted_list);
-
         if (showSelected)
             sorted_list.addAll(0, selected_list);
-
         return sorted_list;
     }
 
@@ -62,6 +57,7 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
     @Override
     public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
         Channel c = channels.get(position);
+        Log.e("ADAPTER", "getting view for pos " + position);
 
         if (view == null) {
             binding = StaxSpinnerItemWithLogoBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
