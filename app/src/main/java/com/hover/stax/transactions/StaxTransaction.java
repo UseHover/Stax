@@ -26,7 +26,7 @@ import java.util.HashMap;
 @Entity(tableName = "stax_transactions", indices = {@Index(value = {"uuid"}, unique = true)})
 public class StaxTransaction {
 
-    public final static String CONFIRM_CODE_KEY = "confirmCode";
+    public final static String CONFIRM_CODE_KEY = "confirmCode", SENDER_NAME_KEY = "senderName", SENDER_PHONE_KEY = "senderPhone", SENDER_ACCOUNT_KEY = "senderAccount";
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
@@ -83,8 +83,7 @@ public class StaxTransaction {
     public String counterparty_id;
 
 
-    public StaxTransaction() {
-    }
+    public StaxTransaction() {}
 
     public StaxTransaction(Intent data, HoverAction action, StaxContact contact, Context c) {
         if (data.hasExtra(TransactionContract.COLUMN_UUID) && data.getStringExtra(TransactionContract.COLUMN_UUID) != null) {
@@ -97,15 +96,8 @@ public class StaxTransaction {
             initiated_at = data.getLongExtra(TransactionContract.COLUMN_REQUEST_TIMESTAMP, DateUtils.now());
             updated_at = initiated_at;
 
-            HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS);
-            if (extras != null) {
-                if (extras.containsKey(HoverAction.AMOUNT_KEY))
-                    amount = Utils.getAmount((extras.get(HoverAction.AMOUNT_KEY)));
-                if (extras.containsKey(HoverAction.PHONE_KEY))
-                    counterparty = extras.get(HoverAction.PHONE_KEY);
-                else if (extras.containsKey(HoverAction.ACCOUNT_KEY))
-                    counterparty = extras.get(HoverAction.ACCOUNT_KEY);
-            }
+            parseExtras((HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS));
+
             if (data.hasExtra(StaxContact.LOOKUP_KEY))
                 counterparty_id = data.getStringExtra(StaxContact.LOOKUP_KEY);
 
@@ -119,19 +111,33 @@ public class StaxTransaction {
         status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
         updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, initiated_at);
 
-        HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES);
-        if (extras != null) {
-            if (extras.containsKey(HoverAction.FEE_KEY))
-                fee = Utils.getAmount(extras.get(HoverAction.FEE_KEY));
-            if (extras.containsKey(CONFIRM_CODE_KEY))
-                confirm_code = extras.get(CONFIRM_CODE_KEY);
-        }
+        parseExtras((HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES));
 
         if (data.hasExtra(StaxContact.LOOKUP_KEY))
             counterparty_id = data.getStringExtra(StaxContact.LOOKUP_KEY);
 
         if (contact != null)
             description = generateDescription(action, contact, c);
+    }
+
+    private void parseExtras(HashMap<String, String> extras) {
+        if (extras == null) return;
+        if (extras.containsKey(HoverAction.AMOUNT_KEY) && amount == null)
+            amount = Utils.getAmount((extras.get(HoverAction.AMOUNT_KEY)));
+
+        if (extras.containsKey(HoverAction.PHONE_KEY))
+            counterparty = extras.get(HoverAction.PHONE_KEY);
+        else if (extras.containsKey(HoverAction.ACCOUNT_KEY))
+            counterparty = extras.get(HoverAction.ACCOUNT_KEY);
+        else if (extras.containsKey(SENDER_PHONE_KEY))
+            counterparty = extras.get(SENDER_PHONE_KEY);
+        else if (extras.containsKey(SENDER_ACCOUNT_KEY))
+            counterparty = extras.get(SENDER_ACCOUNT_KEY);
+
+        if (extras.containsKey(HoverAction.FEE_KEY))
+            fee = Utils.getAmount(extras.get(HoverAction.FEE_KEY));
+        if (extras.containsKey(CONFIRM_CODE_KEY))
+            confirm_code = extras.get(CONFIRM_CODE_KEY);
     }
 
     private String generateDescription(HoverAction action, StaxContact contact, Context c) {
