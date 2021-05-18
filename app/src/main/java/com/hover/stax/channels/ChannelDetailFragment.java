@@ -74,7 +74,7 @@ public class ChannelDetailFragment extends Fragment implements TransactionHistor
         NavHostFragment.findNavController(this).navigate(R.id.transactionDetailsFragment, bundle);
     }
 
-    public void onRefresh() {
+    private void onRefresh() {
         if (getActivity() != null && viewModel.getChannel().getValue() != null)
             ((MainActivity) getActivity()).onTapRefresh(viewModel.getChannel().getValue().id);
     }
