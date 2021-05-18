@@ -28,6 +28,9 @@ import com.hover.stax.schedules.ScheduleDao;
 import com.hover.stax.transactions.StaxTransaction;
 import com.hover.stax.transactions.TransactionDao;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.utils.paymentLinkCryptography.Encryption;
+
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public class DatabaseRepo {
@@ -278,12 +281,37 @@ public class DatabaseRepo {
             decryptedRequest = new MutableLiveData<>();
         }
         decryptedRequest.setValue(null);
-
         String removedBaseUrlString = encrypted.replace(c.getString(R.string.payment_root_url, ""), "");
-        if (Request.isShortLink(removedBaseUrlString)) {
-            removedBaseUrlString = new Shortlink(removedBaseUrlString).expand();
+        if(removedBaseUrlString.contains("(")) { //Only old stax versions contains ( in the link
+            decryptedRequest.postValue(new Request(Request.decryptBijective(removedBaseUrlString, c)));
         }
-        decryptedRequest.postValue(new Request(Request.decryptBijective(removedBaseUrlString, c) ));
+        else {
+            try {
+                Encryption e = Request.getEncryptionSettings().build();
+
+
+                if (Request.isShortLink(removedBaseUrlString)) {
+                    removedBaseUrlString = new Shortlink(removedBaseUrlString).expand();
+                }
+
+                e.decryptAsync(removedBaseUrlString.replaceAll("[(]", "+"), new Encryption.Callback() {
+                    @Override
+                    public void onSuccess(String result) {
+                        decryptedRequest.postValue(new Request(result));
+
+                    }
+
+                    @Override
+                    public void onError(Exception exception) {
+                        Utils.logErrorAndReportToFirebase(TAG, "failed link decryption", exception);
+                    }
+                });
+
+            } catch (NoSuchAlgorithmException e) {
+                Utils.logErrorAndReportToFirebase(TAG, "decryption failure", e);
+            }
+        }
+
         return decryptedRequest;
     }
 

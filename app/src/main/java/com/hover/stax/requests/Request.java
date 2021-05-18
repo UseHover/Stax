@@ -14,9 +14,13 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.utils.paymentLinkCryptography.Base64;
+import com.hover.stax.utils.paymentLinkCryptography.Encryption;
 import com.yariksoffice.lingver.Lingver;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+
+import timber.log.Timber;
 
 @Entity(tableName = "requests")
 public class Request {
@@ -127,12 +131,25 @@ public class Request {
     private String generateStaxLink(Context c) {
         String amountNoFormat = amount != null && !amount.isEmpty() ? amount : "0.00";
         String params = c.getString(R.string.payment_url_end, amountNoFormat, requester_institution_id, requester_number, DateUtils.now());
-        Log.e(TAG, "encrypting from: " + params);
-
+        Timber.i("encrypting from: " + params);
         String encryptedString = encryptBijective(params,c);
-        Log.e(TAG, "link: " + c.getResources().getString(R.string.payment_root_url, encryptedString));
+        Timber.i( "link: " + c.getResources().getString(R.string.payment_root_url, encryptedString));
         return c.getResources().getString(R.string.payment_root_url, encryptedString);
     }
+    public static Encryption.Builder getEncryptionSettings() {
+        return new Encryption.Builder()
+                       .setKeyLength(128)
+                       .setKeyAlgorithm("AES")
+                       .setCharsetName("UTF8")
+                       .setIterationCount(65536)
+                       .setKey("ves€Z€xs€aBKgh")
+                       .setDigestAlgorithm("SHA1")
+                       .setSalt("A secured salt")
+                       .setBase64Mode(Base64.DEFAULT)
+                       .setAlgorithm("AES/CBC/PKCS5Padding")
+                       .setSecureRandomAlgorithm("SHA1PRNG")
+                       .setSecretKeyType("PBKDF2WithHmacSHA1")
+                       .setIv(new byte[]{29, 88, -79, -101, -108, -38, -126, 90, 52, 101, -35, 114, 12, -48, -66, -30});}
 
     public static String decryptBijective(String value, Context c) {
         char[] valueChar = value.toCharArray();
