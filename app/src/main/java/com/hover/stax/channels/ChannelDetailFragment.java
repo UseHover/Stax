@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.amplitude.api.Amplitude;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.databinding.FragmentChannelBinding;
@@ -20,9 +19,8 @@ import com.hover.stax.home.MainActivity;
 import com.hover.stax.transactions.TransactionHistoryAdapter;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
-import com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout;
 
-public class ChannelDetailFragment extends Fragment implements TransactionHistoryAdapter.SelectListener, CustomSwipeRefreshLayout.OnRefreshListener {
+public class ChannelDetailFragment extends Fragment implements TransactionHistoryAdapter.SelectListener {
 
     private RecyclerView transactionHistoryRecyclerView;
     private ChannelDetailViewModel viewModel;
@@ -42,7 +40,8 @@ public class ChannelDetailFragment extends Fragment implements TransactionHistor
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         transactionHistoryRecyclerView = binding.homeCardTransactions.transactionHistoryRecyclerView;
-        setupPullRefresh(view);
+
+        binding.refreshBalanceBtn.setOnClickListener(view1 -> onRefresh());
 
         viewModel.getChannel().observe(getViewLifecycleOwner(), channel -> {
             binding.staxCardView.setTitle(channel.name);
@@ -67,14 +66,6 @@ public class ChannelDetailFragment extends Fragment implements TransactionHistor
         viewModel.setChannel(getArguments().getInt(TransactionContract.COLUMN_CHANNEL_ID));
     }
 
-    private void setupPullRefresh(View view) {
-        CustomSwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipelayout);
-        if (swipeRefreshLayout != null) {
-            swipeRefreshLayout.setRefreshCompleteTimeout(1000);
-            swipeRefreshLayout.enableTopProgressBar(false);
-            swipeRefreshLayout.setOnRefreshListener(this);
-        }
-    }
 
     @Override
     public void viewTransactionDetail(String uuid) {
@@ -83,7 +74,6 @@ public class ChannelDetailFragment extends Fragment implements TransactionHistor
         NavHostFragment.findNavController(this).navigate(R.id.transactionDetailsFragment, bundle);
     }
 
-    @Override
     public void onRefresh() {
         if (getActivity() != null && viewModel.getChannel().getValue() != null)
             ((MainActivity) getActivity()).onTapRefresh(viewModel.getChannel().getValue().id);
@@ -92,7 +82,6 @@ public class ChannelDetailFragment extends Fragment implements TransactionHistor
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
         binding = null;
     }
 }

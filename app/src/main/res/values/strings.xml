@@ -72,6 +72,7 @@
 	<string name="pending_callout">Transaction sent. Waiting for confirmation.</string>
 	<string name="refresh_balance_desc">Refresh balance to see your money</string>
 	<string name="refresh_balances">Refresh balances</string>
+	<string name="refresh">Refresh</string>
 	<string name="refresh_balance_error">Add an account to check your balance.</string>
 
 	<!-- Permissions -->
