@@ -1,46 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:paddingVertical="@dimen/margin_5"
-		android:layout_marginHorizontal="@dimen/margin_10"
-		android:orientation="horizontal" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_10"
+        android:orientation="horizontal"
+        android:paddingVertical="@dimen/margin_5">
 
-		<com.google.android.material.switchmaterial.SwitchMaterial
-			style="@style/StaxSwitch"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/repeatSwitch" />
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/repeatSwitch"
+            style="@style/StaxSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:paddingStart="@dimen/margin_8"
-			android:textSize="@dimen/text_16"
-		    	android:fontFamily="font-normal"
-			android:textColor="@color/offWhite"
-			android:text="@string/repeat_toggle" />
-	</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="font-normal"
+            android:paddingStart="@dimen/margin_8"
+            android:text="@string/repeat_toggle"
+            android:textColor="@color/offWhite"
+            android:textSize="@dimen/text_16" />
+    </LinearLayout>
 
-	<include layout="@layout/repeat_inputs"
-		android:id="@+id/repeatInputs" />
+    <include
+        android:id="@+id/repeatInputs"
+        layout="@layout/repeat_inputs" />
 
-	<RelativeLayout android:id="@+id/repeatButtons"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="@dimen/margin_21">
+    <RelativeLayout
+        android:id="@+id/repeatButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_21">
 
-		<androidx.appcompat.widget.AppCompatButton
-			android:id="@+id/save_repeat_btn"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/btn_save"
-			android:layout_alignParentEnd="true"
-			style="@style/StaxButton"
-			android:fontFamily="font-medium" />
-	</RelativeLayout>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/save_repeat_btn"
+            style="@style/StaxButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:fontFamily="font-medium"
+            android:text="@string/btn_save" />
+    </RelativeLayout>
 </com.hover.stax.views.StaxCardView>

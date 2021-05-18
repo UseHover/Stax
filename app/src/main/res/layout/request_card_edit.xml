@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/request_formCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:title="@string/req_cardhead"
-    android:id="@+id/request_formCard">
+    app:showBack="true"
+    app:title="@string/req_cardhead">
 
-	<include layout="@layout/request_card_amount" />
+    <include
+        android:id="@+id/cardAmount"
+        layout="@layout/request_card_amount" />
 
-	<include layout="@layout/request_card_requestee" />
+    <include
+        android:id="@+id/cardRequestee"
+        layout="@layout/request_card_requestee" />
 
-	<include layout="@layout/request_card_requester" />
+    <include
+        android:id="@+id/cardRequester"
+        layout="@layout/request_card_requester" />
 
-	<include layout="@layout/transfer_note" />
+    <include
+        android:id="@+id/transferNote"
+        layout="@layout/transfer_note" />
 
 </com.hover.stax.views.StaxCardView>

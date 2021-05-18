@@ -9,6 +9,7 @@
 	<com.hover.stax.views.StaxCardView
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
+		android:id="@+id/staxCardView"
 		app:title="@string/lang_cardhead">
 
 		<RadioGroup

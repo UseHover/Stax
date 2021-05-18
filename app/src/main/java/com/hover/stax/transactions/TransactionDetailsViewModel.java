@@ -20,92 +20,94 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionDetailsViewModel extends AndroidViewModel {
-	private final String TAG = "TDViewModel";
+    private final String TAG = "TDViewModel";
 
-	private DatabaseRepo repo;
+    private DatabaseRepo repo;
 
-	private MutableLiveData<StaxTransaction> transaction;
-	private LiveData<HoverAction> action;
-	private LiveData<StaxContact> contact;
-	private MediatorLiveData<List<UssdCallResponse>> messages;
-	private LiveData<List<UssdCallResponse>> sms;
-
-
-	public TransactionDetailsViewModel(@NonNull Application application) {
-		super(application);
-		repo = new DatabaseRepo(application);
-		transaction = new MutableLiveData<>();
-		action = new MutableLiveData<>();
-		messages = new MediatorLiveData<>();
+    private MutableLiveData<StaxTransaction> transaction;
+    private LiveData<HoverAction> action;
+    private LiveData<StaxContact> contact;
+    private MediatorLiveData<List<UssdCallResponse>> messages;
+    private LiveData<List<UssdCallResponse>> sms;
 
 
-		action = Transformations.switchMap(transaction, t -> repo.getLiveAction(t.action_id));
-		contact = Transformations.switchMap(transaction, t -> repo.getLiveContact(t.counterparty_id));
-		messages.addSource(transaction, this::loadMessages);
-		messages.addSource(action, this::loadMessages);
-		sms = Transformations.map(transaction, this::loadSms);
-	}
+    public TransactionDetailsViewModel(@NonNull Application application) {
+        super(application);
+        repo = new DatabaseRepo(application);
+        transaction = new MutableLiveData<>();
+        action = new MutableLiveData<>();
+        messages = new MediatorLiveData<>();
 
-	void setTransaction(String uuid) {
-		new Thread(() -> transaction.postValue(repo.getTransaction(uuid))).start();
-	}
 
-	LiveData<StaxTransaction> getTransaction() {
-		return transaction;
-	}
+        action = Transformations.switchMap(transaction, t -> repo.getLiveAction(t.action_id));
+        contact = Transformations.switchMap(transaction, t -> repo.getLiveContact(t.counterparty_id));
+        messages.addSource(transaction, this::loadMessages);
+        messages.addSource(action, this::loadMessages);
+        sms = Transformations.map(transaction, this::loadSms);
+    }
 
-	LiveData<HoverAction> getAction() {
-		if (action == null) {
-			action = new MutableLiveData<>();
-		}
-		return action;
-	}
+    void setTransaction(String uuid) {
+        new Thread(() -> transaction.postValue(repo.getTransaction(uuid))).start();
+    }
 
-	LiveData<StaxContact> getContact() {
-		if (contact == null) { contact = new MutableLiveData<>(); }
-		return contact;
-	}
+    LiveData<StaxTransaction> getTransaction() {
+        return transaction;
+    }
 
-	void loadMessages(StaxTransaction t) {
-		if (action.getValue() != null && t != null) loadMessages(t, action.getValue());
-	}
+    LiveData<HoverAction> getAction() {
+        if (action == null) {
+            action = new MutableLiveData<>();
+        }
+        return action;
+    }
 
-	void loadMessages(HoverAction a) {
-		if (transaction.getValue() != null && a != null) loadMessages(transaction.getValue(), a);
-	}
+    LiveData<StaxContact> getContact() {
+        if (contact == null) {
+            contact = new MutableLiveData<>();
+        }
+        return contact;
+    }
 
-	void loadMessages(StaxTransaction t, HoverAction a) {
-		List<UssdCallResponse> ussds = UssdCallResponse.generateConvo(Hover.getTransaction(t.uuid, getApplication()), a);
-		messages.setValue(ussds);
-	}
+    void loadMessages(StaxTransaction t) {
+        if (action.getValue() != null && t != null) loadMessages(t, action.getValue());
+    }
 
-	LiveData<List<UssdCallResponse>> getMessages() {
-		if (messages == null) {
-			messages = new MediatorLiveData<>();
-		}
-		return messages;
-	}
+    void loadMessages(HoverAction a) {
+        if (transaction.getValue() != null && a != null) loadMessages(transaction.getValue(), a);
+    }
 
-	List<UssdCallResponse> loadSms(StaxTransaction t) {
-		if (t == null) return null;
-		Transaction transaction = Hover.getTransaction(t.uuid, getApplication());
-		if (transaction.smsHits == null) return null;
-		List<UssdCallResponse> smses = new ArrayList<>();
-		for (int i = 0; i < transaction.smsHits.length(); i++) {
-			MessageLog sms = getSMSMessageByUUID(transaction.smsHits.optString(i));
-			smses.add(new UssdCallResponse(null, sms.msg));
-		}
-		return smses;
-	}
+    void loadMessages(StaxTransaction t, HoverAction a) {
+        List<UssdCallResponse> ussds = UssdCallResponse.generateConvo(Hover.getTransaction(t.uuid, getApplication()), a);
+        messages.setValue(ussds);
+    }
 
-	LiveData<List<UssdCallResponse>> getSms() {
-		if (messages == null) {
-			messages = new MediatorLiveData<>();
-		}
-		return sms;
-	}
+    LiveData<List<UssdCallResponse>> getMessages() {
+        if (messages == null) {
+            messages = new MediatorLiveData<>();
+        }
+        return messages;
+    }
 
-	private MessageLog getSMSMessageByUUID(String uuid) {
-		return Hover.getSMSMessageByUUID(uuid, getApplication());
-	}
+    List<UssdCallResponse> loadSms(StaxTransaction t) {
+        if (t == null) return null;
+        Transaction transaction = Hover.getTransaction(t.uuid, getApplication());
+        if (transaction.smsHits == null) return null;
+        List<UssdCallResponse> smses = new ArrayList<>();
+        for (int i = 0; i < transaction.smsHits.length(); i++) {
+            MessageLog sms = getSMSMessageByUUID(transaction.smsHits.optString(i));
+            smses.add(new UssdCallResponse(null, sms.msg));
+        }
+        return smses;
+    }
+
+    LiveData<List<UssdCallResponse>> getSms() {
+        if (messages == null) {
+            messages = new MediatorLiveData<>();
+        }
+        return sms;
+    }
+
+    private MessageLog getSMSMessageByUUID(String uuid) {
+        return Hover.getSMSMessageByUUID(uuid, getApplication());
+    }
 }

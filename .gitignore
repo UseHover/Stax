@@ -1,5 +1,6 @@
 *.iml
 .gradle
+/.idea/gradle.xml
 /local.properties
 /.idea/caches
 /.idea/libraries
@@ -7,6 +8,11 @@
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
+/.idea/codeStyles
+/.idea/misc.xml
+/.idea/compiler.xml
+/.idea/*
+.idea/runConfigurations.xml
 .DS_Store
 /build
 app/build
@@ -16,3 +22,4 @@ app/release
 .cxx
 /hover.sdk
 *.apk
+/app/src/main/res/values/app_keys.xml

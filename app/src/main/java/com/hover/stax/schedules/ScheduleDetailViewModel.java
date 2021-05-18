@@ -15,61 +15,61 @@ import com.hover.stax.database.DatabaseRepo;
 import java.util.List;
 
 public class ScheduleDetailViewModel extends AndroidViewModel {
-	private final String TAG = "ScheduleViewModel";
+    private final String TAG = "ScheduleViewModel";
 
-	private DatabaseRepo repo;
-	private MutableLiveData<Schedule> schedule;
-	private LiveData<HoverAction> action;
-	private LiveData<List<StaxContact>> contacts;
+    private DatabaseRepo repo;
+    private MutableLiveData<Schedule> schedule;
+    private LiveData<HoverAction> action;
+    private LiveData<List<StaxContact>> contacts;
 
-	public ScheduleDetailViewModel(@NonNull Application application) {
-		super(application);
-		repo = new DatabaseRepo(application);
-		schedule = new MutableLiveData<>();
-		action = Transformations.switchMap(schedule, this::loadAction);
-		contacts = Transformations.switchMap(schedule, this::loadContacts);
-	}
+    public ScheduleDetailViewModel(@NonNull Application application) {
+        super(application);
+        repo = new DatabaseRepo(application);
+        schedule = new MutableLiveData<>();
+        action = Transformations.switchMap(schedule, this::loadAction);
+        contacts = Transformations.switchMap(schedule, this::loadContacts);
+    }
 
-	public void setSchedule(int id) {
-		new Thread(() -> schedule.postValue(repo.getSchedule(id))).start();
-	}
+    public void setSchedule(int id) {
+        new Thread(() -> schedule.postValue(repo.getSchedule(id))).start();
+    }
 
-	public LiveData<Schedule> getSchedule() {
-		if (schedule == null) {
-			return new MutableLiveData<>();
-		}
-		return schedule;
-	}
+    public LiveData<Schedule> getSchedule() {
+        if (schedule == null) {
+            return new MutableLiveData<>();
+        }
+        return schedule;
+    }
 
-	private LiveData<HoverAction> loadAction(Schedule s) {
-		if (s != null) {
-			return repo.getLiveAction(s.action_id);
-		}
-		return new MutableLiveData<>();
-	}
+    private LiveData<HoverAction> loadAction(Schedule s) {
+        if (s != null) {
+            return repo.getLiveAction(s.action_id);
+        }
+        return new MutableLiveData<>();
+    }
 
-	public LiveData<HoverAction> getAction() {
-		if (action == null) {
-			action = new MutableLiveData<>();
-		}
-		return action;
-	}
+    public LiveData<HoverAction> getAction() {
+        if (action == null) {
+            action = new MutableLiveData<>();
+        }
+        return action;
+    }
 
-	private LiveData<List<StaxContact>> loadContacts(Schedule s) {
-		if (s != null) {
-			return repo.getLiveContacts(s.recipient_ids.split(","));
-		}
-		return null;
-	}
+    private LiveData<List<StaxContact>> loadContacts(Schedule s) {
+        if (s != null) {
+            return repo.getLiveContacts(s.recipient_ids.split(","));
+        }
+        return null;
+    }
 
-	public LiveData<List<StaxContact>> getContacts() {
-		if (contacts == null) {
-			contacts = new MutableLiveData<>();
-		}
-		return contacts;
-	}
+    public LiveData<List<StaxContact>> getContacts() {
+        if (contacts == null) {
+            contacts = new MutableLiveData<>();
+        }
+        return contacts;
+    }
 
-	void deleteSchedule() {
-		repo.delete(schedule.getValue());
-	}
+    void deleteSchedule() {
+        repo.delete(schedule.getValue());
+    }
 }

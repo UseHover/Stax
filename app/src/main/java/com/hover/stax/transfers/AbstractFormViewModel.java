@@ -13,46 +13,52 @@ import com.hover.stax.R;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.schedules.Schedule;
+import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
 public abstract class AbstractFormViewModel extends AndroidViewModel {
 
-	protected DatabaseRepo repo;
-	protected String type = HoverAction.P2P;
+    protected DatabaseRepo repo;
+    protected String type = HoverAction.P2P;
 
-	protected LiveData<List<StaxContact>> recentContacts = new MutableLiveData<>();
-	protected MutableLiveData<Schedule> schedule = new MutableLiveData<>();
-	protected MutableLiveData<Boolean> isEditing = new MutableLiveData<>();
+    protected LiveData<List<StaxContact>> recentContacts = new MutableLiveData<>();
+    protected MutableLiveData<Schedule> schedule = new MutableLiveData<>();
+    protected MutableLiveData<Boolean> isEditing = new MutableLiveData<>();
 
-	public AbstractFormViewModel(@NonNull Application application) {
-		super(application);
-		repo = new DatabaseRepo(application);
+    public AbstractFormViewModel(@NonNull Application application) {
+        super(application);
+        repo = new DatabaseRepo(application);
 
-		isEditing.setValue(true);
-		recentContacts = repo.getAllContacts();
-	}
+        isEditing.setValue(true);
+        recentContacts = repo.getAllContacts();
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setEditing(boolean isEdit) { isEditing.setValue(isEdit); }
-	public LiveData<Boolean> getIsEditing() {
-		if (isEditing == null) {
-			isEditing = new MutableLiveData<>();
-			isEditing.setValue(false);
-		}
-		return isEditing;
-	}
+    public void setEditing(boolean isEdit) {
+        isEditing.setValue(isEdit);
+    }
 
-	public LiveData<List<StaxContact>> getRecentContacts() {
-		if (recentContacts == null) { recentContacts = new MutableLiveData<>(); }
-		return recentContacts;
-	}
+    public LiveData<Boolean> getIsEditing() {
+        if (isEditing == null) {
+            isEditing = new MutableLiveData<>();
+            isEditing.setValue(false);
+        }
+        return isEditing;
+    }
 
-	protected void saveSchedule(Schedule s) {
-		Amplitude.getInstance().logEvent(getApplication().getString(R.string.scheduled_complete, s.type));
-		repo.insert(s);
-	}
+    public LiveData<List<StaxContact>> getRecentContacts() {
+        if (recentContacts == null) {
+            recentContacts = new MutableLiveData<>();
+        }
+        return recentContacts;
+    }
+
+    protected void saveSchedule(Schedule s) {
+        Utils.logAnalyticsEvent(getApplication().getString(R.string.scheduled_complete, s.type), getApplication().getBaseContext());
+        repo.insert(s);
+    }
 }

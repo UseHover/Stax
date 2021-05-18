@@ -9,6 +9,7 @@
 	<com.hover.stax.views.StaxCardView
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
+		app:showBack="true"
 	    app:title="@string/bounty_email_stage_title">
 
 		<LinearLayout

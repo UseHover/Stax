@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-	tools:context=".balances.BalancesFragment"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    tools:context=".balances.BalancesFragment">
 
-		<LinearLayout
-		    android:id="@+id/home_content"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:orientation="vertical"
-		    android:layout_marginTop="@dimen/margin_13"
-		    android:paddingBottom="@dimen/margin_55" >
+    <LinearLayout
+        android:id="@+id/home_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/margin_13"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin_55">
 
-			<include layout="@layout/home_card_balances" />
+        <include
+            android:id="@+id/homeCardBalances"
+            layout="@layout/home_card_balances" />
 
-			<include android:id="@+id/scheduled_card"
-			    layout="@layout/home_card_future" />
+        <include
+            android:id="@+id/scheduled_card"
+            layout="@layout/home_card_future" />
 
-			<include layout="@layout/home_card_transactions" />
-		</LinearLayout>
+        <include
+            android:id="@+id/homeCardTransactions"
+            layout="@layout/home_card_transactions" />
+
+    </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

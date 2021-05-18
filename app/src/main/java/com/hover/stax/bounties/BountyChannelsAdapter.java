@@ -1,84 +1,80 @@
 package com.hover.stax.bounties;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.views.StaxCardView;
+import com.hover.stax.databinding.BountyCardChannelBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
 class BountyChannelsAdapter extends RecyclerView.Adapter<BountyChannelsAdapter.CardedBountyListViewHolder> {
 
-	private List<Channel> channelList;
-	private List<Bounty> allBountiesList;
-	private BountyListItem.SelectListener selectListener;
+    private final List<Channel> channelList;
+    private final List<Bounty> allBountiesList;
+    private final BountyListItem.SelectListener selectListener;
 
-	public BountyChannelsAdapter(List<Channel> channels, List<Bounty> bounties, BountyListItem.SelectListener listener) {
-		channelList = channels;
-		allBountiesList = bounties;
-		selectListener = listener;
-	}
+    public BountyChannelsAdapter(List<Channel> channels, List<Bounty> bounties, BountyListItem.SelectListener listener) {
+        channelList = channels;
+        allBountiesList = bounties;
+        selectListener = listener;
+    }
 
-	@NonNull
-	@Override
-	public CardedBountyListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bounty_card_channel, parent, false);
-		return new CardedBountyListViewHolder(view);
-	}
+    @NonNull
+    @Override
+    public CardedBountyListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        BountyCardChannelBinding binding = BountyCardChannelBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new CardedBountyListViewHolder(binding);
+    }
 
-	@Override
-	public void onBindViewHolder(@NonNull CardedBountyListViewHolder holder, int position) {
-		Channel c = channelList.get(position);
-		holder.staxCardView.setTitle(c.getUssdName());
-		List<Bounty> channelBounties = filterBounties(c.id);
-		for (Bounty b: channelBounties) {
-			BountyListItem bountyLi = new BountyListItem(holder.staxCardView.getContext(), null);
-			bountyLi.setBounty(b, selectListener);
-			holder.bountyListView.addView(bountyLi);
-		}
-	}
+    @Override
+    public void onBindViewHolder(@NonNull CardedBountyListViewHolder holder, int position) {
+        Channel c = channelList.get(position);
+        holder.binding.bountyChannelCard.setTitle(c.getUssdName());
+        List<Bounty> channelBounties = filterBounties(c.id);
 
-	private List<Bounty> filterBounties(int channelId) {
-		List<Bounty> matches = new ArrayList<>();
-		for (Bounty b: allBountiesList) {
-			if (b.action.channel_id == channelId)
-				matches.add(b);
-		}
-		return matches;
-	}
+        for (Bounty b : channelBounties) {
+            BountyListItem bountyLi = new BountyListItem(holder.binding.bountyChannelCard.getContext(), null);
+            bountyLi.setBounty(b, selectListener);
+            holder.binding.bountyList.addView(bountyLi);
+        }
+    }
 
-	@Override
-	public int getItemCount() {
-		return channelList == null ? 0 : channelList.size();
-	}
+    private List<Bounty> filterBounties(int channelId) {
+        List<Bounty> matches = new ArrayList<>();
+        for (Bounty b : allBountiesList) {
+            if (b.action.channel_id == channelId)
+                matches.add(b);
+        }
+        return matches;
+    }
 
-	static class CardedBountyListViewHolder extends RecyclerView.ViewHolder {
-		private StaxCardView staxCardView;
-		private LinearLayout bountyListView;
+    @Override
+    public int getItemCount() {
+        return channelList == null ? 0 : channelList.size();
+    }
 
-		public CardedBountyListViewHolder(@NonNull View itemView) {
-			super(itemView);
-			staxCardView = itemView.findViewById(R.id.bountyChannelCard);
-			bountyListView = itemView.findViewById(R.id.bountyList);
-		}
-	}
+    static class CardedBountyListViewHolder extends RecyclerView.ViewHolder {
+        public BountyCardChannelBinding binding;
 
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
+        public CardedBountyListViewHolder(BountyCardChannelBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+    }
 
-	@Override
-	public int getItemViewType(int position) {
-		return position;
-	}
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 
 }

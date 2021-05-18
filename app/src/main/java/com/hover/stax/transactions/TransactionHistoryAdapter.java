@@ -3,93 +3,85 @@ package com.hover.stax.transactions;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.transactions.Transaction;
 import com.hover.stax.R;
+import com.hover.stax.databinding.HomeListItemBinding;
 import com.hover.stax.utils.DateUtils;
-import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
 public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionHistoryAdapter.HistoryViewHolder> {
-	private List<StaxTransaction> transactionList;
-	private final SelectListener selectListener;
 
-	public TransactionHistoryAdapter( List<StaxTransaction> transactions, SelectListener selectListener) {
-		this.transactionList = transactions;
-		this.selectListener = selectListener;
-	}
+    private final List<StaxTransaction> transactionList;
+    private final SelectListener selectListener;
 
-	@NonNull
-	@Override
-	public HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_list_item, parent, false);
-		return new HistoryViewHolder(view);
-	}
+    public TransactionHistoryAdapter(List<StaxTransaction> transactions, SelectListener selectListener) {
+        this.transactionList = transactions;
+        this.selectListener = selectListener;
+    }
 
-	@Override
-	public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
-		StaxTransaction t = transactionList.get(position);
-			if(t.status.equals(Transaction.PENDING)) {
-				holder.parentLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.cardDarkBlue));
-				holder.pendingNotice.setVisibility(View.VISIBLE);
-			}
-			else {
-				holder.parentLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.colorPrimary));
-				holder.pendingNotice.setVisibility(View.GONE);
-			}
+    @NonNull
+    @Override
+    public HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        HomeListItemBinding binding = HomeListItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new HistoryViewHolder(binding);
+    }
 
-		holder.content.setText(t.description.substring(0, 1).toUpperCase() + t.description.substring(1));
-		holder.amount.setText(t.getDisplayAmount());
-		holder.date.setVisibility(shouldShowDate(t, position) ? View.VISIBLE : View.GONE);
-		holder.date.setText(DateUtils.humanFriendlyDate(t.initiated_at));
-		holder.itemView.setOnClickListener(view -> {
-			selectListener.viewTransactionDetail(t.uuid);
-		});
-	}
+    @Override
+    public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
+        StaxTransaction t = transactionList.get(position);
+        if (t.status.equals(Transaction.PENDING)) {
+            holder.binding.transactionItemLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.cardDarkBlue));
+            holder.binding.liCallout.setVisibility(View.VISIBLE);
+        } else {
+            holder.binding.transactionItemLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.colorPrimary));
+            holder.binding.liCallout.setVisibility(View.GONE);
+        }
 
-	private boolean shouldShowDate(StaxTransaction t, int position) {
-		return position == 0 ||
-					   !DateUtils.humanFriendlyDate(transactionList.get(position - 1).initiated_at)
-								.equals(DateUtils.humanFriendlyDate(t.initiated_at));
-	}
+        holder.binding.liDescription.setText(String.format("%s%s", t.description.substring(0, 1).toUpperCase(), t.description.substring(1)));
+        holder.binding.liAmount.setText(t.getDisplayAmount());
+        holder.binding.liHeader.setVisibility(shouldShowDate(t, position) ? View.VISIBLE : View.GONE);
+        holder.binding.liHeader.setText(DateUtils.humanFriendlyDate(t.initiated_at));
 
-	@Override
-	public int getItemCount() {
-		return transactionList != null ? transactionList.size() : 0;
-	}
+        holder.itemView.setOnClickListener(view -> selectListener.viewTransactionDetail(t.uuid));
+    }
 
-	static class HistoryViewHolder extends RecyclerView.ViewHolder {
-		private TextView content, amount, date, pendingNotice;
-		private LinearLayout parentLayout;
+    private boolean shouldShowDate(StaxTransaction t, int position) {
+        return position == 0 ||
+                !DateUtils.humanFriendlyDate(transactionList.get(position - 1).initiated_at)
+                        .equals(DateUtils.humanFriendlyDate(t.initiated_at));
+    }
 
-		HistoryViewHolder(@NonNull View itemView) {
-			super(itemView);
-			parentLayout = itemView.findViewById(R.id.transaction_item_layout);
-			content = itemView.findViewById(R.id.li_description);
-			amount = itemView.findViewById(R.id.li_amount);
-			date = itemView.findViewById(R.id.li_header);
-			pendingNotice = itemView.findViewById(R.id.li_callout);
-		}
-	}
+    @Override
+    public int getItemCount() {
+        return transactionList != null ? transactionList.size() : 0;
+    }
 
-	public interface SelectListener {
-		void viewTransactionDetail(String uuid);
-	}
+    static class HistoryViewHolder extends RecyclerView.ViewHolder {
 
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
+        public HomeListItemBinding binding;
 
-	@Override
-	public int getItemViewType(int position) {
-		return position;
-	}
+        HistoryViewHolder(HomeListItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+    }
+
+    public interface SelectListener {
+        void viewTransactionDetail(String uuid);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 }

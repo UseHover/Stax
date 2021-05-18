@@ -1,21 +1,21 @@
 package com.hover.stax.utils.fonts;
 
 public interface Replacer {
-	void setDefaultFont(String defaultFontAsset);
+    void setDefaultFont(String defaultFontAsset);
 
-	void setBoldFont(String boldFontAsset);
+    void setBoldFont(String boldFontAsset);
 
-	void setItalicFont(String italicFontAsset);
+    void setItalicFont(String italicFontAsset);
 
-	void setBoldItalicFont(String boldItalicFontAsset);
+    void setBoldItalicFont(String boldItalicFontAsset);
 
-	void setLightFont(String lightFontAsset);
+    void setLightFont(String lightFontAsset);
 
-	void setCondensedFont(String condensedFontAsset);
+    void setCondensedFont(String condensedFontAsset);
 
-	void setThinFont(String thinFontAsset);
+    void setThinFont(String thinFontAsset);
 
-	void setMediumFont(String mediumFontAsset);
+    void setMediumFont(String mediumFontAsset);
 
-	void applyFont();
+    void applyFont();
 }

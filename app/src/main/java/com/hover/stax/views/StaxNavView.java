@@ -9,22 +9,24 @@ import android.widget.FrameLayout;
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import com.hover.stax.R;
+import com.hover.stax.databinding.StaxNavViewBinding;
 
-class StaxNavView extends CoordinatorLayout {
-	private FrameLayout contentView;
+public class StaxNavView extends CoordinatorLayout {
 
-	public StaxNavView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		LayoutInflater.from(context).inflate(R.layout.stax_nav_view, this);
-		contentView = findViewById(R.id.content);
-	}
+    private final FrameLayout contentView;
 
-	@Override
-	public void addView(View child, int index, ViewGroup.LayoutParams params) {
-		if (contentView == null)
-			super.addView(child, index, params);
-		else
-			contentView.addView(child, index, params);
-	}
+    public StaxNavView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+
+        StaxNavViewBinding binding = StaxNavViewBinding.inflate(LayoutInflater.from(context), this, true);
+        contentView = binding.content;
+    }
+
+    @Override
+    public void addView(View child, int index, ViewGroup.LayoutParams params) {
+        if (contentView == null)
+            super.addView(child, index, params);
+        else
+            contentView.addView(child, index, params);
+    }
 }

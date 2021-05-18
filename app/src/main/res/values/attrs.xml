@@ -14,12 +14,14 @@
 	<declare-styleable name="StaxTextInputLayout">
 		<attr name="android:hint" />
 		<attr name="android:inputType" />
+		<attr name="android:imeOptions" />
 	</declare-styleable>
 
 	<declare-styleable name="StaxDropdownLayout">
 		<attr name="android:hint" />
 		<attr name="android:editable" />
 		<attr name="android:text" />
+		<attr name="android:imeOptions"/>
 	</declare-styleable>
 
 	<declare-styleable name="CustomSwipeRefreshLayout">

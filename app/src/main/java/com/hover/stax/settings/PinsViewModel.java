@@ -15,88 +15,98 @@ import java.util.List;
 
 public class PinsViewModel extends AndroidViewModel {
 
-	private DatabaseRepo repo;
-	private LiveData<List<Channel>> channels;
-	private LiveData<Channel> channel;
+    private DatabaseRepo repo;
+    private LiveData<List<Channel>> channels;
+    private LiveData<Channel> channel;
 
-	public PinsViewModel(Application application) {
-		super(application);
-		repo = new DatabaseRepo(application);
-		loadSelectedChannels();
-		channel = new MutableLiveData<>();
-	}
+    public PinsViewModel(Application application) {
+        super(application);
+        repo = new DatabaseRepo(application);
+        loadSelectedChannels();
+        channel = new MutableLiveData<>();
+    }
 
-	public LiveData<List<Channel>> getSelectedChannels() {
-		return channels;
-	}
+    public LiveData<List<Channel>> getSelectedChannels() {
+        return channels;
+    }
 
-	private void loadSelectedChannels() {
-		if (channels == null) { channels = new MutableLiveData<>(); }
-		channels = repo.getSelected();
-	}
+    private void loadSelectedChannels() {
+        if (channels == null) {
+            channels = new MutableLiveData<>();
+        }
+        channels = repo.getSelected();
+    }
 
-	public LiveData<Channel> getChannel() {
-		if (channel == null) { channel = new MutableLiveData<>(); }
-		return channel;
-	}
+    public LiveData<Channel> getChannel() {
+        if (channel == null) {
+            channel = new MutableLiveData<>();
+        }
+        return channel;
+    }
 
-	public void loadChannel(int id) { channel = repo.getLiveChannel(id); }
+    public void loadChannel(int id) {
+        channel = repo.getLiveChannel(id);
+    }
 
-	void setPin(int id, String pin) {
-		List<Channel> allChannels = channels.getValue() != null ? channels.getValue() : new ArrayList<>();
-		for (Channel channel : allChannels) {
-			if (channel.id == id) {
-				channel.pin = pin;
-			}
-		}
-	}
+    void setPin(int id, String pin) {
+        List<Channel> allChannels = channels.getValue() != null ? channels.getValue() : new ArrayList<>();
+        for (Channel channel : allChannels) {
+            if (channel.id == id) {
+                channel.pin = pin;
+            }
+        }
+    }
 
-	void savePins(Context c) {
-		List<Channel> selectedChannels = channels.getValue() != null ? channels.getValue() : new ArrayList<>();
-		for (Channel channel : selectedChannels) {
-			if (channel.pin != null && !channel.pin.isEmpty()) {
-				channel.pin = KeyStoreExecutor.createNewKey(channel.pin, c);
-				repo.update(channel);
-			}
-		}
-	}
+    void savePins(Context c) {
+        List<Channel> selectedChannels = channels.getValue() != null ? channels.getValue() : new ArrayList<>();
+        for (Channel channel : selectedChannels) {
+            if (channel.pin != null && !channel.pin.isEmpty()) {
+                channel.pin = KeyStoreExecutor.createNewKey(channel.pin, c);
+                repo.update(channel);
+            }
+        }
+    }
 
-	void savePin(Channel channel, Context c) {
-		if (channel.pin != null && !channel.pin.isEmpty()) {
-			channel.pin = KeyStoreExecutor.createNewKey(channel.pin, c);
-			repo.update(channel);
-		}
-	}
+    void savePin(Channel channel, Context c) {
+        if (channel.pin != null && !channel.pin.isEmpty()) {
+            channel.pin = KeyStoreExecutor.createNewKey(channel.pin, c);
+            repo.update(channel);
+        }
+    }
 
-	public void clearAllPins() {
-		List<Channel> selectedChannels = channels.getValue() != null ? channels.getValue() : new ArrayList<>();
-		for (Channel channel : selectedChannels) {
-			channel.pin = null;
-			repo.update(channel);
-		}
-	}
+    public void clearAllPins() {
+        List<Channel> selectedChannels = channels.getValue() != null ? channels.getValue() : new ArrayList<>();
+        for (Channel channel : selectedChannels) {
+            channel.pin = null;
+            repo.update(channel);
+        }
+    }
 
-	public void removeAccount(Channel channel) {
-		boolean changeDefault = channel.defaultAccount;
-		channel.selected = false;
-		channel.defaultAccount = false;
-		repo.update(channel);
+    public void removeAccount(Channel channel) {
+        boolean channelDefaultChanged = channel.defaultAccount;
+        channel.selected = false;
+        channel.defaultAccount = false;
+        repo.update(channel);
 
-		if (channels.getValue() == null || !changeDefault) return;
-		for (Channel c: channels.getValue()) {
-			if (!c.equals(channel)) {
-				c.defaultAccount = true;
-				repo.update(c);
-				return;
-			}
-		}
-	}
+        if (channels.getValue() != null && channelDefaultChanged) {
+            setRandomAccountAsDefault(channel.id);
+        }
+    }
+    private void setRandomAccountAsDefault(int excludedChannelId) {
+        for (Channel c : channels.getValue()) {
+            if (c.id != excludedChannelId) {
+                c.defaultAccount = true;
+                repo.update(c);
+                return;
+            }
+        }
+    }
 
-	public void setDefaultAccount(Channel channel) {
-		if (channels.getValue() == null) return;
-		for (Channel c: channels.getValue()) {
-			c.defaultAccount = c.id == channel.id;
-			repo.update(c);
-		}
-	}
+    public void setDefaultAccount(Channel channel) {
+        if (channels.getValue() == null) return;
+        for (Channel c : channels.getValue()) {
+            c.defaultAccount = c.id == channel.id;
+            repo.update(c);
+        }
+    }
 }

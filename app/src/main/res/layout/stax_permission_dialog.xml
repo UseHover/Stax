@@ -1,105 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:fillViewport="false">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="false">
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:orientation="vertical"
-		android:padding="@dimen/margin_13">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_13">
 
-		<LinearLayout android:id="@+id/header"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="@dimen/margin_21"
-			android:orientation="horizontal"
-			android:visibility="gone">
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_21"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
-			<TextView android:id="@+id/title"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:textSize="@dimen/text_13"
-				android:textAllCaps="true"
-				android:textAlignment="viewEnd"
-				android:fontFamily="font-bold"
-				android:textColor="@color/offWhite"/>
-		</LinearLayout>
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="font-bold"
+                android:textAlignment="viewEnd"
+                android:textAllCaps="true"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_13" />
+        </LinearLayout>
 
-		<TextView android:id="@+id/message"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="@dimen/margin_21"
-			android:paddingStart="@dimen/margin_5"
-			android:textSize="@dimen/text_16"
-			android:fontFamily="font-normal"
-			tools:ignore="RtlSymmetry"
-			android:visibility="gone"/>
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_21"
+            android:fontFamily="font-normal"
+            android:paddingStart="@dimen/margin_5"
+            android:textSize="@dimen/text_16"
+            android:visibility="gone"
+            tools:ignore="RtlSymmetry" />
 
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-			<TextView android:id="@+id/progress_text"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginBottom="@dimen/margin_13"
-				android:fontFamily="font-normal"
-				android:text="@string/perm_progress1"/>
+            <TextView
+                android:id="@+id/progress_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_13"
+                android:fontFamily="font-normal"
+                android:text="@string/perm_progress1" />
 
-			<ProgressBar android:id="@+id/progress_indicator"
-				style="?android:attr/progressBarStyleHorizontal"
-				android:max="100"
-				android:progress="13"
-				android:layout_width="match_parent"
-				android:layout_height="5dp"
-				android:layout_marginBottom="@dimen/margin_21"/>
+            <ProgressBar
+                android:id="@+id/progress_indicator"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_marginBottom="@dimen/margin_21"
+                android:max="100"
+                android:progress="13" />
 
-			<include android:id="@+id/overlay_example"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				layout="@layout/permission_help_overlay" />
+            <include
+                android:id="@+id/overlay_example"
+                layout="@layout/permission_help_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-			<include android:id="@+id/accessibility_example"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:visibility="gone"
-				layout="@layout/permission_help_accessibility" />
-		</LinearLayout>
+            <include
+                android:id="@+id/accessibility_example"
+                layout="@layout/permission_help_accessibility"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+        </LinearLayout>
 
-		<RelativeLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/margin_55">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_55">
 
-			<androidx.appcompat.widget.AppCompatButton
-				android:id="@+id/neg_btn"
-				android:layout_width="wrap_content"
-				android:layout_height="54.5dp"
-				android:layout_marginEnd="@dimen/margin_21"
-				android:text="@string/btn_cancel"
-				android:layout_toStartOf="@id/divider"
-				style="@style/StaxButton"
-				android:visibility="gone"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/neg_btn"
+                style="@style/StaxButton"
+                android:layout_width="wrap_content"
+                android:layout_height="54.5dp"
+                android:layout_marginEnd="@dimen/margin_21"
+                android:layout_toStartOf="@id/divider"
+                android:text="@string/btn_cancel"
+                android:visibility="gone" />
 
-			<View android:id="@+id/divider"
-				android:layout_width="@dimen/margin_21"
-				android:layout_height="wrap_content"
-				android:background="@color/transparent"
-				android:layout_toStartOf="@+id/pos_btn"/>
+            <View
+                android:id="@+id/divider"
+                android:layout_width="@dimen/margin_21"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/pos_btn"
+                android:background="@color/transparent" />
 
-			<androidx.appcompat.widget.AppCompatButton
-				android:id="@+id/pos_btn"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/btn_ok"
-				android:layout_alignParentEnd="true"
-				style="@style/StaxButton" />
-		</RelativeLayout>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/pos_btn"
+                style="@style/StaxButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="@string/btn_ok" />
+        </RelativeLayout>
 
-	</LinearLayout>
+    </LinearLayout>
 </ScrollView>

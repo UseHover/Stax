@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/bounty_navigation"
-    app:startDestination="@+id/bountyEmailFragment">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/bounty_navigation"
+        app:startDestination="@+id/bountyEmailFragment">
 
-	<fragment
-	    android:id="@+id/bountyEmailFragment"
-	    android:name="com.hover.stax.bounties.BountyEmailFragment"
-	    android:label="@string/nav_bounty"
-	    tools:layout="@layout/fragment_bounty_email" />
+    <fragment
+            android:id="@+id/bountyEmailFragment"
+            android:name="com.hover.stax.bounties.BountyEmailFragment"
+            android:label="@string/nav_bounty"
+            tools:layout="@layout/fragment_bounty_email" />
 
-	<fragment
-	    android:id="@+id/bountyListFragment"
-	    android:name="com.hover.stax.bounties.BountyListFragment"
-	    android:label="@string/nav_bounty"
-	    tools:layout="@layout/bounty_card_channel" />
+    <fragment
+            android:id="@+id/bountyListFragment"
+            android:name="com.hover.stax.bounties.BountyListFragment"
+            android:label="@string/nav_bounty"
+            tools:layout="@layout/bounty_card_channel" />
 
-	<fragment
-	    android:id="@+id/transactionDetailsFragment"
-	    android:name="com.hover.stax.transactions.TransactionDetailsFragment"
-	    android:label="TransactionDetailsFragment"
-	    tools:layout="@layout/fragment_transaction" >
-		<argument
-		    android:name="uuid"
-		    app:argType="string" />
-	</fragment>
+    <fragment
+            android:id="@+id/transactionDetailsFragment"
+            android:name="com.hover.stax.transactions.TransactionDetailsFragment"
+            android:label="TransactionDetailsFragment"
+            tools:layout="@layout/fragment_transaction">
+        <argument
+                android:name="uuid"
+                app:argType="string" />
+    </fragment>
 </navigation>

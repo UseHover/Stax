@@ -56,9 +56,7 @@ public class Encryption {
      * Encrypt a String
      *
      * @param data the String to be encrypted
-     *
      * @return the encrypted String or {@code null} if you send the data as {@code null}
-     *
      * @throws UnsupportedEncodingException       if the Builder charset name is not supported or if
      *                                            the Builder charset name is not supported
      * @throws NoSuchAlgorithmException           if the Builder digest algorithm is not available
@@ -98,7 +96,6 @@ public class Encryption {
      * {@code null} when it occurs and logging the error
      *
      * @param data the String to be encrypted
-     *
      * @return the encrypted String or {@code null} if you send the data as {@code null}
      */
     public String encryptOrNull(String data) {
@@ -141,9 +138,7 @@ public class Encryption {
      * Decrypt a String
      *
      * @param data the String to be decrypted
-     *
      * @return the decrypted String or {@code null} if you send the data as {@code null}
-     *
      * @throws UnsupportedEncodingException       if the Builder charset name is not supported or if
      *                                            the Builder charset name is not supported
      * @throws NoSuchAlgorithmException           if the Builder digest algorithm is not available
@@ -184,7 +179,6 @@ public class Encryption {
      * {@code null} when it occurs and logging the error
      *
      * @param data the String to be decrypted
-     *
      * @return the decrypted String or {@code null} if you send the data as {@code null}
      */
     public String decryptOrNull(String data) {
@@ -227,9 +221,7 @@ public class Encryption {
      * creates a 128bit salted aes key
      *
      * @param key encoded input key
-     *
      * @return aes 128 bit salted key
-     *
      * @throws NoSuchAlgorithmException     if no installed provider that can provide the requested
      *                                      by the Builder secret key type
      * @throws UnsupportedEncodingException if the Builder charset name is not supported
@@ -250,9 +242,7 @@ public class Encryption {
      * and return the char array
      *
      * @param key simple inputted string
-     *
      * @return sha1 base64 encoded representation
-     *
      * @throws UnsupportedEncodingException if the Builder charset name is not supported
      * @throws NoSuchAlgorithmException     if the Builder digest algorithm is not available
      * @throws NullPointerException         if the Builder digest algorithm is {@code null}
@@ -337,7 +327,6 @@ public class Encryption {
          * Build the Encryption with the provided information
          *
          * @return a new Encryption instance with provided information
-         *
          * @throws NoSuchAlgorithmException if the specified SecureRandomAlgorithm is not available
          * @throws NullPointerException     if the SecureRandomAlgorithm is {@code null} or if the
          *                                  IV byte array is null
@@ -357,7 +346,6 @@ public class Encryption {
 
         /**
          * @param charsetName the new charset name
-         *
          * @return this instance to follow the Builder patter
          */
         public Builder setCharsetName(String charsetName) {
@@ -374,7 +362,6 @@ public class Encryption {
 
         /**
          * @param algorithm the algorithm to be used
-         *
          * @return this instance to follow the Builder patter
          */
         public Builder setAlgorithm(String algorithm) {
@@ -391,7 +378,6 @@ public class Encryption {
 
         /**
          * @param keyAlgorithm the keyAlgorithm to be used in keys
-         *
          * @return this instance to follow the Builder patter
          */
         public Builder setKeyAlgorithm(String keyAlgorithm) {
@@ -408,7 +394,6 @@ public class Encryption {
 
         /**
          * @param base64Mode set the base 64 mode
-         *
          * @return this instance to follow the Builder patter
          */
         public Builder setBase64Mode(int base64Mode) {
@@ -425,7 +410,6 @@ public class Encryption {
 
         /**
          * @param secretKeyType the type of AES key that will be created, on KITKAT+ the API has
-         *
          * @return this instance to follow the Builder patter
          */
         public Builder setSecretKeyType(String secretKeyType) {
@@ -442,7 +426,6 @@ public class Encryption {
 
         /**
          * @param salt the value used for salting
-         *
          * @return this instance to follow the Builder patter
          */
         public Builder setSalt(String salt) {
@@ -459,7 +442,6 @@ public class Encryption {
 
         /**
          * @param key the key.
-         *
          * @return this instance to follow the Builder patter
          */
         public Builder setKey(String key) {
@@ -476,7 +458,6 @@ public class Encryption {
 
         /**
          * @param keyLength the length of key
-         *
          * @return this instance to follow the Builder patter
          */
         public Builder setKeyLength(int keyLength) {
@@ -493,7 +474,6 @@ public class Encryption {
 
         /**
          * @param iterationCount the number of times the password is hashed
-         *
          * @return this instance to follow the Builder patter
          */
         public Builder setIterationCount(int iterationCount) {
@@ -510,7 +490,6 @@ public class Encryption {
 
         /**
          * @param secureRandomAlgorithm the algorithm to generate the secure random
-         *
          * @return this instance to follow the Builder patter
          */
         public Builder setSecureRandomAlgorithm(String secureRandomAlgorithm) {
@@ -527,7 +506,6 @@ public class Encryption {
 
         /**
          * @param iv the byte array to create a new IvParameterSpec
-         *
          * @return this instance to follow the Builder patter
          */
         public Builder setIv(byte[] iv) {
@@ -544,7 +522,6 @@ public class Encryption {
 
         /**
          * @param secureRandom the Secure Random
-         *
          * @return this instance to follow the Builder patter
          */
         public Builder setSecureRandom(SecureRandom secureRandom) {
@@ -561,7 +538,6 @@ public class Encryption {
 
         /**
          * @param ivParameterSpec the IvParameterSpec
-         *
          * @return this instance to follow the Builder patter
          */
         public Builder setIvParameterSpec(IvParameterSpec ivParameterSpec) {
@@ -578,7 +554,6 @@ public class Encryption {
 
         /**
          * @param digestAlgorithm the algorithm to be used to get message digest instance
-         *
          * @return this instance to follow the Builder patter
          */
         public Builder setDigestAlgorithm(String digestAlgorithm) {
