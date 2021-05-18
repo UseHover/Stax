@@ -81,6 +81,10 @@ public class DatabaseRepo {
         return channelDao.getChannels(ids);
     }
 
+    public List<Channel> getChannelsByCountry(String countryCode) {
+        return channelDao.getChannels(countryCode);
+    }
+
     public LiveData<List<Channel>> getChannelsByCountry(int[] channelIds, String countryCode) {
         return channelDao.getChannels(countryCode, channelIds);
     }

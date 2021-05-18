@@ -1,5 +1,6 @@
 package com.hover.stax.settings;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,8 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.databinding.FragmentSettingsBinding;
 import com.hover.stax.languages.Lang;
 import com.hover.stax.languages.LanguageViewModel;
+import com.hover.stax.languages.SelectLanguageActivity;
+import com.hover.stax.library.LibraryActivity;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -46,6 +49,7 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
         setUpAccounts(securityViewModel);
         setUpChooseLang();
         setUpContactStax();
+        setUpUssdLibrary();
 
         return binding.getRoot();
     }
@@ -76,6 +80,10 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
 
     private void setUpContactStax() {
         binding.contactStax.twitterContact.setOnClickListener(v -> Utils.openUrl(getString(R.string.stax_twitter_url), requireContext()));
+    }
+
+    private void setUpUssdLibrary() {
+        binding.libraryCard.visitLibrary.setOnClickListener(v -> getActivity().startActivity(new Intent(getActivity(), LibraryActivity.class)));
     }
 
     private void showAccounts(List<Channel> channels) {
