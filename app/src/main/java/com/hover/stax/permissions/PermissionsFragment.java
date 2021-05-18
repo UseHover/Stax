@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
+import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
@@ -44,7 +45,7 @@ public class PermissionsFragment extends DialogFragment {
         helper = new PermissionHelper(getContext());
         current = helper.hasOverlayPerm() ? ACCESS : OVERLAY;
         Utils.logAnalyticsEvent(getString(current == OVERLAY ? R.string.perms_overlay_dialog : R.string.perms_accessibility_dialog), requireContext());
-        dialog = (StaxPermissionDialog) new StaxPermissionDialog(requireActivity())
+        dialog = (StaxPermissionDialog) new StaxPermissionDialog(getActivity())
                 .setDialogTitle(R.string.perm_dialoghead)
                 .setDialogMessage(getString(R.string.perm_dialogbody, getArguments().getString(REASON)))
                 .setNegButton(R.string.btn_cancel, view -> cancel())
@@ -114,13 +115,8 @@ public class PermissionsFragment extends DialogFragment {
     private void animateToDone() {
         if (dialog != null)
             dialog.animateProgressTo(100);
-
-        requireActivity().setResult(RESULT_OK);
-
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            if (getActivity() != null)
-                getActivity().finish();
-        }, getArguments().getInt(STARTWITH) == ACCESS ? 10 : 800);
+        getActivity().setResult(RESULT_OK);
+        new Handler(Looper.getMainLooper()).postDelayed(() -> getActivity().finish(), getArguments().getInt(STARTWITH) == ACCESS ? 10 : 800);
     }
 
     private void cancel() {

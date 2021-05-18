@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.databinding.FragmentBountyEmailBinding;
 import com.hover.stax.navigation.NavigationInterface;
@@ -73,7 +74,7 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
     }
 
     private void setEmailError() {
-        Utils.logAnalyticsEvent(getString(R.string.bounty_email_err, getString(R.string.bounty_api_internet_error)), requireActivity());
+        Utils.logAnalyticsEvent(getString(R.string.bounty_email_err, getString(R.string.bounty_api_internet_error)), requireContext());
         emailInput.setEnabled(true);
         emailInput.setState(getString(R.string.bounty_api_internet_error), AbstractStatefulInput.ERROR);
     }

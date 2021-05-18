@@ -1,5 +1,6 @@
 package com.hover.stax.home;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.amplitude.api.Amplitude;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.hover.sdk.actions.HoverAction;
@@ -67,24 +69,28 @@ public class MainActivity extends AbstractNavigationActivity implements
         super.onNewIntent(intent);
         checkForRequest(intent);
     }
-
     private void checkForDeepLinking() {
         Intent intent = getIntent();
-        if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW) && intent.getData() != null) {
+        if(intent.getAction()!=null && intent.getAction().equals(Intent.ACTION_VIEW) && intent.getData() != null) {
             String deepLinkRoute = intent.getData().toString();
-            if (deepLinkRoute.contains(getString(R.string.deeplink_sendmoney))) {
+            if(deepLinkRoute.contains(getString(R.string.deeplink_sendmoney))) {
                 navigateToTransferActivity(HoverAction.P2P, false, intent, this);
-            } else if (deepLinkRoute.contains(getString(R.string.deeplink_airtime))) {
+            }
+            else if(deepLinkRoute.contains(getString(R.string.deeplink_airtime))) {
                 navigateToTransferActivity(HoverAction.AIRTIME, false, intent, this);
-            } else if (deepLinkRoute.contains(getString(R.string.deeplink_linkaccount))) {
+            }
+            else if(deepLinkRoute.contains(getString(R.string.deeplink_linkaccount))) {
                 navigateToLinkAccountFragment(getNavController());
-            } else if (deepLinkRoute.contains(getString(R.string.deeplink_balance)) || deepLinkRoute.contains(getString(R.string.deeplink_history))) {
+            }
+            else if(deepLinkRoute.contains(getString(R.string.deeplink_balance)) || deepLinkRoute.contains(getString(R.string.deeplink_history))) {
                 navigateToBalanceFragment(getNavController());
-            } else if (deepLinkRoute.contains(getString(R.string.deeplink_settings))) {
+            }
+            else if(deepLinkRoute.contains(getString(R.string.deeplink_settings))) {
                 navigateToSettingsFragment(getNavController());
-            } else if (deepLinkRoute.contains(getString(R.string.deeplink_reviews))) {
+            }
+            else if(deepLinkRoute.contains(getString(R.string.deeplink_reviews))) {
                 Utils.logAnalyticsEvent(getString(R.string.visited_rating_review_screen), this);
-                if (!Utils.getBoolean(Constants.APP_RATED, this)) launchRatingAndReviewDialog();
+                if(!Utils.getBoolean(Constants.APP_RATED, this)) launchRatingAndReviewDialog();
                 else openStaxPlaystorePage();
             }
         }
@@ -93,13 +99,12 @@ public class MainActivity extends AbstractNavigationActivity implements
     private void launchRatingAndReviewDialog() {
         ReviewManager reviewManager = ReviewManagerFactory.create(this);
         reviewManager.requestReviewFlow().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+            if(task.isSuccessful()){
                 reviewManager.launchReviewFlow(MainActivity.this, task.getResult()).addOnCompleteListener(
                         task1 -> Utils.saveBoolean(Constants.APP_RATED, true, MainActivity.this));
             }
         });
     }
-
     private void openStaxPlaystorePage() {
         Uri link = Uri.parse(getString(R.string.stax_market_playstore_link));
         Intent goToMarket = new Intent(Intent.ACTION_VIEW, link);
@@ -145,14 +150,10 @@ public class MainActivity extends AbstractNavigationActivity implements
         Timber.e("running index: %s", index);
 
         if (balancesViewModel.getChannel(action.channel_id) != null) {
-            List<Channel> selectedChannels = balancesViewModel.getSelectedChannels().getValue();
-
             HoverSession.Builder hsb = new HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), MainActivity.this, index);
             if (index + 1 < balancesViewModel.getSelectedChannels().getValue().size())
                 hsb.finalScreenTime(0);
-
-            if (selectedChannels != null && !selectedChannels.isEmpty())
-                hsb.run();
+            hsb.run();
         } else { // Fix for auth issue on OnePlus 6
             new Handler(Looper.getMainLooper()).post(() -> {
                 balancesViewModel.getSelectedChannels().observe(MainActivity.this, new Observer<List<Channel>>() {

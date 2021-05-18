@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +26,6 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.List;
-
-import timber.log.Timber;
 
 import static com.hover.stax.utils.Constants.size55;
 
@@ -95,7 +94,7 @@ public class ActionDropdownAdapter extends ArrayAdapter<HoverAction> {
 
         @Override
         public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-            Timber.e(e);
+            Log.e("LogTag", e.getMessage());
         }
 
         @Override
