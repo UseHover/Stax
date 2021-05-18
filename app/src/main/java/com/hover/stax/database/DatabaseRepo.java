@@ -277,41 +277,42 @@ public class DatabaseRepo {
     }
 
     public LiveData<Request> decrypt(String encrypted, Context c) {
-        if (decryptedRequest == null) {
-            decryptedRequest = new MutableLiveData<>();
-        }
+        if (decryptedRequest == null) { decryptedRequest = new MutableLiveData<>(); }
         decryptedRequest.setValue(null);
         String removedBaseUrlString = encrypted.replace(c.getString(R.string.payment_root_url, ""), "");
 
-        if (removedBaseUrlString.contains("(")) { //Only old stax versions contains ( in the link
-            decryptedRequest.postValue(new Request(Request.decryptBijective(removedBaseUrlString, c)));
-        } else {
-            try {
-                Encryption e = Request.getEncryptionSettings().build();
-                if (Request.isShortLink(removedBaseUrlString)) {
-                    removedBaseUrlString = new Shortlink(removedBaseUrlString).expand();
-                }
-
-                e.decryptAsync(removedBaseUrlString.replaceAll("[(]", "+"), new Encryption.Callback() {
-                    @Override
-                    public void onSuccess(String result) {
-                        decryptedRequest.postValue(new Request(result));
-                    }
-
-                    @Override
-                    public void onError(Exception exception) {
-                        Utils.logErrorAndReportToFirebase(TAG, "failed link decryption", exception);
-                    }
-                });
-
-            } catch (NoSuchAlgorithmException e) {
-                Utils.logErrorAndReportToFirebase(TAG, "decryption failure", e);
-            }
-        }
-
+        //Only old stax versions contains ( in the link
+        if (removedBaseUrlString.contains("(")) decryptRequest(removedBaseUrlString, c);
+        else decryptRequestForOldVersions(removedBaseUrlString);
         return decryptedRequest;
     }
 
+    private void decryptRequest(String param, Context c) {
+        decryptedRequest.postValue(new Request(Request.decryptBijective(param, c)));
+    }
+    private void decryptRequestForOldVersions(String params) {
+        try {
+            Encryption e = Request.getEncryptionSettings().build();
+            if (Request.isShortLink(params)) {
+                params = new Shortlink(params).expand();
+            }
+
+            e.decryptAsync(params.replaceAll("[(]", "+"), new Encryption.Callback() {
+                @Override
+                public void onSuccess(String result) {
+                    decryptedRequest.postValue(new Request(result));
+                }
+
+                @Override
+                public void onError(Exception exception) {
+                    Utils.logErrorAndReportToFirebase(TAG, "failed link decryption", exception);
+                }
+            });
+
+        } catch (NoSuchAlgorithmException e) {
+            Utils.logErrorAndReportToFirebase(TAG, "decryption failure", e);
+        }
+    }
     public void insert(Request request) {
         AppDatabase.databaseWriteExecutor.execute(() -> requestDao.insert(request));
     }
