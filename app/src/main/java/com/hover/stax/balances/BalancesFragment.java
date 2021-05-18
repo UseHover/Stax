@@ -109,7 +109,7 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
         binding.homeCardBalances.balanceCard.setBackButtonVisibility(channels != null && channels.size() > 0 ? VISIBLE : GONE);
 
         toggleLink(channels != null && channels.size() > 0);
-        channelDropdown.setObservers(channelDropdownViewModel, getActivity());
+        channelDropdown.setObservers(channelDropdownViewModel, requireActivity());
     }
 
     public void toggleLink(boolean show) {
@@ -119,9 +119,7 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 
     private void refreshBalances(View v) {
         if (channelDropdown.getHighlighted() != null) {
-            balancesViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
-                balancesViewModel.setAllRunning(v.getContext());
-            });
+            balancesViewModel.getActions().observe(getViewLifecycleOwner(), actions -> balancesViewModel.setAllRunning(requireContext()));
             channelDropdownViewModel.setChannelSelected(channelDropdown.getHighlighted());
 
         } else if (channelDropdownViewModel.getSelectedChannels().getValue() == null || channelDropdownViewModel.getSelectedChannels().getValue().size() == 0)

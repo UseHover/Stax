@@ -28,6 +28,8 @@ import com.squareup.picasso.Target;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 import static com.hover.stax.utils.Constants.size55;
 
 public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedChangeListener, Target {
@@ -72,7 +74,7 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
         ActionDropdownAdapter actionDropdownAdapter = new ActionDropdownAdapter(uniqRecipientActions, getContext());
         dropdownView.setAdapter(actionDropdownAdapter);
         dropdownView.setOnItemClickListener((adapterView, view2, pos, id) -> selectRecipientNetwork((HoverAction) adapterView.getItemAtPosition(pos)));
-        Log.e(TAG, "uniq recipient networks " + uniqRecipientActions.size());
+        Timber.e("uniq recipient networks %s", uniqRecipientActions.size());
         dropdownLayout.setVisibility(showRecipientNetwork(uniqRecipientActions) ? VISIBLE : GONE);
         radioHeader.setText(actions.get(0).transaction_type.equals(HoverAction.AIRTIME) ? R.string.airtime_who_header : R.string.send_who_header);
     }
@@ -90,6 +92,9 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
     }
 
     private boolean showRecipientNetwork(List<HoverAction> actions) {
+        if (actions == null)
+            return false;
+        
         return actions.size() > 1 || (actions.size() == 1 && !actions.get(0).isOnNetwork());
     }
 

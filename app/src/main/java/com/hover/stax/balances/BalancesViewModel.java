@@ -2,7 +2,6 @@ package com.hover.stax.balances;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -20,6 +19,8 @@ import com.hover.stax.utils.Utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import timber.log.Timber;
 
 public class BalancesViewModel extends AndroidViewModel {
     private final String TAG = "BalancesViewModel";
@@ -74,11 +75,12 @@ public class BalancesViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<HoverAction>> loadActions(List<Channel> channelList) {
-        Log.e(TAG, "attempting to load " + channelList.size() + " balance actions");
+        Timber.e("attempting to load " + channelList.size() + " balance actions");
         int[] ids = new int[channelList.size()];
         for (int c = 0; c < channelList.size(); c++)
             ids[c] = channelList.get(c).id;
-        Log.e(TAG, "attempting to load balance actions for channels: " + Arrays.toString(ids));
+        Timber.e("attempting to load balance actions for channels: %s", Arrays.toString(ids));
+
         return repo.getLiveActions(ids, HoverAction.BALANCE);
     }
 
@@ -105,7 +107,7 @@ public class BalancesViewModel extends AndroidViewModel {
     }
 
     public void setAllRunning(Context c) {
-        Log.e(TAG, "triggering refresh");
+        Timber.e("triggering refresh");
         Utils.logAnalyticsEvent(c.getString(R.string.refresh_balance_all), c);
         runFlag.setValue(ALL);
     }

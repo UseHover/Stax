@@ -2,6 +2,7 @@ package com.hover.stax.requests;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.TextView;
@@ -15,6 +16,8 @@ import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
 import java.util.List;
+
+import timber.log.Timber;
 
 public interface RequestSenderInterface {
 
@@ -48,7 +51,12 @@ public interface RequestSenderInterface {
         sendIntent.setAction(Intent.ACTION_VIEW);
         String whatsapp = "https://api.whatsapp.com/send?phone=" + r.generateWhatsappRecipientString(requestees, channel) + "&text=" + r.generateMessage(a);
         sendIntent.setData(Uri.parse(whatsapp));
-        a.startActivityForResult(sendIntent, Constants.SMS);
+
+        try {
+            a.startActivityForResult(sendIntent, Constants.SMS);
+        } catch (ActivityNotFoundException e){
+            Timber.e(e);
+        }
     }
 
     default void sendWhatsAppToMultipleContacts(String message, Activity a) {
@@ -57,7 +65,12 @@ public interface RequestSenderInterface {
         sendIntent.putExtra(Intent.EXTRA_TEXT, message);
         sendIntent.setType("text/plain");
         sendIntent.setPackage("com.whatsapp");
-        a.startActivity(sendIntent);
+
+        try {
+            a.startActivity(sendIntent);
+        } catch (ActivityNotFoundException e){
+            Timber.e(e);
+        }
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
