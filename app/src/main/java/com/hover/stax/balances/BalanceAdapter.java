@@ -111,15 +111,13 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
         public BalanceViewHolder(BalanceItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
-            binding.balanceChannelName.setOnClickListener(this);
+            binding.getRoot().setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            if (balanceListener != null && v.getId() == R.id.balance_channel_name)
+            if (balanceListener != null )
                 balanceListener.onTapDetail(Integer.parseInt(binding.channelId.getText().toString()));
-            else if (balanceListener != null)
-                balanceListener.onTapRefresh(Integer.parseInt(binding.channelId.getText().toString()));
         }
     }
 
