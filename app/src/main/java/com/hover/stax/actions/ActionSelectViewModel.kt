@@ -30,7 +30,7 @@ class ActionSelectViewModel(private val application: Application) : ViewModel() 
 
     fun setActions(actions: List<HoverAction>) = filteredActions.postValue(actions)
 
-    fun setActiveAction(action: HoverAction) = activeAction.postValue(action)
+    fun setActiveAction(action: HoverAction?) = action?.let { activeAction.postValue(action) }
 
     fun errorCheck(): String? {
         return if (activeAction.value == null) application.getString(R.string.action_fielderror) else null

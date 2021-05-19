@@ -1,0 +1,246 @@
+package com.hover.stax.transfers
+
+import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.lifecycle.Observer
+import com.hover.sdk.actions.HoverAction
+import com.hover.stax.R
+import com.hover.stax.actions.ActionSelect
+import com.hover.stax.actions.ActionSelectViewModel
+import com.hover.stax.contacts.ContactInput
+import com.hover.stax.contacts.StaxContact
+import com.hover.stax.databinding.FragmentTransferBinding
+import com.hover.stax.requests.Request
+import com.hover.stax.utils.Constants
+import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.Utils
+import com.hover.stax.views.AbstractStatefulInput
+import com.hover.stax.views.Stax2LineItem
+import com.hover.stax.views.StaxTextInputLayout
+import org.koin.androidx.viewmodel.ext.android.getViewModel
+import timber.log.Timber
+
+
+class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener {
+
+    private lateinit var transferViewModel: TransferViewModel
+    private lateinit var actionSelectViewModel: ActionSelectViewModel
+
+    private lateinit var amountInput: StaxTextInputLayout
+    private lateinit var noteInput: StaxTextInputLayout
+    private lateinit var actionSelect: ActionSelect
+    private lateinit var contactInput: ContactInput
+    private lateinit var recipientValue: Stax2LineItem
+
+    private lateinit var binding: FragmentTransferBinding
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        actionSelectViewModel = getViewModel()
+        channelDropdownViewModel = getViewModel()
+        abstractFormViewModel = getViewModel<TransferViewModel>()
+        transferViewModel = abstractFormViewModel as TransferViewModel
+
+        binding = FragmentTransferBinding.inflate(inflater, container, false)
+
+        init(binding.root)
+        startObservers(binding.root)
+        startListeners()
+
+        return binding.root
+    }
+
+    override fun init(root: View?) {
+        setTitle()
+
+        amountInput = binding.editCard.amountInput;
+        contactInput = binding.editCard.contactSelect;
+        actionSelect = binding.editCard.actionSelect;
+        noteInput = binding.editCard.noteInput;
+
+        recipientValue = binding.summaryCard.recipientValue;
+
+        amountInput.requestFocus();
+
+        super.init(root)
+    }
+
+    private fun setTitle() {
+        Timber.e(transferViewModel.type)
+
+        val titleRes = if (transferViewModel.type == HoverAction.AIRTIME) R.string.cta_airtime else R.string.cta_transfer
+        Timber.e(getString(titleRes))
+        binding.editCard.transferCard.setTitle(getString(titleRes))
+        binding.summaryCard.transferSummaryCard.setTitle(getString(titleRes))
+    }
+
+    override fun startObservers(root: View?) {
+        super.startObservers(root)
+
+        actionSelectViewModel.activeAction.observe(viewLifecycleOwner, Observer {
+            binding.summaryCard.accountValue.setSubtitle(it.getNetworkSubtitle(requireContext()))
+            actionSelect.selectRecipientNetwork(it)
+            setRecipientHint(it)
+        })
+
+        with(channelDropdownViewModel) {
+            activeChannel.observe(viewLifecycleOwner, Observer { channel ->
+                transferViewModel.request.value?.let { request ->
+                    transferViewModel.setRecipientSmartly(request, channel)
+                }
+                actionSelect.visibility = if (channel != null) View.GONE else View.VISIBLE
+                binding.summaryCard.accountValue.setTitle(channel.toString())
+            })
+
+            channelActions.observe(viewLifecycleOwner, Observer {
+                actionSelectViewModel.setActions(it)
+                actionSelect.updateActions(it)
+            })
+        }
+
+        with(transferViewModel) {
+            amount.observe(viewLifecycleOwner, Observer {
+                amountInput.text = it
+                binding.summaryCard.amountValue.text = Utils.formatAmount(it)
+            })
+
+            note.observe(viewLifecycleOwner, Observer {
+                noteInput.text = it
+                binding.summaryCard.noteRow.visibility = if (it.isNullOrEmpty()) View.GONE else View.VISIBLE
+                binding.summaryCard.noteValue.text = it
+            })
+
+            contact.observe(viewLifecycleOwner, Observer { recipientValue.setContact(it) })
+
+            recentContacts.observe(viewLifecycleOwner, Observer {
+                if (!it.isNullOrEmpty()) {
+                    contactInput.setRecent(it, requireActivity())
+                    transferViewModel.contact.value?.let { ct -> contactInput.setSelected(ct) }
+                }
+            })
+
+            request.observe(viewLifecycleOwner, Observer { it?.let { load(it) } })
+        }
+    }
+
+    private fun startListeners() {
+        amountInput.apply {
+            addTextChangedListener(amountWatcher)
+            setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus)
+                    amountInput.setState(
+                        null,
+                        if (transferViewModel.amountErrors() == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+                    )
+            }
+        }
+
+        contactInput.apply {
+            setOnItemClickListener { view, _, position, _ ->
+                val contact = view.getItemAtPosition(position) as StaxContact
+                transferViewModel.setContact(contact)
+            }
+            addTextChangedListener(recipientWatcher)
+            setChooseContactListener { contactPicker(Constants.GET_CONTACT, requireContext()) }
+        }
+
+        actionSelect.setListener(this)
+        noteInput.addTextChangedListener(noteWatcher)
+        fab.setOnClickListener { fabClicked() }
+    }
+
+    private fun fabClicked() {
+        if (transferViewModel.isEditing.value == true) {
+            if (validates()) {
+                transferViewModel.saveContact()
+                transferViewModel.setEditing(false)
+            } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
+        } else (activity as TransferActivity).submit()
+    }
+
+    private val amountWatcher: TextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+        override fun afterTextChanged(editable: Editable) {}
+        override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+            transferViewModel.setAmount(charSequence.toString().replace(",".toRegex(), ""))
+        }
+    }
+
+    private val recipientWatcher: TextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+        override fun afterTextChanged(editable: Editable) {}
+        override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+            transferViewModel.setRecipient(charSequence.toString())
+        }
+    }
+
+    private val noteWatcher: TextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+        override fun afterTextChanged(editable: Editable) {}
+        override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+            transferViewModel.setNote(charSequence.toString())
+        }
+    }
+
+    private fun validates(): Boolean {
+        val amountError = transferViewModel.amountErrors()
+        amountInput.setState(amountError, if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+
+        val channelError = channelDropdownViewModel.errorCheck()
+        channelDropdown.setState(channelError, if (channelError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+
+        val actionError = actionSelectViewModel.errorCheck()
+        actionSelect.setState(actionError, if (actionError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+
+        val recipientError = transferViewModel.recipientErrors(actionSelectViewModel.activeAction.value)
+        contactInput.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+
+        return channelError == null && actionError == null && amountError == null && recipientError == null
+    }
+
+
+    override fun onContactSelected(requestCode: Int, contact: StaxContact?) {
+        transferViewModel.setContact(contact)
+        contactInput.setSelected(contact)
+    }
+
+    override fun highlightAction(a: HoverAction?) {
+        Timber.e("updating active action")
+        a?.let { actionSelectViewModel.setActiveAction(a) }
+    }
+
+    fun setRecipientHint(action: HoverAction) {
+        Timber.e("Update hint to $action : ${action.getPronoun(requireContext())}")
+
+        if (!action.requiresRecipient()) {
+            editCard.findViewById<LinearLayout>(R.id.recipient_entry).visibility = View.GONE
+            binding.summaryCard.recipientRow.visibility = View.GONE
+            recipientValue.setContent(getString(R.string.self_choice), "")
+        } else {
+            editCard.findViewById<LinearLayout>(R.id.recipient_entry).visibility = View.VISIBLE
+            binding.summaryCard.recipientRow.visibility = View.VISIBLE
+            transferViewModel.forceUpdateContactUI()
+            contactInput.setHint(
+                if (action.requiredParams.contains(HoverAction.ACCOUNT_KEY))
+                    getString(R.string.recipientacct_label)
+                else
+                    getString(R.string.recipientphone_label)
+            )
+        }
+    }
+
+    private fun load(r: Request) {
+        transferViewModel.setRecipientSmartly(r, channelDropdownViewModel.activeChannel.value!!)
+        channelDropdownViewModel.setChannelFromRequest(r)
+        amountInput.text = r.amount
+        contactInput.setText(r.requester_number, false)
+
+        transferViewModel.setEditing(r.amount.isNullOrEmpty())
+        channelDropdown.setState(getString(R.string.channel_request_fieldinfo, r.requester_institution_id.toString()), AbstractStatefulInput.INFO)
+        Utils.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext())
+    }
+}

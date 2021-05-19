@@ -2,8 +2,12 @@ package com.hover.stax.di
 
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.stax.actions.ActionSelectViewModel
+import com.hover.stax.channels.ChannelDropdownViewModel
 import com.hover.stax.database.AppDatabase
 import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.requests.NewRequestViewModel
+import com.hover.stax.schedules.ScheduleDetailViewModel
+import com.hover.stax.transfers.TransferViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -12,7 +16,10 @@ val appModule = module(true) {
     single { HoverRoomDatabase.getInstance(get()) }
 
     viewModel { ActionSelectViewModel(get()) }
-
+    viewModel { ChannelDropdownViewModel(get()) }
+    viewModel { NewRequestViewModel(get(), get()) }
+    viewModel { TransferViewModel(get(), get())}
+    viewModel { ScheduleDetailViewModel(get()) }
 }
 
 val dataModule = module {

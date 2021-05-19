@@ -14,6 +14,7 @@ import com.hover.stax.schedules.Schedule
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class TransferViewModel(application: Application, repo: DatabaseRepo) : AbstractFormViewModel(application, repo) {
 
@@ -22,8 +23,9 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     val note = MutableLiveData<String>()
     var request: LiveData<Request> = MutableLiveData<Request>()
 
-    fun setType(transaction_type: String) {
+    fun setTransactionType(transaction_type: String) {
         type = transaction_type
+        Timber.e("Type: $type")
     }
 
     fun setAmount(a: String) = amount.postValue(a)
@@ -31,11 +33,12 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     fun setContact(contactIds: String?) = contactIds?.let {
         viewModelScope.launch {
             val contacts = repo.getContacts(contactIds.split(",").toTypedArray())
+            Timber.e("Contacts : %s", contacts)
             if (contacts.isNotEmpty()) contact.postValue(contacts.first())
         }
     }
 
-    fun setContact(sc: StaxContact) = contact.postValue(sc)
+    fun setContact(sc: StaxContact?) = sc?.let { contact.postValue(it) }
 
     fun forceUpdateContactUI() = contact.postValue(contact.value)
 
@@ -48,16 +51,18 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
         }
     }
 
-    fun setRecipientSmartly(r: Request, channel: Channel) {
-        try {
-            val formattedPhone = StaxContact.getInternationalNumber(channel.countryAlpha2, StaxContact.stripPhone(r.requester_number))
+    fun setRecipientSmartly(r: Request?, channel: Channel) {
+        r?.let {
+            try {
+                val formattedPhone = StaxContact.getInternationalNumber(channel.countryAlpha2, StaxContact.stripPhone(r.requester_number))
 
-            viewModelScope.launch {
-                val sc = repo.getContactFromPhone(formattedPhone)
-                sc?.let { contact.postValue(repo.getContactFromPhone(StaxContact.stripPhone(r.requester_number))) }
+                viewModelScope.launch {
+                    val sc = repo.getContactFromPhone(formattedPhone)
+                    sc?.let { contact.postValue(repo.getContactFromPhone(StaxContact.stripPhone(r.requester_number))) }
+                }
+            } catch (e: NumberFormatException) {
+                Utils.logErrorAndReportToFirebase(TransferViewModel::class.java.simpleName, e.message, e)
             }
-        } catch (e: NumberFormatException) {
-            Utils.logErrorAndReportToFirebase(TransferViewModel::class.java.simpleName, e.message, e)
         }
     }
 
@@ -81,7 +86,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
 
     fun view(s: Schedule){
         schedule.postValue(s)
-        setType(s.type)
+        setTransactionType(s.type)
         setAmount(s.amount)
         setContact(s.recipient_ids)
         setNote(s.note)

@@ -5,10 +5,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
@@ -26,6 +26,8 @@ import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxCardView;
 
+import timber.log.Timber;
+
 public abstract class AbstractFormFragment extends Fragment {
     private static String TAG = "AbstractFormFragment";
 
@@ -37,6 +39,7 @@ public abstract class AbstractFormFragment extends Fragment {
     protected ChannelDropdown channelDropdown;
     protected ExtendedFloatingActionButton fab;
 
+    @CallSuper
     protected void init(View root) {
         editCard = root.findViewById(R.id.editCard);
         noworryText = root.findViewById(R.id.noworry_text);
@@ -49,13 +52,12 @@ public abstract class AbstractFormFragment extends Fragment {
         channelDropdown.setListener(channelDropdownViewModel);
         channelDropdown.setObservers(channelDropdownViewModel, getViewLifecycleOwner());
         setupActionDropdownObservers(channelDropdownViewModel, getViewLifecycleOwner());
-        abstractFormViewModel.getIsEditing().observe(getViewLifecycleOwner(), this::showEdit);
-
+        abstractFormViewModel.isEditing().observe(getViewLifecycleOwner(), this::showEdit);
     }
 
     private void setupActionDropdownObservers(ChannelDropdownViewModel viewModel, LifecycleOwner lifecycleOwner) {
-        viewModel.getActiveChannel().observe(lifecycleOwner, channel -> Log.i(TAG, "Got new active channel: " + channel + " " + channel.countryAlpha2));
-        viewModel.getChannelActions().observe(lifecycleOwner, actions -> Log.i(TAG, "Got new actions: " + actions.size()));
+        viewModel.getActiveChannel().observe(lifecycleOwner, channel -> Timber.i("Got new active channel: " + channel + " " + channel.countryAlpha2));
+        viewModel.getChannelActions().observe(lifecycleOwner, actions -> Timber.i("Got new actions: %s", actions.size()));
     }
 
     protected void showEdit(boolean isEditing) {

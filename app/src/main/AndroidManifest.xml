@@ -132,14 +132,14 @@
             android:theme="@style/StaxTheme" />
 
         <activity
-            android:name=".transfers.TransferActivity"
-            android:theme="@style/StaxTheme"
-            android:windowSoftInputMode="stateVisible|adjustResize"/>
+                android:name=".transfers.TransferActivity"
+                android:theme="@style/StaxTheme"
+                android:windowSoftInputMode="stateVisible|adjustResize"/>
 
         <activity
-            android:name=".requests.RequestActivity"
-            android:theme="@style/StaxTheme"
-            android:windowSoftInputMode="stateVisible|adjustResize">
+                android:name=".requests.RequestActivity"
+                android:theme="@style/StaxTheme"
+                android:windowSoftInputMode="stateVisible|adjustResize">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -147,13 +147,13 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="stax.me"
-                    android:pathPattern="@string/deeplink_request"
-                    android:scheme="https" />
+                        android:host="stax.me"
+                        android:pathPattern="@string/deeplink_request"
+                        android:scheme="https" />
                 <data
-                    android:host="stax.me"
-                    android:pathPattern="@string/deeplink_request"
-                    android:scheme="http" />
+                        android:host="stax.me"
+                        android:pathPattern="@string/deeplink_request"
+                        android:scheme="http" />
             </intent-filter>
         </activity>
 

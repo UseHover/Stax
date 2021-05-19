@@ -11,25 +11,25 @@ import com.hover.stax.utils.Utils
 
 abstract class AbstractFormViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel() {
 
-    protected val recentContacts = MutableLiveData<List<StaxContact>>()
-    protected val schedule = MutableLiveData<Schedule>()
-    protected val isEditing = MutableLiveData<Boolean>(true)
+    var type: String? = "P2P"
+
+    val recentContacts = MutableLiveData<List<StaxContact>>()
+    val schedule = MutableLiveData<Schedule>()
+    val isEditing = MutableLiveData<Boolean>()
 
     init {
-        isEditing.postValue(true)
-        recentContacts.postValue(repo.allContacts.value)
+        isEditing.value = true
+
+        if (!repo.allContacts.value.isNullOrEmpty())
+            recentContacts.postValue(repo.allContacts.value)
     }
 
-    fun setEditing(editing: Boolean){
+    fun setEditing(editing: Boolean) {
         isEditing.postValue(editing)
     }
 
-    fun saveSchedule(s: Schedule){
+    fun saveSchedule(s: Schedule) {
         Utils.logAnalyticsEvent(application.getString(R.string.scheduled_complete, s.type), application.baseContext)
         repo.insert(s)
-    }
-
-    companion object {
-        var type: String = "P2P"
     }
 }
