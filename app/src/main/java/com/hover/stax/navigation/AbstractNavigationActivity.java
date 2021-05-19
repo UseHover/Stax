@@ -82,7 +82,8 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
     }
 
     public void checkPermissionsAndNavigate(int toWhere) {
-        PermissionHelper permissionHelper = new PermissionHelper(this);
+        navigate(this, toWhere, getIntent(), false);
+        /*PermissionHelper permissionHelper = new PermissionHelper(this);
         if (toWhere == Constants.NAV_SETTINGS || toWhere == Constants.NAV_HOME || permissionHelper.hasBasicPerms()) {
             navigate(this, toWhere, getIntent(), false);
         } else {
@@ -90,7 +91,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
                     pos -> PermissionUtils.requestPerms(getNavConst(toWhere), AbstractNavigationActivity.this),
                     neg -> Utils.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), AbstractNavigationActivity.this),
                     this);
-        }
+        }*/
     }
 
     protected void navigateThruHome(int destId) {
@@ -115,6 +116,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         else if (destId == R.id.navigation_settings) return Constants.NAV_SETTINGS;
         else if (destId == R.id.navigation_home) return Constants.NAV_HOME;
         else return destId;
+
     }
 
     public void getStartedWithBountyButton(View view) {

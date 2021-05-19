@@ -24,8 +24,8 @@ import okhttp3.Response;
 class BountyAsyncCaller extends AsyncTask<String, Void, Integer> {
     private static final String TAG = "BountyAsyncCaller";
 
-    private WeakReference<Context> context;
-    private AsyncResponseListener responseListener;
+    private final WeakReference<Context> context;
+    private final AsyncResponseListener responseListener;
     private final OkHttpClient client = new OkHttpClient();
 
     public BountyAsyncCaller(@NonNull WeakReference<Context> mWeakContext, AsyncResponseListener listener) {
