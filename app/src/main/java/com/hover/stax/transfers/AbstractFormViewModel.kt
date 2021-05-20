@@ -11,8 +11,6 @@ import com.hover.stax.utils.Utils
 
 abstract class AbstractFormViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel() {
 
-    var type: String? = "P2P"
-
     val recentContacts = MutableLiveData<List<StaxContact>>()
     val schedule = MutableLiveData<Schedule>()
     val isEditing = MutableLiveData<Boolean>()

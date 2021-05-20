@@ -24,8 +24,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     var request: LiveData<Request> = MutableLiveData<Request>()
 
     fun setTransactionType(transaction_type: String) {
-        type = transaction_type
-        Timber.e("Type: $type")
+        TransactionType.type = transaction_type
     }
 
     fun setAmount(a: String) = amount.postValue(a)

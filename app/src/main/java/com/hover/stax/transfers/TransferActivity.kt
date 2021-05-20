@@ -17,7 +17,6 @@ import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.getViewModel
-import timber.log.Timber
 
 class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInterface {
 
@@ -34,8 +33,6 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
         actionSelectViewModel = getViewModel()
 
         intent.action?.let {
-            Timber.e("Action: $it")
-
             transferViewModel.setTransactionType(it)
             channelDropdownViewModel.type = it
         }
@@ -44,8 +41,6 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
         setContentView(R.layout.activity_transfer)
 
         setUpNav()
-
-        Timber.e(transferViewModel.type)
     }
 
     private fun checkIntent() {
@@ -81,7 +76,7 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
     fun submit() = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it) }
 
     private fun makeHoverCall(action: HoverAction) {
-        Utils.logAnalyticsEvent(getString(R.string.finish_transfer, transferViewModel.type), this)
+        Utils.logAnalyticsEvent(getString(R.string.finish_transfer, TransactionType.type), this)
         updatePushNotifGroupStatus()
 
         transferViewModel.checkSchedule()

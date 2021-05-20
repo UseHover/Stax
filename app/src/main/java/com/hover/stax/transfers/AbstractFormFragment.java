@@ -65,7 +65,7 @@ public abstract class AbstractFormFragment extends Fragment {
         editCard.setVisibility(isEditing ? View.VISIBLE : View.GONE);
         noworryText.setVisibility(isEditing ? View.VISIBLE : View.GONE);
         summaryCard.setVisibility(isEditing ? View.GONE : View.VISIBLE);
-        fab.setText(isEditing ? getString(R.string.btn_continue) : abstractFormViewModel.getType().equals(HoverAction.AIRTIME) ? getString(R.string.fab_airtimenow) : getString(R.string.fab_transfernow));
+        fab.setText(isEditing ? getString(R.string.btn_continue) : TransactionType.Companion.getType().equals(HoverAction.AIRTIME) ? getString(R.string.fab_airtimenow) : getString(R.string.fab_transfernow));
     }
 
     protected void contactPicker(int requestCode, Context c) {

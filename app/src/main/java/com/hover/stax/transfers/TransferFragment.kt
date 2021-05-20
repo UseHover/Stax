@@ -70,9 +70,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     private fun setTitle() {
-        Timber.e(transferViewModel.type)
-
-        val titleRes = if (transferViewModel.type == HoverAction.AIRTIME) R.string.cta_airtime else R.string.cta_transfer
+        val titleRes = if (TransactionType.type == HoverAction.AIRTIME) R.string.cta_airtime else R.string.cta_transfer
         Timber.e(getString(titleRes))
         binding.editCard.transferCard.setTitle(getString(titleRes))
         binding.summaryCard.transferSummaryCard.setTitle(getString(titleRes))
