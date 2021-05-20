@@ -113,6 +113,12 @@ public class ActionDropdownAdapter extends ArrayAdapter<HoverAction> {
         return position;
     }
 
+    @Nullable
+    @Override
+    public HoverAction getItem(int position) {
+        return actions.isEmpty() ? null : actions.get(position);
+    }
+
     @Override
     public int getItemViewType(int position) {
         return position;
