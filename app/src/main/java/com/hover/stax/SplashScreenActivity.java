@@ -173,7 +173,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
     private void initRemoteConfig() {
         FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
-                .setMinimumFetchIntervalInSeconds(0)
+                .setMinimumFetchIntervalInSeconds(3600)
                 .build();
         mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
         mFirebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config_default);
@@ -190,7 +190,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
         try{
             int currentVersionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
             int forceUpdateVersionCode = Integer.parseInt(FirebaseRemoteConfig.getInstance().getString("force_update_app_version"));
-            if(currentVersionCode <= forceUpdateVersionCode) {
+            if(currentVersionCode >= forceUpdateVersionCode) {
                 startActivity(new Intent(this, SelfDestructActivity.class));
                 finish();
                 return true;
