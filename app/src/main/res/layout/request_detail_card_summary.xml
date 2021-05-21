@@ -1,83 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	app:title="@string/req_cardhead">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/requestMoneyCard"
+        app:showBack="true"
+    app:title="@string/req_cardhead">
 
-	<TableLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginHorizontal="@dimen/margin_10">
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_10">
 
-		<TableRow android:id="@+id/amountRow">
-			<TextView
-				android:text="@string/transfer_amount_label"
-			    	android:fontFamily="font-normal"
-				android:textColor="@color/offWhite"
-				android:textSize="@dimen/text_16" />
+        <TableRow android:id="@+id/amountRow">
 
-			<TextView android:id="@+id/amountValue"
-				android:layout_weight="1"
-			      android:fontFamily="font-normal"
-				android:textColor="@color/offWhite"
-				android:textSize="@dimen/text_21"
-				android:textAlignment="viewEnd" />
-		</TableRow>
+            <TextView
+                android:fontFamily="font-normal"
+                android:text="@string/transfer_amount_label"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
 
-		<TableRow android:id="@+id/requesteeRow" android:layout_marginTop="@dimen/margin_21">
-			<TextView
-				android:text="@string/reqfrom_label"
-				android:fontFamily="font-normal"
-				android:textColor="@color/offWhite"
-				android:textSize="@dimen/text_16" />
+            <TextView
+                android:id="@+id/amountValue"
+                android:layout_weight="1"
+                android:fontFamily="font-normal"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_21" />
+        </TableRow>
 
-			<LinearLayout android:id="@+id/requesteeValueList"
-				android:orientation="vertical"
-				android:layout_weight="1" />
-		</TableRow>
+        <TableRow
+            android:id="@+id/requesteeRow"
+            android:layout_marginTop="@dimen/margin_21">
 
-		<TableRow android:id="@+id/requesterAccountRow" android:layout_marginTop="@dimen/margin_21">
-			<TextView
-			    android:text="@string/requester_number_label"
-			    android:textColor="@color/offWhite"
-			    android:fontFamily="font-normal"
-			    android:textSize="@dimen/text_16" />
+            <TextView
+                android:fontFamily="font-normal"
+                android:text="@string/reqfrom_label"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
 
-			<com.hover.stax.views.Stax2LineItem android:id="@+id/requesterValue"
-			    android:layout_weight="1"
-			    android:textAlignment="viewEnd" />
-		</TableRow>
+            <LinearLayout
+                android:id="@+id/requesteeValueList"
+                android:layout_weight="1"
+                android:orientation="vertical" />
+        </TableRow>
 
-		<TableRow android:id="@+id/noteRow" android:layout_marginTop="@dimen/margin_21">
-			<TextView
-				android:text="@string/note_cardhead"
-		        android:fontFamily="font-normal"
-				android:textColor="@color/offWhite"
-				android:textSize="@dimen/text_16" />
+        <TableRow
+            android:id="@+id/requesterAccountRow"
+            android:layout_marginTop="@dimen/margin_21">
 
-			<TextView android:id="@+id/noteValue"
-				android:layout_weight="1"
-		        android:fontFamily="font-normal"
-				android:textColor="@color/offWhite"
-				android:textSize="@dimen/text_21"
-				android:textAlignment="viewEnd" />
-		</TableRow>
+            <TextView
+                android:fontFamily="font-normal"
+                android:text="@string/requester_number_label"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
 
-		<TableRow android:id="@+id/dateRow" android:layout_marginTop="@dimen/margin_21">
-			<TextView
-				android:text="@string/date_label"
-		        android:fontFamily="font-normal"
-				android:textColor="@color/offWhite"
-				android:textSize="@dimen/text_16" />
+            <com.hover.stax.views.Stax2LineItem
+                android:id="@+id/requesterValue"
+                android:layout_weight="1"
+                android:textAlignment="viewEnd" />
+        </TableRow>
 
-			<TextView android:id="@+id/dateValue"
-				android:layout_weight="1"
-		        android:fontFamily="font-normal"
-				android:textColor="@color/offWhite"
-				android:textSize="@dimen/text_21"
-				android:textAlignment="viewEnd" />
-		</TableRow>
-	</TableLayout>
+        <TableRow
+            android:id="@+id/noteRow"
+            android:layout_marginTop="@dimen/margin_21">
+
+            <TextView
+                android:fontFamily="font-normal"
+                android:text="@string/note_cardhead"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
+
+            <TextView
+                android:id="@+id/noteValue"
+                android:layout_weight="1"
+                android:fontFamily="font-normal"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_21" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/dateRow"
+            android:layout_marginTop="@dimen/margin_21">
+
+            <TextView
+                android:fontFamily="font-normal"
+                android:text="@string/date_label"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
+
+            <TextView
+                android:id="@+id/dateValue"
+                android:layout_weight="1"
+                android:fontFamily="font-normal"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_21" />
+        </TableRow>
+    </TableLayout>
 
 </com.hover.stax.views.StaxCardView>

@@ -1,7 +1,6 @@
 package com.hover.stax.transfers;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -10,8 +9,8 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.requests.Request;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.requests.Request;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.Utils;
@@ -57,6 +56,7 @@ public class TransferViewModel extends AbstractFormViewModel {
 	void setContact(StaxContact c) {
 		contact.setValue(c);
 	}
+	void forceUpdateContactUI() {contact.postValue(contact.getValue());}
 
 	LiveData<StaxContact> getContact() {
 		if (contact == null) { contact = new MutableLiveData<>(); }
@@ -66,6 +66,24 @@ public class TransferViewModel extends AbstractFormViewModel {
 	void setRecipient(String r) {
 		if (contact.getValue() != null && contact.getValue().toString().equals(r)) { return; }
 		contact.setValue(new StaxContact(r));
+	}
+
+	void setRecipientSmartly(Request r, Channel channel) {
+		if(channel !=null && r!=null) {
+			try {
+				String formattedPhone = StaxContact.getInternationalNumber(channel.countryAlpha2, StaxContact.stripPhone(r.requester_number));
+				new Thread(() -> {
+					StaxContact contactValue = repo.getContactFromPhone(formattedPhone);
+					if (contactValue == null) {
+						//Check again without internationalizing number, in case the value is a bank account number;
+						contactValue = repo.getContactFromPhone(StaxContact.stripPhone(r.requester_number));
+					}
+					if (contactValue != null) contact.postValue(contactValue);
+				}).start();
+			} catch (NumberParseException e) {
+				Utils.logErrorAndReportToFirebase(TAG, e.getMessage(), e);
+			}
+		}
 	}
 
 	public LiveData<Schedule> getSchedule() {
@@ -132,11 +150,11 @@ public class TransferViewModel extends AbstractFormViewModel {
 	}
 
 	public void saveContact() {
-		if (contact.getValue() != null) {
+		final StaxContact c = contact.getValue();
+		if (c != null) {
 			new Thread(() -> {
-				StaxContact c = contact.getValue();
 				c.lastUsedTimestamp = DateUtils.now();
-				repo.insertOrUpdate(contact.getValue());
+				repo.insertOrUpdate(c);
 			}).start();
 		}
 	}

@@ -1,12 +1,9 @@
 package com.hover.stax.schedules;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +16,7 @@ import androidx.work.WorkManager;
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.databinding.FragmentScheduleBinding;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -29,87 +27,100 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ScheduleDetailFragment extends Fragment {
-	final public static String TAG = "ScheduleFragment";
+    final public static String TAG = "ScheduleFragment";
 
-	private ScheduleDetailViewModel viewModel;
+    private ScheduleDetailViewModel viewModel;
 
-	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		viewModel = new ViewModelProvider(this).get(ScheduleDetailViewModel.class);
-		JSONObject data = new JSONObject();
-		try {
-			data.put("id", getArguments().getInt("id"));
-		} catch (JSONException e) {
-		}
-		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_schedule)), data);
-		return inflater.inflate(R.layout.fragment_schedule, container, false);
-	}
+    private FragmentScheduleBinding binding;
 
-	@Override
-	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        viewModel = new ViewModelProvider(this).get(ScheduleDetailViewModel.class);
+        JSONObject data = new JSONObject();
+        try {
+            data.put("id", getArguments().getInt("id"));
+        } catch (JSONException ignored) {
+        }
+        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_schedule)), data, requireContext());
 
-		viewModel.getSchedule().observe(getViewLifecycleOwner(), schedule -> {
-			if (schedule != null) {
-				setUpSummary(view, schedule);
-				setUpTestBtn(view, schedule);
-			}
-		});
+        binding = FragmentScheduleBinding.inflate(inflater, container, false);
 
-		viewModel.getContacts().observe(getViewLifecycleOwner(), contacts -> {
-			if (contacts != null && contacts.size() > 0) {
-				for (StaxContact c: contacts)
-					createRecipientEntry(c, view);
-			}
-		});
+        return binding.getRoot();
+    }
 
-		viewModel.setSchedule(getArguments().getInt("id"));
-	}
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-	private void setUpSummary(View view, Schedule schedule) {
-		((TextView) view.findViewById(R.id.title)).setText(schedule.description);
-		((TextView) view.findViewById(R.id.details_amount)).setText(Utils.formatAmount(schedule.amount));
-		((TextView) view.findViewById(R.id.details_date)).setText(DateUtils.humanFriendlyDate(schedule.start_date));
+        viewModel.getSchedule().observe(getViewLifecycleOwner(), schedule -> {
+            if (schedule != null) {
+                setUpSummary(schedule);
+                setUpTestBtn(schedule);
+            }
+        });
 
-		view.findViewById(R.id.frequencyRow).setVisibility(schedule.frequency == Schedule.ONCE ? View.GONE : View.VISIBLE);
-		((TextView) view.findViewById(R.id.details_frequency)).setText(schedule.humanFrequency(getContext()));
+        viewModel.getContacts().observe(getViewLifecycleOwner(), contacts -> {
+            if (contacts != null && contacts.size() > 0) {
+                for (StaxContact c : contacts)
+                    createRecipientEntry(c);
+            }
+        });
 
-		view.findViewById(R.id.endRow).setVisibility(schedule.frequency == Schedule.ONCE || schedule.end_date == null ? View.GONE : View.VISIBLE);
-		((TextView) view.findViewById(R.id.details_end)).setText(schedule.end_date != null ? DateUtils.humanFriendlyDate(schedule.end_date) : "");
+        viewModel.setSchedule(getArguments().getInt("id"));
+    }
 
-		view.findViewById(R.id.noteRow).setVisibility(schedule.note == null || schedule.note.isEmpty() ? View.GONE : View.VISIBLE);
-		((TextView) view.findViewById(R.id.details_reason)).setText(schedule.note);
+    private void setUpSummary(Schedule schedule) {
+        binding.scheduleDetailsCard.setTitle(schedule.description);
 
-		view.findViewById(R.id.cancel_btn).setOnClickListener(this::showConfirmDialog);
-	}
+        binding.summaryCard.detailsAmount.setText(Utils.formatAmount(schedule.amount));
+        binding.summaryCard.detailsDate.setText(DateUtils.humanFriendlyDate(schedule.start_date));
 
-	private void createRecipientEntry(StaxContact c, View view) {
-		Stax2LineItem ss2li = new Stax2LineItem(getContext(), null);
-		ss2li.setContact(c);
-		((LinearLayout) view.findViewById(R.id.requesteeValueList)).addView(ss2li);
-	}
+        binding.summaryCard.frequencyRow.setVisibility(schedule.frequency == Schedule.ONCE ? View.GONE : View.VISIBLE);
+        binding.summaryCard.detailsFrequency.setText(schedule.humanFrequency(getContext()));
 
-	private void showConfirmDialog(View v) {
-		new StaxDialog(v.getContext(), this)
-				.setDialogTitle(R.string.cancelfuture_head)
-				.setDialogMessage(R.string.cancelfuture_msg)
-				.setNegButton(R.string.btn_back, btn -> {
-				})
-				.setPosButton(R.string.btn_canceltrans, btn -> {
-					viewModel.deleteSchedule();
-					UIHelper.flashMessage(getContext(), getString(R.string.toast_confirm_cancelfuture));
-					NavHostFragment.findNavController(ScheduleDetailFragment.this).popBackStack();
-				})
-				.isDestructive()
-				.showIt();
-	}
+        binding.summaryCard.endRow.setVisibility(schedule.frequency == Schedule.ONCE || schedule.end_date == null ? View.GONE : View.VISIBLE);
+        binding.summaryCard.detailsEnd.setText(schedule.end_date != null ? DateUtils.humanFriendlyDate(schedule.end_date) : "");
 
-	private void setUpTestBtn(View view, Schedule schedule) {
-		view.findViewById(R.id.test_btn).setVisibility(Utils.usingDebugVariant(getContext()) ? View.VISIBLE : View.GONE);
-		view.findViewById(R.id.test_btn).setOnClickListener(btn -> {
-			WorkManager.getInstance(getContext())
-					.beginUniqueWork("TEST", ExistingWorkPolicy.REPLACE, ScheduleWorker.makeWork()).enqueue();
-			if (!schedule.isScheduledForToday())
-				UIHelper.flashMessage(getContext(), "Shouldn't show notification, not scheduled for today.");
-		});
-	}
+        binding.summaryCard.noteRow.setVisibility(schedule.note == null || schedule.note.isEmpty() ? View.GONE : View.VISIBLE);
+        binding.summaryCard.detailsReason.setText(schedule.note);
+
+        binding.cancelBtn.setOnClickListener(this::showConfirmDialog);
+    }
+
+    private void createRecipientEntry(StaxContact c) {
+        Stax2LineItem ss2li = new Stax2LineItem(getContext(), null);
+        ss2li.setContact(c);
+        binding.summaryCard.requesteeValueList.addView(ss2li);
+    }
+
+    private void showConfirmDialog(View v) {
+        new StaxDialog(requireActivity())
+                .setDialogTitle(R.string.cancelfuture_head)
+                .setDialogMessage(R.string.cancelfuture_msg)
+                .setNegButton(R.string.btn_back, btn -> {
+                })
+                .setPosButton(R.string.btn_canceltrans, btn -> {
+                    viewModel.deleteSchedule();
+                    UIHelper.flashMessage(requireActivity(), getString(R.string.toast_confirm_cancelfuture));
+                    NavHostFragment.findNavController(ScheduleDetailFragment.this).popBackStack();
+                })
+                .isDestructive()
+                .showIt();
+    }
+
+    private void setUpTestBtn(Schedule schedule) {
+        binding.testBtn.setVisibility(Utils.usingDebugVariant(getContext()) ? View.VISIBLE : View.GONE);
+        binding.testBtn.setOnClickListener(btn -> {
+            WorkManager.getInstance(getContext())
+                    .beginUniqueWork("TEST", ExistingWorkPolicy.REPLACE, ScheduleWorker.makeWork()).enqueue();
+            if (!schedule.isScheduledForToday())
+                UIHelper.flashMessage(getContext(), "Shouldn't show notification, not scheduled for today.");
+        });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        binding = null;
+    }
 }

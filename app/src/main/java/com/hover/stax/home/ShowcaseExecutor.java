@@ -16,105 +16,128 @@ import com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout;
 import org.jetbrains.annotations.NotNull;
 
 public class ShowcaseExecutor {
-	private static String TAG = "ShowcaseExecutor";
-	public static String SHOW_TUTORIAL = "SHOWCASE";
-	private Activity activity;
-	private View root;
-	private int stage = 0;
+    private static String TAG = "ShowcaseExecutor";
+    public static String SHOW_TUTORIAL = "SHOWCASE";
+    private Activity activity;
+    private View root;
+    private int stage = 0;
 
-	private boolean isShowing;
+    private boolean isShowing;
 
-	public ShowcaseExecutor(Activity a, View view) {
-		activity = a;
-		root = view;
-		isShowing = false;
-	}
+    public ShowcaseExecutor(Activity a, View view) {
+        activity = a;
+        root = view;
+        isShowing = false;
+    }
 
-	public static int getStage(Context c) { return Utils.getSharedPrefs(c).getInt(Constants.SHOWCASE_STAGE, 0); }
-	public static void increaseStage(Context c) { Utils.saveInt(Constants.SHOWCASE_STAGE, getStage(c) + 1, c); }
+    public static int getStage(Context c) {
+        return Utils.getSharedPrefs(c).getInt(Constants.SHOWCASE_STAGE, 0);
+    }
 
-	private void startShowcase(String head, String body, BubbleShowCaseListener listener, View view) {
-		try {
-			if (!isShowing)
-				BubbleShowCase.Companion.showCase(head, body, BubbleShowCase.ArrowPosition.TOP, listener, view, activity);
-			isShowing = true;
-		} catch (Exception e) { Log.e(TAG, "Showcase failed to start", e); }
-	}
+    public static void increaseStage(Context c) {
+        Utils.saveInt(Constants.SHOWCASE_STAGE, getStage(c) + 1, c);
+    }
 
-	public void showcaseRefreshAccountStage() {
-		CustomSwipeRefreshLayout csrl = ((CustomSwipeRefreshLayout) root.findViewById(R.id.swipelayout));
-		if (csrl != null)
-			csrl.animateOffsetToTriggerPosition(0, null);
-		startShowcase(activity.getString(R.string.onboard_refreshhead), activity.getString(R.string.onboard_refreshbody),
-				refreshShowcaseClickListener, root.findViewById(R.id.homeTimeAgo));
-	}
+    private void startShowcase(String head, String body, BubbleShowCaseListener listener, View view) {
+        try {
+            if (!isShowing)
+                BubbleShowCase.Companion.showCase(head, body, BubbleShowCase.ArrowPosition.TOP, listener, view, activity);
+            isShowing = true;
+        } catch (Exception e) {
+            Log.e(TAG, "Showcase failed to start", e);
+        }
+    }
 
-	public void showcasePeekBalanceStage() {
+    public void showcaseRefreshAccountStage() {
+        CustomSwipeRefreshLayout csrl = ((CustomSwipeRefreshLayout) root.findViewById(R.id.swipelayout));
+        if (csrl != null)
+            csrl.animateOffsetToTriggerPosition(0, null);
+        startShowcase(activity.getString(R.string.onboard_refreshhead), activity.getString(R.string.onboard_refreshbody),
+                refreshShowcaseClickListener, root.findViewById(R.id.homeTimeAgo));
+    }
 
-	}
+    public void showcasePeekBalanceStage() {
 
-	private void openBalance(SwipeRevealLayout v) { if (v != null) v.open(true); }
-	private void closeBalance(SwipeRevealLayout v) { if (v != null) v.close(true); }
+    }
 
-	BubbleShowCaseListener addedAccountListener = new BubbleShowCaseListener() {
+    private void openBalance(SwipeRevealLayout v) {
+        if (v != null) v.open(true);
+    }
 
-		@Override public void onBubbleClick(@NotNull BubbleShowCase bubbleShowCase) {}
+    private void closeBalance(SwipeRevealLayout v) {
+        if (v != null) v.close(true);
+    }
 
-		@Override
-		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) { endStage(bubbleShowCase); }
+    BubbleShowCaseListener addedAccountListener = new BubbleShowCaseListener() {
 
-		@Override
-		public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) { endStage(bubbleShowCase); }
+        @Override
+        public void onBubbleClick(@NotNull BubbleShowCase bubbleShowCase) {
+        }
 
-		@Override
-		public void onTargetClick(@NotNull BubbleShowCase bubbleShowCase) {
-			endStage(bubbleShowCase);
-		}
-	};
+        @Override
+        public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) {
+            endStage(bubbleShowCase);
+        }
 
-	BubbleShowCaseListener refreshShowcaseClickListener = new BubbleShowCaseListener() {
+        @Override
+        public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) {
+            endStage(bubbleShowCase);
+        }
 
-		@Override public void onBubbleClick(@NotNull BubbleShowCase bubbleShowCase) {}
+        @Override
+        public void onTargetClick(@NotNull BubbleShowCase bubbleShowCase) {
+            endStage(bubbleShowCase);
+        }
+    };
 
-		@Override
-		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) {
-			endStage(bubbleShowCase);
-			((CustomSwipeRefreshLayout) root.findViewById(R.id.swipelayout)).animateStayComplete(null);
-		}
+    BubbleShowCaseListener refreshShowcaseClickListener = new BubbleShowCaseListener() {
 
-		@Override
-		public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) {
-			endStage(bubbleShowCase);
-			((CustomSwipeRefreshLayout) root.findViewById(R.id.swipelayout)).animateStayComplete(null);
-		}
+        @Override
+        public void onBubbleClick(@NotNull BubbleShowCase bubbleShowCase) {
+        }
 
-		@Override
-		public void onTargetClick(@NotNull BubbleShowCase bubbleShowCase) {}
-	};
+        @Override
+        public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) {
+            endStage(bubbleShowCase);
+            ((CustomSwipeRefreshLayout) root.findViewById(R.id.swipelayout)).animateStayComplete(null);
+        }
 
-	BubbleShowCaseListener peekBalanceShowcaseClickListener = new BubbleShowCaseListener() {
+        @Override
+        public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) {
+            endStage(bubbleShowCase);
+            ((CustomSwipeRefreshLayout) root.findViewById(R.id.swipelayout)).animateStayComplete(null);
+        }
 
-		@Override public void onBubbleClick(@NotNull BubbleShowCase bubbleShowCase) {}
+        @Override
+        public void onTargetClick(@NotNull BubbleShowCase bubbleShowCase) {
+        }
+    };
 
-		@Override
-		public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) {
-			endStage(bubbleShowCase);
-		}
+    BubbleShowCaseListener peekBalanceShowcaseClickListener = new BubbleShowCaseListener() {
 
-		@Override
-		public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) {
-			endStage(bubbleShowCase);
-		}
+        @Override
+        public void onBubbleClick(@NotNull BubbleShowCase bubbleShowCase) {
+        }
 
-		@Override
-		public void onTargetClick(@NotNull BubbleShowCase bubbleShowCase) {
-			endStage(bubbleShowCase);
-		}
-	};
+        @Override
+        public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) {
+            endStage(bubbleShowCase);
+        }
 
-	private void endStage(BubbleShowCase bubbleShowCase) {
-		increaseStage(activity);
-		bubbleShowCase.dismiss();
-		isShowing = false;
-	}
+        @Override
+        public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) {
+            endStage(bubbleShowCase);
+        }
+
+        @Override
+        public void onTargetClick(@NotNull BubbleShowCase bubbleShowCase) {
+            endStage(bubbleShowCase);
+        }
+    };
+
+    private void endStage(BubbleShowCase bubbleShowCase) {
+        increaseStage(activity);
+        bubbleShowCase.dismiss();
+        isShowing = false;
+    }
 }

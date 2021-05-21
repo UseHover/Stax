@@ -3,21 +3,17 @@ package com.hover.stax.channels;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.hover.stax.utils.DateUtils;
-import com.hover.stax.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 @Entity(tableName = "channels")
 public class Channel implements Comparable<Channel> {

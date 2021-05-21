@@ -10,8 +10,8 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-import com.hover.sdk.api.HoverParameters;
 import com.hover.sdk.actions.HoverAction;
+import com.hover.sdk.api.HoverParameters;
 import com.hover.sdk.transactions.Transaction;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
@@ -25,19 +25,20 @@ import java.util.HashMap;
 
 @Entity(tableName = "stax_transactions", indices = {@Index(value = {"uuid"}, unique = true)})
 public class StaxTransaction {
-	public final static String CONFIRM_CODE_KEY = "confirmCode";
 
-	@PrimaryKey(autoGenerate = true)
-	@NonNull
-	public int id;
+    public final static String CONFIRM_CODE_KEY = "confirmCode", FEE_KEY = "fee";
 
-	@NonNull
-	@ColumnInfo(name = "uuid")
-	public String uuid;
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    public int id;
 
-	@NonNull
-	@ColumnInfo(name = "action_id")
-	public String action_id;
+    @NonNull
+    @ColumnInfo(name = "uuid")
+    public String uuid;
+
+    @NonNull
+    @ColumnInfo(name = "action_id")
+    public String action_id;
 
 	@NonNull
 	@ColumnInfo(name = "environment", defaultValue = "0")
@@ -75,16 +76,11 @@ public class StaxTransaction {
 	@ColumnInfo(name = "confirm_code")
 	public String confirm_code;
 
-	@ColumnInfo(name = "counterparty")
-	public String counterparty;
-
 	@ColumnInfo(name = "recipient_id")
 	public String counterparty_id;
 
 
-
-	public StaxTransaction() {
-	}
+	public StaxTransaction() {}
 
 	public StaxTransaction(Intent data, HoverAction action, StaxContact contact, Context c) {
 		if (data.hasExtra(TransactionContract.COLUMN_UUID) && data.getStringExtra(TransactionContract.COLUMN_UUID) != null) {
@@ -101,10 +97,7 @@ public class StaxTransaction {
 			if (extras != null) {
 				if (extras.containsKey(HoverAction.AMOUNT_KEY))
 					amount = Utils.getAmount((extras.get(HoverAction.AMOUNT_KEY)));
-				if (extras.containsKey(HoverAction.PHONE_KEY))
-					counterparty = extras.get(HoverAction.PHONE_KEY);
-				else if (extras.containsKey(HoverAction.ACCOUNT_KEY))
-					counterparty = extras.get(HoverAction.ACCOUNT_KEY);
+//				check for phone, account, and other keys and save to contact
 			}
 			if (data.hasExtra(StaxContact.ID_KEY))
 				counterparty_id = data.getStringExtra(StaxContact.ID_KEY);
@@ -121,8 +114,8 @@ public class StaxTransaction {
 
 		HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES);
 		if (extras != null) {
-			if (extras.containsKey(HoverAction.FEE_KEY))
-				fee = Utils.getAmount(extras.get(HoverAction.FEE_KEY));
+			if (extras.containsKey(FEE_KEY))
+				fee = Utils.getAmount(extras.get(FEE_KEY));
 			if (extras.containsKey(CONFIRM_CODE_KEY))
 				confirm_code = extras.get(CONFIRM_CODE_KEY);
 		}
@@ -138,16 +131,18 @@ public class StaxTransaction {
 		if (isRecorded())
 			return c.getString(R.string.descrip_recorded, action.from_institution_name);
 
-		String recipientStr = contact != null ? contact.shortName() : counterparty;
+		String recipientStr = contact != null ? contact.shortName() : "myself";
 		switch (transaction_type) {
 			case HoverAction.AIRTIME:
-				return c.getString(R.string.descrip_airtime_sent, action.from_institution_name, ((counterparty == null || counterparty.equals("")) ? "myself" : recipientStr));
+				return c.getString(R.string.descrip_airtime_sent, action.from_institution_name, recipientStr);
 			case HoverAction.P2P:
 				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, recipientStr);
 			case HoverAction.ME2ME:
 				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, action.to_institution_name);
 			case HoverAction.RECEIVE:
-				return c.getString(R.string.descrip_transfer_received, counterparty);
+				return c.getString(R.string.descrip_transfer_received, recipientStr);
+			case HoverAction.C2B:
+				return c.getString(R.string.descrip_bill_paid, action.to_institution_name);
 			default:
 				return "Other";
 		}

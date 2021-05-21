@@ -7,133 +7,140 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
+import com.hover.stax.databinding.ActivityRequestBinding;
 import com.hover.stax.navigation.AbstractNavigationActivity;
-import com.hover.stax.utils.Constants;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxDialog;
 
 
 public class RequestActivity extends AbstractNavigationActivity implements RequestSenderInterface, SmsSentObserver.SmsSentListener {
-	final public static String TAG = "TransferActivity";
+    final public static String TAG = "TransferActivity";
 
-	private NewRequestViewModel requestViewModel;
-	private ScheduleDetailViewModel scheduleViewModel = null;
+    private NewRequestViewModel requestViewModel;
+    private ScheduleDetailViewModel scheduleViewModel = null;
 
-	AlertDialog dialog;
+    AlertDialog dialog;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_request);
-		setUpNav();
-		requestViewModel = new ViewModelProvider(this).get(NewRequestViewModel.class);
-		checkIntent();
-	}
+    private ActivityRequestBinding binding;
 
-	private void checkIntent() {
-		if (getIntent().hasExtra(Schedule.SCHEDULE_ID))
-			createFromSchedule(getIntent().getIntExtra(Schedule.SCHEDULE_ID, -1));
-		else
-			Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_new_request)));
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-	private void createFromSchedule(int schedule_id) {
-		scheduleViewModel = new ViewModelProvider(this).get(ScheduleDetailViewModel.class);
-		scheduleViewModel.getSchedule().observe(this, schedule -> {
-			if (schedule == null) return;
-			requestViewModel.setSchedule(schedule);
-		});
-		scheduleViewModel.setSchedule(schedule_id);
-		Amplitude.getInstance().logEvent(getString(R.string.clicked_schedule_notification));
-	}
+        binding = ActivityRequestBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-	@Override
-	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		if (requestCode == Constants.SMS && new PermissionHelper(this).permissionsGranted(grantResults)) {
-			Amplitude.getInstance().logEvent(getString(R.string.perms_sms_granted));
-			sendSms(null);
-		} else if (requestCode == Constants.SMS) {
-			Amplitude.getInstance().logEvent(getString(R.string.perms_sms_denied));
-			UIHelper.flashMessage(this, getResources().getString(R.string.toast_error_smsperm));
-		}
-	}
+        setUpNav();
 
-	public void sendSms(View view) {
-		requestViewModel.saveRequest();
-		new SmsSentObserver(this, requestViewModel.getRequestees().getValue(), new Handler(), this).start();
-		sendSms(requestViewModel.getRequest().getValue(), requestViewModel.getRequestees().getValue(), this);
-	}
+        requestViewModel = new ViewModelProvider(this).get(NewRequestViewModel.class);
+        checkIntent();
+    }
 
-	public void sendWhatsapp(View view) {
-		requestViewModel.saveRequest();
-		sendWhatsapp(requestViewModel.getRequest().getValue(), requestViewModel.getRequestees().getValue(), requestViewModel.getActiveChannel().getValue(), this);
-	}
+    private void checkIntent() {
+        if (getIntent().hasExtra(Schedule.SCHEDULE_ID))
+            createFromSchedule(getIntent().getIntExtra(Schedule.SCHEDULE_ID, -1));
+        else
+            Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_new_request)), this);
+    }
 
-	public void copyShareLink(View view) {
-		requestViewModel.saveRequest();
-		copyShareLink(requestViewModel.getRequest().getValue(), view.findViewById(R.id.copylink_share_selection), this);
-	}
+    private void createFromSchedule(int schedule_id) {
+        scheduleViewModel = new ViewModelProvider(this).get(ScheduleDetailViewModel.class);
+        scheduleViewModel.getSchedule().observe(this, schedule -> {
+            if (schedule == null) return;
+            requestViewModel.setSchedule(schedule);
+        });
+        scheduleViewModel.setSchedule(schedule_id);
+        Utils.logAnalyticsEvent(getString(R.string.clicked_schedule_notification), this);
+    }
 
-	@Override
-	public void onSmsSendEvent(boolean wasSent) {
-		if (wasSent) onFinished(Constants.SMS);
-	}
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == Constants.SMS && new PermissionHelper(this).permissionsGranted(grantResults)) {
+            Utils.logAnalyticsEvent(getString(R.string.perms_sms_granted), this);
+            sendSms(null);
+        } else if (requestCode == Constants.SMS) {
+            Utils.logAnalyticsEvent(getString(R.string.perms_sms_denied), this);
+            UIHelper.flashMessage(this, getResources().getString(R.string.toast_error_smsperm));
+        }
+    }
 
-	private void onFinished(int type) {
-		setResult(RESULT_OK, createSuccessIntent(type));
-		finish();
-	}
+    public void sendSms(View view) {
+        requestViewModel.saveRequest();
+        new SmsSentObserver(this, requestViewModel.getRequestees().getValue(), new Handler(), this).start();
+        sendSms(requestViewModel.getRequest().getValue(), requestViewModel.getRequestees().getValue(), this);
+    }
 
-	private Intent createSuccessIntent(int type) {
-		Intent i = new Intent();
-		i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);
-		return i;
-	}
+    public void sendWhatsapp(View view) {
+        requestViewModel.saveRequest();
+        sendWhatsapp(requestViewModel.getRequest().getValue(), requestViewModel.getRequestees().getValue(), requestViewModel.getActiveChannel().getValue(), this);
+    }
 
-	private void cancel() {
-		setResult(RESULT_CANCELED);
-		finish();
-	}
+    public void copyShareLink(View view) {
+        requestViewModel.saveRequest();
+        copyShareLink(requestViewModel.getRequest().getValue(), view.findViewById(R.id.copylink_share_selection), this);
+    }
 
-	protected void onStop() {
-		super.onStop();
-		if (dialog != null) {
-			dialog.dismiss();
-			dialog = null;
-		}
-	}
+    @Override
+    public void onSmsSendEvent(boolean wasSent) {
+        if (wasSent) onFinished(Constants.SMS);
+    }
 
-	@Override
-	public void onBackPressed() {
-		if (!requestViewModel.getIsEditing().getValue() && requestViewModel.getRequest().getValue() == null)
-			requestViewModel.setEditing(true);
-		else if (!requestViewModel.getIsEditing().getValue() && requestViewModel.getRequests().getValue() == null)
-			askAreYouSure();
-		else
-			super.onBackPressed();
-	}
+    private void onFinished(int type) {
+        setResult(RESULT_OK, createSuccessIntent(type));
+        finish();
+    }
 
-	private void askAreYouSure() {
-		dialog = new StaxDialog(this)
-			.setDialogTitle(R.string.reqsave_head)
-			.setDialogMessage(R.string.reqsave_msg)
-			.setPosButton(R.string.btn_save, btn -> saveUnsent())
-			.setNegButton(R.string.btn_dontsave, btn ->  cancel())
-			.showIt();
-	}
+    private Intent createSuccessIntent(int type) {
+        Intent i = new Intent();
+        i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);
+        return i;
+    }
 
-	private void saveUnsent() {
-		requestViewModel.saveRequest();
-		Amplitude.getInstance().logEvent(getString(R.string.saved_unsent_request));
-		super.onBackPressed();
-	}
+    private void cancel() {
+        setResult(RESULT_CANCELED);
+        finish();
+    }
+
+    protected void onStop() {
+        super.onStop();
+        if (dialog != null) {
+            dialog.dismiss();
+            dialog = null;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!requestViewModel.getIsEditing().getValue() && requestViewModel.getRequest().getValue() == null)
+            requestViewModel.setEditing(true);
+        else if (!requestViewModel.getIsEditing().getValue() && requestViewModel.getRequests().getValue() == null)
+            askAreYouSure();
+        else
+            super.onBackPressed();
+    }
+
+    private void askAreYouSure() {
+        dialog = new StaxDialog(this)
+                .setDialogTitle(R.string.reqsave_head)
+                .setDialogMessage(R.string.reqsave_msg)
+                .setPosButton(R.string.btn_save, btn -> saveUnsent())
+                .setNegButton(R.string.btn_dontsave, btn -> cancel())
+                .showIt();
+    }
+
+    private void saveUnsent() {
+        requestViewModel.saveRequest();
+        Utils.logAnalyticsEvent(getString(R.string.saved_unsent_request), this);
+        super.onBackPressed();
+    }
 }

@@ -14,8 +14,8 @@ import com.hover.sdk.actions.HoverActionDao;
 import com.hover.sdk.database.HoverRoomDatabase;
 import com.hover.sdk.sims.SimInfo;
 import com.hover.sdk.sims.SimInfoDao;
-import com.hover.stax.R;
 import com.hover.sdk.transactions.TransactionContract;
+import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
 import com.hover.stax.contacts.ContactDao;
@@ -162,7 +162,7 @@ public class DatabaseRepo {
 		return transactionDao.getTransaction(uuid);
 	}
 
-	public void insertOrUpdateTransaction(Intent intent, Context c) {
+	public void insertOrUpdateTransaction(final Intent intent, Context c) {
 		AppDatabase.databaseWriteExecutor.execute(() -> {
 			try {
 				StaxTransaction t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID));
@@ -177,7 +177,8 @@ public class DatabaseRepo {
 				}
 				t.update(intent, a, contact, c);
 				transactionDao.update(t);
-				insertOrUpdate(contact);
+				if (contact != null)
+					insertOrUpdate(contact);
 
 				updateRequests(t, contact, intent);
 			} catch (Exception e) { Log.e(TAG, "error", e); }
@@ -214,6 +215,10 @@ public class DatabaseRepo {
 		return null;
 	}
 
+	public StaxContact getContactFromPhone(String phone) {
+		return contactDao.getByPhone(phone);
+	}
+
 	private void updateRequests(StaxTransaction t, StaxContact contact, Intent intent) {
 		if (t.transaction_type.equals(HoverAction.RECEIVE)) {
 			List<Request> rs = getRequests();
@@ -237,7 +242,7 @@ public class DatabaseRepo {
 	public StaxContact getContactByPhone(String phone) { return contactDao.getByPhone("%" + phone + "%"); }
 	public LiveData<StaxContact> getLiveContact(String id) { return contactDao.getLive(id); }
 
-	public void insertOrUpdate(StaxContact contact) {
+	public void insertOrUpdate(final StaxContact contact) {
 		AppDatabase.databaseWriteExecutor.execute(() -> {
 			if (getContact(contact.id) == null) {
 				try { contactDao.insert(contact); }
@@ -316,5 +321,4 @@ public class DatabaseRepo {
 	public void delete(Request request) {
 		AppDatabase.databaseWriteExecutor.execute(() -> requestDao.delete(request));
 	}
-
 }

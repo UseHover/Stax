@@ -13,26 +13,26 @@ import com.hover.stax.database.DatabaseRepo;
 import java.util.List;
 
 public class TransactionHistoryViewModel extends AndroidViewModel {
-	private final String TAG = "TransactionHistoryViewModel";
+    private final String TAG = "TransactionHistoryViewModel";
 
-	private DatabaseRepo repo;
+    private DatabaseRepo repo;
 
-	private LiveData<List<StaxTransaction>> transactions;
+    private LiveData<List<StaxTransaction>> transactions;
 
-	public TransactionHistoryViewModel(Application application) {
-		super(application);
-		repo = new DatabaseRepo(application);
+    public TransactionHistoryViewModel(Application application) {
+        super(application);
+        repo = new DatabaseRepo(application);
 
-		transactions = new MutableLiveData<>();
-		transactions = repo.getCompleteAndPendingTransferTransactions();
-	}
+        transactions = new MutableLiveData<>();
+        transactions = repo.getCompleteAndPendingTransferTransactions();
+    }
 
-	public LiveData<List<StaxTransaction>> getStaxTransactions() {
-		return transactions;
-	}
+    public LiveData<List<StaxTransaction>> getStaxTransactions() {
+        return transactions;
+    }
 
-	public void saveTransaction(Intent data, Context c) {
-		if (data != null)
-			repo.insertOrUpdateTransaction(data, c);
-	}
+    public void saveTransaction(Intent data, Context c) {
+        if (data != null)
+            repo.insertOrUpdateTransaction(data, c);
+    }
 }

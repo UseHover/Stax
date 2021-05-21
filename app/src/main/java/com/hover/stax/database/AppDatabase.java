@@ -24,75 +24,79 @@ import java.util.concurrent.Executors;
 
 @Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class}, version = 30)
 public abstract class AppDatabase extends RoomDatabase {
-	private static final int NUMBER_OF_THREADS = 8;
-	static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+    private static final int NUMBER_OF_THREADS = 8;
+    static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-	private static volatile AppDatabase INSTANCE;
+    private static volatile AppDatabase INSTANCE;
 
-	public abstract ChannelDao channelDao();
-	public abstract TransactionDao transactionDao();
-	public abstract ContactDao contactDao();
-	public abstract RequestDao requestDao();
-	public abstract ScheduleDao scheduleDao();
+    public abstract ChannelDao channelDao();
 
-	public static synchronized AppDatabase getInstance(Context context) {
-		if (INSTANCE == null) {
-			synchronized (AppDatabase.class) {
-				if (INSTANCE == null) {
-					INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "stax.db")
-						.setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
-						.addMigrations(M23_24)
-						.addMigrations(M24_25)
-						.addMigrations(M25_26)
-						.addMigrations(M26_27)
-						.addMigrations(M27_28)
-						.addMigrations(M28_29)
-			            .addMigrations(M29_30)
-						.build();
-				}
-			}
-		}
-		return INSTANCE;
-	}
+    public abstract TransactionDao transactionDao();
 
-	static final Migration M23_24 = new Migration(23, 24) {
-		@Override
-		public void migrate(SupportSQLiteDatabase database) {
-		}
-	};
+    public abstract ContactDao contactDao();
 
-	static final Migration M24_25 = new Migration(24, 25) {
-		@Override
-		public void migrate(SupportSQLiteDatabase database) {
-		}
-	};
+    public abstract RequestDao requestDao();
 
-	static final Migration M25_26 = new Migration(25, 26) {
-		@Override
-		public void migrate(SupportSQLiteDatabase database) {
-			database.execSQL("ALTER TABLE stax_transactions ADD COLUMN environment INTEGER DEFAULT 0 NOT NULL");
-		}
-	};
+    public abstract ScheduleDao scheduleDao();
 
-	static final Migration M26_27 = new Migration(26, 27) {
-		@Override
-		public void migrate(SupportSQLiteDatabase database) {
-		}
-	};
+    public static synchronized AppDatabase getInstance(Context context) {
+        if (INSTANCE == null) {
+            synchronized (AppDatabase.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "stax.db")
+                            .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
+                            .addMigrations(M23_24)
+                            .addMigrations(M24_25)
+                            .addMigrations(M25_26)
+                            .addMigrations(M26_27)
+                            .addMigrations(M27_28)
+                            .addMigrations(M28_29)
+                            .addMigrations(M29_30)
+                            .build();
+                }
+            }
+        }
+        return INSTANCE;
+    }
 
-	static final Migration M27_28 = new Migration(27, 28) {
-		@Override
-		public void migrate(SupportSQLiteDatabase database) {
-			database.execSQL("ALTER TABLE channels ADD COLUMN root_code TEXT");
-		}
-	};
+    static final Migration M23_24 = new Migration(23, 24) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+        }
+    };
 
-	static final Migration M28_29 = new Migration(28, 29) {
-		@Override
-		public void migrate(SupportSQLiteDatabase database) {
-			database.execSQL("ALTER TABLE channels ADD COLUMN published INTEGER DEFAULT 0 NOT NULL");
-		}
-	};
+    static final Migration M24_25 = new Migration(24, 25) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+        }
+    };
+
+    static final Migration M25_26 = new Migration(25, 26) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE stax_transactions ADD COLUMN environment INTEGER DEFAULT 0 NOT NULL");
+        }
+    };
+
+    static final Migration M26_27 = new Migration(26, 27) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+        }
+    };
+
+    static final Migration M27_28 = new Migration(27, 28) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE channels ADD COLUMN root_code TEXT");
+        }
+    };
+
+    static final Migration M28_29 = new Migration(28, 29) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE channels ADD COLUMN published INTEGER DEFAULT 0 NOT NULL");
+        }
+    };
 
 	static final Migration M29_30 = new Migration(29, 30) {
 		@Override
