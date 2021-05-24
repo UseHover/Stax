@@ -82,8 +82,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
     }
 
     public void checkPermissionsAndNavigate(int toWhere) {
-        navigate(this, toWhere, getIntent(), false);
-        /*PermissionHelper permissionHelper = new PermissionHelper(this);
+        PermissionHelper permissionHelper = new PermissionHelper(this);
         if (toWhere == Constants.NAV_SETTINGS || toWhere == Constants.NAV_HOME || permissionHelper.hasBasicPerms()) {
             navigate(this, toWhere, getIntent(), false);
         } else {
@@ -91,7 +90,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
                     pos -> PermissionUtils.requestPerms(getNavConst(toWhere), AbstractNavigationActivity.this),
                     neg -> Utils.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), AbstractNavigationActivity.this),
                     this);
-        }*/
+        }
     }
 
     protected void navigateThruHome(int destId) {
