@@ -60,7 +60,7 @@ class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListene
         return binding.root
     }
 
-    override fun init(root: View?) {
+    override fun init(root: View) {
         amountInput = binding.editCard.cardAmount.amountInput
         recipientInputList = binding.editCard.cardRequestee.recipientList
         addRecipientBtn = binding.editCard.cardRequestee.addRecipientButton
@@ -80,7 +80,7 @@ class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListene
         super.init(root)
     }
 
-    override fun startObservers(root: View?) {
+    override fun startObservers(root: View) {
         super.startObservers(root)
 
         channelDropdownViewModel.activeChannel.observe(viewLifecycleOwner, Observer {

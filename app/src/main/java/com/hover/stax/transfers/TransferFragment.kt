@@ -54,14 +54,13 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         return binding.root
     }
 
-    override fun init(root: View?) {
+    override fun init(root: View) {
         setTitle()
 
         amountInput = binding.editCard.amountInput;
         contactInput = binding.editCard.contactSelect;
         actionSelect = binding.editCard.actionSelect;
         noteInput = binding.editCard.noteInput;
-
         recipientValue = binding.summaryCard.recipientValue;
 
         amountInput.requestFocus();
@@ -76,7 +75,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         binding.summaryCard.transferSummaryCard.setTitle(getString(titleRes))
     }
 
-    override fun startObservers(root: View?) {
+    override fun startObservers(root: View) {
         super.startObservers(root)
 
         actionSelectViewModel.activeAction.observe(viewLifecycleOwner, Observer {
@@ -102,12 +101,12 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
 
         with(transferViewModel) {
             amount.observe(viewLifecycleOwner, Observer {
-                amountInput.text = it
+//                amountInput.text = it
                 binding.summaryCard.amountValue.text = Utils.formatAmount(it)
             })
 
             note.observe(viewLifecycleOwner, Observer {
-                noteInput.text = it
+//                noteInput.text = it
                 binding.summaryCard.noteRow.visibility = if (it.isNullOrEmpty()) View.GONE else View.VISIBLE
                 binding.summaryCard.noteValue.text = it
             })
