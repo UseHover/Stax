@@ -111,7 +111,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
     }
 
     protected int getNavConst(int destId) {
-        if (destId == R.id.navigation_balance) return Constants.NAV_BALANCE;
+        if (destId == R.id.navigation_request) return Constants.NAV_REQUEST;
         else if (destId == R.id.navigation_settings) return Constants.NAV_SETTINGS;
         else if (destId == R.id.navigation_home) return Constants.NAV_HOME;
         else return destId;
