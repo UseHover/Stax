@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.amplitude.api.Amplitude;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.hover.stax.balances.BalanceAdapter;
@@ -47,10 +46,14 @@ public class MainActivity extends AbstractNavigationActivity implements
 
         balancesViewModel = new ViewModelProvider(this).get(BalancesViewModel.class);
         balancesViewModel.setListener(this);
-        balancesViewModel.getSelectedChannels().observe(this, channels -> Timber.i("Channels observer is necessary to make updates fire, but all logic is in viewmodel. %s", channels.size()));
-        balancesViewModel.getToRun().observe(this, actions -> Timber.i("RunActions observer is necessary to make updates fire, but all logic is in viewmodel. %s", actions.size()));
-        balancesViewModel.getRunFlag().observe(this, flag -> Timber.i("Flag observer is necessary to make updates fire, but all logic is in viewmodel. %s", flag));
-        balancesViewModel.getActions().observe(this, actions -> Timber.i("Actions observer is necessary to make updates fire, but all logic is in viewmodel. %s", actions.size()));
+        balancesViewModel.getSelectedChannels().observe(this, channels -> {
+        });//Timber.i("Channels observer is necessary to make updates fire, but all logic is in viewmodel. %s", channels.size()));
+        balancesViewModel.getToRun().observe(this, actions -> {
+        });//Timber.i("RunActions observer is necessary to make updates fire, but all logic is in viewmodel. %s", actions.size()));
+        balancesViewModel.getRunFlag().observe(this, flag -> {
+        });//Timber.i("Flag observer is necessary to make updates fire, but all logic is in viewmodel. %s", flag));
+        balancesViewModel.getActions().observe(this, actions -> {
+        });//Timber.i("Actions observer is necessary to make updates fire, but all logic is in viewmodel. %s", actions.size()));
 
         setUpNav();
 
@@ -64,23 +67,20 @@ public class MainActivity extends AbstractNavigationActivity implements
         super.onNewIntent(intent);
         checkForRequest(intent);
     }
+
     private void checkForDeepLinking() {
         Intent intent = getIntent();
-        if(intent.getAction()!=null && intent.getAction().equals(Intent.ACTION_VIEW) && intent.getData() != null) {
+        if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW) && intent.getData() != null) {
             String deepLinkRoute = intent.getData().toString();
-            if(deepLinkRoute.contains(getString(R.string.deeplink_sendmoney))) {
+            if (deepLinkRoute.contains(getString(R.string.deeplink_sendmoney))) {
                 navigateToTransferActivity(HoverAction.P2P, false, intent, this);
-            }
-            else if(deepLinkRoute.contains(getString(R.string.deeplink_airtime))) {
+            } else if (deepLinkRoute.contains(getString(R.string.deeplink_airtime))) {
                 navigateToTransferActivity(HoverAction.AIRTIME, false, intent, this);
-            }
-            else if(deepLinkRoute.contains(getString(R.string.deeplink_linkaccount))) {
+            } else if (deepLinkRoute.contains(getString(R.string.deeplink_linkaccount))) {
                 navigateToLinkAccountFragment(getNavController());
-            }
-            else if(deepLinkRoute.contains(getString(R.string.deeplink_balance)) || deepLinkRoute.contains(getString(R.string.deeplink_history))) {
+            } else if (deepLinkRoute.contains(getString(R.string.deeplink_balance)) || deepLinkRoute.contains(getString(R.string.deeplink_history))) {
                 navigateToBalanceFragment(getNavController());
-            }
-            else if(deepLinkRoute.contains(getString(R.string.deeplink_settings))) {
+            } else if (deepLinkRoute.contains(getString(R.string.deeplink_settings))) {
                 navigateToSettingsFragment(getNavController());
             }
         }

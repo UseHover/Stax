@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
@@ -27,6 +26,8 @@ import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import timber.log.Timber;
 
 import static com.hover.stax.utils.Constants.size55;
 
@@ -61,7 +62,7 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
     }
 
     public void updateActions(List<HoverAction> filteredActions) {
-        Log.e(TAG, "Updating to " + filteredActions);
+        Timber.e("Updating to %s", filteredActions);
         this.setVisibility(filteredActions == null || filteredActions.size() <= 0 ? View.GONE : View.VISIBLE);
         if (filteredActions == null || filteredActions.size() <= 0) return;
 
@@ -72,8 +73,10 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
         ActionDropdownAdapter actionDropdownAdapter = new ActionDropdownAdapter(uniqRecipientActions, getContext());
         dropdownView.setAdapter(actionDropdownAdapter);
         dropdownView.setOnItemClickListener((adapterView, view2, pos, id) -> selectRecipientNetwork((HoverAction) adapterView.getItemAtPosition(pos)));
-        Log.e(TAG, "uniq recipient networks " + uniqRecipientActions.size());
+        Timber.e("uniq recipient networks %s", uniqRecipientActions.size());
         dropdownLayout.setVisibility(showRecipientNetwork(uniqRecipientActions) ? VISIBLE : GONE);
+        Timber.e(actions.get(0).transaction_type);
+
         radioHeader.setText(actions.get(0).transaction_type.equals(HoverAction.AIRTIME) ? R.string.airtime_who_header : R.string.send_who_header);
     }
 
@@ -119,7 +122,7 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
     }
 
     public void selectAction(HoverAction a) {
-        Log.e(TAG, "selecting action " + a);
+        Timber.e("selecting action %s", a);
         highlightedAction = a;
         if (highlightListener != null) highlightListener.highlightAction(a);
     }
@@ -143,7 +146,7 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
     }
 
     private void createRadios(List<HoverAction> actions) {
-        Log.e(TAG, "creating radios. " + actions.size());
+        Timber.e("creating radios. %s", actions.size());
         isSelfRadio.removeAllViews();
         isSelfRadio.clearCheck();
         for (int i = 0; i < actions.size(); i++) {
@@ -174,7 +177,7 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 
     @Override
     public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-        Log.e("LogTag", e.getMessage());
+        Timber.e(e.getLocalizedMessage());
     }
 
     @Override

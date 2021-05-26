@@ -18,7 +18,6 @@ import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class BalancesViewModel extends AndroidViewModel {
@@ -74,11 +73,11 @@ public class BalancesViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<HoverAction>> loadActions(List<Channel> channelList) {
-        Log.e(TAG, "attempting to load " + channelList.size() + " balance actions");
+//        Log.e(TAG, "attempting to load " + channelList.size() + " balance actions");
         int[] ids = new int[channelList.size()];
         for (int c = 0; c < channelList.size(); c++)
             ids[c] = channelList.get(c).id;
-        Log.e(TAG, "attempting to load balance actions for channels: " + Arrays.toString(ids));
+//        Log.e(TAG, "attempting to load balance actions for channels: " + Arrays.toString(ids));
         return repo.getLiveActions(ids, HoverAction.BALANCE);
     }
 

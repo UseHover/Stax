@@ -23,13 +23,14 @@ import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.getViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener {
 
+    private val actionSelectViewModel: ActionSelectViewModel by viewModel()
     private lateinit var transferViewModel: TransferViewModel
-    private lateinit var actionSelectViewModel: ActionSelectViewModel
 
     private lateinit var amountInput: StaxTextInputLayout
     private lateinit var noteInput: StaxTextInputLayout
@@ -40,8 +41,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     private lateinit var binding: FragmentTransferBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        actionSelectViewModel = getViewModel()
-        channelDropdownViewModel = getViewModel()
         abstractFormViewModel = getViewModel<TransferViewModel>()
         transferViewModel = abstractFormViewModel as TransferViewModel
 
@@ -57,20 +56,23 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     override fun init(root: View) {
         setTitle()
 
-        amountInput = binding.editCard.amountInput;
-        contactInput = binding.editCard.contactSelect;
-        actionSelect = binding.editCard.actionSelect;
-        noteInput = binding.editCard.noteInput;
-        recipientValue = binding.summaryCard.recipientValue;
+        amountInput = binding.editCard.amountInput
+        contactInput = binding.editCard.contactSelect
+        actionSelect = binding.editCard.actionSelect
+        noteInput = binding.editCard.noteInput
+        recipientValue = binding.summaryCard.recipientValue
 
-        amountInput.requestFocus();
+        amountInput.apply {
+            text =  transferViewModel.amount.value
+            requestFocus()
+        }
+        noteInput.text = transferViewModel.note.value
 
         super.init(root)
     }
 
     private fun setTitle() {
         val titleRes = if (TransactionType.type == HoverAction.AIRTIME) R.string.cta_airtime else R.string.cta_transfer
-        Timber.e(getString(titleRes))
         binding.editCard.transferCard.setTitle(getString(titleRes))
         binding.summaryCard.transferSummaryCard.setTitle(getString(titleRes))
     }
@@ -79,6 +81,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         super.startObservers(root)
 
         actionSelectViewModel.activeAction.observe(viewLifecycleOwner, Observer {
+            Timber.e("Observed active action change $it ${it.transaction_type}")
             binding.summaryCard.accountValue.setSubtitle(it.getNetworkSubtitle(requireContext()))
             actionSelect.selectRecipientNetwork(it)
             setRecipientHint(it)
@@ -89,7 +92,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
                 transferViewModel.request.value?.let { request ->
                     transferViewModel.setRecipientSmartly(request, channel)
                 }
-                actionSelect.visibility = if (channel != null) View.GONE else View.VISIBLE
+                Timber.e("Channel $channel")
+                actionSelect.visibility = if (channel != null) View.VISIBLE else View.GONE
+                Timber.e("Visibility ${actionSelect.visibility}")
+
                 binding.summaryCard.accountValue.setTitle(channel.toString())
             })
 
@@ -101,12 +107,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
 
         with(transferViewModel) {
             amount.observe(viewLifecycleOwner, Observer {
-//                amountInput.text = it
                 binding.summaryCard.amountValue.text = Utils.formatAmount(it)
             })
 
             note.observe(viewLifecycleOwner, Observer {
-//                noteInput.text = it
                 binding.summaryCard.noteRow.visibility = if (it.isNullOrEmpty()) View.GONE else View.VISIBLE
                 binding.summaryCard.noteValue.text = it
             })
@@ -199,7 +203,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         return channelError == null && actionError == null && amountError == null && recipientError == null
     }
 
-
     override fun onContactSelected(requestCode: Int, contact: StaxContact?) {
         transferViewModel.setContact(contact)
         contactInput.setSelected(contact)
@@ -212,14 +215,15 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
 
     fun setRecipientHint(action: HoverAction) {
         Timber.e("Update hint to $action : ${action.getPronoun(requireContext())}")
+        Timber.e("Requires recipient? ${action.requiresRecipient()}")
+        Timber.e("Transaction type? ${action.transaction_type}")
+
+        editCard.findViewById<LinearLayout>(R.id.recipient_entry).visibility = if(action.requiresRecipient()) View.VISIBLE else View.GONE
+        binding.summaryCard.recipientRow.visibility = if(action.requiresRecipient()) View.VISIBLE else View.GONE
 
         if (!action.requiresRecipient()) {
-            editCard.findViewById<LinearLayout>(R.id.recipient_entry).visibility = View.GONE
-            binding.summaryCard.recipientRow.visibility = View.GONE
             recipientValue.setContent(getString(R.string.self_choice), "")
         } else {
-            editCard.findViewById<LinearLayout>(R.id.recipient_entry).visibility = View.VISIBLE
-            binding.summaryCard.recipientRow.visibility = View.VISIBLE
             transferViewModel.forceUpdateContactUI()
             contactInput.setHint(
                 if (action.requiredParams.contains(HoverAction.ACCOUNT_KEY))
@@ -239,5 +243,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         transferViewModel.setEditing(r.amount.isNullOrEmpty())
         channelDropdown.setState(getString(R.string.channel_request_fieldinfo, r.requester_institution_id.toString()), AbstractStatefulInput.INFO)
         Utils.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext())
+
+        Timber.e("Visibility ${actionSelect.visibility}")
     }
 }

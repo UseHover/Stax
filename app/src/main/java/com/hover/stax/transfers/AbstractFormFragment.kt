@@ -25,13 +25,14 @@ import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxCardView
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
 
 abstract class AbstractFormFragment : Fragment() {
 
     lateinit var abstractFormViewModel: AbstractFormViewModel
-    lateinit var channelDropdownViewModel: ChannelDropdownViewModel
+    val channelDropdownViewModel: ChannelDropdownViewModel by sharedViewModel()
 
     lateinit var editCard: StaxCardView
     lateinit var summaryCard: StaxCardView
@@ -62,6 +63,7 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     open fun showEdit(isEditing: Boolean) {
+        Timber.e("Here")
         channelDropdownViewModel.setChannelSelected(channelDropdown.highlighted)
         editCard.visibility = if (isEditing) View.VISIBLE else View.GONE
         noWorryText.visibility = if (isEditing) View.VISIBLE else View.GONE

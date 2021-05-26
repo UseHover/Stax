@@ -17,20 +17,18 @@ import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.getViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInterface {
 
-    private lateinit var actionSelectViewModel: ActionSelectViewModel
+    private val actionSelectViewModel: ActionSelectViewModel by viewModel()
 
-    private lateinit var channelDropdownViewModel: ChannelDropdownViewModel
-    private lateinit var transferViewModel: TransferViewModel
+    private val channelDropdownViewModel: ChannelDropdownViewModel by viewModel()
+    private val transferViewModel: TransferViewModel by viewModel()
     private lateinit var scheduleViewModel: ScheduleDetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        channelDropdownViewModel = getViewModel()
-        transferViewModel = getViewModel()
-        actionSelectViewModel = getViewModel()
 
         intent.action?.let {
             transferViewModel.setTransactionType(it)
@@ -121,6 +119,6 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
         setResult(result, i)
     }
 
-    override fun onBackPressed() = if(!transferViewModel.isEditing.value!!) transferViewModel.setEditing(true) else super.onBackPressed()
+    override fun onBackPressed() = if(transferViewModel.isEditing.value == false) transferViewModel.setEditing(true) else super.onBackPressed()
 
 }

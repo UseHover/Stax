@@ -47,7 +47,7 @@ class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListene
     private lateinit var binding: FragmentRequestBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        channelDropdownViewModel = getViewModel()
+//        channelDropdownViewModel = getViewModel()
         abstractFormViewModel = getViewModel<NewRequestViewModel>()
         requestViewModel = abstractFormViewModel as NewRequestViewModel
 
@@ -71,6 +71,10 @@ class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListene
         accountValue = binding.summaryCard.accountValue
         shareCard = binding.shareCard.root
 
+        amountInput.text = requestViewModel.amount.value
+        noteInput.text = requestViewModel.note.value
+        requesterNumberInput.text = requestViewModel.requesterNumber.value
+
         recipientAdapter = RecipientAdapter(requestViewModel.requestees.value, requestViewModel.recentContacts.value, this)
         recipientInputList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireContext())
@@ -90,12 +94,11 @@ class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListene
 
         with(requestViewModel){
             amount.observe(viewLifecycleOwner, Observer {
-                amountInput.text = it
                 binding.summaryCard.amountRow.visibility = if(validAmount()) View.VISIBLE else View.GONE
                 binding.summaryCard.amountValue.text = Utils.formatAmount(it)
             })
 
-            requesterNumber.observe(viewLifecycleOwner, Observer { requesterNumberInput.text = it; accountValue.setSubtitle(it) })
+            requesterNumber.observe(viewLifecycleOwner, Observer { accountValue.setSubtitle(it) })
             activeChannel.observe(viewLifecycleOwner, Observer { updateAcctNo(it) })
             recentContacts.observe(viewLifecycleOwner, Observer { recipientAdapter?.updateContactList(it) })
             isEditing.observe(viewLifecycleOwner, Observer { showEdit(it) })
