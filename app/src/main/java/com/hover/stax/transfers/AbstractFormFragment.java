@@ -13,13 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 
-import com.amplitude.api.Amplitude;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.channels.ChannelDropdown;
-import com.hover.stax.channels.ChannelDropdownViewModel;
+import com.hover.stax.channels.ChannelsViewModel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.permissions.PermissionUtils;
 import com.hover.stax.utils.Constants;
@@ -31,7 +30,7 @@ public abstract class AbstractFormFragment extends Fragment {
     private static String TAG = "AbstractFormFragment";
 
     protected AbstractFormViewModel abstractFormViewModel;
-    protected ChannelDropdownViewModel channelDropdownViewModel;
+    protected ChannelsViewModel channelsViewModel;
 
     private LinearLayout noworryText;
     protected StaxCardView editCard, summaryCard;
@@ -47,20 +46,20 @@ public abstract class AbstractFormFragment extends Fragment {
     }
 
     protected void startObservers(View root) {
-        channelDropdown.setListener(channelDropdownViewModel);
-        channelDropdown.setObservers(channelDropdownViewModel, getViewLifecycleOwner());
-        setupActionDropdownObservers(channelDropdownViewModel, getViewLifecycleOwner());
+        channelDropdown.setListener(channelsViewModel);
+        channelDropdown.setObservers(channelsViewModel, getViewLifecycleOwner());
+        setupActionDropdownObservers(channelsViewModel, getViewLifecycleOwner());
         abstractFormViewModel.getIsEditing().observe(getViewLifecycleOwner(), this::showEdit);
 
     }
 
-    private void setupActionDropdownObservers(ChannelDropdownViewModel viewModel, LifecycleOwner lifecycleOwner) {
+    private void setupActionDropdownObservers(ChannelsViewModel viewModel, LifecycleOwner lifecycleOwner) {
         viewModel.getActiveChannel().observe(lifecycleOwner, channel -> Log.i(TAG, "Got new active channel: " + channel + " " + channel.countryAlpha2));
         viewModel.getChannelActions().observe(lifecycleOwner, actions -> Log.i(TAG, "Got new actions: " + actions.size()));
     }
 
     protected void showEdit(boolean isEditing) {
-        channelDropdownViewModel.setChannelSelected(channelDropdown.getHighlighted());
+        channelsViewModel.setChannelSelected(channelDropdown.getHighlighted());
         editCard.setVisibility(isEditing ? View.VISIBLE : View.GONE);
         noworryText.setVisibility(isEditing ? View.VISIBLE : View.GONE);
         summaryCard.setVisibility(isEditing ? View.GONE : View.VISIBLE);

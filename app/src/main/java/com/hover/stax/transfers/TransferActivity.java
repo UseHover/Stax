@@ -7,11 +7,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.amplitude.api.Amplitude;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.hover.stax.actions.ActionSelectViewModel;
-import com.hover.stax.channels.ChannelDropdownViewModel;
+import com.hover.stax.channels.ChannelsViewModel;
 import com.hover.stax.contacts.StaxContact;
 
 import com.hover.stax.navigation.AbstractNavigationActivity;
@@ -19,10 +18,8 @@ import com.hover.stax.pushNotification.PushNotificationTopicsInterface;
 import com.hover.stax.utils.Constants;
 
 import com.hover.stax.hover.HoverSession;
-import com.hover.stax.navigation.AbstractNavigationActivity;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
-import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxDialog;
 
@@ -31,7 +28,7 @@ import timber.log.Timber;
 public class TransferActivity extends AbstractNavigationActivity  implements PushNotificationTopicsInterface {
     final public static String TAG = "TransferActivity";
 
-    private ChannelDropdownViewModel channelDropdownViewModel;
+    private ChannelsViewModel channelsViewModel;
     private ActionSelectViewModel actionSelectViewModel;
     private TransferViewModel transferViewModel;
     private ScheduleDetailViewModel scheduleViewModel = null;
@@ -39,14 +36,14 @@ public class TransferActivity extends AbstractNavigationActivity  implements Pus
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        channelDropdownViewModel = new ViewModelProvider(this).get(ChannelDropdownViewModel.class);
+        channelsViewModel = new ViewModelProvider(this).get(ChannelsViewModel.class);
         actionSelectViewModel = new ViewModelProvider(this).get(ActionSelectViewModel.class);
         transferViewModel = new ViewModelProvider(this).get(TransferViewModel.class);
 
         String action = getIntent().getAction();
 
         transferViewModel.setType(action);
-        channelDropdownViewModel.setType(action);
+        channelsViewModel.setType(action);
 
         checkIntent();
         setContentView(R.layout.activity_transfer);
@@ -113,7 +110,7 @@ public class TransferActivity extends AbstractNavigationActivity  implements Pus
 	}
   
     private void makeCall(HoverAction act) {
-        HoverSession.Builder hsb = new HoverSession.Builder(act, channelDropdownViewModel.getActiveChannel().getValue(),
+        HoverSession.Builder hsb = new HoverSession.Builder(act, channelsViewModel.getActiveChannel().getValue(),
                 TransferActivity.this, Constants.TRANSFER_REQUEST)
                 .extra(HoverAction.AMOUNT_KEY, transferViewModel.getAmount().getValue())
                 .extra(HoverAction.NOTE_KEY, transferViewModel.getNote().getValue());
@@ -128,7 +125,7 @@ public class TransferActivity extends AbstractNavigationActivity  implements Pus
         hsb.extra(HoverAction.ACCOUNT_KEY, transferViewModel.getContact().getValue().phoneNumber)
                 .extra(HoverAction.PHONE_KEY, transferViewModel.getContact().getValue()
                         .getNumberFormatForInput(actionSelectViewModel.getActiveAction().getValue(),
-                                channelDropdownViewModel.getActiveChannel().getValue()));
+                                channelsViewModel.getActiveChannel().getValue()));
     }
 
     @Override

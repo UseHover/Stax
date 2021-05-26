@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDropdown;
-import com.hover.stax.channels.ChannelDropdownViewModel;
+import com.hover.stax.channels.ChannelsViewModel;
 import com.hover.stax.databinding.FragmentBalanceBinding;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.navigation.NavigationInterface;
@@ -43,7 +43,7 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
     private FutureViewModel futureViewModel;
     private TransactionHistoryViewModel transactionsViewModel;
     private BalanceAdapter balanceAdapter;
-    private ChannelDropdownViewModel channelDropdownViewModel;
+    private ChannelsViewModel channelsViewModel;
 
     private TextView addChannelLink;
     private ChannelDropdown channelDropdown;
@@ -56,7 +56,7 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_balance_and_history)), requireContext());
         balancesViewModel = new ViewModelProvider(requireActivity()).get(BalancesViewModel.class);
-        channelDropdownViewModel = new ViewModelProvider(requireActivity()).get(ChannelDropdownViewModel.class);
+        channelsViewModel = new ViewModelProvider(requireActivity()).get(ChannelsViewModel.class);
 
         futureViewModel = new ViewModelProvider(requireActivity()).get(FutureViewModel.class);
         transactionsViewModel = new ViewModelProvider(requireActivity()).get(TransactionHistoryViewModel.class);
@@ -83,7 +83,7 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
 
     private void setUpLinkNewAccount() {
         addChannelLink = binding.homeCardBalances.newAccountLink;
-        addChannelLink.setOnClickListener(v -> navigateToLinkAccountFragment(NavHostFragment.findNavController(this)));
+        addChannelLink.setOnClickListener(v -> navigateToChannelsListFragment(NavHostFragment.findNavController(this), false));
         channelDropdown = binding.homeCardBalances.channelDropdown;
     }
 
@@ -109,7 +109,7 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
         binding.homeCardBalances.balanceCard.setBackButtonVisibility(channels != null && channels.size() > 0 ? VISIBLE : GONE);
 
         toggleLink(channels != null && channels.size() > 0);
-        channelDropdown.setObservers(channelDropdownViewModel, getActivity());
+        channelDropdown.setObservers(channelsViewModel, getActivity());
     }
 
     public void toggleLink(boolean show) {
@@ -122,9 +122,9 @@ public class BalancesFragment extends Fragment implements TransactionHistoryAdap
             balancesViewModel.getActions().observe(getViewLifecycleOwner(), actions -> {
                 balancesViewModel.setAllRunning(v.getContext());
             });
-            channelDropdownViewModel.setChannelSelected(channelDropdown.getHighlighted());
+            channelsViewModel.setChannelSelected(channelDropdown.getHighlighted());
 
-        } else if (channelDropdownViewModel.getSelectedChannels().getValue() == null || channelDropdownViewModel.getSelectedChannels().getValue().size() == 0)
+        } else if (channelsViewModel.getSelectedChannels().getValue() == null || channelsViewModel.getSelectedChannels().getValue().size() == 0)
             channelDropdown.setError(getString(R.string.refresh_balance_error));
         else
             balancesViewModel.setAllRunning(v.getContext());

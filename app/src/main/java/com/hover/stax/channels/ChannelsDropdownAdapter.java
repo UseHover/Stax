@@ -30,35 +30,20 @@ import timber.log.Timber;
 
 import static com.hover.stax.utils.Constants.size55;
 
-public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
+public class ChannelsDropdownAdapter extends ArrayAdapter<Channel> {
     private List<Channel> channels;
     private ViewHolder holder;
     private StaxSpinnerItemWithLogoBinding binding;
 
-    public ChannelDropdownAdapter(@NonNull List<Channel> channelList, @NonNull Context context) {
+    public ChannelsDropdownAdapter(@NonNull List<Channel> channelList, @NonNull Context context) {
         super(context, 0, channelList);
         channels = channelList;
-    }
-
-    public static List<Channel> sort(List<Channel> channels, boolean showSelected) {
-        ArrayList<Channel> selected_list = new ArrayList<>();
-        ArrayList<Channel> sorted_list = new ArrayList<>();
-        for (Channel c : channels) {
-            if (c.selected) selected_list.add(c);
-            else sorted_list.add(c);
-        }
-        Collections.sort(selected_list);
-        Collections.sort(sorted_list);
-        if (showSelected)
-            sorted_list.addAll(0, selected_list);
-        return sorted_list;
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
         Channel c = channels.get(position);
-        Log.e("ADAPTER", "getting view for pos " + position);
 
         if (view == null) {
             binding = StaxSpinnerItemWithLogoBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
@@ -92,7 +77,7 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
         holder.divider.setVisibility(View.GONE);
     }
 
-    private static class ViewHolder implements Target {
+    public static class ViewHolder implements Target {
         TextView id;
         ImageView logo;
         AppCompatTextView channelText;

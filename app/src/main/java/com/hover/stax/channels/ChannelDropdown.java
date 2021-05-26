@@ -83,8 +83,8 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target{
 
     private void updateChoices(List<Channel> channels) {
         if (highlightedChannel == null) setDropdownValue(null);
-        ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(ChannelDropdownAdapter.sort(channels, showSelected), getContext());
-        autoCompleteTextView.setAdapter(channelDropdownAdapter);
+        ChannelsDropdownAdapter channelsDropdownAdapter = new ChannelsDropdownAdapter(Channel.sort(channels, showSelected), getContext());
+        autoCompleteTextView.setAdapter(channelsDropdownAdapter);
         autoCompleteTextView.setDropDownHeight(UIHelper.dpToPx(300));
         autoCompleteTextView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((Channel) adapterView.getItemAtPosition(pos)));
 
@@ -122,7 +122,7 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target{
         autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0);
     }
 
-    public void setObservers(@NonNull ChannelDropdownViewModel viewModel, @NonNull LifecycleOwner lifecycleOwner) {
+    public void setObservers(@NonNull ChannelsViewModel viewModel, @NonNull LifecycleOwner lifecycleOwner) {
         viewModel.getSims().observe(lifecycleOwner, sims -> Timber.i("Got sims: %s", sims.size()));
         viewModel.getSimHniList().observe(lifecycleOwner, simList -> Timber.i("Got new sim hni list: %s", simList));
         viewModel.getChannels().observe(lifecycleOwner, this::channelUpdateIfNull);
@@ -134,7 +134,7 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target{
         viewModel.getChannelActions().observe(lifecycleOwner, actions -> setState(actions, viewModel));
     }
 
-    private void setState(List<HoverAction> actions, ChannelDropdownViewModel viewModel) {
+    private void setState(List<HoverAction> actions, ChannelsViewModel viewModel) {
         if (viewModel.getActiveChannel().getValue() != null && (actions == null || actions.size() == 0))
             setState(getContext().getString(R.string.no_actions_fielderror, HoverAction.getHumanFriendlyType(getContext(), viewModel.getType())), AbstractStatefulInput.ERROR);
         else if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !viewModel.getType().equals(HoverAction.BALANCE))
