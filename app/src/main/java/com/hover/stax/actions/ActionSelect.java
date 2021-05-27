@@ -155,7 +155,7 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
                 isSelfRadio.addView(radioButton);
             }
         }
-        
+
         isSelfRadio.setOnCheckedChangeListener(this);
         isSelfRadio.check(highlightedAction != null ? actions.indexOf(highlightedAction) : 0);
         isSelfRadio.setVisibility(actions.size() > 1 ? VISIBLE : GONE);
