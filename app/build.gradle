@@ -119,7 +119,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-inappmessaging-display'
-    implementation 'com.google.android.play:core:1.8.0'
+    implementation 'com.google.android.play:core:1.10.0'
 
     //implementation 'io.sentry:sentry-android:3.1.0'
     implementation 'com.amplitude:android-sdk:2.23.2'
@@ -136,7 +136,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Tests
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
@@ -147,5 +147,5 @@ dependencies {
     releaseImplementation "com.hover:android-sdk:$sdk_version"
     debugImplementation 'com.android.volley:volley:1.2.0'
     debugImplementation 'com.google.android.gms:play-services-analytics:17.0.0'
-    debugImplementation 'io.sentry:sentry-android:1.7.21'
+    debugImplementation 'io.sentry:sentry-android:4.3.0'
 }
