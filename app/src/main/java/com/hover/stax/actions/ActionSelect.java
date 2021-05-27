@@ -143,16 +143,19 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
     }
 
     private void createRadios(List<HoverAction> actions) {
-        Log.e(TAG, "creating radios. " + actions.size());
         isSelfRadio.removeAllViews();
         isSelfRadio.clearCheck();
-        for (int i = 0; i < actions.size(); i++) {
-            HoverAction a = actions.get(i);
-            RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.stax_radio_button, null);
-            radioButton.setText(a.getPronoun(getContext()));
-            radioButton.setId(i);
-            isSelfRadio.addView(radioButton);
+
+        if(!actions.isEmpty()) {
+            for (int i = 0; i < actions.size(); i++) {
+                HoverAction a = actions.get(i);
+                RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.stax_radio_button, null);
+                radioButton.setText(a.getPronoun(getContext()));
+                radioButton.setId(i);
+                isSelfRadio.addView(radioButton);
+            }
         }
+        
         isSelfRadio.setOnCheckedChangeListener(this);
         isSelfRadio.check(highlightedAction != null ? actions.indexOf(highlightedAction) : 0);
         isSelfRadio.setVisibility(actions.size() > 1 ? VISIBLE : GONE);
