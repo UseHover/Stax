@@ -42,8 +42,8 @@ android {
         applicationId "com.hover.stax"
         minSdkVersion 18
         targetSdkVersion 30
-        versionCode 54
-        versionName "1.3.4.4"
+        versionCode 55
+        versionName "1.3.5"
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -62,7 +62,7 @@ android {
 
         release {
             minifyEnabled true
-            buildConfigField "String", "SELF_DESTRUCT", "\"1622450539\"" // May 31, 2021
+            buildConfigField "String", "SELF_DESTRUCT", "\"1625097599\"" // June 30, 2021
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             file(keystorePath).with { propertiesFile ->

@@ -1,9 +1,6 @@
 package com.hover.stax.home;
 
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,7 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.amplitude.api.Amplitude;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.hover.sdk.actions.HoverAction;
@@ -69,6 +65,7 @@ public class MainActivity extends AbstractNavigationActivity implements
         super.onNewIntent(intent);
         checkForRequest(intent);
     }
+
     private void checkForDeepLinking() {
         Intent intent = getIntent();
         if(intent.getAction()!=null && intent.getAction().equals(Intent.ACTION_VIEW) && intent.getData() != null) {
