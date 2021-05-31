@@ -33,13 +33,14 @@ public abstract class AbstractFormFragment extends Fragment {
     protected AbstractFormViewModel abstractFormViewModel;
     protected ChannelDropdownViewModel channelDropdownViewModel;
 
-    private LinearLayout noworryText;
+    private LinearLayout noworryText, editRequestCard;
     protected StaxCardView editCard, summaryCard;
     protected ChannelDropdown channelDropdown;
     protected ExtendedFloatingActionButton fab;
 
     protected void init(View root) {
         editCard = root.findViewById(R.id.editCard);
+        editRequestCard = root.findViewById(R.id.editRequestCard);
         noworryText = root.findViewById(R.id.noworry_text);
         summaryCard = root.findViewById(R.id.summaryCard);
         fab = root.findViewById(R.id.fab);
@@ -61,7 +62,10 @@ public abstract class AbstractFormFragment extends Fragment {
 
     protected void showEdit(boolean isEditing) {
         channelDropdownViewModel.setChannelSelected(channelDropdown.getHighlighted());
-        editCard.setVisibility(isEditing ? View.VISIBLE : View.GONE);
+
+        if(editCard !=null)editCard.setVisibility(isEditing ? View.VISIBLE : View.GONE);
+        if(editRequestCard !=null)editRequestCard.setVisibility(isEditing ? View.VISIBLE : View.GONE);
+
         noworryText.setVisibility(isEditing ? View.VISIBLE : View.GONE);
         summaryCard.setVisibility(isEditing ? View.GONE : View.VISIBLE);
         fab.setText(isEditing ? getString(R.string.btn_continue) : abstractFormViewModel.getType().equals(HoverAction.AIRTIME) ? getString(R.string.fab_airtimenow) : getString(R.string.fab_transfernow));
