@@ -6,12 +6,10 @@ import android.util.Log;
 import android.view.View;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
-import com.hover.stax.R;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.bubbleshowcase.BubbleShowCase;
 import com.hover.stax.utils.bubbleshowcase.BubbleShowCaseListener;
-import com.hover.stax.utils.customSwipeRefresh.CustomSwipeRefreshLayout;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -46,14 +44,6 @@ public class ShowcaseExecutor {
         } catch (Exception e) {
             Log.e(TAG, "Showcase failed to start", e);
         }
-    }
-
-    public void showcaseRefreshAccountStage() {
-        CustomSwipeRefreshLayout csrl = ((CustomSwipeRefreshLayout) root.findViewById(R.id.swipelayout));
-        if (csrl != null)
-            csrl.animateOffsetToTriggerPosition(0, null);
-        startShowcase(activity.getString(R.string.onboard_refreshhead), activity.getString(R.string.onboard_refreshbody),
-                refreshShowcaseClickListener, root.findViewById(R.id.homeTimeAgo));
     }
 
     public void showcasePeekBalanceStage() {
@@ -99,13 +89,11 @@ public class ShowcaseExecutor {
         @Override
         public void onBackgroundDimClick(@NotNull BubbleShowCase bubbleShowCase) {
             endStage(bubbleShowCase);
-            ((CustomSwipeRefreshLayout) root.findViewById(R.id.swipelayout)).animateStayComplete(null);
         }
 
         @Override
         public void onCloseActionImageClick(@NotNull BubbleShowCase bubbleShowCase) {
             endStage(bubbleShowCase);
-            ((CustomSwipeRefreshLayout) root.findViewById(R.id.swipelayout)).animateStayComplete(null);
         }
 
         @Override

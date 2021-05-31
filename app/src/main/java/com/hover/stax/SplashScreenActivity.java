@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -27,7 +28,11 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.WorkManager;
 
 import com.amplitude.api.Amplitude;
+import com.appsflyer.AppsFlyerLib;
+import com.google.firebase.installations.FirebaseInstallations;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.stax.channels.UpdateChannelsWorker;
@@ -57,22 +62,21 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setFullscreenView();
-
+        UIHelper.setFullscreenView(this);
         super.onCreate(savedInstanceState);
+
 
         startSplashForegroundSequence();
         startBackgroundProcesses();
 
+        if (selfDestructWhenAppVersionExpires()) return;
         continueOn();
     }
 
-    private void setFullscreenView() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            getWindow().setDecorFitsSystemWindows(false);
-        } else {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-        }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        AppsFlyerLib.getInstance().start(this);
     }
 
     private void startSplashForegroundSequence() {
@@ -83,11 +87,14 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
     private void startBackgroundProcesses() {
         initAmplitude();
+        logPushNotificationIfRequired();
         initHover();
         createNotificationChannel();
         startWorkers();
         initFirebaseMessagingTopics();
         FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this, s -> Timber.i("Firebase ID is: %s", s));
+        FirebaseInstallations.getInstance().getId().addOnCompleteListener(task -> Timber.d("Firebase installation id is: %s", task.getResult())); //Adding this line somewhat force pulls IAM to show up.
+        initRemoteConfig();
     }
 
     private void initFirebaseMessagingTopics() {
@@ -141,11 +148,13 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
     private void initAmplitude() {
         Amplitude.getInstance().initialize(this, getString(R.string.amp)).enableForegroundTracking(getApplication());
+    }
 
+    private void logPushNotificationIfRequired() {
         if (getIntent().getExtras() != null) {
             String fcmTitle = getIntent().getExtras().getString(Constants.FROM_FCM);
             if (fcmTitle != null) {
-                Amplitude.getInstance().logEvent(getString(R.string.cliucked_push_notification, fcmTitle));
+                Utils.logAnalyticsEvent(getString(R.string.cliucked_push_notification, fcmTitle), this);
             }
         }
     }
@@ -156,12 +165,37 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
         Hover.setPermissionActivity(Constants.PERM_ACTIVITY, this);
     }
 
-    private Boolean shouldSelfDestructWhenAppVersionExpires(Boolean value) {
-        if (value && SelfDestructActivity.isExpired(this)) {
-            startActivity(new Intent(this, SelfDestructActivity.class));
-            finish();
-            return true;
-        } else return false;
+    private void initRemoteConfig() {
+        FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(3600)
+                .build();
+        mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
+        mFirebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config_default);
+        mFirebaseRemoteConfig.fetchAndActivate()
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        boolean updated = task.getResult();
+                        Timber.e("Config params updated: %s", updated);
+                    }
+                });
+    }
+
+    private Boolean selfDestructWhenAppVersionExpires() {
+        try {
+            int currentVersionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+            int forceUpdateVersionCode = Integer.parseInt(FirebaseRemoteConfig.getInstance().getString("force_update_app_version"));
+
+            if (forceUpdateVersionCode > currentVersionCode) {
+                startActivity(new Intent(this, SelfDestructActivity.class));
+                finish();
+                return true;
+            } else return false;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     private void createNotificationChannel() {

@@ -42,8 +42,8 @@ android {
         applicationId "com.hover.stax"
         minSdkVersion 18
         targetSdkVersion 30
-        versionCode 50
-        versionName "1.3.3"
+        versionCode 55
+        versionName "1.3.5"
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -62,7 +62,7 @@ android {
 
         release {
             minifyEnabled true
-            buildConfigField "String", "SELF_DESTRUCT", "\"1622450539\"" // May 31, 2021
+            buildConfigField "String", "SELF_DESTRUCT", "\"1625097599\"" // June 30, 2021
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             file(keystorePath).with { propertiesFile ->
@@ -95,7 +95,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // Google
-    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.navigation:navigation-fragment:2.3.5'
@@ -118,6 +118,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-inappmessaging-display'
+    implementation 'com.google.firebase:firebase-config'
+    implementation 'com.google.android.play:core:1.10.0'
 
     //implementation 'io.sentry:sentry-android:3.1.0'
     implementation 'com.amplitude:android-sdk:2.23.2'
@@ -126,13 +129,15 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
     implementation "com.github.YarikSOffice:lingver:1.3.0"
+    implementation 'com.appsflyer:af-android-sdk:6.2.3'
+    implementation 'com.android.installreferrer:installreferrer:2.2'
 
     // Kotlin
-    implementation "androidx.core:core-ktx:1.3.2"
+    implementation "androidx.core:core-ktx:1.5.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Tests
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
@@ -143,5 +148,5 @@ dependencies {
     releaseImplementation "com.hover:android-sdk:$sdk_version"
     debugImplementation 'com.android.volley:volley:1.2.0'
     debugImplementation 'com.google.android.gms:play-services-analytics:17.0.0'
-    debugImplementation 'io.sentry:sentry-android:1.7.21'
+    debugImplementation 'io.sentry:sentry-android:4.3.0'
 }

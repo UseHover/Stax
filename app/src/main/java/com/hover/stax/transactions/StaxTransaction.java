@@ -121,8 +121,8 @@ public class StaxTransaction {
 
         HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES);
         if (extras != null) {
-            if (extras.containsKey(HoverAction.FEE_KEY))
-                fee = Utils.getAmount(extras.get(HoverAction.FEE_KEY));
+//            if (extras.containsKey(HoverAction.FEE_KEY))
+//                fee = Utils.getAmount(extras.get(HoverAction.FEE_KEY));
             if (extras.containsKey(CONFIRM_CODE_KEY))
                 confirm_code = extras.get(CONFIRM_CODE_KEY);
         }

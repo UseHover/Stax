@@ -21,6 +21,7 @@ import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.databinding.FragmentPinUpdateBinding;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxDialog;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -37,8 +38,7 @@ public class PinUpdateFragment extends Fragment implements Target {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_change_pin)));
-
+        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_change_pin)), requireContext());
         binding = FragmentPinUpdateBinding.inflate(inflater, container, false);
 
         pinViewModel = new ViewModelProvider(this).get(PinsViewModel.class);

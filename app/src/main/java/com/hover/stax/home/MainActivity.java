@@ -9,7 +9,8 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.amplitude.api.Amplitude;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.hover.stax.balances.BalanceAdapter;
@@ -24,6 +25,7 @@ import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
@@ -55,12 +57,50 @@ public class MainActivity extends AbstractNavigationActivity implements
 
         checkForRequest(getIntent());
         checkForFragmentDirection(getIntent());
+        checkForDeepLinking();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         checkForRequest(intent);
+    }
+
+    private void checkForDeepLinking() {
+        Intent intent = getIntent();
+        if(intent.getAction()!=null && intent.getAction().equals(Intent.ACTION_VIEW) && intent.getData() != null) {
+            String deepLinkRoute = intent.getData().toString();
+            if(deepLinkRoute.contains(getString(R.string.deeplink_sendmoney))) {
+                navigateToTransferActivity(HoverAction.P2P, false, intent, this);
+            }
+            else if(deepLinkRoute.contains(getString(R.string.deeplink_airtime))) {
+                navigateToTransferActivity(HoverAction.AIRTIME, false, intent, this);
+            }
+            else if(deepLinkRoute.contains(getString(R.string.deeplink_linkaccount))) {
+                navigateToLinkAccountFragment(getNavController());
+            }
+            else if(deepLinkRoute.contains(getString(R.string.deeplink_balance)) || deepLinkRoute.contains(getString(R.string.deeplink_history))) {
+                navigateToBalanceFragment(getNavController());
+            }
+            else if(deepLinkRoute.contains(getString(R.string.deeplink_settings))) {
+                navigateToSettingsFragment(getNavController());
+            }
+            else if(deepLinkRoute.contains(getString(R.string.deeplink_reviews))) {
+                Utils.logAnalyticsEvent(getString(R.string.visited_rating_review_screen), this);
+                if(!Utils.getBoolean(Constants.APP_RATED, this)) launchRatingAndReviewDialog();
+                else Utils.openStaxPlaystorePage(this);
+            }
+        }
+    }
+
+    private void launchRatingAndReviewDialog() {
+        ReviewManager reviewManager = ReviewManagerFactory.create(this);
+        reviewManager.requestReviewFlow().addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                reviewManager.launchReviewFlow(MainActivity.this, task.getResult()).addOnCompleteListener(
+                        task1 -> Utils.saveBoolean(Constants.APP_RATED, true, MainActivity.this));
+            }
+        });
     }
 
     private void checkForRequest(Intent intent) {
@@ -84,7 +124,7 @@ public class MainActivity extends AbstractNavigationActivity implements
 
     @Override
     public void onTapRefresh(int channel_id) {
-        Amplitude.getInstance().logEvent(getString(R.string.refresh_balance_single));
+        Utils.logAnalyticsEvent(getString(R.string.refresh_balance_single), this);
         balancesViewModel.setRunning(channel_id);
     }
 
@@ -151,7 +191,7 @@ public class MainActivity extends AbstractNavigationActivity implements
         if (data.getAction() != null && data.getAction().equals(Constants.SCHEDULED)) {
             showMessage(getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))));
         } else {
-            Amplitude.getInstance().logEvent(getString(R.string.finish_load_screen));
+            Utils.logAnalyticsEvent(getString(R.string.finish_load_screen), this);
             new ViewModelProvider(this).get(TransactionHistoryViewModel.class).saveTransaction(data, this);
         }
     }

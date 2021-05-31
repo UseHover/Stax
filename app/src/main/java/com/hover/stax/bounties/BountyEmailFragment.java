@@ -48,10 +48,10 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
 
     @Override
     public void onClick(View v) {
-        Amplitude.getInstance().logEvent(getString(R.string.clicked_bounty_email_continue_btn));
+        Utils.logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext());
         if (validates()) {
             emailInput.setEnabled(false);
-            new BountyAsyncCaller(new WeakReference<>(getContext()), this).execute(emailInput.getText());
+            new BountyAsyncCaller(new WeakReference<>(requireContext()), this).execute(emailInput.getText());
             emailInput.setState(getString(R.string.bounty_uploading_email), AbstractStatefulInput.INFO);
         } else {
             emailInput.setState(getString(R.string.bounty_email_error), AbstractStatefulInput.ERROR);
@@ -74,13 +74,13 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
     }
 
     private void setEmailError() {
-        Amplitude.getInstance().logEvent(getString(R.string.bounty_email_err, getString(R.string.bounty_api_internet_error)));
+        Utils.logAnalyticsEvent(getString(R.string.bounty_email_err, getString(R.string.bounty_api_internet_error)), requireContext());
         emailInput.setEnabled(true);
         emailInput.setState(getString(R.string.bounty_api_internet_error), AbstractStatefulInput.ERROR);
     }
 
     private void saveAndContinue() {
-        Amplitude.getInstance().logEvent(getString(R.string.bounty_email_success));
+        Utils.logAnalyticsEvent(getString(R.string.bounty_email_success), requireContext());
         Utils.saveString(BountyActivity.EMAIL_KEY, emailInput.getText(), getContext());
         NavHostFragment.findNavController(this).navigate(R.id.bountyListFragment);
     }

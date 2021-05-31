@@ -1,5 +1,7 @@
 package com.hover.stax.utils;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -9,17 +11,30 @@ import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import androidx.annotation.NonNull;
+
+import com.amplitude.api.Amplitude;
+import com.appsflyer.AppsFlyerLib;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.stax.BuildConfig;
+import com.hover.stax.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import timber.log.Timber;
 
@@ -152,6 +167,51 @@ public class Utils {
 	public static void removeFirebaseMessagingTopic(String topic){
 		FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
 	}
+	public static void logAnalyticsEvent(String event, Context context) {
+		Amplitude.getInstance().logEvent(event);
+		FirebaseAnalytics.getInstance(context).logEvent(strippedForFireAnalytics(event), null);
+		AppsFlyerLib.getInstance().logEvent(context, event, null);
+	}
+	public static void logAnalyticsEvent(@NonNull  String event, @NonNull JSONObject args, @NonNull Context context) {
+		Bundle bundle = convertJSONObjectToBundle(args);
+		Map<String, Object> map = convertJSONObjectToHashMap(args);
+		Amplitude.getInstance().logEvent(event, args);
+		FirebaseAnalytics.getInstance(context).logEvent(strippedForFireAnalytics(event), bundle);
+		AppsFlyerLib.getInstance().logEvent(context, event, map);
+	}
+	private static String strippedForFireAnalytics(String firebaseEventLog) {
+		return firebaseEventLog.replace(" ","_").toLowerCase();
+	}
+	private static Bundle convertJSONObjectToBundle(JSONObject args) {
+		Bundle bundle = new Bundle();
+		Iterator<String> iter = args.keys();
+		while(iter.hasNext()){
+			String key = iter.next();
+			String value = null;
+			try {
+				value = args.get(key).toString();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			bundle.putString(strippedForFireAnalytics(key),value);
+		}
+		return bundle;
+	}
+	private static Map<String, Object> convertJSONObjectToHashMap(JSONObject args) {
+		Map<String, Object> map = new HashMap<>();
+		Iterator<String> iter = args.keys();
+		while(iter.hasNext()){
+			String key = iter.next();
+			String value = null;
+			try {
+				value = args.get(key).toString();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			map.put(key,value);
+		}
+		return map;
+	}
 
 	public static void showSoftKeyboard(Context context, View view) {
 		if(view.requestFocus()){
@@ -169,6 +229,16 @@ public class Utils {
 		Intent i = new Intent(Intent.ACTION_VIEW);
 		i.setData(Uri.parse(url));
 		ctx.startActivity(i);
+	}
+	public static void openStaxPlaystorePage(Activity activity) {
+		Uri link = Uri.parse(activity.getBaseContext().getString(R.string.stax_market_playstore_link));
+		Intent goToMarket = new Intent(Intent.ACTION_VIEW, link);
+		goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+		try {
+			activity.startActivity(goToMarket);
+		} catch (ActivityNotFoundException e) {
+			activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(activity.getBaseContext().getString(R.string.stax_url_playstore_review_link))));
+		}
 	}
 
 }
