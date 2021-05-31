@@ -91,7 +91,7 @@ public class MainActivity extends AbstractNavigationActivity implements
             else if(deepLinkRoute.contains(getString(R.string.deeplink_reviews))) {
                 Utils.logAnalyticsEvent(getString(R.string.visited_rating_review_screen), this);
                 if(!Utils.getBoolean(Constants.APP_RATED, this)) launchRatingAndReviewDialog();
-                else openStaxPlaystorePage();
+                else Utils.openStaxPlaystorePage(this);
             }
         }
     }
@@ -104,16 +104,6 @@ public class MainActivity extends AbstractNavigationActivity implements
                         task1 -> Utils.saveBoolean(Constants.APP_RATED, true, MainActivity.this));
             }
         });
-    }
-    private void openStaxPlaystorePage() {
-        Uri link = Uri.parse(getString(R.string.stax_market_playstore_link));
-        Intent goToMarket = new Intent(Intent.ACTION_VIEW, link);
-        goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-        try {
-            startActivity(goToMarket);
-        } catch (ActivityNotFoundException e) {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.stax_url_playstore_review_link))));
-        }
     }
 
     private void checkForRequest(Intent intent) {
