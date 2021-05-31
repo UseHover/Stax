@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -13,14 +14,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
@@ -30,11 +29,10 @@ import androidx.work.WorkManager;
 
 import com.amplitude.api.Amplitude;
 import com.appsflyer.AppsFlyerLib;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.installations.FirebaseInstallations;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.stax.channels.UpdateChannelsWorker;
@@ -48,8 +46,6 @@ import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.blur.StaxBlur;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -69,9 +65,11 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
         UIHelper.setFullscreenView(this);
         super.onCreate(savedInstanceState);
 
+
         startSplashForegroundSequence();
         startBackgroundProcesses();
 
+        if (selfDestructWhenAppVersionExpires()) return;
         continueOn();
     }
 
@@ -86,6 +84,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
         blurBackground();
         fadeInLogo();
     }
+
     private void startBackgroundProcesses() {
         initAmplitude();
         logPushNotificationIfRequired();
@@ -94,7 +93,8 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
         startWorkers();
         initFirebaseMessagingTopics();
         FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this, s -> Timber.i("Firebase ID is: %s", s));
-        FirebaseInstallations.getInstance().getId().addOnCompleteListener(task -> Log.d(TAG, "Firebase installation id is: "+task.getResult())); //Adding this line somewhat force pulls IAM to show up.
+        FirebaseInstallations.getInstance().getId().addOnCompleteListener(task -> Timber.d("Firebase installation id is: %s", task.getResult())); //Adding this line somewhat force pulls IAM to show up.
+        initRemoteConfig();
     }
 
     private void initFirebaseMessagingTopics() {
@@ -149,6 +149,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
     private void initAmplitude() {
         Amplitude.getInstance().initialize(this, getString(R.string.amp)).enableForegroundTracking(getApplication());
     }
+
     private void logPushNotificationIfRequired() {
         if (getIntent().getExtras() != null) {
             String fcmTitle = getIntent().getExtras().getString(Constants.FROM_FCM);
@@ -164,12 +165,37 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
         Hover.setPermissionActivity(Constants.PERM_ACTIVITY, this);
     }
 
-    private Boolean shouldSelfDestructWhenAppVersionExpires(Boolean value) {
-        if (value && SelfDestructActivity.isExpired(this)) {
-            startActivity(new Intent(this, SelfDestructActivity.class));
-            finish();
-            return true;
-        } else return false;
+    private void initRemoteConfig() {
+        FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(3600)
+                .build();
+        mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
+        mFirebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config_default);
+        mFirebaseRemoteConfig.fetchAndActivate()
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        boolean updated = task.getResult();
+                        Timber.e("Config params updated: %s", updated);
+                    }
+                });
+    }
+
+    private Boolean selfDestructWhenAppVersionExpires() {
+        try {
+            int currentVersionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+            int forceUpdateVersionCode = Integer.parseInt(FirebaseRemoteConfig.getInstance().getString("force_update_app_version"));
+
+            if (forceUpdateVersionCode > currentVersionCode) {
+                startActivity(new Intent(this, SelfDestructActivity.class));
+                finish();
+                return true;
+            } else return false;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     private void createNotificationChannel() {
@@ -231,7 +257,8 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
     private void goToMainActivity(String redirectLink) {
         Intent intent = new Intent(this, MainActivity.class);
         try {
-            if (redirectLink != null) intent.putExtra(FRAGMENT_DIRECT, Integer.parseInt(redirectLink));
+            if (redirectLink != null)
+                intent.putExtra(FRAGMENT_DIRECT, Integer.parseInt(redirectLink));
         } catch (NumberFormatException e) {
             Utils.logErrorAndReportToFirebase(TAG, getString(R.string.firebase_fcm_redirect_format_err), e);
         }

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +25,8 @@ import com.squareup.picasso.Target;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import timber.log.Timber;
 
 import static com.hover.stax.utils.Constants.size55;
 
@@ -57,7 +58,6 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
     @Override
     public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
         Channel c = channels.get(position);
-        Log.e("ADAPTER", "getting view for pos " + position);
 
         if (view == null) {
             binding = StaxSpinnerItemWithLogoBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
@@ -120,7 +120,7 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
 
         @Override
         public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-            Log.e("LogTag", e.getMessage());
+            Timber.e(e);
         }
 
         @Override
@@ -136,6 +136,12 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    @Nullable
+    @Override
+    public Channel getItem(int position) {
+        return channels.isEmpty() ? null : channels.get(position);
     }
 
     @Override

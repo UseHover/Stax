@@ -1,5 +1,7 @@
 package com.hover.stax.utils;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -227,6 +229,16 @@ public class Utils {
 		Intent i = new Intent(Intent.ACTION_VIEW);
 		i.setData(Uri.parse(url));
 		ctx.startActivity(i);
+	}
+	public static void openStaxPlaystorePage(Activity activity) {
+		Uri link = Uri.parse(activity.getBaseContext().getString(R.string.stax_market_playstore_link));
+		Intent goToMarket = new Intent(Intent.ACTION_VIEW, link);
+		goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+		try {
+			activity.startActivity(goToMarket);
+		} catch (ActivityNotFoundException e) {
+			activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(activity.getBaseContext().getString(R.string.stax_url_playstore_review_link))));
+		}
 	}
 
 }

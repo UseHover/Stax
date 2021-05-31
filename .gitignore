@@ -22,3 +22,4 @@ app/release
 .cxx
 /hover.sdk
 *.apk
+/app/src/main/res/values/app_keys.xml
