@@ -1,7 +1,6 @@
 package com.hover.stax;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.appsflyer.AppsFlyerConversionListener;
 import com.appsflyer.AppsFlyerLib;
@@ -45,6 +44,7 @@ public class ApplicationInstance extends Application {
             Timber.uprootAll();
         }
     }
+
     private void initAppsFlyer() {
         AppsFlyerConversionListener conversionListener = new AppsFlyerConversionListener() {
             @Override

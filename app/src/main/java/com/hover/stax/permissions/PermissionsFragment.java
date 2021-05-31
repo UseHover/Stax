@@ -11,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import com.amplitude.api.Amplitude;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
@@ -116,7 +115,9 @@ public class PermissionsFragment extends DialogFragment {
         if (dialog != null)
             dialog.animateProgressTo(100);
         getActivity().setResult(RESULT_OK);
-        new Handler(Looper.getMainLooper()).postDelayed(() -> getActivity().finish(), getArguments().getInt(STARTWITH) == ACCESS ? 10 : 800);
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            if (getActivity() != null) getActivity().finish();
+        }, getArguments().getInt(STARTWITH) == ACCESS ? 10 : 800);
     }
 
     private void cancel() {
