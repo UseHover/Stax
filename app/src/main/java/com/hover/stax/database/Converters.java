@@ -8,6 +8,7 @@ import java.util.Arrays;
 public class Converters {
 	@TypeConverter
 	public String fromArray(ArrayList<String> strings) {
+		if (strings == null) return null;
 		StringBuilder string = new StringBuilder();
 		for (String s : strings) string.append(s).append(",");
 		return string.toString();

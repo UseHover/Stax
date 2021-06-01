@@ -33,6 +33,8 @@ import com.hover.stax.utils.paymentLinkCryptography.Encryption;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class DatabaseRepo {
 	private static String TAG = "DatabaseRepo";
 	private ChannelDao channelDao;
@@ -173,6 +175,7 @@ public class DatabaseRepo {
 				if (t == null) {
 					t = new StaxTransaction(intent, a, contact, c);
 					transactionDao.insert(t);
+					t = transactionDao.getTransaction(t.uuid);
 				}
 				t.update(intent, a, contact, c);
 				transactionDao.update(t);
@@ -182,15 +185,11 @@ public class DatabaseRepo {
 		});
 	}
 
-	public StaxContact getContactFromPhone(String phone) {
-		return contactDao.getByPhone(phone);
-	}
-
 	private void updateRequests(StaxTransaction t, StaxContact contact) {
 		if (t.transaction_type.equals(HoverAction.RECEIVE)) {
 			List<Request> rs = getRequests();
 			for (Request r: rs) {
-				if (r.requestee_ids.contains(contact.id)) {
+				if (r.requestee_ids.contains(contact.id) && r.amount.equals(t.amount.toString())) {
 					r.matched_transaction_uuid = t.uuid;
 					update(r);
 				}

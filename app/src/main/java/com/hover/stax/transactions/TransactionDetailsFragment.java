@@ -95,6 +95,7 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
     @SuppressLint("SetTextI18n")
     private void updateDetails(StaxTransaction transaction) {
         binding.transactionDetailsCard.setTitle(transaction.description);
+        binding.detailsRecipientLabel.setText(transaction.transaction_type.equals(HoverAction.RECEIVE) ? R.string.sender_label : R.string.recipient_label);
         binding.detailsAmount.setText(transaction.getDisplayAmount());
         binding.detailsDate.setText(DateUtils.humanFriendlyDate(transaction.initiated_at));
 

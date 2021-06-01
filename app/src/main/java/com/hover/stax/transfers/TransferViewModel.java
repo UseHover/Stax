@@ -74,10 +74,10 @@ public class TransferViewModel extends AbstractFormViewModel {
 			try {
 				String formattedPhone = PhoneHelper.getInternationalNumber(channel.countryAlpha2, r.requester_number);
 				new Thread(() -> {
-					StaxContact contactValue = repo.getContactFromPhone(formattedPhone);
+					StaxContact contactValue = repo.getContactByPhone(formattedPhone);
 					if (contactValue == null) {
 						//Check again without internationalizing number, in case the value is a bank account number;
-						contactValue = repo.getContactFromPhone(r.requester_number);
+						contactValue = repo.getContactByPhone(r.requester_number);
 					}
 					if (contactValue != null) contact.postValue(contactValue);
 				}).start();

@@ -103,6 +103,7 @@ public class StaxTransaction {
     }
 
     public void update(Intent data, HoverAction action, StaxContact contact, Context c) {
+        Timber.e("Updating");
         status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
         updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, initiated_at);
 
@@ -117,7 +118,7 @@ public class StaxTransaction {
     private void parseExtras(HashMap<String, String> extras) {
         if (extras == null) return;
 
-        if (extras.containsKey(HoverAction.AMOUNT_KEY) && amount == null)
+        if (extras.containsKey(HoverAction.AMOUNT_KEY))
             amount = Utils.getAmount(extras.get(HoverAction.AMOUNT_KEY));
         if (extras.containsKey(FEE_KEY))
             fee = Utils.getAmount(extras.get(FEE_KEY));

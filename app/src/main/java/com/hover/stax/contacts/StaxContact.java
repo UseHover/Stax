@@ -149,7 +149,7 @@ public class StaxContact {
 		StaxContact sc = null;
 		if (t != null && t.counterparty_id != null)
 			sc = dr.getContact(t.counterparty_id);
-		if (intent.hasExtra(StaxContact.ID_KEY))
+		else if (intent.hasExtra(StaxContact.ID_KEY))
 			sc = dr.getContact(intent.getStringExtra(StaxContact.ID_KEY));
 
 		if (sc == null)
@@ -192,7 +192,9 @@ public class StaxContact {
 	}
 
 	private static StaxContact getContactByPhoneValue(HashMap<String, String> map, String key, String countryAlpha2, DatabaseRepo dr) {
-		return dr.getContactByPhone(PhoneHelper.getNationalSignificantNumber(map.get(key), countryAlpha2));
+		StaxContact c = dr.getContactByPhone(PhoneHelper.getNationalSignificantNumber(map.get(key), countryAlpha2));
+		if (c == null) c = dr.getContactByPhone(map.get(key));
+		return c;
 	}
 
 	private String getNameFromExtras(Intent i) {
