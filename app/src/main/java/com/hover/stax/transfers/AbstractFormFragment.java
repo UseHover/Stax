@@ -97,7 +97,7 @@ public abstract class AbstractFormFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode != Constants.ADD_SERVICE && resultCode == Activity.RESULT_OK) {
             StaxContact staxContact = new StaxContact(data, getContext());
-            if (staxContact.getPhoneNumber() != null) {
+            if (staxContact.accountNumber != null) {
                 Utils.logAnalyticsEvent(getString(R.string.contact_select_success), getContext());
                 onContactSelected(requestCode, staxContact);
             } else {

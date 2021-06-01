@@ -9,6 +9,7 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.contacts.PhoneHelper;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.requests.Request;
 import com.hover.stax.schedules.Schedule;
@@ -71,12 +72,12 @@ public class TransferViewModel extends AbstractFormViewModel {
 	void setRecipientSmartly(Request r, Channel channel) {
 		if(channel !=null && r!=null) {
 			try {
-				String formattedPhone = StaxContact.getInternationalNumber(channel.countryAlpha2, StaxContact.stripPhone(r.requester_number));
+				String formattedPhone = PhoneHelper.getInternationalNumber(channel.countryAlpha2, r.requester_number);
 				new Thread(() -> {
 					StaxContact contactValue = repo.getContactFromPhone(formattedPhone);
 					if (contactValue == null) {
 						//Check again without internationalizing number, in case the value is a bank account number;
-						contactValue = repo.getContactFromPhone(StaxContact.stripPhone(r.requester_number));
+						contactValue = repo.getContactFromPhone(r.requester_number);
 					}
 					if (contactValue != null) contact.postValue(contactValue);
 				}).start();
@@ -154,7 +155,7 @@ public class TransferViewModel extends AbstractFormViewModel {
 		if (c != null) {
 			new Thread(() -> {
 				c.lastUsedTimestamp = DateUtils.now();
-				repo.insertOrUpdate(c);
+				repo.save(c);
 			}).start();
 		}
 	}

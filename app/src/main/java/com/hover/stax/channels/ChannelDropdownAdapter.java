@@ -58,7 +58,7 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
     @Override
     public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
         Channel c = channels.get(position);
-        Log.e("ADAPTER", "getting view for pos " + position);
+        Timber.e("getting view for pos %s", position);
 
         if (view == null) {
             binding = StaxSpinnerItemWithLogoBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);

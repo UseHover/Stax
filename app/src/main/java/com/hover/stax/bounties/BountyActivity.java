@@ -16,7 +16,7 @@ import com.hover.stax.navigation.AbstractNavigationActivity;
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface;
 import com.hover.stax.utils.Utils;
 
-public class BountyActivity extends AbstractNavigationActivity implements PushNotificationTopicsInterface{
+public class BountyActivity extends AbstractNavigationActivity implements PushNotificationTopicsInterface {
     private static final String TAG = "BountyActivity";
     static final String EMAIL_KEY = "email_for_bounties";
     private static final int BOUNTY_REQUEST = 3000;

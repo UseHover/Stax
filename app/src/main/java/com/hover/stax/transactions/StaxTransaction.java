@@ -23,6 +23,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
+import timber.log.Timber;
+
 @Entity(tableName = "stax_transactions", indices = {@Index(value = {"uuid"}, unique = true)})
 public class StaxTransaction {
 
@@ -40,128 +42,125 @@ public class StaxTransaction {
     @ColumnInfo(name = "action_id")
     public String action_id;
 
-	@NonNull
-	@ColumnInfo(name = "environment", defaultValue = "0")
-	public Integer environment;
+    @NonNull
+    @ColumnInfo(name = "environment", defaultValue = "0")
+    public Integer environment;
 
-	@NonNull
-	@ColumnInfo(name = "transaction_type")
-	public String transaction_type;
+    @NonNull
+    @ColumnInfo(name = "transaction_type")
+    public String transaction_type;
 
-	@NonNull
-	@ColumnInfo(name = "channel_id")
-	public int channel_id;
+    @NonNull
+    @ColumnInfo(name = "channel_id")
+    public int channel_id;
 
-	@NonNull
-	@ColumnInfo(name = "status", defaultValue = Transaction.PENDING)
-	public String status;
+    @NonNull
+    @ColumnInfo(name = "status", defaultValue = Transaction.PENDING)
+    public String status;
 
-	@NonNull
-	@ColumnInfo(name = "initiated_at", defaultValue = "CURRENT_TIMESTAMP")
-	public Long initiated_at;
+    @NonNull
+    @ColumnInfo(name = "initiated_at", defaultValue = "CURRENT_TIMESTAMP")
+    public Long initiated_at;
 
-	@NonNull
-	@ColumnInfo(name = "updated_at", defaultValue = "CURRENT_TIMESTAMP")
-	public Long updated_at;
+    @NonNull
+    @ColumnInfo(name = "updated_at", defaultValue = "CURRENT_TIMESTAMP")
+    public Long updated_at;
 
-	@ColumnInfo(name = "description")
-	public String description;
+    @ColumnInfo(name = "description")
+    public String description;
 
-	@ColumnInfo(name = "amount")
-	public Double amount;
+    @ColumnInfo(name = "amount")
+    public Double amount;
 
-	@ColumnInfo(name = "fee")
-	public Double fee;
+    @ColumnInfo(name = "fee")
+    public Double fee;
 
-	@ColumnInfo(name = "confirm_code")
-	public String confirm_code;
+    @ColumnInfo(name = "confirm_code")
+    public String confirm_code;
 
-	@ColumnInfo(name = "recipient_id")
-	public String counterparty_id;
+    @ColumnInfo(name = "recipient_id")
+    public String counterparty_id;
 
 
-	public StaxTransaction() {}
+    public StaxTransaction() {}
 
-	public StaxTransaction(Intent data, HoverAction action, StaxContact contact, Context c) {
-		if (data.hasExtra(TransactionContract.COLUMN_UUID) && data.getStringExtra(TransactionContract.COLUMN_UUID) != null) {
-			uuid = data.getStringExtra(TransactionContract.COLUMN_UUID);
-			action_id = data.getStringExtra(TransactionContract.COLUMN_ACTION_ID);
-			transaction_type = data.getStringExtra(TransactionContract.COLUMN_TYPE);
-			environment = data.getIntExtra(TransactionContract.COLUMN_ENVIRONMENT, 0);
-			channel_id = data.getIntExtra(TransactionContract.COLUMN_CHANNEL_ID, -1);
-			status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
-			initiated_at = data.getLongExtra(TransactionContract.COLUMN_REQUEST_TIMESTAMP, DateUtils.now());
-			updated_at = initiated_at;
+    public StaxTransaction(Intent data, HoverAction action, StaxContact contact, Context c) {
+        if (data.hasExtra(TransactionContract.COLUMN_UUID) && data.getStringExtra(TransactionContract.COLUMN_UUID) != null) {
+            uuid = data.getStringExtra(TransactionContract.COLUMN_UUID);
+            action_id = data.getStringExtra(TransactionContract.COLUMN_ACTION_ID);
+            transaction_type = data.getStringExtra(TransactionContract.COLUMN_TYPE);
+            environment = data.getIntExtra(TransactionContract.COLUMN_ENVIRONMENT, 0);
+            channel_id = data.getIntExtra(TransactionContract.COLUMN_CHANNEL_ID, -1);
+            status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
+            initiated_at = data.getLongExtra(TransactionContract.COLUMN_REQUEST_TIMESTAMP, DateUtils.now());
+            updated_at = initiated_at;
 
-			HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS);
-			if (extras != null) {
-				if (extras.containsKey(HoverAction.AMOUNT_KEY))
-					amount = Utils.getAmount((extras.get(HoverAction.AMOUNT_KEY)));
-//				check for phone, account, and other keys and save to contact
-			}
-			if (data.hasExtra(StaxContact.ID_KEY))
-				counterparty_id = data.getStringExtra(StaxContact.ID_KEY);
+            counterparty_id = contact.id;
+            description = generateDescription(action, contact, c);
+            parseExtras((HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS));
+            Timber.v("creating transaction with uuid: %s", uuid);
+        }
+    }
 
-			Log.e("Transaction", "creating transaction with uuid: " + uuid);
+    public void update(Intent data, HoverAction action, StaxContact contact, Context c) {
+        status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
+        updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, initiated_at);
 
-			if (transaction_type != null) description = generateDescription(action, contact, c);
-		}
-	}
+        parseExtras((HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES));
 
-	public void update(Intent data, HoverAction action, StaxContact contact, Context c) {
-		status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
-		updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, initiated_at);
+        if (counterparty_id == null)
+            counterparty_id = contact.id;
 
-		HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES);
-		if (extras != null) {
-			if (extras.containsKey(FEE_KEY))
-				fee = Utils.getAmount(extras.get(FEE_KEY));
-			if (extras.containsKey(CONFIRM_CODE_KEY))
-				confirm_code = extras.get(CONFIRM_CODE_KEY);
-		}
+        description = generateDescription(action, contact, c);
+    }
 
-		if (data.hasExtra(StaxContact.ID_KEY))
-			counterparty_id = data.getStringExtra(StaxContact.ID_KEY);
+    private void parseExtras(HashMap<String, String> extras) {
+        if (extras == null) return;
 
-		if (contact != null)
-			description = generateDescription(action, contact, c);
-	}
+        if (extras.containsKey(HoverAction.AMOUNT_KEY) && amount == null)
+            amount = Utils.getAmount(extras.get(HoverAction.AMOUNT_KEY));
+        if (extras.containsKey(FEE_KEY))
+            fee = Utils.getAmount(extras.get(FEE_KEY));
+        if (extras.containsKey(CONFIRM_CODE_KEY))
+            confirm_code = extras.get(CONFIRM_CODE_KEY);
+    }
 
-	private String generateDescription(HoverAction action, StaxContact contact, Context c) {
-		if (isRecorded())
-			return c.getString(R.string.descrip_recorded, action.from_institution_name);
+    private String generateDescription(HoverAction action, StaxContact contact, Context c) {
+        if (isRecorded())
+            return c.getString(R.string.descrip_recorded, action.from_institution_name);
 
-		String recipientStr = contact != null ? contact.shortName() : "myself";
-		switch (transaction_type) {
-			case HoverAction.AIRTIME:
-				return c.getString(R.string.descrip_airtime_sent, action.from_institution_name, recipientStr);
-			case HoverAction.P2P:
-				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, recipientStr);
-			case HoverAction.ME2ME:
-				return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, action.to_institution_name);
-			case HoverAction.RECEIVE:
-				return c.getString(R.string.descrip_transfer_received, recipientStr);
-			case HoverAction.C2B:
-				return c.getString(R.string.descrip_bill_paid, action.to_institution_name);
-			default:
-				return "Other";
-		}
-	}
+        switch (transaction_type) {
+            case HoverAction.AIRTIME:
+                return c.getString(R.string.descrip_airtime_sent, action.from_institution_name, contact == null ? c.getString(R.string.self_choice) : contact.shortName());
+            case HoverAction.P2P:
+                return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, contact.shortName());
+            case HoverAction.ME2ME:
+                return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, action.to_institution_name);
+            case HoverAction.C2B:
+                return c.getString(R.string.descrip_bill_paid, action.to_institution_name);
+            case HoverAction.RECEIVE:
+                return c.getString(R.string.descrip_transfer_received, contact.shortName());
+            default:
+                return "Other";
+        }
+    }
 
-	public boolean isRecorded() { return environment == HoverParameters.MANUAL_ENV; }
+    public boolean isRecorded() {
+        return environment == HoverParameters.MANUAL_ENV;
+    }
 
-	public String getDisplayAmount() {
-		String a = Utils.formatAmount(amount);
-		if (!transaction_type.equals(HoverAction.RECEIVE))
-			a = "-" + a;
-		else if (isRecorded())
-			return "\\u2014";
-		return a;
-	}
+    public String getDisplayAmount() {
+        String a = Utils.formatAmount(amount);
+        if (!transaction_type.equals(HoverAction.RECEIVE))
+            a = "-" + a;
+        else if (isRecorded())
+            return "\\u2014";
+        return a;
+    }
 
-	@NotNull
-	@Override
-	public String toString() {
-		return description;
-	}
+    @NotNull
+    @Override
+    public String toString() {
+        return description;
+    }
 }

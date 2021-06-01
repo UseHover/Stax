@@ -70,11 +70,13 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
     }
 
     private void setDestinationChangedListener(BottomNavigationView nav) {
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (controller.getGraph().getId() == R.id.bounty_navigation) {
-                nav.getMenu().findItem(R.id.navigation_settings).setChecked(true);
-            }
-        });
+        if (navController != null) {
+            navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+                if (controller.getGraph().getId() == R.id.bounty_navigation) {
+                    nav.getMenu().findItem(R.id.navigation_settings).setChecked(true);
+                }
+            });
+        }
     }
 
     protected NavController getNavController() {

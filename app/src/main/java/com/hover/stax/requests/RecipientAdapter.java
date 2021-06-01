@@ -49,7 +49,7 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
         ci.setRecent(allContacts, ci.getContext());
 
 
-        if (recipients != null && recipients.size() > position && recipients.get(position).getPhoneNumber() != null)
+        if (recipients != null && recipients.size() > position && recipients.get(position).accountNumber != null)
             ci.setText(recipients.get(position).toString(), false);
 
         ci.addTextChangedListener(new TextWatcher() {
