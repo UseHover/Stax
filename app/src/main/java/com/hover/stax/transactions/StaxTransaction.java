@@ -81,6 +81,9 @@ public class StaxTransaction {
     @ColumnInfo(name = "recipient_id")
     public String counterparty_id;
 
+    // FIXME: DO not use! This is covered by contact model. No easy way to drop column yet, but room 2.4 adds an easy way. Currently alpha, use once it is stable
+    @ColumnInfo(name = "counterparty")
+    public String counterparty;
 
     public StaxTransaction() {}
 

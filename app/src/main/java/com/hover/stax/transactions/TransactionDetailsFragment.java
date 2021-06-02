@@ -115,7 +115,7 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
 
     private void showActionDetails(HoverAction action) {
         if (action != null) {
-            binding.detailsNetwork.setText(action.network_name);
+            binding.detailsNetwork.setText(action.from_institution_name);
             if (viewModel.getTransaction().getValue() != null && viewModel.getTransaction().getValue().isRecorded())
                 updateNotificationCard(action);
         }
