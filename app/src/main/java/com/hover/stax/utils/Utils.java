@@ -95,6 +95,7 @@ public class Utils {
 	}
 
 	public static String formatAmount(String number) {
+		if(number.equals("0")) return "0,000";
 		try {
 			return formatAmount(getAmount(number));
 		} catch (Exception e) {

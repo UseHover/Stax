@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_13"
+            android:paddingStart="@dimen/margin_13"
+            android:paddingEnd="0dp"
+            app:cardBackgroundColor="@color/cardViewColor"
+            app:cardCornerRadius="@dimen/radius"
+            app:cardPreventCornerOverlap="false"
+            app:cardElevation="8dp">
+
+
+
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="@dimen/margin_65"
     android:orientation="horizontal"
-    android:paddingHorizontal="@dimen/margin_13">
+        android:background="?selectableItemBackground"
+        android:paddingStart="@dimen/margin_13"
+        android:paddingEnd="0dp">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+            android:layout_weight="1"
         android:layout_gravity="center_vertical"
-        android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
@@ -26,17 +42,6 @@
             android:textSize="@dimen/text_16" />
 
         <TextView
-            android:id="@+id/balance_subtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-8dp"
-            android:drawablePadding="@dimen/margin_5"
-            android:fontFamily="font-normal"
-            android:textColor="@color/offWhite"
-            android:textSize="@dimen/text_13"
-            app:drawableStartCompat="@drawable/ic_refresh_white_13dp" />
-
-        <TextView
             android:id="@+id/channel_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,16 +50,44 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/balance_amount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:fontFamily="font-normal"
-        android:gravity="center_vertical"
-        android:textColor="@color/offWhite"
-        android:textSize="@dimen/text_21"
-        app:drawableEndCompat="@drawable/ic_remove" />
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:paddingEnd="@dimen/margin_13"
+            android:orientation="vertical">
+        <TextView
+                android:id="@+id/balance_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:gravity="end"
+                android:fontFamily="font-normal"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_21"
+                app:drawableEndCompat="@drawable/ic_remove" />
+
+        <TextView
+                android:id="@+id/balance_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="font-normal"
+                android:layout_marginTop="-8dp"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_13"
+                />
+    </LinearLayout>
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="?selectableItemBackground"
+            android:id="@+id/balance_refresh_icon"
+            android:padding="@dimen/margin_13"
+            app:srcCompat="@drawable/ic_refresh_white_24dp"/>
 
 
 </LinearLayout>
+</androidx.cardview.widget.CardView>
