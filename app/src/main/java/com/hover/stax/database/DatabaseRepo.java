@@ -33,8 +33,6 @@ import com.hover.stax.utils.paymentLinkCryptography.Encryption;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-import timber.log.Timber;
-
 public class DatabaseRepo {
 	private static String TAG = "DatabaseRepo";
 	private ChannelDao channelDao;
