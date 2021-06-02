@@ -94,9 +94,10 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
         TextView balanceTitle = binding.homeCardBalances.balanceHeaderTitleId;
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(status ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_off, 0, 0, 0);
         balanceAdapter.showBalance(status);
+        balancesVisible = status;
     }
     private void updateServices(List<Channel> channels) {
-        toggleLink(channels != null && channels.size() > 1);
+        toggleLink(channels != null && !Channel.hasDummy(channels) && channels.size() > 1);
         addDummyChannelsIfRequired(channels);
         balanceAdapter = new BalanceAdapter(channels, (MainActivity) getActivity());
         balancesRecyclerView.setAdapter(balanceAdapter);

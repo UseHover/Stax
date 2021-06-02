@@ -77,6 +77,18 @@ public class Channel implements Comparable<Channel> {
             }
         return  result;
     }
+    public static boolean hasDummy(List<Channel> channels) {
+        if(channels == null) return true;
+
+        boolean result = false;
+        for(Channel channel : channels) {
+            if(channel.id == DUMMY){
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
 
     @PrimaryKey
     @NonNull
