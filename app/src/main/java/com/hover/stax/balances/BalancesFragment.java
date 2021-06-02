@@ -75,7 +75,6 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
     private void setUpLinkNewAccount() {
         addChannelLink = binding.homeCardBalances.newAccountLink;
         addChannelLink.setOnClickListener(v -> navigateToChannelsListFragment(NavHostFragment.findNavController(this), false));
-
     }
 
     private void initBalanceCard() {
@@ -98,14 +97,14 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
     }
     private void updateServices(List<Channel> channels) {
         toggleLink(channels != null && channels.size() > 1);
-        addDummyChannels(channels);
+        addDummyChannelsIfRequired(channels);
         balanceAdapter = new BalanceAdapter(channels, (MainActivity) getActivity());
         balancesRecyclerView.setAdapter(balanceAdapter);
 
         if(Channel.areAllDummies(channels)) showBalance(true);
     }
 
-    private void addDummyChannels(@Nullable List<Channel> channels) {
+    private void addDummyChannelsIfRequired(@Nullable List<Channel> channels) {
         if(channels !=null && channels.size() == 0) {
             channels.add(new Channel().dummy(getString(R.string.your_main_account), GREEN_BG));
             channels.add(new Channel().dummy(getString(R.string.your_other_account), BLUE_BG));
