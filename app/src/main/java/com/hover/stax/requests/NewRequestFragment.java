@@ -227,9 +227,9 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
     }
   
   	private void updatePushNotifGroupStatus() {
-		joinByRequestMoneyNotifGroup(requireContext());
-		stopReceivingNoActivityTopicNotifGroup(requireContext());
-		stopReceivingNoRequestMoneyNotifGroup(requireContext());
+		joinRequestMoneyGroup(requireContext());
+		leaveNoUsageGroup(requireContext());
+		leaveNoRequestMoneyGroup(requireContext());
 	}
 
     private boolean validates() {

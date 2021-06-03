@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 
-import com.amplitude.api.Amplitude;
 import com.appsflyer.AppsFlyerLib;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.HoverParameters;
@@ -17,7 +16,7 @@ import com.hover.stax.navigation.AbstractNavigationActivity;
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface;
 import com.hover.stax.utils.Utils;
 
-public class BountyActivity extends AbstractNavigationActivity implements PushNotificationTopicsInterface{
+public class BountyActivity extends AbstractNavigationActivity implements PushNotificationTopicsInterface {
     private static final String TAG = "BountyActivity";
     static final String EMAIL_KEY = "email_for_bounties";
     private static final int BOUNTY_REQUEST = 3000;
@@ -55,8 +54,8 @@ public class BountyActivity extends AbstractNavigationActivity implements PushNo
     }
   
   private void updatePushNotifGroupStatus(HoverAction a) {
-		joinAllBountiesTopicNotifGroup(this);
-		joinByBountyCountryTopicNotifGroup(a.country_alpha2.toUpperCase(), this);
+		joinAllBountiesGroup(this);
+		joinBountyCountryGroup(a.country_alpha2.toUpperCase(), this);
 
 	}
 

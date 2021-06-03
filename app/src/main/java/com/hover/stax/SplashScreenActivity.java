@@ -99,8 +99,8 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
 
     private void initFirebaseMessagingTopics() {
         joinAllNotifications(this);
-        joinByNoActivityTopicNotifGroup(this);
-        joinByNoRequestMoneyNotifGroup(this);
+        joinNoUsageGroup(this);
+        joinNoRequestMoneyGroup(this);
     }
 
     private void blurBackground() {
