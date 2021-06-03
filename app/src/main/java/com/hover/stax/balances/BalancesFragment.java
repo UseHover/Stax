@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,20 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.channels.ChannelDropdown;
-import com.hover.stax.channels.ChannelsViewModel;
 import com.hover.stax.databinding.FragmentBalanceBinding;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.navigation.NavigationInterface;
-import com.hover.stax.requests.Request;
-import com.hover.stax.schedules.Schedule;
-import com.hover.stax.transactions.TransactionHistoryAdapter;
-import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.utils.UIHelper;
-import com.hover.stax.utils.Utils;
-import com.hover.stax.views.StaxCardView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static android.view.View.GONE;
@@ -41,7 +30,6 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
     final public static String TAG = "BalanceFragment";
     final private  String GREEN_BG = "#46E6CC";
     final private  String BLUE_BG = "#04CCFC";
-
 
     private BalancesViewModel balancesViewModel;
     private BalanceAdapter balanceAdapter;

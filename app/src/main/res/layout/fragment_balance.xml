@@ -9,9 +9,7 @@
         tools:context=".balances.BalancesFragment">
 
     <include
-
             android:id="@+id/homeCardBalances"
             layout="@layout/home_card_balances" />
-
 
 </FrameLayout>
