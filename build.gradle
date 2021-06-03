@@ -16,6 +16,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        jcenter()
         maven { url 'https://jitpack.io' }
         maven { url "http://maven.usehover.com/releases" }
         maven { url "http://maven.usehover.com/snapshots" }
