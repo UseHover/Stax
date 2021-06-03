@@ -27,6 +27,7 @@ import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxDialog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
@@ -63,8 +64,25 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     }
 
     private void forceUserToBeOnline() {
-        if (Utils.isNetworkAvailable(requireContext()))  updateChannelsWorker();
+        if (Utils.isNetworkAvailable(requireContext())) {
+            updateActionConfig();
+            updateChannelsWorker();
+        }
         else showOfflineDialog();
+    }
+
+    private void updateActionConfig() {
+        Hover.updateActionConfigs(new Hover.DownloadListener() {
+            @Override
+            public void onError(String s) {
+                forceUserToBeOnline();
+            }
+
+            @Override
+            public void onSuccess(ArrayList<HoverAction> arrayList) {
+
+            }
+        }, requireContext());
     }
 
     private void updateChannelsWorker() {
@@ -72,6 +90,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.REPLACE, UpdateChannelsWorker.makeWork()).enqueue();
         wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.REPLACE, UpdateChannelsWorker.makeToil());
     }
+
     private void showOfflineDialog() {
         new StaxDialog(requireActivity())
                 .setDialogTitle(R.string.internet_required)
