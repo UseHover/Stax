@@ -68,10 +68,10 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
     private void initBalanceCard() {
         TextView balanceTitle = binding.homeCardBalances.balanceHeaderTitleId;
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(balancesVisible ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_off, 0, 0, 0);
-        balanceTitle.setOnClickListener(v -> {
-            balancesVisible = !balancesVisible;
-            showBalance(balancesVisible);
-        });
+//        balanceTitle.setOnClickListener(v -> {
+//            balancesVisible = !balancesVisible;
+//            showBalance(balancesVisible);
+//        });
 
         balancesRecyclerView = binding.homeCardBalances.balancesRecyclerView;
         balancesRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
