@@ -10,12 +10,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.WorkManager;
 
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.countries.CountryAdapter;
 import com.hover.stax.databinding.FragmentBountyListBinding;
 import com.hover.stax.navigation.NavigationInterface;
@@ -50,6 +54,36 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         initCountryDropdown();
         initRecyclerView();
         startObservers();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        forceUserToBeOnline();
+    }
+
+    private void forceUserToBeOnline() {
+        if (Utils.isNetworkAvailable(requireContext()))  updateChannelsWorker();
+        else showOfflineDialog();
+    }
+
+    private void updateChannelsWorker() {
+        WorkManager wm = WorkManager.getInstance(requireContext());
+        wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.REPLACE, UpdateChannelsWorker.makeWork()).enqueue();
+        wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.REPLACE, UpdateChannelsWorker.makeToil());
+    }
+    private void showOfflineDialog() {
+        new StaxDialog(requireActivity())
+                .setDialogTitle(R.string.internet_required)
+                .setDialogMessage(R.string.internet_required_bounty_desc)
+                .setPosButton(R.string.try_again, view-> {
+                    forceUserToBeOnline();
+                })
+                .setNegButton(R.string.btn_cancel, view -> {
+                    requireActivity().finish();
+                })
+                .makeSticky()
+                .showIt();
     }
 
     public void initCountryDropdown() {

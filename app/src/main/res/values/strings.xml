@@ -359,6 +359,10 @@
 	<string name="bounty_submitted_successfully">Bounty submitted successfully</string>
 	<string name="language">Language</string>
 	<string name="bounty">Bounty</string>
+	<string name="internet_required">Internet required</string>
+	<string name="internet_required_bounty_desc">To partake in a bounty, you need to be connected to the internet. </string>
+	<string name="try_again">Try again</string>
+
 
 
 
