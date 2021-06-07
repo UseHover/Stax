@@ -8,7 +8,7 @@
         app:layoutDescription="@xml/home_card_balances_scene">
 
     <androidx.cardview.widget.CardView
-            android:id="@+id/airtime"
+            android:id="@+id/balance_header_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_13"
@@ -49,7 +49,7 @@
             app:cardCornerRadius="@dimen/radius"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/airtime">
+            app:layout_constraintTop_toBottomOf="@id/balance_header_card">
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/balances_recyclerView"

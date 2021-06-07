@@ -68,8 +68,7 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
         balanceTitle = binding.homeCardBalances.balanceHeaderTitleId;
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(balancesVisible ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_off, 0, 0, 0);
         balanceTitle.setOnClickListener(v -> {
-            balancesVisible = !balancesVisible;
-            showBalance(balancesVisible);
+            showBalance(!balancesVisible);
         });
 
         balancesRecyclerView = binding.homeCardBalances.balancesRecyclerView;
@@ -79,12 +78,11 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
 
     private void showBalance(boolean status) {
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(status ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_off, 0, 0, 0);
-//        balanceAdapter.showBalance(status);
 
         if (status) {
-            binding.homeCardBalances.balancesMl.transitionToEnd();
-        } else {
             binding.homeCardBalances.balancesMl.transitionToStart();
+        } else {
+            binding.homeCardBalances.balancesMl.transitionToEnd();
         }
 
         balancesVisible = status;
@@ -95,6 +93,7 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
         addDummyChannelsIfRequired(channels);
         BalanceAdapter balanceAdapter = new BalanceAdapter(channels, (MainActivity) getActivity());
         balancesRecyclerView.setAdapter(balanceAdapter);
+        balanceAdapter.showBalance(true);
 
         if (Channel.areAllDummies(channels)) showBalance(true);
     }
