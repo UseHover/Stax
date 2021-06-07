@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,7 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
     final public static String TAG = "BalanceFragment";
     final private String GREEN_BG = "#46E6CC";
     final private String BLUE_BG = "#04CCFC";
+    private boolean SHOW_ADD_ANOTHER_ACCOUNT = false;
 
     private BalancesViewModel balancesViewModel;
 
@@ -77,20 +79,20 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
     }
 
     private void showBalanceCards(boolean status) {
-        toggleLink(status);
+        toggleLink(!status);
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(status ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_off, 0, 0, 0);
 
         if (status) {
-            binding.homeCardBalances.balancesMl.transitionToStart();
-        } else {
             binding.homeCardBalances.balancesMl.transitionToEnd();
+        } else {
+            binding.homeCardBalances.balancesMl.transitionToStart();
         }
 
         balancesVisible = status;
     }
 
     private void updateServices(List<Channel> channels) {
-        toggleLink(channels != null && !Channel.hasDummy(channels) && channels.size() > 1);
+        SHOW_ADD_ANOTHER_ACCOUNT = channels != null && !Channel.hasDummy(channels) && channels.size() > 1;
         addDummyChannelsIfRequired(channels);
         BalanceAdapter balanceAdapter = new BalanceAdapter(channels, (MainActivity) getActivity());
         balancesRecyclerView.setAdapter(balanceAdapter);
@@ -108,7 +110,9 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
     }
 
     public void toggleLink(boolean show) {
-        addChannelLink.setVisibility(show ? VISIBLE : GONE);
+        if(SHOW_ADD_ANOTHER_ACCOUNT) {
+            addChannelLink.setVisibility(show ? VISIBLE : GONE);
+        }
     }
 
     @Override
