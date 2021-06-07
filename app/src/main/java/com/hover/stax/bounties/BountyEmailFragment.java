@@ -10,12 +10,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.databinding.FragmentBountyEmailBinding;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.AbstractStatefulInput;
+import com.hover.stax.views.StaxDialog;
 import com.hover.stax.views.StaxTextInputLayout;
 
 import java.lang.ref.WeakReference;
@@ -48,14 +48,27 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
 
     @Override
     public void onClick(View v) {
-        Utils.logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext());
-        if (validates()) {
-            emailInput.setEnabled(false);
-            new BountyAsyncCaller(new WeakReference<>(requireContext()), this).execute(emailInput.getText());
-            emailInput.setState(getString(R.string.bounty_uploading_email), AbstractStatefulInput.INFO);
+        if (Utils.isNetworkAvailable(requireActivity())) {
+            Utils.logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext());
+            if (validates()) {
+                emailInput.setEnabled(false);
+                new BountyAsyncCaller(new WeakReference<>(requireContext()), this).execute(emailInput.getText());
+                emailInput.setState(getString(R.string.bounty_uploading_email), AbstractStatefulInput.INFO);
+            } else {
+                emailInput.setState(getString(R.string.bounty_email_error), AbstractStatefulInput.ERROR);
+            }
         } else {
-            emailInput.setState(getString(R.string.bounty_email_error), AbstractStatefulInput.ERROR);
+            showOfflineDialog();
         }
+    }
+
+    private void showOfflineDialog() {
+        new StaxDialog(requireActivity())
+                .setDialogTitle(R.string.internet_required)
+                .setDialogMessage(R.string.internet_required_bounty_desc)
+                .setPosButton(R.string.btn_ok, null)
+                .makeSticky()
+                .showIt();
     }
 
     private boolean validates() {
