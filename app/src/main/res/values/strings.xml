@@ -14,6 +14,7 @@
 	<string name="nav_home">Home</string>
 	<string name="nav_balance_and_history">Balance and history</string>
 	<string name="nav_balances">Balances</string>
+	<string name="nav_get_paid">Get paid</string>
 	<string name="nav_link_account">Link an account</string>
 	<string name="nav_airtime">Buy Airtime</string>
 	<string name="nav_transfer">Transfer</string>
@@ -74,6 +75,10 @@
 	<string name="refresh_balances">Refresh balances</string>
 	<string name="refresh">Refresh</string>
 	<string name="refresh_balance_error">Add an account to check your balance.</string>
+
+	<!-- ADD ACCOUNT -->
+	<string name="your_accounts">Your accounts</string>
+	<string name="add_an_account">Add an account</string>
 
 	<!-- Permissions -->
 	<string name="permissions_title">Permissions needed</string>

@@ -14,7 +14,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.amplitude.api.Amplitude;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
@@ -32,7 +31,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChannelDropdownViewModel extends AndroidViewModel implements ChannelDropdown.HighlightListener, PushNotificationTopicsInterface {
+public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdown.HighlightListener, PushNotificationTopicsInterface {
     public final static String TAG = "ChannelDropdownVM";
 
     private DatabaseRepo repo;
@@ -47,7 +46,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
     private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
     private MediatorLiveData<List<HoverAction>> channelActions = new MediatorLiveData<>();
 
-    public ChannelDropdownViewModel(Application application) {
+    public ChannelsViewModel(Application application) {
         super(application);
         repo = new DatabaseRepo(application);
         type.setValue(HoverAction.BALANCE);
