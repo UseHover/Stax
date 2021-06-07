@@ -80,7 +80,7 @@ public class MainActivity extends AbstractNavigationActivity implements
                 navigateToTransferActivity(HoverAction.AIRTIME, false, intent, this);
             }
             else if(deepLinkRoute.contains(getString(R.string.deeplink_linkaccount))) {
-                navigateToLinkAccountFragment(getNavController());
+                navigateToChannelsListFragment(getNavController(), false);
             }
             else if(deepLinkRoute.contains(getString(R.string.deeplink_balance)) || deepLinkRoute.contains(getString(R.string.deeplink_history))) {
                 navigateToBalanceFragment(getNavController());

@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.channels.ChannelDropdownViewModel;
+import com.hover.stax.channels.ChannelsViewModel;
 import com.hover.stax.contacts.ContactInput;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.databinding.FragmentRequestBinding;
@@ -51,7 +51,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        channelDropdownViewModel = new ViewModelProvider(requireActivity()).get(ChannelDropdownViewModel.class);
+        channelsViewModel = new ViewModelProvider(requireActivity()).get(ChannelsViewModel.class);
         abstractFormViewModel = new ViewModelProvider(requireActivity()).get(NewRequestViewModel.class);
         requestViewModel = (NewRequestViewModel) abstractFormViewModel;
 
@@ -88,7 +88,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
     @Override
     protected void startObservers(View root) {
         super.startObservers(root);
-        channelDropdownViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> {
+        channelsViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> {
             requestViewModel.setActiveChannel(channel);
             accountValue.setTitle(channel.toString());
         });
@@ -233,7 +233,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 	}
 
     private boolean validates() {
-        String channelError = channelDropdownViewModel.errorCheck();
+        String channelError = channelsViewModel.errorCheck();
         channelDropdown.setState(channelError, channelError == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.ERROR);
         String requesterAcctNoError = requestViewModel.requesterAcctNoError();
         requesterNumberInput.setState(requesterAcctNoError, requesterAcctNoError == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.ERROR);
