@@ -361,6 +361,10 @@
 	<string name="bounty_submitted_successfully">Bounty submitted successfully</string>
 	<string name="language">Language</string>
 	<string name="bounty">Bounty</string>
+	<string name="internet_required">Internet required</string>
+	<string name="internet_required_bounty_desc">You need a data or Wifi connection to map USSD flows. Please connect and try again.</string>
+	<string name="try_again">Try again</string>
+
 
 
 

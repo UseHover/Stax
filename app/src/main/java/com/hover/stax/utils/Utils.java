@@ -9,8 +9,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -239,6 +241,33 @@ public class Utils {
 		} catch (ActivityNotFoundException e) {
 			activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(activity.getBaseContext().getString(R.string.stax_url_playstore_review_link))));
 		}
+	}
+
+	public static boolean isNetworkAvailable( Context context) {
+		if (context == null) return false;
+		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+		if (connectivityManager != null) {
+
+			if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+				NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
+				if (capabilities != null) {
+					if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+						return true;
+					} else return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
+				} else {
+					try {
+						NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+						if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+							return true;
+						}
+					} catch (Exception e) {
+						Timber.e(e);
+					}
+				}
+			}
+			return false;
+		} else return false;
 	}
 
 }
