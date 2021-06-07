@@ -28,13 +28,13 @@ import static android.view.View.VISIBLE;
 
 public class BalancesFragment extends Fragment implements NavigationInterface {
     final public static String TAG = "BalanceFragment";
-    final private  String GREEN_BG = "#46E6CC";
-    final private  String BLUE_BG = "#04CCFC";
+    final private String GREEN_BG = "#46E6CC";
+    final private String BLUE_BG = "#04CCFC";
 
     private BalancesViewModel balancesViewModel;
-    private BalanceAdapter balanceAdapter;
 
     private CardView addChannelLink;
+    private TextView balanceTitle;
     private boolean balancesVisible = false;
 
     private RecyclerView balancesRecyclerView;
@@ -52,7 +52,6 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
         super.onViewCreated(view, savedInstanceState);
         setUpBalances();
         setUpLinkNewAccount();
-
     }
 
     private void setUpBalances() {
@@ -66,12 +65,12 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
     }
 
     private void initBalanceCard() {
-        TextView balanceTitle = binding.homeCardBalances.balanceHeaderTitleId;
+        balanceTitle = binding.homeCardBalances.balanceHeaderTitleId;
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(balancesVisible ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_off, 0, 0, 0);
-//        balanceTitle.setOnClickListener(v -> {
-//            balancesVisible = !balancesVisible;
-//            showBalance(balancesVisible);
-//        });
+        balanceTitle.setOnClickListener(v -> {
+            balancesVisible = !balancesVisible;
+            showBalance(balancesVisible);
+        });
 
         balancesRecyclerView = binding.homeCardBalances.balancesRecyclerView;
         balancesRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
@@ -79,26 +78,33 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
     }
 
     private void showBalance(boolean status) {
-        TextView balanceTitle = binding.homeCardBalances.balanceHeaderTitleId;
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(status ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_off, 0, 0, 0);
-        balanceAdapter.showBalance(status);
+//        balanceAdapter.showBalance(status);
+
+        if (status) {
+            binding.homeCardBalances.balancesMl.transitionToEnd();
+        } else {
+            binding.homeCardBalances.balancesMl.transitionToStart();
+        }
+
         balancesVisible = status;
     }
+
     private void updateServices(List<Channel> channels) {
         toggleLink(channels != null && !Channel.hasDummy(channels) && channels.size() > 1);
         addDummyChannelsIfRequired(channels);
-        balanceAdapter = new BalanceAdapter(channels, (MainActivity) getActivity());
+        BalanceAdapter balanceAdapter = new BalanceAdapter(channels, (MainActivity) getActivity());
         balancesRecyclerView.setAdapter(balanceAdapter);
 
-        if(Channel.areAllDummies(channels)) showBalance(true);
+        if (Channel.areAllDummies(channels)) showBalance(true);
     }
 
     private void addDummyChannelsIfRequired(@Nullable List<Channel> channels) {
-        if(channels !=null && channels.size() == 0) {
+        if (channels != null && channels.size() == 0) {
             channels.add(new Channel().dummy(getString(R.string.your_main_account), GREEN_BG));
             channels.add(new Channel().dummy(getString(R.string.your_other_account), BLUE_BG));
-        }
-        else if (channels !=null && channels.size()  == 1) channels.add(new Channel().dummy(getString(R.string.your_other_account), BLUE_BG));
+        } else if (channels != null && channels.size() == 1)
+            channels.add(new Channel().dummy(getString(R.string.your_other_account), BLUE_BG));
     }
 
     public void toggleLink(boolean show) {

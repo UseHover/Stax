@@ -4,12 +4,12 @@
 
     <ConstraintSet android:id="@+id/start">
         <Constraint
-                android:id="@+id/balances_recyclerView"
+                android:id="@+id/balances_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_13"
-                android:layout_marginEnd="@dimen/margin_13"
                 android:layout_marginTop="@dimen/margin_13"
+                android:layout_marginEnd="@dimen/margin_13"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/airtime" />
@@ -17,23 +17,24 @@
 
     <ConstraintSet android:id="@+id/end">
         <Constraint
-                android:id="@id/balances_recyclerView"
+                android:id="@id/balances_card"
                 android:layout_width="match_parent"
-                android:layout_height="10dp"
+                android:layout_height="65dp"
                 android:layout_marginStart="@dimen/margin_13"
                 android:layout_marginEnd="@dimen/margin_13"
-                android:layout_marginTop="@dimen/margin_5"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/airtime" />
+                app:layout_constraintTop_toTopOf="@id/airtime">
+
+            <CustomAttribute
+                    app:attributeName="radius"
+                    app:customDimension="5dp" />
+
+        </Constraint>
     </ConstraintSet>
 
     <Transition
             app:constraintSetEnd="@id/end"
             app:constraintSetStart="@+id/start"
-            app:duration="300">
-        <OnClick
-                app:clickAction="toggle"
-                app:targetId="@+id/airtime" />
-    </Transition>
+            app:duration="300" />
 </MotionScene>

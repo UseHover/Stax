@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/balances_ml"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layoutDescription="@xml/home_card_balances_scene">
@@ -37,15 +39,26 @@
 
     </androidx.cardview.widget.CardView>
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/balances_recyclerView"
+    <com.google.android.material.card.MaterialCardView
+            android:id="@+id/balances_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_13"
             android:layout_marginTop="@dimen/margin_13"
+            app:cardBackgroundColor="@color/colorPrimaryDark"
+            app:cardCornerRadius="@dimen/radius"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/airtime" />
+            app:layout_constraintTop_toBottomOf="@id/airtime">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/balances_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:itemCount="2"
+                tools:listitem="@layout/balance_item" />
+
+    </com.google.android.material.card.MaterialCardView>
 
     <androidx.cardview.widget.CardView
             android:id="@+id/new_account_link"
@@ -60,7 +73,8 @@
             app:cardElevation="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/balances_recyclerView">
+            app:layout_constraintTop_toBottomOf="@id/balances_recyclerView"
+            app:layout_goneMarginTop="@dimen/margin_10">
 
         <TextView
                 android:layout_width="match_parent"

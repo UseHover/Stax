@@ -22,7 +22,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.stax.BuildConfig;
-import com.hover.stax.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -229,5 +228,4 @@ public class Utils {
 		i.setData(Uri.parse(url));
 		ctx.startActivity(i);
 	}
-
 }
