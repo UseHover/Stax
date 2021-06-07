@@ -23,10 +23,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
+import timber.log.Timber;
+
 @Entity(tableName = "stax_transactions", indices = {@Index(value = {"uuid"}, unique = true)})
 public class StaxTransaction {
 
-    public final static String CONFIRM_CODE_KEY = "confirmCode";
+    public final static String CONFIRM_CODE_KEY = "confirmCode", FEE_KEY = "fee";
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
@@ -76,15 +78,14 @@ public class StaxTransaction {
     @ColumnInfo(name = "confirm_code")
     public String confirm_code;
 
-    @ColumnInfo(name = "counterparty")
-    public String counterparty;
-
     @ColumnInfo(name = "recipient_id")
     public String counterparty_id;
 
+    // FIXME: DO not use! This is covered by contact model. No easy way to drop column yet, but room 2.4 adds an easy way. Currently alpha, use once it is stable
+    @ColumnInfo(name = "counterparty")
+    public String counterparty;
 
-    public StaxTransaction() {
-    }
+    public StaxTransaction() {}
 
     public StaxTransaction(Intent data, HoverAction action, StaxContact contact, Context c) {
         if (data.hasExtra(TransactionContract.COLUMN_UUID) && data.getStringExtra(TransactionContract.COLUMN_UUID) != null) {
@@ -97,57 +98,52 @@ public class StaxTransaction {
             initiated_at = data.getLongExtra(TransactionContract.COLUMN_REQUEST_TIMESTAMP, DateUtils.now());
             updated_at = initiated_at;
 
-            HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS);
-            if (extras != null) {
-                if (extras.containsKey(HoverAction.AMOUNT_KEY))
-                    amount = Utils.getAmount((extras.get(HoverAction.AMOUNT_KEY)));
-                if (extras.containsKey(HoverAction.PHONE_KEY))
-                    counterparty = extras.get(HoverAction.PHONE_KEY);
-                else if (extras.containsKey(HoverAction.ACCOUNT_KEY))
-                    counterparty = extras.get(HoverAction.ACCOUNT_KEY);
-            }
-            if (data.hasExtra(StaxContact.LOOKUP_KEY))
-                counterparty_id = data.getStringExtra(StaxContact.LOOKUP_KEY);
-
-            Log.e("Transaction", "creating transaction with uuid: " + uuid);
-
-            if (transaction_type != null) description = generateDescription(action, contact, c);
+            counterparty_id = contact.id;
+            description = generateDescription(action, contact, c);
+            parseExtras((HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS));
+            Timber.v("creating transaction with uuid: %s", uuid);
         }
     }
 
     public void update(Intent data, HoverAction action, StaxContact contact, Context c) {
+        Timber.e("Updating");
         status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
         updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, initiated_at);
 
-        HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES);
-        if (extras != null) {
-//            if (extras.containsKey(HoverAction.FEE_KEY))
-//                fee = Utils.getAmount(extras.get(HoverAction.FEE_KEY));
-            if (extras.containsKey(CONFIRM_CODE_KEY))
-                confirm_code = extras.get(CONFIRM_CODE_KEY);
-        }
+        parseExtras((HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES));
 
-        if (data.hasExtra(StaxContact.LOOKUP_KEY))
-            counterparty_id = data.getStringExtra(StaxContact.LOOKUP_KEY);
+        if (counterparty_id == null)
+            counterparty_id = contact.id;
 
-        if (contact != null)
-            description = generateDescription(action, contact, c);
+        description = generateDescription(action, contact, c);
+    }
+
+    private void parseExtras(HashMap<String, String> extras) {
+        if (extras == null) return;
+
+        if (extras.containsKey(HoverAction.AMOUNT_KEY))
+            amount = Utils.getAmount(extras.get(HoverAction.AMOUNT_KEY));
+        if (extras.containsKey(FEE_KEY))
+            fee = Utils.getAmount(extras.get(FEE_KEY));
+        if (extras.containsKey(CONFIRM_CODE_KEY))
+            confirm_code = extras.get(CONFIRM_CODE_KEY);
     }
 
     private String generateDescription(HoverAction action, StaxContact contact, Context c) {
         if (isRecorded())
             return c.getString(R.string.descrip_recorded, action.from_institution_name);
 
-        String recipientStr = contact != null ? contact.shortName() : counterparty;
         switch (transaction_type) {
             case HoverAction.AIRTIME:
-                return c.getString(R.string.descrip_airtime_sent, action.from_institution_name, ((counterparty == null || counterparty.equals("")) ? "myself" : recipientStr));
+                return c.getString(R.string.descrip_airtime_sent, action.from_institution_name, contact == null ? c.getString(R.string.self_choice) : contact.shortName());
             case HoverAction.P2P:
-                return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, recipientStr);
+                return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, contact.shortName());
             case HoverAction.ME2ME:
                 return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, action.to_institution_name);
+            case HoverAction.C2B:
+                return c.getString(R.string.descrip_bill_paid, action.to_institution_name);
             case HoverAction.RECEIVE:
-                return c.getString(R.string.descrip_transfer_received, counterparty);
+                return c.getString(R.string.descrip_transfer_received, contact.shortName());
             default:
                 return "Other";
         }

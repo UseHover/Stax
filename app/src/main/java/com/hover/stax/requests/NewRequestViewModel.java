@@ -119,7 +119,7 @@ public class NewRequestViewModel extends AbstractFormViewModel {
     }
 
     String requesteeErrors() {
-        if (requestees.getValue() != null && requestees.getValue().size() > 0 && !requestees.getValue().get(0).getPhoneNumber().isEmpty())
+        if (requestees.getValue() != null && requestees.getValue().size() > 0 && !requestees.getValue().get(0).accountNumber.isEmpty())
             return null;
         return getApplication().getString(R.string.request_error_recipient);
     }
@@ -177,7 +177,7 @@ public class NewRequestViewModel extends AbstractFormViewModel {
         if (requestees.getValue() != null && requestees.getValue().size() > 0) {
             List<StaxContact> contacts = new ArrayList<>();
             for (StaxContact c : requestees.getValue()) {
-                if (c.phoneNumber != null && !c.phoneNumber.isEmpty())
+                if (c.accountNumber != null && !c.accountNumber.isEmpty())
                     contacts.add(c);
             }
             requestees.setValue(contacts);
@@ -189,7 +189,7 @@ public class NewRequestViewModel extends AbstractFormViewModel {
             new Thread(() -> {
                 for (StaxContact c : requestees.getValue()) {
                     c.lastUsedTimestamp = DateUtils.now();
-                    repo.insertOrUpdate(c);
+                    repo.save(c);
                 }
             }).start();
         }

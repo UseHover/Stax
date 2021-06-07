@@ -10,6 +10,7 @@ import androidx.room.PrimaryKey;
 
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.contacts.PhoneHelper;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.Utils;
@@ -66,7 +67,7 @@ public class Request {
     public Request(String amount, String note, String requester, int requester_institution_id) {
         this.amount = amount;
         this.note = note;
-        this.requester_number = requester;
+        this.requester_number = requester.replaceAll(" ", "");
         this.requester_institution_id = requester_institution_id;
         date_sent = DateUtils.now();
     }
@@ -75,14 +76,14 @@ public class Request {
         this.amount = r.amount;
         this.note = r.note;
         this.requestee_ids = requestee.id;
-        this.requester_number = r.requester_number;
+        this.requester_number = r.requester_number.replaceAll(" ", "");
         this.requester_institution_id = r.requester_institution_id;
         this.date_sent = r.date_sent;
         this.description = getDescription(requestee, c);
     }
 
     public Request(String paymentLink) {
-        Log.v(TAG, "Creating request from link: " + paymentLink);
+        Timber.v("Creating request from link: " + paymentLink);
         String[] splitString = paymentLink.split(PAYMENT_LINK_SEPERATOR);
         amount = splitString[0].equals("0.00") ? "" : Utils.formatAmount(splitString[0]);
         requester_institution_id = Integer.parseInt(splitString[1]);
@@ -105,7 +106,7 @@ public class Request {
         StringBuilder phones = new StringBuilder();
         for (int r = 0; r < contacts.size(); r++) {
             if (phones.length() > 0) phones.append(",");
-            phones.append(contacts.get(r).getPhoneNumber());
+            phones.append(contacts.get(r).accountNumber);
         }
         return phones.toString();
     }
@@ -114,7 +115,7 @@ public class Request {
         StringBuilder phones = new StringBuilder();
         for (int r = 0; r < contacts.size(); r++) {
             if (phones.length() > 0) phones.append(",");
-            phones.append(contacts.get(r).getInternationalNumberNoPlus(c != null ? c.countryAlpha2 : Lingver.getInstance().getLocale().getCountry()));
+            phones.append(PhoneHelper.getInternationalNumberNoPlus(contacts.get(r).accountNumber, c != null ? c.countryAlpha2 : Lingver.getInstance().getLocale().getCountry()));
         }
         return phones.toString();
     }

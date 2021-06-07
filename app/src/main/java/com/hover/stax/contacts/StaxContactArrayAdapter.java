@@ -46,7 +46,7 @@ public class StaxContactArrayAdapter extends ArrayAdapter<StaxContact> {
         StaxContact c = filteredContacts.get(position);
 
         holder.title.setText(c.shortName());
-        holder.subtitle.setText(c.getPhoneNumber());
+        holder.subtitle.setText(c.accountNumber);
         holder.subtitle.setVisibility(c.hasName() ? View.VISIBLE : View.GONE);
 
         return v;

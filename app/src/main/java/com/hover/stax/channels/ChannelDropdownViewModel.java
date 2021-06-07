@@ -14,7 +14,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.amplitude.api.Amplitude;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
@@ -245,7 +244,7 @@ public class ChannelDropdownViewModel extends AndroidViewModel implements Channe
 
     private void logChoice(Channel channel) {
         Log.i(TAG, "saving selected channel: " + channel);
-       joinByChannelNotifGroup(channel.id, getApplication().getApplicationContext());
+       joinChannelGroup(channel.id, getApplication().getApplicationContext());
         JSONObject args = new JSONObject();
         try {
             args.put(getApplication().getString(R.string.added_channel_id), channel.id);
