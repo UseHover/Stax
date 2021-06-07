@@ -40,6 +40,8 @@ public class ChannelDetailFragment extends Fragment implements
     private ChannelDetailViewModel viewModel;
     private FutureViewModel futureViewModel;
     private FragmentChannelBinding binding;
+    private RequestsAdapter requestsAdapter;
+    private ScheduledAdapter scheduledAdapter;
 
     @Nullable
     @Override
@@ -55,12 +57,14 @@ public class ChannelDetailFragment extends Fragment implements
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.refreshBalanceBtn.setOnClickListener(view1 -> onRefresh());
+        initRecyclerViews();
         setupObservers();
 
         assert getArguments() != null;
         viewModel.setChannel(getArguments().getInt(TransactionContract.COLUMN_CHANNEL_ID));
 
     }
+
     private void setupObservers() {
         viewModel.getChannel().observe(getViewLifecycleOwner(), channel -> {
             binding.staxCardView.setTitle(channel.name);
@@ -86,18 +90,23 @@ public class ChannelDetailFragment extends Fragment implements
         });
     }
 
+    private void initRecyclerViews() {
+        RecyclerView recyclerView = binding.scheduledCard.scheduledRecyclerView;
+        recyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
+        recyclerView.setAdapter(new ScheduledAdapter(null, this));
+
+        RecyclerView rv = binding.scheduledCard.requestsRecyclerView;
+        rv.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
+        rv.setAdapter(new RequestsAdapter(null, this));
+    }
     private void setUpFuture(Channel channel) {
         futureViewModel.getScheduledByChannel(channel.id).observe(getViewLifecycleOwner(), schedules -> {
-            RecyclerView recyclerView = binding.scheduledCard.scheduledRecyclerView;
-            recyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-            recyclerView.setAdapter(new ScheduledAdapter(schedules, this));
+            scheduledAdapter.updateData(schedules);
             setFutureVisible(schedules, futureViewModel.getRequests().getValue());
         });
 
         futureViewModel.getRequestsByChannel(channel.institutionId).observe(getViewLifecycleOwner(), requests -> {
-            RecyclerView rv = binding.scheduledCard.requestsRecyclerView;
-            rv.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-            rv.setAdapter(new RequestsAdapter(requests, this));
+            requestsAdapter.updateData(requests);
             setFutureVisible(futureViewModel.getScheduled().getValue(), requests);
         });
     }

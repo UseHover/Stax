@@ -23,6 +23,10 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.Reques
         this.requestList = requests;
         this.selectListener = selectListener;
     }
+    public void updateData(List<Request> requests) {
+        this.requestList = requests;
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override
