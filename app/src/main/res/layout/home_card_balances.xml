@@ -47,6 +47,7 @@
             android:layout_marginTop="@dimen/margin_13"
             app:cardBackgroundColor="@color/colorPrimaryDark"
             app:cardCornerRadius="@dimen/radius"
+            app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/balance_header_card">
@@ -59,33 +60,5 @@
                 tools:listitem="@layout/balance_item" />
 
     </com.google.android.material.card.MaterialCardView>
-
-    <androidx.cardview.widget.CardView
-            android:id="@+id/new_account_link"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_13"
-            android:layout_marginBottom="@dimen/margin_8"
-            android:clipToPadding="true"
-            android:visibility="gone"
-            app:cardBackgroundColor="@color/cardViewColor"
-            app:cardCornerRadius="@dimen/radius"
-            app:cardElevation="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/balances_recyclerView"
-            app:layout_goneMarginTop="@dimen/margin_10">
-
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_65"
-                android:fontFamily="font-medium"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/margin_13"
-                android:paddingVertical="@dimen/margin_8"
-                android:text="@string/add_another_account"
-                android:textColor="@color/brightBlue"
-                android:textSize="@dimen/text_16" />
-    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

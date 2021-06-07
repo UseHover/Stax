@@ -36,7 +36,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
         this.balanceListener = listener;
     }
 
-    public void showBalance(boolean show) {
+    public void showBalanceAmounts(boolean show) {
         this.showBalance = show;
         this.notifyDataSetChanged();
     }

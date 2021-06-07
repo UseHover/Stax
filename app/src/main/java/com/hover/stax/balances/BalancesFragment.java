@@ -60,7 +60,7 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
     }
 
     private void setUpLinkNewAccount() {
-        addChannelLink = binding.homeCardBalances.newAccountLink;
+        addChannelLink = binding.newAccountLink;
         addChannelLink.setOnClickListener(v -> navigateToChannelsListFragment(NavHostFragment.findNavController(this), false));
     }
 
@@ -68,7 +68,7 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
         balanceTitle = binding.homeCardBalances.balanceHeaderTitleId;
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(balancesVisible ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_off, 0, 0, 0);
         balanceTitle.setOnClickListener(v -> {
-            showBalance(!balancesVisible);
+            showBalanceCards(!balancesVisible);
         });
 
         balancesRecyclerView = binding.homeCardBalances.balancesRecyclerView;
@@ -76,7 +76,8 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
         balancesRecyclerView.setHasFixedSize(true);
     }
 
-    private void showBalance(boolean status) {
+    private void showBalanceCards(boolean status) {
+        toggleLink(status);
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(status ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_off, 0, 0, 0);
 
         if (status) {
@@ -93,9 +94,9 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
         addDummyChannelsIfRequired(channels);
         BalanceAdapter balanceAdapter = new BalanceAdapter(channels, (MainActivity) getActivity());
         balancesRecyclerView.setAdapter(balanceAdapter);
-        balanceAdapter.showBalance(true);
+        balanceAdapter.showBalanceAmounts(true);
 
-        if (Channel.areAllDummies(channels)) showBalance(true);
+        showBalanceCards(Channel.areAllDummies(channels) || Channel.hasDummy(channels));
     }
 
     private void addDummyChannelsIfRequired(@Nullable List<Channel> channels) {
