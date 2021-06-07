@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.textfield.TextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/inputLayout"
-    style="@style/StaxLabeledDropdown"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:fontFamily="font-normal">
-
-    <AutoCompleteTextView
-        android:id="@+id/autoCompleteView"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/inputLayout"
+        style="@style/StaxLabeledDropdown"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@null"
-        android:completionThreshold="0"
-        android:drawablePadding="@dimen/margin_13"
-        android:dropDownWidth="wrap_content"
-        android:dropDownHeight="300dp"
-        android:fontFamily="font-normal"
-        android:padding="@dimen/margin_13"
-        android:textColor="@color/offWhite"
-        android:textCursorDrawable="@null"
-        android:textSize="@dimen/text_21"
-        android:imeOptions="actionDone"
-        app:endIconMode="dropdown_menu"
-        app:errorTextColor="@color/stax_state_red" />
+        android:fontFamily="font-normal">
+
+    <AutoCompleteTextView
+            android:id="@+id/autoCompleteView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:completionThreshold="0"
+            android:drawablePadding="@dimen/margin_13"
+            android:dropDownWidth="wrap_content"
+            android:dropDownHeight="300dp"
+            android:fontFamily="font-normal"
+            android:imeOptions="actionDone"
+            android:padding="@dimen/margin_13"
+            android:textColor="@color/offWhite"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/text_21"
+            app:endIconMode="dropdown_menu"
+            app:errorTextColor="@color/stax_state_red" />
 
 </com.google.android.material.textfield.TextInputLayout>

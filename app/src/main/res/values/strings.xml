@@ -176,6 +176,11 @@
 
 	<!-- Request -->
 	<string name="req_cardhead">Request money</string>
+	<string name="into_account">Into account</string>
+	<string name="put_in">Put in</string>
+	<string name="put_in_desc">This is where you want to receive the requested money</string>
+	<string name="account_num_desc">e.g. your mobile money phone number or bank account number</string>
+	<string name="send_request_to">Send request to</string>
 	<string name="request_amount_label">How much money?</string>
 	<string name="amount_label_opt">Amount (Optional)</string>
 	<string name="reqfrom_label">To</string>
