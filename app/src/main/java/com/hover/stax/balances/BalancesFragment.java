@@ -79,13 +79,13 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
     }
 
     private void showBalanceCards(boolean status) {
-        toggleLink(!status);
+        toggleLink(status);
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(status ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_off, 0, 0, 0);
 
         if (status) {
-            binding.homeCardBalances.balancesMl.transitionToEnd();
-        } else {
             binding.homeCardBalances.balancesMl.transitionToStart();
+        } else {
+            binding.homeCardBalances.balancesMl.transitionToEnd();
         }
 
         balancesVisible = status;
@@ -98,7 +98,7 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
         balancesRecyclerView.setAdapter(balanceAdapter);
         balanceAdapter.showBalanceAmounts(true);
 
-        showBalanceCards(Channel.areAllDummies(channels) || Channel.hasDummy(channels));
+        showBalanceCards(Channel.areAllDummies(channels));
     }
 
     private void addDummyChannelsIfRequired(@Nullable List<Channel> channels) {
