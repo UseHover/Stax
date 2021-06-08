@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+                android:id="@+id/balances_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_13"
+                android:layout_marginTop="@dimen/margin_13"
+                android:layout_marginEnd="@dimen/margin_13"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/balance_header_card" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+                android:id="@id/balances_card"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:layout_marginStart="@dimen/margin_13"
+                android:layout_marginEnd="@dimen/margin_13"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/balance_header_card">
+
+            <CustomAttribute
+                    app:attributeName="radius"
+                    app:customDimension="5dp" />
+
+        </Constraint>
+    </ConstraintSet>
+
+    <Transition
+            app:constraintSetEnd="@id/end"
+            app:constraintSetStart="@+id/start"
+            app:duration="300" />
+</MotionScene>
