@@ -88,6 +88,7 @@ public class ChannelsListFragment extends Fragment implements ChannelsRecyclerVi
             requireActivity().onBackPressed();
             if(balancesViewModel !=null) balancesViewModel.getActions().observe(getViewLifecycleOwner(), actions -> balancesViewModel.setRunning(channel.id));
     }
+
     private void goToChannelsDetailsScreen(Channel channel) {
         BalanceAdapter.BalanceListener balanceListener = (MainActivity) getActivity();
         if(balanceListener!=null) {

@@ -20,7 +20,6 @@ import com.hover.stax.databinding.FragmentBalanceBinding;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.UIHelper;
-import com.hover.stax.views.staxcardstack.OnSwipeTouchListener;
 import com.hover.stax.views.staxcardstack.StaxCardStackView;
 
 import java.util.ArrayList;
@@ -91,10 +90,10 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
 
         if (status) {
             balanceStack.setVisibility(GONE);
-            binding.homeCardBalances.balancesMl.transitionToStart();
+            binding.homeCardBalances.balancesMl.transitionToEnd();
         } else {
             balanceStack.setVisibility(VISIBLE);
-            binding.homeCardBalances.balancesMl.transitionToEnd();
+            binding.homeCardBalances.balancesMl.transitionToStart();
         }
 
         balancesVisible = status;
