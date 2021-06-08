@@ -4,7 +4,7 @@
 
     <ConstraintSet android:id="@+id/start">
         <Constraint
-                android:id="@+id/balances_card"
+                android:id="@+id/balances_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_13"
@@ -17,7 +17,7 @@
 
     <ConstraintSet android:id="@+id/end">
         <Constraint
-                android:id="@id/balances_card"
+                android:id="@id/balances_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
                 android:layout_marginStart="@dimen/margin_13"

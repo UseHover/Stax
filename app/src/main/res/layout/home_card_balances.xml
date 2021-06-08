@@ -38,26 +38,18 @@
 
     </androidx.cardview.widget.CardView>
 
-    <com.google.android.material.card.MaterialCardView
-            android:id="@+id/balances_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_13"
-            android:layout_marginTop="@dimen/margin_13"
-            app:cardBackgroundColor="@color/colorPrimaryDark"
-            app:cardCornerRadius="@dimen/radius"
-            app:cardElevation="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/balance_header_card">
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/balances_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="2dp"
+                app:cardElevation="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/balance_header_card"
                 tools:itemCount="2"
                 tools:listitem="@layout/balance_item" />
 
-    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.motion.widget.MotionLayout>
