@@ -122,6 +122,7 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
             cardStackAdapter.updateData(tempChannels);
             balanceStack.setOverlapGaps(STACK_OVERLAY_GAP);
             balanceStack.setRotationX(ROTATE_UPSIDE_DOWN);
+            balanceStack.setOnClickListener(view -> showBalanceCards(!balancesVisible));
             updateBalanceCardStackHeight(tempChannels.size());
         }
     }
