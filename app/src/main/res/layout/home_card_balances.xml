@@ -13,7 +13,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_13"
             android:layout_marginTop="@dimen/margin_5"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="@dimen/margin_5"
             android:clipToPadding="true"
             app:cardBackgroundColor="@color/cardViewColor"
             app:cardCornerRadius="@dimen/radius"
@@ -39,17 +39,17 @@
     </androidx.cardview.widget.CardView>
 
 
+
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/balances_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="2dp"
-                app:cardElevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/balance_header_card"
+                app:cardElevation="0dp"
                 tools:itemCount="2"
                 tools:listitem="@layout/balance_item" />
-
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

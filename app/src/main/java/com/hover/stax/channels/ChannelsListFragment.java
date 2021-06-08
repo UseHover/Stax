@@ -76,7 +76,7 @@ public class ChannelsListFragment extends Fragment implements ChannelsRecyclerVi
     private void setupSimSupportedChannels() {
         RecyclerView simSupportedChannelsListView = binding.simSupportedChannelsRecyclerView;
         simSupportedChannelsListView.setLayoutManager(UIHelper.setMainLinearManagers(requireContext()));
-        channelsViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> {
+        channelsViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> {
             if(channels!=null) {
                 simSupportedChannelsListView.setAdapter(new ChannelsRecyclerViewAdapter(Channel.sort(channels, false), this));
             }

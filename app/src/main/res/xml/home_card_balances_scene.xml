@@ -19,7 +19,7 @@
         <Constraint
                 android:id="@id/balances_recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="65dp"
+                android:layout_height="5dp"
                 android:layout_marginStart="@dimen/margin_13"
                 android:layout_marginEnd="@dimen/margin_13"
                 app:layout_constraintEnd_toEndOf="parent"
