@@ -42,4 +42,9 @@
 		<attr name="top_progress_bar_color_4" format="color|reference" />
 
 	</declare-styleable>
+
+	<declare-styleable name="CardStackView">
+		<attr name="stackOverlapGaps" format="dimension"/>
+		<attr name="stackHeaderHeight" format="dimension"/>
+	</declare-styleable>
 </resources>

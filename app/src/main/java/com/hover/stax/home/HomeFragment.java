@@ -30,7 +30,6 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         binding.airtime.setOnClickListener(v -> navigateTo(Constants.NAV_AIRTIME));
         binding.transfer.setOnClickListener(v -> navigateTo(Constants.NAV_TRANSFER));
-        binding.request.setOnClickListener(v -> navigateTo(Constants.NAV_REQUEST));
     }
 
     private void navigateTo(int destination) {
