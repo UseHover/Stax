@@ -9,6 +9,7 @@
 
 	<declare-styleable name="ChannelDropdown">
 		<attr name="show_selected" format="boolean" />
+		<attr name="initial_helper_text" format="string"/>
 	</declare-styleable>
 
 	<declare-styleable name="StaxTextInputLayout">

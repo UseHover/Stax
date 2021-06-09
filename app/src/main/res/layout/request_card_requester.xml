@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:orientation="vertical">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-	<com.hover.stax.channels.ChannelDropdown
-		android:id="@+id/channel_dropdown"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:hint="@string/channel_label"/>
+    <com.hover.stax.channels.ChannelDropdown
+            android:id="@+id/channel_dropdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/put_in"
+            app:initial_helper_text="@string/put_in_desc" />
 
-	<com.hover.stax.views.StaxTextInputLayout
-	    android:id="@+id/accountNumberInput"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-		android:inputType="number"
-		android:hint="@string/requester_account_number_label" />
+    <com.hover.stax.views.StaxTextInputLayout
+            android:id="@+id/accountNumberInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/requester_account_number_label"
+            android:inputType="number" />
 
 </LinearLayout>
