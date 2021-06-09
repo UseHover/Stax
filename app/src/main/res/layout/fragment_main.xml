@@ -31,6 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_13"
                 android:layout_marginTop="@dimen/margin_13"
+                android:animateLayoutChanges="false"
                 app:cardBackgroundColor="@color/cardViewColor"
                 app:cardCornerRadius="@dimen/radius"
                 app:cardElevation="8dp">
@@ -54,6 +55,7 @@
                 android:layout_marginTop="@dimen/margin_13"
                 android:layout_marginBottom="@dimen/margin_21"
                 android:clipToPadding="true"
+                android:animateLayoutChanges="false"
                 app:cardBackgroundColor="@color/cardViewColor"
                 app:cardCornerRadius="@dimen/radius"
                 app:cardElevation="8dp">

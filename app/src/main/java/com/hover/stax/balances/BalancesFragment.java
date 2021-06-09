@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,7 +20,10 @@ import com.hover.stax.databinding.FragmentBalanceBinding;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.views.staxcardstack.StaxCardStackView;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static android.view.View.GONE;
@@ -32,6 +34,8 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
     final private String GREEN_BG = "#46E6CC";
     final private String BLUE_BG = "#04CCFC";
     private boolean SHOW_ADD_ANOTHER_ACCOUNT = false;
+    final private static int STACK_OVERLAY_GAP = 10;
+    final private static int ROTATE_UPSIDE_DOWN = 180;
 
     private BalancesViewModel balancesViewModel;
 
@@ -42,6 +46,7 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
     private RecyclerView balancesRecyclerView;
 
     private FragmentBalanceBinding binding;
+    private StaxCardStackView balanceStack;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         balancesViewModel = new ViewModelProvider(requireActivity()).get(BalancesViewModel.class);
@@ -52,6 +57,7 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        balanceStack = binding.stackBalanceCards;
         setUpBalances();
         setUpLinkNewAccount();
     }
@@ -69,7 +75,7 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
     private void initBalanceCard() {
         balanceTitle = binding.homeCardBalances.balanceHeaderTitleId;
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(balancesVisible ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_off, 0, 0, 0);
-        balanceTitle.setOnClickListener(v -> {
+        balanceTitle.setOnClickListener(view -> {
             showBalanceCards(!balancesVisible);
         });
 
@@ -83,9 +89,11 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(status ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_off, 0, 0, 0);
 
         if (status) {
-            binding.homeCardBalances.balancesMl.transitionToStart();
-        } else {
+            balanceStack.setVisibility(GONE);
             binding.homeCardBalances.balancesMl.transitionToEnd();
+        } else {
+            balanceStack.setVisibility(VISIBLE);
+            binding.homeCardBalances.balancesMl.transitionToStart();
         }
 
         balancesVisible = status;
@@ -99,6 +107,29 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
         balanceAdapter.showBalanceAmounts(true);
 
         showBalanceCards(Channel.areAllDummies(channels));
+        updateStackCard(channels);
+
+
+    }
+    private void updateStackCard(List<Channel> channels) {
+        if(channels !=null) {
+            List<Channel> tempChannels = new ArrayList<>(channels);
+            Collections.reverse(tempChannels);
+
+            BalanceCardStackAdapter cardStackAdapter = new BalanceCardStackAdapter(requireContext());
+            balanceStack.setAdapter (cardStackAdapter);
+            cardStackAdapter.updateData(tempChannels);
+            balanceStack.setOverlapGaps(STACK_OVERLAY_GAP);
+            balanceStack.setRotationX(ROTATE_UPSIDE_DOWN);
+            balanceStack.setOnClickListener(view -> showBalanceCards(!balancesVisible));
+            updateBalanceCardStackHeight(tempChannels.size());
+        }
+    }
+
+    private void updateBalanceCardStackHeight(int numOfItems) {
+        ViewGroup.LayoutParams params = balanceStack.getLayoutParams();
+        params.height = 20 * numOfItems;
+        balanceStack.setLayoutParams(params);
     }
 
     private void addDummyChannelsIfRequired(@Nullable List<Channel> channels) {
