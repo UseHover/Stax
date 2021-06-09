@@ -31,8 +31,15 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
     onMessageReceived(RemoteMessage remoteMessage) {
         Map<String, String> data = remoteMessage.getData();
         String redirect = data.get("redirect");
+
         if (remoteMessage.getNotification() != null) {
             showNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), redirect);
+        }
+        else {
+            //Supports notification coming from custom servers.
+            String title = data.get("title");
+            String body = data.get("body");
+            showNotification(title, body, redirect);
         }
     }
 

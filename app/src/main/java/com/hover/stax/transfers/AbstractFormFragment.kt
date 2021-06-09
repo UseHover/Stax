@@ -17,7 +17,7 @@ import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelDropdown
-import com.hover.stax.channels.ChannelDropdownViewModel
+import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.transfers.TransactionType.Companion.type
@@ -32,7 +32,7 @@ import timber.log.Timber
 abstract class AbstractFormFragment : Fragment() {
 
     lateinit var abstractFormViewModel: AbstractFormViewModel
-    val channelDropdownViewModel: ChannelDropdownViewModel by sharedViewModel()
+    val channelsViewModel: ChannelsViewModel by sharedViewModel()
 
     lateinit var editCard: StaxCardView
     lateinit var summaryCard: StaxCardView
@@ -51,20 +51,19 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     open fun startObservers(root: View) {
-        channelDropdown.setListener(channelDropdownViewModel);
-        channelDropdown.setObservers(channelDropdownViewModel, viewLifecycleOwner);
-        setupActionDropdownObservers(channelDropdownViewModel, viewLifecycleOwner);
+        channelDropdown.setListener(channelsViewModel);
+        channelDropdown.setObservers(channelsViewModel, viewLifecycleOwner);
+        setupActionDropdownObservers(channelsViewModel, viewLifecycleOwner);
         abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit));
     }
 
-    private fun setupActionDropdownObservers(viewModel: ChannelDropdownViewModel, lifecycleOwner: LifecycleOwner) {
+    private fun setupActionDropdownObservers(viewModel: ChannelsViewModel, lifecycleOwner: LifecycleOwner) {
         viewModel.activeChannel.observe(lifecycleOwner, Observer { channel: Channel -> Timber.i("Got new active channel: $channel ${channel.countryAlpha2}") })
         viewModel.channelActions.observe(lifecycleOwner, Observer { actions: List<HoverAction?> -> Timber.i("Got new actions: %s", actions.size) })
     }
 
     open fun showEdit(isEditing: Boolean) {
-        Timber.e("Here")
-        channelDropdownViewModel.setChannelSelected(channelDropdown.highlighted)
+        channelsViewModel.setChannelSelected(channelDropdown.highlighted)
         editCard.visibility = if (isEditing) View.VISIBLE else View.GONE
         noWorryText.visibility = if (isEditing) View.VISIBLE else View.GONE
         summaryCard.visibility = if (isEditing) View.GONE else View.VISIBLE

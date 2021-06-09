@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,37 +26,24 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import timber.log.Timber;
+
 import static com.hover.stax.utils.Constants.size55;
 
-public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
+public class ChannelsDropdownAdapter extends ArrayAdapter<Channel> {
     private List<Channel> channels;
     private ViewHolder holder;
     private StaxSpinnerItemWithLogoBinding binding;
 
-    public ChannelDropdownAdapter(@NonNull List<Channel> channelList, @NonNull Context context) {
+    public ChannelsDropdownAdapter(@NonNull List<Channel> channelList, @NonNull Context context) {
         super(context, 0, channelList);
         channels = channelList;
-    }
-
-    public static List<Channel> sort(List<Channel> channels, boolean showSelected) {
-        ArrayList<Channel> selected_list = new ArrayList<>();
-        ArrayList<Channel> sorted_list = new ArrayList<>();
-        for (Channel c : channels) {
-            if (c.selected) selected_list.add(c);
-            else sorted_list.add(c);
-        }
-        Collections.sort(selected_list);
-        Collections.sort(sorted_list);
-        if (showSelected)
-            sorted_list.addAll(0, selected_list);
-        return sorted_list;
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
         Channel c = channels.get(position);
-        Log.e("ADAPTER", "getting view for pos " + position);
 
         if (view == null) {
             binding = StaxSpinnerItemWithLogoBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
@@ -91,7 +77,7 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
         holder.divider.setVisibility(View.GONE);
     }
 
-    private static class ViewHolder implements Target {
+    public static class ViewHolder implements Target {
         TextView id;
         ImageView logo;
         AppCompatTextView channelText;
@@ -120,7 +106,7 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
 
         @Override
         public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-            Log.e("LogTag", e.getMessage());
+            Timber.e(e);
         }
 
         @Override
@@ -136,6 +122,12 @@ public class ChannelDropdownAdapter extends ArrayAdapter<Channel> {
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    @Nullable
+    @Override
+    public Channel getItem(int position) {
+        return channels.isEmpty() ? null : channels.get(position);
     }
 
     @Override

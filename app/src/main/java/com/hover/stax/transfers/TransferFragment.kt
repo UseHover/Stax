@@ -87,15 +87,12 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
             setRecipientHint(it)
         })
 
-        with(channelDropdownViewModel) {
+        with(channelsViewModel) {
             activeChannel.observe(viewLifecycleOwner, Observer { channel ->
                 transferViewModel.request.value?.let { request ->
                     transferViewModel.setRecipientSmartly(request, channel)
                 }
-                Timber.e("Channel $channel")
                 actionSelect.visibility = if (channel != null) View.VISIBLE else View.GONE
-                Timber.e("Visibility ${actionSelect.visibility}")
-
                 binding.summaryCard.accountValue.setTitle(channel.toString())
             })
 
@@ -191,7 +188,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         val amountError = transferViewModel.amountErrors()
         amountInput.setState(amountError, if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
-        val channelError = channelDropdownViewModel.errorCheck()
+        val channelError = channelsViewModel.errorCheck()
         channelDropdown.setState(channelError, if (channelError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         val actionError = actionSelectViewModel.errorCheck()
@@ -235,8 +232,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     private fun load(r: Request) {
-        transferViewModel.setRecipientSmartly(r, channelDropdownViewModel.activeChannel.value!!)
-        channelDropdownViewModel.setChannelFromRequest(r)
+        transferViewModel.setRecipientSmartly(r, channelsViewModel.activeChannel.value!!)
+        channelsViewModel.setChannelFromRequest(r)
         amountInput.text = r.amount
         contactInput.setText(r.requester_number, false)
 

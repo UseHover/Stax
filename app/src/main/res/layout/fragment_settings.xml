@@ -18,6 +18,7 @@
 
         <include
             android:id="@+id/bountyCard"
+            android:visibility="gone"
             layout="@layout/settings_bounty_card_layout" />
 
         <include

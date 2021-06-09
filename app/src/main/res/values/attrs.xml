@@ -9,6 +9,7 @@
 
 	<declare-styleable name="ChannelDropdown">
 		<attr name="show_selected" format="boolean" />
+		<attr name="initial_helper_text" format="string"/>
 	</declare-styleable>
 
 	<declare-styleable name="StaxTextInputLayout">
@@ -40,5 +41,10 @@
 		<attr name="top_progress_bar_color_3" format="color|reference" />
 		<attr name="top_progress_bar_color_4" format="color|reference" />
 
+	</declare-styleable>
+
+	<declare-styleable name="CardStackView">
+		<attr name="stackOverlapGaps" format="dimension"/>
+		<attr name="stackHeaderHeight" format="dimension"/>
 	</declare-styleable>
 </resources>

@@ -47,7 +47,6 @@ class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListene
     private lateinit var binding: FragmentRequestBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-//        channelDropdownViewModel = getViewModel()
         abstractFormViewModel = getViewModel<NewRequestViewModel>()
         requestViewModel = abstractFormViewModel as NewRequestViewModel
 
@@ -60,12 +59,14 @@ class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListene
         return binding.root
     }
 
+    private fun setDefaultHelperText() = requesterNumberInput.setState(getString(R.string.account_num_desc), AbstractStatefulInput.NONE)
+
     override fun init(root: View) {
-        amountInput = binding.editCard.cardAmount.amountInput
-        recipientInputList = binding.editCard.cardRequestee.recipientList
-        addRecipientBtn = binding.editCard.cardRequestee.addRecipientButton
-        requesterNumberInput = binding.editCard.cardRequester.accountNumberInput
-        noteInput = binding.editCard.transferNote.noteInput
+        amountInput = binding.editRequestCard.cardAmount.amountInput
+        recipientInputList = binding.editRequestCard.cardRequestee.recipientList
+        addRecipientBtn = binding.editRequestCard.cardRequestee.addRecipientButton
+        requesterNumberInput = binding.editRequestCard.cardRequester.accountNumberInput
+        noteInput = binding.editRequestCard.transferNote.noteInput
 
         recipientValueList = binding.summaryCard.requesteeValueList
         accountValue = binding.summaryCard.accountValue
@@ -87,7 +88,7 @@ class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListene
     override fun startObservers(root: View) {
         super.startObservers(root)
 
-        channelDropdownViewModel.activeChannel.observe(viewLifecycleOwner, Observer {
+        channelsViewModel.activeChannel.observe(viewLifecycleOwner, Observer {
             requestViewModel.setActiveChannel(it)
             accountValue.setTitle(it.toString())
         })
@@ -207,7 +208,7 @@ class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListene
     }
 
     private fun validates(): Boolean {
-        val channelError = channelDropdownViewModel.errorCheck()
+        val channelError = channelsViewModel.errorCheck()
         channelDropdown.setState(channelError, if (channelError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         val requesterAcctNoError = requestViewModel.requesterAcctNoError()

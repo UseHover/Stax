@@ -6,7 +6,7 @@ import androidx.lifecycle.Observer
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelectViewModel
-import com.hover.stax.channels.ChannelDropdownViewModel
+import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.navigation.AbstractNavigationActivity
@@ -23,7 +23,7 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
 
     private val actionSelectViewModel: ActionSelectViewModel by viewModel()
 
-    private val channelDropdownViewModel: ChannelDropdownViewModel by viewModel()
+    private val channelsViewModel: ChannelsViewModel by viewModel()
     private val transferViewModel: TransferViewModel by viewModel()
     private lateinit var scheduleViewModel: ScheduleDetailViewModel
 
@@ -32,7 +32,7 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
 
         intent.action?.let {
             transferViewModel.setTransactionType(it)
-            channelDropdownViewModel.type = it
+            channelsViewModel.type = it
         }
 
         checkIntent()
@@ -82,7 +82,7 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
     }
 
     private fun makeCall(action: HoverAction) {
-        val hsb = HoverSession.Builder(action, channelDropdownViewModel.activeChannel.value, this, Constants.TRANSFER_REQUEST)
+        val hsb = HoverSession.Builder(action, channelsViewModel.activeChannel.value, this, Constants.TRANSFER_REQUEST)
             .extra(HoverAction.AMOUNT_KEY, transferViewModel.amount.value)
             .extra(HoverAction.NOTE_KEY, transferViewModel.note.value)
 
@@ -96,7 +96,7 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
                 HoverAction.PHONE_KEY, transferViewModel.contact.value!!
                     .getNumberFormatForInput(
                         actionSelectViewModel.activeAction.value!!,
-                        channelDropdownViewModel.activeChannel.value!!
+                        channelsViewModel.activeChannel.value!!
                     )
             )
     }
