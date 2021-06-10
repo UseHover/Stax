@@ -154,7 +154,10 @@ public class Utils {
 	}
 	public static void logErrorAndReportToFirebase(String tag, String message, Exception e) {
 		Timber.e(e, message);
-		if(BuildConfig.BUILD_TYPE.equals("release")) FirebaseCrashlytics.getInstance().recordException(e);
+		if(BuildConfig.BUILD_TYPE.equals("release")) {
+			if(e!=null) FirebaseCrashlytics.getInstance().recordException(e);
+			else FirebaseCrashlytics.getInstance().log(tag+" - "+message);
+		}
 	}
 
 	public static boolean isInternetConnected(Context c) {

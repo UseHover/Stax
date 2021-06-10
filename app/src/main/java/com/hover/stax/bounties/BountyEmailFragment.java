@@ -19,9 +19,11 @@ import com.hover.stax.views.StaxDialog;
 import com.hover.stax.views.StaxTextInputLayout;
 
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BountyEmailFragment extends Fragment implements NavigationInterface, View.OnClickListener, BountyAsyncCaller.AsyncResponseListener {
-
+    private static final String TAG = "BountyEmailFragment";
     private StaxTextInputLayout emailInput;
     private FragmentBountyEmailBinding binding;
 
@@ -71,6 +73,13 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
                 .showIt();
     }
 
+    private void showEdgeCaseErrorDialog() {
+        new StaxDialog(requireActivity())
+                .setDialogMessage(getString(R.string.edge_case_bounty_email_error))
+                .setPosButton(R.string.btn_ok, null)
+                .showIt();
+    }
+
     private boolean validates() {
         if (emailInput.getText() == null) return false;
         String email = emailInput.getText().replace(" ", "");
@@ -78,11 +87,16 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
     }
 
     @Override
-    public void onComplete(Integer responseCode) {
+    public void onComplete(Map<Integer, String>  responseMap) {
+        Map.Entry<Integer,String> entry = responseMap.entrySet().iterator().next();
+        int responseCode = entry.getKey();
+        String message = entry.getValue();
         if (responseCode >= 200 && responseCode < 300)
-            saveAndContinue();
+           saveAndContinue();
         else {
-            setEmailError();
+            Utils.logErrorAndReportToFirebase(TAG, message, null);
+            if(Utils.isNetworkAvailable(requireContext())) showEdgeCaseErrorDialog();
+            else setEmailError();
         }
     }
 
@@ -101,7 +115,6 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
         binding = null;
     }
 }
