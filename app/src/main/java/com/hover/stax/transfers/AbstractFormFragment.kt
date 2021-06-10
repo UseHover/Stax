@@ -38,12 +38,15 @@ abstract class AbstractFormFragment : Fragment() {
     lateinit var summaryCard: StaxCardView
     lateinit var channelDropdown: ChannelDropdown
     lateinit var fab: ExtendedFloatingActionButton
+    lateinit var editRequestCard: LinearLayout
 
     private lateinit var noWorryText: LinearLayout
+
 
     @CallSuper
     open fun init(root: View) {
         editCard = root.findViewById(R.id.editCard)
+        editRequestCard = root.findViewById(R.id.editRequestCard)
         noWorryText = root.findViewById(R.id.noworry_text)
         summaryCard = root.findViewById(R.id.summaryCard)
         fab = root.findViewById(R.id.fab)
@@ -64,7 +67,10 @@ abstract class AbstractFormFragment : Fragment() {
 
     open fun showEdit(isEditing: Boolean) {
         channelsViewModel.setChannelSelected(channelDropdown.highlighted)
+
         editCard.visibility = if (isEditing) View.VISIBLE else View.GONE
+        editRequestCard.visibility = if(isEditing) View.VISIBLE else View.GONE
+
         noWorryText.visibility = if (isEditing) View.VISIBLE else View.GONE
         summaryCard.visibility = if (isEditing) View.GONE else View.VISIBLE
         fab.text = if (isEditing) getString(R.string.btn_continue) else if (type == HoverAction.AIRTIME) getString(R.string.fab_airtimenow) else getString(R.string.fab_transfernow)
