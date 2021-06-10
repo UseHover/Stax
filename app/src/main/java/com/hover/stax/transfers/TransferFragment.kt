@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.lifecycle.Observer
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
@@ -80,7 +79,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     override fun startObservers(root: View) {
         super.startObservers(root)
 
-        actionSelectViewModel.activeAction.observe(viewLifecycleOwner, Observer {
+        actionSelectViewModel.activeAction.observe(viewLifecycleOwner, {
             Timber.e("Observed active action change $it ${it.transaction_type}")
             binding.summaryCard.accountValue.setSubtitle(it.getNetworkSubtitle(requireContext()))
             actionSelect.selectRecipientNetwork(it)
@@ -88,7 +87,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         })
 
         with(channelsViewModel) {
-            activeChannel.observe(viewLifecycleOwner, Observer { channel ->
+            activeChannel.observe(viewLifecycleOwner, { channel ->
                 transferViewModel.request.value?.let { request ->
                     transferViewModel.setRecipientSmartly(request, channel)
                 }
@@ -96,32 +95,32 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
                 binding.summaryCard.accountValue.setTitle(channel.toString())
             })
 
-            channelActions.observe(viewLifecycleOwner, Observer {
+            channelActions.observe(viewLifecycleOwner, {
                 actionSelectViewModel.setActions(it)
                 actionSelect.updateActions(it)
             })
         }
 
         with(transferViewModel) {
-            amount.observe(viewLifecycleOwner, Observer {
+            amount.observe(viewLifecycleOwner, {
                 binding.summaryCard.amountValue.text = Utils.formatAmount(it)
             })
 
-            note.observe(viewLifecycleOwner, Observer {
+            note.observe(viewLifecycleOwner, {
                 binding.summaryCard.noteRow.visibility = if (it.isNullOrEmpty()) View.GONE else View.VISIBLE
                 binding.summaryCard.noteValue.text = it
             })
 
-            contact.observe(viewLifecycleOwner, Observer { recipientValue.setContact(it) })
+            contact.observe(viewLifecycleOwner, { recipientValue.setContact(it) })
 
-            recentContacts.observe(viewLifecycleOwner, Observer {
+            recentContacts.observe(viewLifecycleOwner, {
                 if (!it.isNullOrEmpty()) {
                     contactInput.setRecent(it, requireActivity())
                     transferViewModel.contact.value?.let { ct -> contactInput.setSelected(ct) }
                 }
             })
 
-            request.observe(viewLifecycleOwner, Observer { it?.let { load(it) } })
+            request.observe(viewLifecycleOwner, { it?.let { load(it) } })
         }
     }
 
@@ -215,7 +214,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         Timber.e("Requires recipient? ${action.requiresRecipient()}")
         Timber.e("Transaction type? ${action.transaction_type}")
 
-        editCard.findViewById<LinearLayout>(R.id.recipient_entry).visibility = if(action.requiresRecipient()) View.VISIBLE else View.GONE
+        editCard?.findViewById<LinearLayout>(R.id.recipient_entry)?.visibility = if(action.requiresRecipient()) View.VISIBLE else View.GONE
         binding.summaryCard.recipientRow.visibility = if(action.requiresRecipient()) View.VISIBLE else View.GONE
 
         if (!action.requiresRecipient()) {

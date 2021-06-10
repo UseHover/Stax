@@ -11,7 +11,6 @@ import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
@@ -55,6 +54,7 @@ class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListene
         init(binding.root)
         startObservers(binding.root)
         startListeners()
+        setDefaultHelperText()
 
         return binding.root
     }
@@ -88,28 +88,28 @@ class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListene
     override fun startObservers(root: View) {
         super.startObservers(root)
 
-        channelsViewModel.activeChannel.observe(viewLifecycleOwner, Observer {
+        channelsViewModel.activeChannel.observe(viewLifecycleOwner, {
             requestViewModel.setActiveChannel(it)
             accountValue.setTitle(it.toString())
         })
 
         with(requestViewModel){
-            amount.observe(viewLifecycleOwner, Observer {
+            amount.observe(viewLifecycleOwner, {
                 binding.summaryCard.amountRow.visibility = if(validAmount()) View.VISIBLE else View.GONE
                 binding.summaryCard.amountValue.text = Utils.formatAmount(it)
             })
 
-            requesterNumber.observe(viewLifecycleOwner, Observer { accountValue.setSubtitle(it) })
-            activeChannel.observe(viewLifecycleOwner, Observer { updateAcctNo(it) })
-            recentContacts.observe(viewLifecycleOwner, Observer { recipientAdapter?.updateContactList(it) })
-            isEditing.observe(viewLifecycleOwner, Observer { showEdit(it) })
+            requesterNumber.observe(viewLifecycleOwner, { accountValue.setSubtitle(it) })
+            activeChannel.observe(viewLifecycleOwner, { updateAcctNo(it) })
+            recentContacts.observe(viewLifecycleOwner, { recipientAdapter?.updateContactList(it) })
+            isEditing.observe(viewLifecycleOwner, { showEdit(it) })
 
-            note.observe(viewLifecycleOwner, Observer {
+            note.observe(viewLifecycleOwner, {
                 binding.summaryCard.noteRow.visibility = if(validNote()) View.VISIBLE else View.GONE
                 binding.summaryCard.noteValue.text = it
             })
 
-            requestees.observe(viewLifecycleOwner, Observer {
+            requestees.observe(viewLifecycleOwner, {
                 if(!it.isNullOrEmpty()){
                     recipientValueList.removeAllViews()
 

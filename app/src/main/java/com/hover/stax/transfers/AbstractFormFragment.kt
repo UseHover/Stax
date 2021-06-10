@@ -34,11 +34,12 @@ abstract class AbstractFormFragment : Fragment() {
     lateinit var abstractFormViewModel: AbstractFormViewModel
     val channelsViewModel: ChannelsViewModel by sharedViewModel()
 
-    lateinit var editCard: StaxCardView
+    var editCard: StaxCardView? = null
+    var editRequestCard: LinearLayout? = null
+
     lateinit var summaryCard: StaxCardView
     lateinit var channelDropdown: ChannelDropdown
     lateinit var fab: ExtendedFloatingActionButton
-    lateinit var editRequestCard: LinearLayout
 
     private lateinit var noWorryText: LinearLayout
 
@@ -68,8 +69,8 @@ abstract class AbstractFormFragment : Fragment() {
     open fun showEdit(isEditing: Boolean) {
         channelsViewModel.setChannelSelected(channelDropdown.highlighted)
 
-        editCard.visibility = if (isEditing) View.VISIBLE else View.GONE
-        editRequestCard.visibility = if(isEditing) View.VISIBLE else View.GONE
+        editCard?.visibility = if (isEditing) View.VISIBLE else View.GONE
+        editRequestCard?.visibility = if(isEditing) View.VISIBLE else View.GONE
 
         noWorryText.visibility = if (isEditing) View.VISIBLE else View.GONE
         summaryCard.visibility = if (isEditing) View.GONE else View.VISIBLE
