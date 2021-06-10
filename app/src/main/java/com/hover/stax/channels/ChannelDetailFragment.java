@@ -93,11 +93,13 @@ public class ChannelDetailFragment extends Fragment implements
     private void initRecyclerViews() {
         RecyclerView recyclerView = binding.scheduledCard.scheduledRecyclerView;
         recyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-        recyclerView.setAdapter(new ScheduledAdapter(null, this));
+        scheduledAdapter = new ScheduledAdapter(null, this);
+        recyclerView.setAdapter(scheduledAdapter);
 
         RecyclerView rv = binding.scheduledCard.requestsRecyclerView;
         rv.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-        rv.setAdapter(new RequestsAdapter(null, this));
+        requestsAdapter = new RequestsAdapter(null, this);
+        rv.setAdapter(requestsAdapter);
     }
     private void setUpFuture(Channel channel) {
         futureViewModel.getScheduledByChannel(channel.id).observe(getViewLifecycleOwner(), schedules -> {
