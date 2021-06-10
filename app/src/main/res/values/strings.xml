@@ -364,6 +364,7 @@
 	<string name="internet_required">Internet required</string>
 	<string name="internet_required_bounty_desc">You need a data or Wifi connection to map USSD flows. Please connect and try again.</string>
 	<string name="try_again">Try again</string>
+	<string name="edge_case_bounty_email_error">This rarely happens, but if error persists, please close the app and restart.</string>
 
 
 

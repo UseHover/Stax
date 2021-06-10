@@ -33,7 +33,8 @@ import java.util.List;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class BalancesFragment extends Fragment implements TransactionHistoryAdapter.SelectListener,
+public class BalancesFragment extends Fragment implements
+        TransactionHistoryAdapter.SelectListener,
         ScheduledAdapter.SelectListener,
         RequestsAdapter.SelectListener,
         NavigationInterface {
