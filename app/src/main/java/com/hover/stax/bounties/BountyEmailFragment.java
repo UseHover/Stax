@@ -73,9 +73,9 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
                 .showIt();
     }
 
-    private void showEdgeCaseErrorDialog() {
+    private void showEdgeCaseErrorDialog(String message) {
         new StaxDialog(requireActivity())
-                .setDialogMessage(getString(R.string.edge_case_bounty_email_error))
+                .setDialogMessage(getString(R.string.edge_case_bounty_email_error, message))
                 .setPosButton(R.string.btn_ok, null)
                 .showIt();
     }
@@ -95,7 +95,7 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
            saveAndContinue();
         else {
             Utils.logErrorAndReportToFirebase(TAG, message, null);
-            if(Utils.isNetworkAvailable(requireContext())) showEdgeCaseErrorDialog();
+            if(Utils.isNetworkAvailable(requireContext())) showEdgeCaseErrorDialog(message);
             else setEmailError();
         }
     }
