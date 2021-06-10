@@ -58,8 +58,8 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     private fun setupActionDropdownObservers(viewModel: ChannelsViewModel, lifecycleOwner: LifecycleOwner) {
-        viewModel.activeChannel.observe(lifecycleOwner, Observer { channel: Channel -> Timber.i("Got new active channel: $channel ${channel.countryAlpha2}") })
-        viewModel.channelActions.observe(lifecycleOwner, Observer { actions: List<HoverAction?> -> Timber.i("Got new actions: %s", actions.size) })
+        viewModel.activeChannel.observe(lifecycleOwner, { channel: Channel -> Timber.i("Got new active channel: $channel ${channel.countryAlpha2}") })
+        viewModel.channelActions.observe(lifecycleOwner, { actions: List<HoverAction?> -> Timber.i("Got new actions: %s", actions.size) })
     }
 
     open fun showEdit(isEditing: Boolean) {

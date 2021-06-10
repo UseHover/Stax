@@ -1,17 +1,13 @@
 package com.hover.stax
 
-import android.R
 import android.app.Application
-import android.content.pm.PackageManager
 import com.appsflyer.AppsFlyerConversionListener
+import com.appsflyer.AppsFlyerLib
 import com.google.firebase.FirebaseApp
 import com.hover.stax.di.appModule
 import com.hover.stax.di.dataModule
-import com.hover.stax.utils.Utils
 import com.hover.stax.utils.fonts.FontReplacer
 import com.yariksoffice.lingver.Lingver
-import io.sentry.Sentry
-import io.sentry.android.core.SentryAndroid
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
@@ -28,6 +24,8 @@ class ApplicationInstance : Application() {
 
         setLogger()
         FirebaseApp.initializeApp(this)
+
+        initAppsFlyer()
     }
 
     private fun setFont() {
@@ -50,6 +48,28 @@ class ApplicationInstance : Application() {
 
     private fun setLogger() {
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree()) else Timber.uprootAll()
+    }
+
+    private fun initAppsFlyer() {
+        val conversionListener = object : AppsFlyerConversionListener {
+            override fun onConversionDataSuccess(data: MutableMap<String, Any>?) {
+                data?.keys?.forEach {
+                    Timber.d("Attribute $it = ${data[it]}")
+                }
+            }
+
+            override fun onConversionDataFail(errorMessage: String?) = Timber.d("Error getting conversion data: $errorMessage")
+
+            override fun onAppOpenAttribution(data: MutableMap<String, String>?) {
+                data?.keys?.forEach {
+                    Timber.d("Attribute $it = ${data[it]}")
+                }
+            }
+
+            override fun onAttributionFailure(errorMessage: String?) = Timber.d("Error onAttributionFailure : $errorMessage")
+        }
+
+        AppsFlyerLib.getInstance().init(getString(R.string.appsflyer_key), conversionListener, this)
     }
 
 }
