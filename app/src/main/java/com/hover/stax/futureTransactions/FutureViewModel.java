@@ -35,8 +35,16 @@ public class FutureViewModel extends AndroidViewModel {
     public LiveData<List<Schedule>> getScheduled() {
         return schedules;
     }
-
     public LiveData<List<Request>> getRequests() {
         return requests;
     }
+
+    public LiveData<List<Request>> getRequestsByChannel(int channelId) {
+        return repo.getLiveRequests(channelId);
+    }
+    public LiveData<List<Schedule>> getScheduledByChannel(int channelId) {
+        return repo.getFutureTransactions(channelId);
+    }
+
+
 }
