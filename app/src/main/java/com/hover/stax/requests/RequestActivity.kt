@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.Observer
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
 import com.hover.stax.databinding.ActivityRequestBinding
@@ -46,7 +45,7 @@ class RequestActivity : AbstractNavigationActivity(), RequestSenderInterface, Sm
 
     private fun createFromSchedule(scheduleId: Int) {
         with(scheduleViewModel) {
-            schedule.observe(this@RequestActivity, Observer { it?.let { requestViewModel.setSchedule(it) } })
+            schedule.observe(this@RequestActivity, { it?.let { requestViewModel.setSchedule(it) } })
             setSchedule(scheduleId)
         }
         Utils.logAnalyticsEvent(getString(R.string.clicked_schedule_notification), this)
