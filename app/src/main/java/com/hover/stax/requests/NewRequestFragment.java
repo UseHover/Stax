@@ -2,6 +2,7 @@ package com.hover.stax.requests;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -60,16 +61,20 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
         init(binding.getRoot());
         startObservers(binding.getRoot());
         startListeners();
+        setDefaultHelperText();
         return binding.getRoot();
+    }
+    private void setDefaultHelperText() {
+        requesterNumberInput.setState(getString(R.string.account_num_desc), AbstractStatefulInput.NONE);
     }
 
     @Override
     protected void init(View view) {
-        amountInput = binding.editCard.cardAmount.amountInput;
-        recipientInputList = binding.editCard.cardRequestee.recipientList;
-        addRecipientBtn = binding.editCard.cardRequestee.addRecipientButton;
-        requesterNumberInput = binding.editCard.cardRequester.accountNumberInput;
-        noteInput = binding.editCard.transferNote.noteInput;
+        amountInput = binding.editRequestCard.cardAmount.amountInput;
+        recipientInputList = binding.editRequestCard.cardRequestee.recipientList;
+        addRecipientBtn = binding.editRequestCard.cardRequestee.addRecipientButton;
+        requesterNumberInput = binding.editRequestCard.cardRequester.accountNumberInput;
+        noteInput = binding.editRequestCard.transferNote.noteInput;
 
         recipientValueList = binding.summaryCard.requesteeValueList;
         accountValue = binding.summaryCard.accountValue;
@@ -92,6 +97,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
             requestViewModel.setActiveChannel(channel);
             accountValue.setTitle(channel.toString());
         });
+
 
         requestViewModel.getActiveChannel().observe(getViewLifecycleOwner(), this::updateAcctNo);
 

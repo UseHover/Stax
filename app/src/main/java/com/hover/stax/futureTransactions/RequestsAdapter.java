@@ -1,4 +1,4 @@
-package com.hover.stax.balances;
+package com.hover.stax.futureTransactions;
 
 import android.view.LayoutInflater;
 import android.view.View;

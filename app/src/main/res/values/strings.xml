@@ -14,6 +14,7 @@
 	<string name="nav_home">Home</string>
 	<string name="nav_balance_and_history">Balance and history</string>
 	<string name="nav_balances">Balances</string>
+	<string name="nav_get_paid">Get paid</string>
 	<string name="nav_link_account">Link an account</string>
 	<string name="nav_airtime">Buy Airtime</string>
 	<string name="nav_transfer">Transfer</string>
@@ -66,14 +67,18 @@
 	<string name="link_account">Link account</string>
 	<string name="link_account_error">Choose an account to link.</string>
 	<string name="link_another"><u>+ Link another account</u></string>
+	<string name="add_another_account"><u>+ Add another account</u></string>
 	<string name="hist_cardhead">History</string>
 	<string name="hist_zerobody">You do not have any history yet. Send money or buy airtime to get started.</string>
 	<string name="future_cardhead">Future Transactions</string>
 	<string name="pending_callout">Transaction sent. Waiting for confirmation.</string>
-	<string name="refresh_balance_desc">Refresh balance to see your money</string>
+	<string name="refresh_balance_desc">Refresh your balance</string>
 	<string name="refresh_balances">Refresh balances</string>
 	<string name="refresh">Refresh</string>
 	<string name="refresh_balance_error">Add an account to check your balance.</string>
+	<string name="your_main_account">Your main account</string>
+	<string name="your_other_account">Your other account</string>
+
 
 	<!-- ADD ACCOUNT -->
 	<string name="your_accounts">Your accounts</string>
@@ -175,6 +180,11 @@
 
 	<!-- Request -->
 	<string name="req_cardhead">Request money</string>
+	<string name="into_account">Into account</string>
+	<string name="put_in">Put in</string>
+	<string name="put_in_desc">This is where you want to receive the requested money</string>
+	<string name="account_num_desc">e.g. your mobile money phone number or bank account number</string>
+	<string name="send_request_to">Send request to</string>
 	<string name="request_amount_label">How much money?</string>
 	<string name="amount_label_opt">Amount (Optional)</string>
 	<string name="reqfrom_label">To</string>
