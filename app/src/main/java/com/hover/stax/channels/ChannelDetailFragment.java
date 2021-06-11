@@ -14,10 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
-import com.hover.stax.balances.FutureViewModel;
-import com.hover.stax.balances.RequestsAdapter;
-import com.hover.stax.balances.ScheduledAdapter;
 import com.hover.stax.databinding.FragmentChannelBinding;
+import com.hover.stax.futureTransactions.FutureViewModel;
+import com.hover.stax.futureTransactions.RequestsAdapter;
+import com.hover.stax.futureTransactions.ScheduledAdapter;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.requests.Request;
