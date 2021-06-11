@@ -30,6 +30,9 @@ public class TransactionHistoryViewModel extends AndroidViewModel {
     public LiveData<List<StaxTransaction>> getStaxTransactions() {
         return transactions;
     }
+    public LiveData<List<StaxTransaction>> getStaxTransactionsForAppReview() {
+        return repo.getTransactionsForAppReview();
+    }
 
     public void saveTransaction(Intent data, Context c) {
         if (data != null)
