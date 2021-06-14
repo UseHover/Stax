@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import timber.log.Timber;
+
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
@@ -108,7 +110,23 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
 
         showBalanceCards(Channel.areAllDummies(channels));
         updateStackCard(channels);
+        showBubbleIfRequired(channels);
 
+
+    }
+    private void showBubbleIfRequired(List<Channel> channels) {
+        int title  = 0;
+        int desc = 0;
+        if(Channel.areAllDummies(channels)) {
+            title = R.string.onboard_addaccounthead;
+            desc = R.string.onboard_addaccountdesc;
+        }
+        else if(Channel.hasDummy(channels)) {
+            title = R.string.onboard_addaccount_greatwork_head;
+            desc = R.string.onboard_addaccount_greatwork_desc;
+        }
+        Timber.i("It's supposed to show bubble");
+        new ShowcaseExecutor(requireActivity(), NavHostFragment.findNavController(this), binding).showcaseAddAccount(title, desc);
 
     }
     private void updateStackCard(List<Channel> channels) {
