@@ -102,6 +102,8 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
             intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_BALANCE);
         else if (destId == R.id.navigation_settings)
             intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_SETTINGS);
+        else if(destId == R.id.navigation_request)
+            intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_REQUEST);
         else if (destId != R.id.navigation_home) {
             onBackPressed();
             return;
