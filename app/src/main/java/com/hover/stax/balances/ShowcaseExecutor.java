@@ -1,6 +1,7 @@
 package com.hover.stax.balances;
 
 import android.app.Activity;
+import android.os.Handler;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -9,7 +10,10 @@ import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.databinding.FragmentBalanceBinding;
 import com.hover.stax.databinding.FragmentMainBinding;
+import com.hover.stax.home.HomeFragment;
+import com.hover.stax.home.MainActivity;
 import com.hover.stax.navigation.NavigationInterface;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.bubbleshowcase.BubbleShowCase;
 import com.hover.stax.utils.bubbleshowcase.BubbleShowCaseListener;
 
@@ -27,19 +31,30 @@ public class ShowcaseExecutor implements NavigationInterface {
 		this.balanceBinding = balanceBinding;
 		this.navController = navController;
 	}
-	public void forceDismiss() {
 
-	}
-
-	private void startShowcase(String head, String body, BubbleShowCaseListener listener, View view) {
+	private void startShowcase(String head, String body, BubbleShowCaseListener listener, View view, BubbleShowCase.ArrowPosition arrowPosition, boolean shouldShowOnce) {
 		try {
-			BubbleShowCase.Companion.showCase(head, body, BubbleShowCase.ArrowPosition.TOP, listener, view, activity);
+			if(shouldShowOnce) BubbleShowCase.Companion.showcaseOnce(head, body, arrowPosition, listener, view, activity);
+			else BubbleShowCase.Companion.showCase(head, body, arrowPosition, listener, view, activity);
+
 		} catch (Exception e) { Timber.e(e, "Showcase failed to start"); }
 	}
 
-	public void showcaseAddAccount(int title, int desc) {
-		startShowcase(activity.getString(title), activity.getString(desc),
-				addedAccountListener, (balanceBinding.homeCardBalances.balancesRecyclerView));
+	public void showcaseAddFirstAccount() {
+					startShowcase(activity.getString(R.string.onboard_addaccounthead), activity.getString(R.string.onboard_addaccountdesc),
+							addedAccountListener, (balanceBinding.homeCardBalances.balancesRecyclerView), BubbleShowCase.ArrowPosition.TOP, false);
+	}
+
+	public void showcaseAddSecondAccount() {
+		// Delaying because it takes a couple of sec for bubbleShowcase to correctly identify Recyclerview's children
+			new Handler().postDelayed(() -> {
+				if( balanceBinding.homeCardBalances.balancesRecyclerView.getChildCount() > 0
+						&& balanceBinding.homeCardBalances.balancesRecyclerView.getChildAt(1).findViewById(R.id.balance_item_card) !=null) {
+					startShowcase(activity.getString(R.string.onboard_addaccount_greatwork_head), activity.getString(R.string.onboard_addaccount_greatwork_desc),
+							addedAccountListener, (balanceBinding.homeCardBalances.balancesRecyclerView.getChildAt(1).findViewById(R.id.balance_item_card).findViewById(R.id.balance_channel_name)),
+							BubbleShowCase.ArrowPosition.LEFT, true);
+				}
+			}, 2000);
 	}
 
 	BubbleShowCaseListener addedAccountListener = new BubbleShowCaseListener() {
@@ -64,6 +79,6 @@ public class ShowcaseExecutor implements NavigationInterface {
 
 	private void goToAddAccountFragment() {
 		Amplitude.getInstance().logEvent(activity.getString(R.string.clicked_add_account_bubble));
-		navigateToChannelsListFragment(navController, true);
+		HomeFragment.navigateTo(Constants.NAV_LINK_ACCOUNT, activity);
 	}
 }

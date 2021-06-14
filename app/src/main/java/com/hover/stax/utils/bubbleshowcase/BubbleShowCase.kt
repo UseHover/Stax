@@ -426,6 +426,19 @@ class BubbleShowCase(builder: BubbleShowCaseBuilder) {
 						  .listener(listener!!)
 						  .targetView(v!!).show()
 			}
+
+		  fun showcaseOnce(title: String?, desc: String?, arrowPosition: ArrowPosition?, listener: BubbleShowCaseListener?, v: View?, activity: Activity) {
+			  BubbleShowCaseBuilder(activity) //Activity instance
+					  .title(title!!) //Any title for the bubble view
+					  .description(desc!!) //More detailed description
+					  .arrowPosition(arrowPosition!!) //You can force the position of the arrow to change the location of the bubble.
+					  .backgroundColor(activity.resources.getColor(R.color.brightBlue)) //Bubble background color
+					  .textColor(activity.resources.getColor(R.color.colorPrimary)) //Bubble Text color
+					  .titleTextSize(20) //Title text size in SP (default value 16sp)
+					  .descriptionTextSize(20) //Subtitle text size in SP (default value 14sp)
+					  .listener(listener!!)
+					  .targetView(v!!).showOnce(title).show()
+		  }
 	  }
 
 	  private fun isTablet(): Boolean = false
