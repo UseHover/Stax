@@ -166,6 +166,7 @@ public class Utils {
 		FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
 	}
 	public static void logAnalyticsEvent(String event, Context context) {
+		Timber.i("Logged confirmed: "+event);
 		Amplitude.getInstance().logEvent(event);
 		FirebaseAnalytics.getInstance(context).logEvent(strippedForFireAnalytics(event), null);
 		AppsFlyerLib.getInstance().logEvent(context, event, null);
