@@ -65,8 +65,12 @@ public class MainActivity extends AbstractNavigationActivity implements
         checkForRequest(getIntent());
         checkForFragmentDirection(getIntent());
         checkForDeepLinking();
-        observeTransactionsForAppReview();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        observeTransactionsForAppReview();
     }
 
     @Override
