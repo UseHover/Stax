@@ -7,9 +7,9 @@
             android:title="@string/nav_home" />
 
     <item
-            android:id="@+id/navigation_balance"
-            android:icon="@drawable/ic_list"
-            android:title="@string/nav_balances" />
+            android:id="@+id/navigation_request"
+            android:icon="@drawable/ic_baseline_people_24"
+            android:title="@string/nav_get_paid" />
 
     <item
             android:id="@+id/navigation_settings"

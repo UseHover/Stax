@@ -1,5 +1,6 @@
 package com.hover.stax.channels;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -8,6 +9,7 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.hover.stax.R;
 import com.hover.stax.utils.DateUtils;
 
 import org.json.JSONException;
@@ -20,6 +22,7 @@ import java.util.List;
 
 @Entity(tableName = "channels")
 public class Channel implements Comparable<Channel> {
+    final public static int DUMMY = -1;
     public Channel() {
     }
 
@@ -49,6 +52,42 @@ public class Channel implements Comparable<Channel> {
             Log.d("exception", e.getMessage());
         }
         return this;
+    }
+    public Channel dummy(String name, String primaryColor) {
+        id = DUMMY;
+        this.name = name;
+        this.primaryColorHex = primaryColor;
+        this.secondaryColorHex =  "#1E232A";
+        currency = "NG";
+        published = true;
+        institutionId = DUMMY;
+        latestBalance = "0";
+        latestBalanceTimestamp = Long.parseLong("-1");
+        return this;
+    }
+    public static boolean areAllDummies(List<Channel> channels) {
+        if(channels == null) return true;
+
+        boolean result = true;
+            for(Channel channel : channels) {
+                if (channel.id != DUMMY) {
+                    result = false;
+                    break;
+                }
+            }
+        return  result;
+    }
+    public static boolean hasDummy(List<Channel> channels) {
+        if(channels == null) return true;
+
+        boolean result = false;
+        for(Channel channel : channels) {
+            if(channel.id == DUMMY){
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 
     @PrimaryKey

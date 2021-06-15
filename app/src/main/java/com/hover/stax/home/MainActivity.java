@@ -11,6 +11,7 @@ import android.os.Looper;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.amplitude.api.Amplitude;
 import com.google.android.play.core.review.ReviewManager;
@@ -18,6 +19,7 @@ import com.google.android.play.core.review.ReviewManagerFactory;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.hover.stax.balances.BalanceAdapter;
+import com.hover.stax.balances.BalancesFragment;
 import com.hover.stax.balances.BalancesViewModel;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.databinding.ActivityMainBinding;
@@ -132,13 +134,18 @@ public class MainActivity extends AbstractNavigationActivity implements
 
     @Override
     public void onTapDetail(int channel_id) {
-        navigateToChannelDetailsFragment(channel_id, getNavController());
+        if(channel_id == Channel.DUMMY) navigateToChannelsListFragment(getNavController(), false);
+        else navigateToChannelDetailsFragment(channel_id, getNavController());
     }
 
     @Override
     public void onTapRefresh(int channel_id) {
-        Utils.logAnalyticsEvent(getString(R.string.refresh_balance_single), this);
-        balancesViewModel.setRunning(channel_id);
+        if(channel_id == Channel.DUMMY) navigateToChannelsListFragment(getNavController(), false);
+        else{
+            Utils.logAnalyticsEvent(getString(R.string.refresh_balance_single), this);
+            balancesViewModel.setRunning(channel_id);
+        }
+
     }
 
     @Override
