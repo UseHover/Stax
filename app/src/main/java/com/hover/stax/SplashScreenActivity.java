@@ -70,7 +70,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
         startBackgroundProcesses();
 
         if (selfDestructWhenAppVersionExpires()) return;
-        continueOn();
+        authenticateUser();
     }
 
     @Override
@@ -138,12 +138,8 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
         tv.setCompoundDrawablesWithIntrinsicBounds(null, d, null, null);
     }
 
-    private void continueOn() {
-        new Handler().postDelayed(() -> {
-            if (Utils.getSharedPrefs(this).getInt(AUTH_CHECK, 0) == 1)
-                new BiometricChecker(this, this).startAuthentication(null);
-            else chooseNavigation(getIntent());
-        }, NAV_DELAY);
+    private void authenticateUser() {
+        new Handler().postDelayed(() -> new BiometricChecker(this, this).startAuthentication(null), NAV_DELAY);
     }
 
     private void initAmplitude() {
