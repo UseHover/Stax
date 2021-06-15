@@ -25,6 +25,7 @@
 	<string name="perms_accessibility_granted" translatable="false">Permission - Accessibility: granted</string>
 	<string name="perms_accessibility_notgranted" translatable="false">Permission - Accessibility: returned to app without toggling</string>
 	<string name="perms_accessibility_cancelled" translatable="false">Permission - Accessibility: dialog canceled</string>
+	<string name="initializing_USSD_event_confirmed">Initializing USSD services</string>
 
 	<string name="selected_language" translatable="false">Selected language</string>
 	<string name="new_channel_selected" translatable="false">Added channel</string>

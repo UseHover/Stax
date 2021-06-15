@@ -170,6 +170,7 @@ public class DatabaseRepo {
                 HoverAction a = intent.hasExtra(HoverAction.ID_KEY) ? getAction(intent.getStringExtra(HoverAction.ID_KEY)) : null;
 
                 if (t == null) {
+                    Utils.logAnalyticsEvent(c.getString(R.string.initializing_USSD_event_confirmed), c);
                     t = new StaxTransaction(intent, a, contact, c);
                     transactionDao.insert(t);
                 }
