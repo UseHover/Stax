@@ -65,12 +65,7 @@ public class MainActivity extends AbstractNavigationActivity implements
         checkForRequest(getIntent());
         checkForFragmentDirection(getIntent());
         checkForDeepLinking();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        observeTransactionsForAppReview();
+        observeForAppReview();
     }
 
     @Override
@@ -103,23 +98,12 @@ public class MainActivity extends AbstractNavigationActivity implements
             }
         }
     }
-    private void observeTransactionsForAppReview() {
-        transactionHistoryViewModel.getStaxTransactionsForAppReview().observe(this, staxTransactions -> {
-                if(qualifiesForAppReview(staxTransactions)) launchRatingAndReviewDialog();
+    private void observeForAppReview() {
+        transactionHistoryViewModel.showAppReviewLiveData().observe(this, status -> {
+               if(status) { launchRatingAndReviewDialog(); }
         });
     }
-    private boolean qualifiesForAppReview(List<StaxTransaction> staxTransactions) {
-        if(staxTransactions.size() >3) return true;
 
-        int balancesTransactions = 0;
-        int transfersAndAirtime = 0;
-        for(StaxTransaction transaction : staxTransactions) {
-            if(transaction.transaction_type.equals(HoverAction.BALANCE)) ++balancesTransactions;
-            else ++transfersAndAirtime;
-        }
-        if(balancesTransactions >= 4) return true;
-        return transfersAndAirtime >= 2;
-    }
 
     private void launchStaxReview() {
         Utils.logAnalyticsEvent(getString(R.string.visited_rating_review_screen), this);
