@@ -1,5 +1,6 @@
 package com.hover.stax.home;
 
+
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
@@ -23,7 +24,6 @@ import com.hover.stax.hover.HoverSession;
 import com.hover.stax.navigation.AbstractNavigationActivity;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.settings.BiometricChecker;
-import com.hover.stax.transactions.StaxTransaction;
 import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.DateUtils;
@@ -108,12 +108,12 @@ public class MainActivity extends AbstractNavigationActivity implements
         });
     }
 
-
     private void launchStaxReview() {
         Utils.logAnalyticsEvent(getString(R.string.visited_rating_review_screen), this);
         if(Utils.getBoolean(Constants.APP_RATED_NATIVELY, this)) openStaxPlaystorePage();
         else launchRatingAndReviewDialog();
     }
+
     private void launchRatingAndReviewDialog() {
         Timber.i("Currently at reviews native");
         ReviewManager reviewManager = ReviewManagerFactory.create(this);

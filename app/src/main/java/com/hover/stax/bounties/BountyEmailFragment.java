@@ -51,7 +51,7 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
         Utils.logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext());
         if (validates()) {
             emailInput.setEnabled(false);
-            new BountyAsyncCaller(new WeakReference<>(getContext()), this).execute(emailInput.getText());
+            new BountyAsyncCaller(new WeakReference<>(requireContext()), this).execute(emailInput.getText());
             emailInput.setState(getString(R.string.bounty_uploading_email), AbstractStatefulInput.INFO);
         } else {
             emailInput.setState(getString(R.string.bounty_email_error), AbstractStatefulInput.ERROR);

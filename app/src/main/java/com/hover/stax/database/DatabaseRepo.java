@@ -288,23 +288,30 @@ public class DatabaseRepo {
     }
 
     public LiveData<Request> decrypt(String encrypted, Context c) {
-        if (decryptedRequest == null) {
-            decryptedRequest = new MutableLiveData<>();
-        }
+        if (decryptedRequest == null) { decryptedRequest = new MutableLiveData<>(); }
         decryptedRequest.setValue(null);
+        String removedBaseUrlString = encrypted.replace(c.getString(R.string.payment_root_url, ""), "");
+
+        //Only old stax versions contains ( in the link
+        if (removedBaseUrlString.contains("(")) decryptRequestForOldVersions(removedBaseUrlString);
+        else decryptRequest(removedBaseUrlString, c);
+        return decryptedRequest;
+    }
+
+    private void decryptRequest(String param, Context c) {
+        decryptedRequest.postValue(new Request(Request.decryptBijective(param, c)));
+    }
+    private void decryptRequestForOldVersions(String params) {
         try {
             Encryption e = Request.getEncryptionSettings().build();
-
-            String removedBaseUrlString = encrypted.replace(c.getString(R.string.payment_root_url, ""), "");
-            if (Request.isShortLink(removedBaseUrlString)) {
-                removedBaseUrlString = new Shortlink(removedBaseUrlString).expand();
+            if (Request.isShortLink(params)) {
+                params = new Shortlink(params).expand();
             }
 
-            e.decryptAsync(removedBaseUrlString.replaceAll("[(]", "+"), new Encryption.Callback() {
+            e.decryptAsync(params.replaceAll("[(]", "+"), new Encryption.Callback() {
                 @Override
                 public void onSuccess(String result) {
                     decryptedRequest.postValue(new Request(result));
-
                 }
 
                 @Override
@@ -316,9 +323,7 @@ public class DatabaseRepo {
         } catch (NoSuchAlgorithmException e) {
             Utils.logErrorAndReportToFirebase(TAG, "decryption failure", e);
         }
-        return decryptedRequest;
     }
-
     public void insert(Request request) {
         AppDatabase.databaseWriteExecutor.execute(() -> requestDao.insert(request));
     }

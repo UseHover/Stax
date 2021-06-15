@@ -116,6 +116,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         else if (destId == R.id.navigation_settings) return Constants.NAV_SETTINGS;
         else if (destId == R.id.navigation_home) return Constants.NAV_HOME;
         else return destId;
+
     }
 
     public void getStartedWithBountyButton(View view) {

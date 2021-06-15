@@ -74,7 +74,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
         super.init(root);
     }
 
-    private void setTitle() {
+    private void setTitle(){
         binding.editCard.transferCard.setTitle(getString(transferViewModel.getType().equals(HoverAction.AIRTIME) ? R.string.cta_airtime : R.string.cta_transfer));
         binding.summaryCard.transferSummaryCard.setTitle(getString(transferViewModel.getType().equals(HoverAction.AIRTIME) ? R.string.cta_airtime : R.string.cta_transfer));
     }
