@@ -28,9 +28,7 @@
             android:id="@+id/layoutTexts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="13dp"
-            android:layout_marginEnd="@dimen/margin_13"
             android:orientation="vertical"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageViewShowCase">
