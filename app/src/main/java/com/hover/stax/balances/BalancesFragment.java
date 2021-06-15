@@ -120,6 +120,7 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
         channelList = channels;
         showBubbleIfRequired();
     }
+
     private void showBubbleIfRequired() {
         if(channelList !=null) {
             if(Channel.areAllDummies(channelList)) {
