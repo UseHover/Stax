@@ -11,7 +11,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.amplitude.api.Amplitude;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
@@ -102,7 +101,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
             intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_BALANCE);
         else if (destId == R.id.navigation_settings)
             intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_SETTINGS);
-        else if(destId == R.id.navigation_request)
+        else if (destId == R.id.navigation_request)
             intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_REQUEST);
         else if (destId != R.id.navigation_home) {
             onBackPressed();
