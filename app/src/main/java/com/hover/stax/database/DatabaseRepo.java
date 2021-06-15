@@ -139,6 +139,9 @@ public class DatabaseRepo {
     public LiveData<List<StaxTransaction>> getCompleteAndPendingTransferTransactions() {
         return transactionDao.getCompleteAndPendingTransfers();
     }
+    public LiveData<List<StaxTransaction>> getTransactionsForAppReview() {
+        return transactionDao.getTransactionsForAppReview();
+    }
 
     public LiveData<List<StaxTransaction>> getBountyTransactions() {
         return transactionDao.getBountyTransactions();
