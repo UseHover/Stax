@@ -29,6 +29,7 @@ import static com.hover.stax.utils.Constants.size55;
 public class ChannelDropdown extends StaxDropdownLayout implements Target{
 
     private boolean showSelected;
+    private String initial_helper_text;
     private Channel highlightedChannel;
     private HighlightListener highlightListener;
 
@@ -41,6 +42,7 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target{
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ChannelDropdown, 0, 0);
         try {
             showSelected = a.getBoolean(R.styleable.ChannelDropdown_show_selected, true);
+            initial_helper_text = a.getString(R.styleable.ChannelDropdown_initial_helper_text);
         } finally {
             a.recycle();
         }
@@ -129,7 +131,7 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target{
         viewModel.getSimChannels().observe(lifecycleOwner, this::channelUpdate);
         viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> Timber.i("Got new selected channels: %s", channels.size()));
         viewModel.getActiveChannel().observe(lifecycleOwner, channel -> {
-            if (channel != null && showSelected) setState(null, NONE);
+            if (channel != null && showSelected) setState(initial_helper_text, NONE);
         });
         viewModel.getChannelActions().observe(lifecycleOwner, actions -> setState(actions, viewModel));
     }
@@ -140,7 +142,7 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target{
         else if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !viewModel.getType().equals(HoverAction.BALANCE))
             setState(getContext().getString(actions.get(0).transaction_type.equals(HoverAction.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning), INFO);
         else if (viewModel.getActiveChannel().getValue() != null && showSelected)
-            setState(null, AbstractStatefulInput.SUCCESS);
+            setState(initial_helper_text, AbstractStatefulInput.SUCCESS);
     }
 
     public interface HighlightListener {

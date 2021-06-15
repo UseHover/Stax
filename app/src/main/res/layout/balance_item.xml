@@ -1,60 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/margin_65"
-    android:orientation="horizontal"
-    android:paddingHorizontal="@dimen/margin_13">
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_13"
+        android:paddingStart="@dimen/margin_13"
+        android:paddingEnd="0dp"
+        app:cardBackgroundColor="@color/cardViewColor"
+        app:cardCornerRadius="@dimen/radius"
+        app:cardElevation="8dp"
+        app:cardPreventCornerOverlap="false">
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1"
-        android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_65"
+            android:background="?selectableItemBackground"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/margin_13"
+            android:paddingEnd="0dp">
 
-        <TextView
-            android:id="@+id/balance_channel_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:fontFamily="font-normal"
-            android:gravity="center_vertical"
-            android:text="Channel name"
-            android:textColor="@color/offWhite"
-            android:textSize="@dimen/text_16" />
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/balance_subtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-8dp"
-            android:drawablePadding="@dimen/margin_5"
-            android:fontFamily="font-normal"
-            android:textColor="@color/offWhite"
-            android:textSize="@dimen/text_13"
-            app:drawableStartCompat="@drawable/ic_refresh_white_13dp" />
+            <TextView
+                    android:id="@+id/balance_channel_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:fontFamily="font-normal"
+                    android:gravity="center_vertical"
+                    android:text="Channel name"
+                    android:textColor="@color/offWhite"
+                    android:textSize="@dimen/text_16" />
 
-        <TextView
-            android:id="@+id/channel_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Channel ID"
-            android:visibility="gone" />
+            <TextView
+                    android:id="@+id/channel_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Channel ID"
+                    android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingEnd="@dimen/margin_13">
+
+            <TextView
+                    android:id="@+id/balance_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:fontFamily="font-normal"
+                    android:gravity="end"
+                    android:textColor="@color/offWhite"
+                    android:textSize="@dimen/text_21"
+                    app:drawableEndCompat="@drawable/ic_remove" />
+
+            <TextView
+                    android:id="@+id/balance_subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-8dp"
+                    android:fontFamily="font-normal"
+                    android:textColor="@color/offWhite"
+                    android:textSize="@dimen/text_13" />
+        </LinearLayout>
+
+        <ImageView
+                android:id="@+id/balance_refresh_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="?selectableItemBackground"
+                android:padding="@dimen/margin_13"
+                app:srcCompat="@drawable/ic_refresh_white_24dp" />
+
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/balance_amount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:fontFamily="font-normal"
-        android:gravity="center_vertical"
-        android:textColor="@color/offWhite"
-        android:textSize="@dimen/text_21"
-        app:drawableEndCompat="@drawable/ic_remove" />
-
-
-</LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -36,7 +36,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
         this.balanceListener = listener;
     }
 
-    public void showBalance(boolean show) {
+    public void showBalanceAmounts(boolean show) {
         this.showBalance = show;
         this.notifyDataSetChanged();
     }
@@ -53,7 +53,7 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
     public void onBindViewHolder(@NonNull BalanceViewHolder holder, int position) {
         Channel channel = channels.get(position);
 
-        holder.binding.balanceChannelName.setText(channel.name);
+        UIHelper.setTextUnderline(holder.binding.balanceChannelName,channel.name);
         holder.binding.channelId.setText(String.valueOf(channel.id));
 
         if (!showBalance)
@@ -76,20 +76,19 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
         setColors(holder, channel,
                 UIHelper.getColor(channel.primaryColorHex, true, holder.itemView.getContext()),
                 UIHelper.getColor(channel.secondaryColorHex, false, holder.itemView.getContext()));
+
+        if(channel.id == Channel.DUMMY) {
+            holder.binding.balanceSubtitle.setVisibility(GONE);
+            holder.binding.balanceRefreshIcon.setImageResource(R.drawable.ic_add_icon_24);
+        }
     }
 
     private void setColors(BalanceViewHolder holder, Channel channel, int primary, int secondary) {
-        holder.itemView.setBackgroundColor(primary);
+        holder.binding.getRoot().setCardBackgroundColor(primary);
         holder.binding.balanceSubtitle.setTextColor(secondary);
         holder.binding.balanceAmount.setTextColor(secondary);
         holder.binding.balanceChannelName.setTextColor(secondary);
-
-        Drawable drawable = ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.ic_refresh_white_13dp);
-        if (drawable != null) {
-            drawable = DrawableCompat.wrap(drawable);
-            DrawableCompat.setTint(drawable.mutate(), secondary);
-            holder.binding.balanceSubtitle.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
-        }
+        holder.binding.balanceRefreshIcon.setColorFilter(secondary);
     }
 
     private void setColorForEmptyAmount(boolean show, BalanceViewHolder holder, int secondary) {
@@ -112,12 +111,18 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
             super(binding.getRoot());
             this.binding = binding;
             binding.getRoot().setOnClickListener(this);
+            binding.balanceRefreshIcon.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            if (balanceListener != null )
-                balanceListener.onTapDetail(Integer.parseInt(binding.channelId.getText().toString()));
+            if (balanceListener != null ){
+                if (binding.balanceRefreshIcon.equals(v)) {
+                    balanceListener.onTapRefresh(Integer.parseInt(binding.channelId.getText().toString()));
+                } else {
+                    balanceListener.onTapDetail(Integer.parseInt(binding.channelId.getText().toString()));
+                }
+            }
         }
     }
 

@@ -173,6 +173,7 @@ public class DatabaseRepo {
                 HoverAction a = intent.hasExtra(HoverAction.ID_KEY) ? getAction(intent.getStringExtra(HoverAction.ID_KEY)) : null;
 
                 if (t == null) {
+                    Utils.logAnalyticsEvent(c.getString(R.string.initializing_USSD_event_confirmed), c);
                     t = new StaxTransaction(intent, a, contact, c);
                     transactionDao.insert(t);
                 }
@@ -250,6 +251,10 @@ public class DatabaseRepo {
         return scheduleDao.getLiveFuture();
     }
 
+    public LiveData<List<Schedule>> getFutureTransactions(int channelId) {
+        return scheduleDao.getLiveFutureByChannelId(channelId);
+    }
+
     public Schedule getSchedule(int id) {
         return scheduleDao.get(id);
     }
@@ -269,6 +274,9 @@ public class DatabaseRepo {
     // Requests
     public LiveData<List<Request>> getLiveRequests() {
         return requestDao.getLiveUnmatched();
+    }
+    public LiveData<List<Request>> getLiveRequests(int channelId) {
+        return requestDao.getLiveUnmatchedByChannel(channelId);
     }
 
     public List<Request> getRequests() {

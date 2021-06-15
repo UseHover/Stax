@@ -22,3 +22,8 @@ app/release
 .cxx
 /hover.sdk
 *.apk
+.project
+.settings/
+app/.classpath
+app/.project
+app/.settings/
