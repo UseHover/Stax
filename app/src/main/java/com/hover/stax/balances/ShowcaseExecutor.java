@@ -49,7 +49,7 @@ public class ShowcaseExecutor implements NavigationInterface {
 		// Delaying because it takes a couple of sec for bubbleShowcase to correctly identify Recyclerview's children
 			new Handler().postDelayed(() -> {
 				if( balanceBinding.homeCardBalances.balancesRecyclerView.getChildCount() > 0
-						&& balanceBinding.homeCardBalances.balancesRecyclerView.getChildAt(1).findViewById(R.id.balance_item_card) !=null) {
+						&& balanceBinding.homeCardBalances.balancesRecyclerView.getChildAt(1) !=null) {
 					startShowcase(activity.getString(R.string.onboard_addaccount_greatwork_head), activity.getString(R.string.onboard_addaccount_greatwork_desc),
 							addedAccountListener, (balanceBinding.homeCardBalances.balancesRecyclerView.getChildAt(1).findViewById(R.id.balance_item_card).findViewById(R.id.balance_channel_name)),
 							BubbleShowCase.ArrowPosition.LEFT, true);
