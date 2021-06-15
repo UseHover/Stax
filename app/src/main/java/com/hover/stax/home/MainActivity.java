@@ -1,6 +1,5 @@
 package com.hover.stax.home;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,15 +10,12 @@ import android.os.Looper;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
 
-import com.amplitude.api.Amplitude;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.hover.stax.balances.BalanceAdapter;
-import com.hover.stax.balances.BalancesFragment;
 import com.hover.stax.balances.BalancesViewModel;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.databinding.ActivityMainBinding;
@@ -62,8 +58,6 @@ public class MainActivity extends AbstractNavigationActivity implements
         balancesViewModel.getRunFlag().observe(this, flag -> Timber.i("Flag observer is necessary to make updates fire, but all logic is in viewmodel. %s", flag));
         balancesViewModel.getActions().observe(this, actions -> Timber.i("Actions observer is necessary to make updates fire, but all logic is in viewmodel. %s", actions.size()));
 
-        setUpNav();
-
         checkForRequest(getIntent());
         checkForFragmentDirection(getIntent());
         checkForDeepLinking();
@@ -75,6 +69,14 @@ public class MainActivity extends AbstractNavigationActivity implements
         super.onNewIntent(intent);
         checkForRequest(intent);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        setUpNav();
+    }
+
     private void checkForDeepLinking() {
         Intent intent = getIntent();
         if(intent.getAction()!=null && intent.getAction().equals(Intent.ACTION_VIEW) && intent.getData() != null) {
@@ -124,6 +126,7 @@ public class MainActivity extends AbstractNavigationActivity implements
             }
         });
     }
+
     private void openStaxPlaystorePage() {
         Timber.i("Currently at reviews for external store page");
         Uri link = Uri.parse(getString(R.string.stax_market_playstore_link));

@@ -62,6 +62,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
         startObservers(binding.getRoot());
         startListeners();
         setDefaultHelperText();
+        setSummaryCardBackButton();
         return binding.getRoot();
     }
     private void setDefaultHelperText() {
@@ -141,6 +142,9 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
         if (!isEditing) requestViewModel.createRequest();
         shareCard.setVisibility(isEditing ? View.GONE : View.VISIBLE);
         fab.setVisibility(isEditing ? View.VISIBLE : View.GONE);
+    }
+    private void setSummaryCardBackButton() {
+        binding.summaryCard.getRoot().setOnClickIcon(view -> requestViewModel.setEditing(true));
     }
 
     protected void updateAcctNo(Channel c) {
