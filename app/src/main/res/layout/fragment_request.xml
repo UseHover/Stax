@@ -1,67 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:layout_marginTop="@dimen/margin_13"
-	tools:context=".requests.NewRequestFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/margin_13"
+    tools:context=".requests.NewRequestFragment">
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="@dimen/margin_89"
-		android:orientation="vertical" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_89"
+        android:orientation="vertical">
 
-		<include layout="@layout/request_card_edit"
-			android:id="@+id/editCard" />
+        <include
+            android:id="@+id/editCard"
+            layout="@layout/request_card_edit" />
 
-		<include layout="@layout/request_card_summary"
-			android:id="@+id/summaryCard"
-			android:visibility="gone"/>
+        <include
+            android:id="@+id/summaryCard"
+            layout="@layout/request_card_summary"
+            android:visibility="gone" />
 
-		<include layout="@layout/request_card_share"
-			android:id="@+id/shareCard"
-			android:visibility="gone"/>
+        <include
+            android:id="@+id/shareCard"
+            layout="@layout/request_card_share"
+            android:visibility="gone" />
 
-		<LinearLayout android:id="@+id/noworry_text"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="horizontal">
+        <LinearLayout
+            android:id="@+id/noworry_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-			<TextView
-				android:layout_height="wrap_content"
-				android:layout_width="0dp"
-				android:layout_weight=".62"
-				android:layout_marginHorizontal="@dimen/margin_13"
-				android:fontFamily="font-normal"
-				android:lineSpacingExtra="2sp"
-				android:textSize="@dimen/text_16"
-				android:textColor="@color/offWhite"
-				android:text="@string/noworry_explain" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_13"
+                android:layout_weight=".62"
+                android:fontFamily="font-normal"
+                android:lineSpacingExtra="2sp"
+                android:text="@string/noworry_explain"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
 
-			<View
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight=".38" />
-		</LinearLayout>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".38" />
+        </LinearLayout>
 
-		<androidx.coordinatorlayout.widget.CoordinatorLayout
-			android:layout_width="match_parent"
-			android:layout_height="match_parent">
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/fab"
+            style="@style/StaxFabExtended"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_marginHorizontal="@dimen/margin_13"
+            android:layout_marginTop="10dp"
+            android:fontFamily="font-medium"
+            android:text="@string/btn_continue" />
 
-			<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-				android:id="@+id/fab"
-				style="@style/StaxFabExtended"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginHorizontal="@dimen/margin_13"
-				android:layout_gravity="end|bottom"
-				app:layout_anchorGravity="end|bottom"
-				android:text="@string/btn_continue"
-				android:fontFamily="font-medium" />
-
-		</androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-	</LinearLayout>
+    </LinearLayout>
 </androidx.core.widget.NestedScrollView>

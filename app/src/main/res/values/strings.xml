@@ -6,10 +6,12 @@
 	<string name="api_url" translatable="false">https://www.usehover.com/api</string>
 	<string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
 	<string name="bounty_endpoint">/stax_bounty_hunters</string>
-	<string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
+	<string name="stax_market_playstore_link" translatable="false">market://details?id=com.hover.stax</string>
+	<string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
 
 	<string name="nav_home">Home</string>
 	<string name="nav_balance_and_history">Balance and history</string>
+	<string name="nav_balances">Balances</string>
 	<string name="nav_link_account">Link an account</string>
 	<string name="nav_airtime">Buy Airtime</string>
 	<string name="nav_transfer">Transfer</string>
@@ -68,6 +70,7 @@
 	<string name="pending_callout">Transaction sent. Waiting for confirmation.</string>
 	<string name="refresh_balance_desc">Refresh balance to see your money</string>
 	<string name="refresh_balances">Refresh balances</string>
+	<string name="refresh">Refresh</string>
 	<string name="refresh_balance_error">Add an account to check your balance.</string>
 
 	<!-- Permissions -->
@@ -106,8 +109,9 @@
 	<string name="hsdk_enable_accessibility">Enable Accessibility</string>
 	<string name="access_service_summary">Connect with Mobile Money and Telecom services on your behalf</string>
 	<string name="access_service_descript">This is used to read and interact with USSD menus to provide a simplified and more accessible experience.</string>
-	<string name="hsdk_complete">Transaction complete</string>
 	<string name="hsdk_manual_env">Manual environment active. This session will be recorded.</string>
+	<string name="hsdk_overlay_header">Transacting</string>
+	<string name="hsdk_complete">Transaction complete</string>
 
 	<!-- Onboarding showcase -->
 	<string name="onboard_addaccounthead">Add an account to get started.</string>
@@ -148,6 +152,7 @@
 	<string name="note_cardhead">Description</string>
 	<string name="request_note_label">What is your request for?</string>
 	<string name="recipient_label">To</string>
+	<string name="sender_label">From</string>
 	<string name="send_who_header">Send money to</string>
 	<string name="airtime_who_header">Buy airtime for</string>
 	<string name="accounts_label">Pay from</string>
@@ -157,6 +162,7 @@
 	<string name="descrip_airtime_sent">%1$s sent airtime to %2$s</string>
 	<string name="descrip_transfer_sent">%1$s sent money to %2$s</string>
 	<string name="descrip_transfer_received">received money from %1$s</string>
+	<string name="descrip_bill_paid">paid %1$s bill</string>
 	<string name="descrip_recorded">Recorded USSD session on %1$s</string>
 	<string name="fab_transfernow">Send money now</string>
 	<string name="fab_airtimenow">Buy airtime now</string>
@@ -266,6 +272,9 @@
 	<string name="toast_confirm_pinupdate">Pin saved</string>
 	<string name="language_cardhead">Language</string>
 	<string name="disclaimer">All products names, brands, and trademarks are property of their respective owners. Use does not imply affiliation.</string>
+	<string name="contact_stax_cardhead">Contact Stax</string>
+	<string name="twitter" translatable="false">Twitter</string>
+	<string name="stax_twitter_url" translatable="false">http://twitter.com/joinstax</string>
 
 	<!-- System auth check -->
 	<string name="auth_title">Authenticate with Stax</string>
@@ -344,9 +353,20 @@
 	<string name="country">Country</string>
 	<string name="country_error_nodata">Please turn on data to load services and countries.</string>
 	<string name="country_with_emoji">%1$s  %2$s </string>
+	<string name="all_countries_with_emoji">🌎 All countries</string>
 	<string name="bounty_sim_err_header">NO %1$s SIM</string>
 	<string name="bounty_sim_err_desc">You need a SIM card from %1$s in your device to map this flow. Please put a SIM card from %1$s in your device and try again.</string>
 	<string name="retry">Retry</string>
 	<string name="submit_flow">Submit flow</string>
 	<string name="bounty_submitted_successfully">Bounty submitted successfully</string>
+	<string name="language">Language</string>
+	<string name="bounty">Bounty</string>
+	<string name="internet_required">Internet required</string>
+	<string name="internet_required_bounty_desc">You need a data or Wifi connection to map USSD flows. Please connect and try again.</string>
+	<string name="try_again">Try again</string>
+	<string name="edge_case_bounty_email_error">This rarely happens, but if error persists, please close the app and restart.</string>
+
+
+
+
 </resources>

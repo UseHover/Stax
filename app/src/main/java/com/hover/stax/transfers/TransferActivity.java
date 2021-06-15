@@ -2,7 +2,6 @@ package com.hover.stax.transfers;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -13,15 +12,21 @@ import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.hover.stax.actions.ActionSelectViewModel;
 import com.hover.stax.channels.ChannelDropdownViewModel;
+import com.hover.stax.contacts.PhoneHelper;
 import com.hover.stax.contacts.StaxContact;
+
 import com.hover.stax.navigation.AbstractNavigationActivity;
+import com.hover.stax.pushNotification.PushNotificationTopicsInterface;
 import com.hover.stax.utils.Constants;
+
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.views.StaxDialog;
 
-public class TransferActivity extends AbstractNavigationActivity {
+import timber.log.Timber;
+
+public class TransferActivity extends AbstractNavigationActivity implements PushNotificationTopicsInterface {
 	final public static String TAG = "TransferActivity";
 
 	private ChannelDropdownViewModel channelDropdownViewModel;
@@ -66,15 +71,20 @@ public class TransferActivity extends AbstractNavigationActivity {
 	}
 
 	private void createFromRequest(String link) {
-		AlertDialog dialog = new StaxDialog(this).setDialogMessage(R.string.loading_link_dialoghead).showIt();
 		transferViewModel.decrypt(link);
+		observeRequest();
+		Amplitude.getInstance().logEvent(getString(R.string.clicked_request_link));
+	}
+
+	private void observeRequest() {
+		AlertDialog dialog = new StaxDialog(this).setDialogMessage(R.string.loading_link_dialoghead).showIt();
 		transferViewModel.getRequest().observe(this, request -> {
-			Log.e(TAG, "maybe viewing request");
+			Timber.i("maybe viewing request");
 			if (request == null) return;
-			Log.e(TAG, "viewing request " + request);
+
+			Timber.i("maybe viewing request");
 			if (dialog != null) dialog.dismiss();
 		});
-		Amplitude.getInstance().logEvent(getString(R.string.clicked_request_link));
 	}
 
 	void submit() {
@@ -83,8 +93,14 @@ public class TransferActivity extends AbstractNavigationActivity {
 
 	private void makeHoverCall(HoverAction act) {
 		Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
+		updatePushNotifGroupStatus();
 		transferViewModel.checkSchedule();
 		makeCall(act);
+	}
+
+	private void updatePushNotifGroupStatus() {
+		joinTransactionGroup(this);
+		leaveNoUsageGroup(this);
 	}
 
 	private void makeCall(HoverAction act) {
@@ -97,8 +113,8 @@ public class TransferActivity extends AbstractNavigationActivity {
 		hsb.run();
 	}
 	private void addRecipientInfo(HoverSession.Builder hsb) {
-		hsb.extra(HoverAction.ACCOUNT_KEY, transferViewModel.getContact().getValue().phoneNumber)
-			.extra(HoverAction.PHONE_KEY, transferViewModel.getContact().getValue().getNumberFormatForInput(actionSelectViewModel.getActiveAction().getValue(), channelDropdownViewModel.getActiveChannel().getValue()));
+		hsb.extra(HoverAction.ACCOUNT_KEY, transferViewModel.getContact().getValue().accountNumber)
+			.extra(HoverAction.PHONE_KEY, PhoneHelper.getNumberFormatForInput(transferViewModel.getContact().getValue().accountNumber, actionSelectViewModel.getActiveAction().getValue(), channelDropdownViewModel.getActiveChannel().getValue()));
 	}
 
 	@Override
@@ -111,15 +127,15 @@ public class TransferActivity extends AbstractNavigationActivity {
 	private void returnResult(int type, int result, Intent data) {
 		Intent i = data == null ? new Intent() : new Intent(data);
 		if (transferViewModel.getContact().getValue() != null)
-			i.putExtra(StaxContact.ID_KEY, transferViewModel.getContact().getValue().id);
+			i.putExtra(StaxContact.ID_KEY, transferViewModel.getContact().getValue().lookupKey);
 		i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);
 		setResult(result, i);
 		finish();
 	}
 
-	@Override
-	public void onBackPressed() {
-		if (!transferViewModel.getIsEditing().getValue()) transferViewModel.setEditing(true);
-		else super.onBackPressed();
-	}
+    @Override
+    public void onBackPressed() {
+        if (!transferViewModel.getIsEditing().getValue()) transferViewModel.setEditing(true);
+        else super.onBackPressed();
+    }
 }

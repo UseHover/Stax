@@ -11,24 +11,24 @@ import java.util.List;
 
 @Dao
 public interface RequestDao {
-	@Query("SELECT * FROM requests ORDER BY date_sent DESC")
-	LiveData<List<Request>> getAll();
+    @Query("SELECT * FROM requests ORDER BY date_sent DESC")
+    LiveData<List<Request>> getAll();
 
-	@Query("SELECT * FROM requests WHERE matched_transaction_uuid IS NULL ORDER BY date_sent DESC")
-	LiveData<List<Request>> getLiveUnmatched();
+    @Query("SELECT * FROM requests WHERE matched_transaction_uuid IS NULL ORDER BY date_sent DESC")
+    LiveData<List<Request>> getLiveUnmatched();
 
-	@Query("SELECT * FROM requests WHERE matched_transaction_uuid IS NULL ORDER BY date_sent DESC")
-	List<Request> getUnmatched();
+    @Query("SELECT * FROM requests WHERE matched_transaction_uuid IS NULL ORDER BY date_sent DESC")
+    List<Request> getUnmatched();
 
-	@Query("SELECT * FROM requests WHERE id = :id")
-	Request get(int id);
+    @Query("SELECT * FROM requests WHERE id = :id")
+    Request get(int id);
 
-	@Insert
-	void insert(Request request);
+    @Insert
+    void insert(Request request);
 
-	@Update
-	void update(Request request);
+    @Update
+    void update(Request request);
 
-	@Delete
-	void delete(Request request);
+    @Delete
+    void delete(Request request);
 }

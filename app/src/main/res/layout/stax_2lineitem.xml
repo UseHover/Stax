@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:minHeight="?attr/listPreferredItemHeight"
-	android:textColor="@drawable/spinner_state_selector"
-	android:background="?attr/selectableItemBackground"
-	android:id="@+id/content" >
+    android:id="@+id/content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:minHeight="?attr/listPreferredItemHeight"
+    android:textColor="@drawable/spinner_state_selector">
 
-	<TextView android:id="@+id/title"
-	    	android:fontFamily="font-normal"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:textSize="@dimen/text_21" />
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="font-normal"
+        android:textSize="@dimen/text_21" />
 
-	<TextView android:id="@+id/subtitle"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/title"
-		android:layout_alignStart="@id/title"
-		android:textSize="@dimen/text_13"
-	    	android:fontFamily="font-normal"
-		android:textColor="@color/offWhite"
-		android:textAppearance="?attr/textAppearanceListItemSecondary" />
+    <TextView
+        android:id="@+id/subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_alignStart="@id/title"
+        android:fontFamily="font-normal"
+        android:textAppearance="?attr/textAppearanceListItemSecondary"
+        android:textColor="@color/offWhite"
+        android:textSize="@dimen/text_13" />
 
 </RelativeLayout>

@@ -2,7 +2,7 @@
 	<string name="custom_font_error" translatable="false">Cannot set custom font</string>
 	<string name="custom_font_err_msg" translatable="false">At least one default font must be set</string>
 
-	<!--	Amplitude log events -->
+	<!--	Amplitude and Firebase Analytics log events -->
 	<string name="viewing_onboarding_slide" translatable="false">Viewing slide %1$s</string>
 	<string name="clicked_getstarted">Clicked get started</string>
 	<string name="perms_basic_dialog" translatable="false">Permission - Phone and SMS: dialog shown</string>
@@ -75,14 +75,18 @@
 	<string name="clicked_copylink_request" translatable="false">Clicked copy link</string>
 
 	<string name="clicked_bounty_email_continue_btn" translatable="false">Clicked bounty email continue button</string>
-	<string name="clicked_run_bounty_session">Clicked run bounty USSD session</string>
-	<string name="clicked_retry_bounty_session">Clicked retry bounty from transaction detail page</string>
+	<string name="clicked_run_bounty_session" translatable="false">Clicked run bounty USSD session</string>
+	<string name="clicked_retry_bounty_session" translatable="false">Clicked retry bounty from transaction detail page</string>
 	<string name="bounty_email_success" translatable="false">Bounty email provided successfully</string>
 	<string name="bounty_email_err" translatable="false">Bounty email error due to: %1$s</string>
+	<string name="visited_rating_review_screen" translatable="false">Visited ratings and review screen</string>
+	<string name="clicked_rating_star" translatable="false">Clicked rating stars and giving review</string>
 
 	<!--FIREBASE MESSAGING-->
 	<string name="firebase_topic_everyone" translatable="false">EVERYONE</string>
 	<string name="firebase_topic_channel" translatable="false">CHANNEL-%1$d</string>
+	<string name="firebase_topic_bounty_in_country" translatable="false">BOUNTY-%1$s</string>
+	<string name="firebase_topic_no_usage_activity" translatable="false">NO-USAGE-ACTIVITY</string>
 	<string name="firebase_topic_no_balance_check" translatable="false">NO-BALANCE-CHECK</string>
 	<string name="firebase_topic_no_balance_toggle" translatable="false">NO-BALANCE-TOGGLE</string>
 	<string name="firebase_topic_no_request_money" translatable="false">NO-REQUEST-MONEY</string>

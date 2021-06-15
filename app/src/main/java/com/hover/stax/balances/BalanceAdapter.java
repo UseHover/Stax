@@ -2,11 +2,9 @@ package com.hover.stax.balances;
 
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -16,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.databinding.BalanceItemBinding;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -25,120 +24,121 @@ import java.util.List;
 import static android.view.View.GONE;
 
 public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceViewHolder> {
-	private final static String TAG = "BalanceAdapter";
-	private List<Channel> channels;
+    private final static String TAG = "BalanceAdapter";
 
-	private final BalanceListener balanceListener;
-	private boolean showBalance = false;
+    private final List<Channel> channels;
 
-	public BalanceAdapter(List<Channel> channels, BalanceListener listener) {
-		this.channels = channels;
-		this.balanceListener = listener;
-	}
-	public void showBalance(boolean show) {
-		this.showBalance = show;
-		this.notifyDataSetChanged();
-	}
+    private final BalanceListener balanceListener;
+    private boolean showBalance = false;
 
-	@NonNull
-	@Override
-	public BalanceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.balance_item, parent, false);
-		return new BalanceViewHolder(view);
-	}
+    public BalanceAdapter(List<Channel> channels, BalanceListener listener) {
+        this.channels = channels;
+        this.balanceListener = listener;
+    }
 
-	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-	@Override
-	public void onBindViewHolder(@NonNull BalanceViewHolder holder, int position) {
-		Channel channel = channels.get(position);
+    public void showBalance(boolean show) {
+        this.showBalance = show;
+        this.notifyDataSetChanged();
+    }
 
-		holder.channelName.setText(channel.name);
-		holder.channelId.setText(Integer.toString(channel.id));
+    @NonNull
+    @Override
+    public BalanceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        BalanceItemBinding binding = BalanceItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new BalanceViewHolder(binding);
+    }
 
-		if(!showBalance)holder.subtitle.setVisibility(GONE);
-		if (channel.latestBalance != null && showBalance) {
-			holder.subtitle.setVisibility(View.VISIBLE);
-			holder.subtitle.setText(DateUtils.humanFriendlyDate(channel.latestBalanceTimestamp));
-			holder.amount.setText(Utils.formatAmount(channel.latestBalance));
-			setColorForEmptyAmount(false, holder, 0);
-		}
-		else {
-			holder.amount.setText("");
-			setColorForEmptyAmount(true, holder, UIHelper.getColor(channel.secondaryColorHex, false, holder.itemView.getContext()));
-		}
-		if (showBalance && channel.latestBalance == null) {
-			holder.subtitle.setVisibility(View.VISIBLE);
-			holder.subtitle.setText(holder.itemView.getContext().getString(R.string.refresh_balance_desc));
-		}
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onBindViewHolder(@NonNull BalanceViewHolder holder, int position) {
+        Channel channel = channels.get(position);
 
-		setColors(holder, channel,
-			UIHelper.getColor(channel.primaryColorHex, true, holder.itemView.getContext()),
-			UIHelper.getColor(channel.secondaryColorHex, false, holder.itemView.getContext()));
-	}
+        holder.binding.balanceChannelName.setText(channel.name);
+        holder.binding.channelId.setText(String.valueOf(channel.id));
 
-	private void setColors(BalanceViewHolder holder, Channel channel, int primary, int secondary) {
-		holder.itemView.setBackgroundColor(primary);
-		holder.subtitle.setTextColor(secondary);
-		holder.amount.setTextColor(secondary);
-		holder.channelName.setTextColor(secondary);
+        if (!showBalance)
+            holder.binding.balanceSubtitle.setVisibility(GONE);
 
-		Drawable drawable = ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.ic_refresh_white_13dp);
-		if(drawable !=null) {
-			drawable = DrawableCompat.wrap(drawable);
-			DrawableCompat.setTint(drawable.mutate(), secondary);
-			holder.subtitle.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
-		}
-	}
-	private void setColorForEmptyAmount(boolean show, BalanceViewHolder holder, int secondary) {
-		if(show) {
-			Drawable drawable = ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.ic_remove);
-			if(drawable !=null) {
-				drawable = DrawableCompat.wrap(drawable);
-				DrawableCompat.setTint(drawable.mutate(), secondary);
-				holder.amount.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
-			}
-		}else holder.amount.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+        if (channel.latestBalance != null && showBalance) {
+            holder.binding.balanceSubtitle.setVisibility(View.VISIBLE);
+            holder.binding.balanceSubtitle.setText(DateUtils.humanFriendlyDate(channel.latestBalanceTimestamp));
+            holder.binding.balanceAmount.setText(Utils.formatAmount(channel.latestBalance));
+            setColorForEmptyAmount(false, holder, 0);
+        } else {
+            holder.binding.balanceAmount.setText("");
+            setColorForEmptyAmount(true, holder, UIHelper.getColor(channel.secondaryColorHex, false, holder.itemView.getContext()));
+        }
+        if (showBalance && channel.latestBalance == null) {
+            holder.binding.balanceSubtitle.setVisibility(View.VISIBLE);
+            holder.binding.balanceSubtitle.setText(holder.itemView.getContext().getString(R.string.refresh_balance_desc));
+        }
 
-	}
+        setColors(holder, channel,
+                UIHelper.getColor(channel.primaryColorHex, true, holder.itemView.getContext()),
+                UIHelper.getColor(channel.secondaryColorHex, false, holder.itemView.getContext()));
+    }
 
-	class BalanceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-		private TextView channelName, channelId, subtitle, amount;
+    private void setColors(BalanceViewHolder holder, Channel channel, int primary, int secondary) {
+        holder.itemView.setBackgroundColor(primary);
+        holder.binding.balanceSubtitle.setTextColor(secondary);
+        holder.binding.balanceAmount.setTextColor(secondary);
+        holder.binding.balanceChannelName.setTextColor(secondary);
 
-		public BalanceViewHolder(@NonNull View itemView) {
-			super(itemView);
-			channelName = itemView.findViewById(R.id.balance_channel);
-			channelName.setOnClickListener(this);
-			channelId = itemView.findViewById(R.id.channel_id);
-			amount = itemView.findViewById(R.id.balance_amount);
-			subtitle = itemView.findViewById(R.id.balance_subtitle);
-		}
+        Drawable drawable = ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.ic_refresh_white_13dp);
+        if (drawable != null) {
+            drawable = DrawableCompat.wrap(drawable);
+            DrawableCompat.setTint(drawable.mutate(), secondary);
+            holder.binding.balanceSubtitle.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+        }
+    }
 
-		@Override
-		public void onClick(View v) {
-			if (balanceListener != null && v.getId() == R.id.balance_channel)
-				balanceListener.onTapDetail(Integer.parseInt(channelId.getText().toString()));
-			else if (balanceListener != null)
-				balanceListener.onTapRefresh(Integer.parseInt(channelId.getText().toString()));
-		}
-	}
+    private void setColorForEmptyAmount(boolean show, BalanceViewHolder holder, int secondary) {
+        if (show) {
+            Drawable drawable = ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.ic_remove);
+            if (drawable != null) {
+                drawable = DrawableCompat.wrap(drawable);
+                DrawableCompat.setTint(drawable.mutate(), secondary);
+                holder.binding.balanceAmount.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+            }
+        } else
+            holder.binding.balanceAmount.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
 
-	public interface BalanceListener {
-		void onTapRefresh(int channelId);
-		void onTapDetail(int channelId);
-	}
+    }
 
-	@Override
-	public int getItemCount() {
-		return channels == null ? 0 : channels.size();
-	}
+    class BalanceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public BalanceItemBinding binding;
 
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
+        public BalanceViewHolder(BalanceItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+            binding.getRoot().setOnClickListener(this);
+        }
 
-	@Override
-	public int getItemViewType(int position) {
-		return position;
-	}
+        @Override
+        public void onClick(View v) {
+            if (balanceListener != null )
+                balanceListener.onTapDetail(Integer.parseInt(binding.channelId.getText().toString()));
+        }
+    }
+
+    public interface BalanceListener {
+        void onTapRefresh(int channelId);
+
+        void onTapDetail(int channelId);
+    }
+
+    @Override
+    public int getItemCount() {
+        return channels == null ? 0 : channels.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 }

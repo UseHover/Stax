@@ -1,39 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bountyRetryButtonLayoutId"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:visibility="gone"
-    android:orientation="horizontal"
-    android:layout_alignParentBottom="true"
     android:layout_alignParentEnd="true"
-    android:id="@+id/bountyButtonsId"
+    android:layout_alignParentBottom="true"
+    android:layout_gravity="end"
+    android:gravity="end"
+    android:orientation="horizontal"
     android:paddingBottom="@dimen/margin_65"
-    android:gravity="end|center_horizontal"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:visibility="gone">
 
-	<RelativeLayout android:id="@+id/btnRow"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:visibility="visible"
-	    >
-		<androidx.appcompat.widget.AppCompatButton
-		    android:id="@+id/btnRetry"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:text="@string/retry"
-		    android:visibility="visible"
-		    android:fontFamily="font-medium"
-		    style="@style/StaxButton" />
-	</RelativeLayout>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnRetry"
+        style="@style/StaxButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="font-medium"
+        android:text="@string/retry" />
 
-	<androidx.appcompat.widget.AppCompatButton
-	    android:id="@+id/btnSubmitFlow"
-	    style="@style/StaxButtonColored"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_marginHorizontal="@dimen/margin_13"
-	    android:text="@string/submit_flow"
-	    android:visibility="gone"
-	    android:fontFamily="font-medium" />
-
-</LinearLayout>
+</RelativeLayout>
