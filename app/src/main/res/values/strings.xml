@@ -130,17 +130,9 @@
 
 	<!-- Onboarding showcase -->
 	<string name="onboard_addaccounthead">Add an account to get started.</string>
-	<string name="onboard_addaccountbody">Stax puts all your bank and mobile money accounts in one secure place.</string>
-	<string name="onboard_sechead">World class security</string>
-	<string name="onboard_secbody">We secure Stax with the same technology that locks your device. You unlock Stax the same way you unlock your device.</string>
-	<string name="onboard_peekhead">Keep accounts private</string>
-	<string name="onboard_peekbody">Peek at your balances by dragging the bar to the left.</string>
-	<string name="onboard_balhead">Refresh your accounts</string>
-	<string name="onboard_balbody">Check your account\'s balance by pulling the bar all the way to the left.</string>
-	<string name="onboard_refreshhead">Refresh Stax</string>
-	<string name="onboard_refreshbody">Pull down the whole screen to refresh all of your accounts.</string>
-	<string name="onboard_infohead">Long press for more info</string>
-	<string name="onboard_infobody">Press and hold any element in Stax for more information.</string>
+	<string name="onboard_addaccountdesc">Keep track of your money all in one place. Your funds never leave your account or mix.</string>
+	<string name="onboard_addaccount_greatwork_head">Great work!</string>
+	<string name="onboard_addaccount_greatwork_desc">Now add your other accounts so you can view all your separate balances in one place.</string>
 
 	<!-- Transfer -->
 	<string name="loading_link_dialoghead">Loading, one moment</string>

@@ -86,7 +86,7 @@ public class MainActivity extends AbstractNavigationActivity implements
                 navigateToTransferActivity(HoverAction.AIRTIME, false, intent, this);
             }
             else if(deepLinkRoute.contains(getString(R.string.deeplink_linkaccount))) {
-                navigateToChannelsListFragment(getNavController(), false);
+                navigateToChannelsListFragment(getNavController(), true);
             }
             else if(deepLinkRoute.contains(getString(R.string.deeplink_balance)) || deepLinkRoute.contains(getString(R.string.deeplink_history))) {
                 navigateToBalanceFragment(getNavController());
@@ -152,7 +152,7 @@ public class MainActivity extends AbstractNavigationActivity implements
 
     @Override
     public void onTapDetail(int channel_id) {
-        if(channel_id == Channel.DUMMY) navigateToChannelsListFragment(getNavController(), false);
+        if(channel_id == Channel.DUMMY) navigateToChannelsListFragment(getNavController(), true);
         else navigateToChannelDetailsFragment(channel_id, getNavController());
     }
 

@@ -1,81 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/showCaseMessageViewLayout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="36dp"
-    android:paddingLeft="36dp"
-    android:paddingRight="20dp"
-    android:paddingTop="20dp"
-    android:maxWidth="420dp">
-
-    <ImageView
-        android:id="@+id/imageViewShowCase"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginLeft="0dp"
-        android:visibility="gone"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/layoutTexts"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/showCaseMessageViewLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical"
-        tools:ignore="MissingConstraints">
+        android:layout_marginHorizontal="35dp"
+        android:paddingStart="16dp"
+        android:paddingTop="15dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="38dp">
 
-        <TextView
-            android:id="@+id/textViewShowCaseTitle"
+    <ImageView
+            android:id="@+id/imageViewShowCase"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="13dp"
+            android:contentDescription="@string/btn_ok"
+            android:visibility="gone"
+            tools:src="@drawable/ic_stax"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+            android:id="@+id/layoutTexts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Title"
-            android:breakStrategy="simple"
-            android:textColor="@color/white"
-            android:visibility="gone"
-            android:textSize="16sp"
-            android:fontFamily="font-medium"
-            android:layout_marginTop="@dimen/margin_13"
-            android:textStyle="bold" />
+            android:layout_marginTop="13dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageViewShowCase">
 
         <TextView
-            android:id="@+id/textViewShowCaseText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:breakStrategy="simple"
-            android:visibility="gone"
-            android:fontFamily="font-normal"
-            android:textColor="@color/white"
-            android:textSize="14sp" />
+                android:id="@+id/textViewShowCaseTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_13"
+                android:fontFamily="font-medium"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
         <TextView
-            android:id="@+id/imageViewShowCaseClose"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="18dp"
-            android:paddingVertical="8dp"
-            android:textSize="@dimen/text_16"
-            android:textColor="@color/white"
-            android:scaleType="centerCrop"
-            android:layout_gravity="end"
-            android:textStyle="bold"
-            android:text="OK"
-            android:background="@drawable/button_bg"
-            android:fontFamily="font-medium"
-            android:layout_marginEnd="@dimen/margin_13" />
+                android:id="@+id/textViewShowCaseText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="font-normal"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+        <TextView
+                android:id="@+id/imageViewShowCaseClose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/margin_13"
+                android:background="@drawable/button_bg"
+                android:fontFamily="font-medium"
+                android:paddingHorizontal="18dp"
+                android:paddingVertical="8dp"
+                android:scaleType="centerCrop"
+                android:text="@string/btn_ok"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_16"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
     </LinearLayout>
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

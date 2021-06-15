@@ -17,14 +17,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.databinding.FragmentBalanceBinding;
+import com.hover.stax.home.HomeFragment;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.navigation.NavigationInterface;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.views.staxcardstack.StaxCardStackView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import timber.log.Timber;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -36,6 +40,8 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
     private boolean SHOW_ADD_ANOTHER_ACCOUNT = false;
     final private static int STACK_OVERLAY_GAP = 10;
     final private static int ROTATE_UPSIDE_DOWN = 180;
+    private boolean SHOWN_BUBBLE_MAIN_ACCOUNT = false;
+    private boolean SHOWN_BUBBLE_OTHER_ACCOUNT = false;
 
     private BalancesViewModel balancesViewModel;
 
@@ -47,6 +53,7 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
 
     private FragmentBalanceBinding binding;
     private StaxCardStackView balanceStack;
+    private List<Channel> channelList;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         balancesViewModel = new ViewModelProvider(requireActivity()).get(BalancesViewModel.class);
@@ -69,7 +76,7 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
 
     private void setUpLinkNewAccount() {
         addChannelLink = binding.newAccountLink;
-        addChannelLink.setOnClickListener(v -> navigateToChannelsListFragment(NavHostFragment.findNavController(this), false));
+        addChannelLink.setOnClickListener(v -> HomeFragment.navigateTo(Constants.NAV_LINK_ACCOUNT, requireActivity()));
     }
 
     private void initBalanceCard() {
@@ -77,6 +84,7 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(balancesVisible ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_off, 0, 0, 0);
         balanceTitle.setOnClickListener(view -> {
             showBalanceCards(!balancesVisible);
+            showBubbleIfRequired();
         });
 
         balancesRecyclerView = binding.homeCardBalances.balancesRecyclerView;
@@ -109,8 +117,29 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
         showBalanceCards(Channel.areAllDummies(channels));
         updateStackCard(channels);
 
-
+        channelList = channels;
+        showBubbleIfRequired();
     }
+
+    private void showBubbleIfRequired() {
+        if(channelList !=null) {
+            if(Channel.areAllDummies(channelList)) {
+                if(!SHOWN_BUBBLE_MAIN_ACCOUNT && balancesVisible) {
+                    Timber.i("SHOWING ALL DUMMIES");
+                    new ShowcaseExecutor(requireActivity(), NavHostFragment.findNavController(this), binding).showcaseAddFirstAccount();
+                    SHOWN_BUBBLE_MAIN_ACCOUNT = true;
+                }
+            }
+            else if(Channel.hasDummy(channelList)) {
+                if(!SHOWN_BUBBLE_OTHER_ACCOUNT && balancesVisible) {
+                    Timber.i("SHOWING ONLY ONE DUMMIES");
+                    new ShowcaseExecutor(requireActivity(), NavHostFragment.findNavController(this), binding).showcaseAddSecondAccount();
+                    SHOWN_BUBBLE_OTHER_ACCOUNT = true;
+                }
+            }
+        }
+    }
+
     private void updateStackCard(List<Channel> channels) {
         if(channels !=null) {
             List<Channel> tempChannels = new ArrayList<>(channels);

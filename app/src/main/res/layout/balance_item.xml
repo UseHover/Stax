@@ -9,6 +9,7 @@
         app:cardBackgroundColor="@color/cardViewColor"
         app:cardCornerRadius="@dimen/radius"
         app:cardElevation="8dp"
+        android:id="@+id/balance_item_card"
         app:cardPreventCornerOverlap="false">
 
     <LinearLayout
@@ -16,7 +17,6 @@
             android:layout_height="@dimen/margin_65"
             android:background="?selectableItemBackground"
             android:orientation="horizontal"
-            android:paddingStart="@dimen/margin_13"
             android:paddingEnd="0dp">
 
         <LinearLayout
@@ -24,6 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
+                android:id="@+id/balance_channel_left"
                 android:orientation="vertical">
 
             <TextView
@@ -32,6 +33,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
+                    android:paddingVertical="@dimen/margin_13"
+                    android:paddingHorizontal="@dimen/margin_13"
                     android:fontFamily="font-normal"
                     android:gravity="center_vertical"
                     android:text="Channel name"
