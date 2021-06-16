@@ -33,18 +33,13 @@ import timber.log.Timber;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-<<<<<<< HEAD
+
 public class BalancesFragment extends Fragment implements NavigationInterface {
-=======
-public class BalancesFragment extends Fragment implements
-        TransactionHistoryAdapter.SelectListener,
-        ScheduledAdapter.SelectListener,
-        RequestsAdapter.SelectListener,
-        NavigationInterface {
->>>>>>> development
+
     final public static String TAG = "BalanceFragment";
     final private String GREEN_BG = "#46E6CC";
     final private String BLUE_BG = "#04CCFC";
+
     private boolean SHOW_ADD_ANOTHER_ACCOUNT = false;
     final private static int STACK_OVERLAY_GAP = 10;
     final private static int ROTATE_UPSIDE_DOWN = 180;

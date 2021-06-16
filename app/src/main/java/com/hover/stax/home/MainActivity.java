@@ -1,10 +1,9 @@
 package com.hover.stax.home;
 
-<<<<<<< HEAD
+
 import android.content.ActivityNotFoundException;
-=======
->>>>>>> development
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -25,7 +24,6 @@ import com.hover.stax.hover.HoverSession;
 import com.hover.stax.navigation.AbstractNavigationActivity;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.settings.BiometricChecker;
-import com.hover.stax.transactions.StaxTransaction;
 import com.hover.stax.transactions.TransactionHistoryViewModel;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.DateUtils;
@@ -72,7 +70,6 @@ public class MainActivity extends AbstractNavigationActivity implements
         checkForRequest(intent);
     }
 
-<<<<<<< HEAD
     @Override
     protected void onResume() {
         super.onResume();
@@ -80,8 +77,6 @@ public class MainActivity extends AbstractNavigationActivity implements
         setUpNav();
     }
 
-=======
->>>>>>> development
     private void checkForDeepLinking() {
         Intent intent = getIntent();
         if(intent.getAction()!=null && intent.getAction().equals(Intent.ACTION_VIEW) && intent.getData() != null) {
@@ -102,29 +97,23 @@ public class MainActivity extends AbstractNavigationActivity implements
                 navigateToSettingsFragment(getNavController());
             }
             else if(deepLinkRoute.contains(getString(R.string.deeplink_reviews))) {
-<<<<<<< HEAD
                 Timber.i("Currently at reviews 1");
                 launchStaxReview();
-=======
-                Utils.logAnalyticsEvent(getString(R.string.visited_rating_review_screen), this);
-                if(!Utils.getBoolean(Constants.APP_RATED, this)) launchRatingAndReviewDialog();
-                else Utils.openStaxPlaystorePage(this);
->>>>>>> development
             }
         }
     }
     private void observeForAppReview() {
         transactionHistoryViewModel.showAppReviewLiveData().observe(this, status -> {
-               if(status) { launchRatingAndReviewDialog(); }
+            if(status) { launchRatingAndReviewDialog(); }
         });
     }
-
 
     private void launchStaxReview() {
         Utils.logAnalyticsEvent(getString(R.string.visited_rating_review_screen), this);
         if(Utils.getBoolean(Constants.APP_RATED_NATIVELY, this)) openStaxPlaystorePage();
         else launchRatingAndReviewDialog();
     }
+
     private void launchRatingAndReviewDialog() {
         Timber.i("Currently at reviews native");
         ReviewManager reviewManager = ReviewManagerFactory.create(this);
@@ -137,7 +126,6 @@ public class MainActivity extends AbstractNavigationActivity implements
             }
         });
     }
-<<<<<<< HEAD
 
     private void openStaxPlaystorePage() {
         Timber.i("Currently at reviews for external store page");
@@ -150,8 +138,6 @@ public class MainActivity extends AbstractNavigationActivity implements
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.stax_url_playstore_review_link))));
         }
     }
-=======
->>>>>>> development
 
     private void checkForRequest(Intent intent) {
         if (intent.hasExtra(Constants.REQUEST_LINK))
