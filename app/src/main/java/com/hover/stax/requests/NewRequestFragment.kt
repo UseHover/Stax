@@ -55,6 +55,7 @@ class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListene
         startObservers(binding.root)
         startListeners()
         setDefaultHelperText()
+        setSummaryCardBackButton()
 
         return binding.root
     }
@@ -137,6 +138,8 @@ class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListene
         fab.visibility = if(isEditing) View.VISIBLE else View.GONE
     }
 
+    private fun setSummaryCardBackButton() = binding.summaryCard.root.setOnClickIcon { requestViewModel.setEditing(true) }
+
     private fun updateAcctNo(channel: Channel?){
         requesterNumberInput.text = channel?.accountNo
     }
@@ -202,9 +205,9 @@ class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListene
     }
 
     private fun updatePushNotifGroupStatus() {
-        joinByRequestMoneyNotifGroup(requireContext())
-        stopReceivingNoActivityTopicNotifGroup(requireContext())
-        stopReceivingNoRequestMoneyNotifGroup(requireContext())
+        joinRequestMoneyGroup(requireContext())
+        leaveNoUsageGroup(requireContext())
+        leaveNoRequestMoneyGroup(requireContext())
     }
 
     private fun validates(): Boolean {
