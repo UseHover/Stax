@@ -53,6 +53,7 @@ public class ChannelsListFragment extends Fragment implements ChannelsRecyclerVi
         super.onViewCreated(view, savedInstanceState);
         setupSelectedChannels();
         setupSimSupportedChannels();
+        observeChannelsLoadedStatus();
     }
 
     private void setupSelectedChannels() {
@@ -74,13 +75,18 @@ public class ChannelsListFragment extends Fragment implements ChannelsRecyclerVi
         binding.simSupportedChannelsCard.setBackButtonVisibility(visible ? GONE : VISIBLE);
     }
 
+    private void observeChannelsLoadedStatus() {
+        channelsViewModel.setHasChannelsLoaded();
+        channelsViewModel.hasChannelsLoaded().observe(getViewLifecycleOwner(), hasLoaded-> {
+            if(hasLoaded !=null && !hasLoaded) showEmptySimChannelsDialog();
+        });
+    }
     private void setupSimSupportedChannels() {
         RecyclerView simSupportedChannelsListView = binding.simSupportedChannelsRecyclerView;
         simSupportedChannelsListView.setLayoutManager(UIHelper.setMainLinearManagers(requireContext()));
         channelsViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> {
-            if(channels!=null) {
-                if(channels.size() > 0) simSupportedChannelsListView.setAdapter(new ChannelsRecyclerViewAdapter(Channel.sort(channels, false), this));
-                else showEmptySimChannelsDialog();
+            if(channels!=null && channels.size() > 0) {
+                simSupportedChannelsListView.setAdapter(new ChannelsRecyclerViewAdapter(Channel.sort(channels, false), this));
             }
         });
     }

@@ -74,6 +74,9 @@ public class DatabaseRepo {
         return channelDao.getLiveChannel(id);
     }
 
+    public int getChannelsDataCount() {
+        return channelDao.getDataCount();
+    }
     public LiveData<List<Channel>> getAllChannels() {
         return allChannels;
     }
