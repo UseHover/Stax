@@ -11,6 +11,8 @@ import com.hover.stax.utils.DateUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -176,6 +178,20 @@ public class Channel implements Comparable<Channel> {
 
     public String getUssdName() {
         return name + " - " + rootCode;
+    }
+
+    public static List<Channel> sort(List<Channel> channels, boolean showSelected) {
+        ArrayList<Channel> selected_list = new ArrayList<>();
+        ArrayList<Channel> sorted_list = new ArrayList<>();
+        for (Channel c : channels) {
+            if (c.selected) selected_list.add(c);
+            else sorted_list.add(c);
+        }
+        Collections.sort(selected_list);
+        Collections.sort(sorted_list);
+        if (showSelected)
+            sorted_list.addAll(0, selected_list);
+        return sorted_list;
     }
 
     @Override
