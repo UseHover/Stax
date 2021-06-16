@@ -1,6 +1,7 @@
 package com.hover.stax.balances;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.databinding.FragmentBalanceBinding;
@@ -22,7 +24,11 @@ import com.hover.stax.home.MainActivity;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.bubbleshowcase.BubbleShowCase;
+import com.hover.stax.utils.bubbleshowcase.BubbleShowCaseListener;
 import com.hover.stax.views.staxcardstack.StaxCardStackView;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,10 +63,12 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
     private FragmentBalanceBinding binding;
     private StaxCardStackView balanceStack;
     private List<Channel> channelList;
+    private BubbleShowCase firstAccountBubble, secondAccountBubble;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         balancesViewModel = new ViewModelProvider(requireActivity()).get(BalancesViewModel.class);
         binding = FragmentBalanceBinding.inflate(inflater, container, false);
+
         return binding.getRoot();
     }
 
@@ -72,6 +80,13 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
         setUpLinkNewAccount();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(firstAccountBubble !=null) firstAccountBubble.dismiss();
+        if(secondAccountBubble !=null) secondAccountBubble.dismiss();
+        Timber.i("ON PAUSE IS CALLED FROM BALANCE");
+    }
     private void setUpBalances() {
         initBalanceCard();
         balancesViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), this::updateServices);
@@ -129,15 +144,15 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
             if(Channel.areAllDummies(channelList)) {
                 if(!SHOWN_BUBBLE_MAIN_ACCOUNT && balancesVisible) {
                     Timber.i("SHOWING ALL DUMMIES");
-                    new ShowcaseExecutor(requireActivity(), NavHostFragment.findNavController(this), binding).showcaseAddFirstAccount();
+                   firstAccountBubble = new ShowcaseExecutor(requireActivity(), binding).showcaseAddFirstAccount();
                     SHOWN_BUBBLE_MAIN_ACCOUNT = true;
                 }
             }
             else if(Channel.hasDummy(channelList)) {
                 if(!SHOWN_BUBBLE_OTHER_ACCOUNT && balancesVisible) {
                     Timber.i("SHOWING ONLY ONE DUMMIES");
-                    new ShowcaseExecutor(requireActivity(), NavHostFragment.findNavController(this), binding).showcaseAddSecondAccount();
                     SHOWN_BUBBLE_OTHER_ACCOUNT = true;
+                    new Handler().postDelayed(() -> secondAccountBubble = new ShowcaseExecutor(requireActivity(), binding).showcaseAddSecondAccount(), 2000);
                 }
             }
         }
@@ -183,4 +198,6 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
         super.onDestroyView();
         binding = null;
     }
+
+
 }

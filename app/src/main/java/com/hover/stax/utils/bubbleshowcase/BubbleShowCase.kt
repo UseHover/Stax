@@ -418,8 +418,8 @@ class BubbleShowCase(builder: BubbleShowCaseBuilder) {
 	  }
 
 	  companion object {
-			fun showCase(title: String?, desc: String?, arrowPosition: ArrowPosition?, listener: BubbleShowCaseListener?, v: View?, activity: Activity) {
-				  BubbleShowCaseBuilder(activity) //Activity instance
+			fun showCase(title: String?, desc: String?, arrowPosition: ArrowPosition?, listener: BubbleShowCaseListener?, v: View?, activity: Activity)  : BubbleShowCase{
+				 return BubbleShowCaseBuilder(activity) //Activity instance
 						  .title(title!!) //Any title for the bubble view
 						  .description(desc!!) //More detailed description
 						  .arrowPosition(arrowPosition!!) //You can force the position of the arrow to change the location of the bubble.
@@ -428,11 +428,11 @@ class BubbleShowCase(builder: BubbleShowCaseBuilder) {
 						  .titleTextSize(20) //Title text size in SP (default value 16sp)
 						  .descriptionTextSize(20) //Subtitle text size in SP (default value 14sp)
 						  .listener(listener!!)
-						  .targetView(v!!).show()
+						  .targetView(v!!). show()
 			}
 
-		  fun showcaseOnce(title: String?, desc: String?, arrowPosition: ArrowPosition?, listener: BubbleShowCaseListener?, v: View?, activity: Activity) {
-			  BubbleShowCaseBuilder(activity) //Activity instance
+		  fun showcaseOnce(title: String?, desc: String?, arrowPosition: ArrowPosition?, listener: BubbleShowCaseListener?, v: View?, activity: Activity) : BubbleShowCase {
+			  return BubbleShowCaseBuilder(activity) //Activity instance
 					  .title(title!!) //Any title for the bubble view
 					  .description(desc!!) //More detailed description
 					  .arrowPosition(arrowPosition!!) //You can force the position of the arrow to change the location of the bubble.
