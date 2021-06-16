@@ -140,11 +140,10 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
     }
 
     private void validateUser() {
-        if (!OnBoardingActivity.hasPassedThrough(this)) goToOnboardingActivity();
-        else startAuth();
-    }
-    private void startAuth() {
-        new Handler().postDelayed(() -> new BiometricChecker(this, this).startAuthentication(null), NAV_DELAY);
+        new Handler().postDelayed(() -> {
+            if (!OnBoardingActivity.hasPassedThrough(this)) goToOnboardingActivity();
+            else new BiometricChecker(this, this).startAuthentication(null);
+        }, NAV_DELAY);
     }
 
     private void initAmplitude() {
