@@ -2,7 +2,6 @@ package com.hover.stax.transactions;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -110,15 +109,7 @@ public class StaxTransaction {
         status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
         updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, initiated_at);
 
-<<<<<<< HEAD
-        HashMap<String, String> extras = (HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES);
-        if (extras != null) {
-            if (extras.containsKey(CONFIRM_CODE_KEY))
-                confirm_code = extras.get(CONFIRM_CODE_KEY);
-        }
-=======
         parseExtras((HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES));
->>>>>>> development
 
         if (counterparty_id == null)
             counterparty_id = contact.id;
