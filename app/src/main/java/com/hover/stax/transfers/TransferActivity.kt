@@ -7,6 +7,7 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.channels.ChannelsViewModel
+import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.navigation.AbstractNavigationActivity
@@ -91,19 +92,16 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
     }
 
     private fun addRecipientInfo(hsb: HoverSession.Builder) {
-        hsb.extra(HoverAction.ACCOUNT_KEY, transferViewModel.contact.value!!.phoneNumber)
+        hsb.extra(HoverAction.ACCOUNT_KEY, transferViewModel.contact.value!!.accountNumber)
             .extra(
-                HoverAction.PHONE_KEY, transferViewModel.contact.value!!
-                    .getNumberFormatForInput(
-                        actionSelectViewModel.activeAction.value!!,
-                        channelsViewModel.activeChannel.value!!
-                    )
+                HoverAction.PHONE_KEY, PhoneHelper.getNumberFormatForInput(transferViewModel.contact.value?.accountNumber,
+                actionSelectViewModel.activeAction.value, channelsViewModel.activeChannel.value)
             )
     }
 
     private fun updatePushNotifGroupStatus() {
-        joinAnyTransactionNotifGroup(this)
-        stopReceivingNoActivityTopicNotifGroup(this)
+        joinTransactionGroup(this)
+        leaveNoUsageGroup(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -114,7 +112,7 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
 
     private fun returnResult(type: Int, result: Int, data: Intent?){
         val i = data?.let { Intent(it) } ?: Intent()
-        transferViewModel.contact.value?.let { i.putExtra(StaxContact.LOOKUP_KEY, it.lookupKey) }
+        transferViewModel.contact.value?.let { i.putExtra(StaxContact.ID_KEY, it.lookupKey) }
         i.action = if(type == Constants.SCHEDULE_REQUEST) Constants.SCHEDULED else Constants.TRANSFERED
         setResult(result, i)
     }

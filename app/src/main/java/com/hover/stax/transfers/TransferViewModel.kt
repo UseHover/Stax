@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
+import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.requests.Request
@@ -53,11 +54,11 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     fun setRecipientSmartly(r: Request?, channel: Channel) {
         r?.let {
             try {
-                val formattedPhone = StaxContact.getInternationalNumber(channel.countryAlpha2, StaxContact.stripPhone(r.requester_number))
+                val formattedPhone = PhoneHelper.getInternationalNumber(channel.countryAlpha2, r.requester_number)
 
                 viewModelScope.launch {
-                    val sc = repo.getContactFromPhone(formattedPhone)
-                    sc?.let { contact.postValue(repo.getContactFromPhone(StaxContact.stripPhone(r.requester_number))) }
+                    val sc = repo.getContactByPhone(formattedPhone)
+                    sc?.let { contact.postValue(repo.getContactByPhone(r.requester_number)) }
                 }
             } catch (e: NumberFormatException) {
                 Utils.logErrorAndReportToFirebase(TransferViewModel::class.java.simpleName, e.message, e)
@@ -91,6 +92,12 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
         setNote(s.note)
     }
 
+    fun view(r: Request){
+        setAmount(r.amount)
+        setContact(r.requestee_ids)
+        setNote(r.note)
+    }
+
     fun checkSchedule(){
         schedule.value?.let {
             if(it.end_date <= DateUtils.today()){
@@ -104,7 +111,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
         contact.value?.let { sc ->
             viewModelScope.launch {
                 sc.lastUsedTimestamp = DateUtils.now()
-                repo.insertOrUpdate(sc)
+                repo.save(sc)
             }
         }
     }

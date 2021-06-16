@@ -205,15 +205,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     override fun highlightAction(a: HoverAction?) {
-        Timber.e("updating active action")
         a?.let { actionSelectViewModel.setActiveAction(a) }
     }
 
     fun setRecipientHint(action: HoverAction) {
-        Timber.e("Update hint to $action : ${action.getPronoun(requireContext())}")
-        Timber.e("Requires recipient? ${action.requiresRecipient()}")
-        Timber.e("Transaction type? ${action.transaction_type}")
-
         editCard?.findViewById<LinearLayout>(R.id.recipient_entry)?.visibility = if(action.requiresRecipient()) View.VISIBLE else View.GONE
         binding.summaryCard.recipientRow.visibility = if(action.requiresRecipient()) View.VISIBLE else View.GONE
 
@@ -239,7 +234,5 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         transferViewModel.setEditing(r.amount.isNullOrEmpty())
         channelDropdown.setState(getString(R.string.channel_request_fieldinfo, r.requester_institution_id.toString()), AbstractStatefulInput.INFO)
         Utils.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext())
-
-        Timber.e("Visibility ${actionSelect.visibility}")
     }
 }
