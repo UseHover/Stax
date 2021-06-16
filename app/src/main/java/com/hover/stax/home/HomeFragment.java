@@ -1,5 +1,6 @@
 package com.hover.stax.home;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,13 +29,12 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.airtime.setOnClickListener(v -> navigateTo(Constants.NAV_AIRTIME));
-        binding.transfer.setOnClickListener(v -> navigateTo(Constants.NAV_TRANSFER));
-        binding.request.setOnClickListener(v -> navigateTo(Constants.NAV_REQUEST));
+        binding.airtime.setOnClickListener(v -> HomeFragment.navigateTo(Constants.NAV_AIRTIME, requireActivity()));
+        binding.transfer.setOnClickListener(v -> HomeFragment.navigateTo(Constants.NAV_TRANSFER, requireActivity()));
     }
 
-    private void navigateTo(int destination) {
-        MainActivity act = ((MainActivity) getActivity());
+    public static void navigateTo(int destination, Activity activity) {
+        MainActivity act = ((MainActivity) activity);
         if (act != null) act.checkPermissionsAndNavigate(destination);
     }
 

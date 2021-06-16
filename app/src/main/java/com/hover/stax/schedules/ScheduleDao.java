@@ -19,6 +19,9 @@ public interface ScheduleDao {
     @Query("SELECT * FROM schedules WHERE start_date > (strftime('%s','now')*1000 - 86400000) AND complete = 0 ORDER BY frequency, start_date DESC")
     LiveData<List<Schedule>> getLiveFuture();
 
+    @Query("SELECT * FROM schedules WHERE start_date > (strftime('%s','now')*1000 - 86400000) AND complete = 0 AND channel_id=:channelId ORDER BY frequency, start_date DESC")
+    LiveData<List<Schedule>> getLiveFutureByChannelId(int channelId);
+
     @Query("SELECT * FROM schedules WHERE start_date > (strftime('%s','now')*1000 - 86400000) AND complete = 0 ORDER BY frequency, start_date DESC")
     List<Schedule> getFuture();
 

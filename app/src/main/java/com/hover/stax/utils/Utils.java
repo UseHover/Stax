@@ -99,6 +99,7 @@ public class Utils {
 	}
 
 	public static String formatAmount(String number) {
+		if(number.equals("0")) return "0,000";
 		try {
 			return formatAmount(getAmount(number));
 		} catch (Exception e) {
@@ -152,6 +153,7 @@ public class Utils {
 		}
 		return false;
 	}
+
 	public static void logErrorAndReportToFirebase(String tag, String message, Exception e) {
 		Timber.e(e, message);
 		if(BuildConfig.BUILD_TYPE.equals("release")) {
@@ -165,6 +167,7 @@ public class Utils {
 		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 		return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
 	}
+
 	public static void setFirebaseMessagingTopic(String topic){
 		FirebaseMessaging.getInstance().subscribeToTopic(topic);
 	}
@@ -172,11 +175,13 @@ public class Utils {
 	public static void removeFirebaseMessagingTopic(String topic){
 		FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
 	}
+
 	public static void logAnalyticsEvent(String event, Context context) {
 		Amplitude.getInstance().logEvent(event);
 		FirebaseAnalytics.getInstance(context).logEvent(strippedForFireAnalytics(event), null);
 		AppsFlyerLib.getInstance().logEvent(context, event, null);
 	}
+
 	public static void logAnalyticsEvent(@NonNull  String event, @NonNull JSONObject args, @NonNull Context context) {
 		Bundle bundle = convertJSONObjectToBundle(args);
 		Map<String, Object> map = convertJSONObjectToHashMap(args);
@@ -184,9 +189,11 @@ public class Utils {
 		FirebaseAnalytics.getInstance(context).logEvent(strippedForFireAnalytics(event), bundle);
 		AppsFlyerLib.getInstance().logEvent(context, event, map);
 	}
+
 	private static String strippedForFireAnalytics(String firebaseEventLog) {
 		return firebaseEventLog.replace(" ","_").toLowerCase();
 	}
+
 	private static Bundle convertJSONObjectToBundle(JSONObject args) {
 		Bundle bundle = new Bundle();
 		Iterator<String> iter = args.keys();
@@ -202,6 +209,7 @@ public class Utils {
 		}
 		return bundle;
 	}
+
 	private static Map<String, Object> convertJSONObjectToHashMap(JSONObject args) {
 		Map<String, Object> map = new HashMap<>();
 		Iterator<String> iter = args.keys();
@@ -235,6 +243,7 @@ public class Utils {
 		i.setData(Uri.parse(url));
 		ctx.startActivity(i);
 	}
+
 	public static void openStaxPlaystorePage(Activity activity) {
 		Uri link = Uri.parse(activity.getBaseContext().getString(R.string.stax_market_playstore_link));
 		Intent goToMarket = new Intent(Intent.ACTION_VIEW, link);
@@ -251,7 +260,6 @@ public class Utils {
 		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
 		if (connectivityManager != null) {
-
 			if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 				NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
 				if (capabilities != null) {
@@ -269,8 +277,8 @@ public class Utils {
 					}
 				}
 			}
-			return false;
-		} else return false;
+		}
+		return false;
 	}
 
 }

@@ -117,6 +117,10 @@
             </com.hover.stax.views.StaxCardView>
 
             <include
+                    android:id="@+id/scheduled_card"
+                    layout="@layout/home_card_future" />
+
+            <include
                     android:id="@+id/homeCardTransactions"
                     layout="@layout/home_card_transactions" />
 

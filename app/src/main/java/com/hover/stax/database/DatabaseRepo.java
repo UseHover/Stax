@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -33,256 +32,287 @@ import com.hover.stax.utils.paymentLinkCryptography.Encryption;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class DatabaseRepo {
-	private static String TAG = "DatabaseRepo";
-	private ChannelDao channelDao;
-	private HoverActionDao actionDao;
-	private RequestDao requestDao;
-	private ScheduleDao scheduleDao;
-	private SimInfoDao simDao;
-	private TransactionDao transactionDao;
-	private ContactDao contactDao;
+    private static String TAG = "DatabaseRepo";
+    private ChannelDao channelDao;
+    private HoverActionDao actionDao;
+    private RequestDao requestDao;
+    private ScheduleDao scheduleDao;
+    private SimInfoDao simDao;
+    private TransactionDao transactionDao;
+    private ContactDao contactDao;
 
-	private LiveData<List<Channel>> allChannels;
-	private LiveData<List<Channel>> selectedChannels;
+    private LiveData<List<Channel>> allChannels;
+    private LiveData<List<Channel>> selectedChannels;
 
-	private MutableLiveData<Request> decryptedRequest = new MutableLiveData<>();
+    private MutableLiveData<Request> decryptedRequest = new MutableLiveData<>();
 
-	public DatabaseRepo(Application application) {
-		AppDatabase db = AppDatabase.getInstance(application);
-		channelDao = db.channelDao();
-		transactionDao = db.transactionDao();
-		contactDao = db.contactDao();
-		requestDao = db.requestDao();
-		scheduleDao = db.scheduleDao();
+    public DatabaseRepo(Application application) {
+        AppDatabase db = AppDatabase.getInstance(application);
+        channelDao = db.channelDao();
+        transactionDao = db.transactionDao();
+        contactDao = db.contactDao();
+        requestDao = db.requestDao();
+        scheduleDao = db.scheduleDao();
 
-		HoverRoomDatabase sdkDb = HoverRoomDatabase.getInstance(application);
-		actionDao = sdkDb.actionDao();
-		simDao = sdkDb.simDao();
+        HoverRoomDatabase sdkDb = HoverRoomDatabase.getInstance(application);
+        actionDao = sdkDb.actionDao();
+        simDao = sdkDb.simDao();
 
-		allChannels = channelDao.getAllInAlphaOrder();
-		selectedChannels = channelDao.getSelected(true);
-	}
+        allChannels = channelDao.getAllInAlphaOrder();
+        selectedChannels = channelDao.getSelected(true);
+    }
 
-	// Channels
-	public Channel getChannel(int id) {
-		return channelDao.getChannel(id);
-	}
+    // Channels
+    public Channel getChannel(int id) {
+        return channelDao.getChannel(id);
+    }
 
-	public LiveData<Channel> getLiveChannel(int id) {
-		return channelDao.getLiveChannel(id);
-	}
+    public LiveData<Channel> getLiveChannel(int id) {
+        return channelDao.getLiveChannel(id);
+    }
 
-	public LiveData<List<Channel>> getAllChannels() {
-		return allChannels;
-	}
+    public LiveData<List<Channel>> getAllChannels() {
+        return allChannels;
+    }
 
-	public LiveData<List<Channel>> getChannels(int[] ids) {
-		return channelDao.getChannels(ids);
-	}
-	public LiveData<List<Channel>> getChannelsByCountry(int[] channelIds, String countryCode) {
-		return channelDao.getChannels(countryCode, channelIds);
-	}
+    public LiveData<List<Channel>> getChannels(int[] ids) {
+        return channelDao.getChannels(ids);
+    }
 
-	public LiveData<List<Channel>> getSelected() {
-		return selectedChannels;
-	}
+    public LiveData<List<Channel>> getChannelsByCountry(int[] channelIds, String countryCode) {
+        return channelDao.getChannels(countryCode, channelIds);
+    }
 
-	public void update(Channel channel) {
-		AppDatabase.databaseWriteExecutor.execute(() -> channelDao.update(channel));
-	}
+    public LiveData<List<Channel>> getSelected() {
+        return selectedChannels;
+    }
 
-	// SIMs
-	public List<SimInfo> getPresentSims() {
-		return simDao.getPresent();
-	}
+    public void update(Channel channel) {
+        AppDatabase.databaseWriteExecutor.execute(() -> channelDao.update(channel));
+    }
 
-	public List<SimInfo> getSims(String[] hnis) {
-		return  simDao.getPresentByHnis(hnis);
-	}
+    // SIMs
+    public List<SimInfo> getPresentSims() {
+        return simDao.getPresent();
+    }
 
-	// Actions
-	public HoverAction getAction(String public_id) {
-		return actionDao.getAction(public_id);
-	}
+    public List<SimInfo> getSims(String[] hnis) {
+        return  simDao.getPresentByHnis(hnis);
+    }
 
-	public LiveData<HoverAction> getLiveAction(String public_id) {
-		return actionDao.getLiveAction(public_id);
-	}
+    // Actions
+    public HoverAction getAction(String public_id) {
+        return actionDao.getAction(public_id);
+    }
 
-	public LiveData<List<HoverAction>> getLiveActions(int[] channelIds, String type) {
-		return actionDao.getLiveActions(channelIds, type);
-	}
+    public LiveData<HoverAction> getLiveAction(String public_id) {
+        return actionDao.getLiveAction(public_id);
+    }
 
-	public List<HoverAction> getTransferActions(int channelId) {
-		return actionDao.getTransferActions(channelId);
-	}
+    public LiveData<List<HoverAction>> getLiveActions(int[] channelIds, String type) {
+        return actionDao.getLiveActions(channelIds, type);
+    }
 
-	public List<HoverAction> getActions(int channelId, String type) {
-		return actionDao.getActions(channelId, type);
-	}
+    public List<HoverAction> getTransferActions(int channelId) {
+        return actionDao.getTransferActions(channelId);
+    }
 
-	public List<HoverAction> getActions(int[] channelIds, String type) {
-		return actionDao.getActions(channelIds, type);
-	}
+    public List<HoverAction> getActions(int channelId, String type) {
+        return actionDao.getActions(channelId, type);
+    }
 
-	public List<HoverAction> getActions(int[] channelIds, int recipientInstitutionId) {
-		return actionDao.getActions(channelIds, recipientInstitutionId, HoverAction.P2P);
-	}
+    public List<HoverAction> getActions(int[] channelIds, String type) {
+        return actionDao.getActions(channelIds, type);
+    }
 
-	public LiveData<List<HoverAction>> getBountyActions() {
-		return actionDao.getBountyActions();
-	}
+    public List<HoverAction> getActions(int[] channelIds, int recipientInstitutionId) {
+        return actionDao.getActions(channelIds, recipientInstitutionId, HoverAction.P2P);
+    }
 
-	// Transactions
-	public LiveData<List<StaxTransaction>> getCompleteAndPendingTransferTransactions() {
-		return transactionDao.getCompleteAndPendingTransfers();
-	}
+    public LiveData<List<HoverAction>> getBountyActions() {
+        return actionDao.getBountyActions();
+    }
 
-	public LiveData<List<StaxTransaction>> getBountyTransactions() {
-		return transactionDao.getBountyTransactions();
-	}
+    // Transactions
+    public LiveData<List<StaxTransaction>> getCompleteAndPendingTransferTransactions() {
+        return transactionDao.getCompleteAndPendingTransfers();
+    }
 
-	public LiveData<List<StaxTransaction>> getCompleteTransferTransactions(int channelId) {
-		return transactionDao.getCompleteAndPendingTransfers(channelId);
-	}
+    public LiveData<List<StaxTransaction>> getBountyTransactions() {
+        return transactionDao.getBountyTransactions();
+    }
 
-	@SuppressLint("DefaultLocale")
-	public LiveData<Double> getSpentAmount(int channelId, int month, int year) {
-		return transactionDao.getTotalAmount(channelId, String.format("%02d", month), String.valueOf(year));
-	}
+    public LiveData<List<StaxTransaction>> getCompleteTransferTransactions(int channelId) {
+        return transactionDao.getCompleteAndPendingTransfers(channelId);
+    }
 
-	@SuppressLint("DefaultLocale")
-	public LiveData<Double> getFees(int channelId, int year) {
-		return transactionDao.getTotalFees(channelId, String.valueOf(year));
-	}
+    @SuppressLint("DefaultLocale")
+    public LiveData<Double> getSpentAmount(int channelId, int month, int year) {
+        return transactionDao.getTotalAmount(channelId, String.format("%02d", month), String.valueOf(year));
+    }
 
-	public StaxTransaction getTransaction(String uuid) {
-		return transactionDao.getTransaction(uuid);
-	}
+    @SuppressLint("DefaultLocale")
+    public LiveData<Double> getFees(int channelId, int year) {
+        return transactionDao.getTotalFees(channelId, String.valueOf(year));
+    }
 
-	public void insertOrUpdateTransaction(final Intent intent, Context c) {
-		AppDatabase.databaseWriteExecutor.execute(() -> {
-			try {
-				StaxTransaction t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID));
-				HoverAction a = getAction(intent.getStringExtra(HoverAction.ID_KEY));
-				Channel channel = getChannel(a.channel_id);
-				StaxContact contact = StaxContact.findOrInit(intent, channel.countryAlpha2, t, this);
-				save(contact);
+    public StaxTransaction getTransaction(String uuid) {
+        return transactionDao.getTransaction(uuid);
+    }
 
-				if (t == null) {
-					t = new StaxTransaction(intent, a, contact, c);
-					transactionDao.insert(t);
-					t = transactionDao.getTransaction(t.uuid);
-				}
-				t.update(intent, a, contact, c);
-				transactionDao.update(t);
+    public void insertOrUpdateTransaction(final Intent intent, Context c) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            try {
+                StaxTransaction t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID));
+                HoverAction a = getAction(intent.getStringExtra(HoverAction.ID_KEY));
+                Channel channel = getChannel(a.channel_id);
+                StaxContact contact = StaxContact.findOrInit(intent, channel.countryAlpha2, t, this);
+                save(contact);
 
-				updateRequests(t, contact);
-			} catch (Exception e) { Log.e(TAG, "error", e); }
-		});
-	}
+                if (t == null) {
+                    t = new StaxTransaction(intent, a, contact, c);
+                    transactionDao.insert(t);
+                    t = transactionDao.getTransaction(t.uuid);
+                }
+                t.update(intent, a, contact, c);
+                transactionDao.update(t);
 
-	private void updateRequests(StaxTransaction t, StaxContact contact) {
-		if (t.transaction_type.equals(HoverAction.RECEIVE)) {
-			List<Request> rs = getRequests();
-			for (Request r: rs) {
-				if (r.requestee_ids.contains(contact.id) && Utils.getAmount(r.amount).equals(t.amount)) {
-					r.matched_transaction_uuid = t.uuid;
-					update(r);
-				}
-			}
-		}
-	}
+                updateRequests(t, contact);
+            } catch (Exception e) {
+                Timber.e(e, "error"); }
+        });
+    }
 
-	// Contacts
-	public LiveData<List<StaxContact>> getAllContacts() { return contactDao.getAll(); }
+    private void updateRequests(StaxTransaction t, StaxContact contact) {
+        if (t.transaction_type.equals(HoverAction.RECEIVE)) {
+            List<Request> rs = getRequests();
+            for (Request r: rs) {
+                if (r.requestee_ids.contains(contact.id) && Utils.getAmount(r.amount).equals(t.amount)) {
+                    r.matched_transaction_uuid = t.uuid;
+                    update(r);
+                }
+            }
+        }
+    }
 
-	public List<StaxContact> getContacts(String[] ids) { return contactDao.get(ids); }
-	public LiveData<List<StaxContact>> getLiveContacts(String[] ids) { return contactDao.getLive(ids); }
+    // Contacts
+    public LiveData<List<StaxContact>> getAllContacts() { return contactDao.getAll(); }
 
-	public StaxContact lookupContact(String lookupKey) { return contactDao.lookup(lookupKey); }
-	public StaxContact getContact(String id) { return contactDao.get(id); }
-	public StaxContact getContactByPhone(String phone) { return contactDao.getByPhone("%" + phone + "%"); }
-	public LiveData<StaxContact> getLiveContact(String id) { return contactDao.getLive(id); }
+    public List<StaxContact> getContacts(String[] ids) { return contactDao.get(ids); }
+    public LiveData<List<StaxContact>> getLiveContacts(String[] ids) { return contactDao.getLive(ids); }
 
-	public void save(final StaxContact contact) {
-		AppDatabase.databaseWriteExecutor.execute(() -> {
-			if (getContact(contact.id) == null) {
-				try { contactDao.insert(contact); }
-				catch (Exception e) { Utils.logErrorAndReportToFirebase(TAG, "failed to insert contact", e); }
-			} else
-				contactDao.update(contact);
-		});
-	}
+    public StaxContact lookupContact(String lookupKey) { return contactDao.lookup(lookupKey); }
+    public StaxContact getContact(String id) { return contactDao.get(id); }
+    public StaxContact getContactByPhone(String phone) { return contactDao.getByPhone("%" + phone + "%"); }
+    public LiveData<StaxContact> getLiveContact(String id) { return contactDao.getLive(id); }
 
-	// Schedules
-	public LiveData<List<Schedule>> getFutureTransactions() {
-		return scheduleDao.getLiveFuture();
-	}
+    public void save(final StaxContact contact) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            if (getContact(contact.id) == null) {
+                try { contactDao.insert(contact); }
+                catch (Exception e) { Utils.logErrorAndReportToFirebase(TAG, "failed to insert contact", e); }
+            } else
+                contactDao.update(contact);
+        });
+    }
 
-	public Schedule getSchedule(int id) {
-		return scheduleDao.get(id);
-	}
+    // Schedules
+    public LiveData<List<Schedule>> getFutureTransactions() {
+        return scheduleDao.getLiveFuture();
+    }
 
-	public void insert(Schedule schedule) {
-		AppDatabase.databaseWriteExecutor.execute(() -> scheduleDao.insert(schedule));
-	}
+    public LiveData<List<Schedule>> getFutureTransactions(int channelId) {
+        return scheduleDao.getLiveFutureByChannelId(channelId);
+    }
 
-	public void update(Schedule schedule) {
-		AppDatabase.databaseWriteExecutor.execute(() -> scheduleDao.update(schedule));
-	}
+    public LiveData<List<StaxTransaction>> getTransactionsForAppReview() {
+        return transactionDao.getTransactionsForAppReview();
+    }
 
-	public void delete(Schedule schedule) {
-		AppDatabase.databaseWriteExecutor.execute(() -> scheduleDao.delete(schedule));
-	}
+    public Schedule getSchedule(int id) {
+        return scheduleDao.get(id);
+    }
 
-	// Requests
-	public LiveData<List<Request>> getLiveRequests() {
-		return requestDao.getLiveUnmatched();
-	}
+    public void insert(Schedule schedule) {
+        AppDatabase.databaseWriteExecutor.execute(() -> scheduleDao.insert(schedule));
+    }
 
-	public List<Request> getRequests() {
-		return requestDao.getUnmatched();
-	}
+    public void update(Schedule schedule) {
+        AppDatabase.databaseWriteExecutor.execute(() -> scheduleDao.update(schedule));
+    }
 
-	public Request getRequest(int id) {
-		return requestDao.get(id);
-	}
+    public void delete(Schedule schedule) {
+        AppDatabase.databaseWriteExecutor.execute(() -> scheduleDao.delete(schedule));
+    }
 
-	public LiveData<Request> decrypt(String encrypted, Context c) {
-		if (decryptedRequest == null) { decryptedRequest = new MutableLiveData<>(); }
-		decryptedRequest.setValue(null);
-		try {
-			Encryption e = Request.getEncryptionSettings().build();
+    // Requests
+    public LiveData<List<Request>> getLiveRequests() {
+        return requestDao.getLiveUnmatched();
+    }
 
-			String removedBaseUrlString =  encrypted.replace(c.getString(R.string.payment_root_url, ""),"");
-			if (Request.isShortLink(removedBaseUrlString)) {
-				removedBaseUrlString = new Shortlink(removedBaseUrlString).expand();
-			}
+    public LiveData<List<Request>> getLiveRequests(int channelId) {
+        return requestDao.getLiveUnmatchedByChannel(channelId);
+    }
 
-			e.decryptAsync(removedBaseUrlString.replaceAll("[(]","+"), new Encryption.Callback() {
-				@Override public void onSuccess(String result) {
-					decryptedRequest.postValue(new Request(result));
+    public List<Request> getRequests() {
+        return requestDao.getUnmatched();
+    }
 
-				}
-				@Override public void onError(Exception exception) {
-					Utils.logErrorAndReportToFirebase(TAG, "failed link decryption", exception);}
-			});
+    public Request getRequest(int id) {
+        return requestDao.get(id);
+    }
 
-		} catch (NoSuchAlgorithmException e) { Utils.logErrorAndReportToFirebase(TAG, "decryption failure", e); }
-		return decryptedRequest;
-	}
+    public LiveData<Request> decrypt(String encrypted, Context c) {
+        if (decryptedRequest == null) { decryptedRequest = new MutableLiveData<>(); }
+        decryptedRequest.setValue(null);
+        String removedBaseUrlString = encrypted.replace(c.getString(R.string.payment_root_url, ""), "");
 
-	public void insert(Request request) {
-		AppDatabase.databaseWriteExecutor.execute(() -> requestDao.insert(request));
-	}
+        //Only old stax versions contains ( in the link
+        if (removedBaseUrlString.contains("(")) decryptRequestForOldVersions(removedBaseUrlString);
+        else decryptRequest(removedBaseUrlString, c);
+        return decryptedRequest;
+    }
 
-	public void update(Request request) {
-		AppDatabase.databaseWriteExecutor.execute(() -> requestDao.update(request));
-	}
+    private void decryptRequest(String param, Context c) {
+        decryptedRequest.postValue(new Request(Request.decryptBijective(param, c)));
+    }
 
-	public void delete(Request request) {
-		AppDatabase.databaseWriteExecutor.execute(() -> requestDao.delete(request));
-	}
+    private void decryptRequestForOldVersions(String params) {
+        try {
+            Encryption e = Request.getEncryptionSettings().build();
+            if (Request.isShortLink(params)) {
+                params = new Shortlink(params).expand();
+            }
+
+            e.decryptAsync(params.replaceAll("[(]", "+"), new Encryption.Callback() {
+                @Override
+                public void onSuccess(String result) {
+                    decryptedRequest.postValue(new Request(result));
+                }
+
+                @Override
+                public void onError(Exception exception) {
+                    Utils.logErrorAndReportToFirebase(TAG, "failed link decryption", exception);
+                }
+            });
+
+        } catch (NoSuchAlgorithmException e) {
+            Utils.logErrorAndReportToFirebase(TAG, "decryption failure", e);
+        }
+    }
+
+    public void insert(Request request) {
+        AppDatabase.databaseWriteExecutor.execute(() -> requestDao.insert(request));
+    }
+
+    public void update(Request request) {
+        AppDatabase.databaseWriteExecutor.execute(() -> requestDao.update(request));
+    }
+
+    public void delete(Request request) {
+        AppDatabase.databaseWriteExecutor.execute(() -> requestDao.delete(request));
+    }
 }
