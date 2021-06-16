@@ -27,3 +27,4 @@ app/release
 app/.classpath
 app/.project
 app/.settings/
+/app/src/main/res/values/app_keys.xml

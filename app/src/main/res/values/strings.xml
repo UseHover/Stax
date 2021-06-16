@@ -6,8 +6,6 @@
 	<string name="api_url" translatable="false">https://www.usehover.com/api</string>
 	<string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
 	<string name="bounty_endpoint">/stax_bounty_hunters</string>
-	<string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
-	<string name="appsflyer_key" public="false" translatable="false">4B6DDdYFw55PmVPTwr8Ski</string>
 	<string name="stax_market_playstore_link" translatable="false">market://details?id=com.hover.stax</string>
 	<string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
 
@@ -76,10 +74,21 @@
 	<string name="refresh_balances">Refresh balances</string>
 	<string name="refresh">Refresh</string>
 	<string name="refresh_balance_error">Add an account to check your balance.</string>
+<<<<<<< HEAD
 	<string name="your_main_account">Your main account</string>
 	<string name="your_other_account">Your other account</string>
 
 
+=======
+	<string name="check_balance_title">Check balance</string>
+	<string name="check_balance_desc">Nice! You added your first account. Now you can check your balance on Stax.</string>
+	<string name="later">Later</string>
+	<string name="empty_channels_internet_err">You need internet connection to use this feature on Stax. Please connect and try again.</string>
+	<string name="no_connecion">No connection</string>
+	<string name="your_main_account">Your main account</string>
+	<string name="your_other_account">Your other account</string>
+
+>>>>>>> f44b0f6949d27f14feee43e0632a8daca08070ea
 	<!-- ADD ACCOUNT -->
 	<string name="your_accounts">Your accounts</string>
 	<string name="add_an_account">Add an account</string>
@@ -126,17 +135,9 @@
 
 	<!-- Onboarding showcase -->
 	<string name="onboard_addaccounthead">Add an account to get started.</string>
-	<string name="onboard_addaccountbody">Stax puts all your bank and mobile money accounts in one secure place.</string>
-	<string name="onboard_sechead">World class security</string>
-	<string name="onboard_secbody">We secure Stax with the same technology that locks your device. You unlock Stax the same way you unlock your device.</string>
-	<string name="onboard_peekhead">Keep accounts private</string>
-	<string name="onboard_peekbody">Peek at your balances by dragging the bar to the left.</string>
-	<string name="onboard_balhead">Refresh your accounts</string>
-	<string name="onboard_balbody">Check your account\'s balance by pulling the bar all the way to the left.</string>
-	<string name="onboard_refreshhead">Refresh Stax</string>
-	<string name="onboard_refreshbody">Pull down the whole screen to refresh all of your accounts.</string>
-	<string name="onboard_infohead">Long press for more info</string>
-	<string name="onboard_infobody">Press and hold any element in Stax for more information.</string>
+	<string name="onboard_addaccountdesc">Keep track of your money all in one place. Your funds never leave your account or mix.</string>
+	<string name="onboard_addaccount_greatwork_head">Great work!</string>
+	<string name="onboard_addaccount_greatwork_desc">Now add your other accounts so you can view all your separate balances in one place.</string>
 
 	<!-- Transfer -->
 	<string name="loading_link_dialoghead">Loading, one moment</string>
@@ -163,6 +164,7 @@
 	<string name="note_cardhead">Description</string>
 	<string name="request_note_label">What is your request for?</string>
 	<string name="recipient_label">To</string>
+	<string name="sender_label">From</string>
 	<string name="send_who_header">Send money to</string>
 	<string name="airtime_who_header">Buy airtime for</string>
 	<string name="accounts_label">Pay from</string>
@@ -172,6 +174,7 @@
 	<string name="descrip_airtime_sent">%1$s sent airtime to %2$s</string>
 	<string name="descrip_transfer_sent">%1$s sent money to %2$s</string>
 	<string name="descrip_transfer_received">received money from %1$s</string>
+	<string name="descrip_bill_paid">paid %1$s bill</string>
 	<string name="descrip_recorded">Recorded USSD session on %1$s</string>
 	<string name="fab_transfernow">Send money now</string>
 	<string name="fab_airtimenow">Buy airtime now</string>
@@ -375,6 +378,11 @@
 	<string name="bounty_submitted_successfully">Bounty submitted successfully</string>
 	<string name="language">Language</string>
 	<string name="bounty">Bounty</string>
+	<string name="internet_required">Internet required</string>
+	<string name="internet_required_bounty_desc">You need a data or Wifi connection to map USSD flows. Please connect and try again.</string>
+	<string name="try_again">Try again</string>
+	<string name="edge_case_bounty_email_error">This rarely happens, but if error persists, please close the app and restart.</string>
+
 
 	<string name="sentry_dsn">https://ce9bf386ab104ece903cd33fc563c241@o44209.ingest.sentry.io/5477330</string>
 

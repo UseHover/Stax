@@ -23,6 +23,11 @@ public class ScheduledAdapter extends RecyclerView.Adapter<ScheduledAdapter.Sche
         this.selectListener = selectListener;
     }
 
+    public void updateData(List<Schedule> scheduled) {
+        this.scheduleList = scheduled;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public ScheduledAdapter.ScheduledViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

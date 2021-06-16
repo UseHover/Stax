@@ -19,6 +19,8 @@ import com.hover.stax.home.MainActivity;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
+import com.hover.stax.views.StaxDialog;
+
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
@@ -78,15 +80,31 @@ public class ChannelsListFragment extends Fragment implements ChannelsRecyclerVi
         simSupportedChannelsListView.setLayoutManager(UIHelper.setMainLinearManagers(requireContext()));
         channelsViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> {
             if(channels!=null) {
-                simSupportedChannelsListView.setAdapter(new ChannelsRecyclerViewAdapter(Channel.sort(channels, false), this));
+                if(channels.size() > 0) simSupportedChannelsListView.setAdapter(new ChannelsRecyclerViewAdapter(Channel.sort(channels, false), this));
+                else showEmptySimChannelsDialog();
             }
         });
     }
 
-    private void returnDataToPreviousScreen(Channel channel) {
+    private void showEmptySimChannelsDialog() {
+        new StaxDialog(requireActivity())
+                .setDialogTitle(R.string.no_connecion)
+                .setDialogMessage(R.string.empty_channels_internet_err)
+                .setPosButton(R.string.btn_ok, view -> requireActivity().onBackPressed())
+                .showIt();
+    }
+    private void showCheckBalanceDialog(Channel channel) {
+        new StaxDialog(requireActivity())
+                .setDialogTitle(R.string.check_balance_title)
+                .setDialogMessage(R.string.check_balance_desc)
+                .setNegButton(R.string.later, view -> saveChannel(channel, false))
+                .setPosButton(R.string.check_balance_title, view -> saveChannel(channel, true))
+                .showIt();
+    }
+    private void saveChannel(Channel channel, boolean checkBalance) {
             channelsViewModel.setChannelSelected(channel);
             requireActivity().onBackPressed();
-            if(balancesViewModel !=null) balancesViewModel.getActions().observe(getViewLifecycleOwner(), actions -> balancesViewModel.setRunning(channel.id));
+            if(balancesViewModel !=null && checkBalance) balancesViewModel.getActions().observe(getViewLifecycleOwner(), actions -> balancesViewModel.setRunning(channel.id));
     }
 
     private void goToChannelsDetailsScreen(Channel channel) {
@@ -104,7 +122,7 @@ public class ChannelsListFragment extends Fragment implements ChannelsRecyclerVi
 
     @Override
     public void clickedChannel(Channel channel) {
-        if(IS_FORCE_RETURN || !channel.selected) returnDataToPreviousScreen(channel);
+        if(IS_FORCE_RETURN || !channel.selected) showCheckBalanceDialog(channel);
         else  goToChannelsDetailsScreen(channel);
     }
 }

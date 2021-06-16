@@ -40,6 +40,7 @@ public class MainActivity extends AbstractNavigationActivity implements
     private BalancesViewModel balancesViewModel;
 
     private ActivityMainBinding binding;
+    TransactionHistoryViewModel transactionHistoryViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class MainActivity extends AbstractNavigationActivity implements
         setContentView(binding.getRoot());
 
         balancesViewModel = new ViewModelProvider(this).get(BalancesViewModel.class);
+        transactionHistoryViewModel  = new ViewModelProvider(this).get(TransactionHistoryViewModel.class);
         balancesViewModel.setListener(this);
         balancesViewModel.getSelectedChannels().observe(this, channels -> {
         });//Timber.i("Channels observer is necessary to make updates fire, but all logic is in viewmodel. %s", channels.size()));
@@ -59,17 +61,23 @@ public class MainActivity extends AbstractNavigationActivity implements
         balancesViewModel.getActions().observe(this, actions -> {
         });//Timber.i("Actions observer is necessary to make updates fire, but all logic is in viewmodel. %s", actions.size()));
 
-        setUpNav();
-
         checkForRequest(getIntent());
         checkForFragmentDirection(getIntent());
         checkForDeepLinking();
+        observeForAppReview();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         checkForRequest(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        setUpNav();
     }
 
     private void checkForDeepLinking() {
@@ -80,31 +88,47 @@ public class MainActivity extends AbstractNavigationActivity implements
                 navigateToTransferActivity(HoverAction.P2P, false, intent, this);
             } else if (deepLinkRoute.contains(getString(R.string.deeplink_airtime))) {
                 navigateToTransferActivity(HoverAction.AIRTIME, false, intent, this);
-            } else if (deepLinkRoute.contains(getString(R.string.deeplink_linkaccount))) {
-                navigateToChannelsListFragment(getNavController(), false);
-            } else if (deepLinkRoute.contains(getString(R.string.deeplink_balance)) || deepLinkRoute.contains(getString(R.string.deeplink_history))) {
+            }
+            else if(deepLinkRoute.contains(getString(R.string.deeplink_linkaccount))) {
+                navigateToChannelsListFragment(getNavController(), true);
+            }
+            else if(deepLinkRoute.contains(getString(R.string.deeplink_balance)) || deepLinkRoute.contains(getString(R.string.deeplink_history))) {
                 navigateToBalanceFragment(getNavController());
             } else if (deepLinkRoute.contains(getString(R.string.deeplink_settings))) {
                 navigateToSettingsFragment(getNavController());
-            } else if (deepLinkRoute.contains(getString(R.string.deeplink_reviews))) {
-                Utils.logAnalyticsEvent(getString(R.string.visited_rating_review_screen), this);
-                if (!Utils.getBoolean(Constants.APP_RATED, this)) launchRatingAndReviewDialog();
-                else openStaxPlaystorePage();
+            } else if(deepLinkRoute.contains(getString(R.string.deeplink_reviews))) {
+                Timber.i("Currently at reviews 1");
+                launchStaxReview();
             }
         }
     }
+    private void observeForAppReview() {
+        transactionHistoryViewModel.showAppReviewLiveData().observe(this, status -> {
+            if(status) { launchRatingAndReviewDialog(); }
+        });
+    }
+
+    private void launchStaxReview() {
+        Utils.logAnalyticsEvent(getString(R.string.visited_rating_review_screen), this);
+        if(Utils.getBoolean(Constants.APP_RATED_NATIVELY, this)) openStaxPlaystorePage();
+        else launchRatingAndReviewDialog();
+    }
 
     private void launchRatingAndReviewDialog() {
+        Timber.i("Currently at reviews native");
         ReviewManager reviewManager = ReviewManagerFactory.create(this);
         reviewManager.requestReviewFlow().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+            Timber.i("Currently at reviews native already completed");
+            if(task.isSuccessful()){
+                Timber.i("Currently at reviews native already succeeded");
                 reviewManager.launchReviewFlow(MainActivity.this, task.getResult()).addOnCompleteListener(
-                        task1 -> Utils.saveBoolean(Constants.APP_RATED, true, MainActivity.this));
+                        task1 -> Utils.saveBoolean(Constants.APP_RATED_NATIVELY, true, MainActivity.this));
             }
         });
     }
 
     private void openStaxPlaystorePage() {
+        Timber.i("Currently at reviews for external store page");
         Uri link = Uri.parse(getString(R.string.stax_market_playstore_link));
         Intent goToMarket = new Intent(Intent.ACTION_VIEW, link);
         goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
@@ -131,14 +155,14 @@ public class MainActivity extends AbstractNavigationActivity implements
 
     @Override
     public void onTapDetail(int channel_id) {
-        if (channel_id == Channel.DUMMY) navigateToChannelsListFragment(getNavController(), false);
+        if(channel_id == Channel.DUMMY) navigateToChannelsListFragment(getNavController(), true);
         else navigateToChannelDetailsFragment(channel_id, getNavController());
     }
 
     @Override
     public void onTapRefresh(int channel_id) {
-        if (channel_id == Channel.DUMMY) navigateToChannelsListFragment(getNavController(), false);
-        else {
+        if(channel_id == Channel.DUMMY) navigateToChannelsListFragment(getNavController(), false);
+        else{
             Utils.logAnalyticsEvent(getString(R.string.refresh_balance_single), this);
             balancesViewModel.setRunning(channel_id);
         }

@@ -145,11 +145,6 @@
                 android:theme="@style/StaxTheme" />
 
         <activity
-                android:name=".transfers.TransferActivity"
-                android:theme="@style/StaxTheme"
-                android:windowSoftInputMode="stateVisible|adjustResize" />
-
-        <activity
                 android:name=".requests.RequestActivity"
                 android:theme="@style/StaxTheme"
                 android:windowSoftInputMode="stateVisible|adjustResize">

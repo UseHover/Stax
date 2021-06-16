@@ -9,6 +9,10 @@
         app:cardBackgroundColor="@color/cardViewColor"
         app:cardCornerRadius="@dimen/radius"
         app:cardElevation="8dp"
+<<<<<<< HEAD
+=======
+        android:id="@+id/balance_item_card"
+>>>>>>> f44b0f6949d27f14feee43e0632a8daca08070ea
         app:cardPreventCornerOverlap="false">
 
     <LinearLayout
@@ -16,7 +20,10 @@
             android:layout_height="@dimen/margin_65"
             android:background="?selectableItemBackground"
             android:orientation="horizontal"
+<<<<<<< HEAD
             android:paddingStart="@dimen/margin_13"
+=======
+>>>>>>> f44b0f6949d27f14feee43e0632a8daca08070ea
             android:paddingEnd="0dp">
 
         <LinearLayout
@@ -24,6 +31,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
+<<<<<<< HEAD
+=======
+                android:id="@+id/balance_channel_left"
+>>>>>>> f44b0f6949d27f14feee43e0632a8daca08070ea
                 android:orientation="vertical">
 
             <TextView
@@ -32,6 +43,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
+<<<<<<< HEAD
+=======
+                    android:paddingVertical="@dimen/margin_13"
+                    android:paddingHorizontal="@dimen/margin_13"
+>>>>>>> f44b0f6949d27f14feee43e0632a8daca08070ea
                     android:fontFamily="font-normal"
                     android:gravity="center_vertical"
                     android:text="Channel name"

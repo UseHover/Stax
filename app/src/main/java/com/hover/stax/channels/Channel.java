@@ -1,15 +1,11 @@
 package com.hover.stax.channels;
 
-import android.content.Context;
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import com.hover.stax.R;
 import com.hover.stax.utils.DateUtils;
 
 import org.json.JSONException;
@@ -20,11 +16,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import timber.log.Timber;
+
 @Entity(tableName = "channels")
 public class Channel implements Comparable<Channel> {
+
     final public static int DUMMY = -1;
-    public Channel() {
-    }
+
+    public Channel() {}
 
     public Channel(int _id, String addChannel) {
         this.id = _id;
@@ -49,10 +48,11 @@ public class Channel implements Comparable<Channel> {
             primaryColorHex = jsonObject.getString("primary_color_hex");
             secondaryColorHex = jsonObject.getString("secondary_color_hex");
         } catch (JSONException e) {
-            Log.d("exception", e.getMessage());
+            Timber.d(e.getLocalizedMessage());
         }
         return this;
     }
+
     public Channel dummy(String name, String primaryColor) {
         id = DUMMY;
         this.name = name;
@@ -65,18 +65,20 @@ public class Channel implements Comparable<Channel> {
         latestBalanceTimestamp = Long.parseLong("-1");
         return this;
     }
+
     public static boolean areAllDummies(List<Channel> channels) {
         if(channels == null) return true;
 
         boolean result = true;
-            for(Channel channel : channels) {
-                if (channel.id != DUMMY) {
-                    result = false;
-                    break;
-                }
+        for(Channel channel : channels) {
+            if (channel.id != DUMMY) {
+                result = false;
+                break;
             }
+        }
         return  result;
     }
+
     public static boolean hasDummy(List<Channel> channels) {
         if(channels == null) return true;
 
@@ -165,7 +167,8 @@ public class Channel implements Comparable<Channel> {
     }
 
     public void updateBalance(HashMap<String, String> parsed_variables) {
-        latestBalance = parsed_variables.get("balance");
+        if (parsed_variables.containsKey("balance"))
+            latestBalance = parsed_variables.get("balance");
         if (parsed_variables.containsKey("update_timestamp") && parsed_variables.get("update_timestamp") != null) {
             latestBalanceTimestamp = Long.parseLong(parsed_variables.get("update_timestamp"));
         } else {
@@ -190,8 +193,6 @@ public class Channel implements Comparable<Channel> {
             sorted_list.addAll(0, selected_list);
         return sorted_list;
     }
-
-
 
     @Override
     public String toString() {
