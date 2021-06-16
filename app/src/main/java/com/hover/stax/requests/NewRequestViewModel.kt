@@ -70,7 +70,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo):
     fun validAmount(): Boolean = (!amount.value.isNullOrEmpty() && amount.value!!.matches("\\d+".toRegex()) && !amount.value!!.matches("[0]+".toRegex()))
 
     fun requesteeErrors(): String? {
-        return if(!requestees.value.isNullOrEmpty() && !requestees.value!!.first().phoneNumber.isNullOrEmpty())
+        return if(!requestees.value.isNullOrEmpty() && !requestees.value!!.first().accountNumber.isNullOrEmpty())
             null
         else
             application.getString(R.string.request_error_recipient)
@@ -117,7 +117,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo):
             val contacts = ArrayList<StaxContact>()
 
             requestees.value?.forEach { contact ->
-                if(!contact.phoneNumber.isNullOrEmpty()) contacts.add(contact)
+                if(!contact.accountNumber.isNullOrEmpty()) contacts.add(contact)
             }
 
             requestees.postValue(contacts)
@@ -129,7 +129,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo):
             viewModelScope.launch {
                 contacts.forEach { contact ->
                     contact.lastUsedTimestamp = DateUtils.now()
-                    repo.insertOrUpdate(contact)
+                    repo.save(contact)
                 }
             }
         }
