@@ -55,10 +55,10 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     open fun startObservers(root: View) {
-        channelDropdown.setListener(channelsViewModel);
-        channelDropdown.setObservers(channelsViewModel, viewLifecycleOwner);
-        setupActionDropdownObservers(channelsViewModel, viewLifecycleOwner);
-        abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit));
+        channelDropdown.setListener(channelsViewModel)
+        channelDropdown.setObservers(channelsViewModel, viewLifecycleOwner)
+        setupActionDropdownObservers(channelsViewModel, viewLifecycleOwner)
+        abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit))
     }
 
     private fun setupActionDropdownObservers(viewModel: ChannelsViewModel, lifecycleOwner: LifecycleOwner) {
@@ -79,6 +79,7 @@ abstract class AbstractFormFragment : Fragment() {
 
     open fun contactPicker(requestCode: Int, c: Context) {
         Utils.logAnalyticsEvent(getString(R.string.try_contact_select), c)
+
         if (PermissionUtils.hasContactPermission(c))
             startContactIntent(requestCode);
         else
@@ -107,7 +108,7 @@ abstract class AbstractFormFragment : Fragment() {
 
         if (requestCode != Constants.ADD_SERVICE && resultCode == Activity.RESULT_OK) {
             val staxContact = StaxContact(data, requireContext())
-            staxContact.phoneNumber?.let {
+            staxContact.accountNumber?.let {
                 Utils.logAnalyticsEvent(getString(R.string.contact_select_success), requireContext());
                 onContactSelected(requestCode, staxContact);
             } ?: run {
