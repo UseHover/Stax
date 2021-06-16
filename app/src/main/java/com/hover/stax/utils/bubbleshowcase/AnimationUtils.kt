@@ -12,7 +12,6 @@ import android.view.animation.ScaleAnimation
  * Created by jcampos on 05/09/2018.
  */
 object AnimationUtils {
-
 	  fun getScaleAnimation(offset: Int, duration: Int): Animation {
 			val anim = ScaleAnimation(
 					0f, 1f, // Start and end values for the X axis scaling

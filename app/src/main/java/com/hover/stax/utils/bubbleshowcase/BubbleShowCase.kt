@@ -16,6 +16,9 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import com.hover.stax.R
+
+import com.hover.stax.utils.Utils
+
 import java.lang.ref.WeakReference
 
 
@@ -24,6 +27,7 @@ import java.lang.ref.WeakReference
  */
 
 class BubbleShowCase(builder: BubbleShowCaseBuilder) {
+
 	  private val SHARED_PREFS_NAME = "BubbleShowCasePrefs"
 
 	  private val FOREGROUND_LAYOUT_ID = 731
@@ -442,6 +446,4 @@ class BubbleShowCase(builder: BubbleShowCaseBuilder) {
 	  }
 
 	  private fun isTablet(): Boolean = false
-
-
 }

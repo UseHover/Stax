@@ -22,7 +22,7 @@ import com.hover.stax.transactions.TransactionDao;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class}, version = 29)
+@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class}, version = 30)
 public abstract class AppDatabase extends RoomDatabase {
     private static final int NUMBER_OF_THREADS = 8;
     static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -51,6 +51,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             .addMigrations(M26_27)
                             .addMigrations(M27_28)
                             .addMigrations(M28_29)
+                            .addMigrations(M29_30)
                             .build();
                 }
             }
@@ -97,4 +98,13 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+	static final Migration M29_30 = new Migration(29, 30) {
+		@Override
+		public void migrate(SupportSQLiteDatabase database) {
+			database.execSQL("DROP INDEX index_stax_contacts_lookup_key");
+			database.execSQL("DROP INDEX index_stax_contacts_id_phone_number");
+			database.execSQL("CREATE UNIQUE INDEX index_stax_contacts_id ON stax_contacts(id)");
+			database.execSQL("CREATE UNIQUE INDEX index_stax_contacts_phone_number ON stax_contacts(phone_number)");
+		}
+	};
 }

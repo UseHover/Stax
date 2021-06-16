@@ -23,7 +23,7 @@ public class UssdCallResponse {
         while (i == 0 || (t.enteredValues != null && t.enteredValues.opt(i - 1) != null) || (t.ussdMessages != null && t.ussdMessages.opt(i) != null)) {
 
             UssdCallResponse tm = null;
-            if (i == 0)
+            if (i == 0 && !t.myType.equals(HoverAction.RECEIVE))
                 tm = new UssdCallResponse(a.root_code, t.ussdMessages != null ? t.ussdMessages.optString(i) : null);
             else
                 tm = new UssdCallResponse(t.enteredValues != null ? t.enteredValues.optString(i - 1) : null,

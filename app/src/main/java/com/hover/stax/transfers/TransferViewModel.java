@@ -1,7 +1,6 @@
 package com.hover.stax.transfers;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -10,8 +9,9 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.requests.Request;
+import com.hover.stax.contacts.PhoneHelper;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.requests.Request;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.Utils;
@@ -69,20 +69,18 @@ public class TransferViewModel extends AbstractFormViewModel {
 		contact.setValue(new StaxContact(r));
 	}
 
-	void setRecipientSmartly(Request r, Channel channel){
+	void setRecipientSmartly(Request r, Channel channel) {
 		if(channel !=null && r!=null) {
 			try {
-				String formattedPhone = StaxContact.getInternationalNumber(channel.countryAlpha2, StaxContact.stripPhone(r.requester_number));
+				String formattedPhone = PhoneHelper.getInternationalNumber(channel.countryAlpha2, r.requester_number);
 				new Thread(() -> {
-					StaxContact contactValue = repo.getContactFromPhone(formattedPhone);
-					if(contactValue == null) {
+					StaxContact contactValue = repo.getContactByPhone(formattedPhone);
+					if (contactValue == null) {
 						//Check again without internationalizing number, in case the value is a bank account number;
-						contactValue = repo.getContactFromPhone(StaxContact.stripPhone(r.requester_number));
+						contactValue = repo.getContactByPhone(r.requester_number);
 					}
-
-					if(contactValue !=null) contact.postValue(contactValue);
+					if (contactValue != null) contact.postValue(contactValue);
 				}).start();
-
 			} catch (NumberParseException e) {
 				Utils.logErrorAndReportToFirebase(TAG, e.getMessage(), e);
 			}
@@ -136,6 +134,12 @@ public class TransferViewModel extends AbstractFormViewModel {
 		setNote(s.note);
 	}
 
+	public void view(Request r) {
+		setAmount(r.amount);
+		setContact(r.requestee_ids);
+		setNote(r.note);
+	}
+
 	public void checkSchedule() {
 		if (schedule.getValue() != null) {
 			Schedule s = schedule.getValue();
@@ -147,11 +151,11 @@ public class TransferViewModel extends AbstractFormViewModel {
 	}
 
 	public void saveContact() {
-		if (contact.getValue() != null) {
+		final StaxContact c = contact.getValue();
+		if (c != null) {
 			new Thread(() -> {
-				StaxContact c = contact.getValue();
 				c.lastUsedTimestamp = DateUtils.now();
-				repo.insertOrUpdate(contact.getValue());
+				repo.save(c);
 			}).start();
 		}
 	}

@@ -6,8 +6,6 @@
 	<string name="api_url" translatable="false">https://www.usehover.com/api</string>
 	<string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
 	<string name="bounty_endpoint">/stax_bounty_hunters</string>
-	<string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
-	<string name="appsflyer_key" public="false" translatable="false">4B6DDdYFw55PmVPTwr8Ski</string>
 	<string name="stax_market_playstore_link" translatable="false">market://details?id=com.hover.stax</string>
 	<string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
 
@@ -159,6 +157,7 @@
 	<string name="note_cardhead">Description</string>
 	<string name="request_note_label">What is your request for?</string>
 	<string name="recipient_label">To</string>
+	<string name="sender_label">From</string>
 	<string name="send_who_header">Send money to</string>
 	<string name="airtime_who_header">Buy airtime for</string>
 	<string name="accounts_label">Pay from</string>
@@ -168,6 +167,7 @@
 	<string name="descrip_airtime_sent">%1$s sent airtime to %2$s</string>
 	<string name="descrip_transfer_sent">%1$s sent money to %2$s</string>
 	<string name="descrip_transfer_received">received money from %1$s</string>
+	<string name="descrip_bill_paid">paid %1$s bill</string>
 	<string name="descrip_recorded">Recorded USSD session on %1$s</string>
 	<string name="fab_transfernow">Send money now</string>
 	<string name="fab_airtimenow">Buy airtime now</string>
@@ -371,6 +371,11 @@
 	<string name="bounty_submitted_successfully">Bounty submitted successfully</string>
 	<string name="language">Language</string>
 	<string name="bounty">Bounty</string>
+	<string name="internet_required">Internet required</string>
+	<string name="internet_required_bounty_desc">You need a data or Wifi connection to map USSD flows. Please connect and try again.</string>
+	<string name="try_again">Try again</string>
+	<string name="edge_case_bounty_email_error">This rarely happens, but if error persists, please close the app and restart.</string>
+
 
 
 

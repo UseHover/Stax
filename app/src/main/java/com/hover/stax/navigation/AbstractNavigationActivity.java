@@ -69,11 +69,13 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
     }
 
     private void setDestinationChangedListener(BottomNavigationView nav) {
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (controller.getGraph().getId() == R.id.bounty_navigation) {
-                nav.getMenu().findItem(R.id.navigation_settings).setChecked(true);
-            }
-        });
+        if (navController != null) {
+            navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+                if (controller.getGraph().getId() == R.id.bounty_navigation) {
+                    nav.getMenu().findItem(R.id.navigation_settings).setChecked(true);
+                }
+            });
+        }
     }
 
     protected NavController getNavController() {
@@ -116,6 +118,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         else if (destId == R.id.navigation_settings) return Constants.NAV_SETTINGS;
         else if (destId == R.id.navigation_home) return Constants.NAV_HOME;
         else return destId;
+
     }
 
     public void getStartedWithBountyButton(View view) {

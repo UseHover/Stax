@@ -46,5 +46,4 @@ class BubbleShowCaseSequence {
 				  }
 			}).show()
 	  }
-
 }

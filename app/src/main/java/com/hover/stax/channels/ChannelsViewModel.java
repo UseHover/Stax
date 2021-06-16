@@ -244,7 +244,7 @@ public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdo
 
     private void logChoice(Channel channel) {
         Log.i(TAG, "saving selected channel: " + channel);
-       joinByChannelNotifGroup(channel.id, getApplication().getApplicationContext());
+       joinChannelGroup(channel.id, getApplication().getApplicationContext());
         JSONObject args = new JSONObject();
         try {
             args.put(getApplication().getString(R.string.added_channel_id), channel.id);
