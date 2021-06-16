@@ -70,8 +70,9 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
         startBackgroundProcesses();
 
         if (selfDestructWhenAppVersionExpires()) return;
-        authenticateUser();
+        validateUser();
     }
+
 
     @Override
     protected void onStart() {
@@ -138,8 +139,11 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
         tv.setCompoundDrawablesWithIntrinsicBounds(null, d, null, null);
     }
 
-    private void authenticateUser() {
-        new Handler().postDelayed(() -> new BiometricChecker(this, this).startAuthentication(null), NAV_DELAY);
+    private void validateUser() {
+        new Handler().postDelayed(() -> {
+            if (!OnBoardingActivity.hasPassedThrough(this)) goToOnboardingActivity();
+            else new BiometricChecker(this, this).startAuthentication(null);
+        }, NAV_DELAY);
     }
 
     private void initAmplitude() {
@@ -220,8 +224,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
     }
 
     private void chooseNavigation(Intent intent) {
-        if (!OnBoardingActivity.hasPassedThrough(this)) goToOnboardingActivity();
-        else if (isToRedirectFromMainActivity(intent)) {
+        if (isToRedirectFromMainActivity(intent)) {
             assert intent.getExtras() != null;
             assert intent.getExtras().getString(FRAGMENT_DIRECT) != null;
             String redirectLink = Objects.requireNonNull(intent.getExtras().getString(FRAGMENT_DIRECT));
