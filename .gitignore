@@ -22,12 +22,9 @@ app/release
 .cxx
 /hover.sdk
 *.apk
-<<<<<<< HEAD
 .project
 .settings/
 app/.classpath
 app/.project
 app/.settings/
-=======
 /app/src/main/res/values/app_keys.xml
->>>>>>> development
