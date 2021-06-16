@@ -14,7 +14,7 @@ import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.hover.stax.actions.ActionSelect;
 import com.hover.stax.actions.ActionSelectViewModel;
-import com.hover.stax.channels.ChannelDropdownViewModel;
+import com.hover.stax.channels.ChannelsViewModel;
 import com.hover.stax.contacts.ContactInput;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.databinding.FragmentTransferBinding;
@@ -43,7 +43,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        channelDropdownViewModel = new ViewModelProvider(requireActivity()).get(ChannelDropdownViewModel.class);
+        channelsViewModel = new ViewModelProvider(requireActivity()).get(ChannelsViewModel.class);
         actionSelectViewModel = new ViewModelProvider(requireActivity()).get(ActionSelectViewModel.class);
         abstractFormViewModel = new ViewModelProvider(requireActivity()).get(TransferViewModel.class);
         transferViewModel = (TransferViewModel) abstractFormViewModel;
@@ -89,13 +89,13 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
             setRecipientHint(action);
         });
 
-        channelDropdownViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> {
+        channelsViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> {
             transferViewModel.setRecipientSmartly(transferViewModel.getRequest().getValue(), channel);
             actionSelect.setVisibility(channel == null ? View.GONE : View.VISIBLE);
             binding.summaryCard.accountValue.setTitle(channel.toString());
         });
 
-        channelDropdownViewModel.getChannelActions().observe(getViewLifecycleOwner(), actions -> {
+        channelsViewModel.getChannelActions().observe(getViewLifecycleOwner(), actions -> {
             actionSelectViewModel.setActions(actions);
             actionSelect.updateActions(actions);
         });
@@ -159,7 +159,7 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
     private boolean validates() {
         String amountError = transferViewModel.amountErrors();
         amountInput.setState(amountError, amountError == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.ERROR);
-        String channelError = channelDropdownViewModel.errorCheck();
+        String channelError = channelsViewModel.errorCheck();
         channelDropdown.setState(channelError, channelError == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.ERROR);
         String actionError = actionSelectViewModel.errorCheck();
         actionSelect.setState(actionError, actionError == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.ERROR);
@@ -232,8 +232,8 @@ public class TransferFragment extends AbstractFormFragment implements ActionSele
     };
 
     private void load(Request r) {
-        transferViewModel.setRecipientSmartly(r, channelDropdownViewModel.getActiveChannel().getValue());
-        channelDropdownViewModel.setChannelFromRequest(r);
+        transferViewModel.setRecipientSmartly(r, channelsViewModel.getActiveChannel().getValue());
+        channelsViewModel.setChannelFromRequest(r);
         amountInput.setText(r.amount);
         contactInput.setText(r.requester_number, false);
         transferViewModel.setEditing(r.amount == null || r.amount.isEmpty());

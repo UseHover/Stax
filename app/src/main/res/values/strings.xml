@@ -12,6 +12,7 @@
 	<string name="nav_home">Home</string>
 	<string name="nav_balance_and_history">Balance and history</string>
 	<string name="nav_balances">Balances</string>
+	<string name="nav_get_paid">Get paid</string>
 	<string name="nav_link_account">Link an account</string>
 	<string name="nav_airtime">Buy Airtime</string>
 	<string name="nav_transfer">Transfer</string>
@@ -64,14 +65,26 @@
 	<string name="link_account">Link account</string>
 	<string name="link_account_error">Choose an account to link.</string>
 	<string name="link_another"><u>+ Link another account</u></string>
+	<string name="add_another_account"><u>+ Add another account</u></string>
 	<string name="hist_cardhead">History</string>
 	<string name="hist_zerobody">You do not have any history yet. Send money or buy airtime to get started.</string>
 	<string name="future_cardhead">Future Transactions</string>
 	<string name="pending_callout">Transaction sent. Waiting for confirmation.</string>
-	<string name="refresh_balance_desc">Refresh balance to see your money</string>
+	<string name="refresh_balance_desc">Refresh your balance</string>
 	<string name="refresh_balances">Refresh balances</string>
 	<string name="refresh">Refresh</string>
 	<string name="refresh_balance_error">Add an account to check your balance.</string>
+	<string name="check_balance_title">Check balance</string>
+	<string name="check_balance_desc">Nice! You added your first account. Now you can check your balance on Stax.</string>
+	<string name="later">Later</string>
+	<string name="empty_channels_internet_err">You need internet connection to use this feature on Stax. Please connect and try again.</string>
+	<string name="no_connecion">No connection</string>
+	<string name="your_main_account">Your main account</string>
+	<string name="your_other_account">Your other account</string>
+
+	<!-- ADD ACCOUNT -->
+	<string name="your_accounts">Your accounts</string>
+	<string name="add_an_account">Add an account</string>
 
 	<!-- Permissions -->
 	<string name="permissions_title">Permissions needed</string>
@@ -115,17 +128,9 @@
 
 	<!-- Onboarding showcase -->
 	<string name="onboard_addaccounthead">Add an account to get started.</string>
-	<string name="onboard_addaccountbody">Stax puts all your bank and mobile money accounts in one secure place.</string>
-	<string name="onboard_sechead">World class security</string>
-	<string name="onboard_secbody">We secure Stax with the same technology that locks your device. You unlock Stax the same way you unlock your device.</string>
-	<string name="onboard_peekhead">Keep accounts private</string>
-	<string name="onboard_peekbody">Peek at your balances by dragging the bar to the left.</string>
-	<string name="onboard_balhead">Refresh your accounts</string>
-	<string name="onboard_balbody">Check your account\'s balance by pulling the bar all the way to the left.</string>
-	<string name="onboard_refreshhead">Refresh Stax</string>
-	<string name="onboard_refreshbody">Pull down the whole screen to refresh all of your accounts.</string>
-	<string name="onboard_infohead">Long press for more info</string>
-	<string name="onboard_infobody">Press and hold any element in Stax for more information.</string>
+	<string name="onboard_addaccountdesc">Keep track of your money all in one place. Your funds never leave your account or mix.</string>
+	<string name="onboard_addaccount_greatwork_head">Great work!</string>
+	<string name="onboard_addaccount_greatwork_desc">Now add your other accounts so you can view all your separate balances in one place.</string>
 
 	<!-- Transfer -->
 	<string name="loading_link_dialoghead">Loading, one moment</string>
@@ -171,6 +176,11 @@
 
 	<!-- Request -->
 	<string name="req_cardhead">Request money</string>
+	<string name="into_account">Into account</string>
+	<string name="put_in">Put in</string>
+	<string name="put_in_desc">This is where you want to receive the requested money</string>
+	<string name="account_num_desc">e.g. your mobile money phone number or bank account number</string>
+	<string name="send_request_to">Send request to</string>
 	<string name="request_amount_label">How much money?</string>
 	<string name="amount_label_opt">Amount (Optional)</string>
 	<string name="reqfrom_label">To</string>

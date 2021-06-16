@@ -1,51 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/balance_card"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:backRes="@drawable/ic_visibility_off"
-    app:defaultBackPress="false"
-    app:showBack="true"
-    app:title="@string/bal_cardhead">
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/balances_ml"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutDescription="@xml/home_card_balances_scene">
+
+    <androidx.cardview.widget.CardView
+            android:id="@+id/balance_header_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_13"
+            android:layout_marginTop="@dimen/margin_5"
+            android:layout_marginBottom="@dimen/margin_5"
+            android:clipToPadding="true"
+            app:cardBackgroundColor="@color/cardViewColor"
+            app:cardCornerRadius="@dimen/radius"
+            app:cardElevation="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+                android:id="@+id/balance_header_title_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/margin_26"
+                android:fontFamily="font-bold"
+                android:padding="@dimen/margin_16"
+                android:paddingHorizontal="@dimen/margin_13"
+                android:text="@string/nav_balances"
+                android:textAlignment="textEnd"
+                android:textAllCaps="true"
+                android:textSize="@dimen/text_13"
+                app:drawableStartCompat="@drawable/ic_visibility_off" />
+
+    </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/balances_recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_26" />
-
-    <TextView
-        android:id="@+id/new_account_link"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="font-medium"
-        android:padding="@dimen/margin_13"
-        android:text="@string/link_another"
-        android:textColor="@color/brightBlue"
-        android:textSize="@dimen/text_16"
-        android:visibility="gone" />
-
-    <com.hover.stax.channels.ChannelDropdown
-        android:id="@+id/channel_dropdown"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/link_account"
-        app:show_selected="false" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="end">
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/refresh_accounts_btn"
-            style="@style/StaxButtonColored"
-            android:layout_width="wrap_content"
+            android:id="@+id/balances_recyclerView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/margin_8"
-            android:drawableStart="@drawable/ic_refresh_dark_24"
-            android:drawablePadding="@dimen/margin_5"
-            android:text="@string/refresh_balances" />
-    </RelativeLayout>
-</com.hover.stax.views.StaxCardView>
+            android:layout_marginHorizontal="2dp"
+            app:cardElevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/balance_header_card"
+            tools:itemCount="2"
+            tools:listitem="@layout/balance_item" />
+
+</androidx.constraintlayout.motion.widget.MotionLayout>

@@ -1,6 +1,7 @@
 package com.hover.stax.requests;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -122,7 +123,7 @@ public class Request {
 
     public String generateMessage(Context c) {
         String amountString = amount != null ? c.getString(R.string.sms_amount_detail, Utils.formatAmount(amount)) : "";
-        String noteString = note != null ? c.getString(R.string.sms_note_detail, note) : "";
+        String noteString = note != null && !TextUtils.isEmpty(note) ? c.getString(R.string.sms_note_detail, note) : "";
         String paymentLink = generateStaxLink(c);
 
         return c.getString(R.string.sms_request_template, amountString, noteString, paymentLink);

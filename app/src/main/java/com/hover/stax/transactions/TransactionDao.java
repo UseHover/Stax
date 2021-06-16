@@ -17,6 +17,9 @@ public interface TransactionDao {
     @Query("SELECT * FROM stax_transactions WHERE transaction_type != 'balance' AND status != 'failed' AND environment != 3 ORDER BY initiated_at DESC")
     LiveData<List<StaxTransaction>> getCompleteAndPendingTransfers();
 
+    @Query("SELECT * FROM stax_transactions WHERE status != 'failed' AND environment != 3 ORDER BY initiated_at DESC LIMIT 4")
+    LiveData<List<StaxTransaction>> getTransactionsForAppReview();
+
     @Query("SELECT * FROM stax_transactions WHERE environment = 3 ORDER BY initiated_at DESC")
     LiveData<List<StaxTransaction>> getBountyTransactions();
 
