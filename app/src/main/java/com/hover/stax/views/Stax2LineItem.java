@@ -38,7 +38,7 @@ public class Stax2LineItem extends RelativeLayout {
     public void setContact(StaxContact contact) {
         if (contact == null) return;
         setTitle(contact.shortName());
-        if (!contact.shortName().equals(contact.accountNumber))
+        if (contact.shortName() !=null && !contact.shortName().equals(contact.accountNumber))
             setSubtitle(contact.accountNumber);
     }
 }

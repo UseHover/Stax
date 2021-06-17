@@ -345,14 +345,14 @@
 	<string name="bounty_uploading_email">Connecting, please wait…</string>
 	<string name="bounty_api_internet_error">Please ensure you have a data internet connection</string>
 	<string name="bounty_api_other_error">Please try again. If this persists, kindly contact us at ussd@stax.me.</string>
-	<string name="bounty_pending_short_desc">We are checking this flow. Expect payment in 1–5 business days.</string>
+	<string name="bounty_pending_short_desc">We are verifying your transaction. If successful, expect to be paid within 7 business days.</string>
 	<string name="done">Done</string>
 	<string name="available_flows">AVAILABLE FLOWS</string>
 	<string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
 	<string name="bounty_claim_explained">To claim USD $%1$d, %2$s.\n\nAs soon as you\’re done, we will send you an email to collect information for payment. You will be paid in 1–5 business days </string>
 	<string name="start_USSD_Flow">Start USSD Flow</string>
 	<string name="checking_your_flow">Checking your flow</string>
-	<string name="bounty_flow_pending_dialog_msg"><![CDATA[Thank you for going through this flow. We sent an email with instructions for payment. We will pay you after we verify and check the flow.<br/><br/>If you don\’t hear from us, email us at <a href="https://ussd@stax.me"> <b><font color=#1878F9> ussd@stax.me </b></a>]]></string>
+	<string name="bounty_flow_pending_dialog_msg"><![CDATA[Thank you for your submission. If the transaction failed, please retry. Once we verify a successful transaction, we will reach out to you for your payment details.<br/><br/>If you have questions, please email us at <a href="https://ussd@stax.me"> <b><font color=#1878F9> ussd@stax.me </b></a>]]></string>
 	<string name="flow_done_title">FLOW DONE</string>
 	<string name="flow_done_desc">We checked the flow and it looks good! You should have an email in your inbox with payment information.</string>
 	<string name="go_through_another_flow">Go through another flow</string>
