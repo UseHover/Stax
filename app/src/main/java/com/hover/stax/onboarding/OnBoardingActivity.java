@@ -2,7 +2,6 @@ package com.hover.stax.onboarding;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
@@ -42,17 +41,9 @@ public class OnBoardingActivity extends AppCompatActivity implements ViewPager.O
         initContinueButton();
     }
 
-    private void setFullscreenView() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            getWindow().setDecorFitsSystemWindows(false);
-        } else {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-        }
-    }
     private void initContinueButton() {
         binding.onboardingContinueBtn.setOnClickListener(this);
     }
-
 
     private void setupOnboardingSlides() {
         viewPager = binding.vpPager;

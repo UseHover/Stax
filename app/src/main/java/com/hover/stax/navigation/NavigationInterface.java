@@ -17,6 +17,7 @@ import com.hover.stax.channels.ChannelsListFragment;
 import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.transactions.TransactionDetailsFragment;
+import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.Constants;
 
 import static com.hover.stax.settings.SettingsFragment.LANG_CHANGE;

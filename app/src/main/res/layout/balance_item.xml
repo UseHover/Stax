@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/balance_item_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_13"
@@ -9,10 +10,6 @@
         app:cardBackgroundColor="@color/cardViewColor"
         app:cardCornerRadius="@dimen/radius"
         app:cardElevation="8dp"
-<<<<<<< HEAD
-=======
-        android:id="@+id/balance_item_card"
->>>>>>> f44b0f6949d27f14feee43e0632a8daca08070ea
         app:cardPreventCornerOverlap="false">
 
     <LinearLayout
@@ -20,21 +17,14 @@
             android:layout_height="@dimen/margin_65"
             android:background="?selectableItemBackground"
             android:orientation="horizontal"
-<<<<<<< HEAD
-            android:paddingStart="@dimen/margin_13"
-=======
->>>>>>> f44b0f6949d27f14feee43e0632a8daca08070ea
             android:paddingEnd="0dp">
 
         <LinearLayout
+                android:id="@+id/balance_channel_left"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-<<<<<<< HEAD
-=======
-                android:id="@+id/balance_channel_left"
->>>>>>> f44b0f6949d27f14feee43e0632a8daca08070ea
                 android:orientation="vertical">
 
             <TextView
@@ -43,13 +33,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-<<<<<<< HEAD
-=======
-                    android:paddingVertical="@dimen/margin_13"
-                    android:paddingHorizontal="@dimen/margin_13"
->>>>>>> f44b0f6949d27f14feee43e0632a8daca08070ea
                     android:fontFamily="font-normal"
                     android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/margin_13"
+                    android:paddingVertical="@dimen/margin_13"
                     android:text="Channel name"
                     android:textColor="@color/offWhite"
                     android:textSize="@dimen/text_16" />
