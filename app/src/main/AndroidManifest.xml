@@ -21,8 +21,8 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/StaxTheme"
-            tools:replace="android:allowBackup"
-            tools:ignore="AllowBackup">
+            tools:ignore="AllowBackup"
+            tools:replace="android:allowBackup">
 
         <activity
                 android:name=".SplashScreenActivity"
@@ -225,6 +225,13 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <meta-data
+                android:name="AF_STORE"
+                android:value="Transsion" />
+        <meta-data
+                android:name="AF_PRE_INSTALL_NAME"
+                android:value="shalltry_int" />
 
         <meta-data
                 android:name="com.google.firebase.messaging.default_notification_icon"

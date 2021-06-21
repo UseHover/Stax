@@ -28,17 +28,18 @@ public class Stax2LineItem extends RelativeLayout {
     }
 
     public void setTitle(String title) {
-        if(title != null) binding.title.setText(title);
+        if (title != null) binding.title.setText(title);
     }
 
     public void setSubtitle(String sub) {
-        if(sub != null) binding.subtitle.setText(sub);
+        if (sub != null) binding.subtitle.setText(sub);
     }
 
     public void setContact(StaxContact contact) {
         if (contact == null) return;
         setTitle(contact.shortName());
-        if (!contact.shortName().equals(contact.accountNumber))
+
+        if (contact.shortName() !=null && !contact.shortName().equals(contact.accountNumber))
             setSubtitle(contact.accountNumber);
     }
 }
