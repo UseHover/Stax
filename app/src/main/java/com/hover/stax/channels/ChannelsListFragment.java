@@ -18,7 +18,6 @@ import com.hover.stax.databinding.FragmentChannelsListBinding;
 import com.hover.stax.home.MainActivity;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
-
 import com.hover.stax.views.StaxDialog;
 
 import static android.view.View.GONE;

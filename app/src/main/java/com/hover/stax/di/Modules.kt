@@ -2,6 +2,7 @@ package com.hover.stax.di
 
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.stax.actions.ActionSelectViewModel
+import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.database.AppDatabase
 import com.hover.stax.database.DatabaseRepo
@@ -20,6 +21,7 @@ val appModule = module(true) {
     viewModel { NewRequestViewModel(get(), get()) }
     viewModel { TransferViewModel(get(), get())}
     viewModel { ScheduleDetailViewModel(get()) }
+    viewModel { BalancesViewModel(get(), get())}
 }
 
 val dataModule = module {
