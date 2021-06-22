@@ -51,7 +51,6 @@ import java.util.Objects;
 
 import timber.log.Timber;
 
-import static com.hover.stax.utils.Constants.AUTH_CHECK;
 import static com.hover.stax.utils.Constants.FRAGMENT_DIRECT;
 
 public class SplashScreenActivity extends AppCompatActivity implements BiometricChecker.AuthListener, PushNotificationTopicsInterface {

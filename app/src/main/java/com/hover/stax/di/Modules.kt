@@ -8,6 +8,7 @@ import com.hover.stax.database.AppDatabase
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.schedules.ScheduleDetailViewModel
+import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransferViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -22,6 +23,7 @@ val appModule = module(true) {
     viewModel { TransferViewModel(get(), get())}
     viewModel { ScheduleDetailViewModel(get()) }
     viewModel { BalancesViewModel(get(), get())}
+    viewModel { TransactionHistoryViewModel(get()) }
 }
 
 val dataModule = module {

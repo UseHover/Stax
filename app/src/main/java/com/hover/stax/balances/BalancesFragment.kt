@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
@@ -18,6 +17,7 @@ import com.hover.stax.navigation.NavigationInterface
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.staxcardstack.StaxCardStackView
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
 class BalancesFragment : Fragment(), NavigationInterface {
@@ -33,7 +33,7 @@ class BalancesFragment : Fragment(), NavigationInterface {
     private var _binding: FragmentBalanceBinding? = null
     private val binding get() = _binding!!
 
-    private val balancesViewModel: BalancesViewModel by viewModels()
+    private val balancesViewModel: BalancesViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentBalanceBinding.inflate(inflater, container, false)
@@ -50,7 +50,7 @@ class BalancesFragment : Fragment(), NavigationInterface {
 
     private fun setUpBalances() {
         initBalanceCard()
-        balancesViewModel.getSelectedChannels().observe(viewLifecycleOwner, this::updateServices)
+        balancesViewModel.selectedChannels.observe(viewLifecycleOwner, ::updateServices)
     }
 
     private fun setUpLinkNewAccount() {
@@ -75,13 +75,13 @@ class BalancesFragment : Fragment(), NavigationInterface {
         }
     }
 
-    private fun showBalanceCards(status: Boolean){
+    private fun showBalanceCards(status: Boolean) {
         toggleLink(status)
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(
             if (status) R.drawable.ic_visibility_on else R.drawable.ic_visibility_off, 0, 0, 0
         )
 
-        if(status){
+        if (status) {
             balanceStack.visibility = View.GONE
             binding.homeCardBalances.balancesMl.transitionToEnd()
         } else {
@@ -92,7 +92,7 @@ class BalancesFragment : Fragment(), NavigationInterface {
         balancesVisible = status
     }
 
-    private fun updateServices(channels: List<Channel>){
+    private fun updateServices(channels: List<Channel>) {
         SHOW_ADD_ANOTHER_ACCOUNT = !channels.isNullOrEmpty() && !Channel.hasDummy(channels)
         addDummyChannelsIfRequired(channels)
 
@@ -107,15 +107,15 @@ class BalancesFragment : Fragment(), NavigationInterface {
         showBubbleIfRequired()
     }
 
-    private fun showBubbleIfRequired(){
+    private fun showBubbleIfRequired() {
         channelList?.let {
-            if(Channel.areAllDummies(it)){
-                if(!SHOWN_BUBBLE_MAIN_ACCOUNT && balancesVisible){
+            if (Channel.areAllDummies(it)) {
+                if (!SHOWN_BUBBLE_MAIN_ACCOUNT && balancesVisible) {
                     ShowcaseExecutor(requireActivity(), binding).showcaseAddFirstAccount()
                     SHOWN_BUBBLE_MAIN_ACCOUNT = true
                 }
-            } else if(Channel.hasDummy(channelList)){
-                if(!SHOWN_BUBBLE_OTHER_ACCOUNT && balancesVisible) {
+            } else if (Channel.hasDummy(channelList)) {
+                if (!SHOWN_BUBBLE_OTHER_ACCOUNT && balancesVisible) {
                     ShowcaseExecutor(requireActivity(), binding).showCaseAddSecondAccount()
                     SHOWN_BUBBLE_OTHER_ACCOUNT = true
                 }
@@ -134,14 +134,14 @@ class BalancesFragment : Fragment(), NavigationInterface {
             balanceStack.apply {
                 setOverlapGaps(STACK_OVERLAY_GAP)
                 rotationX = ROTATE_UPSIDE_DOWN
-                setOnClickListener{ showBalanceCards(!balancesVisible) }
+                setOnClickListener { showBalanceCards(!balancesVisible) }
             }
 
             updateBalanceCardStackHeight(temp.size)
         }
     }
 
-    private fun updateBalanceCardStackHeight(numOfItems: Int){
+    private fun updateBalanceCardStackHeight(numOfItems: Int) {
         val params = balanceStack.layoutParams
         params.height = 20 * numOfItems
         balanceStack.layoutParams = params
@@ -149,18 +149,18 @@ class BalancesFragment : Fragment(), NavigationInterface {
 
     private fun addDummyChannelsIfRequired(channels: List<Channel>?) {
         channels?.let {
-            if(it.isEmpty()){
+            if (it.isEmpty()) {
                 channels.toMutableList().add(Channel().dummy(getString(R.string.your_main_account), GREEN_BG))
                 channels.toMutableList().add(Channel().dummy(getString(R.string.your_other_account), BLUE_BG))
             }
-            if(it.size == 1) {
+            if (it.size == 1) {
                 channels.toMutableList().add(Channel().dummy(getString(R.string.your_other_account), BLUE_BG))
             }
         }
     }
 
     private fun toggleLink(show: Boolean) {
-        if(SHOW_ADD_ANOTHER_ACCOUNT) addChannelLink.visibility = if(show) View.VISIBLE else View.GONE
+        if (SHOW_ADD_ANOTHER_ACCOUNT) addChannelLink.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     override fun onDestroyView() {

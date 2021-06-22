@@ -20,23 +20,24 @@ import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxDialog;
 
+import kotlin.Lazy;
+
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static org.koin.java.KoinJavaComponent.inject;
 
 public class ChannelsListFragment extends Fragment implements ChannelsRecyclerViewAdapter.SelectListener {
     final public static String TAG = "ChannelListFragment";
     static final public String FORCE_RETURN_DATA = "force_return_data";
     private boolean IS_FORCE_RETURN = true;
 
-    private ChannelsViewModel channelsViewModel;
-    private BalancesViewModel balancesViewModel;
+    private Lazy<ChannelsViewModel> channelsViewModel = inject(ChannelsViewModel.class);
+    private Lazy<BalancesViewModel> balancesViewModel = inject(BalancesViewModel.class);
 
     private FragmentChannelsListBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_link_account)), requireContext());
-        channelsViewModel = new ViewModelProvider(requireActivity()).get(ChannelsViewModel.class);
-        balancesViewModel = new ViewModelProvider(requireActivity()).get(BalancesViewModel.class);
         initArguments();
 
         binding = FragmentChannelsListBinding.inflate(inflater, container, false);
@@ -58,7 +59,7 @@ public class ChannelsListFragment extends Fragment implements ChannelsRecyclerVi
     private void setupSelectedChannels() {
         RecyclerView selectedChannelsListView = binding.selectedChannelsRecyclerView;
         selectedChannelsListView.setLayoutManager(UIHelper.setMainLinearManagers(requireContext()));
-        channelsViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
+        channelsViewModel..observe(getViewLifecycleOwner(), channels -> {
             if(channels!=null && channels.size() > 0) {
                 updateCardVisibilities(true);
                 selectedChannelsListView.setAdapter(new ChannelsRecyclerViewAdapter(channels, this));

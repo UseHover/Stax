@@ -17,7 +17,7 @@ import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 
 
-class ShowcaseExecutor(val activity: Activity, val balanceBinding: FragmentBalanceBinding) : NavigationInterface {
+class ShowcaseExecutor(val activity: Activity, private val balanceBinding: FragmentBalanceBinding) : NavigationInterface {
 
     fun startShowCase(head: String, body: String, listener: BubbleShowCaseListener, view: View,
                       arrowPosition: BubbleShowCase.ArrowPosition, shouldShowOnce: Boolean) {

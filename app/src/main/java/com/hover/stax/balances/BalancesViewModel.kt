@@ -17,11 +17,11 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     private val hasRunList = ArrayList<Int>()
     private var hasActive: Boolean = false
 
-    private var selectedChannels: LiveData<List<Channel>> = MutableLiveData()
-    private var activeChannel = MutableLiveData<Channel>()
-    private var actions: LiveData<List<HoverAction>> = MediatorLiveData()
-    private var runFlag = MutableLiveData(NONE)
-    private var toRun = MediatorLiveData<List<HoverAction>>()
+    var selectedChannels: LiveData<List<Channel>> = MutableLiveData()
+    var runFlag = MutableLiveData(NONE)
+    var toRun = MediatorLiveData<List<HoverAction>>()
+    var actions: LiveData<List<HoverAction>> = MediatorLiveData()
+
     private var runBalanceError = MutableLiveData<Boolean>()
 
     init {
@@ -41,19 +41,11 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         listener = l
     }
 
-    fun getToRun(): LiveData<List<HoverAction>> = toRun
-
-    fun getRunFlag(): LiveData<Int> = runFlag
-
-    fun getSelectedChannels(): LiveData<List<Channel>> = selectedChannels
-
     fun loadActions(channelList: List<Channel>): LiveData<List<HoverAction>> {
         val ids = IntArray(channelList.size)
         for (c in channelList.indices) ids[c] = channelList[c].id
         return repo.getLiveActions(ids, HoverAction.BALANCE)
     }
-
-    fun getActions(): LiveData<List<HoverAction>> = actions
 
     fun getChannel(id: Int): Channel? {
         val allChannels = selectedChannels.value ?: ArrayList()
