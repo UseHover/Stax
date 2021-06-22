@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
@@ -50,7 +51,9 @@ class BalancesFragment : Fragment(), NavigationInterface {
 
     private fun setUpBalances() {
         initBalanceCard()
-        balancesViewModel.selectedChannels.observe(viewLifecycleOwner, ::updateServices)
+
+        val observer = Observer<List<Channel>> { t -> updateServices(t) }
+        balancesViewModel.selectedChannels.observe(viewLifecycleOwner, observer)
     }
 
     private fun setUpLinkNewAccount() {

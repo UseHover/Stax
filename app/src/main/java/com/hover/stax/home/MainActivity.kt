@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.hover.sdk.actions.HoverAction
@@ -53,7 +54,16 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
     private fun startObservers() {
         with(balancesViewModel) {
             setListener(this@MainActivity)
-            selectedChannels.observe(this@MainActivity, { Timber.i("Observing selected channels ${it.size}") })
+
+            //This is to prevent the SAM constructor from being compiled to singleton and causing problems. See
+            //https://stackoverflow.com/a/54939860/2371515
+            val observer = object : Observer<List<Channel>> {
+                override fun onChanged(t: List<Channel>?) {
+                    Timber.tag(MainActivity::class.simpleName).i("Observing selected channels ${t?.size}")
+                }
+            }
+
+            selectedChannels.observe(this@MainActivity, observer)
             toRun.observe(this@MainActivity, { Timber.i("Observing action to run ${it.size}") })
             runFlag.observe(this@MainActivity, { Timber.i("Observing run flag $it") })
             actions.observe(this@MainActivity, { Timber.i("Observing actions ${it.size}") })
@@ -171,25 +181,17 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
             if (index + 1 < balancesViewModel.selectedChannels.value!!.size) hsb.finalScreenTime(0)
             hsb.run()
         } else {
-//            Handler(Looper.getMainLooper()).post {
-//                balancesViewModel.selectedChannels.observe(this@MainActivity, Observer {
-//                    if (it != null && balancesViewModel.getChannel(it, action.channel_id) != null) {
-//                        run(action, 0)
-//                      //  balancesViewModel.selectedChannels.removeObserver(this)
-//                    }
-//                })
-//            }
-            //the only way to get the reference to the observer is to move this out onto it's own block.
-//            val selectedChannelsObserver = object : Observer<List<Channel>> {
-//                override fun onChanged(t: List<Channel>?) {
-//                    if (t != null && balancesViewModel.getChannel(t, action.channel_id) != null) {
-//                        run(action, 0)
-//                        balancesViewModel.selectedChannels.removeObserver(this)
-//                    }
-//                }
-//            }
-//
-//            balancesViewModel.selectedChannels.observe(this@MainActivity, selectedChannelsObserver)
+//            the only way to get the reference to the observer is to move this out onto it's own block.
+            val selectedChannelsObserver = object : Observer<List<Channel>> {
+                override fun onChanged(t: List<Channel>?) {
+                    if (t != null && balancesViewModel.getChannel(t, action.channel_id) != null) {
+                        run(action, 0)
+                        balancesViewModel.selectedChannels.removeObserver(this)
+                    }
+                }
+            }
+
+            balancesViewModel.selectedChannels.observe(this, selectedChannelsObserver)
         }
     }
 
