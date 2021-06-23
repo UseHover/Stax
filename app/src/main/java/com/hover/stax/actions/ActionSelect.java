@@ -146,7 +146,7 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
         isSelfRadio.removeAllViews();
         isSelfRadio.clearCheck();
 
-        if(!actions.isEmpty()) {
+        if (actions != null && !actions.isEmpty()) {
             for (int i = 0; i < actions.size(); i++) {
                 HoverAction a = actions.get(i);
                 RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext()).inflate(R.layout.stax_radio_button, null);
