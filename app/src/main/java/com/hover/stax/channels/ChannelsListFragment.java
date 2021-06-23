@@ -24,8 +24,10 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 public class ChannelsListFragment extends Fragment implements ChannelsRecyclerViewAdapter.SelectListener {
+
     final public static String TAG = "ChannelListFragment";
     static final public String FORCE_RETURN_DATA = "force_return_data";
+
     private boolean IS_FORCE_RETURN = true;
 
     private ChannelsViewModel channelsViewModel;
@@ -42,6 +44,7 @@ public class ChannelsListFragment extends Fragment implements ChannelsRecyclerVi
         binding = FragmentChannelsListBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
+
     private void initArguments() {
         if (getArguments() != null) {
             IS_FORCE_RETURN = getArguments().getBoolean(FORCE_RETURN_DATA, true);
@@ -51,6 +54,7 @@ public class ChannelsListFragment extends Fragment implements ChannelsRecyclerVi
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         setupSelectedChannels();
         setupSimSupportedChannels();
         observeChannelsLoadedStatus();
@@ -60,11 +64,10 @@ public class ChannelsListFragment extends Fragment implements ChannelsRecyclerVi
         RecyclerView selectedChannelsListView = binding.selectedChannelsRecyclerView;
         selectedChannelsListView.setLayoutManager(UIHelper.setMainLinearManagers(requireContext()));
         channelsViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> {
-            if(channels!=null && channels.size() > 0) {
+            if (channels != null && channels.size() > 0) {
                 updateCardVisibilities(true);
                 selectedChannelsListView.setAdapter(new ChannelsRecyclerViewAdapter(channels, this));
-            }
-            else {
+            } else {
                 updateCardVisibilities(false);
             }
         });
@@ -77,15 +80,16 @@ public class ChannelsListFragment extends Fragment implements ChannelsRecyclerVi
 
     private void observeChannelsLoadedStatus() {
         channelsViewModel.setHasChannelsLoaded();
-        channelsViewModel.hasChannelsLoaded().observe(getViewLifecycleOwner(), hasLoaded-> {
-            if(hasLoaded !=null && !hasLoaded) showEmptySimChannelsDialog();
+        channelsViewModel.hasChannelsLoaded().observe(getViewLifecycleOwner(), hasLoaded -> {
+            if (hasLoaded != null && !hasLoaded) showEmptySimChannelsDialog();
         });
     }
+
     private void setupSimSupportedChannels() {
         RecyclerView simSupportedChannelsListView = binding.simSupportedChannelsRecyclerView;
         simSupportedChannelsListView.setLayoutManager(UIHelper.setMainLinearManagers(requireContext()));
         channelsViewModel.getSimChannels().observe(getViewLifecycleOwner(), channels -> {
-            if(channels!=null && channels.size() > 0) {
+            if (channels != null && channels.size() > 0) {
                 simSupportedChannelsListView.setAdapter(new ChannelsRecyclerViewAdapter(Channel.sort(channels, false), this));
             }
         });
@@ -95,9 +99,13 @@ public class ChannelsListFragment extends Fragment implements ChannelsRecyclerVi
         new StaxDialog(requireActivity())
                 .setDialogTitle(R.string.no_connecion)
                 .setDialogMessage(R.string.empty_channels_internet_err)
-                .setPosButton(R.string.btn_ok, view -> requireActivity().onBackPressed())
+                .setPosButton(R.string.btn_ok, view -> {
+                    if (isAdded())
+                        requireActivity().onBackPressed();
+                })
                 .showIt();
     }
+
     private void showCheckBalanceDialog(Channel channel) {
         new StaxDialog(requireActivity())
                 .setDialogTitle(R.string.check_balance_title)
@@ -106,15 +114,17 @@ public class ChannelsListFragment extends Fragment implements ChannelsRecyclerVi
                 .setPosButton(R.string.check_balance_title, view -> saveChannel(channel, true))
                 .showIt();
     }
+
     private void saveChannel(Channel channel, boolean checkBalance) {
-            channelsViewModel.setChannelSelected(channel);
-            requireActivity().onBackPressed();
-            if(balancesViewModel !=null && checkBalance) balancesViewModel.getActions().observe(getViewLifecycleOwner(), actions -> balancesViewModel.setRunning(channel.id));
+        channelsViewModel.setChannelSelected(channel);
+        requireActivity().onBackPressed();
+        if (balancesViewModel != null && checkBalance)
+            balancesViewModel.getActions().observe(getViewLifecycleOwner(), actions -> balancesViewModel.setRunning(channel.id));
     }
 
     private void goToChannelsDetailsScreen(Channel channel) {
         BalanceAdapter.BalanceListener balanceListener = (MainActivity) getActivity();
-        if(balanceListener!=null) {
+        if (balanceListener != null) {
             balanceListener.onTapDetail(channel.id);
         }
     }
@@ -127,7 +137,7 @@ public class ChannelsListFragment extends Fragment implements ChannelsRecyclerVi
 
     @Override
     public void clickedChannel(Channel channel) {
-        if(IS_FORCE_RETURN || !channel.selected) showCheckBalanceDialog(channel);
-        else  goToChannelsDetailsScreen(channel);
+        if (IS_FORCE_RETURN || !channel.selected) showCheckBalanceDialog(channel);
+        else goToChannelsDetailsScreen(channel);
     }
 }
