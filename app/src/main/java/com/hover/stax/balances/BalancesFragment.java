@@ -12,10 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.databinding.FragmentBalanceBinding;
@@ -25,10 +23,7 @@ import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.bubbleshowcase.BubbleShowCase;
-import com.hover.stax.utils.bubbleshowcase.BubbleShowCaseListener;
 import com.hover.stax.views.staxcardstack.StaxCardStackView;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -87,6 +82,7 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
         if(secondAccountBubble !=null) secondAccountBubble.dismiss();
         Timber.i("ON PAUSE IS CALLED FROM BALANCE");
     }
+
     private void setUpBalances() {
         initBalanceCard();
         balancesViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), this::updateServices);
