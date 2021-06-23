@@ -23,8 +23,8 @@ public class StaxContactArrayAdapter extends ArrayAdapter<StaxContact> {
 
     public StaxContactArrayAdapter(@NonNull Context context, List<StaxContact> list) {
         super(context, 0, list);
-        allContacts = new ArrayList<>(list);
-        filteredContacts = new ArrayList<>(list);
+        allContacts = list == null ? new ArrayList<>() : new ArrayList<>(list);
+        filteredContacts = list == null ? new ArrayList<>() : new ArrayList<>(list);
     }
 
     @NonNull
