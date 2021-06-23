@@ -77,6 +77,7 @@ public class DatabaseRepo {
     public int getChannelsDataCount() {
         return channelDao.getDataCount();
     }
+
     public LiveData<List<Channel>> getAllChannels() {
         return allChannels;
     }
@@ -103,7 +104,7 @@ public class DatabaseRepo {
     }
 
     public List<SimInfo> getSims(String[] hnis) {
-        return  simDao.getPresentByHnis(hnis);
+        return simDao.getPresentByHnis(hnis);
     }
 
     // Actions
@@ -185,14 +186,15 @@ public class DatabaseRepo {
 
                 updateRequests(t, contact);
             } catch (Exception e) {
-                Timber.e(e, "error"); }
+                Timber.e(e, "error");
+            }
         });
     }
 
     private void updateRequests(StaxTransaction t, StaxContact contact) {
         if (t.transaction_type.equals(HoverAction.RECEIVE)) {
             List<Request> rs = getRequests();
-            for (Request r: rs) {
+            for (Request r : rs) {
                 if (r.requestee_ids.contains(contact.id) && Utils.getAmount(r.amount).equals(t.amount)) {
                     r.matched_transaction_uuid = t.uuid;
                     update(r);
@@ -202,21 +204,42 @@ public class DatabaseRepo {
     }
 
     // Contacts
-    public LiveData<List<StaxContact>> getAllContacts() { return contactDao.getAll(); }
+    public LiveData<List<StaxContact>> getAllContacts() {
+        return contactDao.getAll();
+    }
 
-    public List<StaxContact> getContacts(String[] ids) { return contactDao.get(ids); }
-    public LiveData<List<StaxContact>> getLiveContacts(String[] ids) { return contactDao.getLive(ids); }
+    public List<StaxContact> getContacts(String[] ids) {
+        return contactDao.get(ids);
+    }
 
-    public StaxContact lookupContact(String lookupKey) { return contactDao.lookup(lookupKey); }
-    public StaxContact getContact(String id) { return contactDao.get(id); }
-    public StaxContact getContactByPhone(String phone) { return contactDao.getByPhone("%" + phone + "%"); }
-    public LiveData<StaxContact> getLiveContact(String id) { return contactDao.getLive(id); }
+    public LiveData<List<StaxContact>> getLiveContacts(String[] ids) {
+        return contactDao.getLive(ids);
+    }
+
+    public StaxContact lookupContact(String lookupKey) {
+        return contactDao.lookup(lookupKey);
+    }
+
+    public StaxContact getContact(String id) {
+        return contactDao.get(id);
+    }
+
+    public StaxContact getContactByPhone(String phone) {
+        return contactDao.getByPhone("%" + phone + "%");
+    }
+
+    public LiveData<StaxContact> getLiveContact(String id) {
+        return contactDao.getLive(id);
+    }
 
     public void save(final StaxContact contact) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
             if (getContact(contact.id) == null) {
-                try { contactDao.insert(contact); }
-                catch (Exception e) { Utils.logErrorAndReportToFirebase(TAG, "failed to insert contact", e); }
+                try {
+                    contactDao.insert(contact);
+                } catch (Exception e) {
+                    Utils.logErrorAndReportToFirebase(TAG, "failed to insert contact", e);
+                }
             } else
                 contactDao.update(contact);
         });
@@ -269,13 +292,17 @@ public class DatabaseRepo {
     }
 
     public LiveData<Request> decrypt(String encrypted, Context c) {
-        if (decryptedRequest == null) { decryptedRequest = new MutableLiveData<>(); }
+        if (decryptedRequest == null) {
+            decryptedRequest = new MutableLiveData<>();
+        }
+
         decryptedRequest.setValue(null);
         String removedBaseUrlString = encrypted.replace(c.getString(R.string.payment_root_url, ""), "");
 
         //Only old stax versions contains ( in the link
         if (removedBaseUrlString.contains("(")) decryptRequestForOldVersions(removedBaseUrlString);
         else decryptRequest(removedBaseUrlString, c);
+
         return decryptedRequest;
     }
 
