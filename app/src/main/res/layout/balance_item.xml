@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/balance_item_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,6 +18,7 @@
             android:layout_height="@dimen/margin_65"
             android:background="?selectableItemBackground"
             android:orientation="horizontal"
+            android:paddingStart="0dp"
             android:paddingEnd="0dp">
 
         <LinearLayout
@@ -37,16 +39,16 @@
                     android:gravity="center_vertical"
                     android:paddingHorizontal="@dimen/margin_13"
                     android:paddingVertical="@dimen/margin_13"
-                    android:text="Channel name"
                     android:textColor="@color/offWhite"
-                    android:textSize="@dimen/text_16" />
+                    android:textSize="@dimen/text_16"
+                    tools:text="Channel name" />
 
             <TextView
                     android:id="@+id/channel_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Channel ID"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:text="Channel ID" />
 
         </LinearLayout>
 
@@ -54,9 +56,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/margin_13"
                 android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:paddingEnd="@dimen/margin_13">
+                android:orientation="vertical">
 
             <TextView
                     android:id="@+id/balance_amount"
@@ -66,8 +68,7 @@
                     android:fontFamily="font-normal"
                     android:gravity="end"
                     android:textColor="@color/offWhite"
-                    android:textSize="@dimen/text_21"
-                    app:drawableEndCompat="@drawable/ic_remove" />
+                    android:textSize="@dimen/text_21" />
 
             <TextView
                     android:id="@+id/balance_subtitle"

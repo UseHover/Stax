@@ -21,7 +21,6 @@ import com.hover.stax.utils.bubbleshowcase.BubbleShowCase
 import com.hover.stax.views.staxcardstack.StaxCardStackView
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
 
 class BalancesFragment : Fragment(), NavigationInterface {
@@ -116,7 +115,6 @@ class BalancesFragment : Fragment(), NavigationInterface {
         balancesRecyclerView.adapter = balancesAdapter
         balancesAdapter.showBalanceAmounts(true)
 
-        Timber.e("Channel available are ${channels.size}")
         showBalanceCards(Channel.areAllDummies(channels))
         updateStackCard(channels)
 
@@ -129,12 +127,14 @@ class BalancesFragment : Fragment(), NavigationInterface {
             if (Channel.areAllDummies(it)) {
                 if (!SHOWN_BUBBLE_MAIN_ACCOUNT && balancesVisible) {
                     firstAccBubble = ShowcaseExecutor(requireActivity(), binding).showcaseAddFirstAccount()
+                    firstAccBubble?.show()
                     SHOWN_BUBBLE_MAIN_ACCOUNT = true
                 }
             } else if (Channel.hasDummy(channelList)) {
                 if (!SHOWN_BUBBLE_OTHER_ACCOUNT && balancesVisible) {
                     runBlocking {
                         secondAccBubble = ShowcaseExecutor(requireActivity(), binding).showCaseAddSecondAccount()
+                        secondAccBubble?.show()
                     }
                     SHOWN_BUBBLE_OTHER_ACCOUNT = true
                 }
@@ -176,8 +176,6 @@ class BalancesFragment : Fragment(), NavigationInterface {
                 channels.add(Channel().dummy(getString(R.string.your_other_account), BLUE_BG))
             }
         }
-
-        Timber.e("Channels - ${channels?.size}")
     }
 
     private fun toggleLink(show: Boolean) {
