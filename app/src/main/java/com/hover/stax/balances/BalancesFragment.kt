@@ -17,8 +17,11 @@ import com.hover.stax.home.MainActivity
 import com.hover.stax.navigation.NavigationInterface
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.bubbleshowcase.BubbleShowCase
 import com.hover.stax.views.staxcardstack.StaxCardStackView
+import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 
 class BalancesFragment : Fragment(), NavigationInterface {
@@ -27,6 +30,9 @@ class BalancesFragment : Fragment(), NavigationInterface {
     private lateinit var balanceTitle: TextView
     private lateinit var balanceStack: StaxCardStackView
     private lateinit var balancesRecyclerView: RecyclerView
+
+    private var firstAccBubble: BubbleShowCase? = null
+    private var secondAccBubble: BubbleShowCase? = null
 
     private var balancesVisible = false
     private var channelList: List<Channel>? = null
@@ -49,10 +55,17 @@ class BalancesFragment : Fragment(), NavigationInterface {
         setUpLinkNewAccount()
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        firstAccBubble?.dismiss()
+        secondAccBubble?.dismiss()
+    }
+
     private fun setUpBalances() {
         initBalanceCard()
 
-        val observer = Observer<List<Channel>> { t -> updateServices(t) }
+        val observer = Observer<List<Channel>> { t -> updateServices(ArrayList(t)) }
         balancesViewModel.selectedChannels.observe(viewLifecycleOwner, observer)
     }
 
@@ -95,7 +108,7 @@ class BalancesFragment : Fragment(), NavigationInterface {
         balancesVisible = status
     }
 
-    private fun updateServices(channels: List<Channel>) {
+    private fun updateServices(channels: ArrayList<Channel>) {
         SHOW_ADD_ANOTHER_ACCOUNT = !channels.isNullOrEmpty() && !Channel.hasDummy(channels)
         addDummyChannelsIfRequired(channels)
 
@@ -103,6 +116,7 @@ class BalancesFragment : Fragment(), NavigationInterface {
         balancesRecyclerView.adapter = balancesAdapter
         balancesAdapter.showBalanceAmounts(true)
 
+        Timber.e("Channel available are ${channels.size}")
         showBalanceCards(Channel.areAllDummies(channels))
         updateStackCard(channels)
 
@@ -114,12 +128,14 @@ class BalancesFragment : Fragment(), NavigationInterface {
         channelList?.let {
             if (Channel.areAllDummies(it)) {
                 if (!SHOWN_BUBBLE_MAIN_ACCOUNT && balancesVisible) {
-                    ShowcaseExecutor(requireActivity(), binding).showcaseAddFirstAccount()
+                    firstAccBubble = ShowcaseExecutor(requireActivity(), binding).showcaseAddFirstAccount()
                     SHOWN_BUBBLE_MAIN_ACCOUNT = true
                 }
             } else if (Channel.hasDummy(channelList)) {
                 if (!SHOWN_BUBBLE_OTHER_ACCOUNT && balancesVisible) {
-                    ShowcaseExecutor(requireActivity(), binding).showCaseAddSecondAccount()
+                    runBlocking {
+                        secondAccBubble = ShowcaseExecutor(requireActivity(), binding).showCaseAddSecondAccount()
+                    }
                     SHOWN_BUBBLE_OTHER_ACCOUNT = true
                 }
             }
@@ -150,16 +166,18 @@ class BalancesFragment : Fragment(), NavigationInterface {
         balanceStack.layoutParams = params
     }
 
-    private fun addDummyChannelsIfRequired(channels: List<Channel>?) {
+    private fun addDummyChannelsIfRequired(channels: ArrayList<Channel>?) {
         channels?.let {
             if (it.isEmpty()) {
-                channels.toMutableList().add(Channel().dummy(getString(R.string.your_main_account), GREEN_BG))
-                channels.toMutableList().add(Channel().dummy(getString(R.string.your_other_account), BLUE_BG))
+                channels.add(Channel().dummy(getString(R.string.your_main_account), GREEN_BG))
+                channels.add(Channel().dummy(getString(R.string.your_other_account), BLUE_BG))
             }
             if (it.size == 1) {
-                channels.toMutableList().add(Channel().dummy(getString(R.string.your_other_account), BLUE_BG))
+                channels.add(Channel().dummy(getString(R.string.your_other_account), BLUE_BG))
             }
         }
+
+        Timber.e("Channels - ${channels?.size}")
     }
 
     private fun toggleLink(show: Boolean) {
