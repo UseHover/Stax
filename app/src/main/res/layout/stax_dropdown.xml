@@ -17,7 +17,6 @@
             android:dropDownWidth="wrap_content"
             android:dropDownHeight="300dp"
             android:fontFamily="font-normal"
-            android:inputType="textCapWords"
             android:imeOptions="actionDone"
             android:padding="@dimen/margin_13"
             android:textColor="@color/offWhite"
