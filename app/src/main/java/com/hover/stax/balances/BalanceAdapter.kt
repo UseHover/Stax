@@ -25,37 +25,7 @@ class BalanceAdapter(val channels: List<Channel>, val balanceListener: BalanceLi
 
     override fun onBindViewHolder(holder: BalancesViewHolder, position: Int) {
         val channel = channels[holder.adapterPosition]
-
-        UIHelper.setTextUnderline(holder.binding.balanceChannelName, channel.name)
-        holder.binding.channelId.text = channel.id.toString()
-
-        if (!showBalance) holder.binding.balanceSubtitle.visibility = View.GONE
-
-        when {
-            channel.latestBalance != null && showBalance -> {
-                holder.binding.balanceSubtitle.visibility = View.VISIBLE
-                holder.binding.balanceSubtitle.text = DateUtils.humanFriendlyDate(channel.latestBalanceTimestamp)
-                holder.binding.balanceAmount.text = Utils.formatAmount(channel.latestBalance)
-            }
-            channel.latestBalance == null && showBalance -> {
-                holder.binding.balanceSubtitle.visibility = View.VISIBLE
-                holder.binding.balanceSubtitle.text = holder.itemView.context.getString(R.string.refresh_balance_desc)
-            }
-            else -> {
-                holder.binding.balanceAmount.text = ""
-                setColorForEmptyAmount(true, holder, UIHelper.getColor(channel.secondaryColorHex, false, holder.itemView.context))
-            }
-        }
-
-        setColors(
-            holder, UIHelper.getColor(channel.primaryColorHex, true, holder.itemView.context),
-            UIHelper.getColor(channel.secondaryColorHex, false, holder.itemView.context)
-        )
-
-        if (channel.id == Channel.DUMMY) {
-            holder.binding.balanceSubtitle.visibility = View.GONE
-            holder.binding.balanceRefreshIcon.setImageResource(R.drawable.ic_add_icon_24)
-        }
+        holder.bindItems(channel, holder)
     }
 
     override fun getItemCount(): Int = channels.size
@@ -85,22 +55,47 @@ class BalanceAdapter(val channels: List<Channel>, val balanceListener: BalanceLi
         } else holder.binding.balanceAmount.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
     }
 
-    inner class BalancesViewHolder(val binding: BalanceItemBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+    inner class BalancesViewHolder(val binding: BalanceItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        init {
-            binding.root.setOnClickListener(this)
-            binding.balanceRefreshIcon.setOnClickListener(this)
-        }
+        fun bindItems(channel: Channel, holder: BalancesViewHolder){
+            UIHelper.setTextUnderline(binding.balanceChannelName, channel.name)
 
-        override fun onClick(v: View?) {
-            balanceListener?.let {
-                if (binding.balanceRefreshIcon == v)
-                    balanceListener.onTapRefresh(binding.channelId.text.toString().toInt())
-                else
-                    balanceListener.onTapDetail(binding.channelId.text.toString().toInt())
+            if (!showBalance) binding.balanceSubtitle.visibility = View.GONE
+
+            when {
+                channel.latestBalance != null && showBalance -> {
+                    binding.balanceSubtitle.visibility = View.VISIBLE
+                   binding.balanceSubtitle.text = DateUtils.humanFriendlyDate(channel.latestBalanceTimestamp)
+                    binding.balanceAmount.text = Utils.formatAmount(channel.latestBalance)
+                }
+                channel.latestBalance == null && showBalance -> {
+                    binding.balanceSubtitle.visibility = View.VISIBLE
+                    binding.balanceSubtitle.text = itemView.context.getString(R.string.refresh_balance_desc)
+                }
+                else -> {
+                   binding.balanceAmount.text = ""
+                    setColorForEmptyAmount(true, holder, UIHelper.getColor(channel.secondaryColorHex, false, binding.root.context))
+                }
+            }
+
+            setColors(
+                holder, UIHelper.getColor(channel.primaryColorHex, true, holder.itemView.context),
+                UIHelper.getColor(channel.secondaryColorHex, false, holder.itemView.context)
+            )
+
+            if (channel.id == Channel.DUMMY) {
+                holder.binding.balanceSubtitle.visibility = View.GONE
+                holder.binding.balanceRefreshIcon.setImageResource(R.drawable.ic_add_icon_24)
+            }
+
+            binding.root.setOnClickListener {
+                balanceListener?.onTapDetail(channel.id.toString().toInt())
+            }
+
+            binding.balanceRefreshIcon.setOnClickListener {
+                balanceListener?.onTapRefresh(channel.id.toString().toInt())
             }
         }
-
     }
 
     interface BalanceListener {
