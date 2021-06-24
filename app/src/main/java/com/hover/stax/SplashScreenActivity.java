@@ -219,7 +219,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Biometric
     }
 
     private void chooseNavigation(Intent intent) {
-        if (!OnBoardingActivity.hasPassedThrough(this)) goToOnboardingActivity();
+        if (!OnBoardingActivity.Companion.hasPassedThrough(this)) goToOnboardingActivity();
         else if (isToRedirectFromMainActivity(intent)) {
             assert intent.getExtras() != null;
             assert intent.getExtras().getString(FRAGMENT_DIRECT) != null;
