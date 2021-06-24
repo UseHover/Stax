@@ -67,7 +67,7 @@
 	<string name="clicked_schedule_notification" translatable="false">Clicked notification</string>
 	<string name="finished_scheduled_transaction" translatable="false">Sending scheduled %1$s transfer to the SDK</string>
 
-	<string name="cliucked_push_notification">From push notification: %1$s</string>
+	<string name="clicked_push_notification">From push notification: %1$s</string>
 	<string name="clicked_request_link" translatable="false">Clicked link from request</string>
 	<string name="loaded_request_link" translatable="false">Loaded request from link</string>
 	<string name="saved_unsent_request" translatable="false">Saved unsent request</string>
