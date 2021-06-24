@@ -116,7 +116,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
             recipientAdapter.update(recipients);
         });
         requestViewModel.getRecentContacts().observe(getViewLifecycleOwner(), contacts -> {
-            recipientAdapter.updateContactList(contacts);
+            if (contacts != null) recipientAdapter.updateContactList(contacts);
         });
 
         requestViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> {

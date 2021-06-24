@@ -3,8 +3,6 @@ package com.hover.stax.balances;
 import android.app.Activity;
 import android.view.View;
 
-import androidx.navigation.NavController;
-
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.databinding.FragmentBalanceBinding;
@@ -54,7 +52,6 @@ public class ShowcaseExecutor implements NavigationInterface {
                     BubbleShowCase.ArrowPosition.LEFT, true);
         } else return null;
     }
-
 
     BubbleShowCaseListener addedAccountListener = new BubbleShowCaseListener() {
 

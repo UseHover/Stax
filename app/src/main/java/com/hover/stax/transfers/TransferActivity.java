@@ -94,7 +94,9 @@ public class TransferActivity extends AbstractNavigationActivity implements Push
         Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
         updatePushNotifGroupStatus();
         transferViewModel.checkSchedule();
-        makeCall(act);
+
+        if (act != null)
+            makeCall(act);
     }
 
     private void updatePushNotifGroupStatus() {

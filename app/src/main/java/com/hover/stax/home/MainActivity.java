@@ -155,8 +155,10 @@ public class MainActivity extends AbstractNavigationActivity implements
 
     @Override
     public void onTapDetail(int channel_id) {
-        if(channel_id == Channel.DUMMY) navigateToChannelsListFragment(getNavController(), true);
-        else navigateToChannelDetailsFragment(channel_id, getNavController());
+        if(channel_id == Channel.DUMMY)
+           checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT);
+        else
+            navigateToChannelDetailsFragment(channel_id, getNavController());
     }
 
     @Override

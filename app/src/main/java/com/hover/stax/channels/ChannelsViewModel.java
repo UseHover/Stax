@@ -87,6 +87,7 @@ public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdo
     public LiveData<Boolean> hasChannelsLoaded() {
         return hasChannelsLoaded;
     }
+
     private void loadChannels() {
         if (allChannels == null) {
             allChannels = new MutableLiveData<>();
