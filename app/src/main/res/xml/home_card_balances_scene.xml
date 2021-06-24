@@ -24,13 +24,7 @@
                 android:layout_marginEnd="@dimen/margin_13"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/balance_header_card">
-
-            <CustomAttribute
-                    app:attributeName="radius"
-                    app:customDimension="5dp" />
-
-        </Constraint>
+                app:layout_constraintTop_toTopOf="@id/balance_header_card" />
     </ConstraintSet>
 
     <Transition

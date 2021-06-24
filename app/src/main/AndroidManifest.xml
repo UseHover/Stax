@@ -227,6 +227,8 @@
             </intent-filter>
         </service>
 
+        <meta-data android:name="AF_STORE" android:value="Transsion"/>
+        <meta-data android:name="AF_PRE_INSTALL_NAME" android:value="shalltry_int"/>
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_stax" />

@@ -8,7 +8,6 @@ import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Handler
 import android.view.View
 import android.view.ViewGroup
@@ -16,9 +15,6 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import com.hover.stax.R
-
-import com.hover.stax.utils.Utils
-
 import java.lang.ref.WeakReference
 
 
@@ -341,11 +337,7 @@ class BubbleShowCase(builder: BubbleShowCaseBuilder) {
 	  }
 
 	  private fun createViewId(): Int {
-			return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-				  View.generateViewId()
-			} else {
-				  System.currentTimeMillis().toInt() / 1000
-			}
+			return View.generateViewId()
 	  }
 
 	  private fun takeScreenshot(targetView: View, highlightMode: HighlightMode?): Bitmap? {
@@ -362,8 +354,7 @@ class BubbleShowCase(builder: BubbleShowCaseBuilder) {
 			val rootView = getViewRoot(mActivity.get()!!)
 			val currentScreenView = rootView.getChildAt(0)
 			currentScreenView.buildDrawingCache()
-			val bitmap: Bitmap
-			bitmap = Bitmap.createBitmap(currentScreenView.drawingCache, getXposition(targetView), getYposition(targetView), targetView.width, targetView.height)
+		 	 val bitmap: Bitmap = Bitmap.createBitmap(currentScreenView.drawingCache, getXposition(targetView), getYposition(targetView), targetView.width, targetView.height)
 			currentScreenView.isDrawingCacheEnabled = false
 			currentScreenView.destroyDrawingCache()
 			return bitmap

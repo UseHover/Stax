@@ -19,7 +19,6 @@ import com.hover.stax.views.StaxDialog;
 import com.hover.stax.views.StaxTextInputLayout;
 
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
 import java.util.Map;
 
 public class BountyEmailFragment extends Fragment implements NavigationInterface, View.OnClickListener, BountyAsyncCaller.AsyncResponseListener {
@@ -87,15 +86,15 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
     }
 
     @Override
-    public void onComplete(Map<Integer, String>  responseMap) {
-        Map.Entry<Integer,String> entry = responseMap.entrySet().iterator().next();
+    public void onComplete(Map<Integer, String> responseMap) {
+        Map.Entry<Integer, String> entry = responseMap.entrySet().iterator().next();
         int responseCode = entry.getKey();
         String message = entry.getValue();
         if (responseCode >= 200 && responseCode < 300)
-           saveAndContinue();
+            saveAndContinue();
         else {
             Utils.logErrorAndReportToFirebase(TAG, message, null);
-            if(Utils.isNetworkAvailable(requireContext())) showEdgeCaseErrorDialog();
+            if (isAdded() && Utils.isNetworkAvailable(requireActivity())) showEdgeCaseErrorDialog();
             else setEmailError();
         }
     }

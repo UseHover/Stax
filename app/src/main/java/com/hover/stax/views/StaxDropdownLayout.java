@@ -15,7 +15,6 @@ import com.hover.stax.R;
 import com.hover.stax.databinding.StaxDropdownBinding;
 
 public class StaxDropdownLayout extends AbstractStatefulInput {
-    private final String TAG = "StaxDropdownLayout";
 
     private String hint, defaultText;
     private boolean editable;
@@ -53,9 +52,8 @@ public class StaxDropdownLayout extends AbstractStatefulInput {
     }
 
     private void fillAttr() {
-        if (hint != null)
-            if (hint != null) ((TextInputLayout) findViewById(R.id.inputLayout)).setHint(hint);
-        autoCompleteTextView.setInputType(editable ? InputType.TYPE_TEXT_VARIATION_NORMAL : InputType.TYPE_NULL);
+        if (hint != null) ((TextInputLayout) findViewById(R.id.inputLayout)).setHint(hint);
+        autoCompleteTextView.setInputType(editable ? InputType.TYPE_TEXT_VARIATION_FILTER : InputType.TYPE_NULL);
         if (defaultText != null && !defaultText.isEmpty())
             autoCompleteTextView.setText(defaultText);
         if (imeOptions > 0) autoCompleteTextView.setImeOptions(imeOptions);
