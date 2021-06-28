@@ -160,7 +160,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
 
     override fun onTapDetail(channelId: Int) {
         if (channelId == Channel.DUMMY)
-            navigateToChannelsListFragment(getNavController(), true);
+            checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT)
         else
             navigateToChannelDetailsFragment(channelId, getNavController())
     }

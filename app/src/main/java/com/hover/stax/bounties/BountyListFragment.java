@@ -14,7 +14,6 @@ import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.WorkManager;
 
-import com.amplitude.api.Amplitude;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.stax.R;
@@ -64,7 +63,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     }
 
     private void forceUserToBeOnline() {
-        if (Utils.isNetworkAvailable(requireContext())) {
+        if (isAdded() && Utils.isNetworkAvailable(requireActivity())) {
             updateActionConfig();
             updateChannelsWorker();
         }

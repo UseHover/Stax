@@ -43,13 +43,14 @@ class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListene
     private var recipientAdapter: RecipientAdapter? = null
     private var recipientCount: Int = 0
 
-    private lateinit var binding: FragmentRequestBinding
+    private var _binding: FragmentRequestBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         abstractFormViewModel = getViewModel<NewRequestViewModel>()
         requestViewModel = abstractFormViewModel as NewRequestViewModel
 
-        binding = FragmentRequestBinding.inflate(inflater, container, false)
+        _binding = FragmentRequestBinding.inflate(inflater, container, false)
 
         init(binding.root)
         startObservers(binding.root)
@@ -102,7 +103,7 @@ class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListene
 
             requesterNumber.observe(viewLifecycleOwner, { accountValue.setSubtitle(it) })
             activeChannel.observe(viewLifecycleOwner, { updateAcctNo(it) })
-            recentContacts.observe(viewLifecycleOwner, { recipientAdapter?.updateContactList(it) })
+            recentContacts.observe(viewLifecycleOwner, { it?.let { contacts -> recipientAdapter?.updateContactList(contacts) } })
             isEditing.observe(viewLifecycleOwner, { showEdit(it) })
 
             note.observe(viewLifecycleOwner, {
@@ -221,5 +222,11 @@ class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListene
         (recipientInputList.getChildAt(0) as ContactInput).setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         return channelError == null && requesterAcctNoError == null && recipientError == null
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        _binding = null
     }
 }

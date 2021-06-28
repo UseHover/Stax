@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 
 import com.hover.stax.R;
 import com.hover.stax.databinding.ContactInputBinding;
+import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDropdownLayout;
@@ -45,6 +46,7 @@ public class ContactInput extends LinearLayout {
     public void setRecent(List<StaxContact> contacts, Context c) {
         ArrayAdapter<StaxContact> adapter = new StaxContactArrayAdapter(c, contacts);
         contactAutocomplete.setAdapter(adapter);
+        contactAutocomplete.setDropDownHeight(contacts.isEmpty() ? 0 : UIHelper.dpToPx(300));
     }
 
     public void setSelected(StaxContact contact) {

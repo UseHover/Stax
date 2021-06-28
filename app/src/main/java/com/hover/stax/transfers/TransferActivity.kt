@@ -79,6 +79,7 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
         updatePushNotifGroupStatus()
 
         transferViewModel.checkSchedule()
+
         makeCall(action)
     }
 

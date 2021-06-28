@@ -83,7 +83,7 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
         StaxDialog(requireActivity())
             .setDialogTitle(R.string.no_connecion)
             .setDialogMessage(R.string.empty_channels_internet_err)
-            .setPosButton(R.string.btn_ok) { requireActivity().onBackPressed() }
+            .setPosButton(R.string.btn_ok) { if(isAdded) requireActivity().onBackPressed() }
             .showIt()
     }
 

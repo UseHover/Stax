@@ -1,6 +1,8 @@
 package com.hover.stax.balances
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,8 +21,8 @@ import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.bubbleshowcase.BubbleShowCase
 import com.hover.stax.views.staxcardstack.StaxCardStackView
-import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 
 class BalancesFragment : Fragment(), NavigationInterface {
@@ -131,10 +133,14 @@ class BalancesFragment : Fragment(), NavigationInterface {
                 }
             } else if (Channel.hasDummy(channelList)) {
                 if (!SHOWN_BUBBLE_OTHER_ACCOUNT && balancesVisible) {
-                    runBlocking {
-                        secondAccBubble = ShowcaseExecutor(requireActivity(), binding).showCaseAddSecondAccount()
-                    }
-                    SHOWN_BUBBLE_OTHER_ACCOUNT = true
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        try {
+                            secondAccBubble = ShowcaseExecutor(requireActivity(), binding).showCaseAddSecondAccount()
+                            SHOWN_BUBBLE_OTHER_ACCOUNT = true
+                        } catch (e: Exception){
+                            Timber.e(e)
+                        }
+                    }, 2000)
                 }
             }
         }

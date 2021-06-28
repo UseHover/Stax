@@ -11,7 +11,6 @@ import com.hover.stax.navigation.NavigationInterface
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.bubbleshowcase.BubbleShowCase
 import com.hover.stax.utils.bubbleshowcase.BubbleShowCaseListener
-import kotlinx.coroutines.delay
 import timber.log.Timber
 
 
@@ -44,9 +43,7 @@ class ShowcaseExecutor(val activity: Activity, private val balanceBinding: Fragm
         HomeFragment.navigateTo(Constants.NAV_LINK_ACCOUNT, activity)
     }
 
-    suspend fun showCaseAddSecondAccount(): BubbleShowCase? {
-        delay(2000)
-
+    fun showCaseAddSecondAccount(): BubbleShowCase? {
         return if (balanceBinding.homeCardBalances.balancesRecyclerView.childCount > 0
             && balanceBinding.homeCardBalances.balancesRecyclerView.getChildAt(1) != null
         ) {
