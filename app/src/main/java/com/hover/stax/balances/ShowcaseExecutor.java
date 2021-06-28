@@ -9,6 +9,7 @@ import com.hover.stax.databinding.FragmentBalanceBinding;
 import com.hover.stax.home.HomeFragment;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.Constants;
+import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.bubbleshowcase.BubbleShowCase;
 import com.hover.stax.utils.bubbleshowcase.BubbleShowCaseListener;
 
@@ -45,12 +46,16 @@ public class ShowcaseExecutor implements NavigationInterface {
     }
 
     public BubbleShowCase showcaseAddSecondAccount() {
-        if (balanceBinding.homeCardBalances.balancesRecyclerView.getChildCount() > 0
-                && balanceBinding.homeCardBalances.balancesRecyclerView.getChildAt(1) != null) {
-            return startShowcase(activity.getString(R.string.onboard_addaccount_greatwork_head), activity.getString(R.string.onboard_addaccount_greatwork_desc),
-                    addedAccountListener, (balanceBinding.homeCardBalances.balancesRecyclerView.getChildAt(1).findViewById(R.id.balance_item_card).findViewById(R.id.balance_channel_name)),
-                    BubbleShowCase.ArrowPosition.LEFT, true);
-        } else return null;
+        try{
+            if (balanceBinding != null && balanceBinding.homeCardBalances.balancesRecyclerView.getChildCount() > 0 && balanceBinding.homeCardBalances.balancesRecyclerView.getChildAt(1) != null) {
+                return startShowcase(activity.getString(R.string.onboard_addaccount_greatwork_head), activity.getString(R.string.onboard_addaccount_greatwork_desc),
+                        addedAccountListener, (balanceBinding.homeCardBalances.balancesRecyclerView.getChildAt(1).findViewById(R.id.balance_item_card).findViewById(R.id.balance_channel_name)),
+                        BubbleShowCase.ArrowPosition.LEFT, true);
+            } else return null;
+        }catch (NullPointerException e) {
+            Utils.logErrorAndReportToFirebase(TAG, e.getMessage(), e);
+            return  null;
+        }
     }
 
     BubbleShowCaseListener addedAccountListener = new BubbleShowCaseListener() {
