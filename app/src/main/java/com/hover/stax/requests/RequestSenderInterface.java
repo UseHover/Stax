@@ -29,7 +29,7 @@ public interface RequestSenderInterface {
         sendIntent.setData(Uri.parse("smsto:" + r.generateRecipientString(requestees)));
         sendIntent.putExtra(Intent.EXTRA_TEXT, r.generateMessage(a));
         sendIntent.putExtra("sms_body", r.generateMessage(a));
-        Amplitude.getInstance().logEvent(a.getString(R.string.clicked_send_sms_request));
+        Utils.logAnalyticsEvent(a.getString(R.string.clicked_send_sms_request), a.getBaseContext());
         a.startActivityForResult(Intent.createChooser(sendIntent, "Request"), Constants.SMS);
     }
 
@@ -38,7 +38,7 @@ public interface RequestSenderInterface {
             showError(a);
             return;
         }
-        Amplitude.getInstance().logEvent(a.getString(R.string.clicked_send_whatsapp_request));
+        Utils.logAnalyticsEvent(a.getString(R.string.clicked_send_whatsapp_request), a.getBaseContext());
         if (requestees.size() == 1)
             sendWhatsAppToSingleContact(r, requestees, channel, a);
         else sendWhatsAppToMultipleContacts(r.generateMessage(a), a);
@@ -73,7 +73,8 @@ public interface RequestSenderInterface {
     default void copyShareLink(Request r, TextView copyBtn, Activity a) {
         if (r == null) showError(a);
         else if (Utils.copyToClipboard(r.generateMessage(a), a)) {
-            Amplitude.getInstance().logEvent(a.getString(R.string.clicked_copylink_request));
+            Utils.logAnalyticsEvent(a.getString(R.string.clicked_copylink_request), a.getBaseContext());
+
             copyBtn.setActivated(true);
             copyBtn.setCompoundDrawablesWithIntrinsicBounds(null, a.getResources().getDrawable(R.drawable.img_check), null, null);
             copyBtn.setText(a.getString(R.string.link_copied_label));
