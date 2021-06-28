@@ -186,6 +186,11 @@ public class Utils {
         FirebaseAnalytics.getInstance(context).logEvent(strippedForFireAnalytics(event), null);
         AppsFlyerLib.getInstance().logEvent(context, event, null);
     }
+    public static void logAnalyticsEvent(String event, Context context, boolean excludeAmplitude) {
+        if(!excludeAmplitude) Amplitude.getInstance().logEvent(event);
+        FirebaseAnalytics.getInstance(context).logEvent(strippedForFireAnalytics(event), null);
+        AppsFlyerLib.getInstance().logEvent(context, event, null);
+    }
 
     public static void logAnalyticsEvent(@NonNull String event, @NonNull JSONObject args, @NonNull Context context) {
         Bundle bundle = convertJSONObjectToBundle(args);

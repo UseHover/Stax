@@ -43,8 +43,8 @@ android {
         applicationId "com.hover.stax"
         minSdkVersion 18
         targetSdkVersion 30
-        versionCode 62
-        versionName "1.4.1"
+        versionCode 63
+        versionName "1.4.2"
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
