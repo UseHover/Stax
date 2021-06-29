@@ -165,7 +165,6 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
             else
                 null
         }
-
     }
 
     companion object {

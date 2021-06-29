@@ -2,6 +2,7 @@ package com.hover.stax.channels
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -24,7 +25,7 @@ class ChannelsViewHolder(val binding: StaxSpinnerItemWithLogoBinding) : Recycler
     var channelText: AppCompatTextView? = null
     var checkBox: MaterialCheckBox? = null
 
-    fun bindItems(channel: Channel, isMultiselect: Boolean = false, isSelected: Boolean= false) {
+    fun bindItems(channel: Channel, isMultiselect: Boolean = false, isSelected: Boolean = false) {
         logo = binding.serviceItemImageId
         channelText = binding.serviceItemNameId
         id = binding.serviceItemId
@@ -55,6 +56,8 @@ class ChannelsViewHolder(val binding: StaxSpinnerItemWithLogoBinding) : Recycler
         override fun getPosition(): Int = adapterPosition
 
         override fun getSelectionKey(): Long = itemId
+
+        override fun inSelectionHotspot(e: MotionEvent): Boolean = true
     }
 
 }
