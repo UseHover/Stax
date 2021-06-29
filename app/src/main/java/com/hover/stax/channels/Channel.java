@@ -23,7 +23,8 @@ public class Channel implements Comparable<Channel> {
 
     final public static int DUMMY = -1;
 
-    public Channel() {}
+    public Channel() {
+    }
 
     public Channel(int _id, String addChannel) {
         this.id = _id;
@@ -57,7 +58,7 @@ public class Channel implements Comparable<Channel> {
         id = DUMMY;
         this.name = name;
         this.primaryColorHex = primaryColor;
-        this.secondaryColorHex =  "#1E232A";
+        this.secondaryColorHex = "#1E232A";
         currency = "NG";
         published = true;
         institutionId = DUMMY;
@@ -67,24 +68,24 @@ public class Channel implements Comparable<Channel> {
     }
 
     public static boolean areAllDummies(List<Channel> channels) {
-        if(channels == null) return true;
+        if (channels == null) return true;
 
         boolean result = true;
-        for(Channel channel : channels) {
+        for (Channel channel : channels) {
             if (channel.id != DUMMY) {
                 result = false;
                 break;
             }
         }
-        return  result;
+        return result;
     }
 
     public static boolean hasDummy(List<Channel> channels) {
-        if(channels == null) return true;
+        if (channels == null) return true;
 
         boolean result = false;
-        for(Channel channel : channels) {
-            if(channel.id == DUMMY){
+        for (Channel channel : channels) {
+            if (channel.id == DUMMY) {
                 result = true;
                 break;
             }
@@ -202,5 +203,12 @@ public class Channel implements Comparable<Channel> {
     @Override
     public int compareTo(Channel cOther) {
         return this.toString().compareTo(cOther.toString());
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Channel)) return false;
+        Channel c = (Channel) other;
+        return id == c.id;
     }
 }

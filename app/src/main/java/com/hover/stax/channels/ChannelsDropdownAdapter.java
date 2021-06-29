@@ -22,8 +22,6 @@ import com.hover.stax.utils.UIHelper;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import timber.log.Timber;
@@ -56,38 +54,38 @@ public class ChannelsDropdownAdapter extends ArrayAdapter<Channel> {
         }
 
         holder.setChannel(c);
-        updateDivider(c, position);
+//        updateDivider(c, position);
 
         return view;
     }
 
-    private void updateDivider(Channel currentChannel, int pos) {
-        if (pos > 0) {
-            Channel prevChannel = channels.get(pos - 1);
-            if (!currentChannel.selected && prevChannel.selected) addDivider();
-            else removeDivider();
-        } else removeDivider();
-    }
+//    private void updateDivider(Channel currentChannel, int pos) {
+//        if (pos > 0) {
+//            Channel prevChannel = channels.get(pos - 1);
+//            if (!currentChannel.selected && prevChannel.selected) addDivider();
+//            else removeDivider();
+//        } else removeDivider();
+//    }
 
-    private void addDivider() {
-        holder.divider.setVisibility(View.VISIBLE);
-    }
-
-    private void removeDivider() {
-        holder.divider.setVisibility(View.GONE);
-    }
+//    private void addDivider() {
+//        holder.divider.setVisibility(View.VISIBLE);
+//    }
+//
+//    private void removeDivider() {
+//        holder.divider.setVisibility(View.GONE);
+//    }
 
     public static class ViewHolder implements Target {
         TextView id;
         ImageView logo;
         AppCompatTextView channelText;
-        View divider;
+//        View divider;
 
         private ViewHolder(StaxSpinnerItemWithLogoBinding withLogoBinding) {
             logo = withLogoBinding.serviceItemImageId;
             channelText = withLogoBinding.serviceItemNameId;
             id = withLogoBinding.serviceItemId;
-            divider = withLogoBinding.serviceItemDivider;
+//            divider = withLogoBinding.serviceItemDivider;
         }
 
         @SuppressLint("SetTextI18n")

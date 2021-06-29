@@ -7,6 +7,10 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.selection.SelectionPredicates
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StorageStrategy
+import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.balances.BalanceAdapter.BalanceListener
 import com.hover.stax.balances.BalancesViewModel
@@ -17,6 +21,7 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 
 class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener {
@@ -26,6 +31,9 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
 
     private var _binding: FragmentChannelsListBinding? = null
     private val binding get() = _binding!!
+
+    private var tracker: SelectionTracker<Long>? = null
+    private var multiSelectAdapter: ChannelsMultiSelectAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentChannelsListBinding.inflate(inflater, container, false)
@@ -72,18 +80,45 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
     private fun setupSimSupportedChannels() {
         val simSupportedChannelsListView = binding.simSupportedChannelsRecyclerView
         simSupportedChannelsListView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
+
         channelsViewModel.simChannels.observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
-                simSupportedChannelsListView.adapter = ChannelsRecyclerViewAdapter(Channel.sort(it, false), this)
+                //TODO check variant here
+                initMultiSelectList(binding.simSupportedChannelsRecyclerView, it)
             }
         })
+    }
+
+    private fun initMultiSelectList(channelsRecycler: RecyclerView, channels: List<Channel>) {
+        channelsRecycler.setHasFixedSize(true)
+        multiSelectAdapter = ChannelsMultiSelectAdapter(Channel.sort(channels, false))
+        channelsRecycler.adapter = multiSelectAdapter
+
+        tracker = SelectionTracker.Builder(
+            "channelSelection", channelsRecycler,
+            ChannelKeyProvider(multiSelectAdapter!!), ChannelLookup(channelsRecycler), StorageStrategy.createLongStorage()
+        ).withSelectionPredicate(SelectionPredicates.createSelectAnything())
+            .build()
+        multiSelectAdapter!!.setTracker(tracker!!)
+
+        tracker?.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
+            override fun onSelectionChanged() {
+                super.onSelectionChanged()
+
+                Timber.e("Selected ${tracker?.selection?.size()}")
+            }
+        })
+    }
+
+    private fun initSingleSelectList(channelsRecycler: RecyclerView, channels: List<Channel>) {
+        channelsRecycler.adapter = ChannelsRecyclerViewAdapter(Channel.sort(channels, false), this)
     }
 
     private fun showEmptySimChannelsDialog() {
         StaxDialog(requireActivity())
             .setDialogTitle(R.string.no_connecion)
             .setDialogMessage(R.string.empty_channels_internet_err)
-            .setPosButton(R.string.btn_ok) { if(isAdded) requireActivity().onBackPressed() }
+            .setPosButton(R.string.btn_ok) { if (isAdded) requireActivity().onBackPressed() }
             .showIt()
     }
 
@@ -108,9 +143,9 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
         balanceListener?.onTapDetail(channel.id)
     }
 
-    override fun clickedChannel(channel: Channel?) {
-        if (IS_FORCE_RETURN || !channel!!.selected)
-            showCheckBalanceDialog(channel!!)
+    override fun clickedChannel(channel: Channel) {
+        if (IS_FORCE_RETURN || !channel.selected)
+            showCheckBalanceDialog(channel)
         else
             goToChannelsDetailsScreen(channel)
     }
