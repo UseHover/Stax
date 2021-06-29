@@ -2,14 +2,13 @@ package com.hover.stax.channels
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.selection.SelectionPredicates
-import androidx.recyclerview.selection.SelectionTracker
-import androidx.recyclerview.selection.StorageStrategy
+import androidx.recyclerview.selection.*
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.balances.BalanceAdapter.BalanceListener
@@ -96,7 +95,7 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
 
         tracker = SelectionTracker.Builder(
             "channelSelection", channelsRecycler,
-            ChannelKeyProvider(multiSelectAdapter!!), ChannelLookup(channelsRecycler), StorageStrategy.createLongStorage()
+            StableIdKeyProvider(channelsRecycler), ChannelLookup(channelsRecycler), StorageStrategy.createLongStorage()
         ).withSelectionPredicate(SelectionPredicates.createSelectAnything())
             .build()
         multiSelectAdapter!!.setTracker(tracker!!)
@@ -154,6 +153,19 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
         super.onDestroyView()
 
         _binding = null
+    }
+
+    class ChannelLookup(val recyclerView: RecyclerView) : ItemDetailsLookup<Long>() {
+
+        override fun getItemDetails(e: MotionEvent): ItemDetails<Long>? {
+            val view = recyclerView.findChildViewUnder(e.x, e.y)
+
+            return if (view != null)
+                (recyclerView.getChildViewHolder(view) as ChannelsViewHolder).getItemDetails()
+            else
+                null
+        }
+
     }
 
     companion object {
