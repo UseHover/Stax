@@ -81,6 +81,17 @@ android {
         }
     }
 
+    flavorDimensions 'store_type'
+    productFlavors {
+        playstore {
+            dimension "store_type"
+        }
+        transsion {
+            dimension "store_type"
+            versionNameSuffix "-transsion"
+        }
+    }
+
     bundle {
         language {
             //Ensures all language string resources is bundled in the aab.
