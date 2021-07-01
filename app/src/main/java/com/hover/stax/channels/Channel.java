@@ -177,7 +177,7 @@ public class Channel implements Comparable<Channel> {
     }
 
     public String getUssdName() {
-        return name + " - " + rootCode;
+        return name + " - " + rootCode + " - "+countryAlpha2;
     }
 
     public static List<Channel> sort(List<Channel> channels, boolean showSelected) {
