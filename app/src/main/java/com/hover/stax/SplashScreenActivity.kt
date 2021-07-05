@@ -61,7 +61,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
 
         if (selfDestructWhenAppVersionExpires()) return
 
-        authenticateUser()
+        validateUser()
     }
 
     override fun onStart() {
@@ -127,20 +127,21 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         tv.setCompoundDrawablesRelativeWithIntrinsicBounds(null, d, null, null)
     }
 
-    private fun authenticateUser() = Handler(Looper.getMainLooper()).postDelayed(
+    private fun validateUser() = Handler(Looper.getMainLooper()).postDelayed(
         {
-            BiometricChecker(this@SplashScreenActivity, this@SplashScreenActivity).startAuthentication(null)
+            if (!OnBoardingActivity.hasPassedThrough(this))
+                goToOnBoardingActivity()
+            else
+                BiometricChecker(this@SplashScreenActivity, this@SplashScreenActivity).startAuthentication(null)
         },
         NAV_DELAY
     )
 
     private fun initAmplitude() = Amplitude.getInstance().initialize(this, getString(R.string.amp)).enableForegroundTracking(application)
 
-    private fun logPushNotificationIfRequired() {
-        intent.extras?.let {
-            val fcmTitle = it.getString(Constants.FROM_FCM)
-            fcmTitle?.let { title -> Utils.logAnalyticsEvent(getString(R.string.clicked_push_notification, title), this) }
-        }
+    private fun logPushNotificationIfRequired() = intent.extras?.let {
+        val fcmTitle = it.getString(Constants.FROM_FCM)
+        fcmTitle?.let { title -> Utils.logAnalyticsEvent(getString(R.string.clicked_push_notification, title), this) }
     }
 
     private fun initHover() {
@@ -241,13 +242,9 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         startActivity(intent)
     }
 
-    override fun onAuthError(error: String?) {
-        UIHelper.flashMessage(this, getString(R.string.toast_error_auth))
-    }
+    override fun onAuthError(error: String?) = UIHelper.flashMessage(this, getString(R.string.toast_error_auth))
 
-    override fun onAuthSuccess(action: HoverAction?) {
-        chooseNavigation(intent)
-    }
+    override fun onAuthSuccess(action: HoverAction?) = chooseNavigation(intent)
 
     private fun redirectionIsExternal(redirectTo: String): Boolean = redirectTo.contains("https")
 

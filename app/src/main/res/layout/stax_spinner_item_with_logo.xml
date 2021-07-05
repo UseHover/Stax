@@ -6,12 +6,6 @@
         android:background="?attr/selectableItemBackground"
         android:orientation="vertical">
 
-<!--    <View-->
-<!--            android:id="@+id/service_item_divider"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="1dp"-->
-<!--            android:background="@color/mediumGrey" />-->
-
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -21,7 +15,8 @@
                 android:id="@+id/service_item_checkbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true" />
+                android:layout_centerVertical="true"
+                android:visibility="gone" />
 
         <ImageView
                 android:id="@+id/service_item_image_id"

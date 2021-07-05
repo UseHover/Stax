@@ -100,13 +100,28 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
             .build()
         multiSelectAdapter!!.setTracker(tracker!!)
 
-        tracker?.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
+        tracker!!.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
             override fun onSelectionChanged() {
                 super.onSelectionChanged()
-
-                Timber.e("Selected ${tracker?.selection?.size()}")
+                tracker!!.selection.forEach { Timber.e("Selected $it") }
             }
         })
+
+        binding.continueBtn.apply {
+            visibility = VISIBLE
+            setOnClickListener {
+                fetchSelectedChannels(tracker!!, channels)
+            }
+        }
+    }
+
+    private fun fetchSelectedChannels(tracker: SelectionTracker<Long>, channels: List<Channel>) {
+        val selectedChannels = mutableListOf<Channel>()
+        tracker.selection.forEach {
+            selectedChannels.add(channels[it.toInt()])
+        }
+
+        saveChannels(selectedChannels, true)
     }
 
     private fun initSingleSelectList(channelsRecycler: RecyclerView, channels: List<Channel>) {
@@ -125,16 +140,21 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
         StaxDialog(requireActivity())
             .setDialogTitle(R.string.check_balance_title)
             .setDialogMessage(R.string.check_balance_desc)
-            .setNegButton(R.string.later) { saveChannel(channel, false) }
-            .setPosButton(R.string.check_balance_title) { saveChannel(channel, true) }
+            .setNegButton(R.string.later) { saveChannels(listOf(channel), false) }
+            .setPosButton(R.string.check_balance_title) { saveChannels(listOf(channel), true) }
             .showIt()
     }
 
-    private fun saveChannel(channel: Channel, checkBalance: Boolean) {
-        channelsViewModel.setChannelSelected(channel)
+    private fun saveChannels(channels: List<Channel>, checkBalance: Boolean) {
+        channelsViewModel.setChannelSelected(channels)
         requireActivity().onBackPressed()
 
-        if (checkBalance) balancesViewModel.actions.observe(viewLifecycleOwner, { balancesViewModel.setRunning(channel.id) })
+        if (checkBalance) balancesViewModel.actions.observe(viewLifecycleOwner, {
+            if (channels.size == 1)
+                balancesViewModel.setRunning(channels.first().id)
+            else
+                balancesViewModel.setAllRunning(requireActivity())
+        })
     }
 
     private fun goToChannelsDetailsScreen(channel: Channel) {
@@ -156,7 +176,6 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
     }
 
     class ChannelLookup(val recyclerView: RecyclerView) : ItemDetailsLookup<Long>() {
-
         override fun getItemDetails(e: MotionEvent): ItemDetails<Long>? {
             val view = recyclerView.findChildViewUnder(e.x, e.y)
 
@@ -169,6 +188,7 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
 
     companion object {
         var IS_FORCE_RETURN = true
+        const val IS_FROM_ADD_ACCOUNT = "from_add_account"
         const val FORCE_RETURN_DATA = "force_return_data"
     }
 }

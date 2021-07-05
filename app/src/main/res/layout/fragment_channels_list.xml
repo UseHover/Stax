@@ -38,5 +38,16 @@
                     android:layout_height="match_parent" />
 
         </com.hover.stax.views.StaxCardView>
+
+        <Button
+                android:id="@+id/continue_btn"
+                style="@style/StaxFabExtended"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/margin_13"
+                android:layout_marginTop="@dimen/margin_10"
+                android:text="@string/btn_continue" />
+
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -6,12 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.provider.ContactsContract
 import android.view.View
+import android.widget.Button
 import android.widget.LinearLayout
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
@@ -39,7 +39,7 @@ abstract class AbstractFormFragment : Fragment() {
 
     lateinit var summaryCard: StaxCardView
     lateinit var channelDropdown: ChannelDropdown
-    lateinit var fab: ExtendedFloatingActionButton
+    lateinit var fab: Button
 
     private lateinit var noWorryText: LinearLayout
 
@@ -67,7 +67,7 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     open fun showEdit(isEditing: Boolean) {
-        channelsViewModel.setChannelSelected(channelDropdown.highlighted)
+        channelsViewModel.setChannelSelected(listOf(channelDropdown.highlighted))
 
         editCard?.visibility = if (isEditing) View.VISIBLE else View.GONE
         editRequestCard?.visibility = if(isEditing) View.VISIBLE else View.GONE

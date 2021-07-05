@@ -21,9 +21,10 @@ import timber.log.Timber
 class ChannelsViewHolder(val binding: StaxSpinnerItemWithLogoBinding) : RecyclerView.ViewHolder(binding.root), Target {
 
     var id: TextView? = null
-    private var logo: ImageView? = null
     var channelText: AppCompatTextView? = null
-    var checkBox: MaterialCheckBox? = null
+
+    private var logo: ImageView? = null
+    private var checkBox: MaterialCheckBox? = null
 
     fun bindItems(channel: Channel, isMultiselect: Boolean = false, isSelected: Boolean = false) {
         logo = binding.serviceItemImageId

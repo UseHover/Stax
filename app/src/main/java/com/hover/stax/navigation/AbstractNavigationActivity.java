@@ -39,7 +39,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         setBottomBar();
 
         if (getIntent().getBooleanExtra(SettingsFragment.LANG_CHANGE, false))
-            navigate(this, Constants.NAV_SETTINGS);
+            navigate(this, Constants.NAV_SETTINGS, null);
     }
 
     private void setBottomBar() {
