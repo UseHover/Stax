@@ -25,12 +25,17 @@ class OnBoardingActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
         UIHelper.setFullscreenView(this)
         super.onCreate(savedInstanceState)
 
-        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_onboarding)), this)
+        logEvents()
         binding = OnboardingLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setUpSlides()
         initContinueButton()
+    }
+
+    private fun logEvents() {
+        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_onboarding)), this)
+        Utils.timeEvent(getString(R.string.perms_basic_requested))
     }
 
     private fun setUpSlides() {

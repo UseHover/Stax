@@ -193,6 +193,11 @@ object Utils : KoinComponent {
     }
 
     @JvmStatic
+    fun timeEvent(event: String){
+        mixPanel.timeEvent(event)
+    }
+
+    @JvmStatic
     fun logAnalyticsEvent(event: String, args: JSONObject, context: Context) {
         val bundle = convertJSONObjectToBundle(args)
         val map = convertJSONObjectToHashMap(args)

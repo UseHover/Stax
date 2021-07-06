@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat;
 import com.amplitude.api.Amplitude;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
+import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxDialog;
 
 public class PermissionUtils {
@@ -45,7 +46,8 @@ public class PermissionUtils {
                 logDenyResult(ph, a);
             }
         }
-        Amplitude.getInstance().logEvent(a.getString(R.string.perms_basic_granted));
+//        Amplitude.getInstance().logEvent(a.getString(R.string.perms_basic_granted));
+        Utils.logAnalyticsEvent(a.getString(R.string.perms_basic_granted), a);
     }
 
     private static void logDenyResult(PermissionHelper ph, Activity a) {
