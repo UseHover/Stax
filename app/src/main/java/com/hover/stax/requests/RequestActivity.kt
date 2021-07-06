@@ -88,7 +88,7 @@ class RequestActivity : AbstractNavigationActivity(), RequestSenderInterface, Sm
     }
 
     private fun createSuccessIntent(type: Int): Intent =
-        Intent().apply { action = if(type == Constants.SCHEDULE_REQUEST) Constants.SCHEDULED else Constants.TRANSFERED }
+        Intent().apply { action = if(type == Constants.SCHEDULE_REQUEST) Constants.SCHEDULED else Constants.TRANSFERRED }
 
     private fun cancel(){
         setResult(RESULT_CANCELED)

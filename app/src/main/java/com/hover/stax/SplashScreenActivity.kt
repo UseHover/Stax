@@ -24,7 +24,6 @@ import androidx.work.WorkManager
 import com.amplitude.api.Amplitude
 import com.appsflyer.AppsFlyerLib
 import com.google.firebase.installations.FirebaseInstallations
-import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.hover.sdk.actions.HoverAction
@@ -82,7 +81,10 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         startWorkers()
         initFirebaseMessagingTopics()
 
-        FirebaseMessaging.getInstance().token.addOnSuccessListener { Timber.i("Firebase ID is $it") }
+        FirebaseInstallations.getInstance().getToken(true)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) Timber.i( "Installation auth token: ${task.result?.token}")
+            }
         FirebaseInstallations.getInstance().id.addOnCompleteListener { Timber.i("Firebase installation ID is ${it.result}") }
 
         initRemoteConfigs()
@@ -151,8 +153,8 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
     }
 
     private fun initRemoteConfigs() {
-        val remoteConfig = FirebaseRemoteConfig.getInstance()
         val configSettings = FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(3600).build()
+        val remoteConfig = FirebaseRemoteConfig.getInstance()
         remoteConfig.apply {
             setConfigSettingsAsync(configSettings)
             setDefaultsAsync(R.xml.remote_config_default)
@@ -167,8 +169,13 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
 
     private fun selfDestructWhenAppVersionExpires(): Boolean {
         return try {
+            val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
+            val variant = firebaseRemoteConfig.getString("onboarding_app_variant").toInt()
+            Timber.e("Variant $variant")
+            Utils.variant = variant
+
             val currentVersionCode = packageManager.getPackageInfo(packageName, 0).versionCode
-            val forceUpdateVersionCode = FirebaseRemoteConfig.getInstance().getString("force_update_app_version").toInt()
+            val forceUpdateVersionCode = firebaseRemoteConfig.getString("force_update_app_version").toInt()
             if (forceUpdateVersionCode > currentVersionCode) {
                 startActivity(Intent(this, SelfDestructActivity::class.java))
                 finish()

@@ -61,7 +61,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
                     sc?.let { contact.postValue(repo.getContactByPhone(r.requester_number)) }
                 }
             } catch (e: NumberFormatException) {
-                Utils.logErrorAndReportToFirebase(TransferViewModel::class.java.simpleName, e.message, e)
+                Utils.logErrorAndReportToFirebase(TransferViewModel::class.java.simpleName, e.message!!, e)
             }
         }
     }

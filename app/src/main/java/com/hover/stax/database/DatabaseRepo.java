@@ -193,7 +193,7 @@ public class DatabaseRepo {
         if (t.transaction_type.equals(HoverAction.RECEIVE)) {
             List<Request> rs = getRequests();
             for (Request r: rs) {
-                if (r.requestee_ids.contains(contact.id) && Utils.getAmount(r.amount).equals(t.amount)) {
+                if (r.requestee_ids.contains(contact.id) && Utils.getAmount(r.amount) == t.amount) {
                     r.matched_transaction_uuid = t.uuid;
                     update(r);
                 }

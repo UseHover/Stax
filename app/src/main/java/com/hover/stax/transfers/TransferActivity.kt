@@ -114,7 +114,7 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
     private fun returnResult(type: Int, result: Int, data: Intent?){
         val i = data?.let { Intent(it) } ?: Intent()
         transferViewModel.contact.value?.let { i.putExtra(StaxContact.ID_KEY, it.lookupKey) }
-        i.action = if(type == Constants.SCHEDULE_REQUEST) Constants.SCHEDULED else Constants.TRANSFERED
+        i.action = if(type == Constants.SCHEDULE_REQUEST) Constants.SCHEDULED else Constants.TRANSFERRED
         setResult(result, i)
     }
 

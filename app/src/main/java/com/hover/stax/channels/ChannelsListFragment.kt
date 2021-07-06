@@ -15,6 +15,7 @@ import com.hover.stax.balances.BalanceAdapter.BalanceListener
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.databinding.FragmentChannelsListBinding
 import com.hover.stax.home.MainActivity
+import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxDialog
@@ -81,10 +82,11 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
         simSupportedChannelsListView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
 
         channelsViewModel.simChannels.observe(viewLifecycleOwner, {
-            if (!it.isNullOrEmpty()) {
-                //TODO check variant here
-                initMultiSelectList(binding.simSupportedChannelsRecyclerView, it)
-            }
+            if (!it.isNullOrEmpty())
+                when (Utils.variant) {
+                    Constants.VARIANT_1 -> initSingleSelectList(simSupportedChannelsListView, it)
+                    Constants.VARIANT_2, Constants.VARIANT_3 -> initMultiSelectList(binding.simSupportedChannelsRecyclerView, it)
+                }
         })
     }
 

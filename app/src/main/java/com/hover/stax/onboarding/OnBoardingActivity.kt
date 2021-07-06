@@ -49,20 +49,17 @@ class OnBoardingActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
         }
     }
 
-    private fun initContinueButton() {
-        binding.onboardingContinueBtn.setOnClickListener {
-            viewPager?.stopAutoScroll()
-            Utils.logAnalyticsEvent(getString(R.string.clicked_getstarted), this)
-            setPassedThrough()
-            checkPermissionsAndNavigate()
-        }
+    private fun initContinueButton() = binding.onboardingContinueBtn.setOnClickListener {
+        viewPager?.stopAutoScroll()
+        Utils.logAnalyticsEvent(getString(R.string.clicked_getstarted), this)
+        setPassedThrough()
+        checkPermissionsAndNavigate()
     }
 
     private fun checkPermissionsAndNavigate() {
         val permissionHelper = PermissionHelper(this)
 
-        //TODO insert variant logic here.
-        if (permissionHelper.hasBasicPerms()) {
+        if ((Utils.variant == Constants.VARIANT_1) || permissionHelper.hasBasicPerms()) {
             startActivity(Intent(this, MainActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
             finish()
         } else

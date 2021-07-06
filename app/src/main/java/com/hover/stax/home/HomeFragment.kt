@@ -10,6 +10,7 @@ import com.hover.stax.R
 import com.hover.stax.databinding.FragmentMainBinding
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
+import timber.log.Timber
 
 class HomeFragment : Fragment() {
 
@@ -27,6 +28,8 @@ class HomeFragment : Fragment() {
 
         binding.airtime.setOnClickListener { navigateTo(Constants.NAV_AIRTIME, requireActivity()) }
         binding.transfer.setOnClickListener { navigateTo(Constants.NAV_TRANSFER, requireActivity()) }
+
+        Timber.e("Variant ${Utils.variant}")
     }
 
     override fun onDestroyView() {
