@@ -109,14 +109,10 @@ public class BalancesFragment extends Fragment implements NavigationInterface {
     private void showBalanceCards(boolean status) {
         toggleLink(status);
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(status ? R.drawable.ic_visibility_on : R.drawable.ic_visibility_off, 0, 0, 0);
+        balanceStack.setVisibility(status ? GONE : VISIBLE);
 
-        if (status) {
-            balanceStack.setVisibility(GONE);
-            binding.homeCardBalances.balancesMl.transitionToEnd();
-        } else {
-            balanceStack.setVisibility(VISIBLE);
-            binding.homeCardBalances.balancesMl.transitionToStart();
-        }
+        if (status) binding.homeCardBalances.balancesMl.transitionToEnd();
+        else binding.homeCardBalances.balancesMl.transitionToStart();
 
         balancesVisible = status;
     }
