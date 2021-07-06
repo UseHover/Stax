@@ -81,7 +81,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         startWorkers()
         initFirebaseMessagingTopics()
 
-        FirebaseInstallations.getInstance().getToken(true)
+        FirebaseInstallations.getInstance().getToken(false)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) Timber.i( "Installation auth token: ${task.result?.token}")
             }
@@ -170,7 +170,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
     private fun selfDestructWhenAppVersionExpires(): Boolean {
         return try {
             val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-            val variant = firebaseRemoteConfig.getString("onboarding_app_variant").toInt()
+            val variant = firebaseRemoteConfig.getString("onboarding_app_variant")
             Timber.e("Variant $variant")
             Utils.variant = variant
 

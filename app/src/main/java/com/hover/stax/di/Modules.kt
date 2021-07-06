@@ -10,6 +10,7 @@ import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.schedules.ScheduleDetailViewModel
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransferViewModel
+import com.mixpanel.android.mpmetrics.MixpanelAPI
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -28,4 +29,8 @@ val appModule = module(true) {
 
 val dataModule = module {
     single { DatabaseRepo(get()) }
+}
+
+val analyticsModule = module {
+    single { parameters -> MixpanelAPI.getInstance(get(), parameters.get()) }
 }

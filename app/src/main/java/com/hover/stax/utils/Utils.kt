@@ -15,19 +15,24 @@ import com.appsflyer.AppsFlyerLib
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.messaging.FirebaseMessaging
+
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
+import com.mixpanel.android.mpmetrics.MixpanelAPI
 import org.json.JSONException
 import org.json.JSONObject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.properties.Delegates
 
-object Utils {
-    private const val TAG = "Utils"
+object Utils : KoinComponent {
 
+    private val mixPanel: MixpanelAPI by inject { parametersOf(Constants.MIXPANEL_TOKEN) }
     private const val SHARED_PREFS = "staxprefs"
 
     fun getSharedPrefs(context: Context): SharedPreferences {
@@ -91,7 +96,9 @@ object Utils {
 
     @JvmStatic
     fun getAppName(c: Context?): String {
-        return if (c != null && c.applicationContext.applicationInfo != null) c.applicationContext.applicationInfo.loadLabel(c.packageManager).toString() else "Hover"
+        return if (c != null && c.applicationContext.applicationInfo != null)
+            c.applicationContext.applicationInfo.loadLabel(c.packageManager).toString()
+        else "Hover"
     }
 
     @JvmStatic
@@ -182,6 +189,7 @@ object Utils {
         Amplitude.getInstance().logEvent(event)
         FirebaseAnalytics.getInstance(context!!).logEvent(strippedForFireAnalytics(event), null)
         AppsFlyerLib.getInstance().logEvent(context, event, null)
+        mixPanel.track(event)
     }
 
     @JvmStatic
@@ -191,6 +199,7 @@ object Utils {
         Amplitude.getInstance().logEvent(event, args)
         FirebaseAnalytics.getInstance(context).logEvent(strippedForFireAnalytics(event), bundle)
         AppsFlyerLib.getInstance().logEvent(context, event, map)
+        mixPanel.track(event, args)
     }
 
     private fun strippedForFireAnalytics(firebaseEventLog: String): String {
@@ -287,5 +296,11 @@ object Utils {
         return false
     }
 
-    var variant: String by Delegates.observable(Constants.VARIANT_1, { _, _, newValue -> Timber.i("Variant: $newValue") })
+    var variant: String by Delegates.observable(Constants.VARIANT_1, { _, _, newValue ->
+        Timber.i("Variant: $newValue")
+
+        val props = JSONObject()
+        props.put("Variant", newValue)
+        mixPanel.registerSuperPropertiesOnce(props)
+    })
 }

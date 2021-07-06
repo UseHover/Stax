@@ -37,4 +37,6 @@ object Constants {
     const val VARIANT_2 = "multiselect_accounts"
     const val VARIANT_3 = "multiselect_accounts_and_move_money"
 
+    const val MIXPANEL_TOKEN = "82efeb23b6d38509989f592c8f4b21c2"
+
 }
