@@ -62,7 +62,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         recipientValue = binding.summaryCard.recipientValue
 
         amountInput.apply {
-            text =  transferViewModel.amount.value
+            text = transferViewModel.amount.value
+            Timber.e("Value $text")
             requestFocus()
         }
         noteInput.text = transferViewModel.note.value
@@ -80,7 +81,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         super.startObservers(root)
 
         actionSelectViewModel.activeAction.observe(viewLifecycleOwner, {
-            Timber.e("Observed active action change $it ${it.transaction_type}")
             binding.summaryCard.accountValue.setSubtitle(it.getNetworkSubtitle(requireContext()))
             actionSelect.selectRecipientNetwork(it)
             setRecipientHint(it)
@@ -128,11 +128,15 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         amountInput.apply {
             addTextChangedListener(amountWatcher)
             setOnFocusChangeListener { _, hasFocus ->
+                Timber.e("Has focus : $hasFocus")
+
                 if (!hasFocus)
                     amountInput.setState(
                         null,
                         if (transferViewModel.amountErrors() == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
                     )
+                else
+                    amountInput.setState(null, AbstractStatefulInput.NONE)
             }
         }
 
@@ -209,8 +213,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     fun setRecipientHint(action: HoverAction) {
-        editCard?.findViewById<LinearLayout>(R.id.recipient_entry)?.visibility = if(action.requiresRecipient()) View.VISIBLE else View.GONE
-        binding.summaryCard.recipientRow.visibility = if(action.requiresRecipient()) View.VISIBLE else View.GONE
+        editCard?.findViewById<LinearLayout>(R.id.recipient_entry)?.visibility = if (action.requiresRecipient()) View.VISIBLE else View.GONE
+        binding.summaryCard.recipientRow.visibility = if (action.requiresRecipient()) View.VISIBLE else View.GONE
 
         if (!action.requiresRecipient()) {
             recipientValue.setContent(getString(R.string.self_choice), "")
