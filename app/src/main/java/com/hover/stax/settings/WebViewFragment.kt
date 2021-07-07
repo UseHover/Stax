@@ -1,13 +1,10 @@
 package com.hover.stax.settings
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
@@ -21,11 +18,12 @@ class WebViewFragment : Fragment() {
         loadWebView()
         return binding?.root
     }
+
     @SuppressLint("SetJavaScriptEnabled")
     private fun loadWebView() {
-        val url : String = arguments?.getString("url") ?: ""
-        val webview : WebView? = binding?.webview
-        webview?.getSettings()?.setJavaScriptEnabled(true);
+        val url: String = arguments?.getString("url") ?: ""
+        val webview: WebView? = binding?.webview
+        webview?.settings?.javaScriptEnabled = true;
         webview?.loadUrl(url)
         webview?.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView, url: String) {
