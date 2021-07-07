@@ -53,8 +53,8 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
     private fun createFromSchedule(scheduleId: Int) {
         scheduleViewModel = getViewModel()
         with(scheduleViewModel) {
-            action.observe(this@TransferActivity, Observer { it?.let { actionSelectViewModel.setActiveAction(it) } })
-            schedule.observe(this@TransferActivity, Observer { it?.let { transferViewModel.view(it) } })
+            action.observe(this@TransferActivity, { it?.let { actionSelectViewModel.setActiveAction(it) } })
+            schedule.observe(this@TransferActivity, { it?.let { transferViewModel.view(it) } })
             setSchedule(scheduleId)
         }
 

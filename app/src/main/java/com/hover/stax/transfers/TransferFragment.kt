@@ -21,14 +21,14 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
-import org.koin.androidx.viewmodel.ext.android.getViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener {
 
-    private val actionSelectViewModel: ActionSelectViewModel by viewModel()
+    private val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
     private lateinit var transferViewModel: TransferViewModel
 
     private lateinit var amountInput: StaxTextInputLayout
@@ -40,7 +40,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     private lateinit var binding: FragmentTransferBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        abstractFormViewModel = getViewModel<TransferViewModel>()
+        abstractFormViewModel = getSharedViewModel<TransferViewModel>()
         transferViewModel = abstractFormViewModel as TransferViewModel
 
         binding = FragmentTransferBinding.inflate(inflater, container, false)

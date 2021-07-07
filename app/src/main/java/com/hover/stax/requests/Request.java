@@ -83,7 +83,7 @@ public class Request {
     }
 
     public Request(String paymentLink) {
-        Timber.v("Creating request from link: " + paymentLink);
+        Timber.v("Creating request from link: %s", paymentLink);
         String[] splitString = paymentLink.split(PAYMENT_LINK_SEPERATOR);
         amount = splitString[0].equals("0.00") ? "" : Utils.formatAmount(splitString[0]);
         requester_institution_id = Integer.parseInt(splitString[1]);
