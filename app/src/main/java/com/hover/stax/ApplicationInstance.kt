@@ -4,6 +4,7 @@ import android.app.Application
 import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
 import com.google.firebase.FirebaseApp
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hover.stax.di.analyticsModule
 import com.hover.stax.di.appModule
 import com.hover.stax.di.dataModule
@@ -31,7 +32,7 @@ class ApplicationInstance : Application() {
 
     private fun initFirebase(){
         FirebaseApp.initializeApp(this)
-//        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
     }
 
     private fun setFont() {

@@ -12,6 +12,7 @@ import com.hover.stax.schedules.Schedule
 import com.hover.stax.transfers.AbstractFormViewModel
 import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -91,11 +92,13 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
     }
 
     fun createRequest() {
+        Timber.e("Active channel: ${activeChannel.value}")
         repo.update(activeChannel.value)
         saveContacts()
 
         val request = Request(amount.value, note.value, requesterNumber.value, activeChannel.value!!.institutionId)
-        formulatedRequest.postValue(request)
+        formulatedRequest.value = request
+        Timber.e("Formulated : ${formulatedRequest.value}")
     }
 
     fun saveRequest() {
@@ -104,6 +107,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
 
         val requests = ArrayList<Request>()
         requestees.value!!.forEach { recipient ->
+            Timber.e("Formulated request ${formulatedRequest.value}")
             val request = Request(formulatedRequest.value!!, recipient, application)
             requests.add(request)
             repo.insert(request)
@@ -126,12 +130,12 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
 
     fun saveContacts() {
         requestees.value?.let { contacts ->
-            viewModelScope.launch {
+//            viewModelScope.launch {
                 contacts.forEach { contact ->
                     contact.lastUsedTimestamp = DateUtils.now()
                     repo.save(contact)
                 }
-            }
+//            }
         }
     }
 }

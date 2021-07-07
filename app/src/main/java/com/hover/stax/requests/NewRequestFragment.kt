@@ -25,7 +25,7 @@ import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxCardView
 import com.hover.stax.views.StaxTextInputLayout
-import org.koin.androidx.viewmodel.ext.android.getViewModel
+import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 
 
 class NewRequestFragment : AbstractFormFragment(), RecipientAdapter.UpdateListener, PushNotificationTopicsInterface {
@@ -47,7 +47,7 @@ class NewRequestFragment : AbstractFormFragment(), RecipientAdapter.UpdateListen
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        abstractFormViewModel = getViewModel<NewRequestViewModel>()
+        abstractFormViewModel = getSharedViewModel<NewRequestViewModel>()
         requestViewModel = abstractFormViewModel as NewRequestViewModel
 
         _binding = FragmentRequestBinding.inflate(inflater, container, false)
@@ -57,6 +57,7 @@ class NewRequestFragment : AbstractFormFragment(), RecipientAdapter.UpdateListen
         startListeners()
         setDefaultHelperText()
         setSummaryCardBackButton()
+        setClickListeners()
 
         return binding.root
     }
@@ -156,6 +157,13 @@ class NewRequestFragment : AbstractFormFragment(), RecipientAdapter.UpdateListen
         noteInput.addTextChangedListener(noteWatcher)
 
         fab.setOnClickListener(this::fabClicked)
+    }
+
+    private fun setClickListeners() {
+        val activity = activity as RequestActivity
+        binding.shareCard.smsShareSelection.setOnClickListener { activity.sendSms() }
+        binding.shareCard.whatsappShareSelection.setOnClickListener { activity.sendWhatsapp() }
+        binding.shareCard.copylinkShareSelection.setOnClickListener { activity.copyShareLink(it) }
     }
 
     override fun onContactSelected(requestCode: Int, contact: StaxContact) {
