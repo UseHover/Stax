@@ -8,6 +8,7 @@
 	<string name="bounty_endpoint">/stax_bounty_hunters</string>
 	<string name="stax_market_playstore_link" translatable="false">market://details?id=com.hover.stax</string>
 	<string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
+	<string name="stax_nolt_url">https://stax.nolt.io/</string>
 
 	<string name="nav_home">Home</string>
 	<string name="nav_balance_and_history">Balance and history</string>
@@ -290,6 +291,8 @@
 	<string name="FAQs">FAQs</string>
 	<string name="request_feature">Request a feature in Stax!</string>
 	<string name="contact_support">Contact support</string>
+	<string name="loading">Loading, please wait…"</string>
+	<string name="internet_required_try_again">Internet required, please try again</string>
 
 
 	<!-- System auth check -->

@@ -83,4 +83,14 @@
             app:argType="integer" />
     </fragment>
 
+    <fragment
+            android:id="@+id/webviewFragment"
+            android:name="com.hover.stax.settings.WebViewFragment"
+            android:label="WebViewFragment"
+            tools:layout="@layout/webview_fragment">
+        <argument
+                android:name="url"
+                app:argType="string" />
+    </fragment>
+
 </navigation>

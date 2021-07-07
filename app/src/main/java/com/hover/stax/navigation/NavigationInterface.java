@@ -143,6 +143,12 @@ public interface NavigationInterface {
         NavHostFragment.findNavController(fragment).navigate(R.id.requestDetailsFragment, bundle);
     }
 
+    default void navigateToWebViewFragment(String url, Fragment fragment) {
+        Bundle bundle = new Bundle();
+        bundle.putString("url", url);
+        NavHostFragment.findNavController(fragment).navigate(R.id.webviewFragment, bundle);
+    }
+
     default void navigateToBountyListFragment(NavController navController) {
         navController.navigate(R.id.bountyListFragment);
     }
