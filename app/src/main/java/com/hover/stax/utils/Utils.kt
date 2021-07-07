@@ -301,7 +301,7 @@ object Utils : KoinComponent {
         return false
     }
 
-    var variant: String by Delegates.observable(Constants.VARIANT_1, { _, _, newValue ->
+    var variant: String by Delegates.observable("", { _, _, newValue ->
         Timber.i("Variant: $newValue")
 
         val props = JSONObject()

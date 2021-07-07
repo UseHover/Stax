@@ -127,6 +127,7 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
     }
 
     private fun initSingleSelectList(channelsRecycler: RecyclerView, channels: List<Channel>) {
+        Timber.e("Channels: ${channels.size}")
         channelsRecycler.adapter = ChannelsRecyclerViewAdapter(Channel.sort(channels, false), this)
     }
 

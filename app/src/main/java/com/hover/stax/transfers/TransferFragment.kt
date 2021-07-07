@@ -128,8 +128,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         amountInput.apply {
             addTextChangedListener(amountWatcher)
             setOnFocusChangeListener { _, hasFocus ->
-                Timber.e("Has focus : $hasFocus")
-
                 if (!hasFocus)
                     amountInput.setState(
                         null,

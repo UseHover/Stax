@@ -64,7 +64,10 @@ class OnBoardingActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
     private fun checkPermissionsAndNavigate() {
         val permissionHelper = PermissionHelper(this)
 
-        if ((Utils.variant == Constants.VARIANT_1) || permissionHelper.hasBasicPerms()) {
+        //if remote configs haven't been pulled yet, default to the baseline version
+        if (Utils.variant.isEmpty()) Utils.variant = Constants.VARIANT_1
+
+        if (Utils.variant == Constants.VARIANT_1 || permissionHelper.hasBasicPerms()) {
             startActivity(Intent(this, MainActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
             finish()
         } else
