@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
-class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo): AbstractFormViewModel(application, databaseRepo) {
+class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) : AbstractFormViewModel(application, databaseRepo) {
 
     val activeChannel = MediatorLiveData<Channel>()
     val amount = MutableLiveData<String>()
@@ -41,22 +41,22 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo):
         activeChannel.value?.let { it.accountNo = number }
     }
 
-    fun onUpdate(pos: Int, contact: StaxContact){
-        val cs = ArrayList<StaxContact>()
+    fun onUpdate(pos: Int, contact: StaxContact) {
+        val cs = if (requestees.value != null) ArrayList<StaxContact>(requestees.value!!) else ArrayList()
 
-        if(!requestees.value.isNullOrEmpty()){
-            cs.addAll(requestees.value!!)
-        } else {
+        try {
+            cs[pos] = contact
+        } catch (e: IndexOutOfBoundsException) {
             cs.add(pos, contact)
         }
 
         requestees.postValue(cs)
     }
 
-    fun addRecipient(contact: StaxContact){
+    fun addRecipient(contact: StaxContact) {
         val rList = arrayListOf<StaxContact>()
 
-        if(!requestees.value.isNullOrEmpty())
+        if (!requestees.value.isNullOrEmpty())
             rList.addAll(requestees.value!!)
 
         rList.add(contact)
@@ -70,17 +70,17 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo):
     fun validAmount(): Boolean = (!amount.value.isNullOrEmpty() && amount.value!!.matches("\\d+".toRegex()) && !amount.value!!.matches("[0]+".toRegex()))
 
     fun requesteeErrors(): String? {
-        return if(!requestees.value.isNullOrEmpty() && !requestees.value!!.first().accountNumber.isNullOrEmpty())
+        return if (!requestees.value.isNullOrEmpty() && !requestees.value!!.first().accountNumber.isNullOrEmpty())
             null
         else
             application.getString(R.string.request_error_recipient)
     }
 
-    fun requesterAcctNoError(): String? = if(!requesterNumber.value.isNullOrEmpty()) null else application.getString(R.string.requester_number_fielderror)
+    fun requesterAcctNoError(): String? = if (!requesterNumber.value.isNullOrEmpty()) null else application.getString(R.string.requester_number_fielderror)
 
     fun validNote(): Boolean = !note.value.isNullOrEmpty()
 
-    fun setSchedule(s: Schedule){
+    fun setSchedule(s: Schedule) {
         schedule.postValue(s)
         setAmount(s.amount)
 
@@ -98,8 +98,8 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo):
         formulatedRequest.postValue(request)
     }
 
-    fun saveRequest(){
-        if(!finalRequests.value.isNullOrEmpty() && requestees.value != null && finalRequests.value!!.size == requestees.value!!.size)
+    fun saveRequest() {
+        if (!finalRequests.value.isNullOrEmpty() && requestees.value != null && finalRequests.value!!.size == requestees.value!!.size)
             return
 
         val requests = ArrayList<Request>()
@@ -109,22 +109,22 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo):
             repo.insert(request)
         }
 
-        if(!requests.isNullOrEmpty()) finalRequests.postValue(requests)
+        if (!requests.isNullOrEmpty()) finalRequests.postValue(requests)
     }
 
-    fun removeInvalidRequestees(){
-        if(!requestees.value.isNullOrEmpty()){
+    fun removeInvalidRequestees() {
+        if (!requestees.value.isNullOrEmpty()) {
             val contacts = ArrayList<StaxContact>()
 
             requestees.value?.forEach { contact ->
-                if(!contact.accountNumber.isNullOrEmpty()) contacts.add(contact)
+                if (!contact.accountNumber.isNullOrEmpty()) contacts.add(contact)
             }
 
             requestees.postValue(contacts)
         }
     }
 
-    fun saveContacts(){
+    fun saveContacts() {
         requestees.value?.let { contacts ->
             viewModelScope.launch {
                 contacts.forEach { contact ->

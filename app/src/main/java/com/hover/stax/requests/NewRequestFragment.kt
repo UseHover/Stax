@@ -28,7 +28,7 @@ import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 
 
-class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListener, PushNotificationTopicsInterface {
+class NewRequestFragment : AbstractFormFragment(), RecipientAdapter.UpdateListener, PushNotificationTopicsInterface {
 
     private lateinit var requestViewModel: NewRequestViewModel
     private lateinit var amountInput: StaxTextInputLayout
@@ -95,9 +95,9 @@ class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListene
             accountValue.setTitle(it.toString())
         })
 
-        with(requestViewModel){
+        with(requestViewModel) {
             amount.observe(viewLifecycleOwner, {
-                binding.summaryCard.amountRow.visibility = if(validAmount()) View.VISIBLE else View.GONE
+                binding.summaryCard.amountRow.visibility = if (validAmount()) View.VISIBLE else View.GONE
                 binding.summaryCard.amountValue.text = Utils.formatAmount(it)
             })
 
@@ -107,12 +107,12 @@ class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListene
             isEditing.observe(viewLifecycleOwner, { showEdit(it) })
 
             note.observe(viewLifecycleOwner, {
-                binding.summaryCard.noteRow.visibility = if(validNote()) View.VISIBLE else View.GONE
+                binding.summaryCard.noteRow.visibility = if (validNote()) View.VISIBLE else View.GONE
                 binding.summaryCard.noteValue.text = it
             })
 
             requestees.observe(viewLifecycleOwner, {
-                if(!it.isNullOrEmpty()){
+                if (!it.isNullOrEmpty()) {
                     recipientValueList.removeAllViews()
 
                     it.forEach { contact ->
@@ -121,31 +121,29 @@ class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListene
                         recipientValueList.addView(li)
                     }
 
-                    if(it.size != recipientCount){
-                        recipientCount = it.size
-                        recipientAdapter?.updateContactList(it)
-                    }
+                    recipientCount = it.size
+                    recipientAdapter?.update(it)
                 }
             })
         }
     }
 
-    override fun showEdit(isEditing: Boolean){
+    override fun showEdit(isEditing: Boolean) {
         super.showEdit(isEditing)
 
-        if(!isEditing) requestViewModel.createRequest()
+        if (!isEditing) requestViewModel.createRequest()
 
-        shareCard.visibility = if(isEditing) View.GONE else View.VISIBLE
-        fab.visibility = if(isEditing) View.VISIBLE else View.GONE
+        shareCard.visibility = if (isEditing) View.GONE else View.VISIBLE
+        fab.visibility = if (isEditing) View.VISIBLE else View.GONE
     }
 
     private fun setSummaryCardBackButton() = binding.summaryCard.root.setOnClickIcon { requestViewModel.setEditing(true) }
 
-    private fun updateAcctNo(channel: Channel?){
+    private fun updateAcctNo(channel: Channel?) {
         requesterNumberInput.text = channel?.accountNo
     }
 
-    private fun startListeners(){
+    private fun startListeners() {
         amountInput.addTextChangedListener(amountWatcher)
         addRecipientBtn.setOnClickListener { requestViewModel.addRecipient(StaxContact("")) }
         requesterNumberInput.addTextChangedListener(receivingAccountNumberWatcher)
@@ -160,8 +158,8 @@ class NewRequestFragment: AbstractFormFragment(), RecipientAdapter.UpdateListene
         fab.setOnClickListener(this::fabClicked)
     }
 
-    override fun onContactSelected(requestCode: Int, contact: StaxContact?) {
-        requestViewModel.onUpdate(requestCode, contact!!)
+    override fun onContactSelected(requestCode: Int, contact: StaxContact) {
+        requestViewModel.onUpdate(requestCode, contact)
         recipientAdapter?.notifyDataSetChanged()
     }
 

@@ -109,7 +109,7 @@ abstract class AbstractFormFragment : Fragment() {
         if (requestCode != Constants.ADD_SERVICE && resultCode == Activity.RESULT_OK) {
             val staxContact = StaxContact(data, requireContext())
             staxContact.accountNumber?.let {
-                Utils.logAnalyticsEvent(getString(R.string.contact_select_success), requireContext());
+                Utils.logAnalyticsEvent(getString(R.string.contact_select_success), requireContext())
                 onContactSelected(requestCode, staxContact);
             } ?: run {
                 Utils.logAnalyticsEvent(getString(R.string.contact_select_error), requireContext());
@@ -118,5 +118,5 @@ abstract class AbstractFormFragment : Fragment() {
         }
     }
 
-    abstract fun onContactSelected(requestCode: Int, contact: StaxContact?)
+    abstract fun onContactSelected(requestCode: Int, contact: StaxContact)
 }

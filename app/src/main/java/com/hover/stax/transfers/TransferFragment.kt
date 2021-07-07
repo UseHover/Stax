@@ -199,7 +199,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         return channelError == null && actionError == null && amountError == null && recipientError == null
     }
 
-    override fun onContactSelected(requestCode: Int, contact: StaxContact?) {
+    override fun onContactSelected(requestCode: Int, contact: StaxContact) {
         transferViewModel.setContact(contact)
         contactInput.setSelected(contact)
     }

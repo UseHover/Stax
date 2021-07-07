@@ -15,10 +15,12 @@ import com.hover.stax.contacts.StaxContact;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.RecipientViewHolder> {
     private List<StaxContact> recipients;
     private List<StaxContact> allContacts;
-    private UpdateListener updateListener;
+    private final UpdateListener updateListener;
 
     RecipientAdapter(List<StaxContact> recips, List<StaxContact> contacts, UpdateListener listener) {
         recipients = recips;
@@ -28,6 +30,7 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
 
     void update(List<StaxContact> recips) {
         recipients = recips;
+        Timber.e("Recipients %s", recipients);
         notifyDataSetChanged();
     }
 
