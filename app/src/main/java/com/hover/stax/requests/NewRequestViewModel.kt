@@ -130,12 +130,12 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
 
     fun saveContacts() {
         requestees.value?.let { contacts ->
-//            viewModelScope.launch {
+            viewModelScope.launch {
                 contacts.forEach { contact ->
                     contact.lastUsedTimestamp = DateUtils.now()
                     repo.save(contact)
                 }
-//            }
+            }
         }
     }
 }

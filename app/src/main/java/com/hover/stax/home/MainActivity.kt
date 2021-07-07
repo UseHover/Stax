@@ -64,10 +64,14 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
             }
 
             selectedChannels.observe(this@MainActivity, observer)
-            toRun.observe(this@MainActivity, { Timber.i("Observing action to run ${it.size}") })
-            runFlag.observe(this@MainActivity, { Timber.i("Observing run flag $it") })
-            actions.observe(this@MainActivity, { Timber.i("Observing actions ${it.size}") })
+            toRun.observe(this@MainActivity, { logResult("Observing action to run", it.size) })
+            runFlag.observe(this@MainActivity, { logResult("Observing run flag ", it) })
+            actions.observe(this@MainActivity, { logResult("Observing actions", it.size) })
         }
+    }
+
+    private fun logResult(result: String, size: Int) {
+        Timber.e(result.plus(" $size"))
     }
 
     override fun onResume() {
@@ -146,6 +150,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
     }
 
     override fun startRun(a: HoverAction, index: Int) {
+        Timber.e("Action $a")
         run(a, index)
     }
 

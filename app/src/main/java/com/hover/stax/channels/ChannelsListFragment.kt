@@ -21,7 +21,6 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 
 class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener {
@@ -102,13 +101,6 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
             .build()
         multiSelectAdapter!!.setTracker(tracker!!)
 
-        tracker!!.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
-            override fun onSelectionChanged() {
-                super.onSelectionChanged()
-                tracker!!.selection.forEach { Timber.e("Selected $it") }
-            }
-        })
-
         binding.continueBtn.apply {
             visibility = VISIBLE
             setOnClickListener {
@@ -127,7 +119,6 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
     }
 
     private fun initSingleSelectList(channelsRecycler: RecyclerView, channels: List<Channel>) {
-        Timber.e("Channels: ${channels.size}")
         channelsRecycler.adapter = ChannelsRecyclerViewAdapter(Channel.sort(channels, false), this)
     }
 

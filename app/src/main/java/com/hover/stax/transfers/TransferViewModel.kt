@@ -15,7 +15,6 @@ import com.hover.stax.schedules.Schedule
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class TransferViewModel(application: Application, repo: DatabaseRepo) : AbstractFormViewModel(application, repo) {
 
@@ -33,7 +32,6 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     fun setContact(contactIds: String?) = contactIds?.let {
         viewModelScope.launch {
             val contacts = repo.getContacts(contactIds.split(",").toTypedArray())
-            Timber.e("Contacts : %s", contacts)
             if (contacts.isNotEmpty()) contact.postValue(contacts.first())
         }
     }
