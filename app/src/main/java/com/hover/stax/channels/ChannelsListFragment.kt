@@ -85,7 +85,7 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
             if (!it.isNullOrEmpty())
                 when (Utils.variant) {
                     Constants.VARIANT_1 -> initSingleSelectList(simSupportedChannelsListView, it)
-                    Constants.VARIANT_2, Constants.VARIANT_3 -> initMultiSelectList(binding.simSupportedChannelsRecyclerView, it)
+                    Constants.VARIANT_2, Constants.VARIANT_3 -> initMultiSelectList(simSupportedChannelsListView, it)
                 }
         })
     }
