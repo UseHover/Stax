@@ -81,7 +81,7 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
     }
 
     private void setupRequestFeature() {
-        binding.getSupportStax.requestFeature.setOnClickListener(v->navigateToWebViewFragment(getString(R.string.stax_nolt_url), this));
+        binding.getSupportStax.requestFeature.setOnClickListener(v->Utils.openUrl(getString(R.string.stax_nolt_url), requireContext()));
     }
 
     private void showAccounts(List<Channel> channels) {
