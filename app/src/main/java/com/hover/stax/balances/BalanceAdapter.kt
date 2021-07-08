@@ -69,7 +69,7 @@ class BalanceAdapter(val channels: List<Channel>, val balanceListener: BalanceLi
                     binding.balanceAmount.text = Utils.formatAmount(channel.latestBalance)
                 }
                 channel.latestBalance == null && showBalance -> {
-                    binding.balanceAmount.text = ""
+                    binding.balanceAmount.text = "-"
                     binding.balanceSubtitle.visibility = View.VISIBLE
                     binding.balanceSubtitle.text = itemView.context.getString(R.string.refresh_balance_desc)
                 }
