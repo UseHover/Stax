@@ -19,6 +19,7 @@ import com.hover.stax.home.MainActivity
 import com.hover.stax.navigation.NavigationInterface
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.Utils
 import com.hover.stax.utils.bubbleshowcase.BubbleShowCase
 import com.hover.stax.views.staxcardstack.StaxCardStackView
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -107,6 +108,7 @@ class BalancesFragment : Fragment(), NavigationInterface {
         }
 
         balancesVisible = status
+        Utils.logAnalyticsEvent(getString(if (balancesVisible) R.string.show_balances else R.string.hide_balances), requireActivity())
     }
 
     private fun updateServices(channels: ArrayList<Channel>) {
@@ -137,7 +139,7 @@ class BalancesFragment : Fragment(), NavigationInterface {
                         try {
                             secondAccBubble = ShowcaseExecutor(requireActivity(), binding).showCaseAddSecondAccount()
                             SHOWN_BUBBLE_OTHER_ACCOUNT = true
-                        } catch (e: Exception){
+                        } catch (e: Exception) {
                             Timber.e(e)
                         }
                     }, 2000)
