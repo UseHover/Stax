@@ -68,7 +68,11 @@ class OnBoardingActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
         if (Utils.variant.isEmpty()) Utils.variant = Constants.VARIANT_1
 
         if (Utils.variant == Constants.VARIANT_1 || permissionHelper.hasBasicPerms()) {
-            startActivity(Intent(this, MainActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+            val intent = Intent(this, MainActivity::class.java).apply {
+                putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_LINK_ACCOUNT)
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            }
+            startActivity(intent)
             finish()
         } else
             PermissionUtils.showInformativeBasicPermissionDialog({

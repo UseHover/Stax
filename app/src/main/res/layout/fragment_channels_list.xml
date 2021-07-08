@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -39,13 +40,26 @@
 
         </com.hover.stax.views.StaxCardView>
 
+        <TextView
+                android:id="@+id/no_account_selected_error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_13"
+                android:text="@string/no_account_selected_error"
+                android:textColor="@color/stax_state_red"
+                android:visibility="gone"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="font-medium"
+                android:drawablePadding="@dimen/margin_5"
+                tools:text="@string/no_account_selected_error" />
+
         <Button
                 android:id="@+id/continue_btn"
                 style="@style/StaxFabExtended"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginTop="@dimen/margin_13"
                 android:layout_marginEnd="@dimen/margin_13"
                 android:text="@string/btn_continue"
                 android:visibility="gone" />

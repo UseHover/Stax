@@ -87,6 +87,7 @@
 	<!-- ADD ACCOUNT -->
 	<string name="your_accounts">Your accounts</string>
 	<string name="add_an_account">Add an account</string>
+	<string name="add_accounts_to_stax">Add accounts to Stax</string>
 
 	<!-- Permissions -->
 	<string name="permissions_title">Permissions needed</string>
@@ -377,5 +378,6 @@
 	<string name="internet_required_bounty_desc">You need a data or Wifi connection to map USSD flows. Please connect and try again.</string>
 	<string name="try_again">Try again</string>
 	<string name="edge_case_bounty_email_error">This rarely happens, but if error persists, please close the app and restart.</string>
+	<string name="no_account_selected_error">Please choose at least one account to add to Stax</string>
 
 </resources>

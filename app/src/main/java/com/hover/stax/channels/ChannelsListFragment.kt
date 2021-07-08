@@ -77,6 +77,14 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
     }
 
     private fun setupSimSupportedChannels() {
+        val titleString = when (Utils.variant) {
+            Constants.VARIANT_1 -> R.string.add_an_account
+            Constants.VARIANT_2, Constants.VARIANT_3 -> R.string.add_accounts_to_stax
+            else -> R.string.add_an_account //default title
+        }
+
+        binding.simSupportedChannelsCard.setTitle(getString(titleString))
+
         val simSupportedChannelsListView = binding.simSupportedChannelsRecyclerView
         simSupportedChannelsListView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
 
@@ -110,12 +118,21 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
     }
 
     private fun fetchSelectedChannels(tracker: SelectionTracker<Long>, channels: List<Channel>) {
-        val selectedChannels = mutableListOf<Channel>()
-        tracker.selection.forEach {
-            selectedChannels.add(channels[it.toInt()])
-        }
+        if (tracker.selection.isEmpty) {
+            binding.noAccountSelectedError.apply {
+                visibility = VISIBLE
+                setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_error, 0, 0, 0)
+            }
+        } else {
+            binding.noAccountSelectedError.visibility = GONE
 
-        saveChannels(selectedChannels, true)
+            val selectedChannels = mutableListOf<Channel>()
+            tracker.selection.forEach {
+                selectedChannels.add(channels[it.toInt()])
+            }
+
+            saveChannels(selectedChannels, true)
+        }
     }
 
     private fun initSingleSelectList(channelsRecycler: RecyclerView, channels: List<Channel>) {
@@ -182,7 +199,6 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
 
     companion object {
         var IS_FORCE_RETURN = true
-        const val IS_FROM_ADD_ACCOUNT = "from_add_account"
         const val FORCE_RETURN_DATA = "force_return_data"
     }
 }

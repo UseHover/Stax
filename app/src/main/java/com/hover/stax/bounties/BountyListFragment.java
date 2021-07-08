@@ -164,7 +164,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     void retrySimMatch(Bounty b) {
         bountyViewModel.getSims().removeObservers(getViewLifecycleOwner());
         bountyViewModel.getSims().observe(getViewLifecycleOwner(), sims -> viewBountyDetail(b));
-        Hover.updateSimInfo(getContext());
+        Hover.updateSimInfo(requireActivity());
     }
 
     @Override
