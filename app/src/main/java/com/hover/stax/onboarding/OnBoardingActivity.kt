@@ -67,19 +67,28 @@ class OnBoardingActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
         //if remote configs haven't been pulled yet, default to the baseline version
         if (Utils.variant.isEmpty()) Utils.variant = Constants.VARIANT_1
 
-        if (Utils.variant == Constants.VARIANT_1 || permissionHelper.hasBasicPerms()) {
-            val intent = Intent(this, MainActivity::class.java).apply {
-                putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_LINK_ACCOUNT)
-                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        when(Utils.variant) {
+            Constants.VARIANT_1 -> {
+                startActivity(Intent(this, MainActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+                finish()
             }
-            startActivity(intent)
-            finish()
-        } else
-            PermissionUtils.showInformativeBasicPermissionDialog({
-                PermissionUtils.requestPerms(Constants.NAV_HOME, this@OnBoardingActivity)
-            }, {
-                Utils.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), this@OnBoardingActivity)
-            }, this)
+            Constants.VARIANT_2, Constants.VARIANT_3 -> {
+                if(permissionHelper.hasBasicPerms()){
+                    val intent = Intent(this, MainActivity::class.java).apply {
+                        putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_LINK_ACCOUNT)
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    }
+                    startActivity(intent)
+                    finish()
+                } else {
+                    PermissionUtils.showInformativeBasicPermissionDialog({
+                        PermissionUtils.requestPerms(Constants.NAV_HOME, this@OnBoardingActivity)
+                    }, {
+                        Utils.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), this@OnBoardingActivity)
+                    }, this)
+                }
+            }
+        }
     }
 
     private fun setPassedThrough() = Utils.saveBoolean(OnBoardingActivity::class.java.simpleName, true, this)

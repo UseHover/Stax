@@ -4,7 +4,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.firebase.firebase-perf'
 
 
@@ -89,6 +88,7 @@ android {
 
     lintOptions {
         disable 'MissingTranslation'
+        disable 'ExtraTranslation'
     }
 
     buildFeatures {
@@ -144,7 +144,7 @@ dependencies {
 
     // Kotlin
     implementation "androidx.core:core-ktx:1.6.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+//    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     //di
     def koin_version= "2.2.2"
