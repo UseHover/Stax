@@ -7,16 +7,15 @@ import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 
-import com.amplitude.api.Amplitude;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.api.HoverParameters;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.PhoneHelper;
-import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.settings.KeyStoreExecutor;
 import com.hover.stax.utils.Constants;
+import com.hover.stax.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -94,7 +93,7 @@ final public class HoverSession {
 
     private void startHover(HoverParameters.Builder builder, Activity a) {
         Intent i = builder.buildIntent();
-        Amplitude.getInstance().logEvent(a.getString(R.string.start_load_screen));
+        Utils.logAnalyticsEvent(a.getString(R.string.start_load_screen), a);
         if (frag != null)
             frag.startActivityForResult(i, requestCode);
         else

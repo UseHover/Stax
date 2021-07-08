@@ -15,7 +15,6 @@ import com.appsflyer.AppsFlyerLib
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.messaging.FirebaseMessaging
-
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.mixpanel.android.mpmetrics.MixpanelAPI
@@ -23,7 +22,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import org.koin.core.parameter.parametersOf
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import java.text.DecimalFormat
@@ -32,7 +30,7 @@ import kotlin.properties.Delegates
 
 object Utils : KoinComponent {
 
-    private val mixPanel: MixpanelAPI by inject { parametersOf(Constants.MIXPANEL_TOKEN) }
+    private val mixPanel: MixpanelAPI by inject()
     private const val SHARED_PREFS = "staxprefs"
 
     fun getSharedPrefs(context: Context): SharedPreferences {

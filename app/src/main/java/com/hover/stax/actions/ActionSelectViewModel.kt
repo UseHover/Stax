@@ -5,11 +5,10 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import timber.log.Timber
 
 class ActionSelectViewModel(private val application: Application) : ViewModel() {
 
-    val filteredActions = MediatorLiveData<List<HoverAction>>()
+    private val filteredActions = MediatorLiveData<List<HoverAction>>()
     val activeAction = MediatorLiveData<HoverAction>()
 
     init {
@@ -17,13 +16,8 @@ class ActionSelectViewModel(private val application: Application) : ViewModel() 
     }
 
     private fun setActiveActionIfOutOfDate(actions: List<HoverAction>) {
-        Timber.e("May be setting active action")
-
         if (!actions.isNullOrEmpty() && (activeAction.value == null || !actions.contains(activeAction.value!!))) {
             val action = actions.first()
-
-            Timber.e("Auto selecting $action ${action.transaction_type} ${action.recipientInstitutionId()} ${action.public_id}")
-
             activeAction.postValue(action)
         }
     }
