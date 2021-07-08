@@ -25,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="font-normal"
+            android:background="?selectableItemBackground"
             android:padding="@dimen/margin_10"
             android:text="@string/contact_support"
             android:textSize="@dimen/text_16"
