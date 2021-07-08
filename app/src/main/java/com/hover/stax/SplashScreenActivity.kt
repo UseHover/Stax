@@ -41,12 +41,16 @@ import com.hover.stax.utils.Constants.FRAGMENT_DIRECT
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.blur.StaxBlur
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 
 
 class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener, PushNotificationTopicsInterface {
 
     private lateinit var binding: SplashScreenLayoutBinding
+    private lateinit var remoteConfig: FirebaseRemoteConfig
 
     override fun onCreate(savedInstanceState: Bundle?) {
         UIHelper.setFullscreenView(this)
@@ -55,12 +59,10 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         binding = SplashScreenLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        remoteConfig = FirebaseRemoteConfig.getInstance()
+
         startForegroundSequence()
         startBackgroundProcesses()
-
-        if (selfDestructWhenAppVersionExpires()) return
-
-        validateUser()
     }
 
     override fun onStart() {
@@ -83,7 +85,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
 
         FirebaseInstallations.getInstance().getToken(false)
             .addOnCompleteListener { task ->
-                if (task.isSuccessful) Timber.i( "Installation auth token: ${task.result?.token}")
+                if (task.isSuccessful) Timber.i("Installation auth token: ${task.result?.token}")
             }
         FirebaseInstallations.getInstance().id.addOnCompleteListener { Timber.i("Firebase installation ID is ${it.result}") }
 
@@ -129,15 +131,16 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         tv.setCompoundDrawablesRelativeWithIntrinsicBounds(null, d, null, null)
     }
 
-    private fun validateUser() = Handler(Looper.getMainLooper()).postDelayed(
-        {
-            if (!OnBoardingActivity.hasPassedThrough(this))
+    private fun validateUser() = runBlocking {
+        launch {
+            delay(NAV_DELAY)
+
+            if (!OnBoardingActivity.hasPassedThrough(this@SplashScreenActivity))
                 goToOnBoardingActivity()
             else
                 BiometricChecker(this@SplashScreenActivity, this@SplashScreenActivity).startAuthentication(null)
-        },
-        NAV_DELAY
-    )
+        }
+    }
 
     private fun initAmplitude() = Amplitude.getInstance().initialize(this, getString(R.string.amp)).enableForegroundTracking(application)
 
@@ -154,14 +157,18 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
 
     private fun initRemoteConfigs() {
         val configSettings = FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(3600).build()
-        val remoteConfig = FirebaseRemoteConfig.getInstance()
         remoteConfig.apply {
             setConfigSettingsAsync(configSettings)
             setDefaultsAsync(R.xml.remote_config_default)
             fetchAndActivate().addOnCompleteListener {
                 if (it.isSuccessful) {
-                    val updated = it.result
-                    Timber.i("Config params updated: $updated")
+                    Timber.i("Config params updated: ${it.result}")
+
+                    //set variant after successfully fetching and activating values
+                    Utils.variant = remoteConfig.getString("onboarding_app_variant")
+
+                    if (!selfDestructWhenAppVersionExpires())
+                        validateUser()
                 }
             }
         }
@@ -169,13 +176,8 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
 
     private fun selfDestructWhenAppVersionExpires(): Boolean {
         return try {
-            val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-            val variant = firebaseRemoteConfig.getString("onboarding_app_variant")
-            Timber.e("Variant $variant")
-            Utils.variant = variant
-
             val currentVersionCode = packageManager.getPackageInfo(packageName, 0).versionCode
-            val forceUpdateVersionCode = firebaseRemoteConfig.getString("force_update_app_version").toInt()
+            val forceUpdateVersionCode = remoteConfig.getString("force_update_app_version").toInt()
             if (forceUpdateVersionCode > currentVersionCode) {
                 startActivity(Intent(this, SelfDestructActivity::class.java))
                 finish()
@@ -242,7 +244,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
 
         try {
             redirectLink?.let { intent.putExtra(FRAGMENT_DIRECT, redirectLink.toInt()) }
-        } catch (e: java.lang.NumberFormatException) {
+        } catch (e: NumberFormatException) {
             Utils.logErrorAndReportToFirebase(SplashScreenActivity::class.java.simpleName, getString(R.string.firebase_fcm_redirect_format_err), e)
         }
 
@@ -264,7 +266,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
     companion object {
         const val BLUR_DELAY = 1000L
         const val LOGO_DELAY = 1200L
-        const val NAV_DELAY = 1800L
+        const val NAV_DELAY = 1300L
         const val SPLASH_ICON_WIDTH = 177
         const val SPLASH_ICON_HEIGHT = 57
     }
