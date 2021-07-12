@@ -89,17 +89,20 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
         simSupportedChannelsListView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
 
         channelsViewModel.simChannels.observe(viewLifecycleOwner, {
-            if (!it.isNullOrEmpty())
+            if (!it.isNullOrEmpty()) {
+                val channels = Channel.sort(it, false)
+
                 when (Utils.variant) {
-                    Constants.VARIANT_1 -> initSingleSelectList(simSupportedChannelsListView, it)
-                    Constants.VARIANT_2, Constants.VARIANT_3 -> initMultiSelectList(simSupportedChannelsListView, it)
+                    Constants.VARIANT_1 -> initSingleSelectList(simSupportedChannelsListView, channels)
+                    Constants.VARIANT_2, Constants.VARIANT_3 -> initMultiSelectList(simSupportedChannelsListView, channels)
                 }
+            }
         })
     }
 
     private fun initMultiSelectList(channelsRecycler: RecyclerView, channels: List<Channel>) {
         channelsRecycler.setHasFixedSize(true)
-        multiSelectAdapter = ChannelsMultiSelectAdapter(Channel.sort(channels, false))
+        multiSelectAdapter = ChannelsMultiSelectAdapter(channels)
         channelsRecycler.adapter = multiSelectAdapter
 
         tracker = SelectionTracker.Builder(
@@ -136,7 +139,7 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
     }
 
     private fun initSingleSelectList(channelsRecycler: RecyclerView, channels: List<Channel>) {
-        channelsRecycler.adapter = ChannelsRecyclerViewAdapter(Channel.sort(channels, false), this)
+        channelsRecycler.adapter = ChannelsRecyclerViewAdapter(channels, this)
     }
 
     private fun showEmptySimChannelsDialog() {

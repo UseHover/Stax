@@ -116,6 +116,9 @@ class NewRequestFragment : AbstractFormFragment(), RecipientAdapter.UpdateListen
             requestees.observe(viewLifecycleOwner, {
                 if (it.isNullOrEmpty()) return@observe
 
+                Timber.e("Recipient count %s", recipientCount)
+                Timber.e("Contact count %s", it.size)
+
                 recipientValueList.removeAllViews()
 
                 it.forEach { contact ->
@@ -123,8 +126,12 @@ class NewRequestFragment : AbstractFormFragment(), RecipientAdapter.UpdateListen
                     li.setContact(contact)
                     recipientValueList.addView(li)
                 }
+                recipientValueList.invalidate()
 
                 if (it.size == recipientCount) return@observe
+
+                Timber.e("Updated recipient count %s", recipientCount)
+                Timber.e("Updated contact count %s", it.size)
 
                 recipientCount = it.size
                 recipientAdapter?.update(it)
@@ -170,7 +177,6 @@ class NewRequestFragment : AbstractFormFragment(), RecipientAdapter.UpdateListen
     }
 
     override fun onContactSelected(requestCode: Int, contact: StaxContact) {
-        Timber.e("Pulled contact $contact - $requestCode")
         requestViewModel.onUpdate(requestCode, contact)
         recipientAdapter?.notifyDataSetChanged()
     }

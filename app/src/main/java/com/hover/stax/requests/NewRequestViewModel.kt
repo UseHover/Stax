@@ -47,15 +47,11 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
 
         if (!requestees.value.isNullOrEmpty()) cs.addAll(requestees.value!!)
 
-        Timber.e("Contacts $cs")
-
         try {
             cs[pos] = contact
         } catch (e: IndexOutOfBoundsException) {
             cs.add(pos, contact)
         }
-
-        Timber.e("Updated contacts $cs")
 
         requestees.postValue(cs)
     }
