@@ -2,8 +2,8 @@ package com.hover.stax.views;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -15,6 +15,8 @@ import com.hover.stax.R;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
+
+import timber.log.Timber;
 
 public abstract class AbstractStatefulInput extends FrameLayout {
     private final static String TAG = "AbstractStatefulInput";
@@ -76,8 +78,9 @@ public abstract class AbstractStatefulInput extends FrameLayout {
             inputLayout.setEndIconTintList(csl);
             inputLayout.setHintTextColor(csl);
             inputLayout.setBoxStrokeColorStateList(csl);
+            inputLayout.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "Effra_Regular.ttf"));
         } catch (IOException | XmlPullParserException | NullPointerException e) {
-            Log.e(TAG, "Failed to load color state list", e);
+            Timber.e(e, "Failed to load color state list");
         }
     }
 }

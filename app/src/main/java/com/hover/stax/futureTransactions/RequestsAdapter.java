@@ -1,4 +1,4 @@
-package com.hover.stax.balances;
+package com.hover.stax.futureTransactions;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +22,10 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.Reques
     public RequestsAdapter(List<Request> requests, SelectListener selectListener) {
         this.requestList = requests;
         this.selectListener = selectListener;
+    }
+    public void updateData(List<Request> requests) {
+        this.requestList = requests;
+        notifyDataSetChanged();
     }
 
     @NonNull

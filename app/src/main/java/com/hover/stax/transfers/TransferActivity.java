@@ -11,15 +11,12 @@ import com.amplitude.api.Amplitude;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
 import com.hover.stax.actions.ActionSelectViewModel;
-import com.hover.stax.channels.ChannelDropdownViewModel;
+import com.hover.stax.channels.ChannelsViewModel;
+import com.hover.stax.contacts.PhoneHelper;
 import com.hover.stax.contacts.StaxContact;
-
-import com.hover.stax.navigation.AbstractNavigationActivity;
-import com.hover.stax.pushNotification.PushNotificationTopicsInterface;
-import com.hover.stax.utils.Constants;
-
 import com.hover.stax.hover.HoverSession;
 import com.hover.stax.navigation.AbstractNavigationActivity;
+import com.hover.stax.pushNotification.PushNotificationTopicsInterface;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDetailViewModel;
 import com.hover.stax.utils.Constants;
@@ -28,10 +25,10 @@ import com.hover.stax.views.StaxDialog;
 
 import timber.log.Timber;
 
-public class TransferActivity extends AbstractNavigationActivity  implements PushNotificationTopicsInterface {
+public class TransferActivity extends AbstractNavigationActivity implements PushNotificationTopicsInterface {
     final public static String TAG = "TransferActivity";
 
-    private ChannelDropdownViewModel channelDropdownViewModel;
+    private ChannelsViewModel channelsViewModel;
     private ActionSelectViewModel actionSelectViewModel;
     private TransferViewModel transferViewModel;
     private ScheduleDetailViewModel scheduleViewModel = null;
@@ -39,14 +36,11 @@ public class TransferActivity extends AbstractNavigationActivity  implements Pus
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        channelDropdownViewModel = new ViewModelProvider(this).get(ChannelDropdownViewModel.class);
+        channelsViewModel = new ViewModelProvider(this).get(ChannelsViewModel.class);
         actionSelectViewModel = new ViewModelProvider(this).get(ActionSelectViewModel.class);
         transferViewModel = new ViewModelProvider(this).get(TransferViewModel.class);
-
-        String action = getIntent().getAction();
-
-        transferViewModel.setType(action);
-        channelDropdownViewModel.setType(action);
+        transferViewModel.setType(getIntent().getAction());
+        channelsViewModel.setType(getIntent().getAction());
 
         checkIntent();
         setContentView(R.layout.activity_transfer);
@@ -60,7 +54,6 @@ public class TransferActivity extends AbstractNavigationActivity  implements Pus
             createFromRequest(getIntent().getStringExtra(Constants.REQUEST_LINK));
         else
             Utils.logAnalyticsEvent(getString(R.string.visit_screen, getIntent().getAction()), this);
-
     }
 
     private void createFromSchedule(int schedule_id) {
@@ -88,10 +81,8 @@ public class TransferActivity extends AbstractNavigationActivity  implements Pus
             Timber.i("maybe viewing request");
             if (request == null) return;
 
-            Timber.i("viewing request %s", request);
-            if (dialog != null) {
-                dialog.dismiss();
-            }
+            Timber.i("maybe viewing request");
+            if (dialog != null) dialog.dismiss();
         });
     }
 
@@ -100,20 +91,21 @@ public class TransferActivity extends AbstractNavigationActivity  implements Pus
     }
 
     private void makeHoverCall(HoverAction act) {
-        Utils.logAnalyticsEvent(getString(R.string.finish_transfer, transferViewModel.getType()), this);
+        Amplitude.getInstance().logEvent(getString(R.string.finish_transfer, transferViewModel.getType()));
         updatePushNotifGroupStatus();
-      
         transferViewModel.checkSchedule();
-        makeCall(act);
+
+        if (act != null)
+            makeCall(act);
     }
 
-  private void updatePushNotifGroupStatus() {
-		joinAnyTransactionNotifGroup(this);
-		stopReceivingNoActivityTopicNotifGroup(this);
-	}
-  
+    private void updatePushNotifGroupStatus() {
+        joinTransactionGroup(this);
+        leaveNoUsageGroup(this);
+    }
+
     private void makeCall(HoverAction act) {
-        HoverSession.Builder hsb = new HoverSession.Builder(act, channelDropdownViewModel.getActiveChannel().getValue(),
+        HoverSession.Builder hsb = new HoverSession.Builder(act, channelsViewModel.getActiveChannel().getValue(),
                 TransferActivity.this, Constants.TRANSFER_REQUEST)
                 .extra(HoverAction.AMOUNT_KEY, transferViewModel.getAmount().getValue())
                 .extra(HoverAction.NOTE_KEY, transferViewModel.getNote().getValue());
@@ -125,10 +117,9 @@ public class TransferActivity extends AbstractNavigationActivity  implements Pus
     }
 
     private void addRecipientInfo(HoverSession.Builder hsb) {
-        hsb.extra(HoverAction.ACCOUNT_KEY, transferViewModel.getContact().getValue().phoneNumber)
-                .extra(HoverAction.PHONE_KEY, transferViewModel.getContact().getValue()
-                        .getNumberFormatForInput(actionSelectViewModel.getActiveAction().getValue(),
-                                channelDropdownViewModel.getActiveChannel().getValue()));
+        hsb.extra(HoverAction.ACCOUNT_KEY, transferViewModel.getContact().getValue().accountNumber)
+                .extra(HoverAction.PHONE_KEY, PhoneHelper.getNumberFormatForInput(transferViewModel.getContact().getValue().accountNumber,
+                        actionSelectViewModel.getActiveAction().getValue(), channelsViewModel.getActiveChannel().getValue()));
     }
 
     @Override
@@ -141,7 +132,7 @@ public class TransferActivity extends AbstractNavigationActivity  implements Pus
     private void returnResult(int type, int result, Intent data) {
         Intent i = data == null ? new Intent() : new Intent(data);
         if (transferViewModel.getContact().getValue() != null)
-            i.putExtra(StaxContact.LOOKUP_KEY, transferViewModel.getContact().getValue().lookupKey);
+            i.putExtra(StaxContact.ID_KEY, transferViewModel.getContact().getValue().lookupKey);
         i.setAction(type == Constants.SCHEDULE_REQUEST ? Constants.SCHEDULED : Constants.TRANSFERED);
         setResult(result, i);
         finish();

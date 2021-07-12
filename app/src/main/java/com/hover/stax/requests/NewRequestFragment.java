@@ -2,6 +2,7 @@ package com.hover.stax.requests;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -17,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.channels.ChannelDropdownViewModel;
+import com.hover.stax.channels.ChannelsViewModel;
 import com.hover.stax.contacts.ContactInput;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.databinding.FragmentRequestBinding;
@@ -51,7 +52,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        channelDropdownViewModel = new ViewModelProvider(requireActivity()).get(ChannelDropdownViewModel.class);
+        channelsViewModel = new ViewModelProvider(requireActivity()).get(ChannelsViewModel.class);
         abstractFormViewModel = new ViewModelProvider(requireActivity()).get(NewRequestViewModel.class);
         requestViewModel = (NewRequestViewModel) abstractFormViewModel;
 
@@ -60,16 +61,21 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
         init(binding.getRoot());
         startObservers(binding.getRoot());
         startListeners();
+        setDefaultHelperText();
+        setSummaryCardBackButton();
         return binding.getRoot();
+    }
+    private void setDefaultHelperText() {
+        requesterNumberInput.setState(getString(R.string.account_num_desc), AbstractStatefulInput.NONE);
     }
 
     @Override
     protected void init(View view) {
-        amountInput = binding.editCard.cardAmount.amountInput;
-        recipientInputList = binding.editCard.cardRequestee.recipientList;
-        addRecipientBtn = binding.editCard.cardRequestee.addRecipientButton;
-        requesterNumberInput = binding.editCard.cardRequester.accountNumberInput;
-        noteInput = binding.editCard.transferNote.noteInput;
+        amountInput = binding.editRequestCard.cardAmount.amountInput;
+        recipientInputList = binding.editRequestCard.cardRequestee.recipientList;
+        addRecipientBtn = binding.editRequestCard.cardRequestee.addRecipientButton;
+        requesterNumberInput = binding.editRequestCard.cardRequester.accountNumberInput;
+        noteInput = binding.editRequestCard.transferNote.noteInput;
 
         recipientValueList = binding.summaryCard.requesteeValueList;
         accountValue = binding.summaryCard.accountValue;
@@ -88,10 +94,11 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
     @Override
     protected void startObservers(View root) {
         super.startObservers(root);
-        channelDropdownViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> {
+        channelsViewModel.getActiveChannel().observe(getViewLifecycleOwner(), channel -> {
             requestViewModel.setActiveChannel(channel);
             accountValue.setTitle(channel.toString());
         });
+
 
         requestViewModel.getActiveChannel().observe(getViewLifecycleOwner(), this::updateAcctNo);
 
@@ -109,7 +116,7 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
             recipientAdapter.update(recipients);
         });
         requestViewModel.getRecentContacts().observe(getViewLifecycleOwner(), contacts -> {
-            recipientAdapter.updateContactList(contacts);
+            if (contacts != null) recipientAdapter.updateContactList(contacts);
         });
 
         requestViewModel.getAmount().observe(getViewLifecycleOwner(), amount -> {
@@ -135,6 +142,9 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
         if (!isEditing) requestViewModel.createRequest();
         shareCard.setVisibility(isEditing ? View.GONE : View.VISIBLE);
         fab.setVisibility(isEditing ? View.VISIBLE : View.GONE);
+    }
+    private void setSummaryCardBackButton() {
+        binding.summaryCard.getRoot().setOnClickIcon(view -> requestViewModel.setEditing(true));
     }
 
     protected void updateAcctNo(Channel c) {
@@ -227,13 +237,13 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
     }
   
   	private void updatePushNotifGroupStatus() {
-		joinByRequestMoneyNotifGroup(requireContext());
-		stopReceivingNoActivityTopicNotifGroup(requireContext());
-		stopReceivingNoRequestMoneyNotifGroup(requireContext());
+		joinRequestMoneyGroup(requireContext());
+		leaveNoUsageGroup(requireContext());
+		leaveNoRequestMoneyGroup(requireContext());
 	}
 
     private boolean validates() {
-        String channelError = channelDropdownViewModel.errorCheck();
+        String channelError = channelsViewModel.errorCheck();
         channelDropdown.setState(channelError, channelError == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.ERROR);
         String requesterAcctNoError = requestViewModel.requesterAcctNoError();
         requesterNumberInput.setState(requesterAcctNoError, requesterAcctNoError == null ? AbstractStatefulInput.SUCCESS : AbstractStatefulInput.ERROR);

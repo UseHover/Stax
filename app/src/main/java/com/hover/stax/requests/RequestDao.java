@@ -17,6 +17,9 @@ public interface RequestDao {
     @Query("SELECT * FROM requests WHERE matched_transaction_uuid IS NULL ORDER BY date_sent DESC")
     LiveData<List<Request>> getLiveUnmatched();
 
+    @Query("SELECT * FROM requests WHERE matched_transaction_uuid IS NULL AND requester_institution_id=:channelId ORDER BY date_sent DESC")
+    LiveData<List<Request>> getLiveUnmatchedByChannel(int channelId);
+
     @Query("SELECT * FROM requests WHERE matched_transaction_uuid IS NULL ORDER BY date_sent DESC")
     List<Request> getUnmatched();
 

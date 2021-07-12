@@ -1,4 +1,4 @@
-package com.hover.stax.balances;
+package com.hover.stax.futureTransactions;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -21,6 +21,11 @@ public class ScheduledAdapter extends RecyclerView.Adapter<ScheduledAdapter.Sche
     public ScheduledAdapter(List<Schedule> scheduled, SelectListener selectListener) {
         this.scheduleList = scheduled;
         this.selectListener = selectListener;
+    }
+
+    public void updateData(List<Schedule> scheduled) {
+        this.scheduleList = scheduled;
+        notifyDataSetChanged();
     }
 
     @NonNull

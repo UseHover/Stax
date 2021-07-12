@@ -23,8 +23,8 @@ public class StaxContactArrayAdapter extends ArrayAdapter<StaxContact> {
 
     public StaxContactArrayAdapter(@NonNull Context context, List<StaxContact> list) {
         super(context, 0, list);
-        allContacts = new ArrayList<>(list);
-        filteredContacts = new ArrayList<>(list);
+        allContacts = list == null ? new ArrayList<>() : new ArrayList<>(list);
+        filteredContacts = list == null ? new ArrayList<>() : new ArrayList<>(list);
     }
 
     @NonNull
@@ -46,7 +46,7 @@ public class StaxContactArrayAdapter extends ArrayAdapter<StaxContact> {
         StaxContact c = filteredContacts.get(position);
 
         holder.title.setText(c.shortName());
-        holder.subtitle.setText(c.getPhoneNumber());
+        holder.subtitle.setText(c.accountNumber);
         holder.subtitle.setVisibility(c.hasName() ? View.VISIBLE : View.GONE);
 
         return v;

@@ -11,7 +11,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.amplitude.api.Amplitude;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
@@ -70,11 +69,13 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
     }
 
     private void setDestinationChangedListener(BottomNavigationView nav) {
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (controller.getGraph().getId() == R.id.bounty_navigation) {
-                nav.getMenu().findItem(R.id.navigation_settings).setChecked(true);
-            }
-        });
+        if (navController != null) {
+            navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+                if (controller.getGraph().getId() == R.id.bounty_navigation) {
+                    nav.getMenu().findItem(R.id.navigation_settings).setChecked(true);
+                }
+            });
+        }
     }
 
     protected NavController getNavController() {
@@ -102,6 +103,8 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
             intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_BALANCE);
         else if (destId == R.id.navigation_settings)
             intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_SETTINGS);
+        else if (destId == R.id.navigation_request)
+            intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_REQUEST);
         else if (destId != R.id.navigation_home) {
             onBackPressed();
             return;
@@ -111,7 +114,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
     }
 
     protected int getNavConst(int destId) {
-        if (destId == R.id.navigation_balance) return Constants.NAV_BALANCE;
+        if (destId == R.id.navigation_request) return Constants.NAV_REQUEST;
         else if (destId == R.id.navigation_settings) return Constants.NAV_SETTINGS;
         else if (destId == R.id.navigation_home) return Constants.NAV_HOME;
         else return destId;

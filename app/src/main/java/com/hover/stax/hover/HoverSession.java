@@ -13,6 +13,7 @@ import com.hover.sdk.api.Hover;
 import com.hover.sdk.api.HoverParameters;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.contacts.PhoneHelper;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.settings.KeyStoreExecutor;
 import com.hover.stax.utils.Constants;
@@ -71,7 +72,7 @@ final public class HoverSession {
             return null;
         }
         if (key.equals(HoverAction.PHONE_KEY)) {
-            return StaxContact.normalizeNumberByCountry(value, channel.countryAlpha2);
+            return PhoneHelper.normalizeNumberByCountry(value, channel.countryAlpha2);
         }
         return value;
     }

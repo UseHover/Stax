@@ -19,9 +19,13 @@
 
     <fragment
         android:id="@+id/navigation_linkAccount"
-        android:name="com.hover.stax.balances.LinkAccountFragment"
+        android:name="com.hover.stax.channels.ChannelsListFragment"
         android:label="@string/nav_link_account"
-        tools:layout="@layout/fragment_link_account" />
+            tools:layout="@layout/fragment_channels_list">
+        <argument
+                android:name="force_return_data"
+                app:argType="boolean" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_settings"

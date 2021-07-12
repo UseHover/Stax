@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -32,6 +31,8 @@ import com.hover.stax.utils.paymentLinkCryptography.Encryption;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+
+import timber.log.Timber;
 
 public class DatabaseRepo {
     private static String TAG = "DatabaseRepo";
@@ -71,6 +72,10 @@ public class DatabaseRepo {
 
     public LiveData<Channel> getLiveChannel(int id) {
         return channelDao.getLiveChannel(id);
+    }
+
+    public int getChannelsDataCount() {
+        return channelDao.getDataCount();
     }
 
     public LiveData<List<Channel>> getAllChannels() {
@@ -162,33 +167,36 @@ public class DatabaseRepo {
         return transactionDao.getTransaction(uuid);
     }
 
-    public void insertOrUpdateTransaction(Intent intent, Context c) {
+    public void insertOrUpdateTransaction(final Intent intent, Context c) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
             try {
                 StaxTransaction t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID));
-                StaxContact contact = intent.hasExtra(StaxContact.LOOKUP_KEY) ? getContact(intent.getStringExtra(StaxContact.LOOKUP_KEY)) : null;
-                HoverAction a = intent.hasExtra(HoverAction.ID_KEY) ? getAction(intent.getStringExtra(HoverAction.ID_KEY)) : null;
+                HoverAction a = getAction(intent.getStringExtra(HoverAction.ID_KEY));
+                Channel channel = getChannel(a.channel_id);
+                StaxContact contact = StaxContact.findOrInit(intent, channel.countryAlpha2, t, this);
+                save(contact);
 
                 if (t == null) {
+                    Utils.logAnalyticsEvent(c.getString(R.string.initializing_ussd_services), c, true);
                     t = new StaxTransaction(intent, a, contact, c);
                     transactionDao.insert(t);
+                    t = transactionDao.getTransaction(t.uuid);
                 }
                 t.update(intent, a, contact, c);
                 transactionDao.update(t);
 
-                updateRequests(t, intent);
+                updateRequests(t, contact);
             } catch (Exception e) {
-                Log.e(TAG, "error", e);
+                Timber.e(e, "error");
             }
         });
     }
 
-    private void updateRequests(StaxTransaction t, Intent intent) {
+    private void updateRequests(StaxTransaction t, StaxContact contact) {
         if (t.transaction_type.equals(HoverAction.RECEIVE)) {
             List<Request> rs = getRequests();
             for (Request r : rs) {
-                StaxContact r_contact = getContact(r.requestee_ids);
-                if (r_contact != null && r_contact.equals(new StaxContact(intent.getStringExtra("senderPhone")))) {
+                if (r.requestee_ids.contains(contact.id) && Utils.getAmount(r.amount).equals(t.amount)) {
                     r.matched_transaction_uuid = t.uuid;
                     update(r);
                 }
@@ -213,19 +221,19 @@ public class DatabaseRepo {
         return contactDao.lookup(lookupKey);
     }
 
-    public StaxContact getContact(String lookupKey) {
-        return contactDao.lookup(lookupKey);
+    public StaxContact getContact(String id) {
+        return contactDao.get(id);
+    }
+
+    public StaxContact getContactByPhone(String phone) {
+        return contactDao.getByPhone("%" + phone + "%");
     }
 
     public LiveData<StaxContact> getLiveContact(String id) {
         return contactDao.getLive(id);
     }
 
-    public StaxContact getContactFromPhone(String phone) {
-        return contactDao.getContact(phone);
-    }
-
-    public void insertOrUpdate(StaxContact contact) {
+    public void save(final StaxContact contact) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
             if (getContact(contact.id) == null) {
                 try {
@@ -238,13 +246,17 @@ public class DatabaseRepo {
         });
     }
 
-    public void update(StaxContact contact) {
-        AppDatabase.databaseWriteExecutor.execute(() -> contactDao.update(contact));
-    }
-
     // Schedules
     public LiveData<List<Schedule>> getFutureTransactions() {
         return scheduleDao.getLiveFuture();
+    }
+
+    public LiveData<List<Schedule>> getFutureTransactions(int channelId) {
+        return scheduleDao.getLiveFutureByChannelId(channelId);
+    }
+
+    public LiveData<List<StaxTransaction>> getTransactionsForAppReview() {
+        return transactionDao.getTransactionsForAppReview();
     }
 
     public Schedule getSchedule(int id) {
@@ -268,6 +280,10 @@ public class DatabaseRepo {
         return requestDao.getLiveUnmatched();
     }
 
+    public LiveData<List<Request>> getLiveRequests(int channelId) {
+        return requestDao.getLiveUnmatchedByChannel(channelId);
+    }
+
     public List<Request> getRequests() {
         return requestDao.getUnmatched();
     }
@@ -277,19 +293,24 @@ public class DatabaseRepo {
     }
 
     public LiveData<Request> decrypt(String encrypted, Context c) {
-        if (decryptedRequest == null) { decryptedRequest = new MutableLiveData<>(); }
+        if (decryptedRequest == null) {
+            decryptedRequest = new MutableLiveData<>();
+        }
+
         decryptedRequest.setValue(null);
         String removedBaseUrlString = encrypted.replace(c.getString(R.string.payment_root_url, ""), "");
 
         //Only old stax versions contains ( in the link
         if (removedBaseUrlString.contains("(")) decryptRequestForOldVersions(removedBaseUrlString);
         else decryptRequest(removedBaseUrlString, c);
+
         return decryptedRequest;
     }
 
     private void decryptRequest(String param, Context c) {
         decryptedRequest.postValue(new Request(Request.decryptBijective(param, c)));
     }
+
     private void decryptRequestForOldVersions(String params) {
         try {
             Encryption e = Request.getEncryptionSettings().build();
@@ -313,6 +334,7 @@ public class DatabaseRepo {
             Utils.logErrorAndReportToFirebase(TAG, "decryption failure", e);
         }
     }
+
     public void insert(Request request) {
         AppDatabase.databaseWriteExecutor.execute(() -> requestDao.insert(request));
     }
@@ -324,5 +346,4 @@ public class DatabaseRepo {
     public void delete(Request request) {
         AppDatabase.databaseWriteExecutor.execute(() -> requestDao.delete(request));
     }
-
 }

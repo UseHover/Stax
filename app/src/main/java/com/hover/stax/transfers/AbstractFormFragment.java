@@ -13,13 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 
-import com.amplitude.api.Amplitude;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
 import com.hover.stax.channels.ChannelDropdown;
-import com.hover.stax.channels.ChannelDropdownViewModel;
+import com.hover.stax.channels.ChannelsViewModel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.permissions.PermissionUtils;
 import com.hover.stax.utils.Constants;
@@ -31,15 +30,16 @@ public abstract class AbstractFormFragment extends Fragment {
     private static String TAG = "AbstractFormFragment";
 
     protected AbstractFormViewModel abstractFormViewModel;
-    protected ChannelDropdownViewModel channelDropdownViewModel;
+    protected ChannelsViewModel channelsViewModel;
 
-    private LinearLayout noworryText;
+    private LinearLayout noworryText, editRequestCard;
     protected StaxCardView editCard, summaryCard;
     protected ChannelDropdown channelDropdown;
     protected ExtendedFloatingActionButton fab;
 
     protected void init(View root) {
         editCard = root.findViewById(R.id.editCard);
+        editRequestCard = root.findViewById(R.id.editRequestCard);
         noworryText = root.findViewById(R.id.noworry_text);
         summaryCard = root.findViewById(R.id.summaryCard);
         fab = root.findViewById(R.id.fab);
@@ -47,21 +47,25 @@ public abstract class AbstractFormFragment extends Fragment {
     }
 
     protected void startObservers(View root) {
-        channelDropdown.setListener(channelDropdownViewModel);
-        channelDropdown.setObservers(channelDropdownViewModel, getViewLifecycleOwner());
-        setupActionDropdownObservers(channelDropdownViewModel, getViewLifecycleOwner());
+        channelDropdown.setListener(channelsViewModel);
+        channelDropdown.setObservers(channelsViewModel, getViewLifecycleOwner());
+        setupActionDropdownObservers(channelsViewModel, getViewLifecycleOwner());
         abstractFormViewModel.getIsEditing().observe(getViewLifecycleOwner(), this::showEdit);
 
     }
 
-    private void setupActionDropdownObservers(ChannelDropdownViewModel viewModel, LifecycleOwner lifecycleOwner) {
+    private void setupActionDropdownObservers(ChannelsViewModel viewModel, LifecycleOwner lifecycleOwner) {
         viewModel.getActiveChannel().observe(lifecycleOwner, channel -> Log.i(TAG, "Got new active channel: " + channel + " " + channel.countryAlpha2));
         viewModel.getChannelActions().observe(lifecycleOwner, actions -> Log.i(TAG, "Got new actions: " + actions.size()));
     }
 
     protected void showEdit(boolean isEditing) {
-        channelDropdownViewModel.setChannelSelected(channelDropdown.getHighlighted());
-        editCard.setVisibility(isEditing ? View.VISIBLE : View.GONE);
+        channelsViewModel.setChannelSelected(channelDropdown.getHighlighted());
+
+        if (editCard != null) editCard.setVisibility(isEditing ? View.VISIBLE : View.GONE);
+        if (editRequestCard != null)
+            editRequestCard.setVisibility(isEditing ? View.VISIBLE : View.GONE);
+
         noworryText.setVisibility(isEditing ? View.VISIBLE : View.GONE);
         summaryCard.setVisibility(isEditing ? View.GONE : View.VISIBLE);
         fab.setText(isEditing ? getString(R.string.btn_continue) : abstractFormViewModel.getType().equals(HoverAction.AIRTIME) ? getString(R.string.fab_airtimenow) : getString(R.string.fab_transfernow));
@@ -97,7 +101,7 @@ public abstract class AbstractFormFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode != Constants.ADD_SERVICE && resultCode == Activity.RESULT_OK) {
             StaxContact staxContact = new StaxContact(data, getContext());
-            if (staxContact.getPhoneNumber() != null) {
+            if (staxContact.accountNumber != null) {
                 Utils.logAnalyticsEvent(getString(R.string.contact_select_success), getContext());
                 onContactSelected(requestCode, staxContact);
             } else {
