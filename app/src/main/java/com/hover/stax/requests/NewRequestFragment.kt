@@ -118,20 +118,16 @@ class NewRequestFragment : AbstractFormFragment(), RecipientAdapter.UpdateListen
 
                 recipientValueList.removeAllViews()
 
-                Timber.e("Contacts $it")
-
                 it.forEach { contact ->
                     val li = Stax2LineItem(requireContext(), null)
                     li.setContact(contact)
                     recipientValueList.addView(li)
                 }
 
-                Timber.e("${it.size} - $recipientCount")
+                if (it.size == recipientCount) return@observe
 
-                if (it.size == recipientCount) recipientAdapter?.notifyDataSetChanged() else {
-                    recipientCount = it.size
-                    recipientAdapter?.update(it)
-                }
+                recipientCount = it.size
+                recipientAdapter?.update(it)
             })
         }
     }
