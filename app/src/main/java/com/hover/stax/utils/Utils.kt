@@ -33,7 +33,7 @@ object Utils : KoinComponent {
     private val mixPanel: MixpanelAPI by inject()
     private const val SHARED_PREFS = "staxprefs"
 
-    fun getSharedPrefs(context: Context): SharedPreferences {
+    private fun getSharedPrefs(context: Context): SharedPreferences {
         return context.getSharedPreferences(getPackage(context) + SHARED_PREFS, Context.MODE_PRIVATE)
     }
 
@@ -129,7 +129,7 @@ object Utils : KoinComponent {
         return getBuildConfigValue(c, "DEBUG") as Boolean
     }
 
-    fun getBuildConfigValue(context: Context, fieldName: String?): Any? {
+    private fun getBuildConfigValue(context: Context, fieldName: String?): Any? {
         try {
             val clazz = Class.forName(getPackage(context) + ".BuildConfig")
             val field = clazz.getField(fieldName)

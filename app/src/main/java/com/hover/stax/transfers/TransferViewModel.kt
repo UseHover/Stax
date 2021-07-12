@@ -15,6 +15,7 @@ import com.hover.stax.schedules.Schedule
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class TransferViewModel(application: Application, repo: DatabaseRepo) : AbstractFormViewModel(application, repo) {
 
@@ -41,12 +42,8 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     fun forceUpdateContactUI() = contact.postValue(contact.value)
 
     fun setRecipient(r: String) {
-        contact.value?.let {
-            if (it.toString() == r)
-                return
-            else
-                contact.postValue(StaxContact(r))
-        }
+        if (contact.value != null && contact.value.toString() == r) return
+        contact.value = StaxContact(r)
     }
 
     fun setRecipientSmartly(r: Request?, channel: Channel) {
@@ -72,6 +69,8 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     }
 
     fun recipientErrors(a: HoverAction?): String? {
+        Timber.e("Action $a: ${a?.requiresRecipient()}")
+        Timber.e("Contact ${contact.value}")
         return if (a != null && a.requiresRecipient() && contact.value == null)
             application.getString(if (a.isPhoneBased) R.string.transfer_error_recipient_phone else R.string.transfer_error_recipient_account)
         else null
@@ -82,7 +81,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
         return request
     }
 
-    fun view(s: Schedule){
+    fun view(s: Schedule) {
         schedule.postValue(s)
         setTransactionType(s.type)
         setAmount(s.amount)
@@ -90,22 +89,22 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
         setNote(s.note)
     }
 
-    fun view(r: Request){
+    fun view(r: Request) {
         setAmount(r.amount)
         setContact(r.requestee_ids)
         setNote(r.note)
     }
 
-    fun checkSchedule(){
+    fun checkSchedule() {
         schedule.value?.let {
-            if(it.end_date <= DateUtils.today()){
+            if (it.end_date <= DateUtils.today()) {
                 it.complete = true
                 repo.update(it)
             }
         }
     }
 
-    fun saveContact(){
+    fun saveContact() {
         contact.value?.let { sc ->
             viewModelScope.launch {
                 sc.lastUsedTimestamp = DateUtils.now()

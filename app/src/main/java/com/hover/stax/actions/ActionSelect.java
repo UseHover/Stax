@@ -62,7 +62,6 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
     }
 
     public void updateActions(List<HoverAction> filteredActions) {
-        Timber.e("Updating to %s", filteredActions);
         this.setVisibility(filteredActions == null || filteredActions.size() <= 0 ? View.GONE : View.VISIBLE);
         if (filteredActions == null || filteredActions.size() <= 0) return;
 
@@ -122,7 +121,6 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
     }
 
     public void selectAction(HoverAction a) {
-        Timber.e("selecting action %s", a);
         highlightedAction = a;
         if (highlightListener != null) highlightListener.highlightAction(a);
     }
