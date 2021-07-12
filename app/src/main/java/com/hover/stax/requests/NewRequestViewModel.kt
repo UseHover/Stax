@@ -43,13 +43,19 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
     }
 
     fun onUpdate(pos: Int, contact: StaxContact) {
-        val cs = if (requestees.value != null) ArrayList<StaxContact>(requestees.value!!) else ArrayList()
+        val cs = arrayListOf<StaxContact>()
+
+        if(!requestees.value.isNullOrEmpty()) cs.addAll(requestees.value!!)
+
+        Timber.e("Contacts $cs")
 
         try {
             cs[pos] = contact
         } catch (e: IndexOutOfBoundsException) {
             cs.add(pos, contact)
         }
+
+        Timber.e("Updated contacts $cs")
 
         requestees.postValue(cs)
     }
@@ -61,6 +67,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
             rList.addAll(requestees.value!!)
 
         rList.add(contact)
+
         requestees.postValue(rList)
     }
 
@@ -92,13 +99,11 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
     }
 
     fun createRequest() {
-        Timber.e("Active channel: ${activeChannel.value}")
         repo.update(activeChannel.value)
         saveContacts()
 
         val request = Request(amount.value, note.value, requesterNumber.value, activeChannel.value!!.institutionId)
         formulatedRequest.value = request
-        Timber.e("Formulated : ${formulatedRequest.value}")
     }
 
     fun saveRequest() {
@@ -107,7 +112,6 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
 
         val requests = ArrayList<Request>()
         requestees.value!!.forEach { recipient ->
-            Timber.e("Formulated request ${formulatedRequest.value}")
             val request = Request(formulatedRequest.value!!, recipient, application)
             requests.add(request)
             repo.insert(request)

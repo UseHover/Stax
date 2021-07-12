@@ -26,6 +26,7 @@ import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxCardView
 import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
+import timber.log.Timber
 
 
 class NewRequestFragment : AbstractFormFragment(), RecipientAdapter.UpdateListener, PushNotificationTopicsInterface {
@@ -113,15 +114,21 @@ class NewRequestFragment : AbstractFormFragment(), RecipientAdapter.UpdateListen
             })
 
             requestees.observe(viewLifecycleOwner, {
-                if (!it.isNullOrEmpty()) {
-                    recipientValueList.removeAllViews()
+                if (it.isNullOrEmpty()) return@observe
 
-                    it.forEach { contact ->
-                        val li = Stax2LineItem(requireContext(), null)
-                        li.setContact(contact)
-                        recipientValueList.addView(li)
-                    }
+                recipientValueList.removeAllViews()
 
+                Timber.e("Contacts $it")
+
+                it.forEach { contact ->
+                    val li = Stax2LineItem(requireContext(), null)
+                    li.setContact(contact)
+                    recipientValueList.addView(li)
+                }
+
+                Timber.e("${it.size} - $recipientCount")
+
+                if (it.size == recipientCount) recipientAdapter?.notifyDataSetChanged() else {
                     recipientCount = it.size
                     recipientAdapter?.update(it)
                 }
@@ -156,7 +163,7 @@ class NewRequestFragment : AbstractFormFragment(), RecipientAdapter.UpdateListen
         }
         noteInput.addTextChangedListener(noteWatcher)
 
-        fab.setOnClickListener(this::fabClicked)
+        fab.setOnClickListener { fabClicked() }
     }
 
     private fun setClickListeners() {
@@ -167,16 +174,17 @@ class NewRequestFragment : AbstractFormFragment(), RecipientAdapter.UpdateListen
     }
 
     override fun onContactSelected(requestCode: Int, contact: StaxContact) {
+        Timber.e("Pulled contact $contact - $requestCode")
         requestViewModel.onUpdate(requestCode, contact)
         recipientAdapter?.notifyDataSetChanged()
     }
 
-    override fun onUpdate(pos: Int, recipient: StaxContact?) {
-        requestViewModel.onUpdate(pos, recipient!!)
+    override fun onUpdate(pos: Int, recipient: StaxContact) {
+        requestViewModel.onUpdate(pos, recipient)
     }
 
-    override fun onClickContact(index: Int, c: Context?) {
-        contactPicker(index, c!!)
+    override fun onClickContact(index: Int, c: Context) {
+        contactPicker(index, c)
     }
 
     private val amountWatcher: TextWatcher = object : TextWatcher {
@@ -203,7 +211,7 @@ class NewRequestFragment : AbstractFormFragment(), RecipientAdapter.UpdateListen
         }
     }
 
-    private fun fabClicked(v: View) {
+    private fun fabClicked() {
         requestViewModel.removeInvalidRequestees()
         if (requestViewModel.isEditing.value!! && validates()) {
             updatePushNotifGroupStatus()

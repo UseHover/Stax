@@ -112,7 +112,7 @@ class BalancesFragment : Fragment(), NavigationInterface {
     }
 
     private fun updateServices(channels: ArrayList<Channel>) {
-        SHOW_ADD_ANOTHER_ACCOUNT = !channels.isNullOrEmpty() && !Channel.hasDummy(channels)
+        SHOW_ADD_ANOTHER_ACCOUNT = !channels.isNullOrEmpty() && !Channel.hasDummy(channels) && channels.size > 1
         addDummyChannelsIfRequired(channels)
 
         val balancesAdapter = BalanceAdapter(channels, activity as MainActivity)
