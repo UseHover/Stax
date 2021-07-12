@@ -66,8 +66,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         if (isAdded() && Utils.isNetworkAvailable(requireActivity())) {
             updateActionConfig();
             updateChannelsWorker();
-        }
-        else showOfflineDialog();
+        } else showOfflineDialog();
     }
 
     private void updateActionConfig() {
@@ -94,7 +93,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         new StaxDialog(requireActivity())
                 .setDialogTitle(R.string.internet_required)
                 .setDialogMessage(R.string.internet_required_bounty_desc)
-                .setPosButton(R.string.try_again, view-> {
+                .setPosButton(R.string.try_again, view -> {
                     forceUserToBeOnline();
                 })
                 .setNegButton(R.string.btn_cancel, view -> {

@@ -84,7 +84,8 @@ public class StaxTransaction {
     @ColumnInfo(name = "counterparty")
     public String counterparty;
 
-    public StaxTransaction() {}
+    public StaxTransaction() {
+    }
 
     public StaxTransaction(Intent data, HoverAction action, StaxContact contact, Context c) {
         if (data.hasExtra(TransactionContract.COLUMN_UUID) && data.getStringExtra(TransactionContract.COLUMN_UUID) != null) {
@@ -154,12 +155,14 @@ public class StaxTransaction {
     }
 
     public String getDisplayAmount() {
-        String a = Utils.formatAmount(amount);
-        if (!transaction_type.equals(HoverAction.RECEIVE))
-            a = "-" + a;
-        else if (isRecorded())
-            return "\\u2014";
-        return a;
+        if (amount != null) {
+            String a = Utils.formatAmount(amount);
+            if (!transaction_type.equals(HoverAction.RECEIVE))
+                a = "-" + a;
+            else if (isRecorded())
+                return "\\u2014";
+            return a;
+        } else return null;
     }
 
     @NotNull
