@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+<androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/radius"
+        android:clipToPadding="true"
+        android:animateLayoutChanges="false"
+        app:cardElevation="@dimen/margin_8"
+        android:layout_margin="@dimen/margin_13">
+
+<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <LinearLayout
+            android:id="@+id/primary_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/banner_permission_primary"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_13">
+
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_13"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+            <TextView
+                    android:id="@+id/banner_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:fontFamily="font-medium"
+                    android:text="@string/banner_permission_title"
+                    android:textColor="@color/banner_text"
+                    android:textSize="@dimen/text_21" />
+
+            <TextView
+                    android:id="@+id/banner_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_3"
+                    android:fontFamily="font-normal"
+                    android:text="@string/banner_permission_desc"
+                    android:textColor="@color/banner_text"
+                    android:textSize="@dimen/text_16" />
+        </LinearLayout>
+
+        <ImageView
+                android:id="@+id/banner_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/stax_banner_img_desc"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/banner_gist" />
+
+
+    </LinearLayout>
+
+    <FrameLayout
+            android:id="@+id/seconday_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/banner_secondary"
+            android:paddingHorizontal="@dimen/margin_13"
+            android:paddingVertical="@dimen/margin_8">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="font-medium"
+                android:id="@+id/cta"
+                android:text="@string/banner_gist_cta"
+                android:textColor="@color/banner_text"
+                android:textSize="@dimen/text_16" />
+
+    </FrameLayout>
+
+</LinearLayout>
+</androidx.cardview.widget.CardView>
+</FrameLayout>
