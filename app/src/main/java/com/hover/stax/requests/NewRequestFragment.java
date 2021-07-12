@@ -2,7 +2,6 @@ package com.hover.stax.requests;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -22,16 +21,16 @@ import com.hover.stax.channels.ChannelsViewModel;
 import com.hover.stax.contacts.ContactInput;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.databinding.FragmentRequestBinding;
-
-import com.hover.stax.transfers.AbstractFormFragment;
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface;
-
+import com.hover.stax.transfers.AbstractFormFragment;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.Stax2LineItem;
 import com.hover.stax.views.StaxCardView;
 import com.hover.stax.views.StaxTextInputLayout;
+
+import timber.log.Timber;
 
 public class NewRequestFragment extends AbstractFormFragment implements RecipientAdapter.UpdateListener, PushNotificationTopicsInterface {
 
@@ -99,11 +98,14 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
             accountValue.setTitle(channel.toString());
         });
 
-
         requestViewModel.getActiveChannel().observe(getViewLifecycleOwner(), this::updateAcctNo);
 
         requestViewModel.getRequestees().observe(getViewLifecycleOwner(), recipients -> {
             if (recipients == null || recipients.size() == 0) return;
+
+            Timber.e("Recipient count %s", recipientCount);
+            Timber.e("Contact count %s", recipients.size());
+
             recipientValueList.removeAllViews();
             for (StaxContact recipient : recipients) {
                 Stax2LineItem ssi2l = new Stax2LineItem(getContext(), null);
@@ -112,6 +114,10 @@ public class NewRequestFragment extends AbstractFormFragment implements Recipien
             }
 
             if (recipients.size() == recipientCount) return;
+
+            Timber.e("Updated recipient count %s", recipientCount);
+            Timber.e("Updated contact count %s", recipients.size());
+
             recipientCount = recipients.size();
             recipientAdapter.update(recipients);
         });
