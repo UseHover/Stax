@@ -15,6 +15,8 @@ import com.hover.stax.contacts.StaxContact;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.RecipientViewHolder> {
     private List<StaxContact> recipients;
     private List<StaxContact> allContacts;
@@ -48,6 +50,7 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
     public void onBindViewHolder(final @NonNull RecipientViewHolder holder, int position) {
         ContactInput ci = (ContactInput) holder.itemView;
         ci.setHint(ci.getContext().getString(R.string.send_request_to));
+
         ci.setRecent(allContacts, ci.getContext());
 
         if (recipients != null && recipients.size() > position && recipients.get(position).accountNumber != null)

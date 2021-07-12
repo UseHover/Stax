@@ -32,7 +32,6 @@ import timber.log.Timber;
 import static com.hover.stax.utils.Constants.size55;
 
 public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedChangeListener, Target {
-    private static String TAG = "ActionSelect";
 
     private StaxDropdownLayout dropdownLayout;
     private AutoCompleteTextView dropdownView;

@@ -15,7 +15,6 @@ import com.hover.stax.schedules.Schedule
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class TransferViewModel(application: Application, repo: DatabaseRepo) : AbstractFormViewModel(application, repo) {
 
@@ -69,8 +68,6 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     }
 
     fun recipientErrors(a: HoverAction?): String? {
-        Timber.e("Action $a: ${a?.requiresRecipient()}")
-        Timber.e("Contact ${contact.value}")
         return if (a != null && a.requiresRecipient() && contact.value == null)
             application.getString(if (a.isPhoneBased) R.string.transfer_error_recipient_phone else R.string.transfer_error_recipient_account)
         else null

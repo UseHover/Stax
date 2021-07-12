@@ -45,7 +45,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
     fun onUpdate(pos: Int, contact: StaxContact) {
         val cs = arrayListOf<StaxContact>()
 
-        if(!requestees.value.isNullOrEmpty()) cs.addAll(requestees.value!!)
+        if (!requestees.value.isNullOrEmpty()) cs.addAll(requestees.value!!)
 
         Timber.e("Contacts $cs")
 
@@ -117,7 +117,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
             repo.insert(request)
         }
 
-        if (!requests.isNullOrEmpty()) finalRequests.postValue(requests)
+        finalRequests.value = if (!requests.isNullOrEmpty()) requests else null
     }
 
     fun removeInvalidRequestees() {
@@ -135,10 +135,12 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
     fun saveContacts() {
         requestees.value?.let { contacts ->
             viewModelScope.launch {
-                contacts.forEach { contact ->
-                    contact.lastUsedTimestamp = DateUtils.now()
-                    repo.save(contact)
-                }
+                contacts.filter { contact -> !contact.accountNumber.isNullOrEmpty() }
+                    .forEach { contact ->
+                        Timber.e("Here saving $contact")
+                        contact.lastUsedTimestamp = DateUtils.now()
+                        repo.save(contact)
+                    }
             }
         }
     }

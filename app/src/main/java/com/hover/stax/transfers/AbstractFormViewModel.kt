@@ -9,7 +9,6 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.utils.Utils
-import timber.log.Timber
 
 abstract class AbstractFormViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel() {
 
@@ -20,8 +19,6 @@ abstract class AbstractFormViewModel(val application: Application, val repo: Dat
     init {
         isEditing.value = true
 
-        Timber.e("Contacts : ${repo.allContacts.value?.size}")
-//
 //        if (!repo.allContacts.value.isNullOrEmpty()) {
             recentContacts = repo.allContacts
 //        }

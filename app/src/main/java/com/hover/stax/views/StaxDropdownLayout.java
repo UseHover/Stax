@@ -15,7 +15,6 @@ import com.hover.stax.R;
 import com.hover.stax.databinding.StaxDropdownBinding;
 
 public class StaxDropdownLayout extends AbstractStatefulInput {
-    private final String TAG = "StaxDropdownLayout";
 
     private String hint, defaultText;
     private boolean editable;
