@@ -53,6 +53,7 @@ public class LibraryActivity extends AbstractNavigationActivity implements Libra
 
 	@Override
 	public void dial(String shortCode) {
+		Amplitude.getInstance().logEvent(getString(R.string.clicked_dial_shortcode));
 		Intent i = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + shortCode.replaceAll("#", Uri.encode("#"))));
 		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(i);
