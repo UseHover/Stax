@@ -11,7 +11,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.amplitude.api.Amplitude;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
@@ -19,6 +18,7 @@ import com.hover.stax.home.MainActivity;
 import com.hover.stax.permissions.PermissionUtils;
 import com.hover.stax.settings.SettingsFragment;
 import com.hover.stax.utils.Constants;
+import com.hover.stax.utils.Utils;
 
 public abstract class AbstractNavigationActivity extends AppCompatActivity implements NavigationInterface {
 
@@ -39,7 +39,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         setBottomBar();
 
         if (getIntent().getBooleanExtra(SettingsFragment.LANG_CHANGE, false))
-            navigate(this, Constants.NAV_SETTINGS);
+            navigate(this, Constants.NAV_SETTINGS, null);
     }
 
     private void setBottomBar() {
@@ -55,7 +55,6 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         }
 
         setNavClickListener(nav);
-        setNavReselectListener(nav);
         setDestinationChangedListener(nav);
     }
 
@@ -70,18 +69,13 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
     }
 
     private void setDestinationChangedListener(BottomNavigationView nav) {
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (controller.getGraph().getId() == R.id.bounty_navigation) {
-                nav.getMenu().findItem(R.id.navigation_settings).setChecked(true);
-            }
-        });
-    }
-
-    // convenience method to prevent fragments from sometimes refiring
-    private void setNavReselectListener(BottomNavigationView nav) {
-        nav.setOnNavigationItemReselectedListener(item -> {
-            //do nothing
-        });
+        if (navController != null) {
+            navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+                if (controller.getGraph().getId() == R.id.bounty_navigation) {
+                    nav.getMenu().findItem(R.id.navigation_settings).setChecked(true);
+                }
+            });
+        }
     }
 
     protected NavController getNavController() {
@@ -93,9 +87,11 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         if (toWhere == Constants.NAV_SETTINGS || toWhere == Constants.NAV_HOME || permissionHelper.hasBasicPerms()) {
             navigate(this, toWhere, getIntent(), false);
         } else {
+            Utils.timeEvent(getString(R.string.perms_basic_requested));
+
             PermissionUtils.showInformativeBasicPermissionDialog(
                     pos -> PermissionUtils.requestPerms(getNavConst(toWhere), AbstractNavigationActivity.this),
-                    neg -> Amplitude.getInstance().logEvent(getString(R.string.perms_basic_cancelled)),
+                    neg -> Utils.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), AbstractNavigationActivity.this),
                     this);
         }
     }
@@ -109,6 +105,8 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
             intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_BALANCE);
         else if (destId == R.id.navigation_settings)
             intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_SETTINGS);
+        else if (destId == R.id.navigation_request)
+            intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_REQUEST);
         else if (destId != R.id.navigation_home) {
             onBackPressed();
             return;
@@ -118,10 +116,11 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
     }
 
     protected int getNavConst(int destId) {
-        if (destId == R.id.navigation_balance) return Constants.NAV_BALANCE;
+        if (destId == R.id.navigation_request) return Constants.NAV_REQUEST;
         else if (destId == R.id.navigation_settings) return Constants.NAV_SETTINGS;
         else if (destId == R.id.navigation_home) return Constants.NAV_HOME;
         else return destId;
+
     }
 
     public void getStartedWithBountyButton(View view) {

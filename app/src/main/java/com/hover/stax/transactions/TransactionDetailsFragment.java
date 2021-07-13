@@ -49,7 +49,7 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
             Utils.logErrorAndReportToFirebase(TAG, e.getMessage(), e);
         }
 
-        Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_transaction)), data);
+        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_transaction)), data, requireContext());
 
         binding = FragmentTransactionBinding.inflate(inflater, container, false);
         return binding.getRoot();
@@ -95,6 +95,7 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
     @SuppressLint("SetTextI18n")
     private void updateDetails(StaxTransaction transaction) {
         binding.transactionDetailsCard.setTitle(transaction.description);
+        binding.detailsRecipientLabel.setText(transaction.transaction_type.equals(HoverAction.RECEIVE) ? R.string.sender_label : R.string.recipient_label);
         binding.detailsAmount.setText(transaction.getDisplayAmount());
         binding.detailsDate.setText(DateUtils.humanFriendlyDate(transaction.initiated_at));
 
@@ -114,7 +115,7 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
 
     private void showActionDetails(HoverAction action) {
         if (action != null) {
-            binding.detailsNetwork.setText(action.network_name);
+            binding.detailsNetwork.setText(action.from_institution_name);
             if (viewModel.getTransaction().getValue() != null && viewModel.getTransaction().getValue().isRecorded())
                 updateNotificationCard(action);
         }

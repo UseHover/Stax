@@ -2,7 +2,6 @@ package com.hover.stax.bounties;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -14,18 +13,21 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import timber.log.Timber;
 
-class BountyAsyncCaller extends AsyncTask<String, Void, Integer> {
+class BountyAsyncCaller extends AsyncTask<String, Void, Map<Integer, String>> {
     private static final String TAG = "BountyAsyncCaller";
 
-    private WeakReference<Context> context;
-    private AsyncResponseListener responseListener;
+    private final WeakReference<Context> context;
+    private final AsyncResponseListener responseListener;
     private final OkHttpClient client = new OkHttpClient();
 
     public BountyAsyncCaller(@NonNull WeakReference<Context> mWeakContext, AsyncResponseListener listener) {
@@ -34,11 +36,11 @@ class BountyAsyncCaller extends AsyncTask<String, Void, Integer> {
     }
 
     public interface AsyncResponseListener {
-        void onComplete(Integer responseCode);
+        void onComplete(Map<Integer, String>  responseMap);
     }
 
     @Override
-    protected Integer doInBackground(String... params) {
+    protected Map<Integer, String> doInBackground(String... params) {
         return uploadBountyUser(getUrl(), getJson(params[0]));
     }
 
@@ -53,13 +55,15 @@ class BountyAsyncCaller extends AsyncTask<String, Void, Integer> {
             stax_bounty_hunter.put("email", email);
             stax_bounty_hunter.put("device_id", Hover.getDeviceId(context.get()));
             root.put("stax_bounty_hunter", stax_bounty_hunter);
-            Log.d(TAG, "uploading " + root);
-        } catch (JSONException e) {
+
+            Timber.d( "uploading %s", root);
+        } catch (JSONException ignored) {
         }
         return root;
     }
 
-    private Integer uploadBountyUser(String url, JSONObject json) {
+    private Map<Integer, String> uploadBountyUser(String url, JSONObject json) {
+        Map<Integer, String> resultMap = new HashMap<>();
         try {
             RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
             Request request = new Request.Builder().url(url)
@@ -67,17 +71,17 @@ class BountyAsyncCaller extends AsyncTask<String, Void, Integer> {
                     .post(body)
                     .build();
             Response response = client.newCall(request).execute();
-            Log.v(TAG, response.toString());
-            return response.code();
+            resultMap.put(response.code(), response.toString());
+            return resultMap;
         } catch (IOException e) {
-            return 0;
+            resultMap.put(0, e.getMessage());
+            return resultMap;
         }
     }
 
     @Override
-    protected void onPostExecute(Integer responseCode) {
-        super.onPostExecute(responseCode);
-        if (responseCode != 0)
-            responseListener.onComplete(responseCode);
+    protected void onPostExecute(Map<Integer, String> responseMap) {
+        super.onPostExecute(responseMap);
+        responseListener.onComplete(responseMap);
     }
 }

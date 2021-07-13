@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.hover.sdk.actions.HoverAction;
+import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.database.DatabaseRepo;
 
@@ -22,11 +23,11 @@ public class TransactionReceiver extends BroadcastReceiver {
     }
 
     private void updateBalance(DatabaseRepo repo, Intent intent) {
-        if (intent.hasExtra("parsed_variables")) {
-            HashMap<String, String> parsed_variables = (HashMap<String, String>) intent.getSerializableExtra("parsed_variables");
+        if (intent.hasExtra(TransactionContract.COLUMN_PARSED_VARIABLES)) {
+            HashMap<String, String> parsed_variables = (HashMap<String, String>) intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES);
             if (parsed_variables != null && parsed_variables.containsKey("balance")) {
                 new Thread(() -> {
-                    HoverAction action = repo.getAction(intent.getStringExtra("action_id"));
+                    HoverAction action = repo.getAction(intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID));
                     Channel channel = repo.getChannel(action.channel_id);
                     channel.updateBalance(parsed_variables);
                     repo.update(channel);
@@ -35,7 +36,7 @@ public class TransactionReceiver extends BroadcastReceiver {
         }
     }
 
-    private void updateTransaction(DatabaseRepo repo, Intent intent, Context c) {
+    private void updateTransaction(DatabaseRepo repo, final Intent intent, Context c) {
         repo.insertOrUpdateTransaction(intent, c);
     }
 }

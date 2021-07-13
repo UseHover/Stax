@@ -90,19 +90,26 @@ public class StaxDialog extends AlertDialog {
     }
 
     public AlertDialog showIt() {
-        dialog = createIt();
+        if (dialog == null) dialog = createIt();
         dialog.show();
         return dialog;
     }
 
-    private View.OnClickListener negListener = view -> {
+    public StaxDialog makeSticky() {
+        if (dialog == null) dialog = createIt();
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        return this;
+    }
+
+    private final View.OnClickListener negListener = view -> {
         if (customNegListener != null)
             customNegListener.onClick(view);
         if (dialog != null)
             dialog.dismiss();
     };
 
-    private View.OnClickListener posListener = view -> {
+    private final View.OnClickListener posListener = view -> {
         if (customPosListener != null)
             customPosListener.onClick(view);
         if (dialog != null)

@@ -32,7 +32,7 @@ public class PermissionsActivity extends AppCompatActivity {
         }
         ft.addToBackStack(null);
 
-        PermissionsFragment newFragment = PermissionsFragment.newInstance(HoverAction.getHumanFriendlyType(this, getIntent() != null ? getIntent().getStringExtra("transaction_type") : null), new PermissionHelper(this).hasOverlayPerm());
+        PermissionsFragment newFragment = PermissionsFragment.newInstance(HoverAction.getHumanFriendlyType(this, getIntent() != null ? getIntent().getStringExtra("transaction_type") : ""), new PermissionHelper(this).hasOverlayPerm());
         newFragment.show(ft, "dialog");
     }
 }

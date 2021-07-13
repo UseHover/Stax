@@ -6,11 +6,14 @@
 	<string name="api_url" translatable="false">https://www.usehover.com/api</string>
 	<string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
 	<string name="bounty_endpoint">/stax_bounty_hunters</string>
-	<string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
+	<string name="stax_market_playstore_link" translatable="false">market://details?id=com.hover.stax</string>
+	<string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
+	<string name="mixpanel_token" translatable="false">82efeb23b6d38509989f592c8f4b21c2</string>
 
 	<string name="nav_home">Home</string>
 	<string name="nav_balance_and_history">Balance and history</string>
 	<string name="nav_balances">Balances</string>
+	<string name="nav_get_paid">Get paid</string>
 	<string name="nav_link_account">Link an account</string>
 	<string name="nav_airtime">Buy Airtime</string>
 	<string name="nav_transfer">Transfer</string>
@@ -63,13 +66,28 @@
 	<string name="link_account">Link account</string>
 	<string name="link_account_error">Choose an account to link.</string>
 	<string name="link_another"><u>+ Link another account</u></string>
+	<string name="add_another_account"><u>+ Add another account</u></string>
 	<string name="hist_cardhead">History</string>
 	<string name="hist_zerobody">You do not have any history yet. Send money or buy airtime to get started.</string>
 	<string name="future_cardhead">Future Transactions</string>
 	<string name="pending_callout">Transaction sent. Waiting for confirmation.</string>
-	<string name="refresh_balance_desc">Refresh balance to see your money</string>
+	<string name="refresh_balance_desc">Refresh your balance</string>
 	<string name="refresh_balances">Refresh balances</string>
+	<string name="refresh">Refresh</string>
 	<string name="refresh_balance_error">Add an account to check your balance.</string>
+
+	<string name="check_balance_title">Check balance</string>
+	<string name="check_balance_desc">Nice! You added your first account. Now you can check your balance on Stax.</string>
+	<string name="later">Later</string>
+	<string name="empty_channels_internet_err">You need internet connection to use this feature on Stax. Please connect and try again.</string>
+	<string name="no_connecion">No connection</string>
+	<string name="your_main_account">Your main account</string>
+	<string name="your_other_account">Your other account</string>
+
+	<!-- ADD ACCOUNT -->
+	<string name="your_accounts">Your accounts</string>
+	<string name="add_an_account">Add an account</string>
+	<string name="add_accounts_to_stax">Add accounts to Stax</string>
 
 	<!-- Permissions -->
 	<string name="permissions_title">Permissions needed</string>
@@ -113,17 +131,9 @@
 
 	<!-- Onboarding showcase -->
 	<string name="onboard_addaccounthead">Add an account to get started.</string>
-	<string name="onboard_addaccountbody">Stax puts all your bank and mobile money accounts in one secure place.</string>
-	<string name="onboard_sechead">World class security</string>
-	<string name="onboard_secbody">We secure Stax with the same technology that locks your device. You unlock Stax the same way you unlock your device.</string>
-	<string name="onboard_peekhead">Keep accounts private</string>
-	<string name="onboard_peekbody">Peek at your balances by dragging the bar to the left.</string>
-	<string name="onboard_balhead">Refresh your accounts</string>
-	<string name="onboard_balbody">Check your account\'s balance by pulling the bar all the way to the left.</string>
-	<string name="onboard_refreshhead">Refresh Stax</string>
-	<string name="onboard_refreshbody">Pull down the whole screen to refresh all of your accounts.</string>
-	<string name="onboard_infohead">Long press for more info</string>
-	<string name="onboard_infobody">Press and hold any element in Stax for more information.</string>
+	<string name="onboard_addaccountdesc">Keep track of your money all in one place. Your funds never leave your account or mix.</string>
+	<string name="onboard_addaccount_greatwork_head">Great work!</string>
+	<string name="onboard_addaccount_greatwork_desc">Now add your other accounts so you can view all your separate balances in one place.</string>
 
 	<!-- Transfer -->
 	<string name="loading_link_dialoghead">Loading, one moment</string>
@@ -150,6 +160,7 @@
 	<string name="note_cardhead">Description</string>
 	<string name="request_note_label">What is your request for?</string>
 	<string name="recipient_label">To</string>
+	<string name="sender_label">From</string>
 	<string name="send_who_header">Send money to</string>
 	<string name="airtime_who_header">Buy airtime for</string>
 	<string name="accounts_label">Pay from</string>
@@ -159,6 +170,7 @@
 	<string name="descrip_airtime_sent">%1$s sent airtime to %2$s</string>
 	<string name="descrip_transfer_sent">%1$s sent money to %2$s</string>
 	<string name="descrip_transfer_received">received money from %1$s</string>
+	<string name="descrip_bill_paid">paid %1$s bill</string>
 	<string name="descrip_recorded">Recorded USSD session on %1$s</string>
 	<string name="fab_transfernow">Send money now</string>
 	<string name="fab_airtimenow">Buy airtime now</string>
@@ -167,6 +179,11 @@
 
 	<!-- Request -->
 	<string name="req_cardhead">Request money</string>
+	<string name="into_account">Into account</string>
+	<string name="put_in">Put in</string>
+	<string name="put_in_desc">This is where you want to receive the requested money</string>
+	<string name="account_num_desc">e.g. your mobile money phone number or bank account number</string>
+	<string name="send_request_to">Send request to</string>
 	<string name="request_amount_label">How much money?</string>
 	<string name="amount_label_opt">Amount (Optional)</string>
 	<string name="reqfrom_label">To</string>
@@ -331,14 +348,14 @@
 	<string name="bounty_uploading_email">Connecting, please wait…</string>
 	<string name="bounty_api_internet_error">Please ensure you have a data internet connection</string>
 	<string name="bounty_api_other_error">Please try again. If this persists, kindly contact us at ussd@stax.me.</string>
-	<string name="bounty_pending_short_desc">We are checking this flow. Expect payment in 1–5 business days.</string>
+	<string name="bounty_pending_short_desc">We are verifying your transaction. If successful, expect to be paid within 7 business days.</string>
 	<string name="done">Done</string>
 	<string name="available_flows">AVAILABLE FLOWS</string>
 	<string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
 	<string name="bounty_claim_explained">To claim USD $%1$d, %2$s.\n\nAs soon as you\’re done, we will send you an email to collect information for payment. You will be paid in 1–5 business days </string>
 	<string name="start_USSD_Flow">Start USSD Flow</string>
 	<string name="checking_your_flow">Checking your flow</string>
-	<string name="bounty_flow_pending_dialog_msg"><![CDATA[Thank you for going through this flow. We sent an email with instructions for payment. We will pay you after we verify and check the flow.<br/><br/>If you don\’t hear from us, email us at <a href="https://ussd@stax.me"> <b><font color=#1878F9> ussd@stax.me </b></a>]]></string>
+	<string name="bounty_flow_pending_dialog_msg"><![CDATA[Thank you for your submission. If the transaction failed, please retry. Once we verify a successful transaction, we will reach out to you for your payment details.<br/><br/>If you have questions, please email us at <a href="https://ussd@stax.me"> <b><font color=#1878F9> ussd@stax.me </b></a>]]></string>
 	<string name="flow_done_title">FLOW DONE</string>
 	<string name="flow_done_desc">We checked the flow and it looks good! You should have an email in your inbox with payment information.</string>
 	<string name="go_through_another_flow">Go through another flow</string>
@@ -350,8 +367,8 @@
 	<string name="country_error_nodata">Please turn on data to load services and countries.</string>
 	<string name="country_with_emoji">%1$s  %2$s </string>
 	<string name="all_countries_with_emoji">🌎 All countries</string>
-	<string name="bounty_sim_err_header">NO %1$s SIM</string>
-	<string name="bounty_sim_err_desc">You need a SIM card from %1$s in your device to map this flow. Please put a SIM card from %1$s in your device and try again.</string>
+	<string name="bounty_sim_err_header">Insert correct SIM</string>x
+	<string name="bounty_sim_err_desc">Please input a SIM card from %1$s in your device and try again.</string>
 	<string name="retry">Retry</string>
 	<string name="submit_flow">Submit flow</string>
 	<string name="bounty_submitted_successfully">Bounty submitted successfully</string>
@@ -361,4 +378,11 @@
 	<string name="library_cardhead">USSD Library</string>
 	<string name="visit_library">Find USSD shortcodes</string>
 	<string name="library_dial_btn">Dial %1$s</string>
+
+	<string name="internet_required">Internet required</string>
+	<string name="internet_required_bounty_desc">You need a data or Wifi connection to map USSD flows. Please connect and try again.</string>
+	<string name="try_again">Try again</string>
+	<string name="edge_case_bounty_email_error">This rarely happens, but if error persists, please close the app and restart.</string>
+	<string name="no_account_selected_error">Please choose at least one account to add to Stax</string>
+
 </resources>

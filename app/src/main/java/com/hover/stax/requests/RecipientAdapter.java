@@ -8,16 +8,19 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hover.stax.R;
 import com.hover.stax.contacts.ContactInput;
 import com.hover.stax.contacts.StaxContact;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.RecipientViewHolder> {
     private List<StaxContact> recipients;
     private List<StaxContact> allContacts;
-    private UpdateListener updateListener;
+    private final UpdateListener updateListener;
 
     RecipientAdapter(List<StaxContact> recips, List<StaxContact> contacts, UpdateListener listener) {
         recipients = recips;
@@ -46,10 +49,11 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
     @Override
     public void onBindViewHolder(final @NonNull RecipientViewHolder holder, int position) {
         ContactInput ci = (ContactInput) holder.itemView;
+        ci.setHint(ci.getContext().getString(R.string.send_request_to));
+
         ci.setRecent(allContacts, ci.getContext());
 
-
-        if (recipients != null && recipients.size() > position && recipients.get(position).getPhoneNumber() != null)
+        if (recipients != null && recipients.size() > position && recipients.get(position).accountNumber != null)
             ci.setText(recipients.get(position).toString(), false);
 
         ci.addTextChangedListener(new TextWatcher() {

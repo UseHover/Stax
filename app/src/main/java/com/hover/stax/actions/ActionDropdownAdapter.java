@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +25,8 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.List;
+
+import timber.log.Timber;
 
 import static com.hover.stax.utils.Constants.size55;
 
@@ -64,7 +65,6 @@ public class ActionDropdownAdapter extends ArrayAdapter<HoverAction> {
         TextView id;
         ImageView logo;
         AppCompatTextView channelText;
-        View divider;
 
         StaxSpinnerItemWithLogoBinding binding;
 
@@ -74,8 +74,6 @@ public class ActionDropdownAdapter extends ArrayAdapter<HoverAction> {
             logo = binding.serviceItemImageId;
             channelText = binding.serviceItemNameId;
             id = binding.serviceItemId;
-            divider = binding.serviceItemDivider;
-            divider.setVisibility(View.GONE);
         }
 
         @SuppressLint("SetTextI18n")
@@ -94,7 +92,7 @@ public class ActionDropdownAdapter extends ArrayAdapter<HoverAction> {
 
         @Override
         public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-            Log.e("LogTag", e.getMessage());
+            Timber.e(e.getLocalizedMessage());
         }
 
         @Override
@@ -110,6 +108,12 @@ public class ActionDropdownAdapter extends ArrayAdapter<HoverAction> {
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    @Nullable
+    @Override
+    public HoverAction getItem(int position) {
+        return actions.isEmpty() ? null : actions.get(position);
     }
 
     @Override

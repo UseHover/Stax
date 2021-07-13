@@ -1,7 +1,5 @@
 package com.hover.stax.channels;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -13,10 +11,17 @@ import com.hover.stax.utils.DateUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+
+import timber.log.Timber;
 
 @Entity(tableName = "channels")
 public class Channel implements Comparable<Channel> {
+
+    final public static int DUMMY = -1;
 
     public Channel() {
     }
@@ -44,9 +49,48 @@ public class Channel implements Comparable<Channel> {
             primaryColorHex = jsonObject.getString("primary_color_hex");
             secondaryColorHex = jsonObject.getString("secondary_color_hex");
         } catch (JSONException e) {
-            Log.d("exception", e.getMessage());
+            Timber.d(e.getLocalizedMessage());
         }
         return this;
+    }
+
+    public Channel dummy(String name, String primaryColor) {
+        id = DUMMY;
+        this.name = name;
+        this.primaryColorHex = primaryColor;
+        this.secondaryColorHex = "#1E232A";
+        currency = "NG";
+        published = true;
+        institutionId = DUMMY;
+        latestBalance = "0";
+        latestBalanceTimestamp = Long.parseLong("-1");
+        return this;
+    }
+
+    public static boolean areAllDummies(List<Channel> channels) {
+        if (channels == null) return true;
+
+        boolean result = true;
+        for (Channel channel : channels) {
+            if (channel.id != DUMMY) {
+                result = false;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public static boolean hasDummy(List<Channel> channels) {
+        if (channels == null) return true;
+
+        boolean result = false;
+        for (Channel channel : channels) {
+            if (channel.id == DUMMY) {
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 
     @PrimaryKey
@@ -124,7 +168,8 @@ public class Channel implements Comparable<Channel> {
     }
 
     public void updateBalance(HashMap<String, String> parsed_variables) {
-        latestBalance = parsed_variables.get("balance");
+        if (parsed_variables.containsKey("balance"))
+            latestBalance = parsed_variables.get("balance");
         if (parsed_variables.containsKey("update_timestamp") && parsed_variables.get("update_timestamp") != null) {
             latestBalanceTimestamp = Long.parseLong(parsed_variables.get("update_timestamp"));
         } else {
@@ -136,6 +181,20 @@ public class Channel implements Comparable<Channel> {
         return name + " - " + rootCode;
     }
 
+    public static List<Channel> sort(List<Channel> channels, boolean showSelected) {
+        ArrayList<Channel> selected_list = new ArrayList<>();
+        ArrayList<Channel> sorted_list = new ArrayList<>();
+        for (Channel c : channels) {
+            if (c.selected) selected_list.add(c);
+            else sorted_list.add(c);
+        }
+        Collections.sort(selected_list);
+        Collections.sort(sorted_list);
+        if (showSelected)
+            sorted_list.addAll(0, selected_list);
+        return sorted_list;
+    }
+
     @Override
     public String toString() {
         return name + " " + countryAlpha2;
@@ -144,5 +203,12 @@ public class Channel implements Comparable<Channel> {
     @Override
     public int compareTo(Channel cOther) {
         return this.toString().compareTo(cOther.toString());
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Channel)) return false;
+        Channel c = (Channel) other;
+        return id == c.id;
     }
 }

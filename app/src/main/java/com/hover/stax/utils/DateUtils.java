@@ -26,6 +26,8 @@ public class DateUtils {
     }
 
     public static String humanFriendlyDate(long timestamp) {
+        if(timestamp == -1) return "";
+
         Calendar now = Calendar.getInstance();
         now.setTimeInMillis(now());
         Calendar date = Calendar.getInstance();

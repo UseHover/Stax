@@ -10,18 +10,19 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.databinding.FragmentBountyEmailBinding;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.AbstractStatefulInput;
+import com.hover.stax.views.StaxDialog;
 import com.hover.stax.views.StaxTextInputLayout;
 
 import java.lang.ref.WeakReference;
+import java.util.Map;
 
 public class BountyEmailFragment extends Fragment implements NavigationInterface, View.OnClickListener, BountyAsyncCaller.AsyncResponseListener {
-
+    private static final String TAG = "BountyEmailFragment";
     private StaxTextInputLayout emailInput;
     private FragmentBountyEmailBinding binding;
 
@@ -48,14 +49,34 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
 
     @Override
     public void onClick(View v) {
-        Amplitude.getInstance().logEvent(getString(R.string.clicked_bounty_email_continue_btn));
-        if (validates()) {
-            emailInput.setEnabled(false);
-            new BountyAsyncCaller(new WeakReference<>(getContext()), this).execute(emailInput.getText());
-            emailInput.setState(getString(R.string.bounty_uploading_email), AbstractStatefulInput.INFO);
+        if (Utils.isNetworkAvailable(requireActivity())) {
+            Utils.logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext());
+            if (validates()) {
+                emailInput.setEnabled(false);
+                new BountyAsyncCaller(new WeakReference<>(requireContext()), this).execute(emailInput.getText());
+                emailInput.setState(getString(R.string.bounty_uploading_email), AbstractStatefulInput.INFO);
+            } else {
+                emailInput.setState(getString(R.string.bounty_email_error), AbstractStatefulInput.ERROR);
+            }
         } else {
-            emailInput.setState(getString(R.string.bounty_email_error), AbstractStatefulInput.ERROR);
+            showOfflineDialog();
         }
+    }
+
+    private void showOfflineDialog() {
+        new StaxDialog(requireActivity())
+                .setDialogTitle(R.string.internet_required)
+                .setDialogMessage(R.string.internet_required_bounty_desc)
+                .setPosButton(R.string.btn_ok, null)
+                .makeSticky()
+                .showIt();
+    }
+
+    private void showEdgeCaseErrorDialog() {
+        new StaxDialog(requireActivity())
+                .setDialogMessage(getString(R.string.edge_case_bounty_email_error))
+                .setPosButton(R.string.btn_ok, null)
+                .showIt();
     }
 
     private boolean validates() {
@@ -65,22 +86,27 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
     }
 
     @Override
-    public void onComplete(Integer responseCode) {
+    public void onComplete(Map<Integer, String>  responseMap) {
+        Map.Entry<Integer,String> entry = responseMap.entrySet().iterator().next();
+        int responseCode = entry.getKey();
+        String message = entry.getValue();
         if (responseCode >= 200 && responseCode < 300)
-            saveAndContinue();
+           saveAndContinue();
         else {
-            setEmailError();
+            Utils.logErrorAndReportToFirebase(TAG, message, null);
+            if(isAdded() && Utils.isNetworkAvailable(requireActivity())) showEdgeCaseErrorDialog();
+            else setEmailError();
         }
     }
 
     private void setEmailError() {
-        Amplitude.getInstance().logEvent(getString(R.string.bounty_email_err, getString(R.string.bounty_api_internet_error)));
+        Utils.logAnalyticsEvent(getString(R.string.bounty_email_err, getString(R.string.bounty_api_internet_error)), requireContext());
         emailInput.setEnabled(true);
         emailInput.setState(getString(R.string.bounty_api_internet_error), AbstractStatefulInput.ERROR);
     }
 
     private void saveAndContinue() {
-        Amplitude.getInstance().logEvent(getString(R.string.bounty_email_success));
+        Utils.logAnalyticsEvent(getString(R.string.bounty_email_success), requireContext());
         Utils.saveString(BountyActivity.EMAIL_KEY, emailInput.getText(), getContext());
         NavHostFragment.findNavController(this).navigate(R.id.bountyListFragment);
     }
@@ -88,7 +114,6 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
         binding = null;
     }
 }

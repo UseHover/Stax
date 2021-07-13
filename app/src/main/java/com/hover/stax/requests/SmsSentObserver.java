@@ -7,13 +7,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.telephony.PhoneNumberUtils;
-import android.util.Log;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.contacts.StaxContact;
 
 import java.util.List;
+
+import timber.log.Timber;
 
 class SmsSentObserver extends ContentObserver {
     private static final String TAG = "SmsSentObserver";
@@ -64,7 +65,7 @@ class SmsSentObserver extends ContentObserver {
                 final String address = cursor.getString(cursor.getColumnIndex(COLUMN_ADDRESS));
                 final int type = cursor.getInt(cursor.getColumnIndex(COLUMN_TYPE));
                 for (StaxContact c : recipients) {
-                    if (PhoneNumberUtils.compare(address, c.getPhoneNumber()) && type == MESSAGE_TYPE_SENT) {
+                    if (PhoneNumberUtils.compare(address, c.accountNumber) && type == MESSAGE_TYPE_SENT) {
                         wasSent = true;
                         callBack();
                         Amplitude.getInstance().logEvent(successMsg);
@@ -73,7 +74,7 @@ class SmsSentObserver extends ContentObserver {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, "FAILURE", e);
+            Timber.e(e, "FAILURE");
         }
     }
 

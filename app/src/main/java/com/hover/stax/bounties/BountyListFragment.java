@@ -10,12 +10,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.WorkManager;
 
-import com.amplitude.api.Amplitude;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.countries.CountryAdapter;
 import com.hover.stax.databinding.FragmentBountyListBinding;
 import com.hover.stax.navigation.NavigationInterface;
@@ -23,6 +26,7 @@ import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxDialog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
@@ -37,7 +41,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Amplitude.getInstance().logEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_list)));
+        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_list)), requireContext());
         bountyViewModel = new ViewModelProvider(this).get(BountyViewModel.class);
 
         binding = FragmentBountyListBinding.inflate(inflater, container, false);
@@ -50,6 +54,53 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         initCountryDropdown();
         initRecyclerView();
         startObservers();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        forceUserToBeOnline();
+    }
+
+    private void forceUserToBeOnline() {
+        if (isAdded() && Utils.isNetworkAvailable(requireActivity())) {
+            updateActionConfig();
+            updateChannelsWorker();
+        } else showOfflineDialog();
+    }
+
+    private void updateActionConfig() {
+        Hover.updateActionConfigs(new Hover.DownloadListener() {
+            @Override
+            public void onError(String s) {
+                forceUserToBeOnline();
+            }
+
+            @Override
+            public void onSuccess(ArrayList<HoverAction> arrayList) {
+
+            }
+        }, requireContext());
+    }
+
+    private void updateChannelsWorker() {
+        WorkManager wm = WorkManager.getInstance(requireContext());
+        wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.REPLACE, UpdateChannelsWorker.makeWork()).enqueue();
+        wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.REPLACE, UpdateChannelsWorker.makeToil());
+    }
+
+    private void showOfflineDialog() {
+        new StaxDialog(requireActivity())
+                .setDialogTitle(R.string.internet_required)
+                .setDialogMessage(R.string.internet_required_bounty_desc)
+                .setPosButton(R.string.try_again, view -> {
+                    forceUserToBeOnline();
+                })
+                .setNegButton(R.string.btn_cancel, view -> {
+                    requireActivity().finish();
+                })
+                .makeSticky()
+                .showIt();
     }
 
     public void initCountryDropdown() {
@@ -112,7 +163,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     void retrySimMatch(Bounty b) {
         bountyViewModel.getSims().removeObservers(getViewLifecycleOwner());
         bountyViewModel.getSims().observe(getViewLifecycleOwner(), sims -> viewBountyDetail(b));
-        Hover.updateSimInfo(getContext());
+        Hover.updateSimInfo(requireActivity());
     }
 
     @Override
