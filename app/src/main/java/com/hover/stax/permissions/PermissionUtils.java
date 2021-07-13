@@ -27,6 +27,7 @@ public class PermissionUtils {
         ph.requestBasicPerms(a, requestCode);
     }
 
+
     public static boolean has(String[] permissions, Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
             for (String permission : permissions) {

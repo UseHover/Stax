@@ -57,12 +57,20 @@ public class Utils {
 		editor.commit();
 	}
 
+
 	public static String getString(String key, Context c) { return getSharedPrefs(c).getString(key, ""); }
 	public static boolean getBoolean(String key, Context c) { return getSharedPrefs(c).getBoolean(key, false); }
+	public static int getInt(String key, Context c) {return getSharedPrefs(c).getInt(key, 0);}
+	public static long getLong(String key, Context c) {return getSharedPrefs(c).getLong(key, 0);}
 
 	public static void saveInt(String key, int value, Context c) {
 		SharedPreferences.Editor editor = getSharedPrefs(c).edit();
 		editor.putInt(key, value);
+		editor.apply();
+	}
+	public static void saveLong(String key, long value, Context c) {
+		SharedPreferences.Editor editor = getSharedPrefs(c).edit();
+		editor.putLong(key, value);
 		editor.apply();
 	}
 
@@ -243,6 +251,10 @@ public class Utils {
 		i.setData(Uri.parse(url));
 		ctx.startActivity(i);
 	}
+	public static void openUrl(int urlRes, Context ctx) {
+		openUrl(ctx.getResources().getString(urlRes), ctx);
+	}
+
 
 	public static void openStaxPlaystorePage(Activity activity) {
 		Uri link = Uri.parse(activity.getBaseContext().getString(R.string.stax_market_playstore_link));

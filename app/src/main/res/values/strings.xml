@@ -380,17 +380,17 @@
 	<!-- IN-APP BANNERS -->
 	<string name="banner_permission_title">SIM, SMS, Accessibility &amp; Overlay</string>
 	<string name="banner_permission_desc">Why does Stax ask for these permissions?</string>
-	<string name="banner_permission_cta">Tap here to find out</string>
+	<string name="banner_permission_cta"><u>Tap here to find out</u></string>
 	<string name="banner_roundupnews_title">Catch up on the latest Stax Monthly Roundup</string>
-	<string name="banner_roundupnews_cta">Tap to read now</string>
+	<string name="banner_roundupnews_cta"><u>Tap to read now</u></string>
 	<string name="banner_gist_title">Want exclusive Stax gist?</string>
-	<string name="banner_gist_cta">Subscribe to our mailing list now</string>
+	<string name="banner_gist_cta"><u>Subscribe to our mailing list now</u></string>
 	<string name="banner_upvote_title">Build with us! Add/upvote a feature request or report a bug.</string>
-	<string name="banner_upvote_cta">Give feedback now</string>
+	<string name="banner_upvote_cta"><u>Give feedback now</u></string>
 	<string name="stax_banner_img_desc">Stax banner icon</string>
 
-	<string name="banner_permission_url"></string>
-	<string name="banner_roundupnews_url"></string>
-	<string name="banner_gist_url"></string>
-	<string name="banner_upvoteurl"></string>
+	<string name="banner_permission_url">https://joinstax.medium.com/phone-permissions-on-stax-a0ec82533570</string>
+	<string name="banner_roundupnews_url">https://joinstax.medium.com/</string>
+	<string name="banner_gist_url">https://stax.me</string>
+	<string name="banner_upvoteurl">https://stax.nolt.io/</string>
 </resources>
