@@ -28,7 +28,7 @@ private constructor(val id: Int,
                    R.color.banner_permission_primary,
                    R.color.banner_secondary,
                    R.string.banner_permission_url,
-                   2 )
+                   3 )
        }
 
        fun roundupNews() : Banner {
@@ -41,7 +41,7 @@ private constructor(val id: Int,
                    R.color.offWhite,
                    R.color.banner_secondary,
                    R.string.banner_roundupnews_url,
-                   1
+                   2
                 )
        }
 
@@ -55,7 +55,7 @@ private constructor(val id: Int,
                    R.color.banner_gist_primary,
                    R.color.banner_secondary,
                    R.string.banner_gist_url,
-                   0
+                   1
            )
        }
 
@@ -69,7 +69,7 @@ private constructor(val id: Int,
                    R.color.banner_secondary,
                    R.color.offWhite,
                    R.string.banner_upvoteurl,
-                   0
+                   1
            )
        }
 

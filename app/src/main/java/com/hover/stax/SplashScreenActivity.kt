@@ -87,10 +87,10 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         FirebaseInstallations.getInstance().id.addOnCompleteListener { Timber.i("Firebase installation ID is ${it.result}") }
 
         initRemoteConfigs()
-        updateSessionCounter()
+        updateBannerSessionCounter()
     }
 
-    private fun updateSessionCounter() {
+    private fun updateBannerSessionCounter() {
         val currentCount: Int = Utils.getInt(BannerUtils.APP_SESSIONS, this)
         if(currentCount < 5) Utils.saveInt(BannerUtils.APP_SESSIONS, currentCount + 1, this)
     }
