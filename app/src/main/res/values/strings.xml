@@ -79,7 +79,6 @@
 	<string name="check_balance_title">Check balance</string>
 	<string name="check_balance_desc">Nice! You added your first account. Now you can check your balance on Stax.</string>
 	<string name="later">Later</string>
-	<string name="empty_channels_internet_err">You need internet connection to use this feature on Stax. Please connect and try again.</string>
 	<string name="no_connecion">No connection</string>
 	<string name="your_main_account">Your main account</string>
 	<string name="your_other_account">Your other account</string>

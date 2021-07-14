@@ -98,6 +98,10 @@ public class DatabaseRepo {
         AppDatabase.databaseWriteExecutor.execute(() -> channelDao.update(channel));
     }
 
+    public void updateAll(List<Channel> channels) {
+        AppDatabase.databaseWriteExecutor.execute(() -> channelDao.updateAll(channels));
+    }
+
     // SIMs
     public List<SimInfo> getPresentSims() {
         return simDao.getPresent();
