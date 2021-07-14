@@ -17,7 +17,6 @@ import com.hover.stax.contacts.ContactDao;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.AppDatabase;
 import com.hover.stax.requests.RequestActivity;
-import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.Constants;
 
 import java.util.List;

@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.amplitude.api.Amplitude;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.transactions.Transaction;
 import com.hover.sdk.transactions.TransactionContract;
@@ -26,7 +25,6 @@ import com.hover.stax.databinding.FragmentTransactionBinding;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
-import com.hover.stax.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;

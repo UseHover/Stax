@@ -14,9 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.appsflyer.AppsFlyerLib;
 import com.hover.stax.R;
 import com.hover.stax.databinding.ActivityLanguageBinding;
-import com.hover.stax.home.MainActivity;
 import com.hover.stax.settings.SettingsFragment;
-import com.hover.stax.utils.Utils;
 import com.yariksoffice.lingver.Lingver;
 
 import java.util.List;

@@ -3,7 +3,6 @@ package com.hover.stax.languages;
 import android.content.Context;
 
 import com.hover.stax.R;
-import com.hover.stax.utils.Utils;
 import com.yariksoffice.lingver.Lingver;
 
 import org.jetbrains.annotations.NotNull;

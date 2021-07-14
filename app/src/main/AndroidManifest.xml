@@ -51,75 +51,6 @@
         </activity>
 
         <activity
-                android:name=".home.MainActivity"
-                android:label="@string/app_name"
-                android:theme="@style/StaxTheme">
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_sendmoney"
-                        android:scheme="https" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_sendmoney"
-                        android:scheme="http" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_airtime"
-                        android:scheme="https" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_airtime"
-                        android:scheme="http" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_balance"
-                        android:scheme="https" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_balance"
-                        android:scheme="http" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_settings"
-                        android:scheme="https" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_settings"
-                        android:scheme="http" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_linkaccount"
-                        android:scheme="https" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_linkaccount"
-                        android:scheme="http" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_history"
-                        android:scheme="https" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_history"
-                        android:scheme="http" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_reviews"
-                        android:scheme="https" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_reviews"
-                        android:scheme="http" />
-            </intent-filter>
-        </activity>
-
-        <activity
                 android:name=".languages.SelectLanguageActivity"
                 android:label="@string/language">
             <intent-filter>
@@ -143,11 +74,6 @@
                 android:name=".permissions.PermissionsActivity"
                 android:launchMode="singleTask"
                 android:theme="@style/StaxTheme" />
-
-        <activity
-                android:name=".transfers.TransferActivity"
-                android:theme="@style/StaxTheme"
-                android:windowSoftInputMode="stateVisible|adjustResize"/>
 
         <activity
                 android:name=".requests.RequestActivity"

@@ -43,11 +43,12 @@ android {
         minSdkVersion 18
         targetSdkVersion 30
         versionCode 65
-        versionName "1.4.3"
+        versionName "1.5.0"
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -78,6 +79,17 @@ android {
             }
         }
     }
+
+    //flavorDimensions 'store_type'
+    //productFlavors {
+        //playstore {
+          //  dimension "store_type"
+        //}
+        //transsion {
+          //  dimension "store_type"
+        //    versionNameSuffix "-transsion"
+      //  }
+    //}
 
     bundle {
         language {
@@ -159,6 +171,7 @@ dependencies {
 
     // Hover SDK
     debugImplementation project(":hover.sdk")
+
     def sdk_version = "2.0.0-stax-1.5.0-pro"
 
     releaseImplementation "com.hover:android-sdk:$sdk_version"

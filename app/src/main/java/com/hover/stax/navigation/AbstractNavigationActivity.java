@@ -14,11 +14,9 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
-import com.hover.stax.home.MainActivity;
 import com.hover.stax.permissions.PermissionUtils;
 import com.hover.stax.settings.SettingsFragment;
 import com.hover.stax.utils.Constants;
-import com.hover.stax.utils.Utils;
 
 public abstract class AbstractNavigationActivity extends AppCompatActivity implements NavigationInterface {
 

@@ -13,7 +13,6 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.PhoneHelper;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.DateUtils;
-import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.paymentLinkCryptography.Base64;
 import com.hover.stax.utils.paymentLinkCryptography.Encryption;
 import com.yariksoffice.lingver.Lingver;

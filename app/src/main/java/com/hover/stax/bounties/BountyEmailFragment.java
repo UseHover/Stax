@@ -13,7 +13,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.hover.stax.R;
 import com.hover.stax.databinding.FragmentBountyEmailBinding;
 import com.hover.stax.navigation.NavigationInterface;
-import com.hover.stax.utils.Utils;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDialog;
 import com.hover.stax.views.StaxTextInputLayout;
@@ -86,15 +85,17 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
     }
 
     @Override
-    public void onComplete(Map<Integer, String>  responseMap) {
-        Map.Entry<Integer,String> entry = responseMap.entrySet().iterator().next();
+    public void onComplete(Map<Integer, String> responseMap) {
+        Map.Entry<Integer, String> entry = responseMap.entrySet().iterator().next();
         int responseCode = entry.getKey();
         String message = entry.getValue();
         if (responseCode >= 200 && responseCode < 300)
-           saveAndContinue();
+            saveAndContinue();
         else {
             Utils.logErrorAndReportToFirebase(TAG, message, null);
+
             if(isAdded() && Utils.isNetworkAvailable(requireActivity())) showEdgeCaseErrorDialog();
+
             else setEmailError();
         }
     }
