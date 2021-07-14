@@ -126,9 +126,6 @@ class NewRequestFragment : AbstractFormFragment(), RecipientAdapter.UpdateListen
                     li.setContact(contact)
                     recipientValueList.addView(li)
                 }
-                recipientValueList.invalidate()
-
-                if (it.size == recipientCount) return@observe
 
                 Timber.e("Updated recipient count %s", recipientCount)
                 Timber.e("Updated contact count %s", it.size)
@@ -183,6 +180,7 @@ class NewRequestFragment : AbstractFormFragment(), RecipientAdapter.UpdateListen
 
     override fun onUpdate(pos: Int, recipient: StaxContact) {
         requestViewModel.onUpdate(pos, recipient)
+        recipientAdapter?.notifyDataSetChanged()
     }
 
     override fun onClickContact(index: Int, c: Context) {

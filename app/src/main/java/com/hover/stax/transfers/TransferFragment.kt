@@ -137,7 +137,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         }
 
         contactInput.apply {
-            setOnItemClickListener { view, _, position, _ ->
+            setAutocompleteClickListener { view, _, position, _ ->
                 val contact = view.getItemAtPosition(position) as StaxContact
                 transferViewModel.setContact(contact)
             }

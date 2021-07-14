@@ -43,17 +43,14 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
     }
 
     fun onUpdate(pos: Int, contact: StaxContact) {
-        val cs = arrayListOf<StaxContact>()
-
-        if (!requestees.value.isNullOrEmpty()) cs.addAll(requestees.value!!)
-
-        try {
-            cs[pos] = contact
-        } catch (e: IndexOutOfBoundsException) {
-            cs.add(pos, contact)
+        val rList = arrayListOf<StaxContact>()
+        requestees.value!!.forEachIndexed { i, recipient ->
+            if (i == pos)
+                rList.add(contact)
+            else
+                rList.add(recipient)
         }
-
-        requestees.postValue(cs)
+        requestees.postValue(rList)
     }
 
     fun addRecipient(contact: StaxContact) {

@@ -63,7 +63,7 @@ public class ContactInput extends LinearLayout {
         contactInputLayout.setHint(hint);
     }
 
-    public void setOnItemClickListener(AdapterView.OnItemClickListener listener) {
+    public void setAutocompleteClickListener(AdapterView.OnItemClickListener listener) {
         contactAutocomplete.setOnItemClickListener(listener);
     }
 
