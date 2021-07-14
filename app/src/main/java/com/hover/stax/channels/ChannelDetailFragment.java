@@ -96,6 +96,7 @@ public class ChannelDetailFragment extends Fragment implements
         requestsAdapter = new RequestsAdapter(null, this);
         rv.setAdapter(requestsAdapter);
     }
+
     private void setUpFuture(Channel channel) {
         futureViewModel.getScheduledByChannel(channel.id).observe(getViewLifecycleOwner(), schedules -> {
             scheduledAdapter.updateData(schedules);

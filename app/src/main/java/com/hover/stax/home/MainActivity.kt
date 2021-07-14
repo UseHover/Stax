@@ -57,15 +57,15 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         with(balancesViewModel) {
             setListener(this@MainActivity)
 
-            //This is to prevent the SAM constructor from being compiled to singleton and causing problems. See
+            //This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
             //https://stackoverflow.com/a/54939860/2371515
-            val observer = object : Observer<List<Channel>> {
+            val channelsObserver = object : Observer<List<Channel>> {
                 override fun onChanged(t: List<Channel>?) {
-                    Timber.tag(MainActivity::class.simpleName).i("Observing selected channels ${t?.size}")
+                    logResult("Observing selected channels", t?.size ?: 0)
                 }
             }
 
-            selectedChannels.observe(this@MainActivity, observer)
+            selectedChannels.observe(this@MainActivity, channelsObserver)
             toRun.observe(this@MainActivity, { logResult("Observing action to run", it.size) })
             runFlag.observe(this@MainActivity, { logResult("Observing run flag ", it) })
             actions.observe(this@MainActivity, { logResult("Observing actions", it.size) })

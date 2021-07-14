@@ -161,10 +161,11 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
             setConfigSettingsAsync(configSettings)
             setDefaultsAsync(R.xml.remote_config_default)
             fetchAndActivate().addOnCompleteListener {
-                if (it.isSuccessful)
+                if (it.isSuccessful) {
                     Timber.i("Config params updated: ${it.result}")
-
-                Utils.variant = remoteConfig.getString("onboarding_app_variant")
+                    Utils.variant = remoteConfig.getString("onboarding_app_variant")
+                } else
+                    Utils.variant = Constants.VARIANT_1
 
                 if (!selfDestructWhenAppVersionExpires())
                     validateUser()
