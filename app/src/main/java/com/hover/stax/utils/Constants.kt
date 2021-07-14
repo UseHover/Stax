@@ -23,6 +23,7 @@ object Constants {
 
     const val size55 = 55
 
+    const val TEST_MODE = "test_mode"
     const val LANGUAGE_CHECK = "Language"
     const val PERM_ACTIVITY = "com.hover.stax.permissions.PermissionsActivity"
     const val TRANSFERRED = "TRANSFERRED"
