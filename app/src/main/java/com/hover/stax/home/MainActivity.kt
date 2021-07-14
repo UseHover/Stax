@@ -154,7 +154,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
 
     override fun onTapRefresh(channelId: Int) {
         if (channelId == Channel.DUMMY)
-            navigateToChannelsListFragment(getNavController(), false)
+            checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT)
         else {
             Utils.logAnalyticsEvent(getString(R.string.refresh_balance_single), this)
             balancesViewModel.setRunning(channelId)
