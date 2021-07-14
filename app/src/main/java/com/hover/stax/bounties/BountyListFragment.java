@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -38,6 +39,8 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     private BountyViewModel bountyViewModel;
     private FragmentBountyListBinding binding;
 
+    private StaxDialog dialog;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -54,6 +57,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         initCountryDropdown();
         initRecyclerView();
         startObservers();
+        handleBackPress();
     }
 
     @Override
@@ -124,7 +128,9 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     }
 
     private void updateChannelList(List<Channel> channels, List<Bounty> bounties) {
-        if (bounties != null && bounties.size() > 0 && channels != null && channels.size() > 0 && (bountyViewModel.country.equals(CountryAdapter.codeRepresentingAllCountries()) || channels.get(0).countryAlpha2.equals(bountyViewModel.country))) {
+        if (bounties != null && !bounties.isEmpty() && channels != null && !channels.isEmpty()
+                && (bountyViewModel.country.equals(CountryAdapter.codeRepresentingAllCountries())
+                || channels.get(0).countryAlpha2.equals(bountyViewModel.country))) {
             BountyChannelsAdapter adapter = new BountyChannelsAdapter(channels, bounties, this);
             binding.bountiesRecyclerView.setAdapter(adapter);
         }
@@ -143,21 +149,21 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 
     void showSimErrorDialog(Bounty b) {
         Timber.e("showing sim error dialog %s", b.action.root_code);
-        new StaxDialog(requireActivity())
+        dialog = new StaxDialog(requireActivity())
                 .setDialogTitle(getString(R.string.bounty_sim_err_header))
                 .setDialogMessage(getString(R.string.bounty_sim_err_desc, b.action.network_name))
                 .setNegButton(R.string.btn_cancel, null)
-                .setPosButton(R.string.retry, v -> retrySimMatch(b))
-                .showIt();
+                .setPosButton(R.string.retry, v -> retrySimMatch(b));
+        dialog.showIt();
     }
 
     void showBountyDescDialog(Bounty b) {
         Timber.e("showing dialog %s", b.action);
-        new StaxDialog(requireActivity())
-                .setDialogTitle(getString(R.string.bounty_claim_title, b.action.root_code, HoverAction.getHumanFriendlyType(getContext(), b.action.transaction_type), b.action.bounty_amount))
+        dialog = new StaxDialog(requireActivity())
+                .setDialogTitle(getString(R.string.bounty_claim_title, b.action.root_code, HoverAction.getHumanFriendlyType(requireContext(), b.action.transaction_type), b.action.bounty_amount))
                 .setDialogMessage(getString(R.string.bounty_claim_explained, b.action.bounty_amount, b.getInstructions(getContext())))
-                .setPosButton(R.string.start_USSD_Flow, v -> ((BountyActivity) requireActivity()).makeCall(b.action))
-                .showIt();
+                .setPosButton(R.string.start_USSD_Flow, v -> ((BountyActivity) requireActivity()).makeCall(b.action));
+        dialog.showIt();
     }
 
     void retrySimMatch(Bounty b) {
@@ -172,10 +178,23 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
                 updateChannelList(channels, bountyViewModel.getBounties().getValue()));
     }
 
+    private void handleBackPress(){
+        getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if(dialog != null && dialog.isShowing()){
+                    dialog.dismiss();
+                } else
+                    getActivity().onBackPressed();
+            }
+        });
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
 
+        if (dialog != null && dialog.isShowing()) dialog.dismiss();
         binding = null;
     }
 }

@@ -33,6 +33,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
     private var tracker: SelectionTracker<Long>? = null
     private var multiSelectAdapter: ChannelsMultiSelectAdapter? = null
+    private var dialog: StaxDialog? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentChannelsListBinding.inflate(inflater, container, false)
@@ -77,24 +78,24 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
     private fun onSimsLoaded(channels: List<Channel>) {
         if (!channels.isNullOrEmpty()) {
-            val channels = Channel.sort(channels, false)
+            val sortedList = Channel.sort(channels, false)
             binding.errorText.visibility = GONE
 
             when (Utils.variant) {
-                Constants.VARIANT_1 -> initSingleSelectList(channels)
-                Constants.VARIANT_2, Constants.VARIANT_3 -> initMultiSelectList(channels)
+                Constants.VARIANT_1 -> initSingleSelectList(sortedList)
+                Constants.VARIANT_2, Constants.VARIANT_3 -> initMultiSelectList(sortedList)
             }
         }
     }
 
     private fun onAllLoaded(channels: List<Channel>) {
         if (!channels.isNullOrEmpty() && binding.channelsList.adapter == null) {
-            val channels = Channel.sort(channels, false)
+            val sortedList = Channel.sort(channels, false)
             binding.errorText.visibility = VISIBLE
             binding.errorText.text = getString(R.string.channels_error_nosim)
             when (Utils.variant) {
-                Constants.VARIANT_1 -> initSingleSelectList(channels)
-                Constants.VARIANT_2, Constants.VARIANT_3 -> initMultiSelectList(channels)
+                Constants.VARIANT_1 -> initSingleSelectList(sortedList)
+                Constants.VARIANT_2, Constants.VARIANT_3 -> initMultiSelectList(sortedList)
             }
         } else
             binding.errorText.apply {
@@ -146,12 +147,12 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     }
 
     private fun showCheckBalanceDialog(channel: Channel) {
-        StaxDialog(requireActivity())
+        dialog = StaxDialog(requireActivity())
             .setDialogTitle(R.string.check_balance_title)
             .setDialogMessage(R.string.check_balance_desc)
             .setNegButton(R.string.later) { saveChannels(listOf(channel), false) }
             .setPosButton(R.string.check_balance_title) { saveChannels(listOf(channel), true) }
-            .showIt()
+        dialog!!.showIt()
     }
 
     private fun saveChannels(channels: List<Channel>, checkBalance: Boolean) {
@@ -181,6 +182,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     override fun onDestroyView() {
         super.onDestroyView()
 
+        dialog?.let { if (it.isShowing) it.dismiss() }
         _binding = null
     }
 
