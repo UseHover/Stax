@@ -1,7 +1,6 @@
 package com.hover.stax.bounties;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,8 +32,6 @@ import java.util.List;
 import timber.log.Timber;
 
 public class BountyListFragment extends Fragment implements NavigationInterface, BountyListItem.SelectListener, CountryAdapter.SelectListener {
-
-    private static final String TAG = "BountyListFragment";
 
     private BountyViewModel bountyViewModel;
     private FragmentBountyListBinding binding;
@@ -94,7 +91,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     }
 
     private void showOfflineDialog() {
-        new StaxDialog(requireActivity())
+        dialog = new StaxDialog(requireActivity())
                 .setDialogTitle(R.string.internet_required)
                 .setDialogMessage(R.string.internet_required_bounty_desc)
                 .setPosButton(R.string.try_again, view -> {
@@ -103,8 +100,8 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
                 .setNegButton(R.string.btn_cancel, view -> {
                     requireActivity().finish();
                 })
-                .makeSticky()
-                .showIt();
+                .makeSticky();
+        dialog.showIt();
     }
 
     public void initCountryDropdown() {
@@ -116,9 +113,9 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     }
 
     private void startObservers() {
-        bountyViewModel.getActions().observe(getViewLifecycleOwner(), actions -> Log.v(TAG, "actions update: " + actions.size()));
-        bountyViewModel.getTransactions().observe(getViewLifecycleOwner(), transactions -> Log.v(TAG, "transactions update: " + transactions.size()));
-        bountyViewModel.getSims().observe(getViewLifecycleOwner(), sims -> Log.v(TAG, "sim update: " + sims.size()));
+        bountyViewModel.getActions().observe(getViewLifecycleOwner(), actions -> Timber.v("actions update: %s", actions.size()));
+        bountyViewModel.getTransactions().observe(getViewLifecycleOwner(), transactions -> Timber.v("transactions update: %s", transactions.size()));
+        bountyViewModel.getSims().observe(getViewLifecycleOwner(), sims -> Timber.v("sim update: %s", sims.size()));
         bountyViewModel.getBounties().observe(getViewLifecycleOwner(), bounties -> updateChannelList(bountyViewModel.getChannels().getValue(), bounties));
 
         bountyViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> {
