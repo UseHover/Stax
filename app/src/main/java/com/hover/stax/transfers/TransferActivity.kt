@@ -116,6 +116,7 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
         transferViewModel.contact.value?.let { i.putExtra(StaxContact.ID_KEY, it.lookupKey) }
         i.action = if(type == Constants.SCHEDULE_REQUEST) Constants.SCHEDULED else Constants.TRANSFERRED
         setResult(result, i)
+        finish()
     }
 
     override fun onBackPressed() = if(transferViewModel.isEditing.value == false) transferViewModel.setEditing(true) else super.onBackPressed()

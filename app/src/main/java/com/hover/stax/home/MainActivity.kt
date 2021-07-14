@@ -230,7 +230,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
 
     private fun launchSendMoney() = runBlocking {
         launch {
-            delay(1000L)
+            delay(1200L)
 
             if (Utils.variant == Constants.VARIANT_3 && !Utils.getBoolean(Constants.SHOWN_SEND_MONEY_ACTION, this@MainActivity)
                 && balancesViewModel.runFlag.value == BalancesViewModel.NONE
