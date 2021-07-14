@@ -9,14 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.hover.stax.R;
-import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxDialog;
 
 public class StaxPermissionDialog extends StaxDialog {
-    private final static String TAG = "StaxPermissionDialog";
-
-    public final static int OVERVIEW = 0, OVERLAY = 1, ACCESS = 2;
-    private int cmd;
 
     public StaxPermissionDialog(@NonNull Activity a) {
         this(a, a.getLayoutInflater());

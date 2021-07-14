@@ -18,13 +18,11 @@ import com.hover.stax.databinding.FragmentChannelBinding;
 import com.hover.stax.futureTransactions.FutureViewModel;
 import com.hover.stax.futureTransactions.RequestsAdapter;
 import com.hover.stax.futureTransactions.ScheduledAdapter;
-import com.hover.stax.home.MainActivity;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.requests.Request;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.transactions.TransactionHistoryAdapter;
 import com.hover.stax.utils.UIHelper;
-import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
@@ -81,13 +79,8 @@ public class ChannelDetailFragment extends Fragment implements
             transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions, this));
         });
 
-        viewModel.getSpentThisMonth().observe(getViewLifecycleOwner(), sum -> {
-            binding.detailsMoneyOut.setText(Utils.formatAmount(sum != null ? sum : 0));
-        });
-
-        viewModel.getFeesThisYear().observe(getViewLifecycleOwner(), sum -> {
-            binding.detailsFees.setText(Utils.formatAmount(sum != null ? sum : 0));
-        });
+        viewModel.getSpentThisMonth().observe(getViewLifecycleOwner(), sum -> binding.detailsMoneyOut.setText(Utils.formatAmount(sum != null ? sum : 0.0)));
+        viewModel.getFeesThisYear().observe(getViewLifecycleOwner(), sum -> binding.detailsFees.setText(Utils.formatAmount(sum != null ? sum : 0.0)));
     }
 
     private void initRecyclerViews() {
@@ -101,6 +94,7 @@ public class ChannelDetailFragment extends Fragment implements
         requestsAdapter = new RequestsAdapter(null, this);
         rv.setAdapter(requestsAdapter);
     }
+
     private void setUpFuture(Channel channel) {
         futureViewModel.getScheduledByChannel(channel.id).observe(getViewLifecycleOwner(), schedules -> {
             scheduledAdapter.updateData(schedules);

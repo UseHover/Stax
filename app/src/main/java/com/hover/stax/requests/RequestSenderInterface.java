@@ -7,13 +7,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.TextView;
 
-import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
-import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
@@ -29,7 +27,7 @@ public interface RequestSenderInterface {
         sendIntent.setData(Uri.parse("smsto:" + r.generateRecipientString(requestees)));
         sendIntent.putExtra(Intent.EXTRA_TEXT, r.generateMessage(a));
         sendIntent.putExtra("sms_body", r.generateMessage(a));
-        Utils.logAnalyticsEvent(a.getString(R.string.clicked_send_sms_request), a.getBaseContext());
+        Utils.logAnalyticsEvent(a.getString(R.string.clicked_send_sms_request), a);
         a.startActivityForResult(Intent.createChooser(sendIntent, "Request"), Constants.SMS);
     }
 
@@ -38,7 +36,7 @@ public interface RequestSenderInterface {
             showError(a);
             return;
         }
-        Utils.logAnalyticsEvent(a.getString(R.string.clicked_send_whatsapp_request), a.getBaseContext());
+        Utils.logAnalyticsEvent(a.getString(R.string.clicked_send_whatsapp_request), a);
         if (requestees.size() == 1)
             sendWhatsAppToSingleContact(r, requestees, channel, a);
         else sendWhatsAppToMultipleContacts(r.generateMessage(a), a);
@@ -73,8 +71,7 @@ public interface RequestSenderInterface {
     default void copyShareLink(Request r, TextView copyBtn, Activity a) {
         if (r == null) showError(a);
         else if (Utils.copyToClipboard(r.generateMessage(a), a)) {
-            Utils.logAnalyticsEvent(a.getString(R.string.clicked_copylink_request), a.getBaseContext());
-
+            Utils.logAnalyticsEvent(a.getString(R.string.clicked_copylink_request), a);
             copyBtn.setActivated(true);
             copyBtn.setCompoundDrawablesWithIntrinsicBounds(null, a.getResources().getDrawable(R.drawable.img_check), null, null);
             copyBtn.setText(a.getString(R.string.link_copied_label));

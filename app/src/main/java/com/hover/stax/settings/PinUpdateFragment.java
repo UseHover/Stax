@@ -15,13 +15,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.amplitude.api.Amplitude;
 import com.google.android.material.textfield.TextInputEditText;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.databinding.FragmentPinUpdateBinding;
 import com.hover.stax.utils.UIHelper;
-import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxDialog;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;

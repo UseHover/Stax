@@ -7,7 +7,6 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.channels.Channel;
-import com.hover.stax.utils.Utils;
 
 public class PhoneHelper {
 	final static private String TAG = "PhoneHelper";

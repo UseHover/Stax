@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.stax.databinding.HomeListItemBinding;
 import com.hover.stax.schedules.Schedule;
-import com.hover.stax.utils.Utils;
 
 import java.util.List;
 

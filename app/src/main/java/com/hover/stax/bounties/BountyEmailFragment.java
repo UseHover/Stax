@@ -13,7 +13,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.hover.stax.R;
 import com.hover.stax.databinding.FragmentBountyEmailBinding;
 import com.hover.stax.navigation.NavigationInterface;
-import com.hover.stax.utils.Utils;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDialog;
 import com.hover.stax.views.StaxTextInputLayout;
@@ -94,7 +93,9 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
             saveAndContinue();
         else {
             Utils.logErrorAndReportToFirebase(TAG, message, null);
-            if (isAdded() && Utils.isNetworkAvailable(requireActivity())) showEdgeCaseErrorDialog();
+
+            if(isAdded() && Utils.isNetworkAvailable(requireActivity())) showEdgeCaseErrorDialog();
+
             else setEmailError();
         }
     }

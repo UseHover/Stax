@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-	<com.hover.stax.onboarding.StaxAutoScrollViewPager
-	    android:id="@+id/vpPager"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"/>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-	<RelativeLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_marginHorizontal="@dimen/margin_18"
-	    android:layout_marginBottom="@dimen/margin_34">
+    <com.hover.stax.onboarding.StaxAutoScrollViewPager
+            android:id="@+id/vpPager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-		<androidx.appcompat.widget.AppCompatButton
-		    android:id="@+id/onboarding_continue_btn"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:text="@string/get_started"
-		    android:fontFamily="font-medium"
-		    android:layout_alignParentBottom="true"
-		    android:layout_alignParentEnd="true"
-		    style="@style/StaxButtonColored" />
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_18"
+            android:layout_marginBottom="@dimen/margin_34">
 
-	</RelativeLayout>
+        <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/onboarding_continue_btn"
+                style="@style/StaxButtonColored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:fontFamily="font-medium"
+                android:text="@string/get_started" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

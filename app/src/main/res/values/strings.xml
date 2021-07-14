@@ -10,6 +10,7 @@
 	<string name="bounty_endpoint">/stax_bounty_hunters</string>
 	<string name="stax_market_playstore_link" translatable="false">market://details?id=com.hover.stax</string>
 	<string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
+	<string name="mixpanel_token" translatable="false">82efeb23b6d38509989f592c8f4b21c2</string>
 
 	<string name="nav_home">Home</string>
 	<string name="nav_balance_and_history">Balance and history</string>
@@ -76,10 +77,10 @@
 	<string name="refresh_balances">Refresh balances</string>
 	<string name="refresh">Refresh</string>
 	<string name="refresh_balance_error">Add an account to check your balance.</string>
+
 	<string name="check_balance_title">Check balance</string>
 	<string name="check_balance_desc">Nice! You added your first account. Now you can check your balance on Stax.</string>
 	<string name="later">Later</string>
-	<string name="empty_channels_internet_err">You need internet connection to use this feature on Stax. Please connect and try again.</string>
 	<string name="no_connecion">No connection</string>
 	<string name="your_main_account">Your main account</string>
 	<string name="your_other_account">Your other account</string>
@@ -87,6 +88,7 @@
 	<!-- ADD ACCOUNT -->
 	<string name="your_accounts">Your accounts</string>
 	<string name="add_an_account">Add an account</string>
+	<string name="add_accounts_to_stax">Add accounts to Stax</string>
 
 	<!-- Permissions -->
 	<string name="permissions_title">Permissions needed</string>
@@ -331,8 +333,8 @@
 	<string name="bounty_email_stage_title">🗺️  MAP USSD FLOWS</string>
 	<string name="bounty_email_stage_desc1">Stax wants to make digital money available to anyone anywhere offline. To bring Stax to more people in more countries, we need to build a map of all the USSD services in the world.<b> That is why Stax will pay you USD $5-50 to go through any of the USSD flows on the next page.</b></string>
 	<string name="bounty_email_stage_desc2"><b>1.</b>   Enter your email so we can pay you.\n<b>2.</b>   Choose a USSD flow like “check balance” from your bank or mobile money service on the next page.\n<b>3.</b>   Go through the USSD flow as normal.\n<b>4.</b>   Stax will check the flow.\n<b>5.</b>   You get paid.</string>
-	<string name="descrip_bounty_airtime">Buy airtime for any person</string>
-	<string name="bounty_airtime_explain">Buy airtime for someone else</string>
+	<string name="descrip_bounty_airtime">Buy airtime for any person %1$s</string>
+	<string name="bounty_airtime_explain">Buy airtime for someone else %1$s</string>
 	<string name="descrip_bounty_p2p">Send money to someone else %1$s</string>
 	<string name="bounty_p2p_explain">Send any amount to any person %1$s</string>
 	<string name="descrip_bounty_me2me">Move money to your %1$s account</string>
@@ -366,8 +368,8 @@
 	<string name="country_error_nodata">Please turn on data to load services and countries.</string>
 	<string name="country_with_emoji">%1$s  %2$s </string>
 	<string name="all_countries_with_emoji">🌎 All countries</string>
-	<string name="bounty_sim_err_header">NO %1$s SIM</string>
-	<string name="bounty_sim_err_desc">You need a SIM card from %1$s in your device to map this flow. Please put a SIM card from %1$s in your device and try again.</string>
+	<string name="bounty_sim_err_header">Insert correct SIM</string>x
+	<string name="bounty_sim_err_desc">Please input a SIM card from %1$s in your device and try again.</string>
 	<string name="retry">Retry</string>
 	<string name="submit_flow">Submit flow</string>
 	<string name="bounty_submitted_successfully">Bounty submitted successfully</string>
@@ -377,8 +379,6 @@
 	<string name="internet_required_bounty_desc">You need a data or Wifi connection to map USSD flows. Please connect and try again.</string>
 	<string name="try_again">Try again</string>
 	<string name="edge_case_bounty_email_error">This rarely happens, but if error persists, please close the app and restart.</string>
-
-
-
+	<string name="no_account_selected_error">Please choose at least one account to add to Stax</string>
 
 </resources>

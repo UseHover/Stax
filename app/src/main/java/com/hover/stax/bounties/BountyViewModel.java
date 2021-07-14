@@ -21,7 +21,6 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.countries.CountryAdapter;
 import com.hover.stax.database.DatabaseRepo;
 import com.hover.stax.transactions.StaxTransaction;
-import com.hover.stax.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +30,8 @@ public class BountyViewModel extends AndroidViewModel {
     private static String TAG = "BountyViewModel";
 
     private DatabaseRepo repo;
+
+    String country = CountryAdapter.codeRepresentingAllCountries();
 
     private LiveData<List<HoverAction>> bountyActions;
     private LiveData<List<Channel>> bountyChannels;
@@ -114,6 +115,7 @@ public class BountyViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Channel>> filterChannels(String countryCode) {
+        country = countryCode;
         List<HoverAction> actions = bountyActions.getValue();
         if (actions == null) return null;
 

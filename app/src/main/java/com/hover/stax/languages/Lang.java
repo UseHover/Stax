@@ -2,7 +2,6 @@ package com.hover.stax.languages;
 
 import android.content.Context;
 
-import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.yariksoffice.lingver.Lingver;
 
@@ -45,6 +44,6 @@ public class Lang {
             data.put("language", code);
         } catch (JSONException ignored) {
         }
-        Amplitude.getInstance().logEvent(c.getString(R.string.selected_language), data);
+        Utils.logAnalyticsEvent(c.getString(R.string.selected_language), data, c);
     }
 }
