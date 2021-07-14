@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.hover.stax.databinding.SelfDestructLayoutBinding;
+import com.hover.stax.utils.Utils;
 
 public class SelfDestructActivity extends AppCompatActivity {
 

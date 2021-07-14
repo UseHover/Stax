@@ -21,12 +21,14 @@ import com.hover.stax.languages.Lang;
 import com.hover.stax.languages.LanguageViewModel;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
 import static android.view.View.GONE;
 
 public class SettingsFragment extends Fragment implements NavigationInterface {
+
     final public static String LANG_CHANGE = "Settings";
 
     private ArrayAdapter<Channel> accountAdapter;

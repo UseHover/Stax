@@ -44,6 +44,7 @@ import com.hover.stax.utils.blur.StaxBlur
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
 import timber.log.Timber
 
 
@@ -167,10 +168,18 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
                 } else
                     Utils.variant = Constants.VARIANT_1
 
+                logVariant()
+
                 if (!selfDestructWhenAppVersionExpires())
                     validateUser()
             }
         }
+    }
+
+    private fun logVariant(){
+        val prop = JSONObject()
+        prop.put("Variant", Utils.variant)
+        Utils.logAnalyticsEvent(getString(R.string.fetched_app_variant), prop, this)
     }
 
     private fun selfDestructWhenAppVersionExpires(): Boolean {

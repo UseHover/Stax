@@ -9,6 +9,7 @@ import androidx.biometric.BiometricPrompt;
 
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
+import com.hover.stax.utils.Utils;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;

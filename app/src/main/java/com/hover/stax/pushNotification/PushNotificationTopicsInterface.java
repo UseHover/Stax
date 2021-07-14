@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.hover.stax.R;
+import com.hover.stax.utils.Utils;
 
 public interface PushNotificationTopicsInterface {
 	default void joinAllNotifications(Context c) {

@@ -87,6 +87,8 @@
 	<string name="show_balances">Clicked show balances</string>
 	<string name="hide_balances">Clicked hide balances</string>
 
+	<string name="fetched_app_variant" translatable="false">Fetched app variant</string>
+
 	<!--FIREBASE MESSAGING-->
 	<string name="firebase_topic_everyone" translatable="false">EVERYONE</string>
 	<string name="firebase_topic_channel" translatable="false">CHANNEL-%1$d</string>

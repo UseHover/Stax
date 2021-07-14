@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.hover.stax.R;
+import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxDialog;
 
 public class StaxPermissionDialog extends StaxDialog {

@@ -20,9 +20,7 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:theme="@style/StaxTheme"
-            tools:ignore="AllowBackup"
-            tools:replace="android:allowBackup">
+            android:theme="@style/StaxTheme">
 
         <activity
                 android:name=".SplashScreenActivity"
@@ -51,9 +49,77 @@
         </activity>
 
         <activity
-                android:name=".languages.SelectLanguageActivity"
+                android:name=".home.MainActivity"
+                android:label="@string/app_name"
+                android:theme="@style/StaxTheme">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                        android:host="stax.me"
+                        android:pathPattern="@string/deeplink_sendmoney"
+                        android:scheme="https" />
+                <data
+                        android:host="stax.me"
+                        android:pathPattern="@string/deeplink_sendmoney"
+                        android:scheme="http" />
+                <data
+                        android:host="stax.me"
+                        android:pathPattern="@string/deeplink_airtime"
+                        android:scheme="https" />
+                <data
+                        android:host="stax.me"
+                        android:pathPattern="@string/deeplink_airtime"
+                        android:scheme="http" />
+                <data
+                        android:host="stax.me"
+                        android:pathPattern="@string/deeplink_balance"
+                        android:scheme="https" />
+                <data
+                        android:host="stax.me"
+                        android:pathPattern="@string/deeplink_balance"
+                        android:scheme="http" />
+                <data
+                        android:host="stax.me"
+                        android:pathPattern="@string/deeplink_settings"
+                        android:scheme="https" />
+                <data
+                        android:host="stax.me"
+                        android:pathPattern="@string/deeplink_settings"
+                        android:scheme="http" />
+                <data
+                        android:host="stax.me"
+                        android:pathPattern="@string/deeplink_linkaccount"
+                        android:scheme="https" />
+                <data
+                        android:host="stax.me"
+                        android:pathPattern="@string/deeplink_linkaccount"
+                        android:scheme="http" />
+                <data
+                        android:host="stax.me"
+                        android:pathPattern="@string/deeplink_history"
+                        android:scheme="https" />
+                <data
+                        android:host="stax.me"
+                        android:pathPattern="@string/deeplink_history"
+                        android:scheme="http" />
+                <data
+                        android:host="stax.me"
+                        android:pathPattern="@string/deeplink_reviews"
+                        android:scheme="https" />
+                <data
+                        android:host="stax.me"
+                        android:pathPattern="@string/deeplink_reviews"
+                        android:scheme="http" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".languages.SelectLanguageActivity"
                 android:label="@string/language">
-            <intent-filter>
+            <intent-filter >
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -74,6 +140,11 @@
                 android:name=".permissions.PermissionsActivity"
                 android:launchMode="singleTask"
                 android:theme="@style/StaxTheme" />
+
+        <activity
+                android:name=".transfers.TransferActivity"
+                android:theme="@style/StaxTheme"
+                android:windowSoftInputMode="stateVisible|adjustResize"/>
 
         <activity
                 android:name=".requests.RequestActivity"
@@ -117,7 +188,6 @@
         </activity>
 
         <activity android:name=".destruct.SelfDestructActivity" />
-
         <activity
                 android:name=".onboarding.OnBoardingActivity"
                 android:theme="@style/StaxTheme" />
@@ -141,9 +211,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver
-                android:name="com.appsflyer.SingleInstallBroadcastReceiver"
-                android:exported="true">
+        <receiver android:name="com.appsflyer.SingleInstallBroadcastReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
@@ -159,16 +227,8 @@
         </service>
 
         <meta-data
-                android:name="AF_STORE"
-                android:value="Transsion" />
-        <meta-data
-                android:name="AF_PRE_INSTALL_NAME"
-                android:value="shalltry_int" />
-
-        <meta-data
                 android:name="com.google.firebase.messaging.default_notification_icon"
                 android:resource="@drawable/ic_stax" />
-
         <meta-data
                 android:name="com.google.firebase.messaging.default_notification_color"
                 android:resource="@color/brightBlue" />
@@ -180,7 +240,6 @@
         <meta-data
                 android:name="com.hover.ApiKey"
                 android:value="1335646a78bb2b1157304be1510641f6" />
-
     </application>
 
 </manifest>

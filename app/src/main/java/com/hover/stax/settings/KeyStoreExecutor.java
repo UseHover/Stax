@@ -7,6 +7,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.hover.stax.R;
+import com.hover.stax.utils.Utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

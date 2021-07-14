@@ -26,6 +26,7 @@ import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDao;
 import com.hover.stax.transactions.StaxTransaction;
 import com.hover.stax.transactions.TransactionDao;
+import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.paymentLinkCryptography.Encryption;
 
 import java.security.NoSuchAlgorithmException;
@@ -182,7 +183,7 @@ public class DatabaseRepo {
                     save(contact);
 
                 if (t == null) {
-                    Utils.logAnalyticsEvent(c.getString(R.string.initializing_ussd_services), c, true);
+                    Utils.logAnalyticsEvent(c.getString(R.string.initializing_ussd_services), c);
                     t = new StaxTransaction(intent, a, contact, c);
                     transactionDao.insert(t);
                     t = transactionDao.getTransaction(t.uuid);

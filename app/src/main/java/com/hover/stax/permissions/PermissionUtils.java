@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
+import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxDialog;
 
 public class PermissionUtils {
