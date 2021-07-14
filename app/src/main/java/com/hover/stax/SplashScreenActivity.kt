@@ -161,13 +161,10 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
             setConfigSettingsAsync(configSettings)
             setDefaultsAsync(R.xml.remote_config_default)
             fetchAndActivate().addOnCompleteListener {
-                if (it.isSuccessful) {
+                if (it.isSuccessful)
                     Timber.i("Config params updated: ${it.result}")
 
-                    //set variant after successfully fetching and activating values
-                    Utils.variant = remoteConfig.getString("onboarding_app_variant")
-                } else
-                    Utils.variant = Constants.VARIANT_1
+                Utils.variant = remoteConfig.getString("onboarding_app_variant")
 
                 if (!selfDestructWhenAppVersionExpires())
                     validateUser()
@@ -267,7 +264,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
     companion object {
         const val BLUR_DELAY = 1000L
         const val LOGO_DELAY = 1200L
-        const val NAV_DELAY = 1300L
+        const val NAV_DELAY = 1500L
         const val SPLASH_ICON_WIDTH = 177
         const val SPLASH_ICON_HEIGHT = 57
     }
