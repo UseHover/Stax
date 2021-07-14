@@ -23,7 +23,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener {
+class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener {
 
     private val channelsViewModel: ChannelsViewModel by viewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
@@ -43,71 +43,78 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupSelectedChannels()
-        setupSimSupportedChannels()
-        observeChannelsLoadedStatus()
-    }
-
     private fun initArguments() = arguments?.let { IS_FORCE_RETURN = it.getBoolean(FORCE_RETURN_DATA, true) }
 
-    private fun setupSelectedChannels() {
-        val selectedChannelsListView = binding.selectedChannelsRecyclerView
-        selectedChannelsListView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.channelsListCard.setTitle(getString(getTitle()))
+        binding.selectedList.layoutManager = UIHelper.setMainLinearManagers(requireContext())
+        binding.channelsList.layoutManager = UIHelper.setMainLinearManagers(requireContext())
 
-        channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { channels ->
-            if (!channels.isNullOrEmpty()) {
-                updateCardVisibilities(true)
-                selectedChannelsListView.adapter = ChannelsRecyclerViewAdapter(channels, this)
-            } else {
-                updateCardVisibilities(false)
-            }
-        }
+        channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { channels -> onSelectedLoaded(channels) }
+        channelsViewModel.simChannels.observe(viewLifecycleOwner) { channels -> onSimsLoaded(channels) }
+        channelsViewModel.channels.observe(viewLifecycleOwner) { channels -> onAllLoaded(channels) }
     }
 
-    private fun updateCardVisibilities(visible: Boolean) {
-        binding.selectedChannelsCard.visibility = if (visible) VISIBLE else GONE
-        binding.simSupportedChannelsCard.setBackButtonVisibility(if (visible) GONE else VISIBLE)
-    }
-
-    private fun observeChannelsLoadedStatus() {
-        channelsViewModel.setHasChannelsLoaded()
-        channelsViewModel.hasChannelsLoaded().observe(viewLifecycleOwner) { hasLoaded -> if (hasLoaded != null && !hasLoaded) showEmptySimChannelsDialog() }
-    }
-
-    private fun setupSimSupportedChannels() {
-        val titleString = when (Utils.variant) {
+    private fun getTitle(): Int {
+        return when (Utils.variant) {
             Constants.VARIANT_1 -> R.string.add_an_account
             Constants.VARIANT_2, Constants.VARIANT_3 -> R.string.add_accounts_to_stax
             else -> R.string.add_an_account //default title
         }
-
-        binding.simSupportedChannelsCard.setTitle(getString(titleString))
-
-        val simSupportedChannelsListView = binding.simSupportedChannelsRecyclerView
-        simSupportedChannelsListView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
-
-        channelsViewModel.simChannels.observe(viewLifecycleOwner, {
-            if (!it.isNullOrEmpty()) {
-                val channels = Channel.sort(it, false)
-
-                when (Utils.variant) {
-                    Constants.VARIANT_1 -> initSingleSelectList(simSupportedChannelsListView, channels)
-                    Constants.VARIANT_2, Constants.VARIANT_3 -> initMultiSelectList(simSupportedChannelsListView, channels)
-                }
-            }
-        })
     }
 
-    private fun initMultiSelectList(channelsRecycler: RecyclerView, channels: List<Channel>) {
-        channelsRecycler.setHasFixedSize(true)
+    private fun onSelectedLoaded(channels: List<Channel>) {
+        showSelected(!channels.isNullOrEmpty())
+        if (!channels.isNullOrEmpty())
+            binding.selectedList.adapter = ChannelsRecyclerViewAdapter(channels, this)
+    }
+
+    private fun showSelected(visible: Boolean) {
+        binding.selectedChannelsCard.visibility = if (visible) VISIBLE else GONE
+        binding.channelsListCard.setBackButtonVisibility(if (visible) GONE else VISIBLE)
+    }
+
+    private fun onSimsLoaded(channels: List<Channel>) {
+        if (!channels.isNullOrEmpty()) {
+            val channels = Channel.sort(channels, false)
+            binding.errorText.visibility = GONE
+
+            when (Utils.variant) {
+                Constants.VARIANT_1 -> initSingleSelectList(channels)
+                Constants.VARIANT_2, Constants.VARIANT_3 -> initMultiSelectList(channels)
+            }
+        }
+    }
+
+    private fun onAllLoaded(channels: List<Channel>) {
+        if (!channels.isNullOrEmpty() && binding.channelsList.adapter == null) {
+            val channels = Channel.sort(channels, false)
+            binding.errorText.visibility = VISIBLE
+            binding.errorText.text = getString(R.string.channels_error_nosim)
+            when (Utils.variant) {
+                Constants.VARIANT_1 -> initSingleSelectList(channels)
+                Constants.VARIANT_2, Constants.VARIANT_3 -> initMultiSelectList(channels)
+            }
+        } else
+            binding.errorText.apply {
+                visibility = VISIBLE
+                text = getString(R.string.channels_error_nodata)
+            }
+    }
+
+    private fun initSingleSelectList(channels: List<Channel>) {
+        binding.channelsList.adapter = ChannelsRecyclerViewAdapter(channels, this)
+    }
+
+    private fun initMultiSelectList(channels: List<Channel>) {
+        binding.channelsList.setHasFixedSize(true)
         multiSelectAdapter = ChannelsMultiSelectAdapter(channels)
-        channelsRecycler.adapter = multiSelectAdapter
+        binding.channelsList.adapter = multiSelectAdapter
 
         tracker = SelectionTracker.Builder(
-            "channelSelection", channelsRecycler,
-            StableIdKeyProvider(channelsRecycler), ChannelLookup(channelsRecycler), StorageStrategy.createLongStorage()
+            "channelSelection", binding.channelsList,
+            StableIdKeyProvider(binding.channelsList), ChannelLookup(binding.channelsList), StorageStrategy.createLongStorage()
         ).withSelectionPredicate(SelectionPredicates.createSelectAnything())
             .build()
         multiSelectAdapter!!.setTracker(tracker!!)
@@ -122,12 +129,12 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
 
     private fun fetchSelectedChannels(tracker: SelectionTracker<Long>, channels: List<Channel>) {
         if (tracker.selection.isEmpty) {
-            binding.noAccountSelectedError.apply {
+            binding.errorText.apply {
                 visibility = VISIBLE
-                setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_error, 0, 0, 0)
+                text = getString(R.string.channels_error_noselect)
             }
         } else {
-            binding.noAccountSelectedError.visibility = GONE
+            binding.errorText.visibility = GONE
 
             val selectedChannels = mutableListOf<Channel>()
             tracker.selection.forEach {
@@ -136,18 +143,6 @@ class ChannelsListFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListe
 
             saveChannels(selectedChannels, true)
         }
-    }
-
-    private fun initSingleSelectList(channelsRecycler: RecyclerView, channels: List<Channel>) {
-        channelsRecycler.adapter = ChannelsRecyclerViewAdapter(channels, this)
-    }
-
-    private fun showEmptySimChannelsDialog() {
-        StaxDialog(requireActivity())
-            .setDialogTitle(R.string.no_connecion)
-            .setDialogMessage(R.string.empty_channels_internet_err)
-            .setPosButton(R.string.btn_ok) { if (isAdded) requireActivity().onBackPressed() }
-            .showIt()
     }
 
     private fun showCheckBalanceDialog(channel: Channel) {

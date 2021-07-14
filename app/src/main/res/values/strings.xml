@@ -79,7 +79,6 @@
 	<string name="check_balance_title">Check balance</string>
 	<string name="check_balance_desc">Nice! You added your first account. Now you can check your balance on Stax.</string>
 	<string name="later">Later</string>
-	<string name="empty_channels_internet_err">You need internet connection to use this feature on Stax. Please connect and try again.</string>
 	<string name="no_connecion">No connection</string>
 	<string name="your_main_account">Your main account</string>
 	<string name="your_other_account">Your other account</string>
@@ -332,8 +331,8 @@
 	<string name="bounty_email_stage_title">🗺️  MAP USSD FLOWS</string>
 	<string name="bounty_email_stage_desc1">Stax wants to make digital money available to anyone anywhere offline. To bring Stax to more people in more countries, we need to build a map of all the USSD services in the world.<b> That is why Stax will pay you USD $5-50 to go through any of the USSD flows on the next page.</b></string>
 	<string name="bounty_email_stage_desc2"><b>1.</b>   Enter your email so we can pay you.\n<b>2.</b>   Choose a USSD flow like “check balance” from your bank or mobile money service on the next page.\n<b>3.</b>   Go through the USSD flow as normal.\n<b>4.</b>   Stax will check the flow.\n<b>5.</b>   You get paid.</string>
-	<string name="descrip_bounty_airtime">Buy airtime for any person</string>
-	<string name="bounty_airtime_explain">Buy airtime for someone else</string>
+	<string name="descrip_bounty_airtime">Buy airtime for any person %1$s</string>
+	<string name="bounty_airtime_explain">Buy airtime for someone else %1$s</string>
 	<string name="descrip_bounty_p2p">Send money to someone else %1$s</string>
 	<string name="bounty_p2p_explain">Send any amount to any person %1$s</string>
 	<string name="descrip_bounty_me2me">Move money to your %1$s account</string>

@@ -11,7 +11,6 @@ import java.util.List;
 public class Bounty {
     HoverAction action;
     List<StaxTransaction> transactions;
-    int presentSimsSupported = -1;
 
     public Bounty(HoverAction a, List<StaxTransaction> ts) {
         action = a;
@@ -30,7 +29,7 @@ public class Bounty {
     String generateDescription(Context c) {
         switch (action.transaction_type) {
             case HoverAction.AIRTIME:
-                return c.getString(R.string.descrip_bounty_airtime);
+                return c.getString(R.string.descrip_bounty_airtime, (action.isOnNetwork() ? c.getString(R.string.onnet_choice) : c.getString(R.string.descrip_bounty_offnet, action.to_institution_name)));
             case HoverAction.P2P:
                 return c.getString(R.string.descrip_bounty_p2p, (c.getString(R.string.descrip_bounty_offnet, action.isOnNetwork() ? action.from_institution_name : action.to_institution_name)));
             case HoverAction.ME2ME:
@@ -45,9 +44,9 @@ public class Bounty {
     public String getInstructions(Context c) {
         switch (action.transaction_type) {
             case HoverAction.AIRTIME:
-                return c.getString(R.string.bounty_airtime_explain);
+                return c.getString(R.string.bounty_airtime_explain, (action.isOnNetwork() ? c.getString(R.string.onnet_choice) : c.getString(R.string.descrip_bounty_offnet, action.to_institution_name)));
             case HoverAction.P2P:
-                return c.getString(R.string.bounty_p2p_explain, (action.isOnNetwork() ? c.getString(R.string.onnet_choice) : c.getString(R.string.descrip_bounty_offnet, action.to_institution_name)));
+                return c.getString(R.string.bounty_p2p_explain, c.getString(R.string.descrip_bounty_offnet, action.isOnNetwork() ? action.from_institution_name : action.to_institution_name));
             case HoverAction.ME2ME:
                 return c.getString(R.string.bounty_me2me_explain, action.to_institution_name);
             case HoverAction.C2B:

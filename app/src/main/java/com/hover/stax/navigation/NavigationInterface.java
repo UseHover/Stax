@@ -13,7 +13,7 @@ import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.bounties.BountyActivity;
-import com.hover.stax.channels.ChannelsListFragment;
+import com.hover.stax.channels.AddChannelsFragment;
 import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.transactions.TransactionDetailsFragment;
@@ -87,7 +87,7 @@ public interface NavigationInterface {
 
     default void navigateToChannelsListFragment(NavController navController, boolean forceReturnData) {
         Bundle bundle = new Bundle();
-        bundle.putBoolean(ChannelsListFragment.FORCE_RETURN_DATA, forceReturnData);
+        bundle.putBoolean(AddChannelsFragment.FORCE_RETURN_DATA, forceReturnData);
         navController.navigate(R.id.navigation_linkAccount, bundle);
     }
 

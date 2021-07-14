@@ -124,7 +124,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     }
 
     private void updateChannelList(List<Channel> channels, List<Bounty> bounties) {
-        if (bounties != null && bounties.size() > 0 && channels != null && channels.size() > 0) {
+        if (bounties != null && bounties.size() > 0 && channels != null && channels.size() > 0 && (bountyViewModel.country.equals(CountryAdapter.codeRepresentingAllCountries()) || channels.get(0).countryAlpha2.equals(bountyViewModel.country))) {
             BountyChannelsAdapter adapter = new BountyChannelsAdapter(channels, bounties, this);
             binding.bountiesRecyclerView.setAdapter(adapter);
         }
