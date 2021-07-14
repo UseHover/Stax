@@ -379,4 +379,8 @@
 	<string name="edge_case_bounty_email_error">This rarely happens, but if error persists, please close the app and restart.</string>
 	<string name="no_account_selected_error">Please choose at least one account to add to Stax</string>
 
+	<string name="test_mode_toast">You are now in test mode.</string>
+	<string name="test_mode_disabled">Test mode disabled.</string>
+	<string name="test_mode_almost_toast">Almost there!</string>
+	<string name="test_mode_enabled">Test mode engaged</string>
 </resources>

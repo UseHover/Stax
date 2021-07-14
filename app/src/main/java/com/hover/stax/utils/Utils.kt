@@ -49,6 +49,7 @@ object Utils : KoinComponent {
         return getSharedPrefs(c).getString(key, "")
     }
 
+    @JvmStatic
     fun getBoolean(key: String?, c: Context): Boolean {
         return getSharedPrefs(c).getBoolean(key, false)
     }
@@ -60,6 +61,7 @@ object Utils : KoinComponent {
         editor.apply()
     }
 
+    @JvmStatic
     fun saveBoolean(key: String?, value: Boolean, c: Context) {
         val editor = getSharedPrefs(c).edit()
         editor.putBoolean(key, value)
