@@ -26,7 +26,6 @@ import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxCardView
 import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
-import timber.log.Timber
 
 
 class NewRequestFragment : AbstractFormFragment(), RecipientAdapter.UpdateListener, PushNotificationTopicsInterface {
@@ -116,9 +115,6 @@ class NewRequestFragment : AbstractFormFragment(), RecipientAdapter.UpdateListen
             requestees.observe(viewLifecycleOwner, {
                 if (it.isNullOrEmpty()) return@observe
 
-                Timber.e("Recipient count %s", recipientCount)
-                Timber.e("Contact count %s", it.size)
-
                 recipientValueList.removeAllViews()
 
                 it.forEach { contact ->
@@ -126,9 +122,6 @@ class NewRequestFragment : AbstractFormFragment(), RecipientAdapter.UpdateListen
                     li.setContact(contact)
                     recipientValueList.addView(li)
                 }
-
-                Timber.e("Updated recipient count %s", recipientCount)
-                Timber.e("Updated contact count %s", it.size)
 
                 recipientCount = it.size
                 recipientAdapter?.update(it)

@@ -106,12 +106,12 @@ public class StaxTransaction {
     }
 
     public void update(Intent data, HoverAction action, StaxContact contact, Context c) {
-        Timber.e("Updating");
         status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
+
+        Timber.e("Updating to status %s - %s", status, action);
         updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, initiated_at);
 
         parseExtras((HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES));
-
 
         if (counterparty_id == null)
             counterparty_id = contact.id;

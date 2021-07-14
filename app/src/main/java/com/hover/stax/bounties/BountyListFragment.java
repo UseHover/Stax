@@ -144,7 +144,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     void showSimErrorDialog(Bounty b) {
         Timber.e("showing sim error dialog %s", b.action.root_code);
         new StaxDialog(requireActivity())
-                .setDialogTitle(getString(R.string.bounty_sim_err_header, b.action.network_name))
+                .setDialogTitle(getString(R.string.bounty_sim_err_header))
                 .setDialogMessage(getString(R.string.bounty_sim_err_desc, b.action.network_name))
                 .setNegButton(R.string.btn_cancel, null)
                 .setPosButton(R.string.retry, v -> retrySimMatch(b))

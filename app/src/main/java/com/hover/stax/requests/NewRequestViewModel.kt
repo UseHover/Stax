@@ -12,7 +12,6 @@ import com.hover.stax.schedules.Schedule
 import com.hover.stax.transfers.AbstractFormViewModel
 import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -44,6 +43,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
 
     fun onUpdate(pos: Int, contact: StaxContact) {
         val rList = arrayListOf<StaxContact>()
+
         requestees.value!!.forEachIndexed { i, recipient ->
             if (i == pos)
                 rList.add(contact)
@@ -130,7 +130,6 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
             viewModelScope.launch {
                 contacts.filter { contact -> !contact.accountNumber.isNullOrEmpty() }
                     .forEach { contact ->
-                        Timber.e("Here saving $contact")
                         contact.lastUsedTimestamp = DateUtils.now()
                         repo.save(contact)
                     }
