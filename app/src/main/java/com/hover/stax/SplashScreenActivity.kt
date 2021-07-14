@@ -166,10 +166,11 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
 
                     //set variant after successfully fetching and activating values
                     Utils.variant = remoteConfig.getString("onboarding_app_variant")
+                } else
+                    Utils.variant = Constants.VARIANT_1
 
-                    if (!selfDestructWhenAppVersionExpires())
-                        validateUser()
-                }
+                if (!selfDestructWhenAppVersionExpires())
+                    validateUser()
             }
         }
     }
