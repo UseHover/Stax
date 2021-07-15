@@ -51,6 +51,7 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
         setUpChooseLang();
         setUpContactStax();
         setupGetSupport();
+        setupRequestFeature();
 
         return binding.getRoot();
     }
@@ -88,6 +89,10 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
 
     private void setUpContactStax() {
         binding.contactStax.twitterContact.setOnClickListener(v -> Utils.openUrl(getString(R.string.stax_twitter_url), requireContext()));
+    }
+
+    private void setupRequestFeature() {
+        binding.getSupportStax.requestFeature.setOnClickListener(v->Utils.openUrl(getString(R.string.stax_nolt_url), requireContext()));
     }
 
     private void showAccounts(List<Channel> channels) {
