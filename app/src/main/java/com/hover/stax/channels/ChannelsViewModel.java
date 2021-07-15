@@ -34,7 +34,7 @@ import java.util.List;
 public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdown.HighlightListener, PushNotificationTopicsInterface {
     public final static String TAG = "ChannelDropdownVM";
 
-    private DatabaseRepo repo;
+    private final DatabaseRepo repo;
     private MutableLiveData<String> type = new MutableLiveData<>();
 
     private MutableLiveData<List<SimInfo>> sims;
@@ -47,9 +47,9 @@ public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdo
     private MediatorLiveData<List<HoverAction>> channelActions = new MediatorLiveData<>();
     private MutableLiveData<Boolean> hasChannelsLoaded = new MutableLiveData<>();
 
-    public ChannelsViewModel(Application application) {
+    public ChannelsViewModel(Application application, DatabaseRepo repo) {
         super(application);
-        repo = new DatabaseRepo(application);
+        this.repo = repo;
         type.setValue(HoverAction.BALANCE);
         hasChannelsLoaded.setValue(null);
 

@@ -21,9 +21,9 @@ public class FutureViewModel extends AndroidViewModel {
     private LiveData<List<Schedule>> schedules;
     private LiveData<List<Request>> requests;
 
-    public FutureViewModel(Application application) {
+    public FutureViewModel(Application application, DatabaseRepo repo) {
         super(application);
-        repo = new DatabaseRepo(application);
+        this.repo = repo;
 
         schedules = new MutableLiveData<>();
         schedules = repo.getFutureTransactions();

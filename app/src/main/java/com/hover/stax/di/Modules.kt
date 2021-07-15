@@ -19,15 +19,15 @@ val appModule = module(true) {
     single { HoverRoomDatabase.getInstance(get()) }
 
     viewModel { ActionSelectViewModel(get()) }
-    viewModel { ChannelsViewModel(get()) }
+    viewModel { ChannelsViewModel(get(), get()) }
     viewModel { NewRequestViewModel(get(), get()) }
     viewModel { TransferViewModel(get(), get())}
-    viewModel { ScheduleDetailViewModel(get()) }
+    viewModel { ScheduleDetailViewModel(get(), get()) }
     viewModel { BalancesViewModel(get(), get())}
-    viewModel { TransactionHistoryViewModel(get()) }
+    viewModel { TransactionHistoryViewModel(get(), get()) }
     viewModel { BannerViewModel(get(), get()) }
 }
 
 val dataModule = module {
-    single { DatabaseRepo(get()) }
+    single { DatabaseRepo(get(), get()) }
 }

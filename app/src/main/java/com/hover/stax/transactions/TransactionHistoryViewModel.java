@@ -22,9 +22,9 @@ public class TransactionHistoryViewModel extends AndroidViewModel {
     private LiveData<List<StaxTransaction>> transactions;
     private final LiveData<Boolean> appReviewLiveData;
 
-    public TransactionHistoryViewModel(Application application) {
+    public TransactionHistoryViewModel(Application application, DatabaseRepo repo) {
         super(application);
-        repo = new DatabaseRepo(application);
+        this.repo = repo;
 
         transactions = new MutableLiveData<>();
         transactions = repo.getCompleteAndPendingTransferTransactions();
