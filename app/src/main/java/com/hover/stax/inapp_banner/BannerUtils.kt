@@ -4,6 +4,7 @@ import android.content.Context
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.Utils
+import timber.log.Timber
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -138,6 +139,7 @@ class BannerUtils(val context: Context) {
     }
 
     fun getQualifiedBanner(hasTransactionLastMonth: Boolean): Banner? {
+        Timber.i("Banner called here with MAU: $hasTransactionLastMonth")
         if(!areCampaignsUnlocked()) return run(0)
         if (bannerId_in_cache > 0) return run(bannerId_in_cache, isNewCampaign = false, updateImpression = false)
         if (campaignRunning()) return run(lastBanner(), isNewCampaign = false, updateImpression = true)
