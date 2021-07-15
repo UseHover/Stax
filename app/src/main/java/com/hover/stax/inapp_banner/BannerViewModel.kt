@@ -13,13 +13,10 @@ class BannerViewModel(application: Application, repo: DatabaseRepo) : AndroidVie
     private val bannerUtils = BannerUtils(getApplication())
 
     init {
-
             viewModelScope.launch {
                 val hasTransactionLastMonth: Boolean = repo.hasTransactionLastMonth()
                 qualifiedBannerLiveData.postValue(bannerUtils.getQualifiedBanner(hasTransactionLastMonth))
             }
-
-
     }
 
     fun qualifiedBanner(): LiveData<Banner> = qualifiedBannerLiveData

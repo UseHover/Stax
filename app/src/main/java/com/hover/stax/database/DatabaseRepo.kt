@@ -114,8 +114,7 @@ class DatabaseRepo(application: Application?) {
 
     @SuppressLint("DefaultLocale")
     suspend fun hasTransactionLastMonth(): Boolean {
-        val lastMonth = lastMonth()
-        return transactionDao.getTransactionCount(String.format("%02d", lastMonth.first), lastMonth.second.toString())!! > 0
+        return transactionDao.getTransactionCount(String.format("%02d", lastMonth().first), lastMonth().second.toString())!! > 0
     }
 
     fun getCompleteTransferTransactions(channelId: Int): LiveData<List<StaxTransaction?>?>? {
