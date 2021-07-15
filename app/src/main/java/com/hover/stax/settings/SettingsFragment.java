@@ -15,7 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.databinding.FragmentSettingsBinding;
@@ -32,6 +31,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 public class SettingsFragment extends Fragment implements NavigationInterface {
+
     final public static String LANG_CHANGE = "Settings", TEST_MODE_KEY = "test_mode";
 
     private ArrayAdapter<Channel> accountAdapter;

@@ -86,15 +86,17 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
     }
 
     @Override
-    public void onComplete(Map<Integer, String>  responseMap) {
-        Map.Entry<Integer,String> entry = responseMap.entrySet().iterator().next();
+    public void onComplete(Map<Integer, String> responseMap) {
+        Map.Entry<Integer, String> entry = responseMap.entrySet().iterator().next();
         int responseCode = entry.getKey();
         String message = entry.getValue();
         if (responseCode >= 200 && responseCode < 300)
-           saveAndContinue();
+            saveAndContinue();
         else {
             Utils.logErrorAndReportToFirebase(TAG, message, null);
+
             if(isAdded() && Utils.isNetworkAvailable(requireActivity())) showEdgeCaseErrorDialog();
+
             else setEmailError();
         }
     }

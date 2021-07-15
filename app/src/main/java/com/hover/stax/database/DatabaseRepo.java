@@ -183,6 +183,7 @@ public class DatabaseRepo {
                     save(contact);
 
                 if (t == null) {
+                    Utils.logAnalyticsEvent(c.getString(R.string.initializing_ussd_services), c);
                     t = new StaxTransaction(intent, a, contact, c);
                     transactionDao.insert(t);
                     t = transactionDao.getTransaction(t.uuid);
@@ -240,7 +241,6 @@ public class DatabaseRepo {
     }
 
     public void save(final StaxContact contact) {
-        Timber.e("Here");
         if (contact == null) return;
 
         AppDatabase.databaseWriteExecutor.execute(() -> {
@@ -305,12 +305,14 @@ public class DatabaseRepo {
         if (decryptedRequest == null) {
             decryptedRequest = new MutableLiveData<>();
         }
+
         decryptedRequest.setValue(null);
         String removedBaseUrlString = encrypted.replace(c.getString(R.string.payment_root_url, ""), "");
 
         //Only old stax versions contains ( in the link
         if (removedBaseUrlString.contains("(")) decryptRequestForOldVersions(removedBaseUrlString);
         else decryptRequest(removedBaseUrlString, c);
+
         return decryptedRequest;
     }
 

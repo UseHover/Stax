@@ -20,6 +20,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
     val activeChannel = MediatorLiveData<Channel>()
     val amount = MutableLiveData<String>()
     val requestees = MutableLiveData<List<StaxContact>>(Collections.singletonList(StaxContact("")))
+    val requestee = MutableLiveData<StaxContact>()
     val requesterNumber = MediatorLiveData<String>()
     val note = MutableLiveData<String>()
 
@@ -53,15 +54,24 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
         requestees.postValue(rList)
     }
 
-    fun addRecipient(contact: StaxContact) {
-        val rList = arrayListOf<StaxContact>()
+//    fun addRecipient(contact: StaxContact) {
+//        val rList = arrayListOf<StaxContact>()
+//
+//        if (!requestees.value.isNullOrEmpty())
+//            rList.addAll(requestees.value!!)
+//
+//        rList.add(contact)
+//
+//        requestees.postValue(rList)
+//    }
 
-        if (!requestees.value.isNullOrEmpty())
-            rList.addAll(requestees.value!!)
+    fun setRecipient(recipient: String) {
+        if(requestee.value != null && requestee.value.toString() == recipient) return
+        requestee.value = StaxContact(recipient)
+    }
 
-        rList.add(contact)
-
-        requestees.postValue(rList)
+    fun addRecipient(contact: StaxContact){
+        requestee.value = contact
     }
 
     fun resetRecipients() = requestees.postValue(ArrayList())
@@ -71,7 +81,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
     fun validAmount(): Boolean = (!amount.value.isNullOrEmpty() && amount.value!!.matches("\\d+".toRegex()) && !amount.value!!.matches("[0]+".toRegex()))
 
     fun requesteeErrors(): String? {
-        return if (!requestees.value.isNullOrEmpty() && !requestees.value!!.first().accountNumber.isNullOrEmpty())
+        return if (!requestee.value?.accountNumber.isNullOrEmpty())
             null
         else
             application.getString(R.string.request_error_recipient)
