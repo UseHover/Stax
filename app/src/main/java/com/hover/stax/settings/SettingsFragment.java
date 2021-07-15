@@ -52,6 +52,7 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
         setUpChooseLang();
         setUpContactStax();
         setupRequestFeature();
+        setupFaq();
 
         return binding.getRoot();
     }
@@ -86,6 +87,9 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
 
     private void setupRequestFeature() {
         binding.getSupportStax.requestFeature.setOnClickListener(v->Utils.openUrl(getString(R.string.stax_nolt_url), requireContext()));
+    }
+    private void setupFaq() {
+        binding.getSupportStax.faq.setOnClickListener(v->navigateFAQ(this));
     }
 
     private void showAccounts(List<Channel> channels) {

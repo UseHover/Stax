@@ -387,4 +387,9 @@
 	<string name="try_again">Try again</string>
 	<string name="edge_case_bounty_email_error">This rarely happens, but if error persists, please close the app and restart.</string>
 
+	<string name="faq_title">Frequently asked questions</string>
+	<string name="faq_content"><![CDATA[ %1$s <p/>Still have questions? <p/> <a href="mailto:support@stax.me"><u> <b><font color=#1878F9> Email stax support </b><u></a>]]></string>
+	<string name="loading">Loading…</string>
+	<string name="loading_error">Unable to load FAQ, please try again</string>
+	<string name="faq_internet_error">This feature requires internet connection, please try again</string>
 </resources>
