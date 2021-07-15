@@ -26,12 +26,14 @@ import com.hover.stax.schedules.Schedule;
 import com.hover.stax.schedules.ScheduleDao;
 import com.hover.stax.transactions.StaxTransaction;
 import com.hover.stax.transactions.TransactionDao;
+import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.paymentLinkCryptography.Encryption;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import kotlin.Pair;
 import timber.log.Timber;
 
 public class DatabaseRepo {
@@ -146,6 +148,12 @@ public class DatabaseRepo {
 
     public LiveData<List<StaxTransaction>> getBountyTransactions() {
         return transactionDao.getBountyTransactions();
+    }
+
+    @SuppressLint("DefaultLocale")
+    public Boolean hasTransactionLastMonth() {
+        Pair<Integer, Integer> lastMonth = DateUtils.lastMonth();
+        return transactionDao.getTransactionCount(String.format("%02d", lastMonth.getFirst()), String.valueOf(lastMonth.getSecond()) ) > 0;
     }
 
     public LiveData<List<StaxTransaction>> getCompleteTransferTransactions(int channelId) {

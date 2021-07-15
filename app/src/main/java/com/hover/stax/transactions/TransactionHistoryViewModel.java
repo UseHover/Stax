@@ -31,9 +31,8 @@ public class TransactionHistoryViewModel extends AndroidViewModel {
         appReviewLiveData =  Transformations.map(repo.getTransactionsForAppReview(), this:: showAppReview);
     }
 
-    public LiveData<List<StaxTransaction>> getStaxTransactions() {
-        return transactions;
-    }
+    public LiveData<List<StaxTransaction>> getStaxTransactions() { return transactions; }
+
     public LiveData<Boolean> showAppReviewLiveData() {
         return appReviewLiveData;
     }

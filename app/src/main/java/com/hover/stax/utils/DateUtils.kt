@@ -159,7 +159,16 @@ object DateUtils {
         return cacheCalendar.time
     }
 
-    fun monthNumToName(number: Int): String {
+    @JvmStatic
+    fun lastMonth() : Pair<Int, Int> {
+        val c = Calendar.getInstance()
+        c.add(Calendar.MONTH, -1)
+        val month : Int = c[Calendar.MONTH] + 1
+        val year : Int = c[Calendar.YEAR]
+        return Pair(month, year)
+    }
+
+    private fun monthNumToName(number: Int): String {
         return when (number) {
             0 -> "January"
             1 -> "February"

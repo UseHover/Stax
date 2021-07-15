@@ -25,7 +25,7 @@ val appModule = module(true) {
     viewModel { ScheduleDetailViewModel(get()) }
     viewModel { BalancesViewModel(get(), get())}
     viewModel { TransactionHistoryViewModel(get()) }
-    viewModel { BannerViewModel(get()) }
+    viewModel { BannerViewModel(get(), get()) }
 }
 
 val dataModule = module {

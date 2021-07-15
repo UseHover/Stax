@@ -17,61 +17,76 @@ private constructor(val id: Int,
         const val ROUND_UP_NEWS: Int = 102
         const val GIST: Int = 103
         const val UPVOTE: Int = 104
+        const val RESEARCH:Int = 105
 
-       fun permissions() : Banner {
-           return Banner(
-                   PERMISSION,
-                   R.string.banner_permission_title,
-                   R.string.banner_permission_desc,
-                   R.string.banner_permission_cta,
-                   R.drawable.banner_permission,
-                   R.color.banner_permission_primary,
-                   R.color.banner_secondary,
-                   R.string.banner_permission_url,
-                   3 )
-       }
+        fun permissions() : Banner {
+            return Banner(
+                    PERMISSION,
+                    R.string.banner_permission_title,
+                    R.string.banner_permission_desc,
+                    R.string.banner_permission_cta,
+                    R.drawable.banner_permission,
+                    R.color.banner_permission_primary,
+                    R.color.banner_secondary,
+                    R.string.banner_permission_url,
+                    3 )
+        }
 
-       fun roundupNews() : Banner {
-           return Banner(
-                   ROUND_UP_NEWS,
-                   R.string.banner_roundupnews_title,
-                   null,
-                   R.string.banner_roundupnews_cta,
-                   R.drawable.banner_roundupnews,
-                   R.color.offWhite,
-                   R.color.banner_secondary,
-                   R.string.banner_roundupnews_url,
-                   2
-                )
-       }
+        fun roundupNews() : Banner {
+            return Banner(
+                    ROUND_UP_NEWS,
+                    R.string.banner_roundupnews_title,
+                    null,
+                    R.string.banner_roundupnews_cta,
+                    R.drawable.banner_roundupnews,
+                    R.color.offWhite,
+                    R.color.banner_secondary,
+                    R.string.banner_roundupnews_url,
+                    2
+            )
+        }
 
-       fun gist() : Banner {
-           return Banner(
-                   GIST,
-                   R.string.banner_gist_title,
-                   null,
-                   R.string.banner_gist_cta,
-                   R.drawable.banner_gist,
-                   R.color.banner_gist_primary,
-                   R.color.banner_secondary,
-                   R.string.banner_gist_url,
-                   1
-           )
-       }
+        fun gist() : Banner {
+            return Banner(
+                    GIST,
+                    R.string.banner_gist_title,
+                    null,
+                    R.string.banner_gist_cta,
+                    R.drawable.banner_gist,
+                    R.color.banner_gist_primary,
+                    R.color.banner_secondary,
+                    R.string.banner_gist_url,
+                    1
+            )
+        }
 
-       fun upvote() : Banner {
-           return Banner(
-                   UPVOTE,
-                   R.string.banner_upvote_title,
-                   null,
-                   R.string.banner_upvote_cta,
-                   R.drawable.banner_upvote,
-                   R.color.banner_secondary,
-                   R.color.offWhite,
-                   R.string.banner_upvoteurl,
-                   1
-           )
-       }
+        fun upvote() : Banner {
+            return Banner(
+                    UPVOTE,
+                    R.string.banner_upvote_title,
+                    null,
+                    R.string.banner_upvote_cta,
+                    R.drawable.banner_upvote,
+                    R.color.banner_secondary,
+                    R.color.offWhite,
+                    R.string.banner_upvoteurl,
+                    1
+            )
+        }
+
+        fun research() : Banner {
+            return Banner(
+                    RESEARCH,
+                    R.string.banner_research_title,
+                    null,
+                    R.string.banner_research_cta,
+                    R.drawable.banner_roundupnews,
+                    R.color.offWhite,
+                    R.color.offWhite,
+                    R.string.banner_research_url,
+                    3
+            )
+        }
 
     }
 

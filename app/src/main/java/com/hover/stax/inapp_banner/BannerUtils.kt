@@ -116,7 +116,11 @@ class BannerUtils(val context: Context) {
         }
     }
 
-    fun getQualifiedBanner(): Banner? {
+    private fun researchQualifies(): Boolean {
+
+    }
+
+    fun getQualifiedBanner(hasTransactionLastMonth: Boolean): Banner? {
         if(!areCampaignsUnlocked()) return run(0)
         if (bannerId_in_cache > 0) return run(bannerId_in_cache, isNewCampaign = false, updateImpression = false)
         if (campaignRunning()) return run(lastBanner(), isNewCampaign = false, updateImpression = true)

@@ -32,6 +32,9 @@ public interface TransactionDao {
     @Query("SELECT SUM(fee) as total FROM stax_transactions WHERE strftime('%Y', initiated_at/1000, 'unixepoch') = :year AND channel_id = :channelId AND environment != 3")
     LiveData<Double> getTotalFees(int channelId, String year);
 
+    @Query("SELECT COUNT(id) FROM stax_transactions WHERE strftime('%m', initiated_at/1000, 'unixepoch') = :month AND strftime('%Y', initiated_at/1000, 'unixepoch') = :year AND environment != 3")
+    Integer getTransactionCount(String month, String year);
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(StaxTransaction transaction);
 
