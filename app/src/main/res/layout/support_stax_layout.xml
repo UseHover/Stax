@@ -30,6 +30,7 @@
             android:padding="@dimen/margin_10"
             android:text="@string/contact_support"
             android:textSize="@dimen/text_16"
+            android:onClick="openSupportEmailClient"
             app:drawableEndCompat="@drawable/email_filled_24" />
 
         <TextView

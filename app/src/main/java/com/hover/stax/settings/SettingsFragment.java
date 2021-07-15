@@ -26,6 +26,7 @@ import com.hover.stax.languages.LanguageViewModel;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.views.StaxDialog;
 
 import java.util.List;
 
@@ -50,7 +51,6 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
         setUpAccounts(securityViewModel);
         setUpChooseLang();
         setUpContactStax();
-        setupGetSupport();
         setupRequestFeature();
 
         return binding.getRoot();
@@ -67,13 +67,6 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
 
         assert getActivity() != null;
         btn.setOnClickListener(view -> navigateToLanguageSelectionFragment(getActivity()));
-    }
-
-    private void setupGetSupport() {
-        binding.getSupportStax.contactSupport.setOnClickListener(v -> openEmailClient(
-                getString(R.string.stax_support_email),
-                getString(R.string.stax_emailing_subject, Hover.getDeviceId(requireContext())),
-                requireActivity()));
     }
 
     private void setUpAccounts(PinsViewModel securityViewModel) {
@@ -115,12 +108,8 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
         });
     }
 
-    private void openEmailClient(String recipientEmail, String subject, Activity activity) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        Uri data = Uri.parse("mailto:"+recipientEmail+" ?subject=" + subject);
-        intent.setData(data);
-        activity.startActivity(intent);
-    }
+
+
 
     @Override
     public void onDestroyView() {

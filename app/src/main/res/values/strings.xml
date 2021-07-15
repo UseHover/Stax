@@ -91,6 +91,7 @@
 	<!-- Permissions -->
 	<string name="permissions_title">Permissions needed</string>
 	<string name="permissions_basic_desc">We need phone permissions to see which accounts you might have.</string>
+	<string name="permission_support_desc">We need phone permissions to generate your support ID</string>
 	<string name="nav_sim_permission">Grant SIM permission</string>
 	<string name="perm_dialoghead">One last thing…</string>
 	<string name="perm_dialogbody">Stax needs 2 permissions to %1$s.</string>
