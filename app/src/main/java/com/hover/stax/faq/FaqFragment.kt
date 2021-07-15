@@ -18,6 +18,7 @@ class FaqFragment : Fragment(), FAQAdapter.Companion.SelectListener {
     lateinit var binding: FragmentFaqBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.FAQs)), requireContext())
         binding = FragmentFaqBinding.inflate(inflater, container, false)
         return binding.root
     }
