@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class BannerViewModel(application: Application, repo: DatabaseRepo) : AndroidViewModel(application) {
     private val qualifiedBannerLiveData: MutableLiveData<Banner> = MutableLiveData<Banner>()
-    private val bannerUtils = BannerUtils(getApplication())
+    private val bannerUtils = BannerUtils(application)
 
     init {
             viewModelScope.launch {
