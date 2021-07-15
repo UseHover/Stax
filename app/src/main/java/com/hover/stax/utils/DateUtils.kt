@@ -159,6 +159,17 @@ object DateUtils {
         return cacheCalendar.time
     }
 
+    fun twoMonthsAgo() : Date {
+        val c : Calendar = Calendar.getInstance()
+        c.add(Calendar.MONTH, -2)
+        val month : Int = c[Calendar.MONTH] + 1
+
+        c.set(Calendar.MONTH, month +1);
+        c.set(Calendar.YEAR, c[Calendar.YEAR]);
+        c.set(Calendar.DAY_OF_MONTH, 1)
+        return c.time
+    }
+
     @JvmStatic
     fun lastMonth() : Pair<Int, Int> {
         val c = Calendar.getInstance()

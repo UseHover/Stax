@@ -17,7 +17,9 @@ class BannerUtils(val context: Context) {
     private val IMP: String = "StaxBannerImpressions"
     private val LAST_GIST_IMP_DATE: String = "StaxBannerGistLastShown"
     private val LAST_UPVOTE_IMP_DATE: String = "StaxBannerUpvoteLastShown"
+    private val LAST_RESEARCH_IMP_DATE: String = "StaxBannerResearchLastShown"
     private val PERM_CLICKED = "PermBannerClicked";
+    private val RESEARCH_CLICKED = "ResearchBannerClicked";
     private val GENERAL_LAST_IMP_DATE = "AnyBannerLastImpDate"
 
 
@@ -41,6 +43,11 @@ class BannerUtils(val context: Context) {
     private fun setLastGistImpressionDate(value: Long) = Utils.saveLong(LAST_GIST_IMP_DATE, value, context)
     private fun lastUpvoteImpressionDate() = Utils.getLong(LAST_UPVOTE_IMP_DATE, context)
     private fun setLastUpvoteImpressionDate(value: Long) = Utils.saveLong(LAST_UPVOTE_IMP_DATE, value, context)
+    private fun lastResearchImpressionDate() = Utils.getLong(LAST_RESEARCH_IMP_DATE, context)
+    private fun setLastResearchImpressionDate(value: Long) = Utils.saveLong(LAST_RESEARCH_IMP_DATE, value, context)
+    private fun hasClickedResearchBanner() : Boolean =!Utils.getBoolean(RESEARCH_CLICKED, context)
+    private fun updateResearchBannerPref() = Utils.saveBoolean(RESEARCH_CLICKED, true, context)
+
 
     private fun invalidatePermissionCampaign() = Utils.saveBoolean(PERM_CLICKED, true, context)
     private fun isPermissionCampaignValid() = !Utils.getBoolean(PERM_CLICKED, context) && areCampaignsUnlocked()
@@ -74,6 +81,7 @@ class BannerUtils(val context: Context) {
         with(DateUtils.today()) {
             if (bannerId == Banner.GIST) setLastGistImpressionDate(this)
             else if (bannerId == Banner.UPVOTE) setLastUpvoteImpressionDate(this)
+            else if (bannerId == Banner.RESEARCH) setLastResearchImpressionDate(this)
         }
 
         setLastBanner(bannerId)
@@ -116,7 +124,16 @@ class BannerUtils(val context: Context) {
         }
     }
 
-    private fun researchQualifies(): Boolean {
+    private fun researchQualifies(hasTransactionLastMonth: Boolean): Boolean {
+        if(!hasTransactionLastMonth) return false
+
+        else with(DateUtils) {
+            fun hasImpressionSince(earliestDate: Date) : Boolean = withinDuration(getDate(lastUpvoteImpressionDate()), earliestDate, todayDate())
+
+            return  if(hasClickedResearchBanner()) !hasImpressionSince(twoMonthsAgo())
+            else  !hasImpressionSince(beginningOfTheMonth())
+        }
+
 
     }
 
@@ -131,6 +148,7 @@ class BannerUtils(val context: Context) {
             roundUpNewsQualifies() -> bannerId = Banner.ROUND_UP_NEWS
             gistQualifies() -> bannerId = Banner.GIST
             upvoteQualifies() -> bannerId = Banner.UPVOTE
+            researchQualifies(hasTransactionLastMonth) ->bannerId = Banner.RESEARCH
         }
         bannerId = enforceCampaignLimit(bannerId)
 
@@ -139,6 +157,8 @@ class BannerUtils(val context: Context) {
 
     fun closeCampaign(bannerId: Int) {
         if (bannerId == Banner.PERMISSION) invalidatePermissionCampaign()
+        else if(bannerId == Banner.RESEARCH) updateResearchBannerPref()
+
         renewImpression(0)
         bannerId_in_cache = 0
     }
