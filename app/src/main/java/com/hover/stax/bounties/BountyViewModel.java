@@ -41,9 +41,9 @@ public class BountyViewModel extends AndroidViewModel {
 
     private MutableLiveData<List<SimInfo>> sims;
 
-    public BountyViewModel(@NonNull Application application, DatabaseRepo repo) {
+    public BountyViewModel(@NonNull Application application) {
         super(application);
-        this.repo = repo;
+        repo = new DatabaseRepo(application);
         loadSims();
         filteredBountyChannels = new MutableLiveData<>();
         filteredBountyChannels.setValue(null);

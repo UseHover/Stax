@@ -17,14 +17,14 @@ import java.util.List;
 public class RequestDetailViewModel extends AndroidViewModel {
     private final String TAG = "RequestDetailViewModel";
 
-    private final DatabaseRepo repo;
+    private DatabaseRepo repo;
     private MutableLiveData<Request> request;
     private LiveData<Channel> channel;
     private LiveData<List<StaxContact>> recipients = new MutableLiveData<>();
 
-    public RequestDetailViewModel(@NonNull Application application, DatabaseRepo repo) {
+    public RequestDetailViewModel(@NonNull Application application) {
         super(application);
-        this.repo = repo;
+        repo = new DatabaseRepo(application);
         request = new MutableLiveData<>();
         channel = Transformations.switchMap(request, r -> repo.getLiveChannel(r.requester_institution_id));
         recipients = Transformations.switchMap(request, this::loadRecipients);

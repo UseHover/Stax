@@ -30,18 +30,16 @@ import com.hover.stax.utils.paymentLinkCryptography.Encryption
 import timber.log.Timber
 import java.security.NoSuchAlgorithmException
 
-class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
-
-
-    private val channelDao: ChannelDao = db.channelDao()
-    private val actionDao: HoverActionDao = sdkDb.actionDao()
-    private val requestDao: RequestDao = db.requestDao()
-    private val scheduleDao: ScheduleDao = db.scheduleDao()
-    private val simDao: SimInfoDao = sdkDb.simDao()
-    private val transactionDao: TransactionDao = db.transactionDao()
-    private val contactDao: ContactDao = db.contactDao()
-    val allChannels: LiveData<List<Channel>> = channelDao.allInAlphaOrder
-    val selected: LiveData<List<Channel>> = channelDao.getSelected(true)
+class DatabaseRepo(application: Application?) {
+    private val channelDao: ChannelDao
+    private val actionDao: HoverActionDao
+    private val requestDao: RequestDao
+    private val scheduleDao: ScheduleDao
+    private val simDao: SimInfoDao
+    private val transactionDao: TransactionDao
+    private val contactDao: ContactDao
+    val allChannels: LiveData<List<Channel>>
+    val selected: LiveData<List<Channel>>
     private val decryptedRequest: MutableLiveData<Request> = MutableLiveData()
 
     // Channels
@@ -304,4 +302,17 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         private const val TAG = "DatabaseRepo"
     }
 
+    init {
+        val db = AppDatabase.getInstance(application)
+        channelDao = db.channelDao()
+        transactionDao = db.transactionDao()
+        contactDao = db.contactDao()
+        requestDao = db.requestDao()
+        scheduleDao = db.scheduleDao()
+        val sdkDb = HoverRoomDatabase.getInstance(application)
+        actionDao = sdkDb.actionDao()
+        simDao = sdkDb.simDao()
+        allChannels = channelDao.allInAlphaOrder
+        selected = channelDao.getSelected(true)
+    }
 }

@@ -17,14 +17,14 @@ import java.util.List;
 public class ScheduleDetailViewModel extends AndroidViewModel {
     private final String TAG = "ScheduleViewModel";
 
-    private final DatabaseRepo repo;
+    private DatabaseRepo repo;
     private MutableLiveData<Schedule> schedule;
     private LiveData<HoverAction> action;
     private LiveData<List<StaxContact>> contacts;
 
-    public ScheduleDetailViewModel(@NonNull Application application, DatabaseRepo repo) {
+    public ScheduleDetailViewModel(@NonNull Application application) {
         super(application);
-        this.repo = repo;
+        repo = new DatabaseRepo(application);
         schedule = new MutableLiveData<>();
         action = Transformations.switchMap(schedule, this::loadAction);
         contacts = Transformations.switchMap(schedule, this::loadContacts);
