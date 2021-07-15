@@ -1,5 +1,8 @@
 package com.hover.stax.settings;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.amplitude.api.Amplitude;
+import com.hover.sdk.api.Hover;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.databinding.FragmentSettingsBinding;
@@ -47,6 +50,7 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
         setUpAccounts(securityViewModel);
         setUpChooseLang();
         setUpContactStax();
+        setupGetSupport();
         setupRequestFeature();
 
         return binding.getRoot();
@@ -63,6 +67,13 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
 
         assert getActivity() != null;
         btn.setOnClickListener(view -> navigateToLanguageSelectionFragment(getActivity()));
+    }
+
+    private void setupGetSupport() {
+        binding.getSupportStax.contactSupport.setOnClickListener(v -> openEmailClient(
+                getString(R.string.stax_support_email),
+                getString(R.string.stax_emailing_subject, Hover.getDeviceId(requireContext())),
+                requireActivity()));
     }
 
     private void setUpAccounts(PinsViewModel securityViewModel) {
@@ -102,6 +113,13 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
         spinner.setOnItemClickListener((adapterView, view, pos, id) -> {
             if (pos != 0) securityViewModel.setDefaultAccount(channels.get(pos));
         });
+    }
+
+    private void openEmailClient(String recipientEmail, String subject, Activity activity) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Uri data = Uri.parse("mailto:"+recipientEmail+" ?subject=" + subject);
+        intent.setData(data);
+        activity.startActivity(intent);
     }
 
     @Override
