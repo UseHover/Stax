@@ -98,6 +98,10 @@ public class DatabaseRepo {
         AppDatabase.databaseWriteExecutor.execute(() -> channelDao.update(channel));
     }
 
+    public void updateAll(List<Channel> channels) {
+        AppDatabase.databaseWriteExecutor.execute(() -> channelDao.updateAll(channels));
+    }
+
     // SIMs
     public List<SimInfo> getPresentSims() {
         return simDao.getPresent();
@@ -174,14 +178,17 @@ public class DatabaseRepo {
                 HoverAction a = getAction(intent.getStringExtra(HoverAction.ID_KEY));
                 Channel channel = getChannel(a.channel_id);
                 StaxContact contact = StaxContact.findOrInit(intent, channel.countryAlpha2, t, this);
-                save(contact);
+
+                if (contact.accountNumber != null)
+                    save(contact);
 
                 if (t == null) {
-                    Utils.logAnalyticsEvent(c.getString(R.string.initializing_ussd_services), c, true);
+                    Utils.logAnalyticsEvent(c.getString(R.string.initializing_ussd_services), c);
                     t = new StaxTransaction(intent, a, contact, c);
                     transactionDao.insert(t);
                     t = transactionDao.getTransaction(t.uuid);
                 }
+
                 t.update(intent, a, contact, c);
                 transactionDao.update(t);
 
@@ -196,7 +203,7 @@ public class DatabaseRepo {
         if (t.transaction_type.equals(HoverAction.RECEIVE)) {
             List<Request> rs = getRequests();
             for (Request r : rs) {
-                if (r.requestee_ids.contains(contact.id) && Utils.getAmount(r.amount).equals(t.amount)) {
+                if (r.requestee_ids.contains(contact.id) && Utils.getAmount(r.amount) == t.amount) {
                     r.matched_transaction_uuid = t.uuid;
                     update(r);
                 }
@@ -234,6 +241,8 @@ public class DatabaseRepo {
     }
 
     public void save(final StaxContact contact) {
+        if (contact == null) return;
+
         AppDatabase.databaseWriteExecutor.execute(() -> {
             if (getContact(contact.id) == null) {
                 try {

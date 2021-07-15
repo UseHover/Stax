@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -30,6 +29,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import timber.log.Timber;
 
 public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdown.HighlightListener, PushNotificationTopicsInterface {
     public final static String TAG = "ChannelDropdownVM";
@@ -247,16 +248,20 @@ public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdo
         return channelActions;
     }
 
-    public void setChannelSelected(Channel channel) {
-        if (channel == null || channel.selected) return;
-        logChoice(channel);
-        channel.selected = true;
-        channel.defaultAccount = selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0;
-        repo.update(channel);
+    public void setChannelSelected(List<Channel> channels) {
+        if (channels == null || channels.isEmpty()) return;
+
+        for (int i = 0; i < channels.size(); i++) {
+            Channel c = channels.get(i);
+            logChoice(c);
+            c.selected = true;
+            c.defaultAccount = (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0) && i == 0;
+            repo.update(c);
+        }
     }
 
     private void logChoice(Channel channel) {
-        Log.i(TAG, "saving selected channel: " + channel);
+        Timber.i("saving selected channel: %s", channel);
         joinChannelGroup(channel.id, getApplication().getApplicationContext());
         JSONObject args = new JSONObject();
         try {

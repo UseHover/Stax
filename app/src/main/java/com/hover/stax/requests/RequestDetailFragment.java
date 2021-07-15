@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.databinding.FragmentRequestDetailBinding;

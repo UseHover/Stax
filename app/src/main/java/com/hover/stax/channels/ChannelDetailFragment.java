@@ -81,13 +81,8 @@ public class ChannelDetailFragment extends Fragment implements
             transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions, this));
         });
 
-        viewModel.getSpentThisMonth().observe(getViewLifecycleOwner(), sum -> {
-            binding.detailsMoneyOut.setText(Utils.formatAmount(sum != null ? sum : 0));
-        });
-
-        viewModel.getFeesThisYear().observe(getViewLifecycleOwner(), sum -> {
-            binding.detailsFees.setText(Utils.formatAmount(sum != null ? sum : 0));
-        });
+        viewModel.getSpentThisMonth().observe(getViewLifecycleOwner(), sum -> binding.detailsMoneyOut.setText(Utils.formatAmount(sum != null ? sum : 0.0)));
+        viewModel.getFeesThisYear().observe(getViewLifecycleOwner(), sum -> binding.detailsFees.setText(Utils.formatAmount(sum != null ? sum : 0.0)));
     }
 
     private void initRecyclerViews() {
@@ -101,6 +96,7 @@ public class ChannelDetailFragment extends Fragment implements
         requestsAdapter = new RequestsAdapter(null, this);
         rv.setAdapter(requestsAdapter);
     }
+
     private void setUpFuture(Channel channel) {
         futureViewModel.getScheduledByChannel(channel.id).observe(getViewLifecycleOwner(), schedules -> {
             scheduledAdapter.updateData(schedules);

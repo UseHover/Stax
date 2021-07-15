@@ -46,7 +46,7 @@ public class ContactInput extends LinearLayout {
     public void setRecent(List<StaxContact> contacts, Context c) {
         ArrayAdapter<StaxContact> adapter = new StaxContactArrayAdapter(c, contacts);
         contactAutocomplete.setAdapter(adapter);
-        contactAutocomplete.setDropDownHeight(contacts.size() > 0 ? UIHelper.dpToPx(300) : 0);
+        contactAutocomplete.setDropDownHeight(contacts == null || contacts.isEmpty() ? 0 : UIHelper.dpToPx(300));
     }
 
     public void setSelected(StaxContact contact) {
@@ -63,7 +63,7 @@ public class ContactInput extends LinearLayout {
         contactInputLayout.setHint(hint);
     }
 
-    public void setOnItemClickListener(AdapterView.OnItemClickListener listener) {
+    public void setAutocompleteClickListener(AdapterView.OnItemClickListener listener) {
         contactAutocomplete.setOnItemClickListener(listener);
     }
 

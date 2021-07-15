@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.amplitude.api.Amplitude;
 import com.appsflyer.AppsFlyerLib;
 import com.hover.stax.R;
 import com.hover.stax.databinding.ActivityLanguageBinding;

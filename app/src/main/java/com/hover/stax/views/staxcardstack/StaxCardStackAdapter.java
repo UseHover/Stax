@@ -16,7 +16,7 @@ public abstract class StaxCardStackAdapter<T> extends StaxCardStackView.Adapter<
     public StaxCardStackAdapter(Context context) {
         this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
-        this.mData = new ArrayList();
+        this.mData = new ArrayList<>();
     }
 
     public void updateData(List<T> data) {
