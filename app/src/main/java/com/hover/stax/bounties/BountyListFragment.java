@@ -129,6 +129,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         if (bounties != null && !bounties.isEmpty() && channels != null && !channels.isEmpty()
                 && (bountyViewModel.country.equals(CountryAdapter.codeRepresentingAllCountries())
                 || channels.get(0).countryAlpha2.equals(bountyViewModel.country))) {
+
             BountyChannelsAdapter adapter = new BountyChannelsAdapter(channels, bounties, this);
             binding.bountiesRecyclerView.setAdapter(adapter);
             hideLoadingState();
