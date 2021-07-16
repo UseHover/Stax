@@ -9,17 +9,20 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentFaqBinding
+import com.hover.stax.databinding.FragmentRequestBinding
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 
-class FaqFragment : Fragment(), FAQAdapter.Companion.SelectListener {
+class FaqFragment : Fragment(), FAQAdapter.SelectListener {
 
-    lateinit var binding: FragmentFaqBinding
+    private var _binding: FragmentFaqBinding? = null
+    private val binding get() = _binding!!
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.FAQs)), requireContext())
-        binding = FragmentFaqBinding.inflate(inflater, container, false)
+        _binding = FragmentFaqBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -89,5 +92,10 @@ class FaqFragment : Fragment(), FAQAdapter.Companion.SelectListener {
         binding.faqContentId.movementMethod = LinkMovementMethod.getInstance();
         setShowingContent(true)
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
