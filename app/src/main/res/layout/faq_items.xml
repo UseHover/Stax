@@ -4,6 +4,7 @@
             android:layout_height="wrap_content"
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/faq_topic_item"
+            android:background="?selectableItemBackground"
             android:textSize="@dimen/text_16"
             android:paddingHorizontal="@dimen/margin_13"
             android:paddingVertical="@dimen/margin_16"
