@@ -55,20 +55,20 @@ class RequestActivity : AbstractNavigationActivity(), RequestSenderInterface, Sm
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if(requestCode == Constants.SMS && PermissionHelper(this).permissionsGranted(grantResults)){
             Utils.logAnalyticsEvent(getString(R.string.perms_sms_granted), this)
-            sendSms(null)
+            sendSms()
         }else if(requestCode == Constants.SMS){
             Utils.logAnalyticsEvent(getString(R.string.perms_sms_denied), this)
             UIHelper.flashMessage(this, getString(R.string.toast_error_smsperm))
         }
     }
 
-    fun sendSms(view: View?){
+    fun sendSms(){
         requestViewModel.saveRequest()
         SmsSentObserver(this, requestViewModel.requestees.value, Handler(), this).start()
         sendSms(requestViewModel.formulatedRequest.value, requestViewModel.requestees.value, this)
     }
 
-    fun sendWhatsapp(view: View){
+    fun sendWhatsapp(){
         requestViewModel.saveRequest()
         sendWhatsapp(requestViewModel.formulatedRequest.value, requestViewModel.requestees.value, requestViewModel.activeChannel.value, this)
     }
@@ -88,7 +88,7 @@ class RequestActivity : AbstractNavigationActivity(), RequestSenderInterface, Sm
     }
 
     private fun createSuccessIntent(type: Int): Intent =
-        Intent().apply { action = if(type == Constants.SCHEDULE_REQUEST) Constants.SCHEDULED else Constants.TRANSFERED }
+        Intent().apply { action = if(type == Constants.SCHEDULE_REQUEST) Constants.SCHEDULED else Constants.TRANSFERRED }
 
     private fun cancel(){
         setResult(RESULT_CANCELED)

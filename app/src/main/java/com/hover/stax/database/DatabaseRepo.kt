@@ -30,7 +30,8 @@ import com.hover.stax.utils.paymentLinkCryptography.Encryption
 import timber.log.Timber
 import java.security.NoSuchAlgorithmException
 
-class DatabaseRepo(application: Application?) {
+class DatabaseRepo(application: Application) {
+
     private val channelDao: ChannelDao
     private val actionDao: HoverActionDao
     private val requestDao: RequestDao
@@ -109,6 +110,7 @@ class DatabaseRepo(application: Application?) {
     // Transactions
     val completeAndPendingTransferTransactions: LiveData<List<StaxTransaction?>?>?
         get() = transactionDao.getCompleteAndPendingTransfers()
+
     val bountyTransactions: LiveData<List<StaxTransaction?>?>?
         get() = transactionDao.bountyTransactions
 
@@ -299,7 +301,7 @@ class DatabaseRepo(application: Application?) {
     }
 
     companion object {
-        private const val TAG = "DatabaseRepo"
+        private val TAG = DatabaseRepo::class.java.simpleName
     }
 
     init {

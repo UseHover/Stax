@@ -2,7 +2,6 @@ package com.hover.stax.requests;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -85,7 +84,7 @@ public class Request {
     }
 
     public Request(String paymentLink) {
-        Timber.v("Creating request from link: " + paymentLink);
+        Timber.v("Creating request from link: %s", paymentLink);
         String[] splitString = paymentLink.split(PAYMENT_LINK_SEPERATOR);
         amount = splitString[0].equals("0.00") ? "" : Utils.formatAmount(splitString[0]);
         requester_institution_id = Integer.parseInt(splitString[1]);
@@ -124,7 +123,7 @@ public class Request {
 
     public String generateMessage(Context c) {
         String amountString = amount != null ? c.getString(R.string.sms_amount_detail, Utils.formatAmount(amount)) : "";
-        String noteString = note != null && !TextUtils.isEmpty(note) ? c.getString(R.string.sms_note_detail, note) : "";
+        String noteString = note != null && !TextUtils.isEmpty(note) ? c.getString(R.string.sms_note_detail, note) : " ";
         String paymentLink = generateStaxLink(c);
 
         return c.getString(R.string.sms_request_template, amountString, noteString, paymentLink);
@@ -133,9 +132,9 @@ public class Request {
     private String generateStaxLink(Context c) {
         String amountNoFormat = amount != null && !amount.isEmpty() ? amount : "0.00";
         String params = c.getString(R.string.payment_url_end, amountNoFormat, requester_institution_id, requester_number, DateUtils.now());
-        Timber.i("encrypting from: " + params);
+        Timber.i("encrypting from: %s", params);
         String encryptedString = encryptBijective(params, c);
-        Timber.i("link: " + c.getResources().getString(R.string.payment_root_url, encryptedString));
+        Timber.i("link: %s", c.getResources().getString(R.string.payment_root_url, encryptedString));
         return c.getResources().getString(R.string.payment_root_url, encryptedString);
     }
 

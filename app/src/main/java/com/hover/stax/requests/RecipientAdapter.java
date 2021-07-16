@@ -18,7 +18,7 @@ import java.util.List;
 public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.RecipientViewHolder> {
     private List<StaxContact> recipients;
     private List<StaxContact> allContacts;
-    private UpdateListener updateListener;
+    private final UpdateListener updateListener;
 
     RecipientAdapter(List<StaxContact> recips, List<StaxContact> contacts, UpdateListener listener) {
         recipients = recips;
@@ -48,8 +48,8 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
     public void onBindViewHolder(final @NonNull RecipientViewHolder holder, int position) {
         ContactInput ci = (ContactInput) holder.itemView;
         ci.setHint(ci.getContext().getString(R.string.send_request_to));
-        ci.setRecent(allContacts, ci.getContext());
 
+        ci.setRecent(allContacts, ci.getContext());
 
         if (recipients != null && recipients.size() > position && recipients.get(position).accountNumber != null)
             ci.setText(recipients.get(position).toString(), false);
@@ -70,7 +70,7 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
             }
         });
 
-        ci.setOnItemClickListener((adapterView, view, pos, id) -> {
+        ci.setAutocompleteClickListener((adapterView, view, pos, id) -> {
             StaxContact contact = (StaxContact) adapterView.getItemAtPosition(pos);
             updateListener.onUpdate(position, contact);
         });

@@ -11,19 +11,18 @@ import com.hover.stax.databinding.FragmentMainBinding
 import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
-import org.koin.androidx.viewmodel.ext.android.getViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var bannerViewModel: BannerViewModel
+    private val bannerViewModel: BannerViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
         _binding = FragmentMainBinding.inflate(inflater, container, false)
-        bannerViewModel = getViewModel()
         return binding.root
     }
 
@@ -44,7 +43,7 @@ class HomeFragment : Fragment() {
 
                     binding.homeBanner.setOnClickListener {
                         Utils.logAnalyticsEvent(getString(R.string.clicked_on_banner), requireContext())
-                        Utils.openUrl(banner.url, context)
+                        Utils.openUrl(banner.url, requireActivity())
                         closeCampaign(banner.id)
                     }
                 } else binding.homeBanner.visibility = View.GONE

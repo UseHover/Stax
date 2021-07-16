@@ -32,6 +32,8 @@ public class BountyViewModel extends AndroidViewModel {
 
     private DatabaseRepo repo;
 
+    String country = CountryAdapter.codeRepresentingAllCountries();
+
     private LiveData<List<HoverAction>> bountyActions;
     private LiveData<List<Channel>> bountyChannels;
     private LiveData<List<StaxTransaction>> bountyTransactions;
@@ -114,6 +116,7 @@ public class BountyViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Channel>> filterChannels(String countryCode) {
+        country = countryCode;
         List<HoverAction> actions = bountyActions.getValue();
         if (actions == null) return null;
 

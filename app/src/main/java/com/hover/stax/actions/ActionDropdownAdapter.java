@@ -65,7 +65,6 @@ public class ActionDropdownAdapter extends ArrayAdapter<HoverAction> {
         TextView id;
         ImageView logo;
         AppCompatTextView channelText;
-        View divider;
 
         StaxSpinnerItemWithLogoBinding binding;
 
@@ -75,8 +74,6 @@ public class ActionDropdownAdapter extends ArrayAdapter<HoverAction> {
             logo = binding.serviceItemImageId;
             channelText = binding.serviceItemNameId;
             id = binding.serviceItemId;
-            divider = binding.serviceItemDivider;
-            divider.setVisibility(View.GONE);
         }
 
         @SuppressLint("SetTextI18n")

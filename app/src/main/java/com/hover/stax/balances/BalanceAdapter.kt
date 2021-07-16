@@ -57,7 +57,7 @@ class BalanceAdapter(val channels: List<Channel>, val balanceListener: BalanceLi
 
     inner class BalancesViewHolder(val binding: BalanceItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bindItems(channel: Channel, holder: BalancesViewHolder){
+        fun bindItems(channel: Channel, holder: BalancesViewHolder) {
             UIHelper.setTextUnderline(binding.balanceChannelName, channel.name)
 
             if (!showBalance) binding.balanceSubtitle.visibility = View.GONE
@@ -65,15 +65,16 @@ class BalanceAdapter(val channels: List<Channel>, val balanceListener: BalanceLi
             when {
                 channel.latestBalance != null && showBalance -> {
                     binding.balanceSubtitle.visibility = View.VISIBLE
-                   binding.balanceSubtitle.text = DateUtils.humanFriendlyDate(channel.latestBalanceTimestamp)
+                    binding.balanceSubtitle.text = DateUtils.humanFriendlyDate(channel.latestBalanceTimestamp)
                     binding.balanceAmount.text = Utils.formatAmount(channel.latestBalance)
                 }
                 channel.latestBalance == null && showBalance -> {
+                    binding.balanceAmount.text = "-"
                     binding.balanceSubtitle.visibility = View.VISIBLE
                     binding.balanceSubtitle.text = itemView.context.getString(R.string.refresh_balance_desc)
                 }
                 else -> {
-                   binding.balanceAmount.text = ""
+                    binding.balanceAmount.text = ""
                     setColorForEmptyAmount(true, holder, UIHelper.getColor(channel.secondaryColorHex, false, binding.root.context))
                 }
             }

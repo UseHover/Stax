@@ -23,8 +23,6 @@ class BannerUtils(val context: Context) {
     private val RESEARCH_CLICKED = "ResearchBannerClicked";
     private val GENERAL_LAST_IMP_DATE = "AnyBannerLastImpDate"
 
-
-
     private fun setLastBanner(bannerId: Int) {
         Utils.saveInt(TAG, bannerId, context)
         bannerId_in_cache = bannerId
@@ -34,7 +32,6 @@ class BannerUtils(val context: Context) {
 
     private fun getImpression(): Int = Utils.getInt(IMP, context)
     private fun decrementImpression() = Utils.saveInt(IMP, getImpression() - 1, context)
-
 
     private fun renewImpression(num: Int) = Utils.saveInt(IMP, num, context)
 
@@ -46,22 +43,23 @@ class BannerUtils(val context: Context) {
     private fun setLastUpvoteImpressionDate(value: Long) = Utils.saveLong(LAST_UPVOTE_IMP_DATE, value, context)
     private fun lastResearchImpressionDate() = Utils.getLong(LAST_RESEARCH_IMP_DATE, context)
     private fun setLastResearchImpressionDate(value: Long) = Utils.saveLong(LAST_RESEARCH_IMP_DATE, value, context)
-    private fun hasClickedResearchBanner() : Boolean =!Utils.getBoolean(RESEARCH_CLICKED, context)
+    private fun hasClickedResearchBanner(): Boolean = !Utils.getBoolean(RESEARCH_CLICKED, context)
     private fun updateResearchBannerPref() = Utils.saveBoolean(RESEARCH_CLICKED, true, context)
 
 
     private fun invalidatePermissionCampaign() = Utils.saveBoolean(PERM_CLICKED, true, context)
     private fun isPermissionCampaignValid() = !Utils.getBoolean(PERM_CLICKED, context) && areCampaignsUnlocked()
-    private fun areCampaignsUnlocked():Boolean = Utils.getInt(APP_SESSIONS, context) >= 3
+    private fun areCampaignsUnlocked(): Boolean = Utils.getInt(APP_SESSIONS, context) >= 3
 
     private fun setGeneralLastImpressionDate() = Utils.saveLong(GENERAL_LAST_IMP_DATE, DateUtils.today(), context)
     private fun generalLastImpressionDate() = Utils.getLong(GENERAL_LAST_IMP_DATE, context)
 
     private fun withinDuration(mainDate: Date, dateStart: Date, dateEnd: Date) = mainDate in dateStart..dateEnd
 
-    private fun run(bannerId: Int) : Banner? {
-       return run(bannerId, isNewCampaign = false, updateImpression = false)
+    private fun run(bannerId: Int): Banner? {
+        return run(bannerId, isNewCampaign = false, updateImpression = false)
     }
+
     private fun run(bannerId: Int, isNewCampaign: Boolean, updateImpression: Boolean): Banner? {
         var banner: Banner? = null;
         with(Banner) {
@@ -80,9 +78,11 @@ class BannerUtils(val context: Context) {
 
     private fun updateImpressionMeta(banner: Banner, bannerId: Int, isNewCampaign: Boolean) {
         with(DateUtils.today()) {
-            if (bannerId == Banner.GIST) setLastGistImpressionDate(this)
-            else if (bannerId == Banner.UPVOTE) setLastUpvoteImpressionDate(this)
-            else if (bannerId == Banner.RESEARCH) setLastResearchImpressionDate(this)
+            when (bannerId) {
+                Banner.GIST -> setLastGistImpressionDate(this)
+                Banner.UPVOTE -> setLastUpvoteImpressionDate(this)
+                Banner.RESEARCH -> setLastResearchImpressionDate(this)
+            }
         }
 
         setLastBanner(bannerId)
@@ -98,6 +98,7 @@ class BannerUtils(val context: Context) {
 
     private fun permissionQualifies(): Boolean = !(PermissionHelper(context).hasBasicPerms() && PermissionHelper(context).hasHardPerms())
     private fun roundUpNewsQualifies(): Boolean = DateUtils.todayDate() == DateUtils.getDate(Calendar.THURSDAY, FIRST_WEEK)
+
     private fun gistQualifies(): Boolean {
         with(DateUtils) {
             return if (withinDuration(todayDate(), beginningOfTheMonth(), getDate(SECOND_WEEK))) {
@@ -126,21 +127,19 @@ class BannerUtils(val context: Context) {
     }
 
     private fun researchQualifies(hasTransactionLastMonth: Boolean): Boolean {
-        if(!hasTransactionLastMonth) return false
+        if (!hasTransactionLastMonth) return false
+        else
+            with(DateUtils) {
+                fun hasImpressionSince(earliestDate: Date): Boolean = withinDuration(getDate(lastUpvoteImpressionDate()), earliestDate, todayDate())
 
-        else with(DateUtils) {
-            fun hasImpressionSince(earliestDate: Date) : Boolean = withinDuration(getDate(lastUpvoteImpressionDate()), earliestDate, todayDate())
-
-            return  if(hasClickedResearchBanner()) !hasImpressionSince(twoMonthsAgo())
-            else  !hasImpressionSince(beginningOfTheMonth())
-        }
-
-
+                return if (hasClickedResearchBanner()) !hasImpressionSince(twoMonthsAgo())
+                else !hasImpressionSince(beginningOfTheMonth())
+            }
     }
 
     fun getQualifiedBanner(hasTransactionLastMonth: Boolean): Banner? {
         Timber.i("Banner called here with MAU: $hasTransactionLastMonth")
-        if(!areCampaignsUnlocked()) return run(0)
+        if (!areCampaignsUnlocked()) return run(0)
         if (bannerId_in_cache > 0) return run(bannerId_in_cache, isNewCampaign = false, updateImpression = false)
         if (campaignRunning()) return run(lastBanner(), isNewCampaign = false, updateImpression = true)
 
@@ -150,7 +149,7 @@ class BannerUtils(val context: Context) {
             roundUpNewsQualifies() -> bannerId = Banner.ROUND_UP_NEWS
             gistQualifies() -> bannerId = Banner.GIST
             upvoteQualifies() -> bannerId = Banner.UPVOTE
-            researchQualifies(hasTransactionLastMonth) ->bannerId = Banner.RESEARCH
+            researchQualifies(hasTransactionLastMonth) -> bannerId = Banner.RESEARCH
         }
         bannerId = enforceCampaignLimit(bannerId)
 
@@ -159,7 +158,7 @@ class BannerUtils(val context: Context) {
 
     fun closeCampaign(bannerId: Int) {
         if (bannerId == Banner.PERMISSION) invalidatePermissionCampaign()
-        else if(bannerId == Banner.RESEARCH) updateResearchBannerPref()
+        else if (bannerId == Banner.RESEARCH) updateResearchBannerPref()
 
         renewImpression(0)
         bannerId_in_cache = 0
@@ -167,7 +166,7 @@ class BannerUtils(val context: Context) {
 
     companion object {
         var bannerId_in_cache: Int by Delegates.observable(0) { _, _, _ -> }
-        val APP_SESSIONS = "AppSessions"
+        const val APP_SESSIONS = "AppSessions"
     }
 }
 

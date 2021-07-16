@@ -24,7 +24,6 @@ import androidx.work.WorkManager
 import com.amplitude.api.Amplitude
 import com.appsflyer.AppsFlyerLib
 import com.google.firebase.installations.FirebaseInstallations
-import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.hover.sdk.actions.HoverAction
@@ -43,12 +42,17 @@ import com.hover.stax.utils.Constants.FRAGMENT_DIRECT
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.blur.StaxBlur
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
 import timber.log.Timber
 
 
 class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener, PushNotificationTopicsInterface {
 
     private lateinit var binding: SplashScreenLayoutBinding
+    private lateinit var remoteConfig: FirebaseRemoteConfig
 
     override fun onCreate(savedInstanceState: Bundle?) {
         UIHelper.setFullscreenView(this)
@@ -57,12 +61,10 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         binding = SplashScreenLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        remoteConfig = FirebaseRemoteConfig.getInstance()
+
         startForegroundSequence()
         startBackgroundProcesses()
-
-        if (selfDestructWhenAppVersionExpires()) return
-
-        authenticateUser()
     }
 
     override fun onStart() {
@@ -83,7 +85,10 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         startWorkers()
         initFirebaseMessagingTopics()
 
-        FirebaseMessaging.getInstance().token.addOnSuccessListener { Timber.i("Firebase ID is $it") }
+        FirebaseInstallations.getInstance().getToken(false)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) Timber.i("Installation auth token: ${task.result?.token}")
+            }
         FirebaseInstallations.getInstance().id.addOnCompleteListener { Timber.i("Firebase installation ID is ${it.result}") }
 
         initRemoteConfigs()
@@ -133,20 +138,22 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         tv.setCompoundDrawablesRelativeWithIntrinsicBounds(null, d, null, null)
     }
 
-    private fun authenticateUser() = Handler(Looper.getMainLooper()).postDelayed(
-        {
-            BiometricChecker(this@SplashScreenActivity, this@SplashScreenActivity).startAuthentication(null)
-        },
-        NAV_DELAY
-    )
+    private fun validateUser() = runBlocking {
+        launch {
+            delay(NAV_DELAY)
+
+            if (!OnBoardingActivity.hasPassedThrough(this@SplashScreenActivity))
+                goToOnBoardingActivity()
+            else
+                BiometricChecker(this@SplashScreenActivity, this@SplashScreenActivity).startAuthentication(null)
+        }
+    }
 
     private fun initAmplitude() = Amplitude.getInstance().initialize(this, getString(R.string.amp)).enableForegroundTracking(application)
 
-    private fun logPushNotificationIfRequired() {
-        intent.extras?.let {
-            val fcmTitle = it.getString(Constants.FROM_FCM)
-            fcmTitle?.let { title -> Utils.logAnalyticsEvent(getString(R.string.clicked_push_notification, title), this) }
-        }
+    private fun logPushNotificationIfRequired() = intent.extras?.let {
+        val fcmTitle = it.getString(Constants.FROM_FCM)
+        fcmTitle?.let { title -> Utils.logAnalyticsEvent(getString(R.string.clicked_push_notification, title), this) }
     }
 
     private fun initHover() {
@@ -156,24 +163,35 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
     }
 
     private fun initRemoteConfigs() {
-        val remoteConfig = FirebaseRemoteConfig.getInstance()
         val configSettings = FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(3600).build()
         remoteConfig.apply {
             setConfigSettingsAsync(configSettings)
             setDefaultsAsync(R.xml.remote_config_default)
             fetchAndActivate().addOnCompleteListener {
                 if (it.isSuccessful) {
-                    val updated = it.result
-                    Timber.i("Config params updated: $updated")
-                }
+                    Timber.i("Config params updated: ${it.result}")
+                    Utils.variant = remoteConfig.getString("onboarding_app_variant")
+                } else
+                    Utils.variant = Constants.VARIANT_1
+
+                logVariant()
+
+                if (!selfDestructWhenAppVersionExpires())
+                    validateUser()
             }
         }
+    }
+
+    private fun logVariant(){
+        val prop = JSONObject()
+        prop.put("Variant", Utils.variant)
+        Utils.logAnalyticsEvent(getString(R.string.fetched_app_variant), prop, this)
     }
 
     private fun selfDestructWhenAppVersionExpires(): Boolean {
         return try {
             val currentVersionCode = packageManager.getPackageInfo(packageName, 0).versionCode
-            val forceUpdateVersionCode = FirebaseRemoteConfig.getInstance().getString("force_update_app_version").toInt()
+            val forceUpdateVersionCode = remoteConfig.getString("force_update_app_version").toInt()
             if (forceUpdateVersionCode > currentVersionCode) {
                 startActivity(Intent(this, SelfDestructActivity::class.java))
                 finish()
@@ -240,20 +258,16 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
 
         try {
             redirectLink?.let { intent.putExtra(FRAGMENT_DIRECT, redirectLink.toInt()) }
-        } catch (e: java.lang.NumberFormatException) {
+        } catch (e: NumberFormatException) {
             Utils.logErrorAndReportToFirebase(SplashScreenActivity::class.java.simpleName, getString(R.string.firebase_fcm_redirect_format_err), e)
         }
 
         startActivity(intent)
     }
 
-    override fun onAuthError(error: String?) {
-        UIHelper.flashMessage(this, getString(R.string.toast_error_auth))
-    }
+    override fun onAuthError(error: String?) = UIHelper.flashMessage(this, getString(R.string.toast_error_auth))
 
-    override fun onAuthSuccess(action: HoverAction?) {
-        chooseNavigation(intent)
-    }
+    override fun onAuthSuccess(action: HoverAction?) = chooseNavigation(intent)
 
     private fun redirectionIsExternal(redirectTo: String): Boolean = redirectTo.contains("https")
 
@@ -266,7 +280,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
     companion object {
         const val BLUR_DELAY = 1000L
         const val LOGO_DELAY = 1200L
-        const val NAV_DELAY = 1800L
+        const val NAV_DELAY = 1500L
         const val SPLASH_ICON_WIDTH = 177
         const val SPLASH_ICON_HEIGHT = 57
     }

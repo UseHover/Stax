@@ -29,10 +29,13 @@
             android:id="@+id/languageCard"
             layout="@layout/settings_card_language" />
 
-        <include layout="@layout/contact_stax_layout"
+        <include layout="@layout/stayintouch_stax_layout"
             android:id="@+id/contactStax"/>
 
-        <TextView
+        <include layout="@layout/support_stax_layout"
+                android:id="@+id/get_support_stax"/>
+
+        <TextView android:id="@+id/disclaimer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_13"
@@ -40,7 +43,7 @@
             android:lineSpacingExtra="2sp"
             android:text="@string/disclaimer"
             android:textColor="@color/darkGrey"
-            android:textSize="@dimen/text_13" />
+            android:textSize="@dimen/text_13"/>
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -3,12 +3,12 @@ package com.hover.stax.balances
 import android.app.Activity
 import android.view.View
 import androidx.cardview.widget.CardView
-import com.amplitude.api.Amplitude
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentBalanceBinding
 import com.hover.stax.home.HomeFragment
 import com.hover.stax.navigation.NavigationInterface
 import com.hover.stax.utils.Constants
+import com.hover.stax.utils.Utils
 import com.hover.stax.utils.bubbleshowcase.BubbleShowCase
 import com.hover.stax.utils.bubbleshowcase.BubbleShowCaseListener
 import timber.log.Timber
@@ -39,7 +39,7 @@ class ShowcaseExecutor(val activity: Activity, private val balanceBinding: Fragm
     }
 
     private fun goToAddAccountFragment() {
-        Amplitude.getInstance().logEvent(activity.getString(R.string.clicked_add_account_bubble))
+        Utils.logAnalyticsEvent(activity.getString(R.string.clicked_add_account_bubble), activity)
         HomeFragment.navigateTo(Constants.NAV_LINK_ACCOUNT, activity)
     }
 
