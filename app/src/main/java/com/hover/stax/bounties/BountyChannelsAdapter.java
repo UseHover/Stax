@@ -1,6 +1,7 @@
 package com.hover.stax.bounties;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -36,12 +37,20 @@ class BountyChannelsAdapter extends RecyclerView.Adapter<BountyChannelsAdapter.C
         Channel c = channelList.get(position);
         holder.binding.bountyChannelCard.setTitle(c.getUssdName());
         List<Bounty> channelBounties = filterBounties(c.id);
+        boolean hasVisibleItem = false;
 
         for (Bounty b : channelBounties) {
-            BountyListItem bountyLi = new BountyListItem(holder.binding.bountyChannelCard.getContext(), null);
-            bountyLi.setBounty(b, selectListener);
-            holder.binding.bountyList.addView(bountyLi);
+            if(b.action.bounty_is_open) if(!hasVisibleItem)  hasVisibleItem = true;
+
+            if (b.action.bounty_is_open || b.transactionCount() != 0) {
+                BountyListItem bountyLi = new BountyListItem(holder.binding.bountyChannelCard.getContext(), null);
+                bountyLi.setBounty(b, selectListener);
+                holder.binding.bountyList.addView(bountyLi);
+            }
+
         }
+
+     //  holder.binding.getRoot().setVisibility(hasVisibleItem ? View.VISIBLE : View.GONE);
     }
 
     private List<Bounty> filterBounties(int channelId) {
