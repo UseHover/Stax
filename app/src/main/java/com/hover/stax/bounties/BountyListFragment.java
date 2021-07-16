@@ -24,6 +24,7 @@ import com.hover.stax.databinding.FragmentBountyListBinding;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDialog;
 
 import java.util.ArrayList;
@@ -130,6 +131,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
                 || channels.get(0).countryAlpha2.equals(bountyViewModel.country))) {
             BountyChannelsAdapter adapter = new BountyChannelsAdapter(channels, bounties, this);
             binding.bountiesRecyclerView.setAdapter(adapter);
+            hideLoadingState();
         }
     }
 
@@ -171,8 +173,18 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 
     @Override
     public void countrySelect(String countryCode) {
+        showLoadingState();
+
         bountyViewModel.filterChannels(countryCode).observe(getViewLifecycleOwner(), channels ->
                 updateChannelList(channels, bountyViewModel.getBounties().getValue()));
+    }
+    private void showLoadingState() {
+        binding.bountyCountryDropdown.setState(getString(R.string.filtering_in_progress), AbstractStatefulInput.INFO);
+        binding.bountiesRecyclerView.setVisibility(View.GONE);
+    }
+    private void hideLoadingState() {
+        binding.bountyCountryDropdown.setState(null,AbstractStatefulInput.NONE);
+        binding.bountiesRecyclerView.setVisibility(View.VISIBLE);
     }
 
     private void handleBackPress(){
