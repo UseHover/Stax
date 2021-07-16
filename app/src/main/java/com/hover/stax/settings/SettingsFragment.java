@@ -51,6 +51,7 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
         setUpAccounts(securityViewModel);
         setUpChooseLang();
         setUpContactStax();
+        setupRequestFeature();
         setUpEnableTestMode();
 
         return binding.getRoot();
@@ -84,6 +85,10 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
         binding.supportCard.twitterContact.setOnClickListener(v -> Utils.openUrl(getString(R.string.stax_twitter_url), requireContext()));
     }
 
+    private void setupRequestFeature() {
+        binding.getSupportStax.requestFeature.setOnClickListener(v->Utils.openUrl(getString(R.string.stax_nolt_url), requireContext()));
+    }
+
     private void showAccounts(List<Channel> channels) {
         ListView lv = binding.cardAccounts.accountsList;
         accountAdapter.clear();
@@ -105,13 +110,11 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
     }
 
     private void setUpEnableTestMode() {
-        binding.supportCard.testMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Utils.saveBoolean(Constants.TEST_MODE, isChecked, requireContext());
-                UIHelper.flashMessage(requireContext(), isChecked ? R.string.test_mode_toast : R.string.test_mode_disabled);
-            }
+        binding.supportCard.testMode.setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) (buttonView, isChecked) -> {
+            Utils.saveBoolean(Constants.TEST_MODE, isChecked, requireContext());
+            UIHelper.flashMessage(requireContext(), isChecked ? R.string.test_mode_toast : R.string.test_mode_disabled);
         });
+
         binding.supportCard.testMode.setVisibility(Utils.getBoolean(Constants.TEST_MODE, requireContext()) ? VISIBLE : GONE);
 
         binding.disclaimer.setOnClickListener(v -> {

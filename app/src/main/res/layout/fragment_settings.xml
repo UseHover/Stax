@@ -29,6 +29,12 @@
             android:id="@+id/languageCard"
             layout="@layout/settings_card_language" />
 
+        <include layout="@layout/stayintouch_stax_layout"
+            android:id="@+id/contactStax"/>
+
+        <include layout="@layout/support_stax_layout"
+                android:id="@+id/get_support_stax"/>
+
         <include layout="@layout/support_card_layout"
             android:id="@+id/supportCard"/>
 

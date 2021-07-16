@@ -10,6 +10,7 @@
 	<string name="bounty_endpoint">/stax_bounty_hunters</string>
 	<string name="stax_market_playstore_link" translatable="false">market://details?id=com.hover.stax</string>
 	<string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
+	<string name="stax_nolt_url">https://stax.nolt.io/</string>
 	<string name="mixpanel_token" translatable="false">82efeb23b6d38509989f592c8f4b21c2</string>
 
 	<string name="nav_home">Home</string>
@@ -93,6 +94,7 @@
 	<!-- Permissions -->
 	<string name="permissions_title">Permissions needed</string>
 	<string name="permissions_basic_desc">We need phone permissions to see which accounts you might have.</string>
+	<string name="permission_support_desc">We need phone permissions to generate your support ID</string>
 	<string name="nav_sim_permission">Grant SIM permission</string>
 	<string name="perm_dialoghead">One last thing…</string>
 	<string name="perm_dialogbody">Stax needs 2 permissions to %1$s.</string>
@@ -286,9 +288,17 @@
 	<string name="toast_confirm_pinupdate">Pin saved</string>
 	<string name="language_cardhead">Language</string>
 	<string name="disclaimer">All products names, brands, and trademarks are property of their respective owners. Use does not imply affiliation.</string>
-	<string name="contact_stax_cardhead">Contact Stax</string>
+	<string name="contact_stax_cardhead">Stay in touch</string>
 	<string name="twitter" translatable="false">Twitter</string>
 	<string name="stax_twitter_url" translatable="false">http://twitter.com/joinstax</string>
+	<string name="support">Support</string>
+	<string name="FAQs">FAQs</string>
+	<string name="request_feature">Request a feature in Stax!</string>
+	<string name="contact_support">Contact support</string>
+	<string name="stax_support_email">support@stax.me</string>
+	<string name="stax_emailing_subject">Stax support id-%1$s</string>
+	<string name="send_email_using">Send mail using…</string>
+
 
 	<!-- System auth check -->
 	<string name="auth_title">Authenticate with Stax</string>
