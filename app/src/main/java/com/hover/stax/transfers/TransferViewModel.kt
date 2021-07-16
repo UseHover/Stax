@@ -15,7 +15,6 @@ import com.hover.stax.schedules.Schedule
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class TransferViewModel(application: Application, repo: DatabaseRepo) : AbstractFormViewModel(application, repo) {
 
@@ -33,7 +32,6 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     fun setContact(contactIds: String?) = contactIds?.let {
         viewModelScope.launch {
             val contacts = repo.getContacts(contactIds.split(",").toTypedArray())
-            Timber.e("Contacts : %s", contacts)
             if (contacts.isNotEmpty()) contact.postValue(contacts.first())
         }
     }
@@ -43,12 +41,8 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     fun forceUpdateContactUI() = contact.postValue(contact.value)
 
     fun setRecipient(r: String) {
-        contact.value?.let {
-            if (it.toString() == r)
-                return
-            else
-                contact.postValue(StaxContact(r))
-        }
+        if (contact.value != null && contact.value.toString() == r) return
+        contact.value = StaxContact(r)
     }
 
     fun setRecipientSmartly(r: Request?, channel: Channel) {
@@ -61,7 +55,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
                     sc?.let { contact.postValue(repo.getContactByPhone(r.requester_number)) }
                 }
             } catch (e: NumberFormatException) {
-                Utils.logErrorAndReportToFirebase(TransferViewModel::class.java.simpleName, e.message, e)
+                Utils.logErrorAndReportToFirebase(TransferViewModel::class.java.simpleName, e.message!!, e)
             }
         }
     }
@@ -84,7 +78,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
         return request
     }
 
-    fun view(s: Schedule){
+    fun view(s: Schedule) {
         schedule.postValue(s)
         setTransactionType(s.type)
         setAmount(s.amount)
@@ -92,22 +86,22 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
         setNote(s.note)
     }
 
-    fun view(r: Request){
+    fun view(r: Request) {
         setAmount(r.amount)
         setContact(r.requestee_ids)
         setNote(r.note)
     }
 
-    fun checkSchedule(){
+    fun checkSchedule() {
         schedule.value?.let {
-            if(it.end_date <= DateUtils.today()){
+            if (it.end_date <= DateUtils.today()) {
                 it.complete = true
                 repo.update(it)
             }
         }
     }
 
-    fun saveContact(){
+    fun saveContact() {
         contact.value?.let { sc ->
             viewModelScope.launch {
                 sc.lastUsedTimestamp = DateUtils.now()

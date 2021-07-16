@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
@@ -22,6 +21,9 @@ import com.hover.stax.utils.Constants
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -55,19 +57,23 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         with(balancesViewModel) {
             setListener(this@MainActivity)
 
-            //This is to prevent the SAM constructor from being compiled to singleton and causing problems. See
+            //This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
             //https://stackoverflow.com/a/54939860/2371515
-            val observer = object : Observer<List<Channel>> {
+            val channelsObserver = object : Observer<List<Channel>> {
                 override fun onChanged(t: List<Channel>?) {
-                    Timber.tag(MainActivity::class.simpleName).i("Observing selected channels ${t?.size}")
+                    logResult("Observing selected channels", t?.size ?: 0)
                 }
             }
 
-            selectedChannels.observe(this@MainActivity, observer)
-            toRun.observe(this@MainActivity, { Timber.i("Observing action to run ${it.size}") })
-            runFlag.observe(this@MainActivity, { Timber.i("Observing run flag $it") })
-            actions.observe(this@MainActivity, { Timber.i("Observing actions ${it.size}") })
+            selectedChannels.observe(this@MainActivity, channelsObserver)
+            toRun.observe(this@MainActivity, { logResult("Observing action to run", it.size) })
+            runFlag.observe(this@MainActivity, { logResult("Observing run flag ", it) })
+            actions.observe(this@MainActivity, { logResult("Observing actions", it.size) })
         }
+    }
+
+    private fun logResult(result: String, size: Int) {
+        Timber.e(result.plus(" $size"))
     }
 
     override fun onResume() {
@@ -110,10 +116,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
     private fun launchReviewDialog() {
         val reviewManager = ReviewManagerFactory.create(this)
         reviewManager.requestReviewFlow().addOnCompleteListener { task ->
-            Timber.i("Currently at reviews native already completed")
-
             if (task.isSuccessful) {
-                Timber.i("Currently at reviews native already succeeded")
                 reviewManager.launchReviewFlow(this@MainActivity, task.result).addOnCompleteListener {
                     Utils.saveBoolean(Constants.APP_RATED_NATIVELY, true, this@MainActivity)
                 }
@@ -151,7 +154,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
 
     override fun onTapRefresh(channelId: Int) {
         if (channelId == Channel.DUMMY)
-            navigateToChannelsListFragment(getNavController(), false)
+            checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT)
         else {
             Utils.logAnalyticsEvent(getString(R.string.refresh_balance_single), this)
             balancesViewModel.setRunning(channelId)
@@ -174,8 +177,6 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
     }
 
     private fun run(action: HoverAction, index: Int) {
-        Timber.e("Running ${action.from_institution_name} $index")
-
         if (balancesViewModel.getChannel(action.channel_id) != null) {
             val hsb = HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), this@MainActivity, index)
             if (index + 1 < balancesViewModel.selectedChannels.value!!.size) hsb.finalScreenTime(0)
@@ -200,7 +201,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
             showMessage(getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))))
         } else {
             Utils.logAnalyticsEvent(getString(R.string.finish_load_screen), this)
-            ViewModelProvider(this).get(TransactionHistoryViewModel::class.java).saveTransaction(data, this)
+            historyViewModel.saveTransaction(data, this)
         }
     }
 
@@ -221,7 +222,23 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
             else -> {
                 balancesViewModel.setRan(requestCode)
                 if (resultCode == RESULT_OK && data != null && data.action != null) onProbableHoverCall(data)
+
+                launchSendMoney()
             }
         }
     }
+
+    private fun launchSendMoney() = runBlocking {
+        launch {
+            delay(1200L)
+
+            if (Utils.variant == Constants.VARIANT_3 && !Utils.getBoolean(Constants.SHOWN_SEND_MONEY_ACTION, this@MainActivity)
+                && balancesViewModel.runFlag.value == BalancesViewModel.NONE
+            ) {
+                Utils.saveBoolean(Constants.SHOWN_SEND_MONEY_ACTION, true, this@MainActivity)
+                checkPermissionsAndNavigate(Constants.NAV_TRANSFER)
+            }
+        }
+    }
+
 }

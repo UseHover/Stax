@@ -1,11 +1,11 @@
 package com.hover.stax.bounties;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -33,10 +33,10 @@ import timber.log.Timber;
 
 public class BountyListFragment extends Fragment implements NavigationInterface, BountyListItem.SelectListener, CountryAdapter.SelectListener {
 
-    private static final String TAG = "BountyListFragment";
-
     private BountyViewModel bountyViewModel;
     private FragmentBountyListBinding binding;
+
+    private StaxDialog dialog;
 
     @Nullable
     @Override
@@ -54,6 +54,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         initCountryDropdown();
         initRecyclerView();
         startObservers();
+        handleBackPress();
     }
 
     @Override
@@ -66,8 +67,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         if (isAdded() && Utils.isNetworkAvailable(requireActivity())) {
             updateActionConfig();
             updateChannelsWorker();
-        }
-        else showOfflineDialog();
+        } else showOfflineDialog();
     }
 
     private void updateActionConfig() {
@@ -91,17 +91,17 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     }
 
     private void showOfflineDialog() {
-        new StaxDialog(requireActivity())
+        dialog = new StaxDialog(requireActivity())
                 .setDialogTitle(R.string.internet_required)
                 .setDialogMessage(R.string.internet_required_bounty_desc)
-                .setPosButton(R.string.try_again, view-> {
+                .setPosButton(R.string.try_again, view -> {
                     forceUserToBeOnline();
                 })
                 .setNegButton(R.string.btn_cancel, view -> {
                     requireActivity().finish();
                 })
-                .makeSticky()
-                .showIt();
+                .makeSticky();
+        dialog.showIt();
     }
 
     public void initCountryDropdown() {
@@ -113,9 +113,9 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     }
 
     private void startObservers() {
-        bountyViewModel.getActions().observe(getViewLifecycleOwner(), actions -> Log.v(TAG, "actions update: " + actions.size()));
-        bountyViewModel.getTransactions().observe(getViewLifecycleOwner(), transactions -> Log.v(TAG, "transactions update: " + transactions.size()));
-        bountyViewModel.getSims().observe(getViewLifecycleOwner(), sims -> Log.v(TAG, "sim update: " + sims.size()));
+        bountyViewModel.getActions().observe(getViewLifecycleOwner(), actions -> Timber.v("actions update: %s", actions.size()));
+        bountyViewModel.getTransactions().observe(getViewLifecycleOwner(), transactions -> Timber.v("transactions update: %s", transactions.size()));
+        bountyViewModel.getSims().observe(getViewLifecycleOwner(), sims -> Timber.v("sim update: %s", sims.size()));
         bountyViewModel.getBounties().observe(getViewLifecycleOwner(), bounties -> updateChannelList(bountyViewModel.getChannels().getValue(), bounties));
 
         bountyViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> {
@@ -125,7 +125,9 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     }
 
     private void updateChannelList(List<Channel> channels, List<Bounty> bounties) {
-        if (bounties != null && bounties.size() > 0 && channels != null && channels.size() > 0) {
+        if (bounties != null && !bounties.isEmpty() && channels != null && !channels.isEmpty()
+                && (bountyViewModel.country.equals(CountryAdapter.codeRepresentingAllCountries())
+                || channels.get(0).countryAlpha2.equals(bountyViewModel.country))) {
             BountyChannelsAdapter adapter = new BountyChannelsAdapter(channels, bounties, this);
             binding.bountiesRecyclerView.setAdapter(adapter);
         }
@@ -144,27 +146,27 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 
     void showSimErrorDialog(Bounty b) {
         Timber.e("showing sim error dialog %s", b.action.root_code);
-        new StaxDialog(requireActivity())
-                .setDialogTitle(getString(R.string.bounty_sim_err_header, b.action.network_name))
+        dialog = new StaxDialog(requireActivity())
+                .setDialogTitle(getString(R.string.bounty_sim_err_header))
                 .setDialogMessage(getString(R.string.bounty_sim_err_desc, b.action.network_name))
                 .setNegButton(R.string.btn_cancel, null)
-                .setPosButton(R.string.retry, v -> retrySimMatch(b))
-                .showIt();
+                .setPosButton(R.string.retry, v -> retrySimMatch(b));
+        dialog.showIt();
     }
 
     void showBountyDescDialog(Bounty b) {
         Timber.e("showing dialog %s", b.action);
-        new StaxDialog(requireActivity())
-                .setDialogTitle(getString(R.string.bounty_claim_title, b.action.root_code, HoverAction.getHumanFriendlyType(getContext(), b.action.transaction_type), b.action.bounty_amount))
+        dialog = new StaxDialog(requireActivity())
+                .setDialogTitle(getString(R.string.bounty_claim_title, b.action.root_code, HoverAction.getHumanFriendlyType(requireContext(), b.action.transaction_type), b.action.bounty_amount))
                 .setDialogMessage(getString(R.string.bounty_claim_explained, b.action.bounty_amount, b.getInstructions(getContext())))
-                .setPosButton(R.string.start_USSD_Flow, v -> ((BountyActivity) requireActivity()).makeCall(b.action))
-                .showIt();
+                .setPosButton(R.string.start_USSD_Flow, v -> ((BountyActivity) requireActivity()).makeCall(b.action));
+        dialog.showIt();
     }
 
     void retrySimMatch(Bounty b) {
         bountyViewModel.getSims().removeObservers(getViewLifecycleOwner());
         bountyViewModel.getSims().observe(getViewLifecycleOwner(), sims -> viewBountyDetail(b));
-        Hover.updateSimInfo(getContext());
+        Hover.updateSimInfo(requireActivity());
     }
 
     @Override
@@ -173,10 +175,23 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
                 updateChannelList(channels, bountyViewModel.getBounties().getValue()));
     }
 
+    private void handleBackPress(){
+        getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if(dialog != null && dialog.isShowing()){
+                    dialog.dismiss();
+                } else
+                    getActivity().onBackPressed();
+            }
+        });
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
 
+        if (dialog != null && dialog.isShowing()) dialog.dismiss();
         binding = null;
     }
 }

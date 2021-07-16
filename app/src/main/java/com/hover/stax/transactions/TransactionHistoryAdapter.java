@@ -14,6 +14,8 @@ import com.hover.stax.utils.DateUtils;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionHistoryAdapter.HistoryViewHolder> {
 
     private final List<StaxTransaction> transactionList;
@@ -34,6 +36,8 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
     @Override
     public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
         StaxTransaction t = transactionList.get(position);
+        Timber.e("Transaction state : %s ", t.status);
+
         if (t.status.equals(Transaction.PENDING)) {
             holder.binding.transactionItemLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.cardDarkBlue));
             holder.binding.liCallout.setVisibility(View.VISIBLE);

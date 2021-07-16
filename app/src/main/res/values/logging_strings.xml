@@ -25,7 +25,6 @@
 	<string name="perms_accessibility_granted" translatable="false">Permission - Accessibility: granted</string>
 	<string name="perms_accessibility_notgranted" translatable="false">Permission - Accessibility: returned to app without toggling</string>
 	<string name="perms_accessibility_cancelled" translatable="false">Permission - Accessibility: dialog canceled</string>
-	<string name="initializing_USSD_event_confirmed">Initializing USSD services</string>
 
 	<string name="selected_language" translatable="false">Selected language</string>
 	<string name="new_channel_selected" translatable="false">Added channel</string>
@@ -82,7 +81,13 @@
 	<string name="bounty_email_err" translatable="false">Bounty email error due to: %1$s</string>
 	<string name="visited_rating_review_screen" translatable="false">Visited ratings and review screen</string>
 	<string name="clicked_rating_star" translatable="false">Clicked rating stars and giving review</string>
-	<string name="clicked_add_account_bubble">Clicked add account from bubble showcase</string>
+	<string name="clicked_add_account_bubble" translatable="false">Clicked add account from bubble showcase</string>
+	<string name="initializing_ussd_services" translatable="false">Initializing USSD services</string>
+
+	<string name="show_balances">Clicked show balances</string>
+	<string name="hide_balances">Clicked hide balances</string>
+
+	<string name="fetched_app_variant" translatable="false">Fetched app variant</string>
 
 	<!--FIREBASE MESSAGING-->
 	<string name="firebase_topic_everyone" translatable="false">EVERYONE</string>

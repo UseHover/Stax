@@ -1,8 +1,6 @@
 package com.hover.stax.balances
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +8,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
@@ -19,10 +18,13 @@ import com.hover.stax.home.MainActivity
 import com.hover.stax.navigation.NavigationInterface
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.Utils
 import com.hover.stax.utils.bubbleshowcase.BubbleShowCase
 import com.hover.stax.views.staxcardstack.StaxCardStackView
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
 
 class BalancesFragment : Fragment(), NavigationInterface {
@@ -37,6 +39,8 @@ class BalancesFragment : Fragment(), NavigationInterface {
 
     private var balancesVisible = false
     private var channelList: List<Channel>? = null
+
+    private var bubbleShowCaseJob: Job? = null
 
     private var _binding: FragmentBalanceBinding? = null
     private val binding get() = _binding!!
@@ -58,6 +62,8 @@ class BalancesFragment : Fragment(), NavigationInterface {
 
     override fun onPause() {
         super.onPause()
+
+        bubbleShowCaseJob?.let { if (it.isActive) it.cancel() }
 
         firstAccBubble?.dismiss()
         secondAccBubble?.dismiss()
@@ -107,10 +113,11 @@ class BalancesFragment : Fragment(), NavigationInterface {
         }
 
         balancesVisible = status
+        Utils.logAnalyticsEvent(getString(if (balancesVisible) R.string.show_balances else R.string.hide_balances), requireActivity())
     }
 
     private fun updateServices(channels: ArrayList<Channel>) {
-        SHOW_ADD_ANOTHER_ACCOUNT = !channels.isNullOrEmpty() && !Channel.hasDummy(channels)
+        SHOW_ADD_ANOTHER_ACCOUNT = !channels.isNullOrEmpty() && !Channel.hasDummy(channels) && channels.size > 1
         addDummyChannelsIfRequired(channels)
 
         val balancesAdapter = BalanceAdapter(channels, activity as MainActivity)
@@ -133,14 +140,11 @@ class BalancesFragment : Fragment(), NavigationInterface {
                 }
             } else if (Channel.hasDummy(channelList)) {
                 if (!SHOWN_BUBBLE_OTHER_ACCOUNT && balancesVisible) {
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        try {
-                            secondAccBubble = ShowcaseExecutor(requireActivity(), binding).showCaseAddSecondAccount()
-                            SHOWN_BUBBLE_OTHER_ACCOUNT = true
-                        } catch (e: Exception){
-                            Timber.e(e)
-                        }
-                    }, 2000)
+                    bubbleShowCaseJob = viewLifecycleOwner.lifecycleScope.launch {
+                        delay(2000)
+                        secondAccBubble = ShowcaseExecutor(requireActivity(), binding).showCaseAddSecondAccount()
+                        SHOWN_BUBBLE_OTHER_ACCOUNT = true
+                    }
                 }
             }
         }
@@ -186,8 +190,13 @@ class BalancesFragment : Fragment(), NavigationInterface {
         if (SHOW_ADD_ANOTHER_ACCOUNT) addChannelLink.visibility = if (show) View.VISIBLE else View.GONE
     }
 
+    private fun cancelShowcase() {
+        bubbleShowCaseJob?.let { if (it.isActive) it.cancel() }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        cancelShowcase()
         _binding = null
     }
 

@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/navigation_linkAccount"
-        android:name="com.hover.stax.channels.ChannelsListFragment"
+        android:name="com.hover.stax.channels.AddChannelsFragment"
         android:label="@string/nav_link_account"
             tools:layout="@layout/fragment_channels_list">
         <argument

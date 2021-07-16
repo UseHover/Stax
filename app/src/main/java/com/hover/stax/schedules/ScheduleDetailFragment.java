@@ -13,7 +13,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.WorkManager;
 
-import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.databinding.FragmentScheduleBinding;

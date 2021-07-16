@@ -5,6 +5,7 @@ import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.hover.stax.di.analyticsModule
 import com.hover.stax.di.appModule
 import com.hover.stax.di.dataModule
 import com.hover.stax.utils.fonts.FontReplacer
@@ -48,7 +49,7 @@ class ApplicationInstance : Application() {
     private fun initDI() {
         startKoin {
             androidContext(this@ApplicationInstance)
-            modules(listOf(appModule, dataModule))
+            modules(listOf(appModule, dataModule, analyticsModule))
         }
     }
 

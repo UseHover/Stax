@@ -32,7 +32,6 @@ import timber.log.Timber;
 import static com.hover.stax.utils.Constants.size55;
 
 public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedChangeListener, Target {
-    private static String TAG = "ActionSelect";
 
     private StaxDropdownLayout dropdownLayout;
     private AutoCompleteTextView dropdownView;
@@ -62,7 +61,6 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
     }
 
     public void updateActions(List<HoverAction> filteredActions) {
-        Timber.e("Updating to %s", filteredActions);
         this.setVisibility(filteredActions == null || filteredActions.size() <= 0 ? View.GONE : View.VISIBLE);
         if (filteredActions == null || filteredActions.size() <= 0) return;
 
@@ -122,7 +120,6 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
     }
 
     public void selectAction(HoverAction a) {
-        Timber.e("selecting action %s", a);
         highlightedAction = a;
         if (highlightListener != null) highlightListener.highlightAction(a);
     }

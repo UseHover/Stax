@@ -21,14 +21,13 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
-import org.koin.androidx.viewmodel.ext.android.getViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
+import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener {
 
-    private val actionSelectViewModel: ActionSelectViewModel by viewModel()
+    private val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
     private lateinit var transferViewModel: TransferViewModel
 
     private lateinit var amountInput: StaxTextInputLayout
@@ -40,7 +39,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     private lateinit var binding: FragmentTransferBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        abstractFormViewModel = getViewModel<TransferViewModel>()
+        abstractFormViewModel = getSharedViewModel<TransferViewModel>()
         transferViewModel = abstractFormViewModel as TransferViewModel
 
         binding = FragmentTransferBinding.inflate(inflater, container, false)
@@ -62,7 +61,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         recipientValue = binding.summaryCard.recipientValue
 
         amountInput.apply {
-            text =  transferViewModel.amount.value
+            text = transferViewModel.amount.value
             requestFocus()
         }
         noteInput.text = transferViewModel.note.value
@@ -80,7 +79,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         super.startObservers(root)
 
         actionSelectViewModel.activeAction.observe(viewLifecycleOwner, {
-            Timber.e("Observed active action change $it ${it.transaction_type}")
             binding.summaryCard.accountValue.setSubtitle(it.getNetworkSubtitle(requireContext()))
             actionSelect.selectRecipientNetwork(it)
             setRecipientHint(it)
@@ -133,11 +131,13 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
                         null,
                         if (transferViewModel.amountErrors() == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
                     )
+                else
+                    amountInput.setState(null, AbstractStatefulInput.NONE)
             }
         }
 
         contactInput.apply {
-            setOnItemClickListener { view, _, position, _ ->
+            setAutocompleteClickListener { view, _, position, _ ->
                 val contact = view.getItemAtPosition(position) as StaxContact
                 transferViewModel.setContact(contact)
             }
@@ -199,7 +199,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         return channelError == null && actionError == null && amountError == null && recipientError == null
     }
 
-    override fun onContactSelected(requestCode: Int, contact: StaxContact?) {
+    override fun onContactSelected(requestCode: Int, contact: StaxContact) {
         transferViewModel.setContact(contact)
         contactInput.setSelected(contact)
     }
@@ -209,8 +209,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     fun setRecipientHint(action: HoverAction) {
-        editCard?.findViewById<LinearLayout>(R.id.recipient_entry)?.visibility = if(action.requiresRecipient()) View.VISIBLE else View.GONE
-        binding.summaryCard.recipientRow.visibility = if(action.requiresRecipient()) View.VISIBLE else View.GONE
+        editCard?.findViewById<LinearLayout>(R.id.recipient_entry)?.visibility = if (action.requiresRecipient()) View.VISIBLE else View.GONE
+        binding.summaryCard.recipientRow.visibility = if (action.requiresRecipient()) View.VISIBLE else View.GONE
 
         if (!action.requiresRecipient()) {
             recipientValue.setContent(getString(R.string.self_choice), "")
