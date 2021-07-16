@@ -18,7 +18,6 @@ val appModule = module(true) {
     single { AppDatabase.getInstance(get()) }
     single { HoverRoomDatabase.getInstance(get()) }
 
-    viewModel { FaqViewModel(get()) }
     viewModel { ActionSelectViewModel(get()) }
     viewModel { ChannelsViewModel(get()) }
     viewModel { NewRequestViewModel(get(), get()) }

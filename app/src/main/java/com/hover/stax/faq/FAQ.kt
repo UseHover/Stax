@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
@@ -35,6 +36,6 @@ internal fun getFAQList() : LiveData<List<FAQ>> {
     return liveData
 }
 
-class FaqViewModel(application: Application) : AndroidViewModel(application) {
+class FaqViewModel() : ViewModel() {
     val faqLiveData : LiveData<List<FAQ>> = getFAQList()
 }
