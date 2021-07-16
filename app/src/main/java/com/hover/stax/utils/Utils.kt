@@ -28,6 +28,7 @@ import java.text.DecimalFormat
 import java.util.*
 import kotlin.properties.Delegates
 
+
 object Utils : KoinComponent {
 
     private val mixPanel: MixpanelAPI by inject()
@@ -65,6 +66,20 @@ object Utils : KoinComponent {
     fun saveBoolean(key: String?, value: Boolean, c: Context) {
         val editor = getSharedPrefs(c).edit()
         editor.putBoolean(key, value)
+        editor.apply()
+    }
+
+    fun getInt(key: String?, c: Context?): Int {
+        return getSharedPrefs(c!!).getInt(key, 0)
+    }
+
+    fun getLong(key: String?, c: Context?): Long {
+        return getSharedPrefs(c!!).getLong(key, 0)
+    }
+
+    fun saveLong(key: String?, value: Long, c: Context?) {
+        val editor = getSharedPrefs(c!!).edit()
+        editor.putLong(key, value)
         editor.apply()
     }
 
@@ -262,6 +277,11 @@ object Utils : KoinComponent {
         i.data = Uri.parse(url)
         ctx.startActivity(i)
     }
+
+    fun openUrl(urlRes: Int, ctx: Context) {
+        openUrl(ctx.resources.getString(urlRes), ctx)
+    }
+
 
     @JvmStatic
     fun openStaxPlaystorePage(activity: Activity) {

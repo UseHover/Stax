@@ -32,6 +32,7 @@ import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.databinding.SplashScreenLayoutBinding
 import com.hover.stax.destruct.SelfDestructActivity
 import com.hover.stax.home.MainActivity
+import com.hover.stax.inapp_banner.BannerUtils
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
 import com.hover.stax.schedules.ScheduleWorker
@@ -91,8 +92,13 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         FirebaseInstallations.getInstance().id.addOnCompleteListener { Timber.i("Firebase installation ID is ${it.result}") }
 
         initRemoteConfigs()
+        updateBannerSessionCounter()
     }
 
+    private fun updateBannerSessionCounter() {
+        val currentCount: Int = Utils.getInt(BannerUtils.APP_SESSIONS, this)
+        if(currentCount < 5) Utils.saveInt(BannerUtils.APP_SESSIONS, currentCount + 1, this)
+    }
     private fun initFirebaseMessagingTopics() {
         joinAllNotifications(this)
         joinNoUsageGroup(this)

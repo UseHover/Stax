@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -82,7 +81,7 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
     }
 
     private void setUpContactStax() {
-        binding.supportCard.twitterContact.setOnClickListener(v -> Utils.openUrl(getString(R.string.stax_twitter_url), requireContext()));
+        binding.contactStax.twitterContact.setOnClickListener(v -> Utils.openUrl(getString(R.string.stax_twitter_url), requireContext()));
     }
 
     private void setupRequestFeature() {
@@ -110,12 +109,12 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
     }
 
     private void setUpEnableTestMode() {
-        binding.supportCard.testMode.setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) (buttonView, isChecked) -> {
+        binding.contactStax.testMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
             Utils.saveBoolean(Constants.TEST_MODE, isChecked, requireContext());
             UIHelper.flashMessage(requireContext(), isChecked ? R.string.test_mode_toast : R.string.test_mode_disabled);
         });
 
-        binding.supportCard.testMode.setVisibility(Utils.getBoolean(Constants.TEST_MODE, requireContext()) ? VISIBLE : GONE);
+        binding.contactStax.testMode.setVisibility(Utils.getBoolean(Constants.TEST_MODE, requireContext()) ? VISIBLE : GONE);
 
         binding.disclaimer.setOnClickListener(v -> {
             clickCounter++;
@@ -128,7 +127,7 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
 
     private void enableTestMode() {
         Utils.saveBoolean(Constants.TEST_MODE, true, requireContext());
-        binding.supportCard.testMode.setVisibility(VISIBLE);
+        binding.contactStax.testMode.setVisibility(VISIBLE);
         UIHelper.flashMessage(requireContext(), R.string.test_mode_toast);
     }
 

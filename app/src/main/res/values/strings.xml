@@ -391,8 +391,30 @@
 	<string name="edge_case_bounty_email_error">This rarely happens, but if error persists, please close the app and restart.</string>
 	<string name="no_account_selected_error">Please choose at least one account to add to Stax</string>
 
+	<!-- IN-APP BANNERS -->
+	<string name="banner_permission_title">SIM, SMS, Accessibility &amp; Overlay</string>
+	<string name="banner_permission_desc">Why does Stax ask for these permissions?</string>
+	<string name="banner_permission_cta"><u>Tap here to find out</u></string>
+	<string name="banner_roundupnews_title">Catch up on the latest Stax Monthly Roundup</string>
+	<string name="banner_roundupnews_cta"><u>Tap to read now</u></string>
+	<string name="banner_gist_title">Want exclusive Stax gist?</string>
+	<string name="banner_gist_cta"><u>Subscribe to our mailing list now</u></string>
+	<string name="banner_upvote_title">Build with us! Add/upvote a feature request or report a bug.</string>
+	<string name="banner_upvote_cta"><u>Give feedback now</u></string>
+	<string name="stax_banner_img_desc">Stax banner icon</string>
+	<string name="banner_research_title">Want to get paid to make Stax even better?</string>
+	<string name="banner_research_cta">Sign up for a research study today</string>
+
+	<string name="banner_permission_url">https://joinstax.medium.com/phone-permissions-on-stax-a0ec82533570</string>
+	<string name="banner_roundupnews_url">https://joinstax.medium.com/</string>
+	<string name="banner_gist_url">https://stax.me</string>
+	<string name="banner_upvoteurl">https://stax.nolt.io/</string>
+	<string name="banner_research_url">https://joinstax.typeform.com/to/JiloPnVy</string>
+
+	<!-- TEST MODE -->
 	<string name="test_mode_toast">You are now in test mode.</string>
 	<string name="test_mode_disabled">Test mode disabled.</string>
 	<string name="test_mode_almost_toast">Almost there!</string>
 	<string name="test_mode_enabled">Test mode engaged</string>
+
 </resources>

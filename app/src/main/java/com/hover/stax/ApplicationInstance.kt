@@ -14,6 +14,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
 import java.util.*
+import kotlin.properties.Delegates
 
 
 class ApplicationInstance : Application() {
@@ -28,6 +29,7 @@ class ApplicationInstance : Application() {
         initFirebase()
 
         initAppsFlyer()
+
     }
 
     private fun initFirebase(){
