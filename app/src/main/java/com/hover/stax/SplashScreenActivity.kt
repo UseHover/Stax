@@ -32,6 +32,7 @@ import com.hover.sdk.api.Hover
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.databinding.SplashScreenLayoutBinding
 import com.hover.stax.destruct.SelfDestructActivity
+import com.hover.stax.faq.FaqViewModel
 import com.hover.stax.home.MainActivity
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
@@ -42,6 +43,7 @@ import com.hover.stax.utils.Constants.FRAGMENT_DIRECT
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.blur.StaxBlur
+import org.koin.androidx.viewmodel.ext.android.getViewModel
 import timber.log.Timber
 
 
@@ -86,8 +88,13 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         FirebaseInstallations.getInstance().id.addOnCompleteListener { Timber.i("Firebase installation ID is ${it.result}") }
 
         initRemoteConfigs()
+        initFAQ()
     }
 
+    private fun initFAQ() {
+        val faqViewModel: FaqViewModel = getViewModel()
+        faqViewModel.faqLiveData
+    }
     private fun initFirebaseMessagingTopics() {
         joinAllNotifications(this)
         joinNoUsageGroup(this)

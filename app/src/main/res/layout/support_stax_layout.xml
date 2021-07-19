@@ -41,6 +41,7 @@
                 android:padding="@dimen/margin_10"
                 android:text="@string/FAQs"
                 android:textSize="@dimen/text_16"
+                android:background="?selectableItemBackground"
                 />
     </LinearLayout>
 </com.hover.stax.views.StaxCardView>

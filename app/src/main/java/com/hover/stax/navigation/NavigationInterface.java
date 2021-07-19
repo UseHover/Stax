@@ -152,6 +152,10 @@ public interface NavigationInterface {
         navController.navigate(R.id.bountyListFragment);
     }
 
+    default void navigateFAQ(Fragment fragment) {
+        NavHostFragment.findNavController(fragment).navigate(R.id.faqFragment);
+    }
+
     default void openSupportEmailClient(Activity activity) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         String recipientEmail = activity.getString(R.string.stax_support_email);

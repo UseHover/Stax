@@ -19,6 +19,7 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
 import com.hover.stax.contacts.ContactDao;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.faq.FAQ;
 import com.hover.stax.requests.Request;
 import com.hover.stax.requests.RequestDao;
 import com.hover.stax.requests.Shortlink;
@@ -56,7 +57,6 @@ public class DatabaseRepo {
         contactDao = db.contactDao();
         requestDao = db.requestDao();
         scheduleDao = db.scheduleDao();
-
         HoverRoomDatabase sdkDb = HoverRoomDatabase.getInstance(application);
         actionDao = sdkDb.actionDao();
         simDao = sdkDb.simDao();
