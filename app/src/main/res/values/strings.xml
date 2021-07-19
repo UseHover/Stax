@@ -46,7 +46,7 @@
 	<string name="btn_test">Test</string>
 
 	<!-- ONBOARDING -->
-	<string name="stax_tagline">USSD made simple</string>
+	<string name="stax_tagline">Move money without stress</string>
 	<string name="splash_screen_img_desc">Stax background</string>
 	<string name="slide_1_title">Do All Your Transactions Offline!</string>
 	<string name="slide_1_desc">You don\'t need the internet to move money or check your account balances on Stax.</string>
