@@ -55,7 +55,7 @@ private constructor(val id: Int,
                     R.drawable.banner_gist,
                     R.color.banner_gist_primary,
                     R.color.banner_secondary,
-                    R.string.banner_gist_url,
+                    R.string.receive_stax_updates_url,
                     1
             )
         }
