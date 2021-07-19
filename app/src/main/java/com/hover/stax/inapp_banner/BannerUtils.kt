@@ -160,7 +160,7 @@ class BannerUtils(val context: Context) {
         if (bannerId == Banner.PERMISSION) invalidatePermissionCampaign()
         else if (bannerId == Banner.RESEARCH) updateResearchBannerPref()
 
-        renewImpression(0)
+        if(getImpression() < 2) renewImpression(getImpression() + 1)
         bannerId_in_cache = 0
     }
 
