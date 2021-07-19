@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    <com.hover.stax.views.StaxCardView
+            android:id="@+id/faq_list_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:showBack="true"
+            app:title="@string/faq_title">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/faq_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        <TextView
+                android:id="@+id/faq_content_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_13"
+                android:fontFamily="font-normal"
+                android:textSize="@dimen/text_16"
+                />
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="@dimen/margin_13"
+                android:fontFamily="font-normal"
+                android:textSize="@dimen/text_16"
+                android:id="@+id/responseText"
+                android:visibility="gone"
+                />
+
+    </com.hover.stax.views.StaxCardView>
+</LinearLayout>
