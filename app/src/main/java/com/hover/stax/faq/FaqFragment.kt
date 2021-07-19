@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.hover.sdk.api.Hover
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentFaqBinding
 import com.hover.stax.databinding.FragmentRequestBinding
@@ -88,12 +89,15 @@ class FaqFragment : Fragment(), FAQAdapter.SelectListener {
 
     override fun onTopicClicked(faq: FAQ) {
         binding.faqListCard.setTitle(faq.topic)
-        binding.faqContentId.text = Html.fromHtml(getString(R.string.faq_content, faq.content))
+        binding.faqContentId.text = Html.fromHtml(getString(R.string.faq_content, faq.content, deviceId()))
         binding.faqContentId.movementMethod = LinkMovementMethod.getInstance();
         setShowingContent(true)
-
     }
 
+    private fun deviceId(): String {
+        val id: String = Hover.getDeviceId(requireContext())
+        return if(id == "null") return "" else id
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
