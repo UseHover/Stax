@@ -48,12 +48,12 @@
 	<!-- ONBOARDING -->
 	<string name="stax_tagline">USSD made simple</string>
 	<string name="splash_screen_img_desc">Stax background</string>
-	<string name="slide_1_title">Never dial a code again!</string>
-	<string name="slide_1_desc">Move money between dozens of banks and mobile money options</string>
-	<string name="slide_2_title">No data?\nNo problem!</string>
-	<string name="slide_2_desc">Payments through Stax work without wifi or data.</string>
-	<string name="slide_3_title">Forget your SMS inbox.</string>
-	<string name="slide_3_desc">Stax organizes all your transactions in one place</string>
+	<string name="slide_1_title">Do All Your Transactions Offline!</string>
+	<string name="slide_1_desc">You don\'t need the internet to move money or check your account balances on Stax.</string>
+	<string name="slide_2_title">Move Money\nWithout Stress!</string>
+	<string name="slide_2_desc">Transfer funds between your accounts, buy airtime, send and request money.</string>
+	<string name="slide_3_title">All Your Financial Accounts in One App.</string>
+	<string name="slide_3_desc">Link all your bank & mobile money accounts to Stax and move money from one place.</string>
 
 	<!-- Home -->
 	<string name="welcome_to">Welcome to</string>
