@@ -84,6 +84,7 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
 
     private void setUpContactStax() {
         binding.contactStax.twitterContact.setOnClickListener(v -> Utils.openUrl(getString(R.string.stax_twitter_url), requireContext()));
+        binding.contactStax.receiveStaxUpdate.setOnClickListener(v->Utils.openUrl(getString(R.string.receive_stax_updates_url), requireContext()));
     }
 
     private void setupRequestFeature() {

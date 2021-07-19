@@ -1,29 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:title="@string/contact_stax_cardhead">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/contact_stax_cardhead">
 
     <TextView
-        android:id="@+id/twitterContact"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="font-normal"
-        android:padding="@dimen/margin_10"
-        android:text="@string/twitter"
-        android:textSize="@dimen/text_16"
-        app:drawableEndCompat="@drawable/ic_baseline_open_in_new_24" />
+            android:id="@+id/twitterContact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:fontFamily="font-normal"
+            android:padding="@dimen/margin_10"
+            android:text="@string/twitter"
+            android:textSize="@dimen/text_16"
+            app:drawableEndCompat="@drawable/ic_baseline_open_in_new_24" />
+
+    <TextView
+            android:id="@+id/receiveStaxUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:fontFamily="font-normal"
+            android:padding="@dimen/margin_10"
+            android:text="@string/receive_stax_updates"
+            android:textSize="@dimen/text_16"
+            app:drawableEndCompat="@drawable/email_filled_24" />
+
 
     <CheckBox
-        android:id="@+id/testMode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="font-normal"
-        android:padding="@dimen/margin_10"
-        android:text="@string/test_mode_enabled"
-        android:textSize="@dimen/text_16"
-        android:textColor="@color/offWhite"
-        android:checked="true"/>
+            android:id="@+id/testMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:fontFamily="font-normal"
+            android:padding="@dimen/margin_10"
+            android:text="@string/test_mode_enabled"
+            android:textColor="@color/offWhite"
+            android:textSize="@dimen/text_16" />
 
 </com.hover.stax.views.StaxCardView>

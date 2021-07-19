@@ -11,6 +11,7 @@
 	<string name="stax_market_playstore_link" translatable="false">market://details?id=com.hover.stax</string>
 	<string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
 	<string name="stax_nolt_url">https://stax.nolt.io/</string>
+	<string name="receive_stax_updates_url">https://416e906b.sibforms.com/serve/MUIEAAS88NDe6oTn7nl8YrIqgutsJ_GgyCYRWVsZ-S54quVNmBhvpsu70WpNXrZd-n6H5r8m1ZRfuTl8ckiQrB4sLIdNSx0Y_DFZ7_hQGCDv9PG6N0ncsHwWW3OYsMlPMHgQSR6OZf8xK8HC-NA3p3T71Pv1Coy_n9oiDRwIu7HCryUfDtfHr11mXSQ5S3JwcOd8cN7FL1ewDRqu</string>
 	<string name="mixpanel_token" translatable="false">82efeb23b6d38509989f592c8f4b21c2</string>
 
 	<string name="nav_home">Home</string>
@@ -291,6 +292,8 @@
 	<string name="contact_stax_cardhead">Stay in touch</string>
 	<string name="twitter" translatable="false">Twitter</string>
 	<string name="stax_twitter_url" translatable="false">http://twitter.com/joinstax</string>
+	<string name="receive_stax_updates">Receive Stax updates</string>
+
 	<string name="support">Support</string>
 	<string name="FAQs">FAQs</string>
 	<string name="request_feature">Request a feature in Stax!</string>
