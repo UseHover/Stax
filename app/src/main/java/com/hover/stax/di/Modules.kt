@@ -7,7 +7,11 @@ import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.database.AppDatabase
 import com.hover.stax.database.DatabaseRepo
+<<<<<<< HEAD
 import com.hover.stax.faq.FaqViewModel
+=======
+import com.hover.stax.inapp_banner.BannerViewModel
+>>>>>>> development
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.schedules.ScheduleDetailViewModel
 import com.hover.stax.transactions.TransactionHistoryViewModel
@@ -29,6 +33,7 @@ val appModule = module(true) {
     viewModel { ScheduleDetailViewModel(get()) }
     viewModel { BalancesViewModel(get(), get()) }
     viewModel { TransactionHistoryViewModel(get()) }
+    viewModel { BannerViewModel(get(), get()) }
 }
 
 val dataModule = module {

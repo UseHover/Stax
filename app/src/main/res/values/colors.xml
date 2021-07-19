@@ -24,7 +24,11 @@
 	<color name="pending_brown">#343734</color>
 	<color name="muted_green">#2A3932</color>
 	<color name="lighter_grey">#3F434A</color>
-	
+
+	<color name="banner_permission_primary">#45E6CE</color>
+	<color name="banner_gist_primary">#00CCFF</color>
+	<color name="banner_secondary">#BFF2FF</color>
+	<color name="banner_text">#2F364A</color>
 
 	<color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/offWhite</color>
 </resources>
