@@ -28,7 +28,6 @@ import java.text.DecimalFormat
 import java.util.*
 import kotlin.properties.Delegates
 
-
 object Utils : KoinComponent {
 
     private val mixPanel: MixpanelAPI by inject()
@@ -281,7 +280,6 @@ object Utils : KoinComponent {
     fun openUrl(urlRes: Int, ctx: Context) {
         openUrl(ctx.resources.getString(urlRes), ctx)
     }
-
 
     @JvmStatic
     fun openStaxPlaystorePage(activity: Activity) {

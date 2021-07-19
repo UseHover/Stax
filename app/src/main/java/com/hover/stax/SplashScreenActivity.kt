@@ -31,6 +31,7 @@ import com.hover.sdk.api.Hover
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.databinding.SplashScreenLayoutBinding
 import com.hover.stax.destruct.SelfDestructActivity
+
 import com.hover.stax.faq.FaqViewModel
 import com.hover.stax.home.MainActivity
 import com.hover.stax.inapp_banner.BannerUtils
@@ -48,6 +49,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
+
 
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 

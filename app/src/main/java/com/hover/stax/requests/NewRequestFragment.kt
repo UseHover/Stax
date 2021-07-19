@@ -97,8 +97,8 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
                 binding.summaryCard.noteRow.visibility = if (validNote()) View.VISIBLE else View.GONE
                 binding.summaryCard.noteValue.text = it
             })
-            
-            requestee.observe(viewLifecycleOwner) { recipientValue.setContact(it) }
+
+            requestee.observe(viewLifecycleOwner, { recipientValue.setContact(it)})
         }
     }
 
