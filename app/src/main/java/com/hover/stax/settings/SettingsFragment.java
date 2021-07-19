@@ -15,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.hover.sdk.api.Hover;
+import com.hover.stax.BuildConfig;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.databinding.FragmentSettingsBinding;
@@ -54,6 +56,7 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
         setupRequestFeature();
         setUpEnableTestMode();
         setupFaq();
+        setupAppVersionInfo();
 
         return binding.getRoot();
     }
@@ -80,6 +83,13 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
             else
                 binding.cardAccounts.defaultAccountEntry.setVisibility(GONE);
         });
+    }
+
+    private void setupAppVersionInfo() {
+        String deviceId = Hover.getDeviceId(requireContext());
+        String appVersion = BuildConfig.VERSION_NAME;
+        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
+        binding.staxAndDeviceInfo.setText(getString(R.string.app_version_and_device_id,appVersion, versionCode, deviceId ));
     }
 
     private void setUpContactStax() {
