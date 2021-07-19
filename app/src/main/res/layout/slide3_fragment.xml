@@ -23,7 +23,7 @@
 	    android:textSize="55sp"
 	    android:fontFamily="font-bold"
 	    android:textColor="@color/brightBlue"
-	    android:layout_marginBottom="@dimen/margin_34"
+	    android:layout_marginBottom="@dimen/margin_55"
 	    android:layout_alignBottom="@+id/slide_text_desc"
 	    android:textStyle="bold" />
 
