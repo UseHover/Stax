@@ -10,6 +10,7 @@
 	<string name="bounty_endpoint">/stax_bounty_hunters</string>
 	<string name="stax_market_playstore_link" translatable="false">market://details?id=com.hover.stax</string>
 	<string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
+	<string name="stax_nolt_url">https://stax.nolt.io/</string>
 	<string name="mixpanel_token" translatable="false">82efeb23b6d38509989f592c8f4b21c2</string>
 
 	<string name="nav_home">Home</string>
@@ -93,6 +94,7 @@
 	<!-- Permissions -->
 	<string name="permissions_title">Permissions needed</string>
 	<string name="permissions_basic_desc">We need phone permissions to see which accounts you might have.</string>
+	<string name="permission_support_desc">We need phone permissions to generate your support ID</string>
 	<string name="nav_sim_permission">Grant SIM permission</string>
 	<string name="perm_dialoghead">One last thing…</string>
 	<string name="perm_dialogbody">Stax needs 2 permissions to %1$s.</string>
@@ -286,9 +288,17 @@
 	<string name="toast_confirm_pinupdate">Pin saved</string>
 	<string name="language_cardhead">Language</string>
 	<string name="disclaimer">All products names, brands, and trademarks are property of their respective owners. Use does not imply affiliation.</string>
-	<string name="contact_stax_cardhead">Contact Stax</string>
+	<string name="contact_stax_cardhead">Stay in touch</string>
 	<string name="twitter" translatable="false">Twitter</string>
 	<string name="stax_twitter_url" translatable="false">http://twitter.com/joinstax</string>
+	<string name="support">Support</string>
+	<string name="FAQs">FAQs</string>
+	<string name="request_feature">Request a feature in Stax!</string>
+	<string name="contact_support">Contact support</string>
+	<string name="stax_support_email">support@stax.me</string>
+	<string name="stax_emailing_subject">Stax support id-%1$s</string>
+	<string name="send_email_using">Send mail using…</string>
+
 
 	<!-- System auth check -->
 	<string name="auth_title">Authenticate with Stax</string>
@@ -364,6 +374,7 @@
 	<string name="bounty_amount_with_currency">USD $%1$d</string>
 	<string name="select_country">Select country</string>
 	<string name="filter_by_country">Filter by country</string>
+	<string name="filtering_in_progress">Filtering, please wait…</string>
 	<string name="country">Country</string>
 	<string name="country_error_nodata">Please turn on data to load services and countries.</string>
 	<string name="country_with_emoji">%1$s  %2$s </string>
@@ -381,8 +392,36 @@
 	<string name="edge_case_bounty_email_error">This rarely happens, but if error persists, please close the app and restart.</string>
 	<string name="no_account_selected_error">Please choose at least one account to add to Stax</string>
 
+	<!-- IN-APP BANNERS -->
+	<string name="banner_permission_title">SIM, SMS, Accessibility &amp; Overlay</string>
+	<string name="banner_permission_desc">Why does Stax ask for these permissions?</string>
+	<string name="banner_permission_cta"><u>Tap here to find out</u></string>
+	<string name="banner_roundupnews_title">Catch up on the latest Stax Monthly Roundup</string>
+	<string name="banner_roundupnews_cta"><u>Tap to read now</u></string>
+	<string name="banner_gist_title">Want exclusive Stax gist?</string>
+	<string name="banner_gist_cta"><u>Subscribe to our mailing list now</u></string>
+	<string name="banner_upvote_title">Build with us! Add/upvote a feature request or report a bug.</string>
+	<string name="banner_upvote_cta"><u>Give feedback now</u></string>
+	<string name="stax_banner_img_desc">Stax banner icon</string>
+	<string name="banner_research_title">Want to get paid to make Stax even better?</string>
+	<string name="banner_research_cta">Sign up for a research study today</string>
+
+	<string name="banner_permission_url">https://joinstax.medium.com/phone-permissions-on-stax-a0ec82533570</string>
+	<string name="banner_roundupnews_url">https://joinstax.medium.com/</string>
+	<string name="banner_gist_url">https://stax.me</string>
+	<string name="banner_upvoteurl">https://stax.nolt.io/</string>
+	<string name="banner_research_url">https://joinstax.typeform.com/to/JiloPnVy</string>
+
+	<!-- TEST MODE -->
 	<string name="test_mode_toast">You are now in test mode.</string>
 	<string name="test_mode_disabled">Test mode disabled.</string>
 	<string name="test_mode_almost_toast">Almost there!</string>
 	<string name="test_mode_enabled">Test mode engaged</string>
+
+	<string name="faq_title">Frequently asked questions</string>
+	<string name="faq_content"><![CDATA[ %1$s <p/>Still have questions? <p/> <a href="mailto:support@stax.me"><u> <b><font color=#1878F9> Email stax support </b><u></a>]]></string>
+	<string name="loading">Loading…</string>
+	<string name="loading_error">Unable to load FAQ, please try again</string>
+	<string name="faq_internet_error">This feature requires internet connection, please try again</string>
+
 </resources>

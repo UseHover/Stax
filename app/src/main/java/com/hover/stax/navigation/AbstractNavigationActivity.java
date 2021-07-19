@@ -82,7 +82,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         return navHostFragment.getNavController();
     }
 
-    public void checkPermissionsAndNavigate(int toWhere) {
+    public void checkPermissionsAndNavigate(int toWhere, int permissionMessage) {
         PermissionHelper permissionHelper = new PermissionHelper(this);
         if (toWhere == Constants.NAV_SETTINGS || toWhere == Constants.NAV_HOME || permissionHelper.hasBasicPerms()) {
             navigate(this, toWhere, getIntent(), false);
@@ -90,10 +90,15 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
             Utils.timeEvent(getString(R.string.perms_basic_requested));
 
             PermissionUtils.showInformativeBasicPermissionDialog(
+                    permissionMessage,
                     pos -> PermissionUtils.requestPerms(getNavConst(toWhere), AbstractNavigationActivity.this),
                     neg -> Utils.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), AbstractNavigationActivity.this),
                     this);
         }
+    }
+
+    public void checkPermissionsAndNavigate(int toWhere) {
+        checkPermissionsAndNavigate(toWhere, 0);
     }
 
     protected void navigateThruHome(int destId) {
@@ -125,6 +130,9 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 
     public void getStartedWithBountyButton(View view) {
         checkPermissionsAndNavigate(Constants.NAV_BOUNTY);
+    }
+    public void openSupportEmailClient(View view) {
+        checkPermissionsAndNavigate(Constants.NAV_EMAIL_CLIENT, R.string.permission_support_desc);
     }
 
     @Override

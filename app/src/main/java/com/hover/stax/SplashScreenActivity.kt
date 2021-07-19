@@ -31,7 +31,10 @@ import com.hover.sdk.api.Hover
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.databinding.SplashScreenLayoutBinding
 import com.hover.stax.destruct.SelfDestructActivity
+
+import com.hover.stax.faq.FaqViewModel
 import com.hover.stax.home.MainActivity
+import com.hover.stax.inapp_banner.BannerUtils
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
 import com.hover.stax.schedules.ScheduleWorker
@@ -41,10 +44,15 @@ import com.hover.stax.utils.Constants.FRAGMENT_DIRECT
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.blur.StaxBlur
+
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
+
+
+import org.koin.androidx.viewmodel.ext.android.getViewModel
+
 import timber.log.Timber
 
 
@@ -91,6 +99,18 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         FirebaseInstallations.getInstance().id.addOnCompleteListener { Timber.i("Firebase installation ID is ${it.result}") }
 
         initRemoteConfigs()
+        updateBannerSessionCounter()
+        initFAQ()
+    }
+
+    private fun initFAQ() {
+        val faqViewModel: FaqViewModel = getViewModel()
+        faqViewModel.faqLiveData
+    }
+
+    private fun updateBannerSessionCounter() {
+        val currentCount: Int = Utils.getInt(BannerUtils.APP_SESSIONS, this)
+        if (currentCount < 5) Utils.saveInt(BannerUtils.APP_SESSIONS, currentCount + 1, this)
     }
 
     private fun initFirebaseMessagingTopics() {
@@ -176,7 +196,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         }
     }
 
-    private fun logVariant(){
+    private fun logVariant() {
         val prop = JSONObject()
         prop.put("Variant", Utils.variant)
         Utils.logAnalyticsEvent(getString(R.string.fetched_app_variant), prop, this)

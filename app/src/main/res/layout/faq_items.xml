@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/faq_topic_item"
+            android:background="?selectableItemBackground"
+            android:textSize="@dimen/text_16"
+            android:paddingHorizontal="@dimen/margin_13"
+            android:paddingVertical="@dimen/margin_16"
+            android:textColor="@color/offWhite"
+            android:fontFamily="font-normal"/>

@@ -10,8 +10,7 @@ object Constants {
     const val NAV_LINK_ACCOUNT = 606
     const val NAV_LANGUAGE_SELECTION = 607
     const val NAV_BOUNTY = 608
-
-    const val BALANCE_MAX = 100
+    const val NAV_EMAIL_CLIENT = 609
 
     const val ADD_SERVICE = 200
     const val GET_CONTACT = 201

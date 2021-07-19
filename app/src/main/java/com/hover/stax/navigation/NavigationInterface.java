@@ -2,6 +2,7 @@ package com.hover.stax.navigation;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.hover.sdk.actions.HoverAction;
+import com.hover.sdk.api.Hover;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.bounties.BountyActivity;
@@ -63,6 +65,9 @@ public interface NavigationInterface {
                 break;
             case Constants.NAV_BOUNTY:
                 activity.startActivity(new Intent(activity, BountyActivity.class));
+                break;
+            case Constants.NAV_EMAIL_CLIENT:
+                openSupportEmailClient(activity);
                 break;
             default:
                 break;
@@ -146,4 +151,19 @@ public interface NavigationInterface {
     default void navigateToBountyListFragment(NavController navController) {
         navController.navigate(R.id.bountyListFragment);
     }
+
+    default void navigateFAQ(Fragment fragment) {
+        NavHostFragment.findNavController(fragment).navigate(R.id.faqFragment);
+    }
+
+    default void openSupportEmailClient(Activity activity) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        String recipientEmail = activity.getString(R.string.stax_support_email);
+        String subject = activity.getString(R.string.stax_emailing_subject, Hover.getDeviceId(activity.getBaseContext()));
+
+        Uri data = Uri.parse("mailto:"+recipientEmail+" ?subject=" + subject);
+        intent.setData(data);
+        activity.startActivity(intent);
+    }
 }
+

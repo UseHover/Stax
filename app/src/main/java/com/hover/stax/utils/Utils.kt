@@ -68,6 +68,20 @@ object Utils : KoinComponent {
         editor.apply()
     }
 
+    fun getInt(key: String?, c: Context?): Int {
+        return getSharedPrefs(c!!).getInt(key, 0)
+    }
+
+    fun getLong(key: String?, c: Context?): Long {
+        return getSharedPrefs(c!!).getLong(key, 0)
+    }
+
+    fun saveLong(key: String?, value: Long, c: Context?) {
+        val editor = getSharedPrefs(c!!).edit()
+        editor.putLong(key, value)
+        editor.apply()
+    }
+
     @JvmStatic
     fun isFirebaseTopicInDefaultState(topic: String?, c: Context): Boolean {
         return getSharedPrefs(c).getBoolean(topic, true)
@@ -261,6 +275,10 @@ object Utils : KoinComponent {
         val i = Intent(Intent.ACTION_VIEW)
         i.data = Uri.parse(url)
         ctx.startActivity(i)
+    }
+
+    fun openUrl(urlRes: Int, ctx: Context) {
+        openUrl(ctx.resources.getString(urlRes), ctx)
     }
 
     @JvmStatic

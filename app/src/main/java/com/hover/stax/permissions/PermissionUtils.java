@@ -27,6 +27,7 @@ public class PermissionUtils {
         ph.requestBasicPerms(a, requestCode);
     }
 
+
     public static boolean has(String[] permissions, Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
             for (String permission : permissions) {
@@ -70,11 +71,11 @@ public class PermissionUtils {
         return Build.VERSION.SDK_INT < 23 || PermissionUtils.has(new String[]{Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS}, c);
     }
 
-    public static void showInformativeBasicPermissionDialog(View.OnClickListener posListener, View.OnClickListener negListener, Activity activity) {
+    public static void showInformativeBasicPermissionDialog(int permissionMessage, View.OnClickListener posListener, View.OnClickListener negListener, Activity activity) {
         Utils.logAnalyticsEvent(activity.getString(R.string.perms_basic_dialog), activity);
         new StaxDialog(activity)
                 .setDialogTitle(R.string.permissions_title)
-                .setDialogMessage(R.string.permissions_basic_desc)
+                .setDialogMessage(permissionMessage > 0 ? permissionMessage : R.string.permissions_basic_desc)
                 .setPosButton(R.string.btn_ok, posListener)
                 .setNegButton(R.string.btn_cancel, negListener)
                 .showIt();
