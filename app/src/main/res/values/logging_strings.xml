@@ -66,7 +66,7 @@
 	<string name="clicked_schedule_notification" translatable="false">Clicked notification</string>
 	<string name="finished_scheduled_transaction" translatable="false">Sending scheduled %1$s transfer to the SDK</string>
 
-	<string name="cliucked_push_notification">From push notification: %1$s</string>
+	<string name="clicked_push_notification">From push notification: %1$s</string>
 	<string name="clicked_request_link" translatable="false">Clicked link from request</string>
 	<string name="loaded_request_link" translatable="false">Loaded request from link</string>
 	<string name="saved_unsent_request" translatable="false">Saved unsent request</string>
@@ -83,6 +83,11 @@
 	<string name="clicked_rating_star" translatable="false">Clicked rating stars and giving review</string>
 	<string name="clicked_add_account_bubble" translatable="false">Clicked add account from bubble showcase</string>
 	<string name="initializing_ussd_services" translatable="false">Initializing USSD services</string>
+
+	<string name="show_balances">Clicked show balances</string>
+	<string name="hide_balances">Clicked hide balances</string>
+
+	<string name="fetched_app_variant" translatable="false">Fetched app variant</string>
 
 	<!--FIREBASE MESSAGING-->
 	<string name="firebase_topic_everyone" translatable="false">EVERYONE</string>

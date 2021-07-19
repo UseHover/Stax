@@ -39,7 +39,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         setBottomBar();
 
         if (getIntent().getBooleanExtra(SettingsFragment.LANG_CHANGE, false))
-            navigate(this, Constants.NAV_SETTINGS);
+            navigate(this, Constants.NAV_SETTINGS, null);
     }
 
     private void setBottomBar() {
@@ -87,6 +87,8 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         if (toWhere == Constants.NAV_SETTINGS || toWhere == Constants.NAV_HOME || permissionHelper.hasBasicPerms()) {
             navigate(this, toWhere, getIntent(), false);
         } else {
+            Utils.timeEvent(getString(R.string.perms_basic_requested));
+
             PermissionUtils.showInformativeBasicPermissionDialog(
                     pos -> PermissionUtils.requestPerms(getNavConst(toWhere), AbstractNavigationActivity.this),
                     neg -> Utils.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), AbstractNavigationActivity.this),

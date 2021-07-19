@@ -94,7 +94,9 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
             saveAndContinue();
         else {
             Utils.logErrorAndReportToFirebase(TAG, message, null);
-            if (isAdded() && Utils.isNetworkAvailable(requireActivity())) showEdgeCaseErrorDialog();
+
+            if(isAdded() && Utils.isNetworkAvailable(requireActivity())) showEdgeCaseErrorDialog();
+
             else setEmailError();
         }
     }

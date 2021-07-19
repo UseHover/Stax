@@ -2,7 +2,6 @@ package com.hover.stax.bounties;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
@@ -15,8 +14,9 @@ import com.hover.stax.R;
 import com.hover.stax.databinding.ActivityBountyBinding;
 import com.hover.stax.navigation.AbstractNavigationActivity;
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface;
-import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+
+import timber.log.Timber;
 
 public class BountyActivity extends AbstractNavigationActivity implements PushNotificationTopicsInterface {
     private static final String TAG = "BountyActivity";
@@ -58,7 +58,6 @@ public class BountyActivity extends AbstractNavigationActivity implements PushNo
   private void updatePushNotifGroupStatus(HoverAction a) {
 		joinAllBountiesGroup(this);
 		joinBountyCountryGroup(a.country_alpha2.toUpperCase(), this);
-
 	}
 
     public void retryCall(String actionId) {
@@ -74,7 +73,7 @@ public class BountyActivity extends AbstractNavigationActivity implements PushNo
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "called on activity result");
+        Timber.d("called on activity result");
         if (requestCode == BOUNTY_REQUEST) {
             if (data != null) {
                 String transactionUUID = data.getStringExtra("uuid");
