@@ -43,7 +43,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 30
         versionCode 66
-        versionName "1.5.1"
+        versionName "1.5.0.1"
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -69,6 +69,7 @@ android {
 
         release {
             minifyEnabled true
+            shrinkResources true
             buildConfigField "String", "SELF_DESTRUCT", "\"1625097599\"" // June 30, 2021
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
@@ -157,7 +158,6 @@ dependencies {
 
     // Kotlin
     implementation "androidx.room:room-ktx:2.3.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "androidx.core:core-ktx:1.6.0"
 //    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 

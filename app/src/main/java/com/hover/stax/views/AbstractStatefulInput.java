@@ -19,10 +19,8 @@ import java.io.IOException;
 import timber.log.Timber;
 
 public abstract class AbstractStatefulInput extends FrameLayout {
-    private final static String TAG = "AbstractStatefulInput";
     public final static int NONE = 0, INFO = 1, WARN = 2, ERROR = 3, SUCCESS = 4;
 
-    private int currentState;
     private TextInputLayout inputLayout;
 
     public AbstractStatefulInput(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -42,7 +40,6 @@ public abstract class AbstractStatefulInput extends FrameLayout {
     }
 
     public void setState(String message, int state) {
-        currentState = state;
         inputLayout.setHelperText(message);
         switch (state) {
             case INFO:
