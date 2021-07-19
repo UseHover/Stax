@@ -391,8 +391,16 @@
 	<string name="edge_case_bounty_email_error">This rarely happens, but if error persists, please close the app and restart.</string>
 	<string name="no_account_selected_error">Please choose at least one account to add to Stax</string>
 
+<<<<<<< HEAD
 	<string name="test_mode_toast">You are now in test mode.</string>
 	<string name="test_mode_disabled">Test mode disabled.</string>
 	<string name="test_mode_almost_toast">Almost there!</string>
 	<string name="test_mode_enabled">Test mode engaged</string>
+=======
+	<string name="faq_title">Frequently asked questions</string>
+	<string name="faq_content"><![CDATA[ %1$s <p/>Still have questions? <p/> <a href="mailto:support@stax.me"><u> <b><font color=#1878F9> Email stax support </b><u></a>]]></string>
+	<string name="loading">Loading…</string>
+	<string name="loading_error">Unable to load FAQ, please try again</string>
+	<string name="faq_internet_error">This feature requires internet connection, please try again</string>
+>>>>>>> 4ec189c8c7f7fc801fe1fd3561daf69632f825cc
 </resources>
