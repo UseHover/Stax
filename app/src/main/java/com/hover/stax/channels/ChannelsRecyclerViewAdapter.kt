@@ -23,4 +23,12 @@ class ChannelsRecyclerViewAdapter(val channelList: List<Channel>, val selectList
     interface SelectListener {
         fun clickedChannel(channel: Channel)
     }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
 }
