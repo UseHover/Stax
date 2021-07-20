@@ -7,10 +7,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
 
-class ChannelsMultiSelectAdapter( channels: List<Channel>) : ListAdapter<Channel, ChannelsViewHolder>(ChannelDiffCallback()) {
+class ChannelsMultiSelectAdapter( val channelList: List<Channel>) : ListAdapter<Channel, ChannelsViewHolder>(ChannelDiffCallback()) {
 
     private var selectionTracker: SelectionTracker<Long>? = null
-    var channelList: List<Channel> = channels
 
     init {
         setHasStableIds(true)
