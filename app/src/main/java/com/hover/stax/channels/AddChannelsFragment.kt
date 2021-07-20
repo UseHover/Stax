@@ -54,7 +54,6 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
         channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { channels -> onSelectedLoaded(channels) }
         channelsViewModel.simChannels.observe(viewLifecycleOwner) { channels -> onSimsLoaded(channels) }
-        channelsViewModel.channels.observe(viewLifecycleOwner) { channels -> onAllLoaded(channels) }
     }
 
     private fun getTitle(): Int {
@@ -113,11 +112,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         multiSelectAdapter = ChannelsMultiSelectAdapter(channels)
         binding.channelsList.adapter = multiSelectAdapter
 
-        tracker = SelectionTracker.Builder(
-            "channelSelection", binding.channelsList,
-            StableIdKeyProvider(binding.channelsList), ChannelLookup(binding.channelsList), StorageStrategy.createLongStorage()
-        ).withSelectionPredicate(SelectionPredicates.createSelectAnything())
-            .build()
+        tracker = getTracker()
         multiSelectAdapter!!.setTracker(tracker!!)
 
         binding.continueBtn.apply {
@@ -128,6 +123,13 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         }
     }
 
+    private fun getTracker()  : SelectionTracker<Long>{
+        return SelectionTracker.Builder(
+                "channelSelection", binding.channelsList,
+                StableIdKeyProvider(binding.channelsList), ChannelLookup(binding.channelsList), StorageStrategy.createLongStorage()
+        ).withSelectionPredicate(SelectionPredicates.createSelectAnything())
+                .build()
+    }
     private fun fetchSelectedChannels(tracker: SelectionTracker<Long>, channels: List<Channel>) {
         if (tracker.selection.isEmpty) {
             binding.errorText.apply {
