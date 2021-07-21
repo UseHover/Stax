@@ -4,11 +4,13 @@ import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.balances.BalancesViewModel
+import com.hover.stax.channels.ChannelDetailViewModel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.database.AppDatabase
 import com.hover.stax.database.DatabaseRepo
 
 import com.hover.stax.faq.FaqViewModel
+import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.schedules.ScheduleDetailViewModel
@@ -26,16 +28,18 @@ val appModule = module(true) {
     viewModel { FaqViewModel() }
     viewModel { ActionSelectViewModel(get()) }
     viewModel { ChannelsViewModel(get()) }
+    viewModel { ChannelDetailViewModel(get()) }
     viewModel { NewRequestViewModel(get(), get()) }
     viewModel { TransferViewModel(get(), get()) }
     viewModel { ScheduleDetailViewModel(get()) }
     viewModel { BalancesViewModel(get(), get()) }
     viewModel { TransactionHistoryViewModel(get()) }
     viewModel { BannerViewModel(get(), get()) }
+    viewModel { FutureViewModel(get()) }
 }
 
 val dataModule = module {
-    single { DatabaseRepo(get()) }
+    single { DatabaseRepo(get(), get()) }
 }
 
 val analyticsModule = module {
