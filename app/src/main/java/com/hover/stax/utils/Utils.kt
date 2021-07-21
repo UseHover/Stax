@@ -207,7 +207,7 @@ object Utils : KoinComponent {
     }
 
     @JvmStatic
-    fun timeEvent(event: String){
+    fun timeEvent(event: String) {
         mixPanel.timeEvent(event)
     }
 
