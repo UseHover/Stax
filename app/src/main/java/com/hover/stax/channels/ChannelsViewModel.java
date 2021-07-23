@@ -87,7 +87,7 @@ public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdo
         selectedChannels = repo.getSelected();
     }
 
-    public LiveData<List<Channel>> getChannels() {
+    public LiveData<List<Channel>> getAllChannels() {
         if (allChannels == null) {
             allChannels = new MutableLiveData<>();
         }
