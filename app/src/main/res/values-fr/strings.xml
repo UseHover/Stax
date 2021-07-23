@@ -439,5 +439,12 @@
   <string name="actions_fielderror">Ce compte ne prend pas en charge l\'achat de temps d\'antenne. Veuillez sélectionner un autre compte.</string>
   <string name="descrip_transfer_received">tu as reçu de l\'argent %1$s</string>
   <string name="hsdk_complete">Transaction terminée</string>
-  
+  <string name="stax_tagline">Déplacez de l\'argent sans stress</string>
+  <string name="slide_3_desc">Liez toutes vos banques &amp; des comptes d\'argent mobile vers Stax et transférez de l\'argent d\'un seul endroit.</string>
+  <string name="slide_3_title">Tous vos comptes financiers dans une seule application.</string>
+  <string name="slide_2_desc">Transférez des fonds entre vos comptes, achetez du temps d\'antenne, envoyez et demandez de l\'argent.</string>
+  <string name="slide_1_desc">Vous n\'avez pas besoin d\'Internet pour transférer de l\'argent ou vérifier les soldes de votre compte sur Stax.</string>
+  <string name="slide_1_title">Faites toutes vos transactions hors ligne !</string>
+  <string name="slide_2_title">Déplacez de l\'argent sans stress</string>
+
 </resources>

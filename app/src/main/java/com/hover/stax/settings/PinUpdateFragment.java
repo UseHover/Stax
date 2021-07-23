@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.amplitude.api.Amplitude;
 import com.google.android.material.textfield.TextInputEditText;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;

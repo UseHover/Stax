@@ -23,14 +23,22 @@
                 android:name="com.hover.stax.balances.BalancesFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_26" />
+                 />
+
+        <com.hover.stax.inapp_banner.StaxBannerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/homeBanner"
+                android:visibility="gone"
+                android:background="?selectableItemBackground"
+                android:layout_marginTop="@dimen/margin_16"/>
 
         <androidx.cardview.widget.CardView
                 android:id="@+id/transfer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_13"
-                android:layout_marginTop="@dimen/margin_13"
+                android:layout_marginTop="@dimen/margin_26"
                 android:animateLayoutChanges="false"
                 app:cardBackgroundColor="@color/cardViewColor"
                 app:cardCornerRadius="@dimen/radius"

@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent">
-
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
         <com.hover.stax.views.StaxCardView
                 android:id="@+id/selectedChannels_card"
@@ -20,35 +18,51 @@
                 app:showBack="true"
                 app:title="@string/your_accounts">
 
-            <FrameLayout
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/selectedList"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                <androidx.recyclerview.widget.RecyclerView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/selectedChannelsRecyclerView"/>
-            </FrameLayout>
+                    android:layout_height="wrap_content" />
 
         </com.hover.stax.views.StaxCardView>
 
         <com.hover.stax.views.StaxCardView
-                android:id="@+id/simSupportedChannels_card"
+                android:id="@+id/channels_list_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:defaultBackPress="true"
                 app:showBack="false"
                 app:title="@string/add_an_account">
 
-            <FrameLayout
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/channelsList"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                <androidx.recyclerview.widget.RecyclerView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/simSupportedChannelsRecyclerView"/>
-            </FrameLayout>
-
+                    android:layout_height="match_parent" />
 
         </com.hover.stax.views.StaxCardView>
+
+        <TextView
+                android:id="@+id/error_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_13"
+                android:text="@string/channels_error_nodata"
+                android:textColor="@color/stax_state_red"
+                android:visibility="gone"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="font-medium"
+                android:drawablePadding="@dimen/margin_5"
+                android:drawableStart="@drawable/ic_error" />
+
+        <Button
+                android:id="@+id/continue_btn"
+                style="@style/StaxFabExtended"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="@dimen/margin_13"
+                android:layout_marginEnd="@dimen/margin_13"
+                android:text="@string/btn_continue"
+                android:visibility="gone" />
+
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
