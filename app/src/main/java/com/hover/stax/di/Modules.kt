@@ -41,7 +41,7 @@ val dataModule = module(createdAtStart = true) {
     single { DatabaseRepo(get(), get()) }
 }
 
-val utilsModule = module {
+val utilsModule = module(createdAtStart = true) {
     single { MixpanelAPI.getInstance(get(), androidContext().getString(R.string.mixpanel_token)) }
     single { NetworkMonitor(get()) }
 }

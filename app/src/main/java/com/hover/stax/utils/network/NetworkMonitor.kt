@@ -7,9 +7,10 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Build
+import androidx.annotation.MainThread
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
-import timber.log.Timber
+import androidx.lifecycle.MutableLiveData
 import kotlin.properties.Delegates
 
 
@@ -58,6 +59,20 @@ constructor(val application: Application) {
     }
 
     var isNetworkConnected: Boolean by Delegates.observable(true, { _, _, newValue ->
-        Timber.e("Internet Connected : $newValue")
+        StateLiveData.get().postValue(newValue)
     })
+
+
+    class StateLiveData : MutableLiveData<Boolean>() {
+
+        companion object {
+            private lateinit var instance: StateLiveData
+
+            @MainThread
+            fun get(): StateLiveData {
+                instance = if (::instance.isInitialized) instance else StateLiveData()
+                return instance
+            }
+        }
+    }
 }

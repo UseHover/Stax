@@ -13,15 +13,12 @@ import com.hover.stax.di.utilsModule
 import com.hover.stax.utils.fonts.FontReplacer
 import com.hover.stax.utils.network.NetworkMonitor
 import com.yariksoffice.lingver.Lingver
-import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
 import java.util.*
 
 class ApplicationInstance : Application() {
-
-    private val networkMonitor: NetworkMonitor by inject()
 
     override fun onCreate() {
         super.onCreate()
@@ -35,7 +32,7 @@ class ApplicationInstance : Application() {
         initAppsFlyer()
     }
 
-    private fun initFirebase(){
+    private fun initFirebase() {
         FirebaseApp.initializeApp(this)
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
     }
@@ -87,12 +84,12 @@ class ApplicationInstance : Application() {
     @RequiresApi(21)
     override fun registerComponentCallbacks(callback: ComponentCallbacks?) {
         super.registerComponentCallbacks(callback)
-        networkMonitor.startNetworkCallback()
+        NetworkMonitor(this).startNetworkCallback()
     }
 
     @RequiresApi(21)
     override fun unregisterComponentCallbacks(callback: ComponentCallbacks?) {
         super.unregisterComponentCallbacks(callback)
-        networkMonitor.stopNetworkCallback()
+        NetworkMonitor(this).stopNetworkCallback()
     }
 }
