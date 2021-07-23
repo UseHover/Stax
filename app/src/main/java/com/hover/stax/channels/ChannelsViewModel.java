@@ -46,13 +46,11 @@ public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdo
     private MediatorLiveData<List<Channel>> simChannels;
     private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
     private MediatorLiveData<List<HoverAction>> channelActions = new MediatorLiveData<>();
-    private MutableLiveData<Boolean> hasChannelsLoaded = new MutableLiveData<>();
 
     public ChannelsViewModel(Application application) {
         super(application);
         repo = new DatabaseRepo(application);
         type.setValue(HoverAction.BALANCE);
-        hasChannelsLoaded.setValue(null);
 
         loadChannels();
         loadSims();
@@ -78,17 +76,6 @@ public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdo
         return type.getValue();
     }
 
-    public void setHasChannelsLoaded() {
-        new Thread(() -> {
-            int size = repo.getChannelsDataCount();
-            hasChannelsLoaded.postValue(size > 0);
-        }).start();
-    }
-
-    public LiveData<Boolean> hasChannelsLoaded() {
-        return hasChannelsLoaded;
-    }
-
     private void loadChannels() {
         if (allChannels == null) {
             allChannels = new MutableLiveData<>();
@@ -100,7 +87,7 @@ public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdo
         selectedChannels = repo.getSelected();
     }
 
-    public LiveData<List<Channel>> getChannels() {
+    public LiveData<List<Channel>> getAllChannels() {
         if (allChannels == null) {
             allChannels = new MutableLiveData<>();
         }

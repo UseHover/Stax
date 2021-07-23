@@ -127,7 +127,7 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target{
     public void setObservers(@NonNull ChannelsViewModel viewModel, @NonNull LifecycleOwner lifecycleOwner) {
         viewModel.getSims().observe(lifecycleOwner, sims -> Timber.i("Got sims: %s", sims.size()));
         viewModel.getSimHniList().observe(lifecycleOwner, simList -> Timber.i("Got new sim hni list: %s", simList));
-        viewModel.getChannels().observe(lifecycleOwner, this::channelUpdateIfNull);
+        viewModel.getAllChannels().observe(lifecycleOwner, this::channelUpdateIfNull);
         viewModel.getSimChannels().observe(lifecycleOwner, this::channelUpdate);
         viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> Timber.i("Got new selected channels: %s", channels.size()));
         viewModel.getActiveChannel().observe(lifecycleOwner, channel -> {
