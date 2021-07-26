@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
 
-class ChannelsMultiSelectAdapter( val channelList: List<Channel>) : ListAdapter<Channel, ChannelsViewHolder>(ChannelDiffCallback()) {
+class ChannelsMultiSelectAdapter : ListAdapter<Channel, ChannelsViewHolder>(ChannelDiffCallback()) {
 
     private var selectionTracker: SelectionTracker<Long>? = null
 
@@ -21,19 +21,21 @@ class ChannelsMultiSelectAdapter( val channelList: List<Channel>) : ListAdapter<
     }
 
     override fun onBindViewHolder(holder: ChannelsViewHolder, position: Int) {
-        val channel = channelList[position]
+        val channel = currentList[position]
         selectionTracker?.let {
             holder.bindItems(channel, true, it.isSelected(position.toLong()))
         }
     }
 
-    override fun getItemCount(): Int = channelList.size
+    override fun getItemCount(): Int = currentList.size
 
     override fun getItemId(position: Int): Long = position.toLong()
 
     fun setTracker(tracker: SelectionTracker<Long>) {
         selectionTracker = tracker
     }
+
+    fun hasTracker(): Boolean = selectionTracker != null
 
     class ChannelDiffCallback : DiffUtil.ItemCallback<Channel>() {
 

@@ -32,7 +32,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     private val binding get() = _binding!!
 
     private var tracker: SelectionTracker<Long>? = null
-    private var multiSelectAdapter: ChannelsMultiSelectAdapter? = null
+    private var multiSelectAdapter: ChannelsMultiSelectAdapter = ChannelsMultiSelectAdapter()
     private var dialog: StaxDialog? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -110,11 +110,15 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
     private fun initMultiSelectList(channels: List<Channel>) {
         binding.channelsList.setHasFixedSize(true)
-        multiSelectAdapter = ChannelsMultiSelectAdapter(channels)
+
+        multiSelectAdapter.submitList(null)
+        multiSelectAdapter.submitList(channels)
         binding.channelsList.adapter = multiSelectAdapter
 
-        tracker = getTracker()
-        multiSelectAdapter!!.setTracker(tracker!!)
+        if (!multiSelectAdapter.hasTracker()) {
+            tracker = getTracker()
+            multiSelectAdapter.setTracker(tracker!!)
+        }
 
         binding.continueBtn.apply {
             visibility = VISIBLE
