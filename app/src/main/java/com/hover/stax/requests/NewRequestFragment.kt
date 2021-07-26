@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.ContactInput
@@ -77,10 +78,18 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
     override fun startObservers(root: View) {
         super.startObservers(root)
 
-        channelsViewModel.activeChannel.observe(viewLifecycleOwner, {
-            requestViewModel.setActiveChannel(it)
-            accountValue.setTitle(it.toString())
-        })
+        //This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
+        //https://stackoverflow.com/a/54939860/2371515
+        val channelsObserver = object : Observer<Channel> {
+            override fun onChanged(channel: Channel?) {
+                channel?.let {
+                    requestViewModel.setActiveChannel(it)
+                    accountValue.setTitle(it.toString())
+                }
+            }
+        }
+
+        channelsViewModel.activeChannel.observe(viewLifecycleOwner, channelsObserver)
 
         with(requestViewModel) {
             amount.observe(viewLifecycleOwner, {
@@ -98,7 +107,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
                 binding.summaryCard.noteValue.text = it
             })
 
-            requestee.observe(viewLifecycleOwner, { recipientValue.setContact(it)})
+            requestee.observe(viewLifecycleOwner, { recipientValue.setContact(it) })
         }
     }
 

@@ -14,17 +14,17 @@ import com.hover.stax.database.DatabaseRepo;
 
 import java.util.List;
 
-public class RequestDetailViewModel extends AndroidViewModel {
-    private final String TAG = "RequestDetailViewModel";
+import static org.koin.java.KoinJavaComponent.get;
 
-    private DatabaseRepo repo;
-    private MutableLiveData<Request> request;
+public class RequestDetailViewModel extends AndroidViewModel {
+
+    private DatabaseRepo repo = get(DatabaseRepo.class);
+    private final MutableLiveData<Request> request;
     private LiveData<Channel> channel;
     private LiveData<List<StaxContact>> recipients = new MutableLiveData<>();
 
     public RequestDetailViewModel(@NonNull Application application) {
         super(application);
-        repo = new DatabaseRepo(application);
         request = new MutableLiveData<>();
         channel = Transformations.switchMap(request, r -> repo.getLiveChannel(r.requester_institution_id));
         recipients = Transformations.switchMap(request, this::loadRecipients);

@@ -44,9 +44,5 @@ class ChannelsMultiSelectAdapter : ListAdapter<Channel, ChannelsViewHolder>(Chan
         override fun areContentsTheSame(oldItem: Channel, newItem: Channel): Boolean = oldItem == newItem
 
     }
-
-    override fun getItemViewType(position: Int): Int {
-        return position
-    }
 }
 

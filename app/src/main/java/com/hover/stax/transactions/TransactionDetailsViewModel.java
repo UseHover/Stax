@@ -19,10 +19,11 @@ import com.hover.stax.database.DatabaseRepo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransactionDetailsViewModel extends AndroidViewModel {
-    private final String TAG = "TDViewModel";
+import static org.koin.java.KoinJavaComponent.get;
 
-    private DatabaseRepo repo;
+public class TransactionDetailsViewModel extends AndroidViewModel {
+
+    private final DatabaseRepo repo = get(DatabaseRepo.class);
 
     private MutableLiveData<StaxTransaction> transaction;
     private LiveData<HoverAction> action;
@@ -33,7 +34,6 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
 
     public TransactionDetailsViewModel(@NonNull Application application) {
         super(application);
-        repo = new DatabaseRepo(application);
         transaction = new MutableLiveData<>();
         action = new MutableLiveData<>();
         messages = new MediatorLiveData<>();

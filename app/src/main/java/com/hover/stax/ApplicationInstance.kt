@@ -1,21 +1,22 @@
 package com.hover.stax
 
 import android.app.Application
+import android.content.ComponentCallbacks
+import androidx.annotation.RequiresApi
 import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.hover.stax.di.analyticsModule
 import com.hover.stax.di.appModule
 import com.hover.stax.di.dataModule
+import com.hover.stax.di.utilsModule
 import com.hover.stax.utils.fonts.FontReplacer
+import com.hover.stax.utils.network.NetworkMonitor
 import com.yariksoffice.lingver.Lingver
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
 import java.util.*
-
-import kotlin.properties.Delegates
 
 class ApplicationInstance : Application() {
 
@@ -31,7 +32,7 @@ class ApplicationInstance : Application() {
         initAppsFlyer()
     }
 
-    private fun initFirebase(){
+    private fun initFirebase() {
         FirebaseApp.initializeApp(this)
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
     }
@@ -50,7 +51,7 @@ class ApplicationInstance : Application() {
     private fun initDI() {
         startKoin {
             androidContext(this@ApplicationInstance)
-            modules(listOf(appModule, dataModule, analyticsModule))
+            modules(listOf(appModule, dataModule, utilsModule))
         }
     }
 
@@ -80,4 +81,15 @@ class ApplicationInstance : Application() {
         AppsFlyerLib.getInstance().init(getString(R.string.appsflyer_key), conversionListener, this)
     }
 
+    @RequiresApi(21)
+    override fun registerComponentCallbacks(callback: ComponentCallbacks?) {
+        super.registerComponentCallbacks(callback)
+        NetworkMonitor(this).startNetworkCallback()
+    }
+
+    @RequiresApi(21)
+    override fun unregisterComponentCallbacks(callback: ComponentCallbacks?) {
+        super.unregisterComponentCallbacks(callback)
+        NetworkMonitor(this).stopNetworkCallback()
+    }
 }

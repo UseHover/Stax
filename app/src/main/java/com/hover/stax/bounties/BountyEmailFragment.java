@@ -14,6 +14,7 @@ import com.hover.stax.R;
 import com.hover.stax.databinding.FragmentBountyEmailBinding;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.utils.network.NetworkMonitor;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDialog;
 import com.hover.stax.views.StaxTextInputLayout;
@@ -21,10 +22,15 @@ import com.hover.stax.views.StaxTextInputLayout;
 import java.lang.ref.WeakReference;
 import java.util.Map;
 
+import static org.koin.java.KoinJavaComponent.get;
+
 public class BountyEmailFragment extends Fragment implements NavigationInterface, View.OnClickListener, BountyAsyncCaller.AsyncResponseListener {
+
     private static final String TAG = "BountyEmailFragment";
     private StaxTextInputLayout emailInput;
     private FragmentBountyEmailBinding binding;
+
+    private NetworkMonitor networkMonitor = get(NetworkMonitor.class);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,13 +49,13 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         emailInput = binding.emailInput;
-        emailInput.setText(Utils.getString(BountyActivity.EMAIL_KEY, getContext()));
+        emailInput.setText(Utils.getString(BountyActivity.EMAIL_KEY, requireActivity()));
         binding.continueEmailBountyButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        if (Utils.isNetworkAvailable(requireActivity())) {
+        if (networkMonitor.isNetworkConnected()) {
             Utils.logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext());
             if (validates()) {
                 emailInput.setEnabled(false);
@@ -95,7 +101,7 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
         else {
             Utils.logErrorAndReportToFirebase(TAG, message, null);
 
-            if(isAdded() && Utils.isNetworkAvailable(requireActivity())) showEdgeCaseErrorDialog();
+            if(isAdded() && networkMonitor.isNetworkConnected()) showEdgeCaseErrorDialog();
 
             else setEmailError();
         }
