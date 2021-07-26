@@ -37,4 +37,6 @@ object Constants {
     const val VARIANT_1 = "baseline"
     const val VARIANT_2 = "multiselect_accounts"
     const val VARIANT_3 = "multiselect_accounts_and_move_money"
+
+    const val CONNECTIVITY = "android.net.conn.CONNECTIVITY_CHANGE"
 }

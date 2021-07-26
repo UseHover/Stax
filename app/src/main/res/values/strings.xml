@@ -426,5 +426,6 @@
 	<string name="loading">Loading…</string>
 	<string name="loading_error">Unable to load FAQ, please try again</string>
 	<string name="faq_internet_error">This feature requires internet connection, please try again</string>
+    <string name="working_offline">Working offline</string>
 
 </resources>

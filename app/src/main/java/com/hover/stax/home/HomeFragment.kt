@@ -8,10 +8,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentMainBinding
-
 import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
+import com.hover.stax.utils.network.NetworkMonitor
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -52,6 +52,15 @@ class HomeFragment : Fragment() {
                 } else binding.homeBanner.visibility = View.GONE
             })
         }
+
+        NetworkMonitor.StateLiveData.get().observe(viewLifecycleOwner) {
+            updateOfflineIndicator(it)
+        }
+    }
+
+    private fun updateOfflineIndicator(isConnected: Boolean) {
+        binding.offlineBadge.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_internet_off, 0, 0, 0)
+        binding.offlineBadge.visibility = if (isConnected) View.GONE else View.VISIBLE
     }
 
     override fun onDestroyView() {
