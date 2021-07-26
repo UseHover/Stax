@@ -70,6 +70,7 @@ public class ActionSelect extends LinearLayout implements RadioGroup.OnCheckedCh
 
         ActionDropdownAdapter actionDropdownAdapter = new ActionDropdownAdapter(uniqRecipientActions, getContext());
         dropdownView.setAdapter(actionDropdownAdapter);
+        dropdownView.setDropDownHeight(UIHelper.dpToPx(300));
         dropdownView.setOnItemClickListener((adapterView, view2, pos, id) -> selectRecipientNetwork((HoverAction) adapterView.getItemAtPosition(pos)));
         Timber.e("uniq recipient networks %s", uniqRecipientActions.size());
         dropdownLayout.setVisibility(showRecipientNetwork(uniqRecipientActions) ? VISIBLE : GONE);

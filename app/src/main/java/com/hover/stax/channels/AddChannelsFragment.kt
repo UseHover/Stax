@@ -32,7 +32,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     private val binding get() = _binding!!
 
     private var tracker: SelectionTracker<Long>? = null
-    private var multiSelectAdapter: ChannelsMultiSelectAdapter? = null
+    private var multiSelectAdapter: ChannelsMultiSelectAdapter = ChannelsMultiSelectAdapter()
     private var dialog: StaxDialog? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -54,6 +54,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
         channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { channels -> onSelectedLoaded(channels) }
         channelsViewModel.simChannels.observe(viewLifecycleOwner) { channels -> onSimsLoaded(channels) }
+        channelsViewModel.allChannels.observe(viewLifecycleOwner) { channels -> onAllLoaded(channels) }
     }
 
     private fun getTitle(): Int {
@@ -92,6 +93,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
             val sortedList = Channel.sort(channels, false)
             binding.errorText.visibility = VISIBLE
             binding.errorText.text = getString(R.string.channels_error_nosim)
+
             when (Utils.variant) {
                 Constants.VARIANT_1 -> initSingleSelectList(sortedList)
                 Constants.VARIANT_2, Constants.VARIANT_3 -> initMultiSelectList(sortedList)
@@ -109,11 +111,15 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
     private fun initMultiSelectList(channels: List<Channel>) {
         binding.channelsList.setHasFixedSize(true)
-        multiSelectAdapter = ChannelsMultiSelectAdapter(channels)
+
+        multiSelectAdapter.submitList(null)
+        multiSelectAdapter.submitList(channels)
         binding.channelsList.adapter = multiSelectAdapter
 
-        tracker = getTracker()
-        multiSelectAdapter!!.setTracker(tracker!!)
+        if (!multiSelectAdapter.hasTracker()) {
+            tracker = getTracker()
+            multiSelectAdapter.setTracker(tracker!!)
+        }
 
         binding.continueBtn.apply {
             visibility = VISIBLE
@@ -123,13 +129,14 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         }
     }
 
-    private fun getTracker()  : SelectionTracker<Long>{
+    private fun getTracker(): SelectionTracker<Long> {
         return SelectionTracker.Builder(
-                "channelSelection", binding.channelsList,
-                StableIdKeyProvider(binding.channelsList), ChannelLookup(binding.channelsList), StorageStrategy.createLongStorage()
+            "channelSelection", binding.channelsList,
+            StableIdKeyProvider(binding.channelsList), ChannelLookup(binding.channelsList), StorageStrategy.createLongStorage()
         ).withSelectionPredicate(SelectionPredicates.createSelectAnything())
-                .build()
+            .build()
     }
+
     private fun fetchSelectedChannels(tracker: SelectionTracker<Long>, channels: List<Channel>) {
         if (tracker.selection.isEmpty) {
             binding.errorText.apply {
@@ -144,16 +151,16 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
                 selectedChannels.add(channels[it.toInt()])
             }
 
-            saveChannels(selectedChannels, true)
+            showCheckBalanceDialog(R.string.check_balances_desc, selectedChannels)
         }
     }
 
-    private fun showCheckBalanceDialog(channel: Channel) {
+    private fun showCheckBalanceDialog(message: Int, channels: List<Channel>) {
         dialog = StaxDialog(requireActivity())
             .setDialogTitle(R.string.check_balance_title)
-            .setDialogMessage(R.string.check_balance_desc)
-            .setNegButton(R.string.later) { saveChannels(listOf(channel), false) }
-            .setPosButton(R.string.check_balance_title) { saveChannels(listOf(channel), true) }
+            .setDialogMessage(message)
+            .setNegButton(R.string.later) { saveChannels(channels, false) }
+            .setPosButton(R.string.check_balance_title) { saveChannels(channels, true) }
         dialog!!.showIt()
     }
 
@@ -176,7 +183,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
     override fun clickedChannel(channel: Channel) {
         if (IS_FORCE_RETURN || !channel.selected)
-            showCheckBalanceDialog(channel)
+            showCheckBalanceDialog(R.string.check_balance_desc, listOf(channel))
         else
             goToChannelsDetailsScreen(channel)
     }
