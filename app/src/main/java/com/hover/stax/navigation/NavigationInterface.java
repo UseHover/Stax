@@ -93,7 +93,7 @@ public interface NavigationInterface {
     default void navigateToChannelsListFragment(NavController navController, boolean forceReturnData) {
         Bundle bundle = new Bundle();
         bundle.putBoolean(AddChannelsFragment.FORCE_RETURN_DATA, forceReturnData);
-        navController.navigate(R.id.navigation_linkAccount, bundle);
+        navController.navigate(R.id.action_navigation_home_to_navigation_linkAccount, bundle);
     }
 
     default void navigateToTransferActivity(String type, boolean isFromStaxLink, Intent received, Activity activity) {
@@ -126,7 +126,7 @@ public interface NavigationInterface {
     default void navigateToTransactionDetailsFragment(String uuid, Fragment fragment) {
         Bundle bundle = new Bundle();
         bundle.putString(TransactionContract.COLUMN_UUID, uuid);
-        NavHostFragment.findNavController(fragment).navigate(R.id.transactionDetailsFragment, bundle);
+        NavHostFragment.findNavController(fragment).navigate(R.id.action_bountyListFragment_to_transactionDetailsFragment, bundle);
     }
 
     default void navigateToTransactionDetailsFragment(String uuid, NavController navController, boolean showBountyButton) {
@@ -161,7 +161,7 @@ public interface NavigationInterface {
         String recipientEmail = activity.getString(R.string.stax_support_email);
         String subject = activity.getString(R.string.stax_emailing_subject, Hover.getDeviceId(activity.getBaseContext()));
 
-        Uri data = Uri.parse("mailto:"+recipientEmail+" ?subject=" + subject);
+        Uri data = Uri.parse("mailto:" + recipientEmail + " ?subject=" + subject);
         intent.setData(data);
         activity.startActivity(intent);
     }
