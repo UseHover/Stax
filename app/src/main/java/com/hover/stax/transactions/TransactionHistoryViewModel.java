@@ -15,7 +15,6 @@ import com.hover.stax.database.DatabaseRepo;
 import java.util.List;
 
 public class TransactionHistoryViewModel extends AndroidViewModel {
-    private final String TAG = "TransactionHistoryViewModel";
 
     private final DatabaseRepo repo;
 
@@ -28,6 +27,7 @@ public class TransactionHistoryViewModel extends AndroidViewModel {
 
         transactions = new MutableLiveData<>();
         transactions = repo.getCompleteAndPendingTransferTransactions();
+
         appReviewLiveData =  Transformations.map(repo.getTransactionsForAppReview(), this:: showAppReview);
     }
 

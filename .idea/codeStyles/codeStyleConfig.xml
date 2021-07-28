@@ -1,5 +1,9 @@
 <component name="ProjectCodeStyleConfiguration">
   <state>
+<<<<<<< HEAD
     <option name="PREFERRED_PROJECT_CODE_STYLE" value="Stax" />
+=======
+    <option name="PREFERRED_PROJECT_CODE_STYLE" value="Project" />
+>>>>>>> master
   </state>
 </component>

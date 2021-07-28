@@ -26,6 +26,7 @@ import timber.log.Timber;
 
 import static com.hover.stax.utils.Constants.size55;
 
+
 public class ChannelDropdown extends StaxDropdownLayout implements Target{
 
     private boolean showSelected;

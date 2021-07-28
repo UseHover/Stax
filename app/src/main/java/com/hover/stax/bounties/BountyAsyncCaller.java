@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.hover.sdk.api.Hover;
 import com.hover.stax.R;
+import com.hover.stax.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;

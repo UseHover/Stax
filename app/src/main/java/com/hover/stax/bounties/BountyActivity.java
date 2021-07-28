@@ -54,11 +54,11 @@ public class BountyActivity extends AbstractNavigationActivity implements PushNo
         updatePushNotifGroupStatus(a);
         call(a.public_id);
     }
-  
-  private void updatePushNotifGroupStatus(HoverAction a) {
-		joinAllBountiesGroup(this);
-		joinBountyCountryGroup(a.country_alpha2.toUpperCase(), this);
-	}
+
+    private void updatePushNotifGroupStatus(HoverAction a) {
+        joinAllBountiesGroup(this);
+        joinBountyCountryGroup(a.country_alpha2.toUpperCase(), this);
+    }
 
     public void retryCall(String actionId) {
         Utils.logAnalyticsEvent(getString(R.string.clicked_retry_bounty_session), this);

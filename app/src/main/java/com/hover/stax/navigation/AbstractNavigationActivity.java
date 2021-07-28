@@ -11,6 +11,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
@@ -131,6 +132,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
     public void getStartedWithBountyButton(View view) {
         checkPermissionsAndNavigate(Constants.NAV_BOUNTY);
     }
+
     public void openSupportEmailClient(View view) {
         checkPermissionsAndNavigate(Constants.NAV_EMAIL_CLIENT, R.string.permission_support_desc);
     }

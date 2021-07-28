@@ -19,6 +19,7 @@ import java.io.IOException;
 import timber.log.Timber;
 
 public abstract class AbstractStatefulInput extends FrameLayout {
+
     public final static int NONE = 0, INFO = 1, WARN = 2, ERROR = 3, SUCCESS = 4;
 
     private TextInputLayout inputLayout;
@@ -75,6 +76,7 @@ public abstract class AbstractStatefulInput extends FrameLayout {
             inputLayout.setEndIconTintList(csl);
             inputLayout.setHintTextColor(csl);
             inputLayout.setBoxStrokeColorStateList(csl);
+
             inputLayout.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "Effra_Regular.ttf"));
         } catch (IOException | XmlPullParserException | NullPointerException e) {
             Timber.e(e, "Failed to load color state list");

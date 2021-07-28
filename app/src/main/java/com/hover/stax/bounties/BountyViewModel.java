@@ -117,6 +117,7 @@ public class BountyViewModel extends AndroidViewModel {
 
     public LiveData<List<Channel>> filterChannels(String countryCode) {
         country = countryCode;
+
         List<HoverAction> actions = bountyActions.getValue();
         if (actions == null) return null;
 
