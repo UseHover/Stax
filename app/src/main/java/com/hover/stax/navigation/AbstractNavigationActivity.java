@@ -11,7 +11,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.amplitude.api.Amplitude;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
@@ -40,7 +40,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         setBottomBar();
 
         if (getIntent().getBooleanExtra(SettingsFragment.LANG_CHANGE, false))
-            navigate(this, Constants.NAV_SETTINGS);
+            navigate(this, Constants.NAV_SETTINGS, null);
     }
 
     private void setBottomBar() {
@@ -83,16 +83,23 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         return navHostFragment.getNavController();
     }
 
-    public void checkPermissionsAndNavigate(int toWhere) {
+    public void checkPermissionsAndNavigate(int toWhere, int permissionMessage) {
         PermissionHelper permissionHelper = new PermissionHelper(this);
         if (toWhere == Constants.NAV_SETTINGS || toWhere == Constants.NAV_HOME || permissionHelper.hasBasicPerms()) {
             navigate(this, toWhere, getIntent(), false);
         } else {
+            Utils.timeEvent(getString(R.string.perms_basic_requested));
+
             PermissionUtils.showInformativeBasicPermissionDialog(
+                    permissionMessage,
                     pos -> PermissionUtils.requestPerms(getNavConst(toWhere), AbstractNavigationActivity.this),
                     neg -> Utils.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), AbstractNavigationActivity.this),
                     this);
         }
+    }
+
+    public void checkPermissionsAndNavigate(int toWhere) {
+        checkPermissionsAndNavigate(toWhere, 0);
     }
 
     protected void navigateThruHome(int destId) {
@@ -104,6 +111,8 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
             intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_BALANCE);
         else if (destId == R.id.navigation_settings)
             intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_SETTINGS);
+        else if (destId == R.id.navigation_request)
+            intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_REQUEST);
         else if (destId != R.id.navigation_home) {
             onBackPressed();
             return;
@@ -113,7 +122,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
     }
 
     protected int getNavConst(int destId) {
-        if (destId == R.id.navigation_balance) return Constants.NAV_BALANCE;
+        if (destId == R.id.navigation_request) return Constants.NAV_REQUEST;
         else if (destId == R.id.navigation_settings) return Constants.NAV_SETTINGS;
         else if (destId == R.id.navigation_home) return Constants.NAV_HOME;
         else return destId;
@@ -122,6 +131,10 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 
     public void getStartedWithBountyButton(View view) {
         checkPermissionsAndNavigate(Constants.NAV_BOUNTY);
+    }
+
+    public void openSupportEmailClient(View view) {
+        checkPermissionsAndNavigate(Constants.NAV_EMAIL_CLIENT, R.string.permission_support_desc);
     }
 
     @Override

@@ -1,7 +1,5 @@
 package com.hover.stax.channels;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -13,136 +11,204 @@ import com.hover.stax.utils.DateUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+
+import timber.log.Timber;
 
 @Entity(tableName = "channels")
 public class Channel implements Comparable<Channel> {
 
-	public Channel() {}
+    final public static int DUMMY = -1;
 
-	public Channel(int _id, String addChannel) {
-		this.id = _id;
-		this.name = addChannel;
-	}
+    public Channel() {
+    }
 
-	public Channel(JSONObject jsonObject, String rootUrl) {
-		update(jsonObject, rootUrl);
-	}
+    public Channel(int _id, String addChannel) {
+        this.id = _id;
+        this.name = addChannel;
+    }
 
-	Channel update(JSONObject jsonObject, String rootUrl) {
-		try {
-			id = jsonObject.getInt("id");
-			name = jsonObject.getString("name");
-			rootCode = jsonObject.getString("root_code");
-			countryAlpha2 = jsonObject.getString("country_alpha2").toUpperCase();
-			currency = jsonObject.getString("currency");
-			hniList = jsonObject.getString("hni_list");
-			published = jsonObject.getBoolean("published");
-			logoUrl = rootUrl + jsonObject.getString("logo_url");
-			institutionId = jsonObject.getInt("institution_id");
-			primaryColorHex = jsonObject.getString("primary_color_hex");
-			secondaryColorHex = jsonObject.getString("secondary_color_hex");
-		} catch (JSONException e) {
-			Log.d("exception", e.getMessage());
-		}
-		return this;
-	}
+    public Channel(JSONObject jsonObject, String rootUrl) {
+        update(jsonObject, rootUrl);
+    }
 
-	@PrimaryKey
-	@NonNull
-	public int id;
+    Channel update(JSONObject jsonObject, String rootUrl) {
+        try {
+            id = jsonObject.getInt("id");
+            name = jsonObject.getString("name");
+            rootCode = jsonObject.getString("root_code");
+            countryAlpha2 = jsonObject.getString("country_alpha2").toUpperCase();
+            currency = jsonObject.getString("currency");
+            hniList = jsonObject.getString("hni_list");
+            published = jsonObject.getBoolean("published");
+            logoUrl = rootUrl + jsonObject.getString("logo_url");
+            institutionId = jsonObject.getInt("institution_id");
+            primaryColorHex = jsonObject.getString("primary_color_hex");
+            secondaryColorHex = jsonObject.getString("secondary_color_hex");
+        } catch (JSONException e) {
+            Timber.d(e.getLocalizedMessage());
+        }
+        return this;
+    }
 
-	@NonNull
-	@ColumnInfo(name = "name")
-	public String name;
+    public Channel dummy(String name, String primaryColor) {
+        id = DUMMY;
+        this.name = name;
+        this.primaryColorHex = primaryColor;
+        this.secondaryColorHex = "#1E232A";
+        currency = "NG";
+        published = true;
+        institutionId = DUMMY;
+        latestBalance = "0";
+        latestBalanceTimestamp = Long.parseLong("-1");
+        return this;
+    }
 
-	@NonNull
-	@ColumnInfo(name = "country_alpha2")
-	public String countryAlpha2;
+    public static boolean areAllDummies(List<Channel> channels) {
+        if (channels == null) return true;
 
-	@ColumnInfo(name = "root_code")
-	public String rootCode;
+        boolean result = true;
+        for (Channel channel : channels) {
+            if (channel.id != DUMMY) {
+                result = false;
+                break;
+            }
+        }
+        return result;
+    }
 
-	@NonNull
-	@ColumnInfo(name = "currency")
-	public String currency;
+    public static boolean hasDummy(List<Channel> channels) {
+        if (channels == null) return true;
 
-	@NonNull
-	@ColumnInfo(name = "hni_list")
-	public String hniList;
+        boolean result = false;
+        for (Channel channel : channels) {
+            if (channel.id == DUMMY) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
 
-	@NonNull
-	@ColumnInfo(name = "logo_url")
-	public String logoUrl;
+    @PrimaryKey
+    @NonNull
+    public int id;
 
-	@NonNull
-	@ColumnInfo(name = "institution_id")
-	public int institutionId;
+    @NonNull
+    @ColumnInfo(name = "name")
+    public String name;
 
-	@NonNull
-	@ColumnInfo(name = "primary_color_hex")
-	public String primaryColorHex;
+    @NonNull
+    @ColumnInfo(name = "country_alpha2")
+    public String countryAlpha2;
 
-	@NonNull
-	@ColumnInfo(name = "published", defaultValue = "0")
-	public Boolean published;
+    @ColumnInfo(name = "root_code")
+    public String rootCode;
 
-	@NonNull
-	@ColumnInfo(name = "secondary_color_hex")
-	public String secondaryColorHex;
+    @NonNull
+    @ColumnInfo(name = "currency")
+    public String currency;
 
-	@NonNull
-	@ColumnInfo(name = "selected", defaultValue = "0")
-	public boolean selected;
+    @NonNull
+    @ColumnInfo(name = "hni_list")
+    public String hniList;
 
-	@NonNull
-	@ColumnInfo(name = "defaultAccount", defaultValue = "0")
-	public boolean defaultAccount;
+    @NonNull
+    @ColumnInfo(name = "logo_url")
+    public String logoUrl;
 
-	@ColumnInfo(name = "pin")
-	public String pin;
+    @NonNull
+    @ColumnInfo(name = "institution_id")
+    public int institutionId;
 
-	@ColumnInfo(name = "latestBalance")
-	public String latestBalance;
+    @NonNull
+    @ColumnInfo(name = "primary_color_hex")
+    public String primaryColorHex;
 
-	@ColumnInfo(name = "latestBalanceTimestamp", defaultValue = "CURRENT_TIMESTAMP")
-	public Long latestBalanceTimestamp;
+    @NonNull
+    @ColumnInfo(name = "published", defaultValue = "0")
+    public Boolean published;
 
-	@ColumnInfo(name = "account_no")
-	public String accountNo;
+    @NonNull
+    @ColumnInfo(name = "secondary_color_hex")
+    public String secondaryColorHex;
 
-	@Ignore
-	public String spentThisMonth, spentDifferenceToLastMonth;
+    @NonNull
+    @ColumnInfo(name = "selected", defaultValue = "0")
+    public boolean selected;
 
-	public void setSpentThisMonth(String spentThisMonth) {
-		this.spentThisMonth = spentThisMonth;
-	}
+    @NonNull
+    @ColumnInfo(name = "defaultAccount", defaultValue = "0")
+    public boolean defaultAccount;
 
-	public void setSpentDifferenceToLastMonth(String spentDifferenceToLastMonth) {
-		this.spentDifferenceToLastMonth = spentDifferenceToLastMonth;
-	}
+    @ColumnInfo(name = "pin")
+    public String pin;
 
-	public void updateBalance(HashMap<String, String> parsed_variables) {
-		if (parsed_variables.containsKey("balance"))
-			latestBalance = parsed_variables.get("balance");
-		if (parsed_variables.containsKey("update_timestamp") && parsed_variables.get("update_timestamp") != null) {
-			latestBalanceTimestamp = Long.parseLong(parsed_variables.get("update_timestamp"));
-		} else {
-			latestBalanceTimestamp = DateUtils.now();
-		}
-	}
+    @ColumnInfo(name = "latestBalance")
+    public String latestBalance;
 
-	public String getUssdName() {
-		return name + " - " + rootCode;
-	}
+    @ColumnInfo(name = "latestBalanceTimestamp", defaultValue = "CURRENT_TIMESTAMP")
+    public Long latestBalanceTimestamp;
 
-	@Override
-	public String toString() {
-		return name + " " + countryAlpha2;
-	}
+    @ColumnInfo(name = "account_no")
+    public String accountNo;
 
-	@Override
-	public int compareTo(Channel cOther) {
-		return this.toString().compareTo(cOther.toString());
-	}
+    @Ignore
+    public String spentThisMonth, spentDifferenceToLastMonth;
+
+    public void setSpentThisMonth(String spentThisMonth) {
+        this.spentThisMonth = spentThisMonth;
+    }
+
+    public void setSpentDifferenceToLastMonth(String spentDifferenceToLastMonth) {
+        this.spentDifferenceToLastMonth = spentDifferenceToLastMonth;
+    }
+
+    public void updateBalance(HashMap<String, String> parsed_variables) {
+        if (parsed_variables.containsKey("balance"))
+            latestBalance = parsed_variables.get("balance");
+        if (parsed_variables.containsKey("update_timestamp") && parsed_variables.get("update_timestamp") != null) {
+            latestBalanceTimestamp = Long.parseLong(parsed_variables.get("update_timestamp"));
+        } else {
+            latestBalanceTimestamp = DateUtils.now();
+        }
+    }
+
+    public String getUssdName() {
+        return name + " - " + rootCode + " - "+countryAlpha2;
+    }
+
+    public static List<Channel> sort(List<Channel> channels, boolean showSelected) {
+        ArrayList<Channel> selected_list = new ArrayList<>();
+        ArrayList<Channel> sorted_list = new ArrayList<>();
+        for (Channel c : channels) {
+            if (c.selected) selected_list.add(c);
+            else sorted_list.add(c);
+        }
+        Collections.sort(selected_list);
+        Collections.sort(sorted_list);
+        if (showSelected)
+            sorted_list.addAll(0, selected_list);
+        return sorted_list;
+    }
+
+    @Override
+    public String toString() {
+        return name + " " + countryAlpha2;
+    }
+
+    @Override
+    public int compareTo(Channel cOther) {
+        return this.toString().compareTo(cOther.toString());
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Channel)) return false;
+        Channel c = (Channel) other;
+        return id == c.id;
+    }
 }

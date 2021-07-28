@@ -2,7 +2,6 @@ package com.hover.stax.transactions;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -85,7 +84,8 @@ public class StaxTransaction {
     @ColumnInfo(name = "counterparty")
     public String counterparty;
 
-    public StaxTransaction() {}
+    public StaxTransaction() {
+    }
 
     public StaxTransaction(Intent data, HoverAction action, StaxContact contact, Context c) {
         if (data.hasExtra(TransactionContract.COLUMN_UUID) && data.getStringExtra(TransactionContract.COLUMN_UUID) != null) {
@@ -106,8 +106,9 @@ public class StaxTransaction {
     }
 
     public void update(Intent data, HoverAction action, StaxContact contact, Context c) {
-        Timber.e("Updating");
         status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
+
+        Timber.e("Updating to status %s - %s", status, action);
         updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, initiated_at);
 
         parseExtras((HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES));
@@ -154,12 +155,14 @@ public class StaxTransaction {
     }
 
     public String getDisplayAmount() {
-        String a = Utils.formatAmount(amount);
-        if (!transaction_type.equals(HoverAction.RECEIVE))
-            a = "-" + a;
-        else if (isRecorded())
-            return "\\u2014";
-        return a;
+        if (amount != null) {
+            String a = Utils.formatAmount(amount);
+            if (!transaction_type.equals(HoverAction.RECEIVE))
+                a = "-" + a;
+            else if (isRecorded())
+                return "\\u2014";
+            return a;
+        } else return null;
     }
 
     @NotNull

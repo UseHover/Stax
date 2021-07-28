@@ -12,18 +12,17 @@ import android.view.animation.ScaleAnimation
  * Created by jcampos on 05/09/2018.
  */
 object AnimationUtils {
-
-    fun getScaleAnimation(offset: Int, duration: Int): Animation {
-        val anim = ScaleAnimation(
-                0f, 1f, // Start and end values for the X axis scaling
-                0f, 1f, // Start and end values for the Y axis scaling
-                Animation.RELATIVE_TO_SELF, 0.5f, // Pivot point of X scaling
-                Animation.RELATIVE_TO_SELF, 0.5f) // Pivot point of Y scaling
-        anim.fillAfter = true
-        anim.startOffset = offset.toLong()
-        anim.duration = duration.toLong()
-        return anim
-    }
+	  fun getScaleAnimation(offset: Int, duration: Int): Animation {
+			val anim = ScaleAnimation(
+					0f, 1f, // Start and end values for the X axis scaling
+					0f, 1f, // Start and end values for the Y axis scaling
+					Animation.RELATIVE_TO_SELF, 0.5f, // Pivot point of X scaling
+					Animation.RELATIVE_TO_SELF, 0.5f) // Pivot point of Y scaling
+			anim.fillAfter = true
+			anim.startOffset = offset.toLong()
+			anim.duration = duration.toLong()
+			return anim
+	  }
 
     fun getFadeInAnimation(offset: Int, duration: Int): Animation {
         val fadeIn = AlphaAnimation(0f, 1f)

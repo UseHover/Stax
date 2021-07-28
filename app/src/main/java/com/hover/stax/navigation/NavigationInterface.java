@@ -1,36 +1,26 @@
 package com.hover.stax.navigation;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.google.android.play.core.review.ReviewInfo;
-import com.google.android.play.core.review.ReviewManager;
-import com.google.android.play.core.review.ReviewManagerFactory;
-import com.google.android.play.core.tasks.OnCompleteListener;
-import com.google.android.play.core.tasks.Task;
 import com.hover.sdk.actions.HoverAction;
+import com.hover.sdk.api.Hover;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.bounties.BountyActivity;
+import com.hover.stax.channels.AddChannelsFragment;
 import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.transactions.TransactionDetailsFragment;
 import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.Constants;
-import com.hover.stax.utils.Utils;
-
-import org.jetbrains.annotations.NotNull;
 
 import static com.hover.stax.settings.SettingsFragment.LANG_CHANGE;
 
@@ -68,13 +58,16 @@ public interface NavigationInterface {
                 navigateToSettingsFragment(navController);
                 break;
             case Constants.NAV_LINK_ACCOUNT:
-                navigateToLinkAccountFragment(navController);
+                navigateToChannelsListFragment(navController, true);
                 break;
             case Constants.NAV_LANGUAGE_SELECTION:
                 navigateToLanguageSelectionFragment(activity);
                 break;
             case Constants.NAV_BOUNTY:
                 activity.startActivity(new Intent(activity, BountyActivity.class));
+                break;
+            case Constants.NAV_EMAIL_CLIENT:
+                openSupportEmailClient(activity);
                 break;
             default:
                 break;
@@ -97,8 +90,10 @@ public interface NavigationInterface {
         navController.navigate(R.id.navigation_balance);
     }
 
-    default void navigateToLinkAccountFragment(NavController navController) {
-        navController.navigate(R.id.navigation_linkAccount);
+    default void navigateToChannelsListFragment(NavController navController, boolean forceReturnData) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(AddChannelsFragment.FORCE_RETURN_DATA, forceReturnData);
+        navController.navigate(R.id.navigation_linkAccount, bundle);
     }
 
     default void navigateToTransferActivity(String type, boolean isFromStaxLink, Intent received, Activity activity) {
@@ -155,5 +150,19 @@ public interface NavigationInterface {
 
     default void navigateToBountyListFragment(NavController navController) {
         navController.navigate(R.id.bountyListFragment);
+    }
+
+    default void navigateFAQ(Fragment fragment) {
+        NavHostFragment.findNavController(fragment).navigate(R.id.faqFragment);
+    }
+
+    default void openSupportEmailClient(Activity activity) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        String recipientEmail = activity.getString(R.string.stax_support_email);
+        String subject = activity.getString(R.string.stax_emailing_subject, Hover.getDeviceId(activity.getBaseContext()));
+
+        Uri data = Uri.parse("mailto:"+recipientEmail+" ?subject=" + subject);
+        intent.setData(data);
+        activity.startActivity(intent);
     }
 }

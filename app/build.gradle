@@ -4,7 +4,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.google.firebase.firebase-perf'
 
 
 def userHome = Paths.get(System.getProperty('user.home'))
@@ -36,14 +36,14 @@ android {
     }
 
     compileSdkVersion 30
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.hover.stax"
         minSdkVersion 18
         targetSdkVersion 30
-        versionCode 58
-        versionName "1.3.6.2"
+        versionCode 71
+        versionName "1.5.0.6"
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -68,6 +68,7 @@ android {
 
         release {
             minifyEnabled true
+            shrinkResources true
             buildConfigField "String", "SELF_DESTRUCT", "\"1625097599\"" // June 30, 2021
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
@@ -79,6 +80,17 @@ android {
         }
     }
 
+    //flavorDimensions 'store_type'
+    //productFlavors {
+        //playstore {
+          //  dimension "store_type"
+        //}
+        //transsion {
+          //  dimension "store_type"
+        //    versionNameSuffix "-transsion"
+      //  }
+    //}
+
     bundle {
         language {
             //Ensures all language string resources is bundled in the aab.
@@ -88,7 +100,7 @@ android {
 
     lintOptions {
         disable 'MissingTranslation'
-//        disable 'ExtraTranslation'
+        disable 'ExtraTranslation'
     }
 
     buildFeatures {
@@ -101,20 +113,21 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // Google
-    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
-    implementation 'androidx.navigation:navigation-fragment:2.3.5'
-    implementation 'androidx.navigation:navigation-ui:2.3.5'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation "androidx.work:work-runtime:2.5.0"
     implementation "androidx.biometric:biometric:1.1.0"
-    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.viewpager:viewpager:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview-selection:1.1.0'
     annotationProcessor "androidx.lifecycle:lifecycle-common-java8:2.3.1"
-    implementation "androidx.room:room-runtime:2.2.6"
-    annotationProcessor "androidx.room:room-compiler:2.2.6"
-    androidTestImplementation "androidx.room:room-testing:2.2.6"
+    implementation "androidx.room:room-runtime:2.3.0"
+    annotationProcessor "androidx.room:room-compiler:2.3.0"
+    androidTestImplementation "androidx.room:room-testing:2.3.0"
 
     //logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
@@ -128,7 +141,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-config'
     implementation 'com.google.android.play:core:1.10.0'
 
-    //implementation 'io.sentry:sentry-android:3.1.0'
+    implementation 'com.google.firebase:firebase-perf'
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+
     implementation 'com.amplitude:android-sdk:2.23.2'
     implementation "com.squareup.okhttp3:okhttp:4.8.1"
     implementation "com.googlecode.libphonenumber:libphonenumber:8.12.9"
@@ -138,21 +153,32 @@ dependencies {
     implementation 'com.appsflyer:af-android-sdk:6.2.3'
     implementation 'com.android.installreferrer:installreferrer:2.2'
 
+    //mixpanel
+    implementation 'com.mixpanel.android:mixpanel-android:5.9.1'
+
     // Kotlin
-    implementation "androidx.core:core-ktx:1.5.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.room:room-ktx:2.3.0"
+    implementation "androidx.core:core-ktx:1.6.0"
+
+    //di
+    def koin_version= "2.2.2"
+    implementation "org.koin:koin-androidx-scope:$koin_version"
+    implementation "org.koin:koin-androidx-viewmodel:$koin_version"
+    implementation "org.koin:koin-androidx-fragment:$koin_version"
 
     // Tests
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     // Hover SDK
     debugImplementation project(":hover.sdk")
-    def sdk_version = "2.0.0-stax-1.3.5-pro"
+
+    def sdk_version = "2.0.0-stax-1.5.0-pro"
 
     releaseImplementation "com.hover:android-sdk:$sdk_version"
     debugImplementation 'com.android.volley:volley:1.2.0'
     debugImplementation 'com.google.android.gms:play-services-analytics:17.0.0'
+
     debugImplementation 'io.sentry:sentry-android:4.3.0'
 }

@@ -9,6 +9,9 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +33,8 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import org.jetbrains.annotations.NotNull;
+
+import timber.log.Timber;
 
 public class UIHelper {
     private static final String TAG = "UIHelper";
@@ -130,4 +135,23 @@ public class UIHelper {
             activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         }
     }
+
+    public static void setTextUnderline(TextView textView, String cs) {
+        SpannableString content = new SpannableString(cs);
+        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+        content.setSpan(android.graphics.Typeface.BOLD, 0, content.length(), 0);
+        try{
+            textView.setText(content);
+        }catch (Exception e) { Timber.e(e); }
+
+    }
+
+    public static void removeTextUnderline(TextView textView) {
+        SpannableString ss= new SpannableString(textView.getText());
+        UnderlineSpan[] spans=ss.getSpans(0, textView.getText().length(), UnderlineSpan.class);
+        for (UnderlineSpan span : spans) {
+            ss.removeSpan(span);
+        }
+    }
+
 }

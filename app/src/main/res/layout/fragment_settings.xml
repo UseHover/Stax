@@ -1,46 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".settings.SettingsFragment">
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".settings.SettingsFragment">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_13"
-        android:layout_marginBottom="@dimen/margin_89"
-        android:orientation="vertical">
-
-        <include
-            android:id="@+id/cardAccounts"
-            layout="@layout/settings_card_accounts" />
-
-        <include
-            android:id="@+id/bountyCard"
-            android:visibility="visible"
-            layout="@layout/settings_bounty_card_layout" />
-
-        <include
-            android:id="@+id/securityCard"
-            layout="@layout/settings_security_card" />
-
-        <include
-            android:id="@+id/languageCard"
-            layout="@layout/settings_card_language" />
-
-        <include layout="@layout/contact_stax_layout"
-            android:id="@+id/contactStax"/>
-
-        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_13"
-            android:fontFamily="font-normal"
-            android:lineSpacingExtra="2sp"
-            android:text="@string/disclaimer"
-            android:textColor="@color/darkGrey"
-            android:textSize="@dimen/text_13" />
+            android:layout_marginTop="@dimen/margin_13"
+            android:layout_marginBottom="@dimen/margin_89"
+            android:orientation="vertical">
+
+        <include
+                android:id="@+id/cardAccounts"
+                layout="@layout/settings_card_accounts" />
+
+        <include
+                android:id="@+id/bountyCard"
+                layout="@layout/settings_bounty_card_layout"
+                android:visibility="visible" />
+
+        <include
+                android:id="@+id/get_support_stax"
+                layout="@layout/support_stax_layout" />
+
+        <include
+                android:id="@+id/contactStax"
+                layout="@layout/stayintouch_stax_layout" />
+
+        <include
+                android:id="@+id/securityCard"
+                layout="@layout/settings_security_card" />
+
+        <include
+                android:id="@+id/languageCard"
+                layout="@layout/settings_card_language" />
+
+        <TextView
+                android:id="@+id/stax_and_device_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_13"
+                android:layout_marginBottom="@dimen/margin_13"
+                android:fontFamily="font-normal"
+                android:lineSpacingExtra="2sp"
+                android:text="@string/disclaimer"
+                android:textColor="@color/darkGrey"
+                android:textSize="@dimen/text_13" />
+
+        <TextView
+                android:id="@+id/disclaimer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_13"
+                android:fontFamily="font-normal"
+                android:lineSpacingExtra="2sp"
+                android:text="@string/disclaimer"
+                android:textColor="@color/darkGrey"
+                android:textSize="@dimen/text_13" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

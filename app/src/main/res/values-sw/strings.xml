@@ -440,5 +440,12 @@
   <string name="other_choice">Mtu mwingine</string>
   <string name="actions_fielderror">Akaunti hii haitumiki kununua muda wa maongezi. Tafadhali chagua akaunti tofauti.</string>
   <string name="descrip_transfer_received">umepokea pesa kutoka kwa %1$s</string>
-  
+    <string name="stax_tagline">Hoja pesa bila mafadhaiko</string>
+  <string name="slide_1_title">Fanya Shughuli Zako Zote Nje ya Mtandao!</string>
+  <string name="slide_1_desc">Huna haja ya mtandao kuhamisha pesa au kuangalia mizani ya akaunti yako kwenye Stax.</string>
+  <string name="slide_2_title">Hoja pesa bila mafadhaiko</string>
+  <string name="slide_2_desc">Hamisha fedha kati ya akaunti zako, nunua muda wa maongezi, tuma na uombe pesa.</string>
+  <string name="slide_3_title">Akaunti Zako Zote za Fedha katika App Moja.</string>
+  <string name="slide_3_desc">Unganisha benki yako yote &amp; akaunti za pesa za rununu kwenda Stax na uhamishe pesa kutoka sehemu moja.</string>
+
 </resources>

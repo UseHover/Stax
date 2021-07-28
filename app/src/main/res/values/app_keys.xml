@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
-	<string name="appsflyer_key" public="false" translatable="false">4B6DDdYFw55PmVPTwr8Ski</string>
-	<string name="stax_link_bijective_key" translatable="false">pwiqskztoa</string>
-	<string name="stax_link_bijective_ext" translatable="false">gjr</string>
-	<string name="stax_link_bijective_ext_reverse" translatable="false">.-,</string>
-</resources>

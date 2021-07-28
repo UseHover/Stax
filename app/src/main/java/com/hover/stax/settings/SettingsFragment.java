@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -14,26 +15,31 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.amplitude.api.Amplitude;
+import com.hover.sdk.api.Hover;
+import com.hover.stax.BuildConfig;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.databinding.FragmentSettingsBinding;
 import com.hover.stax.languages.Lang;
 import com.hover.stax.languages.LanguageViewModel;
 import com.hover.stax.navigation.NavigationInterface;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 public class SettingsFragment extends Fragment implements NavigationInterface {
-    final public static String LANG_CHANGE = "Settings";
+
+    final public static String LANG_CHANGE = "Settings", TEST_MODE_KEY = "test_mode";
 
     private ArrayAdapter<Channel> accountAdapter;
 
     private FragmentSettingsBinding binding;
+    private int clickCounter = 0;
 
     @Nullable
     @Override
@@ -47,6 +53,10 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
         setUpAccounts(securityViewModel);
         setUpChooseLang();
         setUpContactStax();
+        setupRequestFeature();
+        setUpEnableTestMode();
+        setupFaq();
+        setupAppVersionInfo();
 
         return binding.getRoot();
     }
@@ -75,8 +85,23 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
         });
     }
 
+    private void setupAppVersionInfo() {
+        String deviceId = Hover.getDeviceId(requireContext());
+        String appVersion = BuildConfig.VERSION_NAME;
+        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
+        binding.staxAndDeviceInfo.setText(getString(R.string.app_version_and_device_id,appVersion, versionCode, deviceId ));
+    }
+
     private void setUpContactStax() {
         binding.contactStax.twitterContact.setOnClickListener(v -> Utils.openUrl(getString(R.string.stax_twitter_url), requireContext()));
+        binding.contactStax.receiveStaxUpdate.setOnClickListener(v->Utils.openUrl(getString(R.string.receive_stax_updates_url), requireContext()));
+    }
+
+    private void setupRequestFeature() {
+        binding.getSupportStax.requestFeature.setOnClickListener(v->Utils.openUrl(getString(R.string.stax_nolt_url), requireContext()));
+    }
+    private void setupFaq() {
+        binding.getSupportStax.faq.setOnClickListener(v->navigateFAQ(this));
     }
 
     private void showAccounts(List<Channel> channels) {
@@ -97,6 +122,29 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
         spinner.setOnItemClickListener((adapterView, view, pos, id) -> {
             if (pos != 0) securityViewModel.setDefaultAccount(channels.get(pos));
         });
+    }
+
+    private void setUpEnableTestMode() {
+        binding.contactStax.testMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            Utils.saveBoolean(Constants.TEST_MODE, isChecked, requireContext());
+            UIHelper.flashMessage(requireContext(), isChecked ? R.string.test_mode_toast : R.string.test_mode_disabled);
+        });
+
+        binding.contactStax.testMode.setVisibility(Utils.getBoolean(Constants.TEST_MODE, requireContext()) ? VISIBLE : GONE);
+
+        binding.disclaimer.setOnClickListener(v -> {
+            clickCounter++;
+            if (clickCounter == 5)
+                UIHelper.flashMessage(requireContext(), R.string.test_mode_almost_toast);
+            else if (clickCounter == 7)
+                enableTestMode();
+        });
+    }
+
+    private void enableTestMode() {
+        Utils.saveBoolean(Constants.TEST_MODE, true, requireContext());
+        binding.contactStax.testMode.setVisibility(VISIBLE);
+        UIHelper.flashMessage(requireContext(), R.string.test_mode_toast);
     }
 
     @Override

@@ -1,111 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:layout_gravity="bottom"
-
-    >
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        android:orientation="vertical"
-        android:paddingHorizontal="@dimen/margin_5"
-        android:paddingVertical="@dimen/margin_65">
-
-        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginHorizontal="@dimen/margin_3"
-            android:layout_marginVertical="@dimen/margin_26"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="@dimen/margin_8"
-                android:fontFamily="font-normal"
-                android:gravity="center"
-                android:text="@string/welcome_to"
-                android:textSize="@dimen/text_21" />
-
-            <ImageView
+        <ImageView
                 android:id="@+id/home_stax_logo"
                 android:layout_width="80dp"
                 android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:gravity="center"
+                android:layout_gravity="start"
+                android:layout_marginHorizontal="@dimen/margin_13"
+                android:gravity="start"
                 android:src="@mipmap/stax" />
-        </LinearLayout>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/airtime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_8"
-            android:layout_marginTop="@dimen/margin_5"
-            android:layout_marginBottom="5dp"
-            android:clipToPadding="true"
-            app:cardBackgroundColor="@color/cardViewColor"
-            app:cardCornerRadius="@dimen/radius"
-            app:cardElevation="8dp">
-
-            <TextView
+        <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/balance_fragment"
+                android:name="com.hover.stax.balances.BalancesFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_bg_grey"
-                android:fontFamily="font-normal"
-                android:padding="@dimen/margin_24"
-                android:text="@string/nav_airtime"
-                android:textSize="@dimen/text_21"
+                 />
 
-                />
+        <com.hover.stax.inapp_banner.StaxBannerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/homeBanner"
+                android:visibility="gone"
+                android:background="?selectableItemBackground"
+                android:layout_marginTop="@dimen/margin_16"/>
+
+        <androidx.cardview.widget.CardView
+                android:id="@+id/transfer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_13"
+                android:layout_marginTop="@dimen/margin_26"
+                android:animateLayoutChanges="false"
+                app:cardBackgroundColor="@color/cardViewColor"
+                app:cardCornerRadius="@dimen/radius"
+                app:cardElevation="8dp">
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_bg_grey"
+                    android:fontFamily="font-normal"
+                    android:padding="@dimen/margin_24"
+                    android:text="@string/cta_transfer"
+                    android:textSize="@dimen/text_21"
+                    app:drawableEndCompat="@drawable/ic_transfer_within_24" />
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/request"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_8"
-            android:layout_marginBottom="5dp"
-            app:cardBackgroundColor="@color/cardViewColor"
-            app:cardCornerRadius="@dimen/radius"
-            app:cardElevation="8dp">
-
-            <TextView
+                android:id="@+id/airtime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_bg_grey"
-                android:fontFamily="font-normal"
-                android:padding="@dimen/margin_24"
-                android:text="@string/cta_request"
-                android:textSize="@dimen/text_21" />
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/transfer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_8"
-            android:layout_marginBottom="@dimen/margin_21"
-            app:cardBackgroundColor="@color/cardViewColor"
-            app:cardCornerRadius="@dimen/radius"
-            app:cardElevation="8dp">
+                android:layout_marginHorizontal="@dimen/margin_13"
+                android:layout_marginTop="@dimen/margin_13"
+                android:layout_marginBottom="@dimen/margin_21"
+                android:clipToPadding="true"
+                android:animateLayoutChanges="false"
+                app:cardBackgroundColor="@color/cardViewColor"
+                app:cardCornerRadius="@dimen/radius"
+                app:cardElevation="8dp">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/button_bg_grey"
-                android:fontFamily="font-normal"
-                android:padding="@dimen/margin_24"
-                android:text="@string/cta_transfer"
-                android:textSize="@dimen/text_21" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_bg_grey"
+                    android:fontFamily="font-normal"
+                    android:padding="@dimen/margin_24"
+                    android:text="@string/nav_airtime"
+                    android:textSize="@dimen/text_21"
+                    app:drawableEndCompat="@drawable/ic_system_upate_24" />
         </androidx.cardview.widget.CardView>
 
     </LinearLayout>

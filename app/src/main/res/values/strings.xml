@@ -1,4 +1,6 @@
 <resources>
+	<string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
+	<string name="appsflyer_key" public="false" translatable="false">4B6DDdYFw55PmVPTwr8Ski</string>
 	<string name="app_name" translatable="false">Stax</string>
 	<string name="payment_root_url" translatable="false">https://stax.me/pay?%1$s</string>
 	<string name="payment_url_end" translatable="false">%1$s-%2$d-%3$s-%4$d</string>
@@ -8,10 +10,16 @@
 	<string name="bounty_endpoint">/stax_bounty_hunters</string>
 	<string name="stax_market_playstore_link" translatable="false">market://details?id=com.hover.stax</string>
 	<string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
+	<string name="stax_nolt_url">https://stax.nolt.io/</string>
+	<string name="receive_stax_updates_url">https://416e906b.sibforms.com/serve/MUIEAAS88NDe6oTn7nl8YrIqgutsJ_GgyCYRWVsZ-S54quVNmBhvpsu70WpNXrZd-n6H5r8m1ZRfuTl8ckiQrB4sLIdNSx0Y_DFZ7_hQGCDv9PG6N0ncsHwWW3OYsMlPMHgQSR6OZf8xK8HC-NA3p3T71Pv1Coy_n9oiDRwIu7HCryUfDtfHr11mXSQ5S3JwcOd8cN7FL1ewDRqu</string>
+	<string name="mixpanel_token" translatable="false">82efeb23b6d38509989f592c8f4b21c2</string>
 
 	<string name="nav_home">Home</string>
 	<string name="nav_balance_and_history">Balance and history</string>
 	<string name="nav_balances">Balances</string>
+
+	<string name="nav_get_paid">Get paid</string>
+
 	<string name="nav_link_account">Link an account</string>
 	<string name="nav_airtime">Buy Airtime</string>
 	<string name="nav_transfer">Transfer</string>
@@ -41,14 +49,14 @@
 	<string name="btn_test">Test</string>
 
 	<!-- ONBOARDING -->
-	<string name="stax_tagline">USSD made simple</string>
+	<string name="stax_tagline">Move money without stress</string>
 	<string name="splash_screen_img_desc">Stax background</string>
-	<string name="slide_1_title">Never dial a code again!</string>
-	<string name="slide_1_desc">Move money between dozens of banks and mobile money options</string>
-	<string name="slide_2_title">No data?\nNo problem!</string>
-	<string name="slide_2_desc">Payments through Stax work without wifi or data.</string>
-	<string name="slide_3_title">Forget your SMS inbox.</string>
-	<string name="slide_3_desc">Stax organizes all your transactions in one place</string>
+	<string name="slide_1_title">Do All Your Transactions Offline!</string>
+	<string name="slide_1_desc">You don\'t need the internet to move money or check your account balances on Stax.</string>
+	<string name="slide_2_title">Move Money\nWithout Stress!</string>
+	<string name="slide_2_desc">Transfer funds between your accounts, buy airtime, send and request money.</string>
+	<string name="slide_3_title">All Your Financial Accounts in One App.</string>
+	<string name="slide_3_desc">Link all your bank &amp; mobile money accounts to Stax and move money from one place.</string>
 
 	<!-- Home -->
 	<string name="welcome_to">Welcome to</string>
@@ -64,18 +72,32 @@
 	<string name="link_account">Link account</string>
 	<string name="link_account_error">Choose an account to link.</string>
 	<string name="link_another"><u>+ Link another account</u></string>
+	<string name="add_another_account"><u>+ Add another account</u></string>
 	<string name="hist_cardhead">History</string>
 	<string name="hist_zerobody">You do not have any history yet. Send money or buy airtime to get started.</string>
 	<string name="future_cardhead">Future Transactions</string>
 	<string name="pending_callout">Transaction sent. Waiting for confirmation.</string>
-	<string name="refresh_balance_desc">Refresh balance to see your money</string>
+	<string name="refresh_balance_desc">Refresh your balance</string>
 	<string name="refresh_balances">Refresh balances</string>
 	<string name="refresh">Refresh</string>
 	<string name="refresh_balance_error">Add an account to check your balance.</string>
 
+	<string name="check_balance_title">Check balance</string>
+	<string name="check_balance_desc">Nice! You added your first account. Now you can check your balance on Stax.</string>
+	<string name="later">Later</string>
+	<string name="no_connecion">No connection</string>
+	<string name="your_main_account">Your main account</string>
+	<string name="your_other_account">Your other account</string>
+
+	<!-- ADD ACCOUNT -->
+	<string name="your_accounts">Your accounts</string>
+	<string name="add_an_account">Add an account</string>
+	<string name="add_accounts_to_stax">Add accounts to Stax</string>
+
 	<!-- Permissions -->
 	<string name="permissions_title">Permissions needed</string>
 	<string name="permissions_basic_desc">We need phone permissions to see which accounts you might have.</string>
+	<string name="permission_support_desc">We need phone permissions to generate your support ID</string>
 	<string name="nav_sim_permission">Grant SIM permission</string>
 	<string name="perm_dialoghead">One last thing…</string>
 	<string name="perm_dialogbody">Stax needs 2 permissions to %1$s.</string>
@@ -115,17 +137,9 @@
 
 	<!-- Onboarding showcase -->
 	<string name="onboard_addaccounthead">Add an account to get started.</string>
-	<string name="onboard_addaccountbody">Stax puts all your bank and mobile money accounts in one secure place.</string>
-	<string name="onboard_sechead">World class security</string>
-	<string name="onboard_secbody">We secure Stax with the same technology that locks your device. You unlock Stax the same way you unlock your device.</string>
-	<string name="onboard_peekhead">Keep accounts private</string>
-	<string name="onboard_peekbody">Peek at your balances by dragging the bar to the left.</string>
-	<string name="onboard_balhead">Refresh your accounts</string>
-	<string name="onboard_balbody">Check your account\'s balance by pulling the bar all the way to the left.</string>
-	<string name="onboard_refreshhead">Refresh Stax</string>
-	<string name="onboard_refreshbody">Pull down the whole screen to refresh all of your accounts.</string>
-	<string name="onboard_infohead">Long press for more info</string>
-	<string name="onboard_infobody">Press and hold any element in Stax for more information.</string>
+	<string name="onboard_addaccountdesc">Keep track of your money all in one place. Your funds never leave your account or mix.</string>
+	<string name="onboard_addaccount_greatwork_head">Great work!</string>
+	<string name="onboard_addaccount_greatwork_desc">Now add your other accounts so you can view all your separate balances in one place.</string>
 
 	<!-- Transfer -->
 	<string name="loading_link_dialoghead">Loading, one moment</string>
@@ -171,6 +185,11 @@
 
 	<!-- Request -->
 	<string name="req_cardhead">Request money</string>
+	<string name="into_account">Into account</string>
+	<string name="put_in">Put in</string>
+	<string name="put_in_desc">This is where you want to receive the requested money</string>
+	<string name="account_num_desc">e.g. your mobile money phone number or bank account number</string>
+	<string name="send_request_to">Send request to</string>
 	<string name="request_amount_label">How much money?</string>
 	<string name="amount_label_opt">Amount (Optional)</string>
 	<string name="reqfrom_label">To</string>
@@ -271,10 +290,21 @@
 	<string name="toast_confirm_acctremoved">Account removed successfully</string>
 	<string name="toast_confirm_pinupdate">Pin saved</string>
 	<string name="language_cardhead">Language</string>
+	<string name="app_version_and_device_id">App version: %1$s\nVersion code:%2$s\nDevice ID: %3$s</string>
 	<string name="disclaimer">All products names, brands, and trademarks are property of their respective owners. Use does not imply affiliation.</string>
-	<string name="contact_stax_cardhead">Contact Stax</string>
+
+	<string name="contact_stax_cardhead">Stay in touch</string>
 	<string name="twitter" translatable="false">Twitter</string>
 	<string name="stax_twitter_url" translatable="false">http://twitter.com/joinstax</string>
+	<string name="receive_stax_updates">Receive Stax updates</string>
+
+	<string name="support">Support</string>
+	<string name="FAQs">FAQs</string>
+	<string name="request_feature">Request a feature in Stax!</string>
+	<string name="contact_support">Contact support</string>
+	<string name="stax_support_email">support@stax.me</string>
+	<string name="stax_emailing_subject">Stax support id-%1$s</string>
+	<string name="send_email_using">Send mail using…</string>
 
 	<!-- System auth check -->
 	<string name="auth_title">Authenticate with Stax</string>
@@ -319,8 +349,8 @@
 	<string name="bounty_email_stage_title">🗺️  MAP USSD FLOWS</string>
 	<string name="bounty_email_stage_desc1">Stax wants to make digital money available to anyone anywhere offline. To bring Stax to more people in more countries, we need to build a map of all the USSD services in the world.<b> That is why Stax will pay you USD $5-50 to go through any of the USSD flows on the next page.</b></string>
 	<string name="bounty_email_stage_desc2"><b>1.</b>   Enter your email so we can pay you.\n<b>2.</b>   Choose a USSD flow like “check balance” from your bank or mobile money service on the next page.\n<b>3.</b>   Go through the USSD flow as normal.\n<b>4.</b>   Stax will check the flow.\n<b>5.</b>   You get paid.</string>
-	<string name="descrip_bounty_airtime">Buy airtime for any person</string>
-	<string name="bounty_airtime_explain">Buy airtime for someone else</string>
+	<string name="descrip_bounty_airtime">Buy airtime for any person %1$s</string>
+	<string name="bounty_airtime_explain">Buy airtime for someone else %1$s</string>
 	<string name="descrip_bounty_p2p">Send money to someone else %1$s</string>
 	<string name="bounty_p2p_explain">Send any amount to any person %1$s</string>
 	<string name="descrip_bounty_me2me">Move money to your %1$s account</string>
@@ -335,14 +365,14 @@
 	<string name="bounty_uploading_email">Connecting, please wait…</string>
 	<string name="bounty_api_internet_error">Please ensure you have a data internet connection</string>
 	<string name="bounty_api_other_error">Please try again. If this persists, kindly contact us at ussd@stax.me.</string>
-	<string name="bounty_pending_short_desc">We are checking this flow. Expect payment in 1–5 business days.</string>
+	<string name="bounty_pending_short_desc">We are verifying your transaction. If successful, expect to be paid within 7 business days.</string>
 	<string name="done">Done</string>
 	<string name="available_flows">AVAILABLE FLOWS</string>
 	<string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
 	<string name="bounty_claim_explained">To claim USD $%1$d, %2$s.\n\nAs soon as you\’re done, we will send you an email to collect information for payment. You will be paid in 1–5 business days </string>
 	<string name="start_USSD_Flow">Start USSD Flow</string>
 	<string name="checking_your_flow">Checking your flow</string>
-	<string name="bounty_flow_pending_dialog_msg"><![CDATA[Thank you for going through this flow. We sent an email with instructions for payment. We will pay you after we verify and check the flow.<br/><br/>If you don\’t hear from us, email us at <a href="https://ussd@stax.me"> <b><font color=#1878F9> ussd@stax.me </b></a>]]></string>
+	<string name="bounty_flow_pending_dialog_msg"><![CDATA[Thank you for your submission. If the transaction failed, please retry. Once we verify a successful transaction, we will reach out to you for your payment details.<br/><br/>If you have questions, please email us at <a href="https://ussd@stax.me"> <b><font color=#1878F9> ussd@stax.me </b></a>]]></string>
 	<string name="flow_done_title">FLOW DONE</string>
 	<string name="flow_done_desc">We checked the flow and it looks good! You should have an email in your inbox with payment information.</string>
 	<string name="go_through_another_flow">Go through another flow</string>
@@ -350,12 +380,13 @@
 	<string name="bounty_amount_with_currency">USD $%1$d</string>
 	<string name="select_country">Select country</string>
 	<string name="filter_by_country">Filter by country</string>
+	<string name="filtering_in_progress">Filtering, please wait…</string>
 	<string name="country">Country</string>
 	<string name="country_error_nodata">Please turn on data to load services and countries.</string>
 	<string name="country_with_emoji">%1$s  %2$s </string>
 	<string name="all_countries_with_emoji">🌎 All countries</string>
-	<string name="bounty_sim_err_header">NO %1$s SIM</string>
-	<string name="bounty_sim_err_desc">You need a SIM card from %1$s in your device to map this flow. Please put a SIM card from %1$s in your device and try again.</string>
+	<string name="bounty_sim_err_header">Insert correct SIM</string>x
+	<string name="bounty_sim_err_desc">Please input a SIM card from %1$s in your device and try again.</string>
 	<string name="retry">Retry</string>
 	<string name="submit_flow">Submit flow</string>
 	<string name="bounty_submitted_successfully">Bounty submitted successfully</string>
@@ -366,7 +397,37 @@
 	<string name="try_again">Try again</string>
 	<string name="edge_case_bounty_email_error">This rarely happens, but if error persists, please close the app and restart.</string>
 
+	<string name="no_account_selected_error">Please choose at least one account to add to Stax</string>
 
+	<!-- IN-APP BANNERS -->
+	<string name="banner_permission_title">SIM, SMS, Accessibility &amp; Overlay</string>
+	<string name="banner_permission_desc">Why does Stax ask for these permissions?</string>
+	<string name="banner_permission_cta"><u>Tap here to find out</u></string>
+	<string name="banner_roundupnews_title">Catch up on the latest Stax Monthly Roundup</string>
+	<string name="banner_roundupnews_cta"><u>Tap to read now</u></string>
+	<string name="banner_gist_title">Want exclusive Stax gist?</string>
+	<string name="banner_gist_cta"><u>Subscribe to our mailing list now</u></string>
+	<string name="banner_upvote_title">Build with us! Add/upvote a feature request or report a bug.</string>
+	<string name="banner_upvote_cta"><u>Give feedback now</u></string>
+	<string name="stax_banner_img_desc">Stax banner icon</string>
+	<string name="banner_research_title">Want to get paid to make Stax even better?</string>
+	<string name="banner_research_cta">Sign up for a research study today</string>
 
+	<string name="banner_permission_url">https://joinstax.medium.com/phone-permissions-on-stax-a0ec82533570</string>
+	<string name="banner_roundupnews_url">https://joinstax.medium.com/</string>
+	<string name="banner_upvoteurl">https://stax.nolt.io/</string>
+	<string name="banner_research_url">https://joinstax.typeform.com/to/JiloPnVy</string>
+
+	<!-- TEST MODE -->
+	<string name="test_mode_toast">You are now in test mode.</string>
+	<string name="test_mode_disabled">Test mode disabled.</string>
+	<string name="test_mode_almost_toast">Almost there!</string>
+	<string name="test_mode_enabled">Test mode engaged</string>
+
+	<string name="faq_title">Frequently asked questions</string>
+	<string name="faq_content"><![CDATA[ %1$s <p/>Still have questions? <p/> <a href="mailto:support@stax.me?subject=Stax-support-%2$s"><u> <b><font color=#1878F9> Email stax support </b><u></a>]]></string>
+	<string name="loading">Loading…</string>
+	<string name="loading_error">Unable to load FAQ, please try again</string>
+	<string name="faq_internet_error">This feature requires internet connection, please try again</string>
 
 </resources>

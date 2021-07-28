@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.telephony.PhoneNumberUtils;
-import android.util.Log;
 
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
@@ -16,8 +15,9 @@ import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 class SmsSentObserver extends ContentObserver {
-    private static final String TAG = "SmsSentObserver";
     private static final Uri uri = Uri.parse("content://sms/");
 
     private static final int MESSAGE_TYPE_SENT = 2;
@@ -74,7 +74,7 @@ class SmsSentObserver extends ContentObserver {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, "FAILURE", e);
+            Timber.e(e, "FAILURE");
         }
     }
 

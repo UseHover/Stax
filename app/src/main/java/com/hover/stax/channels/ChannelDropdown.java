@@ -26,9 +26,11 @@ import timber.log.Timber;
 
 import static com.hover.stax.utils.Constants.size55;
 
+
 public class ChannelDropdown extends StaxDropdownLayout implements Target{
 
     private boolean showSelected;
+    private String initial_helper_text;
     private Channel highlightedChannel;
     private HighlightListener highlightListener;
 
@@ -41,6 +43,7 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target{
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ChannelDropdown, 0, 0);
         try {
             showSelected = a.getBoolean(R.styleable.ChannelDropdown_show_selected, true);
+            initial_helper_text = a.getString(R.styleable.ChannelDropdown_initial_helper_text);
         } finally {
             a.recycle();
         }
@@ -83,8 +86,8 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target{
 
     private void updateChoices(List<Channel> channels) {
         if (highlightedChannel == null) setDropdownValue(null);
-        ChannelDropdownAdapter channelDropdownAdapter = new ChannelDropdownAdapter(ChannelDropdownAdapter.sort(channels, showSelected), getContext());
-        autoCompleteTextView.setAdapter(channelDropdownAdapter);
+        ChannelsDropdownAdapter channelsDropdownAdapter = new ChannelsDropdownAdapter(Channel.sort(channels, showSelected), getContext());
+        autoCompleteTextView.setAdapter(channelsDropdownAdapter);
         autoCompleteTextView.setDropDownHeight(UIHelper.dpToPx(300));
         autoCompleteTextView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((Channel) adapterView.getItemAtPosition(pos)));
 
@@ -122,25 +125,25 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target{
         autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0);
     }
 
-    public void setObservers(@NonNull ChannelDropdownViewModel viewModel, @NonNull LifecycleOwner lifecycleOwner) {
+    public void setObservers(@NonNull ChannelsViewModel viewModel, @NonNull LifecycleOwner lifecycleOwner) {
         viewModel.getSims().observe(lifecycleOwner, sims -> Timber.i("Got sims: %s", sims.size()));
         viewModel.getSimHniList().observe(lifecycleOwner, simList -> Timber.i("Got new sim hni list: %s", simList));
-        viewModel.getChannels().observe(lifecycleOwner, this::channelUpdateIfNull);
+        viewModel.getAllChannels().observe(lifecycleOwner, this::channelUpdateIfNull);
         viewModel.getSimChannels().observe(lifecycleOwner, this::channelUpdate);
         viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> Timber.i("Got new selected channels: %s", channels.size()));
         viewModel.getActiveChannel().observe(lifecycleOwner, channel -> {
-            if (channel != null && showSelected) setState(null, NONE);
+            if (channel != null && showSelected) setState(initial_helper_text, NONE);
         });
         viewModel.getChannelActions().observe(lifecycleOwner, actions -> setState(actions, viewModel));
     }
 
-    private void setState(List<HoverAction> actions, ChannelDropdownViewModel viewModel) {
+    private void setState(List<HoverAction> actions, ChannelsViewModel viewModel) {
         if (viewModel.getActiveChannel().getValue() != null && (actions == null || actions.size() == 0))
             setState(getContext().getString(R.string.no_actions_fielderror, HoverAction.getHumanFriendlyType(getContext(), viewModel.getType())), AbstractStatefulInput.ERROR);
         else if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !viewModel.getType().equals(HoverAction.BALANCE))
             setState(getContext().getString(actions.get(0).transaction_type.equals(HoverAction.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning), INFO);
         else if (viewModel.getActiveChannel().getValue() != null && showSelected)
-            setState(null, AbstractStatefulInput.SUCCESS);
+            setState(initial_helper_text, AbstractStatefulInput.SUCCESS);
     }
 
     public interface HighlightListener {

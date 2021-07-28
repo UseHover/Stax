@@ -2,7 +2,6 @@ package com.hover.stax.bounties;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -23,6 +22,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import timber.log.Timber;
 
 class BountyAsyncCaller extends AsyncTask<String, Void, Map<Integer, String>> {
     private static final String TAG = "BountyAsyncCaller";
@@ -57,8 +57,8 @@ class BountyAsyncCaller extends AsyncTask<String, Void, Map<Integer, String>> {
             stax_bounty_hunter.put("device_id", Hover.getDeviceId(context.get()));
             root.put("stax_bounty_hunter", stax_bounty_hunter);
 
-            Log.d(TAG, "uploading " + root);
-        } catch (JSONException e) {
+            Timber.d( "uploading %s", root);
+        } catch (JSONException ignored) {
         }
         return root;
     }

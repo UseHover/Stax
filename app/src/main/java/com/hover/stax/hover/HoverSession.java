@@ -3,20 +3,18 @@ package com.hover.stax.hover;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 
-import com.amplitude.api.Amplitude;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.api.HoverParameters;
 import com.hover.stax.R;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.contacts.PhoneHelper;
-import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.settings.KeyStoreExecutor;
 import com.hover.stax.utils.Constants;
+import com.hover.stax.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,8 +22,9 @@ import org.json.JSONObject;
 import java.util.Iterator;
 import java.util.List;
 
+import timber.log.Timber;
+
 final public class HoverSession {
-    private final static String TAG = "HoverSession";
 
     final private Fragment frag;
     final private Channel channel;
@@ -40,12 +39,12 @@ final public class HoverSession {
         finalScreenTime = b.finalScreenTime;
         HoverParameters.Builder builder = getBasicBuilder(b);
         addExtras(builder, b.extras, b.action);
-//		addPin(builder, b.activity); // Not active
         startHover(builder, b.activity);
     }
 
     private HoverParameters.Builder getBasicBuilder(Builder b) {
         HoverParameters.Builder builder = new HoverParameters.Builder(b.activity);
+        builder.setEnvironment(Utils.getBoolean(Constants.TEST_MODE, b.activity) ? HoverParameters.TEST_ENV : HoverParameters.PROD_ENV);
         builder.request(b.action.public_id);
         builder.setHeader(getMessage(b.action, b.activity));
         builder.initialProcessingMessage("");
@@ -94,7 +93,7 @@ final public class HoverSession {
 
     private void startHover(HoverParameters.Builder builder, Activity a) {
         Intent i = builder.buildIntent();
-        Amplitude.getInstance().logEvent(a.getString(R.string.start_load_screen));
+        Utils.logAnalyticsEvent(a.getString(R.string.start_load_screen), a);
         if (frag != null)
             frag.startActivityForResult(i, requestCode);
         else
@@ -127,7 +126,7 @@ final public class HoverSession {
             try {
                 extras.put(key, value);
             } catch (JSONException e) {
-                Log.e(TAG, "Failed to add extra");
+                Timber.e("Failed to add extra");
             }
             return this;
         }

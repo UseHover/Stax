@@ -1,60 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/margin_65"
-    android:orientation="horizontal"
-    android:paddingHorizontal="@dimen/margin_13">
-
-    <LinearLayout
-        android:layout_width="0dp"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/balance_item_card"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_marginBottom="@dimen/margin_13"
+        android:paddingStart="@dimen/margin_13"
+        android:paddingEnd="0dp"
+        app:cardBackgroundColor="@color/cardViewColor"
+        app:cardCornerRadius="@dimen/radius"
+        app:cardElevation="8dp"
+        app:cardPreventCornerOverlap="false">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:minHeight="@dimen/margin_65"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp">
 
         <TextView
-            android:id="@+id/balance_channel_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:fontFamily="font-normal"
-            android:gravity="center_vertical"
-            android:text="Channel name"
-            android:textColor="@color/offWhite"
-            android:textSize="@dimen/text_16" />
+                android:id="@+id/balance_channel_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_13"
+                android:layout_marginEnd="@dimen/margin_13"
+                android:fontFamily="font-normal"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Channel name" />
 
-        <TextView
-            android:id="@+id/balance_subtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-8dp"
-            android:drawablePadding="@dimen/margin_5"
-            android:fontFamily="font-normal"
-            android:textColor="@color/offWhite"
-            android:textSize="@dimen/text_13"
-            app:drawableStartCompat="@drawable/ic_refresh_white_13dp" />
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_21"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/balance_refresh_icon"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/channel_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Channel ID"
-            android:visibility="gone" />
+            <TextView
+                    android:id="@+id/balance_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:fontFamily="font-normal"
+                    android:gravity="end"
+                    android:textColor="@color/offWhite"
+                    android:textSize="@dimen/text_21" />
 
-    </LinearLayout>
+            <TextView
+                    android:id="@+id/balance_subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-8dp"
+                    android:fontFamily="font-normal"
+                    android:textColor="@color/offWhite"
+                    android:textSize="@dimen/text_13" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/balance_amount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:fontFamily="font-normal"
-        android:gravity="center_vertical"
-        android:textColor="@color/offWhite"
-        android:textSize="@dimen/text_21"
-        app:drawableEndCompat="@drawable/ic_remove" />
+        <ImageView
+                android:id="@+id/balance_refresh_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/margin_13"
+                android:background="?selectableItemBackground"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_refresh_white_24dp" />
 
-
-</LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
