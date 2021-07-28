@@ -20,6 +20,7 @@
             android:imeOptions="actionDone"
             android:padding="@dimen/margin_13"
             android:textColor="@color/offWhite"
+            android:autofillHints="phone"
             android:textCursorDrawable="@null"
             android:textSize="@dimen/text_21"
             app:endIconMode="dropdown_menu"
