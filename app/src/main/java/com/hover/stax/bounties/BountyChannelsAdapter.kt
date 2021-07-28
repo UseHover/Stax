@@ -11,8 +11,7 @@ import java.util.*
 internal class BountyChannelsAdapter(private var channelList: List<Channel>?, private val allBountiesList: List<Bounty>, private val selectListener: BountyListItem.SelectListener) : RecyclerView.Adapter<CardedBountyListViewHolder>() {
 
     init {
-        channelList = channelList?.asSequence()?.filter { filterBounties(it.id).any {b-> b.action.bounty_is_open || b.transactionCount() != 0}}?.toList()
-
+        channelList = channelList?.asSequence()?.filter { filterBounties(it.id).any { b -> b.action.bounty_is_open || b.transactionCount() != 0 } }?.toList()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardedBountyListViewHolder {

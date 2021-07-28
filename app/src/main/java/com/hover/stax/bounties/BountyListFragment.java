@@ -37,7 +37,7 @@ import static org.koin.java.KoinJavaComponent.get;
 
 public class BountyListFragment extends Fragment implements NavigationInterface, BountyListItem.SelectListener, CountryAdapter.SelectListener {
 
-    private NetworkMonitor networkMonitor = get(NetworkMonitor.class);
+    private final NetworkMonitor networkMonitor = get(NetworkMonitor.class);
 
     private BountyViewModel bountyViewModel;
     private FragmentBountyListBinding binding;
