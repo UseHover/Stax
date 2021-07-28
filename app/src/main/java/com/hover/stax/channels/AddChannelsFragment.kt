@@ -151,7 +151,9 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
                 selectedChannels.add(channels[it.toInt()])
             }
 
-            showCheckBalanceDialog(R.string.check_balances_desc, selectedChannels)
+            showCheckBalanceDialog(
+                if (selectedChannels.size > 1) R.string.check_balance_alt_plural else R.string.check_balance_alt, selectedChannels
+            )
         }
     }
 
@@ -183,7 +185,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
     override fun clickedChannel(channel: Channel) {
         if (IS_FORCE_RETURN || !channel.selected)
-            showCheckBalanceDialog(R.string.check_balance_desc, listOf(channel))
+            showCheckBalanceDialog(R.string.check_balance_alt, listOf(channel))
         else
             goToChannelsDetailsScreen(channel)
     }
