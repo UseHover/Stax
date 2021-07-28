@@ -29,6 +29,7 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
     private static final String TAG = "BountyEmailFragment";
     private StaxTextInputLayout emailInput;
     private FragmentBountyEmailBinding binding;
+    private StaxDialog dialog;
 
     private NetworkMonitor networkMonitor = get(NetworkMonitor.class);
 
@@ -70,19 +71,19 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
     }
 
     private void showOfflineDialog() {
-        new StaxDialog(requireActivity())
+        dialog = new StaxDialog(requireActivity())
                 .setDialogTitle(R.string.internet_required)
                 .setDialogMessage(R.string.internet_required_bounty_desc)
                 .setPosButton(R.string.btn_ok, null)
-                .makeSticky()
-                .showIt();
+                .makeSticky();
+        dialog.showIt();
     }
 
     private void showEdgeCaseErrorDialog() {
-        new StaxDialog(requireActivity())
+        dialog = new StaxDialog(requireActivity())
                 .setDialogMessage(getString(R.string.edge_case_bounty_email_error))
-                .setPosButton(R.string.btn_ok, null)
-                .showIt();
+                .setPosButton(R.string.btn_ok, null);
+        dialog.showIt();
     }
 
     private boolean validates() {
@@ -115,13 +116,16 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
 
     private void saveAndContinue() {
         Utils.logAnalyticsEvent(getString(R.string.bounty_email_success), requireContext());
-        Utils.saveString(BountyActivity.EMAIL_KEY, emailInput.getText(), getContext());
-        NavHostFragment.findNavController(this).navigate(R.id.bountyListFragment);
+        Utils.saveString(BountyActivity.EMAIL_KEY, emailInput.getText(), requireActivity());
+        NavHostFragment.findNavController(this).navigate(R.id.action_bountyEmailFragment_to_bountyListFragment);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (dialog != null && dialog.isShowing())
+            dialog.dismiss();
+
         binding = null;
     }
 }

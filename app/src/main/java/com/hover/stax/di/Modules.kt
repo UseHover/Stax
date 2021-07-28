@@ -38,6 +38,7 @@ val appModule = module {
 val dataModule = module(createdAtStart = true) {
     single { AppDatabase.getInstance(get()) }
     single { HoverRoomDatabase.getInstance(get()) }
+
     single { DatabaseRepo(get(), get()) }
 }
 

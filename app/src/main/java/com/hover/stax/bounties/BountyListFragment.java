@@ -152,7 +152,6 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     }
 
     void showSimErrorDialog(Bounty b) {
-        Timber.e("showing sim error dialog %s", b.action.root_code);
         dialog = new StaxDialog(requireActivity())
                 .setDialogTitle(getString(R.string.bounty_sim_err_header))
                 .setDialogMessage(getString(R.string.bounty_sim_err_desc, b.action.network_name))
@@ -162,7 +161,6 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     }
 
     void showBountyDescDialog(Bounty b) {
-        Timber.e("showing dialog %s", b.action);
         dialog = new StaxDialog(requireActivity())
                 .setDialogTitle(getString(R.string.bounty_claim_title, b.action.root_code, HoverAction.getHumanFriendlyType(requireContext(), b.action.transaction_type), b.action.bounty_amount))
                 .setDialogMessage(getString(R.string.bounty_claim_explained, b.action.bounty_amount, b.getInstructions(getContext())))
@@ -183,20 +181,22 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         bountyViewModel.filterChannels(countryCode).observe(getViewLifecycleOwner(), channels ->
                 updateChannelList(channels, bountyViewModel.getBounties().getValue()));
     }
+
     private void showLoadingState() {
         binding.bountyCountryDropdown.setState(getString(R.string.filtering_in_progress), AbstractStatefulInput.INFO);
         binding.bountiesRecyclerView.setVisibility(View.GONE);
     }
+
     private void hideLoadingState() {
-        binding.bountyCountryDropdown.setState(null,AbstractStatefulInput.NONE);
+        binding.bountyCountryDropdown.setState(null, AbstractStatefulInput.NONE);
         binding.bountiesRecyclerView.setVisibility(View.VISIBLE);
     }
 
-    private void handleBackPress(){
+    private void handleBackPress() {
         getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if(dialog != null && dialog.isShowing()){
+                if (dialog != null && dialog.isShowing()) {
                     dialog.dismiss();
                 } else
                     getActivity().onBackPressed();
