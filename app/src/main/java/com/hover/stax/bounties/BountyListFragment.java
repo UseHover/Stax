@@ -24,6 +24,7 @@ import com.hover.stax.databinding.FragmentBountyListBinding;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.utils.network.NetworkMonitor;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDialog;
 
@@ -32,7 +33,11 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static org.koin.java.KoinJavaComponent.get;
+
 public class BountyListFragment extends Fragment implements NavigationInterface, BountyListItem.SelectListener, CountryAdapter.SelectListener {
+
+    private NetworkMonitor networkMonitor = get(NetworkMonitor.class);
 
     private BountyViewModel bountyViewModel;
     private FragmentBountyListBinding binding;
@@ -65,7 +70,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     }
 
     private void forceUserToBeOnline() {
-        if (isAdded() && Utils.isNetworkAvailable(requireActivity())) {
+        if (isAdded() && networkMonitor.isNetworkConnected()) {
             updateActionConfig();
             updateChannelsWorker();
         } else showOfflineDialog();
