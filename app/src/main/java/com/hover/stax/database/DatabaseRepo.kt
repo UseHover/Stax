@@ -145,7 +145,10 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
                 val a = getAction(intent.getStringExtra(HoverAction.ID_KEY))
                 val channel = getChannel(a.channel_id)
                 val contact = StaxContact.findOrInit(intent, channel.countryAlpha2, t, this)
-                save(contact)
+
+                if (contact.accountNumber != null)
+                    save(contact)
+
                 if (t == null) {
                     t = StaxTransaction(intent, a, contact, c)
                     transactionDao.insert(t)

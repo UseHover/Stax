@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:minHeight="?attr/listPreferredItemHeight"
-	android:paddingStart="?attr/listPreferredItemPaddingStart"
-	android:paddingEnd="?attr/listPreferredItemPaddingEnd"
-	android:layout_gravity="center_vertical"
-	android:gravity="center_vertical"
-	android:textColor="@drawable/spinner_state_selector"
-	android:background="?attr/selectableItemBackground"
-	android:id="@+id/content" >
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:minHeight="?attr/listPreferredItemHeight"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:textColor="@drawable/spinner_state_selector">
 
-	<TextView android:id="@+id/title"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-        android:fontFamily="font-normal"
-		android:textSize="@dimen/text_16" />
+    <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="font-normal"
+            android:textSize="@dimen/text_16" />
 
-	<TextView android:id="@+id/subtitle"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/title"
-		android:layout_alignStart="@id/title"
-		android:textSize="@dimen/text_13"
-        android:fontFamily="font-normal"
-		android:textColor="@color/darkGrey"
-		android:textAppearance="?attr/textAppearanceListItemSecondary"
-		android:visibility="gone"/>
+    <TextView
+            android:id="@+id/subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_alignStart="@id/title"
+            android:fontFamily="font-normal"
+            android:textAppearance="?attr/textAppearanceListItemSecondary"
+            android:textColor="@color/darkGrey"
+            android:textSize="@dimen/text_13"
+            android:visibility="gone" />
 
 </RelativeLayout>
