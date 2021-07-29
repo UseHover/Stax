@@ -236,7 +236,7 @@ public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdo
         return channelActions;
     }
 
-    public void setChannelSelected(List<Channel> channels) {
+    public void setChannelsSelected(List<Channel> channels) {
         if (channels == null || channels.isEmpty()) return;
 
         for (int i = 0; i < channels.size(); i++) {

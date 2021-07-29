@@ -83,9 +83,4 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
     public long getItemId(int position) {
         return position;
     }
-
-    @Override
-    public int getItemViewType(int position) {
-        return position;
-    }
 }

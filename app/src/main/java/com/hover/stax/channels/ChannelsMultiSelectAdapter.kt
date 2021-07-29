@@ -23,13 +23,13 @@ class ChannelsMultiSelectAdapter : ListAdapter<Channel, ChannelsViewHolder>(Chan
     override fun onBindViewHolder(holder: ChannelsViewHolder, position: Int) {
         val channel = currentList[position]
         selectionTracker?.let {
-            holder.bindItems(channel, true, it.isSelected(position.toLong()))
+            holder.bind(channel, true, it.isSelected(channel.id.toLong()))
         }
     }
 
     override fun getItemCount(): Int = currentList.size
 
-    override fun getItemId(position: Int): Long = position.toLong()
+    override fun getItemId(position: Int): Long = getItem(position).id.toLong()
 
     fun setTracker(tracker: SelectionTracker<Long>) {
         selectionTracker = tracker
