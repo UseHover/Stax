@@ -9,7 +9,7 @@
             android:id="@+id/bountyEmailFragment"
             android:name="com.hover.stax.bounties.BountyEmailFragment"
             android:label="@string/nav_bounty"
-            tools:layout="@layout/fragment_bounty_email" >
+            tools:layout="@layout/fragment_bounty_email">
         <action
                 android:id="@+id/action_bountyEmailFragment_to_bountyListFragment"
                 app:destination="@id/bountyListFragment" />
@@ -19,10 +19,11 @@
             android:id="@+id/bountyListFragment"
             android:name="com.hover.stax.bounties.BountyListFragment"
             android:label="@string/nav_bounty"
-            tools:layout="@layout/bounty_card_channel" >
+            tools:layout="@layout/bounty_card_channel">
         <action
                 android:id="@+id/action_bountyListFragment_to_transactionDetailsFragment"
-                app:destination="@id/transactionDetailsFragment" />
+                app:destination="@id/transactionDetailsFragment"
+                />
     </fragment>
 
     <fragment
