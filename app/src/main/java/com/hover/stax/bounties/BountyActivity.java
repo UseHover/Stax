@@ -19,6 +19,7 @@ import com.hover.stax.utils.Utils;
 import timber.log.Timber;
 
 public class BountyActivity extends AbstractNavigationActivity implements PushNotificationTopicsInterface {
+
     private static final String TAG = "BountyActivity";
     static final String EMAIL_KEY = "email_for_bounties";
     private static final int BOUNTY_REQUEST = 3000;
@@ -87,9 +88,10 @@ public class BountyActivity extends AbstractNavigationActivity implements PushNo
     public void onBackPressed() {
         NavController controller = getNavController();
 
-        if (controller.getCurrentDestination() != null && controller.getCurrentDestination().getId() == R.id.bountyListFragment)
+        if (controller.getCurrentDestination() != null && controller.getCurrentDestination().getId() == R.id.bountyListFragment) {
             navigateThruHome(R.id.navigation_settings);
-        else
-            super.onBackPressed();
+        } else {
+            controller.popBackStack();
+        }
     }
 }

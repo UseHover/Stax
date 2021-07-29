@@ -13,15 +13,16 @@ import com.hover.stax.database.DatabaseRepo;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.koin.java.KoinJavaComponent.get;
+
 public class PinsViewModel extends AndroidViewModel {
 
-    private DatabaseRepo repo;
+    private final DatabaseRepo repo = get(DatabaseRepo.class);
     private LiveData<List<Channel>> channels;
     private LiveData<Channel> channel;
 
     public PinsViewModel(Application application) {
         super(application);
-        repo = new DatabaseRepo(application);
         loadSelectedChannels();
         channel = new MutableLiveData<>();
     }

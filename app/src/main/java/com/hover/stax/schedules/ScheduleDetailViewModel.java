@@ -14,17 +14,17 @@ import com.hover.stax.database.DatabaseRepo;
 
 import java.util.List;
 
-public class ScheduleDetailViewModel extends AndroidViewModel {
-    private final String TAG = "ScheduleViewModel";
+import static org.koin.java.KoinJavaComponent.get;
 
-    private DatabaseRepo repo;
+public class ScheduleDetailViewModel extends AndroidViewModel {
+
+    private DatabaseRepo repo = get(DatabaseRepo.class);
     private MutableLiveData<Schedule> schedule;
     private LiveData<HoverAction> action;
     private LiveData<List<StaxContact>> contacts;
 
     public ScheduleDetailViewModel(@NonNull Application application) {
         super(application);
-        repo = new DatabaseRepo(application);
         schedule = new MutableLiveData<>();
         action = Transformations.switchMap(schedule, this::loadAction);
         contacts = Transformations.switchMap(schedule, this::loadContacts);

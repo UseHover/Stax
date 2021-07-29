@@ -42,7 +42,8 @@ class BountyListItem extends LinearLayout {
     private void chooseState() {
         if (!bounty.action.bounty_is_open && bounty.transactionCount() > 0) { // Bounty is closed and done by current user
             setState(R.color.muted_green, R.string.done, R.drawable.ic_check, false, null);
-        } else if (!bounty.action.bounty_is_open) { // This bounty is closed and done by another user
+        }
+        else if (!bounty.action.bounty_is_open) { // This bounty is closed and done by another user
             setState(R.color.lighter_grey, 0, 0, false, null);
         } else if (bounty.transactionCount() > 0) { // Bounty is open and with a transaction by current user
             setState(R.color.pending_brown, R.string.bounty_pending_short_desc, R.drawable.ic_warning, true,

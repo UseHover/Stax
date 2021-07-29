@@ -82,6 +82,9 @@
 
 	<string name="check_balance_title">Check balance</string>
 	<string name="check_balance_desc">Nice! You added your first account. Now you can check your balance on Stax.</string>
+	<string name="check_balance_alt">Nice! Account added successfully. Now you can check your balance on Stax.</string>
+	<string name="check_balance_alt_plural">Nice! Accounts added successfully. Now you can check your balance on Stax.</string>
+
 	<string name="later">Later</string>
 	<string name="no_connecion">No connection</string>
 	<string name="your_main_account">Your main account</string>
@@ -300,7 +303,7 @@
 	<string name="request_feature">Request a feature in Stax!</string>
 	<string name="contact_support">Contact support</string>
 	<string name="stax_support_email">support@stax.me</string>
-	<string name="stax_emailing_subject">Stax support id-%1$s</string>
+	<string name="stax_emailing_subject">Stax support id - %1$s</string>
 	<string name="send_email_using">Send mail using…</string>
 
 
@@ -426,5 +429,6 @@
 	<string name="loading">Loading…</string>
 	<string name="loading_error">Unable to load FAQ, please try again</string>
 	<string name="faq_internet_error">This feature requires internet connection, please try again</string>
+    <string name="working_offline">Working offline</string>
 
 </resources>

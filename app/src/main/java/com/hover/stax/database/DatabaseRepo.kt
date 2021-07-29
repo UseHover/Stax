@@ -1,7 +1,6 @@
 package com.hover.stax.database
 
 import android.annotation.SuppressLint
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.LiveData
@@ -30,18 +29,20 @@ import com.hover.stax.utils.paymentLinkCryptography.Encryption
 import timber.log.Timber
 import java.security.NoSuchAlgorithmException
 
-class DatabaseRepo(application: Application) {
+class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
-    private val channelDao: ChannelDao
-    private val actionDao: HoverActionDao
-    private val requestDao: RequestDao
-    private val scheduleDao: ScheduleDao
-    private val simDao: SimInfoDao
-    private val transactionDao: TransactionDao
-    private val contactDao: ContactDao
-    val allChannels: LiveData<List<Channel>>
-    val selected: LiveData<List<Channel>>
     private val decryptedRequest: MutableLiveData<Request> = MutableLiveData()
+
+    private val channelDao: ChannelDao = db.channelDao()
+    private val actionDao: HoverActionDao = sdkDb.actionDao()
+    private val requestDao: RequestDao = db.requestDao()
+    private val scheduleDao: ScheduleDao = db.scheduleDao()
+    private val simDao: SimInfoDao = sdkDb.simDao()
+    private val transactionDao: TransactionDao = db.transactionDao()
+    private val contactDao: ContactDao = db.contactDao()
+
+    val allChannels: LiveData<List<Channel>> = channelDao.allInAlphaOrder
+    val selected: LiveData<List<Channel>> = channelDao.getSelected(true)
 
     // Channels
     fun getChannel(id: Int): Channel {
@@ -108,10 +109,10 @@ class DatabaseRepo(application: Application) {
         get() = actionDao.bountyActions
 
     // Transactions
-    val completeAndPendingTransferTransactions: LiveData<List<StaxTransaction?>?>?
+    val completeAndPendingTransferTransactions: LiveData<List<StaxTransaction>>?
         get() = transactionDao.getCompleteAndPendingTransfers()
 
-    val bountyTransactions: LiveData<List<StaxTransaction?>?>?
+    val bountyTransactions: LiveData<List<StaxTransaction>>?
         get() = transactionDao.bountyTransactions
 
     @SuppressLint("DefaultLocale")
@@ -119,17 +120,17 @@ class DatabaseRepo(application: Application) {
         return transactionDao.getTransactionCount(String.format("%02d", lastMonth().first), lastMonth().second.toString())!! > 0
     }
 
-    fun getCompleteTransferTransactions(channelId: Int): LiveData<List<StaxTransaction?>?>? {
+    fun getCompleteTransferTransactions(channelId: Int): LiveData<List<StaxTransaction>>? {
         return transactionDao.getCompleteAndPendingTransfers(channelId)
     }
 
     @SuppressLint("DefaultLocale")
-    fun getSpentAmount(channelId: Int, month: Int, year: Int): LiveData<Double?>? {
+    fun getSpentAmount(channelId: Int, month: Int, year: Int): LiveData<Double>? {
         return transactionDao.getTotalAmount(channelId, String.format("%02d", month), year.toString())
     }
 
     @SuppressLint("DefaultLocale")
-    fun getFees(channelId: Int, year: Int): LiveData<Double?>? {
+    fun getFees(channelId: Int, year: Int): LiveData<Double>? {
         return transactionDao.getTotalFees(channelId, year.toString())
     }
 
@@ -144,7 +145,10 @@ class DatabaseRepo(application: Application) {
                 val a = getAction(intent.getStringExtra(HoverAction.ID_KEY))
                 val channel = getChannel(a.channel_id)
                 val contact = StaxContact.findOrInit(intent, channel.countryAlpha2, t, this)
-                save(contact)
+
+                if (contact.accountNumber != null)
+                    save(contact)
+
                 if (t == null) {
                     t = StaxTransaction(intent, a, contact, c)
                     transactionDao.insert(t)
@@ -219,7 +223,7 @@ class DatabaseRepo(application: Application) {
         return scheduleDao.getLiveFutureByChannelId(channelId)
     }
 
-    val transactionsForAppReview: LiveData<List<StaxTransaction?>?>?
+    val transactionsForAppReview: LiveData<List<StaxTransaction>>?
         get() = transactionDao.transactionsForAppReview
 
     fun getSchedule(id: Int): Schedule {
@@ -302,19 +306,5 @@ class DatabaseRepo(application: Application) {
 
     companion object {
         private val TAG = DatabaseRepo::class.java.simpleName
-    }
-
-    init {
-        val db = AppDatabase.getInstance(application)
-        channelDao = db.channelDao()
-        transactionDao = db.transactionDao()
-        contactDao = db.contactDao()
-        requestDao = db.requestDao()
-        scheduleDao = db.scheduleDao()
-        val sdkDb = HoverRoomDatabase.getInstance(application)
-        actionDao = sdkDb.actionDao()
-        simDao = sdkDb.simDao()
-        allChannels = channelDao.allInAlphaOrder
-        selected = channelDao.getSelected(true)
     }
 }
