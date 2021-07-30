@@ -166,8 +166,13 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         dialog = new StaxDialog(requireActivity())
                 .setDialogTitle(getString(R.string.bounty_claim_title, b.action.root_code, HoverAction.getHumanFriendlyType(requireContext(), b.action.transaction_type), b.action.bounty_amount))
                 .setDialogMessage(getString(R.string.bounty_claim_explained, b.action.bounty_amount, b.getInstructions(getContext())))
-                .setPosButton(R.string.start_USSD_Flow, v -> ((BountyActivity) requireActivity()).makeCall(b.action));
+                .setPosButton(R.string.start_USSD_Flow, v ->  startBounty(b));
         dialog.showIt();
+    }
+
+    private void startBounty(Bounty b) {
+        Utils.setFirebaseMessagingTopic("BOUNTY"+b.action.root_code);
+        ((BountyActivity) requireActivity()).makeCall(b.action);
     }
 
     void retrySimMatch(Bounty b) {
