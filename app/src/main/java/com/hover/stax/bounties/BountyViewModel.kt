@@ -16,8 +16,7 @@ import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.utils.Utils.getPackage
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.koin.java.KoinJavaComponent.get
 import java.util.*
 
@@ -33,6 +32,7 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
     private val bountyList = MediatorLiveData<List<Bounty>>()
     private var sims: MutableLiveData<List<SimInfo>?>? = null
     val bountyEmailLiveData : MutableLiveData<Map<Int, String?>> = MutableLiveData()
+    lateinit var deffered : Deferred<MutableList<Bounty>>
 
 
      fun uploadBountyUser(email:String) {
@@ -103,21 +103,32 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     private fun makeBounties(actions: List<HoverAction>?, transactions: List<StaxTransaction>?) {
-        val bounties: MutableList<Bounty> = ArrayList()
-        val transactionsCopy: MutableList<StaxTransaction> = if (transactions == null) ArrayList() else ArrayList(transactions)
-        for (action in actions!!) {
-            val filterTransactions: MutableList<StaxTransaction> = ArrayList()
-            val iter = transactionsCopy.listIterator()
-            while (iter.hasNext()) {
-                val t = iter.next()
-                if (t.action_id == action.public_id) {
-                    filterTransactions.add(t)
-                    iter.remove()
-                }
-            }
-            bounties.add(Bounty(action, filterTransactions))
+        viewModelScope.launch(Dispatchers.Main) {
+            bountyList.value = getBounties(actions, transactions)
         }
-        bountyList.value = bounties
+    }
+
+    private suspend fun getBounties(actions: List<HoverAction>?, transactions: List<StaxTransaction>?) : MutableList<Bounty> {
+        coroutineScope {
+             deffered = async(Dispatchers.IO) { val bounties: MutableList<Bounty> = ArrayList()
+                val transactionsCopy: MutableList<StaxTransaction> = if (transactions == null) ArrayList() else ArrayList(transactions)
+                for (action in actions!!) {
+                    val filterTransactions: MutableList<StaxTransaction> = ArrayList()
+                    val iter = transactionsCopy.listIterator()
+                    while (iter.hasNext()) {
+                        val t = iter.next()
+                        if (t.action_id == action.public_id) {
+                            filterTransactions.add(t)
+                            iter.remove()
+                        }
+                    }
+                    bounties.add(Bounty(action, filterTransactions))
+                }
+                return@async bounties
+            }
+
+        }
+        return  deffered.await()
     }
 
     init {
