@@ -32,7 +32,7 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
     private val bountyList = MediatorLiveData<List<Bounty>>()
     private var sims: MutableLiveData<List<SimInfo>?>? = null
     val bountyEmailLiveData : MutableLiveData<Map<Int, String?>> = MutableLiveData()
-    lateinit var deffered : Deferred<MutableList<Bounty>>
+    lateinit var defferedBountyList : Deferred<MutableList<Bounty>>
 
 
      fun uploadBountyUser(email:String) {
@@ -110,7 +110,7 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
 
     private suspend fun getBounties(actions: List<HoverAction>?, transactions: List<StaxTransaction>?) : MutableList<Bounty> {
         coroutineScope {
-             deffered = async(Dispatchers.IO) { val bounties: MutableList<Bounty> = ArrayList()
+             defferedBountyList = async(Dispatchers.IO) { val bounties: MutableList<Bounty> = ArrayList()
                 val transactionsCopy: MutableList<StaxTransaction> = if (transactions == null) ArrayList() else ArrayList(transactions)
                 for (action in actions!!) {
                     val filterTransactions: MutableList<StaxTransaction> = ArrayList()
@@ -128,7 +128,7 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
             }
 
         }
-        return  deffered.await()
+        return  defferedBountyList.await()
     }
 
     init {
