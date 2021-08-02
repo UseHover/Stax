@@ -150,6 +150,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
                     save(contact)
 
                 if (t == null) {
+                   c?.let { Utils.logAnalyticsEvent(c.getString(R.string.initializing_ussd_services), c)}
                     t = StaxTransaction(intent, a, contact, c)
                     transactionDao.insert(t)
                     t = transactionDao.getTransaction(t.uuid)
