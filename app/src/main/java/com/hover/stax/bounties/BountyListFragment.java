@@ -80,8 +80,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         Hover.updateActionConfigs(new Hover.DownloadListener() {
             @Override
             public void onError(String s) {
-                Timber.e(s);
-                //forceUserToBeOnline();
+                Utils.logErrorAndReportToFirebase(BountyListFragment.class.getSimpleName(), "Failed to update action configs: " + s, null);
             }
 
             @Override
