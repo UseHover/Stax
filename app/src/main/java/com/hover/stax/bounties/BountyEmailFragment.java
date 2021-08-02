@@ -1,5 +1,7 @@
 package com.hover.stax.bounties;
 
+import static org.koin.java.KoinJavaComponent.get;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import com.hover.stax.R;
 import com.hover.stax.databinding.FragmentBountyEmailBinding;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.utils.network.NetworkMonitor;
 import com.hover.stax.views.AbstractStatefulInput;
 import com.hover.stax.views.StaxDialog;
 import com.hover.stax.views.StaxTextInputLayout;
@@ -22,9 +25,13 @@ import java.lang.ref.WeakReference;
 import java.util.Map;
 
 public class BountyEmailFragment extends Fragment implements NavigationInterface, View.OnClickListener, BountyAsyncCaller.AsyncResponseListener {
+
     private static final String TAG = "BountyEmailFragment";
     private StaxTextInputLayout emailInput;
     private FragmentBountyEmailBinding binding;
+    private StaxDialog dialog;
+
+    private final NetworkMonitor networkMonitor = get(NetworkMonitor.class);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,13 +50,13 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         emailInput = binding.emailInput;
-        emailInput.setText(Utils.getString(BountyActivity.EMAIL_KEY, getContext()));
+        emailInput.setText(Utils.getString(BountyActivity.EMAIL_KEY, requireActivity()));
         binding.continueEmailBountyButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        if (Utils.isNetworkAvailable(requireActivity())) {
+        if (networkMonitor.isNetworkConnected()) {
             Utils.logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext());
             if (validates()) {
                 emailInput.setEnabled(false);
@@ -64,19 +71,19 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
     }
 
     private void showOfflineDialog() {
-        new StaxDialog(requireActivity())
+        dialog = new StaxDialog(requireActivity())
                 .setDialogTitle(R.string.internet_required)
                 .setDialogMessage(R.string.internet_required_bounty_desc)
                 .setPosButton(R.string.btn_ok, null)
-                .makeSticky()
-                .showIt();
+                .makeSticky();
+        dialog.showIt();
     }
 
     private void showEdgeCaseErrorDialog() {
-        new StaxDialog(requireActivity())
+        dialog = new StaxDialog(requireActivity())
                 .setDialogMessage(getString(R.string.edge_case_bounty_email_error))
-                .setPosButton(R.string.btn_ok, null)
-                .showIt();
+                .setPosButton(R.string.btn_ok, null);
+        dialog.showIt();
     }
 
     private boolean validates() {
@@ -94,8 +101,7 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
             saveAndContinue();
         else {
             Utils.logErrorAndReportToFirebase(TAG, message, null);
-
-            if(isAdded() && Utils.isNetworkAvailable(requireActivity())) showEdgeCaseErrorDialog();
+            if (isAdded() && networkMonitor.isNetworkConnected()) showEdgeCaseErrorDialog();
             else setEmailError();
         }
     }
@@ -108,13 +114,16 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
 
     private void saveAndContinue() {
         Utils.logAnalyticsEvent(getString(R.string.bounty_email_success), requireContext());
-        Utils.saveString(BountyActivity.EMAIL_KEY, emailInput.getText(), getContext());
-        NavHostFragment.findNavController(this).navigate(R.id.bountyListFragment);
+        Utils.saveString(BountyActivity.EMAIL_KEY, emailInput.getText(), requireActivity());
+        NavHostFragment.findNavController(this).navigate(R.id.action_bountyEmailFragment_to_bountyListFragment);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (dialog != null && dialog.isShowing())
+            dialog.dismiss();
+
         binding = null;
     }
 }

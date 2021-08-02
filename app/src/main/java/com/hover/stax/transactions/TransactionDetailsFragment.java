@@ -31,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class TransactionDetailsFragment extends Fragment implements NavigationInterface {
+
     final public static String TAG = "TransDetailsFragment";
     final public static String SHOW_BOUNTY_SUBMIT = "bounty_submit_button";
 

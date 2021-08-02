@@ -14,17 +14,17 @@ import com.hover.stax.database.DatabaseRepo;
 
 import java.util.List;
 
+import static org.koin.java.KoinJavaComponent.get;
+
 public class TransactionHistoryViewModel extends AndroidViewModel {
 
-    private final DatabaseRepo repo;
+    private final DatabaseRepo repo = get(DatabaseRepo.class);
 
     private LiveData<List<StaxTransaction>> transactions;
     private final LiveData<Boolean> appReviewLiveData;
 
     public TransactionHistoryViewModel(Application application) {
         super(application);
-        repo = new DatabaseRepo(application);
-
         transactions = new MutableLiveData<>();
         transactions = repo.getCompleteAndPendingTransferTransactions();
 
