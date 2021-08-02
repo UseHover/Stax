@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:title="@string/bounty_title">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:title="@string/bounty_title">
 
-	<TextView
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:textSize="@dimen/text_16"
-	    android:fontFamily="font-normal"
-	    android:paddingHorizontal="@dimen/margin_13"
-	    android:text="@string/bounty_msg"/>
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:fontFamily="font-normal"
+            android:paddingHorizontal="@dimen/margin_13"
+            android:text="@string/bounty_msg"
+            android:textSize="@dimen/text_16" />
 
-	<RelativeLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content">
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-		<androidx.appcompat.widget.AppCompatButton
-		    android:id="@+id/getStartedWithBountyButton"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:text="@string/get_started"
-		    android:onClick="getStartedWithBountyButton"
-		    android:layout_alignParentEnd="true"
-		    style="@style/StaxButtonColored" />
-	</RelativeLayout>
+        <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/getStartedWithBountyButton"
+                style="@style/StaxButtonColored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:onClick="getStartedWithBountyButton"
+                android:text="@string/get_started" />
+    </RelativeLayout>
 
 </com.hover.stax.views.StaxCardView>

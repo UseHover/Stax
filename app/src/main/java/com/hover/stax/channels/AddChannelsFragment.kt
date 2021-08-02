@@ -7,7 +7,9 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.selection.*
+import androidx.recyclerview.selection.SelectionPredicates
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StorageStrategy
 import com.hover.stax.R
 import com.hover.stax.balances.BalanceAdapter.BalanceListener
 import com.hover.stax.balances.BalancesViewModel
@@ -19,7 +21,6 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 
 class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener {
@@ -64,11 +65,12 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     private fun setUpMultiselect() {
         if (Utils.variant == Constants.VARIANT_2 || Utils.variant == Constants.VARIANT_3) {
             tracker = SelectionTracker.Builder(
-                    "channelSelection", binding.channelsList,
-                    ChannelKeyProvider(selectAdapter),
-                    ChannelLookup(binding.channelsList),
-                    StorageStrategy.createLongStorage()).withSelectionPredicate(SelectionPredicates.createSelectAnything())
-                    .build()
+                "channelSelection", binding.channelsList,
+                ChannelKeyProvider(selectAdapter),
+                ChannelLookup(binding.channelsList),
+                StorageStrategy.createLongStorage()
+            ).withSelectionPredicate(SelectionPredicates.createSelectAnything())
+                .build()
             selectAdapter.setTracker(tracker!!)
 
             binding.continueBtn.apply {
@@ -137,8 +139,8 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
             }
 
             showCheckBalanceDialog(
-                    if (selectedChannels.size > 1) R.string.check_balance_alt_plural
-                    else R.string.check_balance_alt,
+                if (selectedChannels.size > 1) R.string.check_balance_alt_plural
+                else R.string.check_balance_alt,
                 selectedChannels
             )
         }

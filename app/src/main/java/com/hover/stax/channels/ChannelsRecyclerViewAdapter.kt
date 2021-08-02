@@ -40,8 +40,6 @@ class ChannelsRecyclerViewAdapter(var channelList: List<Channel>, var selectList
         selectionTracker = tracker
     }
 
-    fun hasTracker(): Boolean = selectionTracker != null
-
     interface SelectListener {
         fun clickedChannel(channel: Channel)
     }
