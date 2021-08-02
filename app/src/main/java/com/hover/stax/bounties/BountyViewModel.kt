@@ -54,7 +54,9 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
 
     private val simReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            Thread { sims!!.postValue(repo.presentSims) }.start()
+            viewModelScope.launch(Dispatchers.IO) {
+                sims!!.postValue(repo.presentSims)
+            }
         }
     }
 

@@ -57,19 +57,20 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
     }
 
     private fun showOfflineDialog() {
-        StaxDialog(requireActivity())
+       dialog =  StaxDialog(requireActivity())
                 .setDialogTitle(R.string.internet_required)
                 .setDialogMessage(R.string.internet_required_bounty_desc)
                 .setPosButton(R.string.btn_ok, null)
-                .makeSticky()
-                .showIt()
+                .makeSticky();
+
+        dialog!!.showIt()
     }
 
     private fun showEdgeCaseErrorDialog() {
-        StaxDialog(requireActivity())
+        dialog = StaxDialog(requireActivity())
                 .setDialogMessage(getString(R.string.edge_case_bounty_email_error))
-                .setPosButton(R.string.btn_ok, null)
-                .showIt()
+                .setPosButton(R.string.btn_ok, null);
+        dialog!!.showIt()
     }
 
     private fun validates(): Boolean {
@@ -78,7 +79,7 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
         return email.matches("(?:[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)])".toRegex())
     }
 
-    fun observeEmailResult() {
+    private fun observeEmailResult() {
         viewModel.bountyEmailLiveData.observe(viewLifecycleOwner, { responseMap ->
             val entry = responseMap.entries.iterator().next()
             val responseCode = entry.key
