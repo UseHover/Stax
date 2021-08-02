@@ -45,6 +45,7 @@ public class Lang {
             data.put("language", code);
         } catch (JSONException ignored) {
         }
+
         Utils.logAnalyticsEvent(c.getString(R.string.selected_language), data, c);
     }
 }
