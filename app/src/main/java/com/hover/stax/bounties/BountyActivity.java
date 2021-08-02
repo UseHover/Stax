@@ -25,15 +25,13 @@ public class BountyActivity extends AbstractNavigationActivity implements PushNo
     private static final int BOUNTY_REQUEST = 3000;
     public BountyViewModel bountyViewModel;
 
-    private ActivityBountyBinding binding;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utils.logAnalyticsEvent(getString(R.string.visit_screen, TAG), this);
 
         bountyViewModel = new ViewModelProvider(this).get(BountyViewModel.class);
-        binding = ActivityBountyBinding.inflate(getLayoutInflater());
+        ActivityBountyBinding binding = ActivityBountyBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setUpNav();
@@ -88,7 +86,8 @@ public class BountyActivity extends AbstractNavigationActivity implements PushNo
     public void onBackPressed() {
         NavController controller = getNavController();
 
-        if (controller.getCurrentDestination() != null && controller.getCurrentDestination().getId() == R.id.bountyListFragment) {
+        if (controller.getCurrentDestination() != null && (controller.getCurrentDestination().getId() == R.id.bountyListFragment
+                || controller.getCurrentDestination().getId() == R.id.bountyEmailFragment)) {
             navigateThruHome(R.id.navigation_settings);
         } else {
             controller.popBackStack();

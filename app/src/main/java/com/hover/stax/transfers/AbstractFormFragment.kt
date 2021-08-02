@@ -67,7 +67,7 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     open fun showEdit(isEditing: Boolean) {
-        channelDropdown.highlighted?.let { channelsViewModel.setChannelSelected(listOf(it)) }
+        channelDropdown.highlighted?.let { channelsViewModel.setChannelsSelected(listOf(it)) }
 
         editCard?.visibility = if (isEditing) View.VISIBLE else View.GONE
         editRequestCard?.visibility = if(isEditing) View.VISIBLE else View.GONE

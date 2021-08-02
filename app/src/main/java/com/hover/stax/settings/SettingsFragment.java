@@ -1,12 +1,14 @@
 package com.hover.stax.settings;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,9 +30,6 @@ import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 
 import java.util.List;
-
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 
 public class SettingsFragment extends Fragment implements NavigationInterface {
 
@@ -89,19 +88,20 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
         String deviceId = Hover.getDeviceId(requireContext());
         String appVersion = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
-        binding.staxAndDeviceInfo.setText(getString(R.string.app_version_and_device_id,appVersion, versionCode, deviceId ));
+        binding.staxAndDeviceInfo.setText(getString(R.string.app_version_and_device_id, appVersion, versionCode, deviceId));
     }
 
     private void setUpContactStax() {
         binding.contactStax.twitterContact.setOnClickListener(v -> Utils.openUrl(getString(R.string.stax_twitter_url), requireContext()));
-        binding.contactStax.receiveStaxUpdate.setOnClickListener(v->Utils.openUrl(getString(R.string.receive_stax_updates_url), requireContext()));
+        binding.contactStax.receiveStaxUpdate.setOnClickListener(v -> Utils.openUrl(getString(R.string.receive_stax_updates_url), requireContext()));
     }
 
     private void setupRequestFeature() {
-        binding.getSupportStax.requestFeature.setOnClickListener(v->Utils.openUrl(getString(R.string.stax_nolt_url), requireContext()));
+        binding.getSupportStax.requestFeature.setOnClickListener(v -> Utils.openUrl(getString(R.string.stax_nolt_url), requireContext()));
     }
+
     private void setupFaq() {
-        binding.getSupportStax.faq.setOnClickListener(v->navigateFAQ(this));
+        binding.getSupportStax.faq.setOnClickListener(v -> navigateFAQ(this));
     }
 
     private void showAccounts(List<Channel> channels) {
@@ -112,7 +112,6 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
         lv.setOnItemClickListener((arg0, arg1, position, arg3) -> navigateToPinUpdateFragment(channels.get(position).id, SettingsFragment.this));
         UIHelper.fixListViewHeight(lv);
     }
-
 
     private void createDefaultSelector(List<Channel> channels, PinsViewModel securityViewModel) {
         AutoCompleteTextView spinner = binding.cardAccounts.defaultAccountSpinner;
