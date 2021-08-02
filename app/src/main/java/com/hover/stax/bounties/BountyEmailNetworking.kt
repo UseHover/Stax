@@ -15,6 +15,7 @@ import java.io.IOException
 import java.util.*
 
 internal class BountyEmailNetworking(private val context: Context) {
+
     private val client = OkHttpClient()
     private val url: String = context.getString(R.string.api_url) + context.getString(R.string.bounty_endpoint)
 
@@ -48,9 +49,5 @@ internal class BountyEmailNetworking(private val context: Context) {
         } catch (ignored: JSONException) {
         }
         return root
-    }
-
-    companion object {
-        private const val TAG = "BountyEmailViewModel"
     }
 }

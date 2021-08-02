@@ -1,5 +1,7 @@
 package com.hover.stax.bounties;
 
+import static org.koin.java.KoinJavaComponent.get;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,8 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
-
-import static org.koin.java.KoinJavaComponent.get;
 
 public class BountyListFragment extends Fragment implements NavigationInterface, BountyListItem.SelectListener, CountryAdapter.SelectListener {
 
@@ -80,7 +80,8 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         Hover.updateActionConfigs(new Hover.DownloadListener() {
             @Override
             public void onError(String s) {
-                forceUserToBeOnline();
+                Timber.e(s);
+                //forceUserToBeOnline();
             }
 
             @Override
@@ -100,12 +101,8 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         dialog = new StaxDialog(requireActivity())
                 .setDialogTitle(R.string.internet_required)
                 .setDialogMessage(R.string.internet_required_bounty_desc)
-                .setPosButton(R.string.try_again, view -> {
-                    forceUserToBeOnline();
-                })
-                .setNegButton(R.string.btn_cancel, view -> {
-                    requireActivity().finish();
-                })
+                .setPosButton(R.string.try_again, view -> forceUserToBeOnline())
+                .setNegButton(R.string.btn_cancel, view -> requireActivity().finish())
                 .makeSticky();
         dialog.showIt();
     }
@@ -164,12 +161,12 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         dialog = new StaxDialog(requireActivity())
                 .setDialogTitle(getString(R.string.bounty_claim_title, b.action.root_code, HoverAction.getHumanFriendlyType(requireContext(), b.action.transaction_type), b.action.bounty_amount))
                 .setDialogMessage(getString(R.string.bounty_claim_explained, b.action.bounty_amount, b.getInstructions(getContext())))
-                .setPosButton(R.string.start_USSD_Flow, v ->startBounty(b));
+                .setPosButton(R.string.start_USSD_Flow, v -> startBounty(b));
         dialog.showIt();
     }
 
-    private void startBounty(Bounty b){
-        Utils.setFirebaseMessagingTopic("BOUNTY"+b.action.root_code);
+    private void startBounty(Bounty b) {
+        Utils.setFirebaseMessagingTopic("BOUNTY" + b.action.root_code);
         ((BountyActivity) requireActivity()).makeCall(b.action);
     }
 

@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentBountyEmailBinding
 import com.hover.stax.navigation.NavigationInterface
@@ -17,16 +17,16 @@ import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInputLayout
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.java.KoinJavaComponent.get
 
 class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListener {
+
     private var emailInput: StaxTextInputLayout? = null
     private var binding: FragmentBountyEmailBinding? = null
     private var dialog: StaxDialog? = null
-    private val networkMonitor = get(NetworkMonitor::class.java)
+    private val networkMonitor: NetworkMonitor by inject()
     private val viewModel: BountyViewModel by sharedViewModel()
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentBountyEmailBinding.inflate(inflater, container, false)
@@ -100,7 +100,7 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
     private fun saveAndContinue() {
         logAnalyticsEvent(getString(R.string.bounty_email_success), requireContext())
         saveString(BountyActivity.EMAIL_KEY, emailInput!!.text, requireActivity())
-        NavHostFragment.findNavController(this).navigate(R.id.action_bountyEmailFragment_to_bountyListFragment)
+        findNavController().navigate(R.id.action_bountyEmailFragment_to_bountyListFragment)
     }
 
     override fun onDestroyView() {
