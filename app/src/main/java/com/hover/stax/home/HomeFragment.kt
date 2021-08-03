@@ -53,9 +53,9 @@ class HomeFragment : Fragment() {
             })
         }
 
-//        NetworkMonitor.StateLiveData.get().observe(viewLifecycleOwner) {
-//            updateOfflineIndicator(it)
-//        }
+        NetworkMonitor.StateLiveData.get().observe(viewLifecycleOwner) {
+            updateOfflineIndicator(it)
+        }
     }
 
     private fun updateOfflineIndicator(isConnected: Boolean) {

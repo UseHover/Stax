@@ -79,4 +79,16 @@ class ApplicationInstance : Application() {
 
         AppsFlyerLib.getInstance().init(getString(R.string.appsflyer_key), conversionListener, this)
     }
+
+    @RequiresApi(21)
+    override fun registerComponentCallbacks(callback: ComponentCallbacks?) {
+        super.registerComponentCallbacks(callback)
+        NetworkMonitor(this).startNetworkCallback()
+    }
+
+    @RequiresApi(21)
+    override fun unregisterComponentCallbacks(callback: ComponentCallbacks?) {
+        super.unregisterComponentCallbacks(callback)
+        NetworkMonitor(this).stopNetworkCallback()
+    }
 }
