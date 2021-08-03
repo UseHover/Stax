@@ -152,7 +152,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         super.onResume();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             IntentFilter filter = new IntentFilter(Constants.CONNECTIVITY);
-            registerReceiver(networkReceiver, filter);
+//            registerReceiver(networkReceiver, filter);
         }
     }
 
@@ -160,7 +160,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
     protected void onPause() {
         super.onPause();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            unregisterReceiver(networkReceiver);
+//            unregisterReceiver(networkReceiver);
         }
     }
 }

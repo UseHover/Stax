@@ -30,7 +30,7 @@ import kotlin.properties.Delegates
 
 object Utils : KoinComponent {
 
-    private val mixPanel: MixpanelAPI by inject()
+//    private val mixPanel: MixpanelAPI by inject()
     private const val SHARED_PREFS = "staxprefs"
 
     private fun getSharedPrefs(context: Context): SharedPreferences {
@@ -203,12 +203,12 @@ object Utils : KoinComponent {
         Amplitude.getInstance().logEvent(event)
         FirebaseAnalytics.getInstance(context!!).logEvent(strippedForFireAnalytics(event), null)
         AppsFlyerLib.getInstance().logEvent(context, event, null)
-        mixPanel.track(event)
+//        mixPanel.track(event)
     }
 
     @JvmStatic
     fun timeEvent(event: String) {
-        mixPanel.timeEvent(event)
+//        mixPanel.timeEvent(event)
     }
 
     @JvmStatic
@@ -218,7 +218,7 @@ object Utils : KoinComponent {
         Amplitude.getInstance().logEvent(event, args)
         FirebaseAnalytics.getInstance(context).logEvent(strippedForFireAnalytics(event), bundle)
         AppsFlyerLib.getInstance().logEvent(context, event, map)
-        mixPanel.track(event, args)
+//        mixPanel.track(event, args)
     }
 
     private fun strippedForFireAnalytics(firebaseEventLog: String): String {
@@ -324,6 +324,6 @@ object Utils : KoinComponent {
 
         val props = JSONObject()
         props.put("Variant", newValue)
-        mixPanel.registerSuperPropertiesOnce(props)
+//        mixPanel.registerSuperPropertiesOnce(props)
     })
 }
