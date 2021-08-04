@@ -28,7 +28,7 @@ import java.text.DecimalFormat
 import java.util.*
 import kotlin.properties.Delegates
 
-object Utils : KoinComponent {
+object Utils {
 
 //    private val mixPanel: MixpanelAPI by inject()
     private const val SHARED_PREFS = "staxprefs"
