@@ -46,7 +46,7 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_security)), requireContext());
 
-        PinsViewModel securityViewModel = new ViewModelProvider(this).get(PinsViewModel.class);
+        PinsViewModel securityViewModel = new ViewModelProvider(requireActivity()).get(PinsViewModel.class);
 
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
 
