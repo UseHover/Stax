@@ -1,6 +1,5 @@
 package com.hover.stax.utils.network
 
-import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
@@ -34,7 +33,7 @@ constructor(val context: Context) {
 
     @RequiresApi(21)
     fun stopNetworkCallback() {
-        cm.unregisterNetworkCallback(ConnectivityManager.NetworkCallback())
+        cm.unregisterNetworkCallback(connectivityManagerCallback)
     }
 
     @RequiresApi(21)
