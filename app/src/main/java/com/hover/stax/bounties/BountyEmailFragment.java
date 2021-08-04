@@ -119,7 +119,7 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
         Utils.logAnalyticsEvent(getString(R.string.bounty_email_success), requireContext());
         Utils.saveString(BountyActivity.EMAIL_KEY, emailInput.getText(), requireActivity());
 
-        NavHostFragment.findNavController(this).navigate(R.id.action_bountyEmailFragment_to_bountyListFragment);
+        NavHostFragment.findNavController(this).navigate(R.id.bountyListFragment);
     }
 
     @Override
