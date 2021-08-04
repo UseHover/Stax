@@ -42,8 +42,8 @@ android {
         applicationId "com.hover.stax"
         minSdkVersion 18
         targetSdkVersion 30
-        versionCode 73
-        versionName "1.5.1"
+        versionCode 75
+        versionName "1.5.2.1"
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -80,17 +80,6 @@ android {
             }
         }
     }
-
-    //flavorDimensions 'store_type'
-    //productFlavors {
-        //playstore {
-          //  dimension "store_type"
-        //}
-        //transsion {
-          //  dimension "store_type"
-        //    versionNameSuffix "-transsion"
-      //  }
-    //}
 
     bundle {
         language {

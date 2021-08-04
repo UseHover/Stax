@@ -23,6 +23,7 @@ import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener {
@@ -208,7 +209,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         a?.let { actionSelectViewModel.setActiveAction(a) }
     }
 
-    fun setRecipientHint(action: HoverAction) {
+    private fun setRecipientHint(action: HoverAction) {
         editCard?.findViewById<LinearLayout>(R.id.recipient_entry)?.visibility = if (action.requiresRecipient()) View.VISIBLE else View.GONE
         binding.summaryCard.recipientRow.visibility = if (action.requiresRecipient()) View.VISIBLE else View.GONE
 
@@ -226,7 +227,11 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     private fun load(r: Request) {
-        transferViewModel.setRecipientSmartly(r, channelsViewModel.activeChannel.value!!)
+        Timber.e(r.toString())
+        channelsViewModel.activeChannel.value?.let {
+            transferViewModel.setRecipientSmartly(r, it)
+        }
+
         channelsViewModel.setChannelFromRequest(r)
         amountInput.text = r.amount
         contactInput.setText(r.requester_number, false)
