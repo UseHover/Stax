@@ -11,13 +11,13 @@ import android.telephony.PhoneNumberUtils;
 import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
 import timber.log.Timber;
 
 class SmsSentObserver extends ContentObserver {
-    private static final String TAG = "SmsSentObserver";
     private static final Uri uri = Uri.parse("content://sms/");
 
     private static final int MESSAGE_TYPE_SENT = 2;

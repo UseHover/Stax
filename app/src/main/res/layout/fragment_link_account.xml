@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linkAccount_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:defaultBackPress="true"
+    app:showBack="true"
+    app:title="@string/nav_link_account">
+
+    <com.hover.stax.channels.ChannelDropdown
+        android:id="@+id/channel_dropdown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/link_account"
+        app:show_selected="false" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="74dp"
+        android:layout_marginTop="@dimen/margin_13"
+        android:paddingBottom="@dimen/margin_13">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/neg_btn"
+            style="@style/StaxButton"
+            android:layout_width="wrap_content"
+            android:layout_height="55.5dp"
+            android:layout_marginEnd="@dimen/margin_13"
+            android:layout_toStartOf="@id/divider"
+            android:text="@string/btn_cancel"
+            android:visibility="visible" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="@dimen/margin_13"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/pos_btn"
+            android:background="@color/transparent" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/pos_btn"
+            style="@style/StaxButtonColored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="@string/link_account" />
+    </RelativeLayout>
+</com.hover.stax.views.StaxCardView>

@@ -26,14 +26,16 @@ class ChannelsViewHolder(val binding: StaxSpinnerItemWithLogoBinding) : Recycler
     private var logo: ImageView? = null
     private var checkBox: MaterialCheckBox? = null
 
-    fun bindItems(channel: Channel, isMultiselect: Boolean = false, isSelected: Boolean = false) {
+    fun bind(channel: Channel, isMultiselect: Boolean = false, isSelected: Boolean? = false) {
         logo = binding.serviceItemImageId
         channelText = binding.serviceItemNameId
         id = binding.serviceItemId
         checkBox = binding.serviceItemCheckbox
 
-        if (isMultiselect) checkBox!!.visibility = View.VISIBLE else checkBox!!.visibility = View.GONE
-        checkBox!!.isChecked = isSelected
+        if (isMultiselect) {
+            checkBox!!.visibility = View.VISIBLE
+            checkBox!!.isChecked = isSelected != null && isSelected
+        } else checkBox!!.visibility = View.GONE
 
         id!!.text = channel.id.toString()
         channelText!!.text = channel.toString()

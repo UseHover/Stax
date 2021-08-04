@@ -28,6 +28,7 @@ public interface RequestSenderInterface {
         sendIntent.setData(Uri.parse("smsto:" + r.generateRecipientString(requestees)));
         sendIntent.putExtra(Intent.EXTRA_TEXT, r.generateMessage(a));
         sendIntent.putExtra("sms_body", r.generateMessage(a));
+
         Utils.logAnalyticsEvent(a.getString(R.string.clicked_send_sms_request), a);
         a.startActivityForResult(Intent.createChooser(sendIntent, "Request"), Constants.SMS);
     }

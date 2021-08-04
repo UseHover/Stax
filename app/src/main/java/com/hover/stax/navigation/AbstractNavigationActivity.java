@@ -13,6 +13,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
@@ -152,7 +153,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         super.onResume();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             IntentFilter filter = new IntentFilter(Constants.CONNECTIVITY);
-//            registerReceiver(networkReceiver, filter);
+            registerReceiver(networkReceiver, filter);
         }
     }
 
@@ -160,7 +161,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
     protected void onPause() {
         super.onPause();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-//            unregisterReceiver(networkReceiver);
+            unregisterReceiver(networkReceiver);
         }
     }
 }
