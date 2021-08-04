@@ -52,7 +52,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
 
                 viewModelScope.launch {
                     val sc = repo.getContactByPhone(formattedPhone)
-                    sc?.let { contact.postValue(repo.getContactByPhone(r.requester_number)) }
+                    sc.let { contact.postValue(repo.getContactByPhone(r.requester_number)) }
                 }
             } catch (e: NumberFormatException) {
                 Utils.logErrorAndReportToFirebase(TransferViewModel::class.java.simpleName, e.message!!, e)
