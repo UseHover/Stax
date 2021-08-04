@@ -6,11 +6,15 @@ import android.content.Intent
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class NetworkReceiver: BroadcastReceiver(), KoinComponent {
+class NetworkReceiver: BroadcastReceiver(){
 
-    private val networkMonitor: NetworkMonitor by inject()
+    private lateinit var networkMonitor: NetworkMonitor
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        networkMonitor.isNetworkAvailable()
+        context?.let {
+            networkMonitor = NetworkMonitor(it)
+            networkMonitor.isNetworkAvailable()
+        }
+
     }
 }
