@@ -14,6 +14,7 @@ import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.Utils
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TransferViewModel(application: Application, repo: DatabaseRepo) : AbstractFormViewModel(application, repo) {
@@ -47,15 +48,14 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
 
     fun setRecipientSmartly(r: Request?, channel: Channel) {
         r?.let {
-            try {
-                val formattedPhone = PhoneHelper.getInternationalNumber(channel.countryAlpha2, r.requester_number)
-
-                viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
+                    val formattedPhone = PhoneHelper.getInternationalNumber(channel.countryAlpha2, r.requester_number)
                     val sc = repo.getContactByPhone(formattedPhone)
-                    sc.let { contact.postValue(repo.getContactByPhone(r.requester_number)) }
+                    sc?.let { contact.postValue(it) }
+                } catch (e: NumberFormatException) {
+                    Utils.logErrorAndReportToFirebase(TransferViewModel::class.java.simpleName, e.message!!, e)
                 }
-            } catch (e: NumberFormatException) {
-                Utils.logErrorAndReportToFirebase(TransferViewModel::class.java.simpleName, e.message!!, e)
             }
         }
     }
