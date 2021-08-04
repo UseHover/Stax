@@ -37,7 +37,7 @@ import timber.log.Timber;
 
 public class BountyListFragment extends Fragment implements NavigationInterface, BountyListItem.SelectListener, CountryAdapter.SelectListener {
 
-    private final NetworkMonitor networkMonitor = get(NetworkMonitor.class);
+    private NetworkMonitor networkMonitor;
 
     private BountyViewModel bountyViewModel;
     private FragmentBountyListBinding binding;
@@ -49,7 +49,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_list)), requireContext());
         bountyViewModel = new ViewModelProvider(this).get(BountyViewModel.class);
-
+        networkMonitor = new NetworkMonitor(requireContext());
         binding = FragmentBountyListBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }

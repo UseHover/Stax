@@ -25,11 +25,12 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
     private var emailInput: StaxTextInputLayout? = null
     private var binding: FragmentBountyEmailBinding? = null
     private var dialog: StaxDialog? = null
-    private val networkMonitor: NetworkMonitor by inject()
+    private lateinit var networkMonitor: NetworkMonitor
     private val viewModel: BountyViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentBountyEmailBinding.inflate(inflater, container, false)
+        networkMonitor = NetworkMonitor(requireContext())
         return binding!!.root
     }
 
