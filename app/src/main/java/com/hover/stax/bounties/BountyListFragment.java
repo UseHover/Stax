@@ -35,8 +35,6 @@ import java.util.List;
 
 import timber.log.Timber;
 
-import static org.koin.java.KoinJavaComponent.get;
-
 public class BountyListFragment extends Fragment implements NavigationInterface, BountyListItem.SelectListener, CountryAdapter.SelectListener {
 
     private final NetworkMonitor networkMonitor = get(NetworkMonitor.class);
