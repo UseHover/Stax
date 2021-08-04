@@ -62,7 +62,7 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
 
     private void setUpChooseLang() {
         TextView btn = binding.languageCard.selectLanguageBtn;
-        LanguageViewModel languageViewModel = new ViewModelProvider(this).get(LanguageViewModel.class);
+        LanguageViewModel languageViewModel = new ViewModelProvider(requireActivity()).get(LanguageViewModel.class);
         languageViewModel.loadLanguages().observe(getViewLifecycleOwner(), languages -> {
             for (Lang lang : languages) {
                 if (lang.isSelected()) btn.setText(lang.name);
