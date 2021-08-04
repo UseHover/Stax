@@ -40,7 +40,7 @@ public class PinUpdateFragment extends Fragment implements Target {
         Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_change_pin)), requireContext());
         binding = FragmentPinUpdateBinding.inflate(inflater, container, false);
 
-        pinViewModel = new ViewModelProvider(this).get(PinsViewModel.class);
+        pinViewModel = new ViewModelProvider(requireActivity()).get(PinsViewModel.class);
         pinViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> Timber.e("Observer ensures events fire."));
         pinViewModel.loadChannel(getArguments().getInt("channel_id", 0));
         pinViewModel.getChannel().observe(getViewLifecycleOwner(), this::initView);
@@ -90,7 +90,7 @@ public class PinUpdateFragment extends Fragment implements Target {
 
     private void removeAccount(Channel channel) {
         pinViewModel.removeAccount(channel);
-        NavHostFragment.findNavController(PinUpdateFragment.this).popBackStack();
+        NavHostFragment.findNavController(this).popBackStack();
         UIHelper.flashMessage(requireActivity(), getResources().getString(R.string.toast_confirm_acctremoved));
     }
 

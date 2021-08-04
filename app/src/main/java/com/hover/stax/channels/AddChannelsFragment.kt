@@ -173,12 +173,11 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         balanceListener?.onTapDetail(channel.id)
     }
 
-    override fun clickedChannel(channel: Channel) {
-        if (IS_FORCE_RETURN || !channel.selected)
-            showCheckBalanceDialog(R.string.check_balance_alt, listOf(channel))
-        else
-            goToChannelsDetailsScreen(channel)
-    }
+    override fun clickedChannel(channel: Channel) = if (channel.selected)
+        goToChannelsDetailsScreen(channel)
+    else
+        showCheckBalanceDialog(R.string.check_balance_alt, listOf(channel))
+
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -45,7 +45,7 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_security)), requireContext());
 
-        PinsViewModel securityViewModel = new ViewModelProvider(this).get(PinsViewModel.class);
+        PinsViewModel securityViewModel = new ViewModelProvider(requireActivity()).get(PinsViewModel.class);
 
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
 
@@ -62,7 +62,7 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
 
     private void setUpChooseLang() {
         TextView btn = binding.languageCard.selectLanguageBtn;
-        LanguageViewModel languageViewModel = new ViewModelProvider(this).get(LanguageViewModel.class);
+        LanguageViewModel languageViewModel = new ViewModelProvider(requireActivity()).get(LanguageViewModel.class);
         languageViewModel.loadLanguages().observe(getViewLifecycleOwner(), languages -> {
             for (Lang lang : languages) {
                 if (lang.isSelected()) btn.setText(lang.name);
