@@ -34,7 +34,7 @@ constructor(val context: Context) {
 
     @RequiresApi(21)
     fun stopNetworkCallback() {
-        cm.unregisterNetworkCallback(ConnectivityManager.NetworkCallback())
+        cm.unregisterNetworkCallback(connectivityManagerCallback)
     }
 
     @RequiresApi(21)
