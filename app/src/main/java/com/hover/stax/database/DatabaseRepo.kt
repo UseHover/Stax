@@ -196,7 +196,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return contactDao[id]
     }
 
-    fun getContactByPhone(phone: String): StaxContact {
+    fun getContactByPhone(phone: String): StaxContact? {
         return contactDao.getByPhone("%$phone%")
     }
 
