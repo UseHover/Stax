@@ -93,7 +93,7 @@ public interface NavigationInterface {
     default void navigateToChannelsListFragment(NavController navController, boolean forceReturnData) {
         Bundle bundle = new Bundle();
         bundle.putBoolean(AddChannelsFragment.FORCE_RETURN_DATA, forceReturnData);
-        navController.navigate(R.id.navigation_linkAccount, bundle);
+        navController.navigate(R.id.action_navigation_home_to_navigation_linkAccount, bundle);
     }
 
     default void navigateToTransferActivity(String type, boolean isFromStaxLink, Intent received, Activity activity) {
