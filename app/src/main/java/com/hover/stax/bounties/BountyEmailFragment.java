@@ -1,5 +1,7 @@
 package com.hover.stax.bounties;
 
+import static org.koin.java.KoinJavaComponent.get;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,8 +23,6 @@ import com.hover.stax.views.StaxTextInputLayout;
 
 import java.lang.ref.WeakReference;
 import java.util.Map;
-
-import static org.koin.java.KoinJavaComponent.get;
 
 public class BountyEmailFragment extends Fragment implements NavigationInterface, View.OnClickListener, BountyAsyncCaller.AsyncResponseListener {
 
@@ -102,14 +102,15 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
         else {
             Utils.logErrorAndReportToFirebase(TAG, message, null);
 
-            if(isAdded() && networkMonitor.isNetworkConnected()) showEdgeCaseErrorDialog();
-
-            else setEmailError();
+            if (isAdded()) {
+                if (networkMonitor.isNetworkConnected()) showEdgeCaseErrorDialog();
+                else setEmailError();
+            }
         }
     }
 
     private void setEmailError() {
-        Utils.logAnalyticsEvent(getString(R.string.bounty_email_err, getString(R.string.bounty_api_internet_error)), requireContext());
+        Utils.logAnalyticsEvent(getString(R.string.bounty_email_err, getString(R.string.bounty_api_internet_error)), requireActivity());
         emailInput.setEnabled(true);
         emailInput.setState(getString(R.string.bounty_api_internet_error), AbstractStatefulInput.ERROR);
     }
@@ -117,6 +118,7 @@ public class BountyEmailFragment extends Fragment implements NavigationInterface
     private void saveAndContinue() {
         Utils.logAnalyticsEvent(getString(R.string.bounty_email_success), requireContext());
         Utils.saveString(BountyActivity.EMAIL_KEY, emailInput.getText(), requireActivity());
+
         NavHostFragment.findNavController(this).navigate(R.id.action_bountyEmailFragment_to_bountyListFragment);
     }
 
