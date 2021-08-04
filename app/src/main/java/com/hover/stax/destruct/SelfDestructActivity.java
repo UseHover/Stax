@@ -10,12 +10,11 @@ import com.hover.stax.utils.Utils;
 
 public class SelfDestructActivity extends AppCompatActivity {
 
-    private SelfDestructLayoutBinding binding;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = SelfDestructLayoutBinding.inflate(getLayoutInflater());
+
+        SelfDestructLayoutBinding binding = SelfDestructLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         binding.continueBtn.setOnClickListener(view -> Utils.openStaxPlaystorePage(this));
     }
