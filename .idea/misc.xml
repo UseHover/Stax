@@ -5,6 +5,18 @@
       <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
     </configurations>
   </component>
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/layout/activity_bounty.xml" value="0.14817629179331307" />
+        <entry key="app/src/main/res/layout/balance_item.xml" value="0.15602836879432624" />
+        <entry key="app/src/main/res/layout/fragment_bounty_email.xml" value="0.14817629179331307" />
+        <entry key="app/src/main/res/layout/fragment_channels_list.xml" value="0.15602836879432624" />
+        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.15602836879432624" />
+        <entry key="app/src/main/res/layout/settings_bounty_card_layout.xml" value="0.15602836879432624" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
       <profile-state>
@@ -19,11 +31,7 @@
       </profile-state>
     </entry>
   </component>
-<<<<<<< HEAD
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
-=======
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
->>>>>>> master
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

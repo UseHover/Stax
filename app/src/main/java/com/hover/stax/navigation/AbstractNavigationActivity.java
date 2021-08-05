@@ -1,6 +1,8 @@
 package com.hover.stax.navigation;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -20,12 +22,14 @@ import com.hover.stax.permissions.PermissionUtils;
 import com.hover.stax.settings.SettingsFragment;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.utils.network.NetworkReceiver;
 
 public abstract class AbstractNavigationActivity extends AppCompatActivity implements NavigationInterface {
 
     protected NavController navController;
     protected AppBarConfiguration appBarConfiguration;
     protected NavHostFragment navHostFragment;
+    private final NetworkReceiver networkReceiver = new NetworkReceiver();
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -142,5 +146,22 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         PermissionUtils.logPermissionsGranted(grantResults, this);
         checkPermissionsAndNavigate(requestCode);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            IntentFilter filter = new IntentFilter(Constants.CONNECTIVITY);
+            registerReceiver(networkReceiver, filter);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            unregisterReceiver(networkReceiver);
+        }
     }
 }

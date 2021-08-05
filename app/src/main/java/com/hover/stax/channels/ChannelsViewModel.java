@@ -32,10 +32,12 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static org.koin.java.KoinJavaComponent.get;
+
 public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdown.HighlightListener, PushNotificationTopicsInterface {
     public final static String TAG = "ChannelDropdownVM";
 
-    private DatabaseRepo repo;
+    private DatabaseRepo repo = get(DatabaseRepo.class);
     private MutableLiveData<String> type = new MutableLiveData<>();
 
     private MutableLiveData<List<SimInfo>> sims;
@@ -49,7 +51,6 @@ public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdo
 
     public ChannelsViewModel(Application application) {
         super(application);
-        repo = new DatabaseRepo(application);
         type.setValue(HoverAction.BALANCE);
 
         loadChannels();
@@ -235,7 +236,7 @@ public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdo
         return channelActions;
     }
 
-    public void setChannelSelected(List<Channel> channels) {
+    public void setChannelsSelected(List<Channel> channels) {
         if (channels == null || channels.isEmpty()) return;
 
         for (int i = 0; i < channels.size(); i++) {

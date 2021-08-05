@@ -9,7 +9,11 @@
             android:id="@+id/navigation_home"
             android:name="com.hover.stax.home.HomeFragment"
             android:label="@string/nav_home"
-            tools:layout="@layout/fragment_main" />
+            tools:layout="@layout/fragment_main">
+        <action
+                android:id="@+id/action_navigation_home_to_navigation_linkAccount"
+                app:destination="@id/navigation_linkAccount" />
+    </fragment>
 
     <fragment
             android:id="@+id/navigation_balance"
