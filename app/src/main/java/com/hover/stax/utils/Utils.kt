@@ -49,6 +49,7 @@ object Utils : KoinComponent {
         return getSharedPrefs(c).getString(key, "")
     }
 
+    @JvmStatic
     fun getBoolean(key: String?, c: Context): Boolean {
         return getSharedPrefs(c).getBoolean(key, false)
     }
@@ -60,9 +61,24 @@ object Utils : KoinComponent {
         editor.apply()
     }
 
+    @JvmStatic
     fun saveBoolean(key: String?, value: Boolean, c: Context) {
         val editor = getSharedPrefs(c).edit()
         editor.putBoolean(key, value)
+        editor.apply()
+    }
+
+    fun getInt(key: String?, c: Context?): Int {
+        return getSharedPrefs(c!!).getInt(key, 0)
+    }
+
+    fun getLong(key: String?, c: Context?): Long {
+        return getSharedPrefs(c!!).getLong(key, 0)
+    }
+
+    fun saveLong(key: String?, value: Long, c: Context?) {
+        val editor = getSharedPrefs(c!!).edit()
+        editor.putLong(key, value)
         editor.apply()
     }
 
@@ -191,7 +207,7 @@ object Utils : KoinComponent {
     }
 
     @JvmStatic
-    fun timeEvent(event: String){
+    fun timeEvent(event: String) {
         mixPanel.timeEvent(event)
     }
 
@@ -259,6 +275,10 @@ object Utils : KoinComponent {
         val i = Intent(Intent.ACTION_VIEW)
         i.data = Uri.parse(url)
         ctx.startActivity(i)
+    }
+
+    fun openUrl(urlRes: Int, ctx: Context) {
+        openUrl(ctx.resources.getString(urlRes), ctx)
     }
 
     @JvmStatic

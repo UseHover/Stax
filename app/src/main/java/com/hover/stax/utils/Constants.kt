@@ -10,8 +10,7 @@ object Constants {
     const val NAV_LINK_ACCOUNT = 606
     const val NAV_LANGUAGE_SELECTION = 607
     const val NAV_BOUNTY = 608
-
-    const val BALANCE_MAX = 100
+    const val NAV_EMAIL_CLIENT = 609
 
     const val ADD_SERVICE = 200
     const val GET_CONTACT = 201
@@ -23,6 +22,7 @@ object Constants {
 
     const val size55 = 55
 
+    const val TEST_MODE = "test_mode"
     const val LANGUAGE_CHECK = "Language"
     const val PERM_ACTIVITY = "com.hover.stax.permissions.PermissionsActivity"
     const val TRANSFERRED = "TRANSFERRED"
@@ -37,4 +37,6 @@ object Constants {
     const val VARIANT_1 = "baseline"
     const val VARIANT_2 = "multiselect_accounts"
     const val VARIANT_3 = "multiselect_accounts_and_move_money"
+
+    const val CONNECTIVITY = "android.net.conn.CONNECTIVITY_CHANGE"
 }

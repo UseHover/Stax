@@ -14,26 +14,24 @@ import com.hover.stax.database.DatabaseRepo;
 
 import java.util.List;
 
-public class TransactionHistoryViewModel extends AndroidViewModel {
-    private final String TAG = "TransactionHistoryViewModel";
+import static org.koin.java.KoinJavaComponent.get;
 
-    private final DatabaseRepo repo;
+public class TransactionHistoryViewModel extends AndroidViewModel {
+
+    private final DatabaseRepo repo = get(DatabaseRepo.class);
 
     private LiveData<List<StaxTransaction>> transactions;
     private final LiveData<Boolean> appReviewLiveData;
 
     public TransactionHistoryViewModel(Application application) {
         super(application);
-        repo = new DatabaseRepo(application);
-
         transactions = new MutableLiveData<>();
         transactions = repo.getCompleteAndPendingTransferTransactions();
         appReviewLiveData =  Transformations.map(repo.getTransactionsForAppReview(), this:: showAppReview);
     }
 
-    public LiveData<List<StaxTransaction>> getStaxTransactions() {
-        return transactions;
-    }
+    public LiveData<List<StaxTransaction>> getStaxTransactions() { return transactions; }
+
     public LiveData<Boolean> showAppReviewLiveData() {
         return appReviewLiveData;
     }

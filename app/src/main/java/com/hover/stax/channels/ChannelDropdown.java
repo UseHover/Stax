@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.R;
@@ -127,9 +128,17 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target{
     public void setObservers(@NonNull ChannelsViewModel viewModel, @NonNull LifecycleOwner lifecycleOwner) {
         viewModel.getSims().observe(lifecycleOwner, sims -> Timber.i("Got sims: %s", sims.size()));
         viewModel.getSimHniList().observe(lifecycleOwner, simList -> Timber.i("Got new sim hni list: %s", simList));
-        viewModel.getChannels().observe(lifecycleOwner, this::channelUpdateIfNull);
+        viewModel.getAllChannels().observe(lifecycleOwner, this::channelUpdateIfNull);
         viewModel.getSimChannels().observe(lifecycleOwner, this::channelUpdate);
-        viewModel.getSelectedChannels().observe(lifecycleOwner, channels -> Timber.i("Got new selected channels: %s", channels.size()));
+
+        //This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
+        //https://stackoverflow.com/a/54939860/2371515
+        viewModel.getSelectedChannels().observe(lifecycleOwner, new Observer<List<Channel>>() {
+            @Override
+            public void onChanged(List<Channel> channels) {
+                Timber.i("Got new selected channels: %s", channels.size());
+            }
+        });
         viewModel.getActiveChannel().observe(lifecycleOwner, channel -> {
             if (channel != null && showSelected) setState(initial_helper_text, NONE);
         });

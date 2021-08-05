@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,6 +29,7 @@ import java.util.List;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static org.koin.androidx.viewmodel.compat.ViewModelCompat.getViewModel;
 
 public class ChannelDetailFragment extends Fragment implements
         TransactionHistoryAdapter.SelectListener,
@@ -47,8 +47,6 @@ public class ChannelDetailFragment extends Fragment implements
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_channel)), requireContext());
-        viewModel = new ViewModelProvider(requireActivity()).get(ChannelDetailViewModel.class);
-        futureViewModel = new ViewModelProvider(requireActivity()).get(FutureViewModel.class);
         binding = FragmentChannelBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -56,6 +54,9 @@ public class ChannelDetailFragment extends Fragment implements
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        viewModel = getViewModel(this, ChannelDetailViewModel.class);
+        futureViewModel =  getViewModel(this, FutureViewModel.class);
+
         binding.refreshBalanceBtn.setOnClickListener(view1 -> onRefresh());
         initRecyclerViews();
         setupObservers();
@@ -75,7 +76,7 @@ public class ChannelDetailFragment extends Fragment implements
         });
 
         RecyclerView transactionHistoryRecyclerView = binding.homeCardTransactions.transactionHistoryRecyclerView;
-        viewModel.getStaxTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
+        viewModel.getTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
             binding.homeCardTransactions.noHistory.setVisibility(staxTransactions == null || staxTransactions.size() == 0 ? View.VISIBLE : View.GONE);
             transactionHistoryRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
             transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions, this));
@@ -96,13 +97,14 @@ public class ChannelDetailFragment extends Fragment implements
         requestsAdapter = new RequestsAdapter(null, this);
         rv.setAdapter(requestsAdapter);
     }
+
     private void setUpFuture(Channel channel) {
-        futureViewModel.getScheduledByChannel(channel.id).observe(getViewLifecycleOwner(), schedules -> {
+        futureViewModel.scheduledByChannel(channel.id).observe(getViewLifecycleOwner(), schedules -> {
             scheduledAdapter.updateData(schedules);
             setFutureVisible(schedules, futureViewModel.getRequests().getValue());
         });
 
-        futureViewModel.getRequestsByChannel(channel.institutionId).observe(getViewLifecycleOwner(), requests -> {
+        futureViewModel.requestsByChannel(channel.institutionId).observe(getViewLifecycleOwner(), requests -> {
             requestsAdapter.updateData(requests);
             setFutureVisible(futureViewModel.getScheduled().getValue(), requests);
         });

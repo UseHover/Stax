@@ -31,7 +31,10 @@ import com.hover.sdk.api.Hover
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.databinding.SplashScreenLayoutBinding
 import com.hover.stax.destruct.SelfDestructActivity
+
+import com.hover.stax.faq.FaqViewModel
 import com.hover.stax.home.MainActivity
+import com.hover.stax.inapp_banner.BannerUtils
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
 import com.hover.stax.schedules.ScheduleWorker
@@ -41,9 +44,15 @@ import com.hover.stax.utils.Constants.FRAGMENT_DIRECT
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.blur.StaxBlur
+
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
+
+
+import org.koin.androidx.viewmodel.ext.android.getViewModel
+
 import timber.log.Timber
 
 
@@ -90,6 +99,18 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         FirebaseInstallations.getInstance().id.addOnCompleteListener { Timber.i("Firebase installation ID is ${it.result}") }
 
         initRemoteConfigs()
+        updateBannerSessionCounter()
+        initFAQ()
+    }
+
+    private fun initFAQ() {
+        val faqViewModel: FaqViewModel = getViewModel()
+        faqViewModel.faqLiveData
+    }
+
+    private fun updateBannerSessionCounter() {
+        val currentCount: Int = Utils.getInt(BannerUtils.APP_SESSIONS, this)
+        if (currentCount < 5) Utils.saveInt(BannerUtils.APP_SESSIONS, currentCount + 1, this)
     }
 
     private fun initFirebaseMessagingTopics() {
@@ -163,20 +184,29 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
             fetchAndActivate().addOnCompleteListener {
                 if (it.isSuccessful) {
                     Timber.i("Config params updated: ${it.result}")
-
-                    //set variant after successfully fetching and activating values
                     Utils.variant = remoteConfig.getString("onboarding_app_variant")
+                } else
+                    Utils.variant = Constants.VARIANT_1
 
-                    if (!selfDestructWhenAppVersionExpires())
-                        validateUser()
-                }
+                logVariant()
+
+                if (!selfDestructWhenAppVersionExpires())
+                    validateUser()
             }
         }
+    }
+
+    private fun logVariant() {
+        val prop = JSONObject()
+        prop.put("Variant", Utils.variant)
+        Utils.logAnalyticsEvent(getString(R.string.fetched_app_variant), prop, this)
     }
 
     private fun selfDestructWhenAppVersionExpires(): Boolean {
         return try {
             val currentVersionCode = packageManager.getPackageInfo(packageName, 0).versionCode
+            Timber.e("Current version code :  $currentVersionCode")
+
             val forceUpdateVersionCode = remoteConfig.getString("force_update_app_version").toInt()
             if (forceUpdateVersionCode > currentVersionCode) {
                 startActivity(Intent(this, SelfDestructActivity::class.java))
@@ -266,7 +296,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
     companion object {
         const val BLUR_DELAY = 1000L
         const val LOGO_DELAY = 1200L
-        const val NAV_DELAY = 1300L
+        const val NAV_DELAY = 1500L
         const val SPLASH_ICON_WIDTH = 177
         const val SPLASH_ICON_HEIGHT = 57
     }

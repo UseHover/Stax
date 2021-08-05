@@ -20,9 +20,7 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:theme="@style/StaxTheme"
-            tools:ignore="AllowBackup"
-            tools:replace="android:allowBackup">
+            android:theme="@style/StaxTheme">
 
         <activity
                 android:name=".SplashScreenActivity"
@@ -119,10 +117,9 @@
             </intent-filter>
         </activity>
 
-        <activity
-                android:name=".languages.SelectLanguageActivity"
+        <activity android:name=".languages.SelectLanguageActivity"
                 android:label="@string/language">
-            <intent-filter>
+            <intent-filter >
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -191,7 +188,6 @@
         </activity>
 
         <activity android:name=".destruct.SelfDestructActivity" />
-
         <activity
                 android:name=".onboarding.OnBoardingActivity"
                 android:theme="@style/StaxTheme" />
@@ -234,9 +230,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver
-                android:name="com.appsflyer.SingleInstallBroadcastReceiver"
-                android:exported="true">
+        <receiver android:name="com.appsflyer.SingleInstallBroadcastReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
@@ -252,16 +246,8 @@
         </service>
 
         <meta-data
-                android:name="AF_STORE"
-                android:value="Transsion" />
-        <meta-data
-                android:name="AF_PRE_INSTALL_NAME"
-                android:value="shalltry_int" />
-
-        <meta-data
                 android:name="com.google.firebase.messaging.default_notification_icon"
                 android:resource="@drawable/ic_stax" />
-
         <meta-data
                 android:name="com.google.firebase.messaging.default_notification_color"
                 android:resource="@color/brightBlue" />
@@ -273,6 +259,5 @@
         <meta-data
                 android:name="com.hover.ApiKey"
                 android:value="1335646a78bb2b1157304be1510641f6" />
-
     </application>
 </manifest>

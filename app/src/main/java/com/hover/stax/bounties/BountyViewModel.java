@@ -27,10 +27,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-public class BountyViewModel extends AndroidViewModel {
-    private static String TAG = "BountyViewModel";
+import static org.koin.java.KoinJavaComponent.get;
 
-    private DatabaseRepo repo;
+public class BountyViewModel extends AndroidViewModel {
+    private DatabaseRepo repo = get(DatabaseRepo.class);
+
+    String country = CountryAdapter.codeRepresentingAllCountries();
 
     private LiveData<List<HoverAction>> bountyActions;
     private LiveData<List<Channel>> bountyChannels;
@@ -43,7 +45,6 @@ public class BountyViewModel extends AndroidViewModel {
 
     public BountyViewModel(@NonNull Application application) {
         super(application);
-        repo = new DatabaseRepo(application);
         loadSims();
         filteredBountyChannels = new MutableLiveData<>();
         filteredBountyChannels.setValue(null);
@@ -114,6 +115,7 @@ public class BountyViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Channel>> filterChannels(String countryCode) {
+        country = countryCode;
         List<HoverAction> actions = bountyActions.getValue();
         if (actions == null) return null;
 

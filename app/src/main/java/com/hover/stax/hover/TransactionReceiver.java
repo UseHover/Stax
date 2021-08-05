@@ -1,6 +1,5 @@
 package com.hover.stax.hover;
 
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,12 +11,13 @@ import com.hover.stax.database.DatabaseRepo;
 
 import java.util.HashMap;
 
+import static org.koin.java.KoinJavaComponent.get;
+
 public class TransactionReceiver extends BroadcastReceiver {
-    final private static String TAG = "TransactionReceiver";
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        DatabaseRepo repo = new DatabaseRepo((Application) context.getApplicationContext());
+        DatabaseRepo repo = get(DatabaseRepo.class);
         updateBalance(repo, intent);
         updateTransaction(repo, intent, context);
     }

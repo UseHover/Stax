@@ -1,5 +1,7 @@
 package com.hover.stax.library;
 
+import static org.koin.java.KoinJavaComponent.get;
+
 import android.app.Application;
 
 import androidx.annotation.NonNull;
@@ -25,7 +27,7 @@ public class LibraryViewModel extends AndroidViewModel {
 
 	public LibraryViewModel(@NonNull Application application) {
 		super(application);
-		repo = new DatabaseRepo(application);
+		repo = get(DatabaseRepo.class);
 		allChannels = repo.getAllChannels();
 		filteredChannels.setValue(allChannels.getValue());
 	}

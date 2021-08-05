@@ -15,8 +15,6 @@ import com.hover.stax.contacts.StaxContact;
 import java.util.ArrayList;
 import java.util.List;
 
-import timber.log.Timber;
-
 public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.RecipientViewHolder> {
     private List<StaxContact> recipients;
     private List<StaxContact> allContacts;
@@ -72,7 +70,7 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientAdapter.Reci
             }
         });
 
-        ci.setOnItemClickListener((adapterView, view, pos, id) -> {
+        ci.setAutocompleteClickListener((adapterView, view, pos, id) -> {
             StaxContact contact = (StaxContact) adapterView.getItemAtPosition(pos);
             updateListener.onUpdate(position, contact);
         });

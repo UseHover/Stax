@@ -46,6 +46,9 @@ public interface ChannelDao {
     @Update
     void update(Channel channel);
 
+    @Update
+    void updateAll(List<Channel> channel);
+
     @Delete
     void delete(Channel channel);
 

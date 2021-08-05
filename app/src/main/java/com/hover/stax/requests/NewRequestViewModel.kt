@@ -12,7 +12,6 @@ import com.hover.stax.schedules.Schedule
 import com.hover.stax.transfers.AbstractFormViewModel
 import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -21,6 +20,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
     val activeChannel = MediatorLiveData<Channel>()
     val amount = MutableLiveData<String>()
     val requestees = MutableLiveData<List<StaxContact>>(Collections.singletonList(StaxContact("")))
+    val requestee = MutableLiveData<StaxContact>()
     val requesterNumber = MediatorLiveData<String>()
     val note = MutableLiveData<String>()
 
@@ -43,28 +43,35 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
     }
 
     fun onUpdate(pos: Int, contact: StaxContact) {
-        val cs = arrayListOf<StaxContact>()
-
-        if (!requestees.value.isNullOrEmpty()) cs.addAll(requestees.value!!)
-
-        try {
-            cs[pos] = contact
-        } catch (e: IndexOutOfBoundsException) {
-            cs.add(pos, contact)
-        }
-
-        requestees.postValue(cs)
-    }
-
-    fun addRecipient(contact: StaxContact) {
         val rList = arrayListOf<StaxContact>()
 
-        if (!requestees.value.isNullOrEmpty())
-            rList.addAll(requestees.value!!)
-
-        rList.add(contact)
-
+        requestees.value!!.forEachIndexed { i, recipient ->
+            if (i == pos)
+                rList.add(contact)
+            else
+                rList.add(recipient)
+        }
         requestees.postValue(rList)
+    }
+
+//    fun addRecipient(contact: StaxContact) {
+//        val rList = arrayListOf<StaxContact>()
+//
+//        if (!requestees.value.isNullOrEmpty())
+//            rList.addAll(requestees.value!!)
+//
+//        rList.add(contact)
+//
+//        requestees.postValue(rList)
+//    }
+
+    fun setRecipient(recipient: String) {
+        if(requestee.value != null && requestee.value.toString() == recipient) return
+        requestee.value = StaxContact(recipient)
+    }
+
+    fun addRecipient(contact: StaxContact){
+        requestee.value = contact
     }
 
     fun resetRecipients() = requestees.postValue(ArrayList())
@@ -74,7 +81,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
     fun validAmount(): Boolean = (!amount.value.isNullOrEmpty() && amount.value!!.matches("\\d+".toRegex()) && !amount.value!!.matches("[0]+".toRegex()))
 
     fun requesteeErrors(): String? {
-        return if (!requestees.value.isNullOrEmpty() && !requestees.value!!.first().accountNumber.isNullOrEmpty())
+        return if (!requestee.value?.accountNumber.isNullOrEmpty())
             null
         else
             application.getString(R.string.request_error_recipient)
@@ -133,7 +140,6 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
             viewModelScope.launch {
                 contacts.filter { contact -> !contact.accountNumber.isNullOrEmpty() }
                     .forEach { contact ->
-                        Timber.e("Here saving $contact")
                         contact.lastUsedTimestamp = DateUtils.now()
                         repo.save(contact)
                     }

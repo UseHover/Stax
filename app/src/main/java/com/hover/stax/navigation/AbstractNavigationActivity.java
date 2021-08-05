@@ -1,6 +1,8 @@
 package com.hover.stax.navigation;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -19,12 +21,14 @@ import com.hover.stax.permissions.PermissionUtils;
 import com.hover.stax.settings.SettingsFragment;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.Utils;
+import com.hover.stax.utils.network.NetworkReceiver;
 
 public abstract class AbstractNavigationActivity extends AppCompatActivity implements NavigationInterface {
 
     protected NavController navController;
     protected AppBarConfiguration appBarConfiguration;
     protected NavHostFragment navHostFragment;
+    private final NetworkReceiver networkReceiver = new NetworkReceiver();
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -82,7 +86,7 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         return navHostFragment.getNavController();
     }
 
-    public void checkPermissionsAndNavigate(int toWhere) {
+    public void checkPermissionsAndNavigate(int toWhere, int permissionMessage) {
         PermissionHelper permissionHelper = new PermissionHelper(this);
         if (toWhere == Constants.NAV_SETTINGS || toWhere == Constants.NAV_HOME || permissionHelper.hasBasicPerms()) {
             navigate(this, toWhere, getIntent(), false);
@@ -90,10 +94,15 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
             Utils.timeEvent(getString(R.string.perms_basic_requested));
 
             PermissionUtils.showInformativeBasicPermissionDialog(
+                    permissionMessage,
                     pos -> PermissionUtils.requestPerms(getNavConst(toWhere), AbstractNavigationActivity.this),
                     neg -> Utils.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), AbstractNavigationActivity.this),
                     this);
         }
+    }
+
+    public void checkPermissionsAndNavigate(int toWhere) {
+        checkPermissionsAndNavigate(toWhere, 0);
     }
 
     protected void navigateThruHome(int destId) {
@@ -127,10 +136,31 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         checkPermissionsAndNavigate(Constants.NAV_BOUNTY);
     }
 
+    public void openSupportEmailClient(View view) {
+        checkPermissionsAndNavigate(Constants.NAV_EMAIL_CLIENT, R.string.permission_support_desc);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         PermissionUtils.logPermissionsGranted(grantResults, this);
         checkPermissionsAndNavigate(requestCode);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            IntentFilter filter = new IntentFilter(Constants.CONNECTIVITY);
+            registerReceiver(networkReceiver, filter);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            unregisterReceiver(networkReceiver);
+        }
     }
 }

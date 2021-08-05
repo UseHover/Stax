@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/mobile_navigation"
+        app:startDestination="@+id/navigation_home">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.hover.stax.home.HomeFragment"
-        android:label="@string/nav_home"
-        tools:layout="@layout/fragment_main" />
+            android:id="@+id/navigation_home"
+            android:name="com.hover.stax.home.HomeFragment"
+            android:label="@string/nav_home"
+            tools:layout="@layout/fragment_main">
+        <action
+                android:id="@+id/action_navigation_home_to_navigation_linkAccount"
+                app:destination="@id/navigation_linkAccount" />
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_balance"
-        android:name="com.hover.stax.balances.BalancesFragment"
-        android:label="@string/nav_balance_and_history"
-        tools:layout="@layout/fragment_balance" />
+            android:id="@+id/navigation_balance"
+            android:name="com.hover.stax.balances.BalancesFragment"
+            android:label="@string/nav_balance_and_history"
+            tools:layout="@layout/fragment_balance" />
 
     <fragment
-        android:id="@+id/navigation_linkAccount"
-        android:name="com.hover.stax.channels.ChannelsListFragment"
-        android:label="@string/nav_link_account"
+            android:id="@+id/navigation_linkAccount"
+            android:name="com.hover.stax.channels.AddChannelsFragment"
+            android:label="@string/nav_link_account"
             tools:layout="@layout/fragment_channels_list">
         <argument
                 android:name="force_return_data"
@@ -28,59 +32,65 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_settings"
-        android:name="com.hover.stax.settings.SettingsFragment"
-        android:label="@string/nav_settings"
-        tools:layout="@layout/fragment_settings" />
+            android:id="@+id/navigation_settings"
+            android:name="com.hover.stax.settings.SettingsFragment"
+            android:label="@string/nav_settings"
+            tools:layout="@layout/fragment_settings" />
 
     <fragment
-        android:id="@+id/transactionDetailsFragment"
-        android:name="com.hover.stax.transactions.TransactionDetailsFragment"
-        android:label="TransactionDetailsFragment"
-        tools:layout="@layout/fragment_transaction">
+            android:id="@+id/faqFragment"
+            android:name="com.hover.stax.faq.FaqFragment"
+            android:label="@string/FAQs"
+            tools:layout="@layout/fragment_faq" />
+
+    <fragment
+            android:id="@+id/transactionDetailsFragment"
+            android:name="com.hover.stax.transactions.TransactionDetailsFragment"
+            android:label="TransactionDetailsFragment"
+            tools:layout="@layout/fragment_transaction">
         <argument
-            android:name="uuid"
-            app:argType="string" />
+                android:name="uuid"
+                app:argType="string" />
     </fragment>
 
     <fragment
-        android:id="@+id/scheduleDetailsFragment"
-        android:name="com.hover.stax.schedules.ScheduleDetailFragment"
-        android:label="ScheduleDetailFragment"
-        tools:layout="@layout/fragment_schedule">
+            android:id="@+id/scheduleDetailsFragment"
+            android:name="com.hover.stax.schedules.ScheduleDetailFragment"
+            android:label="ScheduleDetailFragment"
+            tools:layout="@layout/fragment_schedule">
         <argument
-            android:name="id"
-            app:argType="integer" />
+                android:name="id"
+                app:argType="integer" />
     </fragment>
 
     <fragment
-        android:id="@+id/requestDetailsFragment"
-        android:name="com.hover.stax.requests.RequestDetailFragment"
-        android:label="RequestDetailFragment"
-        tools:layout="@layout/fragment_request_detail">
+            android:id="@+id/requestDetailsFragment"
+            android:name="com.hover.stax.requests.RequestDetailFragment"
+            android:label="RequestDetailFragment"
+            tools:layout="@layout/fragment_request_detail">
         <argument
-            android:name="id"
-            app:argType="integer" />
+                android:name="id"
+                app:argType="integer" />
     </fragment>
 
     <fragment
-        android:id="@+id/channelsDetailsFragment"
-        android:name="com.hover.stax.channels.ChannelDetailFragment"
-        android:label="ChannelsDetailsFragment"
-        tools:layout="@layout/fragment_channel">
+            android:id="@+id/channelsDetailsFragment"
+            android:name="com.hover.stax.channels.ChannelDetailFragment"
+            android:label="ChannelsDetailsFragment"
+            tools:layout="@layout/fragment_channel">
         <argument
-            android:name="channel_id"
-            app:argType="integer" />
+                android:name="channel_id"
+                app:argType="integer" />
     </fragment>
 
     <fragment
-        android:id="@+id/pinUpdateFragment"
-        android:name="com.hover.stax.settings.PinUpdateFragment"
-        android:label="PinUpdateFragment"
-        tools:layout="@layout/fragment_pin_update">
+            android:id="@+id/pinUpdateFragment"
+            android:name="com.hover.stax.settings.PinUpdateFragment"
+            android:label="PinUpdateFragment"
+            tools:layout="@layout/fragment_pin_update">
         <argument
-            android:name="channel_id"
-            app:argType="integer" />
+                android:name="channel_id"
+                app:argType="integer" />
     </fragment>
 
 </navigation>

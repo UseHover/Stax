@@ -45,6 +45,7 @@ final public class HoverSession {
 
     private HoverParameters.Builder getBasicBuilder(Builder b) {
         HoverParameters.Builder builder = new HoverParameters.Builder(b.activity);
+        builder.setEnvironment(Utils.getBoolean(Constants.TEST_MODE, b.activity) ? HoverParameters.TEST_ENV : HoverParameters.PROD_ENV);
         builder.request(b.action.public_id);
         builder.setHeader(getMessage(b.action, b.activity));
         builder.initialProcessingMessage("");
