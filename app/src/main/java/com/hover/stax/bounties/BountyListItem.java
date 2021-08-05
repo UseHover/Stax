@@ -57,6 +57,7 @@ class BountyListItem extends LinearLayout {
         if (noticeString != 0) binding.liCallout.setText(noticeString);
         binding.liCallout.setCompoundDrawablesWithIntrinsicBounds(noticeIcon, 0, 0, 0);
         binding.liCallout.setVisibility(noticeString != 0 ? View.VISIBLE : View.GONE);
+
         if (!isOpen) strikeThrough(binding.liAmount);
         if (!isOpen) strikeThrough(binding.liDescription);
         setOnClickListener(listener);

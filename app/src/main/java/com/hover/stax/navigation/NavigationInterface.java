@@ -166,4 +166,3 @@ public interface NavigationInterface {
         activity.startActivity(intent);
     }
 }
-

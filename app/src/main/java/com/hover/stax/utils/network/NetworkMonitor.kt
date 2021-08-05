@@ -1,6 +1,5 @@
 package com.hover.stax.utils.network
 
-import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
@@ -16,9 +15,9 @@ import kotlin.properties.Delegates
 
 class NetworkMonitor
 @RequiresPermission(android.Manifest.permission.ACCESS_NETWORK_STATE)
-constructor(val application: Application) {
+constructor(val context: Context) {
 
-    private val cm = application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    private val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
     @RequiresApi(21)
     fun startNetworkCallback() {
@@ -34,7 +33,7 @@ constructor(val application: Application) {
 
     @RequiresApi(21)
     fun stopNetworkCallback() {
-        cm.unregisterNetworkCallback(ConnectivityManager.NetworkCallback())
+        cm.unregisterNetworkCallback(connectivityManagerCallback)
     }
 
     @RequiresApi(21)
@@ -51,7 +50,7 @@ constructor(val application: Application) {
     }
 
     fun isNetworkAvailable() {
-        val connectivityManager = application.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
         connectivityManager?.let {
             val activeNetworkInfo = it.activeNetworkInfo
             isNetworkConnected = activeNetworkInfo != null && activeNetworkInfo.isConnected

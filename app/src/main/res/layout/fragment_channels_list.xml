@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -44,14 +43,14 @@
                 android:id="@+id/error_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:layout_marginStart="@dimen/margin_13"
+                android:drawablePadding="@dimen/margin_5"
+                app:drawableStartCompat="@drawable/ic_error"
+                android:fontFamily="font-medium"
                 android:text="@string/channels_error_nodata"
                 android:textColor="@color/stax_state_red"
-                android:visibility="gone"
-                android:layout_gravity="center_vertical"
-                android:fontFamily="font-medium"
-                android:drawablePadding="@dimen/margin_5"
-                android:drawableStart="@drawable/ic_error" />
+                android:visibility="gone" />
 
         <Button
                 android:id="@+id/continue_btn"

@@ -154,6 +154,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
                     save(contact)
 
                 if (t == null) {
+                    c?.let { Utils.logAnalyticsEvent(c.getString(R.string.initializing_ussd_services), c) }
                     t = StaxTransaction(intent, a, contact, c)
                     transactionDao.insert(t)
                     t = transactionDao.getTransaction(t.uuid)
@@ -199,7 +200,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return contactDao[id]
     }
 
-    fun getContactByPhone(phone: String): StaxContact {
+    fun getContactByPhone(phone: String): StaxContact? {
         return contactDao.getByPhone("%$phone%")
     }
 

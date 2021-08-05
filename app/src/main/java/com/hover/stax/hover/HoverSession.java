@@ -3,7 +3,6 @@ package com.hover.stax.hover;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 
@@ -23,8 +22,9 @@ import org.json.JSONObject;
 import java.util.Iterator;
 import java.util.List;
 
+import timber.log.Timber;
+
 final public class HoverSession {
-    private final static String TAG = "HoverSession";
 
     final private Fragment frag;
     final private Channel channel;
@@ -39,7 +39,6 @@ final public class HoverSession {
         finalScreenTime = b.finalScreenTime;
         HoverParameters.Builder builder = getBasicBuilder(b);
         addExtras(builder, b.extras, b.action);
-//		addPin(builder, b.activity); // Not active
         startHover(builder, b.activity);
     }
 
@@ -127,7 +126,7 @@ final public class HoverSession {
             try {
                 extras.put(key, value);
             } catch (JSONException e) {
-                Log.e(TAG, "Failed to add extra");
+                Timber.e("Failed to add extra");
             }
             return this;
         }

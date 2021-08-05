@@ -27,6 +27,7 @@ public class TransactionHistoryViewModel extends AndroidViewModel {
         super(application);
         transactions = new MutableLiveData<>();
         transactions = repo.getCompleteAndPendingTransferTransactions();
+
         appReviewLiveData =  Transformations.map(repo.getTransactionsForAppReview(), this:: showAppReview);
     }
 
