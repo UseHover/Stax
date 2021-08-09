@@ -46,6 +46,10 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
         contact.value = StaxContact(r)
     }
 
+    fun resetRecipient() {
+        contact.value = StaxContact()
+    }
+
     fun setRecipientSmartly(r: Request?, channel: Channel) {
         r?.let {
             viewModelScope.launch(Dispatchers.IO) {
@@ -68,9 +72,10 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     }
 
     fun recipientErrors(a: HoverAction?): String? {
-        return if (a != null && a.requiresRecipient() && contact.value == null)
-            application.getString(if (a.isPhoneBased) R.string.transfer_error_recipient_phone else R.string.transfer_error_recipient_account)
-        else null
+        return when {
+            (a != null && a.requiresRecipient() && contact.value == null) || contact.value?.accountNumber == null -> application.getString(if (a!!.isPhoneBased) R.string.transfer_error_recipient_phone else R.string.transfer_error_recipient_account)
+            else -> null
+        }
     }
 
     fun decrypt(encryptedString: String): LiveData<Request> {

@@ -35,46 +35,21 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
 
     fun setActiveChannel(c: Channel) = activeChannel.postValue(c)
 
-    fun setRequesterNumber(c: Channel) = requesterNumber.postValue(c.accountNo)
+    private fun setRequesterNumber(c: Channel) = requesterNumber.postValue(c.accountNo)
 
     fun setRequesterNumber(number: String) {
         requesterNumber.postValue(number)
         activeChannel.value?.let { it.accountNo = number }
     }
 
-    fun onUpdate(pos: Int, contact: StaxContact) {
-        val rList = arrayListOf<StaxContact>()
-
-        requestees.value!!.forEachIndexed { i, recipient ->
-            if (i == pos)
-                rList.add(contact)
-            else
-                rList.add(recipient)
-        }
-        requestees.postValue(rList)
-    }
-
-//    fun addRecipient(contact: StaxContact) {
-//        val rList = arrayListOf<StaxContact>()
-//
-//        if (!requestees.value.isNullOrEmpty())
-//            rList.addAll(requestees.value!!)
-//
-//        rList.add(contact)
-//
-//        requestees.postValue(rList)
-//    }
-
     fun setRecipient(recipient: String) {
-        if(requestee.value != null && requestee.value.toString() == recipient) return
+        if (requestee.value != null && requestee.value.toString() == recipient) return
         requestee.value = StaxContact(recipient)
     }
 
-    fun addRecipient(contact: StaxContact){
+    fun addRecipient(contact: StaxContact) {
         requestee.value = contact
     }
-
-    fun resetRecipients() = requestees.postValue(ArrayList())
 
     fun setNote(n: String) = note.postValue(n)
 
@@ -135,7 +110,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
         }
     }
 
-    fun saveContacts() {
+    private fun saveContacts() {
         requestees.value?.let { contacts ->
             viewModelScope.launch {
                 contacts.filter { contact -> !contact.accountNumber.isNullOrEmpty() }
