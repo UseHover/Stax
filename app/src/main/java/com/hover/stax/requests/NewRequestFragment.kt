@@ -8,7 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.ContactInput
@@ -47,13 +49,20 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         _binding = FragmentRequestBinding.inflate(inflater, container, false)
 
         init(binding.root)
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         startObservers(binding.root)
         startListeners()
         setDefaultHelperText()
         setSummaryCardBackButton()
         setClickListeners()
 
-        return binding.root
+        handleBackPress()
     }
 
     private fun setDefaultHelperText() = requesterNumberInput.setState(getString(R.string.account_num_desc), AbstractStatefulInput.NONE)
@@ -219,6 +228,15 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
         return channelError == null && requesterAcctNoError == null && recipientError == null
     }
+
+    private fun handleBackPress() = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (requestViewModel.isEditing.value == false)
+                requestViewModel.setEditing(true)
+            else
+                findNavController().popBackStack()
+        }
+    })
 
     override fun onDestroyView() {
         super.onDestroyView()
