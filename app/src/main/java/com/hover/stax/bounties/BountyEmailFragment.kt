@@ -17,7 +17,6 @@ import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInputLayout
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListener {
@@ -58,19 +57,19 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
     }
 
     private fun showOfflineDialog() {
-       dialog =  StaxDialog(requireActivity())
-                .setDialogTitle(R.string.internet_required)
-                .setDialogMessage(R.string.internet_required_bounty_desc)
-                .setPosButton(R.string.btn_ok, null)
-                .makeSticky();
+        dialog = StaxDialog(requireActivity())
+            .setDialogTitle(R.string.internet_required)
+            .setDialogMessage(R.string.internet_required_bounty_desc)
+            .setPosButton(R.string.btn_ok, null)
+            .makeSticky();
 
         dialog!!.showIt()
     }
 
     private fun showEdgeCaseErrorDialog() {
         dialog = StaxDialog(requireActivity())
-                .setDialogMessage(getString(R.string.edge_case_bounty_email_error))
-                .setPosButton(R.string.btn_ok, null);
+            .setDialogMessage(getString(R.string.edge_case_bounty_email_error))
+            .setPosButton(R.string.btn_ok, null);
         dialog!!.showIt()
     }
 
