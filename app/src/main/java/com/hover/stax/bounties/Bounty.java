@@ -23,9 +23,14 @@ public class Bounty {
     }
 
     public int transactionCount() { return transactions.size(); }
-    public int lastTransactionIndex() {return transactionCount() - 1;}
+    public int lastTransactionIndex() {
+        if(transactionCount() == 0) return 0;
+        return transactionCount() - 1;
+    }
 
     public boolean isLastTransactionFailed() {
+        if(transactionCount()== 0) return false;
+
         int lastIndex = transactions.size() - 1;
         return transactions.get(lastIndex).status.equals(Transaction.FAILED);
     }
