@@ -3,6 +3,7 @@ package com.hover.stax.bounties;
 import android.content.Context;
 
 import com.hover.sdk.actions.HoverAction;
+import com.hover.sdk.transactions.Transaction;
 import com.hover.stax.R;
 import com.hover.stax.transactions.StaxTransaction;
 
@@ -21,8 +22,17 @@ public class Bounty {
         return action;
     }
 
-    public int transactionCount() {
-        return transactions.size();
+    public int transactionCount() { return transactions.size(); }
+    public int lastTransactionIndex() {
+        if(transactionCount() == 0) return 0;
+        return transactionCount() - 1;
+    }
+
+    public boolean isLastTransactionFailed() {
+        if(transactionCount()== 0) return false;
+
+        int lastIndex = transactions.size() - 1;
+        return transactions.get(lastIndex).status.equals(Transaction.FAILED);
     }
 
 

@@ -370,6 +370,8 @@
 	<string name="bounty_api_other_error">Please try again. If this persists, kindly contact us at ussd@stax.me.</string>
 	<string name="bounty_pending_short_desc">We are verifying your transaction. If successful, expect to be paid within 7 business days.</string>
 	<string name="done">Done</string>
+	<string name="bounty_transaction_failed">This submission did not meet our requirement</string>
+	<string name="bounty_transaction_failed_try_again">This submission did not meet our requirement, but you can try again</string>
 	<string name="available_flows">AVAILABLE FLOWS</string>
 	<string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
 	<string name="bounty_claim_explained">To claim USD $%1$d, %2$s.\n\nAs soon as you\’re done, we will send you an email to collect information for payment. You will be paid in 1–5 business days </string>
