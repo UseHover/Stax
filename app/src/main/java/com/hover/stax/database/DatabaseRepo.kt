@@ -64,6 +64,10 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return channelDao.getChannels(countryCode, channelIds)
     }
 
+    fun getChannelsByCountry(countryCode: String?): List<Channel> {
+        return channelDao.getChannels(countryCode)
+    }
+
     fun update(channel: Channel?) {
         AppDatabase.databaseWriteExecutor.execute { channelDao.update(channel) }
     }
@@ -206,7 +210,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun save(contact: StaxContact) {
         AppDatabase.databaseWriteExecutor.execute {
-            if (getContact(contact.id) == null) {
+            if (getContact(contact.id) == null && contact.accountNumber != null) {
                 try {
                     contactDao.insert(contact)
                 } catch (e: Exception) {

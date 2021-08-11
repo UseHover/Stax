@@ -346,7 +346,7 @@
 
 	<!-- BOUNTY -->
 	<string name="nav_bounty">Bounty</string>
-  	<string name="bounty_title">💸  GET PAID! MAP USSD FLOWS</string>
+	<string name="bounty_title">💸  GET PAID! MAP USSD FLOWS</string>
 	<string name="bounty_msg">Stax will pay you USD $5 - $50 to go through a USSD flow.</string>
 	<string name="get_started">Get started</string>
 	<string name="bounty_email_stage_title">🗺️  MAP USSD FLOWS</string>
@@ -395,6 +395,11 @@
 	<string name="bounty_submitted_successfully">Bounty submitted successfully</string>
 	<string name="language">Language</string>
 	<string name="bounty">Bounty</string>
+
+	<string name="library_cardhead">USSD Library</string>
+	<string name="visit_library">Find USSD shortcodes</string>
+	<string name="library_dial_btn">Dial %1$s</string>
+
 	<string name="internet_required">Internet required</string>
 	<string name="internet_required_bounty_desc">You need a data or Wifi connection to map USSD flows. Please connect and try again.</string>
 	<string name="try_again">Try again</string>
