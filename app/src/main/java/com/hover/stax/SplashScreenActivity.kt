@@ -1,5 +1,6 @@
 package com.hover.stax
 
+
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -11,13 +12,12 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
@@ -31,7 +31,6 @@ import com.hover.sdk.api.Hover
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.databinding.SplashScreenLayoutBinding
 import com.hover.stax.destruct.SelfDestructActivity
-
 import com.hover.stax.faq.FaqViewModel
 import com.hover.stax.home.MainActivity
 import com.hover.stax.inapp_banner.BannerUtils
@@ -44,15 +43,11 @@ import com.hover.stax.utils.Constants.FRAGMENT_DIRECT
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.blur.StaxBlur
-
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
-
-
+import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.getViewModel
-
 import timber.log.Timber
 
 
@@ -119,28 +114,30 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         joinNoRequestMoneyGroup(this)
     }
 
-    private fun blurBackground() {
-        Handler(Looper.getMainLooper()).postDelayed({
-            val bg = BitmapFactory.decodeResource(resources, R.drawable.splash_background)
-            val bitmap = StaxBlur(this@SplashScreenActivity, 16, 1).transform(bg)
-            binding.splashImageBlur.apply {
-                setImageBitmap(bitmap)
-                visibility = View.VISIBLE
-                animation = loadFadeIn(this@SplashScreenActivity)
-            }
-        }, BLUR_DELAY)
+    private fun blurBackground() = lifecycleScope.launch {
+        delay(BLUR_DELAY)
+
+        val bg = BitmapFactory.decodeResource(resources, R.drawable.splash_background)
+        val bitmap = StaxBlur(this@SplashScreenActivity, 16, 1).transform(bg)
+        binding.splashImageBlur.apply {
+            setImageBitmap(bitmap)
+            visibility = View.VISIBLE
+            animation = loadFadeIn(this@SplashScreenActivity)
+        }
     }
 
     private fun fadeInLogo() {
         val tv = binding.splashContent
         setSplashContentTopDrawable(tv)
 
-        Handler(Looper.getMainLooper()).postDelayed({
+        lifecycleScope.launch {
+            delay(LOGO_DELAY)
+
             tv.apply {
                 visibility = View.VISIBLE
                 animation = loadFadeIn(this@SplashScreenActivity)
             }
-        }, LOGO_DELAY)
+        }
     }
 
     private fun loadFadeIn(context: Context) = AnimationUtils.loadAnimation(context, android.R.anim.fade_in)
@@ -152,15 +149,13 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         tv.setCompoundDrawablesRelativeWithIntrinsicBounds(null, d, null, null)
     }
 
-    private fun validateUser() = runBlocking {
-        launch {
-            delay(NAV_DELAY)
+    private fun validateUser() = lifecycleScope.launchWhenStarted {
+        delay(NAV_DELAY)
 
-            if (!OnBoardingActivity.hasPassedThrough(this@SplashScreenActivity))
-                goToOnBoardingActivity()
-            else
-                BiometricChecker(this@SplashScreenActivity, this@SplashScreenActivity).startAuthentication(null)
-        }
+        if (!OnBoardingActivity.hasPassedThrough(this@SplashScreenActivity))
+            goToOnBoardingActivity()
+        else
+            BiometricChecker(this@SplashScreenActivity, this@SplashScreenActivity).startAuthentication(null)
     }
 
     private fun initAmplitude() = Amplitude.getInstance().initialize(this, getString(R.string.amp)).enableForegroundTracking(application)
