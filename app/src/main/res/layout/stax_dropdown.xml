@@ -18,7 +18,6 @@
             android:dropDownHeight="0dp"
             android:fontFamily="font-normal"
             android:imeOptions="actionDone"
-            android:padding="@dimen/margin_13"
             android:textColor="@color/offWhite"
             android:autofillHints="phone"
             android:textCursorDrawable="@null"
