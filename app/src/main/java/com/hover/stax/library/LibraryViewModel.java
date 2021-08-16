@@ -15,32 +15,35 @@ import com.hover.stax.database.DatabaseRepo;
 
 import java.util.List;
 
-import timber.log.Timber;
-
 public class LibraryViewModel extends AndroidViewModel {
-	private static String TAG = "LibraryViewModel";
+    private static String TAG = "LibraryViewModel";
 
-	private DatabaseRepo repo;
+    private DatabaseRepo repo;
 
-	private LiveData<List<Channel>> allChannels;
-	private MutableLiveData<List<Channel>> filteredChannels = new MutableLiveData<>();
+    private LiveData<List<Channel>> allChannels;
+    private MutableLiveData<List<Channel>> filteredChannels = new MutableLiveData<>();
 
-	public LibraryViewModel(@NonNull Application application) {
-		super(application);
-		repo = get(DatabaseRepo.class);
-		allChannels = repo.getAllChannels();
-		filteredChannels.setValue(allChannels.getValue());
-	}
+    public LibraryViewModel(@NonNull Application application) {
+        super(application);
+        repo = get(DatabaseRepo.class);
+        allChannels = repo.getAllChannels();
+        filteredChannels.setValue(allChannels.getValue());
+    }
 
-	public void filterChannels(String countryCode) {
-		new Thread(() -> {
-			if (countryCode.equals(CountryAdapter.codeRepresentingAllCountries()))
-				filteredChannels.postValue(allChannels.getValue());
-			else
-				filteredChannels.postValue(repo.getChannelsByCountry(countryCode));
-		}).start();
-	}
+    public void filterChannels(String countryCode) {
+        new Thread(() -> {
+            if (countryCode.equals(CountryAdapter.codeRepresentingAllCountries()))
+                filteredChannels.postValue(allChannels.getValue());
+            else
+                filteredChannels.postValue(repo.getChannelsByCountry(countryCode));
+        }).start();
+    }
 
-	public LiveData<List<Channel>> getAllChannels() { return allChannels; }
-	public LiveData<List<Channel>> getFilteredChannels() { return filteredChannels; }
+    public LiveData<List<Channel>> getAllChannels() {
+        return allChannels;
+    }
+
+    public LiveData<List<Channel>> getFilteredChannels() {
+        return filteredChannels;
+    }
 }

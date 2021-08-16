@@ -84,7 +84,7 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
     }
 
     private fun makeCall(action: HoverAction) {
-        val hsb = HoverSession.Builder(action, channelsViewModel.activeChannel.value, this, Constants.TRANSFER_REQUEST)
+        val hsb = HoverSession.Builder(action, channelsViewModel.activeChannel.value!!, this, Constants.TRANSFER_REQUEST)
             .extra(HoverAction.AMOUNT_KEY, transferViewModel.amount.value)
             .extra(HoverAction.NOTE_KEY, transferViewModel.note.value)
 
@@ -95,8 +95,10 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
     private fun addRecipientInfo(hsb: HoverSession.Builder) {
         hsb.extra(HoverAction.ACCOUNT_KEY, transferViewModel.contact.value!!.accountNumber)
             .extra(
-                HoverAction.PHONE_KEY, PhoneHelper.getNumberFormatForInput(transferViewModel.contact.value?.accountNumber,
-                actionSelectViewModel.activeAction.value, channelsViewModel.activeChannel.value)
+                HoverAction.PHONE_KEY, PhoneHelper.getNumberFormatForInput(
+                    transferViewModel.contact.value?.accountNumber,
+                    actionSelectViewModel.activeAction.value, channelsViewModel.activeChannel.value
+                )
             )
     }
 
@@ -107,18 +109,18 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == Constants.TRANSFER_REQUEST)
+        if (requestCode == Constants.TRANSFER_REQUEST)
             returnResult(requestCode, resultCode, data)
     }
 
-    private fun returnResult(type: Int, result: Int, data: Intent?){
+    private fun returnResult(type: Int, result: Int, data: Intent?) {
         val i = data?.let { Intent(it) } ?: Intent()
         transferViewModel.contact.value?.let { i.putExtra(StaxContact.ID_KEY, it.lookupKey) }
-        i.action = if(type == Constants.SCHEDULE_REQUEST) Constants.SCHEDULED else Constants.TRANSFERRED
+        i.action = if (type == Constants.SCHEDULE_REQUEST) Constants.SCHEDULED else Constants.TRANSFERRED
         setResult(result, i)
         finish()
     }
 
-    override fun onBackPressed() = if(transferViewModel.isEditing.value == false) transferViewModel.setEditing(true) else super.onBackPressed()
+    override fun onBackPressed() = if (transferViewModel.isEditing.value == false) transferViewModel.setEditing(true) else super.onBackPressed()
 
 }

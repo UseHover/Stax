@@ -120,6 +120,7 @@
 	<string name="balance_msg">Checking %1$s balance</string>
 	<string name="airtime_msg">Buying airtime</string>
 	<string name="transfer_msg">Transferring money</string>
+	<string name="fetch_accounts">Fetching accounts</string>
 
 	<!-- SDK Overrides -->
 	<string name="hsdk_overlay_msg"><![CDATA[<font color="#1E232A">Show progress updates by turning <b>switch ON</b> in the next screen.</font>]]></string>
@@ -179,6 +180,7 @@
 	<string name="descrip_airtime_sent">%1$s sent airtime to %2$s</string>
 	<string name="descrip_transfer_sent">%1$s sent money to %2$s</string>
 	<string name="descrip_transfer_received">received money from %1$s</string>
+	<string name="descrip_fetch_accounts">fetched accounts from %1$s</string>
 	<string name="descrip_bill_paid">paid %1$s bill</string>
 	<string name="descrip_recorded">Recorded USSD session on %1$s</string>
 	<string name="fab_transfernow">Send money now</string>

@@ -145,6 +145,8 @@ public class StaxTransaction {
                 return c.getString(R.string.descrip_bill_paid, action.to_institution_name);
             case HoverAction.RECEIVE:
                 return c.getString(R.string.descrip_transfer_received, contact.shortName());
+            case HoverAction.FETCH_ACCOUNTS:
+                return c.getString(R.string.descrip_fetch_accounts, action.from_institution_name);
             default:
                 return "Other";
         }

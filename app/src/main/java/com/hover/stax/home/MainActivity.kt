@@ -178,7 +178,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
 
     private fun run(action: HoverAction, index: Int) {
         if (balancesViewModel.getChannel(action.channel_id) != null) {
-            val hsb = HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), this@MainActivity, index)
+            val hsb = HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id)!!, this@MainActivity, index)
             if (index + 1 < balancesViewModel.selectedChannels.value!!.size) hsb.finalScreenTime(0)
             hsb.run()
         } else {
