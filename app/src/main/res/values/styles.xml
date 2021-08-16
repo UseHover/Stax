@@ -147,12 +147,12 @@
         <item name="helperTextEnabled">true</item>
     </style>
 
-    <style name="StaxLabeledInput" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+    <style name="StaxLabeledInput" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:layout_marginStart">@dimen/margin_10</item>
         <item name="android:layout_marginEnd">@dimen/margin_10</item>
         <item name="android:layout_marginBottom">@dimen/margin_8</item>
         <item name="boxStrokeColor">@color/offWhite</item>
-        <item name="boxBackgroundColor">@color/colorPrimaryDark</item>
+        <item name="boxBackgroundColor">@color/cardViewColor</item>
         <item name="boxStrokeWidth">2dp</item>
         <item name="android:textColorHint">@color/offWhite</item>
         <item name="hintTextColor">@color/offWhite</item>
@@ -169,13 +169,6 @@
     </style>
 
     <style name="StaxLabeledDropdown" parent="StaxLabeledInput">
-        <item name="materialThemeOverlay">
-            @style/ThemeOverlay.MaterialComponents.AutoCompleteTextView.FilledBox.Dense
-        </item>
-        <item name="endIconMode">dropdown_menu</item>
-    </style>
-
-    <style name="OldStaxLabeledDropdown" parent="StaxLabeledInput">
         <!-- <item name="materialThemeOverlay">@style/StaxDropdownPopup</item> -->
         <!-- Below is Equivalent of Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu -->
         <item name="materialThemeOverlay">
