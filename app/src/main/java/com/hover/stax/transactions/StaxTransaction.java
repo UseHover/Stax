@@ -21,6 +21,7 @@ import com.hover.stax.utils.Utils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import timber.log.Timber;
 
@@ -101,6 +102,7 @@ public class StaxTransaction {
             counterparty_id = contact.id;
             description = generateDescription(action, contact, c);
             parseExtras((HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS));
+
             Timber.v("creating transaction with uuid: %s", uuid);
         }
     }
@@ -121,6 +123,8 @@ public class StaxTransaction {
 
     private void parseExtras(HashMap<String, String> extras) {
         if (extras == null) return;
+
+        Timber.e("Extras %s", extras.keySet());
 
         if (extras.containsKey(HoverAction.AMOUNT_KEY))
             amount = Utils.getAmount(extras.get(HoverAction.AMOUNT_KEY));

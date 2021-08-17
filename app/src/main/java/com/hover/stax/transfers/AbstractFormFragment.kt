@@ -35,9 +35,9 @@ abstract class AbstractFormFragment : Fragment() {
     val channelsViewModel: ChannelsViewModel by sharedViewModel()
 
     var editCard: StaxCardView? = null
-    var editRequestCard: LinearLayout? = null
+    private var editRequestCard: LinearLayout? = null
 
-    lateinit var summaryCard: StaxCardView
+    private lateinit var summaryCard: StaxCardView
     lateinit var channelDropdown: ChannelDropdown
     lateinit var fab: Button
 

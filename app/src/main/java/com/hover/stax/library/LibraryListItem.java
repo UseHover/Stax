@@ -12,14 +12,12 @@ import com.hover.stax.databinding.LibraryListItemBinding;
 
 class LibraryListItem extends LinearLayout {
 
-	private final LibraryListItemBinding binding;
+    LibraryListItem(@NonNull Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        LibraryListItemBinding.inflate(LayoutInflater.from(context), this, true);
+    }
 
-	LibraryListItem(@NonNull Context context, @Nullable AttributeSet attrs) {
-		super(context, attrs);
-		binding = LibraryListItemBinding.inflate(LayoutInflater.from(context), this, true);
-	}
-
-	public interface DialListener {
-		void dial(String shortCode);
-	}
+    public interface DialListener {
+        void dial(String shortCode);
+    }
 }

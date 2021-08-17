@@ -9,7 +9,6 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import timber.log.Timber
 
 
 class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel() {
@@ -27,7 +26,6 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     init {
         selectedChannels = repo.selected
-        Timber.e("Selected channels ${repo.selected.value}")
 
         actions = Transformations.switchMap(selectedChannels, this::loadActions)
 
@@ -45,7 +43,6 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun loadActions(channelList: List<Channel>): LiveData<List<HoverAction>> {
-        Timber.e("Channel List : $channelList")
         val ids = IntArray(channelList.size)
         for (c in channelList.indices) ids[c] = channelList[c].id
         return repo.getLiveActions(ids, HoverAction.BALANCE)
@@ -70,7 +67,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         runFlag.value = ALL
     }
 
-    fun onSetRunning(flag: Int?) {
+    private fun onSetRunning(flag: Int?) {
         when (flag) {
             NONE, null -> toRun.value = ArrayList()
             ALL -> startRun(actions.value!!)
@@ -78,7 +75,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
-    fun onActionsLoaded(actions: List<HoverAction>) {
+    private fun onActionsLoaded(actions: List<HoverAction>) {
         when {
             runFlag.value == null || toRun.value!!.isNotEmpty() -> return
             runFlag.value == ALL -> startRun(actions)
@@ -86,34 +83,34 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
-    fun startRun(actions: List<HoverAction>){
-        if(!actions.isNullOrEmpty()) {
+    private fun startRun(actions: List<HoverAction>) {
+        if (!actions.isNullOrEmpty()) {
             toRun.value = actions
             runNext(actions, 0)
         }
     }
 
-    fun runNext(actions: List<HoverAction>, index: Int) {
-        if(listener != null && !hasActive){
+    private fun runNext(actions: List<HoverAction>, index: Int) {
+        if (listener != null && !hasActive) {
             hasActive = true
             listener?.startRun(actions[index], index)
-        } else if(!hasActive) {
+        } else if (!hasActive) {
             UIHelper.flashMessage(application, "Failed to start run, please try again")
         }
     }
 
-    fun setRan(index: Int){
+    fun setRan(index: Int) {
         var i = index
 
         hasActive = false
 
-        if(toRun.value!!.size > i + 1){
+        if (toRun.value!!.size > i + 1) {
             hasRunList.add(toRun.value!![i].id)
 
-            while(hasRunList.contains(toRun.value!![i + 1].id))
+            while (hasRunList.contains(toRun.value!![i + 1].id))
                 i += 1
 
-            if(toRun.value!!.size > i + 1)
+            if (toRun.value!!.size > i + 1)
                 runNext(toRun.value!!, i + 1)
             else
                 endRun()
@@ -121,19 +118,19 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
             endRun()
     }
 
-    fun endRun(){
+    private fun endRun() {
         toRun.value = ArrayList()
         runFlag.value = NONE
         hasRunList.clear()
     }
 
-    fun getChannelActions(flag: Int): List<HoverAction> {
+    private fun getChannelActions(flag: Int): List<HoverAction> {
         val list = ArrayList<HoverAction>()
 
-        if(actions.value.isNullOrEmpty()) return list
+        if (actions.value.isNullOrEmpty()) return list
 
         actions.value!!.forEach {
-            if(it.channel_id == flag)
+            if (it.channel_id == flag)
                 list.add(it)
         }
 
