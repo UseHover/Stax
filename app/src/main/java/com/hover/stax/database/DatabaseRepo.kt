@@ -12,6 +12,8 @@ import com.hover.sdk.sims.SimInfo
 import com.hover.sdk.sims.SimInfoDao
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
+import com.hover.stax.account.Account
+import com.hover.stax.account.AccountDao
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelDao
 import com.hover.stax.contacts.ContactDao
@@ -40,6 +42,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     private val simDao: SimInfoDao = sdkDb.simDao()
     private val transactionDao: TransactionDao = db.transactionDao()
     private val contactDao: ContactDao = db.contactDao()
+    private val accountDao: AccountDao = db.accountDao()
 
     val allChannels: LiveData<List<Channel>> = channelDao.allInAlphaOrder
     val selected: LiveData<List<Channel>> = channelDao.getSelected(true)
@@ -158,6 +161,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
                     t = StaxTransaction(intent, a, contact, c)
                     transactionDao.insert(t)
                     t = transactionDao.getTransaction(t.uuid)
+
+
                 }
                 t!!.update(intent, a, contact, c)
                 transactionDao.update(t)
@@ -308,6 +313,38 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     fun delete(request: Request?) {
         AppDatabase.databaseWriteExecutor.execute { requestDao.delete(request) }
     }
+
+    suspend fun getAllAccounts(): List<Account> = accountDao.getAllAccounts()
+
+    suspend fun getAccounts(channelId: Int): List<Account> = accountDao.getAccounts(channelId)
+
+    suspend fun getAccount(name: String, channelId: Int): Account? = accountDao.getAccount(name, channelId)
+
+    suspend fun saveAccounts(accounts: List<Account>) {
+        accounts.forEach { account ->
+            val acct = getAccount(account.name, account.channelId)
+
+            try {
+                AppDatabase.databaseWriteExecutor.execute {
+                    if (acct == null)
+                        accountDao.insert(account)
+                    else
+                        accountDao.update(account)
+                }
+            } catch (e: Exception) {
+                Utils.logErrorAndReportToFirebase(TAG, "failed to insert/update account", e)
+            }
+        }
+    }
+
+    fun insert(account: Account) {
+        AppDatabase.databaseWriteExecutor.execute { accountDao.insert(account) }
+    }
+
+    fun update(account: Account) {
+        AppDatabase.databaseWriteExecutor.execute { accountDao.update(account) }
+    }
+
 
     companion object {
         private val TAG = DatabaseRepo::class.java.simpleName

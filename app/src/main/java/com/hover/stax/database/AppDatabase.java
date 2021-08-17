@@ -10,6 +10,7 @@ import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.hover.stax.account.Account;
+import com.hover.stax.account.AccountDao;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
 import com.hover.stax.contacts.ContactDao;
@@ -40,6 +41,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract RequestDao requestDao();
 
     public abstract ScheduleDao scheduleDao();
+
+    public abstract AccountDao accountDao();
 
     public static synchronized AppDatabase getInstance(Context context) {
         if (INSTANCE == null) {

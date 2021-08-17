@@ -6,7 +6,10 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
+
+import com.hover.stax.account.ChannelWithAccounts;
 
 import java.util.List;
 
@@ -34,7 +37,11 @@ public interface ChannelDao {
     @Query("SELECT * FROM channels WHERE id = :id LIMIT 1")
     LiveData<Channel> getLiveChannel(int id);
 
-    @Query("SELECT COUNT(id)  FROM channels")
+    @Transaction
+    @Query("SELECT * FROM channels where selected = :selected ORDER BY name ASC")
+    LiveData<List<ChannelWithAccounts>> getChannelsWithAccounts(boolean selected);
+
+    @Query("SELECT COUNT(id) FROM channels")
     int getDataCount();
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
