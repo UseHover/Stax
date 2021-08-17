@@ -101,6 +101,7 @@ public class StaxTransaction {
 
             counterparty_id = contact.id;
             description = generateDescription(action, contact, c);
+
             parseExtras((HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS));
 
             Timber.v("creating transaction with uuid: %s", uuid);

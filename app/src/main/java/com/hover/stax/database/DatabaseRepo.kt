@@ -160,12 +160,14 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
                     c?.let { Utils.logAnalyticsEvent(c.getString(R.string.initializing_ussd_services), c) }
                     t = StaxTransaction(intent, a, contact, c)
                     transactionDao.insert(t)
+
                     t = transactionDao.getTransaction(t.uuid)
-
-
                 }
+
                 t!!.update(intent, a, contact, c)
                 transactionDao.update(t)
+
+                createAccounts(intent, t)
                 updateRequests(t, contact)
             } catch (e: Exception) {
                 Timber.e(e, "error")
@@ -314,22 +316,44 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         AppDatabase.databaseWriteExecutor.execute { requestDao.delete(request) }
     }
 
+    private fun createAccounts(intent: Intent, transaction: StaxTransaction) {
+        Timber.e("Creating accounts")
+
+        val data = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as HashMap<String, String>
+
+        val accounts = mutableListOf<Account>()
+        //TODO replace with action variable
+        if (data.containsKey("userAccountList")) {
+            //TODO parse out accounts
+        } else {
+            val channel = getChannel(transaction.channel_id)
+            val account = Account(channel.name, channel.name, channel.logoUrl, channel.accountNo, channel.id)
+            accounts.add(account)
+        }
+        Timber.e("Accounts - ${accounts.size}")
+
+        saveAccounts(accounts)
+    }
+
     suspend fun getAllAccounts(): List<Account> = accountDao.getAllAccounts()
 
     suspend fun getAccounts(channelId: Int): List<Account> = accountDao.getAccounts(channelId)
 
-    suspend fun getAccount(name: String, channelId: Int): Account? = accountDao.getAccount(name, channelId)
+    private fun getAccount(name: String, channelId: Int): Account? = accountDao.getAccount(name, channelId)
 
-    suspend fun saveAccounts(accounts: List<Account>) {
+    private fun saveAccounts(accounts: List<Account>) {
         accounts.forEach { account ->
             val acct = getAccount(account.name, account.channelId)
 
             try {
                 AppDatabase.databaseWriteExecutor.execute {
-                    if (acct == null)
+                    if (acct == null) {
+                        Timber.e("Inserting account $account")
                         accountDao.insert(account)
-                    else
+                    } else {
+                        Timber.e("Updating account $account")
                         accountDao.update(account)
+                    }
                 }
             } catch (e: Exception) {
                 Utils.logErrorAndReportToFirebase(TAG, "failed to insert/update account", e)
@@ -344,7 +368,6 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     fun update(account: Account) {
         AppDatabase.databaseWriteExecutor.execute { accountDao.update(account) }
     }
-
 
     companion object {
         private val TAG = DatabaseRepo::class.java.simpleName

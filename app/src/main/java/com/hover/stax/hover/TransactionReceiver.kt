@@ -27,7 +27,6 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
         if (intent.hasExtra(TransactionContract.COLUMN_PARSED_VARIABLES)) {
             val parsedVariables = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as? HashMap<String, String>
 
-//            parsedVariables?.keys?.forEach { Timber.e(it) }
             parsedVariables?.entries?.forEach {
                 Timber.e("Entries - $it")
             }

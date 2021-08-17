@@ -15,7 +15,7 @@ interface AccountDao {
     suspend fun getAccounts(channelIds: IntArray): List<Account>
 
     @Query("SELECT * FROM accounts where name = :name and channelId = :channelId")
-    suspend fun getAccount(name: String, channelId: Int): Account?
+    fun getAccount(name: String, channelId: Int): Account?
 
     @Query("SELECT COUNT(id)  FROM accounts")
     fun getDataCount(): Int

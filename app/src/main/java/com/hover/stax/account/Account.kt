@@ -6,6 +6,8 @@ import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 import com.hover.stax.channels.Channel
+import com.hover.stax.utils.DateUtils.now
+import java.util.HashMap
 
 @Entity(
     tableName = "accounts",
@@ -20,7 +22,7 @@ data class Account(
     val logoUrl: String,
 
     @ColumnInfo(name = "account_no")
-    val accountNo: String,
+    var accountNo: String?,
 
     @ColumnInfo(index = true)
     val channelId: Int
@@ -33,6 +35,16 @@ data class Account(
 
     @ColumnInfo(defaultValue = "CURRENT_TIMESTAMP")
     var latestBalanceTimestamp: Long = System.currentTimeMillis()
+
+    fun updateBalance(parsed_variables: HashMap<String, String>) {
+        if (parsed_variables.containsKey("balance")) latestBalance = parsed_variables["balance"]
+
+        latestBalanceTimestamp = if (parsed_variables.containsKey("update_timestamp") && parsed_variables["update_timestamp"] != null) {
+            parsed_variables["update_timestamp"]!!.toLong()
+        } else {
+            now()
+        }
+    }
 
     override fun toString() = buildString { append(name); append(" "); append(accountNo) }
 
