@@ -64,6 +64,10 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return channelDao.getChannels(countryCode, channelIds)
     }
 
+    fun getChannelsByCountry(countryCode: String?): List<Channel> {
+        return channelDao.getChannels(countryCode)
+    }
+
     fun update(channel: Channel?) {
         AppDatabase.databaseWriteExecutor.execute { channelDao.update(channel) }
     }

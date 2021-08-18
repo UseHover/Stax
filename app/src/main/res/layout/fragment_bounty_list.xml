@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/bounty_list_layout_id"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/bounty_list_layout_id"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <com.hover.stax.views.StaxCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:showBack="true"
-            app:title="@string/filter_by_country">
+            android:orientation="vertical">
 
-            <com.hover.stax.countries.CountryDropdown
-                android:id="@+id/bounty_country_dropdown"
+        <com.hover.stax.views.StaxCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/select_country"
-                android:text="@string/country" />
+                app:showBack="true"
+                app:title="@string/filter_by_country">
+
+            <com.hover.stax.countries.CountryDropdown
+                    android:id="@+id/bounty_country_dropdown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/select_country"
+                    android:text="@string/country" />
         </com.hover.stax.views.StaxCardView>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/bountiesRecyclerView"
-            android:animateLayoutChanges="false"
-            android:nestedScrollingEnabled="false"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+                android:id="@+id/bountiesRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="false"
+                android:nestedScrollingEnabled="false" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -1,5 +1,6 @@
 package com.hover.stax.settings;
 
+import android.content.Intent;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
@@ -24,6 +25,8 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.databinding.FragmentSettingsBinding;
 import com.hover.stax.languages.Lang;
 import com.hover.stax.languages.LanguageViewModel;
+import com.hover.stax.languages.SelectLanguageActivity;
+import com.hover.stax.library.LibraryActivity;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
@@ -52,6 +55,7 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
         setUpAccounts(securityViewModel);
         setUpChooseLang();
         setUpContactStax();
+        setUpUssdLibrary();
         setupRequestFeature();
         setUpEnableTestMode();
         setupFaq();
@@ -102,6 +106,10 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
 
     private void setupFaq() {
         binding.getSupportStax.faq.setOnClickListener(v -> navigateFAQ(this));
+    }
+
+    private void setUpUssdLibrary() {
+        binding.libraryCard.visitLibrary.setOnClickListener(v -> getActivity().startActivity(new Intent(getActivity(), LibraryActivity.class)));
     }
 
     private void showAccounts(List<Channel> channels) {

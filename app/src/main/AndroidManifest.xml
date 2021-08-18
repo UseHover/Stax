@@ -192,6 +192,25 @@
                 android:name=".onboarding.OnBoardingActivity"
                 android:theme="@style/StaxTheme" />
 
+	    <activity android:name=".library.LibraryActivity"
+		    android:theme="@style/StaxTheme">
+		    <intent-filter>
+			    <action android:name="android.intent.action.VIEW" />
+
+			    <category android:name="android.intent.category.DEFAULT" />
+			    <category android:name="android.intent.category.BROWSABLE" />
+
+			    <data
+				    android:host="stax.me"
+				    android:pathPattern="@string/deeplink_lib"
+				    android:scheme="https" />
+			    <data
+				    android:host="stax.me"
+				    android:pathPattern="@string/deeplink_lib"
+				    android:scheme="http" />
+		    </intent-filter>
+	    </activity>
+
         <receiver
                 android:name=".hover.TransactionReceiver"
                 android:enabled="true"
@@ -241,5 +260,4 @@
                 android:name="com.hover.ApiKey"
                 android:value="1335646a78bb2b1157304be1510641f6" />
     </application>
-
 </manifest>
