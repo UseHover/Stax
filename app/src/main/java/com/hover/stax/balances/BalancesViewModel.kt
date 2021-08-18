@@ -9,6 +9,7 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
+import timber.log.Timber
 
 
 class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel() {
@@ -45,7 +46,14 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     private fun loadActions(channelList: List<Channel>): LiveData<List<HoverAction>> {
         val ids = IntArray(channelList.size)
         for (c in channelList.indices) ids[c] = channelList[c].id
-        return repo.getLiveActions(ids, HoverAction.BALANCE)
+
+        val channelLiveData = repo.getLiveActions(ids, HoverAction.BALANCE)
+
+        channelLiveData.value?.forEach {
+            Timber.e("${it.from_institution_name} - ${it.transaction_type}")
+        }
+
+        return channelLiveData
     }
 
     fun getChannel(id: Int): Channel? {

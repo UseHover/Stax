@@ -232,7 +232,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     private fun load(r: Request) {
-        Timber.e(r.toString())
         channelsViewModel.activeChannel.value?.let {
             transferViewModel.setRecipientSmartly(r, it)
         }

@@ -325,6 +325,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         //TODO replace with action variable
         if (data.containsKey("userAccountList")) {
             //TODO parse out accounts
+            Timber.e(data["userAccountList"])
         } else {
             val channel = getChannel(transaction.channel_id)
             val account = Account(channel.name, channel.name, channel.logoUrl, channel.accountNo, channel.id)
