@@ -31,109 +31,117 @@
 			android:layout_height="0dp" />
 
 		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_margin="@dimen/hsdk__standard_padding"
-			android:layout_alignParentTop="true"
-			android:layout_above="@id/btns"
-			android:gravity="start"
-			android:orientation="vertical">
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_above="@id/btns"
+				android:layout_alignParentTop="true"
+				android:layout_marginStart="@dimen/hsdk__standard_padding"
+				android:layout_marginTop="@dimen/hsdk__standard_padding"
+				android:layout_marginEnd="@dimen/hsdk__standard_padding"
+				android:layout_marginBottom="@dimen/hsdk__standard_padding"
+				android:gravity="start"
+				android:orientation="vertical">
 
-			<ImageView android:id="@+id/logo"
-				android:layout_width="92dp"
-				android:layout_height="29dp"
-				app:srcCompat="@mipmap/stax"
-				android:gravity="center"
-				android:layout_gravity="start"
-				android:visibility="visible"
-				android:layout_marginBottom="@dimen/hsdk__processing_large_padding"
-				android:contentDescription="@string/hsdk_response_ic"/>
+			<ImageView
+					android:id="@+id/logo"
+					android:layout_width="92dp"
+					android:layout_height="29dp"
+					android:layout_gravity="start"
+					android:layout_marginBottom="@dimen/hsdk__processing_large_padding"
+					android:contentDescription="@string/hsdk_response_ic"
+					android:gravity="center"
+					android:visibility="visible"
+					app:srcCompat="@mipmap/stax" />
 
 			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal"
-				android:layout_marginBottom="@dimen/hsdk__large_padding" >
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginBottom="@dimen/hsdk__large_padding"
+					android:orientation="horizontal">
 
-				<FrameLayout android:id="@+id/logosFrame"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content" >
+				<FrameLayout
+						android:id="@+id/logosFrame"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content">
 
-					<ImageView android:id="@+id/imageSender"
-						android:layout_width="34dp"
-						android:layout_height="34dp"
-						app:srcCompat="@drawable/ic_runner_logo"
-						android:gravity="center"
-						android:layout_gravity="center"
-						android:visibility="gone"
-						android:contentDescription="@string/hsdk_response_ic"/>
+					<ImageView
+							android:id="@+id/imageSender"
+							android:layout_width="34dp"
+							android:layout_height="34dp"
+							android:layout_gravity="center"
+							android:contentDescription="@string/hsdk_response_ic"
+							android:gravity="center"
+							android:visibility="gone"
+							app:srcCompat="@drawable/ic_runner_logo" />
 
-					<ImageView android:id="@+id/imageReceiver"
-						android:layout_width="34dp"
-						android:layout_height="34dp"
-						app:srcCompat="@drawable/ic_runner_logo"
-						android:gravity="center"
-						android:layout_gravity="center"
-						android:visibility="gone"
-						android:layout_marginStart="17dp"
-						android:layout_marginEnd="@dimen/hsdk__small_padding"
-						android:contentDescription="@string/hsdk_response_ic"/>
+					<ImageView
+							android:id="@+id/imageReceiver"
+							android:layout_width="34dp"
+							android:layout_height="34dp"
+							android:layout_gravity="center"
+							android:layout_marginStart="17dp"
+							android:layout_marginEnd="@dimen/hsdk__small_padding"
+							android:contentDescription="@string/hsdk_response_ic"
+							android:gravity="center"
+							android:visibility="gone"
+							app:srcCompat="@drawable/ic_runner_logo" />
 				</FrameLayout>
 
 				<TextSwitcher
-					android:id="@+id/text_header"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center_horizontal"
-					android:inAnimation="@android:anim/fade_in"
-					android:outAnimation="@android:anim/fade_out" tools:ignore="UselessParent">
-
-					<TextView
+						android:id="@+id/text_header"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:textSize="14sp"
-						android:textStyle="bold"
-						android:textColor="?attr/titleTextColor"
-						android:text="@string/hsdk_overlay_header"/>
+						android:layout_gravity="center_horizontal"
+						android:inAnimation="@android:anim/fade_in"
+						android:outAnimation="@android:anim/fade_out"
+						tools:ignore="UselessParent">
 
 					<TextView
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:textSize="14sp"
-						android:textStyle="bold"
-						android:textColor="?attr/titleTextColor"
-						android:text=""/>
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:text="@string/hsdk_overlay_header"
+							android:textColor="?attr/titleTextColor"
+							android:textSize="14sp"
+							android:textStyle="bold" />
+
+					<TextView
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:text=""
+							android:textColor="?attr/titleTextColor"
+							android:textSize="14sp"
+							android:textStyle="bold" />
 				</TextSwitcher>
 			</LinearLayout>
 
 			<TextSwitcher
-				android:id="@+id/progress_text"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_gravity="start|center_vertical"
-				android:inAnimation="@android:anim/fade_in"
-				android:outAnimation="@android:anim/fade_out"
-				tools:ignore="UselessParent">
-
-				<TextView
+					android:id="@+id/progress_text"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:textSize="14sp"
-					android:layout_gravity="center_horizontal"
-					android:gravity="start"
-					android:textAlignment="textStart"
-					android:textColor="?attr/titleTextColor"
-					android:text="@string/hsdk_average_transaction_text"/>
+					android:layout_gravity="start|center_vertical"
+					android:inAnimation="@android:anim/fade_in"
+					android:outAnimation="@android:anim/fade_out"
+					tools:ignore="UselessParent">
 
 				<TextView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:textSize="14sp"
-					android:layout_gravity="start"
-					android:gravity="start"
-					android:textAlignment="textStart"
-					android:textColor="?attr/titleTextColor"
-					android:text="@string/hsdk_complete"/>
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center_horizontal"
+						android:gravity="start"
+						android:text="@string/hsdk_average_transaction_text"
+						android:textAlignment="textStart"
+						android:textColor="?attr/titleTextColor"
+						android:textSize="14sp" />
+
+				<TextView
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_gravity="start"
+						android:gravity="start"
+						android:text="@string/hsdk_complete"
+						android:textAlignment="textStart"
+						android:textColor="?attr/titleTextColor"
+						android:textSize="14sp" />
 			</TextSwitcher>
 		</LinearLayout>
 

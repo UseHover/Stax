@@ -7,7 +7,9 @@ import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 import com.hover.stax.channels.Channel
 import com.hover.stax.utils.DateUtils.now
-import java.util.HashMap
+import java.util.*
+
+const val DUMMY = -1
 
 @Entity(
     tableName = "accounts",
@@ -25,8 +27,18 @@ data class Account(
     var accountNo: String?,
 
     @ColumnInfo(index = true)
-    val channelId: Int
+    val channelId: Int,
+
+    @ColumnInfo(name = "primary_color_hex")
+    val primaryColorHex: String,
+
+    @ColumnInfo(name = "secondary_color_hex")
+    val secondaryColorHex: String
 ) : Comparable<Account> {
+
+    constructor(name: String, primaryColor: String): this(
+        name, alias = name, logoUrl = "", accountNo = "", channelId = -1, primaryColor, secondaryColorHex = "#1E232A"
+    )
 
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
@@ -44,6 +56,13 @@ data class Account(
         } else {
             now()
         }
+    }
+
+    fun dummy(): Account {
+        id = DUMMY
+        latestBalanceTimestamp = -1L
+        latestBalance = "0"
+        return this
     }
 
     override fun toString() = buildString { append(name); append(" "); append(accountNo) }

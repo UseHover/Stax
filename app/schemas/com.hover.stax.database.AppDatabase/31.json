@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 31,
-    "identityHash": "9d06f925980ad30b6f900ae4f2041798",
+    "identityHash": "1028c5a2361f2cf06302bc595503908b",
     "entities": [
       {
         "tableName": "channels",
@@ -480,7 +480,7 @@
       },
       {
         "tableName": "accounts",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `alias` TEXT NOT NULL, `logo_url` TEXT NOT NULL, `account_no` TEXT, `channelId` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `latestBalance` TEXT, `latestBalanceTimestamp` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(`channelId`) REFERENCES `channels`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `alias` TEXT NOT NULL, `logo_url` TEXT NOT NULL, `account_no` TEXT, `channelId` INTEGER NOT NULL, `primary_color_hex` TEXT NOT NULL, `secondary_color_hex` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `latestBalance` TEXT, `latestBalanceTimestamp` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(`channelId`) REFERENCES `channels`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "name",
@@ -510,6 +510,18 @@
             "fieldPath": "channelId",
             "columnName": "channelId",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "primaryColorHex",
+            "columnName": "primary_color_hex",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "secondaryColorHex",
+            "columnName": "secondary_color_hex",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -566,7 +578,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9d06f925980ad30b6f900ae4f2041798')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1028c5a2361f2cf06302bc595503908b')"
     ]
   }
 }

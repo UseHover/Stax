@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.account.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.utils.UIHelper
@@ -19,6 +20,8 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     private var hasActive: Boolean = false
 
     var selectedChannels: LiveData<List<Channel>> = MutableLiveData()
+    var accounts: LiveData<List<Account>> = MutableLiveData()
+
     var runFlag = MutableLiveData(NONE)
     var toRun = MediatorLiveData<List<HoverAction>>()
     var actions: LiveData<List<HoverAction>> = MediatorLiveData()
@@ -27,6 +30,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     init {
         selectedChannels = repo.selected
+        accounts = repo.allAccounts
 
         actions = Transformations.switchMap(selectedChannels, this::loadActions)
 
@@ -93,6 +97,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     private fun startRun(actions: List<HoverAction>) {
         if (!actions.isNullOrEmpty()) {
+            Timber.e("Actions $actions")
             toRun.value = actions
             runNext(actions, 0)
         }

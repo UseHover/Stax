@@ -1,12 +1,13 @@
 package com.hover.stax.account
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
 interface AccountDao {
 
     @Query("SELECT * FROM accounts ORDER BY alias ASC")
-    suspend fun getAllAccounts(): List<Account>
+    fun getAllAccounts(): LiveData<List<Account>>
 
     @Query("SELECT * FROM accounts WHERE channelId = :channelId ORDER BY alias ASC")
     suspend fun getAccounts(channelId: Int): List<Account>

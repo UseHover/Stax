@@ -24,6 +24,7 @@
         <entry key="app/src/main/res/layout/slide1_fragment.xml" value="0.15704154002026344" />
         <entry key="app/src/main/res/layout/stax_dropdown.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/stax_input.xml" value="0.13903985507246377" />
+        <entry key="app/src/main/res/layout/stax_transacting_in_progress.xml" value="0.146403242147923" />
         <entry key="app/src/main/res/layout/transfer_card_edit.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/transfer_card_future.xml" value="0.13903985507246377" />
       </map>

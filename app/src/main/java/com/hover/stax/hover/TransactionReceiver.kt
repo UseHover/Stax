@@ -35,9 +35,13 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
                 Timber.e("Here")
                 GlobalScope.launch(Dispatchers.IO) {
                     val action = repo.getAction(intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID))
-                    val channel = repo.getChannel(action.channel_id)
-                    channel.updateBalance(parsedVariables)
-                    repo.update(channel)
+//                    val channel = repo.getChannel(action.channel_id)
+
+                    val account = repo.getAccounts(action.channel_id).first()
+                    account.updateBalance(parsedVariables)
+//                    channel.updateBalance(parsedVariables)
+//                    repo.update(channel)
+                    repo.update(account)
                 }
             }
         }
