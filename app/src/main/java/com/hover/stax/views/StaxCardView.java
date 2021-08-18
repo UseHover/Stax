@@ -20,6 +20,8 @@ public class StaxCardView extends FrameLayout {
 
     private int backDrawable = 0;
     private int bgColor;
+    private int horizontalSpace = 0;
+    private int cardElevation = -1;
 
     private final StaxCardViewBinding binding;
 
@@ -39,6 +41,8 @@ public class StaxCardView extends FrameLayout {
             useContextBackPress = a.getBoolean(R.styleable.StaxCardView_defaultBackPress, true);
             backDrawable = a.getResourceId(R.styleable.StaxCardView_backRes, 0);
             bgColor = a.getColor(R.styleable.StaxCardView_staxCardColor, context.getResources().getColor(R.color.colorPrimary));
+            cardElevation = a.getIndex(R.styleable.StaxCardView_ElevationHeight);
+            horizontalSpace = a.getIndex(R.styleable.StaxCardView_horizontalSpace);
         } finally {
             a.recycle();
         }
@@ -82,6 +86,18 @@ public class StaxCardView extends FrameLayout {
         if (showBack) binding.backButton.setVisibility(VISIBLE);
         if (backDrawable != 0) binding.backButton.setImageResource(backDrawable);
         binding.content.setBackgroundColor(bgColor);
+
+        binding.cardViewHeader.setCardElevation(cardElevation);
+        setCardMarginIfRequired();
+
+    }
+
+    private void setCardMarginIfRequired() {
+        if(horizontalSpace == 0) {
+            LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+            params.setMargins(horizontalSpace, 0, horizontalSpace, 0);
+            binding.cardViewHeader.setLayoutParams(params);
+        }
     }
 
     @Override

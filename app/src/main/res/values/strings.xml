@@ -263,6 +263,7 @@
 	<string name="network_label">Recipient account</string>
 	<string name="id_label">Transaction ID</string>
 	<string name="session_cardhead">Messages</string>
+	<string name="see_more">See more</string>
 
 	<!-- Canceling -->
 	<string name="cancelfuture_head">Cancel future transaction</string>

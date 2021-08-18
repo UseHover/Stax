@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:descendantFocusability="afterDescendants"
+        android:orientation="vertical">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="-16dp"
+            android:layout_marginBottom="@dimen/margin_13"
+            android:orientation="vertical">
+
+        <com.hover.stax.views.StaxCardView
+                android:id="@+id/transactionDetailsCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:ElevationHeight="0"
+                app:backRes="@drawable/ic_close_white"
+                app:horizontalSpace="0"
+                app:showBack="true"
+                app:title="@string/nav_transaction">
+
+            <include
+                    android:id="@+id/info_card"
+                    layout="@layout/transaction_details_info_card" />
+        </com.hover.stax.views.StaxCardView>
+
+        <com.hover.stax.views.StaxCardView
+                android:id="@+id/notification_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="0dp"
+                android:visibility="gone"
+                app:ElevationHeight="0"
+                app:backRes="@drawable/ic_info"
+                app:defaultBackPress="false"
+                app:horizontalSpace="0"
+                app:showBack="true"
+                app:staxCardColor="@color/cardDarkBlue"
+                app:title="@string/pending_cardhead">
+
+            <TextView
+                    android:id="@+id/notification_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_3"
+                    android:fontFamily="font-normal"
+                    android:text="@string/pending_cardbody"
+                    android:textSize="@dimen/text_16" />
+        </com.hover.stax.views.StaxCardView>
+
+        <com.hover.stax.views.StaxCardView
+                android:id="@+id/messagesCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="45dp"
+                android:elevation="0dp"
+                app:ElevationHeight="0"
+                app:horizontalSpace="0"
+                app:title="@string/session_cardhead">
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/convo_recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_10" />
+
+
+        </com.hover.stax.views.StaxCardView>
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+            android:id="@+id/seeMoreButtonLayoutId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/margin_13">
+
+        <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSeeMore"
+                style="@style/StaxButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="font-medium"
+                android:text="@string/see_more" />
+
+    </RelativeLayout>
+</RelativeLayout>

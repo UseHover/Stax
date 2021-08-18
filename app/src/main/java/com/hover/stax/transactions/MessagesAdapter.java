@@ -14,9 +14,15 @@ import java.util.List;
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.TransactionMessageViewHolder> {
 
     private final List<UssdCallResponse> messagesList;
+    private  int forcedSize = 0;
 
     MessagesAdapter(List<UssdCallResponse> messagesList) {
         this.messagesList = messagesList;
+    }
+
+    MessagesAdapter(List<UssdCallResponse> messagesList, int forcedSize) {
+        this.messagesList = messagesList;
+        this.forcedSize = forcedSize;
     }
 
     @NonNull
@@ -51,7 +57,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Transa
     @Override
     public int getItemCount() {
         if (messagesList == null) return 0;
-        return messagesList.size();
+        return forcedSize > 0 && forcedSize < messagesList.size() ? forcedSize : messagesList.size();
     }
 
     static class TransactionMessageViewHolder extends RecyclerView.ViewHolder {

@@ -95,27 +95,27 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
     @SuppressLint("SetTextI18n")
     private void updateDetails(StaxTransaction transaction) {
         binding.transactionDetailsCard.setTitle(transaction.description);
-        binding.detailsRecipientLabel.setText(transaction.transaction_type.equals(HoverAction.RECEIVE) ? R.string.sender_label : R.string.recipient_label);
-        binding.detailsAmount.setText(transaction.getDisplayAmount());
-        binding.detailsDate.setText(DateUtils.humanFriendlyDate(transaction.initiated_at));
+        binding.infoCard.detailsRecipientLabel.setText(transaction.transaction_type.equals(HoverAction.RECEIVE) ? R.string.sender_label : R.string.recipient_label);
+        binding.infoCard.detailsAmount.setText(transaction.getDisplayAmount());
+        binding.infoCard.detailsDate.setText(DateUtils.humanFriendlyDate(transaction.initiated_at));
 
         if (transaction.confirm_code != null && !transaction.confirm_code.isEmpty())
-            binding.detailsTransactionNumber.setText(transaction.confirm_code);
+            binding.infoCard.detailsTransactionNumber.setText(transaction.confirm_code);
         else
-            binding.detailsTransactionNumber.setText(transaction.uuid);
+            binding.infoCard.detailsTransactionNumber.setText(transaction.uuid);
 
         if (transaction.isRecorded()) hideDetails();
     }
 
     private void hideDetails() {
-        binding.amountRow.setVisibility(View.GONE);
-        binding.recipientRow.setVisibility(View.GONE);
-        binding.recipAccountRow.setVisibility(View.GONE);
+        binding.infoCard.amountRow.setVisibility(View.GONE);
+        binding.infoCard.recipientRow.setVisibility(View.GONE);
+        binding.infoCard.recipAccountRow.setVisibility(View.GONE);
     }
 
     private void showActionDetails(HoverAction action) {
         if (action != null) {
-            binding.detailsNetwork.setText(action.from_institution_name);
+            binding.infoCard.detailsNetwork.setText(action.from_institution_name);
             if (viewModel.getTransaction().getValue() != null && viewModel.getTransaction().getValue().isRecorded())
                 updateNotificationCard(action);
         }
@@ -135,7 +135,7 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
 
     private void updateRecipient(StaxContact contact) {
         if (contact != null)
-            binding.detailsRecipient.setContact(contact);
+            binding.infoCard.detailsRecipient.setContact(contact);
     }
 
     private void setUSSDMessagesRecyclerView() {

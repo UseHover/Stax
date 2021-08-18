@@ -4,6 +4,9 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.view.View
+import android.view.animation.AnimationUtils
 import androidx.lifecycle.Observer
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.hover.sdk.actions.HoverAction
@@ -16,6 +19,9 @@ import com.hover.stax.hover.HoverSession
 import com.hover.stax.navigation.AbstractNavigationActivity
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
+import com.hover.stax.transactions.PopupTransDetailsListener
+import com.hover.stax.transactions.PopupTransactionDetailsFragment
+import com.hover.stax.transactions.TransactionDetailsFragment
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.DateUtils
@@ -28,12 +34,17 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
-class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener {
+class MainActivity : AbstractNavigationActivity(),
+        BalancesViewModel.RunBalanceListener,
+        BalanceAdapter.BalanceListener,
+        BiometricChecker.AuthListener,
+        PopupTransDetailsListener{
 
     private val balancesViewModel: BalancesViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var popupFragment : PopupTransactionDetailsFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -216,6 +227,13 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+        showPopUpTransactionDetailsIfRequired(data)
+        handleAllOtherResults(requestCode, resultCode, data)
+
+    }
+
+    private fun handleAllOtherResults(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             Constants.TRANSFER_REQUEST -> data?.let { onProbableHoverCall(it) }
             Constants.REQUEST_REQUEST -> if (resultCode == RESULT_OK) onRequest(data!!)
@@ -224,6 +242,18 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
                 if (resultCode == RESULT_OK && data != null && data.action != null) onProbableHoverCall(data)
 
                 launchSendMoney()
+            }
+        }
+    }
+
+    private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
+        data?.let {
+            if(it.action.equals(Constants.TRANSFERRED)){
+                val uuid:String? = it.extras?.getString("uuid")
+                uuid?.let{
+                    showTransactionPopup(uuid);
+                }
+                return@let
             }
         }
     }
@@ -239,6 +269,22 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
                 checkPermissionsAndNavigate(Constants.NAV_TRANSFER)
             }
         }
+    }
+
+    private fun showTransactionPopup(uuid: String) {
+        popupFragment = PopupTransactionDetailsFragment(uuid, this)
+        popupFragment.show(supportFragmentManager, "popup")
+    }
+
+    override fun onUUIDReceived(uuid: String) {
+        binding.navHostFragment.visibility = View.INVISIBLE
+        closePopUp()
+        navigateToTransactionDetailsFragment(uuid, getNavController(), false)
+        Handler(mainLooper).postDelayed({ binding.navHostFragment.visibility = View.VISIBLE }, 500)
+    }
+
+    override fun closePopUp() {
+       popupFragment.dismiss()
     }
 
 }
