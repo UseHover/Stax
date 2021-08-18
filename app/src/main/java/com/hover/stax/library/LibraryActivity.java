@@ -14,6 +14,7 @@ import com.hover.stax.countries.CountryAdapter;
 import com.hover.stax.databinding.ActivityLibraryBinding;
 import com.hover.stax.navigation.AbstractNavigationActivity;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
@@ -27,7 +28,8 @@ public class LibraryActivity extends AbstractNavigationActivity implements Libra
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, TAG));
+
+		Utils.logAnalyticsEvent(getString(R.string.visit_screen, TAG), this);
 
 		viewModel = new ViewModelProvider(this).get(LibraryViewModel.class);
 		binding = ActivityLibraryBinding.inflate(getLayoutInflater());
