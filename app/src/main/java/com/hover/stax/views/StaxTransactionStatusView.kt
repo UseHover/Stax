@@ -21,7 +21,7 @@ open class StaxTransactionStatusView(context: Context, attrs: AttributeSet ) : F
     }
 
     private fun getAttrs(context: Context, attrs: AttributeSet) {
-        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.StaxCardView, 0, 0)
+        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.StaxTransactionStatusView, 0, 0)
         try {
            isFlatView = a.getBoolean(R.styleable.StaxTransactionStatusView_isFlatView, false)
         } finally {
