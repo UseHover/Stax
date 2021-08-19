@@ -60,7 +60,7 @@ open class StaxTransactionStatusView(context: Context, attrs: AttributeSet ) : F
             setIcon(if(isBounty) R.drawable.ic_warning else R.drawable.ic_info)
             setBackgroundColor(if(isBounty)  R.color.pending_brown  else R.color.cardDarkBlue)
             setTitle(if (isBounty)R.string.checking_your_flow  else R.string.pending_cardHead)
-            binding.notificationDetail.text = Html.fromHtml( resources.getString(if(isBounty) R.string.bounty_flow_pending_dialog_msg  else R.string.pending_desc))
+            binding.notificationDetail.text = Html.fromHtml( resources.getString(if(isBounty) R.string.bounty_flow_pending_dialog_msg  else R.string.pending_cardbody))
         }
     }
 
