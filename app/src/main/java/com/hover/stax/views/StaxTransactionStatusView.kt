@@ -9,6 +9,7 @@ import android.widget.FrameLayout
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
 import com.hover.stax.databinding.TransactionStatusLayoutBinding
+import com.hover.stax.transactions.StaxTransaction
 
 open class StaxTransactionStatusView(context: Context, attrs: AttributeSet ) : FrameLayout(context, attrs) {
     private val binding: TransactionStatusLayoutBinding
@@ -32,11 +33,11 @@ open class StaxTransactionStatusView(context: Context, attrs: AttributeSet ) : F
         if(isFlatView) binding.notificationCard.makeFlatView()
     }
 
-    fun updateInfo(transactionStatus: String, isBounty: Boolean) {
-        when(transactionStatus){
-            Transaction.SUCCEEDED -> setSuccessView(isBounty)
-            Transaction.PENDING -> setPendingView(isBounty)
-            Transaction.FAILED -> setFailedView(isBounty)
+    fun updateInfo(transaction: StaxTransaction) {
+        when(transaction.status){
+            Transaction.SUCCEEDED -> setSuccessView(transaction.isRecorded)
+            Transaction.PENDING -> setPendingView(transaction.isRecorded)
+            Transaction.FAILED -> setFailedView(transaction.isRecorded)
         }
         fillFromAttrs()
     }

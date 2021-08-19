@@ -86,7 +86,7 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
         if (transaction != null) {
             if (transaction.isRecorded()) setupRetryBountyButton();
             updateDetails(transaction);
-            if (viewModel.getAction().getValue() != null) binding.transactionStatusCard.updateInfo(transaction.status, transaction.isRecorded());
+            if (viewModel.getAction().getValue() != null) binding.transactionStatusCard.updateInfo(transaction);
         }
     }
 
@@ -116,7 +116,7 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
             binding.infoCard.detailsNetwork.setText(action.from_institution_name);
             if (viewModel.getTransaction().getValue() != null) {
                 StaxTransaction transaction = viewModel.getTransaction().getValue();
-                binding.transactionStatusCard.updateInfo(transaction.status, transaction.isRecorded());
+                binding.transactionStatusCard.updateInfo(transaction);
             }
         }
     }

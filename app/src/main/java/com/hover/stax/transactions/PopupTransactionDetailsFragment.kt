@@ -10,7 +10,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.sdk.actions.HoverAction
-import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionPopupBinding
@@ -70,7 +69,7 @@ class PopupTransactionDetailsFragment(private val uuid: String, private val call
     private fun showTransaction(transaction: StaxTransaction?) {
         if (transaction != null) {
             updateDetails(transaction)
-            if (viewModel!!.action.value != null) binding.transactionStatusCard.updateInfo(transaction.status, transaction.isRecorded)
+            if (viewModel!!.action.value != null) binding.transactionStatusCard.updateInfo(transaction)
         }
     }
 
@@ -93,7 +92,7 @@ class PopupTransactionDetailsFragment(private val uuid: String, private val call
         if (action != null) {
             binding.infoCard.detailsNetwork.setText(action.from_institution_name)
             viewModel!!.transaction.value?.let {
-                binding.transactionStatusCard.updateInfo(it.status, it.isRecorded)
+                binding.transactionStatusCard.updateInfo(it)
             }
         }
     }
