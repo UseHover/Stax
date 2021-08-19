@@ -86,9 +86,7 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
         if (transaction != null) {
             if (transaction.isRecorded()) setupRetryBountyButton();
             updateDetails(transaction);
-            showNotificationCard(transaction.isRecorded() || transaction.status.equals(Transaction.PENDING));
-            if (transaction.isRecorded() && viewModel.getAction().getValue() != null)
-                updateNotificationCard(viewModel.getAction().getValue());
+            if (viewModel.getAction().getValue() != null) binding.transactionStatusCard.updateInfo(transaction.status, transaction.isRecorded());
         }
     }
 
@@ -104,10 +102,10 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
         else
             binding.infoCard.detailsTransactionNumber.setText(transaction.uuid);
 
-        if (transaction.isRecorded()) hideDetails();
+        if (transaction.isRecorded()) hideNonBountyDetails();
     }
 
-    private void hideDetails() {
+    private void hideNonBountyDetails() {
         binding.infoCard.amountRow.setVisibility(View.GONE);
         binding.infoCard.recipientRow.setVisibility(View.GONE);
         binding.infoCard.recipAccountRow.setVisibility(View.GONE);
@@ -116,22 +114,13 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
     private void showActionDetails(HoverAction action) {
         if (action != null) {
             binding.infoCard.detailsNetwork.setText(action.from_institution_name);
-            if (viewModel.getTransaction().getValue() != null && viewModel.getTransaction().getValue().isRecorded())
-                updateNotificationCard(action);
+            if (viewModel.getTransaction().getValue() != null) {
+                StaxTransaction transaction = viewModel.getTransaction().getValue();
+                binding.transactionStatusCard.updateInfo(transaction.status, transaction.isRecorded());
+            }
         }
     }
 
-    private void showNotificationCard(boolean show) {
-        binding.notificationCard.setVisibility(show ? View.VISIBLE : View.GONE);
-    }
-
-    @SuppressLint("ResourceAsColor")
-    private void updateNotificationCard(HoverAction action) {
-        binding.notificationCard.setBackgroundColor(action.bounty_is_open ? R.color.pending_brown : R.color.muted_green);
-        binding.notificationCard.setTitle(R.string.checking_your_flow);
-        binding.notificationCard.setIcon(action.bounty_is_open ? R.drawable.ic_warning : R.drawable.ic_check);
-        binding.notificationDetail.setText(Html.fromHtml(action.bounty_is_open ? getString(R.string.bounty_flow_pending_dialog_msg) : getString(R.string.flow_done_desc)));
-    }
 
     private void updateRecipient(StaxContact contact) {
         if (contact != null)

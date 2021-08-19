@@ -6,6 +6,7 @@
 	<color name="brightBluePressed" tools:override="true">#2AAFDC</color>
 	<color name="cardViewColor">#292E35</color>
 	<color name="cardDarkBlue">#1D2735</color>
+	<color name="cardDarkRed">#5A120D</color>
 	<color name="buttonColor">#3A3E45</color>
 	<color name="grey">#B1B2B6</color>
 	<color name="offWhite">#F1F1F4</color>

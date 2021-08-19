@@ -29,30 +29,12 @@
                     layout="@layout/transaction_details_info_card" />
         </com.hover.stax.views.StaxCardView>
 
-        <com.hover.stax.views.StaxCardView
-                android:id="@+id/notification_card"
+        <com.hover.stax.views.StaxTransactionStatusView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:elevation="0dp"
-                android:visibility="gone"
-                app:ElevationHeight="0"
-                app:backRes="@drawable/ic_info"
-                app:defaultBackPress="false"
-                app:horizontalSpace="0"
-                app:showBack="true"
-                app:staxCardColor="@color/cardDarkBlue"
-                app:title="@string/pending_cardhead">
-
-            <TextView
-                    android:id="@+id/notification_detail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/margin_10"
-                    android:layout_marginBottom="@dimen/margin_3"
-                    android:fontFamily="font-normal"
-                    android:text="@string/pending_cardbody"
-                    android:textSize="@dimen/text_16" />
-        </com.hover.stax.views.StaxCardView>
+                android:id="@+id/transaction_status_card"
+                app:isFlatView="true"
+                />
 
         <com.hover.stax.views.StaxCardView
                 android:id="@+id/messagesCard"

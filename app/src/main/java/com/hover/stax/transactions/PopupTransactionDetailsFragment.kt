@@ -19,9 +19,7 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils.logAnalyticsEvent
 
 class PopupTransactionDetailsFragment(private val uuid: String, private val callback: PopupTransDetailsListener) : DialogFragment() {
-    val TAG = "PopupTransDetailsFragment"
-    val SHOW_BOUNTY_SUBMIT = "bounty_submit_button"
-    val USSD_MSG_SIZE = 1;
+    private val USSD_MSG_SIZE = 1;
 
     private var viewModel: TransactionDetailsViewModel? = null
 
@@ -72,8 +70,7 @@ class PopupTransactionDetailsFragment(private val uuid: String, private val call
     private fun showTransaction(transaction: StaxTransaction?) {
         if (transaction != null) {
             updateDetails(transaction)
-            showNotificationCard(transaction.isRecorded || transaction.status == Transaction.PENDING)
-            if (transaction.isRecorded && viewModel!!.action.value != null) updateNotificationCard(viewModel!!.action.value)
+            if (viewModel!!.action.value != null) binding.transactionStatusCard.updateInfo(transaction.status, transaction.isRecorded)
         }
     }
 
@@ -83,10 +80,10 @@ class PopupTransactionDetailsFragment(private val uuid: String, private val call
         binding.infoCard.detailsAmount.setText(transaction.displayAmount)
         binding.infoCard.detailsDate.setText(humanFriendlyDate(transaction.initiated_at))
         if (transaction.confirm_code != null && !transaction.confirm_code.isEmpty()) binding.infoCard.detailsTransactionNumber.setText(transaction.confirm_code) else binding.infoCard.detailsTransactionNumber.setText(transaction.uuid)
-        if (transaction.isRecorded) hideDetails()
+        if (transaction.isRecorded) hideNonBountyDetails()
     }
 
-    private fun hideDetails() {
+    private fun hideNonBountyDetails() {
         binding.infoCard.amountRow.setVisibility(View.GONE)
         binding.infoCard.recipientRow.setVisibility(View.GONE)
         binding.infoCard.recipAccountRow.setVisibility(View.GONE)
@@ -95,20 +92,10 @@ class PopupTransactionDetailsFragment(private val uuid: String, private val call
     private fun showActionDetails(action: HoverAction?) {
         if (action != null) {
             binding.infoCard.detailsNetwork.setText(action.from_institution_name)
-            if (viewModel!!.transaction.value != null && viewModel!!.transaction.value!!.isRecorded) updateNotificationCard(action)
+            viewModel!!.transaction.value?.let {
+                binding.transactionStatusCard.updateInfo(it.status, it.isRecorded)
+            }
         }
-    }
-
-    private fun showNotificationCard(show: Boolean) {
-        binding.notificationCard.setVisibility(if (show) View.VISIBLE else View.GONE)
-    }
-
-    @SuppressLint("ResourceAsColor")
-    private fun updateNotificationCard(action: HoverAction?) {
-        binding.notificationCard.setBackgroundColor(if (action!!.bounty_is_open) R.color.pending_brown else R.color.muted_green)
-        binding.notificationCard.setTitle(R.string.checking_your_flow)
-        binding.notificationCard.setIcon(if (action.bounty_is_open) R.drawable.ic_warning else R.drawable.ic_check)
-        binding.notificationDetail.setText(Html.fromHtml(if (action.bounty_is_open) getString(R.string.bounty_flow_pending_dialog_msg) else getString(R.string.flow_done_desc)))
     }
 
     private fun updateRecipient(contact: StaxContact?) {

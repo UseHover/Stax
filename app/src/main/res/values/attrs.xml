@@ -9,6 +9,10 @@
 		<attr name="horizontalSpace" format="integer"/>
 	</declare-styleable>
 
+	<declare-styleable name="StaxTransactionStatusView">
+		<attr name="isFlatView" format="boolean" />
+	</declare-styleable>
+
 	<declare-styleable name="ChannelDropdown">
 		<attr name="show_selected" format="boolean" />
 		<attr name="initial_helper_text" format="string"/>
