@@ -34,45 +34,59 @@ open class StaxTransactionStatusView(context: Context, attrs: AttributeSet) : Fr
     }
 
     fun updateInfo(transaction: StaxTransaction) {
-        when (transaction.status) {
-            Transaction.SUCCEEDED -> setSuccessView(transaction.isRecorded)
-            Transaction.PENDING -> setPendingView(transaction.isRecorded)
-            Transaction.FAILED -> setFailedView(transaction.isRecorded)
-        }
+        binding.notificationCard.setBackButtonVisibility(VISIBLE)
+        makeUpdate(transaction.status, transaction.isRecorded)
         fillFromAttrs()
     }
 
-    @SuppressLint("ResourceAsColor")
-    private fun setSuccessView(isBounty: Boolean) {
+    private fun makeUpdate(status : String, isBounty: Boolean) {
+        updateIcon(status, isBounty)
+        updateBackgroundColor(status, isBounty)
+        updateTitle(status, isBounty)
+        updateNotificationDetail(status, isBounty)
+    }
+
+    private fun updateIcon(status : String, isBounty: Boolean) {
         with(binding.notificationCard) {
-            setBackButtonVisibility(VISIBLE)
-            setIcon(R.drawable.ic_success)
-            setBackgroundColor(R.color.muted_green)
-            setTitle(R.string.confirmed_cardHead)
-            binding.notificationDetail.text = Html.fromHtml(resources.getString(if (isBounty) R.string.flow_done_desc else R.string.confirmed_desc))
+            when (status) {
+                Transaction.SUCCEEDED -> setIcon(R.drawable.ic_success)
+                Transaction.PENDING -> setIcon(if (isBounty) R.drawable.ic_warning else R.drawable.ic_info)
+                Transaction.FAILED -> setIcon(R.drawable.ic_info_red)
+            }
         }
     }
 
     @SuppressLint("ResourceAsColor")
-    private fun setPendingView(isBounty: Boolean) {
+    private fun updateBackgroundColor(status : String, isBounty: Boolean) {
         with(binding.notificationCard) {
-            setBackButtonVisibility(VISIBLE)
-            setIcon(if (isBounty) R.drawable.ic_warning else R.drawable.ic_info)
-            setBackgroundColor(if (isBounty) R.color.pending_brown else R.color.cardDarkBlue)
-            setTitle(if (isBounty) R.string.checking_your_flow else R.string.pending_cardHead)
-            binding.notificationDetail.text = Html.fromHtml(resources.getString(if (isBounty) R.string.bounty_flow_pending_dialog_msg else R.string.pending_cardbody))
+            when (status) {
+                Transaction.SUCCEEDED -> setBackgroundColor(R.color.muted_green)
+                Transaction.PENDING -> setBackgroundColor(if (isBounty) R.color.pending_brown else R.color.cardDarkBlue)
+                Transaction.FAILED -> setBackgroundColor(R.color.cardDarkRed)
+            }
         }
     }
 
-    @SuppressLint("ResourceAsColor")
-    private fun setFailedView(isBounty: Boolean) {
+    private fun updateTitle(status : String, isBounty: Boolean) {
         with(binding.notificationCard) {
-            setBackButtonVisibility(VISIBLE)
-            setIcon(R.drawable.ic_info_red)
-            setBackgroundColor(R.color.cardDarkRed)
-            setTitle(R.string.unsuccessful_cardHead)
-            binding.notificationDetail.text = Html.fromHtml(resources.getString(if (isBounty) R.string.bounty_transaction_failed else R.string.unsuccessful_desc))
+            when (status) {
+                Transaction.SUCCEEDED -> setTitle(R.string.confirmed_cardHead)
+                Transaction.PENDING ->  setTitle(if (isBounty) R.string.checking_your_flow else R.string.pending_cardHead)
+                Transaction.FAILED -> setTitle(R.string.unsuccessful_cardHead)
+            }
         }
+    }
+
+    private fun updateNotificationDetail(status : String, isBounty: Boolean) {
+        with(binding.notificationCard) {
+            when (status) {
+                Transaction.SUCCEEDED ->  binding.notificationDetail.text = Html.fromHtml(resources.getString(if (isBounty) R.string.flow_done_desc else R.string.confirmed_desc))
+                Transaction.PENDING ->  binding.notificationDetail.text = Html.fromHtml(resources.getString(if (isBounty) R.string.bounty_flow_pending_dialog_msg else R.string.pending_cardbody))
+                Transaction.FAILED -> binding.notificationDetail.text = Html.fromHtml(resources.getString(if (isBounty) R.string.bounty_transaction_failed else R.string.unsuccessful_desc))
+            }
+        }
+
+
     }
 
 }
