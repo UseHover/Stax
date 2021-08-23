@@ -32,7 +32,6 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
             }
 
             if (parsedVariables != null && parsedVariables.containsKey("balance")) {
-                Timber.e("Here")
                 GlobalScope.launch(Dispatchers.IO) {
                     val action = repo.getAction(intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID))
 //                    val channel = repo.getChannel(action.channel_id)

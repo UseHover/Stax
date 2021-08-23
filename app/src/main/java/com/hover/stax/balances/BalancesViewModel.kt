@@ -100,7 +100,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     private fun updateActionsIfRequired(actions: List<HoverAction>): List<HoverAction> {
         val actionList = ArrayList(actions)
 
-        val channelIds = actionList.filter { it.transaction_type == HoverAction.FETCH_ACCOUNTS }.map { it.channel_id }.toList()
+        val channelIds = actionList.distinctBy { it.id }.filter { it.transaction_type == HoverAction.FETCH_ACCOUNTS }.map { it.channel_id }.toList()
 
         channelIds.forEach { id ->
             if (repo.getAccounts(id).isNullOrEmpty())
