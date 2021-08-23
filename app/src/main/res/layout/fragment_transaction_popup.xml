@@ -11,7 +11,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="0dp"
-            android:layout_marginBottom="@dimen/margin_13"
             android:orientation="vertical">
 
         <com.hover.stax.views.StaxCardView
@@ -40,7 +39,7 @@
                 android:id="@+id/messagesCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="45dp"
+                android:layout_marginBottom="40dp"
                 android:elevation="0dp"
                 app:ElevationHeight="0"
                 app:horizontalSpace="0"
