@@ -77,7 +77,7 @@
 	<string name="clicked_send_sms_request" translatable="false">Clicked send sms request</string>
 	<string name="clicked_send_whatsapp_request" translatable="false">Clicked send whatsapp request</string>
 	<string name="clicked_copylink_request" translatable="false">Clicked copy link</string>
-	<string name="clicked_dial_shortcode" translatable="false">Clicked dial shortcode</string>
+	<string name="clicked_dial_shortcode" translatable="false">Manual USSD dial</string>
 
 	<string name="clicked_bounty_email_continue_btn" translatable="false">Clicked bounty email continue button</string>
 	<string name="clicked_run_bounty_session" translatable="false">Clicked run bounty USSD session</string>
