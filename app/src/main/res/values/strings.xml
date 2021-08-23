@@ -442,5 +442,8 @@
 	<string name="loading_error">Unable to load FAQ, please try again</string>
 	<string name="faq_internet_error">This feature requires internet connection, please try again</string>
     <string name="working_offline">Working offline</string>
+	<string name="rename_account">Rename Account</string>
+	<string name="current_name">Current name</string>
+	<string name="hint_enter_new_name">Enter new name</string>
 
 </resources>
