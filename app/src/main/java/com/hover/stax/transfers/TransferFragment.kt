@@ -173,9 +173,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         override fun afterTextChanged(editable: Editable) {}
         override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, afterCount: Int) {
             with(transferViewModel) {
-                if (afterCount == 0)
+                if (afterCount == 0) {
                     resetRecipient()
-                else
+                    recipientValue.setContent("", "")
+                } else
                     setRecipient(charSequence.toString())
             }
         }
@@ -232,7 +233,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     private fun load(r: Request) {
-        Timber.e(r.toString())
         channelsViewModel.activeChannel.value?.let {
             transferViewModel.setRecipientSmartly(r, it)
         }
