@@ -69,6 +69,10 @@ public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdo
         channelActions.addSource(activeChannel, this::loadActions);
     }
 
+    public List<HoverAction> getAction(Channel channel) {
+        return repo.getActions(channel.id, HoverAction.FETCH_ACCOUNTS);
+    }
+
     public void setType(String t) {
         type.setValue(t);
     }
@@ -246,6 +250,8 @@ public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdo
             c.defaultAccount = (selectedChannels.getValue() == null || selectedChannels.getValue().size() == 0) && i == 0;
             repo.update(c);
         }
+
+        Timber.e("Selected channels %s", channels.size());
     }
 
     private void logChoice(Channel channel) {

@@ -10,6 +10,8 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
@@ -51,13 +53,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         val ids = IntArray(channelList.size)
         for (c in channelList.indices) ids[c] = channelList[c].id
 
-        val channelLiveData = repo.getLiveActions(ids, HoverAction.BALANCE)
-
-        channelLiveData.value?.forEach {
-            Timber.e("${it.from_institution_name} - ${it.transaction_type}")
-        }
-
-        return channelLiveData
+        return repo.getLiveActions(ids, listOf(HoverAction.FETCH_ACCOUNTS, HoverAction.BALANCE))
     }
 
     fun getChannel(id: Int): Channel? {
@@ -80,25 +76,49 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun onSetRunning(flag: Int?) {
-        when (flag) {
-            NONE, null -> toRun.value = ArrayList()
-            ALL -> startRun(actions.value!!)
-            else -> startRun(getChannelActions(flag))
+        viewModelScope.launch(Dispatchers.IO) {
+            when (flag) {
+                NONE, null -> toRun.postValue(ArrayList())
+                ALL -> startRun(updateActionsIfRequired(actions.value!!))
+                else -> startRun(getChannelActions(flag))
+            }
         }
     }
 
     private fun onActionsLoaded(actions: List<HoverAction>) {
-        when {
-            runFlag.value == null || toRun.value!!.isNotEmpty() -> return
-            runFlag.value == ALL -> startRun(actions)
-            runFlag.value != NONE -> startRun(getChannelActions(runFlag.value!!))
+        viewModelScope.launch(Dispatchers.IO) {
+            val actionsToRun = updateActionsIfRequired(actions)
+
+            when {
+                runFlag.value == null || toRun.value!!.isNotEmpty() -> {}
+                runFlag.value == ALL -> startRun(actionsToRun)
+                runFlag.value != NONE -> startRun(getChannelActions(runFlag.value!!))
+            }
         }
+    }
+
+    private fun updateActionsIfRequired(actions: List<HoverAction>): List<HoverAction> {
+        val actionList = ArrayList(actions)
+
+        val channelIds = actionList.filter { it.transaction_type == HoverAction.FETCH_ACCOUNTS }.map { it.channel_id }.toList()
+
+        channelIds.forEach { id ->
+            if (repo.getAccounts(id).isNullOrEmpty())
+                actionList.dropWhile { it.transaction_type == HoverAction.BALANCE }
+            else
+                actionList.dropWhile { it.transaction_type == HoverAction.FETCH_ACCOUNTS }
+        }
+
+        actionList.forEach {
+            Timber.e("${it.from_institution_name} - ${it.transaction_type}")
+        }
+
+        return actionList
     }
 
     private fun startRun(actions: List<HoverAction>) {
         if (!actions.isNullOrEmpty()) {
-            Timber.e("Actions $actions")
-            toRun.value = actions
+            toRun.postValue(actions)
             runNext(actions, 0)
         }
     }
@@ -140,9 +160,12 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     private fun getChannelActions(flag: Int): List<HoverAction> {
         val list = ArrayList<HoverAction>()
 
-        if (actions.value.isNullOrEmpty()) return list
+        if (actions.value.isNullOrEmpty())
+            return list
 
-        actions.value!!.forEach {
+        val actionsToRun = updateActionsIfRequired(actions.value!!)
+
+        actionsToRun.forEach {
             if (it.channel_id == flag)
                 list.add(it)
         }

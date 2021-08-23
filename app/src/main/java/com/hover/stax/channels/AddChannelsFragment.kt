@@ -21,6 +21,7 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 
 class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener {
@@ -156,7 +157,10 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         dialog!!.showIt()
     }
 
+    //TODO save accounts if balance not checked
     private fun saveChannels(channels: List<Channel>, checkBalance: Boolean) {
+        Timber.e("Saving channels ")
+
         channelsViewModel.setChannelsSelected(channels)
         requireActivity().onBackPressed()
 

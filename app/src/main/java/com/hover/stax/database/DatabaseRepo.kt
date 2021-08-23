@@ -96,6 +96,10 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return actionDao.getLiveActions(channelIds, type)
     }
 
+    fun getLiveActions(channelIds: IntArray, types: List<String>): LiveData<List<HoverAction>> {
+        return actionDao.getLiveActions(channelIds, types)
+    }
+
     fun getTransferActions(channelId: Int): List<HoverAction> {
         return actionDao.getTransferActions(channelId)
     }
@@ -341,7 +345,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     val allAccounts: LiveData<List<Account>> = accountDao.getAllAccounts()
 
-    suspend fun getAccounts(channelId: Int): List<Account> = accountDao.getAccounts(channelId)
+    fun getAccounts(channelId: Int): List<Account> = accountDao.getAccounts(channelId)
 
     private fun getAccount(name: String, channelId: Int): Account? = accountDao.getAccount(name, channelId)
 

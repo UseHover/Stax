@@ -10,7 +10,7 @@ interface AccountDao {
     fun getAllAccounts(): LiveData<List<Account>>
 
     @Query("SELECT * FROM accounts WHERE channelId = :channelId ORDER BY alias ASC")
-    suspend fun getAccounts(channelId: Int): List<Account>
+    fun getAccounts(channelId: Int): List<Account>
 
     @Query("SELECT * FROM accounts WHERE channelId in (:channelIds) ORDER BY alias ASC")
     suspend fun getAccounts(channelIds: IntArray): List<Account>
