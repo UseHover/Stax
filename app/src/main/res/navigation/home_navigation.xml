@@ -75,7 +75,7 @@
 
     <fragment
             android:id="@+id/channelsDetailsFragment"
-            android:name="com.hover.stax.channels.ChannelDetailFragment"
+            android:name="com.hover.stax.account.AccountDetailFragment"
             android:label="ChannelsDetailsFragment"
             tools:layout="@layout/fragment_channel">
         <argument

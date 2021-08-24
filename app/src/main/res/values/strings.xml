@@ -219,6 +219,7 @@
 	<string name="link_copied_label">Link copied</string>
 	<string name="share_request_link_cardhead">Share request link</string>
 	<string name="share_again_cardhead">Share request link again</string>
+	<string name="account_name_error">Please enter a new account name</string>
 
 	<!-- Scheduling -->
 	<string name="future_toggle">Send later</string>
@@ -444,6 +445,7 @@
     <string name="working_offline">Working offline</string>
 	<string name="rename_account">Rename Account</string>
 	<string name="current_name">Current name</string>
-	<string name="hint_enter_new_name">Enter new name</string>
+	<string name="hint_enter_new_name">Enter a new name</string>
+    <string name="original_name">Original name</string>
 
 </resources>

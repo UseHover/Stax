@@ -216,8 +216,5 @@ class BalancesFragment : Fragment(), NavigationInterface {
         private var SHOW_ADD_ANOTHER_ACCOUNT = false
         private var SHOWN_BUBBLE_MAIN_ACCOUNT = false
         private var SHOWN_BUBBLE_OTHER_ACCOUNT = false
-
-        const val accts = "1. Current Acct-KES-0100005462368\n" +
-                "    2. PureSavingsAcct-KES-0100005671994"
     }
 }

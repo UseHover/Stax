@@ -12,7 +12,6 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel() {
@@ -90,7 +89,8 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
             val actionsToRun = updateActionsIfRequired(actions)
 
             when {
-                runFlag.value == null || toRun.value!!.isNotEmpty() -> {}
+                runFlag.value == null || toRun.value!!.isNotEmpty() -> {
+                }
                 runFlag.value == ALL -> startRun(actionsToRun)
                 runFlag.value != NONE -> startRun(getChannelActions(runFlag.value!!))
             }
@@ -103,17 +103,13 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         val channelIds = actionList.distinctBy { it.id }.filter { it.transaction_type == HoverAction.FETCH_ACCOUNTS }.map { it.channel_id }.toList()
 
         channelIds.forEach { id ->
-            if (repo.getAccounts(id).isEmpty()) {
-                val balanceAction: HoverAction = actionList.first { it.channel_id == id && it.transaction_type == HoverAction.BALANCE }
-                actionList.remove(balanceAction)
+            val actionToFilter = if (repo.getAccounts(id).isEmpty()) {
+                actionList.first { it.channel_id == id && it.transaction_type == HoverAction.BALANCE }
             } else {
-                val fetchAccountsAction: HoverAction = actionList.first { it.channel_id == id && it.transaction_type == HoverAction.FETCH_ACCOUNTS }
-                actionList.remove(fetchAccountsAction)
+                actionList.first { it.channel_id == id && it.transaction_type == HoverAction.FETCH_ACCOUNTS }
             }
-        }
 
-        actionList.forEach {
-            Timber.e("To run - ${it.from_institution_name} - ${it.transaction_type}")
+            actionList.remove(actionToFilter)
         }
 
         return actionList
@@ -175,8 +171,6 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
 
         return list
     }
-
-    fun hasChannels(): Boolean = !selectedChannels.value.isNullOrEmpty()
 
     interface RunBalanceListener {
         fun startRun(a: HoverAction, index: Int)
