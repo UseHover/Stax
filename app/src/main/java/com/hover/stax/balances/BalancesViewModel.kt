@@ -110,7 +110,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
 
         actionList.forEach {
-            Timber.e("${it.from_institution_name} - ${it.transaction_type}")
+            Timber.e("To run - ${it.from_institution_name} - ${it.transaction_type}")
         }
 
         return actionList

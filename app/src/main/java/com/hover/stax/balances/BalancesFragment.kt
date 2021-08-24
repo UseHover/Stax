@@ -27,6 +27,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
+import java.lang.StringBuilder
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 
 class BalancesFragment : Fragment(), NavigationInterface {
@@ -61,6 +65,8 @@ class BalancesFragment : Fragment(), NavigationInterface {
         balanceStack = binding.stackBalanceCards
         setUpBalances()
         setUpLinkNewAccount()
+
+        Timber.e(parseOutAccounts(accts))
     }
 
     override fun onPause() {
@@ -197,6 +203,16 @@ class BalancesFragment : Fragment(), NavigationInterface {
         bubbleShowCaseJob?.let { if (it.isActive) it.cancel() }
     }
 
+    private fun parseOutAccounts(fullString: String): String {
+        val m: Matcher = Pattern.compile("([\\d]{1,2})[\\>)\\:\\.\\s]+(.+)$").matcher(fullString)
+        val accounts = StringBuilder()
+        while (m.find()) {
+            accounts.append("-").append(m.group(0))
+            Timber.i("Found: %s", m.group(0))
+        }
+        return accounts.toString()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         cancelShowcase()
@@ -213,5 +229,8 @@ class BalancesFragment : Fragment(), NavigationInterface {
         private var SHOW_ADD_ANOTHER_ACCOUNT = false
         private var SHOWN_BUBBLE_MAIN_ACCOUNT = false
         private var SHOWN_BUBBLE_OTHER_ACCOUNT = false
+
+        const val accts = "1. Current Acct-KES-0100005462368\n" +
+                "    2. PureSavingsAcct-KES-0100005671994"
     }
 }

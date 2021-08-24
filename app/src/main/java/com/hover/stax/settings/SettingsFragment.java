@@ -25,7 +25,6 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.databinding.FragmentSettingsBinding;
 import com.hover.stax.languages.Lang;
 import com.hover.stax.languages.LanguageViewModel;
-import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.library.LibraryActivity;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.Constants;
@@ -127,7 +126,7 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
         spinner.setAdapter(accountAdapter);
         spinner.setText(spinner.getAdapter().getItem(0).toString(), false);
         spinner.setOnItemClickListener((adapterView, view, pos, id) -> {
-            if (pos != 0) securityViewModel.setDefaultAccount(channels.get(pos));
+            if (pos != 0) securityViewModel.setDefaultChannel(channels.get(pos));
         });
     }
 
