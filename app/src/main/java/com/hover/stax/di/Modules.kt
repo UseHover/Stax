@@ -13,6 +13,7 @@ import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.schedules.ScheduleDetailViewModel
+import com.hover.stax.settings.PinsViewModel
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.network.NetworkMonitor
@@ -33,6 +34,7 @@ val appModule = module {
     viewModel { TransactionHistoryViewModel(get()) }
     viewModel { BannerViewModel(get(), get()) }
     viewModel { FutureViewModel(get()) }
+    viewModel { PinsViewModel(get())}
 }
 
 val dataModule = module(createdAtStart = true) {

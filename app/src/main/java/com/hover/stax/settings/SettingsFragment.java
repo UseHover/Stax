@@ -4,6 +4,8 @@ import android.content.Intent;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import static org.koin.androidx.viewmodel.compat.ViewModelCompat.getViewModel;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +49,7 @@ public class SettingsFragment extends Fragment implements NavigationInterface {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_security)), requireContext());
 
-        PinsViewModel securityViewModel = new ViewModelProvider(requireActivity()).get(PinsViewModel.class);
+        PinsViewModel securityViewModel = getViewModel(this, PinsViewModel.class);
 
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
 

@@ -56,10 +56,11 @@ class PinUpdateFragment : Fragment(), Target {
         if (c == null) {
             return
         }
+
         binding.choiceCard.setTitle(c.name)
         binding.editCard.setTitle(c.name)
 
-        Picasso.get().load(c.logoUrl).into(this@PinUpdateFragment)
+//        c.logoUrl?.let { Picasso.get().load(c.logoUrl).into(this) }
 
         if (c.pin != null && c.pin.isNotEmpty()) input?.setText(KeyStoreExecutor.decrypt(c.pin, context))
         setupSavePin(c)
@@ -106,7 +107,7 @@ class PinUpdateFragment : Fragment(), Target {
         //wait for binding to happen when fragment is resumed before setting the image
         val d = RoundedBitmapDrawableFactory.create(binding.root.context.resources, b)
         d.isCircular = true
-        input!!.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null)
+        input?.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null)
     }
 
     override fun onBitmapFailed(e: Exception, errorDrawable: Drawable) {}
