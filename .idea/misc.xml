@@ -8,7 +8,6 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="app/src/main/res/layout/settings_card_contact_us.xml" value="0.3640625" />
         <entry key="app/src/main/res/layout/activity_bounty.xml" value="0.14817629179331307" />
         <entry key="app/src/main/res/layout/balance_item.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/fragment_bounty_email.xml" value="0.14817629179331307" />
@@ -21,8 +20,10 @@
         <entry key="app/src/main/res/layout/request_card_summary.xml" value="0.14868287740628167" />
         <entry key="app/src/main/res/layout/settings_bounty_card_layout.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/settings_card_accounts.xml" value="0.13903985507246377" />
+        <entry key="app/src/main/res/layout/settings_card_contact_us.xml" value="0.3640625" />
         <entry key="app/src/main/res/layout/stax_dropdown.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/stax_input.xml" value="0.13903985507246377" />
+        <entry key="app/src/main/res/layout/transaction_status_layout.xml" value="0.378125" />
         <entry key="app/src/main/res/layout/transfer_card_edit.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/transfer_card_future.xml" value="0.13903985507246377" />
       </map>

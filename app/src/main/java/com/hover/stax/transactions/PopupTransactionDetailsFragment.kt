@@ -68,7 +68,7 @@ class PopupTransactionDetailsFragment(private val uuid: String, private val call
     private fun showTransaction(transaction: StaxTransaction?) {
         if (transaction != null) {
             updateDetails(transaction)
-            if (viewModel!!.action.value != null) binding.transactionStatusCard.updateInfo(transaction)
+            if (viewModel!!.action.value != null) binding.transactionStatusCard.setStateInfo(transaction)
         }
     }
 
@@ -91,7 +91,7 @@ class PopupTransactionDetailsFragment(private val uuid: String, private val call
         if (action != null) {
             binding.infoCard.detailsNetwork.setText(action.from_institution_name)
             viewModel!!.transaction.value?.let {
-                binding.transactionStatusCard.updateInfo(it)
+                binding.transactionStatusCard.setStateInfo(it)
             }
         }
     }

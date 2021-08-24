@@ -2,7 +2,6 @@ package com.hover.stax.transactions;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.sdk.actions.HoverAction;
-import com.hover.sdk.transactions.Transaction;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.bounties.BountyActivity;
@@ -86,7 +84,7 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
         if (transaction != null) {
             if (transaction.isRecorded()) setupRetryBountyButton();
             updateDetails(transaction);
-            if (viewModel.getAction().getValue() != null) binding.transactionStatusCard.updateInfo(transaction);
+            if (viewModel.getAction().getValue() != null) binding.transactionStatusCard.setStateInfo(transaction);
         }
     }
 
@@ -116,7 +114,7 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
             binding.infoCard.detailsNetwork.setText(action.from_institution_name);
             if (viewModel.getTransaction().getValue() != null) {
                 StaxTransaction transaction = viewModel.getTransaction().getValue();
-                binding.transactionStatusCard.updateInfo(transaction);
+                binding.transactionStatusCard.setStateInfo(transaction);
             }
         }
     }

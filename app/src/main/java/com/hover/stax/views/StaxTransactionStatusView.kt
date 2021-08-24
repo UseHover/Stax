@@ -29,64 +29,52 @@ open class StaxTransactionStatusView(context: Context, attrs: AttributeSet) : Fr
         }
     }
 
-    private fun fillFromAttrs() {
-        if (isFlatView) binding.notificationCard.makeFlatView()
-    }
-
-    fun updateInfo(transaction: StaxTransaction) {
-        binding.notificationCard.setBackButtonVisibility(VISIBLE)
-        makeUpdate(transaction.status, transaction.isRecorded)
-        fillFromAttrs()
-    }
-
-    private fun makeUpdate(status : String, isBounty: Boolean) {
-        updateIcon(status, isBounty)
-        updateBackgroundColor(status, isBounty)
-        updateTitle(status, isBounty)
-        updateNotificationDetail(status, isBounty)
-    }
-
-    private fun updateIcon(status : String, isBounty: Boolean) {
-        with(binding.notificationCard) {
-            when (status) {
-                Transaction.SUCCEEDED -> setIcon(R.drawable.ic_success)
-                Transaction.PENDING -> setIcon(if (isBounty) R.drawable.ic_warning else R.drawable.ic_info)
-                Transaction.FAILED -> setIcon(R.drawable.ic_info_red)
-            }
-        }
-    }
-
     @SuppressLint("ResourceAsColor")
-    private fun updateBackgroundColor(status : String, isBounty: Boolean) {
+    fun setStateInfo(transaction: StaxTransaction) {
+        updateState(getIcon(transaction), getBackgrounColor(transaction), getTitle(transaction), getDetail(transaction))
+    }
+
+    private fun updateState(icon: Int, backgroundColor: Int, title: Int, detail: Int) {
         with(binding.notificationCard) {
-            when (status) {
-                Transaction.SUCCEEDED -> setBackgroundColor(R.color.muted_green)
-                Transaction.PENDING -> setBackgroundColor(if (isBounty) R.color.pending_brown else R.color.cardDarkBlue)
-                Transaction.FAILED -> setBackgroundColor(R.color.cardDarkRed)
-            }
+            setBackButtonVisibility(VISIBLE);
+            setIcon(icon);
+            setBackgroundColor(backgroundColor);
+            setTitle(title);
+            if (isFlatView) makeFlatView()
+            binding.notificationDetail.text = Html.fromHtml(resources.getString(detail));
         }
     }
 
-    private fun updateTitle(status : String, isBounty: Boolean) {
-        with(binding.notificationCard) {
-            when (status) {
-                Transaction.SUCCEEDED -> setTitle(R.string.confirmed_cardHead)
-                Transaction.PENDING ->  setTitle(if (isBounty) R.string.checking_your_flow else R.string.pending_cardHead)
-                Transaction.FAILED -> setTitle(R.string.unsuccessful_cardHead)
-            }
+    private fun getIcon(transaction: StaxTransaction): Int {
+        return when (transaction.status) {
+            Transaction.FAILED -> R.drawable.ic_info_red
+            Transaction.PENDING -> if (transaction.isRecorded) R.drawable.ic_warning else R.drawable.ic_info
+            else -> R.drawable.ic_success
         }
     }
 
-    private fun updateNotificationDetail(status : String, isBounty: Boolean) {
-        with(binding.notificationCard) {
-            when (status) {
-                Transaction.SUCCEEDED ->  binding.notificationDetail.text = Html.fromHtml(resources.getString(if (isBounty) R.string.flow_done_desc else R.string.confirmed_desc))
-                Transaction.PENDING ->  binding.notificationDetail.text = Html.fromHtml(resources.getString(if (isBounty) R.string.bounty_flow_pending_dialog_msg else R.string.pending_cardbody))
-                Transaction.FAILED -> binding.notificationDetail.text = Html.fromHtml(resources.getString(if (isBounty) R.string.bounty_transaction_failed else R.string.unsuccessful_desc))
-            }
+    private fun getBackgrounColor(transaction: StaxTransaction): Int {
+        return when (transaction.status) {
+            Transaction.FAILED -> R.color.cardDarkRed
+            Transaction.PENDING -> if (transaction.isRecorded) R.color.pending_brown else R.color.cardDarkBlue
+            else -> R.color.muted_green
         }
+    }
 
+    private fun getTitle(transaction: StaxTransaction): Int {
+        return when (transaction.status) {
+            Transaction.FAILED -> R.string.unsuccessful_cardHead
+            Transaction.PENDING ->  if (transaction.isRecorded) R.string.checking_your_flow else R.string.pending_cardHead
+            else -> R.string.confirmed_cardHead
+        }
+    }
 
+    private fun getDetail(transaction: StaxTransaction): Int {
+        return when (transaction.status) {
+            Transaction.FAILED -> if (transaction.isRecorded) R.string.bounty_transaction_failed else R.string.unsuccessful_desc
+            Transaction.PENDING ->  if (transaction.isRecorded) R.string.bounty_flow_pending_dialog_msg else R.string.pending_cardbody
+            else -> if (transaction.isRecorded) R.string.flow_done_desc else R.string.confirmed_desc
+        }
     }
 
 }
