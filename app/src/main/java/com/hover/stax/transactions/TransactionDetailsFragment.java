@@ -84,13 +84,13 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
         if (transaction != null) {
             if (transaction.isRecorded()) setupRetryBountyButton();
             updateDetails(transaction);
-            if (viewModel.getAction().getValue() != null) binding.transactionStatusCard.setStateInfo(transaction);
         }
     }
 
     @SuppressLint("SetTextI18n")
     private void updateDetails(StaxTransaction transaction) {
         binding.transactionDetailsCard.setTitle(transaction.description);
+        binding.transactionStatusCard.setStateInfo(transaction.getFullStatus());
         binding.infoCard.detailsRecipientLabel.setText(transaction.transaction_type.equals(HoverAction.RECEIVE) ? R.string.sender_label : R.string.recipient_label);
         binding.infoCard.detailsAmount.setText(transaction.getDisplayAmount());
         binding.infoCard.detailsDate.setText(DateUtils.humanFriendlyDate(transaction.initiated_at));
@@ -110,13 +110,7 @@ public class TransactionDetailsFragment extends Fragment implements NavigationIn
     }
 
     private void showActionDetails(HoverAction action) {
-        if (action != null) {
-            binding.infoCard.detailsNetwork.setText(action.from_institution_name);
-            if (viewModel.getTransaction().getValue() != null) {
-                StaxTransaction transaction = viewModel.getTransaction().getValue();
-                binding.transactionStatusCard.setStateInfo(transaction);
-            }
-        }
+        if (action != null) { binding.infoCard.detailsNetwork.setText(action.from_institution_name); }
     }
 
 

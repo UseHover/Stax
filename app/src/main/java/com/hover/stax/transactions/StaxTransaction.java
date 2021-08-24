@@ -150,6 +150,10 @@ public class StaxTransaction {
         }
     }
 
+    public TransactionStatus getFullStatus() {
+        return new TransactionStatus(this);
+    }
+
     public boolean isRecorded() {
         return environment == HoverParameters.MANUAL_ENV;
     }
