@@ -332,15 +332,24 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
             Timber.e(data["userAccountList"])
         } else {
             val channel = getChannel(transaction.channel_id)
+            val hasFetchAccountsAction = getActions(channel.id, HoverAction.FETCH_ACCOUNTS).isNotEmpty()
 
-            with(channel) {
-                val account = Account(name, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex)
-                accounts.add(account)
-            }
+            if (!hasFetchAccountsAction)
+                with(channel) {
+                    val account = Account(name, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex)
+                    accounts.add(account)
+                }
         }
         Timber.e("Accounts - ${accounts.size}")
 
         saveAccounts(accounts)
+    }
+
+    fun createAccount(channel: Channel) {
+        with(channel) {
+            val account = Account(name, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex)
+            insert(account)
+        }
     }
 
     val allAccounts: LiveData<List<Account>> = accountDao.getAllAccounts()

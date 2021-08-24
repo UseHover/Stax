@@ -83,7 +83,7 @@ class PinUpdateFragment : Fragment(), Target {
             StaxDialog(requireActivity())
                 .setDialogTitle(getString(R.string.removepin_dialoghead, channel.name))
                 .setDialogMessage(R.string.removepins_dialogmes)
-                .setPosButton(R.string.btn_removeaccount) { btn: View? -> removeAccount(channel) }
+                .setPosButton(R.string.btn_removeaccount) { removeAccount(channel) }
                 .setNegButton(R.string.btn_cancel, null)
                 .isDestructive
                 .showIt()

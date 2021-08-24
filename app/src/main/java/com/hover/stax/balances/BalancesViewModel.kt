@@ -103,10 +103,13 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         val channelIds = actionList.distinctBy { it.id }.filter { it.transaction_type == HoverAction.FETCH_ACCOUNTS }.map { it.channel_id }.toList()
 
         channelIds.forEach { id ->
-            if (repo.getAccounts(id).isNullOrEmpty())
-                actionList.dropWhile { it.transaction_type == HoverAction.BALANCE }
-            else
-                actionList.dropWhile { it.transaction_type == HoverAction.FETCH_ACCOUNTS }
+            if (repo.getAccounts(id).isEmpty()) {
+                val balanceAction: HoverAction = actionList.first { it.channel_id == id && it.transaction_type == HoverAction.BALANCE }
+                actionList.remove(balanceAction)
+            } else {
+                val fetchAccountsAction: HoverAction = actionList.first { it.channel_id == id && it.transaction_type == HoverAction.FETCH_ACCOUNTS }
+                actionList.remove(fetchAccountsAction)
+            }
         }
 
         actionList.forEach {

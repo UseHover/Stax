@@ -44,7 +44,6 @@ class BalancesFragment : Fragment(), NavigationInterface {
     private var secondAccBubble: BubbleShowCase? = null
 
     private var balancesVisible = false
-    private var channelList: List<Channel>? = null
     private var accountList: List<Account>? = null
 
     private var bubbleShowCaseJob: Job? = null
@@ -65,8 +64,6 @@ class BalancesFragment : Fragment(), NavigationInterface {
         balanceStack = binding.stackBalanceCards
         setUpBalances()
         setUpLinkNewAccount()
-
-        Timber.e(parseOutAccounts(accts))
     }
 
     override fun onPause() {
@@ -201,16 +198,6 @@ class BalancesFragment : Fragment(), NavigationInterface {
 
     private fun cancelShowcase() {
         bubbleShowCaseJob?.let { if (it.isActive) it.cancel() }
-    }
-
-    private fun parseOutAccounts(fullString: String): String {
-        val m: Matcher = Pattern.compile("([\\d]{1,2})[\\>)\\:\\.\\s]+(.+)$").matcher(fullString)
-        val accounts = StringBuilder()
-        while (m.find()) {
-            accounts.append("-").append(m.group(0))
-            Timber.i("Found: %s", m.group(0))
-        }
-        return accounts.toString()
     }
 
     override fun onDestroyView() {

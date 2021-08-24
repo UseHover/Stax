@@ -157,19 +157,22 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         dialog!!.showIt()
     }
 
-    //TODO save accounts if balance not checked
     private fun saveChannels(channels: List<Channel>, checkBalance: Boolean) {
         Timber.e("Saving channels ")
 
         channelsViewModel.setChannelsSelected(channels)
         requireActivity().onBackPressed()
 
-        if (checkBalance) balancesViewModel.actions.observe(viewLifecycleOwner, {
-            if (channels.size == 1)
-                balancesViewModel.setRunning(channels.first().id)
-            else
-                balancesViewModel.setAllRunning(requireActivity())
-        })
+        if (checkBalance)
+            balancesViewModel.actions.observe(viewLifecycleOwner, {
+                if (channels.size == 1)
+                    balancesViewModel.setRunning(channels.first().id)
+                else
+                    balancesViewModel.setAllRunning(requireActivity())
+            })
+        else {
+            channelsViewModel.createAccounts(channels)
+        }
     }
 
     private fun goToChannelsDetailsScreen(channel: Channel) {

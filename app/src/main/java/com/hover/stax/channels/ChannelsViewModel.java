@@ -1,5 +1,7 @@
 package com.hover.stax.channels;
 
+import static org.koin.java.KoinJavaComponent.get;
+
 import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -32,8 +34,6 @@ import java.util.List;
 
 import timber.log.Timber;
 
-import static org.koin.java.KoinJavaComponent.get;
-
 public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdown.HighlightListener, PushNotificationTopicsInterface {
     public final static String TAG = "ChannelDropdownVM";
 
@@ -45,9 +45,10 @@ public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdo
 
     private LiveData<List<Channel>> allChannels;
     private LiveData<List<Channel>> selectedChannels;
-    private MediatorLiveData<List<Channel>> simChannels;
-    private MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
-    private MediatorLiveData<List<HoverAction>> channelActions = new MediatorLiveData<>();
+
+    private final MediatorLiveData<List<Channel>> simChannels;
+    private final MediatorLiveData<Channel> activeChannel = new MediatorLiveData<>();
+    private final MediatorLiveData<List<HoverAction>> channelActions = new MediatorLiveData<>();
 
     public ChannelsViewModel(Application application) {
         super(application);
@@ -67,10 +68,6 @@ public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdo
         channelActions.addSource(type, this::loadActions);
         channelActions.addSource(selectedChannels, this::loadActions);
         channelActions.addSource(activeChannel, this::loadActions);
-    }
-
-    public List<HoverAction> getAction(Channel channel) {
-        return repo.getActions(channel.id, HoverAction.FETCH_ACCOUNTS);
     }
 
     public void setType(String t) {
@@ -296,6 +293,17 @@ public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdo
     public void view(Schedule s) {
         setType(s.type);
         setActiveChannel(repo.getChannel(s.channel_id));
+    }
+
+    //creates an account if channel does not have a fetch account action
+    public void createAccounts(List<Channel> channels) {
+        new Thread(() -> {
+            for (Channel channel : channels) {
+                if (repo.getActions(channel.id, HoverAction.FETCH_ACCOUNTS).isEmpty()) {
+                    repo.createAccount(channel);
+                }
+            }
+        }).start();
     }
 
     @Override
