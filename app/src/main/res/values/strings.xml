@@ -13,6 +13,7 @@
 	<string name="stax_nolt_url">https://stax.nolt.io/</string>
 	<string name="receive_stax_updates_url">https://416e906b.sibforms.com/serve/MUIEAAS88NDe6oTn7nl8YrIqgutsJ_GgyCYRWVsZ-S54quVNmBhvpsu70WpNXrZd-n6H5r8m1ZRfuTl8ckiQrB4sLIdNSx0Y_DFZ7_hQGCDv9PG6N0ncsHwWW3OYsMlPMHgQSR6OZf8xK8HC-NA3p3T71Pv1Coy_n9oiDRwIu7HCryUfDtfHr11mXSQ5S3JwcOd8cN7FL1ewDRqu</string>
 	<string name="mixpanel_token" translatable="false">82efeb23b6d38509989f592c8f4b21c2</string>
+	<string name="bounty_transactions_endpoint" translatable="false">/get_bounty_results?device_id=%1$s</string>
 
 	<string name="nav_home">Home</string>
 	<string name="nav_balance_and_history">Balance and history</string>
