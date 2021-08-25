@@ -42,10 +42,10 @@ class BountyListItem extends LinearLayout {
     }
 
     private void chooseState() {
-        if(!bounty.isLastTransactionFailed() && !bounty.action.bounty_is_open) {
+        if(bounty.isLastTransactionFailed() && !bounty.action.bounty_is_open) {
             setState(R.color.stax_bounty_red_bg, R.string.bounty_transaction_failed, R.drawable.ic_info_red, false, navTransactionDetail());
         }
-        else if(!bounty.isLastTransactionFailed() && bounty.action.bounty_is_open) {
+        else if(bounty.isLastTransactionFailed() && bounty.action.bounty_is_open) {
             setState(R.color.stax_bounty_red_bg, R.string.bounty_transaction_failed_try_again, R.drawable.ic_info_red, true, showBountyDetail());
         }
         else if (!bounty.action.bounty_is_open && bounty.transactionCount() > 0) { // Bounty is closed and done by current user
