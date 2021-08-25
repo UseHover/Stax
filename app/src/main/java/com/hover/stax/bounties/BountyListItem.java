@@ -1,8 +1,10 @@
 package com.hover.stax.bounties;
 
 import android.content.Context;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.text.style.StrikethroughSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -40,10 +42,10 @@ class BountyListItem extends LinearLayout {
     }
 
     private void chooseState() {
-        if(bounty.isLastTransactionFailed() && !bounty.action.bounty_is_open) {
+        if(!bounty.isLastTransactionFailed() && !bounty.action.bounty_is_open) {
             setState(R.color.stax_bounty_red_bg, R.string.bounty_transaction_failed, R.drawable.ic_info_red, false, navTransactionDetail());
         }
-        else if(bounty.isLastTransactionFailed() && bounty.action.bounty_is_open) {
+        else if(!bounty.isLastTransactionFailed() && bounty.action.bounty_is_open) {
             setState(R.color.stax_bounty_red_bg, R.string.bounty_transaction_failed_try_again, R.drawable.ic_info_red, true, showBountyDetail());
         }
         else if (!bounty.action.bounty_is_open && bounty.transactionCount() > 0) { // Bounty is closed and done by current user
@@ -64,10 +66,12 @@ class BountyListItem extends LinearLayout {
         return (view)-> selectListener.viewBountyDetail(bounty);
     }
 
-
     private void setState(int color, int noticeString, int noticeIcon, boolean isOpen, View.OnClickListener listener) {
         setBackgroundColor(getContext().getResources().getColor(color));
-        if (noticeString != 0) binding.liCallout.setText(noticeString);
+        if (noticeString != 0) {
+            binding.liCallout.setText(Html.fromHtml(getContext().getString(noticeString)));
+            binding.liCallout.setMovementMethod(LinkMovementMethod.getInstance());
+        }
         binding.liCallout.setCompoundDrawablesWithIntrinsicBounds(noticeIcon, 0, 0, 0);
         binding.liCallout.setVisibility(noticeString != 0 ? View.VISIBLE : View.GONE);
 
