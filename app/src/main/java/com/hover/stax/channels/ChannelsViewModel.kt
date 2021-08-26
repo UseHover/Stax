@@ -12,18 +12,21 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
+import com.hover.stax.account.Account
 
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.utils.Utils
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
 
 
-class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel(), ChannelDropdown.HighlightListener, PushNotificationTopicsInterface {
+class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel(),
+        ChannelDropdown.HighlightListener, PushNotificationTopicsInterface {
 
     private var type = MutableLiveData<String>()
     var sims = MutableLiveData<List<SimInfo>>()
@@ -34,6 +37,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     var simChannels = MediatorLiveData<List<Channel>>()
     val activeChannel = MediatorLiveData<Channel>()
     val channelActions = MediatorLiveData<List<HoverAction>>()
+    val accounts = MediatorLiveData<List<Account>>()
 
     private var localBroadcastManager: LocalBroadcastManager? = null
 
@@ -53,6 +57,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
         activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull)
 
+        accounts.addSource(selectedChannels, this::loadAccounts)
+
         channelActions.apply {
             addSource(type, this@ChannelsViewModel::loadActions)
             addSource(selectedChannels, this@ChannelsViewModel::loadActions)
@@ -66,12 +72,12 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     fun getActionType(): String = type.value!!
 
-    fun loadChannels() {
+    private fun loadChannels() {
         allChannels = repo.allChannels
         selectedChannels = repo.selected
     }
 
-    fun loadSims() {
+    private fun loadSims() {
         viewModelScope.launch {
             sims.postValue(repo.presentSims)
         }
@@ -112,7 +118,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         updateSimChannels(simChannels, allChannels.value, hniList)
     }
 
-    fun updateSimChannels(simChannels: MediatorLiveData<List<Channel>>, channels: List<Channel>?, hniList: List<String>?) {
+    private fun updateSimChannels(simChannels: MediatorLiveData<List<Channel>>, channels: List<Channel>?, hniList: List<String>?) {
         if (channels == null || hniList == null) return
 
         val simChannelList = ArrayList<Channel>()
@@ -131,7 +137,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         simChannels.value = simChannelList
     }
 
-    fun setActiveChannelIfNull(channels: List<Channel>) {
+    private fun setActiveChannelIfNull(channels: List<Channel>) {
         if (!channels.isNullOrEmpty() && activeChannel.value == null)
             activeChannel.value = channels.first { it.defaultAccount }
     }
@@ -141,7 +147,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     //TODO make another function to set active account from channel actions
-    fun setActiveChannel(actions: List<HoverAction>) {
+    private fun setActiveChannel(actions: List<HoverAction>) {
         if (actions.isNullOrEmpty()) return
 
         activeChannel.removeSource(channelActions)
@@ -155,28 +161,35 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         c?.let { setActiveChannel(it) }
     }
 
-
-    fun loadActions(t: String) {
+    private fun loadActions(t: String) {
         if ((t == HoverAction.BALANCE && selectedChannels.value == null) || (t != HoverAction.BALANCE && activeChannel.value == null)) return
         if (t == HoverAction.BALANCE) loadActions(selectedChannels.value!!, t) else loadActions(activeChannel.value!!, t)
     }
 
-    fun loadActions(channel: Channel) {
+    private fun loadActions(channel: Channel) {
         loadActions(channel, type.value!!)
     }
 
-    fun loadActions(channels: List<Channel>) {
+    private fun loadActions(channels: List<Channel>) {
         if (type.value == HoverAction.BALANCE)
             loadActions(channels, type.value!!)
     }
 
-    fun loadActions(channel: Channel, t: String) {
+    private fun loadActions(channel: Channel, t: String) {
         viewModelScope.launch {
             channelActions.value = if (t == HoverAction.P2P) repo.getTransferActions(channel.id) else repo.getActions(channel.id, t)
         }
     }
 
-    fun loadActions(channels: List<Channel>, t: String) {
+    //TODO load accounts here
+    private fun loadAccounts(channels: List<Channel>){
+        viewModelScope.launch {
+            val ids = channels.map { it.id }
+            accounts.value = repo.getAccounts(ids)
+        }
+    }
+
+    private fun loadActions(channels: List<Channel>, t: String) {
         val ids = IntArray(channels.size)
 
         for (i in channels.indices)
@@ -256,6 +269,12 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
                 if (repo.getActions(it.id, HoverAction.FETCH_ACCOUNTS).isEmpty())
                     repo.createAccount(it)
             }
+        }
+    }
+
+    fun getAccounts(channelId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            accounts.postValue(repo.getAccounts(channelId))
         }
     }
 

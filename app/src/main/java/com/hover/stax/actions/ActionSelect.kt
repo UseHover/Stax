@@ -9,6 +9,7 @@ import android.widget.*
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.account.Account
 import com.hover.stax.databinding.ActionSelectBinding
 import com.hover.stax.utils.Constants.size55
 import com.hover.stax.utils.UIHelper
@@ -27,6 +28,7 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
     private var isSelfRadio: RadioGroup? = null
 
     private var actions: List<HoverAction>? = null
+    private var accounts: List<Account>? = null
     private var highlightedAction: HoverAction? = null
     private var highlightListener: HighlightListener? = null
 
@@ -49,18 +51,38 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
 
         actions = filteredActions
         highlightedAction = null
-        val uniqueActions = sort(filteredActions)
+//        val uniqueActions = sort(filteredActions)
+//
+//        val actionDropdownAdapter = ActionDropdownAdapter(uniqueActions, context)
+//        dropdownView!!.apply {
+//            setAdapter(actionDropdownAdapter)
+//            dropDownHeight = UIHelper.dpToPx(300)
+//            setOnItemClickListener { parent, _, position, _ -> selectRecipientNetwork(parent.getItemAtPosition(position) as HoverAction) }
+//            Timber.e("Unique recipient networks ${uniqueActions.size}")
+//            visibility = if (showRecipientNetwork(uniqueActions)) VISIBLE else GONE
+//
+//            Timber.e("Transaction type ${actions?.first()?.transaction_type}")
+//            radioHeader!!.setText(if (actions!!.first().transaction_type == HoverAction.AIRTIME) R.string.airtime_who_header else R.string.send_who_header)
+//        }
+    }
 
-        val actionDropdownAdapter = ActionDropdownAdapter(uniqueActions, context)
-        dropdownView!!.apply {
-            setAdapter(actionDropdownAdapter)
-            dropDownHeight = UIHelper.dpToPx(300)
-            setOnItemClickListener { parent, _, position, _ -> selectRecipientNetwork(parent.getItemAtPosition(position) as HoverAction) }
-            Timber.e("Unique recipient networks ${uniqueActions.size}")
-            visibility = if (showRecipientNetwork(uniqueActions)) VISIBLE else GONE
+    //TODO make dropdown be inflated by account being loaded as opposed to actions
+    fun updateAccounts(accts: List<Account>) {
+        accounts = accts
+        actions?.let {
+            val uniqueActions = sort(it)
 
-            Timber.e("Transaction type ${actions?.first()?.transaction_type}")
-            radioHeader!!.setText(if (actions!!.first().transaction_type == HoverAction.AIRTIME) R.string.airtime_who_header else R.string.send_who_header)
+            val actionDropdownAdapter = ActionDropdownAdapter(accounts!!, context)
+            dropdownView!!.apply {
+//                setAdapter(actionDropdownAdapter)
+                dropDownHeight = UIHelper.dpToPx(300)
+                setOnItemClickListener { parent, _, position, _ -> selectRecipientNetwork(parent.getItemAtPosition(position) as Account) }
+                Timber.e("Unique recipient networks ${uniqueActions.size}")
+                visibility = if (showRecipientNetwork(uniqueActions)) VISIBLE else GONE
+
+                Timber.e("Transaction type ${actions?.first()?.transaction_type}")
+                radioHeader!!.setText(if (actions!!.first().transaction_type == HoverAction.AIRTIME) R.string.airtime_who_header else R.string.send_who_header)
+            }
         }
     }
 
@@ -71,8 +93,23 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
     fun selectRecipientNetwork(action: HoverAction) {
         if (action == highlightedAction) return
 
+        if(accounts != null){
+            selectRecipientNetwork(accounts!!.first())
+            return
+        } else {
+            Timber.e("Accounts are null")
+        }
+
         setDropdownValue(action)
         setRadioValuesIfRequired(action)
+    }
+
+    fun selectRecipientNetwork(account: Account) {
+        val action = actions?.first { it.channel_id == account.channelId }
+        if (action == highlightedAction) return
+
+        setDropDownValue(account)
+        setRadioValuesIfRequired(action!!)
     }
 
     private fun setRadioValuesIfRequired(action: HoverAction) {
@@ -90,7 +127,7 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
         } else createRadios(options)
     }
 
-    fun selectAction(action: HoverAction) {
+    private fun selectAction(action: HoverAction) {
         highlightedAction = action
         highlightListener?.highlightAction(action)
     }
@@ -98,6 +135,11 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
     private fun setDropdownValue(action: HoverAction) {
         dropdownView!!.setText(action.toString(), false)
         UIHelper.loadPicasso(context.getString(R.string.root_url).plus(action.to_institution_logo), size55, this)
+    }
+
+    private fun setDropDownValue(account: Account) {
+        dropdownView!!.setText(account.alias, false)
+        UIHelper.loadPicasso(context.getString(R.string.root_url).plus(account.logoUrl), size55, this)
     }
 
     fun setState(message: String?, state: Int) = dropdownLayout?.setState(message, state)

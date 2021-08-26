@@ -13,7 +13,7 @@ interface AccountDao {
     fun getAccounts(channelId: Int): List<Account>
 
     @Query("SELECT * FROM accounts WHERE channelId in (:channelIds) ORDER BY alias ASC")
-    suspend fun getAccounts(channelIds: IntArray): List<Account>
+    suspend fun getAccounts(channelIds: List<Int>): List<Account>
 
     @Query("SELECT * FROM accounts where name = :name and channelId = :channelId")
     fun getAccount(name: String, channelId: Int): Account?
