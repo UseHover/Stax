@@ -21,7 +21,7 @@ import org.koin.dsl.module
 val appModule = module {
     viewModel { FaqViewModel() }
     viewModel { ActionSelectViewModel(get()) }
-    viewModel { ChannelsViewModel(get()) }
+    viewModel { ChannelsViewModel(get(), get()) }
     viewModel { AccountDetailViewModel(get(), get()) }
     viewModel { NewRequestViewModel(get(), get()) }
     viewModel { TransferViewModel(get(), get()) }

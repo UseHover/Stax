@@ -148,8 +148,8 @@ public class ChannelDropdown extends StaxDropdownLayout implements Target{
 
     private void setState(List<HoverAction> actions, ChannelsViewModel viewModel) {
         if (viewModel.getActiveChannel().getValue() != null && (actions == null || actions.size() == 0))
-            setState(getContext().getString(R.string.no_actions_fielderror, HoverAction.getHumanFriendlyType(getContext(), viewModel.getType())), AbstractStatefulInput.ERROR);
-        else if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !viewModel.getType().equals(HoverAction.BALANCE))
+            setState(getContext().getString(R.string.no_actions_fielderror, HoverAction.getHumanFriendlyType(getContext(), viewModel.getActionType())), AbstractStatefulInput.ERROR);
+        else if (actions != null && actions.size() == 1 && !actions.get(0).requiresRecipient() && !viewModel.getActionType().equals(HoverAction.BALANCE))
             setState(getContext().getString(actions.get(0).transaction_type.equals(HoverAction.AIRTIME) ? R.string.self_only_airtime_warning : R.string.self_only_money_warning), INFO);
         else if (viewModel.getActiveChannel().getValue() != null && showSelected)
             setState(initial_helper_text, AbstractStatefulInput.SUCCESS);

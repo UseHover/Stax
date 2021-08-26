@@ -33,7 +33,7 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
 
         intent.action?.let {
             transferViewModel.setTransactionType(it)
-            channelsViewModel.type = it
+            channelsViewModel.setType(it)
         }
 
         checkIntent()
