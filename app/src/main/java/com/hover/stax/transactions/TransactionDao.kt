@@ -20,6 +20,9 @@ interface TransactionDao {
     @Query("SELECT * FROM stax_transactions WHERE uuid = :uuid LIMIT 1")
     fun getTransaction(uuid: String?): StaxTransaction?
 
+    @Query("SELECT * FROM stax_transactions WHERE uuid = :uuid LIMIT 1")
+    suspend fun getTransactionSuspended(uuid: String?): StaxTransaction?
+
     @Query("SELECT SUM(amount) as total FROM stax_transactions WHERE strftime('%m', initiated_at/1000, 'unixepoch') = :month AND strftime('%Y', initiated_at/1000, 'unixepoch') = :year AND channel_id = :channelId AND environment != 3")
     fun getTotalAmount(channelId: Int, month: String, year: String): LiveData<Double>?
 

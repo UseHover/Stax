@@ -20,6 +20,7 @@
 	<color name="stax_state_green">#05EB8F</color>
 	<color name="stax_state_blue">#1878F9</color>
 	<color name="stax_state_yellow">#FFCA32</color>
+	<color name="stax_bounty_red_bg">#342C34</color>
 	<color name="stax_state_red">#FF0028</color>
 	<color name="pending_brown">#343734</color>
 	<color name="muted_green">#2A3932</color>
