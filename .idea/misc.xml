@@ -11,6 +11,7 @@
         <entry key="app/src/main/res/drawable/button_bg_colored.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_dark.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_grey.xml" value="0.32037037037037036" />
+        <entry key="app/src/main/res/layout/action_select.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/activity_bounty.xml" value="0.14817629179331307" />
         <entry key="app/src/main/res/layout/balance_item.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/fragment_bounty_email.xml" value="0.14817629179331307" />
