@@ -10,6 +10,7 @@ import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
 import com.hover.stax.databinding.TransactionStatusLayoutBinding
 import com.hover.stax.transactions.StaxTransaction
+import com.hover.stax.transactions.TransactionStatus
 
 open class StaxTransactionStatusView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
     private val binding: TransactionStatusLayoutBinding
@@ -29,64 +30,21 @@ open class StaxTransactionStatusView(context: Context, attrs: AttributeSet) : Fr
         }
     }
 
-    private fun fillFromAttrs() {
-        if (isFlatView) binding.notificationCard.makeFlatView()
-    }
-
-    fun updateInfo(transaction: StaxTransaction) {
-        binding.notificationCard.setBackButtonVisibility(VISIBLE)
-        makeUpdate(transaction.status, transaction.isRecorded)
-        fillFromAttrs()
-    }
-
-    private fun makeUpdate(status : String, isBounty: Boolean) {
-        updateIcon(status, isBounty)
-        updateBackgroundColor(status, isBounty)
-        updateTitle(status, isBounty)
-        updateNotificationDetail(status, isBounty)
-    }
-
-    private fun updateIcon(status : String, isBounty: Boolean) {
-        with(binding.notificationCard) {
-            when (status) {
-                Transaction.SUCCEEDED -> setIcon(R.drawable.ic_success)
-                Transaction.PENDING -> setIcon(if (isBounty) R.drawable.ic_warning else R.drawable.ic_info)
-                Transaction.FAILED -> setIcon(R.drawable.ic_info_red)
-            }
-        }
-    }
-
     @SuppressLint("ResourceAsColor")
-    private fun updateBackgroundColor(status : String, isBounty: Boolean) {
-        with(binding.notificationCard) {
-            when (status) {
-                Transaction.SUCCEEDED -> setBackgroundColor(R.color.muted_green)
-                Transaction.PENDING -> setBackgroundColor(if (isBounty) R.color.pending_brown else R.color.cardDarkBlue)
-                Transaction.FAILED -> setBackgroundColor(R.color.cardDarkRed)
-            }
+    fun setStateInfo(status: TransactionStatus?) {
+        if (status != null) {
+            updateState(status.getIcon(), status.getBackgrounColor(), status.getTitle(), status.getDetail())
         }
     }
 
-    private fun updateTitle(status : String, isBounty: Boolean) {
+    private fun updateState(icon: Int, backgroundColor: Int, title: Int, detail: Int) {
         with(binding.notificationCard) {
-            when (status) {
-                Transaction.SUCCEEDED -> setTitle(R.string.confirmed_cardHead)
-                Transaction.PENDING ->  setTitle(if (isBounty) R.string.checking_your_flow else R.string.pending_cardHead)
-                Transaction.FAILED -> setTitle(R.string.unsuccessful_cardHead)
-            }
+            setBackButtonVisibility(VISIBLE);
+            setIcon(icon);
+            setBackgroundColor(backgroundColor);
+            setTitle(title);
+            if (isFlatView) makeFlatView()
+            binding.notificationDetail.text = Html.fromHtml(resources.getString(detail));
         }
     }
-
-    private fun updateNotificationDetail(status : String, isBounty: Boolean) {
-        with(binding.notificationCard) {
-            when (status) {
-                Transaction.SUCCEEDED ->  binding.notificationDetail.text = Html.fromHtml(resources.getString(if (isBounty) R.string.flow_done_desc else R.string.confirmed_desc))
-                Transaction.PENDING ->  binding.notificationDetail.text = Html.fromHtml(resources.getString(if (isBounty) R.string.bounty_flow_pending_dialog_msg else R.string.pending_cardbody))
-                Transaction.FAILED -> binding.notificationDetail.text = Html.fromHtml(resources.getString(if (isBounty) R.string.bounty_transaction_failed else R.string.unsuccessful_desc))
-            }
-        }
-
-
-    }
-
 }

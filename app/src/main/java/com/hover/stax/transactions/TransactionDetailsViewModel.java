@@ -31,7 +31,6 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
     private MediatorLiveData<List<UssdCallResponse>> messages;
     private LiveData<List<UssdCallResponse>> sms;
 
-
     public TransactionDetailsViewModel(@NonNull Application application) {
         super(application);
         transaction = new MutableLiveData<>();

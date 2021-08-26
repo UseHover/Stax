@@ -29,11 +29,11 @@
         </com.hover.stax.views.StaxCardView>
 
         <com.hover.stax.views.StaxTransactionStatusView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/transaction_status_card"
-                app:isFlatView="true"
-                />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/transaction_status_card"
+            app:isFlatView="true"
+            />
 
         <com.hover.stax.views.StaxCardView
                 android:id="@+id/messagesCard"

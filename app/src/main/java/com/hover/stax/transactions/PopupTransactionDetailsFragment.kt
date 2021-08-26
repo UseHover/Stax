@@ -66,10 +66,7 @@ class PopupTransactionDetailsFragment(private val uuid: String, private val call
     }
 
     private fun showTransaction(transaction: StaxTransaction?) {
-        if (transaction != null) {
-            updateDetails(transaction)
-            if (viewModel!!.action.value != null) binding.transactionStatusCard.updateInfo(transaction)
-        }
+        if (transaction != null) { updateDetails(transaction) }
     }
 
     @SuppressLint("SetTextI18n")
@@ -77,6 +74,7 @@ class PopupTransactionDetailsFragment(private val uuid: String, private val call
         binding.infoCard.detailsRecipientLabel.setText(if (transaction.transaction_type == HoverAction.RECEIVE) R.string.sender_label else R.string.recipient_label)
         binding.infoCard.detailsAmount.setText(transaction.displayAmount)
         binding.infoCard.detailsDate.setText(humanFriendlyDate(transaction.initiated_at))
+        binding.transactionStatusCard.setStateInfo(transaction.fullStatus)
         if (transaction.confirm_code != null && !transaction.confirm_code.isEmpty()) binding.infoCard.detailsTransactionNumber.setText(transaction.confirm_code) else binding.infoCard.detailsTransactionNumber.setText(transaction.uuid)
         if (transaction.isRecorded) hideNonBountyDetails()
     }
@@ -88,12 +86,7 @@ class PopupTransactionDetailsFragment(private val uuid: String, private val call
     }
 
     private fun showActionDetails(action: HoverAction?) {
-        if (action != null) {
-            binding.infoCard.detailsNetwork.setText(action.from_institution_name)
-            viewModel!!.transaction.value?.let {
-                binding.transactionStatusCard.updateInfo(it)
-            }
-        }
+        if (action != null) { binding.infoCard.detailsNetwork.setText(action.from_institution_name) }
     }
 
     private fun updateRecipient(contact: StaxContact?) {
