@@ -264,7 +264,10 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         finish()
     }
 
-    private fun goToOnBoardingActivity() = startActivity(Intent(this, OnBoardingActivity::class.java))
+    private fun goToOnBoardingActivity() {
+        startActivity(Intent(this, OnBoardingActivity::class.java))
+        finish()
+    }
 
     private fun goToFulfillRequestActivity(intent: Intent) =
         startActivity(Intent(this, MainActivity::class.java).putExtra(Constants.REQUEST_LINK, intent.data.toString()))

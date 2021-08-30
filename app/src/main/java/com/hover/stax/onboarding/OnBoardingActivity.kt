@@ -15,9 +15,8 @@ import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 
-class OnBoardingActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
+class OnBoardingActivity : AppCompatActivity() {
 
-    private var viewPager: StaxAutoScrollViewPager? = null
 
     private lateinit var binding: OnboardingLayoutBinding
 
@@ -29,7 +28,6 @@ class OnBoardingActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
         binding = OnboardingLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setUpSlides()
         initContinueButton()
     }
 
@@ -38,24 +36,8 @@ class OnBoardingActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
         Utils.timeEvent(getString(R.string.perms_basic_requested))
     }
 
-    private fun setUpSlides() {
-        val viewPagerAdapter = SlidesPagerAdapter(supportFragmentManager, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
-
-        viewPager = binding.vpPager
-        viewPager!!.apply {
-            startAutoScroll(FIRST_SCROLL_DELAY)
-            setInterval(OTHER_SCROLL_DELAY)
-            setCycle(true)
-            setAutoScrollDurationFactor(AUTO_SCROLL_EASE_DURATION_FACTOR)
-            setSwipeScrollDurationFactor(SWIPE_DURATION_FACTOR)
-            setStopScrollWhenTouch(true)
-            addOnPageChangeListener(this@OnBoardingActivity)
-            adapter = viewPagerAdapter
-        }
-    }
 
     private fun initContinueButton() = binding.onboardingContinueBtn.setOnClickListener {
-        viewPager?.stopAutoScroll()
         Utils.logAnalyticsEvent(getString(R.string.clicked_getstarted), this)
         setPassedThrough()
         checkPermissionsAndNavigate()
@@ -93,11 +75,7 @@ class OnBoardingActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
 
     private fun setPassedThrough() = Utils.saveBoolean(OnBoardingActivity::class.java.simpleName, true, this)
 
-    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
-    override fun onPageSelected(position: Int) = Utils.logAnalyticsEvent(getString(R.string.viewing_onboarding_slide, position.toString()), this);
-
-    override fun onPageScrollStateChanged(state: Int) {}
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -106,11 +84,6 @@ class OnBoardingActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
     }
 
     companion object {
-        const val FIRST_SCROLL_DELAY = 4000
-        const val OTHER_SCROLL_DELAY = 5000L
-        const val SWIPE_DURATION_FACTOR = 2.0
-        const val AUTO_SCROLL_EASE_DURATION_FACTOR = 5.0
-
         fun hasPassedThrough(context: Context) = Utils.getBoolean(OnBoardingActivity::class.java.simpleName, context)
     }
 }
