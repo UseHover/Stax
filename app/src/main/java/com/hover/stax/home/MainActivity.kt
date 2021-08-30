@@ -19,8 +19,6 @@ import com.hover.stax.hover.HoverSession
 import com.hover.stax.navigation.AbstractNavigationActivity
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
-import com.hover.stax.transactions.PopupTransDetailsListener
-import com.hover.stax.transactions.PopupTransactionDetailsFragment
 import com.hover.stax.transactions.TransactionDetailsFragment
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.utils.Constants
@@ -37,14 +35,12 @@ import timber.log.Timber
 class MainActivity : AbstractNavigationActivity(),
         BalancesViewModel.RunBalanceListener,
         BalanceAdapter.BalanceListener,
-        BiometricChecker.AuthListener,
-        PopupTransDetailsListener{
+        BiometricChecker.AuthListener{
 
     private val balancesViewModel: BalancesViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var popupFragment : PopupTransactionDetailsFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -272,19 +268,8 @@ class MainActivity : AbstractNavigationActivity(),
     }
 
     private fun showTransactionPopup(uuid: String) {
-        popupFragment = PopupTransactionDetailsFragment(uuid, this)
-        popupFragment.show(supportFragmentManager, "popup")
+        navigateToTransactionDetailsFragment(uuid, supportFragmentManager, false)
     }
 
-    override fun onUUIDReceived(uuid: String) {
-        binding.navHostFragment.visibility = View.INVISIBLE
-        closePopUp()
-        navigateToTransactionDetailsFragment(uuid, getNavController(), false)
-        Handler(mainLooper).postDelayed({ binding.navHostFragment.visibility = View.VISIBLE }, 500)
-    }
-
-    override fun closePopUp() {
-       popupFragment.dismiss()
-    }
 
 }

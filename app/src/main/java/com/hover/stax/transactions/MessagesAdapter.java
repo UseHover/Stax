@@ -57,7 +57,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Transa
     @Override
     public int getItemCount() {
         if (messagesList == null) return 0;
-        return forcedSize > 0 && forcedSize < messagesList.size() ? forcedSize : messagesList.size();
+        return (forcedSize > 0 && forcedSize <= messagesList.size()  ) ? forcedSize : messagesList.size();
     }
 
     static class TransactionMessageViewHolder extends RecyclerView.ViewHolder {
