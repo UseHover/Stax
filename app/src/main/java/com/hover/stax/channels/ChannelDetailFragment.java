@@ -117,9 +117,7 @@ public class ChannelDetailFragment extends Fragment implements
 
     @Override
     public void viewTransactionDetail(String uuid) {
-        Bundle bundle = new Bundle();
-        bundle.putString(TransactionContract.COLUMN_UUID, uuid);
-        NavHostFragment.findNavController(this).navigate(R.id.transactionDetailsFragment, bundle);
+        navigateToTransactionDetailsFragment(uuid, getChildFragmentManager(), true);
     }
 
     private void onRefresh() {

@@ -5,8 +5,7 @@
 		<attr name="backRes" format="reference"/>
 		<attr name="defaultBackPress" format="string"/>
 		<attr name="staxCardColor" format="color"/>
-		<attr name="ElevationHeight" format="integer"/>
-		<attr name="horizontalSpace" format="integer"/>
+		<attr name="isFlatView" format="boolean"/>
 	</declare-styleable>
 
 	<declare-styleable name="ChannelDropdown">

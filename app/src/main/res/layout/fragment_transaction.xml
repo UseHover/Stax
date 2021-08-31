@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="afterDescendants"
+        android:id="@+id/ft_mainBg"
+        android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
 
     <androidx.core.widget.NestedScrollView
@@ -31,25 +33,23 @@
 
 
             <com.hover.stax.views.StaxCardView
-                android:id="@+id/notification_card"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:backRes="@drawable/ic_info"
-                app:defaultBackPress="false"
-                app:showBack="true"
-                app:staxCardColor="@color/cardDarkBlue"
-                app:title="@string/pending_cardhead">
-
-                <TextView
-                    android:id="@+id/notification_detail"
+                    android:id="@+id/notification_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/margin_10"
-                    android:layout_marginBottom="@dimen/margin_3"
-                    android:fontFamily="font-normal"
-                    android:text="@string/pending_cardbody"
-                    android:textSize="@dimen/text_16" />
+                    app:backRes="@drawable/ic_info"
+                    app:defaultBackPress="false"
+                    app:showBack="true"
+                    app:staxCardColor="@color/colorPrimary"
+                    app:title="">
+
+                <TextView
+                        android:id="@+id/notification_detail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_10"
+                        android:layout_marginBottom="@dimen/margin_3"
+                        android:fontFamily="font-normal"
+                        android:textSize="@dimen/text_16" />
             </com.hover.stax.views.StaxCardView>
 
             <com.hover.stax.views.StaxCardView
