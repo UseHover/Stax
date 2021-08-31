@@ -209,12 +209,6 @@ object Utils {
 
         FirebaseAnalytics.getInstance(context).logEvent(strippedForFireAnalytics(event), null)
         AppsFlyerLib.getInstance().logEvent(context, event, null)
-//        mixPanel.track(event)
-    }
-
-    @JvmStatic
-    fun timeEvent(event: String) {
-//        mixPanel.timeEvent(event)
     }
 
     @JvmStatic
@@ -228,7 +222,6 @@ object Utils {
 
         FirebaseAnalytics.getInstance(context).logEvent(strippedForFireAnalytics(event), bundle)
         AppsFlyerLib.getInstance().logEvent(context, event, map)
-//        mixPanel.track(event, args)
     }
 
     private fun strippedForFireAnalytics(firebaseEventLog: String): String {
@@ -302,12 +295,4 @@ object Utils {
             activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(activity.baseContext.getString(R.string.stax_url_playstore_review_link))))
         }
     }
-
-    var variant: String by Delegates.observable("", { _, _, newValue ->
-        Timber.i("Variant: $newValue")
-
-        val props = JSONObject()
-        props.put("Variant", newValue)
-//        mixPanel.registerSuperPropertiesOnce(props)
-    })
 }

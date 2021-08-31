@@ -3,7 +3,6 @@ package com.hover.stax.channels
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.view.MotionEvent
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
@@ -21,21 +20,18 @@ import timber.log.Timber
 class ChannelsViewHolder(val binding: StaxSpinnerItemWithLogoBinding) : RecyclerView.ViewHolder(binding.root), Target {
 
     var id: TextView? = null
-    var channelText: AppCompatTextView? = null
+    private var channelText: AppCompatTextView? = null
 
     private var logo: ImageView? = null
     private var checkBox: MaterialCheckBox? = null
 
-    fun bind(channel: Channel, isMultiselect: Boolean = false, isSelected: Boolean? = false) {
+    fun bind(channel: Channel, isSelected: Boolean? = false) {
         logo = binding.serviceItemImageId
         channelText = binding.serviceItemNameId
         id = binding.serviceItemId
         checkBox = binding.serviceItemCheckbox
 
-        if (isMultiselect) {
-            checkBox!!.visibility = View.VISIBLE
-            checkBox!!.isChecked = isSelected != null && isSelected
-        } else checkBox!!.visibility = View.GONE
+        checkBox!!.isChecked = isSelected != null && isSelected
 
         id!!.text = channel.id.toString()
         channelText!!.text = channel.toString()
