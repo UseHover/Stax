@@ -47,7 +47,7 @@ class BalancesFragment : Fragment(), NavigationInterface {
 
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentBalanceBinding.inflate(inflater, container, false)
         return binding.root
     }
