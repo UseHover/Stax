@@ -119,6 +119,14 @@
 	<string name="airtime_msg">Buying airtime</string>
 	<string name="transfer_msg">Transferring money</string>
 
+	<!-- TRANSACTION STATUS -->
+	<string name="confirmed_cardHead">SUCCEEDED</string>
+	<string name="pending_cardHead">PENDING</string>
+	<string name="unsuccessful_cardHead">UNSUCCESSFUL</string>
+	<string name="confirmed_desc">We got a message from %1$s confirming that this transaction was successful.</string>
+	<string name="pending_desc">We received no response from %1$s. We don\’t think this transaction worked. Please try again.</string>
+	<string name="unsuccessful_desc">We got a message from %1$s confirming that this transaction has failed. Please try again.</string>
+
 	<!-- SDK Overrides -->
 	<string name="hsdk_overlay_msg"><![CDATA[<font color="#1E232A">Show progress updates by turning <b>switch ON</b> in the next screen.</font>]]></string>
 	<string name="hsdk_access_msg"><![CDATA[<font color="#0A9A8D">Turn on Accessibility</font> <font color="#1E232A">in the <b>next screen</b> to run USSD sessions</font>]]></string>
@@ -261,6 +269,7 @@
 	<string name="network_label">Recipient account</string>
 	<string name="id_label">Transaction ID</string>
 	<string name="session_cardhead">Messages</string>
+	<string name="see_more">See more</string>
 
 	<!-- Canceling -->
 	<string name="cancelfuture_head">Cancel future transaction</string>

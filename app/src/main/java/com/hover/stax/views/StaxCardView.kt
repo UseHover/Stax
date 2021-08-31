@@ -1,0 +1,128 @@
+package com.hover.stax.views
+
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import com.hover.stax.R
+import com.hover.stax.databinding.StaxCardViewBinding
+import com.hover.stax.transactions.TransactionStatus
+
+open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
+    private var title: String? = null
+    private var showBack = false
+    private var useContextBackPress = false
+    private var backDrawable = 0
+    private var bgColor = 0
+    private var isFlatView: Boolean = false
+    private val binding: StaxCardViewBinding
+
+    private fun getAttrs(context: Context, attrs: AttributeSet) {
+        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.StaxCardView, 0, 0)
+        try {
+            title = a.getString(R.styleable.StaxCardView_title)
+            showBack = a.getBoolean(R.styleable.StaxCardView_showBack, false)
+            useContextBackPress = a.getBoolean(R.styleable.StaxCardView_defaultBackPress, true)
+            backDrawable = a.getResourceId(R.styleable.StaxCardView_backRes, 0)
+            bgColor = a.getColor(R.styleable.StaxCardView_staxCardColor, context.resources.getColor(R.color.colorPrimary))
+            isFlatView = a.getBoolean(R.styleable.StaxCardView_isFlatView, false)
+        } finally {
+            a.recycle()
+        }
+    }
+
+    fun makeFlatView() {
+        val zero = 0
+        binding.cardViewHeader.cardElevation = zero.toFloat()
+        binding.cardViewHeader.radius = zero.toFloat()
+        removeCardMargin()
+    }
+
+    @SuppressLint("ResourceType")
+    override fun setBackgroundColor(colorRes: Int) {
+        bgColor = context.resources.getColor(colorRes)
+        binding.content.setBackgroundColor(bgColor)
+    }
+
+    fun setBackButtonVisibility(visibility: Int) {
+        binding.backButton.visibility = visibility
+    }
+
+    fun setTitle(t: String?) {
+        if (t != null) binding.title.text = t
+    }
+
+    fun setTitle(titleString: Int) {
+        if (titleString != 0) binding.title.text = context.getString(titleString)
+    }
+
+    fun setIcon(icon: Int) {
+        if (icon != 0) {
+            binding.backButton.setImageResource(icon)
+        }
+    }
+
+    fun setOnClickIcon(listener: OnClickListener?) {
+        if (listener != null) {
+            binding.backButton.setOnClickListener(listener)
+        }
+    }
+
+    private fun fillFromAttrs() {
+        if (title != null) binding.title.text = title else binding.header.visibility = GONE
+        if (useContextBackPress) binding.backButton.setOnClickListener { view: View? -> triggerBack() }
+        if (showBack) binding.backButton.visibility = VISIBLE
+        if (backDrawable != 0) binding.backButton.setImageResource(backDrawable)
+        binding.content.setBackgroundColor(bgColor)
+
+        if (isFlatView) makeFlatView()
+    }
+
+    private fun removeCardMargin() {
+        val params = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+        params.setMargins(0, 0, 0, 0)
+        binding.cardViewHeader.layoutParams = params
+    }
+
+    override fun addView(child: View, index: Int, params: ViewGroup.LayoutParams) {
+        // Since ViewBinding serves to eliminate null with views,this is the only way to catch this
+        try {
+            binding.content.addView(child, index, params)
+        } catch (npe: NullPointerException) {
+            super.addView(child, index, params)
+        }
+    }
+
+    private fun triggerBack() {
+        try {
+            (context as Activity).onBackPressed()
+        } catch (ignored: Exception) {
+        }
+    }
+
+    @SuppressLint("ResourceAsColor")
+    fun setStateInfo(status: TransactionStatus?) {
+        if (status != null) {
+            updateState(status.getIcon(), status.getBackgroundColor(), status.getTitle())
+        }
+    }
+
+    private fun updateState(icon: Int, backgroundColor: Int, title: Int) {
+        with(binding.cardViewHeader) {
+            setBackButtonVisibility(View.VISIBLE);
+            setIcon(icon);
+            setTitle(title);
+            binding.content.setBackgroundColor(backgroundColor)
+        }
+    }
+
+    init {
+        getAttrs(context, attrs)
+        binding = StaxCardViewBinding.inflate(LayoutInflater.from(context), this, true)
+        fillFromAttrs()
+    }
+}

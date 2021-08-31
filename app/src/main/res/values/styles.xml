@@ -221,6 +221,11 @@
     <style name="StaxSnackbarText" parent="@style/Widget.MaterialComponents.Snackbar.TextView">
         <item name="android:textColor">@color/offWhite</item>
     </style>
+
+    <style name="StaxDialogFullScreen" parent="StaxTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
+    </style>
 </resources>
 
 

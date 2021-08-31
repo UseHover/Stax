@@ -145,7 +145,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 
     @Override
     public void viewTransactionDetail(String uuid) {
-        navigateToTransactionDetailsFragment(uuid, this);
+        navigateToTransactionDetailsFragment(uuid, getChildFragmentManager(), true);
     }
 
     @Override

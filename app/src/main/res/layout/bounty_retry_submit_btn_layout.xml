@@ -8,7 +8,7 @@
     android:layout_gravity="end"
     android:gravity="end"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/margin_65"
+    android:paddingBottom="@dimen/margin_26"
     android:visibility="gone">
 
     <androidx.appcompat.widget.AppCompatButton
