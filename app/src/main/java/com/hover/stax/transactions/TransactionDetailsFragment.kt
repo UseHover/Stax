@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.bounties.BountyActivity
@@ -20,18 +19,20 @@ import com.hover.stax.utils.Utils.logAnalyticsEvent
 import com.hover.stax.utils.Utils.logErrorAndReportToFirebase
 import org.json.JSONException
 import org.json.JSONObject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class TransactionDetailsFragment(private val uuid: String, private val isFullScreen: Boolean) : DialogFragment(), NavigationInterface {
-    private var viewModel: TransactionDetailsViewModel? = null
+
+    private val viewModel: TransactionDetailsViewModel by viewModel()
     private var binding: FragmentTransactionBinding? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        viewModel = ViewModelProvider(requireActivity()).get(TransactionDetailsViewModel::class.java)
         val data = JSONObject()
         try {
             data.put("uuid", uuid)
         } catch (e: JSONException) {
-            logErrorAndReportToFirebase(TAG, e.message!!, e)
+            logErrorAndReportToFirebase(TransactionDetailsFragment::class.java.simpleName, e.message!!, e)
         }
 
         logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_transaction)), data, requireContext())
@@ -62,7 +63,7 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
         updatePopupDesign()
         startObservers()
         setUssdSessionMessagesRecyclerView()
-        viewModel!!.setTransaction(uuid)
+        viewModel.setTransaction(uuid)
         setupBackButton()
         setupSeeMoreButton()
 
@@ -74,9 +75,9 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
     }
 
     private fun startObservers() {
-        viewModel!!.transaction.observe(viewLifecycleOwner, { transaction: StaxTransaction? -> showTransaction(transaction) })
-        viewModel!!.action.observe(viewLifecycleOwner, { action: HoverAction? -> showActionDetails(action) })
-        viewModel!!.contact.observe(viewLifecycleOwner, { contact: StaxContact? -> updateRecipient(contact) })
+        viewModel.transaction.observe(viewLifecycleOwner, { transaction: StaxTransaction? -> showTransaction(transaction) })
+        viewModel.action.observe(viewLifecycleOwner, { action: HoverAction? -> showActionDetails(action) })
+        viewModel.contact.observe(viewLifecycleOwner, { contact: StaxContact? -> updateRecipient(contact) })
     }
 
     private fun setupSeeMoreButton() {
@@ -88,7 +89,6 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
             retryButton.setOnClickListener { recreateFullScreen() }
         }
     }
-
 
     private fun setupRetryBountyButton() {
         val bountyButtonsLayout = binding!!.retrySubmit.bountyRetryButtonLayoutId
@@ -125,7 +125,7 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
         binding!!.infoCard.detailsAmount.text = transaction.displayAmount
         binding!!.infoCard.detailsDate.text = humanFriendlyDate(transaction.initiated_at)
 
-        if (transaction.confirm_code != null && !transaction.confirm_code.isEmpty()) binding!!.infoCard.detailsTransactionNumber.text = transaction.confirm_code else binding!!.infoCard.detailsTransactionNumber.text = transaction.uuid
+        if (!transaction.confirm_code.isNullOrEmpty()) binding!!.infoCard.detailsTransactionNumber.text = transaction.confirm_code else binding!!.infoCard.detailsTransactionNumber.text = transaction.uuid
         if (transaction.isRecorded) hideNonBountyDetails()
     }
 
@@ -136,9 +136,7 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
     }
 
     private fun showActionDetails(action: HoverAction?) {
-        if (action != null) {
-            binding!!.infoCard.detailsNetwork.text = action.from_institution_name
-        }
+        binding!!.infoCard.detailsNetwork.text = action?.from_institution_name
     }
 
     private fun updateRecipient(contact: StaxContact?) {
@@ -149,14 +147,14 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
         val messagesView = binding!!.convoRecyclerView
         messagesView.layoutManager = UIHelper.setMainLinearManagers(requireActivity())
         messagesView.setHasFixedSize(true)
-        viewModel!!.messages.observe(viewLifecycleOwner, { ussdCallResponses: List<UssdCallResponse?>? -> if (ussdCallResponses != null) messagesView.adapter = MessagesAdapter(ussdCallResponses, if (isFullScreen) 0 else 1) })
+        viewModel.messages.observe(viewLifecycleOwner, { if (it != null) messagesView.adapter = MessagesAdapter(it, if (isFullScreen) 0 else 1) })
     }
 
     private fun setSmsMessagesRecyclerView() {
         val smsView = binding!!.smsRecyclerView
         smsView.layoutManager = UIHelper.setMainLinearManagers(requireActivity())
         smsView.setHasFixedSize(true)
-        viewModel!!.sms.observe(viewLifecycleOwner, { smses: List<UssdCallResponse?>? -> if (smses != null) smsView.adapter = MessagesAdapter(smses) })
+        viewModel.sms.observe(viewLifecycleOwner, { if (it != null) smsView.adapter = MessagesAdapter(it) })
     }
 
     private fun setupBackButton() {
@@ -170,17 +168,13 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
     }
 
     private fun retryBountyClicked(v: View) {
-        if (viewModel!!.transaction.value != null) (requireActivity() as BountyActivity).retryCall(viewModel!!.transaction.value!!.action_id)
+        viewModel.transaction.value?.let {
+            (requireActivity() as BountyActivity).retryCall(it.action_id)
+        }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
-    }
-
-    companion object {
-        const val TAG = "TransDetailsFragment"
-        const val SHOW_BOUNTY_SUBMIT = "bounty_submit_button"
     }
 }

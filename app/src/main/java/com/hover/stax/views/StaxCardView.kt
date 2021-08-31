@@ -107,7 +107,7 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
     @SuppressLint("ResourceAsColor")
     fun setStateInfo(status: TransactionStatus?) {
         if (status != null) {
-            updateState(status.getIcon(), status.getBackgrounColor(), status.getTitle())
+            updateState(status.getIcon(), status.getBackgroundColor(), status.getTitle())
         }
     }
 
