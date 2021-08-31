@@ -73,7 +73,7 @@ public class PermissionUtils {
 
     public static void showInformativeBasicPermissionDialog(int permissionMessage, View.OnClickListener posListener, View.OnClickListener negListener, Activity activity) {
         Utils.logAnalyticsEvent(activity.getString(R.string.perms_basic_dialog), activity);
-        if (permissionMessage == 0) {
+        if (permissionMessage > 0) {
             new StaxDialog(activity)
                     .setDialogTitle(R.string.permissions_title)
                     .setDialogMessage(permissionMessage)
