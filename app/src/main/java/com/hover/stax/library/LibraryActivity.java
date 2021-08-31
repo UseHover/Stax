@@ -14,6 +14,7 @@ import com.hover.stax.countries.CountryAdapter;
 import com.hover.stax.databinding.ActivityLibraryBinding;
 import com.hover.stax.navigation.AbstractNavigationActivity;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.utils.Utils;
 
 import java.util.List;
 
@@ -27,7 +28,8 @@ public class LibraryActivity extends AbstractNavigationActivity implements Libra
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Amplitude.getInstance().logEvent(getString(R.string.visit_screen, TAG));
+
+		Utils.logAnalyticsEvent(getString(R.string.visit_screen, TAG), this);
 
 		viewModel = new ViewModelProvider(this).get(LibraryViewModel.class);
 		binding = ActivityLibraryBinding.inflate(getLayoutInflater());
@@ -53,7 +55,8 @@ public class LibraryActivity extends AbstractNavigationActivity implements Libra
 
 	@Override
 	public void dial(String shortCode) {
-		Amplitude.getInstance().logEvent(getString(R.string.clicked_dial_shortcode));
+		Utils.logAnalyticsEvent(getString(R.string.clicked_dial_shortcode), this);
+
 		Intent i = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + shortCode.replaceAll("#", Uri.encode("#"))));
 		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(i);

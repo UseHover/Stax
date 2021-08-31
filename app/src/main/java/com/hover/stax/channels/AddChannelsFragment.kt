@@ -15,7 +15,6 @@ import com.hover.stax.balances.BalanceAdapter.BalanceListener
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.databinding.FragmentChannelsListBinding
 import com.hover.stax.home.MainActivity
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxDialog
@@ -50,7 +49,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.channelsListCard.setTitle(getString(getTitle()))
+        binding.channelsListCard.setTitle(getString(R.string.add_accounts_to_stax))
         binding.selectedList.layoutManager = UIHelper.setMainLinearManagers(requireContext())
         binding.selectedList.setHasFixedSize(true)
         binding.channelsList.layoutManager = UIHelper.setMainLinearManagers(requireContext())
@@ -64,30 +63,20 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     }
 
     private fun setUpMultiselect() {
-        if (Utils.variant == Constants.VARIANT_2 || Utils.variant == Constants.VARIANT_3) {
-            tracker = SelectionTracker.Builder(
+        tracker = SelectionTracker.Builder(
                 "channelSelection", binding.channelsList,
                 ChannelKeyProvider(selectAdapter),
                 ChannelLookup(binding.channelsList),
                 StorageStrategy.createLongStorage()
-            ).withSelectionPredicate(SelectionPredicates.createSelectAnything())
+        ).withSelectionPredicate(SelectionPredicates.createSelectAnything())
                 .build()
-            selectAdapter.setTracker(tracker!!)
+        selectAdapter.setTracker(tracker!!)
 
-            binding.continueBtn.apply {
-                visibility = VISIBLE
-                setOnClickListener {
-                    aggregateSelectedChannels(tracker!!)
-                }
+        binding.continueBtn.apply {
+            visibility = VISIBLE
+            setOnClickListener {
+                aggregateSelectedChannels(tracker!!)
             }
-        }
-    }
-
-    private fun getTitle(): Int {
-        return when (Utils.variant) {
-            Constants.VARIANT_1 -> R.string.add_an_account
-            Constants.VARIANT_2, Constants.VARIANT_3 -> R.string.add_accounts_to_stax
-            else -> R.string.add_an_account //default title
         }
     }
 
@@ -140,19 +129,19 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
             }
 
             showCheckBalanceDialog(
-                if (selectedChannels.size > 1) R.string.check_balance_alt_plural
-                else R.string.check_balance_alt,
-                selectedChannels
+                    if (selectedChannels.size > 1) R.string.check_balance_alt_plural
+                    else R.string.check_balance_alt,
+                    selectedChannels
             )
         }
     }
 
     private fun showCheckBalanceDialog(message: Int, channels: List<Channel>) {
         dialog = StaxDialog(requireActivity())
-            .setDialogTitle(R.string.check_balance_title)
-            .setDialogMessage(message)
-            .setNegButton(R.string.later) { saveChannels(channels, false) }
-            .setPosButton(R.string.check_balance_title) { saveChannels(channels, true) }
+                .setDialogTitle(R.string.check_balance_title)
+                .setDialogMessage(message)
+                .setNegButton(R.string.later) { saveChannels(channels, false) }
+                .setPosButton(R.string.check_balance_title) { saveChannels(channels, true) }
         dialog!!.showIt()
     }
 

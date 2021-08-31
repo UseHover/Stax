@@ -163,7 +163,8 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         }
     }
 
-    private fun initAmplitude() = Amplitude.getInstance().initialize(this, getString(R.string.amp)).enableForegroundTracking(application)
+    private fun initAmplitude() = Amplitude.getInstance().initialize(this, getString(R.string.amp))
+            .enableForegroundTracking(application)
 
     private fun logPushNotificationIfRequired() = intent.extras?.let {
         val fcmTitle = it.getString(Constants.FROM_FCM)
@@ -182,24 +183,10 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
             setConfigSettingsAsync(configSettings)
             setDefaultsAsync(R.xml.remote_config_default)
             fetchAndActivate().addOnCompleteListener {
-                if (it.isSuccessful) {
-                    Timber.i("Config params updated: ${it.result}")
-                    Utils.variant = remoteConfig.getString("onboarding_app_variant")
-                } else
-                    Utils.variant = Constants.VARIANT_1
-
-                logVariant()
-
                 if (!selfDestructWhenAppVersionExpires())
                     validateUser()
             }
         }
-    }
-
-    private fun logVariant() {
-        val prop = JSONObject()
-        prop.put("Variant", Utils.variant)
-        Utils.logAnalyticsEvent(getString(R.string.fetched_app_variant), prop, this)
     }
 
     private fun selfDestructWhenAppVersionExpires(): Boolean {
@@ -264,7 +251,10 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         finish()
     }
 
-    private fun goToOnBoardingActivity() = startActivity(Intent(this, OnBoardingActivity::class.java))
+    private fun goToOnBoardingActivity() {
+        startActivity(Intent(this, OnBoardingActivity::class.java))
+        finish()
+    }
 
     private fun goToFulfillRequestActivity(intent: Intent) =
         startActivity(Intent(this, MainActivity::class.java).putExtra(Constants.REQUEST_LINK, intent.data.toString()))

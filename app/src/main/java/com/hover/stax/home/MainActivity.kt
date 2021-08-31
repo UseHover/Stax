@@ -258,8 +258,8 @@ class MainActivity : AbstractNavigationActivity(),
         launch {
             delay(1200L)
 
-            if (Utils.variant == Constants.VARIANT_3 && !Utils.getBoolean(Constants.SHOWN_SEND_MONEY_ACTION, this@MainActivity)
-                && balancesViewModel.runFlag.value == BalancesViewModel.NONE
+            if (!Utils.getBoolean(Constants.SHOWN_SEND_MONEY_ACTION, this@MainActivity)
+                    && balancesViewModel.runFlag.value == BalancesViewModel.NONE
             ) {
                 Utils.saveBoolean(Constants.SHOWN_SEND_MONEY_ACTION, true, this@MainActivity)
                 checkPermissionsAndNavigate(Constants.NAV_TRANSFER)

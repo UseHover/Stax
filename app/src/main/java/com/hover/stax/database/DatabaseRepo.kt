@@ -10,6 +10,7 @@ import com.hover.sdk.actions.HoverActionDao
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.sdk.sims.SimInfo
 import com.hover.sdk.sims.SimInfoDao
+import com.hover.sdk.transactions.Transaction
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
@@ -167,6 +168,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
             }
         }
     }
+
+
 
     private fun updateRequests(t: StaxTransaction?, contact: StaxContact) {
         if (t!!.transaction_type == HoverAction.RECEIVE) {
