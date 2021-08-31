@@ -25,24 +25,23 @@ public class StaxDialog extends AlertDialog {
     protected View.OnClickListener customPosListener;
 
     public StaxDialog(@NonNull Activity a) {
-        this(a, a.getLayoutInflater());
+        this(a, a.getLayoutInflater(), 0);
     }
 
-    private StaxDialog(Context c, LayoutInflater inflater) {
+    public StaxDialog(@NonNull Activity a, int viewRes) {
+        this(a, a.getLayoutInflater(), viewRes);
+    }
+
+    private StaxDialog(Context c, LayoutInflater inflater, int viewRes) {
         super(c);
         context = c;
-        view = inflater.inflate(R.layout.stax_dialog, null);
+        view = inflater.inflate(viewRes > 0 ? viewRes : R.layout.stax_dialog, null);
         customNegListener = null;
         customPosListener = null;
     }
 
     public StaxDialog setDialogTitle(int title) {
         setDialogTitle(context.getString(title));
-        return this;
-    }
-
-    public StaxDialog setCustomView(int viewRes) {
-        view = getLayoutInflater().inflate(viewRes, null);
         return this;
     }
 
