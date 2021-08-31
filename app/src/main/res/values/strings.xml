@@ -97,7 +97,11 @@
 
 	<!-- Permissions -->
 	<string name="permissions_title">Permissions needed</string>
-	<string name="permissions_basic_desc">We need phone permissions to see which accounts you might have.</string>
+	<string name="permissions_basic_title">We need to make a change to Phone &amp; SMS Permissions.</string>
+	<string name="permissions_basic_desc_1">Phone permission allows Stax to detect your SIM so we can show you the financial services available in your country.</string>
+	<string name="permissions_basic_desc_2">It also enables you to select recipients from your contacts when sending airtime or money.</string>
+	<string name="permissions_basic_desc_3">SMS Permission helps us detect via SMS receipt that your transactions are successful.</string>
+
 	<string name="permission_support_desc">We need phone permissions to generate your support ID</string>
 	<string name="nav_sim_permission">Grant SIM permission</string>
 	<string name="perm_dialoghead">One last thing…</string>
