@@ -41,9 +41,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_13"
-                    android:importantForAutofill="no"
                     android:hint="@string/bounty_email"
+                    android:importantForAutofill="no"
                     android:inputType="text" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/marketingOptIn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_5"
+                    android:layout_marginTop="-25dp"
+                    android:fontFamily="font-normal"
+                    android:gravity="center"
+                    android:text="@string/marketing_email_optin" />
 
             <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/continueEmailBountyButton"

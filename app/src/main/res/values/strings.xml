@@ -8,6 +8,7 @@
 	<string name="api_url" translatable="false">https://www.usehover.com/api</string>
 	<string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
 	<string name="bounty_endpoint">/stax_bounty_hunters</string>
+	<string name="users_endpoint">/stax_users</string>
 	<string name="stax_market_playstore_link" translatable="false">market://details?id=com.hover.stax</string>
 	<string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
 	<string name="stax_nolt_url">https://stax.nolt.io/</string>
@@ -447,5 +448,6 @@
 	<string name="loading_error">Unable to load FAQ, please try again</string>
 	<string name="faq_internet_error">This feature requires internet connection, please try again</string>
     <string name="working_offline">Working offline</string>
+    <string name="marketing_email_optin">"Stax can send me emails in the future. "</string>
 
 </resources>

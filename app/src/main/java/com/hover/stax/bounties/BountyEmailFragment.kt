@@ -22,23 +22,25 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListener {
 
     private var emailInput: StaxTextInputLayout? = null
-    private var binding: FragmentBountyEmailBinding? = null
+    private var _binding: FragmentBountyEmailBinding? = null
+    private val binding get() = _binding!!
+
     private var dialog: StaxDialog? = null
     private lateinit var networkMonitor: NetworkMonitor
     private val viewModel: BountyViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentBountyEmailBinding.inflate(inflater, container, false)
+        _binding = FragmentBountyEmailBinding.inflate(inflater, container, false)
         networkMonitor = NetworkMonitor(requireContext())
-        return binding!!.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeEmailResult()
-        emailInput = binding!!.emailInput
+        emailInput = binding.emailInput
         emailInput!!.text = getString(BountyActivity.EMAIL_KEY, requireActivity())
-        binding!!.continueEmailBountyButton.setOnClickListener(this)
+        binding.continueEmailBountyButton.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
@@ -46,7 +48,7 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
             logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext())
             if (validates()) {
                 emailInput!!.isEnabled = false
-                viewModel.uploadBountyUser(emailInput!!.text)
+                viewModel.uploadBountyUser(emailInput!!.text, binding.marketingOptIn.isChecked)
                 emailInput!!.setState(getString(R.string.bounty_uploading_email), AbstractStatefulInput.INFO)
             } else {
                 emailInput!!.setState(getString(R.string.bounty_email_error), AbstractStatefulInput.ERROR)
@@ -106,7 +108,7 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
     override fun onDestroyView() {
         super.onDestroyView()
         if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
-        binding = null
+        _binding = null
     }
 
     companion object {

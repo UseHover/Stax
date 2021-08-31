@@ -30,23 +30,22 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
     val transactions: LiveData<List<StaxTransaction>>
     private val filteredBountyChannels: MutableLiveData<List<Channel>?>
     private val bountyList = MediatorLiveData<List<Bounty>>()
-    private var sims: MutableLiveData<List<SimInfo>?>? = null
+    var sims: MutableLiveData<List<SimInfo>> = MutableLiveData()
     val bountyEmailLiveData : MutableLiveData<Map<Int, String?>> = MutableLiveData()
-    lateinit var defferedBountyList : Deferred<MutableList<Bounty>>
+    private lateinit var defferedBountyList : Deferred<MutableList<Bounty>>
 
-
-     fun uploadBountyUser(email:String) {
+     fun uploadBountyUser(email:String, optedIn: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = BountyEmailNetworking(getApplication()).uploadBountyUser(email)
+            val result = BountyEmailNetworking(getApplication()).uploadBountyUser(email, optedIn)
             bountyEmailLiveData.postValue(result)
         }
     }
 
     private fun loadSims() {
-        if (sims == null) {
-            sims = MutableLiveData()
+        viewModelScope.launch {
+            sims.postValue(repo.presentSims)
         }
-        Thread { sims!!.postValue(repo.presentSims) }.start()
+
         LocalBroadcastManager.getInstance(getApplication())
                 .registerReceiver(simReceiver, IntentFilter(getPackage(getApplication()) + ".NEW_SIM_INFO_ACTION"))
         Hover.updateSimInfo(getApplication())
@@ -55,24 +54,17 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
     private val simReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             viewModelScope.launch(Dispatchers.IO) {
-                sims!!.postValue(repo.presentSims)
+                sims.postValue(repo.presentSims)
             }
         }
     }
 
     fun isSimPresent(b: Bounty): Boolean {
-        if (sims!!.value == null || sims!!.value!!.isEmpty()) return false
-        for (sim in sims!!.value!!) {
+        if (sims.value.isNullOrEmpty()) return false
+        for (sim in sims.value!!) {
             for (i in 0 until b.action.hni_list.length()) if (b.action.hni_list.optString(i) == sim.osReportedHni) return true
         }
         return false
-    }
-
-    fun getSims(): LiveData<List<SimInfo>?> {
-        if (sims == null) {
-            sims = MutableLiveData()
-        }
-        return sims!!
     }
 
     private fun loadChannels(actions: List<HoverAction>?): LiveData<List<Channel>> {
@@ -138,9 +130,9 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
         filteredBountyChannels = MutableLiveData()
         filteredBountyChannels.value = null
         actions = repo.bountyActions
-        channels = Transformations.switchMap(actions) { actions: List<HoverAction>? -> loadChannels(actions) }
+        channels = Transformations.switchMap(actions, this::loadChannels)
         transactions = repo.bountyTransactions!!
-        bountyList.addSource(actions) { actions: List<HoverAction>? -> this.makeBounties(actions) }
-        bountyList.addSource(transactions) { transactions: List<StaxTransaction>? -> makeBountiesIfActions(transactions) }
+        bountyList.addSource(actions, this::makeBounties)
+        bountyList.addSource(transactions, this::makeBountiesIfActions)
     }
 }
