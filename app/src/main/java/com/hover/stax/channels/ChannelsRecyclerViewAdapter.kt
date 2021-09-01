@@ -21,7 +21,7 @@ class ChannelsRecyclerViewAdapter(var channelList: List<Channel>, var selectList
 
     override fun onBindViewHolder(holder: ChannelsViewHolder, position: Int) {
         val channel = channelList[holder.adapterPosition]
-        holder.bind(channel, selectionTracker?.isSelected(channel.id.toLong()))
+        holder.bind(channel, selectionTracker != null, selectionTracker?.isSelected(channel.id.toLong()))
         holder.itemView.setOnClickListener { selectListener.clickedChannel(channel) }
     }
 
