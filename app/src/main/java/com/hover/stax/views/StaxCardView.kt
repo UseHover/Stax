@@ -116,7 +116,7 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
             setBackButtonVisibility(View.VISIBLE);
             setIcon(icon);
             setTitle(title);
-            binding.content.setBackgroundColor(backgroundColor)
+            this@StaxCardView.setBackgroundColor(backgroundColor)
         }
     }
 
