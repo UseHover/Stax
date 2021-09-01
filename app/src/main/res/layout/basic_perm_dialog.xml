@@ -12,12 +12,12 @@
             android:padding="@dimen/margin_13">
 
         <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="@dimen/margin_34"
                 android:contentDescription="@string/permissions_basic_title"
-                android:src="@mipmap/fullsize_logo" />
+                app:srcCompat="@drawable/ic_shield_log" />
 
         <TextView
                 android:id="@+id/title"
