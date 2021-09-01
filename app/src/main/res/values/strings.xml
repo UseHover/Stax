@@ -382,8 +382,8 @@
 	<string name="bounty_api_other_error">Please try again. If this persists, kindly contact us at ussd@stax.me.</string>
 	<string name="bounty_pending_short_desc">We are verifying your transaction. If successful, expect to be paid within 10 business days.</string>
 	<string name="done">Done</string>
-	<string name="bounty_transaction_failed"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="mailto:help@stax.me?subject=Stax-support-%2$s"><u> <b> our requirements </b></u></a></font> and is no longer available]]></string>
-	<string name="bounty_transaction_failed_try_again"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="mailto:help@stax.me?subject=Stax-support-%2$s"><u> <b> our requirements. </b></u></a></font> Please try again]]></string>
+	<string name="bounty_transaction_failed"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c"><u> <b> our requirements </b></u></a></font> and is no longer available]]></string>
+	<string name="bounty_transaction_failed_try_again"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c"><u> <b> our requirements. </b></u></a></font> Please try again]]></string>
 	<string name="available_flows">AVAILABLE FLOWS</string>
 	<string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
 	<string name="bounty_claim_explained">To claim USD $%1$d, %2$s.\n\nAs soon as you\’re done, we will send you an email to collect information for payment. You will be paid in 7–10 business days </string>
