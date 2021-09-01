@@ -34,6 +34,7 @@
 
 	<string name="lang_cardhead">Choose a language</string>
 	<string-array name="supported_lang_codes">
+		<item>am</item>
 		<item>en</item>
 		<item>fr</item>
 		<item>sw</item>
