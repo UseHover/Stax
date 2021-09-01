@@ -9,12 +9,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/margin_13">
+            android:padding="@dimen/margin_16">
 
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_10"
                 android:layout_marginBottom="@dimen/margin_34"
                 android:contentDescription="@string/permissions_basic_title"
                 app:srcCompat="@drawable/ic_shield_log" />
