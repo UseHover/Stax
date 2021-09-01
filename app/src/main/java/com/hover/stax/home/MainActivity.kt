@@ -14,20 +14,20 @@ import com.hover.stax.R
 import com.hover.stax.balances.BalanceAdapter
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.channels.Channel
+import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.navigation.AbstractNavigationActivity
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
+import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionDetailsFragment
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -183,6 +183,21 @@ class MainActivity : AbstractNavigationActivity(),
         run(action!!, 0)
     }
 
+    fun reBuildHoverSession(transaction: StaxTransaction){
+        CoroutineScope(Dispatchers.IO).launch {
+            val actionAndChannelPair = historyViewModel.getActionAndChannel(transaction.action_id, transaction.channel_id)
+            val accountNumber = historyViewModel.getAccountNumber(transaction.counterparty_id)
+
+            val hsb : HoverSession.Builder = HoverSession.Builder(actionAndChannelPair.first, actionAndChannelPair.second, this@MainActivity, Constants.TRANSFERRED_INT)
+                    .extra(HoverAction.AMOUNT_KEY, Utils.formatAmount(transaction.amount.toString()))
+                    .extra(HoverAction.ACCOUNT_KEY, accountNumber)
+                    .extra(HoverAction.PHONE_KEY, accountNumber)
+
+            hsb.run()
+        }
+
+    }
+
     private fun run(action: HoverAction, index: Int) {
         if (balancesViewModel.getChannel(action.channel_id) != null) {
             val hsb = HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), this@MainActivity, index)
@@ -224,7 +239,7 @@ class MainActivity : AbstractNavigationActivity(),
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        showPopUpTransactionDetailsIfRequired(data)
+        showPopUpTransactionDetailsIfRequired(requestCode, data)
         handleAllOtherResults(requestCode, resultCode, data)
 
     }
@@ -242,9 +257,9 @@ class MainActivity : AbstractNavigationActivity(),
         }
     }
 
-    private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
+    private fun showPopUpTransactionDetailsIfRequired(requestCode: Int, data: Intent?) {
         data?.let {
-            if(it.action.equals(Constants.TRANSFERRED)){
+            if(it.action.equals(Constants.TRANSFERRED) || requestCode == Constants.TRANSFERRED_INT){
                 val uuid:String? = it.extras?.getString("uuid")
                 uuid?.let{
                     showTransactionPopup(uuid);

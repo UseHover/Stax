@@ -203,6 +203,12 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return contactDao[id]
     }
 
+    suspend fun getContact_Suspended(id: String?): StaxContact? {
+        return contactDao.get_suspended(id)
+    }
+
+
+
     fun getContactByPhone(phone: String): StaxContact? {
         return contactDao.getByPhone("%$phone%")
     }

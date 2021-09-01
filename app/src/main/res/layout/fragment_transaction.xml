@@ -42,14 +42,40 @@
                     app:staxCardColor="@color/colorPrimary"
                     app:title="">
 
-                <TextView
-                        android:id="@+id/notification_detail"
+                <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/margin_10"
-                        android:layout_marginBottom="@dimen/margin_3"
-                        android:fontFamily="font-normal"
-                        android:textSize="@dimen/text_16" />
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:id="@+id/notification_detail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/margin_10"
+                            android:layout_marginBottom="@dimen/margin_3"
+                            android:fontFamily="font-normal"
+                            android:textSize="@dimen/text_16" />
+
+                    <RelativeLayout
+                            android:id="@+id/transactionRetryButtonLayoutId"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:gravity="end"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+                        <androidx.appcompat.widget.AppCompatButton
+                                android:id="@+id/btnRetryTransaction"
+                                style="@style/StaxButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="font-medium"
+                                android:text="@string/try_again" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+
             </com.hover.stax.views.StaxCardView>
 
             <com.hover.stax.views.StaxCardView

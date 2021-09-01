@@ -8,10 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.hover.sdk.actions.HoverAction
+import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
 import com.hover.stax.bounties.BountyActivity
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
+import com.hover.stax.home.MainActivity
 import com.hover.stax.navigation.NavigationInterface
 import com.hover.stax.utils.DateUtils.humanFriendlyDate
 import com.hover.stax.utils.UIHelper
@@ -97,6 +99,18 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
         retryButton.setOnClickListener { v: View -> retryBountyClicked(v) }
     }
 
+    private fun setupRetryTransactionButton(transaction: StaxTransaction) {
+        val transactionButtonsLayout = binding!!.transactionRetryButtonLayoutId
+        val retryButton = binding!!.btnRetryTransaction
+        transactionButtonsLayout.visibility = View.VISIBLE
+        retryButton.setOnClickListener {
+            this.dismiss()
+            (requireActivity() as MainActivity).reBuildHoverSession(transaction)
+        }
+    }
+
+
+
     private fun updatePopupDesign() {
         if (!isFullScreen) {
             binding!!.ftMainBg.setBackgroundColor(resources.getColor(R.color.colorPrimary))
@@ -111,6 +125,7 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
     private fun showTransaction(transaction: StaxTransaction?) {
         if (transaction != null) {
             if (transaction.isRecorded) setupRetryBountyButton()
+            else if(transaction.status == Transaction.SUCCEEDED) setupRetryTransactionButton(transaction)
             updateDetails(transaction)
         }
     }
@@ -168,6 +183,8 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
     }
 
     private fun retryBountyClicked(v: View) {
+        this.dismiss()
+
         viewModel.transaction.value?.let {
             (requireActivity() as BountyActivity).retryCall(it.action_id)
         }
