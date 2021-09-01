@@ -35,6 +35,7 @@
 
 	<string name="lang_cardhead">Choose a language</string>
 	<string-array name="supported_lang_codes">
+		<item>am</item>
 		<item>en</item>
 		<item>fr</item>
 		<item>sw</item>
@@ -98,7 +99,11 @@
 
 	<!-- Permissions -->
 	<string name="permissions_title">Permissions needed</string>
-	<string name="permissions_basic_desc">We need phone permissions to see which accounts you might have.</string>
+	<string name="permissions_basic_title">We need to make a change to Phone &amp; SMS Permissions.</string>
+	<string name="permissions_basic_desc_1">Phone permission allows Stax to detect your SIM so we can show you the financial services available in your country.</string>
+	<string name="permissions_basic_desc_2">It also enables you to select recipients from your contacts when sending airtime or money.</string>
+	<string name="permissions_basic_desc_3">SMS Permission helps us detect via SMS receipt that your transactions are successful.</string>
+
 	<string name="permission_support_desc">We need phone permissions to generate your support ID</string>
 	<string name="nav_sim_permission">Grant SIM permission</string>
 	<string name="perm_dialoghead">One last thing…</string>
@@ -378,8 +383,8 @@
 	<string name="bounty_api_other_error">Please try again. If this persists, kindly contact us at ussd@stax.me.</string>
 	<string name="bounty_pending_short_desc">We are verifying your transaction. If successful, expect to be paid within 10 business days.</string>
 	<string name="done">Done</string>
-	<string name="bounty_transaction_failed"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="mailto:help@stax.me?subject=Stax-support-%2$s"><u> <b> our requirements </b></u></a></font> and is no longer available]]></string>
-	<string name="bounty_transaction_failed_try_again"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="mailto:help@stax.me?subject=Stax-support-%2$s"><u> <b> our requirements. </b></u></a></font> Please try again]]></string>
+	<string name="bounty_transaction_failed"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c"><u> <b> our requirements </b></u></a></font> and is no longer available]]></string>
+	<string name="bounty_transaction_failed_try_again"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c"><u> <b> our requirements. </b></u></a></font> Please try again]]></string>
 	<string name="available_flows">AVAILABLE FLOWS</string>
 	<string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
 	<string name="bounty_claim_explained">To claim USD $%1$d, %2$s.\n\nAs soon as you\’re done, we will send you an email to collect information for payment. You will be paid in 7–10 business days </string>
