@@ -37,19 +37,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
     public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
         StaxTransaction t = transactionList.get(position);
 
-        if (t.status.equals(Transaction.PENDING)) {
-            holder.binding.transactionItemLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.cardDarkBlue));
-            holder.binding.liCallout.setVisibility(View.VISIBLE);
-        }
-        else if(t.status.equals(Transaction.FAILED)) {
-            holder.binding.transactionItemLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.cardDarkRed));
-            holder.binding.liCallout.setText(t.getFullStatus().getDetail());
-            holder.binding.liCallout.setVisibility(View.VISIBLE);
-        }
-        else {
-            holder.binding.transactionItemLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.colorPrimary));
-            holder.binding.liCallout.setVisibility(View.GONE);
-        }
+        setBGAndCallout(t, holder);
 
         holder.binding.liDescription.setText(String.format("%s%s", t.description.substring(0, 1).toUpperCase(), t.description.substring(1)));
         holder.binding.liAmount.setText(t.getDisplayAmount());
@@ -58,6 +46,24 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
 
         holder.itemView.setOnClickListener(view -> selectListener.viewTransactionDetail(t.uuid));
     }
+
+    private void setBGAndCallout(StaxTransaction t, HistoryViewHolder holder) {
+        if (t.status.equals(Transaction.PENDING)) {
+            holder.binding.transactionItemLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.cardDarkBlue));
+            holder.binding.liCallout.setVisibility(View.VISIBLE);
+        }
+        else if(t.status.equals(Transaction.FAILED)) {
+            holder.binding.transactionItemLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.cardDarkRed));
+            holder.binding.liCallout.setText(t.getFullStatus().getDetail());
+            holder.binding.liCallout.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_info_red, 0, 0, 0);
+            holder.binding.liCallout.setVisibility(View.VISIBLE);
+        }
+        else {
+            holder.binding.transactionItemLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.colorPrimary));
+            holder.binding.liCallout.setVisibility(View.GONE);
+        }
+    }
+
 
     private boolean shouldShowDate(StaxTransaction t, int position) {
         return position == 0 ||
