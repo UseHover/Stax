@@ -119,7 +119,7 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
     private fun updateDetails(transaction: StaxTransaction) {
         binding!!.transactionDetailsCard.setTitle(transaction.description)
         binding!!.notificationCard.setStateInfo(transaction.fullStatus)
-        binding!!.notificationDetail.text = Html.fromHtml(resources.getString(transaction.fullStatus.getDetail()));
+        updateNotificationDetail(viewModel.action.value, transaction)
 
         binding!!.infoCard.detailsRecipientLabel.setText(if (transaction.transaction_type == HoverAction.RECEIVE) R.string.sender_label else R.string.recipient_label)
         binding!!.infoCard.detailsAmount.text = transaction.displayAmount
@@ -137,6 +137,10 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
 
     private fun showActionDetails(action: HoverAction?) {
         binding!!.infoCard.detailsNetwork.text = action?.from_institution_name
+        updateNotificationDetail(action, viewModel.transaction.value)
+    }
+    private fun updateNotificationDetail(action: HoverAction?, transaction: StaxTransaction?) {
+        binding!!.notificationDetail.text = Html.fromHtml(resources.getString(transaction?.fullStatus!!.getDetail(), action?.from_institution_name));
     }
 
     private fun updateRecipient(contact: StaxContact?) {
