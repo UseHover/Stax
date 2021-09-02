@@ -194,7 +194,7 @@
 	<string name="descrip_recorded">Recorded USSD session on %1$s</string>
 	<string name="fab_transfernow">Send money now</string>
 	<string name="fab_airtimenow">Buy airtime now</string>
-	<string name="noworry_explain">Don\'t worry. You can review the info after you press the Continue button.</string>
+	<string name="noworry_explain">You can review this info in the next step.</string>
 	<string name="descrip_airtime_sched">Buy airtime with %1$s for %2$s</string>
 
 	<!-- Request -->
