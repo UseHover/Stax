@@ -4,14 +4,12 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.view.View
-import android.view.animation.AnimationUtils
 import androidx.lifecycle.Observer
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.balances.BalanceAdapter
+import com.hover.stax.balances.BalancesFragment
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.databinding.ActivityMainBinding
@@ -19,7 +17,6 @@ import com.hover.stax.hover.HoverSession
 import com.hover.stax.navigation.AbstractNavigationActivity
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
-import com.hover.stax.transactions.TransactionDetailsFragment
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.DateUtils
@@ -35,7 +32,7 @@ import timber.log.Timber
 class MainActivity : AbstractNavigationActivity(),
         BalancesViewModel.RunBalanceListener,
         BalanceAdapter.BalanceListener,
-        BiometricChecker.AuthListener{
+        BiometricChecker.AuthListener {
 
     private val balancesViewModel: BalancesViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
@@ -237,16 +234,22 @@ class MainActivity : AbstractNavigationActivity(),
                 balancesViewModel.setRan(requestCode)
                 if (resultCode == RESULT_OK && data != null && data.action != null) onProbableHoverCall(data)
 
+                showBalanceCards()
                 launchSendMoney()
             }
         }
     }
 
+    private fun showBalanceCards() {
+        val balanceFragment = supportFragmentManager.findFragmentById(R.id.navigation_balance) as BalancesFragment
+        balanceFragment.showBalanceCards(true)
+    }
+
     private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
         data?.let {
-            if(it.action.equals(Constants.TRANSFERRED)){
-                val uuid:String? = it.extras?.getString("uuid")
-                uuid?.let{
+            if (it.action.equals(Constants.TRANSFERRED)) {
+                val uuid: String? = it.extras?.getString("uuid")
+                uuid?.let {
                     showTransactionPopup(uuid);
                 }
                 return@let
@@ -270,6 +273,4 @@ class MainActivity : AbstractNavigationActivity(),
     private fun showTransactionPopup(uuid: String) {
         navigateToTransactionDetailsFragment(uuid, supportFragmentManager, false)
     }
-
-
 }
