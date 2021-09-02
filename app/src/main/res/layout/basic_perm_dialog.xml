@@ -51,17 +51,6 @@
                 android:drawablePadding="@dimen/margin_13"
                 android:fontFamily="font-normal"
                 android:textColor="@color/offWhite"
-                android:text="@string/permissions_basic_desc_2"
-                app:drawableStartCompat="@drawable/ic_check" />
-
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_16"
-                android:layout_marginBottom="@dimen/margin_13"
-                android:drawablePadding="@dimen/margin_13"
-                android:fontFamily="font-normal"
-                android:textColor="@color/offWhite"
                 android:text="@string/permissions_basic_desc_3"
                 app:drawableStartCompat="@drawable/ic_check" />
 
