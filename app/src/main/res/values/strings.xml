@@ -129,7 +129,7 @@
 	<string name="pending_cardHead">PENDING</string>
 	<string name="unsuccessful_cardHead">UNSUCCESSFUL</string>
 	<string name="confirmed_desc">We got a message from %1$s confirming that this transaction was successful.</string>
-	<string name="pending_desc">We received no response from %1$s. We don\’t think this transaction worked. Please try again.</string>
+	<string name="unsuccessful_incomplete_desc">We received no response from this service. We don\’t think this transaction worked. Please try again.</string>
 	<string name="unsuccessful_desc">We got a message from %1$s confirming that this transaction has failed. Please try again.</string>
 
 	<!-- SDK Overrides -->

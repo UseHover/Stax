@@ -40,7 +40,13 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
         if (t.status.equals(Transaction.PENDING)) {
             holder.binding.transactionItemLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.cardDarkBlue));
             holder.binding.liCallout.setVisibility(View.VISIBLE);
-        } else {
+        }
+        else if(t.status.equals(Transaction.FAILED)) {
+            holder.binding.transactionItemLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.cardDarkRed));
+            holder.binding.liCallout.setText(t.getFullStatus().getDetail());
+            holder.binding.liCallout.setVisibility(View.VISIBLE);
+        }
+        else {
             holder.binding.transactionItemLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.colorPrimary));
             holder.binding.liCallout.setVisibility(View.GONE);
         }
