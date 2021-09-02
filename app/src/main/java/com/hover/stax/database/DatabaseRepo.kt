@@ -125,8 +125,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return transactionDao.getTransactionCount(String.format("%02d", lastMonth().first), lastMonth().second.toString())!! > 0
     }
 
-    fun getCompleteTransferTransactions(channelId: Int): LiveData<List<StaxTransaction>>? {
-        return transactionDao.getCompleteAndPendingTransfers(channelId)
+    fun getAllTransferTransactions(channelId: Int): LiveData<List<StaxTransaction>>? {
+        return transactionDao.getAllTransfers(channelId)
     }
 
     @SuppressLint("DefaultLocale")

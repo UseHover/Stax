@@ -50,11 +50,19 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         super.onViewCreated(view, savedInstanceState)
 
         binding.channelsListCard.setTitle(getString(R.string.add_accounts_to_stax))
-        binding.selectedList.layoutManager = UIHelper.setMainLinearManagers(requireContext())
-        binding.selectedList.setHasFixedSize(true)
-        binding.channelsList.layoutManager = UIHelper.setMainLinearManagers(requireContext())
-        binding.channelsList.setHasFixedSize(true)
-        binding.channelsList.adapter = selectAdapter
+        binding.selectedList.apply {
+            layoutManager = UIHelper.setMainLinearManagers(requireContext())
+            setHasFixedSize(true)
+            isNestedScrollingEnabled = false
+        }
+
+        binding.channelsList.apply {
+            layoutManager = UIHelper.setMainLinearManagers(requireContext())
+            setHasFixedSize(true)
+            adapter = selectAdapter
+            isNestedScrollingEnabled = false
+        }
+
         setUpMultiselect()
 
         channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { channels -> onSelectedLoaded(channels) }
@@ -73,7 +81,6 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         selectAdapter.setTracker(tracker!!)
 
         binding.continueBtn.apply {
-            visibility = VISIBLE
             setOnClickListener {
                 aggregateSelectedChannels(tracker!!)
             }
