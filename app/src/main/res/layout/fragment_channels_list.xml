@@ -1,67 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/error_text"
+            android:layout_marginBottom="@dimen/margin_13"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <com.hover.stax.views.StaxCardView
-                android:id="@+id/selectedChannels_card"
+        <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:defaultBackPress="true"
-                app:showBack="true"
-                app:title="@string/your_accounts">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/selectedList"
+            <com.hover.stax.views.StaxCardView
+                    android:id="@+id/selectedChannels_card"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    app:defaultBackPress="true"
+                    app:showBack="true"
+                    app:title="@string/your_accounts">
 
-        </com.hover.stax.views.StaxCardView>
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/selectedList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
-        <com.hover.stax.views.StaxCardView
-                android:id="@+id/channels_list_card"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:defaultBackPress="true"
-                app:showBack="false"
-                app:title="@string/add_an_account">
+            </com.hover.stax.views.StaxCardView>
 
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/channelsList"
+            <com.hover.stax.views.StaxCardView
+                    android:id="@+id/channels_list_card"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="wrap_content"
+                    app:defaultBackPress="true"
+                    app:showBack="false"
+                    app:title="@string/add_an_account">
 
-        </com.hover.stax.views.StaxCardView>
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/channelsList"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
 
-        <TextView
-                android:id="@+id/error_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:layout_marginStart="@dimen/margin_13"
-                android:drawablePadding="@dimen/margin_5"
-                app:drawableStartCompat="@drawable/ic_error"
-                android:fontFamily="font-medium"
-                android:text="@string/channels_error_nodata"
-                android:textColor="@color/stax_state_red"
-                android:visibility="gone" />
+            </com.hover.stax.views.StaxCardView>
 
-        <Button
-                android:id="@+id/continue_btn"
-                style="@style/StaxFabExtended"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="@dimen/margin_13"
-                android:layout_marginEnd="@dimen/margin_13"
-                android:text="@string/btn_continue"
-                android:visibility="gone" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+    <TextView
+            android:id="@+id/error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_13"
+            android:layout_marginTop="@dimen/margin_13"
+            android:drawablePadding="@dimen/margin_5"
+            android:layout_marginBottom="@dimen/margin_8"
+            android:fontFamily="font-medium"
+            android:gravity="center_vertical"
+            android:text="@string/channels_error_nodata"
+            app:layout_goneMarginBottom="@dimen/margin_13"
+            android:textColor="@color/stax_state_red"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/continue_btn"
+            android:visibility="gone"
+            app:drawableStartCompat="@drawable/ic_error" />
+
+    <Button
+            android:id="@+id/continue_btn"
+            style="@style/StaxFabExtended"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginBottom="@dimen/margin_21"
+            android:layout_marginTop="@dimen/margin_13"
+            android:layout_marginEnd="@dimen/margin_13"
+            android:text="@string/btn_continue"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
