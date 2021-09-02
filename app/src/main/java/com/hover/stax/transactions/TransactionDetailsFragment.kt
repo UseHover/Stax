@@ -155,7 +155,7 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
     private fun showTransaction(transaction: StaxTransaction?) {
         if (transaction != null) {
             if (transaction.isRecorded) setupRetryBountyButton()
-            else if(transaction.status == Transaction.SUCCEEDED) {
+            else if(transaction.status == Transaction.FAILED) {
                 val button = showButtonToClick()
                 if(shouldContactSupport(transaction.uuid)) setupContactSupportButton(transaction.uuid, button)
                 else retryTransactionClicked(transaction, button)
