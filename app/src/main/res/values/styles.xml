@@ -92,7 +92,7 @@
 
     <style name="StaxFabExtended" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
         <item name="android:padding">@dimen/margin_13</item>
-        <item name="android:layout_marginBottom">@dimen/margin_89</item>
+<!--        <item name="android:layout_marginBottom">@dimen/margin_89</item>-->
         <item name="android:radius">5dp</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="backgroundTint">@color/brightBlue</item>
@@ -188,6 +188,9 @@
     </style>
 
     <style name="StaxDialog" parent="Theme.MaterialComponents.Dialog">
+        <item name="android:windowMinWidthMajor">95%</item>
+        <item name="android:windowMinWidthMinor">95%</item>
+
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryVariant">@color/brightBlue</item>
         <item name="colorOnPrimary">@color/offWhite</item>
@@ -220,6 +223,11 @@
 
     <style name="StaxSnackbarText" parent="@style/Widget.MaterialComponents.Snackbar.TextView">
         <item name="android:textColor">@color/offWhite</item>
+    </style>
+
+    <style name="StaxDialogFullScreen" parent="StaxTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
     </style>
 </resources>
 

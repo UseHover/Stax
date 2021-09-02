@@ -73,11 +73,18 @@ public class PermissionUtils {
 
     public static void showInformativeBasicPermissionDialog(int permissionMessage, View.OnClickListener posListener, View.OnClickListener negListener, Activity activity) {
         Utils.logAnalyticsEvent(activity.getString(R.string.perms_basic_dialog), activity);
-        new StaxDialog(activity)
-                .setDialogTitle(R.string.permissions_title)
-                .setDialogMessage(permissionMessage > 0 ? permissionMessage : R.string.permissions_basic_desc)
-                .setPosButton(R.string.btn_ok, posListener)
-                .setNegButton(R.string.btn_cancel, negListener)
-                .showIt();
+        if (permissionMessage > 0) {
+            new StaxDialog(activity)
+                    .setDialogTitle(R.string.permissions_title)
+                    .setDialogMessage(permissionMessage)
+                    .setPosButton(R.string.btn_ok, posListener)
+                    .setNegButton(R.string.btn_cancel, negListener)
+                    .showIt();
+        } else {
+            new StaxDialog(activity, R.layout.basic_perm_dialog)
+                    .setPosButton(R.string.btn_ok, posListener)
+                    .setNegButton(R.string.btn_cancel, negListener)
+                    .showIt();
+        }
     }
 }

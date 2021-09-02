@@ -6,6 +6,7 @@
 	<color name="brightBluePressed" tools:override="true">#2AAFDC</color>
 	<color name="cardViewColor">#292E35</color>
 	<color name="cardDarkBlue">#1D2735</color>
+	<color name="cardDarkRed">#5A120D</color>
 	<color name="buttonColor">#3A3E45</color>
 	<color name="grey">#B1B2B6</color>
 	<color name="offWhite">#F1F1F4</color>
@@ -20,6 +21,7 @@
 	<color name="stax_state_green">#05EB8F</color>
 	<color name="stax_state_blue">#1878F9</color>
 	<color name="stax_state_yellow">#FFCA32</color>
+	<color name="stax_bounty_red_bg">#342C34</color>
 	<color name="stax_state_red">#FF0028</color>
 	<color name="pending_brown">#343734</color>
 	<color name="muted_green">#2A3932</color>

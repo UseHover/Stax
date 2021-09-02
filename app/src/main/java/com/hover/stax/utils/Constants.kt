@@ -20,6 +20,8 @@ object Constants {
     const val REQUEST_REQUEST = 301
     const val SMS = 303
 
+    const val UUID = "uuid";
+
     const val size55 = 55
 
     const val TEST_MODE = "test_mode"

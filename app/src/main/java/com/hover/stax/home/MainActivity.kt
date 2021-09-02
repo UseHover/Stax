@@ -9,6 +9,7 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.balances.BalanceAdapter
+import com.hover.stax.balances.BalancesFragment
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.databinding.ActivityMainBinding
@@ -28,7 +29,10 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
-class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener, BiometricChecker.AuthListener {
+class MainActivity : AbstractNavigationActivity(),
+        BalancesViewModel.RunBalanceListener,
+        BalanceAdapter.BalanceListener,
+        BiometricChecker.AuthListener {
 
     private val balancesViewModel: BalancesViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
@@ -216,6 +220,13 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+        showPopUpTransactionDetailsIfRequired(data)
+        handleAllOtherResults(requestCode, resultCode, data)
+
+    }
+
+    private fun handleAllOtherResults(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             Constants.TRANSFER_REQUEST -> data?.let { onProbableHoverCall(it) }
             Constants.REQUEST_REQUEST -> if (resultCode == RESULT_OK) onRequest(data!!)
@@ -223,7 +234,25 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
                 balancesViewModel.setRan(requestCode)
                 if (resultCode == RESULT_OK && data != null && data.action != null) onProbableHoverCall(data)
 
+                showBalanceCards()
                 launchSendMoney()
+            }
+        }
+    }
+
+    private fun showBalanceCards() {
+        val balanceFragment = supportFragmentManager.findFragmentById(R.id.navigation_balance) as BalancesFragment
+        balanceFragment.showBalanceCards(true)
+    }
+
+    private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
+        data?.let {
+            if (it.action.equals(Constants.TRANSFERRED)) {
+                val uuid: String? = it.extras?.getString("uuid")
+                uuid?.let {
+                    showTransactionPopup(uuid);
+                }
+                return@let
             }
         }
     }
@@ -232,8 +261,8 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         launch {
             delay(1200L)
 
-            if (Utils.variant == Constants.VARIANT_3 && !Utils.getBoolean(Constants.SHOWN_SEND_MONEY_ACTION, this@MainActivity)
-                && balancesViewModel.runFlag.value == BalancesViewModel.NONE
+            if (!Utils.getBoolean(Constants.SHOWN_SEND_MONEY_ACTION, this@MainActivity)
+                    && balancesViewModel.runFlag.value == BalancesViewModel.NONE
             ) {
                 Utils.saveBoolean(Constants.SHOWN_SEND_MONEY_ACTION, true, this@MainActivity)
                 checkPermissionsAndNavigate(Constants.NAV_TRANSFER)
@@ -241,4 +270,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         }
     }
 
+    private fun showTransactionPopup(uuid: String) {
+        navigateToTransactionDetailsFragment(uuid, supportFragmentManager, false)
+    }
 }

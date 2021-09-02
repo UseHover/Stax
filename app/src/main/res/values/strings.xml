@@ -13,6 +13,7 @@
 	<string name="stax_nolt_url">https://stax.nolt.io/</string>
 	<string name="receive_stax_updates_url">https://416e906b.sibforms.com/serve/MUIEAAS88NDe6oTn7nl8YrIqgutsJ_GgyCYRWVsZ-S54quVNmBhvpsu70WpNXrZd-n6H5r8m1ZRfuTl8ckiQrB4sLIdNSx0Y_DFZ7_hQGCDv9PG6N0ncsHwWW3OYsMlPMHgQSR6OZf8xK8HC-NA3p3T71Pv1Coy_n9oiDRwIu7HCryUfDtfHr11mXSQ5S3JwcOd8cN7FL1ewDRqu</string>
 	<string name="mixpanel_token" translatable="false">82efeb23b6d38509989f592c8f4b21c2</string>
+	<string name="bounty_transactions_endpoint" translatable="false">/get_bounty_results?device_id=%1$s</string>
 
 	<string name="nav_home">Home</string>
 	<string name="nav_balance_and_history">Balance and history</string>
@@ -33,6 +34,7 @@
 
 	<string name="lang_cardhead">Choose a language</string>
 	<string-array name="supported_lang_codes">
+		<item>am</item>
 		<item>en</item>
 		<item>fr</item>
 		<item>sw</item>
@@ -51,12 +53,9 @@
 	<!-- ONBOARDING -->
 	<string name="stax_tagline">Move money without stress</string>
 	<string name="splash_screen_img_desc">Stax background</string>
-	<string name="slide_1_title">Do All Your Transactions Offline!</string>
-	<string name="slide_1_desc">You don\'t need the internet to move money or check your account balances on Stax.</string>
-	<string name="slide_2_title">Move Money\nWithout Stress!</string>
-	<string name="slide_2_desc">Transfer funds between your accounts, buy airtime, send and request money.</string>
-	<string name="slide_3_title">All Your Financial Accounts in One App.</string>
-	<string name="slide_3_desc">Link all your bank &amp; mobile money accounts to Stax and move money from one place.</string>
+	<string name="slide_1_title">Secure. Fast. Convenient</string>
+	<string name="slide_1_desc">Send money and buy airtime offline using your existing bank and momo accounts</string>
+	<string name="onboarding_link_accounts">Link your accounts now</string>
 
 	<!-- Home -->
 	<string name="welcome_to">Welcome to</string>
@@ -99,7 +98,11 @@
 
 	<!-- Permissions -->
 	<string name="permissions_title">Permissions needed</string>
-	<string name="permissions_basic_desc">We need phone permissions to see which accounts you might have.</string>
+	<string name="permissions_basic_title">We need to make a change to Phone &amp; SMS Permissions.</string>
+	<string name="permissions_basic_desc_1">Phone permission allows Stax to detect your SIM so we can show you the financial services available in your country.</string>
+	<string name="permissions_basic_desc_2">It also enables you to select recipients from your contacts when sending airtime or money.</string>
+	<string name="permissions_basic_desc_3">SMS Permission helps us detect via SMS receipt that your transactions are successful.</string>
+
 	<string name="permission_support_desc">We need phone permissions to generate your support ID</string>
 	<string name="nav_sim_permission">Grant SIM permission</string>
 	<string name="perm_dialoghead">One last thing…</string>
@@ -120,6 +123,14 @@
 	<string name="balance_msg">Checking %1$s balance</string>
 	<string name="airtime_msg">Buying airtime</string>
 	<string name="transfer_msg">Transferring money</string>
+
+	<!-- TRANSACTION STATUS -->
+	<string name="confirmed_cardHead">SUCCEEDED</string>
+	<string name="pending_cardHead">PENDING</string>
+	<string name="unsuccessful_cardHead">UNSUCCESSFUL</string>
+	<string name="confirmed_desc">We got a message from %1$s confirming that this transaction was successful.</string>
+	<string name="pending_desc">We received no response from %1$s. We don\’t think this transaction worked. Please try again.</string>
+	<string name="unsuccessful_desc">We got a message from %1$s confirming that this transaction has failed. Please try again.</string>
 
 	<!-- SDK Overrides -->
 	<string name="hsdk_overlay_msg"><![CDATA[<font color="#1E232A">Show progress updates by turning <b>switch ON</b> in the next screen.</font>]]></string>
@@ -183,7 +194,7 @@
 	<string name="descrip_recorded">Recorded USSD session on %1$s</string>
 	<string name="fab_transfernow">Send money now</string>
 	<string name="fab_airtimenow">Buy airtime now</string>
-	<string name="noworry_explain">Don\'t worry. You can review the info after you press the Continue button.</string>
+	<string name="noworry_explain">You can review this info in the next step.</string>
 	<string name="descrip_airtime_sched">Buy airtime with %1$s for %2$s</string>
 
 	<!-- Request -->
@@ -263,6 +274,7 @@
 	<string name="network_label">Recipient account</string>
 	<string name="id_label">Transaction ID</string>
 	<string name="session_cardhead">Messages</string>
+	<string name="see_more">See more</string>
 
 	<!-- Canceling -->
 	<string name="cancelfuture_head">Cancel future transaction</string>
@@ -305,7 +317,7 @@
 	<string name="FAQs">FAQs</string>
 	<string name="request_feature">Request a feature in Stax!</string>
 	<string name="contact_support">Contact support</string>
-	<string name="stax_support_email">support@stax.me</string>
+	<string name="stax_support_email">help@stax.me</string>
 	<string name="stax_emailing_subject">Stax support id - %1$s</string>
 	<string name="send_email_using">Send mail using…</string>
 
@@ -368,13 +380,13 @@
 	<string name="bounty_uploading_email">Connecting, please wait…</string>
 	<string name="bounty_api_internet_error">Please ensure you have a data internet connection</string>
 	<string name="bounty_api_other_error">Please try again. If this persists, kindly contact us at ussd@stax.me.</string>
-	<string name="bounty_pending_short_desc">We are verifying your transaction. If successful, expect to be paid within 7 business days.</string>
+	<string name="bounty_pending_short_desc">We are verifying your transaction. If successful, expect to be paid within 10 business days.</string>
 	<string name="done">Done</string>
-	<string name="bounty_transaction_failed">This submission did not meet our requirement</string>
-	<string name="bounty_transaction_failed_try_again">This submission did not meet our requirement, but you can try again</string>
+	<string name="bounty_transaction_failed"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c"><u> <b> our requirements </b></u></a></font> and is no longer available]]></string>
+	<string name="bounty_transaction_failed_try_again"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c"><u> <b> our requirements. </b></u></a></font> Please try again]]></string>
 	<string name="available_flows">AVAILABLE FLOWS</string>
 	<string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
-	<string name="bounty_claim_explained">To claim USD $%1$d, %2$s.\n\nAs soon as you\’re done, we will send you an email to collect information for payment. You will be paid in 1–5 business days </string>
+	<string name="bounty_claim_explained">To claim USD $%1$d, %2$s.\n\nAs soon as you\’re done, we will send you an email to collect information for payment. You will be paid in 7–10 business days </string>
 	<string name="start_USSD_Flow">Start USSD Flow</string>
 	<string name="checking_your_flow">Checking your flow</string>
 	<string name="bounty_flow_pending_dialog_msg"><![CDATA[Thank you for your submission. If the transaction failed, please retry. Once we verify a successful transaction, we will reach out to you for your payment details.<br/><br/>If you have questions, please email us at <a href="https://ussd@stax.me"> <b><font color=#1878F9> ussd@stax.me </b></a>]]></string>
@@ -435,7 +447,7 @@
 	<string name="test_mode_enabled">Test mode engaged</string>
 
 	<string name="faq_title">Frequently asked questions</string>
-	<string name="faq_content"><![CDATA[ %1$s <p/>Still have questions? <p/> <a href="mailto:support@stax.me?subject=Stax-support-%2$s"><u> <b><font color=#1878F9> Email stax support </b><u></a>]]></string>
+	<string name="faq_content"><![CDATA[ %1$s <p/>Still have questions? <p/> <a href="mailto:help@stax.me?subject=Stax-support-%2$s"><u> <b><font color=#1878F9> Email stax support </b><u></a>]]></string>
 	<string name="loading">Loading…</string>
 	<string name="loading_error">Unable to load FAQ, please try again</string>
 	<string name="faq_internet_error">This feature requires internet connection, please try again</string>
