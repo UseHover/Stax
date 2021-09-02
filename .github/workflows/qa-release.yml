@@ -41,7 +41,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           # Specific java version to run
-          java-version: 1.8
+          java-version: 11
 
 
       # Run the assembleRelease gradle command to start the build process for our buildVariant
