@@ -1,16 +1,17 @@
 package com.hover.stax.database
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.actions.HoverActionDao
+import com.hover.sdk.api.Hover
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.sdk.sims.SimInfo
 import com.hover.sdk.sims.SimInfoDao
-import com.hover.sdk.transactions.Transaction
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
@@ -24,6 +25,7 @@ import com.hover.stax.schedules.Schedule
 import com.hover.stax.schedules.ScheduleDao
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionDao
+import com.hover.stax.transactions.UssdCallResponse
 import com.hover.stax.utils.DateUtils.lastMonth
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.paymentLinkCryptography.Encryption
@@ -150,17 +152,20 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
                 val a = getAction(intent.getStringExtra(HoverAction.ID_KEY))
                 val channel = getChannel(a.channel_id)
                 val contact = StaxContact.findOrInit(intent, channel.countryAlpha2, t, this)
+                var isNew = false
 
                 if (contact.accountNumber != null)
                     save(contact)
 
                 if (t == null) {
+                    isNew = true
                     c?.let { Utils.logAnalyticsEvent(c.getString(R.string.initializing_ussd_services), c) }
                     t = StaxTransaction(intent, a, contact, c)
                     transactionDao.insert(t)
                     t = transactionDao.getTransaction(t.uuid)
                 }
-                t!!.update(intent, a, contact, c)
+
+                t!!.update(intent, a, contact, isNew, c)
                 transactionDao.update(t)
                 updateRequests(t, contact)
             } catch (e: Exception) {
@@ -168,8 +173,6 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
             }
         }
     }
-
-
 
     private fun updateRequests(t: StaxTransaction?, contact: StaxContact) {
         if (t!!.transaction_type == HoverAction.RECEIVE) {
