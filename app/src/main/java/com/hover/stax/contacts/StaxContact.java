@@ -83,7 +83,7 @@ public class StaxContact {
 		if (contactData != null) {
 			Cursor cur = c.getContentResolver().query(contactData, null, null, null, null);
 			if (cur != null && cur.getCount() > 0 && cur.moveToNext()) {
-				id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+				id = cur.getString(cur.getColumnIndex(ContactsContract.RawContacts._ID));
 				Timber.e("pulled contact with id: %s", id);
 				lookupKey = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
 				name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));

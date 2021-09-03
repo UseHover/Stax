@@ -4,14 +4,11 @@ import android.app.Activity
 import android.content.*
 import android.graphics.Bitmap
 import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.IdRes
-import androidx.navigation.NavController
+import androidx.core.content.ContextCompat.startActivity
 import com.amplitude.api.Amplitude
 import com.amplitude.api.Identify
 import com.appsflyer.AppsFlyerLib
@@ -21,16 +18,13 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
-import com.mixpanel.android.mpmetrics.MixpanelAPI
 import org.json.JSONException
 import org.json.JSONObject
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import java.text.DecimalFormat
 import java.util.*
-import kotlin.properties.Delegates
+
 
 object Utils {
 
@@ -279,9 +273,14 @@ object Utils {
         i.data = Uri.parse(url)
         ctx.startActivity(i)
     }
-
     fun openUrl(urlRes: Int, ctx: Context) {
         openUrl(ctx.resources.getString(urlRes), ctx)
+    }
+
+    fun openEmail(email:String, subject:String, ctx: Context) {
+        val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", email, null))
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
+        ctx.startActivity(Intent.createChooser(emailIntent, "Send email..."))
     }
 
     @JvmStatic

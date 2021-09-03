@@ -31,7 +31,12 @@ class TransactionStatus(val transaction: StaxTransaction) {
 
     fun getDetail(): Int {
         return when (transaction.status) {
-            Transaction.FAILED -> if (transaction.isRecorded) R.string.bounty_transaction_failed else R.string.unsuccessful_desc
+            Transaction.FAILED -> if (transaction.isRecorded) R.string.bounty_transaction_failed else {
+                if(transaction.category !=null && transaction.category == StaxTransaction.CATEGORY_INCOMPLETE_SESSION)
+                    R.string.unsuccessful_incomplete_desc
+                else
+                    R.string.unsuccessful_desc
+            }
             Transaction.PENDING -> if (transaction.isRecorded) R.string.bounty_flow_pending_dialog_msg else R.string.pending_cardbody
             else -> if (transaction.isRecorded) R.string.flow_done_desc else R.string.confirmed_desc
         }
