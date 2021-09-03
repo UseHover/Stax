@@ -165,23 +165,13 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
                     t = transactionDao.getTransaction(t.uuid)
                 }
 
-                t!!.update(intent, a, contact, c)
-                if( !isNew && shouldFlagFailure(t, c)) t.setFailed_Incomplete()
-
+                t!!.update(intent, a, contact, isNew, c)
                 transactionDao.update(t)
                 updateRequests(t, contact)
             } catch (e: Exception) {
                 Timber.e(e, "error")
             }
         }
-    }
-
-    private fun shouldFlagFailure(transaction: StaxTransaction, c: Context?) : Boolean {
-        val actionId = transaction.action_id
-        val action = actionDao.getAction(actionId)
-        val numOfSteps = action.custom_steps.length()
-        val ussds = UssdCallResponse.generateConvo(Hover.getTransaction(transaction.uuid, c), action)
-        return ussds.size < numOfSteps -1
     }
 
     private fun updateRequests(t: StaxTransaction?, contact: StaxContact) {

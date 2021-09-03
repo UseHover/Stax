@@ -10,6 +10,7 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.hover.sdk.actions.HoverAction;
+import com.hover.sdk.api.Hover;
 import com.hover.sdk.api.HoverParameters;
 import com.hover.sdk.transactions.Transaction;
 import com.hover.sdk.transactions.TransactionContract;
@@ -108,8 +109,9 @@ public class StaxTransaction {
         }
     }
 
-    public void update(Intent data, HoverAction action, StaxContact contact, Context c) {
-        status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
+    public void update(Intent data, HoverAction action, StaxContact contact, Boolean isNewTransaction, Context c) {
+        if( !isNewTransaction && isSessionIncomplete(action, c)) setFailed_Incomplete();
+        else status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
 
         Timber.e("Updating to status %s - %s", status, action);
         updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, initiated_at);
@@ -120,6 +122,12 @@ public class StaxTransaction {
             counterparty_id = contact.id;
 
         description = generateDescription(action, contact, c);
+    }
+
+    private Boolean isSessionIncomplete(HoverAction action, Context c)   {
+        int numOfSteps = action.custom_steps.length();
+        int ussdLength = Hover.getTransaction(uuid, c).ussdMessages.length();
+        return ussdLength < numOfSteps -1;
     }
 
     public void setFailed_Incomplete() {
