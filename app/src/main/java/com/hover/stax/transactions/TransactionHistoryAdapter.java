@@ -1,5 +1,7 @@
 package com.hover.stax.transactions;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,8 +55,9 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
             holder.binding.liCallout.setVisibility(View.VISIBLE);
         }
         else if(t.status.equals(Transaction.FAILED)) {
-            holder.binding.transactionItemLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.cardDarkRed));
-            holder.binding.liCallout.setText(t.getFullStatus().getDetail());
+            Resources res = holder.itemView.getContext().getResources();
+            holder.binding.transactionItemLayout.setBackgroundColor(res.getColor(R.color.cardDarkRed));
+            holder.binding.liCallout.setText(res.getString(t.getFullStatus().getDetail(), res.getString(R.string.from_this_service) ));
             holder.binding.liCallout.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_info_red, 0, 0, 0);
             holder.binding.liCallout.setVisibility(View.VISIBLE);
         }
