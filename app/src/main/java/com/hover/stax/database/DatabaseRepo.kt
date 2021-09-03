@@ -127,8 +127,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return transactionDao.getTransactionCount(String.format("%02d", lastMonth().first), lastMonth().second.toString())!! > 0
     }
 
-    fun getCompleteTransferTransactions(channelId: Int): LiveData<List<StaxTransaction>>? {
-        return transactionDao.getCompleteAndPendingTransfers(channelId)
+    fun getAllTransferTransactions(channelId: Int): LiveData<List<StaxTransaction>>? {
+        return transactionDao.getAllTransfers(channelId)
     }
 
     @SuppressLint("DefaultLocale")
@@ -205,6 +205,12 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     fun getContact(id: String?): StaxContact? {
         return contactDao[id]
     }
+
+    suspend fun getContact_Suspended(id: String?): StaxContact? {
+        return contactDao.get_suspended(id)
+    }
+
+
 
     fun getContactByPhone(phone: String): StaxContact? {
         return contactDao.getByPhone("%$phone%")
