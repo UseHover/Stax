@@ -61,6 +61,8 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         return null
     }
 
+
+
     fun setRunning(channelId: Int) {
         runFlag.value = channelId
     }
