@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentBountyEmailBinding
 import com.hover.stax.navigation.NavigationInterface
@@ -66,16 +68,14 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
     }
 
     private fun showEdgeCaseErrorDialog() {
+        //logout user so that they start the login afresh
+        Timber.e("Logging out")
+        Firebase.auth.signOut()
+
         dialog = StaxDialog(requireActivity())
                 .setDialogMessage(getString(R.string.edge_case_bounty_email_error))
                 .setPosButton(R.string.btn_ok, null);
         dialog!!.showIt()
-    }
-
-    private fun validates(): Boolean {
-        if (emailInput!!.text == null) return false
-        val email = emailInput!!.text.replace(" ", "")
-        return email.matches("(?:[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)])".toRegex())
     }
 
     private fun observeEmailResult() {
