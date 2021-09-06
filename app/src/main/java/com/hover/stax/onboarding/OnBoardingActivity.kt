@@ -33,13 +33,9 @@ class OnBoardingActivity : AppCompatActivity() {
     }
 
     private fun initContinueButton() = binding.onboardingContinueBtn.setOnClickListener {
-        try{
-           // Utils.logAnalyticsEvent(getString(R.string.clicked_getstarted), this)
-           // setPassedThrough()
+            Utils.logAnalyticsEvent(getString(R.string.clicked_getstarted), this)
+            setPassedThrough()
             checkPermissionsAndNavigate()
-        }catch (e:Exception) {
-            UIHelper.flashMessage(this, e.message)
-        }
     }
 
     private fun checkPermissionsAndNavigate() {
