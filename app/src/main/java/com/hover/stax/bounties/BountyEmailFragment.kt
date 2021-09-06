@@ -5,11 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.identity.Identity
-import com.google.android.gms.auth.api.identity.SignInClient
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentBountyEmailBinding
 import com.hover.stax.navigation.NavigationInterface
@@ -21,6 +17,7 @@ import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListener {
 
@@ -32,9 +29,6 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
     private lateinit var networkMonitor: NetworkMonitor
     private val viewModel: BountyViewModel by sharedViewModel()
 
-    private lateinit var signInClient: SignInClient
-    private lateinit var signInRequest: BeginSignInRequest
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentBountyEmailBinding.inflate(inflater, container, false)
         networkMonitor = NetworkMonitor(requireContext())
@@ -45,30 +39,19 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
         super.onViewCreated(view, savedInstanceState)
         observeEmailResult()
         binding.btnSignIn.setOnClickListener(this)
+
+        viewModel.user.observe(viewLifecycleOwner) {
+            Timber.e("Uploading user details")
+            viewModel.uploadBountyUser(it.email!!, binding.marketingOptIn.isChecked)
+        }
     }
 
     override fun onClick(v: View) {
         if (networkMonitor.isNetworkConnected) {
             logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext())
-            setupSignInClient()
+            (activity as BountyActivity).signIn()
         } else {
             showOfflineDialog()
-        }
-    }
-
-    private fun setupSignInClient(){
-        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-            signInClient = Identity.getSignInClient(requireActivity())
-            signInRequest = BeginSignInRequest.builder()
-                    .setGoogleIdTokenRequestOptions(
-                            BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                                    .setSupported(true)
-                                    .setServerClientId(getString(R.string.google_server_client_id))
-                                    .setFilterByAuthorizedAccounts(true)
-                                    .build()
-                    )
-                    .setAutoSelectEnabled(true)
-                    .build()
         }
     }
 

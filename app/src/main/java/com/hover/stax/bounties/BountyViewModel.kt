@@ -6,8 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.lifecycle.*
-import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.google.firebase.auth.FirebaseUser
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
@@ -22,6 +22,7 @@ import java.util.*
 
 class BountyViewModel(application: Application) : AndroidViewModel(application) {
     private val repo = get(DatabaseRepo::class.java)
+
     @JvmField
     var country: String = CountryAdapter.codeRepresentingAllCountries()
 
@@ -30,11 +31,18 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
     val transactions: LiveData<List<StaxTransaction>>
     private val filteredBountyChannels: MutableLiveData<List<Channel>?>
     private val bountyList = MediatorLiveData<List<Bounty>>()
-    var sims: MutableLiveData<List<SimInfo>> = MutableLiveData()
-    val bountyEmailLiveData : MutableLiveData<Map<Int, String?>> = MutableLiveData()
-    private lateinit var defferedBountyList : Deferred<MutableList<Bounty>>
 
-     fun uploadBountyUser(email:String, optedIn: Boolean) {
+    var sims: MutableLiveData<List<SimInfo>> = MutableLiveData()
+    val bountyEmailLiveData: MutableLiveData<Map<Int, String?>> = MutableLiveData()
+    private lateinit var defferedBountyList: Deferred<MutableList<Bounty>>
+
+    val user = MutableLiveData<FirebaseUser>()
+
+    fun setUser(firebaseUser: FirebaseUser) {
+        user.value = firebaseUser
+    }
+
+    fun uploadBountyUser(email: String, optedIn: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             val result = BountyEmailNetworking(getApplication()).uploadBountyUser(email, optedIn)
             bountyEmailLiveData.postValue(result)
@@ -102,9 +110,10 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    private suspend fun getBounties(actions: List<HoverAction>?, transactions: List<StaxTransaction>?) : MutableList<Bounty> {
+    private suspend fun getBounties(actions: List<HoverAction>?, transactions: List<StaxTransaction>?): MutableList<Bounty> {
         coroutineScope {
-             defferedBountyList = async(Dispatchers.IO) { val bounties: MutableList<Bounty> = ArrayList()
+            defferedBountyList = async(Dispatchers.IO) {
+                val bounties: MutableList<Bounty> = ArrayList()
                 val transactionsCopy: MutableList<StaxTransaction> = if (transactions == null) ArrayList() else ArrayList(transactions)
                 for (action in actions!!) {
                     val filterTransactions: MutableList<StaxTransaction> = ArrayList()
@@ -122,7 +131,7 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
             }
 
         }
-        return  defferedBountyList.await()
+        return defferedBountyList.await()
     }
 
     init {

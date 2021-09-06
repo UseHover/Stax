@@ -50,7 +50,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_5"
-                    android:layout_marginTop="-25dp"
                     android:fontFamily="font-normal"
                     android:gravity="center"
                     android:text="@string/marketing_email_optin" />
@@ -62,7 +61,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginTop="@dimen/margin_13"
-                    android:onClick="submitEmail"
                     android:text="@string/btn_google_signin" />
         </LinearLayout>
     </com.hover.stax.views.StaxCardView>
