@@ -33,9 +33,9 @@ class OnBoardingActivity : AppCompatActivity() {
     }
 
     private fun initContinueButton() = binding.onboardingContinueBtn.setOnClickListener {
-        Utils.logAnalyticsEvent(getString(R.string.clicked_getstarted), this)
-        setPassedThrough()
-        checkPermissionsAndNavigate()
+            Utils.logAnalyticsEvent(getString(R.string.clicked_getstarted), this)
+            setPassedThrough()
+            checkPermissionsAndNavigate()
     }
 
     private fun checkPermissionsAndNavigate() {
@@ -49,9 +49,7 @@ class OnBoardingActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         } else {
-            PermissionUtils.showInformativeBasicPermissionDialog(0, {
-                PermissionUtils.requestPerms(Constants.NAV_HOME, this@OnBoardingActivity)
-            }, {
+            PermissionUtils.showInformativeBasicPermissionDialog(0, { PermissionUtils.requestPerms(Constants.NAV_HOME, this@OnBoardingActivity) }, {
                 Utils.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), this@OnBoardingActivity)
             }, this)
         }
