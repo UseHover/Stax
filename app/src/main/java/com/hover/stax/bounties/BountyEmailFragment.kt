@@ -5,11 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.identity.SignInClient
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentBountyEmailBinding
 import com.hover.stax.navigation.NavigationInterface
-import com.hover.stax.utils.Utils.getString
 import com.hover.stax.utils.Utils.logAnalyticsEvent
 import com.hover.stax.utils.Utils.logErrorAndReportToFirebase
 import com.hover.stax.utils.Utils.saveString
@@ -29,6 +32,9 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
     private lateinit var networkMonitor: NetworkMonitor
     private val viewModel: BountyViewModel by sharedViewModel()
 
+    private lateinit var signInClient: SignInClient
+    private lateinit var signInRequest: BeginSignInRequest
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentBountyEmailBinding.inflate(inflater, container, false)
         networkMonitor = NetworkMonitor(requireContext())
@@ -38,40 +44,48 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeEmailResult()
-        emailInput = binding.emailInput
-        emailInput!!.text = getString(BountyActivity.EMAIL_KEY, requireActivity())
-        binding.continueEmailBountyButton.setOnClickListener(this)
+        binding.btnSignIn.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
         if (networkMonitor.isNetworkConnected) {
             logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext())
-            if (validates()) {
-                emailInput!!.isEnabled = false
-                viewModel.uploadBountyUser(emailInput!!.text, binding.marketingOptIn.isChecked)
-                emailInput!!.setState(getString(R.string.bounty_uploading_email), AbstractStatefulInput.INFO)
-            } else {
-                emailInput!!.setState(getString(R.string.bounty_email_error), AbstractStatefulInput.ERROR)
-            }
+            setupSignInClient()
         } else {
             showOfflineDialog()
         }
     }
 
+    private fun setupSignInClient(){
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            signInClient = Identity.getSignInClient(requireActivity())
+            signInRequest = BeginSignInRequest.builder()
+                    .setGoogleIdTokenRequestOptions(
+                            BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                                    .setSupported(true)
+                                    .setServerClientId(getString(R.string.google_server_client_id))
+                                    .setFilterByAuthorizedAccounts(true)
+                                    .build()
+                    )
+                    .setAutoSelectEnabled(true)
+                    .build()
+        }
+    }
+
     private fun showOfflineDialog() {
         dialog = StaxDialog(requireActivity())
-            .setDialogTitle(R.string.internet_required)
-            .setDialogMessage(R.string.internet_required_bounty_desc)
-            .setPosButton(R.string.btn_ok, null)
-            .makeSticky();
+                .setDialogTitle(R.string.internet_required)
+                .setDialogMessage(R.string.internet_required_bounty_desc)
+                .setPosButton(R.string.btn_ok, null)
+                .makeSticky();
 
         dialog!!.showIt()
     }
 
     private fun showEdgeCaseErrorDialog() {
         dialog = StaxDialog(requireActivity())
-            .setDialogMessage(getString(R.string.edge_case_bounty_email_error))
-            .setPosButton(R.string.btn_ok, null);
+                .setDialogMessage(getString(R.string.edge_case_bounty_email_error))
+                .setPosButton(R.string.btn_ok, null);
         dialog!!.showIt()
     }
 

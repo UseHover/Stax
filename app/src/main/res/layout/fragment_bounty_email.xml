@@ -36,14 +36,14 @@
                     android:text="@string/bounty_email_stage_desc2"
                     android:textSize="@dimen/text_16" />
 
-            <com.hover.stax.views.StaxTextInputLayout
-                    android:id="@+id/emailInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_13"
-                    android:hint="@string/bounty_email"
-                    android:importantForAutofill="no"
-                    android:inputType="text" />
+<!--            <com.hover.stax.views.StaxTextInputLayout-->
+<!--                    android:id="@+id/emailInput"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="@dimen/margin_13"-->
+<!--                    android:hint="@string/bounty_email"-->
+<!--                    android:importantForAutofill="no"-->
+<!--                    android:inputType="text" />-->
 
             <com.google.android.material.checkbox.MaterialCheckBox
                     android:id="@+id/marketingOptIn"
@@ -56,14 +56,14 @@
                     android:text="@string/marketing_email_optin" />
 
             <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/continueEmailBountyButton"
+                    android:id="@+id/btnSignIn"
                     style="@style/StaxButtonColored"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginTop="@dimen/margin_13"
                     android:onClick="submitEmail"
-                    android:text="@string/btn_continue" />
+                    android:text="@string/btn_google_signin" />
         </LinearLayout>
     </com.hover.stax.views.StaxCardView>
 </androidx.core.widget.NestedScrollView>
