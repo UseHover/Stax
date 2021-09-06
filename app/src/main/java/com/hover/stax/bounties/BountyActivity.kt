@@ -2,8 +2,12 @@ package com.hover.stax.bounties
 
 
 import android.content.Intent
+import android.content.IntentSender
 import android.os.Bundle
 import com.appsflyer.AppsFlyerLib
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.identity.SignInClient
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.HoverParameters
 import com.hover.stax.R
@@ -84,5 +88,6 @@ class BountyActivity : AbstractNavigationActivity(), PushNotificationTopicsInter
     companion object {
         const val EMAIL_KEY = "email_for_bounties"
         const val BOUNTY_REQUEST = 3000
+        const val LOGIN_REQUEST = 4000
     }
 }

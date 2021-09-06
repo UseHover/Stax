@@ -135,6 +135,7 @@ dependencies {
 
     //auth
     implementation 'com.google.android.gms:play-services-auth:19.2.0'
+    implementation 'com.google.firebase:firebase-auth-ktx:21.0.1'
 
     implementation 'com.amplitude:android-sdk:2.23.2'
     implementation "com.squareup.okhttp3:okhttp:4.8.1"
