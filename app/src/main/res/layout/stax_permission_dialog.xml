@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:fillViewport="false">
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:fillViewport="false">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -54,6 +55,18 @@
                 android:layout_marginBottom="@dimen/margin_13"
                 android:fontFamily="font-normal"
                 android:text="@string/perm_progress1" />
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_16"
+                    android:id="@+id/perm_message"
+                    android:layout_marginBottom="@dimen/margin_13"
+                    android:drawablePadding="@dimen/margin_13"
+                    android:fontFamily="font-normal"
+                    android:textColor="@color/offWhite"
+                    android:text="@string/permissions_overlay_desc"
+                    app:drawableStartCompat="@drawable/ic_check" />
 
             <ProgressBar
                 android:id="@+id/progress_indicator"

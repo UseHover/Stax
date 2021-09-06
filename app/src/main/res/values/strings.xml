@@ -102,6 +102,9 @@
 	<string name="permissions_basic_desc_1">Phone permission allows Stax to detect your SIM so we can show you the financial services available in your country.</string>
 	<string name="permissions_basic_desc_2">It also enables you to select recipients from your contacts when sending airtime or money.</string>
 	<string name="permissions_basic_desc_3">SMS Permission helps us detect via SMS receipt that your transactions are successful.</string>
+	<string name="permissions_overlay_desc">In other to provide you with the ability to check your balance, transfer money or buy airtime, Stax needs your display and accessibility permission.</string>
+	<string name="permissions_accessibility_desc">These permissions allow Stax to dial USSD codes on your behalf and create an overlay that shows you the transaction progress.</string>
+
 
 	<string name="permission_support_desc">We need phone permissions to generate your support ID</string>
 	<string name="nav_sim_permission">Grant SIM permission</string>
