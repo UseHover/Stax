@@ -25,23 +25,24 @@ public class StaxDialog extends AlertDialog {
     protected View.OnClickListener customPosListener;
 
     public StaxDialog(@NonNull Activity a) {
-        this(a, a.getLayoutInflater(), 0);
+        this(a, a.getLayoutInflater(), false);
     }
 
-    public StaxDialog(@NonNull Activity a, int viewRes) {
-        this(a, a.getLayoutInflater(), viewRes);
+    public StaxDialog(@NonNull Activity a, boolean usePermissionDesign) {
+        this(a, a.getLayoutInflater(), usePermissionDesign);
     }
 
-    private StaxDialog(Context c, LayoutInflater inflater, int viewRes) {
+    private StaxDialog(Context c, LayoutInflater inflater, boolean usePermissionDesign) {
         super(c);
         context = c;
-        view = inflater.inflate(viewRes > 0 ? viewRes : R.layout.stax_dialog, null);
+        view = inflater.inflate(usePermissionDesign ? R.layout.basic_perm_dialog : R.layout.stax_dialog, null);
         customNegListener = null;
         customPosListener = null;
     }
 
     public StaxDialog setDialogTitle(int title) {
-        setDialogTitle(context.getString(title));
+        if(title == 0) setDialogMessage("");
+        else setDialogTitle(context.getString(title));
         return this;
     }
 
