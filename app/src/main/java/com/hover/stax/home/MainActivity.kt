@@ -5,6 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.NavHostFragment
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
@@ -12,14 +14,12 @@ import com.hover.stax.balances.BalanceAdapter
 import com.hover.stax.balances.BalancesFragment
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.channels.Channel
-import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.navigation.AbstractNavigationActivity
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.transactions.StaxTransaction
-import com.hover.stax.transactions.TransactionDetailsFragment
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.DateUtils
@@ -181,12 +181,12 @@ class MainActivity : AbstractNavigationActivity(),
         run(action!!, 0)
     }
 
-    fun reBuildHoverSession(transaction: StaxTransaction){
-        CoroutineScope(Dispatchers.IO).launch {
+    fun reBuildHoverSession(transaction: StaxTransaction) {
+        lifecycleScope.launch(Dispatchers.IO) {
             val actionAndChannelPair = historyViewModel.getActionAndChannel(transaction.action_id, transaction.channel_id)
             val accountNumber = historyViewModel.getAccountNumber(transaction.counterparty_id)
 
-            val hsb : HoverSession.Builder = HoverSession.Builder(actionAndChannelPair.first, actionAndChannelPair.second, this@MainActivity, Constants.TRANSFERRED_INT)
+            val hsb: HoverSession.Builder = HoverSession.Builder(actionAndChannelPair.first, actionAndChannelPair.second, this@MainActivity, Constants.TRANSFERRED_INT)
                     .extra(HoverAction.AMOUNT_KEY, Utils.formatAmount(transaction.amount.toString()))
                     .extra(HoverAction.ACCOUNT_KEY, accountNumber)
                     .extra(HoverAction.PHONE_KEY, accountNumber)
@@ -239,7 +239,6 @@ class MainActivity : AbstractNavigationActivity(),
 
         showPopUpTransactionDetailsIfRequired(requestCode, data)
         handleAllOtherResults(requestCode, resultCode, data)
-
     }
 
     private fun handleAllOtherResults(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -255,17 +254,17 @@ class MainActivity : AbstractNavigationActivity(),
             }
         }
     }
-    
-       private fun showBalanceCards() {
-        val balanceFragment = supportFragmentManager.findFragmentById(R.id.navigation_balance) as BalancesFragment
-        balanceFragment.showBalanceCards(true)
+
+    private fun showBalanceCards() {
+        val balanceFragment = navHostFragment.childFragmentManager.findFragmentById(R.id.navigation_balance) as? BalancesFragment
+        balanceFragment?.showBalanceCards(true)
     }
 
     private fun showPopUpTransactionDetailsIfRequired(requestCode: Int, data: Intent?) {
         data?.let {
-            if(it.action.equals(Constants.TRANSFERRED) || requestCode == Constants.TRANSFERRED_INT){
-                val uuid:String? = it.extras?.getString("uuid")
-                uuid?.let{
+            if (it.action.equals(Constants.TRANSFERRED) || requestCode == Constants.TRANSFERRED_INT) {
+                val uuid: String? = it.extras?.getString("uuid")
+                uuid?.let {
                     showTransactionPopup(uuid);
                 }
                 return@let
