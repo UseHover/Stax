@@ -36,9 +36,8 @@
             android:id="@+id/message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_21"
+            android:layout_marginBottom="@dimen/margin_13"
             android:fontFamily="font-normal"
-            android:paddingStart="@dimen/margin_5"
             android:textSize="@dimen/text_16"
             android:visibility="gone"
             tools:ignore="RtlSymmetry" />
