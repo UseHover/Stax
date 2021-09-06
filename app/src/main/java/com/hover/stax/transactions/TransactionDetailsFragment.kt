@@ -1,20 +1,28 @@
 package com.hover.stax.transactions
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.DialogFragment
 import com.hover.sdk.actions.HoverAction
+import com.hover.sdk.api.Hover
+import com.hover.sdk.transactions.Transaction
+import com.hover.stax.ApplicationInstance
 import com.hover.stax.R
 import com.hover.stax.bounties.BountyActivity
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
+import com.hover.stax.home.MainActivity
 import com.hover.stax.navigation.NavigationInterface
 import com.hover.stax.utils.DateUtils.humanFriendlyDate
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.Utils
 import com.hover.stax.utils.Utils.logAnalyticsEvent
 import com.hover.stax.utils.Utils.logErrorAndReportToFirebase
 import org.json.JSONException
@@ -26,6 +34,7 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
 
     private val viewModel: TransactionDetailsViewModel by viewModel()
     private var binding: FragmentTransactionBinding? = null
+    private val tryAgainCounter = ApplicationInstance.transactionDetails_TryAgainCounter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val data = JSONObject()
@@ -97,6 +106,41 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
         retryButton.setOnClickListener { v: View -> retryBountyClicked(v) }
     }
 
+    private fun showButtonToClick() : Button {
+        val transactionButtonsLayout = binding!!.transactionRetryButtonLayoutId
+        val retryButton = binding!!.btnRetryTransaction
+        transactionButtonsLayout.visibility = View.VISIBLE
+        return retryButton
+    }
+    private fun retryTransactionClicked(transaction: StaxTransaction, retryButton: Button) {
+        retryButton.setOnClickListener {
+            updateTryAgainCounter(transaction.uuid)
+            this.dismiss()
+            (requireActivity() as MainActivity).reBuildHoverSession(transaction)
+        }
+    }
+    private fun setupContactSupportButton(id: String, contactSupportButton: Button) {
+        contactSupportButton.setText(R.string.contact_support)
+        contactSupportButton.setOnClickListener {
+            resetTryAgainCounter(id)
+            this.dismiss()
+            val deviceId = Hover.getDeviceId(requireContext())
+            val email =  resources.getString(R.string.stax_support_email)
+            val subject = "Stax Transaction failure - support id- {${deviceId}}"
+            Utils.openEmail(email, subject, requireContext())
+        }
+    }
+    private fun updateTryAgainCounter(id : String) {
+        val currentCount : Int = if ( tryAgainCounter[id] !=null) tryAgainCounter[id]!! else 0
+        tryAgainCounter[id] = currentCount + 1
+    }
+
+    private fun resetTryAgainCounter(id : String) {
+        tryAgainCounter[id] = 0
+    }
+
+    private fun shouldContactSupport(id:String) : Boolean = if (tryAgainCounter[id] !=null) tryAgainCounter[id]!! >= 3 else false
+
     private fun updatePopupDesign() {
         if (!isFullScreen) {
             binding!!.ftMainBg.setBackgroundColor(resources.getColor(R.color.colorPrimary))
@@ -111,6 +155,11 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
     private fun showTransaction(transaction: StaxTransaction?) {
         if (transaction != null) {
             if (transaction.isRecorded) setupRetryBountyButton()
+            else if(transaction.status == Transaction.FAILED) {
+                val button = showButtonToClick()
+                if(shouldContactSupport(transaction.uuid)) setupContactSupportButton(transaction.uuid, button)
+                else retryTransactionClicked(transaction, button)
+            }
             updateDetails(transaction)
         }
     }
@@ -119,7 +168,7 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
     private fun updateDetails(transaction: StaxTransaction) {
         binding!!.transactionDetailsCard.setTitle(transaction.description)
         binding!!.notificationCard.setStateInfo(transaction.fullStatus)
-        binding!!.notificationDetail.text = Html.fromHtml(resources.getString(transaction.fullStatus.getDetail()));
+        updateNotificationDetail(viewModel.action.value, transaction)
 
         binding!!.infoCard.detailsRecipientLabel.setText(if (transaction.transaction_type == HoverAction.RECEIVE) R.string.sender_label else R.string.recipient_label)
         binding!!.infoCard.detailsAmount.text = transaction.displayAmount
@@ -137,6 +186,10 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
 
     private fun showActionDetails(action: HoverAction?) {
         binding!!.infoCard.detailsNetwork.text = action?.from_institution_name
+        updateNotificationDetail(action, viewModel.transaction.value)
+    }
+    private fun updateNotificationDetail(action: HoverAction?, transaction: StaxTransaction?) {
+        binding!!.notificationDetail.text = Html.fromHtml(resources.getString(transaction?.fullStatus!!.getDetail(), action?.from_institution_name));
     }
 
     private fun updateRecipient(contact: StaxContact?) {
@@ -168,6 +221,8 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
     }
 
     private fun retryBountyClicked(v: View) {
+        this.dismiss()
+
         viewModel.transaction.value?.let {
             (requireActivity() as BountyActivity).retryCall(it.action_id)
         }
@@ -177,4 +232,6 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
         super.onDestroyView()
         binding = null
     }
+
+
 }

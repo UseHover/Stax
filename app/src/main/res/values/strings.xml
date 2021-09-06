@@ -130,8 +130,9 @@
 	<string name="pending_cardHead">PENDING</string>
 	<string name="unsuccessful_cardHead">UNSUCCESSFUL</string>
 	<string name="confirmed_desc">We got a message from %1$s confirming that this transaction was successful.</string>
-	<string name="pending_desc">We received no response from %1$s. We don\’t think this transaction worked. Please try again.</string>
+	<string name="unsuccessful_incomplete_desc">We received no response from %1$s. We don\’t think this transaction worked. Please try again.</string>
 	<string name="unsuccessful_desc">We got a message from %1$s confirming that this transaction has failed. Please try again.</string>
+	<string name="from_this_service">from this service</string>
 
 	<!-- SDK Overrides -->
 	<string name="hsdk_overlay_msg"><![CDATA[<font color="#1E232A">Show progress updates by turning <b>switch ON</b> in the next screen.</font>]]></string>
@@ -195,7 +196,7 @@
 	<string name="descrip_recorded">Recorded USSD session on %1$s</string>
 	<string name="fab_transfernow">Send money now</string>
 	<string name="fab_airtimenow">Buy airtime now</string>
-	<string name="noworry_explain">Don\'t worry. You can review the info after you press the Continue button.</string>
+	<string name="noworry_explain">You can review this info in the next step.</string>
 	<string name="descrip_airtime_sched">Buy airtime with %1$s for %2$s</string>
 
 	<!-- Request -->
@@ -319,6 +320,7 @@
 	<string name="request_feature">Request a feature in Stax!</string>
 	<string name="contact_support">Contact support</string>
 	<string name="stax_support_email">help@stax.me</string>
+	<string name="stax_support_email_mailTo">https://help@stax.me</string>
 	<string name="stax_emailing_subject">Stax support id - %1$s</string>
 	<string name="send_email_using">Send mail using…</string>
 
