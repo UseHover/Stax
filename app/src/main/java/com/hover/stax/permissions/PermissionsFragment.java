@@ -105,6 +105,7 @@ public class PermissionsFragment extends DialogFragment {
         if (dialog != null) {
             dialog.animateProgressTo(81);
             ((TextView) dialog.getView().findViewById(R.id.progress_text)).setText(getContext() != null ? getString(R.string.perm_progress2) : "");
+            ((TextView) dialog.getView().findViewById(R.id.perm_message)).setText(getContext() != null ? getString(R.string.permissions_accessibility_desc) : "");
             dialog.getView().findViewById(R.id.overlay_example).setVisibility(View.GONE);
             dialog.getView().findViewById(R.id.accessibility_example).setVisibility(View.VISIBLE);
             dialog.setPosButton(R.string.perm_cta2, view -> requestAccessibility());

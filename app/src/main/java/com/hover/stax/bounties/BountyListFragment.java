@@ -1,7 +1,5 @@
 package com.hover.stax.bounties;
 
-import static org.koin.java.KoinJavaComponent.get;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +22,7 @@ import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.countries.CountryAdapter;
 import com.hover.stax.databinding.FragmentBountyListBinding;
 import com.hover.stax.navigation.NavigationInterface;
+import com.hover.stax.transactions.UpdateBountyTransactionsWorker;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.network.NetworkMonitor;
@@ -73,6 +72,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         if (isAdded() && networkMonitor.isNetworkConnected()) {
             updateActionConfig();
             updateChannelsWorker();
+            updateBountyTransactionWorker();
         } else showOfflineDialog();
     }
 
@@ -94,6 +94,12 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         WorkManager wm = WorkManager.getInstance(requireContext());
         wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.REPLACE, UpdateChannelsWorker.makeWork()).enqueue();
         wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.REPLACE, UpdateChannelsWorker.makeToil());
+    }
+
+    private void updateBountyTransactionWorker() {
+        WorkManager wm = WorkManager.getInstance(requireContext());
+        wm.beginUniqueWork(UpdateBountyTransactionsWorker.BOUNTY_TRANSACTION_WORK_ID, ExistingWorkPolicy.REPLACE, UpdateBountyTransactionsWorker.Companion.makeWork()).enqueue();
+        wm.enqueueUniquePeriodicWork(UpdateBountyTransactionsWorker.TAG, ExistingPeriodicWorkPolicy.REPLACE, UpdateBountyTransactionsWorker.Companion.makeToil());
     }
 
     private void showOfflineDialog() {
@@ -138,7 +144,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 
     @Override
     public void viewTransactionDetail(String uuid) {
-        navigateToTransactionDetailsFragment(uuid, this);
+        navigateToTransactionDetailsFragment(uuid, getChildFragmentManager(), true);
     }
 
     @Override

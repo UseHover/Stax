@@ -14,9 +14,9 @@
         <com.google.android.material.checkbox.MaterialCheckBox
                 android:id="@+id/service_item_checkbox"
                 android:layout_width="wrap_content"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:visibility="gone" />
+                android:layout_centerVertical="true" />
 
         <ImageView
                 android:id="@+id/service_item_image_id"

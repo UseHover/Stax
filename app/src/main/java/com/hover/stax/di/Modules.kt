@@ -10,9 +10,12 @@ import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.faq.FaqViewModel
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.inapp_banner.BannerViewModel
+import com.hover.stax.library.LibraryViewModel
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.schedules.ScheduleDetailViewModel
+
 import com.hover.stax.settings.PinsViewModel
+import com.hover.stax.transactions.TransactionDetailsViewModel
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransferViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -31,6 +34,8 @@ val appModule = module {
     viewModel { BannerViewModel(get(), get()) }
     viewModel { FutureViewModel(get()) }
     viewModel { PinsViewModel(get())}
+    viewModel { TransactionDetailsViewModel(get()) }
+    viewModel { LibraryViewModel(get()) }
 }
 
 val dataModule = module(createdAtStart = true) {

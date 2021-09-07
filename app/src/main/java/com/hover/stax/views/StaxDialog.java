@@ -6,6 +6,7 @@ import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,25 +25,33 @@ public class StaxDialog extends AlertDialog {
     protected View.OnClickListener customPosListener;
 
     public StaxDialog(@NonNull Activity a) {
-        this(a, a.getLayoutInflater());
+        this(a, a.getLayoutInflater(), false);
     }
 
-    private StaxDialog(Context c, LayoutInflater inflater) {
+    public StaxDialog(@NonNull Activity a, boolean usePermissionDesign) {
+        this(a, a.getLayoutInflater(), usePermissionDesign);
+    }
+
+    private StaxDialog(Context c, LayoutInflater inflater, boolean usePermissionDesign) {
         super(c);
         context = c;
-        view = inflater.inflate(R.layout.stax_dialog, null);
+        view = inflater.inflate(usePermissionDesign ? R.layout.basic_perm_dialog : R.layout.stax_dialog, null);
         customNegListener = null;
         customPosListener = null;
     }
 
     public StaxDialog setDialogTitle(int title) {
-        setDialogTitle(context.getString(title));
+        if(title == 0) setDialogMessage("");
+        else setDialogTitle(context.getString(title));
         return this;
     }
 
     public StaxDialog setDialogTitle(String title) {
-        view.findViewById(R.id.header).setVisibility(View.VISIBLE);
-        ((TextView) view.findViewById(R.id.title)).setText(title);
+        LinearLayout headerLayout = view.findViewById(R.id.header);
+        if(headerLayout !=null) {
+            headerLayout.setVisibility(View.VISIBLE);
+            ((TextView) view.findViewById(R.id.title)).setText(title);
+        }
         return this;
     }
 
@@ -52,8 +61,12 @@ public class StaxDialog extends AlertDialog {
     }
 
     public StaxDialog setDialogMessage(String message) {
-        view.findViewById(R.id.message).setVisibility(View.VISIBLE);
-        ((TextView) view.findViewById(R.id.message)).setText(message);
+        TextView messageText = view.findViewById(R.id.message);
+
+        if(messageText !=null){
+            messageText.setVisibility(View.VISIBLE);
+            messageText.setText(message);
+        }
         return this;
     }
 

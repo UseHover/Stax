@@ -9,7 +9,9 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.Stax2lineitemBinding
 
 class Stax2LineItem(context: Context?, attrs: AttributeSet?) : RelativeLayout(context, attrs) {
+
     private val binding: Stax2lineitemBinding = Stax2lineitemBinding.inflate(LayoutInflater.from(context), this, true)
+
     fun setContent(title: String?, sub: String?) {
         setTitle(title)
         setSubtitle(sub)

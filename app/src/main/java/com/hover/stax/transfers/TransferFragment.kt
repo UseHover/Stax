@@ -178,9 +178,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         override fun afterTextChanged(editable: Editable) {}
         override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, afterCount: Int) {
             with(transferViewModel) {
-                if (afterCount == 0)
+                if (afterCount == 0) {
                     resetRecipient()
-                else
+                    recipientValue.setContent("", "")
+                } else
                     setRecipient(charSequence.toString())
             }
         }

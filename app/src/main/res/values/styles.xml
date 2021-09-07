@@ -92,7 +92,7 @@
 
     <style name="StaxFabExtended" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
         <item name="android:padding">@dimen/margin_13</item>
-        <item name="android:layout_marginBottom">@dimen/margin_89</item>
+        <!--        <item name="android:layout_marginBottom">@dimen/margin_89</item>-->
         <item name="android:radius">5dp</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="backgroundTint">@color/brightBlue</item>
@@ -126,6 +126,27 @@
         <item name="cornerSize">5dp</item>
     </style>
 
+    <style name="OldStaxLabeledInput" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_marginStart">@dimen/margin_10</item>
+        <item name="android:layout_marginEnd">@dimen/margin_10</item>
+        <item name="android:layout_marginBottom">@dimen/margin_8</item>
+        <item name="boxStrokeColor">@color/offWhite</item>
+        <item name="boxBackgroundColor">@color/cardViewColor</item>
+        <item name="boxStrokeWidth">2dp</item>
+        <item name="android:textColorHint">@color/offWhite</item>
+        <item name="hintTextColor">@color/offWhite</item>
+        <item name="android:textColor">@color/offWhite</item>
+        <item name="android:textSize">@dimen/text_13</item>
+        <item name="fontFamily">font-medium</item>
+        <item name="android:fontFamily">font-medium</item>
+        <item name="errorTextColor">@color/stax_state_red</item>
+        <item name="errorIconDrawable">@drawable/ic_error</item>
+        <item name="endIconTint">@color/offWhite</item>
+        <item name="errorEnabled">true</item>
+        <item name="helperTextTextColor">@color/stax_state_blue</item>
+        <item name="helperTextEnabled">true</item>
+    </style>
+
     <style name="StaxLabeledInput" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:layout_marginStart">@dimen/margin_10</item>
         <item name="android:layout_marginEnd">@dimen/margin_10</item>
@@ -156,15 +177,6 @@
         <item name="endIconMode">dropdown_menu</item>
     </style>
 
-    <style name="OldStaxLabeledDropdown" parent="StaxLabeledInput">
-        <!-- <item name="materialThemeOverlay">@style/StaxDropdownPopup</item> -->
-        <!-- Below is Equivalent of Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu -->
-        <item name="materialThemeOverlay">
-            @style/ThemeOverlay.MaterialComponents.AutoCompleteTextView.OutlinedBox
-        </item>
-        <item name="endIconMode">dropdown_menu</item>
-    </style>
-
     <style name="StaxDropdownPopup" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <item name="colorSurface">@color/cardViewColor</item>
     </style>
@@ -176,6 +188,9 @@
     </style>
 
     <style name="StaxDialog" parent="Theme.MaterialComponents.Dialog">
+        <item name="android:windowMinWidthMajor">95%</item>
+        <item name="android:windowMinWidthMinor">95%</item>
+
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryVariant">@color/brightBlue</item>
         <item name="colorOnPrimary">@color/offWhite</item>
@@ -209,6 +224,9 @@
     <style name="StaxSnackbarText" parent="@style/Widget.MaterialComponents.Snackbar.TextView">
         <item name="android:textColor">@color/offWhite</item>
     </style>
+
+    <style name="StaxDialogFullScreen" parent="StaxTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
+    </style>
 </resources>
-
-

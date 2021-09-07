@@ -85,6 +85,7 @@ jobs:
           prerelease: false
 
 
+<<<<<<< HEAD
       # Deploy to alpha track
       - name: Deploy to beta test track
         uses: r0adkll/upload-google-play@v1
@@ -106,6 +107,29 @@ jobs:
           SLACK_AVATAR: sender
         with:
           args: 'Stax has just been deployed to Play Store production track. :truck:'
+=======
+#      # Deploy to alpha track
+#      - name: Deploy to beta test track
+#        uses: r0adkll/upload-google-play@v1
+#        with:
+#          serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_SERVICE_ACCOUNT }}
+#          packageName: com.hover.stax
+#          releaseFiles: app/build/outputs/bundle/release/*.aab
+#          track: beta
+##          whatsNewDirectory: whatsnew/
+#
+#
+#      # Send slack notification
+#      - name: Send Slack notification
+#        uses: Ilshidur/action-slack@2.0.2
+#        env:
+#          SLACK_WEBHOOK: ${{ secrets.STAX_SLACK_WEBHOOK }}
+#          SLACK_USERNAME: StaxDeploymentBot
+#          SLACK_CHANNEL: stax
+#          SLACK_AVATAR: sender
+#        with:
+#          args: 'Stax has just been deployed to Play Store production track. :truck:'
+>>>>>>> bb93ae94d9518306507b3625096577079f384ef9
 
 
 

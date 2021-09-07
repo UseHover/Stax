@@ -21,7 +21,7 @@ import timber.log.Timber
 class ChannelsViewHolder(val binding: StaxSpinnerItemWithLogoBinding) : RecyclerView.ViewHolder(binding.root), Target {
 
     var id: TextView? = null
-    var channelText: AppCompatTextView? = null
+    private var channelText: AppCompatTextView? = null
 
     private var logo: ImageView? = null
     private var checkBox: MaterialCheckBox? = null
