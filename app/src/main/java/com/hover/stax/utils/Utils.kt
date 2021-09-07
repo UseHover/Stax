@@ -4,35 +4,30 @@ import android.app.Activity
 import android.content.*
 import android.graphics.Bitmap
 import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.IdRes
-import androidx.navigation.NavController
+import androidx.core.content.ContextCompat.startActivity
 import com.amplitude.api.Amplitude
+import com.amplitude.api.Identify
 import com.appsflyer.AppsFlyerLib
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.messaging.FirebaseMessaging
+import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
-import com.mixpanel.android.mpmetrics.MixpanelAPI
 import org.json.JSONException
 import org.json.JSONObject
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import java.text.DecimalFormat
 import java.util.*
-import kotlin.properties.Delegates
+
 
 object Utils {
 
-//    private val mixPanel: MixpanelAPI by inject()
     private const val SHARED_PREFS = "staxprefs"
 
     private fun getSharedPrefs(context: Context): SharedPreferences {
@@ -201,26 +196,26 @@ object Utils {
     }
 
     @JvmStatic
-    fun logAnalyticsEvent(event: String, context: Context?) {
-        Amplitude.getInstance().logEvent(event)
-        FirebaseAnalytics.getInstance(context!!).logEvent(strippedForFireAnalytics(event), null)
-        AppsFlyerLib.getInstance().logEvent(context, event, null)
-//        mixPanel.track(event)
-    }
+    fun logAnalyticsEvent(event: String, context: Context) {
+        val amplitude = Amplitude.getInstance()
+        val identify = Identify().set("deviceId", Hover.getDeviceId(context))
+        amplitude.apply { identify(identify); logEvent(event) }
 
-    @JvmStatic
-    fun timeEvent(event: String) {
-//        mixPanel.timeEvent(event)
+        FirebaseAnalytics.getInstance(context).logEvent(strippedForFireAnalytics(event), null)
+        AppsFlyerLib.getInstance().logEvent(context, event, null)
     }
 
     @JvmStatic
     fun logAnalyticsEvent(event: String, args: JSONObject, context: Context) {
         val bundle = convertJSONObjectToBundle(args)
         val map = convertJSONObjectToHashMap(args)
-        Amplitude.getInstance().logEvent(event, args)
+
+        val amplitude = Amplitude.getInstance()
+        val identify = Identify().set("deviceId", Hover.getDeviceId(context))
+        amplitude.apply { identify(identify); logEvent(event, args) }
+
         FirebaseAnalytics.getInstance(context).logEvent(strippedForFireAnalytics(event), bundle)
         AppsFlyerLib.getInstance().logEvent(context, event, map)
-//        mixPanel.track(event, args)
     }
 
     private fun strippedForFireAnalytics(firebaseEventLog: String): String {
@@ -278,9 +273,14 @@ object Utils {
         i.data = Uri.parse(url)
         ctx.startActivity(i)
     }
-
     fun openUrl(urlRes: Int, ctx: Context) {
         openUrl(ctx.resources.getString(urlRes), ctx)
+    }
+
+    fun openEmail(email:String, subject:String, ctx: Context) {
+        val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", email, null))
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
+        ctx.startActivity(Intent.createChooser(emailIntent, "Send email..."))
     }
 
     @JvmStatic
@@ -294,38 +294,4 @@ object Utils {
             activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(activity.baseContext.getString(R.string.stax_url_playstore_review_link))))
         }
     }
-
-    @JvmStatic
-    fun isNetworkAvailable(context: Context?): Boolean {
-        if (context == null) return false
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
-        connectivityManager?.let {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                val capabilities = it.getNetworkCapabilities(connectivityManager.activeNetwork)
-                if (capabilities != null) {
-                    return if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-                        true
-                    } else capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
-                } else {
-                    try {
-                        val activeNetworkInfo = it.activeNetworkInfo
-                        if (activeNetworkInfo != null && activeNetworkInfo.isConnected) {
-                            return true
-                        }
-                    } catch (e: Exception) {
-                        Timber.e(e)
-                    }
-                }
-            }
-        }
-        return false
-    }
-
-    var variant: String by Delegates.observable("", { _, _, newValue ->
-        Timber.i("Variant: $newValue")
-
-        val props = JSONObject()
-        props.put("Variant", newValue)
-//        mixPanel.registerSuperPropertiesOnce(props)
-    })
 }

@@ -10,6 +10,7 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.hover.sdk.actions.HoverAction;
+import com.hover.sdk.api.Hover;
 import com.hover.sdk.api.HoverParameters;
 import com.hover.sdk.transactions.Transaction;
 import com.hover.sdk.transactions.TransactionContract;
@@ -28,7 +29,7 @@ import timber.log.Timber;
 @Entity(tableName = "stax_transactions", indices = {@Index(value = {"uuid"}, unique = true)})
 public class StaxTransaction {
 
-    public final static String CONFIRM_CODE_KEY = "confirmCode", FEE_KEY = "fee";
+    public final static String CONFIRM_CODE_KEY = "confirmCode", FEE_KEY = "fee", CATEGORY_INCOMPLETE_SESSION = "incomplete_session";
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
@@ -81,6 +82,9 @@ public class StaxTransaction {
     @ColumnInfo(name = "recipient_id")
     public String counterparty_id;
 
+    @ColumnInfo(name = "category")
+    public String category;
+
     // FIXME: DO not use! This is covered by contact model. No easy way to drop column yet, but room 2.4 adds an easy way. Currently alpha, use once it is stable
     @ColumnInfo(name = "counterparty")
     public String counterparty;
@@ -108,8 +112,9 @@ public class StaxTransaction {
         }
     }
 
-    public void update(Intent data, HoverAction action, StaxContact contact, Context c) {
-        status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
+    public void update(Intent data, HoverAction action, StaxContact contact, Boolean isNewTransaction, Context c) {
+        if( !isNewTransaction && isSessionIncomplete(action, c)) setFailed_Incomplete();
+        else status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
 
         Timber.e("Updating to status %s - %s", status, action);
         updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, initiated_at);
@@ -120,6 +125,17 @@ public class StaxTransaction {
             counterparty_id = contact.id;
 
         description = generateDescription(action, contact, c);
+    }
+
+    private Boolean isSessionIncomplete(HoverAction action, Context c)   {
+        int numOfSteps = action.custom_steps.length();
+        int ussdLength = Hover.getTransaction(uuid, c).ussdMessages.length();
+        return ussdLength < numOfSteps -1;
+    }
+
+    public void setFailed_Incomplete() {
+        status = Transaction.FAILED;
+        category = CATEGORY_INCOMPLETE_SESSION;
     }
 
     private void parseExtras(HashMap<String, String> extras) {
@@ -155,6 +171,10 @@ public class StaxTransaction {
             default:
                 return "Other";
         }
+    }
+
+    public TransactionStatus getFullStatus() {
+        return new TransactionStatus(this);
     }
 
     public boolean isRecorded() {

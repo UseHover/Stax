@@ -1,451 +1,841 @@
 <?xml version="1.0" encoding="UTF-8"?><resources>
-  	
+
+  <string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
+
+  <string name="appsflyer_key" public="false" translatable="false">4B6DDdYFw55PmVPTwr8Ski</string>
+
+  <string name="app_name" translatable="false">Stax</string>
+
+  <string name="payment_root_url" translatable="false">https://stax.me/pay?%1$s</string>
+
+  <string name="payment_url_end" translatable="false">%1$s-%2$d-%3$s-%4$d</string>
+
+  <string name="root_url" translatable="false">https://www.usehover.com</string>
+
+  <string name="api_url" translatable="false">https://www.usehover.com/api</string>
+
+  <string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
+
+  <string name="bounty_endpoint">/stax_bounty_hunters</string>
+
+  <string name="stax_market_playstore_link" translatable="false">market://details?id=com.hover.stax</string>
+
+  <string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
+
+  <string name="stax_nolt_url">https://stax.nolt.io/</string>
+
+  <string name="receive_stax_updates_url">https://416e906b.sibforms.com/serve/MUIEAAS88NDe6oTn7nl8YrIqgutsJ_GgyCYRWVsZ-S54quVNmBhvpsu70WpNXrZd-n6H5r8m1ZRfuTl8ckiQrB4sLIdNSx0Y_DFZ7_hQGCDv9PG6N0ncsHwWW3OYsMlPMHgQSR6OZf8xK8HC-NA3p3T71Pv1Coy_n9oiDRwIu7HCryUfDtfHr11mXSQ5S3JwcOd8cN7FL1ewDRqu</string>
+
+  <string name="mixpanel_token" translatable="false">82efeb23b6d38509989f592c8f4b21c2</string>
+
   <string name="nav_home">Nyumbani</string>
-  	
+
+  <string name="nav_balance_and_history">Salio na historia</string>
+
+  <string name="nav_balances">Masalio</string>
+
+  <string name="nav_get_paid">Kulipwa</string>
+
+  <string name="nav_link_account">Unganisha akaunti</string>
+
   <string name="nav_airtime">Nunua Muda wa Maongezi</string>
-  	
-  <string name="nav_transfer">Hamisha Pesa</string>
-  	
-  <string name="nav_settings">Usalama</string>
-  	
-  <string name="nav_transaction">Maelezo ya Muamala</string>
-  	
-  <string name="nav_schedule">Maelezo ya Ratiba</string>
-  	
-  <string name="nav_request">Omba Maelezo</string>
-  	
-  <string name="nav_transfer_detail">Maelezo ya Uhamisho</string>
-  	
-  <string name="nav_sim_permission">Toa ruhusa ya SIM</string>
+
+  <string name="nav_transfer">Hamisha</string>
+
+  <string name="nav_new_request">Ombi Jipya</string>
+
+  <string name="nav_settings">Mipangilio</string>
 
   <string name="nav_account_detail">Maelezo ya Akaunti</string>
-  	
-  <string name="btn_cancel">Katisha</string>
-  	
+
+  <string name="nav_transaction">Maelezo ya Muamala</string>
+
+  <string name="nav_schedule">Maelezo ya Ratiba</string>
+
+  <string name="nav_request">Omba Maelezo</string>
+
+  <string name="nav_transfer_detail">Maelezo ya Uhamisho</string>
+
+  <string name="lang_cardhead">Chagua lugha</string>
+
+  <string-array name="supported_lang_codes">
+
+    <item>am</item>
+
+    <item>en</item>
+
+    <item>fr</item>
+
+    <item>sw</item>
+
+  </string-array>
+
   <string name="btn_ok">SAWA</string>
-  	
+
+  <string name="btn_cancel">Katisha</string>
+
   <string name="btn_save">Hifadhi</string>
 
+  <string name="btn_dontsave">Acha</string>
+
   <string name="btn_continue">Endelea</string>
-  	
+
   <string name="btn_send">Tuma</string>
 
   <string name="btn_edit">Hariri</string>
-  	
-  <string name="btn_back">Nyuma</string>
-  	
-  <string name="btn_test">Jaribu</string>
-  	
-  <string name="lang_cardhead">Chagua lugha</string>
-  	
-  <string-array name="supported_lang_codes">
-    		
-    <item>en</item>
-    		
-    <item>fr</item>
-    		
-    <item>sw</item>
-    	
-  </string-array>
-  	
-  <!-- Home -->
-  	
-  <string name="bal_cardhead">Masalio</string>
 
-  <string name="hist_cardhead">Historia</string>
-  	
-  <string name="hist_zerobody">Bado huna historia yoyote. Tuma pesa au nunua muda wa maongezi ili uanze.</string>
-  	
-  <string name="future_cardhead">Miamala ya Baadaye</string>
+  <string name="btn_back">Nyuma</string>
+
+  <string name="btn_test">Jaribu</string>
+
+  <!-- ONBOARDING -->
+
+  <string name="stax_tagline">Hamisha pesa bila mafadhaiko</string>
+
+  <string name="splash_screen_img_desc">Mandhari-nyuma wa Stax</string>
+
+  <string name="slide_1_title">Fanya Shughuli Zako Zote Nje ya Mtandao!</string>
+
+  <string name="slide_1_desc">Huna haja ya mtandao kuhamisha pesa au kuangalia masalio ya akaunti yako kwenye Stax.</string>
+
+  <string name="slide_2_title">Hamisha Pesa&#13;\nBila Mafadhaiko!</string>
+
+  <string name="slide_2_desc">Hamisha fedha kati ya akaunti zako, nunua muda wa maongezi, tuma na uombe pesa.</string>
+
+  <string name="slide_3_title">Akaunti Zako Zote za Fedha katika Programu Moja.</string>
+
+  <string name="slide_3_desc">Unganisha akaunti zako zote za benki na pesa za rununu kwa Stax na uhamishe pesa kutoka sehemu moja.</string>
+
+  <!-- Home -->
+
+  <string name="welcome_to">Karibu kwa</string>
+
+  <string name="cta_transfer">Tuma pesa</string>
 
   <string name="cta_airtime">Nunua muda wa maongezi</string>
-  	
+
   <string name="cta_request">Omba pesa</string>
 
-  <!-- Hover Session -->
-  	
-  <string name="balance_msg">Inakagua salio ya %1$s</string>
-  	
-  <string name="airtime_msg">Kununua muda wa maongezi</string>
-  	
-  <string name="transfer_msg">Kuhamisha pesa</string>
-  	
-  <!-- Accounts and Permissions -->
+  <!-- Balances -->
+
+  <string name="bal_cardhead">Masalio</string>
 
   <string name="channels_error_nodata">Tafadhali washa data ili kupakia huduma.</string>
 
-  <!-- SDK Overrides -->
-  	
-  <string name="hsdk_overlay_msg">&lt;font color="#1E232A"&gt;Onyesha sasisho za maendeleo kwa kuwasha &lt;b&gt;swichi ya ON&lt;/b&gt; kwenye skrini inayofuata.&lt;/font&gt;</string>
-  	
-  <string name="hsdk_access_msg">&lt;font color="#0A9A8D"&gt;Washa Ufikiaji&lt;/font&gt; &lt;font color="#1E232A"&gt;ndani ya&lt;b&gt;skrini inayofuata&lt;/b&gt; ili kuendesha vikao vya USSD&lt;/font&gt;</string>
-  	
-  <string name="hsdk_access_btn">Fungua Mipangilio</string>
-  	
-  <string name="hsdk_overlay_tip">Ifuatayo, donoa swichi ya ON</string>
-  	
-  <string name="hsdk_overlay_example">Ruhusu onyesho juu ya programu zingine</string>
-  	
-  <string name="hsdk_settings">Mipangilio</string>
-  	
-  <string name="hsdk_off">Imezimwa</string>
-  	
-  <string name="hsdk_accessibility">Upatikanaji</string>
-  	
-  <string name="hsdk_accessibility_sub">Huduma</string>
-  	
-  <string name="hsdk_enable_accessibility">Washa Ufikiaji</string>
-  	
-  <string name="access_service_summary">Ungana na huduma za Pesa za Simu na Mawasiliano kwa niaba yako</string>
-  	
-  <string name="access_service_descript">Hii hutumiwa kusoma na kuingiliana na menyu za USSD ili kutoa uzoefu uliorahisishwa na unaopatikana zaidi.</string>
-  	
-  <!-- PIN Entry -->
+  <string name="channels_error_nosim">Tafadhali ingiza SIM inayofaa ili kuchuja chaguo.</string>
 
-  <string name="security_cardbody">Stax inakidhi vigezo vya 740.17(b)(3) (i) uainishaji wa usalama wa Ofisi ya Viwanda na Usalama ya Marekani. Programu hii hutumia HTTPS kwa mawasiliano ya seva; usimbuaji fiche wa RSA muhimu ili kuhifadhi kwa muda vitambulisho vya mtumiaji kwenye kifaa chake kwa kutumia Android Keystore; na usimbuaji nambari kwa kutumia DRM.</string>
+  <string name="channels_error_noselect">Lazima uchague huduma.</string>
 
-  <!-- Request Services -->
+  <string name="link_account">Unganisha akaunti</string>
 
-  <string name="reqsave_head">Hifadhi ombi?</string>
-  	
-  <string name="reqsave_msg">Hatuna uhakika ikiwa ujumbe wako umetumwa.</string>
-  	
-  <!-- Onboarding showcase -->
-  	
-  <string name="onboard_sechead">Usalama wa kiwango cha ulimwengu</string>
-  	
-  <string name="onboard_secbody">Tunalinda Stax na teknolojia ile ile inayofunga kifaa chako. Unafungua Stax kwa njia ile ile unayofungua kifaa chako</string>
-  	
-  <string name="onboard_peekhead">Weka akaunti faragha</string>
-  	
-  <string name="onboard_peekbody">Tazama masalio yako kwa kukokota mwambaa kushoto</string>
-  	
-  <string name="onboard_balhead">Onyesha upya akaunti zako</string>
-  	
-  <string name="onboard_balbody">Angalia masalio ya akaunti yako kwa kuvuta mwambaa hadi kushoto</string>
-  	
-  <string name="onboard_refreshhead">Onyesha upya Stax</string>
-  	
-  <string name="onboard_refreshbody">Vuta skrini nzima ili kuonyesha upya akaunti zako zote</string>
-  	
-  <string name="onboard_infohead">Bonyeza kwa muda mrefu kwa habari zaidi</string>
-  	
-  <string name="onboard_infobody">Bonyeza na ushikilie kipengee chochote katika Stax kwa habari zaidi</string>
-  	
-  <!-- Transfer -->
-  	
-  <string name="loading_link_dialoghead">Inapakia, subiri kidogo</string>
-  	
-  <string name="transfer_amount_label">Kiasi</string>
-  	
-  <string name="request_amount_label">Pesa ngapi?</string>
-  	
-  <string name="channel_label">Akaunti</string>
+  <string name="link_account_error">Chagua akaunti ya kuunganisha.</string>
 
   <string name="link_another">
-    <u>+ Ongeza akaunti</u>
+    <u>+ Unganisha akaunti nyingine</u>
   </string>
 
+  <string name="add_another_account">
+    <u>+ Ongeza akaunti nyingine</u>
+  </string>
+
+  <string name="hist_cardhead">Historia</string>
+
+  <string name="hist_zerobody">Bado huna historia yoyote. Tuma pesa au nunua muda wa maongezi ili uanze.</string>
+
+  <string name="future_cardhead">Miamala ya Baadaye</string>
+
+  <string name="pending_callout">Shughuli imetumwa. Inasubiri uthibitisho.</string>
+
+  <string name="refresh_balance_desc">Onyesha salio lako</string>
+
+  <string name="refresh_balances">Onyesha upya masalio</string>
+
+  <string name="refresh">Onyesha upya</string>
+
+  <string name="refresh_balance_error">Ongeza akaunti ili uangalie salio lako.</string>
+
+  <string name="check_balance_title">Angalia salio</string>
+
+  <string name="check_balance_desc">Vizuri! Umeongeza akaunti yako ya kwanza. Sasa unaweza kuangalia salio lako kwenye Stax.</string>
+
+  <string name="check_balance_alt">Vizuri! Akaunti imeongezwa kwa mafanikio. Sasa unaweza kuangalia salio lako kwenye Stax.</string>
+
+  <string name="check_balance_alt_plural">Vizuri! Akaunti zimeongezwa kwa mafanikio. Sasa unaweza kuangalia salio lako kwenye Stax.</string>
+
+  <string name="later">Baadae</string>
+
+  <string name="no_connecion">Hakuna muunganisho</string>
+
+  <string name="your_main_account">Akaunti yako kuu</string>
+
+  <string name="your_other_account">Akaunti yako nyingine</string>
+
+  <!-- ADD ACCOUNT -->
+
+  <string name="your_accounts">Akaunti zako</string>
+
+  <string name="add_an_account">Ongeza akaunti</string>
+
+  <string name="add_accounts_to_stax">Ongeza akaunti kwa Stax</string>
+
+  <!-- Permissions -->
+
+  <string name="permissions_title">Ruhusa zinahitajika</string>
+
+  <string name="permissions_basic_desc">Tunahitaji ruhusa za simu ili uone akaunti ambazo unaweza kuwa nazo.</string>
+
+  <string name="permission_support_desc">Tunahitaji ruhusa za simu ili kuunda kitambulisho chako cha usaidizi</string>
+
+  <string name="nav_sim_permission">Toa ruhusa ya SIM</string>
+
+  <string name="perm_dialoghead">Jambo la mwisho…</string>
+
+  <string name="perm_dialogbody">Stax inahitaji ruhusa 2 kwa %1$s.</string>
+
+  <string name="use_ussd">tumia USSD</string>
+
+  <string name="buy_airtime">Nunua muda wa maongezi</string>
+
+  <string name="check_balance">angalia salio</string>
+
+  <string name="send_money">tuma pesa</string>
+
+  <string name="send_money_to">tuma pesa kwa</string>
+
+  <string name="move_money">hamisha pesa</string>
+
+  <string name="perm_accessibiltiy_dialogbody">Stax inahitaji ruhusa ya ufikivu kwa %1$s</string>
+
+  <string name="perm_progress1">Hatua ya 1 kati ya 2: Onyesha ruhusa</string>
+
+  <string name="perm_progress2">Hatua ya 2 kati ya 2: Ruhusa ya ufikiaji</string>
+
+  <string name="perm_cta1">Onyesha mipangilio</string>
+
+  <string name="perm_cta2">Onyesha mipangilio tena</string>
+
+  <!-- Hover Session -->
+
+  <string name="balance_msg">Inakagua salio ya %1$s</string>
+
+  <string name="airtime_msg">Kununua muda wa maongezi</string>
+
+  <string name="transfer_msg">Kuhamisha pesa</string>
+
+  <!-- SDK Overrides -->
+
+  <string name="hsdk_overlay_msg">&lt;font color="#1E232A"&gt;Onyesha sasisho za maendeleo kwa kuwasha &lt;b&gt;swichi ya ON&lt;/b&gt; kwenye skrini inayofuata.&lt;/font&gt;</string>
+
+  <string name="hsdk_access_msg">&lt;font color="#0A9A8D"&gt;Washa Ufikiaji&lt;/font&gt; &lt;font color="#1E232A"&gt;ndani ya&lt;b&gt;skrini inayofuata&lt;/b&gt; ili kuendesha vikao vya USSD&lt;/font&gt;</string>
+
+  <string name="hsdk_access_btn">Fungua Mipangilio</string>
+
+  <string name="hsdk_overlay_tip">Ifuatayo, donoa swichi ya ON</string>
+
+  <string name="hsdk_overlay_example">Ruhusu onyesho juu ya programu zingine</string>
+
+  <string name="hsdk_settings">Mipangilio</string>
+
+  <string name="hsdk_off">Imezimwa</string>
+
+  <string name="hsdk_accessibility">Upatikanaji</string>
+
+  <string name="hsdk_accessibility_sub">Huduma</string>
+
+  <string name="hsdk_enable_accessibility">Washa Ufikiaji</string>
+
+  <string name="access_service_summary">Ungana na huduma za Pesa za Simu na Mawasiliano kwa niaba yako</string>
+
+  <string name="access_service_descript">Hii hutumiwa kusoma na kuingiliana na menyu za USSD ili kutoa uzoefu uliorahisishwa na unaopatikana zaidi.</string>
+
+  <string name="hsdk_manual_env">Mazingira ya mwongozo yanafanya kazi. Kipindi hiki kitarekodiwa.</string>
+
+  <string name="hsdk_overlay_header">Inafanya shughuli</string>
+
+  <string name="hsdk_complete">Shughuli imekamilika</string>
+
+  <!-- Onboarding showcase -->
+
+  <string name="onboard_addaccounthead">Ongeza akaunti ili uanze.</string>
+
+  <string name="onboard_addaccountdesc">Fuatilia pesa zako zote mahali pamoja. Fedha zako hazitoki kwenye akaunti yako au kuchanganyika.</string>
+
+  <string name="onboard_addaccount_greatwork_head">Kazi nzuri!</string>
+
+  <string name="onboard_addaccount_greatwork_desc">Sasa ongeza akaunti zako zingine ili uweze kuona masalio yako yote tofauti katika sehemu moja.</string>
+
+  <!-- Transfer -->
+
+  <string name="loading_link_dialoghead">Inapakia, subiri kidogo</string>
+
+  <string name="transfer_amount_label">Kiasi</string>
+
+  <string name="channel_label">Akaunti</string>
+
+  <string name="actions_fielderror">Akaunti hii haitumiki kununua muda wa maongezi. Tafadhali chagua akaunti tofauti.</string>
+
   <string name="recipientphone_label">Nambari ya simu ya mawasiliano</string>
-  	
+
   <string name="recipientacct_label">Nambari ya akaunti ya mawasiliano</string>
-  	
+
   <string name="toast_error_contactperm">Lazima uipe ruhusa usomaji mawasiliani ili kuchagua nambari kutoka kwa kitabu chako cha anwani.</string>
-  	
+
   <string name="toast_error_contactselect">Kulikuwa na tatizo wakati wa kuchagua anwani yako. Tafadhali jaribu tena.</string>
-  	
-  <string name="transfer_error_recipient_phone">Tafadhali ingiza simu hii.</string>
 
-  <string name="transfer_error_recipient_account">Tafadhali ingiza nambari ya akaunti hii.</string>
+  <string name="transfer_error_recipient_general">Tafadhali ingiza nambari ya mpokeaji.</string>
 
-  <string name="amount_fielderror">Tafadhali ingiza kiasi.</string>
+  <string name="transfer_error_recipient_phone">Tafadhali ingiza nambari ya simu.</string>
+
+  <string name="transfer_error_recipient_account">Tafadhali ingiza nambari ya akaunti.</string>
+
+  <string name="amount_fielderror">Tafadhali ingiza kiasi halali.</string>
+
+  <string name="channel_fielderror">Tafadhali chagua huduma.</string>
+
+  <string name="action_fielderror">Tafadhali chagua mtandao wa mpokeaji.</string>
+
+  <string name="channel_request_fieldinfo">Tafadhali angalia kama chaguo lako linaweza kutuma kwa %1$s</string>
+
+  <string name="no_actions_fielderror">Huduma hii haiwezi kutumika kwa %1$s.</string>
+
+  <string name="toast_pleasefix">Tafadhali rekebisha makosa yaliyoonyeshwa kwa rangi nyekundu.</string>
 
   <string name="self_choice">Mimi mwenyewe</string>
-  	
+
+  <string name="other_choice">Mtu mwingine</string>
+
   <string name="onnet_choice">Kwenye mtandao</string>
-  	
+
   <string name="offnet_choice">Kwa %1$s</string>
 
-  <string name="note_cardhead">Kumbuka</string>
-  	
-  <string name="request_note_label">Ingiza dokezo (hiari)</string>
-  	
-  <string name="recipient_label">Kwa nani?</string>
-  	
+  <string name="note_cardhead">Maelezo</string>
+
+  <string name="request_note_label">Ombi lako ni nini?</string>
+
+  <string name="recipient_label">Kwa</string>
+
+  <string name="sender_label">Kutoka</string>
+
+  <string name="send_who_header">Tuma pesa kwa</string>
+
+  <string name="airtime_who_header">Nunua muda wa maongezi kwa</string>
+
   <string name="accounts_label">Lipa kutoka</string>
-  	
+
+  <string name="self_only_money_warning">Hii inaweza kutumika tu kuhamisha pesa kwenye akaunti yako mwenyewe.</string>
+
+  <string name="self_only_airtime_warning">Hii inaweza kutumika tu kununua muda wa maongezi kwa akaunti yako mwenyewe.</string>
+
   <string name="descrip_multcontacts">Wasiliani %1$d</string>
-  	
-  <string name="descrip_airtime_sent">%1$s imetuma muda wa maongezi kwa %2$s</string>
-  	
-  <string name="descrip_transfer_sent">kutoka %1$s hadi %2$s</string>
-  	
-  <string name="fab_transfernow">Hamisha sasa</string>
-  	
+
+  <string name="descrip_airtime_sent">%1$s umetuma muda wa maongezi kwa %2$s</string>
+
+  <string name="descrip_transfer_sent">%1$s umetuma pesa kwa %2$s</string>
+
+  <string name="descrip_transfer_received">umepokea pesa kutoka kwa %1$s</string>
+
+  <string name="descrip_bill_paid">umelipa bili ya %1$s</string>
+
+  <string name="descrip_recorded">Rekodi ya kipindi cha USSD mnamo %1$s</string>
+
+  <string name="fab_transfernow">Tuma pesa sasa</string>
+
+  <string name="fab_airtimenow">Nunua muda wa maongezi sasa</string>
+
+  <string name="noworry_explain">Usijali. Unaweza kukagua maelezo baada ya kubonyeza kitufe cha Endelea.</string>
+
   <string name="descrip_airtime_sched">Nunua muda wa maongezi na %1$s kwa %2$s</string>
-  	
-  <string name="pending_callout">Shughuli imetumwa. Inasubiri uthibitisho.</string>
-  	
-  <string name="pending_cardhead">Inasubiri uthibitisho</string>
-  	
-  <string name="pending_cardbody">Kipindi cha USSD kimekamilika, lakini bado hatujapokea SMS ya uthibitisho.</string>
 
   <!-- Request -->
-  	
+
   <string name="req_cardhead">Omba pesa</string>
-  	
+
+  <string name="into_account">Kwa akaunti</string>
+
+  <string name="put_in">Weka ndani</string>
+
+  <string name="put_in_desc">Hapa ndipo unapotaka kupokea pesa zilizoombwa</string>
+
+  <string name="account_num_desc">mfano nambari yako ya simu ya pesa au nambari ya akaunti ya benki</string>
+
+  <string name="send_request_to">Tuma ombi kwa</string>
+
+  <string name="request_amount_label">Pesa ngapi?</string>
+
   <string name="amount_label_opt">Kiasi (Hiari)</string>
-  	
+
   <string name="reqfrom_label">Kwa</string>
-  	
-  <string name="btn_addcontact">Ongeza mtu mwingine</string>
-  	
+
+  <string name="btn_addcontact">+ Ongeza mtu mwingine</string>
+
   <string name="sms_request_template">Tafadhali nitumie Stax %1$s haraka unavyoweza %2$s%3$s</string>
-  	
+
   <string name="sms_amount_detail">%1$s </string>
-  	
+
   <string name="sms_note_detail">Kumbuka: \"%1$s\" </string>
-  	
+
+  <string name="reqsave_head">Hifadhi ombi?</string>
+
   <string name="toast_error_smsperm">Lazima uipe ruhusa ya kusoma SMS ili Stax iweze kujua wakati ombi limetumwa au kutimizwa.</string>
-  	
-  <string name="toast_confirm_request">Ombi lako limetumwa.</string>
-  	
+
+  <string name="reqsave_msg">Inaonekana haujatuma ombi lako. Je, ungependa kuihifadhi hata hivyo?</string>
+
+  <string name="toast_confirm_request">Ombi lako limehifadhiwa.</string>
+
   <string name="toast_request_scheduled">Ombi lako limepangwa. Utakumbushwa kutuma ujumbe mnamo %1$s</string>
-  	
+
   <string name="descrip_request">Ombi kwa %1$s</string>
 
   <string name="requester_number_label">Akaunti</string>
-  	
+
+  <string name="requester_account_number_label">Nambari ya akaunti</string>
+
+  <string name="request_error_recipient">Tafadhali ingiza nambari ya simu.</string>
+
   <string name="requester_number_fielderror">Tafadhali ingiza akaunti au nambari ya simu ambayo ungependa kupokea pesa</string>
-  	
+
   <string name="requester_account_error">Tafadhali chagua akaunti au ongeza mpya ili kupokea pesa zako</string>
 
   <string name="sms_label">SMS</string>
-  	
+
   <string name="whatsapp_label">WhatsApp</string>
-  	
+
   <string name="copyLink_label">Nakili kiungo</string>
-  	
+
   <string name="link_copied_label">Kiungo kimenakiliwa</string>
-  	
+
   <string name="share_request_link_cardhead">Shiriki kiunga cha ombi</string>
-  	
+
   <string name="share_again_cardhead">Shiriki kiunga cha ombi tena</string>
-  	
+
   <!-- Scheduling -->
-  	
+
   <string name="future_toggle">Tuma baadaye</string>
-  	
+
   <string name="date_label">Tarehe</string>
-  	
+
   <string name="repeat_toggle">Tuma zaidi ya mara moja</string>
-  	
+
   <string name="repeatfreq_label">Mara ngapi?</string>
-  	
+
   <string name="end_label">Tarehe ya mwisho</string>
-  	
+
   <string name="end_label_opt">Tarehe ya kumalizika (hiari)</string>
-  	
+
   <string name="repeatnum_label_opt">Mara ngapi? (hiari)</string>
-  	
+
   <string name="repeatnum_label">Mara ngapi?</string>
-  	
+
   <string name="toast_confirm_schedule">Uhamisho umepangwa. Tutakukumbusha kuhamisha mnamo %1$s</string>
-  	
+
   <string-array name="frequency_choices">
-    		
+
     <item>Kila siku</item>
-    		
+
     <item>Kila wiki</item>
-    		
+
     <item>Kila wiki 2</item>
-    		
+
     <item>Kila mwezi</item>
-    	
+
   </string-array>
-  	
+
   <string-array name="frequency_choices_values" translatable="false">
-    		
+
     <item>0daily</item>
-    		
+
     <item>1weekly</item>
-    		
+
     <item>2biweekly</item>
-    		
+
     <item>3monthly</item>
-    	
+
   </string-array>
-  	
+
   <string name="fab_schedule">Ratiba</string>
-  	
+
   <!-- Notifications -->
-  	
+
   <string name="notify_default_title">Mtumiaji amepangwa</string>
-  	
+
   <string name="notify_default_channel_descrip">Onyesha arifa za kufanya uhamisho na maombi uliyoyapanga.</string>
-  	
+
   <string name="notify_transfer">Ni wakati wa kuhamisha pesa %1$s na Stax.</string>
-  	
+
   <string name="notify_transfer_cta">Hamisha sasa</string>
-  	
+
   <string name="notify_request">Ni wakati wa kutuma ombi la pesa kwa %1$s na Stax.</string>
-  	
+
   <string name="notify_request_cta">Tuma ombi</string>
-  	
+
   <string name="notify_airtime">Ni wakati wa kununua muda wa maongezi na Stax.</string>
-  	
+
   <string name="notify_airtime_cta">Nunua muda wa maongezi</string>
-  	
+
   <!-- Details -->
-  	
+
+  <string name="pending_cardhead">Inasubiri uthibitisho</string>
+
+  <string name="pending_cardbody">Kipindi cha USSD kimekamilika, lakini bado hatujapokea SMS ya uthibitisho.</string>
+
   <string name="balance_label">Salio</string>
-  	
+
   <string name="moneyout_label">Pesa zilizotoka mwezi huu</string>
-  	
+
   <string name="moneyin_label">Pesa zilizoingia mwezi huu</string>
-  	
+
   <string name="fees_label">Ada iliyolipwa kwa %1$s mwaka huu</string>
-  	
+
   <string name="transactions_cardhead">Miamala</string>
-  	
-  <string name="network_label">Mtandao</string>
-  	
+
+  <string name="network_label">Akaunti ya mpokeaji</string>
+
   <string name="id_label">Kitambulisho cha Muamala</string>
-  	
+
   <string name="session_cardhead">Ujumbe</string>
-  	
+
   <!-- Canceling -->
-  	
+
   <string name="cancelfuture_head">Katiza miamala ya siku zijazo</string>
-  	
+
   <string name="btn_canceltrans">Katiza miamala</string>
-  	
+
   <string name="cancelfuture_msg">Hii itakatiza miamala ya baadaye. Unaweza kupanga upya miamala wakati wowote.</string>
-  	
+
   <string name="toast_confirm_cancelfuture">Miamala ya baadaye zimekatizwa.</string>
-  	
+
   <string name="cancelreq_head">Katiza ombi</string>
-  	
+
   <string name="btn_cancelreq">Katiza ombi</string>
-  	
+
   <string name="cancelreq_msg">Hii itakatiza ombi hili. Unaweza kuomba tena pesa kutoka kwa mtu wakati wowote.</string>
-  	
+
   <string name="toast_confirm_cancelreq">Ombi limekatizwa.</string>
-  	
+
   <!-- Settings -->
-  	
+
   <string name="accts_cardhead">Akaunti</string>
-  	
+
   <string name="security_cardhead">Usalama</string>
-  	
+
+  <string name="security_cardbody">Stax inakidhi vigezo vya 740.17(b)(3) (i) uainishaji wa usalama wa Ofisi ya Viwanda na Usalama ya Marekani. Programu hii hutumia HTTPS kwa mawasiliano ya seva; usimbuaji fiche wa RSA muhimu ili kuhifadhi kwa muda vitambulisho vya mtumiaji kwenye kifaa chake kwa kutumia Android Keystore; na usimbuaji nambari kwa kutumia DRM.</string>
+
   <string name="defaultacct_label">Akaunti chaguo-msingi</string>
-  	
+
   <string name="security_head">Salama na Stax</string>
-  	
-  <string name="btn_removepins">Ondoa PIN kutoka kwa kifaa</string>
-  	
+
+  <string name="btn_removepins">Ondoa PIN</string>
+
   <string name="removepins_dialoghead">Ondoa PIN zote sasa</string>
 
   <string name="removepin_dialoghead">Ondoa PIN %1$s sasa</string>
 
-  <string name="btn_removeaccount">Ondoa akaunti</string>
-  	
-  <string name="removepins_dialogmes">Unaweza kuongeza akaunti zako kwenye Stax tena wakati wowote.</string>
-  	
+  <string name="btn_removeaccount">Ondoa Akaunti</string>
+
+  <string name="removepins_dialogmes">Unaweza kuongeza PIN zako kwenye Stax tena wakati wowote.</string>
+
   <string name="toast_confirm_removepin">PIN imeondolewa  kwa mafanikio</string>
-  	
+
   <string name="btn_savepin">Hifadhi PIN</string>
-  	
+
   <string name="btn_editpin">Hariri PIN</string>
-  	
+
   <string name="editpin_label">PIN</string>
-  	
+
   <string name="btn_removeacct">Ondoa Akaunti</string>
-  	
+
   <string name="toast_confirm_acctremoved">Akaunti imeondolewa kwa mafanikio</string>
-  	
+
   <string name="toast_confirm_pinupdate">Pini imehifadhiwa</string>
-  	
+
   <string name="language_cardhead">Lugha</string>
-  	
+
+  <string name="app_version_and_device_id">Toleo la programu: %1$s&#13;\nNambari ya toleo:%2$s&#13;\nKitambulisho cha Kifaa: %3$s</string>
+
   <string name="disclaimer">Majina yote ya bidhaa, chapa, na alama za biashara ni mali ya wamiliki wao. Matumizi haimaanishi ushirika.</string>
-  	
+
+  <string name="contact_stax_cardhead">Endelea kuwasiliana</string>
+
+  <string name="twitter" translatable="false">Twitter</string>
+
+  <string name="stax_twitter_url" translatable="false">http://twitter.com/joinstax</string>
+
+  <string name="receive_stax_updates">Pokea sasisho za Stax</string>
+
+  <string name="support">Msaada</string>
+
+  <string name="FAQs">Maswali Yanayoulizwa mara nyingi</string>
+
+  <string name="request_feature">Omba huduma katika Stax!</string>
+
+  <string name="contact_support">Wasiliana na msaada</string>
+
+  <string name="stax_support_email">support\@stax.me</string>
+
+  <string name="stax_emailing_subject">Kitambulisho cha msaada cha Stax - %1$s</string>
+
+  <string name="send_email_using">Tuma barua ukitumia…</string>
+
   <!-- System auth check -->
-  	
+
   <string name="auth_title">Thibitisha na Stax</string>
-  	
+
   <string name="auth_descrip">Thibitisha kwa alama yako ya kidole</string>
-  	
+
   <string name="toast_error_auth">Uthibitishaji umeshindwa</string>
-  	
+
   <!-- Self destruct -->
-  	
+
   <string name="destruct_cardbody">Ujenzi huu wa Stax umekwisha. \n\nPakua ujenzi wa hivi karibuni ili uendelee kutumia Stax.</string>
-  	
+
   <string name="btn_download">Pakua toleo jipya</string>
-  	
+
   <string name="uninstall_cardbody">Sasisho lako linapakua. \n\nBonyeza kitufe hapa chini ili kusakinusha toleo hili. Mara tu upakuaji wako ukikamilika donoa arifa ya kusanikisha toleo jipya.</string>
-  	
+
   <string name="btn_uninstall">Sakinusha</string>
-  	
+
   <string name="notify_download_head">Sasisho la Stax</string>
-  	
+
   <string name="notify_download_body">Inapakua</string>
-  	
+
   <!-- Time -->
-  	
+
   <string name="timeago_ago">%1$s zilizopita</string>
-  	
+
   <string name="timeago_from_now">%1$s kuanzia sasa</string>
-  	
+
   <string name="timeago_secondes">chini ya dakika</string>
-  	
+
   <string name="timeago_minute">kama dakika</string>
-  	
+
   <string name="timeago_minutes">Dakika %1$d</string>
-  	
+
   <string name="timeago_hour">kama lisaa</string>
-  	
+
   <string name="timeago_hours">kama masaa %1$d</string>
-  	
+
   <string name="timeago_day">siku</string>
-  	
+
   <string name="timeago_days">Masiku %1$d</string>
-  	
+
   <string name="timeago_month">karibu mwezi</string>
-  	
+
   <string name="timeago_months">Miezi %1$d</string>
-  	
+
   <string name="timeago_year">karibu mwaka</string>
-  	
+
   <string name="timeago_years">Miaka %1$d</string>
-  	
+
   <!-- SWIPE REFRESH -->
-  	
+
   <string name="csr_text_state_normal">Telezesha ili kuonyesha upya salio </string>
-  	
+
   <string name="csr_text_state_ready">Toa ili kuonyesha upya salio</string>
-  	
+
   <string name="csr_text_state_refresh">Inaonyesha upya salio…</string>
-  	
+
   <string name="csr_text_state_complete">Uonyeshaji upya wa salio umekamilika</string>
-  	
+
   <string name="csr_text_last_refresh">sasisho la mwisho:</string>
 
-  <!-- Missing -->
-  <string name="btn_dontsave">Usihifadhi</string>
-  <string name="onboard_addaccountbody">Usihifadhi</string>
-  <string name="hsdk_complete">Shughuli imekamilika</string>
-  <string name="onboard_addaccounthead">Ongeza akaunti ili uanze</string>
-  <string name="other_choice">Mtu mwingine</string>
-  <string name="actions_fielderror">Akaunti hii haitumiki kununua muda wa maongezi. Tafadhali chagua akaunti tofauti.</string>
-  <string name="descrip_transfer_received">umepokea pesa kutoka kwa %1$s</string>
-    <string name="stax_tagline">Hoja pesa bila mafadhaiko</string>
-  <string name="slide_1_title">Fanya Shughuli Zako Zote Nje ya Mtandao!</string>
-  <string name="slide_1_desc">Huna haja ya mtandao kuhamisha pesa au kuangalia mizani ya akaunti yako kwenye Stax.</string>
-  <string name="slide_2_title">Hoja pesa bila mafadhaiko</string>
-  <string name="slide_2_desc">Hamisha fedha kati ya akaunti zako, nunua muda wa maongezi, tuma na uombe pesa.</string>
-  <string name="slide_3_title">Akaunti Zako Zote za Fedha katika App Moja.</string>
-  <string name="slide_3_desc">Unganisha benki yako yote &amp; akaunti za pesa za rununu kwenda Stax na uhamishe pesa kutoka sehemu moja.</string>
+  <!-- BOUNTY -->
+
+  <string name="nav_bounty">Zawadi</string>
+
+  <string name="bounty_title">&#128184; PATA KULIPWA! Mtiririko wa Ramani ya USSD</string>
+
+  <string name="bounty_msg">Stax itakulipa USD $5 - $50 kupitia mtiririko wa USSD.</string>
+
+  <string name="get_started">Anza</string>
+
+  <string name="bounty_email_stage_title">&#128506;️  Mtiririko wa Ramani ya USSD</string>
+
+  <string name="bounty_email_stage_desc1">
+    Stax inataka kufanya pesa za dijiti zipatikane kwa mtu yeyote mahali popote nje ya mtandao. Ili kuleta Stax kwa watu wengi zaidi katika nchi zaidi, tunahitaji kujenga ramani ya huduma zote za USSD ulimwenguni.
+    <b> Ndio maana Stax itakulipa USD $5-50 kupitia mtiririko wowote wa USSD kwenye ukurasa unaofuata.</b>
+  </string>
+
+  <string name="bounty_email_stage_desc2">
+    <b>1.</b>
+       Ingiza barua pepe yako ili tuweze kukulipa.\n
+    <b>2.</b>
+       Chagua mtiririko wa USSD kama \"cheki salio\" kutoka kwa benki yako au huduma ya pesa ya rununu kwenye ukurasa unaofuata.\n
+    <b>3.</b>
+       Pitia mtiririko wa USSD kama kawaida.\n
+    <b>4.</b>
+       Stax itaangalia mtiririko.\n
+    <b>5.</b>
+       Unalipwa.
+  </string>
+
+  <string name="descrip_bounty_airtime">Nunua muda wa maongezi kwa mtu yeyote %1$s</string>
+
+  <string name="bounty_airtime_explain">Nunua muda wa maongezi kwa mtu mwingine %1$s</string>
+
+  <string name="descrip_bounty_p2p">Tuma pesa kwa mtu mwingine %1$s</string>
+
+  <string name="bounty_p2p_explain">Tuma kiasi chochote kwa mtu yeyote %1$s</string>
+
+  <string name="descrip_bounty_me2me">Hamisha pesa kwenye akaunti yako ya %1$s</string>
+
+  <string name="bounty_me2me_explain">Tuma kiasi chochote kwa akaunti yako ya %1$s</string>
+
+  <string name="descrip_bounty_c2b">Lipa bili</string>
+
+  <string name="bounty_c2b_explain">Tuma kiasi chochote kwa biashara yoyote</string>
+
+  <string name="descrip_bounty_balance">Angalia salio</string>
+
+  <string name="bounty_balance_explain">Angalia salio lako</string>
+
+  <string name="descrip_bounty_offnet">mnamo %1$s</string>
+
+  <string name="bounty_email">Barua pepe</string>
+
+  <string name="bounty_email_error">Tafadhali ingiza anwani halali ya barua pepe</string>
+
+  <string name="bounty_uploading_email">Inaunganisha, tafadhali subiri…</string>
+
+  <string name="bounty_api_internet_error">Tafadhali hakikisha una muunganisho wa mtandao wa data</string>
+
+  <string name="bounty_api_other_error">Tafadhali jaribu tena. Ikiwa hii itaendelea, wasiliana nasi kwa ussd\@stax.me.</string>
+
+  <string name="bounty_pending_short_desc">Tunathibitisha shughuli yako. Ikiwa imefanikiwa, tarajia kulipwa ndani ya siku 7 za biashara.</string>
+
+  <string name="done">Imefanywa</string>
+
+  <string name="bounty_transaction_failed">Uwasilishaji huu haukutimiza mahitaji yetu</string>
+
+  <string name="bounty_transaction_failed_try_again">Uwasilishaji huu haukutimiza mahitaji yetu, lakini unaweza kujaribu tena</string>
+
+  <string name="available_flows">MITIRIRIKO INAYOPATIKANA</string>
+
+  <string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
+
+  <string name="bounty_claim_explained">Ili kudai USD $%1$d, %2$s.\n\nMara tu utakapomaliza, tutakutumia barua pepe kukusanya habari kwa malipo. Utalipwa katika siku 1-5 za biashara </string>
+
+  <string name="start_USSD_Flow">Anza Mtiririko wa USSD</string>
+
+  <string name="checking_your_flow">Kuangalia mtiririko wako</string>
+
+  <string name="bounty_flow_pending_dialog_msg">Asante kwa uwasilishaji wako. Ikiwa shughuli ilishindwa, tafadhali jaribu tena. Mara tu tutakapohakikisha shughuli iliyofanikiwa, tutakufikia kwa maelezo yako ya malipo.&lt;br/&gt;&lt;br/&gt;Ikiwa una maswali, tafadhali tutumie barua pepe kwa &lt;a href="https://ussd@stax.me"&gt; &lt;b&gt;&lt;font color=#1878F9&gt; ussd\@stax.me &lt;/b&gt;&lt;/a&gt;</string>
+
+  <string name="flow_done_title">MTIRIRIKO UMEFANYWA</string>
+
+  <string name="flow_done_desc">Tuliangalia mtiririko na inaonekana mzuri! Unapaswa kuwa na barua pepe kwenye kikasha chako na habari ya malipo.</string>
+
+  <string name="go_through_another_flow">Pitia mtiririko mwingine</string>
+
+  <string name="flow_recorded">MTIRIRIKO UMEREKODIWA</string>
+
+  <string name="bounty_amount_with_currency">USD $%1$d</string>
+
+  <string name="select_country">Chagua nchi</string>
+
+  <string name="filter_by_country">Chuja na nchi</string>
+
+  <string name="filtering_in_progress">Inachuja, tafadhali subiri…</string>
+
+  <string name="country">Nchi</string>
+
+  <string name="country_error_nodata">Tafadhali washa data ili kupakia huduma na nchi.</string>
+
+  <string name="country_with_emoji">%1$s  %2$s </string>
+
+  <string name="all_countries_with_emoji">&#127758; Nchi zote</string>
+
+  <string name="bounty_sim_err_header">Ingiza SIM sahihi</string>
+
+  <string name="bounty_sim_err_desc">Tafadhali ingiza kadi ya SIM kutoka %1$s kwenye kifaa chako na ujaribu tena.</string>
+
+  <string name="retry">Jaribu tena</string>
+
+  <string name="submit_flow">Wasilisha mtiririko</string>
+
+  <string name="bounty_submitted_successfully">Zawadi imewasilishwa kwa mafanikio</string>
+
+  <string name="language">Lugha</string>
+
+  <string name="bounty">Zawadi</string>
+
+  <string name="library_cardhead">Maktaba ya USSD</string>
+
+  <string name="visit_library">Pata misimbo fupi za USSD</string>
+
+  <string name="library_dial_btn">Piga %1$s</string>
+
+  <string name="internet_required">Mtandao unahitajika</string>
+
+  <string name="internet_required_bounty_desc">Unahitaji muunganisho wa data au Wifi kwenye ramani ya mtiririko wa USSD. Tafadhali unganisha na ujaribu tena.</string>
+
+  <string name="try_again">Jaribu tena</string>
+
+  <string name="edge_case_bounty_email_error">Hii hufanyika mara chache, lakini ikiwa kosa linaendelea, tafadhali funga programu na uanze tena.</string>
+
+  <string name="no_account_selected_error">Tafadhali chagua angalau akaunti moja kuongeza kwenye Stax</string>
+
+  <!-- IN-APP BANNERS -->
+
+  <string name="banner_permission_title">SIM, SMS, Upatikanaji na Ufunikaji</string>
+
+  <string name="banner_permission_desc">Kwa nini Stax anauliza ruhusa hizi?</string>
+
+  <string name="banner_permission_cta">
+    <u>Donoa hapa ili ujue</u>
+  </string>
+
+  <string name="banner_roundupnews_title">Pata mkusanyiko mpya wa kila mwezi wa Stax</string>
+
+  <string name="banner_roundupnews_cta">
+    <u>Donoa ili usome sasa</u>
+  </string>
+
+  <string name="banner_gist_title">Unataka mambo ya kipekee ya Stax?</string>
+
+  <string name="banner_gist_cta">
+    <u>Jisajili kwenye orodha yetu ya barua sasa</u>
+  </string>
+
+  <string name="banner_upvote_title">Jijenga nasi! Ongeza/piga kura ombi la huduma au ripoti kasoro.</string>
+
+  <string name="banner_upvote_cta">
+    <u>Toa maoni sasa</u>
+  </string>
+
+  <string name="stax_banner_img_desc">Ikoni ya bango la Stax</string>
+
+  <string name="banner_research_title">Unataka kulipwa ili kufanya Stax iwe bora zaidi?</string>
+
+  <string name="banner_research_cta">Jisajili kwa utafiti leo</string>
+
+  <string name="banner_permission_url">https://joinstax.medium.com/phone-permissions-on-stax-a0ec82533570</string>
+
+  <string name="banner_roundupnews_url">https://joinstax.medium.com/</string>
+
+  <string name="banner_upvoteurl">https://stax.nolt.io/</string>
+
+  <string name="banner_research_url">https://joinstax.typeform.com/to/JiloPnVy</string>
+
+  <!-- TEST MODE -->
+
+  <string name="test_mode_toast">Sasa uko katika hali ya jaribio.</string>
+
+  <string name="test_mode_disabled">Hali ya mtihani imezimwa.</string>
+
+  <string name="test_mode_almost_toast">Karibu kufika!</string>
+
+  <string name="test_mode_enabled">Modi ya jaribio imewashwa</string>
+
+  <string name="faq_title">Maswali yanayoulizwa mara nyingi</string>
+
+  <string name="faq_content"> %1$s &lt;p/&gt;Je, bado una maswali? &lt;p/&gt; &lt;a href="mailto:support@stax.me?subject=Stax-support-%2$s"&gt;&lt;u&gt; &lt;b&gt;&lt;font color=#1878F9&gt; Usaidizi wa stax ya barua pepe &lt;/b&gt;&lt;u&gt;&lt;/a&gt;</string>
+
+  <string name="loading">Inapakia…</string>
+
+  <string name="loading_error">Imeshindwa kupakia Maswali Yanayoulizwa Mara Nyingi, tafadhali jaribu tena</string>
+
+  <string name="faq_internet_error">Kipengele hiki kinahitaji muunganisho wa mtandao, tafadhali jaribu tena</string>
+
+  <string name="working_offline">Kufanya kazi nje ya mtandao</string>
 
 </resources>

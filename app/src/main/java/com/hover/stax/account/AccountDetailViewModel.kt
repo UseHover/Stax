@@ -26,7 +26,7 @@ class AccountDetailViewModel(val application: Application, val repo: DatabaseRep
 
     init {
         channel = Transformations.switchMap(id, repo::getLiveChannel)
-        transactions = Transformations.switchMap(id, repo::getCompleteTransferTransactions)
+        transactions = Transformations.switchMap(id, repo::getAllTransferTransactions)
         spentThisMonth = Transformations.switchMap(id, this::loadSpentThisMonth)
         feesThisYear = Transformations.switchMap(id, this::loadFeesThisYear)
     }

@@ -131,8 +131,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return transactionDao.getTransactionCount(String.format("%02d", lastMonth().first), lastMonth().second.toString())!! > 0
     }
 
-    fun getCompleteTransferTransactions(channelId: Int): LiveData<List<StaxTransaction>>? {
-        return transactionDao.getCompleteAndPendingTransfers(channelId)
+    fun getAllTransferTransactions(channelId: Int): LiveData<List<StaxTransaction>>? {
+        return transactionDao.getAllTransfers(channelId)
     }
 
     @SuppressLint("DefaultLocale")
@@ -156,11 +156,13 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
                 val a = getAction(intent.getStringExtra(HoverAction.ID_KEY))
                 val channel = getChannel(a.channel_id)
                 val contact = StaxContact.findOrInit(intent, channel.countryAlpha2, t, this)
+                var isNew = false
 
                 if (contact.accountNumber != null)
                     save(contact)
 
                 if (t == null) {
+                    isNew = true
                     c?.let { Utils.logAnalyticsEvent(c.getString(R.string.initializing_ussd_services), c) }
                     t = StaxTransaction(intent, a, contact, c)
                     transactionDao.insert(t)
@@ -168,7 +170,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
                     t = transactionDao.getTransaction(t.uuid)
                 }
 
-                t!!.update(intent, a, contact, c)
+                t!!.update(intent, a, contact, isNew, c)
                 transactionDao.update(t)
 
                 createAccounts(intent, t)
@@ -209,6 +211,10 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun getContact(id: String?): StaxContact? {
         return contactDao[id]
+    }
+
+    suspend fun getContactAsync(id: String?): StaxContact? {
+        return contactDao.getAsync(id)
     }
 
     fun getContactByPhone(phone: String): StaxContact? {

@@ -1,12 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 31,
-<<<<<<< HEAD
-    "identityHash": "1028c5a2361f2cf06302bc595503908b",
-=======
-    "identityHash": "2beb142621c128726360f946e0681070",
->>>>>>> bb93ae94d9518306507b3625096577079f384ef9
+    "version": 32,
+    "identityHash": "e9dc3dbe16f88faa4d9a646e8503ec05",
     "entities": [
       {
         "tableName": "channels",
@@ -130,11 +126,7 @@
       },
       {
         "tableName": "stax_transactions",
-<<<<<<< HEAD
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uuid` TEXT NOT NULL, `action_id` TEXT NOT NULL, `environment` INTEGER NOT NULL DEFAULT 0, `transaction_type` TEXT NOT NULL, `channel_id` INTEGER NOT NULL, `status` TEXT NOT NULL DEFAULT 'pending', `initiated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `description` TEXT, `amount` REAL, `fee` REAL, `confirm_code` TEXT, `recipient_id` TEXT, `counterparty` TEXT)",
-=======
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uuid` TEXT NOT NULL, `action_id` TEXT NOT NULL, `environment` INTEGER NOT NULL DEFAULT 0, `transaction_type` TEXT NOT NULL, `channel_id` INTEGER NOT NULL, `status` TEXT NOT NULL DEFAULT 'pending', `initiated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `description` TEXT, `amount` REAL, `fee` REAL, `confirm_code` TEXT, `recipient_id` TEXT, `category` TEXT, `counterparty` TEXT)",
->>>>>>> bb93ae94d9518306507b3625096577079f384ef9
         "fields": [
           {
             "fieldPath": "id",
@@ -225,15 +217,12 @@
             "notNull": false
           },
           {
-<<<<<<< HEAD
-=======
             "fieldPath": "category",
             "columnName": "category",
             "affinity": "TEXT",
             "notNull": false
           },
           {
->>>>>>> bb93ae94d9518306507b3625096577079f384ef9
             "fieldPath": "counterparty",
             "columnName": "counterparty",
             "affinity": "TEXT",
@@ -494,7 +483,6 @@
         },
         "indices": [],
         "foreignKeys": []
-<<<<<<< HEAD
       },
       {
         "tableName": "accounts",
@@ -591,18 +579,12 @@
             ]
           }
         ]
-=======
->>>>>>> bb93ae94d9518306507b3625096577079f384ef9
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-<<<<<<< HEAD
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1028c5a2361f2cf06302bc595503908b')"
-=======
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2beb142621c128726360f946e0681070')"
->>>>>>> bb93ae94d9518306507b3625096577079f384ef9
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e9dc3dbe16f88faa4d9a646e8503ec05')"
     ]
   }
 }

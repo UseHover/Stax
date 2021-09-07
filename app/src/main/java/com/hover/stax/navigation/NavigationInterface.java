@@ -1,12 +1,14 @@
 package com.hover.stax.navigation;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -123,17 +125,9 @@ public interface NavigationInterface {
         NavHostFragment.findNavController(fragment).navigate(R.id.pinUpdateFragment, bundle);
     }
 
-    default void navigateToTransactionDetailsFragment(String uuid, Fragment fragment) {
-        Bundle bundle = new Bundle();
-        bundle.putString(TransactionContract.COLUMN_UUID, uuid);
-        NavHostFragment.findNavController(fragment).navigate(R.id.action_bountyListFragment_to_transactionDetailsFragment, bundle);
-    }
-
-    default void navigateToTransactionDetailsFragment(String uuid, NavController navController, boolean showBountyButton) {
-        Bundle bundle = new Bundle();
-        bundle.putString(TransactionContract.COLUMN_UUID, uuid);
-        bundle.putBoolean(TransactionDetailsFragment.SHOW_BOUNTY_SUBMIT, showBountyButton);
-        navController.navigate(R.id.transactionDetailsFragment, bundle);
+    default void navigateToTransactionDetailsFragment(String uuid, FragmentManager manager, Boolean isFullScreen) {
+        TransactionDetailsFragment frag = new TransactionDetailsFragment(uuid, isFullScreen);
+        frag.show(manager, "dialogFrag");
     }
 
     default void navigateToScheduleDetailsFragment(int id, Fragment fragment) {

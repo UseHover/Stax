@@ -25,7 +25,7 @@ import com.hover.stax.transactions.TransactionDao;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class, Account.class}, version = 31)
+@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class, Account.class}, version = 32)
 public abstract class AppDatabase extends RoomDatabase {
     private static final int NUMBER_OF_THREADS = 8;
     static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -58,6 +58,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             .addMigrations(M28_29)
                             .addMigrations(M29_30)
                             .addMigrations(M30_31)
+                            .addMigrations(M31_32)
                             .build();
                 }
             }
@@ -104,17 +105,24 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
-	static final Migration M29_30 = new Migration(29, 30) {
-		@Override
-		public void migrate(SupportSQLiteDatabase database) {
-			database.execSQL("DROP INDEX index_stax_contacts_lookup_key");
-			database.execSQL("DROP INDEX index_stax_contacts_id_phone_number");
-			database.execSQL("CREATE UNIQUE INDEX index_stax_contacts_id ON stax_contacts(id)");
-			database.execSQL("CREATE UNIQUE INDEX index_stax_contacts_phone_number ON stax_contacts(phone_number)");
-		}
-	};
+    static final Migration M29_30 = new Migration(29, 30) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("DROP INDEX index_stax_contacts_lookup_key");
+            database.execSQL("DROP INDEX index_stax_contacts_id_phone_number");
+            database.execSQL("CREATE UNIQUE INDEX index_stax_contacts_id ON stax_contacts(id)");
+            database.execSQL("CREATE UNIQUE INDEX index_stax_contacts_phone_number ON stax_contacts(phone_number)");
+        }
+    };
 
-	static final Migration M30_31 = new Migration(30, 31) {
+    static final Migration M30_31 = new Migration(30, 31) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE stax_transactions ADD COLUMN category TEXT");
+        }
+    };
+
+    static final Migration M31_32 = new Migration(31, 32) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("CREATE TABLE IF NOT EXISTS accounts (name TEXT NOT NULL, alias TEXT NOT NULL, logo_url TEXT NOT NULL, " +

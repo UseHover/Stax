@@ -40,7 +40,7 @@ public class SelectLanguageActivity extends AppCompatActivity {
             binding.staxCardView.setBackButtonVisibility(View.VISIBLE);
 
         selectedCode = Lingver.getInstance().getLanguage();
-        final RadioGroup radioGrp = findViewById(R.id.languageRadioGroup);
+        final RadioGroup radioGrp = binding.languageRadioGroup;
 
         LanguageViewModel languageViewModel = new ViewModelProvider(this).get(LanguageViewModel.class);
         languageViewModel.loadLanguages().observe(this, languages -> {

@@ -77,7 +77,7 @@ public class BountyActivity extends AbstractNavigationActivity implements PushNo
             if (data != null) {
                 String transactionUUID = data.getStringExtra("uuid");
                 if (transactionUUID != null)
-                    navigateToTransactionDetailsFragment(transactionUUID, getNavController(), true);
+                    navigateToTransactionDetailsFragment(transactionUUID, getSupportFragmentManager(), true);
             }
         }
     }
