@@ -39,11 +39,17 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     val channelActions = MediatorLiveData<List<HoverAction>>()
     val accounts = MediatorLiveData<List<Account>>()
 
-    private var localBroadcastManager: LocalBroadcastManager? = null
+    private val localBroadcastManager: LocalBroadcastManager = LocalBroadcastManager.getInstance(application)
+
+    private val simReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            viewModelScope.launch {
+                sims.postValue(repo.presentSims)
+            }
+        }
+    }
 
     init {
-        localBroadcastManager = LocalBroadcastManager.getInstance(application)
-
         type.value = HoverAction.BALANCE
 
         loadChannels()
@@ -82,16 +88,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             sims.postValue(repo.presentSims)
         }
 
-        localBroadcastManager!!.registerReceiver(simReceiver, IntentFilter(Utils.getPackage(application).plus(".NEW_SIM_INFO_ACTION")))
+        localBroadcastManager.registerReceiver(simReceiver, IntentFilter(Utils.getPackage(application).plus(".NEW_SIM_INFO_ACTION")))
         Hover.updateSimInfo(application)
-    }
-
-    private val simReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            viewModelScope.launch {
-                sims.postValue(repo.presentSims)
-            }
-        }
     }
 
     private fun getHnisAndSubscribeToFirebase(sims: List<SimInfo>?): List<String>? {
@@ -280,7 +278,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     override fun onCleared() {
         try {
-            localBroadcastManager!!.unregisterReceiver(simReceiver)
+            localBroadcastManager.unregisterReceiver(simReceiver)
         } catch (ignored: Exception) {
         }
 
