@@ -89,6 +89,7 @@
 
 	<string name="clicked_add_account_bubble" translatable="false">Clicked add account from bubble showcase</string>
 	<string name="transaction_started" translatable="false">Transaction started</string>
+	<string name="transaction_completed" translatable="false">Transaction completed</string>
 
 	<string name="show_balances">Clicked show balances</string>
 	<string name="hide_balances">Clicked hide balances</string>
