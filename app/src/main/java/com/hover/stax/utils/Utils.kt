@@ -206,6 +206,12 @@ object Utils {
     }
 
     @JvmStatic
+    fun logAnalyticsEvent(event: String, context: Context, excludeAmplitude: Boolean) {
+        FirebaseAnalytics.getInstance(context).logEvent(strippedForFireAnalytics(event), null)
+        AppsFlyerLib.getInstance().logEvent(context, event, null)
+    }
+
+    @JvmStatic
     fun logAnalyticsEvent(event: String, args: JSONObject, context: Context) {
         val bundle = convertJSONObjectToBundle(args)
         val map = convertJSONObjectToHashMap(args)

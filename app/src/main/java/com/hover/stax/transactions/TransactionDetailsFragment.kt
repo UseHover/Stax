@@ -114,7 +114,7 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
     }
     private fun retryTransactionClicked(transaction: StaxTransaction, retryButton: Button) {
         retryButton.setOnClickListener {
-            updateTryAgainCounter(transaction.uuid)
+            updateTryAgainCounter(transaction.action_id)
             this.dismiss()
             (requireActivity() as MainActivity).reBuildHoverSession(transaction)
         }
@@ -157,7 +157,7 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
             if (transaction.isRecorded) setupRetryBountyButton()
             else if(transaction.status == Transaction.FAILED) {
                 val button = showButtonToClick()
-                if(shouldContactSupport(transaction.uuid)) setupContactSupportButton(transaction.uuid, button)
+                if(shouldContactSupport(transaction.action_id)) setupContactSupportButton(transaction.action_id, button)
                 else retryTransactionClicked(transaction, button)
             }
             updateDetails(transaction)
