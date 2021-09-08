@@ -13,14 +13,13 @@ import androidx.recyclerview.selection.StorageStrategy
 import com.hover.stax.R
 import com.hover.stax.balances.BalanceAdapter.BalanceListener
 import com.hover.stax.balances.BalancesViewModel
-import com.hover.stax.databinding.FragmentChannelsListBinding
+import com.hover.stax.databinding.FragmentAddChannelsBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 
 class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener {
@@ -28,7 +27,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     private val channelsViewModel: ChannelsViewModel by viewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
 
-    private var _binding: FragmentChannelsListBinding? = null
+    private var _binding: FragmentAddChannelsBinding? = null
     private val binding get() = _binding!!
 
     private var selectAdapter: ChannelsRecyclerViewAdapter = ChannelsRecyclerViewAdapter(ArrayList(0), this)
@@ -37,7 +36,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     private var dialog: StaxDialog? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentChannelsListBinding.inflate(inflater, container, false)
+        _binding = FragmentAddChannelsBinding.inflate(inflater, container, false)
 
         Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_link_account)), requireContext())
         initArguments()
@@ -154,8 +153,6 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     }
 
     private fun saveChannels(channels: List<Channel>, checkBalance: Boolean) {
-        Timber.e("Saving channels ")
-
         channelsViewModel.setChannelsSelected(channels)
         requireActivity().onBackPressed()
 
@@ -180,7 +177,6 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         goToChannelsDetailsScreen(channel)
     else
         showCheckBalanceDialog(R.string.check_balance_alt, listOf(channel))
-
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -464,5 +464,7 @@
 	<string name="current_name">Current name</string>
 	<string name="hint_enter_new_name">Enter a new name</string>
     <string name="original_name">Original name</string>
+    <string name="which_account">Which account?</string>
+	<string name="account_select_header">You have more than one %1$s account. Please choose which one you want to use to %2$s.</string>
 
 </resources>

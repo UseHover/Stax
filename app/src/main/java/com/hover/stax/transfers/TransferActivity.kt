@@ -23,7 +23,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInterface {
 
     private val actionSelectViewModel: ActionSelectViewModel by viewModel()
-
     private val channelsViewModel: ChannelsViewModel by viewModel()
     private val transferViewModel: TransferViewModel by viewModel()
     private lateinit var scheduleViewModel: ScheduleDetailViewModel

@@ -179,7 +179,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
-    //TODO load accounts here
     private fun loadAccounts(channels: List<Channel>){
         viewModelScope.launch {
             val ids = channels.map { it.id }

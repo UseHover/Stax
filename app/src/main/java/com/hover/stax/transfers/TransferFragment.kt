@@ -99,10 +99,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
                 actionSelect.updateActions(it)
             })
 
-            accounts.observe(viewLifecycleOwner) {
-                Timber.e("Accounts ${it.size}")
-                actionSelect.updateAccounts(it)
-            }
+//            accounts.observe(viewLifecycleOwner) {
+//                Timber.e("Accounts ${it.size}")
+//                actionSelect.updateAccounts(it)
+//            }
         }
 
         with(transferViewModel) {
