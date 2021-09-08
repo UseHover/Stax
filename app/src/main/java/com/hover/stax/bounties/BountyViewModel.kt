@@ -37,9 +37,14 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
     private lateinit var defferedBountyList: Deferred<MutableList<Bounty>>
 
     val user = MutableLiveData<FirebaseUser>()
+    val didLoginFail = MutableLiveData(false)
 
     fun setUser(firebaseUser: FirebaseUser) {
         user.value = firebaseUser
+    }
+
+    fun setLoginfailed(failed: Boolean) {
+        didLoginFail.value = failed
     }
 
     fun uploadBountyUser(email: String, optedIn: Boolean) {

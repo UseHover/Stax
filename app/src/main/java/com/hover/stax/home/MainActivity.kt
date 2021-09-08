@@ -255,10 +255,10 @@ class MainActivity : AbstractNavigationActivity(),
             }
         }
     }
-    
-       private fun showBalanceCards() {
-        val balanceFragment = supportFragmentManager.findFragmentById(R.id.navigation_balance) as BalancesFragment
-        balanceFragment.showBalanceCards(true)
+
+    private fun showBalanceCards() {
+        val balanceFragment = navHostFragment.childFragmentManager.findFragmentById(R.id.navigation_balance) as? BalancesFragment
+        balanceFragment?.showBalanceCards(true)
     }
 
     private fun showPopUpTransactionDetailsIfRequired(requestCode: Int, data: Intent?) {

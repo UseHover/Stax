@@ -123,7 +123,7 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     // Firebase
-    implementation platform('com.google.firebase:firebase-bom:26.0.0')
+    implementation platform('com.google.firebase:firebase-bom:28.4.0')
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-messaging'
@@ -135,7 +135,7 @@ dependencies {
 
     //auth
     implementation 'com.google.android.gms:play-services-auth:19.2.0'
-    implementation 'com.google.firebase:firebase-auth-ktx:21.0.1'
+    implementation 'com.google.firebase:firebase-auth-ktx'
 
     implementation 'com.amplitude:android-sdk:2.23.2'
     implementation "com.squareup.okhttp3:okhttp:4.8.1"

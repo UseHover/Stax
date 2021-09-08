@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.common.SignInButton
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.hover.stax.R
@@ -15,15 +16,12 @@ import com.hover.stax.utils.Utils.logAnalyticsEvent
 import com.hover.stax.utils.Utils.logErrorAndReportToFirebase
 import com.hover.stax.utils.Utils.saveString
 import com.hover.stax.utils.network.NetworkMonitor
-import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
-import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
 class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListener {
 
-    private var emailInput: StaxTextInputLayout? = null
     private var _binding: FragmentBountyEmailBinding? = null
     private val binding get() = _binding!!
 
@@ -40,20 +38,42 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeEmailResult()
-        binding.btnSignIn.setOnClickListener(this)
+
+        binding.btnSignIn.apply {
+            setSize(SignInButton.SIZE_WIDE)
+            setOnClickListener(this@BountyEmailFragment)
+        }
+
+        binding.progressIndicator.setVisibilityAfterHide(View.GONE)
 
         viewModel.user.observe(viewLifecycleOwner) {
-            Timber.e("Uploading user details")
+            updateProgress(50)
             viewModel.uploadBountyUser(it.email!!, binding.marketingOptIn.isChecked)
+        }
+
+        viewModel.didLoginFail.observe(viewLifecycleOwner) {
+            if (it == true) {
+                updateProgress(100)
+                viewModel.setLoginfailed(false)
+            }
         }
     }
 
     override fun onClick(v: View) {
         if (networkMonitor.isNetworkConnected) {
             logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext())
+            updateProgress(0)
             (activity as BountyActivity).signIn()
         } else {
             showOfflineDialog()
+        }
+    }
+
+    private fun updateProgress(progress: Int) = with(binding.progressIndicator) {
+        when (progress) {
+            0 -> show()
+            50 -> setProgressCompat(progress, true)
+            else -> hide()
         }
     }
 
@@ -69,8 +89,8 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
 
     private fun showEdgeCaseErrorDialog() {
         //logout user so that they start the login afresh
-        Timber.e("Logging out")
         Firebase.auth.signOut()
+        updateProgress(100)
 
         dialog = StaxDialog(requireActivity())
                 .setDialogMessage(getString(R.string.edge_case_bounty_email_error))
@@ -85,20 +105,16 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
             val message = entry.value
             if (responseCode in 200..299) saveAndContinue() else {
                 logErrorAndReportToFirebase(TAG, message!!, null)
-                if (isAdded && networkMonitor.isNetworkConnected) showEdgeCaseErrorDialog() else setEmailError()
+                if (isAdded && networkMonitor.isNetworkConnected) showEdgeCaseErrorDialog()
             }
         })
     }
 
-    private fun setEmailError() {
-        logAnalyticsEvent(getString(R.string.bounty_email_err, getString(R.string.bounty_api_internet_error)), requireContext())
-        emailInput!!.isEnabled = true
-        emailInput!!.setState(getString(R.string.bounty_api_internet_error), AbstractStatefulInput.ERROR)
-    }
-
     private fun saveAndContinue() {
+        updateProgress(100)
+
         logAnalyticsEvent(getString(R.string.bounty_email_success), requireContext())
-        saveString(BountyActivity.EMAIL_KEY, emailInput!!.text, requireActivity())
+        saveString(BountyActivity.EMAIL_KEY, viewModel.user.value!!.email, requireActivity())
         findNavController().navigate(R.id.action_bountyEmailFragment_to_bountyListFragment)
     }
 

@@ -3,47 +3,43 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/bounty_email_layout_id"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="visible">
 
     <com.hover.stax.views.StaxCardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:showBack="true"
             app:title="@string/bounty_email_stage_title">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
             <TextView
+                    android:id="@+id/intro"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_16"
                     android:fontFamily="font-normal"
                     android:lineSpacingExtra="1.5dp"
                     android:paddingHorizontal="@dimen/margin_13"
                     android:text="@string/bounty_email_stage_desc1"
-                    android:textSize="@dimen/text_16" />
+                    android:textSize="@dimen/text_16"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                    android:id="@+id/instructions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_16"
                     android:fontFamily="font-normal"
                     android:lineSpacingExtra="1.5dp"
                     android:paddingHorizontal="@dimen/margin_13"
                     android:text="@string/bounty_email_stage_desc2"
-                    android:textSize="@dimen/text_16" />
-
-<!--            <com.hover.stax.views.StaxTextInputLayout-->
-<!--                    android:id="@+id/emailInput"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="@dimen/margin_13"-->
-<!--                    android:hint="@string/bounty_email"-->
-<!--                    android:importantForAutofill="no"-->
-<!--                    android:inputType="text" />-->
+                    android:textSize="@dimen/text_16"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/intro" />
 
             <com.google.android.material.checkbox.MaterialCheckBox
                     android:id="@+id/marketingOptIn"
@@ -52,16 +48,35 @@
                     android:layout_marginStart="@dimen/margin_5"
                     android:fontFamily="font-normal"
                     android:gravity="center"
-                    android:text="@string/marketing_email_optin" />
+                    android:text="@string/marketing_email_optin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/instructions" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.gms.common.SignInButton
                     android:id="@+id/btnSignIn"
-                    style="@style/StaxButtonColored"
-                    android:layout_width="wrap_content"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
                     android:layout_marginTop="@dimen/margin_13"
-                    android:text="@string/btn_google_signin" />
-        </LinearLayout>
+                    android:layout_marginEnd="@dimen/margin_8"
+                    android:layout_marginBottom="@dimen/margin_10"
+                    app:layout_constraintBottom_toTopOf="@id/progressIndicator"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/marketingOptIn" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                    android:id="@+id/progressIndicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    android:minHeight="4dp"
+                    android:visibility="gone"
+                    app:hideAnimationBehavior="inward"
+                    app:indicatorColor="@color/brightBluePressed"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:showAnimationBehavior="outward" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.hover.stax.views.StaxCardView>
 </androidx.core.widget.NestedScrollView>
