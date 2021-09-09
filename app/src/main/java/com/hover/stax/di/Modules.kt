@@ -3,6 +3,7 @@ package com.hover.stax.di
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.balances.BalancesViewModel
+import com.hover.stax.bounties.BountyViewModel
 import com.hover.stax.channels.ChannelDetailViewModel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.database.AppDatabase
@@ -33,6 +34,7 @@ val appModule = module {
     viewModel { FutureViewModel(get()) }
     viewModel { TransactionDetailsViewModel(get()) }
     viewModel { LibraryViewModel(get()) }
+    viewModel { BountyViewModel(get()) }
 }
 
 val dataModule = module(createdAtStart = true) {
