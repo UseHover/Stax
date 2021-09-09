@@ -31,6 +31,7 @@
         <entry key="app/src/main/res/layout/request_card_amount.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/request_card_edit.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/request_card_requestee.xml" value="0.15602836879432624" />
+        <entry key="app/src/main/res/layout/request_card_requester.xml" value="0.15704154002026344" />
         <entry key="app/src/main/res/layout/request_card_share.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/request_card_summary.xml" value="0.14868287740628167" />
         <entry key="app/src/main/res/layout/request_detail_card_summary.xml" value="0.15602836879432624" />

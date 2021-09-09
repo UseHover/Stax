@@ -11,7 +11,7 @@
             android:layout_height="wrap_content">
 
         <TextView
-                android:id="@+id/header"
+                android:id="@+id/accountsInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_16"
@@ -30,7 +30,7 @@
                 android:layout_marginTop="@dimen/margin_13"
                 android:layout_marginBottom="@dimen/margin_10"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/header" />
+                app:layout_constraintTop_toBottomOf="@+id/accountsInfo" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.hover.stax.views.StaxCardView>

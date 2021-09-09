@@ -218,7 +218,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
     private fun validates(): Boolean {
         val channelError = channelsViewModel.errorCheck()
-        channelDropdown.setState(channelError, if (channelError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        channelDropdown?.setState(channelError, if (channelError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         val requesterAcctNoError = requestViewModel.requesterAcctNoError()
         requesterNumberInput.setState(requesterAcctNoError, if (requesterAcctNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)

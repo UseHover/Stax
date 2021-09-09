@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsRecyclerViewAdapter
 import com.hover.stax.channels.ChannelsViewModel
@@ -33,6 +34,8 @@ class AccountsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener,
             layoutManager = UIHelper.setMainLinearManagers(requireActivity())
             adapter = selectAdapter
         }
+
+        binding.accountListCard.setOnClickIcon { findNavController().popBackStack() }
 
         with(viewModel) {
             allChannels.observe(viewLifecycleOwner) { selectAdapter.updateList(it) }

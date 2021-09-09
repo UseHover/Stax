@@ -68,6 +68,7 @@
 	<string name="channels_error_nodata">Please turn on data to load services.</string>
 	<string name="channels_error_nosim">Please insert a supported SIM to filter choices.</string>
 	<string name="channels_error_noselect">You must select a service.</string>
+	<string name="accounts_error_no_accounts">No accounts added</string>
 	<string name="link_account">Link account</string>
 	<string name="link_account_error">Choose an account to link.</string>
 	<string name="link_another"><u>+ Link another account</u></string>

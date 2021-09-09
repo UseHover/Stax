@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
+import com.hover.stax.account.AccountDropDown
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelDropdown
 import com.hover.stax.channels.ChannelsViewModel
@@ -38,7 +39,8 @@ abstract class AbstractFormFragment : Fragment() {
     private var editRequestCard: LinearLayout? = null
 
     private lateinit var summaryCard: StaxCardView
-    lateinit var channelDropdown: ChannelDropdown
+    var channelDropdown: ChannelDropdown? = null
+    lateinit var accountDropdown: AccountDropDown
     lateinit var fab: Button
 
     private lateinit var noWorryText: LinearLayout
@@ -52,11 +54,14 @@ abstract class AbstractFormFragment : Fragment() {
         summaryCard = root.findViewById(R.id.summaryCard)
         fab = root.findViewById(R.id.fab)
         channelDropdown = root.findViewById(R.id.channel_dropdown)
+        accountDropdown = root.findViewById(R.id.accountDropdown)
     }
 
     open fun startObservers(root: View) {
-        channelDropdown.setListener(channelsViewModel)
-        channelDropdown.setObservers(channelsViewModel, viewLifecycleOwner)
+        accountDropdown.setListener(channelsViewModel)
+        channelDropdown?.setListener(channelsViewModel)
+        accountDropdown.setObservers(channelsViewModel, viewLifecycleOwner)
+        channelDropdown?.setObservers(channelsViewModel, viewLifecycleOwner)
         setupActionDropdownObservers(channelsViewModel, viewLifecycleOwner)
         abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit))
     }
@@ -67,7 +72,7 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     open fun showEdit(isEditing: Boolean) {
-        channelDropdown.highlighted?.let { channelsViewModel.setChannelsSelected(listOf(it)) }
+        channelDropdown?.highlighted?.let { channelsViewModel.setChannelsSelected(listOf(it)) }
 
         editCard?.visibility = if (isEditing) View.VISIBLE else View.GONE
         editRequestCard?.visibility = if(isEditing) View.VISIBLE else View.GONE

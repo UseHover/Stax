@@ -65,7 +65,7 @@ data class Account(
         return this
     }
 
-    override fun toString() = buildString { append(name); append(" "); append(accountNo) }
+    override fun toString() = buildString { append(name); append(" - "); append(accountNo) }
 
     override fun equals(other: Any?): Boolean {
         if (other !is Account) return false
