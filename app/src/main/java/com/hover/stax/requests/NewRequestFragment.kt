@@ -108,6 +108,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
             requesterNumber.observe(viewLifecycleOwner, { accountValue.setSubtitle(it) })
             activeChannel.observe(viewLifecycleOwner, { updateAcctNo(it) })
+
             recentContacts.observe(viewLifecycleOwner, { it?.let { contacts -> requesteeInput.setRecent(contacts, requireActivity()) } })
             isEditing.observe(viewLifecycleOwner, { showEdit(it) })
 
@@ -218,7 +219,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
     private fun validates(): Boolean {
         val channelError = channelsViewModel.errorCheck()
-        channelDropdown?.setState(channelError, if (channelError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        accountDropdown.setState(channelError, if (channelError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         val requesterAcctNoError = requestViewModel.requesterAcctNoError()
         requesterNumberInput.setState(requesterAcctNoError, if (requesterAcctNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)

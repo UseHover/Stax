@@ -5,6 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.R
+import com.hover.stax.account.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.database.DatabaseRepo
@@ -17,6 +18,7 @@ import kotlin.collections.ArrayList
 
 class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) : AbstractFormViewModel(application, databaseRepo) {
 
+    val activeAccount = MediatorLiveData<Account>()
     val activeChannel = MediatorLiveData<Channel>()
     val amount = MutableLiveData<String>()
     val requestees = MutableLiveData<List<StaxContact>>(Collections.singletonList(StaxContact("")))

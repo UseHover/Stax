@@ -12,32 +12,32 @@ import java.util.*
 const val DUMMY = -1
 
 @Entity(
-    tableName = "accounts",
-    foreignKeys = [ForeignKey(entity = Channel::class, parentColumns = ["id"], childColumns = ["channelId"], onDelete = CASCADE)]
+        tableName = "accounts",
+        foreignKeys = [ForeignKey(entity = Channel::class, parentColumns = ["id"], childColumns = ["channelId"], onDelete = CASCADE)]
 )
 data class Account(
-    val name: String,
+        val name: String,
 
-    val alias: String,
+        val alias: String,
 
-    @ColumnInfo(name = "logo_url")
-    val logoUrl: String,
+        @ColumnInfo(name = "logo_url")
+        val logoUrl: String,
 
-    @ColumnInfo(name = "account_no")
-    var accountNo: String?,
+        @ColumnInfo(name = "account_no")
+        var accountNo: String?,
 
-    @ColumnInfo(index = true)
-    val channelId: Int,
+        @ColumnInfo(index = true)
+        val channelId: Int,
 
-    @ColumnInfo(name = "primary_color_hex")
-    val primaryColorHex: String,
+        @ColumnInfo(name = "primary_color_hex")
+        val primaryColorHex: String,
 
-    @ColumnInfo(name = "secondary_color_hex")
-    val secondaryColorHex: String
+        @ColumnInfo(name = "secondary_color_hex")
+        val secondaryColorHex: String
 ) : Comparable<Account> {
 
-    constructor(name: String, primaryColor: String): this(
-        name, alias = name, logoUrl = "", accountNo = "", channelId = -1, primaryColor, secondaryColorHex = "#1E232A"
+    constructor(name: String, primaryColor: String) : this(
+            name, alias = name, logoUrl = "", accountNo = "", channelId = -1, primaryColor, secondaryColorHex = "#1E232A"
     )
 
     @PrimaryKey(autoGenerate = true)
@@ -65,7 +65,14 @@ data class Account(
         return this
     }
 
-    override fun toString() = buildString { append(name); append(" - "); append(accountNo) }
+    override fun toString() = buildString {
+        append(alias)
+
+        if (accountNo != null) {
+            append(" - ")
+            append(accountNo)
+        }
+    }
 
     override fun equals(other: Any?): Boolean {
         if (other !is Account) return false

@@ -55,7 +55,7 @@ class AccountDropDown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         }
     }
 
-    fun accountUpdate(accounts: List<Account>) {
+    private fun accountUpdate(accounts: List<Account>) {
         if (!accounts.isNullOrEmpty()) {
             setState(null, NONE)
             updateChoices(accounts)
@@ -66,7 +66,7 @@ class AccountDropDown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     private fun setEmptyState() {
         autoCompleteTextView.dropDownHeight = 0
-        setState(context.getString(R.string.accounts_error_no_accounts), ERROR)
+        setState(context.getString(R.string.accounts_error_no_accounts), NONE)
     }
 
     private fun setDropdownValue(account: Account?) {
@@ -102,7 +102,7 @@ class AccountDropDown(context: Context, attributeSet: AttributeSet) : StaxDropdo
             sims.observe(lifecycleOwner) { Timber.i("Got sims ${it.size}") }
             simHniList.observe(lifecycleOwner) { Timber.i("Got new sim hni list $it") }
             accounts.observe(lifecycleOwner) {
-                updateAccountIfNull(it)
+                accountUpdate(it)
             }
 
             val selectedObserver = object : Observer<List<Channel>> {
@@ -112,7 +112,10 @@ class AccountDropDown(context: Context, attributeSet: AttributeSet) : StaxDropdo
             }
             selectedChannels.observe(lifecycleOwner, selectedObserver)
             activeChannel.observe(lifecycleOwner) { if (it != null && showSelected) setState(helperText, NONE) }
-            channelActions.observe(lifecycleOwner) { setState(it, viewModel) }
+            channelActions.observe(lifecycleOwner) {
+                Timber.e("Got channel actions ${it.size}")
+                setState(it, viewModel)
+            }
         }
     }
 

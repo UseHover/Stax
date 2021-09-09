@@ -137,12 +137,13 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun setActiveChannelIfNull(channels: List<Channel>) {
+        Timber.e("Setting active channel ${channels.firstOrNull()}")
         if (!channels.isNullOrEmpty() && activeChannel.value == null)
             activeChannel.value = channels.first { it.defaultAccount }
     }
 
     private fun setActiveChannel(channel: Channel) {
-        activeChannel.value = channel
+        activeChannel.postValue(channel)
     }
 
     //TODO make another function to set active account from channel actions
@@ -286,7 +287,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     override fun highlightAccount(account: Account) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val channel = repo.getChannel(account.channelId)
             setActiveChannel(channel)
         }

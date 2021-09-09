@@ -39,7 +39,6 @@ abstract class AbstractFormFragment : Fragment() {
     private var editRequestCard: LinearLayout? = null
 
     private lateinit var summaryCard: StaxCardView
-    var channelDropdown: ChannelDropdown? = null
     lateinit var accountDropdown: AccountDropDown
     lateinit var fab: Button
 
@@ -53,15 +52,12 @@ abstract class AbstractFormFragment : Fragment() {
         noWorryText = root.findViewById(R.id.noworry_text)
         summaryCard = root.findViewById(R.id.summaryCard)
         fab = root.findViewById(R.id.fab)
-        channelDropdown = root.findViewById(R.id.channel_dropdown)
         accountDropdown = root.findViewById(R.id.accountDropdown)
     }
 
     open fun startObservers(root: View) {
         accountDropdown.setListener(channelsViewModel)
-        channelDropdown?.setListener(channelsViewModel)
         accountDropdown.setObservers(channelsViewModel, viewLifecycleOwner)
-        channelDropdown?.setObservers(channelsViewModel, viewLifecycleOwner)
         setupActionDropdownObservers(channelsViewModel, viewLifecycleOwner)
         abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit))
     }
@@ -72,7 +68,7 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     open fun showEdit(isEditing: Boolean) {
-        channelDropdown?.highlighted?.let { channelsViewModel.setChannelsSelected(listOf(it)) }
+//        channelDropdown?.highlighted?.let { channelsViewModel.setChannelsSelected(listOf(it)) }
 
         editCard?.visibility = if (isEditing) View.VISIBLE else View.GONE
         editRequestCard?.visibility = if(isEditing) View.VISIBLE else View.GONE
