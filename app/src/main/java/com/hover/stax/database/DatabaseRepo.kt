@@ -47,6 +47,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     val allChannels: LiveData<List<Channel>> = channelDao.allInAlphaOrder
     val selected: LiveData<List<Channel>> = channelDao.getSelected(true)
 
+    fun getSelectedCount(): Int = channelDao.getSelectedCount(true)
+
     // Channels
     fun getChannel(id: Int): Channel {
         return channelDao.getChannel(id)

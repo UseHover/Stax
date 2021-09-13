@@ -22,6 +22,9 @@ public interface ChannelDao {
     @Query("SELECT * FROM channels WHERE selected = :selected ORDER BY defaultAccount DESC, name ASC")
     LiveData<List<Channel>> getSelected(boolean selected);
 
+    @Query("SELECT COUNT(*) FROM channels WHERE selected = :selected")
+    int getSelectedCount(boolean selected);
+
     @Query("SELECT * FROM channels WHERE id IN (:channel_ids) ORDER BY name ASC")
     LiveData<List<Channel>> getChannels(int[] channel_ids);
 

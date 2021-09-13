@@ -199,6 +199,15 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
+    fun saveChannels(channels: List<Channel>) {
+        viewModelScope.launch {
+            val toSkip = repo.getActions(getChannelIds(channels), HoverAction.FETCH_ACCOUNTS).map { it.channel_id }
+
+            val channelsToAdd = channels.filterNot { toSkip.contains(it.id) }
+            setChannelsSelected(channelsToAdd)
+        }
+    }
+
     fun setChannelsSelected(channels: List<Channel>?) {
         if (channels.isNullOrEmpty()) return
 
@@ -248,14 +257,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
-    private fun getChannelIds(channels: List<Channel>): IntArray {
-        val ids = IntArray(channels.size)
-
-        for (i in channels.indices)
-            ids[i] = channels[i].id
-
-        return ids
-    }
+    private fun getChannelIds(channels: List<Channel>): IntArray = channels.map { it.id }.toIntArray()
 
     fun view(s: Schedule) {
         setType(s.type)

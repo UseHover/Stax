@@ -32,7 +32,7 @@ class AccountsAdapter(val accounts: List<Account>, val selectListener: SelectLis
             binding.serviceItemNameId.text = account.name.plus(" - ").plus(account.accountNo)
             UIHelper.loadPicasso(account.logoUrl, Constants.size55, this)
 
-            binding.root.setOnClickListener { selectListener.accountSelected(account.id) }
+            binding.root.setOnClickListener { selectListener.accountSelected(account) }
         }
 
         override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
@@ -49,6 +49,6 @@ class AccountsAdapter(val accounts: List<Account>, val selectListener: SelectLis
     }
 
     interface SelectListener {
-        fun accountSelected(id: Int)
+        fun accountSelected(account: Account)
     }
 }

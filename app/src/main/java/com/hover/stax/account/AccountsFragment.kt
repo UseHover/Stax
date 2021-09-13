@@ -47,14 +47,15 @@ class AccountsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener,
         }
     }
 
+    //TODO set channels selected for channels that need accounts fetched.
     override fun clickedChannel(channel: Channel) {
         lifecycleScope.launch {
-            viewModel.setChannelsSelected(listOf(channel))
             val fetchAction = viewModel.getFetchAccountAction(channel.id)
 
             if (fetchAction != null) {
                 fetchAccounts(fetchAction, channel)
             } else {
+                viewModel.setChannelsSelected(listOf(channel))
                 viewModel.createAccounts(listOf(channel))
                 findNavController().popBackStack()
             }
@@ -66,7 +67,6 @@ class AccountsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener,
                 ?: (activity as? RequestActivity)?.makeCall(action, channel)
     }
 
-    override fun accountSelected(id: Int) {
-        TODO("Run action on selected account")
+    override fun accountSelected(account: Account) {
     }
 }
