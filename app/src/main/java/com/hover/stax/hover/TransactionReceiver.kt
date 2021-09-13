@@ -27,20 +27,16 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
         if (intent.hasExtra(TransactionContract.COLUMN_PARSED_VARIABLES)) {
             val parsedVariables = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as? HashMap<String, String>
 
-            parsedVariables?.entries?.forEach {
-                Timber.e("Entries - $it")
-            }
+            parsedVariables?.let { variables ->
+                if (variables.containsKey("userAccountList")) {
 
-            if (parsedVariables != null && parsedVariables.containsKey("balance")) {
-                GlobalScope.launch(Dispatchers.IO) {
-                    val action = repo.getAction(intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID))
-//                    val channel = repo.getChannel(action.channel_id)
-
-                    val account = repo.getAccounts(action.channel_id).first()
-                    account.updateBalance(parsedVariables)
-//                    channel.updateBalance(parsedVariables)
-//                    repo.update(channel)
-                    repo.update(account)
+                } else if (variables.containsKey("balance")) {
+                    GlobalScope.launch(Dispatchers.IO) {
+                        val action = repo.getAction(intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID))
+                        val account = repo.getAccounts(action.channel_id).first()
+                        account.updateBalance(parsedVariables)
+                        repo.update(account)
+                    }
                 }
             }
         }

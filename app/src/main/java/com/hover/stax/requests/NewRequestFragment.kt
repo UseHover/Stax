@@ -116,7 +116,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
             })
 
             requesterNumber.observe(viewLifecycleOwner, { accountValue.setSubtitle(it) })
-            activeChannel.observe(viewLifecycleOwner, { updateAcctNo(it) })
+            activeAccount.observe(viewLifecycleOwner, { updateAcctNo(it.accountNo) })
 
             recentContacts.observe(viewLifecycleOwner, { it?.let { contacts -> requesteeInput.setRecent(contacts, requireActivity()) } })
             isEditing.observe(viewLifecycleOwner, { showEdit(it) })
@@ -146,8 +146,8 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
     private fun setSummaryCardBackButton() = binding.summaryCard.root.setOnClickIcon { requestViewModel.setEditing(true) }
 
-    private fun updateAcctNo(channel: Channel?) {
-        requesterNumberInput.text = channel?.accountNo
+    private fun updateAcctNo(accountNo: String?) {
+        requesterNumberInput.text = accountNo
     }
 
     private fun startListeners() {

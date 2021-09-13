@@ -1,5 +1,7 @@
 package com.hover.stax.channels;
 
+import static com.hover.stax.utils.Constants.size55;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -20,15 +22,12 @@ import com.hover.stax.views.StaxDropdownLayout;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-
 import java.util.List;
 
 import timber.log.Timber;
 
-import static com.hover.stax.utils.Constants.size55;
 
-
-public class ChannelDropdown extends StaxDropdownLayout implements Target{
+public class ChannelDropdown extends StaxDropdownLayout implements Target {
 
     private boolean showSelected;
     private String initial_helper_text;

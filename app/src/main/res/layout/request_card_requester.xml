@@ -5,7 +5,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <com.hover.stax.account.AccountDropDown
+    <com.hover.stax.account.AccountDropdown
             android:id="@+id/accountDropdown"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

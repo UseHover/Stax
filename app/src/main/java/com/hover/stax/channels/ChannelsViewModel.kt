@@ -13,7 +13,7 @@ import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.account.Account
-import com.hover.stax.account.AccountDropDown
+import com.hover.stax.account.AccountDropdown
 
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
@@ -27,7 +27,7 @@ import timber.log.Timber
 
 
 class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel(),
-        ChannelDropdown.HighlightListener, AccountDropDown.HighlightListener, PushNotificationTopicsInterface {
+        ChannelDropdown.HighlightListener, AccountDropdown.HighlightListener, PushNotificationTopicsInterface {
 
     private var type = MutableLiveData<String>()
     var sims = MutableLiveData<List<SimInfo>>()

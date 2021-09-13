@@ -17,7 +17,6 @@ import com.hover.stax.transfers.TransferActivity
 import com.hover.stax.utils.UIHelper
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class AccountsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener, AccountsAdapter.SelectListener {
 
@@ -48,13 +47,10 @@ class AccountsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener,
         }
     }
 
-    //TODO run fetch account actions
     override fun clickedChannel(channel: Channel) {
         lifecycleScope.launch {
             viewModel.setChannelsSelected(listOf(channel))
             val fetchAction = viewModel.getFetchAccountAction(channel.id)
-
-            Timber.e("Fetch action ${fetchAction.toString()}")
 
             if (fetchAction != null) {
                 fetchAccounts(fetchAction, channel)

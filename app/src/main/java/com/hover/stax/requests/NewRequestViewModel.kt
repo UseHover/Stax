@@ -18,7 +18,8 @@ import kotlin.collections.ArrayList
 
 class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) : AbstractFormViewModel(application, databaseRepo) {
 
-    val activeChannel = MediatorLiveData<Channel>()
+    val activeAccount = MutableLiveData<Account>()
+    val activeChannel = MutableLiveData<Channel>()
     val amount = MutableLiveData<String>()
     val requestees = MutableLiveData<List<StaxContact>>(Collections.singletonList(StaxContact("")))
     val requestee = MutableLiveData<StaxContact>()
@@ -34,7 +35,16 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
 
     fun setAmount(a: String) = amount.postValue(a)
 
-    fun setActiveChannel(c: Channel) = activeChannel.postValue(c)
+    fun setActiveChannel(c: Channel) {
+        activeChannel.postValue(c)
+
+        viewModelScope.launch {
+            val account = repo.getAccounts(c.id).firstOrNull()
+            setActiveAccount(account)
+        }
+    }
+
+    private fun setActiveAccount(account: Account?) = activeAccount.postValue(account)
 
     private fun setRequesterNumber(c: Channel) = requesterNumber.postValue(c.accountNo)
 

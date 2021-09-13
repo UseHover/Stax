@@ -20,11 +20,11 @@ import com.squareup.picasso.Target
 import timber.log.Timber
 
 
-class AccountDropDown(context: Context, attributeSet: AttributeSet) : StaxDropdownLayout(context, attributeSet), Target {
+class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdownLayout(context, attributeSet), Target {
 
     private var showSelected: Boolean = true
     private var helperText: String? = null
-    var highlightedAccount: Account? = null
+    private var highlightedAccount: Account? = null
     private var highlightListener: HighlightListener? = null
 
     init {
@@ -46,18 +46,9 @@ class AccountDropDown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         highlightListener = listener
     }
 
-    fun updateAccountIfNull(accounts: List<Account>) {
-        if (!accounts.isNullOrEmpty() && !hasExistingContent()) {
-            setState(context.getString(R.string.channels_error_nosim), INFO)
-            updateChoices(accounts)
-        } else if (!hasExistingContent()) {
-            setEmptyState()
-        }
-    }
-
     private fun accountUpdate(accounts: List<Account>) {
-        if (!accounts.isNullOrEmpty()) {
-            setState(null, NONE)
+        if (!accounts.isNullOrEmpty() && !hasExistingContent()) {
+//            setState(null, NONE)
             updateChoices(accounts)
         } else if (!hasExistingContent()) {
             setEmptyState()
@@ -70,7 +61,7 @@ class AccountDropDown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     private fun setDropdownValue(account: Account?) {
-        autoCompleteTextView.setText(account?.alias ?: "", false)
+        autoCompleteTextView.setText(account?.toString() ?: "", false)
         account?.logoUrl?.let { UIHelper.loadPicasso(it, size55, this) }
     }
 
@@ -83,10 +74,10 @@ class AccountDropDown(context: Context, attributeSet: AttributeSet) : StaxDropdo
             setAdapter(adapter)
             dropDownHeight = UIHelper.dpToPx(300)
             setOnItemClickListener { parent, _, position, _ -> onSelect(parent.getItemAtPosition(position) as Account) }
-
-            if (showSelected)
-                setDropdownValue(accounts.first())
         }
+
+        if (showSelected)
+            setDropdownValue(accounts.first())
     }
 
     private fun onSelect(account: Account) {
@@ -102,6 +93,7 @@ class AccountDropDown(context: Context, attributeSet: AttributeSet) : StaxDropdo
             sims.observe(lifecycleOwner) { Timber.i("Got sims ${it.size}") }
             simHniList.observe(lifecycleOwner) { Timber.i("Got new sim hni list $it") }
             accounts.observe(lifecycleOwner) {
+                Timber.e("Updating accounts")
                 accountUpdate(it)
             }
 
@@ -111,9 +103,8 @@ class AccountDropDown(context: Context, attributeSet: AttributeSet) : StaxDropdo
                 }
             }
             selectedChannels.observe(lifecycleOwner, selectedObserver)
-            activeChannel.observe(lifecycleOwner) { if (it != null && showSelected) setState(helperText, NONE) }
+            activeChannel.observe(lifecycleOwner) { if (it != null && showSelected) setState(helperText, NONE); Timber.e("Setting state null") }
             channelActions.observe(lifecycleOwner) {
-                Timber.e("Got channel actions ${it.size}")
                 setState(it, viewModel)
             }
         }
@@ -128,7 +119,9 @@ class AccountDropDown(context: Context, attributeSet: AttributeSet) : StaxDropdo
                 setState(context.getString(if (actions.first().transaction_type == HoverAction.AIRTIME) R.string.self_only_airtime_warning
                 else R.string.self_only_money_warning), INFO)
 
-            viewModel.activeChannel.value != null && showSelected -> setState(helperText, SUCCESS)
+            viewModel.activeChannel.value != null && showSelected -> {
+                setState(helperText, SUCCESS)
+            }
         }
     }
 

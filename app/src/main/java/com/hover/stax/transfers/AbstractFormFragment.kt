@@ -18,7 +18,7 @@ import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
-import com.hover.stax.account.AccountDropDown
+import com.hover.stax.account.AccountDropdown
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.contacts.StaxContact
@@ -41,11 +41,10 @@ abstract class AbstractFormFragment : Fragment() {
     private var editRequestCard: LinearLayout? = null
 
     private lateinit var summaryCard: StaxCardView
-    lateinit var accountDropdown: AccountDropDown
+    lateinit var accountDropdown: AccountDropdown
     lateinit var fab: Button
 
     private lateinit var noWorryText: LinearLayout
-
 
     @CallSuper
     open fun init(root: View) {
