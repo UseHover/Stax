@@ -5,14 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.hover.sdk.actions.HoverAction
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsRecyclerViewAdapter
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentAccountsBinding
-
+import com.hover.stax.requests.RequestActivity
+import com.hover.stax.transfers.TransferActivity
 import com.hover.stax.utils.UIHelper
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class AccountsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener, AccountsAdapter.SelectListener {
 
@@ -20,7 +25,7 @@ class AccountsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener,
     private val binding get() = _binding!!
 
     private val viewModel: ChannelsViewModel by viewModel()
-    private var selectAdapter: ChannelsRecyclerViewAdapter = ChannelsRecyclerViewAdapter(ArrayList(), null)
+    private var selectAdapter: ChannelsRecyclerViewAdapter = ChannelsRecyclerViewAdapter(ArrayList(), this)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAccountsBinding.inflate(inflater, container, false)
@@ -45,7 +50,24 @@ class AccountsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener,
 
     //TODO run fetch account actions
     override fun clickedChannel(channel: Channel) {
+        lifecycleScope.launch {
+            viewModel.setChannelsSelected(listOf(channel))
+            val fetchAction = viewModel.getFetchAccountAction(channel.id)
 
+            Timber.e("Fetch action ${fetchAction.toString()}")
+
+            if (fetchAction != null) {
+                fetchAccounts(fetchAction, channel)
+            } else {
+                viewModel.createAccounts(listOf(channel))
+                findNavController().popBackStack()
+            }
+        }
+    }
+
+    private fun fetchAccounts(action: HoverAction, channel: Channel) {
+        (activity as? TransferActivity)?.makeCall(action, channel)
+                ?: (activity as? RequestActivity)?.makeCall(action, channel)
     }
 
     override fun accountSelected(id: Int) {

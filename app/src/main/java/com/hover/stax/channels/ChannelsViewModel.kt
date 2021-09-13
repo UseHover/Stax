@@ -262,10 +262,12 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         setActiveChannel(repo.getChannel(s.channel_id))
     }
 
+    fun getFetchAccountAction(channelId: Int): HoverAction? = repo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()
+
     fun createAccounts(channels: List<Channel>) {
         viewModelScope.launch {
             channels.forEach {
-                if (repo.getActions(it.id, HoverAction.FETCH_ACCOUNTS).isEmpty())
+                if (getFetchAccountAction(it.id) == null)
                     repo.createAccount(it)
             }
         }

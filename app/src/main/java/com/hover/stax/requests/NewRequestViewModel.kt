@@ -18,7 +18,6 @@ import kotlin.collections.ArrayList
 
 class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) : AbstractFormViewModel(application, databaseRepo) {
 
-    val activeAccount = MediatorLiveData<Account>()
     val activeChannel = MediatorLiveData<Channel>()
     val amount = MutableLiveData<String>()
     val requestees = MutableLiveData<List<StaxContact>>(Collections.singletonList(StaxContact("")))

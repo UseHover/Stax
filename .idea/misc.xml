@@ -11,13 +11,10 @@
         <entry key="app/src/main/res/drawable/button_bg_colored.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_dark.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_grey.xml" value="0.32037037037037036" />
-        <entry key="app/src/main/res/layout/account_card_layout.xml" value="0.30932971014492755" />
         <entry key="app/src/main/res/layout/action_select.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/activity_bounty.xml" value="0.14817629179331307" />
         <entry key="app/src/main/res/layout/balance_item.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/basic_perm_dialog.xml" value="0.2890625" />
-        <entry key="app/src/main/res/layout/fragment_accounts.xml" value="0.30520833333333336" />
-        <entry key="app/src/main/res/layout/fragment_balance.xml" value="0.14842958459979735" />
         <entry key="app/src/main/res/layout/fragment_bounty_email.xml" value="0.14817629179331307" />
         <entry key="app/src/main/res/layout/fragment_bounty_list.xml" value="0.1342451874366768" />
         <entry key="app/src/main/res/layout/fragment_channel.xml" value="0.14766970618034447" />
@@ -31,7 +28,7 @@
         <entry key="app/src/main/res/layout/request_card_amount.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/request_card_edit.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/request_card_requestee.xml" value="0.15602836879432624" />
-        <entry key="app/src/main/res/layout/request_card_requester.xml" value="0.15704154002026344" />
+        <entry key="app/src/main/res/layout/request_card_requester.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/request_card_share.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/request_card_summary.xml" value="0.14868287740628167" />
         <entry key="app/src/main/res/layout/request_detail_card_summary.xml" value="0.15602836879432624" />

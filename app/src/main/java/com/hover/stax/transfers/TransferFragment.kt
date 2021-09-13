@@ -102,14 +102,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
             })
 
             accounts.observe(viewLifecycleOwner) {
-                Timber.e("Accounts ${it.size}")
-                if (it.isEmpty()) {
-                    accountDropdown.autoCompleteTextView.setOnTouchListener { v, event ->
-                        if (event.action == MotionEvent.ACTION_DOWN)
-                            findNavController().navigate(R.id.action_navigation_transfer_to_accountsFragment)
-                        true
-                    }
-                }
+                if (it.isEmpty())
+                    setDropdownTouchListener(R.id.action_navigation_transfer_to_accountsFragment)
             }
 
             with(transferViewModel) {

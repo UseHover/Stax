@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxCardView
 import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
+import timber.log.Timber
 
 
 class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterface {
@@ -98,7 +100,14 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
             }
         }
 
-        channelsViewModel.activeChannel.observe(viewLifecycleOwner, channelsObserver)
+        with(channelsViewModel) {
+            accounts.observe(viewLifecycleOwner) {
+                //no channels selected. navigate user to accounts fragment
+                if (it.isNullOrEmpty())
+                    setDropdownTouchListener(R.id.action_navigation_request_to_accountsFrag)
+            }
+            activeChannel.observe(viewLifecycleOwner, channelsObserver)
+        }
 
         with(requestViewModel) {
             amount.observe(viewLifecycleOwner, {
@@ -146,8 +155,8 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         requesterNumberInput.addTextChangedListener(receivingAccountNumberWatcher)
         requesterNumberInput.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             if (!hasFocus) requesterNumberInput.setState(
-                null,
-                if (requestViewModel.requesterAcctNoError() == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.NONE
+                    null,
+                    if (requestViewModel.requesterAcctNoError() == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.NONE
             )
         }
         noteInput.addTextChangedListener(noteWatcher)

@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelectViewModel
+import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.contacts.StaxContact
@@ -82,23 +83,26 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
         makeCall(action)
     }
 
-    private fun makeCall(action: HoverAction) {
-        val hsb = HoverSession.Builder(action, channelsViewModel.activeChannel.value!!, this, Constants.TRANSFER_REQUEST)
-            .extra(HoverAction.AMOUNT_KEY, transferViewModel.amount.value)
-            .extra(HoverAction.NOTE_KEY, transferViewModel.note.value)
+    fun makeCall(action: HoverAction, channel: Channel? = null) {
+        val hsb = HoverSession.Builder(action, channel ?: channelsViewModel.activeChannel.value!!, this, Constants.TRANSFER_REQUEST)
 
-        transferViewModel.contact.value?.let { addRecipientInfo(hsb) }
+        if (action.transaction_type != HoverAction.FETCH_ACCOUNTS) {
+            hsb.extra(HoverAction.AMOUNT_KEY, transferViewModel.amount.value)
+                    .extra(HoverAction.NOTE_KEY, transferViewModel.note.value)
+            transferViewModel.contact.value?.let { addRecipientInfo(hsb) }
+        }
+
         hsb.run()
     }
 
     private fun addRecipientInfo(hsb: HoverSession.Builder) {
         hsb.extra(HoverAction.ACCOUNT_KEY, transferViewModel.contact.value!!.accountNumber)
-            .extra(
-                HoverAction.PHONE_KEY, PhoneHelper.getNumberFormatForInput(
-                    transferViewModel.contact.value?.accountNumber,
-                    actionSelectViewModel.activeAction.value, channelsViewModel.activeChannel.value
+                .extra(
+                        HoverAction.PHONE_KEY, PhoneHelper.getNumberFormatForInput(
+                        transferViewModel.contact.value?.accountNumber,
+                        actionSelectViewModel.activeAction.value, channelsViewModel.activeChannel.value
                 )
-            )
+                )
     }
 
     private fun updatePushNotifGroupStatus() {
