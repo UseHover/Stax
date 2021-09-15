@@ -12,6 +12,7 @@ import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.transfers.AbstractFormViewModel
 import com.hover.stax.utils.DateUtils
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
@@ -38,7 +39,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
     fun setActiveChannel(c: Channel) {
         activeChannel.postValue(c)
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val account = repo.getAccounts(c.id).firstOrNull()
             setActiveAccount(account)
         }

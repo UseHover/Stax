@@ -12,6 +12,7 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel() {
@@ -119,6 +120,8 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         if (!actions.isNullOrEmpty()) {
             toRun.postValue(actions)
             runNext(actions, 0)
+        } else {
+            Timber.e("Actions are empty")
         }
     }
 

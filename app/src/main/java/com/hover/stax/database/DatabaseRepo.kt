@@ -183,6 +183,13 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         }
     }
 
+    private fun getAccounts(channel: Channel): List<Account> {
+        val account = Account("Current Acct", "Current Acct", channel.logoUrl, "0100005462368", channel.id, channel.primaryColorHex, channel.secondaryColorHex)
+        val account2 = Account("PureSavingsAcct", "PureSavingsAcct", channel.logoUrl, "0100005671994", channel.id, channel.primaryColorHex, channel.secondaryColorHex)
+
+        return listOf(account, account2)
+    }
+
     private fun updateRequests(t: StaxTransaction?, contact: StaxContact) {
         if (t!!.transaction_type == HoverAction.RECEIVE) {
             val rs = requests
@@ -333,13 +340,14 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
         val data = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as HashMap<String, String>
 
+        val channel = getChannel(transaction.channel_id)
         val accounts = mutableListOf<Account>()
+
         //TODO replace with action variable
         if (data.containsKey("userAccountList")) {
-            //TODO parse out accounts
-            Timber.e(data["userAccountList"])
+            Timber.e("Here to save the accounts")
+            accounts.addAll(getAccounts(channel))
         } else {
-            val channel = getChannel(transaction.channel_id)
             val hasFetchAccountsAction = getActions(channel.id, HoverAction.FETCH_ACCOUNTS).isNotEmpty()
 
             if (!hasFetchAccountsAction)

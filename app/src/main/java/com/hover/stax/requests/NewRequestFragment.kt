@@ -116,7 +116,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
             })
 
             requesterNumber.observe(viewLifecycleOwner, { accountValue.setSubtitle(it) })
-            activeAccount.observe(viewLifecycleOwner, { updateAcctNo(it.accountNo) })
+            activeAccount.observe(viewLifecycleOwner, { updateAcctNo(it?.accountNo) })
 
             recentContacts.observe(viewLifecycleOwner, { it?.let { contacts -> requesteeInput.setRecent(contacts, requireActivity()) } })
             isEditing.observe(viewLifecycleOwner, { showEdit(it) })

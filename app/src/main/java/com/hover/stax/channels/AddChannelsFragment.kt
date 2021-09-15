@@ -153,7 +153,8 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     }
 
     private fun saveChannels(channels: List<Channel>, checkBalance: Boolean) {
-        channelsViewModel.saveChannels(channels)
+        channelsViewModel.setChannelsSelected(channels)
+        requireActivity().onBackPressed()
 
         if (checkBalance)
             balancesViewModel.actions.observe(viewLifecycleOwner, {
@@ -165,8 +166,6 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         else {
             channelsViewModel.createAccounts(channels)
         }
-
-        requireActivity().onBackPressed()
     }
 
     private fun goToChannelsDetailsScreen(channel: Channel) {

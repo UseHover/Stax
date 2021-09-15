@@ -217,8 +217,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             channel.defaultAccount = selectedChannels.value.isNullOrEmpty() && index == 0
             repo.update(channel)
         }
-
-        Timber.e("Selected channels ${channels.size}")
     }
 
     private fun logChoice(channel: Channel) {

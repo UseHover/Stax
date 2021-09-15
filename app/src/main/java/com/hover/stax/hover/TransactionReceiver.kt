@@ -16,6 +16,8 @@ import org.json.JSONObject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 class TransactionReceiver : BroadcastReceiver(), KoinComponent, PushNotificationTopicsInterface {
 
@@ -27,19 +29,17 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent, PushNotification
     }
 
     private fun updateBalance(intent: Intent, context: Context) {
-        Timber.e("${intent.extras?.get(TransactionContract.COLUMN_PARSED_VARIABLES)}")
-
         if (intent.hasExtra(TransactionContract.COLUMN_PARSED_VARIABLES)) {
             val parsedVariables = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as? HashMap<String, String>
 
             parsedVariables?.let { variables ->
                 GlobalScope.launch(Dispatchers.IO) {
-                    val action = repo.getAction(intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID))
-                    val channel = repo.getChannel(action.channel_id)
-
                     if (variables.containsKey("userAccountList")) {
-                        setChannelSelected(channel, context)
-                    } else if (variables.containsKey("balance")) {
+                        val stringToParse = variables["userAccountList"]
+                        parseOutAccounts(stringToParse!!).forEachIndexed { index, s -> Timber.e("$index - $s") }
+                    }
+                    if (variables.containsKey("balance")) {
+                        val action = repo.getAction(intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID))
                         val account = repo.getAccounts(action.channel_id).first()
                         account.updateBalance(parsedVariables)
                         repo.update(account)
@@ -74,4 +74,29 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent, PushNotification
 
         Utils.logAnalyticsEvent(context.getString(R.string.new_channel_selected), args, context)
     }
+
+    fun parseOutAccounts(fullString: String): List<String> {
+
+        fun getRawAccounts(): String {
+            val m: Matcher = Pattern.compile("([\\d]{1,2})[\\>)\\:\\.\\s]+(.+)$").matcher(fullString);
+            val accounts = StringBuilder();
+            while (m.find()) {
+                accounts.append(m.group(0))
+                Timber.i("Found: %s, with size %s", m.group(0), m.groupCount());
+            }
+            return accounts.toString()
+        }
+
+        fun getAccountAsList(): List<String> {
+            val p = Pattern.compile("([\\d]{1,2})([.-:])(\\s)");
+            return fullString.split(p);
+        }
+
+        fun validAccounts(): List<String> {
+            return getAccountAsList().filter { s: String -> s.length > 2 }
+        }
+
+        return validAccounts()
+    }
+
 }
