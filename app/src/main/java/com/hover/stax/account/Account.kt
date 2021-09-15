@@ -48,6 +48,8 @@ data class Account(
 
     var latestBalance: String? = null
 
+    var isDefault: Boolean = false
+
     @ColumnInfo(defaultValue = "CURRENT_TIMESTAMP")
     var latestBalanceTimestamp: Long = System.currentTimeMillis()
 
