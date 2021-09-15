@@ -77,29 +77,6 @@ data class Account(
         }
     }
 
-    fun parseOutAccounts(fullString : String) : List<String> {
-        fun getRawAccounts() : String {
-            val m : Matcher = Pattern.compile("\\s+([\\d]{1,2})[\\>)\\:\\.\\s]+(.+)$").matcher(fullString);
-            val  accounts = StringBuilder();
-            while (m.find()) {
-                accounts.append(m.group(0));
-                Timber.i("Found: %s, with size %s", m.group(0), m.groupCount());
-            }
-            return accounts.toString()
-        }
-
-        fun getAccountAsList() : List<String> {
-            val p = Pattern.compile("([\\d]{1,2})([.-:])(\\s)");
-            return getRawAccounts().split(p);
-        }
-
-        fun validAccounts() : List<String> {
-            return getAccountAsList().filter { s: String -> s.length>2 }
-        }
-
-        return validAccounts()
-    }
-
     override fun equals(other: Any?): Boolean {
         if (other !is Account) return false
         return id == other.id
