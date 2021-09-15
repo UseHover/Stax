@@ -119,9 +119,9 @@ public interface NavigationInterface {
         activity.startActivity(intentLanguage);
     }
 
-    default void navigateToPinUpdateFragment(int channel_id, Fragment fragment) {
+    default void navigateToPinUpdateFragment(int accountId, Fragment fragment) {
         Bundle bundle = new Bundle();
-        bundle.putInt("channel_id", channel_id);
+        bundle.putInt("accountId", accountId);
         NavHostFragment.findNavController(fragment).navigate(R.id.pinUpdateFragment, bundle);
     }
 

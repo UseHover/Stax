@@ -5,46 +5,32 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hover.stax.account.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.database.DatabaseRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class PinsViewModel(val repo: DatabaseRepo) : ViewModel() {
 
-    private var channels: LiveData<List<Channel>> = MutableLiveData()
-    var channel: LiveData<Channel> = MutableLiveData()
+    var accounts: LiveData<List<Account>> = MutableLiveData()
+    var account = MutableLiveData<Account>()
+    val channel = MutableLiveData<Channel>()
 
     init {
-        loadSelectedChannels()
+        loadAccounts()
     }
 
-    fun getSelectedChannels(): LiveData<List<Channel>> = channels
-
-    private fun loadSelectedChannels() {
-        channels = repo.selected
+    private fun loadAccounts() {
+        accounts = repo.allAccounts
     }
 
-    fun loadChannel(id: Int) {
-        channel = repo.getLiveChannel(id)
-    }
-
-    fun setPin(id: Int, pin: String?) {
-        val allChannels = if (channels.value != null) channels.value else ArrayList()
-        for (channel in allChannels!!) {
-            if (channel.id == id) {
-                channel.pin = pin
-            }
-        }
-    }
-
-    fun savePins(c: Context) {
-        val selectedChannels = if (channels.value != null) channels.value else ArrayList()
-        for (channel in selectedChannels!!) {
-            if (channel.pin != null && channel.pin.isNotEmpty()) {
-                channel.pin = KeyStoreExecutor.createNewKey(channel.pin, c)
-                repo.update(channel)
-            }
+    fun loadAccount(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val a = repo.getAccount(id)
+            account.postValue(a)
+            channel.postValue(repo.getChannel(a!!.channelId))
         }
     }
 
@@ -55,47 +41,33 @@ class PinsViewModel(val repo: DatabaseRepo) : ViewModel() {
         }
     }
 
-    fun clearAllPins() {
-        val selectedChannels = if (channels.value != null) channels.value else ArrayList()
-        for (channel in selectedChannels!!) {
-            channel.pin = null
+    fun removeAccount(account: Account) = viewModelScope.launch(Dispatchers.IO) {
+        val defaultChanged = account.isDefault
+
+        repo.delete(account)
+        val hasAccounts = repo.getAccounts(account.channelId).isNotEmpty()
+        if (!hasAccounts) {
+            val channel = repo.getChannel(account.channelId).apply {
+                selected = false
+                defaultAccount = false
+            }
+            Timber.e("removing channel from selected")
             repo.update(channel)
         }
-    }
 
-    fun removeChannel(channel: Channel) {
-        val channelDefaultChanged = channel.defaultAccount
-        channel.selected = false
-        channel.defaultAccount = false
-        repo.update(channel)
-
-        removeAccounts(channel.id)
-
-        if (channels.value != null && channelDefaultChanged) {
-            setRandomChannelAsDefault(channel.id)
-        }
-    }
-
-    private fun removeAccounts(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        val accounts = repo.getAccounts(channelId)
-        accounts.forEach { repo.delete(it) }
-    }
-
-    private fun setRandomChannelAsDefault(excludedChannelId: Int) {
-        for (c in channels.value!!) {
-            if (c.id != excludedChannelId) {
-                c.defaultAccount = true
-                repo.update(c)
-                return
+        if (!accounts.value.isNullOrEmpty() && defaultChanged)
+            accounts.value?.firstOrNull()?.let {
+                it.isDefault = true
+                repo.update(it)
             }
-        }
     }
 
-    fun setDefaultChannel(channel: Channel) {
-        if (channels.value == null) return
-        for (c in channels.value!!) {
-            c.defaultAccount = c.id == channel.id
-            repo.update(c)
+    fun setDefaultAccount(account: Account) {
+        if (!accounts.value.isNullOrEmpty()) {
+            for (a in accounts.value!!) {
+                a.isDefault = a.id == account.id
+                repo.update(a)
+            }
         }
     }
 

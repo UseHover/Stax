@@ -18,6 +18,9 @@ interface AccountDao {
     @Query("SELECT * FROM accounts where name = :name and channelId = :channelId")
     fun getAccount(name: String, channelId: Int): Account?
 
+    @Query("SELECT * FROM accounts where id = :id")
+    fun getAccount(id: Int): Account?
+
     @Query("SELECT * FROM accounts where isDefault = 1")
     fun getDefaultAccount(): Account?
 

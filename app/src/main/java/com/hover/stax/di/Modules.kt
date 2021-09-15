@@ -10,6 +10,7 @@ import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.faq.FaqViewModel
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.inapp_banner.BannerViewModel
+import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.library.LibraryViewModel
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.schedules.ScheduleDetailViewModel
@@ -36,6 +37,7 @@ val appModule = module {
     viewModel { PinsViewModel(get())}
     viewModel { TransactionDetailsViewModel(get()) }
     viewModel { LibraryViewModel(get()) }
+    viewModel { LanguageViewModel(get()) }
 }
 
 val dataModule = module(createdAtStart = true) {

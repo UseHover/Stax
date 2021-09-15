@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.textfield.TextInputEditText
 import com.hover.stax.R
+import com.hover.stax.account.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.databinding.FragmentPinUpdateBinding
 import com.hover.stax.utils.UIHelper
@@ -40,31 +41,33 @@ class PinUpdateFragment : Fragment(), Target {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        pinViewModel.getSelectedChannels().observe(viewLifecycleOwner, { Timber.e("Observer ensures events fire.") })
+        pinViewModel.accounts.observe(viewLifecycleOwner, { Timber.e("Observer ensures events fire.") })
 
-        arguments?.getInt("channel_id", 0)?.let {
-            pinViewModel.loadChannel(it)
+        arguments?.getInt("accountId", 0)?.let {
+            pinViewModel.loadAccount(it)
         }
 
-        pinViewModel.channel.observe(viewLifecycleOwner, { initView(it) })
+        pinViewModel.account.observe(viewLifecycleOwner, { initView(it) })
         input = binding.pinInput
         binding.editBtn.setOnClickListener { showChoiceCard(false) }
         binding.cancelBtn.setOnClickListener { showChoiceCard(true) }
     }
 
-    private fun initView(c: Channel?) {
-        if (c == null) {
+    private fun initView(account: Account?) {
+        if (account == null) {
             return
         }
 
-        binding.choiceCard.setTitle(c.name)
-        binding.editCard.setTitle(c.name)
+        binding.choiceCard.setTitle(account.alias)
+        binding.editCard.setTitle(account.alias)
 
 //        c.logoUrl?.let { Picasso.get().load(c.logoUrl).into(this) }
+        pinViewModel.channel.value?.let {
+            if (it.pin.isNullOrEmpty()) input?.setText(KeyStoreExecutor.decrypt(it.pin, context))
+            setupSavePin(it)
+        }
 
-        if (c.pin != null && c.pin.isNotEmpty()) input?.setText(KeyStoreExecutor.decrypt(c.pin, context))
-        setupSavePin(c)
-        setUpRemoveAccount(c)
+        setUpRemoveAccount(account)
     }
 
     private fun setupSavePin(channel: Channel) {
@@ -78,20 +81,20 @@ class PinUpdateFragment : Fragment(), Target {
         }
     }
 
-    private fun setUpRemoveAccount(channel: Channel) {
+    private fun setUpRemoveAccount(account: Account) {
         binding.removeAcct.setOnClickListener {
             StaxDialog(requireActivity())
-                .setDialogTitle(getString(R.string.removepin_dialoghead, channel.name))
+                .setDialogTitle(getString(R.string.removepin_dialoghead, account.alias))
                 .setDialogMessage(R.string.removepins_dialogmes)
-                .setPosButton(R.string.btn_removeaccount) { removeAccount(channel) }
+                .setPosButton(R.string.btn_removeaccount) { removeAccount(account) }
                 .setNegButton(R.string.btn_cancel, null)
                 .isDestructive
                 .showIt()
         }
     }
 
-    private fun removeAccount(channel: Channel) {
-        pinViewModel.removeChannel(channel)
+    private fun removeAccount(account: Account) {
+        pinViewModel.removeAccount(account)
         NavHostFragment.findNavController(this).popBackStack()
         UIHelper.flashMessage(requireActivity(), resources.getString(R.string.toast_confirm_acctremoved))
     }
