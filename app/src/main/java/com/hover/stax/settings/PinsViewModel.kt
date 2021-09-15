@@ -44,19 +44,21 @@ class PinsViewModel(val repo: DatabaseRepo) : ViewModel() {
     fun removeAccount(account: Account) = viewModelScope.launch(Dispatchers.IO) {
         val defaultChanged = account.isDefault
 
-        repo.delete(account)
-        val hasAccounts = repo.getAccounts(account.channelId).isNotEmpty()
-        if (!hasAccounts) {
+        //remove the channel from selected
+        if (repo.getAccounts(account.channelId).size == 1) {
             val channel = repo.getChannel(account.channelId).apply {
                 selected = false
                 defaultAccount = false
             }
-            Timber.e("removing channel from selected")
             repo.update(channel)
         }
+        
+        //delete the account
+        repo.delete(account)
 
+        //set a random one as the default
         if (!accounts.value.isNullOrEmpty() && defaultChanged)
-            accounts.value?.firstOrNull()?.let {
+            accounts.value?.random()?.let {
                 it.isDefault = true
                 repo.update(it)
             }
