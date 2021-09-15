@@ -184,8 +184,10 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     }
 
     private fun getAccounts(channel: Channel): List<Account> {
-        val account = Account("Current Acct", "Current Acct", channel.logoUrl, "0100005462368", channel.id, channel.primaryColorHex, channel.secondaryColorHex)
-        val account2 = Account("PureSavingsAcct", "PureSavingsAcct", channel.logoUrl, "0100005671994", channel.id, channel.primaryColorHex, channel.secondaryColorHex)
+        val account = Account("Current Acct", "Current Acct", channel.logoUrl, "0100005462368",
+                channel.id, channel.primaryColorHex, channel.secondaryColorHex)
+        val account2 = Account("PureSavingsAcct", "PureSavingsAcct", channel.logoUrl, "0100005671994",
+                channel.id, channel.primaryColorHex, channel.secondaryColorHex, true)
 
         return listOf(account, account2)
     }
@@ -347,30 +349,26 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         if (data.containsKey("userAccountList")) {
             Timber.e("Here to save the accounts")
             accounts.addAll(getAccounts(channel))
-        } else {
-            val hasFetchAccountsAction = getActions(channel.id, HoverAction.FETCH_ACCOUNTS).isNotEmpty()
-
-            if (!hasFetchAccountsAction)
-                with(channel) {
-                    val account = Account(name, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex)
-                    accounts.add(account)
-                }
         }
+//        else {
+//            val hasFetchAccountsAction = getActions(channel.id, HoverAction.FETCH_ACCOUNTS).isNotEmpty()
+//
+//            if (!hasFetchAccountsAction)
+//                with(channel) {
+//                    val account = Account(name, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex)
+//                    accounts.add(account)
+//                }
+//        }
         Timber.e("Accounts - ${accounts.size}")
 
         saveAccounts(accounts)
     }
 
-    fun createAccount(channel: Channel) {
-        with(channel) {
-            val account = Account(name, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex)
-            insert(account)
-        }
-    }
-
     val allAccounts: LiveData<List<Account>> = accountDao.getAllAccounts()
 
     fun getAccounts(channelId: Int): List<Account> = accountDao.getAccounts(channelId)
+
+    fun getDefaultAccount(): Account? = accountDao.getDefaultAccount()
 
     suspend fun getAccounts(ids: List<Int>): List<Account> = accountDao.getAccounts(ids)
 

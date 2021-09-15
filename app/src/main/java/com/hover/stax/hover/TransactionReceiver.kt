@@ -3,8 +3,10 @@ package com.hover.stax.hover
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
+import com.hover.stax.account.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
@@ -35,8 +37,8 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent, PushNotification
             parsedVariables?.let { variables ->
                 GlobalScope.launch(Dispatchers.IO) {
                     if (variables.containsKey("userAccountList")) {
-                        val stringToParse = variables["userAccountList"]
-                        parseOutAccounts(stringToParse!!).forEachIndexed { index, s -> Timber.e("$index - $s") }
+                        val accountList = variables["userAccountList"]
+                        parseOutAccounts(accountList!!).forEachIndexed { index, s -> Timber.e("$index - $s") }
                     }
                     if (variables.containsKey("balance")) {
                         val action = repo.getAction(intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID))

@@ -77,7 +77,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         }
 
         if (showSelected)
-            setDropdownValue(accounts.first())
+            setDropdownValue(accounts.first { it.isDefault })
     }
 
     private fun onSelect(account: Account) {

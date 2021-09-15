@@ -25,7 +25,7 @@ import com.hover.stax.transactions.TransactionDao;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class, Account.class}, version = 32)
+@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class, Account.class}, version = 33)
 public abstract class AppDatabase extends RoomDatabase {
     private static final int NUMBER_OF_THREADS = 8;
     static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -59,6 +59,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             .addMigrations(M29_30)
                             .addMigrations(M30_31)
                             .addMigrations(M31_32)
+                            .addMigrations(M32_33)
                             .build();
                 }
             }
@@ -128,8 +129,15 @@ public abstract class AppDatabase extends RoomDatabase {
             database.execSQL("CREATE TABLE IF NOT EXISTS accounts (name TEXT NOT NULL, alias TEXT NOT NULL, logo_url TEXT NOT NULL, " +
                     "account_no TEXT, channelId INTEGER NOT NULL, primary_color_hex TEXT NOT NULL, secondary_color_hex TEXT NOT NULL, " +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, latestBalance TEXT, latestBalanceTimestamp INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
-                    "isDefault INTEGER NOT NULL, FOREIGN KEY(channelId) REFERENCES channels(id) ON UPDATE NO ACTION ON DELETE CASCADE)");
+                    "FOREIGN KEY(channelId) REFERENCES channels(id) ON UPDATE NO ACTION ON DELETE CASCADE)");
             database.execSQL("CREATE INDEX IF NOT EXISTS index_accounts_channelId ON accounts(channelId)");
+        }
+    };
+
+    static final Migration M32_33 = new Migration(32, 33) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE accounts ADD COLUMN isDefault INTEGER NOT NULL DEFAULT 0");
         }
     };
 }

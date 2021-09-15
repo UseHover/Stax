@@ -36,7 +36,9 @@ data class Account(
         val primaryColorHex: String,
 
         @ColumnInfo(name = "secondary_color_hex")
-        val secondaryColorHex: String
+        val secondaryColorHex: String,
+
+        var isDefault: Boolean = false
 ) : Comparable<Account> {
 
     constructor(name: String, primaryColor: String) : this(
@@ -47,8 +49,6 @@ data class Account(
     var id: Int = 0
 
     var latestBalance: String? = null
-
-    var isDefault: Boolean = false
 
     @ColumnInfo(defaultValue = "CURRENT_TIMESTAMP")
     var latestBalanceTimestamp: Long = System.currentTimeMillis()
