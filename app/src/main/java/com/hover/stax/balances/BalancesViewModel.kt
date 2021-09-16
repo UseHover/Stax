@@ -171,7 +171,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     interface RunBalanceListener {
-        fun startRun(a: HoverAction, account: Account, index: Int)
+        fun startRun(a: HoverAction, index: Int)
     }
 
     companion object {
