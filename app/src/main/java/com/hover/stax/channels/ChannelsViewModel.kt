@@ -80,8 +80,30 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     fun getActionType(): String = type.value!!
 
     private fun loadChannels() {
+        removeStaleChannels()
+
         allChannels = repo.allChannels
         selectedChannels = repo.selected
+    }
+
+    /**
+     * A prerequisite for actions to be loaded and run is having channels marked as selected. While adding channels,
+     * this must be done before accounts can be created from fetch account actions or check balance. However, when accounts are not fetched,
+     * the channel is still marked as selected. Since there is no clean way of handling this after the result of the transaction, this method
+     * handles that for now. 
+     */
+    private fun removeStaleChannels(){
+        viewModelScope.launch(Dispatchers.IO) {
+            val channels = repo.getChannelsAndAccounts()
+
+            channels.forEach {
+                if(it.accounts.isEmpty()){
+                    val c = it.channel
+                    c.selected = false
+                    repo.update(c)
+                }
+            }
+        }
     }
 
     private fun loadSims() {
@@ -259,7 +281,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     fun view(s: Schedule) {
         setType(s.type)
-        setActiveChannel(repo.getChannel(s.channel_id))
+        setActiveChannel(repo.getChannel(s.channel_id)!!)
     }
 
     fun getFetchAccountAction(channelId: Int): HoverAction? = repo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()
@@ -297,7 +319,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     override fun highlightAccount(account: Account) {
         viewModelScope.launch(Dispatchers.IO) {
             val channel = repo.getChannel(account.channelId)
-            setActiveChannel(channel)
+            setActiveChannel(channel!!)
         }
     }
 }

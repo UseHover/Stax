@@ -50,9 +50,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun loadActions(channelList: List<Channel>): LiveData<List<HoverAction>> {
-        val ids = IntArray(channelList.size)
-        for (c in channelList.indices) ids[c] = channelList[c].id
-
+        val ids = channelList.map { it.id }.toIntArray()
         return repo.getLiveActions(ids, listOf(HoverAction.FETCH_ACCOUNTS, HoverAction.BALANCE))
     }
 

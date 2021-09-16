@@ -14,6 +14,7 @@ import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
 import com.hover.stax.account.Account
 import com.hover.stax.account.AccountDao
+import com.hover.stax.account.ChannelWithAccounts
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelDao
 import com.hover.stax.contacts.ContactDao
@@ -49,8 +50,10 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun getSelectedCount(): Int = channelDao.getSelectedCount(true)
 
+    fun getChannelsAndAccounts(): List<ChannelWithAccounts> = channelDao.getChannelsAndAccounts()
+
     // Channels
-    fun getChannel(id: Int): Channel {
+    fun getChannel(id: Int): Channel? {
         return channelDao.getChannel(id)
     }
 
@@ -61,15 +64,15 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     val channelsDataCount: Int
         get() = channelDao.dataCount
 
-    fun getChannels(ids: IntArray?): LiveData<List<Channel>> {
+    fun getChannels(ids: IntArray): LiveData<List<Channel>> {
         return channelDao.getChannels(ids)
     }
 
-    fun getChannelsByCountry(channelIds: IntArray?, countryCode: String?): LiveData<List<Channel>> {
+    fun getChannelsByCountry(channelIds: IntArray, countryCode: String): LiveData<List<Channel>> {
         return channelDao.getChannels(countryCode, channelIds)
     }
 
-    fun getChannelsByCountry(countryCode: String?): List<Channel> {
+    fun getChannelsByCountry(countryCode: String): List<Channel> {
         return channelDao.getChannels(countryCode)
     }
 
@@ -157,7 +160,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
                 var t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID))
                 val a = getAction(intent.getStringExtra(HoverAction.ID_KEY))
                 val channel = getChannel(a.channel_id)
-                val contact = StaxContact.findOrInit(intent, channel.countryAlpha2, t, this)
+                val contact = StaxContact.findOrInit(intent, channel!!.countryAlpha2, t, this)
                 var isNew = false
 
                 if (contact.accountNumber != null)
@@ -348,7 +351,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         //TODO replace with action variable
         if (data.containsKey("userAccountList")) {
             Timber.e("Here to save the accounts")
-            accounts.addAll(getAccounts(channel))
+            accounts.addAll(getAccounts(channel!!))
         }
 //        else {
 //            val hasFetchAccountsAction = getActions(channel.id, HoverAction.FETCH_ACCOUNTS).isNotEmpty()

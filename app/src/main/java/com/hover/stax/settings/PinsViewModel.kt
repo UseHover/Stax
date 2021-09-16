@@ -10,7 +10,6 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.database.DatabaseRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class PinsViewModel(val repo: DatabaseRepo) : ViewModel() {
 
@@ -46,13 +45,13 @@ class PinsViewModel(val repo: DatabaseRepo) : ViewModel() {
 
         //remove the channel from selected
         if (repo.getAccounts(account.channelId).size == 1) {
-            val channel = repo.getChannel(account.channelId).apply {
+            val channel = repo.getChannel(account.channelId)!!.apply {
                 selected = false
                 defaultAccount = false
             }
             repo.update(channel)
         }
-        
+
         //delete the account
         repo.delete(account)
 

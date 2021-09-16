@@ -3,10 +3,8 @@ package com.hover.stax.hover
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
-import com.hover.stax.account.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
@@ -18,7 +16,6 @@ import org.json.JSONObject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
-import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class TransactionReceiver : BroadcastReceiver(), KoinComponent, PushNotificationTopicsInterface {
@@ -38,7 +35,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent, PushNotification
                 GlobalScope.launch(Dispatchers.IO) {
                     if (variables.containsKey("userAccountList")) {
                         val accountList = variables["userAccountList"]
-                        parseOutAccounts(accountList!!).forEachIndexed { index, s -> Timber.e("$index - $s") }
+                        parseAccounts(accountList!!).forEachIndexed { index, s -> Timber.e("$index - $s") }
                     }
                     if (variables.containsKey("balance")) {
                         val action = repo.getAction(intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID))
@@ -77,17 +74,20 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent, PushNotification
         Utils.logAnalyticsEvent(context.getString(R.string.new_channel_selected), args, context)
     }
 
-    fun parseOutAccounts(fullString: String): List<String> {
+    private fun parseAccounts(accountList: String): List<String> {
+        val pattern = Pattern.compile("^[\\\\d]{1,2}[>):.\\\\s]+(.+)\$")
+        val matcher = pattern.matcher(accountList)
 
-        fun getRawAccounts(): String {
-            val m: Matcher = Pattern.compile("([\\d]{1,2})[\\>)\\:\\.\\s]+(.+)$").matcher(fullString);
-            val accounts = StringBuilder();
-            while (m.find()) {
-                accounts.append(m.group(0))
-                Timber.i("Found: %s, with size %s", m.group(0), m.groupCount());
-            }
-            return accounts.toString()
-        }
+        val accounts = arrayListOf<String>()
+        while (matcher.find())
+            accounts.add(matcher.group(1))
+
+        Timber.e("Account size : ${accounts.size}")
+
+        return accounts
+    }
+
+    fun parseOutAccounts(fullString: String): List<String> {
 
         fun getAccountAsList(): List<String> {
             val p = Pattern.compile("([\\d]{1,2})([.-:])(\\s)");
