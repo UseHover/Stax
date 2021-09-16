@@ -12,7 +12,6 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel() {
@@ -34,7 +33,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         selectedChannels = repo.selected
         accounts = repo.allAccounts
 
-        actions = Transformations.switchMap(selectedChannels, this::loadActions)
+        actions = Transformations.switchMap(accounts, this::loadActions)
 
         toRun.apply {
             value = ArrayList()
@@ -49,8 +48,8 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         listener = l
     }
 
-    private fun loadActions(channelList: List<Channel>): LiveData<List<HoverAction>> {
-        val ids = channelList.map { it.id }.toIntArray()
+    private fun loadActions(accounts: List<Account>): LiveData<List<HoverAction>> {
+        val ids = accounts.map { it.channelId }.toIntArray()
         return repo.getLiveActions(ids, listOf(HoverAction.FETCH_ACCOUNTS, HoverAction.BALANCE))
     }
 
@@ -118,8 +117,6 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         if (!actions.isNullOrEmpty()) {
             toRun.postValue(actions)
             runNext(actions, 0)
-        } else {
-            Timber.e("Actions are empty")
         }
     }
 
@@ -174,7 +171,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     interface RunBalanceListener {
-        fun startRun(a: HoverAction, index: Int)
+        fun startRun(a: HoverAction, account: Account, index: Int)
     }
 
     companion object {

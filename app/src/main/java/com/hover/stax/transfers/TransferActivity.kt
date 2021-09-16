@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.lifecycle.Observer
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.account.Account
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
@@ -20,6 +21,7 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInterface {
 
@@ -72,23 +74,27 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
         transferViewModel.request.observe(this@TransferActivity, Observer { it?.let { alertDialog?.dismiss() } })
     }
 
-    fun submit() = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it) }
+    fun submit(account: Account) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account) }
 
-    private fun makeHoverCall(action: HoverAction) {
+    private fun makeHoverCall(action: HoverAction, account: Account) {
         Utils.logAnalyticsEvent(getString(R.string.finish_transfer, TransactionType.type), this)
         updatePushNotifGroupStatus()
 
         transferViewModel.checkSchedule()
 
-        makeCall(action)
+        makeCall(action, selectedAccount = account)
     }
 
-    fun makeCall(action: HoverAction, channel: Channel? = null) {
-        val hsb = HoverSession.Builder(action, channel ?: channelsViewModel.activeChannel.value!!, this, Constants.TRANSFER_REQUEST)
+    fun makeCall(action: HoverAction, channel: Channel? = null, selectedAccount: Account? = null) {
+        Timber.e("Selected account $selectedAccount")
+
+        val hsb = HoverSession.Builder(action, channel
+                ?: channelsViewModel.activeChannel.value!!, this, Constants.TRANSFER_REQUEST)
 
         if (action.transaction_type != HoverAction.FETCH_ACCOUNTS) {
             hsb.extra(HoverAction.AMOUNT_KEY, transferViewModel.amount.value)
                     .extra(HoverAction.NOTE_KEY, transferViewModel.note.value)
+                    .extra(Constants.ACCOUNT_NAME, selectedAccount?.name)
             transferViewModel.contact.value?.let { addRecipientInfo(hsb) }
         }
 

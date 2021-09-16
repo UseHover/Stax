@@ -94,7 +94,7 @@ class BalancesFragment : Fragment(), NavigationInterface {
             )
             it.setOnClickListener {
                 showBalanceCards(!balancesVisible)
-                showBubbleIfRequired()
+//                showBubbleIfRequired()
             }
         }
 
@@ -134,26 +134,6 @@ class BalancesFragment : Fragment(), NavigationInterface {
         updateStackCard(accounts)
 
         accountList = accounts
-        showBubbleIfRequired()
-    }
-
-    private fun showBubbleIfRequired() {
-        accountList?.let { accts ->
-            if (accts.all { it.id == DUMMY }) {
-                if (!SHOWN_BUBBLE_MAIN_ACCOUNT && balancesVisible) {
-                    firstAccBubble = ShowcaseExecutor(requireActivity(), binding).showcaseAddFirstAccount()
-                    SHOWN_BUBBLE_MAIN_ACCOUNT = true
-                }
-            } else if (accts.any { it.id == DUMMY }) {
-                if (!SHOWN_BUBBLE_OTHER_ACCOUNT && balancesVisible) {
-                    bubbleShowCaseJob = viewLifecycleOwner.lifecycleScope.launch {
-                        delay(2000)
-                        secondAccBubble = ShowcaseExecutor(requireActivity(), binding).showCaseAddSecondAccount()
-                        SHOWN_BUBBLE_OTHER_ACCOUNT = true
-                    }
-                }
-            }
-        }
     }
 
     private fun updateStackCard(accounts: List<Account>?) {

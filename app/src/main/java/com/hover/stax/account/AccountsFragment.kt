@@ -47,7 +47,6 @@ class AccountsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener,
         }
     }
 
-    //TODO set channels selected for channels that need accounts fetched.
     override fun clickedChannel(channel: Channel) {
         viewModel.setChannelsSelected(listOf(channel))
 

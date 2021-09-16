@@ -24,7 +24,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     private var showSelected: Boolean = true
     private var helperText: String? = null
-    private var highlightedAccount: Account? = null
+    var highlightedAccount: Account? = null
     private var highlightListener: HighlightListener? = null
 
     init {
@@ -61,6 +61,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     private fun setDropdownValue(account: Account?) {
+        highlightedAccount = account
         autoCompleteTextView.setText(account?.toString() ?: "", false)
         account?.logoUrl?.let { UIHelper.loadPicasso(it, size55, this) }
     }
@@ -83,7 +84,6 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     private fun onSelect(account: Account) {
         setDropdownValue(account)
         highlightListener?.highlightAccount(account)
-        highlightedAccount = account
     }
 
     private fun hasExistingContent(): Boolean = autoCompleteTextView.adapter != null && autoCompleteTextView.adapter.count > 0
@@ -119,9 +119,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
                 setState(context.getString(if (actions.first().transaction_type == HoverAction.AIRTIME) R.string.self_only_airtime_warning
                 else R.string.self_only_money_warning), INFO)
 
-            viewModel.activeChannel.value != null && showSelected -> {
-                setState(helperText, SUCCESS)
-            }
+            viewModel.activeChannel.value != null && showSelected -> setState(helperText, SUCCESS)
         }
     }
 

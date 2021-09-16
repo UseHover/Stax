@@ -39,6 +39,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     val activeChannel = MediatorLiveData<Channel>()
     val channelActions = MediatorLiveData<List<HoverAction>>()
     val accounts = MediatorLiveData<List<Account>>()
+    val activeAccount = MutableLiveData<Account>()
 
     private val localBroadcastManager: LocalBroadcastManager = LocalBroadcastManager.getInstance(application)
 
@@ -90,7 +91,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
      * A prerequisite for actions to be loaded and run is having channels marked as selected. While adding channels,
      * this must be done before accounts can be created from fetch account actions or check balance. However, when accounts are not fetched,
      * the channel is still marked as selected. Since there is no clean way of handling this after the result of the transaction, this method
-     * handles that for now. 
+     * handles that for now.
      */
     private fun removeStaleChannels(){
         viewModelScope.launch(Dispatchers.IO) {
@@ -320,6 +321,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         viewModelScope.launch(Dispatchers.IO) {
             val channel = repo.getChannel(account.channelId)
             setActiveChannel(channel!!)
+            activeAccount.postValue(account)
         }
     }
 }

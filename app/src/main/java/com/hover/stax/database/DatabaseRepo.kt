@@ -45,6 +45,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     private val contactDao: ContactDao = db.contactDao()
     private val accountDao: AccountDao = db.accountDao()
 
+    // Channels
     val allChannels: LiveData<List<Channel>> = channelDao.allInAlphaOrder
     val selected: LiveData<List<Channel>> = channelDao.getSelected(true)
 
@@ -52,7 +53,6 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun getChannelsAndAccounts(): List<ChannelWithAccounts> = channelDao.getChannelsAndAccounts()
 
-    // Channels
     fun getChannel(id: Int): Channel? {
         return channelDao.getChannel(id)
     }

@@ -164,7 +164,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
                 transferViewModel.saveContact()
                 transferViewModel.setEditing(false)
             } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
-        } else (activity as TransferActivity).submit()
+        } else (activity as TransferActivity).submit(accountDropdown.highlightedAccount)
     }
 
     private val amountWatcher: TextWatcher = object : TextWatcher {
@@ -219,7 +219,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     override fun highlightAction(a: HoverAction?) {
-        a?.let { actionSelectViewModel.setActiveAction(a) }
+        a?.let { actionSelectViewModel.setActiveAction(it) }
     }
 
     private fun setRecipientHint(action: HoverAction) {
