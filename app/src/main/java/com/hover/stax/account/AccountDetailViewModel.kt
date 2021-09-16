@@ -15,6 +15,7 @@ import java.util.*
 class AccountDetailViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel() {
 
     private val id = MutableLiveData<Int>()
+    var account: LiveData<Account> = MutableLiveData()
     var channel: LiveData<Channel> = MutableLiveData()
     var transactions: LiveData<List<StaxTransaction>> = MutableLiveData()
     var spentThisMonth: LiveData<Double> = MutableLiveData()
@@ -25,6 +26,7 @@ class AccountDetailViewModel(val application: Application, val repo: DatabaseRep
     private val calendar = Calendar.getInstance()
 
     init {
+
         channel = Transformations.switchMap(id, repo::getLiveChannel)
         transactions = Transformations.switchMap(id, repo::getAllTransferTransactions)
         spentThisMonth = Transformations.switchMap(id, this::loadSpentThisMonth)

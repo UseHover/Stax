@@ -96,13 +96,13 @@ class BalanceAdapter(val accounts: List<Account>, val balanceListener: BalanceLi
             }
 
             binding.balanceRefreshIcon.setOnClickListener {
-                balanceListener?.onTapRefresh(account.channelId.toString().toInt())
+                balanceListener?.onTapRefresh(account.id.toString().toInt())
             }
         }
     }
 
     interface BalanceListener {
-        fun onTapRefresh(channelId: Int)
+        fun onTapRefresh(accountId: Int)
 
         fun onTapDetail(channelId: Int)
     }

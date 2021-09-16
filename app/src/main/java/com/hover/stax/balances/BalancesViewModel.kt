@@ -24,7 +24,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     var accounts: LiveData<List<Account>> = MutableLiveData()
 
     var runFlag = MutableLiveData(NONE)
-    var toRun = MediatorLiveData<List<HoverAction>>()
+    var toRun = MediatorLiveData<List<Pair<Account, HoverAction>>>()
     var actions: LiveData<List<HoverAction>> = MediatorLiveData()
 
     private var runBalanceError = MutableLiveData<Boolean>()
@@ -33,7 +33,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         selectedChannels = repo.selected
         accounts = repo.allAccounts
 
-        actions = Transformations.switchMap(accounts, this::loadActions)
+        actions = Transformations.switchMap(selectedChannels, this::loadActions)
 
         toRun.apply {
             value = ArrayList()
@@ -48,8 +48,8 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         listener = l
     }
 
-    private fun loadActions(accounts: List<Account>): LiveData<List<HoverAction>> {
-        val ids = accounts.map { it.channelId }.toIntArray()
+    private fun loadActions(channels: List<Channel>): LiveData<List<HoverAction>> {
+        val ids = channels.map { it.id }.toIntArray()
         return repo.getLiveActions(ids, listOf(HoverAction.FETCH_ACCOUNTS, HoverAction.BALANCE))
     }
 
@@ -58,13 +58,17 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         return getChannel(allChannels, id)
     }
 
-    fun getChannel(channels: List<Channel>, id: Int): Channel? {
-        channels.forEach { if (it.id == id) return it }
-        return null
+    fun getChannel(channels: List<Channel>, id: Int): Channel? = channels.firstOrNull { it.id == id }
+
+    fun setRunning(accountId: Int) {
+        runFlag.value = accountId
     }
 
-    fun setRunning(channelId: Int) {
-        runFlag.value = channelId
+    fun setRunning(channel: Channel) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val accounts = repo.getAccounts(channel.id)
+            if (!accounts.isNullOrEmpty()) runFlag.postValue(accounts.first().id)
+        }
     }
 
     fun setAllRunning(c: Context) {
@@ -76,21 +80,19 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         viewModelScope.launch(Dispatchers.IO) {
             when (flag) {
                 NONE, null -> toRun.postValue(ArrayList())
-                ALL -> startRun(updateActionsIfRequired(actions.value!!))
-                else -> startRun(getChannelActions(flag))
+                ALL -> startRun(getAccountActions(actions.value!!))
+                else -> startRun(listOf(getAccountActions(flag)))
             }
         }
     }
 
     private fun onActionsLoaded(actions: List<HoverAction>) {
         viewModelScope.launch(Dispatchers.IO) {
-            val actionsToRun = updateActionsIfRequired(actions)
-
             when {
                 runFlag.value == null || toRun.value!!.isNotEmpty() -> {
                 }
-                runFlag.value == ALL -> startRun(actionsToRun)
-                runFlag.value != NONE -> startRun(getChannelActions(runFlag.value!!))
+                runFlag.value == ALL -> startRun(getAccountActions(actions))
+                runFlag.value != NONE -> startRun(listOf(getAccountActions(runFlag.value!!)))
             }
         }
     }
@@ -113,17 +115,17 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         return actionList
     }
 
-    private fun startRun(actions: List<HoverAction>) {
-        if (!actions.isNullOrEmpty()) {
-            toRun.postValue(actions)
-            runNext(actions, 0)
+    private fun startRun(actionPairs: List<Pair<Account, HoverAction>>) {
+        if (!actionPairs.isNullOrEmpty()) {
+            toRun.postValue(actionPairs)
+            runNext(actionPairs, 0)
         }
     }
 
-    private fun runNext(actions: List<HoverAction>, index: Int) {
+    private fun runNext(actionPairs: List<Pair<Account, HoverAction>>, index: Int) {
         if (listener != null && !hasActive) {
             hasActive = true
-            listener?.startRun(actions[index], index)
+            listener?.startRun(actionPairs[index], index)
         } else if (!hasActive) {
             UIHelper.flashMessage(application, "Failed to start run, please try again")
         }
@@ -135,9 +137,9 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         hasActive = false
 
         if (toRun.value!!.size > i + 1) {
-            hasRunList.add(toRun.value!![i].id)
+            hasRunList.add(toRun.value!![i].second.id)
 
-            while (hasRunList.contains(toRun.value!![i + 1].id))
+            while (hasRunList.contains(toRun.value!![i + 1].second.id))
                 i += 1
 
             if (toRun.value!!.size > i + 1)
@@ -154,24 +156,24 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         hasRunList.clear()
     }
 
-    private fun getChannelActions(flag: Int): List<HoverAction> {
-        val list = ArrayList<HoverAction>()
-
-        if (actions.value.isNullOrEmpty())
-            return list
-
+    private fun getAccountActions(flag: Int): Pair<Account, HoverAction> {
+        val account = repo.getAccount(flag)!!
         val actionsToRun = updateActionsIfRequired(actions.value!!)
 
-        actionsToRun.forEach {
-            if (it.channel_id == flag)
-                list.add(it)
-        }
+        return Pair(account, actionsToRun.first())
+    }
 
-        return list
+    private fun getAccountActions(actions: List<HoverAction>): List<Pair<Account, HoverAction>> {
+        val updatedActions = updateActionsIfRequired(actions)
+
+        return if (!accounts.value.isNullOrEmpty()) {
+            return accounts.value!!.map { account -> Pair(account, updatedActions.first { it.channel_id == it.channel_id }) }
+        } else
+            emptyList()
     }
 
     interface RunBalanceListener {
-        fun startRun(a: HoverAction, index: Int)
+        fun startRun(actionPair: Pair<Account, HoverAction>, index: Int)
     }
 
     companion object {

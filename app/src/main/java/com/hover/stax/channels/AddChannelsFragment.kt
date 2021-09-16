@@ -135,6 +135,9 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
                 selectedChannels.addAll(selectAdapter.channelList.filter { it.id.toLong() == selection })
             }
 
+            channelsViewModel.setChannelsSelected(selectedChannels)
+            channelsViewModel.createAccounts(selectedChannels)
+
             showCheckBalanceDialog(
                     if (selectedChannels.size > 1) R.string.check_balance_alt_plural
                     else R.string.check_balance_alt,
@@ -153,14 +156,12 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     }
 
     private fun saveChannels(channels: List<Channel>, checkBalance: Boolean) {
-        channelsViewModel.setChannelsSelected(channels)
-        channelsViewModel.createAccounts(channels)
         requireActivity().onBackPressed()
 
         if (checkBalance)
             balancesViewModel.actions.observe(viewLifecycleOwner, {
                 if (channels.size == 1)
-                    balancesViewModel.setRunning(channels.first().id)
+                    balancesViewModel.setRunning(channels.first())
                 else
                     balancesViewModel.setAllRunning(requireActivity())
             })

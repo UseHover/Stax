@@ -399,6 +399,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         }
     }
 
+    fun getAccountCount(): Int = accountDao.getDataCount()
+
     fun insert(account: Account) {
         AppDatabase.databaseWriteExecutor.execute { accountDao.insert(account) }
     }

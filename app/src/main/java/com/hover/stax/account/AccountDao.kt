@@ -24,7 +24,7 @@ interface AccountDao {
     @Query("SELECT * FROM accounts where isDefault = 1")
     fun getDefaultAccount(): Account?
 
-    @Query("SELECT COUNT(id)  FROM accounts")
+    @Query("SELECT COUNT(id) FROM accounts")
     fun getDataCount(): Int
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

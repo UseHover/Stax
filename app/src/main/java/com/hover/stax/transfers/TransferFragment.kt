@@ -164,7 +164,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
                 transferViewModel.saveContact()
                 transferViewModel.setEditing(false)
             } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
-        } else (activity as TransferActivity).submit(accountDropdown.highlightedAccount)
+        } else (activity as TransferActivity).submit(accountDropdown.highlightedAccount!!)
     }
 
     private val amountWatcher: TextWatcher = object : TextWatcher {

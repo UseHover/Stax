@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.NavHostFragment
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
@@ -155,16 +154,16 @@ class MainActivity : AbstractNavigationActivity(),
         }
     }
 
-    override fun startRun(a: HoverAction, index: Int) {
-        run(a, index)
+    override fun startRun(actionPair: Pair<Account, HoverAction>, index: Int) {
+        run(actionPair, index)
     }
 
-    override fun onTapRefresh(channelId: Int) {
-        if (channelId == DUMMY)
+    override fun onTapRefresh(accountId: Int) {
+        if (accountId == DUMMY)
             checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT)
         else {
             Utils.logAnalyticsEvent(getString(R.string.refresh_balance_single), this)
-            balancesViewModel.setRunning(channelId)
+            balancesViewModel.setRunning(accountId)
         }
     }
 
@@ -180,7 +179,7 @@ class MainActivity : AbstractNavigationActivity(),
     }
 
     override fun onAuthSuccess(action: HoverAction?) {
-        run(action!!, 0)
+//        run(action!!, 0)
     }
 
     fun reBuildHoverSession(transaction: StaxTransaction) {
@@ -197,17 +196,22 @@ class MainActivity : AbstractNavigationActivity(),
         }
     }
 
-    private fun run(action: HoverAction, index: Int) {
-        if (balancesViewModel.getChannel(action.channel_id) != null) {
-            val hsb = HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id)!!, this@MainActivity, index)
+    private fun run(actionPair: Pair<Account, HoverAction>, index: Int) {
+        Timber.e("On Main running ${actionPair.first.name} - ${actionPair.second.transaction_type}")
+
+        if (balancesViewModel.getChannel(actionPair.first.channelId) != null) {
+            val hsb = HoverSession.Builder(actionPair.second, balancesViewModel.getChannel(actionPair.first.channelId)!!, this@MainActivity, index)
+                    .extra(Constants.ACCOUNT_NAME, actionPair.first.name)
+            Timber.e("SESSION - ${actionPair.first.name} - ${actionPair.second.transaction_type}")
+
             if (index + 1 < balancesViewModel.accounts.value!!.size) hsb.finalScreenTime(0)
             hsb.run()
         } else {
 //            the only way to get the reference to the observer is to move this out onto it's own block.
             val selectedChannelsObserver = object : Observer<List<Channel>> {
                 override fun onChanged(t: List<Channel>?) {
-                    if (t != null && balancesViewModel.getChannel(t, action.channel_id) != null) {
-                        run(action, 0)
+                    if (t != null && balancesViewModel.getChannel(t, actionPair.first.channelId) != null) {
+                        run(actionPair, 0)
                         balancesViewModel.selectedChannels.removeObserver(this)
                     }
                 }
@@ -251,7 +255,6 @@ class MainActivity : AbstractNavigationActivity(),
                 if (resultCode == RESULT_OK && data != null && data.action != null) onProbableHoverCall(data)
 
                 showBalanceCards()
-//                launchSendMoney()
             }
         }
     }
@@ -269,19 +272,6 @@ class MainActivity : AbstractNavigationActivity(),
                     showTransactionPopup(uuid);
                 }
                 return@let
-            }
-        }
-    }
-
-    private fun launchSendMoney() = runBlocking {
-        launch {
-            delay(1500L)
-
-            if (!Utils.getBoolean(Constants.SHOWN_SEND_MONEY_ACTION, this@MainActivity)
-                    && balancesViewModel.runFlag.value == BalancesViewModel.NONE
-            ) {
-                Utils.saveBoolean(Constants.SHOWN_SEND_MONEY_ACTION, true, this@MainActivity)
-                checkPermissionsAndNavigate(Constants.NAV_TRANSFER)
             }
         }
     }
