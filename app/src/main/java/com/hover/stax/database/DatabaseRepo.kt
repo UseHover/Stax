@@ -31,6 +31,7 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.utils.paymentLinkCryptography.Encryption
 import timber.log.Timber
 import java.security.NoSuchAlgorithmException
+import java.util.regex.Pattern
 
 class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
@@ -186,15 +187,6 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         }
     }
 
-    private fun getAccounts(channel: Channel): List<Account> {
-        val account = Account("Current Acct", "Current Acct", channel.logoUrl, "0100005462368",
-                channel.id, channel.primaryColorHex, channel.secondaryColorHex)
-        val account2 = Account("PureSavingsAcct", "PureSavingsAcct", channel.logoUrl, "0100005671994",
-                channel.id, channel.primaryColorHex, channel.secondaryColorHex, true)
-
-        return listOf(account, account2)
-    }
-
     private fun updateRequests(t: StaxTransaction?, contact: StaxContact) {
         if (t!!.transaction_type == HoverAction.RECEIVE) {
             val rs = requests
@@ -341,30 +333,34 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     }
 
     private fun createAccounts(intent: Intent, transaction: StaxTransaction) {
-        Timber.e("Creating accounts")
-
         val data = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as HashMap<String, String>
 
         val channel = getChannel(transaction.channel_id)
         val accounts = mutableListOf<Account>()
 
-        //TODO replace with action variable
         if (data.containsKey("userAccountList")) {
-            Timber.e("Here to save the accounts")
-            accounts.addAll(getAccounts(channel!!))
+            accounts.addAll(parseAccounts(data["userAccountList"]!!, channel!!))
         }
-//        else {
-//            val hasFetchAccountsAction = getActions(channel.id, HoverAction.FETCH_ACCOUNTS).isNotEmpty()
-//
-//            if (!hasFetchAccountsAction)
-//                with(channel) {
-//                    val account = Account(name, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex)
-//                    accounts.add(account)
-//                }
-//        }
+
         Timber.e("Accounts - ${accounts.size}")
 
         saveAccounts(accounts)
+    }
+
+    private fun parseAccounts(accountList: String, channel: Channel): List<Account> {
+        val pattern = Pattern.compile("^[\\d]{1,2}[>):.\\s]+(.+)\$", Pattern.MULTILINE)
+        val matcher = pattern.matcher(accountList)
+
+        val accounts = arrayListOf<Account>()
+        val defaultAccount = getDefaultAccount()
+        while (matcher.find()) {
+            accounts.add(
+                    Account(matcher.group(1), matcher.group(1), channel.logoUrl, null,
+                            channel.id, channel.primaryColorHex, channel.secondaryColorHex, defaultAccount == null)
+            )
+        }
+
+        return accounts
     }
 
     val allAccounts: LiveData<List<Account>> = accountDao.getAllAccounts()
@@ -398,8 +394,6 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
             }
         }
     }
-
-    fun getAccountCount(): Int = accountDao.getDataCount()
 
     fun insert(account: Account) {
         AppDatabase.databaseWriteExecutor.execute { accountDao.insert(account) }
