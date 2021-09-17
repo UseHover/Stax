@@ -24,7 +24,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     var accounts: LiveData<List<Account>> = MutableLiveData()
 
     var runFlag = MutableLiveData(NONE)
-    var toRun = MediatorLiveData<List<Pair<Account, HoverAction>>>()
+    var toRun = MediatorLiveData<List<Pair<Account?, HoverAction>>>()
     var actions: LiveData<List<HoverAction>> = MediatorLiveData()
 
     private var runBalanceError = MutableLiveData<Boolean>()
@@ -67,7 +67,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     fun setRunning(channel: Channel) {
         viewModelScope.launch(Dispatchers.IO) {
             val accounts = repo.getAccounts(channel.id)
-            if (!accounts.isNullOrEmpty()) runFlag.postValue(accounts.first().id)
+            runFlag.postValue(accounts.firstOrNull()?.id ?: channel.id)
         }
     }
 
@@ -81,7 +81,9 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
             when (flag) {
                 NONE, null -> toRun.postValue(ArrayList())
                 ALL -> startRun(getAccountActions(actions.value!!))
-                else -> startRun(listOf(getAccountActions(flag)))
+                else -> {
+                    startRun(listOf(getAccountActions(flag)))
+                }
             }
         }
     }
@@ -115,14 +117,14 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         return actionList
     }
 
-    private fun startRun(actionPairs: List<Pair<Account, HoverAction>>) {
+    private fun startRun(actionPairs: List<Pair<Account?, HoverAction>>) {
         if (!actionPairs.isNullOrEmpty()) {
             toRun.postValue(actionPairs)
             runNext(actionPairs, 0)
         }
     }
 
-    private fun runNext(actionPairs: List<Pair<Account, HoverAction>>, index: Int) {
+    private fun runNext(actionPairs: List<Pair<Account?, HoverAction>>, index: Int) {
         if (listener != null && !hasActive) {
             hasActive = true
             listener?.startRun(actionPairs[index], index)
@@ -156,8 +158,8 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         hasRunList.clear()
     }
 
-    private fun getAccountActions(flag: Int): Pair<Account, HoverAction> {
-        val account = repo.getAccount(flag)!!
+    private fun getAccountActions(flag: Int): Pair<Account?, HoverAction> {
+        val account = repo.getAccount(flag)
         val actionsToRun = updateActionsIfRequired(actions.value!!)
 
         return Pair(account, actionsToRun.first())
@@ -173,7 +175,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     interface RunBalanceListener {
-        fun startRun(actionPair: Pair<Account, HoverAction>, index: Int)
+        fun startRun(actionPair: Pair<Account?, HoverAction>, index: Int)
     }
 
     companion object {

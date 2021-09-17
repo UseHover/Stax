@@ -154,7 +154,8 @@ class MainActivity : AbstractNavigationActivity(),
         }
     }
 
-    override fun startRun(actionPair: Pair<Account, HoverAction>, index: Int) {
+    override fun startRun(actionPair: Pair<Account?, HoverAction>, index: Int) {
+        Timber.e("Starting run for ${actionPair.first?.name} - ${actionPair.second.transaction_type}")
         run(actionPair, index)
     }
 
@@ -196,13 +197,16 @@ class MainActivity : AbstractNavigationActivity(),
         }
     }
 
-    private fun run(actionPair: Pair<Account, HoverAction>, index: Int) {
-        Timber.e("On Main running ${actionPair.first.name} - ${actionPair.second.transaction_type}")
+    private fun run(actionPair: Pair<Account?, HoverAction>, index: Int) {
+        Timber.e("On Main running ${actionPair.first?.name} - ${actionPair.second.transaction_type}")
 
-        if (balancesViewModel.getChannel(actionPair.first.channelId) != null) {
-            val hsb = HoverSession.Builder(actionPair.second, balancesViewModel.getChannel(actionPair.first.channelId)!!, this@MainActivity, index)
-                    .extra(Constants.ACCOUNT_NAME, actionPair.first.name)
-            Timber.e("SESSION - ${actionPair.first.name} - ${actionPair.second.transaction_type}")
+        if (balancesViewModel.getChannel(actionPair.second.channel_id) != null) {
+            val hsb = HoverSession.Builder(actionPair.second, balancesViewModel.getChannel(actionPair.second.channel_id)!!, this@MainActivity, index)
+
+            if (actionPair.first != null)
+                hsb.extra(Constants.ACCOUNT_NAME, actionPair.first!!.name)
+
+            Timber.e("SESSION - ${actionPair.first?.name} - ${actionPair.second.transaction_type}")
 
             if (index + 1 < balancesViewModel.accounts.value!!.size) hsb.finalScreenTime(0)
             hsb.run()
@@ -210,7 +214,7 @@ class MainActivity : AbstractNavigationActivity(),
 //            the only way to get the reference to the observer is to move this out onto it's own block.
             val selectedChannelsObserver = object : Observer<List<Channel>> {
                 override fun onChanged(t: List<Channel>?) {
-                    if (t != null && balancesViewModel.getChannel(t, actionPair.first.channelId) != null) {
+                    if (t != null && balancesViewModel.getChannel(t, actionPair.second.channel_id) != null) {
                         run(actionPair, 0)
                         balancesViewModel.selectedChannels.removeObserver(this)
                     }
