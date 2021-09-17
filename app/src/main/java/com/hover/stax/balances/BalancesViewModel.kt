@@ -12,6 +12,7 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel() {
@@ -61,6 +62,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     fun getChannel(channels: List<Channel>, id: Int): Channel? = channels.firstOrNull { it.id == id }
 
     fun setRunning(accountId: Int) {
+        Timber.e("Account id $accountId")
         runFlag.value = accountId
     }
 
@@ -81,9 +83,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
             when (flag) {
                 NONE, null -> toRun.postValue(ArrayList())
                 ALL -> startRun(getAccountActions(actions.value!!))
-                else -> {
-                    startRun(listOf(getAccountActions(flag)))
-                }
+                else -> startRun(listOf(getAccountActions(flag)))
             }
         }
     }
@@ -160,7 +160,13 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     private fun getAccountActions(flag: Int): Pair<Account?, HoverAction> {
         val account = repo.getAccount(flag)
-        val actionsToRun = updateActionsIfRequired(actions.value!!)
+
+        val actionsToRun = if (account == null)
+            updateActionsIfRequired(actions.value!!.filter { it.channel_id == flag })
+        else
+            updateActionsIfRequired(actions.value!!.filter { it.channel_id == account.channelId })
+
+        Timber.e("Action ${actionsToRun.first().transaction_type} - Inst ${actionsToRun.first().from_institution_name}")
 
         return Pair(account, actionsToRun.first())
     }

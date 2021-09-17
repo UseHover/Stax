@@ -94,7 +94,6 @@ class BalancesFragment : Fragment(), NavigationInterface {
             )
             it.setOnClickListener {
                 showBalanceCards(!balancesVisible)
-//                showBubbleIfRequired()
             }
         }
 
@@ -194,7 +193,5 @@ class BalancesFragment : Fragment(), NavigationInterface {
         const val ROTATE_UPSIDE_DOWN = 180f
 
         private var SHOW_ADD_ANOTHER_ACCOUNT = false
-        private var SHOWN_BUBBLE_MAIN_ACCOUNT = false
-        private var SHOWN_BUBBLE_OTHER_ACCOUNT = false
     }
 }
