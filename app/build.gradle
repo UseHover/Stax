@@ -166,7 +166,7 @@ dependencies {
 
     // Hover SDK
     debugImplementation project(":hover.sdk")
-    def sdk_version = "2.0.0-stax-1.5.0-pro"
+    def sdk_version = "2.0.0-stax-1.5.7-pro"
 
     releaseImplementation "com.hover:android-sdk:$sdk_version"
     debugImplementation 'com.android.volley:volley:1.2.1'
