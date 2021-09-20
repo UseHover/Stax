@@ -378,7 +378,7 @@
 	<string name="bounty_p2p_explain">Send any amount to any person %1$s</string>
 	<string name="descrip_bounty_me2me">Move money to your %1$s account</string>
 	<string name="bounty_me2me_explain">Send any amount to your own %1$s account</string>
-	<string name="descrip_bounty_c2b">Pay a bill</string>
+	<string name="descrip_bounty_c2b">Pay any bill</string>
 	<string name="bounty_c2b_explain">Send any amount to any business</string>
 	<string name="descrip_bounty_balance">Check balance</string>
 	<string name="bounty_balance_explain">Check your balance</string>

@@ -79,7 +79,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     }
 
     private void updateActionConfig() {
-        Hover.updateActionConfigs(new Hover.DownloadListener() {
+        Hover.initialize(requireContext(), new Hover.DownloadListener() {
             @Override
             public void onError(String s) {
                 Utils.logErrorAndReportToFirebase(BountyListFragment.class.getSimpleName(), "Failed to update action configs: " + s, null);
@@ -89,7 +89,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
             public void onSuccess(ArrayList<HoverAction> arrayList) {
 
             }
-        }, requireContext());
+        });
     }
 
     private void updateChannelsWorker() {
