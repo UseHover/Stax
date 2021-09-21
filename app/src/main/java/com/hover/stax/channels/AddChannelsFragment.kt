@@ -66,7 +66,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         setUpMultiselect()
 
         channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { channels -> onSelectedLoaded(channels) }
-        channelsViewModel.simChannels.observe(viewLifecycleOwner) { channels -> onSimsLoaded(channels) }
+       // channelsViewModel.simChannels.observe(viewLifecycleOwner) { channels -> onSimsLoaded(channels) }
         channelsViewModel.allChannels.observe(viewLifecycleOwner) { channels -> onAllLoaded(channels) }
     }
 
@@ -107,8 +107,8 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
     private fun onAllLoaded(channels: List<Channel>) {
         if (!channels.isNullOrEmpty() && binding.channelsList.adapter?.itemCount == 0) {
+            updateAdapter(Channel.sort(channels, false))
             setError(R.string.channels_error_nosim)
-            updateAdapter(Channel.sort(channels, false));
         } else if (channels.isNullOrEmpty())
             setError(R.string.channels_error_nodata)
     }
