@@ -1,6 +1,7 @@
 package com.hover.stax.bounties
 
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,6 +46,7 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
         }
 
         binding.progressIndicator.setVisibilityAfterHide(View.GONE)
+        binding.instructions.movementMethod = LinkMovementMethod.getInstance()
 
         viewModel.user.observe(viewLifecycleOwner) {
             updateProgress(50)
