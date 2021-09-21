@@ -30,9 +30,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
-class MainActivity : AbstractNavigationActivity(),
-        BalancesViewModel.RunBalanceListener,
-        BalanceAdapter.BalanceListener,
+class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener,
         BiometricChecker.AuthListener {
 
     private val balancesViewModel: BalancesViewModel by viewModel()
