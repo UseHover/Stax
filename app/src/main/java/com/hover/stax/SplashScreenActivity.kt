@@ -28,6 +28,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
+import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.databinding.SplashScreenLayoutBinding
 import com.hover.stax.destruct.SelfDestructActivity
@@ -45,9 +46,8 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.utils.blur.StaxBlur
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.json.JSONObject
-import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.getViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
@@ -55,6 +55,9 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
 
     private lateinit var binding: SplashScreenLayoutBinding
     private lateinit var remoteConfig: FirebaseRemoteConfig
+
+    private val channelsViewModel: ChannelsViewModel by viewModel()
+    private var hasAccounts = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         UIHelper.setFullscreenView(this)
@@ -80,6 +83,8 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
     }
 
     private fun startBackgroundProcesses() {
+        channelsViewModel.accounts.observe(this) { hasAccounts = it.isNotEmpty() }
+
         initAmplitude()
         logPushNotificationIfRequired()
         initHover()
@@ -88,9 +93,9 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         initFirebaseMessagingTopics()
 
         FirebaseInstallations.getInstance().getToken(false)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) Timber.i("Installation auth token: ${task.result?.token}")
-            }
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) Timber.i("Installation auth token: ${task.result?.token}")
+                }
         FirebaseInstallations.getInstance().id.addOnCompleteListener { Timber.i("Firebase installation ID is ${it.result}") }
 
         initRemoteConfigs()
@@ -152,10 +157,11 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
     private fun validateUser() = lifecycleScope.launchWhenStarted {
         delay(NAV_DELAY)
 
-        if (!OnBoardingActivity.hasPassedThrough(this@SplashScreenActivity))
-            goToOnBoardingActivity()
-        else
-            BiometricChecker(this@SplashScreenActivity, this@SplashScreenActivity).startAuthentication(null)
+        when {
+            !OnBoardingActivity.hasPassedThrough(this@SplashScreenActivity) -> goToOnBoardingActivity()
+            hasAccounts -> BiometricChecker(this@SplashScreenActivity, this@SplashScreenActivity).startAuthentication(null)
+            else -> goToMainActivity(null)
+        }
     }
 
     private fun initAmplitude() = Amplitude.getInstance().initialize(this, getString(R.string.amp))
@@ -252,7 +258,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
     }
 
     private fun goToFulfillRequestActivity(intent: Intent) =
-        startActivity(Intent(this, MainActivity::class.java).putExtra(Constants.REQUEST_LINK, intent.data.toString()))
+            startActivity(Intent(this, MainActivity::class.java).putExtra(Constants.REQUEST_LINK, intent.data.toString()))
 
     private fun goToMainActivity(redirectLink: String?) {
         val intent = Intent(this, MainActivity::class.java)
