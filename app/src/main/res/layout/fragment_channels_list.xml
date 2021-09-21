@@ -8,7 +8,6 @@
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/error_text"
             android:layout_marginBottom="@dimen/margin_13"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -41,33 +40,36 @@
                     app:showBack="false"
                     app:title="@string/add_an_account">
 
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/channelsList"
+                <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:id="@+id/error_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_13"
+                            android:layout_marginBottom="@dimen/margin_8"
+                            android:drawablePadding="@dimen/margin_5"
+                            android:fontFamily="font-medium"
+                            android:gravity="center_vertical"
+                            android:visibility="gone"
+                            android:text="@string/channels_error_nodata"
+                            android:textColor="@color/stax_state_red"
+                            app:drawableStartCompat="@drawable/ic_error" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/channelsList"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                </LinearLayout>
 
             </com.hover.stax.views.StaxCardView>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <TextView
-            android:id="@+id/error_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_13"
-            android:layout_marginTop="@dimen/margin_13"
-            android:drawablePadding="@dimen/margin_5"
-            android:layout_marginBottom="@dimen/margin_8"
-            android:fontFamily="font-medium"
-            android:gravity="center_vertical"
-            android:text="@string/channels_error_nodata"
-            app:layout_goneMarginBottom="@dimen/margin_13"
-            android:textColor="@color/stax_state_red"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/continue_btn"
-            android:visibility="gone"
-            app:drawableStartCompat="@drawable/ic_error" />
 
     <Button
             android:id="@+id/continue_btn"
@@ -75,9 +77,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginBottom="@dimen/margin_21"
             android:layout_marginTop="@dimen/margin_13"
             android:layout_marginEnd="@dimen/margin_13"
+            android:layout_marginBottom="@dimen/margin_21"
             android:text="@string/btn_continue"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
