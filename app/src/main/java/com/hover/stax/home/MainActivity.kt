@@ -168,11 +168,11 @@ class MainActivity : AbstractNavigationActivity(),
         }
     }
 
-    override fun onTapDetail(channelId: Int) {
-        if (channelId == DUMMY)
+    override fun onTapDetail(accountId: Int) {
+        if (accountId == DUMMY)
             checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT)
         else
-            navigateToChannelDetailsFragment(channelId, getNavController())
+            navigateToAccountDetailsFragment(accountId, getNavController())
     }
 
     override fun onAuthError(error: String?) {

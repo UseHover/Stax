@@ -342,8 +342,6 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
             accounts.addAll(parseAccounts(data["userAccountList"]!!, channel!!))
         }
 
-        Timber.e("Accounts - ${accounts.size}")
-
         saveAccounts(accounts)
     }
 
@@ -371,6 +369,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun getAccount(id: Int): Account? = accountDao.getAccount(id)
 
+    fun getLiveAccount(id: Int): LiveData<Account> = accountDao.getLiveAccount(id)
+
     suspend fun getAccounts(ids: List<Int>): List<Account> = accountDao.getAccounts(ids)
 
     private fun getAccount(name: String, channelId: Int): Account? = accountDao.getAccount(name, channelId)
@@ -382,10 +382,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
             try {
                 AppDatabase.databaseWriteExecutor.execute {
                     if (acct == null) {
-                        Timber.e("Inserting account $account")
                         accountDao.insert(account)
                     } else {
-                        Timber.e("Updating account $account")
                         accountDao.update(account)
                     }
                 }

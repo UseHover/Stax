@@ -107,10 +107,10 @@ public interface NavigationInterface {
         activity.startActivityForResult(i, Constants.TRANSFER_REQUEST);
     }
 
-    default void navigateToChannelDetailsFragment(int channel_id, NavController navController) {
+    default void navigateToAccountDetailsFragment(int accountId, NavController navController) {
         Bundle bundle = new Bundle();
-        bundle.putInt(TransactionContract.COLUMN_CHANNEL_ID, channel_id);
-        navController.navigate(R.id.channelsDetailsFragment, bundle);
+        bundle.putInt(Constants.ACCOUNT_ID, accountId);
+        navController.navigate(R.id.accountDetailsFragment, bundle);
     }
 
     default void navigateToLanguageSelectionFragment(Activity activity) {

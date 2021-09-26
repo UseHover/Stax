@@ -92,7 +92,7 @@ class BalanceAdapter(val accounts: List<Account>, val balanceListener: BalanceLi
             }
 
             binding.root.setOnClickListener {
-                balanceListener?.onTapDetail(account.channelId.toString().toInt())
+                balanceListener?.onTapDetail(account.id)
             }
 
             binding.balanceRefreshIcon.setOnClickListener {

@@ -11,6 +11,7 @@ import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 import com.hover.stax.R
+import com.hover.stax.account.Account
 import com.hover.stax.balances.BalanceAdapter.BalanceListener
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.databinding.FragmentAddChannelsBinding
@@ -150,12 +151,12 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         dialog = StaxDialog(requireActivity())
                 .setDialogTitle(R.string.check_balance_title)
                 .setDialogMessage(message)
-                .setNegButton(R.string.later) { saveChannels(channels, false) }
-                .setPosButton(R.string.check_balance_title) { saveChannels(channels, true) }
+                .setNegButton(R.string.later) { runActions(channels, false) }
+                .setPosButton(R.string.check_balance_title) { runActions(channels, true) }
         dialog!!.showIt()
     }
 
-    private fun saveChannels(channels: List<Channel>, checkBalance: Boolean) {
+    private fun runActions(channels: List<Channel>, checkBalance: Boolean) {
         requireActivity().onBackPressed()
 
         if (checkBalance)
@@ -167,15 +168,15 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
             })
     }
 
-    private fun goToChannelsDetailsScreen(channel: Channel) {
+    private fun viewAccountDetails(account: Account) {
         val balanceListener: BalanceListener? = activity as MainActivity?
-        balanceListener?.onTapDetail(channel.id)
+        balanceListener?.onTapDetail(account.id)
     }
 
-    override fun clickedChannel(channel: Channel) = if (channel.selected)
-        goToChannelsDetailsScreen(channel)
-    else
-        showCheckBalanceDialog(R.string.check_balance_alt, listOf(channel))
+    override fun clickedChannel(channel: Channel) {
+        if (!channel.selected)
+            showCheckBalanceDialog(R.string.check_balance_alt, listOf(channel))
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

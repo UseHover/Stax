@@ -37,6 +37,7 @@ object Constants {
     const val APP_RATED_NATIVELY = "app_has_been_rated_natively"
     const val SHOWN_SEND_MONEY_ACTION = "shown_send_money_action"
     const val ACCOUNT_NAME = "accountName"
+    const val ACCOUNT_ID = "accountId"
 
     const val CONNECTIVITY = "android.net.conn.CONNECTIVITY_CHANGE"
 }

@@ -62,7 +62,6 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     fun getChannel(channels: List<Channel>, id: Int): Channel? = channels.firstOrNull { it.id == id }
 
     fun setRunning(accountId: Int) {
-        Timber.e("Account id $accountId")
         runFlag.value = accountId
     }
 
@@ -174,9 +173,9 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     private fun getAccountActions(actions: List<HoverAction>): List<Pair<Account, HoverAction>> {
         val updatedActions = updateActionsIfRequired(actions)
 
-        return if (!accounts.value.isNullOrEmpty()) {
+        return if (!accounts.value.isNullOrEmpty())
             return accounts.value!!.map { account -> Pair(account, updatedActions.first { it.channel_id == it.channel_id }) }
-        } else
+        else
             emptyList()
     }
 

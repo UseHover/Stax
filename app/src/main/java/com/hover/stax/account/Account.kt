@@ -7,10 +7,7 @@ import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 import com.hover.stax.channels.Channel
 import com.hover.stax.utils.DateUtils.now
-import timber.log.Timber
 import java.util.*
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 const val DUMMY = -1
 
@@ -21,7 +18,7 @@ const val DUMMY = -1
 data class Account(
         val name: String,
 
-        val alias: String,
+        var alias: String?,
 
         @ColumnInfo(name = "logo_url")
         val logoUrl: String,

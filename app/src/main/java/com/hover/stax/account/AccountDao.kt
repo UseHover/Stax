@@ -21,6 +21,9 @@ interface AccountDao {
     @Query("SELECT * FROM accounts where id = :id")
     fun getAccount(id: Int): Account?
 
+    @Query("SELECT * FROM accounts where id = :id")
+    fun getLiveAccount(id: Int): LiveData<Account>
+
     @Query("SELECT * FROM accounts where isDefault = 1")
     fun getDefaultAccount(): Account?
 

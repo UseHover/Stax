@@ -20,6 +20,7 @@ import com.hover.stax.navigation.NavigationInterface
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.transactions.TransactionHistoryAdapter
+import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
@@ -53,18 +54,20 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         binding.refreshBalanceBtn.setOnClickListener { onRefresh() }
         binding.renameAcctBtn.setOnClickListener { startRenameFlow() }
 
-        arguments?.let { viewModel.setChannel(it.getInt(TransactionContract.COLUMN_CHANNEL_ID)) }
+        arguments?.let { viewModel.setAccount(it.getInt(Constants.ACCOUNT_ID)) }
     }
 
     private fun setupObservers() {
         with(viewModel) {
-            channel.observe(viewLifecycleOwner) {
-                binding.staxCardView.setTitle(it.name)
+            account.observe(viewLifecycleOwner) {
+                toggleAccountDetails(false)
+
+                binding.staxCardView.setTitle(it.alias)
                 binding.feesDescription.text = getString(R.string.fees_label, it.name)
                 binding.detailsBalance.text = it.latestBalance
                 binding.originalName.text = it.name
 
-                setUpFuture(it)
+//                setUpFuture(it)
             }
 
             val txHistoryRv = binding.homeCardTransactions.transactionHistoryRecyclerView
@@ -114,7 +117,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         binding.scheduledCard.root.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    private fun onRefresh() = viewModel.channel.value?.let { (activity as MainActivity).onTapRefresh(it.id) }
+    private fun onRefresh() = viewModel.account.value?.let { (activity as MainActivity).onTapRefresh(it.id) }
 
     override fun viewRequestDetail(id: Int) {
         navigateToRequestDetailsFragment(id, this)
@@ -131,13 +134,13 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     private fun startRenameFlow() {
         toggleAccountDetails(true)
 
-        val channel = viewModel.channel.value
-        binding.renameCard.currentName.text = channel?.name
-        binding.renameCard.btnSubmit.setOnClickListener { updateAccountName() }
+        val channel = viewModel.account.value
+        binding.renameCard.currentName.text = channel?.alias
+        binding.renameCard.btnSubmit.setOnClickListener {
+            viewModel.setNewAccountName(binding.renameCard.newName.text)
+            updateAccountName() }
 
         binding.renameCard.root.setOnClickIcon { toggleAccountDetails(false) }
-
-        handleBackPress()
     }
 
     private fun updateAccountName() {
@@ -160,16 +163,16 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         }
     }
 
-    private fun handleBackPress() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (binding.renameCard.root.visibility == View.VISIBLE)
-                    toggleAccountDetails(false)
-                else
-                    requireActivity().onBackPressed()
-            }
-        })
-    }
+//    private fun handleBackPress() {
+//        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+//            override fun handleOnBackPressed() {
+//                if (binding.renameCard.root.visibility == View.VISIBLE)
+//                    toggleAccountDetails(false)
+//                else
+//                    requireActivity().onBackPressed()
+//            }
+//        })
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

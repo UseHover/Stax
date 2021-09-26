@@ -222,15 +222,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
-    fun saveChannels(channels: List<Channel>) {
-        viewModelScope.launch {
-            val toSkip = repo.getActions(getChannelIds(channels), HoverAction.FETCH_ACCOUNTS).map { it.channel_id }
-
-            val channelsToAdd = channels.filterNot { toSkip.contains(it.id) }
-            setChannelsSelected(channelsToAdd)
-        }
-    }
-
     fun setChannelsSelected(channels: List<Channel>?) {
         if (channels.isNullOrEmpty()) return
 
@@ -295,6 +286,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
                 if (getFetchAccountAction(it.id) == null) {
                     with(it) {
                         val account = Account(name, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex, defaultAccount == null)
+
+                        Timber.e("Account ${account.alias}")
                         repo.insert(account)
                     }
                 }
