@@ -188,7 +188,7 @@ class MainActivity : AbstractNavigationActivity(),
             val actionAndChannelPair = historyViewModel.getActionAndChannel(transaction.action_id, transaction.channel_id)
             val accountNumber = historyViewModel.getAccountNumber(transaction.counterparty_id)
 
-            val hsb: HoverSession.Builder = HoverSession.Builder(actionAndChannelPair.first, actionAndChannelPair.second, this@MainActivity, Constants.TRANSFERRED_INT)
+            val hsb = HoverSession.Builder(actionAndChannelPair.first, actionAndChannelPair.second, this@MainActivity, Constants.TRANSFERRED_INT)
                     .extra(HoverAction.AMOUNT_KEY, Utils.formatAmount(transaction.amount.toString()))
                     .extra(HoverAction.ACCOUNT_KEY, accountNumber)
                     .extra(HoverAction.PHONE_KEY, accountNumber)
@@ -200,11 +200,10 @@ class MainActivity : AbstractNavigationActivity(),
     private fun run(actionPair: Pair<Account?, HoverAction>, index: Int) {
         if (balancesViewModel.getChannel(actionPair.second.channel_id) != null) {
             val hsb = HoverSession.Builder(actionPair.second, balancesViewModel.getChannel(actionPair.second.channel_id)!!, this@MainActivity, index)
-            actionPair.first?.let { hsb.extra(Constants.ACCOUNT_NAME, it.name) }
+                    .extra(Constants.ACCOUNT_NAME, actionPair.first?.name)
+            actionPair.first?.let { hsb.setAccountName(it.name) }
 
             if (index + 1 < balancesViewModel.accounts.value!!.size) hsb.finalScreenTime(0)
-
-            Timber.e("====== Extras ${hsb.extras} ")
 
             hsb.run()
         } else {

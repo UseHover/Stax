@@ -9,7 +9,6 @@ import com.hover.sdk.api.HoverParameters
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.PhoneHelper
-import com.hover.stax.settings.KeyStoreExecutor
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
 import org.json.JSONException
@@ -23,18 +22,20 @@ class HoverSession private constructor(b: Builder) {
     private val channel: Channel
     private val requestCode: Int
     private val finalScreenTime: Int
+    private val accountName: String?
 
     private fun getBasicBuilder(b: Builder): HoverParameters.Builder = HoverParameters.Builder(b.activity)
-        .apply {
-            setEnvironment(if (Utils.getBoolean(Constants.TEST_MODE, b.activity)) HoverParameters.TEST_ENV else HoverParameters.PROD_ENV)
-            request(b.action.public_id)
-            setHeader(getMessage(b.action, b.activity))
-            initialProcessingMessage("")
-            showUserStepDescriptions(true)
-            finalMsgDisplayTime(finalScreenTime)
-            style(R.style.StaxHoverTheme)
-            sessionOverlayLayout(R.layout.stax_transacting_in_progress)
-        }
+            .apply {
+                setEnvironment(if (Utils.getBoolean(Constants.TEST_MODE, b.activity)) HoverParameters.TEST_ENV else HoverParameters.PROD_ENV)
+                request(b.action.public_id)
+                setHeader(getMessage(b.action, b.activity))
+                initialProcessingMessage("")
+                showUserStepDescriptions(true)
+                finalMsgDisplayTime(finalScreenTime)
+                style(R.style.StaxHoverTheme)
+                sessionOverlayLayout(R.layout.stax_transacting_in_progress)
+                private_extra(Constants.ACCOUNT_NAME, accountName)
+            }
 
     private fun addExtras(builder: HoverParameters.Builder, extras: JSONObject, action: HoverAction) {
         val requiredExtras = action.requiredParams
@@ -53,10 +54,6 @@ class HoverSession private constructor(b: Builder) {
         return if (key == HoverAction.PHONE_KEY) {
             PhoneHelper.normalizeNumberByCountry(value, channel.countryAlpha2)
         } else value
-    }
-
-    private fun addPin(builder: HoverParameters.Builder, a: Activity) {
-        builder.extra(HoverAction.PIN_KEY, KeyStoreExecutor.decrypt(channel.pin, a))
     }
 
     private fun getMessage(a: HoverAction, c: Context): String {
@@ -82,6 +79,7 @@ class HoverSession private constructor(b: Builder) {
         val extras: JSONObject
         var requestCode: Int
         var finalScreenTime = 4000
+        var account: String? = null
 
         constructor(a: HoverAction?, c: Channel, act: Activity, requestCode: Int, frag: Fragment?) : this(a, c, act, requestCode) {
             fragment = frag
@@ -99,6 +97,10 @@ class HoverSession private constructor(b: Builder) {
         fun finalScreenTime(ms: Int): Builder {
             finalScreenTime = ms
             return this
+        }
+
+        fun setAccountName(name: String) {
+            account = name
         }
 
         fun run(): HoverSession {
@@ -121,6 +123,7 @@ class HoverSession private constructor(b: Builder) {
         channel = b.channel
         requestCode = b.requestCode
         finalScreenTime = b.finalScreenTime
+        accountName = b.account
         val builder = getBasicBuilder(b)
         addExtras(builder, b.extras, b.action)
         startHover(builder, b.activity)

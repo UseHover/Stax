@@ -21,7 +21,6 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInterface {
 
@@ -86,8 +85,6 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
     }
 
     fun makeCall(action: HoverAction, channel: Channel? = null, selectedAccount: Account? = null) {
-        Timber.e("Selected account $selectedAccount")
-
         val hsb = HoverSession.Builder(action, channel
                 ?: channelsViewModel.activeChannel.value!!, this, Constants.TRANSFER_REQUEST)
 
@@ -95,6 +92,9 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
             hsb.extra(HoverAction.AMOUNT_KEY, transferViewModel.amount.value)
                     .extra(HoverAction.NOTE_KEY, transferViewModel.note.value)
                     .extra(Constants.ACCOUNT_NAME, selectedAccount?.name)
+
+            selectedAccount?.run { hsb.setAccountName(name) }
+
             transferViewModel.contact.value?.let { addRecipientInfo(hsb) }
         }
 

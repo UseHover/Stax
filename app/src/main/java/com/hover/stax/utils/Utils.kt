@@ -218,6 +218,12 @@ object Utils {
         AppsFlyerLib.getInstance().logEvent(context, event, map)
     }
 
+    @JvmStatic
+    fun logAnalyticsEvent(event: String, context: Context, excludeAmplitude: Boolean) {
+        FirebaseAnalytics.getInstance(context).logEvent(strippedForFireAnalytics(event), null)
+        AppsFlyerLib.getInstance().logEvent(context, event, null)
+    }
+
     private fun strippedForFireAnalytics(firebaseEventLog: String): String {
         return firebaseEventLog.replace(" ", "_").lowercase()
     }

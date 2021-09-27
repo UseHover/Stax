@@ -14,6 +14,7 @@ import com.hover.stax.R
 import com.hover.stax.account.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.databinding.FragmentPinUpdateBinding
+import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils.logAnalyticsEvent
 import com.hover.stax.views.StaxDialog
@@ -43,7 +44,7 @@ class PinUpdateFragment : Fragment(), Target {
 
         pinViewModel.accounts.observe(viewLifecycleOwner, { Timber.e("Observer ensures events fire.") })
 
-        arguments?.getInt("accountId", 0)?.let {
+        arguments?.getInt(Constants.ACCOUNT_ID, 0)?.let {
             pinViewModel.loadAccount(it)
         }
 
@@ -61,7 +62,6 @@ class PinUpdateFragment : Fragment(), Target {
         binding.choiceCard.setTitle(account.alias)
         binding.editCard.setTitle(account.alias)
 
-//        c.logoUrl?.let { Picasso.get().load(c.logoUrl).into(this) }
         pinViewModel.channel.value?.let {
             if (it.pin.isNullOrEmpty()) input?.setText(KeyStoreExecutor.decrypt(it.pin, context))
             setupSavePin(it)

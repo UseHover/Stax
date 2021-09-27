@@ -249,7 +249,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         contactInput.setText(r.requester_number, false)
 
         transferViewModel.setEditing(r.amount.isNullOrEmpty())
-//        channelDropdown.setState(getString(R.string.channel_request_fieldinfo, r.requester_institution_id.toString()), AbstractStatefulInput.INFO)
         accountDropdown.setState(getString(R.string.channel_request_fieldinfo, r.requester_institution_id.toString()), AbstractStatefulInput.INFO)
         Utils.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext())
     }
