@@ -201,7 +201,7 @@ class MainActivity : AbstractNavigationActivity(),
         if (balancesViewModel.getChannel(actionPair.second.channel_id) != null) {
             val hsb = HoverSession.Builder(actionPair.second, balancesViewModel.getChannel(actionPair.second.channel_id)!!, this@MainActivity, index)
                     .extra(Constants.ACCOUNT_NAME, actionPair.first?.name)
-            actionPair.first?.let { hsb.setAccountName(it.name) }
+            actionPair.first?.let { hsb.setAccountId(it.id.toString()) }
 
             if (index + 1 < balancesViewModel.accounts.value!!.size) hsb.finalScreenTime(0)
 

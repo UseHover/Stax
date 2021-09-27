@@ -93,7 +93,7 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
                     .extra(HoverAction.NOTE_KEY, transferViewModel.note.value)
                     .extra(Constants.ACCOUNT_NAME, selectedAccount?.name)
 
-            selectedAccount?.run { hsb.setAccountName(name) }
+            selectedAccount?.run { hsb.setAccountId(id.toString()) }
 
             transferViewModel.contact.value?.let { addRecipientInfo(hsb) }
         }

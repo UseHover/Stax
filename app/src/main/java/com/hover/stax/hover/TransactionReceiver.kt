@@ -50,6 +50,6 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent, PushNotification
             }
         }
 
-        repo.insertOrUpdateTransaction(intent, context, account!!.id)
+        repo.insertOrUpdateTransaction(intent, context)
     }
 }

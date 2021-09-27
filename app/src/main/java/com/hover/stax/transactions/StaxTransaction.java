@@ -16,6 +16,7 @@ import com.hover.sdk.transactions.Transaction;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.Utils;
 
@@ -151,6 +152,8 @@ public class StaxTransaction {
             fee = Utils.getAmount(extras.get(FEE_KEY));
         if (extras.containsKey(CONFIRM_CODE_KEY))
             confirm_code = extras.get(CONFIRM_CODE_KEY);
+        if(extras.containsKey(Constants.ACCOUNT_ID))
+            accountId = Integer.parseInt(extras.get(Constants.ACCOUNT_ID));
     }
 
     private String generateDescription(HoverAction action, StaxContact contact, Context c) {

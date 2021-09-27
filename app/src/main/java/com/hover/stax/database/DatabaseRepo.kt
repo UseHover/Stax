@@ -150,7 +150,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return transactionDao.getTransaction(uuid)
     }
 
-    fun insertOrUpdateTransaction(intent: Intent, c: Context, accountId: Int? = null) {
+    fun insertOrUpdateTransaction(intent: Intent, c: Context) {
         AppDatabase.databaseWriteExecutor.execute {
             try {
                 var t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID))
@@ -171,8 +171,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
                 } else
                     c.let { Utils.logAnalyticsEvent(c.getString(R.string.transaction_completed), c, true) }
 
-                t!!.accountId = accountId
-                t.update(intent, a, contact, isNew, c)
+                t!!.update(intent, a, contact, isNew, c)
                 transactionDao.update(t)
 
                 createAccounts(intent, t)

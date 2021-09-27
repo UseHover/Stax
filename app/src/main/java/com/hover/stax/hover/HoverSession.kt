@@ -22,7 +22,7 @@ class HoverSession private constructor(b: Builder) {
     private val channel: Channel
     private val requestCode: Int
     private val finalScreenTime: Int
-    private val accountName: String?
+    private val accountId: String?
 
     private fun getBasicBuilder(b: Builder): HoverParameters.Builder = HoverParameters.Builder(b.activity)
             .apply {
@@ -34,7 +34,7 @@ class HoverSession private constructor(b: Builder) {
                 finalMsgDisplayTime(finalScreenTime)
                 style(R.style.StaxHoverTheme)
                 sessionOverlayLayout(R.layout.stax_transacting_in_progress)
-                private_extra(Constants.ACCOUNT_NAME, accountName)
+                private_extra(Constants.ACCOUNT_ID, accountId)
             }
 
     private fun addExtras(builder: HoverParameters.Builder, extras: JSONObject, action: HoverAction) {
@@ -99,8 +99,8 @@ class HoverSession private constructor(b: Builder) {
             return this
         }
 
-        fun setAccountName(name: String) {
-            account = name
+        fun setAccountId(id: String) {
+            account = id
         }
 
         fun run(): HoverSession {
@@ -123,7 +123,7 @@ class HoverSession private constructor(b: Builder) {
         channel = b.channel
         requestCode = b.requestCode
         finalScreenTime = b.finalScreenTime
-        accountName = b.account
+        accountId = b.account
         val builder = getBasicBuilder(b)
         addExtras(builder, b.extras, b.action)
         startHover(builder, b.activity)
