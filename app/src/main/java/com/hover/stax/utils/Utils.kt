@@ -24,9 +24,7 @@ import java.io.ByteArrayOutputStream
 import java.text.DecimalFormat
 import java.util.*
 
-
 object Utils {
-
     private const val SHARED_PREFS = "staxprefs"
 
     private fun getSharedPrefs(context: Context): SharedPreferences {
