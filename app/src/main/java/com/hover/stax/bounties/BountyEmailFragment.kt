@@ -18,18 +18,16 @@ import com.hover.stax.utils.Utils.saveString
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
 class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListener {
 
     private var _binding: FragmentBountyEmailBinding? = null
     private val binding get() = _binding!!
-
     private var dialog: StaxDialog? = null
     private lateinit var networkMonitor: NetworkMonitor
     private val viewModel: BountyViewModel by sharedViewModel()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentBountyEmailBinding.inflate(inflater, container, false)
         networkMonitor = NetworkMonitor(requireContext())
         return binding.root
@@ -82,7 +80,7 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
                 .setDialogTitle(R.string.internet_required)
                 .setDialogMessage(R.string.internet_required_bounty_desc)
                 .setPosButton(R.string.btn_ok, null)
-                .makeSticky();
+                .makeSticky()
 
         dialog!!.showIt()
     }
@@ -91,10 +89,9 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
         //logout user so that they start the login afresh
         Firebase.auth.signOut()
         updateProgress(100)
-
         dialog = StaxDialog(requireActivity())
                 .setDialogMessage(getString(R.string.edge_case_bounty_email_error))
-                .setPosButton(R.string.btn_ok, null);
+                .setPosButton(R.string.btn_ok, null)
         dialog!!.showIt()
     }
 

@@ -1,7 +1,6 @@
 package com.hover.stax.database
 
 import android.annotation.SuppressLint
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.LiveData
@@ -152,6 +151,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
                 val a = getAction(intent.getStringExtra(HoverAction.ID_KEY))
                 val channel = getChannel(a.channel_id)
                 val contact = StaxContact.findOrInit(intent, channel.countryAlpha2, t, this)
+
                 var isNew = false
 
                 if (contact.accountNumber != null)
@@ -209,8 +209,6 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     suspend fun getContact_Suspended(id: String?): StaxContact? {
         return contactDao.get_suspended(id)
     }
-
-
 
     fun getContactByPhone(phone: String): StaxContact? {
         return contactDao.getByPhone("%$phone%")

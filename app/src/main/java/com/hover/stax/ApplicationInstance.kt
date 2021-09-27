@@ -81,10 +81,6 @@ class ApplicationInstance : Application() {
         AppsFlyerLib.getInstance().init(getString(R.string.appsflyer_key), conversionListener, this)
     }
 
-    companion object {
-        val transactionDetails_TryAgainCounter : MutableMap <String, Int>  by Delegates.observable(HashMap(), { _, _, _->})
-    }
-
     @RequiresApi(21)
     override fun registerComponentCallbacks(callback: ComponentCallbacks?) {
         super.registerComponentCallbacks(callback)
@@ -95,5 +91,9 @@ class ApplicationInstance : Application() {
     override fun unregisterComponentCallbacks(callback: ComponentCallbacks?) {
         super.unregisterComponentCallbacks(callback)
         NetworkMonitor(this).stopNetworkCallback()
+    }
+
+    companion object {
+        val transactionDetails_TryAgainCounter : MutableMap <String, Int>  by Delegates.observable(HashMap(), { _, _, _->})
     }
 }

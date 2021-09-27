@@ -1,9 +1,9 @@
 package com.hover.stax.settings;
 
-import android.content.Intent;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +25,6 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.databinding.FragmentSettingsBinding;
 import com.hover.stax.languages.Lang;
 import com.hover.stax.languages.LanguageViewModel;
-import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.library.LibraryActivity;
 import com.hover.stax.navigation.NavigationInterface;
 import com.hover.stax.utils.Constants;
