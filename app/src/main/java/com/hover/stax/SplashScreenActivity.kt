@@ -83,7 +83,10 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
     }
 
     private fun startBackgroundProcesses() {
-        channelsViewModel.accounts.observe(this) { hasAccounts = it.isNotEmpty() }
+        with(channelsViewModel){
+            accounts.observe(this@SplashScreenActivity) { hasAccounts = it.isNotEmpty() }
+            migrateAccounts()
+        }
 
         initAmplitude()
         logPushNotificationIfRequired()
@@ -193,7 +196,6 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
     private fun selfDestructWhenAppVersionExpires(): Boolean {
         return try {
             val currentVersionCode = packageManager.getPackageInfo(packageName, 0).versionCode
-            Timber.e("Current version code :  $currentVersionCode")
 
             val forceUpdateVersionCode = remoteConfig.getString("force_update_app_version").toInt()
             if (forceUpdateVersionCode > currentVersionCode) {

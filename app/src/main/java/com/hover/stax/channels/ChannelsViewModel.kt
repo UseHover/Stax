@@ -93,12 +93,12 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
      * the channel is still marked as selected. Since there is no clean way of handling this after the result of the transaction, this method
      * handles that for now.
      */
-    private fun removeStaleChannels(){
+    private fun removeStaleChannels() {
         viewModelScope.launch(Dispatchers.IO) {
             val channels = repo.getChannelsAndAccounts()
 
             channels.forEach {
-                if(it.accounts.isEmpty()){
+                if (it.accounts.isEmpty()) {
                     val c = it.channel
                     c.selected = false
                     repo.update(c)
@@ -279,15 +279,13 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     fun getFetchAccountAction(channelId: Int): HoverAction? = repo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()
 
     fun createAccounts(channels: List<Channel>) {
-        viewModelScope.launch (Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             val defaultAccount = repo.getDefaultAccount()
 
             channels.forEach {
                 if (getFetchAccountAction(it.id) == null) {
                     with(it) {
                         val account = Account(name, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex, defaultAccount == null)
-
-                        Timber.e("Account ${account.alias}")
                         repo.insert(account)
                     }
                 }
@@ -295,9 +293,11 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
-    fun getAccounts(channelId: Int) {
+    fun migrateAccounts() {
         viewModelScope.launch(Dispatchers.IO) {
-            accounts.postValue(repo.getAccounts(channelId))
+            if (accounts.value.isNullOrEmpty() && !selectedChannels.value.isNullOrEmpty()) {
+                createAccounts(selectedChannels.value!!)
+            }
         }
     }
 
