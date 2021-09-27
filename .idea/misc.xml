@@ -19,6 +19,7 @@
         <entry key="app/src/main/res/layout/fragment_bounty_list.xml" value="0.1342451874366768" />
         <entry key="app/src/main/res/layout/fragment_channel.xml" value="0.14766970618034447" />
         <entry key="app/src/main/res/layout/fragment_channels_list.xml" value="0.15602836879432624" />
+        <entry key="app/src/main/res/layout/fragment_faq.xml" value="0.24010416666666667" />
         <entry key="app/src/main/res/layout/fragment_main.xml" value="0.1331521739130435" />
         <entry key="app/src/main/res/layout/fragment_pin_update.xml" value="0.13405797101449277" />
         <entry key="app/src/main/res/layout/fragment_request.xml" value="0.14868287740628167" />
@@ -49,6 +50,7 @@
       </map>
     </option>
   </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
       <profile-state>

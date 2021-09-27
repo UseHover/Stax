@@ -15,7 +15,6 @@ import com.google.firebase.ktx.Firebase
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.HoverParameters
 import com.hover.stax.R
-import com.hover.stax.balances.BalancesFragment
 import com.hover.stax.databinding.ActivityBountyBinding
 import com.hover.stax.navigation.AbstractNavigationActivity
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface

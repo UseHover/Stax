@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.account.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.contacts.StaxContact
@@ -23,6 +24,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     val contact = MutableLiveData<StaxContact>()
     val note = MutableLiveData<String>()
     var request: LiveData<Request> = MutableLiveData()
+    val activeAccount = MutableLiveData<Account>()
 
     fun setTransactionType(transaction_type: String) {
         TransactionType.type = transaction_type
@@ -30,7 +32,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
 
     fun setAmount(a: String) = amount.postValue(a)
 
-    fun setContact(contactIds: String?) = contactIds?.let {
+    private fun setContact(contactIds: String?) = contactIds?.let {
         viewModelScope.launch {
             val contacts = repo.getContacts(contactIds.split(",").toTypedArray())
             if (contacts.isNotEmpty()) contact.postValue(contacts.first())

@@ -21,9 +21,8 @@ interface ContactDao {
     operator fun get(id: String?): StaxContact?
 
     @Query("SELECT * FROM stax_contacts WHERE id  = :id LIMIT 1")
-    suspend fun get_suspended(id: String?): StaxContact?
 
-
+    suspend fun getAsync(id: String?): StaxContact?
 
     @Query("SELECT * FROM stax_contacts WHERE lookup_key  = :lookupKey LIMIT 1")
     fun lookup(lookupKey: String?): StaxContact

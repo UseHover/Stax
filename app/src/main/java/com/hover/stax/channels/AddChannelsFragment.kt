@@ -11,9 +11,10 @@ import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 import com.hover.stax.R
+import com.hover.stax.account.Account
 import com.hover.stax.balances.BalanceAdapter.BalanceListener
 import com.hover.stax.balances.BalancesViewModel
-import com.hover.stax.databinding.FragmentChannelsListBinding
+import com.hover.stax.databinding.FragmentAddChannelsBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -27,7 +28,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     private val channelsViewModel: ChannelsViewModel by viewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
 
-    private var _binding: FragmentChannelsListBinding? = null
+    private var _binding: FragmentAddChannelsBinding? = null
     private val binding get() = _binding!!
 
     private var selectAdapter: ChannelsRecyclerViewAdapter = ChannelsRecyclerViewAdapter(ArrayList(0), this)
@@ -36,7 +37,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     private var dialog: StaxDialog? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentChannelsListBinding.inflate(inflater, container, false)
+        _binding = FragmentAddChannelsBinding.inflate(inflater, container, false)
 
         Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_link_account)), requireContext())
         initArguments()
@@ -107,8 +108,8 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
     private fun onAllLoaded(channels: List<Channel>) {
         if (!channels.isNullOrEmpty() && binding.channelsList.adapter?.itemCount == 0) {
+            updateAdapter(Channel.sort(channels, false))
             setError(R.string.channels_error_nosim)
-            updateAdapter(Channel.sort(channels, false));
         } else if (channels.isNullOrEmpty())
             setError(R.string.channels_error_nodata)
     }
@@ -135,6 +136,9 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
                 selectedChannels.addAll(selectAdapter.channelList.filter { it.id.toLong() == selection })
             }
 
+            channelsViewModel.setChannelsSelected(selectedChannels)
+            channelsViewModel.createAccounts(selectedChannels)
+
             showCheckBalanceDialog(
                     if (selectedChannels.size > 1) R.string.check_balance_alt_plural
                     else R.string.check_balance_alt,
@@ -147,33 +151,32 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         dialog = StaxDialog(requireActivity())
                 .setDialogTitle(R.string.check_balance_title)
                 .setDialogMessage(message)
-                .setNegButton(R.string.later) { saveChannels(channels, false) }
-                .setPosButton(R.string.check_balance_title) { saveChannels(channels, true) }
+                .setNegButton(R.string.later) { runActions(channels, false) }
+                .setPosButton(R.string.check_balance_title) { runActions(channels, true) }
         dialog!!.showIt()
     }
 
-    private fun saveChannels(channels: List<Channel>, checkBalance: Boolean) {
-        channelsViewModel.setChannelsSelected(channels)
+    private fun runActions(channels: List<Channel>, checkBalance: Boolean) {
         requireActivity().onBackPressed()
 
-        if (checkBalance) balancesViewModel.actions.observe(viewLifecycleOwner, {
-            if (channels.size == 1)
-                balancesViewModel.setRunning(channels.first().id)
-            else
-                balancesViewModel.setAllRunning(requireActivity())
-        })
+        if (checkBalance)
+            balancesViewModel.actions.observe(viewLifecycleOwner, {
+                if (channels.size == 1)
+                    balancesViewModel.setRunning(channels.first())
+                else
+                    balancesViewModel.setAllRunning(requireActivity())
+            })
     }
 
-    private fun goToChannelsDetailsScreen(channel: Channel) {
+    private fun viewAccountDetails(account: Account) {
         val balanceListener: BalanceListener? = activity as MainActivity?
-        balanceListener?.onTapDetail(channel.id)
+        balanceListener?.onTapDetail(account.id)
     }
 
-    override fun clickedChannel(channel: Channel) = if (channel.selected)
-        goToChannelsDetailsScreen(channel)
-    else
-        showCheckBalanceDialog(R.string.check_balance_alt, listOf(channel))
-
+    override fun clickedChannel(channel: Channel) {
+        if (!channel.selected)
+            showCheckBalanceDialog(R.string.check_balance_alt, listOf(channel))
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

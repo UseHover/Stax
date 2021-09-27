@@ -1,7 +1,5 @@
 package com.hover.stax.bounties;
 
-import static org.koin.java.KoinJavaComponent.get;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,7 +77,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     }
 
     private void updateActionConfig() {
-        Hover.updateActionConfigs(new Hover.DownloadListener() {
+        Hover.initialize(requireContext(), new Hover.DownloadListener() {
             @Override
             public void onError(String s) {
                 Utils.logErrorAndReportToFirebase(BountyListFragment.class.getSimpleName(), "Failed to update action configs: " + s, null);
@@ -89,7 +87,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
             public void onSuccess(ArrayList<HoverAction> arrayList) {
 
             }
-        }, requireContext());
+        });
     }
 
     private void updateChannelsWorker() {
@@ -97,6 +95,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.REPLACE, UpdateChannelsWorker.makeWork()).enqueue();
         wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.REPLACE, UpdateChannelsWorker.makeToil());
     }
+
     private void updateBountyTransactionWorker() {
         WorkManager wm = WorkManager.getInstance(requireContext());
         wm.beginUniqueWork(UpdateBountyTransactionsWorker.Companion.getBOUNTY_TRANSACTION_WORK_ID(), ExistingWorkPolicy.REPLACE, UpdateBountyTransactionsWorker.Companion.makeWork()).enqueue();

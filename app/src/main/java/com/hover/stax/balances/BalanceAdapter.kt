@@ -7,6 +7,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
+import com.hover.stax.account.Account
+import com.hover.stax.account.DUMMY
 import com.hover.stax.channels.Channel
 import com.hover.stax.databinding.BalanceItemBinding
 import com.hover.stax.utils.DateUtils
@@ -14,7 +16,7 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 
 
-class BalanceAdapter(val channels: List<Channel>, val balanceListener: BalanceListener?) : RecyclerView.Adapter<BalanceAdapter.BalancesViewHolder>() {
+class BalanceAdapter(val accounts: List<Account>, val balanceListener: BalanceListener?) : RecyclerView.Adapter<BalanceAdapter.BalancesViewHolder>() {
 
     private var showBalance: Boolean = false
 
@@ -24,11 +26,11 @@ class BalanceAdapter(val channels: List<Channel>, val balanceListener: BalanceLi
     }
 
     override fun onBindViewHolder(holder: BalancesViewHolder, position: Int) {
-        val channel = channels[holder.adapterPosition]
-        holder.bindItems(channel, holder)
+        val account = accounts[holder.adapterPosition]
+        holder.bindItems(account, holder)
     }
 
-    override fun getItemCount(): Int = channels.size
+    override fun getItemCount(): Int = accounts.size
 
     fun showBalanceAmounts(show: Boolean) {
         showBalance = show
@@ -57,50 +59,50 @@ class BalanceAdapter(val channels: List<Channel>, val balanceListener: BalanceLi
 
     inner class BalancesViewHolder(val binding: BalanceItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bindItems(channel: Channel, holder: BalancesViewHolder) {
-            UIHelper.setTextUnderline(binding.balanceChannelName, channel.name)
+        fun bindItems(account: Account, holder: BalancesViewHolder) {
+            UIHelper.setTextUnderline(binding.balanceChannelName, account.alias)
 
             if (!showBalance) binding.balanceSubtitle.visibility = View.GONE
 
             when {
-                channel.latestBalance != null && showBalance -> {
+                account.latestBalance != null && showBalance -> {
                     binding.balanceSubtitle.visibility = View.VISIBLE
-                    binding.balanceSubtitle.text = DateUtils.humanFriendlyDate(channel.latestBalanceTimestamp)
-                    binding.balanceAmount.text = Utils.formatAmount(channel.latestBalance)
+                    binding.balanceSubtitle.text = DateUtils.humanFriendlyDate(account.latestBalanceTimestamp)
+                    binding.balanceAmount.text = Utils.formatAmount(account.latestBalance!!)
                 }
-                channel.latestBalance == null && showBalance -> {
+                account.latestBalance == null && showBalance -> {
                     binding.balanceAmount.text = "-"
                     binding.balanceSubtitle.visibility = View.VISIBLE
                     binding.balanceSubtitle.text = itemView.context.getString(R.string.refresh_balance_desc)
                 }
                 else -> {
                     binding.balanceAmount.text = ""
-                    setColorForEmptyAmount(true, holder, UIHelper.getColor(channel.secondaryColorHex, false, binding.root.context))
+                    setColorForEmptyAmount(true, holder, UIHelper.getColor(account.secondaryColorHex, false, binding.root.context))
                 }
             }
 
             setColors(
-                holder, UIHelper.getColor(channel.primaryColorHex, true, holder.itemView.context),
-                UIHelper.getColor(channel.secondaryColorHex, false, holder.itemView.context)
+                holder, UIHelper.getColor(account.primaryColorHex, true, holder.itemView.context),
+                UIHelper.getColor(account.secondaryColorHex, false, holder.itemView.context)
             )
 
-            if (channel.id == Channel.DUMMY) {
+            if (account.id == DUMMY) {
                 holder.binding.balanceSubtitle.visibility = View.GONE
                 holder.binding.balanceRefreshIcon.setImageResource(R.drawable.ic_add_icon_24)
             }
 
             binding.root.setOnClickListener {
-                balanceListener?.onTapDetail(channel.id.toString().toInt())
+                balanceListener?.onTapDetail(account.id)
             }
 
             binding.balanceRefreshIcon.setOnClickListener {
-                balanceListener?.onTapRefresh(channel.id.toString().toInt())
+                balanceListener?.onTapRefresh(account.id.toString().toInt())
             }
         }
     }
 
     interface BalanceListener {
-        fun onTapRefresh(channelId: Int)
+        fun onTapRefresh(accountId: Int)
 
         fun onTapDetail(channelId: Int)
     }
