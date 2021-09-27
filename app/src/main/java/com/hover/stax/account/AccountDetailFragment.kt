@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
@@ -28,7 +27,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListener, ScheduledAdapter.SelectListener,
-    RequestsAdapter.SelectListener, NavigationInterface {
+        RequestsAdapter.SelectListener, NavigationInterface {
 
     private val viewModel: AccountDetailViewModel by viewModel()
     private val futureViewModel: FutureViewModel by viewModel()
@@ -67,7 +66,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
                 binding.detailsBalance.text = it.latestBalance
                 binding.originalName.text = it.name
 
-//                setUpFuture(it)
+                setUpFuture(it.channelId)
             }
 
             val txHistoryRv = binding.homeCardTransactions.transactionHistoryRecyclerView
@@ -79,8 +78,12 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
                 }
             }
 
-            spentThisMonth.observe(viewLifecycleOwner) { binding.detailsMoneyOut.text = Utils.formatAmount(it ?: 0.0) }
-            feesThisYear.observe(viewLifecycleOwner) { binding.detailsFees.text = Utils.formatAmount(it ?: 0.0) }
+            spentThisMonth.observe(viewLifecycleOwner) {
+                binding.detailsMoneyOut.text = Utils.formatAmount(it ?: 0.0)
+            }
+            feesThisYear.observe(viewLifecycleOwner) {
+                binding.detailsFees.text = Utils.formatAmount(it ?: 0.0)
+            }
         }
     }
 
@@ -98,14 +101,14 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         }
     }
 
-    private fun setUpFuture(channel: Channel) {
+    private fun setUpFuture(channelId: Int) {
         with(futureViewModel) {
-            scheduledByChannel(channel.id).observe(viewLifecycleOwner) {
+            scheduledByChannel(channelId).observe(viewLifecycleOwner) {
                 scheduledAdapter?.updateData(it)
                 setFutureVisible(it, requests.value)
             }
 
-            requestsByChannel(channel.id).observe(viewLifecycleOwner) {
+            requestsByChannel(channelId).observe(viewLifecycleOwner) {
                 requestsAdapter?.updateData(it)
                 setFutureVisible(scheduled.value, it)
             }
@@ -138,7 +141,8 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         binding.renameCard.currentName.text = channel?.alias
         binding.renameCard.btnSubmit.setOnClickListener {
             viewModel.setNewAccountName(binding.renameCard.newName.text)
-            updateAccountName() }
+            updateAccountName()
+        }
 
         binding.renameCard.root.setOnClickIcon { toggleAccountDetails(false) }
     }
@@ -162,17 +166,6 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
             renameCard.renameAccountCard.visibility = if (hide) View.VISIBLE else View.GONE
         }
     }
-
-//    private fun handleBackPress() {
-//        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-//            override fun handleOnBackPressed() {
-//                if (binding.renameCard.root.visibility == View.VISIBLE)
-//                    toggleAccountDetails(false)
-//                else
-//                    requireActivity().onBackPressed()
-//            }
-//        })
-//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -22,7 +22,6 @@ import com.hover.stax.utils.Utils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 import timber.log.Timber;
 
@@ -85,6 +84,9 @@ public class StaxTransaction {
     @ColumnInfo(name = "category")
     public String category;
 
+    @ColumnInfo(name = "account_id")
+    public Integer accountId;
+
     // FIXME: DO not use! This is covered by contact model. No easy way to drop column yet, but room 2.4 adds an easy way. Currently alpha, use once it is stable
     @ColumnInfo(name = "counterparty")
     public String counterparty;
@@ -113,7 +115,7 @@ public class StaxTransaction {
     }
 
     public void update(Intent data, HoverAction action, StaxContact contact, Boolean isNewTransaction, Context c) {
-        if( !isNewTransaction && isSessionIncomplete(action, c)) setFailed_Incomplete();
+        if (!isNewTransaction && isSessionIncomplete(action, c)) setFailed_Incomplete();
         else status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
 
         Timber.e("Updating to status %s - %s", status, action);
@@ -127,10 +129,10 @@ public class StaxTransaction {
         description = generateDescription(action, contact, c);
     }
 
-    private Boolean isSessionIncomplete(HoverAction action, Context c)   {
+    private Boolean isSessionIncomplete(HoverAction action, Context c) {
         int numOfSteps = action.custom_steps.length();
         int ussdLength = Hover.getTransaction(uuid, c).ussdMessages.length();
-        return ussdLength < numOfSteps -1;
+        return ussdLength < numOfSteps - 1;
     }
 
     public void setFailed_Incomplete() {

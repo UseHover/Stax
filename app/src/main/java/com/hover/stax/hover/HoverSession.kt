@@ -87,7 +87,7 @@ class HoverSession private constructor(b: Builder) {
             fragment = frag
         }
 
-        fun extra(key: String?, value: String?): Builder {
+        fun extra(key: String, value: String?): Builder {
             try {
                 extras.put(key, value)
             } catch (e: JSONException) {

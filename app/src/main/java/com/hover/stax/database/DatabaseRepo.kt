@@ -50,8 +50,6 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     val allChannels: LiveData<List<Channel>> = channelDao.allInAlphaOrder
     val selected: LiveData<List<Channel>> = channelDao.getSelected(true)
 
-    fun getSelectedCount(): Int = channelDao.getSelectedCount(true)
-
     fun getChannelsAndAccounts(): List<ChannelWithAccounts> = channelDao.getChannelsAndAccounts()
 
     fun getChannel(id: Int): Channel? {
@@ -61,9 +59,6 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     fun getLiveChannel(id: Int): LiveData<Channel> {
         return channelDao.getLiveChannel(id)
     }
-
-    val channelsDataCount: Int
-        get() = channelDao.dataCount
 
     fun getChannels(ids: IntArray): LiveData<List<Channel>> {
         return channelDao.getChannels(ids)
@@ -137,18 +132,18 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return transactionDao.getTransactionCount(String.format("%02d", lastMonth().first), lastMonth().second.toString())!! > 0
     }
 
-    fun getAllTransferTransactions(channelId: Int): LiveData<List<StaxTransaction>>? {
-        return transactionDao.getAllTransfers(channelId)
+    fun getAllTransferTransactions(accountId: Int): LiveData<List<StaxTransaction>>? {
+        return transactionDao.getAllTransfers(accountId)
     }
 
     @SuppressLint("DefaultLocale")
-    fun getSpentAmount(channelId: Int, month: Int, year: Int): LiveData<Double>? {
-        return transactionDao.getTotalAmount(channelId, String.format("%02d", month), year.toString())
+    fun getSpentAmount(accountId: Int, month: Int, year: Int): LiveData<Double>? {
+        return transactionDao.getTotalAmount(accountId, String.format("%02d", month), year.toString())
     }
 
     @SuppressLint("DefaultLocale")
-    fun getFees(channelId: Int, year: Int): LiveData<Double>? {
-        return transactionDao.getTotalFees(channelId, year.toString())
+    fun getFees(accountId: Int, year: Int): LiveData<Double>? {
+        return transactionDao.getTotalFees(accountId, year.toString())
     }
 
     fun getTransaction(uuid: String?): StaxTransaction? {

@@ -198,17 +198,14 @@ class MainActivity : AbstractNavigationActivity(),
     }
 
     private fun run(actionPair: Pair<Account?, HoverAction>, index: Int) {
-        Timber.e("On Main running ${actionPair.first?.name} - ${actionPair.second.transaction_type}")
-
         if (balancesViewModel.getChannel(actionPair.second.channel_id) != null) {
             val hsb = HoverSession.Builder(actionPair.second, balancesViewModel.getChannel(actionPair.second.channel_id)!!, this@MainActivity, index)
-
-            if (actionPair.first != null)
-                hsb.extra(Constants.ACCOUNT_NAME, actionPair.first!!.name)
-
-            Timber.e("SESSION - ${actionPair.first?.name} - ${actionPair.second.transaction_type}")
+            actionPair.first?.let { hsb.extra(Constants.ACCOUNT_NAME, it.name) }
 
             if (index + 1 < balancesViewModel.accounts.value!!.size) hsb.finalScreenTime(0)
+
+            Timber.e("====== Extras ${hsb.extras} ")
+
             hsb.run()
         } else {
 //            the only way to get the reference to the observer is to move this out onto it's own block.
