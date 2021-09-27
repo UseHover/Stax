@@ -95,16 +95,11 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.REPLACE, UpdateChannelsWorker.makeWork()).enqueue();
         wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.REPLACE, UpdateChannelsWorker.makeToil());
     }
+
     private void updateBountyTransactionWorker() {
         WorkManager wm = WorkManager.getInstance(requireContext());
         wm.beginUniqueWork(UpdateBountyTransactionsWorker.Companion.getBOUNTY_TRANSACTION_WORK_ID(), ExistingWorkPolicy.REPLACE, UpdateBountyTransactionsWorker.Companion.makeWork()).enqueue();
         wm.enqueueUniquePeriodicWork(UpdateBountyTransactionsWorker.Companion.getTAG(), ExistingPeriodicWorkPolicy.REPLACE, UpdateBountyTransactionsWorker.Companion.makeToil());
-    }
-
-    private void updateBountyTransactionWorker() {
-        WorkManager wm = WorkManager.getInstance(requireContext());
-        wm.beginUniqueWork(UpdateBountyTransactionsWorker.BOUNTY_TRANSACTION_WORK_ID, ExistingWorkPolicy.REPLACE, UpdateBountyTransactionsWorker.Companion.makeWork()).enqueue();
-        wm.enqueueUniquePeriodicWork(UpdateBountyTransactionsWorker.TAG, ExistingPeriodicWorkPolicy.REPLACE, UpdateBountyTransactionsWorker.Companion.makeToil());
     }
 
     private void showOfflineDialog() {

@@ -31,9 +31,9 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent, PushNotification
         if(intent.hasExtra(TransactionContract.COLUMN_INPUT_EXTRAS)){
             val inputExtras = intent.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS) as? HashMap<String, String>
 
-            if(inputExtras!!.containsKey(Constants.ACCOUNT_NAME)){
-                val accountName = inputExtras[Constants.ACCOUNT_NAME]
-                account = repo.getAccount(accountName!!)
+            if(inputExtras!!.containsKey(Constants.ACCOUNT_ID)){
+                val accountId = inputExtras[Constants.ACCOUNT_ID]
+                account = repo.getAccount(accountId!!.toInt())
             }
         }
 
