@@ -30,7 +30,6 @@ import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-
 class MainActivity : AbstractNavigationActivity(),
         BalancesViewModel.RunBalanceListener,
         BalanceAdapter.BalanceListener,

@@ -156,7 +156,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         runFlag.value = NONE
         hasRunList.clear()
     }
-
+    
     private fun getAccountActions(flag: Int): Pair<Account?, HoverAction> {
         val account = repo.getAccount(flag)
 

@@ -82,9 +82,9 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
     }
 
     private fun startObservers() {
-        viewModel.transaction.observe(viewLifecycleOwner, { transaction: StaxTransaction? -> showTransaction(transaction) })
-        viewModel.action.observe(viewLifecycleOwner, { action: HoverAction? -> showActionDetails(action) })
-        viewModel.contact.observe(viewLifecycleOwner, { contact: StaxContact? -> updateRecipient(contact) })
+        viewModel.transaction.observe(viewLifecycleOwner, { showTransaction(it) })
+        viewModel.action.observe(viewLifecycleOwner, { showActionDetails(it) })
+        viewModel.contact.observe(viewLifecycleOwner, {  updateRecipient(it) })
     }
 
     private fun setupSeeMoreButton() {
@@ -113,7 +113,7 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
 
     private fun retryTransactionClicked(transaction: StaxTransaction, retryButton: Button) {
         retryButton.setOnClickListener {
-            updateTryAgainCounter(transaction.uuid)
+            updateTryAgainCounter(transaction.action_id)
             this.dismiss()
             (requireActivity() as MainActivity).reBuildHoverSession(transaction)
         }
@@ -155,12 +155,16 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
 
     private fun showTransaction(transaction: StaxTransaction?) {
         if (transaction != null) {
-            if (transaction.isRecorded) setupRetryBountyButton()
-            else if (transaction.status == Transaction.FAILED) {
-                val button = showButtonToClick()
-                if (shouldContactSupport(transaction.uuid)) setupContactSupportButton(transaction.uuid, button)
-                else retryTransactionClicked(transaction, button)
-            }
+            if (transaction.isRecorded)
+                setupRetryBountyButton()
+            else
+                if (transaction.status == Transaction.FAILED) {
+                    val button = showButtonToClick()
+                    if (shouldContactSupport(transaction.action_id))
+                        setupContactSupportButton(transaction.action_id, button)
+                    else
+                        retryTransactionClicked(transaction, button)
+                }
             updateDetails(transaction)
         }
     }

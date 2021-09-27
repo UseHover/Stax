@@ -86,9 +86,9 @@
 	<string name="bounty_email_err" translatable="false">Bounty email error due to: %1$s</string>
 	<string name="visited_rating_review_screen" translatable="false">Visited ratings and review screen</string>
 	<string name="clicked_rating_star" translatable="false">Clicked rating stars and giving review</string>
+	<string name="clicked_google_sign_in" translatable="false">Clicked Google Sign In</string>
 
 	<string name="clicked_add_account_bubble" translatable="false">Clicked add account from bubble showcase</string>
-	<string name="initializing_ussd_services" translatable="false">Initializing USSD services</string>
 	<string name="transaction_started" translatable="false">Transaction started</string>
 	<string name="transaction_completed" translatable="false">Transaction completed</string>
 

@@ -9,6 +9,7 @@
             android:id="@+id/bountyEmailFragment"
             android:name="com.hover.stax.bounties.BountyEmailFragment"
             android:label="@string/nav_bounty"
+            android:tag="@string/nav_bounty"
             tools:layout="@layout/fragment_bounty_email">
         <action
                 android:id="@+id/action_bountyEmailFragment_to_bountyListFragment"

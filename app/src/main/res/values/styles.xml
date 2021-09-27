@@ -92,7 +92,6 @@
 
     <style name="StaxFabExtended" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
         <item name="android:padding">@dimen/margin_13</item>
-        <!--        <item name="android:layout_marginBottom">@dimen/margin_89</item>-->
         <item name="android:radius">5dp</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="backgroundTint">@color/brightBlue</item>

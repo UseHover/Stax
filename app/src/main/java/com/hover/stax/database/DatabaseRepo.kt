@@ -156,6 +156,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
                 var t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID))
                 val a = getAction(intent.getStringExtra(HoverAction.ID_KEY))
                 val channel = getChannel(a.channel_id)
+
                 val contact = StaxContact.findOrInit(intent, channel!!.countryAlpha2, t, this)
                 var isNew = false
 
@@ -168,8 +169,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
                     t = StaxTransaction(intent, a, contact, c)
                     transactionDao.insert(t)
                     t = transactionDao.getTransaction(t.uuid)
-                } else
-                    c.let { Utils.logAnalyticsEvent(c.getString(R.string.transaction_completed), c, true) }
+                } else c.let { Utils.logAnalyticsEvent(c.getString(R.string.transaction_completed), c, true) }
 
                 t!!.update(intent, a, contact, isNew, c)
                 transactionDao.update(t)

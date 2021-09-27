@@ -116,7 +116,8 @@ public class StaxTransaction {
     }
 
     public void update(Intent data, HoverAction action, StaxContact contact, Boolean isNewTransaction, Context c) {
-        if (!isNewTransaction && isSessionIncomplete(action, c)) setFailed_Incomplete();
+        if( !isNewTransaction && isSessionIncomplete(action, c)) setFailed_Incomplete();
+
         else status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
 
         Timber.e("Updating to status %s - %s", status, action);
@@ -130,10 +131,10 @@ public class StaxTransaction {
         description = generateDescription(action, contact, c);
     }
 
-    private Boolean isSessionIncomplete(HoverAction action, Context c) {
+    private Boolean isSessionIncomplete(HoverAction action, Context c)   {
         int numOfSteps = action.custom_steps.length();
         int ussdLength = Hover.getTransaction(uuid, c).ussdMessages.length();
-        return ussdLength < numOfSteps - 1;
+        return ussdLength < numOfSteps -1;
     }
 
     public void setFailed_Incomplete() {

@@ -43,8 +43,8 @@ android {
         applicationId "com.hover.stax"
         minSdkVersion 18
         targetSdkVersion 30
-        versionCode 83
-        versionName "1.5.6.1"
+        versionCode 85
+        versionName "1.5.6.3"
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -104,7 +104,7 @@ dependencies {
 
     // Google
     implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
@@ -123,16 +123,19 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     // Firebase
-    implementation platform('com.google.firebase:firebase-bom:26.0.0')
+    implementation platform('com.google.firebase:firebase-bom:28.4.0')
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-inappmessaging-display'
     implementation 'com.google.firebase:firebase-config'
-    implementation 'com.google.android.play:core:1.10.0'
-
+    implementation 'com.google.android.play:core:1.10.2'
     implementation 'com.google.firebase:firebase-perf'
     implementation 'com.google.firebase:firebase-firestore-ktx'
+
+    //auth
+    implementation 'com.google.android.gms:play-services-auth:19.2.0'
+    implementation 'com.google.firebase:firebase-auth-ktx'
 
     implementation 'com.amplitude:android-sdk:2.23.2'
     implementation "com.squareup.okhttp3:okhttp:4.8.1"
@@ -163,7 +166,7 @@ dependencies {
 
     // Hover SDK
     debugImplementation project(":hover.sdk")
-    def sdk_version = "2.0.0-stax-1.5.0-pro"
+    def sdk_version = "2.0.0-stax-1.5.8-pro"
 
     releaseImplementation "com.hover:android-sdk:$sdk_version"
     debugImplementation 'com.android.volley:volley:1.2.1'

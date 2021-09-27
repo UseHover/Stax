@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "1098235122453-knns8iksckpjrhbps5gg8njhfgkf97g1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hover.stax",
+            "certificate_hash": "4771df4ddf334c28cc71ebd82f5da5e227a415bf"
+          }
+        },
+        {
+          "client_id": "1098235122453-v4kea3mfd19a51vm8282t0i7p37olku4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hover.stax",
+            "certificate_hash": "39b574f5b31cc4c617ca5e00846950296e4133f0"
+          }
+        },
+        {
           "client_id": "1098235122453-vegqvhklnofu5careh3fltdu5bdv9dmu.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -28,7 +44,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1098235122453-vegqvhklnofu5careh3fltdu5bdv9dmu.apps.googleusercontent.com",
+              "client_id": "1098235122453-5u1hct3brr4t626317k9fgjkkfdmsbvs.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
