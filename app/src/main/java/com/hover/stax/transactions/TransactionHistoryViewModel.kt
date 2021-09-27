@@ -10,13 +10,12 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.database.DatabaseRepo
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import org.koin.java.KoinJavaComponent.get
 
 class TransactionHistoryViewModel(application: Application?) : AndroidViewModel(application!!) {
     private val repo = get(DatabaseRepo::class.java)
-    var staxTransactions: LiveData<List<StaxTransaction>> = MutableLiveData()
+    private var staxTransactions: LiveData<List<StaxTransaction>> = MutableLiveData()
     private val appReviewLiveData: LiveData<Boolean>
 
     fun showAppReviewLiveData(): LiveData<Boolean> {
@@ -57,6 +56,6 @@ class TransactionHistoryViewModel(application: Application?) : AndroidViewModel(
 
     init {
         staxTransactions = repo.completeAndPendingTransferTransactions!!
-        appReviewLiveData = Transformations.map(repo.transactionsForAppReview!!) { staxTransactions: List<StaxTransaction> -> showAppReview(staxTransactions) }
+        appReviewLiveData = Transformations.map(repo.transactionsForAppReview!!) { showAppReview(it) }
     }
 }

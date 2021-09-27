@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
@@ -98,28 +100,33 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
                 actionSelectViewModel.setActions(it)
                 actionSelect.updateActions(it)
             })
-        }
 
-        with(transferViewModel) {
-            amount.observe(viewLifecycleOwner, {
-                binding.summaryCard.amountValue.text = Utils.formatAmount(it)
-            })
+            accounts.observe(viewLifecycleOwner) {
+                if (it.isEmpty())
+                    setDropdownTouchListener(R.id.action_navigation_transfer_to_accountsFragment)
+            }
 
-            note.observe(viewLifecycleOwner, {
-                binding.summaryCard.noteRow.visibility = if (it.isNullOrEmpty()) View.GONE else View.VISIBLE
-                binding.summaryCard.noteValue.text = it
-            })
+            with(transferViewModel) {
+                amount.observe(viewLifecycleOwner, {
+                    binding.summaryCard.amountValue.text = Utils.formatAmount(it)
+                })
 
-            contact.observe(viewLifecycleOwner, { recipientValue.setContact(it) })
+                note.observe(viewLifecycleOwner, {
+                    binding.summaryCard.noteRow.visibility = if (it.isNullOrEmpty()) View.GONE else View.VISIBLE
+                    binding.summaryCard.noteValue.text = it
+                })
 
-            recentContacts.observe(viewLifecycleOwner, {
-                if (!it.isNullOrEmpty()) {
-                    contactInput.setRecent(it, requireActivity())
-                    transferViewModel.contact.value?.let { ct -> contactInput.setSelected(ct) }
-                }
-            })
+                contact.observe(viewLifecycleOwner, { recipientValue.setContact(it) })
 
-            request.observe(viewLifecycleOwner, { it?.let { load(it) } })
+                recentContacts.observe(viewLifecycleOwner, {
+                    if (!it.isNullOrEmpty()) {
+                        contactInput.setRecent(it, requireActivity())
+                        transferViewModel.contact.value?.let { ct -> contactInput.setSelected(ct) }
+                    }
+                })
+
+                request.observe(viewLifecycleOwner, { it?.let { load(it) } })
+            }
         }
     }
 
@@ -129,8 +136,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
             setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus)
                     amountInput.setState(
-                        null,
-                        if (transferViewModel.amountErrors() == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+                            null,
+                            if (transferViewModel.amountErrors() == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
                     )
                 else
                     amountInput.setState(null, AbstractStatefulInput.NONE)
@@ -157,7 +164,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
                 transferViewModel.saveContact()
                 transferViewModel.setEditing(false)
             } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
-        } else (activity as TransferActivity).submit()
+        } else (activity as TransferActivity).submit(accountDropdown.highlightedAccount!!)
     }
 
     private val amountWatcher: TextWatcher = object : TextWatcher {
@@ -195,7 +202,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         amountInput.setState(amountError, if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         val channelError = channelsViewModel.errorCheck()
-        channelDropdown.setState(channelError, if (channelError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        accountDropdown.setState(channelError, if (channelError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         val actionError = actionSelectViewModel.errorCheck()
         actionSelect.setState(actionError, if (actionError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
@@ -212,7 +219,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     override fun highlightAction(a: HoverAction?) {
-        a?.let { actionSelectViewModel.setActiveAction(a) }
+        a?.let { actionSelectViewModel.setActiveAction(it) }
     }
 
     private fun setRecipientHint(action: HoverAction) {
@@ -224,10 +231,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         } else {
             transferViewModel.forceUpdateContactUI()
             contactInput.setHint(
-                if (action.requiredParams.contains(HoverAction.ACCOUNT_KEY))
-                    getString(R.string.recipientacct_label)
-                else
-                    getString(R.string.recipientphone_label)
+                    if (action.requiredParams.contains(HoverAction.ACCOUNT_KEY))
+                        getString(R.string.recipientacct_label)
+                    else
+                        getString(R.string.recipientphone_label)
             )
         }
     }
@@ -242,7 +249,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         contactInput.setText(r.requester_number, false)
 
         transferViewModel.setEditing(r.amount.isNullOrEmpty())
-        channelDropdown.setState(getString(R.string.channel_request_fieldinfo, r.requester_institution_id.toString()), AbstractStatefulInput.INFO)
+        accountDropdown.setState(getString(R.string.channel_request_fieldinfo, r.requester_institution_id.toString()), AbstractStatefulInput.INFO)
         Utils.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext())
     }
 }

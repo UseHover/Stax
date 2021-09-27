@@ -5,19 +5,22 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.R
+import com.hover.stax.account.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.transfers.AbstractFormViewModel
 import com.hover.stax.utils.DateUtils
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
 class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) : AbstractFormViewModel(application, databaseRepo) {
 
-    val activeChannel = MediatorLiveData<Channel>()
+    val activeAccount = MutableLiveData<Account>()
+    val activeChannel = MutableLiveData<Channel>()
     val amount = MutableLiveData<String>()
     val requestees = MutableLiveData<List<StaxContact>>(Collections.singletonList(StaxContact("")))
     val requestee = MutableLiveData<StaxContact>()
@@ -33,7 +36,16 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
 
     fun setAmount(a: String) = amount.postValue(a)
 
-    fun setActiveChannel(c: Channel) = activeChannel.postValue(c)
+    fun setActiveChannel(c: Channel) {
+        activeChannel.postValue(c)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val account = repo.getAccounts(c.id).firstOrNull()
+            setActiveAccount(account)
+        }
+    }
+
+    private fun setActiveAccount(account: Account?) = activeAccount.postValue(account)
 
     private fun setRequesterNumber(c: Channel) = requesterNumber.postValue(c.accountNo)
 

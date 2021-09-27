@@ -6,7 +6,7 @@ import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
 
-class ChannelsRecyclerViewAdapter(var channelList: List<Channel>, var selectListener: SelectListener) : RecyclerView.Adapter<ChannelsViewHolder>() {
+class ChannelsRecyclerViewAdapter(var channelList: List<Channel>, var selectListener: SelectListener?) : RecyclerView.Adapter<ChannelsViewHolder>() {
 
     private var selectionTracker: SelectionTracker<Long>? = null
 
@@ -22,7 +22,7 @@ class ChannelsRecyclerViewAdapter(var channelList: List<Channel>, var selectList
     override fun onBindViewHolder(holder: ChannelsViewHolder, position: Int) {
         val channel = channelList[holder.adapterPosition]
         holder.bind(channel, selectionTracker != null, selectionTracker?.isSelected(channel.id.toLong()))
-        holder.itemView.setOnClickListener { selectListener.clickedChannel(channel) }
+        holder.itemView.setOnClickListener { selectListener?.clickedChannel(channel) }
     }
 
     override fun getItemCount(): Int = channelList.size

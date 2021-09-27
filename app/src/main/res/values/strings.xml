@@ -71,6 +71,7 @@
 	<string name="channels_error_nodata">Please turn on data to load services.</string>
 	<string name="channels_error_nosim">Please insert a supported SIM to filter choices.</string>
 	<string name="channels_error_noselect">You must select a service.</string>
+	<string name="accounts_error_no_accounts">No accounts added</string>
 	<string name="link_account">Link account</string>
 	<string name="link_account_error">Choose an account to link.</string>
 	<string name="link_another"><u>+ Link another account</u></string>
@@ -129,6 +130,7 @@
 	<string name="balance_msg">Checking %1$s balance</string>
 	<string name="airtime_msg">Buying airtime</string>
 	<string name="transfer_msg">Transferring money</string>
+	<string name="fetch_accounts">Fetching accounts</string>
 
 	<!-- TRANSACTION STATUS -->
 	<string name="confirmed_cardHead">SUCCEEDED</string>
@@ -197,6 +199,7 @@
 	<string name="descrip_airtime_sent">%1$s sent airtime to %2$s</string>
 	<string name="descrip_transfer_sent">%1$s sent money to %2$s</string>
 	<string name="descrip_transfer_received">received money from %1$s</string>
+	<string name="descrip_fetch_accounts">fetched accounts from %1$s</string>
 	<string name="descrip_bill_paid">paid %1$s bill</string>
 	<string name="descrip_recorded">Recorded USSD session on %1$s</string>
 	<string name="fab_transfernow">Send money now</string>
@@ -235,6 +238,7 @@
 	<string name="link_copied_label">Link copied</string>
 	<string name="share_request_link_cardhead">Share request link</string>
 	<string name="share_again_cardhead">Share request link again</string>
+	<string name="account_name_error">Please enter a new account name</string>
 
 	<!-- Scheduling -->
 	<string name="future_toggle">Send later</string>
@@ -459,6 +463,14 @@
 	<string name="loading_error">Unable to load FAQ, please try again</string>
 	<string name="faq_internet_error">This feature requires internet connection, please try again</string>
     <string name="working_offline">Working offline</string>
+
+	<string name="rename_account">Rename Account</string>
+	<string name="current_name">Current name</string>
+	<string name="hint_enter_new_name">Enter a new name</string>
+    <string name="original_name">Original name</string>
+    <string name="which_account">Which account?</string>
+	<string name="account_select_header">You have more than one %1$s account. Please choose which one you want to use to %2$s.</string>
+
     <string name="marketing_email_optin">"Stax can send me emails in the future. "</string>
 
 </resources>

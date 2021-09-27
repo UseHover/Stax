@@ -36,10 +36,8 @@ object Constants {
     const val FROM_FCM = "from_notification"
     const val APP_RATED_NATIVELY = "app_has_been_rated_natively"
     const val SHOWN_SEND_MONEY_ACTION = "shown_send_money_action"
-
-    const val VARIANT_1 = "baseline"
-    const val VARIANT_2 = "multiselect_accounts"
-    const val VARIANT_3 = "multiselect_accounts_and_move_money"
+    const val ACCOUNT_NAME = "accountName"
+    const val ACCOUNT_ID = "accountId"
 
     const val CONNECTIVITY = "android.net.conn.CONNECTIVITY_CHANGE"
 }

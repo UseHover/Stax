@@ -23,19 +23,23 @@
 
         <TextView
                 android:id="@+id/balance_channel_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_13"
-                android:layout_marginEnd="@dimen/margin_13"
+                android:layout_marginEnd="@dimen/margin_8"
+                android:ellipsize="end"
                 android:fontFamily="font-normal"
+                android:maxLines="2"
                 android:textColor="@color/offWhite"
                 android:textSize="@dimen/text_16"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/balanceLayout"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Channel name" />
 
         <LinearLayout
+                android:id="@+id/balanceLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_21"

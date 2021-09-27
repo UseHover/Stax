@@ -5,9 +5,12 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
+import com.hover.stax.channels.Channel
 import com.hover.stax.databinding.ActivityRequestBinding
+import com.hover.stax.hover.HoverSession
 import com.hover.stax.navigation.AbstractNavigationActivity
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.schedules.ScheduleDetailViewModel
@@ -122,5 +125,10 @@ class RequestActivity : AbstractNavigationActivity(), RequestSenderInterface, Sm
         requestViewModel.saveRequest()
         Utils.logAnalyticsEvent(getString(R.string.saved_unsent_request), this)
         super.onBackPressed()
+    }
+
+    fun makeCall(action: HoverAction, channel: Channel){
+        val hsb = HoverSession.Builder(action, channel , this, Constants.REQUEST_REQUEST)
+        hsb.run()
     }
 }

@@ -16,7 +16,7 @@ import timber.log.Timber
 
 class ShowcaseExecutor(val activity: Activity, private val balanceBinding: FragmentBalanceBinding) : NavigationInterface {
 
-    fun startShowCase(
+    private fun startShowCase(
         head: String, body: String, listener: BubbleShowCaseListener, view: View,
         arrowPosition: BubbleShowCase.ArrowPosition, shouldShowOnce: Boolean
     ): BubbleShowCase? {
@@ -55,7 +55,7 @@ class ShowcaseExecutor(val activity: Activity, private val balanceBinding: Fragm
         } else null
     }
 
-    val addedAccountListener = object : BubbleShowCaseListener {
+    private val addedAccountListener = object : BubbleShowCaseListener {
         override fun onTargetClick(bubbleShowCase: BubbleShowCase) {
             bubbleShowCase.dismiss()
             goToAddAccountFragment()

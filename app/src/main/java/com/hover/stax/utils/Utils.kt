@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat.startActivity
 import com.amplitude.api.Amplitude
 import com.amplitude.api.Identify
 import com.appsflyer.AppsFlyerLib
@@ -279,11 +278,12 @@ object Utils {
         i.data = Uri.parse(url)
         ctx.startActivity(i)
     }
+
     fun openUrl(urlRes: Int, ctx: Context) {
         openUrl(ctx.resources.getString(urlRes), ctx)
     }
 
-    fun openEmail(email:String, subject:String, ctx: Context) {
+    fun openEmail(email: String, subject: String, ctx: Context) {
         val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", email, null))
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
         ctx.startActivity(Intent.createChooser(emailIntent, "Send email..."))

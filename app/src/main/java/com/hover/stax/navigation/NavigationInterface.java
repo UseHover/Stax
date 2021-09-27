@@ -107,10 +107,10 @@ public interface NavigationInterface {
         activity.startActivityForResult(i, Constants.TRANSFER_REQUEST);
     }
 
-    default void navigateToChannelDetailsFragment(int channel_id, NavController navController) {
+    default void navigateToAccountDetailsFragment(int accountId, NavController navController) {
         Bundle bundle = new Bundle();
-        bundle.putInt(TransactionContract.COLUMN_CHANNEL_ID, channel_id);
-        navController.navigate(R.id.channelsDetailsFragment, bundle);
+        bundle.putInt(Constants.ACCOUNT_ID, accountId);
+        navController.navigate(R.id.accountDetailsFragment, bundle);
     }
 
     default void navigateToLanguageSelectionFragment(Activity activity) {
@@ -119,9 +119,9 @@ public interface NavigationInterface {
         activity.startActivity(intentLanguage);
     }
 
-    default void navigateToPinUpdateFragment(int channel_id, Fragment fragment) {
+    default void navigateToPinUpdateFragment(int accountId, Fragment fragment) {
         Bundle bundle = new Bundle();
-        bundle.putInt("channel_id", channel_id);
+        bundle.putInt("accountId", accountId);
         NavHostFragment.findNavController(fragment).navigate(R.id.pinUpdateFragment, bundle);
     }
 

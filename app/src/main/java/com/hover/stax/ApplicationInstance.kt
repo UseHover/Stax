@@ -82,7 +82,7 @@ class ApplicationInstance : Application() {
     }
 
     companion object {
-        val transactionDetails_TryAgainCounter : MutableMap <String, Int>  by Delegates.observable(HashMap(), { _, _, _->})
+        val txnDetailsRetryCounter : MutableMap <String, Int>  by Delegates.observable(HashMap(), { _, _, _->})
     }
 
     @RequiresApi(21)
