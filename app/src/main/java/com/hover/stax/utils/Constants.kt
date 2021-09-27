@@ -16,6 +16,7 @@ object Constants {
     const val GET_CONTACT = 201
     const val TRANSFER_REQUEST = 203
     const val SCHEDULE_REQUEST = 204
+    const val FETCH_ACCOUNT_REQUEST = 205
 
     const val REQUEST_REQUEST = 301
     const val SMS = 303
