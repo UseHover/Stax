@@ -111,6 +111,7 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
             returnResult(requestCode, resultCode, data)
     }
 
+
     private fun returnResult(type: Int, result: Int, data: Intent?){
         val i = data?.let { Intent(it) } ?: Intent()
         transferViewModel.contact.value?.let { i.putExtra(StaxContact.ID_KEY, it.lookupKey) }

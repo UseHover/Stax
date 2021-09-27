@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.actions.HoverActionDao
+import com.hover.sdk.api.Hover
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.sdk.sims.SimInfo
 import com.hover.sdk.sims.SimInfoDao
@@ -23,6 +24,7 @@ import com.hover.stax.schedules.Schedule
 import com.hover.stax.schedules.ScheduleDao
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionDao
+import com.hover.stax.transactions.UssdCallResponse
 import com.hover.stax.utils.DateUtils.lastMonth
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.paymentLinkCryptography.Encryption
@@ -62,6 +64,10 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun getChannelsByCountry(channelIds: IntArray?, countryCode: String?): LiveData<List<Channel>> {
         return channelDao.getChannels(countryCode, channelIds)
+    }
+
+    fun getChannelsByCountry(countryCode: String?): List<Channel> {
+        return channelDao.getChannels(countryCode)
     }
 
     fun update(channel: Channel?) {
@@ -120,8 +126,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return transactionDao.getTransactionCount(String.format("%02d", lastMonth().first), lastMonth().second.toString())!! > 0
     }
 
-    fun getCompleteTransferTransactions(channelId: Int): LiveData<List<StaxTransaction>>? {
-        return transactionDao.getCompleteAndPendingTransfers(channelId)
+    fun getAllTransferTransactions(channelId: Int): LiveData<List<StaxTransaction>>? {
+        return transactionDao.getAllTransfers(channelId)
     }
 
     @SuppressLint("DefaultLocale")
@@ -146,16 +152,20 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
                 val channel = getChannel(a.channel_id)
                 val contact = StaxContact.findOrInit(intent, channel.countryAlpha2, t, this)
 
+                var isNew = false
+
                 if (contact.accountNumber != null)
                     save(contact)
 
                 if (t == null) {
-                    c?.let { Utils.logAnalyticsEvent(c.getString(R.string.initializing_ussd_services), c) }
+                    isNew = true
+                    c?.let { Utils.logAnalyticsEvent(c.getString(R.string.transaction_started), c, true) }
                     t = StaxTransaction(intent, a, contact, c)
                     transactionDao.insert(t)
                     t = transactionDao.getTransaction(t.uuid)
-                }
-                t!!.update(intent, a, contact, c)
+                } else c?.let { Utils.logAnalyticsEvent(c.getString(R.string.transaction_completed), c, true) }
+
+                t!!.update(intent, a, contact, isNew, c)
                 transactionDao.update(t)
                 updateRequests(t, contact)
             } catch (e: Exception) {
@@ -196,6 +206,10 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return contactDao[id]
     }
 
+    suspend fun getContact_Suspended(id: String?): StaxContact? {
+        return contactDao.get_suspended(id)
+    }
+
     fun getContactByPhone(phone: String): StaxContact? {
         return contactDao.getByPhone("%$phone%")
     }
@@ -206,7 +220,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun save(contact: StaxContact) {
         AppDatabase.databaseWriteExecutor.execute {
-            if (getContact(contact.id) == null) {
+            if (getContact(contact.id) == null && contact.accountNumber != null) {
                 try {
                     contactDao.insert(contact)
                 } catch (e: Exception) {

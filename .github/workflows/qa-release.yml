@@ -41,7 +41,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           # Specific java version to run
-          java-version: 1.8
+          java-version: 11
 
 
       # Run the assembleRelease gradle command to start the build process for our buildVariant
@@ -50,7 +50,7 @@ jobs:
         uses: eskatos/gradle-command-action@v1.3.3
         with:
           # Can be overridden with the desired gradle version
-          gradle-version: 6.7.1
+          gradle-version: 7.0.2
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true

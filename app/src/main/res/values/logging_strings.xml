@@ -77,6 +77,7 @@
 	<string name="clicked_send_sms_request" translatable="false">Clicked send sms request</string>
 	<string name="clicked_send_whatsapp_request" translatable="false">Clicked send whatsapp request</string>
 	<string name="clicked_copylink_request" translatable="false">Clicked copy link</string>
+	<string name="clicked_dial_shortcode" translatable="false">Manual USSD dial</string>
 
 	<string name="clicked_bounty_email_continue_btn" translatable="false">Clicked bounty email continue button</string>
 	<string name="clicked_run_bounty_session" translatable="false">Clicked run bounty USSD session</string>
@@ -85,9 +86,11 @@
 	<string name="bounty_email_err" translatable="false">Bounty email error due to: %1$s</string>
 	<string name="visited_rating_review_screen" translatable="false">Visited ratings and review screen</string>
 	<string name="clicked_rating_star" translatable="false">Clicked rating stars and giving review</string>
+	<string name="clicked_google_sign_in" translatable="false">Clicked Google Sign In</string>
 
 	<string name="clicked_add_account_bubble" translatable="false">Clicked add account from bubble showcase</string>
-	<string name="initializing_ussd_services" translatable="false">Initializing USSD services</string>
+	<string name="transaction_started" translatable="false">Transaction started</string>
+	<string name="transaction_completed" translatable="false">Transaction completed</string>
 
 	<string name="show_balances">Clicked show balances</string>
 	<string name="hide_balances">Clicked hide balances</string>

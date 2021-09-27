@@ -30,6 +30,7 @@ class SmsSentObserver extends ContentObserver {
     final private List<StaxContact> recipients;
     private boolean wasSent = false;
     final private String successMsg;
+    private Context context;
 
     public SmsSentObserver(SmsSentListener l, List<StaxContact> contacts, Handler handler, Context c) {
         super(handler);
@@ -37,6 +38,7 @@ class SmsSentObserver extends ContentObserver {
         this.resolver = c.getContentResolver();
         this.listener = l;
         this.recipients = contacts;
+        this.context = c;
 
         successMsg = c.getString(R.string.sms_sent_success);
     }
@@ -68,7 +70,9 @@ class SmsSentObserver extends ContentObserver {
                     if (PhoneNumberUtils.compare(address, c.accountNumber) && type == MESSAGE_TYPE_SENT) {
                         wasSent = true;
                         callBack();
-                        Amplitude.getInstance().logEvent(successMsg);
+
+                        Utils.logAnalyticsEvent(successMsg, context);
+
                         break;
                     }
                 }

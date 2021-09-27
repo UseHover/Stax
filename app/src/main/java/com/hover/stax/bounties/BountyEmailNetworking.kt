@@ -14,14 +14,13 @@ import timber.log.Timber
 import java.io.IOException
 import java.util.*
 
-internal class BountyEmailNetworking(private val context: Context) {
+class BountyEmailNetworking(private val context: Context) {
 
     private val client = OkHttpClient()
-    private val url: String = context.getString(R.string.api_url) + context.getString(R.string.bounty_endpoint)
+    private val url: String = context.getString(R.string.api_url) + context.getString(R.string.users_endpoint)
 
-    fun uploadBountyUser(email: String): Map<Int, String?> {
-
-        val json = getJson(email)
+    fun uploadBountyUser(email: String, optedIn: Boolean): Map<Int, String?> {
+        val json = getJson(email, optedIn)
         val resultMap: MutableMap<Int, String?> = HashMap()
         return try {
             val body: RequestBody = json.toString().toRequestBody("application/json".toMediaTypeOrNull())
@@ -38,13 +37,15 @@ internal class BountyEmailNetworking(private val context: Context) {
         }
     }
 
-   private fun getJson(email: String): JSONObject {
+    private fun getJson(email: String, optedIn: Boolean): JSONObject {
         val root = JSONObject()
         try {
-            val stax_bounty_hunter = JSONObject()
-            stax_bounty_hunter.put("email", email)
-            stax_bounty_hunter.put("device_id", Hover.getDeviceId(context))
-            root.put("stax_bounty_hunter", stax_bounty_hunter)
+            val staxBountyHunter = JSONObject()
+            staxBountyHunter.put("email", email)
+            staxBountyHunter.put("device_id", Hover.getDeviceId(context))
+            staxBountyHunter.put("is_mapper", true)
+            staxBountyHunter.put("marketing_opted_in", optedIn)
+            root.put("stax_user", staxBountyHunter)
             Timber.d("uploading %s", root)
         } catch (ignored: JSONException) {
         }

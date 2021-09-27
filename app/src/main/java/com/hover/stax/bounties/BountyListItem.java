@@ -1,8 +1,10 @@
 package com.hover.stax.bounties;
 
 import android.content.Context;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.text.style.StrikethroughSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -36,25 +38,40 @@ class BountyListItem extends LinearLayout {
 
     private void setContent() {
         binding.liDescription.setText(bounty.generateDescription(getContext()));
-        binding.liAmount.setText(getContext().getString(R.string.bounty_amount_with_currency, bounty.action.bounty_amount));
+        binding.liAmount.setText(getContext().getString(R.string.bounty_amount_with_currency, bounty.getAction().bounty_amount));
     }
 
     private void chooseState() {
-        if (!bounty.action.bounty_is_open && bounty.transactionCount() > 0) { // Bounty is closed and done by current user
+        if(bounty.isLastTransactionFailed() && !bounty.getAction().bounty_is_open) {
+            setState(R.color.stax_bounty_red_bg, R.string.bounty_transaction_failed, R.drawable.ic_info_red, false, navTransactionDetail());
+        }
+        else if(bounty.isLastTransactionFailed() && bounty.getAction().bounty_is_open) {
+            setState(R.color.stax_bounty_red_bg, R.string.bounty_transaction_failed_try_again, R.drawable.ic_info_red, true, showBountyDetail());
+        }
+        else if (!bounty.getAction().bounty_is_open && bounty.getTransactionCount() > 0) { // Bounty is closed and done by current user
             setState(R.color.muted_green, R.string.done, R.drawable.ic_check, false, null);
         }
-        else if (!bounty.action.bounty_is_open) { // This bounty is closed and done by another user
+        else if (!bounty.getAction().bounty_is_open) { // This bounty is closed and done by another user
             setState(R.color.lighter_grey, 0, 0, false, null);
-        } else if (bounty.transactionCount() > 0) { // Bounty is open and with a transaction by current user
-            setState(R.color.pending_brown, R.string.bounty_pending_short_desc, R.drawable.ic_warning, true,
-                    (view) -> selectListener.viewTransactionDetail(bounty.transactions.get(0).uuid));
+        } else if (bounty.getTransactionCount() > 0) { // Bounty is open and with a transaction by current user
+            setState(R.color.pending_brown, R.string.bounty_pending_short_desc, R.drawable.ic_warning, true, navTransactionDetail());
         } else
-            setState(R.color.cardViewColor, 0, 0, true, (view) -> selectListener.viewBountyDetail(bounty));
+            setState(R.color.cardViewColor, 0, 0, true, showBountyDetail());
+    }
+
+    private View.OnClickListener  navTransactionDetail() {
+        return (view) -> selectListener.viewTransactionDetail(bounty.getTransactions().get(bounty.lastTransactionIndex()).uuid);
+    }
+    private View.OnClickListener showBountyDetail() {
+        return (view)-> selectListener.viewBountyDetail(bounty);
     }
 
     private void setState(int color, int noticeString, int noticeIcon, boolean isOpen, View.OnClickListener listener) {
         setBackgroundColor(getContext().getResources().getColor(color));
-        if (noticeString != 0) binding.liCallout.setText(noticeString);
+        if (noticeString != 0) {
+            binding.liCallout.setText(Html.fromHtml(getContext().getString(noticeString)));
+            binding.liCallout.setMovementMethod(LinkMovementMethod.getInstance());
+        }
         binding.liCallout.setCompoundDrawablesWithIntrinsicBounds(noticeIcon, 0, 0, 0);
         binding.liCallout.setVisibility(noticeString != 0 ? View.VISIBLE : View.GONE);
 

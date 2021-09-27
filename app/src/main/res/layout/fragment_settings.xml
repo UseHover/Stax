@@ -18,8 +18,11 @@
 
         <include
                 android:id="@+id/bountyCard"
-                layout="@layout/settings_bounty_card_layout"
+                layout="@layout/settings_card_bounties"
                 android:visibility="visible" />
+
+        <include layout="@layout/settings_card_ussd_library"
+            android:id="@+id/library_card"/>
 
         <include
                 android:id="@+id/get_support_stax"

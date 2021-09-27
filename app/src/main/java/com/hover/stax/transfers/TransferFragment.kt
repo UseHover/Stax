@@ -171,8 +171,14 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     private val recipientWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
         override fun afterTextChanged(editable: Editable) {}
-        override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-            transferViewModel.setRecipient(charSequence.toString())
+        override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, afterCount: Int) {
+            with(transferViewModel) {
+                if (afterCount == 0) {
+                    resetRecipient()
+                    recipientValue.setContent("", "")
+                } else
+                    setRecipient(charSequence.toString())
+            }
         }
     }
 
@@ -227,7 +233,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     private fun load(r: Request) {
-        Timber.e(r.toString())
         channelsViewModel.activeChannel.value?.let {
             transferViewModel.setRecipientSmartly(r, it)
         }

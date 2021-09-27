@@ -17,12 +17,12 @@ public class UssdCallResponse {
         responseMessage = response != null ? response : "";
     }
 
-    static List<UssdCallResponse> generateConvo(Transaction t, HoverAction a) {
+    public static List<UssdCallResponse> generateConvo(Transaction t, HoverAction a) {
         ArrayList<UssdCallResponse> convo = new ArrayList<>();
         int i = 0;
         while (i == 0 || (t.enteredValues != null && t.enteredValues.opt(i - 1) != null) || (t.ussdMessages != null && t.ussdMessages.opt(i) != null)) {
 
-            UssdCallResponse tm = null;
+            UssdCallResponse tm;
             if (i == 0 && !t.myType.equals(HoverAction.RECEIVE))
                 tm = new UssdCallResponse(a.root_code, t.ussdMessages != null ? t.ussdMessages.optString(i) : null);
             else

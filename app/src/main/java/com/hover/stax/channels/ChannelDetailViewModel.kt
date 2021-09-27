@@ -21,7 +21,7 @@ class ChannelDetailViewModel(val repo: DatabaseRepo) : ViewModel() {
 
     init {
         channel = Transformations.switchMap(id, repo::getLiveChannel)
-        transactions = Transformations.switchMap(id, repo::getCompleteTransferTransactions)
+        transactions = Transformations.switchMap(id, repo::getAllTransferTransactions)
         spentThisMonth = Transformations.switchMap(id, this::loadSpentThisMonth)
         feesThisYear = Transformations.switchMap(id, this::loadFeesThisYear)
     }

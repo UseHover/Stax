@@ -1,50 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-		<LinearLayout android:id="@+id/futureToggle"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:paddingVertical="@dimen/margin_8"
-			android:layout_marginHorizontal="@dimen/margin_10"
-			android:gravity="center_vertical"
-			android:orientation="horizontal" >
+    <LinearLayout
+            android:id="@+id/futureToggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_10"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingVertical="@dimen/margin_8">
 
-			<com.google.android.material.switchmaterial.SwitchMaterial
-				style="@style/StaxSwitch"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:id="@+id/futureSwitch" />
+        <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/futureSwitch"
+                style="@style/StaxSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:paddingStart="@dimen/margin_8"
-				android:textSize="@dimen/text_16"
-				android:fontFamily="font-normal"
-				android:textColor="@color/offWhite"
-				android:text="@string/future_toggle" />
-		</LinearLayout>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="font-normal"
+                android:paddingStart="@dimen/margin_8"
+                android:text="@string/future_toggle"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
+    </LinearLayout>
 
-		<com.google.android.material.textfield.TextInputLayout
-			android:id="@+id/dateEntry"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/margin_21"
-			android:hint="@string/date_label"
-			style="@style/StaxLabeledInput">
+    <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/dateEntry"
+            style="@style/StaxLabeledInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_21"
+            android:hint="@string/date_label">
 
-			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/dateInput"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-			    	android:fontFamily="font-normal"
-				android:padding="@dimen/margin_13"
-				android:textSize="@dimen/text_21"
-				android:textColor="@color/offWhite"
-				android:background="@null"
-				android:textCursorDrawable="@null"
-				android:drawableEnd="@drawable/ic_calendar"/>
-		</com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/dateInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:drawableEnd="@drawable/ic_calendar"
+                android:fontFamily="font-normal"
+                android:padding="@dimen/margin_13"
+                android:textColor="@color/offWhite"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/text_21" />
+    </com.google.android.material.textfield.TextInputLayout>
 </com.hover.stax.views.StaxCardView>

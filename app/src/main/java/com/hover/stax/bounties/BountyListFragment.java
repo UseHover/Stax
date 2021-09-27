@@ -24,6 +24,7 @@ import com.hover.stax.channels.UpdateChannelsWorker;
 import com.hover.stax.countries.CountryAdapter;
 import com.hover.stax.databinding.FragmentBountyListBinding;
 import com.hover.stax.navigation.NavigationInterface;
+import com.hover.stax.transactions.UpdateBountyTransactionsWorker;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.network.NetworkMonitor;
@@ -73,6 +74,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         if (isAdded() && networkMonitor.isNetworkConnected()) {
             updateActionConfig();
             updateChannelsWorker();
+            updateBountyTransactionWorker();
         } else showOfflineDialog();
     }
 
@@ -94,6 +96,11 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         WorkManager wm = WorkManager.getInstance(requireContext());
         wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.REPLACE, UpdateChannelsWorker.makeWork()).enqueue();
         wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.REPLACE, UpdateChannelsWorker.makeToil());
+    }
+    private void updateBountyTransactionWorker() {
+        WorkManager wm = WorkManager.getInstance(requireContext());
+        wm.beginUniqueWork(UpdateBountyTransactionsWorker.Companion.getBOUNTY_TRANSACTION_WORK_ID(), ExistingWorkPolicy.REPLACE, UpdateBountyTransactionsWorker.Companion.makeWork()).enqueue();
+        wm.enqueueUniquePeriodicWork(UpdateBountyTransactionsWorker.Companion.getTAG(), ExistingPeriodicWorkPolicy.REPLACE, UpdateBountyTransactionsWorker.Companion.makeToil());
     }
 
     private void showOfflineDialog() {
@@ -138,7 +145,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 
     @Override
     public void viewTransactionDetail(String uuid) {
-        navigateToTransactionDetailsFragment(uuid, this);
+        navigateToTransactionDetailsFragment(uuid, getChildFragmentManager(), true);
     }
 
     @Override
@@ -150,7 +157,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     void showSimErrorDialog(Bounty b) {
         dialog = new StaxDialog(requireActivity())
                 .setDialogTitle(getString(R.string.bounty_sim_err_header))
-                .setDialogMessage(getString(R.string.bounty_sim_err_desc, b.action.network_name))
+                .setDialogMessage(getString(R.string.bounty_sim_err_desc, b.getAction().network_name))
                 .setNegButton(R.string.btn_cancel, null)
                 .setPosButton(R.string.retry, v -> retrySimMatch(b));
         dialog.showIt();
@@ -158,15 +165,15 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
 
     void showBountyDescDialog(Bounty b) {
         dialog = new StaxDialog(requireActivity())
-                .setDialogTitle(getString(R.string.bounty_claim_title, b.action.root_code, HoverAction.getHumanFriendlyType(requireContext(), b.action.transaction_type), b.action.bounty_amount))
-                .setDialogMessage(getString(R.string.bounty_claim_explained, b.action.bounty_amount, b.getInstructions(getContext())))
+                .setDialogTitle(getString(R.string.bounty_claim_title, b.getAction().root_code, HoverAction.getHumanFriendlyType(requireContext(), b.getAction().transaction_type), b.getAction().bounty_amount))
+                .setDialogMessage(getString(R.string.bounty_claim_explained, b.getAction().bounty_amount, b.getInstructions(getContext())))
                 .setPosButton(R.string.start_USSD_Flow, v -> startBounty(b));
         dialog.showIt();
     }
 
     private void startBounty(Bounty b) {
-        Utils.setFirebaseMessagingTopic("BOUNTY" + b.action.root_code);
-        ((BountyActivity) requireActivity()).makeCall(b.action);
+        Utils.setFirebaseMessagingTopic("BOUNTY" + b.getAction().root_code);
+        ((BountyActivity) requireActivity()).makeCall(b.getAction());
     }
 
     void retrySimMatch(Bounty b) {

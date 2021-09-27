@@ -30,7 +30,6 @@
             android:dropDownWidth="wrap_content"
             android:editable="false"
             android:fontFamily="font-normal"
-            android:padding="@dimen/margin_13"
             android:textColor="@color/offWhite"
             android:textCursorDrawable="@null"
             android:textSize="@dimen/text_21" />

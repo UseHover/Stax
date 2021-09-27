@@ -16,6 +16,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
 import java.util.*
+import kotlin.properties.Delegates
 
 class ApplicationInstance : Application() {
 
@@ -90,5 +91,9 @@ class ApplicationInstance : Application() {
     override fun unregisterComponentCallbacks(callback: ComponentCallbacks?) {
         super.unregisterComponentCallbacks(callback)
         NetworkMonitor(this).stopNetworkCallback()
+    }
+
+    companion object {
+        val transactionDetails_TryAgainCounter : MutableMap <String, Int>  by Delegates.observable(HashMap(), { _, _, _->})
     }
 }

@@ -15,7 +15,6 @@ import com.hover.stax.R;
 import com.hover.stax.databinding.StaxInputBinding;
 
 public class StaxTextInputLayout extends AbstractStatefulInput {
-    private final String TAG = "StaxTextInputLayout";
 
     private String hint;
     private int inputType;

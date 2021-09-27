@@ -47,7 +47,7 @@ class BalancesFragment : Fragment(), NavigationInterface {
 
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentBalanceBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -84,7 +84,7 @@ class BalancesFragment : Fragment(), NavigationInterface {
     private fun initBalanceCard() {
         balanceTitle = binding.homeCardBalances.balanceHeaderTitleId.also {
             it.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                if (balancesVisible) R.drawable.ic_visibility_on else R.drawable.ic_visibility_off, 0, 0, 0
+                    if (balancesVisible) R.drawable.ic_visibility_on else R.drawable.ic_visibility_off, 0, 0, 0
             )
             it.setOnClickListener {
                 showBalanceCards(!balancesVisible)
@@ -98,10 +98,10 @@ class BalancesFragment : Fragment(), NavigationInterface {
         }
     }
 
-    private fun showBalanceCards(status: Boolean) {
+    fun showBalanceCards(status: Boolean) {
         toggleLink(status)
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(
-            if (status) R.drawable.ic_visibility_on else R.drawable.ic_visibility_off, 0, 0, 0
+                if (status) R.drawable.ic_visibility_on else R.drawable.ic_visibility_off, 0, 0, 0
         )
 
         if (status) {
