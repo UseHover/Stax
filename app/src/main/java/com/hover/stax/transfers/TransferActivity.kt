@@ -71,7 +71,7 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
 
     private fun observeRequest() {
         val alertDialog = StaxDialog(this).setDialogMessage(R.string.loading_link_dialoghead).showIt()
-        transferViewModel.request.observe(this@TransferActivity, Observer { it?.let { alertDialog?.dismiss() } })
+        transferViewModel.request.observe(this@TransferActivity, { it?.let { alertDialog?.dismiss() } })
     }
 
     fun submit(account: Account) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account) }

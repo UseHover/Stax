@@ -71,7 +71,7 @@ jobs:
 
       #Deploy to alpha track
       - name: Deploy to internal test track
-        uses: r0adkll/upload-google-play@v1
+        uses: r0adkll/upload-google-play@v1.0.15
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_SERVICE_ACCOUNT }}
           packageName: com.hover.stax
