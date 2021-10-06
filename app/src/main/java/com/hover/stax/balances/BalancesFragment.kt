@@ -73,7 +73,15 @@ class BalancesFragment : Fragment(), NavigationInterface {
         initBalanceCard()
 
         val observer = Observer<List<Channel>> { t -> updateServices(ArrayList(t)) }
-        balancesViewModel.selectedChannels.observe(viewLifecycleOwner, observer)
+        with(balancesViewModel) {
+            selectedChannels.observe(viewLifecycleOwner, observer)
+            shouldShowBalances.observe(viewLifecycleOwner) {
+                if (it == true) {
+                    showBalanceCards(true)
+                    showBalances(false)
+                }
+            }
+        }
     }
 
     private fun setUpLinkNewAccount() {
@@ -98,7 +106,7 @@ class BalancesFragment : Fragment(), NavigationInterface {
         }
     }
 
-    fun showBalanceCards(status: Boolean) {
+    private fun showBalanceCards(status: Boolean) {
         toggleLink(status)
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(
                 if (status) R.drawable.ic_visibility_on else R.drawable.ic_visibility_off, 0, 0, 0

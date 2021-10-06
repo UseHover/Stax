@@ -21,6 +21,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     var selectedChannels: LiveData<List<Channel>> = MutableLiveData()
     var runFlag = MutableLiveData(NONE)
     var toRun = MediatorLiveData<List<HoverAction>>()
+    var shouldShowBalances = MutableLiveData(false)
     var actions: LiveData<List<HoverAction>> = MediatorLiveData()
 
     private var runBalanceError = MutableLiveData<Boolean>()
@@ -142,7 +143,9 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         return list
     }
 
-    fun hasChannels(): Boolean = !selectedChannels.value.isNullOrEmpty()
+    fun showBalances(show: Boolean) {
+        shouldShowBalances.value = show
+    }
 
     interface RunBalanceListener {
         fun startRun(a: HoverAction, index: Int)
