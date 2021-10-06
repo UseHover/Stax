@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
@@ -19,11 +18,7 @@ import com.hover.stax.navigation.NavigationInterface
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import com.hover.stax.utils.bubbleshowcase.BubbleShowCase
 import com.hover.stax.views.staxcardstack.StaxCardStackView
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
@@ -34,13 +29,8 @@ class BalancesFragment : Fragment(), NavigationInterface {
     private lateinit var balanceStack: StaxCardStackView
     private lateinit var balancesRecyclerView: RecyclerView
 
-    private var firstAccBubble: BubbleShowCase? = null
-    private var secondAccBubble: BubbleShowCase? = null
-
     private var balancesVisible = false
     private var channelList: List<Channel>? = null
-
-    private var bubbleShowCaseJob: Job? = null
 
     private var _binding: FragmentBalanceBinding? = null
     private val binding get() = _binding!!
@@ -58,15 +48,6 @@ class BalancesFragment : Fragment(), NavigationInterface {
         balanceStack = binding.stackBalanceCards
         setUpBalances()
         setUpLinkNewAccount()
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        bubbleShowCaseJob?.let { if (it.isActive) it.cancel() }
-
-        firstAccBubble?.dismiss()
-        secondAccBubble?.dismiss()
     }
 
     private fun setUpBalances() {
@@ -96,7 +77,6 @@ class BalancesFragment : Fragment(), NavigationInterface {
             )
             it.setOnClickListener {
                 showBalanceCards(!balancesVisible)
-                showBubbleIfRequired()
             }
         }
 
@@ -136,26 +116,6 @@ class BalancesFragment : Fragment(), NavigationInterface {
         updateStackCard(channels)
 
         channelList = channels
-        showBubbleIfRequired()
-    }
-
-    private fun showBubbleIfRequired() {
-        channelList?.let {
-            if (Channel.areAllDummies(it)) {
-                if (!SHOWN_BUBBLE_MAIN_ACCOUNT && balancesVisible) {
-                    firstAccBubble = ShowcaseExecutor(requireActivity(), binding).showcaseAddFirstAccount()
-                    SHOWN_BUBBLE_MAIN_ACCOUNT = true
-                }
-            } else if (Channel.hasDummy(channelList)) {
-                if (!SHOWN_BUBBLE_OTHER_ACCOUNT && balancesVisible) {
-                    bubbleShowCaseJob = viewLifecycleOwner.lifecycleScope.launch {
-                        delay(2000)
-                        secondAccBubble = ShowcaseExecutor(requireActivity(), binding).showCaseAddSecondAccount()
-                        SHOWN_BUBBLE_OTHER_ACCOUNT = true
-                    }
-                }
-            }
-        }
     }
 
     private fun updateStackCard(channels: List<Channel>?) {
@@ -198,13 +158,8 @@ class BalancesFragment : Fragment(), NavigationInterface {
         if (SHOW_ADD_ANOTHER_ACCOUNT) addChannelLink.visibility = if (show) View.VISIBLE else View.GONE
     }
 
-    private fun cancelShowcase() {
-        bubbleShowCaseJob?.let { if (it.isActive) it.cancel() }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
-        cancelShowcase()
         _binding = null
     }
 
