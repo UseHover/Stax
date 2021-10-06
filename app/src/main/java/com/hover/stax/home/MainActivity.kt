@@ -171,7 +171,7 @@ class MainActivity : AbstractNavigationActivity(),
             navigateToChannelDetailsFragment(channelId, getNavController())
     }
 
-    override fun onAuthError(error: String?) {
+    override fun onAuthError(error: String) {
         Timber.e("Error : $error")
     }
 
@@ -255,7 +255,7 @@ class MainActivity : AbstractNavigationActivity(),
     private fun showPopUpTransactionDetailsIfRequired(requestCode: Int, data: Intent?) {
         data?.let {
             if (it.action.equals(Constants.TRANSFERRED) || requestCode == Constants.TRANSFERRED_INT) {
-                val uuid: String? = it.extras?.getString("uuid")
+                val uuid = it.extras?.getString("uuid")
                 uuid?.let {
                     showTransactionPopup(uuid);
                 }
