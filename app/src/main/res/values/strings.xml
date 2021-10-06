@@ -461,5 +461,6 @@
 	<string name="faq_internet_error">This feature requires internet connection, please try again</string>
     <string name="working_offline">Working offline</string>
     <string name="marketing_email_optin">"Stax can send me emails in the future."</string>
+    <string name="email_client_not_found">"No email client found on device. "</string>
 
 </resources>

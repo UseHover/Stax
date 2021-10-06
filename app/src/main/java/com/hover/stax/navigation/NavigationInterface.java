@@ -1,7 +1,9 @@
 package com.hover.stax.navigation;
 
+import static com.hover.stax.settings.SettingsFragment.LANG_CHANGE;
+
 import android.app.Activity;
-import android.content.Context;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,8 +25,9 @@ import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.transactions.TransactionDetailsFragment;
 import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.Constants;
+import com.hover.stax.utils.UIHelper;
 
-import static com.hover.stax.settings.SettingsFragment.LANG_CHANGE;
+import timber.log.Timber;
 
 public interface NavigationInterface {
 
@@ -157,6 +160,12 @@ public interface NavigationInterface {
 
         Uri data = Uri.parse("mailto:" + recipientEmail + " ?subject=" + subject);
         intent.setData(data);
-        activity.startActivity(intent);
+
+        try {
+            activity.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Timber.e("Activity not found");
+            UIHelper.flashMessage(activity, activity.getString(R.string.email_client_not_found));
+        }
     }
 }
