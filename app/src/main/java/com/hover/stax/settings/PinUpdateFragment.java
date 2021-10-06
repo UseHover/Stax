@@ -89,21 +89,22 @@ public class PinUpdateFragment extends Fragment implements Target {
     }
 
     private void setUpRemoveAccount(Channel channel) {
-        binding.removeAcct.setOnClickListener(v -> {
-            new StaxDialog(requireActivity())
-                    .setDialogTitle(getString(R.string.removepin_dialoghead, channel.name))
-                    .setDialogMessage(R.string.removepins_dialogmes)
-                    .setPosButton(R.string.btn_removeaccount, btn -> removeAccount(channel))
-                    .setNegButton(R.string.btn_cancel, null)
-                    .isDestructive()
-                    .showIt();
-        });
+        binding.removeAcct.setOnClickListener(v -> new StaxDialog(requireActivity())
+                .setDialogTitle(getString(R.string.removepin_dialoghead, channel.name))
+                .setDialogMessage(R.string.removepins_dialogmes)
+                .setPosButton(R.string.btn_removeaccount, btn -> removeAccount(channel))
+                .setNegButton(R.string.btn_cancel, null)
+                .isDestructive()
+                .showIt());
     }
 
     private void removeAccount(Channel channel) {
         pinViewModel.removeAccount(channel);
-        NavHostFragment.findNavController(this).popBackStack();
-        UIHelper.flashMessage(requireActivity(), getResources().getString(R.string.toast_confirm_acctremoved));
+
+        if(getActivity() != null && isAdded()) {
+            NavHostFragment.findNavController(this).popBackStack();
+            UIHelper.flashMessage(requireActivity(), getResources().getString(R.string.toast_confirm_acctremoved));
+        }
     }
 
     private void showChoiceCard(boolean show) {
