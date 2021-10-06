@@ -83,7 +83,7 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
 
     private fun loadChannels(actions: List<HoverAction>?): LiveData<List<Channel>> {
         if (actions == null) return MutableLiveData()
-        val ids = getChannelIdArray(actions)
+        val ids = getChannelIdArray(actions.distinctBy { it.id })
         return repo.getChannels(ids)
     }
 
@@ -96,11 +96,7 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
         return if (countryCode == CountryAdapter.codeRepresentingAllCountries()) loadChannels(actions) else repo.getChannelsByCountry(getChannelIdArray(actions), countryCode)
     }
 
-    private fun getChannelIdArray(actions: List<HoverAction>): IntArray {
-        val ids = IntArray(actions.size)
-        for (a in actions.indices) ids[a] = actions[a].channel_id
-        return ids
-    }
+    private fun getChannelIdArray(actions: List<HoverAction>): IntArray = actions.distinctBy { it.channel_id }.map { it.channel_id }.toIntArray()
 
     private fun makeBountiesIfActions(transactions: List<StaxTransaction>?) {
         if (actions.value != null && transactions != null) makeBounties(actions.value, transactions)
