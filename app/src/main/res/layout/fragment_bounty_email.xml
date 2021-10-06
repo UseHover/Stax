@@ -49,6 +49,7 @@
                     android:fontFamily="font-normal"
                     android:gravity="center"
                     android:text="@string/marketing_email_optin"
+                    android:textColor="@android:color/white"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/instructions" />
 
