@@ -129,7 +129,7 @@ public interface NavigationInterface {
     }
 
     default void navigateToTransactionDetailsFragment(String uuid, FragmentManager manager, Boolean isFullScreen) {
-        TransactionDetailsFragment frag = new TransactionDetailsFragment(uuid, isFullScreen);
+        TransactionDetailsFragment frag = TransactionDetailsFragment.Companion.newInstance(uuid, isFullScreen);
         frag.show(manager, "dialogFrag");
     }
 
