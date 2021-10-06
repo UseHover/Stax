@@ -1,8 +1,6 @@
 package com.hover.stax.transactions
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.view.LayoutInflater
@@ -34,7 +32,7 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
 
     private val viewModel: TransactionDetailsViewModel by viewModel()
     private var binding: FragmentTransactionBinding? = null
-    private val tryAgainCounter = ApplicationInstance.transactionDetails_TryAgainCounter
+    private val tryAgainCounter = ApplicationInstance.txnDetailsRetryCounter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val data = JSONObject()
@@ -232,6 +230,4 @@ class TransactionDetailsFragment(private val uuid: String, private val isFullScr
         super.onDestroyView()
         binding = null
     }
-
-
 }
