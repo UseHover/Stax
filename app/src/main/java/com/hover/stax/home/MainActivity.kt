@@ -102,6 +102,8 @@ class MainActivity : AbstractNavigationActivity(),
                 route.contains(getString(R.string.deeplink_reviews)) ->
                     launchStaxReview()
             }
+
+            intent.data = null
         }
     }
 

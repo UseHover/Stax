@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.lifecycle.*
-
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.auth.FirebaseUser
 import com.hover.sdk.actions.HoverAction
@@ -19,7 +18,10 @@ import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.utils.Utils.getPackage
 import kotlinx.coroutines.*
 import org.koin.java.KoinJavaComponent.get
+import timber.log.Timber
 import java.util.*
+
+private const val MAX_LOOKUP_COUNT = 40
 
 class BountyViewModel(application: Application) : AndroidViewModel(application) {
     private val repo = get(DatabaseRepo::class.java)
@@ -40,11 +42,22 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
     val user = MutableLiveData<FirebaseUser>()
     val didLoginFail = MutableLiveData(false)
 
+    init {
+        loadSims()
+        filteredBountyChannels = MutableLiveData()
+        filteredBountyChannels.value = null
+        actions = repo.bountyActions
+        channels = Transformations.switchMap(actions, this::loadChannels)
+        transactions = repo.bountyTransactions!!
+        bountyList.addSource(actions, this::makeBounties)
+        bountyList.addSource(transactions, this::makeBountiesIfActions)
+    }
+
     fun setUser(firebaseUser: FirebaseUser) {
         user.value = firebaseUser
     }
 
-    fun setLoginfailed(failed: Boolean) {
+    fun setLoginFailed(failed: Boolean) {
         didLoginFail.value = failed
     }
 
@@ -83,8 +96,24 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
 
     private fun loadChannels(actions: List<HoverAction>?): LiveData<List<Channel>> {
         if (actions == null) return MutableLiveData()
-        val ids = getChannelIdArray(actions.distinctBy { it.id })
-        return repo.getChannels(ids)
+        val ids = getChannelIdArray(actions.distinctBy { it.id }).toList()
+
+        val channelList = runBlocking {
+            getChannelsAsync(ids).await()
+        }
+
+        return MutableLiveData(channelList)
+    }
+
+    private fun getChannelsAsync(ids:List<Int>): Deferred<List<Channel>> = viewModelScope.async(Dispatchers.IO) {
+        val channels = ArrayList<Channel>()
+
+        ids.chunked(MAX_LOOKUP_COUNT).forEach { idList ->
+            val results = repo.getChannelsByIds(idList)
+            channels.addAll(results)
+        }
+
+        channels
     }
 
     val bounties: LiveData<List<Bounty>>
@@ -93,10 +122,16 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
     fun filterChannels(countryCode: String): LiveData<List<Channel>>? {
         country = countryCode
         val actions = actions.value ?: return null
-        return if (countryCode == CountryAdapter.codeRepresentingAllCountries()) loadChannels(actions) else repo.getChannelsByCountry(getChannelIdArray(actions), countryCode)
+
+        return if (countryCode == CountryAdapter.codeRepresentingAllCountries())
+            loadChannels(actions)
+        else
+            repo.getChannelsByCountry(getChannelIdArray(actions), countryCode)
     }
 
-    private fun getChannelIdArray(actions: List<HoverAction>): IntArray = actions.distinctBy { it.channel_id }.map { it.channel_id }.toIntArray()
+    private fun getChannelIdArray(actions: List<HoverAction>): IntArray {
+        return actions.distinctBy { it.channel_id }.map { it.channel_id }.toIntArray()
+    }
 
     private fun makeBountiesIfActions(transactions: List<StaxTransaction>?) {
         if (actions.value != null && transactions != null) makeBounties(actions.value, transactions)
@@ -134,16 +169,5 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
 
         }
         return defferedBountyList.await()
-    }
-
-    init {
-        loadSims()
-        filteredBountyChannels = MutableLiveData()
-        filteredBountyChannels.value = null
-        actions = repo.bountyActions
-        channels = Transformations.switchMap(actions, this::loadChannels)
-        transactions = repo.bountyTransactions!!
-        bountyList.addSource(actions, this::makeBounties)
-        bountyList.addSource(transactions, this::makeBountiesIfActions)
     }
 }

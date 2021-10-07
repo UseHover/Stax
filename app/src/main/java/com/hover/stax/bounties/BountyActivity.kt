@@ -15,7 +15,6 @@ import com.google.firebase.ktx.Firebase
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.HoverParameters
 import com.hover.stax.R
-import com.hover.stax.balances.BalancesFragment
 import com.hover.stax.databinding.ActivityBountyBinding
 import com.hover.stax.navigation.AbstractNavigationActivity
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
@@ -106,7 +105,7 @@ class BountyActivity : AbstractNavigationActivity(), PushNotificationTopicsInter
                 fetchAccount(account.idToken!!)
             } catch (e: ApiException) {
                 Timber.e(e, "Google sign in failed")
-                bountyViewModel.setLoginfailed(true)
+                bountyViewModel.setLoginFailed(true)
             }
         }
     }
@@ -119,7 +118,7 @@ class BountyActivity : AbstractNavigationActivity(), PushNotificationTopicsInter
                         Timber.i("Sign in with credential: success")
                         auth.currentUser?.let { user -> bountyViewModel.setUser(user) }
                     } else {
-                        bountyViewModel.setLoginfailed(true)
+                        bountyViewModel.setLoginFailed(true)
                         Timber.e(it.exception, "Sign in with credential failed")
                     }
                 }
