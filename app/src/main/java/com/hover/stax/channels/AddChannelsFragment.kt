@@ -154,7 +154,9 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
     private fun saveChannels(channels: List<Channel>, checkBalance: Boolean) {
         channelsViewModel.setChannelsSelected(channels)
-        requireActivity().onBackPressed()
+
+        if (activity != null && isAdded)
+            requireActivity().onBackPressed()
 
         if (checkBalance) balancesViewModel.actions.observe(viewLifecycleOwner, {
             if (channels.size == 1)

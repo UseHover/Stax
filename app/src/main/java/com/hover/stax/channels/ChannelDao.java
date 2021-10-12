@@ -22,6 +22,9 @@ public interface ChannelDao {
     @Query("SELECT * FROM channels WHERE id IN (:channel_ids) ORDER BY name ASC")
     LiveData<List<Channel>> getChannels(int[] channel_ids);
 
+    @Query("SELECT * FROM channels WHERE id IN (:channel_ids) ORDER BY name ASC")
+    List<Channel> getChannelsByIds(List<Integer> channel_ids);
+
     @Query("SELECT * FROM channels WHERE country_alpha2 = :countryCode ORDER BY name ASC")
     List<Channel> getChannels(String countryCode);
 

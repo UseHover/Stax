@@ -274,7 +274,12 @@ object Utils {
     fun openUrl(url: String?, ctx: Context) {
         val i = Intent(Intent.ACTION_VIEW)
         i.data = Uri.parse(url)
-        ctx.startActivity(i)
+
+        try {
+            ctx.startActivity(i)
+        } catch (e: ActivityNotFoundException) {
+            Timber.e("No activity found to handle intent")
+        }
     }
 
     fun openUrl(urlRes: Int, ctx: Context) {

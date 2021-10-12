@@ -41,7 +41,7 @@ public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdo
     private MutableLiveData<String> type = new MutableLiveData<>();
 
     private MutableLiveData<List<SimInfo>> sims;
-    private LiveData<List<String>> simHniList = new MutableLiveData<>();
+    private LiveData<List<String>> simHniList;
 
     private LiveData<List<Channel>> allChannels;
     private LiveData<List<Channel>> selectedChannels;
@@ -271,7 +271,7 @@ public class ChannelsViewModel extends AndroidViewModel implements ChannelDropdo
         if (r != null && selectedChannels.getValue() != null && selectedChannels.getValue().size() > 0) {
             new Thread(() -> {
                 List<HoverAction> acts = repo.getActions(getChannelIds(selectedChannels.getValue()), r.requester_institution_id);
-                if (acts.size() <= 0)
+                if (acts.size() == 0)
                     acts = repo.getActions(getChannelIds(simChannels.getValue()), r.requester_institution_id);
                 if (acts.size() > 0)
                     channelActions.postValue(acts);

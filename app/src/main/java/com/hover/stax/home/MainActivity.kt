@@ -6,12 +6,10 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.NavHostFragment
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.balances.BalanceAdapter
-import com.hover.stax.balances.BalancesFragment
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.databinding.ActivityMainBinding
@@ -104,6 +102,8 @@ class MainActivity : AbstractNavigationActivity(),
                 route.contains(getString(R.string.deeplink_reviews)) ->
                     launchStaxReview()
             }
+
+            intent.data = null
         }
     }
 
@@ -173,7 +173,7 @@ class MainActivity : AbstractNavigationActivity(),
             navigateToChannelDetailsFragment(channelId, getNavController())
     }
 
-    override fun onAuthError(error: String?) {
+    override fun onAuthError(error: String) {
         Timber.e("Error : $error")
     }
 
@@ -249,38 +249,18 @@ class MainActivity : AbstractNavigationActivity(),
                 balancesViewModel.setRan(requestCode)
                 if (resultCode == RESULT_OK && data != null && data.action != null) onProbableHoverCall(data)
 
-                showBalanceCards()
-                launchSendMoney()
+                balancesViewModel.showBalances(true)
             }
         }
-    }
-
-    private fun showBalanceCards() {
-        val balanceFragment = navHostFragment.childFragmentManager.findFragmentById(R.id.navigation_balance) as? BalancesFragment
-        balanceFragment?.showBalanceCards(true)
     }
 
     private fun showPopUpTransactionDetailsIfRequired(requestCode: Int, data: Intent?) {
         data?.let {
             if (it.action.equals(Constants.TRANSFERRED) || requestCode == Constants.TRANSFERRED_INT) {
-                val uuid: String? = it.extras?.getString("uuid")
+                val uuid = it.extras?.getString("uuid")
                 uuid?.let {
                     showTransactionPopup(uuid);
                 }
-                return@let
-            }
-        }
-    }
-
-    private fun launchSendMoney() = runBlocking {
-        launch {
-            delay(1200L)
-
-            if (!Utils.getBoolean(Constants.SHOWN_SEND_MONEY_ACTION, this@MainActivity)
-                    && balancesViewModel.runFlag.value == BalancesViewModel.NONE
-            ) {
-                Utils.saveBoolean(Constants.SHOWN_SEND_MONEY_ACTION, true, this@MainActivity)
-                checkPermissionsAndNavigate(Constants.NAV_TRANSFER)
             }
         }
     }

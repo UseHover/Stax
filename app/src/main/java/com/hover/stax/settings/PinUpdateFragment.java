@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -24,6 +25,8 @@ import com.hover.stax.utils.Utils;
 import com.hover.stax.views.StaxDialog;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+
+import java.util.List;
 
 import timber.log.Timber;
 
@@ -41,7 +44,16 @@ public class PinUpdateFragment extends Fragment implements Target {
         binding = FragmentPinUpdateBinding.inflate(inflater, container, false);
 
         pinViewModel = new ViewModelProvider(requireActivity()).get(PinsViewModel.class);
-        pinViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), channels -> Timber.e("Observer ensures events fire."));
+
+        Observer<List<Channel>> observer = new Observer<List<Channel>>() {
+
+            @Override
+            public void onChanged(List<Channel> channels) {
+                Timber.e("Observer ensures events fire.");
+            }
+        };
+
+        pinViewModel.getSelectedChannels().observe(getViewLifecycleOwner(), observer);
         pinViewModel.loadChannel(getArguments().getInt("channel_id", 0));
         pinViewModel.getChannel().observe(getViewLifecycleOwner(), this::initView);
 
@@ -77,21 +89,22 @@ public class PinUpdateFragment extends Fragment implements Target {
     }
 
     private void setUpRemoveAccount(Channel channel) {
-        binding.removeAcct.setOnClickListener(v -> {
-            new StaxDialog(requireActivity())
-                    .setDialogTitle(getString(R.string.removepin_dialoghead, channel.name))
-                    .setDialogMessage(R.string.removepins_dialogmes)
-                    .setPosButton(R.string.btn_removeaccount, btn -> removeAccount(channel))
-                    .setNegButton(R.string.btn_cancel, null)
-                    .isDestructive()
-                    .showIt();
-        });
+        binding.removeAcct.setOnClickListener(v -> new StaxDialog(requireActivity())
+                .setDialogTitle(getString(R.string.removepin_dialoghead, channel.name))
+                .setDialogMessage(R.string.removepins_dialogmes)
+                .setPosButton(R.string.btn_removeaccount, btn -> removeAccount(channel))
+                .setNegButton(R.string.btn_cancel, null)
+                .isDestructive()
+                .showIt());
     }
 
     private void removeAccount(Channel channel) {
         pinViewModel.removeAccount(channel);
-        NavHostFragment.findNavController(this).popBackStack();
-        UIHelper.flashMessage(requireActivity(), getResources().getString(R.string.toast_confirm_acctremoved));
+
+        if(getActivity() != null && isAdded()) {
+            NavHostFragment.findNavController(this).popBackStack();
+            UIHelper.flashMessage(requireActivity(), getResources().getString(R.string.toast_confirm_acctremoved));
+        }
     }
 
     private void showChoiceCard(boolean show) {

@@ -43,16 +43,14 @@ class BalanceAdapter(val channels: List<Channel>, val balanceListener: BalanceLi
         holder.binding.balanceRefreshIcon.setColorFilter(secondary)
     }
 
-    private fun setColorForEmptyAmount(show: Boolean, holder: BalancesViewHolder, secondary: Int) {
-        if (show) {
-            var drawable = ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_remove)
+    private fun setColorForEmptyAmount(holder: BalancesViewHolder, secondary: Int) {
+        var drawable = ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_remove)
 
-            if (drawable != null) {
-                drawable = DrawableCompat.wrap(drawable)
-                DrawableCompat.setTint(drawable.mutate(), secondary)
-                holder.binding.balanceAmount.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
-            }
-        } else holder.binding.balanceAmount.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+        if (drawable != null) {
+            drawable = DrawableCompat.wrap(drawable)
+            DrawableCompat.setTint(drawable.mutate(), secondary)
+            holder.binding.balanceAmount.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
+        }
     }
 
     inner class BalancesViewHolder(val binding: BalanceItemBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -75,13 +73,13 @@ class BalanceAdapter(val channels: List<Channel>, val balanceListener: BalanceLi
                 }
                 else -> {
                     binding.balanceAmount.text = ""
-                    setColorForEmptyAmount(true, holder, UIHelper.getColor(channel.secondaryColorHex, false, binding.root.context))
+                    setColorForEmptyAmount(holder, UIHelper.getColor(channel.secondaryColorHex, false, binding.root.context))
                 }
             }
 
             setColors(
-                holder, UIHelper.getColor(channel.primaryColorHex, true, holder.itemView.context),
-                UIHelper.getColor(channel.secondaryColorHex, false, holder.itemView.context)
+                    holder, UIHelper.getColor(channel.primaryColorHex, true, holder.itemView.context),
+                    UIHelper.getColor(channel.secondaryColorHex, false, holder.itemView.context)
             )
 
             if (channel.id == Channel.DUMMY) {
