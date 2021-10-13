@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.content.ContextCompat
@@ -28,7 +29,6 @@ import com.hover.stax.utils.Utils.logErrorAndReportToFirebase
 import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 
 class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
@@ -77,17 +77,13 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        updatePopupDesign()
         startObservers()
-        setUssdSessionMessagesRecyclerView()
+        if (!isFullScreen) setToPopupDesign()
+        createUSSDMessagesRecyclerView()
+        createSmsMessagesRecyclerView()
         viewModel.setTransaction(uuid)
-        setupBackButton()
+        binding.transactionDetailsCard.setOnClickIcon { this.dismiss() }
         setupSeeMoreButton()
-    }
-
-    private fun setUssdSessionMessagesRecyclerView() {
-        setUSSDMessagesRecyclerView()
-        if (isFullScreen) setSmsMessagesRecyclerView()
     }
 
     private fun startObservers() {
@@ -96,12 +92,36 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
         viewModel.contact.observe(viewLifecycleOwner, {  updateRecipient(it) })
     }
 
+    private fun setToPopupDesign() {
+        binding.ftMainBg.setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.colorPrimary))
+        binding.transactionDetailsCard.setIcon(R.drawable.ic_close_white)
+        binding.transactionDetailsCard.setTitle(R.drawable.ic_close_white)
+
+        binding.transactionDetailsCard.makeFlatView()
+        binding.notificationCard.makeFlatView()
+        binding.messagesCard.makeFlatView()
+    }
+
+    private fun createUSSDMessagesRecyclerView() {
+        val messagesView = binding.convoRecyclerView
+        messagesView.layoutManager = UIHelper.setMainLinearManagers(requireActivity())
+        messagesView.setHasFixedSize(true)
+        viewModel.messages.observe(viewLifecycleOwner, { if (it != null) messagesView.adapter = MessagesAdapter(it, if (isFullScreen) 0 else 1) })
+    }
+
+    private fun createSmsMessagesRecyclerView() {
+        val smsView = binding.smsRecyclerView
+        smsView.layoutManager = UIHelper.setMainLinearManagers(requireActivity())
+        smsView.setHasFixedSize(true)
+        viewModel.sms.observe(viewLifecycleOwner, { if (it != null) smsView.adapter = MessagesAdapter(it) })
+    }
+
     private fun setupSeeMoreButton() {
         val retryButton = binding.retrySubmit.btnRetry
         val bountyButtonsLayout = binding.retrySubmit.bountyRetryButtonLayoutId
         if (!isFullScreen) {
             bountyButtonsLayout.visibility = View.VISIBLE
-            retryButton.setText(R.string.see_more)
+            retryButton.setText(R.string.view_full_details)
             retryButton.setOnClickListener { recreateFullScreen() }
         }
     }
@@ -151,38 +171,32 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
 
     private fun shouldContactSupport(id: String): Boolean = if (retryCounter[id] != null) retryCounter[id]!! >= 3 else false
 
-    private fun updatePopupDesign() {
-        if (!isFullScreen) {
-            binding.ftMainBg.setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.colorPrimary))
-            binding.transactionDetailsCard.setIcon(R.drawable.ic_close_white)
-
-            binding.transactionDetailsCard.makeFlatView()
-            binding.notificationCard.makeFlatView()
-            binding.messagesCard.makeFlatView()
-        }
-    }
-
     private fun showTransaction(transaction: StaxTransaction?) {
         if (transaction != null) {
             if (transaction.isRecorded)
                 setupRetryBountyButton()
-            else
-                if (transaction.status == Transaction.FAILED) {
-                    val button = showButtonToClick()
-                    if (shouldContactSupport(transaction.action_id))
-                        setupContactSupportButton(transaction.action_id, button)
-                    else
-                        retryTransactionClicked(transaction, button)
-                }
+            else if (transaction.status == Transaction.FAILED) {
+                val button = showButtonToClick()
+                if (shouldContactSupport(transaction.action_id))
+                    setupContactSupportButton(transaction.action_id, button)
+                else
+                    retryTransactionClicked(transaction, button)
+            }
             updateDetails(transaction)
         }
     }
 
     @SuppressLint("SetTextI18n")
     private fun updateDetails(transaction: StaxTransaction) {
-        binding.transactionDetailsCard.setTitle(transaction.description)
+        if (isFullScreen)
+            binding.transactionDetailsCard.setTitle(transaction.description)
+        else {
+            if (viewModel.action.value != null) binding.transactionDetailsCard.setTitle(transaction.generateLongDescription(viewModel.action.value, viewModel.contact.value, requireContext()))
+            binding.infoCard.root.visibility = GONE
+        }
+
         binding.notificationCard.setStateInfo(transaction.fullStatus)
-        updateNotificationDetail(viewModel.action.value, transaction)
+        updateStatusDetail(viewModel.action.value, transaction)
 
         binding.infoCard.detailsRecipientLabel.setText(if (transaction.transaction_type == HoverAction.RECEIVE) R.string.sender_label else R.string.recipient_label)
         binding.infoCard.detailsAmount.text = transaction.displayAmount
@@ -199,34 +213,23 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
     }
 
     private fun showActionDetails(action: HoverAction?) {
+        if (!isFullScreen) {
+            binding.transactionDetailsCard.setTitle(viewModel.transaction.value?.generateLongDescription(action, viewModel.contact.value, requireContext()))
+        }
         binding.infoCard.detailsNetwork.text = action?.from_institution_name
-        updateNotificationDetail(action, viewModel.transaction.value)
+        updateStatusDetail(action, viewModel.transaction.value)
     }
 
-    private fun updateNotificationDetail(action: HoverAction?, transaction: StaxTransaction?) {
-        binding.notificationDetail.text = Html.fromHtml(resources.getString(transaction?.fullStatus!!.getDetail(), action?.from_institution_name))
+    private fun updateStatusDetail(action: HoverAction?, transaction: StaxTransaction?) {
+        binding.statusDetail.text = Html.fromHtml(resources.getString(transaction?.fullStatus!!.getDetail(), action?.from_institution_name))
     }
 
     private fun updateRecipient(contact: StaxContact?) {
-        if (contact != null) binding.infoCard.detailsRecipient.setContact(contact)
-    }
-
-    private fun setUSSDMessagesRecyclerView() {
-        val messagesView = binding.convoRecyclerView
-        messagesView.layoutManager = UIHelper.setMainLinearManagers(requireActivity())
-        messagesView.setHasFixedSize(true)
-        viewModel.messages.observe(viewLifecycleOwner, { if (it != null) messagesView.adapter = MessagesAdapter(it, if (isFullScreen) 0 else 1) })
-    }
-
-    private fun setSmsMessagesRecyclerView() {
-        val smsView = binding.smsRecyclerView
-        smsView.layoutManager = UIHelper.setMainLinearManagers(requireActivity())
-        smsView.setHasFixedSize(true)
-        viewModel.sms.observe(viewLifecycleOwner, { if (it != null) smsView.adapter = MessagesAdapter(it) })
-    }
-
-    private fun setupBackButton() {
-        binding.transactionDetailsCard.setOnClickIcon { this.dismiss() }
+        if (contact != null) {
+            if (!isFullScreen && viewModel.action.value != null)
+                binding.transactionDetailsCard.setTitle(viewModel.transaction.value?.generateLongDescription(viewModel.action.value, contact, requireContext()))
+            binding.infoCard.detailsRecipient.setContact(contact)
+        }
     }
 
     private fun recreateFullScreen() {

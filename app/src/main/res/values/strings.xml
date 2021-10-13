@@ -193,16 +193,23 @@
 	<string name="accounts_label">Pay from</string>
 	<string name="self_only_money_warning">This can only be used to move money to your own account.</string>
 	<string name="self_only_airtime_warning">This can only be used to buy airtime for your own account.</string>
+	<string name="fab_transfernow">Send money now</string>
+	<string name="fab_airtimenow">Buy airtime now</string>
+	<string name="noworry_explain">You can review this info in the next step.</string>
 	<string name="descrip_multcontacts">%1$d contacts</string>
+
+	<string name="descrip_balance">%1$s check balance</string>
 	<string name="descrip_airtime_sent">%1$s sent airtime to %2$s</string>
 	<string name="descrip_transfer_sent">%1$s sent money to %2$s</string>
 	<string name="descrip_transfer_received">received money from %1$s</string>
 	<string name="descrip_bill_paid">paid %1$s bill</string>
 	<string name="descrip_recorded">Recorded USSD session on %1$s</string>
-	<string name="fab_transfernow">Send money now</string>
-	<string name="fab_airtimenow">Buy airtime now</string>
-	<string name="noworry_explain">You can review this info in the next step.</string>
 	<string name="descrip_airtime_sched">Buy airtime with %1$s for %2$s</string>
+
+	<string name="descrip_long_airtime_send">buy %1$s airtime with %2$s for %3$s</string>
+	<string name="descrip_long_transfer_send">send %1$s from %2$s to %3$s on %4$s</string>
+	<string name="descrip_long_move">move %1$s from %2$s to %3$s</string>
+	<string name="descrip_long_bill_paid">pay %1$s from %2$s to %3$s</string>
 
 	<!-- Request -->
 	<string name="req_cardhead">Request money</string>
@@ -281,7 +288,7 @@
 	<string name="network_label">Recipient account</string>
 	<string name="id_label">Transaction ID</string>
 	<string name="session_cardhead">Messages</string>
-	<string name="see_more">See more</string>
+	<string name="view_full_details">View full details</string>
 
 	<!-- Canceling -->
 	<string name="cancelfuture_head">Cancel future transaction</string>

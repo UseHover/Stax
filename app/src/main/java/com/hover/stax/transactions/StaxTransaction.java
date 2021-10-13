@@ -1,5 +1,6 @@
 package com.hover.stax.transactions;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 
@@ -151,6 +152,8 @@ public class StaxTransaction {
             return c.getString(R.string.descrip_recorded, action.from_institution_name);
 
         switch (transaction_type) {
+            case HoverAction.BALANCE:
+                c.getString(R.string.descrip_balance, action.from_institution_name);
             case HoverAction.AIRTIME:
                 return c.getString(R.string.descrip_airtime_sent, action.from_institution_name, contact == null ? c.getString(R.string.self_choice) : contact.shortName());
             case HoverAction.P2P:
@@ -159,6 +162,29 @@ public class StaxTransaction {
                 return c.getString(R.string.descrip_transfer_sent, action.from_institution_name, action.to_institution_name);
             case HoverAction.C2B:
                 return c.getString(R.string.descrip_bill_paid, action.to_institution_name);
+            case HoverAction.RECEIVE:
+                return c.getString(R.string.descrip_transfer_received, contact.shortName());
+            default:
+                return "Other";
+        }
+    }
+
+    @SuppressLint("DefaultLocale")
+    public String generateLongDescription(HoverAction action, StaxContact contact, Context c) {
+        if (isRecorded())
+            return c.getString(R.string.descrip_recorded, action.from_institution_name);
+
+        switch (transaction_type) {
+            case HoverAction.BALANCE:
+                c.getString(R.string.descrip_balance, action.from_institution_name);
+            case HoverAction.AIRTIME:
+                return c.getString(R.string.descrip_long_airtime_send, String.format("%.2f", amount), action.from_institution_name, contact == null ? c.getString(R.string.self_choice) : contact.shortName());
+            case HoverAction.P2P:
+                return c.getString(R.string.descrip_long_transfer_send, String.format("%.2f", amount), action.from_institution_name, contact == null ? " " : contact.shortName(), action.to_institution_name);
+            case HoverAction.ME2ME:
+                return c.getString(R.string.descrip_long_move, String.format("%.2f", amount), action.from_institution_name, action.to_institution_name);
+            case HoverAction.C2B:
+                return c.getString(R.string.descrip_long_bill_paid, String.format("%.2f", amount), action.from_institution_name, action.to_institution_name);
             case HoverAction.RECEIVE:
                 return c.getString(R.string.descrip_transfer_received, contact.shortName());
             default:

@@ -48,7 +48,7 @@
                         android:orientation="vertical">
 
                     <TextView
-                            android:id="@+id/notification_detail"
+                            android:id="@+id/status_detail"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/margin_10"
