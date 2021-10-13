@@ -18,7 +18,6 @@ import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.utils.Utils.getPackage
 import kotlinx.coroutines.*
 import org.koin.java.KoinJavaComponent.get
-import timber.log.Timber
 import java.util.*
 
 private const val MAX_LOOKUP_COUNT = 40
@@ -37,7 +36,7 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
 
     var sims: MutableLiveData<List<SimInfo>> = MutableLiveData()
     val bountyEmailLiveData: MutableLiveData<Map<Int, String?>> = MutableLiveData()
-    private lateinit var defferedBountyList: Deferred<MutableList<Bounty>>
+    private lateinit var deferredBountyList: Deferred<MutableList<Bounty>>
 
     val user = MutableLiveData<FirebaseUser>()
     val didLoginFail = MutableLiveData(false)
@@ -149,7 +148,7 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
 
     private suspend fun getBounties(actions: List<HoverAction>?, transactions: List<StaxTransaction>?): MutableList<Bounty> {
         coroutineScope {
-            defferedBountyList = async(Dispatchers.IO) {
+            deferredBountyList = async(Dispatchers.IO) {
                 val bounties: MutableList<Bounty> = ArrayList()
                 val transactionsCopy: MutableList<StaxTransaction> = if (transactions == null) ArrayList() else ArrayList(transactions)
                 for (action in actions!!) {
@@ -168,6 +167,6 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
             }
 
         }
-        return defferedBountyList.await()
+        return deferredBountyList.await()
     }
 }
