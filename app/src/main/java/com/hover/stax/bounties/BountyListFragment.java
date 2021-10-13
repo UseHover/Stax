@@ -56,10 +56,12 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initCountryDropdown();
         initRecyclerView();
         startObservers();
         handleBackPress();
+
+        binding.bountyCountryDropdown.setEnabled(false);
+        binding.progressIndicator.show();
     }
 
     @Override
@@ -103,6 +105,8 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     }
 
     private void showOfflineDialog() {
+        binding.progressIndicator.hide();
+
         dialog = new StaxDialog(requireActivity())
                 .setDialogTitle(R.string.internet_required)
                 .setDialogMessage(R.string.internet_required_bounty_desc)
@@ -113,6 +117,7 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
     }
 
     public void initCountryDropdown() {
+        binding.bountyCountryDropdown.setEnabled(true);
         binding.bountyCountryDropdown.setListener(this);
     }
 
@@ -127,6 +132,9 @@ public class BountyListFragment extends Fragment implements NavigationInterface,
         bountyViewModel.getBounties().observe(getViewLifecycleOwner(), bounties -> updateChannelList(bountyViewModel.getChannels().getValue(), bounties));
 
         bountyViewModel.getChannels().observe(getViewLifecycleOwner(), channels -> {
+            binding.progressIndicator.hide();
+            initCountryDropdown();
+
             binding.bountyCountryDropdown.updateChoices(channels);
             updateChannelList(channels, bountyViewModel.getBounties().getValue());
         });

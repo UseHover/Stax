@@ -274,7 +274,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         startActivity(intent)
     }
 
-    override fun onAuthError(error: String?) = UIHelper.flashMessage(this, getString(R.string.toast_error_auth))
+    override fun onAuthError(error: String?) = runOnUiThread { UIHelper.flashMessage(this, getString(R.string.toast_error_auth)) }
 
     override fun onAuthSuccess(action: HoverAction?) = chooseNavigation(intent)
 

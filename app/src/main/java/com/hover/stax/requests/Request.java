@@ -131,7 +131,8 @@ public class Request {
 
     private String generateStaxLink(Context c) {
         String amountNoFormat = amount != null && !amount.isEmpty() ? amount : "0.00";
-        String params = c.getString(R.string.payment_url_end, amountNoFormat, requester_institution_id, requester_number, DateUtils.now());
+        String requesterNumber = requester_number.replace("+", "");
+        String params = c.getString(R.string.payment_url_end, amountNoFormat, requester_institution_id, requesterNumber, DateUtils.now());
         Timber.i("encrypting from: %s", params);
         String encryptedString = encryptBijective(params, c);
         Timber.i("link: %s", c.getResources().getString(R.string.payment_root_url, encryptedString));

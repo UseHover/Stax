@@ -54,7 +54,7 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
         viewModel.didLoginFail.observe(viewLifecycleOwner) {
             if (it == true) {
                 updateProgress(100)
-                viewModel.setLoginfailed(false)
+                viewModel.setLoginFailed(false)
             }
         }
     }

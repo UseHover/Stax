@@ -17,9 +17,8 @@ import com.yariksoffice.lingver.Lingver;
 import java.util.Locale;
 
 public class CountryAdapter extends ArrayAdapter<String> {
-    private static final String TAG = "CountryAdapter";
 
-    private String[] countryCodes;
+    private final String[] countryCodes;
 
     public CountryAdapter(@NonNull String[] codes, @NonNull Context context) {
         super(context, 0, codes);
