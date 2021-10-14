@@ -286,10 +286,17 @@ object Utils {
         openUrl(ctx.resources.getString(urlRes), ctx)
     }
 
-    fun openEmail(email: String, subject: String, ctx: Context) {
-        val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", email, null))
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
-        ctx.startActivity(Intent.createChooser(emailIntent, "Send email..."))
+    @JvmStatic
+    fun openEmail(subject: String, context: Context) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        val recipientEmail = context.getString(R.string.stax_support_email)
+        intent.data = Uri.parse("mailto:$recipientEmail ?subject=$subject")
+        try {
+            context.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Timber.e("Activity not found")
+            UIHelper.flashMessage(context, context.getString(R.string.email_client_not_found))
+        }
     }
 
     @JvmStatic

@@ -33,10 +33,6 @@ class TransactionHistoryViewModel(application: Application?) : AndroidViewModel(
         return if (balancesTransactions >= 4) true else transfersAndAirtime >= 2
     }
 
-    fun saveTransaction(data: Intent?, c: Context?) {
-        if (data != null) repo.insertOrUpdateTransaction(data, c)
-    }
-
     suspend fun getActionAndChannel (actionId: String, channelId: Int): Pair<HoverAction, Channel>{
        val pairResult : Deferred<Pair<HoverAction, Channel>> =  viewModelScope.async (Dispatchers.IO) {
             val action: HoverAction = repo.getAction(actionId)

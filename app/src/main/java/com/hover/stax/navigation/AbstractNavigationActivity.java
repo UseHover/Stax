@@ -135,10 +135,6 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
         checkPermissionsAndNavigate(Constants.NAV_BOUNTY);
     }
 
-    public void openSupportEmailClient(View view) {
-        checkPermissionsAndNavigate(Constants.NAV_EMAIL_CLIENT, R.string.permission_support_desc);
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

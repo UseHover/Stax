@@ -100,40 +100,41 @@ public class StaxTransaction {
             environment = data.getIntExtra(TransactionContract.COLUMN_ENVIRONMENT, 0);
             channel_id = data.getIntExtra(TransactionContract.COLUMN_CHANNEL_ID, -1);
             status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
+            category = data.getStringExtra(TransactionContract.COLUMN_CATEGORY);
             initiated_at = data.getLongExtra(TransactionContract.COLUMN_REQUEST_TIMESTAMP, DateUtils.now());
-            updated_at = initiated_at;
+            updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, initiated_at);
 
             counterparty_id = contact.id;
             description = generateDescription(action, contact, c);
             parseExtras((HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS));
+            parseExtras((HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES));
             Timber.v("creating transaction with uuid: %s", uuid);
         }
     }
 
-    public void update(Intent data, HoverAction action, StaxContact contact, Boolean isNewTransaction, Context c) {
-        if( !isNewTransaction && isSessionIncomplete(action, c)) setFailed_Incomplete();
-        else status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
-
-        Timber.e("Updating to status %s - %s", status, action);
-        updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, initiated_at);
-
+    public void update(Intent data, HoverAction action, StaxContact contact, Context c) {
+        chooseStatus(data, action, c);
         parseExtras((HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES));
 
-        if (counterparty_id == null)
-            counterparty_id = contact.id;
-
+        if (counterparty_id == null) counterparty_id = contact.id;
         description = generateDescription(action, contact, c);
+        updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, initiated_at);
+    }
+
+    public void chooseStatus(Intent data, HoverAction action, Context c) {
+        if (isSessionIncomplete(action, c)) {
+            status = Transaction.FAILED;
+            category = CATEGORY_INCOMPLETE_SESSION;
+        } else {
+            status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
+            category = data.getStringExtra(TransactionContract.COLUMN_CATEGORY);;
+        }
     }
 
     private Boolean isSessionIncomplete(HoverAction action, Context c)   {
         int numOfSteps = action.custom_steps.length();
         int ussdLength = Hover.getTransaction(uuid, c).ussdMessages.length();
-        return ussdLength < numOfSteps -1;
-    }
-
-    public void setFailed_Incomplete() {
-        status = Transaction.FAILED;
-        category = CATEGORY_INCOMPLETE_SESSION;
+        return ussdLength < numOfSteps - 1;
     }
 
     private void parseExtras(HashMap<String, String> extras) {
@@ -153,7 +154,7 @@ public class StaxTransaction {
 
         switch (transaction_type) {
             case HoverAction.BALANCE:
-                c.getString(R.string.descrip_balance, action.from_institution_name);
+                return c.getString(R.string.descrip_balance, action.from_institution_name);
             case HoverAction.AIRTIME:
                 return c.getString(R.string.descrip_airtime_sent, action.from_institution_name, contact == null ? c.getString(R.string.self_choice) : contact.shortName());
             case HoverAction.P2P:
@@ -176,15 +177,15 @@ public class StaxTransaction {
 
         switch (transaction_type) {
             case HoverAction.BALANCE:
-                c.getString(R.string.descrip_balance, action.from_institution_name);
+                return c.getString(R.string.descrip_balance, action.from_institution_name);
             case HoverAction.AIRTIME:
-                return c.getString(R.string.descrip_long_airtime_send, String.format("%.2f", amount), action.from_institution_name, contact == null ? c.getString(R.string.self_choice) : contact.shortName());
+                return c.getString(R.string.descrip_long_airtime_send, getDisplayAmount(), action.from_institution_name, contact == null ? c.getString(R.string.self_choice) : contact.shortName());
             case HoverAction.P2P:
-                return c.getString(R.string.descrip_long_transfer_send, String.format("%.2f", amount), action.from_institution_name, contact == null ? " " : contact.shortName(), action.to_institution_name);
+                return c.getString(R.string.descrip_long_transfer_send, getDisplayAmount(), action.from_institution_name, contact == null ? " " : contact.shortName(), action.to_institution_name);
             case HoverAction.ME2ME:
-                return c.getString(R.string.descrip_long_move, String.format("%.2f", amount), action.from_institution_name, action.to_institution_name);
+                return c.getString(R.string.descrip_long_move, getDisplayAmount(), action.from_institution_name, action.to_institution_name);
             case HoverAction.C2B:
-                return c.getString(R.string.descrip_long_bill_paid, String.format("%.2f", amount), action.from_institution_name, action.to_institution_name);
+                return c.getString(R.string.descrip_long_bill_paid, getDisplayAmount(), action.from_institution_name, action.to_institution_name);
             case HoverAction.RECEIVE:
                 return c.getString(R.string.descrip_transfer_received, contact.shortName());
             default:

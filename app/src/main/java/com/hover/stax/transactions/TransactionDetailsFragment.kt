@@ -41,6 +41,17 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
     private var uuid: String? = null
     private var isFullScreen = false
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        isFullScreen = requireArguments().getBoolean(IS_FULLSCREEN)
+        if (isFullScreen) setFullScreen()
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        if (!isFullScreen) popUpSize()
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         uuid = requireArguments().getString(UUID)
 
@@ -54,17 +65,6 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
         logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_transaction)), data, requireContext())
         _binding = FragmentTransactionBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        isFullScreen = requireArguments().getBoolean(IS_FULLSCREEN)
-        if (isFullScreen) setFullScreen()
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        if (!isFullScreen) popUpSize()
     }
 
     private fun setFullScreen() {
@@ -149,14 +149,13 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
     }
 
     private fun setupContactSupportButton(id: String, contactSupportButton: Button) {
-        contactSupportButton.setText(R.string.contact_support)
+        contactSupportButton.setText(R.string.email_support)
         contactSupportButton.setOnClickListener {
             resetTryAgainCounter(id)
             this.dismiss()
             val deviceId = Hover.getDeviceId(requireContext())
-            val email = resources.getString(R.string.stax_support_email)
             val subject = "Stax Transaction failure - support id- {${deviceId}}"
-            Utils.openEmail(email, subject, requireContext())
+            Utils.openEmail(subject, requireActivity())
         }
     }
 

@@ -134,32 +134,23 @@ public class StaxContact {
 		return phoneUtil.isNumberMatch(accountNumber, other.accountNumber) != NO_MATCH;
 	}
 
-	private void updateNames(Intent i) {
+	public void updateNames(Intent i) {
 		if (name == null || name.isEmpty())
 			name = getNameFromExtras(i);
 		else if (!getNameFromExtras(i).isEmpty() && !name.equals(getNameFromExtras(i))) {
 			if (aliases == null || aliases.size() == 0)
 				aliases = new ArrayList<>(Collections.singleton(getNameFromExtras(i)));
-			else
+			else if (!aliases.contains(getNameFromExtras(i)))
 				aliases.add(getNameFromExtras(i));
 		}
 	}
 
-	public static StaxContact findOrInit(Intent intent, String countryAlpha2, StaxTransaction t, DatabaseRepo dr) {
-		StaxContact sc = null;
-		if (t != null && t.counterparty_id != null)
-			sc = dr.getContact(t.counterparty_id);
-		else if (intent.hasExtra(StaxContact.ID_KEY))
-			sc = dr.getContact(intent.getStringExtra(StaxContact.ID_KEY));
-
-		if (sc == null)
-			sc = checkInKeys(intent, countryAlpha2, dr);
+	public static StaxContact findOrInit(Intent intent, String countryAlpha2, DatabaseRepo dr) {
+		StaxContact sc = checkInKeys(intent, countryAlpha2, dr);
 		if (sc == null)
 			sc = checkOutKeys(intent, countryAlpha2, dr);
-
-		if (sc != null)
-			sc.updateNames(intent);
 		if (sc == null) sc = new StaxContact(intent);
+
 		return sc;
 	}
 

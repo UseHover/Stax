@@ -146,44 +146,25 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return transactionDao.getTransaction(uuid)
     }
 
-    fun insertOrUpdateTransaction(intent: Intent, c: Context?) {
+    fun insertOrUpdateTransaction(intent: Intent, action: HoverAction, contact: StaxContact, c: Context) {
+        Timber.e("insertOrUpdateTransaction");
         AppDatabase.databaseWriteExecutor.execute {
             try {
                 var t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID))
-                val a = getAction(intent.getStringExtra(HoverAction.ID_KEY))
-                val channel = getChannel(a.channel_id)
-                val contact = StaxContact.findOrInit(intent, channel.countryAlpha2, t, this)
-
-                var isNew = false
-
-                if (contact.accountNumber != null)
-                    save(contact)
 
                 if (t == null) {
-                    isNew = true
-                    c?.let { Utils.logAnalyticsEvent(c.getString(R.string.transaction_started), c, true) }
-                    t = StaxTransaction(intent, a, contact, c)
+                    Utils.logAnalyticsEvent(c.getString(R.string.transaction_started), c, true)
+                    t = StaxTransaction(intent, action, contact, c)
                     transactionDao.insert(t)
                     t = transactionDao.getTransaction(t.uuid)
-                } else c?.let { Utils.logAnalyticsEvent(c.getString(R.string.transaction_completed), c, true) }
-
-                t!!.update(intent, a, contact, isNew, c)
-                transactionDao.update(t)
-                updateRequests(t, contact)
+                } else {
+                    Utils.logAnalyticsEvent(c.getString(R.string.transaction_completed), c, true)
+                    t.update(intent, action, contact, c)
+                    transactionDao.update(t)
+                }
+                Timber.e("save t with uuid: %s", t?.uuid);
             } catch (e: Exception) {
                 Timber.e(e, "error")
-            }
-        }
-    }
-
-    private fun updateRequests(t: StaxTransaction?, contact: StaxContact) {
-        if (t!!.transaction_type == HoverAction.RECEIVE) {
-            val rs = requests
-            for (r in rs) {
-                if (r.requestee_ids.contains(contact.id) && Utils.getAmount(r.amount) == t.amount) {
-                    r.matched_transaction_uuid = t.uuid
-                    update(r)
-                }
             }
         }
     }
