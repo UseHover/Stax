@@ -35,6 +35,10 @@ interface ChannelDao {
     @Query("SELECT * FROM channels where selected = 1 ORDER BY name ASC")
     fun getChannelsAndAccounts(): List<ChannelWithAccounts>
 
+    @Transaction
+    @Query("SELECT * FROM channels where id = :id ORDER BY name ASC")
+    fun getChannelAndAccounts(id: Int): ChannelWithAccounts?
+
     @get:Query("SELECT COUNT(id) FROM channels")
     val dataCount: Int
 

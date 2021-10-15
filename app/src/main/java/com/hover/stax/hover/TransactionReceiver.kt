@@ -37,8 +37,6 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent, PushNotification
             }
         }
 
-        Timber.e("Account - ${account?.toString()}")
-
         if (intent.hasExtra(TransactionContract.COLUMN_PARSED_VARIABLES)) {
             val parsedVariables = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as? HashMap<String, String>
 

@@ -11,10 +11,12 @@
         <entry key="app/src/main/res/drawable/button_bg_colored.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_dark.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_grey.xml" value="0.32037037037037036" />
+        <entry key="app/src/main/res/layout/account_card_layout.xml" value="0.15704154002026344" />
         <entry key="app/src/main/res/layout/action_select.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/activity_bounty.xml" value="0.14817629179331307" />
         <entry key="app/src/main/res/layout/balance_item.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/basic_perm_dialog.xml" value="0.2890625" />
+        <entry key="app/src/main/res/layout/fragment_accounts.xml" value="0.15704154002026344" />
         <entry key="app/src/main/res/layout/fragment_bounty_email.xml" value="0.14817629179331307" />
         <entry key="app/src/main/res/layout/fragment_bounty_list.xml" value="0.1342451874366768" />
         <entry key="app/src/main/res/layout/fragment_channel.xml" value="0.14766970618034447" />
@@ -41,6 +43,7 @@
         <entry key="app/src/main/res/layout/settings_card_accounts.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/settings_card_contact_us.xml" value="0.3640625" />
         <entry key="app/src/main/res/layout/stax_card_view.xml" value="0.1646403242147923" />
+        <entry key="app/src/main/res/layout/stax_dialog.xml" value="0.3120471014492754" />
         <entry key="app/src/main/res/layout/stax_dropdown.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/stax_input.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/stax_spinner_item_with_logo.xml" value="0.13134057971014493" />

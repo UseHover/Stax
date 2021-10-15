@@ -4,7 +4,8 @@
         android:id="@+id/accountSelectCard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:showBack="true">
+        app:showBack="true"
+        app:title="@string/which_account">
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

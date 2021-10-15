@@ -100,7 +100,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
         dialog!!.showIt()
     }
 
-    fun initCountryDropdown() {
+    private fun initCountryDropdown() {
         binding.bountyCountryDropdown.isEnabled = true
         binding.bountyCountryDropdown.setListener(this)
     }
@@ -146,7 +146,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
         bountyViewModel.filterChannels(countryCode).observe(viewLifecycleOwner, { updateChannelList(it, bountyViewModel.bounties.value) })
     }
 
-    fun showSimErrorDialog(b: Bounty) {
+    private fun showSimErrorDialog(b: Bounty) {
         dialog = StaxDialog(requireActivity())
                 .setDialogTitle(getString(R.string.bounty_sim_err_header))
                 .setDialogMessage(getString(R.string.bounty_sim_err_desc, b.action.network_name))
@@ -155,7 +155,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
         dialog!!.showIt()
     }
 
-    fun showBountyDescDialog(b: Bounty) {
+    private fun showBountyDescDialog(b: Bounty) {
         dialog = StaxDialog(requireActivity())
                 .setDialogTitle(getString(R.string.bounty_claim_title, b.action.root_code,
                         HoverAction.getHumanFriendlyType(requireContext(), b.action.transaction_type), b.action.bounty_amount))
@@ -179,7 +179,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
         binding.bountiesRecyclerView.visibility = View.VISIBLE
     }
 
-    fun retrySimMatch(b: Bounty?) {
+    private fun retrySimMatch(b: Bounty?) {
         with(bountyViewModel.sims) {
             removeObservers(viewLifecycleOwner)
             observe(viewLifecycleOwner) { b?.let { viewBountyDetail(b) } }
