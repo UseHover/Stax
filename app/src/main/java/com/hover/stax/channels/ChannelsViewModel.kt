@@ -122,7 +122,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         val hniList = ArrayList<String>()
 
         for (sim in sims) {
-            if (!hniList.contains(sim.osReportedHni)) {
+            if (!hniList.contains(sim.osReportedHni) && sim.countryIso != null) {
                 FirebaseMessaging.getInstance().subscribeToTopic("sim-".plus(sim.osReportedHni))
                 FirebaseMessaging.getInstance().subscribeToTopic(sim.countryIso.uppercase())
                 hniList.add(sim.osReportedHni)

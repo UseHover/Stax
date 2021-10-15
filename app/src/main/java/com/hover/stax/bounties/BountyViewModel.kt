@@ -119,9 +119,9 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
     val bounties: LiveData<List<Bounty>>
         get() = bountyList
 
-    fun filterChannels(countryCode: String): LiveData<List<Channel>>? {
+    fun filterChannels(countryCode: String): LiveData<List<Channel>> {
         country = countryCode
-        val actions = actions.value ?: return null
+        val actions = actions.value ?: return MutableLiveData(ArrayList<Channel>())
 
         return if (countryCode == CountryAdapter.codeRepresentingAllCountries())
             loadChannels(actions)
