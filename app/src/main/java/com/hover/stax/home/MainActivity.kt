@@ -175,7 +175,7 @@ class MainActivity : AbstractNavigationActivity(),
             navigateToAccountDetailsFragment(accountId, getNavController())
     }
 
-    override fun onAuthError(error: String?) {
+    override fun onAuthError(error: String) {
         Timber.e("Error : $error")
     }
 

@@ -101,6 +101,6 @@ class BalanceAdapter(val accounts: List<Account>, val balanceListener: BalanceLi
     interface BalanceListener {
         fun onTapRefresh(accountId: Int)
 
-        fun onTapDetail(channelId: Int)
+        fun onTapDetail(accountId: Int)
     }
 }
