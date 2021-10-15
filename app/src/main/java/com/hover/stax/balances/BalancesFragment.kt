@@ -40,13 +40,8 @@ class BalancesFragment : Fragment(), NavigationInterface {
     private lateinit var balanceStack: StaxCardStackView
     private lateinit var balancesRecyclerView: RecyclerView
 
-    private var firstAccBubble: BubbleShowCase? = null
-    private var secondAccBubble: BubbleShowCase? = null
-
     private var balancesVisible = false
     private var accountList: List<Account>? = null
-
-    private var bubbleShowCaseJob: Job? = null
 
     private var _binding: FragmentBalanceBinding? = null
     private val binding get() = _binding!!
@@ -66,20 +61,19 @@ class BalancesFragment : Fragment(), NavigationInterface {
         setUpLinkNewAccount()
     }
 
-    override fun onPause() {
-        super.onPause()
-
-        bubbleShowCaseJob?.let { if (it.isActive) it.cancel() }
-
-        firstAccBubble?.dismiss()
-        secondAccBubble?.dismiss()
-    }
-
     private fun setUpBalances() {
         initBalanceCard()
 
         val observer = Observer<List<Account>> { t -> updateServices(ArrayList(t)) }
-        balancesViewModel.accounts.observe(viewLifecycleOwner, observer)
+        with(balancesViewModel) {
+            accounts.observe(viewLifecycleOwner, observer)
+            shouldShowBalances.observe(viewLifecycleOwner) {
+                if (it == true) {
+                    showBalanceCards(true)
+                    showBalances(false)
+                }
+            }
+        }
     }
 
     private fun setUpLinkNewAccount() {
@@ -103,7 +97,7 @@ class BalancesFragment : Fragment(), NavigationInterface {
         }
     }
 
-    fun showBalanceCards(status: Boolean) {
+    private fun showBalanceCards(status: Boolean) {
         toggleLink(status)
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(
                 if (status) R.drawable.ic_visibility_on else R.drawable.ic_visibility_off, 0, 0, 0
@@ -175,13 +169,8 @@ class BalancesFragment : Fragment(), NavigationInterface {
         if (SHOW_ADD_ANOTHER_ACCOUNT) addChannelLink.visibility = if (show) View.VISIBLE else View.GONE
     }
 
-    private fun cancelShowcase() {
-        bubbleShowCaseJob?.let { if (it.isActive) it.cancel() }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
-        cancelShowcase()
         _binding = null
     }
 

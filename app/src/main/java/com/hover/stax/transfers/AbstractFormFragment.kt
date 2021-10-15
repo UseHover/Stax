@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import androidx.annotation.CallSuper
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -126,7 +127,7 @@ abstract class AbstractFormFragment : Fragment() {
     fun setDropdownTouchListener(action: Int) {
         accountDropdown.autoCompleteTextView.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN)
-                findNavController().navigate(action)
+                findNavController().navigate(action, bundleOf())
             true
         }
     }

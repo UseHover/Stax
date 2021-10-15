@@ -10,6 +10,7 @@ import androidx.annotation.MainThread
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.lifecycle.MutableLiveData
+import timber.log.Timber
 import kotlin.properties.Delegates
 
 
@@ -32,8 +33,10 @@ constructor(val context: Context) {
     }
 
     @RequiresApi(21)
-    fun stopNetworkCallback() {
+    fun stopNetworkCallback() = try {
         cm.unregisterNetworkCallback(connectivityManagerCallback)
+    } catch (ignored: Exception) {
+        Timber.e("Network callback already unregistered.")
     }
 
     @RequiresApi(21)

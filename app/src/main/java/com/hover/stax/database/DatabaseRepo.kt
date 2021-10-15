@@ -52,6 +52,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun getChannelsAndAccounts(): List<ChannelWithAccounts> = channelDao.getChannelsAndAccounts()
 
+    fun getChannelAndAccounts(id: Int): ChannelWithAccounts? = channelDao.getChannelAndAccounts(id)
+
     fun getChannel(id: Int): Channel? {
         return channelDao.getChannel(id)
     }
@@ -63,6 +65,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     fun getChannels(ids: IntArray): LiveData<List<Channel>> {
         return channelDao.getChannels(ids)
     }
+
+    fun getChannelsByIds(ids: List<Int>): List<Channel> = channelDao.getChannelsByIds(ids)
 
     fun getChannelsByCountry(channelIds: IntArray, countryCode: String): LiveData<List<Channel>> {
         return channelDao.getChannels(countryCode, channelIds)

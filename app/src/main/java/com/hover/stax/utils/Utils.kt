@@ -274,7 +274,12 @@ object Utils {
     fun openUrl(url: String?, ctx: Context) {
         val i = Intent(Intent.ACTION_VIEW)
         i.data = Uri.parse(url)
-        ctx.startActivity(i)
+
+        try {
+            ctx.startActivity(i)
+        } catch (e: ActivityNotFoundException) {
+            Timber.e("No activity found to handle intent")
+        }
     }
 
     fun openUrl(urlRes: Int, ctx: Context) {
@@ -284,7 +289,12 @@ object Utils {
     fun openEmail(email: String, subject: String, ctx: Context) {
         val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", email, null))
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
-        ctx.startActivity(Intent.createChooser(emailIntent, "Send email..."))
+
+        try {
+            ctx.startActivity(Intent.createChooser(emailIntent, "Send email..."))
+        } catch (e: ActivityNotFoundException) {
+            Timber.e("No email client found")
+        }
     }
 
     @JvmStatic

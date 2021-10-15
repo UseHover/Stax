@@ -105,7 +105,7 @@ class BountyActivity : AbstractNavigationActivity(), PushNotificationTopicsInter
                 fetchAccount(account.idToken!!)
             } catch (e: ApiException) {
                 Timber.e(e, "Google sign in failed")
-                bountyViewModel.setLoginfailed(true)
+                bountyViewModel.setLoginFailed(true)
             }
         }
     }
@@ -118,7 +118,7 @@ class BountyActivity : AbstractNavigationActivity(), PushNotificationTopicsInter
                         Timber.i("Sign in with credential: success")
                         auth.currentUser?.let { user -> bountyViewModel.setUser(user) }
                     } else {
-                        bountyViewModel.setLoginfailed(true)
+                        bountyViewModel.setLoginFailed(true)
                         Timber.e(it.exception, "Sign in with credential failed")
                     }
                 }
