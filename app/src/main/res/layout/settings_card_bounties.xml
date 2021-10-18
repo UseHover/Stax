@@ -24,7 +24,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:onClick="getStartedWithBountyButton"
                 android:text="@string/get_started" />
     </RelativeLayout>
 

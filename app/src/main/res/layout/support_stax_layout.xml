@@ -27,7 +27,6 @@
                 android:layout_height="wrap_content"
                 android:background="?selectableItemBackground"
                 android:fontFamily="font-normal"
-                android:onClick="openSupportEmailClient"
                 android:padding="@dimen/margin_10"
                 android:text="@string/contact_support"
                 android:textSize="@dimen/text_16"

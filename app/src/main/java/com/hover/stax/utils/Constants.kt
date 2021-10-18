@@ -11,6 +11,7 @@ object Constants {
     const val NAV_LANGUAGE_SELECTION = 607
     const val NAV_BOUNTY = 608
     const val NAV_EMAIL_CLIENT = 609
+    const val NAV_USSD_LIB = 610
 
     const val ADD_SERVICE = 200
     const val GET_CONTACT = 201

@@ -92,5 +92,10 @@
                 android:name="channel_id"
                 app:argType="integer" />
     </fragment>
+    <fragment
+            android:id="@+id/libraryFragment"
+            android:name="com.hover.stax.library.LibraryFragment"
+            android:label="USSD Library"
+            tools:layout="@layout/fragment_library" />
 
 </navigation>

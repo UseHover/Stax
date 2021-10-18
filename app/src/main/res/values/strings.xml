@@ -475,5 +475,6 @@
     <string name="marketing_email_optin">"Stax can send me emails in the future."</string>
     <string name="email_client_not_found">"No email client found on device."</string>
     <string name="enable_call_permission">"Please enable call permission to dial USSD code."</string>
+    <string name="ussd_lib">USSD Lib</string>
 
 </resources>

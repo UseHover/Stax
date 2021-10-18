@@ -12,13 +12,14 @@
             android:title="@string/nav_get_paid" />
 
     <item
+            android:id="@+id/libraryFragment"
+            android:icon="@drawable/ic_baseline_menu_book"
+            android:title="@string/ussd_lib" />
+
+    <item
             android:id="@+id/navigation_settings"
             android:icon="@drawable/ic_settings"
             android:title="@string/nav_settings" />
 
-    <item
-            android:id="@+id/navigation_holder"
-            android:icon="@null"
-            android:title="@string/app_name"
-            android:visible="false" />
+
 </menu>

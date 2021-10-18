@@ -15,8 +15,9 @@ import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.account.Account
 import com.hover.stax.databinding.FragmentSettingsBinding
+import com.hover.stax.home.MainActivity
 import com.hover.stax.languages.LanguageViewModel
-import com.hover.stax.library.LibraryActivity
+import com.hover.stax.library.LibraryFragment
 import com.hover.stax.navigation.NavigationInterface
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
@@ -44,14 +45,15 @@ class SettingsFragment : Fragment(), NavigationInterface {
         super.onViewCreated(view, savedInstanceState)
         Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_security)), requireActivity())
 
-        setUpAccounts(viewModel);
-        setUpChooseLang();
-        setUpContactStax();
-        setUpUssdLibrary();
-        setupRequestFeature();
-        setUpEnableTestMode();
-        setupFaq();
-        setupAppVersionInfo();
+        setUpAccounts(viewModel)
+        setUpChooseLang()
+        setUpContactStax()
+        setupRequestFeature()
+        setUpEnableTestMode()
+        setupFaq()
+        setupAppVersionInfo()
+
+        binding.bountyCard.getStartedWithBountyButton.setOnClickListener { (requireActivity() as MainActivity).getStartedWithBountyButton() }
     }
 
     private fun setUpAccounts(viewModel: PinsViewModel) {
@@ -90,6 +92,8 @@ class SettingsFragment : Fragment(), NavigationInterface {
             twitterContact.setOnClickListener { Utils.openUrl(getString(R.string.stax_twitter_url), requireActivity()) }
             receiveStaxUpdate.setOnClickListener { Utils.openUrl(getString(R.string.receive_stax_updates_url), requireActivity()) }
         }
+
+        binding.getSupportStax.contactSupport.setOnClickListener { (requireActivity() as MainActivity).openSupportEmailClient() }
     }
 
     private fun setupRequestFeature() = binding.getSupportStax.requestFeature.setOnClickListener {
@@ -97,10 +101,6 @@ class SettingsFragment : Fragment(), NavigationInterface {
     }
 
     private fun setupFaq() = binding.getSupportStax.faq.setOnClickListener { navigateFAQ(this) }
-
-    private fun setUpUssdLibrary() = binding.libraryCard.visitLibrary.setOnClickListener {
-        requireActivity().startActivity(Intent(requireActivity(), LibraryActivity::class.java))
-    }
 
     private fun showAccounts(accounts: List<Account>) {
         val lv = binding.cardAccounts.accountsList

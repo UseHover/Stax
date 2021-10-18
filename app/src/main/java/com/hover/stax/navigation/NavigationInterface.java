@@ -73,9 +73,15 @@ public interface NavigationInterface {
             case Constants.NAV_EMAIL_CLIENT:
                 openSupportEmailClient(activity);
                 break;
+            case Constants.NAV_USSD_LIB:
+                navigateToUSSDLib(navController);
             default:
                 break;
         }
+    }
+
+    default void navigateToUSSDLib(NavController navController) {
+        navController.navigate(R.id.libraryFragment);
     }
 
     default void navigateToRequestFragment(Activity activity) {
