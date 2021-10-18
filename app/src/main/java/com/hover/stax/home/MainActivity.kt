@@ -154,10 +154,7 @@ class MainActivity : AbstractNavigationActivity(),
         }
     }
 
-    override fun startRun(actionPair: Pair<Account?, HoverAction>, index: Int) {
-        Timber.e("Starting run for ${actionPair.first?.name} - ${actionPair.second.transaction_type}")
-        run(actionPair, index)
-    }
+    override fun startRun(actionPair: Pair<Account?, HoverAction>, index: Int) = run(actionPair, index)
 
     override fun onTapRefresh(accountId: Int) {
         if (accountId == DUMMY)

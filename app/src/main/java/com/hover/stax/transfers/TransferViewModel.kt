@@ -24,7 +24,6 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     val contact = MutableLiveData<StaxContact>()
     val note = MutableLiveData<String>()
     var request: LiveData<Request> = MutableLiveData()
-    val activeAccount = MutableLiveData<Account>()
 
     fun setTransactionType(transaction_type: String) {
         TransactionType.type = transaction_type
