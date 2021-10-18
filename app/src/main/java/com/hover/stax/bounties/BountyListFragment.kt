@@ -47,6 +47,8 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        networkMonitor = NetworkMonitor(requireActivity())
+
         initRecyclerView()
         startObservers()
         handleBackPress()
@@ -125,7 +127,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
 
     private fun updateChannelList(channels: List<Channel>?, bounties: List<Bounty>?) {
         if (!channels.isNullOrEmpty() && !bounties.isNullOrEmpty() &&
-                bountyViewModel.country == CountryAdapter.codeRepresentingAllCountries() || channels?.first()?.countryAlpha2 == bountyViewModel.country) {
+                bountyViewModel.country == CountryAdapter.codeRepresentingAllCountries() || channels?.firstOrNull()?.countryAlpha2 == bountyViewModel.country) {
             val adapter = BountyChannelsAdapter(channels, bounties!!, this)
             binding.bountiesRecyclerView.adapter = adapter
             hideLoadingState()

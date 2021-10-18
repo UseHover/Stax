@@ -16,6 +16,7 @@
         <entry key="app/src/main/res/layout/activity_bounty.xml" value="0.14817629179331307" />
         <entry key="app/src/main/res/layout/balance_item.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/basic_perm_dialog.xml" value="0.2890625" />
+        <entry key="app/src/main/res/layout/contact_input.xml" value="0.15678824721377912" />
         <entry key="app/src/main/res/layout/fragment_accounts.xml" value="0.15704154002026344" />
         <entry key="app/src/main/res/layout/fragment_bounty_email.xml" value="0.14817629179331307" />
         <entry key="app/src/main/res/layout/fragment_bounty_list.xml" value="0.1342451874366768" />
@@ -50,6 +51,7 @@
         <entry key="app/src/main/res/layout/transfer_card_edit.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/transfer_card_future.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/transfer_card_summary.xml" value="0.15602836879432624" />
+        <entry key="app/src/main/res/layout/transfer_note.xml" value="0.1" />
       </map>
     </option>
   </component>
