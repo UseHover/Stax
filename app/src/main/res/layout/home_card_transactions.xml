@@ -7,7 +7,7 @@
     app:title="@string/hist_cardhead">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/transaction_history_recyclerView"
+        android:id="@+id/transaction_history"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

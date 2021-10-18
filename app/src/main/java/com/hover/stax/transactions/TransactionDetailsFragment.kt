@@ -98,7 +98,7 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
         binding.transactionDetailsCard.setTitle(R.drawable.ic_close_white)
 
         binding.transactionDetailsCard.makeFlatView()
-        binding.notificationCard.makeFlatView()
+        binding.statusCard.makeFlatView()
         binding.messagesCard.makeFlatView()
     }
 
@@ -106,7 +106,7 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
         val messagesView = binding.convoRecyclerView
         messagesView.layoutManager = UIHelper.setMainLinearManagers(requireActivity())
         messagesView.setHasFixedSize(true)
-        viewModel.messages.observe(viewLifecycleOwner, { if (it != null) messagesView.adapter = MessagesAdapter(it, if (isFullScreen) 0 else 1) })
+        viewModel.messages.observe(viewLifecycleOwner, { if (it != null) messagesView.adapter = MessagesAdapter(it) })
     }
 
     private fun createSmsMessagesRecyclerView() {
@@ -194,21 +194,21 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
             binding.infoCard.root.visibility = GONE
         }
 
-        binding.notificationCard.setStateInfo(transaction.fullStatus)
-        updateStatusDetail(viewModel.action.value, transaction)
-
         binding.infoCard.detailsRecipientLabel.setText(if (transaction.transaction_type == HoverAction.RECEIVE) R.string.sender_label else R.string.recipient_label)
         binding.infoCard.detailsAmount.text = transaction.displayAmount
         binding.infoCard.detailsDate.text = humanFriendlyDate(transaction.initiated_at)
+        binding.infoCard.detailsServiceId.text = transaction.confirm_code
+        binding.infoCard.detailsStaxUuid.text = transaction.uuid
 
-        if (!transaction.confirm_code.isNullOrEmpty()) binding.infoCard.detailsTransactionNumber.text = transaction.confirm_code else binding.infoCard.detailsTransactionNumber.text = transaction.uuid
-        if (transaction.isRecorded) hideNonBountyDetails()
+        setVisibleDetails(transaction)
+        updateStatus(viewModel.action.value, transaction)
     }
 
-    private fun hideNonBountyDetails() {
-        binding.infoCard.amountRow.visibility = View.GONE
-        binding.infoCard.recipientRow.visibility = View.GONE
-        binding.infoCard.recipAccountRow.visibility = View.GONE
+    private fun setVisibleDetails(transaction: StaxTransaction) {
+        binding.infoCard.amountRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) View.GONE else View.VISIBLE
+        binding.infoCard.recipientRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) View.GONE else View.VISIBLE
+        binding.infoCard.recipAccountRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) View.GONE else View.VISIBLE
+        binding.infoCard.serviceIdRow.visibility = if (transaction.isRecorded || transaction.confirm_code.isNullOrBlank()) View.GONE else View.VISIBLE
     }
 
     private fun showActionDetails(action: HoverAction?) {
@@ -216,11 +216,14 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
             binding.transactionDetailsCard.setTitle(viewModel.transaction.value?.generateLongDescription(action, viewModel.contact.value, requireContext()))
         }
         binding.infoCard.detailsNetwork.text = action?.from_institution_name
-        updateStatusDetail(action, viewModel.transaction.value)
+        updateStatus(action, viewModel.transaction.value)
     }
 
-    private fun updateStatusDetail(action: HoverAction?, transaction: StaxTransaction?) {
-        binding.statusDetail.text = Html.fromHtml(resources.getString(transaction?.fullStatus!!.getDetail(), action?.from_institution_name))
+    private fun updateStatus(action: HoverAction?, transaction: StaxTransaction?) {
+        if (action != null && transaction != null) {
+            binding.statusCard.updateState(transaction.fullStatus.getIcon(action, binding.statusCard.context), transaction.fullStatus.getBackgroundColor(), transaction.fullStatus.getTitle())
+            binding.statusText.text = Html.fromHtml(transaction.fullStatus.getStatusDetail(action, requireContext()))
+        }
     }
 
     private fun updateRecipient(contact: StaxContact?) {

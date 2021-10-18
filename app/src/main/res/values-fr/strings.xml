@@ -490,8 +490,6 @@
 
   <string name="network_label">Compte bénéficiaire</string>
 
-  <string name="id_label">ID de transaction</string>
-
   <string name="session_cardhead">Messages</string>
 
   <!-- Canceling -->

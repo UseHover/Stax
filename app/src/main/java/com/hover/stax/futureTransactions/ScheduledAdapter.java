@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hover.stax.databinding.HomeListItemBinding;
+import com.hover.stax.databinding.TransactionListItemBinding;
 import com.hover.stax.schedules.Schedule;
 import com.hover.stax.utils.Utils;
 
@@ -31,7 +31,7 @@ public class ScheduledAdapter extends RecyclerView.Adapter<ScheduledAdapter.Sche
     @NonNull
     @Override
     public ScheduledAdapter.ScheduledViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        HomeListItemBinding binding = HomeListItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        TransactionListItemBinding binding = TransactionListItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new ScheduledAdapter.ScheduledViewHolder(binding);
     }
 
@@ -55,9 +55,9 @@ public class ScheduledAdapter extends RecyclerView.Adapter<ScheduledAdapter.Sche
     }
 
     static class ScheduledViewHolder extends RecyclerView.ViewHolder {
-        public HomeListItemBinding binding;
+        public TransactionListItemBinding binding;
 
-        ScheduledViewHolder(HomeListItemBinding binding) {
+        ScheduledViewHolder(TransactionListItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

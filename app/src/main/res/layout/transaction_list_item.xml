@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:id="@+id/transaction_item_layout"
+	android:orientation="vertical">
+
+	<TextView
+		android:id="@+id/li_header"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingHorizontal="@dimen/margin_10"
+		android:textColor="@color/grey"
+		android:textSize="@dimen/text_13"
+		android:fontFamily="font-normal"
+		android:background="@color/cardViewColor"
+		android:visibility="gone" />
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingHorizontal="@dimen/margin_10"
+		android:paddingTop="@dimen/margin_10"
+		android:paddingBottom="@dimen/margin_13"
+		android:background="?attr/selectableItemBackground"
+		android:layout_gravity="center_vertical"
+		android:gravity="center_vertical">
+
+		<LinearLayout
+			android:orientation="vertical"
+			android:layout_weight="1"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_marginEnd="@dimen/margin_13"
+			android:layout_gravity="center_vertical"
+			android:gravity="center_vertical">
+
+			<TextView android:id="@+id/li_description"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center_vertical"
+				android:textColor="@color/offWhite"
+				android:textSize="@dimen/text_16"
+				android:fontFamily="font-normal"/>
+
+			<TextView android:id="@+id/li_status"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/margin_5"
+				android:drawablePadding="@dimen/margin_5"
+				android:fontFamily="font-normal"
+				android:textColor="@color/offWhite"
+				android:textSize="@dimen/text_13"
+				android:text="@string/pending_callout"
+				app:drawableStartCompat="@drawable/ic_info" />
+
+		</LinearLayout>
+
+		<TextView android:id="@+id/li_amount"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:minWidth="@dimen/margin_89"
+			android:gravity="center_vertical|end"
+			android:fontFamily="font-normal"
+			android:textColor="@color/white"
+			android:textSize="@dimen/text_21" />
+
+	</LinearLayout>
+</LinearLayout>

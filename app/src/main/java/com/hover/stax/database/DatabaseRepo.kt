@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.actions.HoverActionDao
-import com.hover.sdk.api.Hover
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.sdk.sims.SimInfo
 import com.hover.sdk.sims.SimInfoDao
@@ -24,7 +23,6 @@ import com.hover.stax.schedules.Schedule
 import com.hover.stax.schedules.ScheduleDao
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionDao
-import com.hover.stax.transactions.UssdCallResponse
 import com.hover.stax.utils.DateUtils.lastMonth
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.paymentLinkCryptography.Encryption
@@ -97,6 +95,10 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return actionDao.getLiveActions(channelIds, type)
     }
 
+    fun getChannelActions(channelId: Int): LiveData<List<HoverAction>> {
+        return actionDao.getLiveChannelActions(channelId)
+    }
+
     fun getTransferActions(channelId: Int): List<HoverAction> {
         return actionDao.getTransferActions(channelId)
     }
@@ -128,8 +130,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return transactionDao.getTransactionCount(String.format("%02d", lastMonth().first), lastMonth().second.toString())!! > 0
     }
 
-    fun getAllTransferTransactions(channelId: Int): LiveData<List<StaxTransaction>>? {
-        return transactionDao.getAllTransfers(channelId)
+    fun getChannelTransactions(channelId: Int): LiveData<List<StaxTransaction>>? {
+        return transactionDao.getChannelTransactions(channelId)
     }
 
     @SuppressLint("DefaultLocale")

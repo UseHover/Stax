@@ -40,6 +40,7 @@ public class ChannelDetailFragment extends Fragment implements
     private ChannelDetailViewModel viewModel;
     private FutureViewModel futureViewModel;
     private FragmentChannelBinding binding;
+    private TransactionHistoryAdapter transactionsAdapter;
     private RequestsAdapter requestsAdapter;
     private ScheduledAdapter scheduledAdapter;
 
@@ -75,27 +76,30 @@ public class ChannelDetailFragment extends Fragment implements
             setUpFuture(channel);
         });
 
-        RecyclerView transactionHistoryRecyclerView = binding.homeCardTransactions.transactionHistoryRecyclerView;
-        viewModel.getTransactions().observe(getViewLifecycleOwner(), staxTransactions -> {
-            binding.homeCardTransactions.noHistory.setVisibility(staxTransactions == null || staxTransactions.size() == 0 ? View.VISIBLE : View.GONE);
-            transactionHistoryRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-            transactionHistoryRecyclerView.setAdapter(new TransactionHistoryAdapter(staxTransactions, this));
+        viewModel.getTransactions().observe(getViewLifecycleOwner(), transactions -> {
+            binding.homeCardTransactions.noHistory.setVisibility(transactions == null || transactions.size() == 0 ? View.VISIBLE : View.GONE);
+            transactionsAdapter.updateData(transactions, viewModel.getActions().getValue());
         });
+
+        viewModel.getActions().observe(getViewLifecycleOwner(), actions -> transactionsAdapter.updateData(viewModel.getTransactions().getValue(), actions));
 
         viewModel.getSpentThisMonth().observe(getViewLifecycleOwner(), sum -> binding.detailsMoneyOut.setText(Utils.formatAmount(sum != null ? sum : 0.0)));
         viewModel.getFeesThisYear().observe(getViewLifecycleOwner(), sum -> binding.detailsFees.setText(Utils.formatAmount(sum != null ? sum : 0.0)));
     }
 
     private void initRecyclerViews() {
-        RecyclerView recyclerView = binding.scheduledCard.scheduledRecyclerView;
-        recyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
-        scheduledAdapter = new ScheduledAdapter(null, this);
-        recyclerView.setAdapter(scheduledAdapter);
-
-        RecyclerView rv = binding.scheduledCard.requestsRecyclerView;
-        rv.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
+        binding.homeCardTransactions.transactionHistory.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
         requestsAdapter = new RequestsAdapter(null, this);
-        rv.setAdapter(requestsAdapter);
+        transactionsAdapter = new TransactionHistoryAdapter(null, null, this);
+        binding.homeCardTransactions.transactionHistory.setAdapter(transactionsAdapter);
+
+        binding.scheduledCard.scheduledRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
+        scheduledAdapter = new ScheduledAdapter(null, this);
+        binding.scheduledCard.scheduledRecyclerView.setAdapter(scheduledAdapter);
+
+        binding.scheduledCard.requestsRecyclerView.setLayoutManager(UIHelper.setMainLinearManagers(getContext()));
+        requestsAdapter = new RequestsAdapter(null, this);
+        binding.scheduledCard.requestsRecyclerView.setAdapter(requestsAdapter);
     }
 
     private void setUpFuture(Channel channel) {

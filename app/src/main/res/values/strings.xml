@@ -130,14 +130,24 @@
 	<string name="airtime_msg">Buying airtime</string>
 	<string name="transfer_msg">Transferring money</string>
 
-	<!-- TRANSACTION STATUS -->
-	<string name="confirmed_cardHead">SUCCEEDED</string>
-	<string name="pending_cardHead">PENDING</string>
-	<string name="unsuccessful_cardHead">UNSUCCESSFUL</string>
-	<string name="confirmed_desc">We got a message from %1$s confirming that this transaction was successful.</string>
-	<string name="unsuccessful_incomplete_desc">We received no response from %1$s. We don\’t think this transaction worked. Please try again.</string>
-	<string name="unsuccessful_desc">We got a message from %1$s confirming that this transaction has failed. Please try again.</string>
-	<string name="from_this_service">from this service</string>
+	<!-- Transaction statuses -->
+	<string name="succeeded_cardHead">Succeeded</string>
+	<string name="pending_cardHead">Pending</string>
+	<string name="failed_cardHead">Unsuccessful</string>
+	<string name="null_service_name_text">this USSD service</string>
+	<string name="no_response_error">No response from %1$s.</string>
+	<string name="incomplete_error">It appears that %1$s stopped responding part way through.</string>
+	<string name="pin_error">PIN error. %1$s asks you to please check your PIN and retry.</string>
+	<string name="balance_error">%1$s says your balance is too low to complete this transaction.</string>
+	<string name="unregistered_error">%1$s says you are not registered for this service.</string>
+	<string name="invalid_entry">One of your inputs was invalid, view details to see what went wrong.</string>
+	<string name="mmi_error">Your network returned an error, please try again.</string>
+	<string name="unspecified_error">Unknown error.</string>
+	<string name="no_response_desc">We received no response from %1$s. We don\’t think this transaction worked. Please try again.</string>
+	<string name="incomplete_desc">We received only a partial response from %1$s. We don\’t think this transaction worked. Please try again.</string>
+	<string name="invalid_entry_desc">One of your inputs was invalid, see session details below to see what went wrong. Make sure any amounts, phone numbers, or account numbers are correct. See session details below.</string>
+	<string name="mmi_error_desc">Your network returned an error, please try again. If this happens a lot please contact your network provider or money service to complain.</string>
+	<string name="unspecified_error_desc">Unknown error, see details below to find out what went wrong. Please try again.</string>
 
 	<!-- SDK Overrides -->
 	<string name="hsdk_overlay_msg"><![CDATA[<font color="#1E232A">Show progress updates by turning <b>switch ON</b> in the next screen.</font>]]></string>
@@ -287,8 +297,10 @@
 	<string name="transactions_cardhead">Transactions</string>
 	<string name="network_label">Recipient account</string>
 	<string name="id_label">Transaction ID</string>
+	<string name="stax_id_label">Stax ID</string>
 	<string name="session_cardhead">Messages</string>
 	<string name="view_full_details">View full details</string>
+	<string name="new_balance">New balance %1$s</string>
 
 	<!-- Canceling -->
 	<string name="cancelfuture_head">Cancel future transaction</string>

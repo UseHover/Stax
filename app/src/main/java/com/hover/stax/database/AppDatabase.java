@@ -22,7 +22,7 @@ import com.hover.stax.transactions.TransactionDao;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class}, version = 31)
+@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class}, version = 32)
 public abstract class AppDatabase extends RoomDatabase {
     private static final int NUMBER_OF_THREADS = 8;
     static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -53,6 +53,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             .addMigrations(M28_29)
                             .addMigrations(M29_30)
                             .addMigrations(M30_31)
+                            .addMigrations(M31_32)
                             .build();
                 }
             }
@@ -113,6 +114,13 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE stax_transactions ADD COLUMN category TEXT");
+        }
+    };
+
+    static final Migration M31_32 = new Migration(31, 32) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE stax_transactions ADD COLUMN balance TEXT");
         }
     };
 }

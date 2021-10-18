@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.hover.sdk.actions.HoverAction
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.transactions.StaxTransaction
 import java.util.*
@@ -14,6 +15,7 @@ class ChannelDetailViewModel(val repo: DatabaseRepo) : ViewModel() {
     private val id = MutableLiveData<Int>()
     var channel: LiveData<Channel> = MutableLiveData()
     var transactions: LiveData<List<StaxTransaction>> = MutableLiveData()
+    var actions: LiveData<List<HoverAction>> = MutableLiveData()
     var spentThisMonth: LiveData<Double> = MutableLiveData()
     var feesThisYear: LiveData<Double> = MutableLiveData()
 
@@ -21,7 +23,8 @@ class ChannelDetailViewModel(val repo: DatabaseRepo) : ViewModel() {
 
     init {
         channel = Transformations.switchMap(id, repo::getLiveChannel)
-        transactions = Transformations.switchMap(id, repo::getAllTransferTransactions)
+        transactions = Transformations.switchMap(id, repo::getChannelTransactions)
+        actions = Transformations.switchMap(id, repo::getChannelActions)
         spentThisMonth = Transformations.switchMap(id, this::loadSpentThisMonth)
         feesThisYear = Transformations.switchMap(id, this::loadFeesThisYear)
     }
