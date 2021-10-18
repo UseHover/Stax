@@ -71,13 +71,13 @@ class SettingsFragment : Fragment(), NavigationInterface {
     private fun setUpChooseLang() {
         val selectLangBtn = binding.languageCard.selectLanguageBtn
         val languageVM = getViewModel<LanguageViewModel>()
-        languageVM.loadLanguages().observe(viewLifecycleOwner) { langs ->
+        languageVM.languages.observe(viewLifecycleOwner) { langs ->
             langs.forEach {
-                if (it.isSelected) selectLangBtn.text = it.name
+                if (it.isSelected()) selectLangBtn.text = it.name
             }
         }
 
-        selectLangBtn.setOnClickListener { navigateToLanguageSelectionFragment(requireActivity()) }
+        selectLangBtn.setOnClickListener { findNavController().navigate(R.id.action_navigation_settings_to_languageSelectFragment) }
     }
 
     private fun setupAppVersionInfo() {

@@ -1,7 +1,5 @@
 package com.hover.stax.navigation;
 
-import static com.hover.stax.settings.SettingsFragment.LANG_CHANGE;
-
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -19,7 +17,6 @@ import com.hover.sdk.api.Hover;
 import com.hover.stax.R;
 import com.hover.stax.bounties.BountyActivity;
 import com.hover.stax.channels.AddChannelsFragment;
-import com.hover.stax.languages.SelectLanguageActivity;
 import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.transactions.TransactionDetailsFragment;
 import com.hover.stax.transfers.TransferActivity;
@@ -64,9 +61,9 @@ public interface NavigationInterface {
             case Constants.NAV_LINK_ACCOUNT:
                 navigateToChannelsListFragment(navController, true);
                 break;
-            case Constants.NAV_LANGUAGE_SELECTION:
-                navigateToLanguageSelectionFragment(activity);
-                break;
+//            case Constants.NAV_LANGUAGE_SELECTION:
+//                navigateToLanguageSelectionFragment(activity);
+//                break;
             case Constants.NAV_BOUNTY:
                 activity.startActivity(new Intent(activity, BountyActivity.class));
                 break;
@@ -121,11 +118,11 @@ public interface NavigationInterface {
         navController.navigate(R.id.accountDetailsFragment, bundle);
     }
 
-    default void navigateToLanguageSelectionFragment(Activity activity) {
-        Intent intentLanguage = new Intent(activity, SelectLanguageActivity.class);
-        intentLanguage.putExtra(LANG_CHANGE, true);
-        activity.startActivity(intentLanguage);
-    }
+//    default void navigateToLanguageSelectionFragment(Activity activity) {
+//        Intent intentLanguage = new Intent(activity, SelectLanguageActivity.class);
+//        intentLanguage.putExtra(LANG_CHANGE, true);
+//        activity.startActivity(intentLanguage);
+//    }
 
 //    default void navigateToPinUpdateFragment(int accountId, Fragment fragment) {
 //        Bundle bundle = new Bundle();

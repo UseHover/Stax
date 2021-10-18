@@ -35,13 +35,16 @@
             android:id="@+id/navigation_settings"
             android:name="com.hover.stax.settings.SettingsFragment"
             android:label="@string/nav_settings"
-            tools:layout="@layout/fragment_settings" >
+            tools:layout="@layout/fragment_settings">
         <action
                 android:id="@+id/action_navigation_settings_to_faqFragment"
                 app:destination="@id/faqFragment" />
         <action
                 android:id="@+id/action_navigation_settings_to_pinUpdateFragment"
                 app:destination="@id/pinUpdateFragment" />
+        <action
+                android:id="@+id/action_navigation_settings_to_languageSelectFragment"
+                app:destination="@id/languageSelectFragment" />
     </fragment>
 
     <fragment
@@ -104,5 +107,16 @@
             android:name="com.hover.stax.library.LibraryFragment"
             android:label="USSD Library"
             tools:layout="@layout/fragment_library" />
+    <fragment
+            android:id="@+id/languageSelectFragment"
+            android:name="com.hover.stax.languages.LanguageSelectFragment"
+            android:label="LanguageSelectFragment"
+            tools:layout="@layout/fragment_language">
+        <action
+                android:id="@+id/action_languageSelectFragment_to_navigation_settings"
+                app:destination="@id/navigation_settings"
+                app:popUpTo="@id/navigation_settings"
+                app:popUpToInclusive="true" />
+    </fragment>
 
 </navigation>
