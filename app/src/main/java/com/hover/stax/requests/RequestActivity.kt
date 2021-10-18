@@ -106,7 +106,7 @@ class RequestActivity : AbstractNavigationActivity(), RequestSenderInterface, Sm
     override fun onBackPressed() {
         when {
             !requestViewModel.isEditing.value!! && requestViewModel.formulatedRequest.value == null -> requestViewModel.setEditing(true)
-            !requestViewModel.isEditing.value!! && requestViewModel.formulatedRequest.value == null -> askAreYouSure()
+            !requestViewModel.isEditing.value!! && requestViewModel.formulatedRequest.value != null -> askAreYouSure()
             else -> super.onBackPressed()
         }
     }

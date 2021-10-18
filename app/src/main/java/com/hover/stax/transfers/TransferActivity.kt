@@ -135,7 +135,5 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
         finish()
     }
 
-
     override fun onBackPressed() = if (transferViewModel.isEditing.value == false) transferViewModel.setEditing(true) else super.onBackPressed()
-
 }

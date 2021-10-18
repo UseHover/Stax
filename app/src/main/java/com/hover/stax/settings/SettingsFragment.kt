@@ -1,6 +1,5 @@
 package com.hover.stax.settings
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +8,9 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
@@ -17,7 +18,6 @@ import com.hover.stax.account.Account
 import com.hover.stax.databinding.FragmentSettingsBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.languages.LanguageViewModel
-import com.hover.stax.library.LibraryFragment
 import com.hover.stax.navigation.NavigationInterface
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
@@ -100,15 +100,17 @@ class SettingsFragment : Fragment(), NavigationInterface {
         Utils.openUrl(getString(R.string.stax_nolt_url), requireActivity())
     }
 
-    private fun setupFaq() = binding.getSupportStax.faq.setOnClickListener { navigateFAQ(this) }
+    private fun setupFaq() = binding.getSupportStax.faq.setOnClickListener { findNavController().navigate(R.id.action_navigation_settings_to_faqFragment) }
 
     private fun showAccounts(accounts: List<Account>) {
         val lv = binding.cardAccounts.accountsList
         accountAdapter!!.clear()
         accountAdapter!!.addAll(accounts)
         lv.adapter = accountAdapter
-        lv.setOnItemClickListener { _, _, position, _ -> navigateToPinUpdateFragment(accounts[position].id, this@SettingsFragment) }
-        UIHelper.fixListViewHeight(lv)
+        lv.setOnItemClickListener { _, _, position, _ ->
+            findNavController().navigate(R.id.action_navigation_settings_to_pinUpdateFragment, bundleOf("accountId" to accounts[position].id))
+            UIHelper.fixListViewHeight(lv)
+        }
     }
 
     private fun createDefaultSelector(accounts: List<Account>) {
