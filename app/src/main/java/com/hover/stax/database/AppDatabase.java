@@ -154,7 +154,7 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE stax_transactions ADD COLUMN balance TEXT");
-            database.execSQL("CREATE INDEX IF NOT EXISTS index_accounts_name ON accounts(name)");
+            database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_accounts_name ON accounts(name)");
         }
     };
 }
