@@ -12,7 +12,6 @@ import com.hover.stax.R
 import com.hover.stax.account.Account
 import com.hover.stax.account.DUMMY
 import com.hover.stax.balances.BalanceAdapter
-import com.hover.stax.balances.BalancesFragment
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.databinding.ActivityMainBinding
@@ -155,10 +154,7 @@ class MainActivity : AbstractNavigationActivity(),
         }
     }
 
-    override fun startRun(actionPair: Pair<Account?, HoverAction>, index: Int) {
-        Timber.e("Starting run for ${actionPair.first?.name} - ${actionPair.second.transaction_type}")
-        run(actionPair, index)
-    }
+    override fun startRun(actionPair: Pair<Account?, HoverAction>, index: Int) = run(actionPair, index)
 
     override fun onTapRefresh(accountId: Int) {
         if (accountId == DUMMY)
@@ -243,16 +239,11 @@ class MainActivity : AbstractNavigationActivity(),
         } else {
             if (requestCode != Constants.TRANSFER_REQUEST) {
                 balancesViewModel.setRan(requestCode)
-                showBalanceCards()
+                balancesViewModel.showBalances(true)
             }
             showPopUpTransactionDetailsIfRequired(data)
         }
     }
-
-private fun showBalanceCards() {
-        val balanceFragment = navHostFragment.childFragmentManager.findFragmentById(R.id.navigation_balance) as? BalancesFragment
-        balanceFragment?.showBalanceCards(true)
-}
 
     private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {

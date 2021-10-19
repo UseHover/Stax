@@ -16,7 +16,6 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
-import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.bounties.BountyActivity;
 import com.hover.stax.channels.AddChannelsFragment;

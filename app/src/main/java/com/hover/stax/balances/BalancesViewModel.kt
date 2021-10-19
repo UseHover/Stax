@@ -24,6 +24,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     var selectedChannels: LiveData<List<Channel>> = MutableLiveData()
     var accounts: LiveData<List<Account>> = MutableLiveData()
 
+    var shouldShowBalances = MutableLiveData(false)
     var runFlag = MutableLiveData(NONE)
     var toRun = MediatorLiveData<List<Pair<Account?, HoverAction>>>()
     var actions: LiveData<List<HoverAction>> = MediatorLiveData()
@@ -177,6 +178,10 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
             return accounts.value!!.map { account -> Pair(account, updatedActions.first { it.channel_id == it.channel_id }) }
         else
             emptyList()
+    }
+
+    fun showBalances(show: Boolean) {
+        shouldShowBalances.value = show
     }
 
     interface RunBalanceListener {

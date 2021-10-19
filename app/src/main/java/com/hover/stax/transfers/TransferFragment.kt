@@ -4,11 +4,9 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
@@ -25,7 +23,6 @@ import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener {
@@ -34,7 +31,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     private lateinit var transferViewModel: TransferViewModel
 
     private lateinit var amountInput: StaxTextInputLayout
-    private lateinit var noteInput: StaxTextInputLayout
     private lateinit var actionSelect: ActionSelect
     private lateinit var contactInput: ContactInput
     private lateinit var recipientValue: Stax2LineItem
@@ -60,16 +56,21 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         amountInput = binding.editCard.amountInput
         contactInput = binding.editCard.contactSelect
         actionSelect = binding.editCard.actionSelect
-        noteInput = binding.editCard.noteInput
         recipientValue = binding.summaryCard.recipientValue
 
         amountInput.apply {
             text = transferViewModel.amount.value
             requestFocus()
         }
-        noteInput.text = transferViewModel.note.value
 
         super.init(root)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        amountInput.setHint(getString(R.string.transfer_amount_label))
+        accountDropdown.setHint(getString(R.string.channel_label))
     }
 
     private fun setTitle() {
@@ -154,7 +155,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         }
 
         actionSelect.setListener(this)
-        noteInput.addTextChangedListener(noteWatcher)
+//        noteInput.addTextChangedListener(noteWatcher)
         fab.setOnClickListener { fabClicked() }
     }
 
@@ -189,14 +190,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         }
     }
 
-    private val noteWatcher: TextWatcher = object : TextWatcher {
-        override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-        override fun afterTextChanged(editable: Editable) {}
-        override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-            transferViewModel.setNote(charSequence.toString())
-        }
-    }
-
     private fun validates(): Boolean {
         val amountError = transferViewModel.amountErrors()
         amountInput.setState(amountError, if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
@@ -218,8 +211,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         contactInput.setSelected(contact)
     }
 
-    override fun highlightAction(a: HoverAction?) {
-        a?.let { actionSelectViewModel.setActiveAction(it) }
+    override fun highlightAction(action: HoverAction?) {
+        action?.let { actionSelectViewModel.setActiveAction(it) }
     }
 
     private fun setRecipientHint(action: HoverAction) {

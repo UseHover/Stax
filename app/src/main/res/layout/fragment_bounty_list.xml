@@ -5,14 +5,33 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-        <com.hover.stax.views.StaxCardView
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progressIndicator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_13"
+                android:layout_marginEnd="@dimen/margin_13"
+                android:indeterminate="true"
+                android:minHeight="4dp"
+                android:visibility="gone"
+                app:hideAnimationBehavior="inward"
+                app:indicatorColor="@color/brightBluePressed"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:showAnimationBehavior="outward" />
+
+        <com.hover.stax.views.StaxCardView
+                android:id="@+id/countryFilter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:showBack="true"
                 app:title="@string/filter_by_country">
 
@@ -29,7 +48,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="false"
-                android:nestedScrollingEnabled="false" />
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/countryFilter" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

@@ -138,7 +138,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     }
 
     override fun viewTransactionDetail(uuid: String?) {
-        NavHostFragment.findNavController(this).navigate(R.id.transactionDetailsFragment, bundleOf(TransactionContract.COLUMN_UUID to uuid))
+        navigateToTransactionDetailsFragment(uuid, childFragmentManager, true)
     }
 
     private fun startRenameFlow() {

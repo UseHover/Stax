@@ -37,7 +37,7 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
 
     var sims: MutableLiveData<List<SimInfo>> = MutableLiveData()
     val bountyEmailLiveData: MutableLiveData<Map<Int, String?>> = MutableLiveData()
-    private lateinit var defferedBountyList: Deferred<MutableList<Bounty>>
+    private lateinit var bountyListAsync: Deferred<MutableList<Bounty>>
 
     val user = MutableLiveData<FirebaseUser>()
     val didLoginFail = MutableLiveData(false)
@@ -96,17 +96,35 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
 
     private fun loadChannels(actions: List<HoverAction>?): LiveData<List<Channel>> {
         if (actions == null) return MutableLiveData()
-        val ids = getChannelIdArray(actions)
-        Timber.e("channel id length %s", ids.size)
-        return repo.getChannels(ids)
+//        val ids = getChannelIdArray(actions)
+//        Timber.e("channel id length %s", ids.size)
+//        return repo.getChannels(ids)
+        val ids = getChannelIdArray(actions.distinctBy { it.id }).toList()
+
+        val channelList = runBlocking {
+            getChannelsAsync(ids).await()
+        }
+
+        return MutableLiveData(channelList)
+    }
+
+    private fun getChannelsAsync(ids:List<Int>): Deferred<List<Channel>> = viewModelScope.async(Dispatchers.IO) {
+        val channels = ArrayList<Channel>()
+
+        ids.chunked(MAX_LOOKUP_COUNT).forEach { idList ->
+            val results = repo.getChannelsByIds(idList)
+            channels.addAll(results)
+        }
+
+        channels
     }
 
     val bounties: LiveData<List<Bounty>>
         get() = bountyList
 
-    fun filterChannels(countryCode: String): LiveData<List<Channel>>? {
+    fun filterChannels(countryCode: String): LiveData<List<Channel>> {
         country = countryCode
-        val actions = actions.value ?: return null
+        val actions = actions.value ?: return MutableLiveData(ArrayList<Channel>())
 
         return if (countryCode == CountryAdapter.codeRepresentingAllCountries())
             loadChannels(actions)
@@ -114,9 +132,7 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
             repo.getChannelsByCountry(getChannelIdArray(actions), countryCode)
     }
 
-    private fun getChannelIdArray(actions: List<HoverAction>): IntArray {
-        return actions.distinctBy { it.channel_id }.map { it.channel_id }.toIntArray()
-    }
+    private fun getChannelIdArray(actions: List<HoverAction>): IntArray = actions.distinctBy { it.channel_id }.map { it.channel_id }.toIntArray()
 
     private fun makeBountiesIfActions(transactions: List<StaxTransaction>?) {
         if (actions.value != null && transactions != null) makeBounties(actions.value, transactions)
@@ -134,7 +150,7 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
 
     private suspend fun getBounties(actions: List<HoverAction>?, transactions: List<StaxTransaction>?): MutableList<Bounty> {
         coroutineScope {
-            defferedBountyList = async(Dispatchers.IO) {
+            bountyListAsync = async(Dispatchers.IO) {
                 val bounties: MutableList<Bounty> = ArrayList()
                 val transactionsCopy: MutableList<StaxTransaction> = if (transactions == null) ArrayList() else ArrayList(transactions)
                 for (action in actions!!) {
@@ -153,6 +169,6 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
             }
 
         }
-        return defferedBountyList.await()
+        return bountyListAsync.await()
     }
 }

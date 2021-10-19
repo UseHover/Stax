@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.account.Account
 import com.hover.stax.account.DUMMY
-import com.hover.stax.channels.Channel
 import com.hover.stax.databinding.BalanceItemBinding
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.UIHelper
@@ -80,8 +79,8 @@ class BalanceAdapter(val accounts: List<Account>, val balanceListener: BalanceLi
             }
 
             setColors(
-                holder, UIHelper.getColor(account.primaryColorHex, true, holder.itemView.context),
-                UIHelper.getColor(account.secondaryColorHex, false, holder.itemView.context)
+                    holder, UIHelper.getColor(account.primaryColorHex, true, holder.itemView.context),
+                    UIHelper.getColor(account.secondaryColorHex, false, holder.itemView.context)
             )
 
             if (account.id == DUMMY) {
@@ -102,6 +101,6 @@ class BalanceAdapter(val accounts: List<Account>, val balanceListener: BalanceLi
     interface BalanceListener {
         fun onTapRefresh(accountId: Int)
 
-        fun onTapDetail(channelId: Int)
+        fun onTapDetail(accountId: Int)
     }
 }

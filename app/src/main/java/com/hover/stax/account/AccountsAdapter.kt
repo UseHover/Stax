@@ -29,7 +29,7 @@ class AccountsAdapter(val accounts: List<Account>, val selectListener: SelectLis
     inner class ViewHolder(val binding: StaxSpinnerItemWithLogoBinding) : RecyclerView.ViewHolder(binding.root), Target {
 
         fun bind(account: Account) {
-            binding.serviceItemNameId.text = account.name.plus(" - ").plus(account.accountNo)
+            binding.serviceItemNameId.text = account.alias
             UIHelper.loadPicasso(account.logoUrl, Constants.size55, this)
 
             binding.root.setOnClickListener { selectListener.accountSelected(account) }
