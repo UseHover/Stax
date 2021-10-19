@@ -6,13 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.RadioGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.appsflyer.AppsFlyerLib
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentLanguageBinding
-import com.hover.stax.settings.SettingsFragment
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
 import com.yariksoffice.lingver.Lingver
