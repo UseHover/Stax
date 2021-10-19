@@ -12,6 +12,9 @@ import com.hover.sdk.sims.SimInfo
 import com.hover.sdk.sims.SimInfoDao
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
+import com.hover.stax.account.Account
+import com.hover.stax.account.AccountDao
+import com.hover.stax.account.ChannelWithAccounts
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelDao
 import com.hover.stax.contacts.ContactDao
@@ -28,6 +31,7 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.utils.paymentLinkCryptography.Encryption
 import timber.log.Timber
 import java.security.NoSuchAlgorithmException
+import java.util.regex.Pattern
 
 class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
@@ -40,12 +44,15 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     private val simDao: SimInfoDao = sdkDb.simDao()
     private val transactionDao: TransactionDao = db.transactionDao()
     private val contactDao: ContactDao = db.contactDao()
+    private val accountDao: AccountDao = db.accountDao()
 
+    // Channels
     val allChannels: LiveData<List<Channel>> = channelDao.allInAlphaOrder
     val selected: LiveData<List<Channel>> = channelDao.getSelected(true)
 
-    // Channels
-    fun getChannel(id: Int): Channel {
+    fun getChannelsAndAccounts(): List<ChannelWithAccounts> = channelDao.getChannelsAndAccounts()
+
+    fun getChannel(id: Int): Channel? {
         return channelDao.getChannel(id)
     }
 
@@ -53,20 +60,15 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return channelDao.getLiveChannel(id)
     }
 
-    val channelsDataCount: Int
-        get() = channelDao.dataCount
-
-    fun getChannels(ids: IntArray?): LiveData<List<Channel>> {
+    fun getChannels(ids: IntArray): LiveData<List<Channel>> {
         return channelDao.getChannels(ids)
     }
 
-    fun getChannelsByIds(ids: List<Int>): List<Channel> = channelDao.getChannelsByIds(ids)
-
-    fun getChannelsByCountry(channelIds: IntArray?, countryCode: String?): LiveData<List<Channel>> {
+    fun getChannelsByCountry(channelIds: IntArray, countryCode: String): LiveData<List<Channel>> {
         return channelDao.getChannels(countryCode, channelIds)
     }
 
-    fun getChannelsByCountry(countryCode: String?): List<Channel> {
+    fun getChannelsByCountry(countryCode: String): List<Channel> {
         return channelDao.getChannels(countryCode)
     }
 
@@ -97,6 +99,10 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun getChannelActions(channelId: Int): LiveData<List<HoverAction>> {
         return actionDao.getLiveChannelActions(channelId)
+    }
+
+    fun getLiveActions(channelIds: IntArray, types: List<String>): LiveData<List<HoverAction>> {
+        return actionDao.getLiveActions(channelIds, types)
     }
 
     fun getTransferActions(channelId: Int): List<HoverAction> {
@@ -130,18 +136,18 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return transactionDao.getTransactionCount(String.format("%02d", lastMonth().first), lastMonth().second.toString())!! > 0
     }
 
-    fun getChannelTransactions(channelId: Int): LiveData<List<StaxTransaction>>? {
-        return transactionDao.getChannelTransactions(channelId)
+    fun getAccountTransactions(account: Account): LiveData<List<StaxTransaction>>? {
+        return transactionDao.getAccountTransactions(account.id)
     }
 
     @SuppressLint("DefaultLocale")
-    fun getSpentAmount(channelId: Int, month: Int, year: Int): LiveData<Double>? {
-        return transactionDao.getTotalAmount(channelId, String.format("%02d", month), year.toString())
+    fun getSpentAmount(accountId: Int, month: Int, year: Int): LiveData<Double>? {
+        return transactionDao.getTotalAmount(accountId, String.format("%02d", month), year.toString())
     }
 
     @SuppressLint("DefaultLocale")
-    fun getFees(channelId: Int, year: Int): LiveData<Double>? {
-        return transactionDao.getTotalFees(channelId, year.toString())
+    fun getFees(accountId: Int, year: Int): LiveData<Double>? {
+        return transactionDao.getTotalFees(accountId, year.toString())
     }
 
     fun getTransaction(uuid: String?): StaxTransaction? {
@@ -149,7 +155,6 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     }
 
     fun insertOrUpdateTransaction(intent: Intent, action: HoverAction, contact: StaxContact, c: Context) {
-        Timber.e("insertOrUpdateTransaction");
         AppDatabase.databaseWriteExecutor.execute {
             try {
                 var t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID))
@@ -191,8 +196,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return contactDao[id]
     }
 
-    suspend fun getContact_Suspended(id: String?): StaxContact? {
-        return contactDao.get_suspended(id)
+    suspend fun getContactAsync(id: String?): StaxContact? {
+        return contactDao.getAsync(id)
     }
 
     fun getContactByPhone(phone: String): StaxContact? {
@@ -302,6 +307,54 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun delete(request: Request?) {
         AppDatabase.databaseWriteExecutor.execute { requestDao.delete(request) }
+    }
+
+    val allAccountsLive: LiveData<List<Account>> = accountDao.getAllAccountsLive()
+
+    fun getAllAccounts(): List<Account> = accountDao.getAllAccounts()
+
+    fun getAccounts(channelId: Int): List<Account> = accountDao.getAccounts(channelId)
+
+    fun getDefaultAccount(): Account? = accountDao.getDefaultAccount()
+
+    fun getAccount(id: Int): Account? = accountDao.getAccount(id)
+
+    fun getAccount(name: String): Account? = accountDao.getAccount(name)
+
+    fun getLiveAccount(id: Int): LiveData<Account> = accountDao.getLiveAccount(id)
+
+    suspend fun getAccounts(ids: List<Int>): List<Account> = accountDao.getAccounts(ids)
+
+    private fun getAccount(name: String, channelId: Int): Account? = accountDao.getAccount(name, channelId)
+
+    fun saveAccounts(accounts: List<Account>) {
+        accounts.forEach { account ->
+            val acct = getAccount(account.name, account.channelId)
+
+            try {
+                AppDatabase.databaseWriteExecutor.execute {
+                    if (acct == null) {
+                        accountDao.insert(account)
+                    } else {
+                        accountDao.update(account)
+                    }
+                }
+            } catch (e: Exception) {
+                Utils.logErrorAndReportToFirebase(TAG, "failed to insert/update account", e)
+            }
+        }
+    }
+
+    fun insert(account: Account) {
+        AppDatabase.databaseWriteExecutor.execute { accountDao.insert(account) }
+    }
+
+    fun update(account: Account) {
+        AppDatabase.databaseWriteExecutor.execute { accountDao.update(account) }
+    }
+
+    fun delete(account: Account) {
+        AppDatabase.databaseWriteExecutor.execute { accountDao.delete(account) }
     }
 
     companion object {

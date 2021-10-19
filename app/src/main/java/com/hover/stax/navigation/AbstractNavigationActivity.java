@@ -13,7 +13,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
@@ -23,6 +22,7 @@ import com.hover.stax.settings.SettingsFragment;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.network.NetworkReceiver;
+import com.hover.stax.navigation.NavigationInterface;
 
 public abstract class AbstractNavigationActivity extends AppCompatActivity implements NavigationInterface {
 
@@ -76,9 +76,10 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
     private void setDestinationChangedListener(BottomNavigationView nav) {
         if (navController != null) {
             navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-                if (controller.getGraph().getId() == R.id.bounty_navigation) {
+                nav.setVisibility(destination.getId() == R.id.navigation_linkAccount ? View.GONE : View.VISIBLE);
+
+                if (destination.getId() == R.id.bounty_navigation)
                     nav.getMenu().findItem(R.id.navigation_settings).setChecked(true);
-                }
             });
         }
     }

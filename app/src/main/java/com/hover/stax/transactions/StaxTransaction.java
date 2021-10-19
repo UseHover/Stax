@@ -18,6 +18,7 @@ import com.hover.sdk.transactions.Transaction;
 import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.contacts.StaxContact;
+import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.Utils;
 
@@ -92,6 +93,9 @@ public class StaxTransaction {
     @ColumnInfo(name = "balance")
     public String balance;
 
+    @ColumnInfo(name = "account_id")
+    public Integer accountId;
+
     // FIXME: DO not use! This is covered by contact model. No easy way to drop column yet, but room 2.4 adds an easy way. Currently alpha, use once it is stable
     @ColumnInfo(name = "counterparty")
     public String counterparty;
@@ -113,6 +117,7 @@ public class StaxTransaction {
 
             counterparty_id = contact.id;
             description = generateDescription(action, contact, c);
+
             parseExtras((HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS));
             parseExtras((HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES));
             Timber.v("creating transaction with uuid: %s", uuid);
@@ -132,6 +137,8 @@ public class StaxTransaction {
     private void parseExtras(HashMap<String, String> extras) {
         if (extras == null) return;
 
+        Timber.e("Extras %s", extras.keySet());
+
         if (extras.containsKey(HoverAction.AMOUNT_KEY))
             amount = Utils.getAmount(extras.get(HoverAction.AMOUNT_KEY));
         if (extras.containsKey(FEE_KEY))
@@ -140,6 +147,8 @@ public class StaxTransaction {
             confirm_code = extras.get(CONFIRM_CODE_KEY);
         if (extras.containsKey(HoverAction.BALANCE))
             balance = extras.get(HoverAction.BALANCE);
+        if (extras.containsKey(Constants.ACCOUNT_ID))
+            accountId = Integer.parseInt(extras.get(Constants.ACCOUNT_ID));
     }
 
     private String generateDescription(HoverAction action, StaxContact contact, Context c) {
@@ -159,6 +168,8 @@ public class StaxTransaction {
                 return c.getString(R.string.descrip_bill_paid, action.to_institution_name);
             case HoverAction.RECEIVE:
                 return c.getString(R.string.descrip_transfer_received, contact.shortName());
+            case HoverAction.FETCH_ACCOUNTS:
+                return c.getString(R.string.descrip_fetch_accounts, action.from_institution_name);
             default:
                 return "Other";
         }

@@ -1,7 +1,6 @@
 package com.hover.stax.transactions
 
 import android.content.Context
-import android.util.Log
 import androidx.work.*
 import com.hover.sdk.api.Hover
 import com.hover.sdk.transactions.Transaction
@@ -22,6 +21,7 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class UpdateBountyTransactionsWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
+
    companion object {
        val TAG = "BountyTransactionWorker"
        val BOUNTY_TRANSACTION_WORK_ID = "BOUNTY_TRANSACTION"
@@ -38,22 +38,23 @@ class UpdateBountyTransactionsWorker(context: Context, workerParams: WorkerParam
                    .build()
        }
 
-       fun netConstraint(): Constraints {
+       private fun netConstraint(): Constraints {
            return Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
        }
    }
+
     private val client = OkHttpClient()
     private val transactionDao = AppDatabase.getInstance(context).transactionDao()
 
     override fun doWork(): Result {
         try{
+
             val bountyResultJson = downloadBountyResult(getUrl())
             Timber.i("url is ${getUrl()}")
             Timber.i("Transaction returns result $bountyResultJson")
 
             val succeeded : JSONArray = bountyResultJson.getJSONArray("succeeded")
             val failed = bountyResultJson.getJSONArray("failed")
-
 
             CoroutineScope(Dispatchers.IO).launch {
                 for (i in 0 until succeeded.length()) {
@@ -68,12 +69,12 @@ class UpdateBountyTransactionsWorker(context: Context, workerParams: WorkerParam
             }
 
             return Result.success()
-
         }catch (e : JSONException ) {
-            Log.e(TAG, "Error parsing bounty result data.", e);
+            Timber.e(e, "Error parsing bounty result data.");
             return Result.failure();
         } catch ( e : IOException) {
-            Log.e(TAG, "Timeout downloading bounty result data, will try again.", e);
+            Timber.e(e, "Timeout downloading bounty result data, will try again.");
+
             return Result.retry();
         }
     }

@@ -96,24 +96,9 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
 
     private fun loadChannels(actions: List<HoverAction>?): LiveData<List<Channel>> {
         if (actions == null) return MutableLiveData()
-        val ids = getChannelIdArray(actions.distinctBy { it.id }).toList()
-
-        val channelList = runBlocking {
-            getChannelsAsync(ids).await()
-        }
-
-        return MutableLiveData(channelList)
-    }
-
-    private fun getChannelsAsync(ids:List<Int>): Deferred<List<Channel>> = viewModelScope.async(Dispatchers.IO) {
-        val channels = ArrayList<Channel>()
-
-        ids.chunked(MAX_LOOKUP_COUNT).forEach { idList ->
-            val results = repo.getChannelsByIds(idList)
-            channels.addAll(results)
-        }
-
-        channels
+        val ids = getChannelIdArray(actions)
+        Timber.e("channel id length %s", ids.size)
+        return repo.getChannels(ids)
     }
 
     val bounties: LiveData<List<Bounty>>

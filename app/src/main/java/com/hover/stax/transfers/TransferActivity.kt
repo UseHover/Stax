@@ -5,7 +5,9 @@ import android.os.Bundle
 import androidx.lifecycle.Observer
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.account.Account
 import com.hover.stax.actions.ActionSelectViewModel
+import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.contacts.StaxContact
@@ -19,11 +21,11 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInterface {
 
     private val actionSelectViewModel: ActionSelectViewModel by viewModel()
-
     private val channelsViewModel: ChannelsViewModel by viewModel()
     private val transferViewModel: TransferViewModel by viewModel()
     private lateinit var scheduleViewModel: ScheduleDetailViewModel
@@ -33,7 +35,7 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
 
         intent.action?.let {
             transferViewModel.setTransactionType(it)
-            channelsViewModel.type = it
+            channelsViewModel.setType(it)
         }
 
         checkIntent()
@@ -69,35 +71,49 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
 
     private fun observeRequest() {
         val alertDialog = StaxDialog(this).setDialogMessage(R.string.loading_link_dialoghead).showIt()
-        transferViewModel.request.observe(this@TransferActivity, Observer { it?.let { alertDialog?.dismiss() } })
+        transferViewModel.request.observe(this@TransferActivity, { it?.let { alertDialog?.dismiss() } })
     }
 
-    fun submit() = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it) }
+    fun submit(account: Account) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account) }
 
-    private fun makeHoverCall(action: HoverAction) {
+    private fun makeHoverCall(action: HoverAction, account: Account) {
         Utils.logAnalyticsEvent(getString(R.string.finish_transfer, TransactionType.type), this)
         updatePushNotifGroupStatus()
 
         transferViewModel.checkSchedule()
 
-        makeCall(action)
+        makeCall(action, selectedAccount = account)
     }
 
-    private fun makeCall(action: HoverAction) {
-        val hsb = HoverSession.Builder(action, channelsViewModel.activeChannel.value, this, Constants.TRANSFER_REQUEST)
-            .extra(HoverAction.AMOUNT_KEY, transferViewModel.amount.value)
-            .extra(HoverAction.NOTE_KEY, transferViewModel.note.value)
+    private fun getRequestCode(transactionType: String) : Int {
+        return if(transactionType == HoverAction.FETCH_ACCOUNTS) Constants.FETCH_ACCOUNT_REQUEST
+        else Constants.TRANSFER_REQUEST
+    }
 
-        transferViewModel.contact.value?.let { addRecipientInfo(hsb) }
+    fun makeCall(action: HoverAction, channel: Channel? = null, selectedAccount: Account? = null) {
+        val hsb = HoverSession.Builder(action, channel
+                ?: channelsViewModel.activeChannel.value!!, this, getRequestCode(action.transaction_type))
+
+        if (action.transaction_type != HoverAction.FETCH_ACCOUNTS) {
+            hsb.extra(HoverAction.AMOUNT_KEY, transferViewModel.amount.value)
+                    .extra(HoverAction.NOTE_KEY, transferViewModel.note.value)
+                    .extra(Constants.ACCOUNT_NAME, selectedAccount?.name)
+
+            selectedAccount?.run { hsb.setAccountId(id.toString()) }
+            transferViewModel.contact.value?.let { addRecipientInfo(hsb) }
+        }
+
         hsb.run()
     }
 
     private fun addRecipientInfo(hsb: HoverSession.Builder) {
         hsb.extra(HoverAction.ACCOUNT_KEY, transferViewModel.contact.value!!.accountNumber)
-            .extra(
-                HoverAction.PHONE_KEY, PhoneHelper.getNumberFormatForInput(transferViewModel.contact.value?.accountNumber,
-                actionSelectViewModel.activeAction.value, channelsViewModel.activeChannel.value)
-            )
+                .extra(
+                        HoverAction.PHONE_KEY, PhoneHelper.getNumberFormatForInput(
+                        transferViewModel.contact.value?.accountNumber,
+                        actionSelectViewModel.activeAction.value, channelsViewModel.activeChannel.value
+                )
+                )
     }
 
     private fun updatePushNotifGroupStatus() {
@@ -107,19 +123,19 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == Constants.TRANSFER_REQUEST)
+        if (requestCode == Constants.TRANSFER_REQUEST)
             returnResult(requestCode, resultCode, data)
     }
 
-
-    private fun returnResult(type: Int, result: Int, data: Intent?){
+    private fun returnResult(type: Int, result: Int, data: Intent?) {
         val i = data?.let { Intent(it) } ?: Intent()
         transferViewModel.contact.value?.let { i.putExtra(StaxContact.ID_KEY, it.lookupKey) }
-        i.action = if(type == Constants.SCHEDULE_REQUEST) Constants.SCHEDULED else Constants.TRANSFERRED
+        i.action = if (type == Constants.SCHEDULE_REQUEST) Constants.SCHEDULED else Constants.TRANSFERRED
         setResult(result, i)
         finish()
     }
 
-    override fun onBackPressed() = if(transferViewModel.isEditing.value == false) transferViewModel.setEditing(true) else super.onBackPressed()
+
+    override fun onBackPressed() = if (transferViewModel.isEditing.value == false) transferViewModel.setEditing(true) else super.onBackPressed()
 
 }

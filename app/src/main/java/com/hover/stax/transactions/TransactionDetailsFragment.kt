@@ -134,8 +134,8 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
     }
 
     private fun showButtonToClick(): Button {
-        val transactionButtonsLayout = binding.transactionRetryButtonLayoutId
-        val retryButton = binding.btnRetryTransaction
+        val transactionButtonsLayout = binding!!.transactionRetryButtonLayoutId
+        val retryButton = binding!!.btnRetryTransaction
         transactionButtonsLayout.visibility = View.VISIBLE
         return retryButton
     }

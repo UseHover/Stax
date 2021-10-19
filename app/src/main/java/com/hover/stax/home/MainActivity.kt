@@ -9,7 +9,10 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.account.Account
+import com.hover.stax.account.DUMMY
 import com.hover.stax.balances.BalanceAdapter
+import com.hover.stax.balances.BalancesFragment
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.databinding.ActivityMainBinding
@@ -26,7 +29,6 @@ import com.hover.stax.utils.Utils
 import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
-
 
 class MainActivity : AbstractNavigationActivity(),
         BalancesViewModel.RunBalanceListener,
@@ -62,13 +64,13 @@ class MainActivity : AbstractNavigationActivity(),
 
             //This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
             //https://stackoverflow.com/a/54939860/2371515
-            val channelsObserver = object : Observer<List<Channel>> {
-                override fun onChanged(t: List<Channel>?) {
+            val accountsObserver = object : Observer<List<Account>> {
+                override fun onChanged(t: List<Account>?) {
                     logResult("Observing selected channels", t?.size ?: 0)
                 }
             }
 
-            selectedChannels.observe(this@MainActivity, channelsObserver)
+            accounts.observe(this@MainActivity, accountsObserver)
             toRun.observe(this@MainActivity, { logResult("Observing action to run", it.size) })
             runFlag.observe(this@MainActivity, { logResult("Observing run flag ", it) })
             actions.observe(this@MainActivity, { logResult("Observing actions", it.size) })
@@ -153,24 +155,25 @@ class MainActivity : AbstractNavigationActivity(),
         }
     }
 
-    override fun startRun(a: HoverAction, index: Int) {
-        run(a, index)
+    override fun startRun(actionPair: Pair<Account?, HoverAction>, index: Int) {
+        Timber.e("Starting run for ${actionPair.first?.name} - ${actionPair.second.transaction_type}")
+        run(actionPair, index)
     }
 
-    override fun onTapRefresh(channelId: Int) {
-        if (channelId == Channel.DUMMY)
+    override fun onTapRefresh(accountId: Int) {
+        if (accountId == DUMMY)
             checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT)
         else {
             Utils.logAnalyticsEvent(getString(R.string.refresh_balance_single), this)
-            balancesViewModel.setRunning(channelId)
+            balancesViewModel.setRunning(accountId)
         }
     }
 
-    override fun onTapDetail(channelId: Int) {
-        if (channelId == Channel.DUMMY)
+    override fun onTapDetail(accountId: Int) {
+        if (accountId == DUMMY)
             checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT)
         else
-            navigateToChannelDetailsFragment(channelId, getNavController())
+            navigateToAccountDetailsFragment(accountId, getNavController())
     }
 
     override fun onAuthError(error: String) {
@@ -178,7 +181,7 @@ class MainActivity : AbstractNavigationActivity(),
     }
 
     override fun onAuthSuccess(action: HoverAction?) {
-        run(action!!, 0)
+//        run(action!!, 0)
     }
 
     fun reBuildHoverSession(transaction: StaxTransaction) {
@@ -186,27 +189,30 @@ class MainActivity : AbstractNavigationActivity(),
             val actionAndChannelPair = historyViewModel.getActionAndChannel(transaction.action_id, transaction.channel_id)
             val accountNumber = historyViewModel.getAccountNumber(transaction.counterparty_id)
 
-            val hsb: HoverSession.Builder = HoverSession.Builder(actionAndChannelPair.first, actionAndChannelPair.second, this@MainActivity, Constants.TRANSFERRED_INT)
+            val hsb = HoverSession.Builder(actionAndChannelPair.first, actionAndChannelPair.second, this@MainActivity, Constants.TRANSFERRED_INT)
                     .extra(HoverAction.AMOUNT_KEY, Utils.formatAmount(transaction.amount.toString()))
                     .extra(HoverAction.ACCOUNT_KEY, accountNumber)
                     .extra(HoverAction.PHONE_KEY, accountNumber)
 
             hsb.run()
         }
-
     }
 
-    private fun run(action: HoverAction, index: Int) {
-        if (balancesViewModel.getChannel(action.channel_id) != null) {
-            val hsb = HoverSession.Builder(action, balancesViewModel.getChannel(action.channel_id), this@MainActivity, index)
-            if (index + 1 < balancesViewModel.selectedChannels.value!!.size) hsb.finalScreenTime(0)
+    private fun run(actionPair: Pair<Account?, HoverAction>, index: Int) {
+        if (balancesViewModel.getChannel(actionPair.second.channel_id) != null) {
+            val hsb = HoverSession.Builder(actionPair.second, balancesViewModel.getChannel(actionPair.second.channel_id)!!, this@MainActivity, index)
+                    .extra(Constants.ACCOUNT_NAME, actionPair.first?.name)
+            actionPair.first?.let { hsb.setAccountId(it.id.toString()) }
+
+            if (index + 1 < balancesViewModel.accounts.value!!.size) hsb.finalScreenTime(0)
+
             hsb.run()
         } else {
 //            the only way to get the reference to the observer is to move this out onto it's own block.
             val selectedChannelsObserver = object : Observer<List<Channel>> {
                 override fun onChanged(t: List<Channel>?) {
-                    if (t != null && balancesViewModel.getChannel(t, action.channel_id) != null) {
-                        run(action, 0)
+                    if (t != null && balancesViewModel.getChannel(t, actionPair.second.channel_id) != null) {
+                        run(actionPair, 0)
                         balancesViewModel.selectedChannels.removeObserver(this)
                     }
                 }
@@ -237,11 +243,16 @@ class MainActivity : AbstractNavigationActivity(),
         } else {
             if (requestCode != Constants.TRANSFER_REQUEST) {
                 balancesViewModel.setRan(requestCode)
-                balancesViewModel.showBalances(true)
+                showBalanceCards()
             }
             showPopUpTransactionDetailsIfRequired(data)
         }
     }
+
+private fun showBalanceCards() {
+        val balanceFragment = navHostFragment.childFragmentManager.findFragmentById(R.id.navigation_balance) as? BalancesFragment
+        balanceFragment?.showBalanceCards(true)
+}
 
     private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {

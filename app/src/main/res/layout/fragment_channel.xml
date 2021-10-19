@@ -97,18 +97,51 @@
                             android:textSize="@dimen/text_21"
                             android:textStyle="bold" />
                 </TableRow>
+
+                <TableRow android:layout_marginVertical="@dimen/margin_21">
+
+                    <TextView
+                            android:id="@+id/orig_name_desc"
+                            android:layout_weight="1"
+                            android:fontFamily="font-normal"
+                            android:text="@string/original_name"
+                            android:textColor="@color/offWhite"
+                            android:textSize="@dimen/text_16" />
+
+                    <TextView
+                            android:id="@+id/original_name"
+                            android:fontFamily="font-normal"
+                            android:textAlignment="viewEnd"
+                            android:textColor="@color/offWhite"
+                            android:textSize="@dimen/text_21"
+                            android:textStyle="bold" />
+                </TableRow>
             </TableLayout>
 
             <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="end">
+                    android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/rename_acct_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/margin_8"
+                        android:layout_marginEnd="@dimen/margin_10"
+                        android:layout_toStartOf="@+id/refresh_balance_btn"
+                        android:background="@drawable/button_bg_dark"
+                        android:elevation="1dp"
+                        android:fontFamily="font-normal"
+                        android:text="@string/rename_account"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white" />
 
                 <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/refresh_balance_btn"
                         style="@style/StaxButtonColored"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginVertical="@dimen/margin_8"
                         android:drawableStart="@drawable/ic_refresh_dark_24"
                         android:drawablePadding="@dimen/margin_5"
@@ -121,8 +154,12 @@
                 layout="@layout/home_card_future" />
 
         <include
-                android:id="@+id/homeCardTransactions"
-                layout="@layout/home_card_transactions" />
+                android:id="@+id/history_card"
+                layout="@layout/transaction_card_history" />
+
+        <include
+                android:id="@+id/renameCard"
+                layout="@layout/rename_account_layout" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

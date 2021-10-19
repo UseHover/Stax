@@ -1,5 +1,6 @@
 package com.hover.stax
 
+
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -11,13 +12,12 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
@@ -28,10 +28,10 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
+import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.databinding.SplashScreenLayoutBinding
 import com.hover.stax.destruct.SelfDestructActivity
-
 import com.hover.stax.faq.FaqViewModel
 import com.hover.stax.home.MainActivity
 import com.hover.stax.inapp_banner.BannerUtils
@@ -44,15 +44,10 @@ import com.hover.stax.utils.Constants.FRAGMENT_DIRECT
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.blur.StaxBlur
-
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import org.json.JSONObject
-
-
 import org.koin.androidx.viewmodel.ext.android.getViewModel
-
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
@@ -60,6 +55,9 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
 
     private lateinit var binding: SplashScreenLayoutBinding
     private lateinit var remoteConfig: FirebaseRemoteConfig
+
+    private val channelsViewModel: ChannelsViewModel by viewModel()
+    private var hasAccounts = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         UIHelper.setFullscreenView(this)
@@ -85,6 +83,11 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
     }
 
     private fun startBackgroundProcesses() {
+        with(channelsViewModel){
+            accounts.observe(this@SplashScreenActivity) { hasAccounts = it.isNotEmpty() }
+            migrateAccounts()
+        }
+
         initAmplitude()
         logPushNotificationIfRequired()
         initHover()
@@ -93,9 +96,9 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         initFirebaseMessagingTopics()
 
         FirebaseInstallations.getInstance().getToken(false)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) Timber.i("Installation auth token: ${task.result?.token}")
-            }
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) Timber.i("Installation auth token: ${task.result?.token}")
+                }
         FirebaseInstallations.getInstance().id.addOnCompleteListener { Timber.i("Firebase installation ID is ${it.result}") }
 
         initRemoteConfigs()
@@ -119,28 +122,30 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         joinNoRequestMoneyGroup(this)
     }
 
-    private fun blurBackground() {
-        Handler(Looper.getMainLooper()).postDelayed({
-            val bg = BitmapFactory.decodeResource(resources, R.drawable.splash_background)
-            val bitmap = StaxBlur(this@SplashScreenActivity, 16, 1).transform(bg)
-            binding.splashImageBlur.apply {
-                setImageBitmap(bitmap)
-                visibility = View.VISIBLE
-                animation = loadFadeIn(this@SplashScreenActivity)
-            }
-        }, BLUR_DELAY)
+    private fun blurBackground() = lifecycleScope.launch {
+        delay(BLUR_DELAY)
+
+        val bg = BitmapFactory.decodeResource(resources, R.drawable.splash_background)
+        val bitmap = StaxBlur(this@SplashScreenActivity, 16, 1).transform(bg)
+        binding.splashImageBlur.apply {
+            setImageBitmap(bitmap)
+            visibility = View.VISIBLE
+            animation = loadFadeIn(this@SplashScreenActivity)
+        }
     }
 
     private fun fadeInLogo() {
         val tv = binding.splashContent
         setSplashContentTopDrawable(tv)
 
-        Handler(Looper.getMainLooper()).postDelayed({
+        lifecycleScope.launch {
+            delay(LOGO_DELAY)
+
             tv.apply {
                 visibility = View.VISIBLE
                 animation = loadFadeIn(this@SplashScreenActivity)
             }
-        }, LOGO_DELAY)
+        }
     }
 
     private fun loadFadeIn(context: Context) = AnimationUtils.loadAnimation(context, android.R.anim.fade_in)
@@ -152,14 +157,13 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         tv.setCompoundDrawablesRelativeWithIntrinsicBounds(null, d, null, null)
     }
 
-    private fun validateUser() = runBlocking {
-        launch {
-            delay(NAV_DELAY)
+    private fun validateUser() = lifecycleScope.launchWhenStarted {
+        delay(NAV_DELAY)
 
-            if (!OnBoardingActivity.hasPassedThrough(this@SplashScreenActivity))
-                goToOnBoardingActivity()
-            else
-                BiometricChecker(this@SplashScreenActivity, this@SplashScreenActivity).startAuthentication(null)
+        when {
+            !OnBoardingActivity.hasPassedThrough(this@SplashScreenActivity) -> goToOnBoardingActivity()
+            hasAccounts -> BiometricChecker(this@SplashScreenActivity, this@SplashScreenActivity).startAuthentication(null)
+            else -> goToMainActivity(null)
         }
     }
 
@@ -192,7 +196,6 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
     private fun selfDestructWhenAppVersionExpires(): Boolean {
         return try {
             val currentVersionCode = packageManager.getPackageInfo(packageName, 0).versionCode
-            Timber.e("Current version code :  $currentVersionCode")
 
             val forceUpdateVersionCode = remoteConfig.getString("force_update_app_version").toInt()
             if (forceUpdateVersionCode > currentVersionCode) {
@@ -257,7 +260,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
     }
 
     private fun goToFulfillRequestActivity(intent: Intent) =
-        startActivity(Intent(this, MainActivity::class.java).putExtra(Constants.REQUEST_LINK, intent.data.toString()))
+            startActivity(Intent(this, MainActivity::class.java).putExtra(Constants.REQUEST_LINK, intent.data.toString()))
 
     private fun goToMainActivity(redirectLink: String?) {
         val intent = Intent(this, MainActivity::class.java)

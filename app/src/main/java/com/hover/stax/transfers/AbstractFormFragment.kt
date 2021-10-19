@@ -1,10 +1,12 @@
 package com.hover.stax.transfers
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.provider.ContactsContract
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -12,11 +14,12 @@ import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
+import com.hover.stax.account.AccountDropdown
 import com.hover.stax.channels.Channel
-import com.hover.stax.channels.ChannelDropdown
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.permissions.PermissionUtils
@@ -35,14 +38,13 @@ abstract class AbstractFormFragment : Fragment() {
     val channelsViewModel: ChannelsViewModel by sharedViewModel()
 
     var editCard: StaxCardView? = null
-    var editRequestCard: LinearLayout? = null
+    private var editRequestCard: LinearLayout? = null
 
-    lateinit var summaryCard: StaxCardView
-    lateinit var channelDropdown: ChannelDropdown
+    private lateinit var summaryCard: StaxCardView
+    lateinit var accountDropdown: AccountDropdown
     lateinit var fab: Button
 
     private lateinit var noWorryText: LinearLayout
-
 
     @CallSuper
     open fun init(root: View) {
@@ -51,12 +53,12 @@ abstract class AbstractFormFragment : Fragment() {
         noWorryText = root.findViewById(R.id.noworry_text)
         summaryCard = root.findViewById(R.id.summaryCard)
         fab = root.findViewById(R.id.fab)
-        channelDropdown = root.findViewById(R.id.channel_dropdown)
+        accountDropdown = root.findViewById(R.id.accountDropdown)
     }
 
     open fun startObservers(root: View) {
-        channelDropdown.setListener(channelsViewModel)
-        channelDropdown.setObservers(channelsViewModel, viewLifecycleOwner)
+        accountDropdown.setListener(channelsViewModel)
+        accountDropdown.setObservers(channelsViewModel, viewLifecycleOwner)
         setupActionDropdownObservers(channelsViewModel, viewLifecycleOwner)
         abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit))
     }
@@ -67,10 +69,10 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     open fun showEdit(isEditing: Boolean) {
-        channelDropdown.highlighted?.let { channelsViewModel.setChannelsSelected(listOf(it)) }
+//        channelDropdown?.highlighted?.let { channelsViewModel.setChannelsSelected(listOf(it)) }
 
         editCard?.visibility = if (isEditing) View.VISIBLE else View.GONE
-        editRequestCard?.visibility = if(isEditing) View.VISIBLE else View.GONE
+        editRequestCard?.visibility = if (isEditing) View.VISIBLE else View.GONE
 
         noWorryText.visibility = if (isEditing) View.VISIBLE else View.GONE
         summaryCard.visibility = if (isEditing) View.GONE else View.VISIBLE
@@ -119,4 +121,13 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     abstract fun onContactSelected(requestCode: Int, contact: StaxContact)
+
+    @SuppressLint("ClickableViewAccessibility")
+    fun setDropdownTouchListener(action: Int) {
+        accountDropdown.autoCompleteTextView.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_DOWN)
+                findNavController().navigate(action)
+            true
+        }
+    }
 }
