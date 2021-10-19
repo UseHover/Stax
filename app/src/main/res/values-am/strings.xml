@@ -491,8 +491,6 @@
 
     <string name="network_label">ተቀባዩ ሂሳብ</string>
 
-    <string name="id_label">የግብይት መታወቂያ</string>
-
     <string name="session_cardhead">መልእክቶች</string>
 
     <!-- Canceling -->
@@ -555,21 +553,15 @@
 
     <string name="disclaimer">ሁሉም የምርት ስሞች ፣ የምርት ስሞች እና የንግድ ምልክቶች የየባለቤቶቻቸው ንብረት ናቸው። አጠቃቀም ቁርኝት አያመለክትም።</string>
 
-    <string name="contact_stax_cardhead">አትጥፋ</string>
-
     <string name="twitter" translatable="false">Twitter</string>
 
     <string name="stax_twitter_url" translatable="false">http://twitter.com/joinstax</string>
 
     <string name="receive_stax_updates">የ Stax ዝመናዎችን ይቀበሉ</string>
 
-    <string name="support">ድጋፍ</string>
-
     <string name="FAQs">ተደጋጋሚ ጥያቄዎች</string>
 
-    <string name="request_feature">በስታክስ ውስጥ ባህሪን ይጠይቁ!</string>
-
-    <string name="contact_support">ድጋፍን ያነጋግሩ</string>
+    <string name="request_feature">በስታክስ ውስጥ ባህሪን ይጠይቁ</string>
 
     <string name="stax_support_email">support\@stax.me</string>
 
@@ -680,10 +672,6 @@
     <string name="descrip_bounty_me2me">ገንዘብ ወደ የእርስዎ %1$s መለያ ይውሰዱ</string>
 
     <string name="bounty_me2me_explain">ማንኛውንም መጠን ወደ የራስዎ %1$s መለያ ይላኩ</string>
-
-    <string name="descrip_bounty_c2b">ሂሳብ ይክፈሉ</string>
-
-    <string name="bounty_c2b_explain">ለማንኛውም ንግድ ማንኛውንም መጠን ይላኩ</string>
 
     <string name="descrip_bounty_balance">ሚዛን ይፈትሹ</string>
 

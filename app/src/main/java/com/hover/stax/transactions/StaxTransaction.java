@@ -1,10 +1,12 @@
 package com.hover.stax.transactions;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
+import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
@@ -30,6 +32,9 @@ import timber.log.Timber;
 public class StaxTransaction {
 
     public final static String CONFIRM_CODE_KEY = "confirmCode", FEE_KEY = "fee", CATEGORY_INCOMPLETE_SESSION = "incomplete_session";
+    public final static String MMI_ERROR = "mmi-error", PIN_ERROR = "pin-error", BALANCE_ERROR = "balance-error",
+        UNREGISTERED_ERROR = "unregistered-error", INVALID_ENTRY_ERROR = "invalid-entry",
+        NO_RESPONSE_ERROR = "no-response", INCOMPLETE_ERROR = "incomplete", UNSPECIFIED_ERROR = "unspecified-error";
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
@@ -59,6 +64,9 @@ public class StaxTransaction {
     @ColumnInfo(name = "status", defaultValue = Transaction.PENDING)
     public String status;
 
+    @ColumnInfo(name = "category")
+    public String category;
+
     @NonNull
     @ColumnInfo(name = "initiated_at", defaultValue = "CURRENT_TIMESTAMP")
     public Long initiated_at;
@@ -82,8 +90,8 @@ public class StaxTransaction {
     @ColumnInfo(name = "recipient_id")
     public String counterparty_id;
 
-    @ColumnInfo(name = "category")
-    public String category;
+    @ColumnInfo(name = "balance")
+    public String balance;
 
     @ColumnInfo(name = "account_id")
     public Integer accountId;
@@ -98,48 +106,32 @@ public class StaxTransaction {
     public StaxTransaction(Intent data, HoverAction action, StaxContact contact, Context c) {
         if (data.hasExtra(TransactionContract.COLUMN_UUID) && data.getStringExtra(TransactionContract.COLUMN_UUID) != null) {
             uuid = data.getStringExtra(TransactionContract.COLUMN_UUID);
+            channel_id = data.getIntExtra(TransactionContract.COLUMN_CHANNEL_ID, -1);
             action_id = data.getStringExtra(TransactionContract.COLUMN_ACTION_ID);
             transaction_type = data.getStringExtra(TransactionContract.COLUMN_TYPE);
             environment = data.getIntExtra(TransactionContract.COLUMN_ENVIRONMENT, 0);
-            channel_id = data.getIntExtra(TransactionContract.COLUMN_CHANNEL_ID, -1);
             status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
+            category = data.getStringExtra(TransactionContract.COLUMN_CATEGORY);
             initiated_at = data.getLongExtra(TransactionContract.COLUMN_REQUEST_TIMESTAMP, DateUtils.now());
-            updated_at = initiated_at;
+            updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, initiated_at);
 
             counterparty_id = contact.id;
             description = generateDescription(action, contact, c);
 
             parseExtras((HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_INPUT_EXTRAS));
-
+            parseExtras((HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES));
             Timber.v("creating transaction with uuid: %s", uuid);
         }
     }
 
-    public void update(Intent data, HoverAction action, StaxContact contact, Boolean isNewTransaction, Context c) {
-        if( !isNewTransaction && isSessionIncomplete(action, c)) setFailed_Incomplete();
-
-        else status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
-
-        Timber.e("Updating to status %s - %s", status, action);
-        updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, initiated_at);
-
+    public void update(Intent data, HoverAction action, StaxContact contact, Context c) {
+        status = data.getStringExtra(TransactionContract.COLUMN_STATUS);
+        category = data.getStringExtra(TransactionContract.COLUMN_CATEGORY);
         parseExtras((HashMap<String, String>) data.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES));
 
-        if (counterparty_id == null)
-            counterparty_id = contact.id;
-
+        if (counterparty_id == null) counterparty_id = contact.id;
         description = generateDescription(action, contact, c);
-    }
-
-    private Boolean isSessionIncomplete(HoverAction action, Context c)   {
-        int numOfSteps = action.custom_steps.length();
-        int ussdLength = Hover.getTransaction(uuid, c).ussdMessages.length();
-        return ussdLength < numOfSteps -1;
-    }
-
-    public void setFailed_Incomplete() {
-        status = Transaction.FAILED;
-        category = CATEGORY_INCOMPLETE_SESSION;
+        updated_at = data.getLongExtra(TransactionContract.COLUMN_UPDATE_TIMESTAMP, initiated_at);
     }
 
     private void parseExtras(HashMap<String, String> extras) {
@@ -153,7 +145,9 @@ public class StaxTransaction {
             fee = Utils.getAmount(extras.get(FEE_KEY));
         if (extras.containsKey(CONFIRM_CODE_KEY))
             confirm_code = extras.get(CONFIRM_CODE_KEY);
-        if(extras.containsKey(Constants.ACCOUNT_ID))
+        if (extras.containsKey(HoverAction.BALANCE))
+            balance = extras.get(HoverAction.BALANCE);
+        if (extras.containsKey(Constants.ACCOUNT_ID))
             accountId = Integer.parseInt(extras.get(Constants.ACCOUNT_ID));
     }
 
@@ -162,6 +156,8 @@ public class StaxTransaction {
             return c.getString(R.string.descrip_recorded, action.from_institution_name);
 
         switch (transaction_type) {
+            case HoverAction.BALANCE:
+                return c.getString(R.string.descrip_balance, action.from_institution_name);
             case HoverAction.AIRTIME:
                 return c.getString(R.string.descrip_airtime_sent, action.from_institution_name, contact == null ? c.getString(R.string.self_choice) : contact.shortName());
             case HoverAction.P2P:
@@ -174,6 +170,29 @@ public class StaxTransaction {
                 return c.getString(R.string.descrip_transfer_received, contact.shortName());
             case HoverAction.FETCH_ACCOUNTS:
                 return c.getString(R.string.descrip_fetch_accounts, action.from_institution_name);
+            default:
+                return "Other";
+        }
+    }
+
+    @SuppressLint("DefaultLocale")
+    public String generateLongDescription(HoverAction action, StaxContact contact, Context c) {
+        if (isRecorded())
+            return c.getString(R.string.descrip_recorded, action.from_institution_name);
+
+        switch (transaction_type) {
+            case HoverAction.BALANCE:
+                return c.getString(R.string.descrip_balance, action.from_institution_name);
+            case HoverAction.AIRTIME:
+                return c.getString(R.string.descrip_long_airtime_send, getDisplayAmount(), action.from_institution_name, contact == null ? c.getString(R.string.self_choice) : contact.shortName());
+            case HoverAction.P2P:
+                return c.getString(R.string.descrip_long_transfer_send, getDisplayAmount(), action.from_institution_name, contact == null ? " " : contact.shortName(), action.to_institution_name);
+            case HoverAction.ME2ME:
+                return c.getString(R.string.descrip_long_move, getDisplayAmount(), action.from_institution_name, action.to_institution_name);
+            case HoverAction.C2B:
+                return c.getString(R.string.descrip_long_bill_paid, getDisplayAmount(), action.from_institution_name, action.to_institution_name);
+            case HoverAction.RECEIVE:
+                return c.getString(R.string.descrip_transfer_received, contact.shortName());
             default:
                 return "Other";
         }

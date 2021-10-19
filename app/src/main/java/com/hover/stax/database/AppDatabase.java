@@ -25,7 +25,7 @@ import com.hover.stax.transactions.TransactionDao;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class, Account.class}, version = 34)
+@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class, Account.class}, version = 35)
 public abstract class AppDatabase extends RoomDatabase {
     private static final int NUMBER_OF_THREADS = 8;
     static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -61,6 +61,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             .addMigrations(M31_32)
                             .addMigrations(M32_33)
                             .addMigrations(M33_34)
+                            .addMigrations(M34_35)
                             .build();
                 }
             }
@@ -146,6 +147,14 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE stax_transactions ADD COLUMN account_id INTEGER");
+        }
+    };
+
+    static final Migration M34_35 = new Migration(34, 35) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE stax_transactions ADD COLUMN balance TEXT");
+            database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_accounts_name ON accounts(name)");
         }
     };
 }

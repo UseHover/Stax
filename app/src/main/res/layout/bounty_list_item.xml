@@ -48,7 +48,7 @@
 
 	</LinearLayout>
 
-	<TextView android:id="@+id/li_callout"
+	<TextView android:id="@+id/li_status"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 		android:paddingHorizontal="@dimen/margin_10"

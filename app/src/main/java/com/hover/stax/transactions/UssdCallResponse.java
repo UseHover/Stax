@@ -8,6 +8,7 @@ import java.util.List;
 
 public class UssdCallResponse {
     String enteredValue, responseMessage;
+    boolean isShortCode = false;
 
     public UssdCallResponse(String sent, String response) {
         enteredValue = sent != null ? sent : "";
@@ -15,6 +16,12 @@ public class UssdCallResponse {
             this.enteredValue = "****";
         }
         responseMessage = response != null ? response : "";
+
+    }
+
+    public UssdCallResponse(String sent, String response, boolean isShortCode) {
+        this(sent, response);
+        this.isShortCode = isShortCode;
     }
 
     public static List<UssdCallResponse> generateConvo(Transaction t, HoverAction a) {
@@ -24,7 +31,7 @@ public class UssdCallResponse {
 
             UssdCallResponse tm;
             if (i == 0 && !t.myType.equals(HoverAction.RECEIVE))
-                tm = new UssdCallResponse(a.root_code, t.ussdMessages != null ? t.ussdMessages.optString(i) : null);
+                tm = new UssdCallResponse(a.root_code, t.ussdMessages != null ? t.ussdMessages.optString(i) : null, true);
             else
                 tm = new UssdCallResponse(t.enteredValues != null ? t.enteredValues.optString(i - 1) : null,
                         t.ussdMessages != null ? t.ussdMessages.optString(i) : null);

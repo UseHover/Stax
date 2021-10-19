@@ -34,4 +34,15 @@
                 android:textCursorDrawable="@null"
                 android:textSize="@dimen/text_21" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <CheckBox
+        android:id="@+id/testMode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:fontFamily="font-normal"
+        android:padding="@dimen/margin_10"
+        android:text="@string/test_mode_enabled"
+        android:textColor="@color/offWhite"
+        android:textSize="@dimen/text_16" />
 </com.hover.stax.views.StaxCardView>

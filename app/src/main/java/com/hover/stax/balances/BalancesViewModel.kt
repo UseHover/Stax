@@ -33,7 +33,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     init {
         selectedChannels = repo.selected
-        accounts = repo.allAccounts
+        accounts = repo.allAccountsLive
 
         actions = Transformations.switchMap(selectedChannels, this::loadActions)
 

@@ -2,6 +2,7 @@ package com.hover.stax.account
 
 import android.app.Application
 import androidx.lifecycle.*
+import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.transactions.StaxTransaction
@@ -14,6 +15,7 @@ class AccountDetailViewModel(val application: Application, val repo: DatabaseRep
     private val id = MutableLiveData<Int>()
     var account: LiveData<Account> = MutableLiveData()
     var transactions: LiveData<List<StaxTransaction>> = MutableLiveData()
+    var actions: LiveData<List<HoverAction>> = MutableLiveData()
     var spentThisMonth: LiveData<Double> = MutableLiveData()
     var feesThisYear: LiveData<Double> = MutableLiveData()
 
@@ -23,7 +25,8 @@ class AccountDetailViewModel(val application: Application, val repo: DatabaseRep
 
     init {
         account = Transformations.switchMap(id, repo::getLiveAccount)
-        transactions = Transformations.switchMap(id, repo::getAllTransferTransactions)
+        transactions = Transformations.switchMap(account, repo::getAccountTransactions)
+        actions = Transformations.switchMap(id, repo::getChannelActions)
         spentThisMonth = Transformations.switchMap(id, this::loadSpentThisMonth)
         feesThisYear = Transformations.switchMap(id, this::loadFeesThisYear)
     }

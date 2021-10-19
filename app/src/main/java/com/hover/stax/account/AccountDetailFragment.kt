@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
+import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
@@ -32,6 +34,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     private val viewModel: AccountDetailViewModel by viewModel()
     private val futureViewModel: FutureViewModel by viewModel()
 
+    private var transactionsAdapter: TransactionHistoryAdapter? = null
     private var requestsAdapter: RequestsAdapter? = null
     private var scheduledAdapter: ScheduledAdapter? = null
 
@@ -69,14 +72,12 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
                 setUpFuture(it.channelId)
             }
 
-            val txHistoryRv = binding.homeCardTransactions.transactionHistoryRecyclerView
             transactions.observe(viewLifecycleOwner) {
-                binding.homeCardTransactions.noHistory.visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
-                txHistoryRv.apply {
-                    layoutManager = UIHelper.setMainLinearManagers(requireActivity())
-                    adapter = TransactionHistoryAdapter(it, this@AccountDetailFragment)
-                }
+                binding.historyCard.noHistory.visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
+                transactionsAdapter!!.updateData(it, viewModel.actions.getValue())
             }
+
+            actions.observe(viewLifecycleOwner) { transactionsAdapter!!.updateData(viewModel.transactions.value, it) }
 
             spentThisMonth.observe(viewLifecycleOwner) {
                 binding.detailsMoneyOut.text = Utils.formatAmount(it ?: 0.0)
@@ -88,6 +89,12 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     }
 
     private fun initRecyclerViews() {
+        binding.historyCard.transactionsRecycler.apply {
+            layoutManager = UIHelper.setMainLinearManagers(context)
+            transactionsAdapter = TransactionHistoryAdapter(null, null, this@AccountDetailFragment)
+           adapter = transactionsAdapter
+        }
+
         binding.scheduledCard.scheduledRecyclerView.apply {
             layoutManager = UIHelper.setMainLinearManagers(context)
             scheduledAdapter = ScheduledAdapter(null, this@AccountDetailFragment)
@@ -131,7 +138,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     }
 
     override fun viewTransactionDetail(uuid: String?) {
-        NavHostFragment.findNavController(this).navigate(R.id.transactionDetailsFragment, bundleOf(TransactionContract.COLUMN_UUID to uuid))
+        navigateToTransactionDetailsFragment(uuid, childFragmentManager, true)
     }
 
     private fun startRenameFlow() {
@@ -162,7 +169,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     private fun toggleAccountDetails(hide: Boolean) {
         with(binding) {
             staxCardView.visibility = if (hide) View.GONE else View.VISIBLE
-            homeCardTransactions.root.visibility = if (hide) View.GONE else View.VISIBLE
+            historyCard.root.visibility = if (hide) View.GONE else View.VISIBLE
             renameCard.renameAccountCard.visibility = if (hide) View.VISIBLE else View.GONE
         }
     }

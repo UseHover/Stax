@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.lifecycle.*
-
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.auth.FirebaseUser
 import com.hover.sdk.actions.HoverAction
@@ -19,6 +18,7 @@ import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.utils.Utils.getPackage
 import kotlinx.coroutines.*
 import org.koin.java.KoinJavaComponent.get
+import timber.log.Timber
 import java.util.*
 
 private const val MAX_LOOKUP_COUNT = 40
@@ -96,6 +96,9 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
 
     private fun loadChannels(actions: List<HoverAction>?): LiveData<List<Channel>> {
         if (actions == null) return MutableLiveData()
+//        val ids = getChannelIdArray(actions)
+//        Timber.e("channel id length %s", ids.size)
+//        return repo.getChannels(ids)
         val ids = getChannelIdArray(actions.distinctBy { it.id }).toList()
 
         val channelList = runBlocking {
@@ -168,6 +171,4 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
         }
         return bountyListAsync.await()
     }
-
-
 }

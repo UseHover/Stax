@@ -70,9 +70,6 @@ public interface NavigationInterface {
             case Constants.NAV_BOUNTY:
                 activity.startActivity(new Intent(activity, BountyActivity.class));
                 break;
-            case Constants.NAV_EMAIL_CLIENT:
-                openSupportEmailClient(activity);
-                break;
             default:
                 break;
         }
@@ -150,21 +147,5 @@ public interface NavigationInterface {
 
     default void navigateFAQ(Fragment fragment) {
         NavHostFragment.findNavController(fragment).navigate(R.id.faqFragment);
-    }
-
-    default void openSupportEmailClient(Activity activity) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        String recipientEmail = activity.getString(R.string.stax_support_email);
-        String subject = activity.getString(R.string.stax_emailing_subject, Hover.getDeviceId(activity.getBaseContext()));
-
-        Uri data = Uri.parse("mailto:" + recipientEmail + " ?subject=" + subject);
-        intent.setData(data);
-
-        try {
-            activity.startActivity(intent);
-        } catch (ActivityNotFoundException e) {
-            Timber.e("Activity not found");
-            UIHelper.flashMessage(activity, activity.getString(R.string.email_client_not_found));
-        }
     }
 }

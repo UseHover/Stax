@@ -101,6 +101,10 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return actionDao.getLiveActions(channelIds, type)
     }
 
+    fun getChannelActions(channelId: Int): LiveData<List<HoverAction>> {
+        return actionDao.getLiveChannelActions(channelId)
+    }
+
     fun getLiveActions(channelIds: IntArray, types: List<String>): LiveData<List<HoverAction>> {
         return actionDao.getLiveActions(channelIds, types)
     }
@@ -136,8 +140,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return transactionDao.getTransactionCount(String.format("%02d", lastMonth().first), lastMonth().second.toString())!! > 0
     }
 
-    fun getAllTransferTransactions(accountId: Int): LiveData<List<StaxTransaction>>? {
-        return transactionDao.getAllTransfers(accountId)
+    fun getAccountTransactions(account: Account): LiveData<List<StaxTransaction>>? {
+        return transactionDao.getAccountTransactions(account.id)
     }
 
     @SuppressLint("DefaultLocale")
@@ -154,46 +158,24 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return transactionDao.getTransaction(uuid)
     }
 
-    fun insertOrUpdateTransaction(intent: Intent, c: Context) {
+    fun insertOrUpdateTransaction(intent: Intent, action: HoverAction, contact: StaxContact, c: Context) {
         AppDatabase.databaseWriteExecutor.execute {
             try {
                 var t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID))
-                val a = getAction(intent.getStringExtra(HoverAction.ID_KEY))
-                val channel = getChannel(a.channel_id)
-
-                val contact = StaxContact.findOrInit(intent, channel!!.countryAlpha2, t, this)
-                var isNew = false
-
-                if (contact.accountNumber != null)
-                    save(contact)
 
                 if (t == null) {
-                    isNew = true
-                    c.let { Utils.logAnalyticsEvent(c.getString(R.string.transaction_started), c, true) }
-                    t = StaxTransaction(intent, a, contact, c)
+                    Utils.logAnalyticsEvent(c.getString(R.string.transaction_started), c, true)
+                    t = StaxTransaction(intent, action, contact, c)
                     transactionDao.insert(t)
                     t = transactionDao.getTransaction(t.uuid)
-                } else c.let { Utils.logAnalyticsEvent(c.getString(R.string.transaction_completed), c, true) }
-
-                t!!.update(intent, a, contact, isNew, c)
-                transactionDao.update(t)
-
-                createAccounts(intent, t)
-                updateRequests(t, contact)
+                } else {
+                    Utils.logAnalyticsEvent(c.getString(R.string.transaction_completed), c, true)
+                    t.update(intent, action, contact, c)
+                    transactionDao.update(t)
+                }
+                Timber.e("save t with uuid: %s", t?.uuid);
             } catch (e: Exception) {
                 Timber.e(e, "error")
-            }
-        }
-    }
-
-    private fun updateRequests(t: StaxTransaction?, contact: StaxContact) {
-        if (t!!.transaction_type == HoverAction.RECEIVE) {
-            val rs = requests
-            for (r in rs) {
-                if (r.requestee_ids.contains(contact.id) && Utils.getAmount(r.amount) == t.amount) {
-                    r.matched_transaction_uuid = t.uuid
-                    update(r)
-                }
             }
         }
     }
@@ -331,36 +313,9 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         AppDatabase.databaseWriteExecutor.execute { requestDao.delete(request) }
     }
 
-    private fun createAccounts(intent: Intent, transaction: StaxTransaction) {
-        val data = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as HashMap<String, String>
+    val allAccountsLive: LiveData<List<Account>> = accountDao.getAllAccountsLive()
 
-        val channel = getChannel(transaction.channel_id)
-        val accounts = mutableListOf<Account>()
-
-        if (data.containsKey("userAccountList")) {
-            accounts.addAll(parseAccounts(data["userAccountList"]!!, channel!!))
-        }
-
-        saveAccounts(accounts)
-    }
-
-    private fun parseAccounts(accountList: String, channel: Channel): List<Account> {
-        val pattern = Pattern.compile("^[\\d]{1,2}[>):.\\s]+(.+)\$", Pattern.MULTILINE)
-        val matcher = pattern.matcher(accountList)
-
-        val accounts = arrayListOf<Account>()
-        val defaultAccount = getDefaultAccount()
-        while (matcher.find()) {
-            accounts.add(
-                    Account(matcher.group(1), matcher.group(1), channel.logoUrl, null,
-                            channel.id, channel.primaryColorHex, channel.secondaryColorHex, defaultAccount == null)
-            )
-        }
-
-        return accounts
-    }
-
-    val allAccounts: LiveData<List<Account>> = accountDao.getAllAccounts()
+    fun getAllAccounts(): List<Account> = accountDao.getAllAccounts()
 
     fun getAccounts(channelId: Int): List<Account> = accountDao.getAccounts(channelId)
 
@@ -376,7 +331,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     private fun getAccount(name: String, channelId: Int): Account? = accountDao.getAccount(name, channelId)
 
-    private fun saveAccounts(accounts: List<Account>) {
+    fun saveAccounts(accounts: List<Account>) {
         accounts.forEach { account ->
             val acct = getAccount(account.name, account.channelId)
 

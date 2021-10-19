@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hover.stax.databinding.HomeListItemBinding;
+import com.hover.stax.databinding.TransactionListItemBinding;
 import com.hover.stax.requests.Request;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.Utils;
@@ -31,7 +31,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.Reques
     @NonNull
     @Override
     public RequestsAdapter.RequestsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        HomeListItemBinding binding = HomeListItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        TransactionListItemBinding binding = TransactionListItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new RequestsAdapter.RequestsViewHolder(binding);
     }
 
@@ -58,9 +58,9 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.Reques
     }
 
     static class RequestsViewHolder extends RecyclerView.ViewHolder {
-        public HomeListItemBinding binding;
+        public TransactionListItemBinding binding;
 
-        RequestsViewHolder(HomeListItemBinding binding) {
+        RequestsViewHolder(TransactionListItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

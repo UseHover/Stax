@@ -218,15 +218,6 @@ class MainActivity : AbstractNavigationActivity(),
         }
     }
 
-    private fun onProbableHoverCall(data: Intent) {
-        if (data.action != null && data.action == Constants.SCHEDULED) {
-            showMessage(getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))))
-        } else {
-            Utils.logAnalyticsEvent(getString(R.string.finish_load_screen), this)
-            historyViewModel.saveTransaction(data, this)
-        }
-    }
-
     private fun onRequest(data: Intent) {
         if (data.action == Constants.SCHEDULED)
             showMessage(getString(R.string.toast_request_scheduled, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))))
@@ -238,37 +229,30 @@ class MainActivity : AbstractNavigationActivity(),
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        Timber.e("recieved result. %s", data?.action)
+        Timber.e("uuid? %s", data?.extras?.getString("uuid"))
 
-        showPopUpTransactionDetailsIfRequired(requestCode, data)
-        handleAllOtherResults(requestCode, resultCode, data)
-    }
-
-    private fun handleAllOtherResults(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            Constants.TRANSFER_REQUEST -> data?.let { onProbableHoverCall(it) }
-            Constants.REQUEST_REQUEST -> if (resultCode == RESULT_OK) onRequest(data!!)
-            else -> {
+        if (requestCode == Constants.TRANSFER_REQUEST && data != null && data.action == Constants.SCHEDULED) {
+            showMessage(getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))))
+        } else if (requestCode == Constants.REQUEST_REQUEST) {
+            if (resultCode == RESULT_OK && data != null) onRequest(data)
+        } else {
+            if (requestCode != Constants.TRANSFER_REQUEST) {
                 balancesViewModel.setRan(requestCode)
-                if (resultCode == RESULT_OK && data != null && data.action != null) onProbableHoverCall(data)
-
                 balancesViewModel.showBalances(true)
             }
+            showPopUpTransactionDetailsIfRequired(data)
         }
     }
 
-    private fun showPopUpTransactionDetailsIfRequired(requestCode: Int, data: Intent?) {
-        data?.let {
-            if (it.action.equals(Constants.TRANSFERRED) || requestCode == Constants.TRANSFERRED_INT) {
-                val uuid = it.extras?.getString("uuid")
-                uuid?.let {
-                    showTransactionPopup(uuid);
-                }
-                return@let
-            }
+    private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
+        if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
+            Timber.e("showing popup")
+            navigateToTransactionDetailsFragment(
+                data.extras!!.getString("uuid")!!,
+                supportFragmentManager,
+                false
+            )
         }
-    }
-
-    private fun showTransactionPopup(uuid: String) {
-        navigateToTransactionDetailsFragment(uuid, supportFragmentManager, false)
     }
 }

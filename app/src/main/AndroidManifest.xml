@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         package="com.hover.stax">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -117,9 +116,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".languages.SelectLanguageActivity"
+        <activity
+                android:name=".languages.SelectLanguageActivity"
                 android:label="@string/language">
-            <intent-filter >
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -144,7 +144,7 @@
         <activity
                 android:name=".transfers.TransferActivity"
                 android:theme="@style/StaxTheme"
-                android:windowSoftInputMode="stateVisible|adjustResize"/>
+                android:windowSoftInputMode="stateVisible|adjustResize" />
 
         <activity
                 android:name=".requests.RequestActivity"
@@ -192,24 +192,25 @@
                 android:name=".onboarding.OnBoardingActivity"
                 android:theme="@style/StaxTheme" />
 
-	    <activity android:name=".library.LibraryActivity"
-		    android:theme="@style/StaxTheme">
-		    <intent-filter>
-			    <action android:name="android.intent.action.VIEW" />
+        <activity
+                android:name=".library.LibraryActivity"
+                android:theme="@style/StaxTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
-			    <category android:name="android.intent.category.DEFAULT" />
-			    <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-			    <data
-				    android:host="stax.me"
-				    android:pathPattern="@string/deeplink_lib"
-				    android:scheme="https" />
-			    <data
-				    android:host="stax.me"
-				    android:pathPattern="@string/deeplink_lib"
-				    android:scheme="http" />
-		    </intent-filter>
-	    </activity>
+                <data
+                        android:host="stax.me"
+                        android:pathPattern="@string/deeplink_lib"
+                        android:scheme="https" />
+                <data
+                        android:host="stax.me"
+                        android:pathPattern="@string/deeplink_lib"
+                        android:scheme="http" />
+            </intent-filter>
+        </activity>
 
         <receiver
                 android:name=".hover.TransactionReceiver"
@@ -230,7 +231,9 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="com.appsflyer.SingleInstallBroadcastReceiver" android:exported="true">
+        <receiver
+                android:name="com.appsflyer.SingleInstallBroadcastReceiver"
+                android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>

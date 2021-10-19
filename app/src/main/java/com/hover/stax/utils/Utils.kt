@@ -1,5 +1,6 @@
 package com.hover.stax.utils
 
+import android.Manifest
 import android.app.Activity
 import android.content.*
 import android.graphics.Bitmap
@@ -17,6 +18,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
+import com.hover.stax.permissions.PermissionUtils
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
@@ -286,14 +288,16 @@ object Utils {
         openUrl(ctx.resources.getString(urlRes), ctx)
     }
 
-    fun openEmail(email: String, subject: String, ctx: Context) {
-        val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", email, null))
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
-
+    @JvmStatic
+    fun openEmail(subject: String, context: Context) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        val recipientEmail = context.getString(R.string.stax_support_email)
+        intent.data = Uri.parse("mailto:$recipientEmail ?subject=$subject")
         try {
-            ctx.startActivity(Intent.createChooser(emailIntent, "Send email..."))
+            context.startActivity(intent)
         } catch (e: ActivityNotFoundException) {
-            Timber.e("No email client found")
+            Timber.e("Activity not found")
+            UIHelper.flashMessage(context, context.getString(R.string.email_client_not_found))
         }
     }
 
@@ -307,5 +311,19 @@ object Utils {
         } catch (e: ActivityNotFoundException) {
             activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(activity.baseContext.getString(R.string.stax_url_playstore_review_link))))
         }
+    }
+
+    @JvmStatic
+    fun dial(shortCode: String, c: Context) {
+        logAnalyticsEvent(c.getString(R.string.clicked_dial_shortcode), c)
+
+        val dialIntent = Intent(Intent.ACTION_CALL, Uri.parse("tel:".plus(shortCode.replace("#", Uri.encode("#"))))).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+
+        if (PermissionUtils.has(arrayOf(Manifest.permission.CALL_PHONE), c))
+            c.startActivity(dialIntent)
+        else
+            UIHelper.flashMessage(c, c.getString(R.string.enable_call_permission))
     }
 }

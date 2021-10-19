@@ -14,7 +14,7 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class LibraryActivity : AbstractNavigationActivity(), ChannelsAdapter.DialListener, CountryAdapter.SelectListener {
+class LibraryActivity : AbstractNavigationActivity(), CountryAdapter.SelectListener {
 
     private val viewModel: LibraryViewModel by viewModel()
     private var binding: ActivityLibraryBinding? = null
@@ -33,8 +33,8 @@ class LibraryActivity : AbstractNavigationActivity(), ChannelsAdapter.DialListen
         setObservers()
     }
 
-    private fun setObservers(){
-        with(viewModel){
+    private fun setObservers() {
+        with(viewModel) {
             allChannels.observe(this@LibraryActivity) {
                 it?.let {
                     binding!!.countryDropdown.updateChoices(it)
@@ -47,22 +47,9 @@ class LibraryActivity : AbstractNavigationActivity(), ChannelsAdapter.DialListen
     }
 
     private fun updateList(channels: List<Channel>) {
-        if(!channels.isNullOrEmpty())
-            binding!!.shortcodes.adapter = ChannelsAdapter(channels, this)
+        if (!channels.isNullOrEmpty())
+            binding!!.shortcodes.adapter = ChannelsAdapter(channels)
     }
 
     override fun countrySelect(countryCode: String) = viewModel.filterChannels(countryCode)
-
-    override fun dial(shortCode: String) {
-        Utils.logAnalyticsEvent(getString(R.string.clicked_dial_shortcode), this)
-
-        val dialIntent = Intent(Intent.ACTION_CALL, Uri.parse("tel:".plus(shortCode.replace("#", Uri.encode("#"))))).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-
-        if (PermissionUtils.has(arrayOf(Manifest.permission.CALL_PHONE), this))
-            startActivity(dialIntent)
-        else
-            UIHelper.flashMessage(this, getString(R.string.enable_call_permission))
-    }
 }
