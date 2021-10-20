@@ -2,7 +2,6 @@ package com.hover.stax.transactions
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -11,6 +10,7 @@ import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.RecyclerView
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.transactions.Transaction
@@ -21,7 +21,7 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.navigation.NavigationInterface
-import com.hover.stax.utils.DateUtils.humanFriendlyDate
+import com.hover.stax.utils.DateUtils.humanFriendlyDateTime
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.Utils.logAnalyticsEvent
@@ -106,14 +106,22 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
         val messagesView = binding.convoRecyclerView
         messagesView.layoutManager = UIHelper.setMainLinearManagers(requireActivity())
         messagesView.setHasFixedSize(true)
-        viewModel.messages.observe(viewLifecycleOwner, { if (it != null) messagesView.adapter = MessagesAdapter(it) })
+        viewModel.messages.observe(viewLifecycleOwner, { updateWithSessionDetails(it, messagesView) })
     }
 
     private fun createSmsMessagesRecyclerView() {
         val smsView = binding.smsRecyclerView
         smsView.layoutManager = UIHelper.setMainLinearManagers(requireActivity())
         smsView.setHasFixedSize(true)
-        viewModel.sms.observe(viewLifecycleOwner, { if (it != null) smsView.adapter = MessagesAdapter(it) })
+        viewModel.sms.observe(viewLifecycleOwner, { updateWithSessionDetails(it, smsView) })
+    }
+
+    private fun updateWithSessionDetails(messages: List<UssdCallResponse>?, v: RecyclerView) {
+        if (messages != null) {
+            if (viewModel.transaction.value?.status == Transaction.SUCCEEDED)
+                setStatusText(viewModel.action.value, viewModel.transaction.value)
+            v.adapter = MessagesAdapter(messages)
+        }
     }
 
     private fun setupSeeMoreButton() {
@@ -196,7 +204,7 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
 
         binding.infoCard.detailsRecipientLabel.setText(if (transaction.transaction_type == HoverAction.RECEIVE) R.string.sender_label else R.string.recipient_label)
         binding.infoCard.detailsAmount.text = transaction.displayAmount
-        binding.infoCard.detailsDate.text = humanFriendlyDate(transaction.initiated_at)
+        binding.infoCard.detailsDate.text = humanFriendlyDateTime(transaction.updated_at)
         binding.infoCard.detailsServiceId.text = transaction.confirm_code
         binding.infoCard.detailsStaxUuid.text = transaction.uuid
 
@@ -221,8 +229,14 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
 
     private fun updateStatus(action: HoverAction?, transaction: StaxTransaction?) {
         if (action != null && transaction != null) {
-            binding.statusCard.updateState(transaction.fullStatus.getIcon(action, binding.statusCard.context), transaction.fullStatus.getBackgroundColor(), transaction.fullStatus.getTitle())
-            binding.statusText.text = Html.fromHtml(transaction.fullStatus.getStatusDetail(action, requireContext()))
+            binding.statusCard.updateState(transaction.fullStatus.getIcon(), transaction.fullStatus.getBackgroundColor(), transaction.fullStatus.getTitle())
+            setStatusText(action, transaction)
+        }
+    }
+
+    private fun setStatusText(action: HoverAction?, transaction: StaxTransaction?) {
+        if (transaction != null) {
+            binding.statusText.text = transaction.fullStatus.getStatusDetail(action, viewModel.messages?.value?.last(), viewModel.sms?.value, requireContext())
         }
     }
 

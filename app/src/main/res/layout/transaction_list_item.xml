@@ -14,7 +14,7 @@
 		android:paddingVertical="@dimen/margin_16"
 		android:textColor="@color/brightBlue"
 		android:textSize="@dimen/text_13"
-		android:fontFamily="font-normal"
+		android:fontFamily="font-medium"
 		android:background="@color/cardViewColor"
 		android:visibility="gone" />
 
