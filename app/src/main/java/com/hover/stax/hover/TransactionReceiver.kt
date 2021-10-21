@@ -118,12 +118,10 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
         while (matcher.find()) {
             val newAccount = Account(matcher.group(1), channel!!)
             accounts.add(newAccount)
-
-            if (repo.getDefaultAccount() == null && accounts.isNotEmpty())
-                accounts.first().isDefault = true
         }
 
-        Timber.e("Found ${accounts.size} accounts")
+        if (repo.getDefaultAccount() == null && accounts.isNotEmpty())
+            accounts.first().isDefault = true
 
         return accounts
     }
