@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.google.android.play.core.review.ReviewManagerFactory
@@ -169,7 +170,8 @@ class MainActivity : AbstractNavigationActivity(),
         if (accountId == DUMMY)
             checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT)
         else
-            navigateToAccountDetailsFragment(accountId, getNavController())
+            getNavController().navigate(R.id.action_navigation_balance_to_accountDetailsFragment, bundleOf(Constants.ACCOUNT_ID to accountId))
+//            navigateToAccountDetailsFragment(accountId, getNavController())
     }
 
     override fun onAuthError(error: String) {

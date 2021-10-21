@@ -19,7 +19,11 @@
             android:id="@+id/navigation_balance"
             android:name="com.hover.stax.balances.BalancesFragment"
             android:label="@string/nav_balance_and_history"
-            tools:layout="@layout/fragment_balance" />
+            tools:layout="@layout/fragment_balance" >
+        <action
+                android:id="@+id/action_navigation_balance_to_accountDetailsFragment"
+                app:destination="@id/accountDetailsFragment" />
+    </fragment>
 
     <fragment
             android:id="@+id/navigation_linkAccount"
