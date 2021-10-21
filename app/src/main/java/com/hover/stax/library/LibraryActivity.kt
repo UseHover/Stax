@@ -38,7 +38,8 @@ class LibraryActivity : AbstractNavigationActivity(), CountryAdapter.SelectListe
             allChannels.observe(this@LibraryActivity) {
                 it?.let {
                     binding!!.countryDropdown.updateChoices(it)
-                    filterChannels(CountryAdapter.codeRepresentingAllCountries())
+                    if (filteredChannels.value == null)
+                        filterChannels(CountryAdapter.codeRepresentingAllCountries())
                 }
             }
 
