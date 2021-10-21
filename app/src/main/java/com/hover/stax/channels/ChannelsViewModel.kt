@@ -39,7 +39,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     val activeChannel = MediatorLiveData<Channel>()
     val channelActions = MediatorLiveData<List<HoverAction>>()
     val accounts = MediatorLiveData<List<Account>>()
-    val activeAccount = MutableLiveData<Account>()
+    private val activeAccount = MutableLiveData<Account>()
 
     private val localBroadcastManager: LocalBroadcastManager = LocalBroadcastManager.getInstance(application)
 

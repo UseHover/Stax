@@ -106,14 +106,10 @@ class MainActivity : AbstractNavigationActivity(),
             val route = intent.data.toString()
 
             when {
-                route.contains(getString(R.string.deeplink_sendmoney)) -> {
-                    setActionType(HoverAction.P2P)
-                    navigateToTransferFragment(getNavController())
-                }
-                route.contains(getString(R.string.deeplink_airtime)) -> {
-                    setActionType(HoverAction.P2P)
-                    navigateToTransferFragment(getNavController())
-                }
+                route.contains(getString(R.string.deeplink_sendmoney)) ->
+                    navigateToTransferFragment(getNavController(), HoverAction.P2P)
+                route.contains(getString(R.string.deeplink_airtime)) ->
+                    navigateToTransferFragment(getNavController(),  HoverAction.AIRTIME)
                 route.contains(getString(R.string.deeplink_linkaccount)) ->
                     navigateToChannelsListFragment(getNavController(), true)
                 route.contains(getString(R.string.deeplink_balance)) || route.contains(getString(R.string.deeplink_history)) ->
@@ -165,10 +161,7 @@ class MainActivity : AbstractNavigationActivity(),
 
     private fun checkForRequest(intent: Intent) {
         if (intent.hasExtra(Constants.REQUEST_LINK)) {
-            transferViewModel.setTransactionType(HoverAction.P2P)
-            channelsViewModel.setType(HoverAction.P2P)
-
-            getNavController().navigate(R.id.navigation_transfer)
+            navigateToTransferFragment(getNavController(), HoverAction.P2P)
 
             createFromRequest(intent.getStringExtra(Constants.REQUEST_LINK)!!)
         }
@@ -340,20 +333,11 @@ class MainActivity : AbstractNavigationActivity(),
     }
 
     private fun initFromIntent() {
-        intent.action?.let {
-            setActionType(it)
-        }
-
         when {
             intent.hasExtra(Schedule.SCHEDULE_ID) -> createFromSchedule(intent.getIntExtra(Schedule.SCHEDULE_ID, -1))
             intent.hasExtra(Constants.REQUEST_LINK) -> createFromRequest(intent.getStringExtra(Constants.REQUEST_LINK)!!)
             else -> Utils.logAnalyticsEvent(getString(R.string.visit_screen, intent.action), this)
         }
-    }
-
-    fun setActionType(actionType: String) {
-        transferViewModel.setTransactionType(actionType)
-        channelsViewModel.setType(actionType)
     }
 
     private fun createFromSchedule(scheduleId: Int) {

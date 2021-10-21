@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
@@ -16,17 +17,13 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.requests.Request
-import com.hover.stax.schedules.Schedule
-import com.hover.stax.schedules.ScheduleDetailViewModel
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.Stax2LineItem
-import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
-import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
@@ -46,6 +43,11 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         abstractFormViewModel = getSharedViewModel<TransferViewModel>()
         transferViewModel = abstractFormViewModel as TransferViewModel
+
+        arguments?.getString(Constants.TRANSACTION_TYPE)?.let {
+            transferViewModel.setTransactionType(it)
+            channelsViewModel.setType(it)
+        }
 
         binding = FragmentTransferBinding.inflate(inflater, container, false)
 
@@ -67,6 +69,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         amountInput.apply {
             text = transferViewModel.amount.value
             requestFocus()
+
         }
 
         super.init(root)
@@ -89,6 +92,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         super.startObservers(root)
 
         actionSelectViewModel.activeAction.observe(viewLifecycleOwner, {
+            Timber.e("Active action $it - ${it.transaction_type}")
             binding.summaryCard.accountValue.setSubtitle(it.getNetworkSubtitle(requireContext()))
             actionSelect.selectRecipientNetwork(it)
             setRecipientHint(it)
@@ -161,8 +165,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         }
 
         actionSelect.setListener(this)
-//        noteInput.addTextChangedListener(noteWatcher)
         fab.setOnClickListener { fabClicked() }
+
+        binding.summaryCard.transferSummaryCard.setOnClickIcon { transferViewModel.setEditing(true) }
     }
 
     private fun fabClicked() {
@@ -171,7 +176,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
                 transferViewModel.saveContact()
                 transferViewModel.setEditing(false)
             } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
-        } else (requireActivity() as MainActivity).submit(accountDropdown.highlightedAccount!!)
+        } else {
+            (requireActivity() as MainActivity).submit(accountDropdown.highlightedAccount!!)
+            findNavController().popBackStack()
+        }
     }
 
     private val amountWatcher: TextWatcher = object : TextWatcher {
