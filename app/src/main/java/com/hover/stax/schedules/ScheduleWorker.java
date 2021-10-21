@@ -16,6 +16,7 @@ import com.hover.stax.R;
 import com.hover.stax.contacts.ContactDao;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.AppDatabase;
+import com.hover.stax.home.MainActivity;
 import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.Constants;
@@ -74,7 +75,7 @@ public class ScheduleWorker extends Worker {
         if (s.type.equals(Constants.REQUEST_TYPE))
             intent = new Intent(getApplicationContext(), RequestActivity.class);
         else
-            intent = new Intent(getApplicationContext(), TransferActivity.class);
+            intent = new Intent(getApplicationContext(), MainActivity.class);
 
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.setAction(s.type);

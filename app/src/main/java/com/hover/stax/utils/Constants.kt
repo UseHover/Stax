@@ -22,7 +22,6 @@ object Constants {
     const val REQUEST_REQUEST = 301
     const val SMS = 303
 
-
     const val size55 = 55
 
     const val TEST_MODE = "test_mode"
@@ -36,9 +35,9 @@ object Constants {
     const val FRAGMENT_DIRECT = "fragment_direct"
     const val FROM_FCM = "from_notification"
     const val APP_RATED_NATIVELY = "app_has_been_rated_natively"
-    const val SHOWN_SEND_MONEY_ACTION = "shown_send_money_action"
     const val ACCOUNT_NAME = "accountName"
     const val ACCOUNT_ID = "accountId"
+    const val ACTION = "action"
 
     const val CONNECTIVITY = "android.net.conn.CONNECTIVITY_CHANGE"
 }

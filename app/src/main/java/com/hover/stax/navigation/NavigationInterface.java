@@ -41,10 +41,9 @@ public interface NavigationInterface {
 
         switch (toWhere) {
             case Constants.NAV_TRANSFER:
-                navigateToTransferActivity(HoverAction.P2P, false, intent, activity);
-                break;
             case Constants.NAV_AIRTIME:
-                navigateToTransferActivity(HoverAction.AIRTIME, false, intent, activity);
+                navigateToTransferFragment(navController);
+                //navigateToTransferActivity(HoverAction.AIRTIME, false, intent, activity);
                 break;
             case Constants.NAV_REQUEST:
                 navigateToRequestFragment(activity);
@@ -110,6 +109,10 @@ public interface NavigationInterface {
             i.putExtra(Constants.REQUEST_LINK, received.getExtras().getString(Constants.REQUEST_LINK));
 
         activity.startActivityForResult(i, Constants.TRANSFER_REQUEST);
+    }
+
+    default void navigateToTransferFragment(NavController navController) {
+        navController.navigate(R.id.action_navigation_home_to_navigation_transfer);
     }
 
     default void navigateToAccountDetailsFragment(int accountId, NavController navController) {

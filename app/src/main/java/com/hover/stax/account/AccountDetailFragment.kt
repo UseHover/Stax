@@ -4,14 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.navigation.fragment.NavHostFragment
-import com.hover.sdk.actions.HoverAction
-import com.hover.sdk.transactions.TransactionContract
+import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
-import com.hover.stax.channels.Channel
 import com.hover.stax.databinding.FragmentChannelBinding
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.futureTransactions.RequestsAdapter
@@ -55,6 +50,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
         binding.refreshBalanceBtn.setOnClickListener { onRefresh() }
         binding.renameAcctBtn.setOnClickListener { startRenameFlow() }
+        binding.staxCardView.setOnClickIcon { findNavController().popBackStack() }
 
         arguments?.let { viewModel.setAccount(it.getInt(Constants.ACCOUNT_ID)) }
     }
@@ -74,7 +70,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
             transactions.observe(viewLifecycleOwner) {
                 binding.historyCard.noHistory.visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
-                transactionsAdapter!!.updateData(it, viewModel.actions.getValue())
+                transactionsAdapter!!.updateData(it, viewModel.actions.value)
             }
 
             actions.observe(viewLifecycleOwner) { transactionsAdapter!!.updateData(viewModel.transactions.value, it) }
@@ -92,7 +88,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         binding.historyCard.transactionsRecycler.apply {
             layoutManager = UIHelper.setMainLinearManagers(context)
             transactionsAdapter = TransactionHistoryAdapter(null, null, this@AccountDetailFragment)
-           adapter = transactionsAdapter
+            adapter = transactionsAdapter
         }
 
         binding.scheduledCard.scheduledRecyclerView.apply {

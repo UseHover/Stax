@@ -13,17 +13,20 @@
         <action
                 android:id="@+id/action_navigation_home_to_navigation_linkAccount"
                 app:destination="@id/navigation_linkAccount" />
+        <action
+                android:id="@+id/action_navigation_home_to_accountDetailsFragment"
+                app:destination="@id/accountDetailsFragment" />
+        <action
+                android:id="@+id/action_navigation_home_to_navigation_transfer"
+                app:destination="@id/navigation_transfer" />
+
     </fragment>
 
     <fragment
             android:id="@+id/navigation_balance"
             android:name="com.hover.stax.balances.BalancesFragment"
             android:label="@string/nav_balance_and_history"
-            tools:layout="@layout/fragment_balance" >
-        <action
-                android:id="@+id/action_navigation_balance_to_accountDetailsFragment"
-                app:destination="@id/accountDetailsFragment" />
-    </fragment>
+            tools:layout="@layout/fragment_balance" />
 
     <fragment
             android:id="@+id/navigation_linkAccount"
@@ -95,6 +98,11 @@
         <argument
                 android:name="channel_id"
                 app:argType="integer" />
+        <action
+                android:id="@+id/action_accountDetailsFragment_to_navigation_home"
+                app:destination="@id/navigation_home"
+                app:popUpTo="@id/navigation_home"
+                app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
@@ -120,6 +128,32 @@
                 android:id="@+id/action_languageSelectFragment_to_navigation_settings"
                 app:destination="@id/navigation_settings"
                 app:popUpTo="@id/navigation_settings"
+                app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/navigation_transfer"
+            android:name="com.hover.stax.transfers.TransferFragment"
+            android:label="@string/nav_transfer"
+            tools:layout="@layout/fragment_transfer">
+        <action
+                android:id="@+id/action_navigation_transfer_to_accountsFragment"
+                app:destination="@id/accountsFragment" />
+        <action
+                android:id="@+id/action_navigation_transfer_to_navigation_home"
+                app:destination="@id/navigation_home"
+                app:popUpTo="@id/navigation_home"
+                app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+            android:id="@+id/accountsFragment"
+            android:name="com.hover.stax.account.AccountsFragment"
+            android:label="AccountsFragment"
+            tools:layout="@layout/fragment_accounts">
+        <action
+                android:id="@+id/action_accountsFragment_to_navigation_transfer"
+                app:destination="@id/navigation_transfer"
+                app:popUpTo="@id/navigation_transfer"
                 app:popUpToInclusive="true" />
     </fragment>
 

@@ -14,15 +14,21 @@ import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
+import com.hover.stax.home.MainActivity
 import com.hover.stax.requests.Request
+import com.hover.stax.schedules.Schedule
+import com.hover.stax.schedules.ScheduleDetailViewModel
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.Stax2LineItem
+import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
+import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener {
@@ -165,7 +171,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
                 transferViewModel.saveContact()
                 transferViewModel.setEditing(false)
             } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
-        } else (activity as TransferActivity).submit(accountDropdown.highlightedAccount!!)
+        } else (requireActivity() as MainActivity).submit(accountDropdown.highlightedAccount!!)
     }
 
     private val amountWatcher: TextWatcher = object : TextWatcher {

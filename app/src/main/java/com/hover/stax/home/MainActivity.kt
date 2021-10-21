@@ -12,31 +12,45 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.account.Account
 import com.hover.stax.account.DUMMY
+import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.balances.BalanceAdapter
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.channels.Channel
+import com.hover.stax.channels.ChannelsViewModel
+import com.hover.stax.contacts.PhoneHelper
+import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.navigation.AbstractNavigationActivity
+import com.hover.stax.pushNotification.PushNotificationTopicsInterface
 import com.hover.stax.schedules.Schedule
+import com.hover.stax.schedules.ScheduleDetailViewModel
 import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionHistoryViewModel
+import com.hover.stax.transfers.TransactionType
+import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
+import com.hover.stax.views.StaxDialog
 import kotlinx.coroutines.*
+import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class MainActivity : AbstractNavigationActivity(),
         BalancesViewModel.RunBalanceListener,
         BalanceAdapter.BalanceListener,
-        BiometricChecker.AuthListener {
+        BiometricChecker.AuthListener, PushNotificationTopicsInterface {
 
     private val balancesViewModel: BalancesViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
+    private val actionSelectViewModel: ActionSelectViewModel by viewModel()
+    private val channelsViewModel: ChannelsViewModel by viewModel()
+    private val transferViewModel: TransferViewModel by viewModel()
+    private lateinit var scheduleViewModel: ScheduleDetailViewModel
 
     private lateinit var binding: ActivityMainBinding
 
@@ -46,6 +60,7 @@ class MainActivity : AbstractNavigationActivity(),
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        initFromIntent()
         startObservers()
         checkForRequest(intent)
         checkForFragmentDirection(intent)
@@ -91,10 +106,14 @@ class MainActivity : AbstractNavigationActivity(),
             val route = intent.data.toString()
 
             when {
-                route.contains(getString(R.string.deeplink_sendmoney)) ->
-                    navigateToTransferActivity(HoverAction.P2P, false, intent, this)
-                route.contains(getString(R.string.deeplink_airtime)) ->
-                    navigateToTransferActivity(HoverAction.AIRTIME, false, intent, this)
+                route.contains(getString(R.string.deeplink_sendmoney)) -> {
+                    setActionType(HoverAction.P2P)
+                    navigateToTransferFragment(getNavController())
+                }
+                route.contains(getString(R.string.deeplink_airtime)) -> {
+                    setActionType(HoverAction.P2P)
+                    navigateToTransferFragment(getNavController())
+                }
                 route.contains(getString(R.string.deeplink_linkaccount)) ->
                     navigateToChannelsListFragment(getNavController(), true)
                 route.contains(getString(R.string.deeplink_balance)) || route.contains(getString(R.string.deeplink_history)) ->
@@ -145,7 +164,14 @@ class MainActivity : AbstractNavigationActivity(),
     }
 
     private fun checkForRequest(intent: Intent) {
-        if (intent.hasExtra(Constants.REQUEST_LINK)) navigateToTransferActivity(HoverAction.P2P, true, intent, this)
+        if (intent.hasExtra(Constants.REQUEST_LINK)) {
+            transferViewModel.setTransactionType(HoverAction.P2P)
+            channelsViewModel.setType(HoverAction.P2P)
+
+            getNavController().navigate(R.id.navigation_transfer)
+
+            createFromRequest(intent.getStringExtra(Constants.REQUEST_LINK)!!)
+        }
     }
 
     private fun checkForFragmentDirection(intent: Intent) {
@@ -170,7 +196,7 @@ class MainActivity : AbstractNavigationActivity(),
         if (accountId == DUMMY)
             checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT)
         else
-            getNavController().navigate(R.id.action_navigation_balance_to_accountDetailsFragment, bundleOf(Constants.ACCOUNT_ID to accountId))
+            getNavController().navigate(R.id.action_navigation_home_to_accountDetailsFragment, bundleOf(Constants.ACCOUNT_ID to accountId))
 //            navigateToAccountDetailsFragment(accountId, getNavController())
     }
 
@@ -251,10 +277,105 @@ class MainActivity : AbstractNavigationActivity(),
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
             Timber.e("showing popup")
             navigateToTransactionDetailsFragment(
-                data.extras!!.getString("uuid")!!,
-                supportFragmentManager,
-                false
+                    data.extras!!.getString("uuid")!!,
+                    supportFragmentManager,
+                    false
             )
         }
     }
+
+    fun submit(account: Account) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account) }
+
+    private fun makeHoverCall(action: HoverAction, account: Account) {
+        Utils.logAnalyticsEvent(getString(R.string.finish_transfer, TransactionType.type), this)
+        updatePushNotifGroupStatus()
+
+        transferViewModel.checkSchedule()
+
+        makeCall(action, selectedAccount = account)
+    }
+
+    private fun getRequestCode(transactionType: String): Int {
+        return if (transactionType == HoverAction.FETCH_ACCOUNTS) Constants.FETCH_ACCOUNT_REQUEST
+        else Constants.TRANSFER_REQUEST
+    }
+
+    fun makeCall(action: HoverAction, channel: Channel? = null, selectedAccount: Account? = null) {
+        val hsb = HoverSession.Builder(action, channel
+                ?: channelsViewModel.activeChannel.value!!, this, getRequestCode(action.transaction_type))
+
+        if (action.transaction_type != HoverAction.FETCH_ACCOUNTS) {
+            hsb.extra(HoverAction.AMOUNT_KEY, transferViewModel.amount.value)
+                    .extra(HoverAction.NOTE_KEY, transferViewModel.note.value)
+                    .extra(Constants.ACCOUNT_NAME, selectedAccount?.name)
+
+            selectedAccount?.run { hsb.setAccountId(id.toString()) }
+            transferViewModel.contact.value?.let { addRecipientInfo(hsb) }
+        }
+
+        hsb.run()
+    }
+
+    private fun addRecipientInfo(hsb: HoverSession.Builder) {
+        hsb.extra(HoverAction.ACCOUNT_KEY, transferViewModel.contact.value!!.accountNumber)
+                .extra(
+                        HoverAction.PHONE_KEY, PhoneHelper.getNumberFormatForInput(
+                        transferViewModel.contact.value?.accountNumber,
+                        actionSelectViewModel.activeAction.value, channelsViewModel.activeChannel.value
+                )
+                )
+    }
+
+    private fun updatePushNotifGroupStatus() {
+        joinTransactionGroup(this)
+        leaveNoUsageGroup(this)
+    }
+
+    private fun returnResult(type: Int, result: Int, data: Intent?) {
+        val i = data?.let { Intent(it) } ?: Intent()
+        transferViewModel.contact.value?.let { i.putExtra(StaxContact.ID_KEY, it.lookupKey) }
+        i.action = if (type == Constants.SCHEDULE_REQUEST) Constants.SCHEDULED else Constants.TRANSFERRED
+        setResult(result, i)
+//        finish()
+    }
+
+    private fun initFromIntent() {
+        intent.action?.let {
+            setActionType(it)
+        }
+
+        when {
+            intent.hasExtra(Schedule.SCHEDULE_ID) -> createFromSchedule(intent.getIntExtra(Schedule.SCHEDULE_ID, -1))
+            intent.hasExtra(Constants.REQUEST_LINK) -> createFromRequest(intent.getStringExtra(Constants.REQUEST_LINK)!!)
+            else -> Utils.logAnalyticsEvent(getString(R.string.visit_screen, intent.action), this)
+        }
+    }
+
+    fun setActionType(actionType: String) {
+        transferViewModel.setTransactionType(actionType)
+        channelsViewModel.setType(actionType)
+    }
+
+    private fun createFromSchedule(scheduleId: Int) {
+        scheduleViewModel = getViewModel()
+        with(scheduleViewModel) {
+            action.observe(this@MainActivity) { it?.let { actionSelectViewModel.setActiveAction(it) } }
+            schedule.observe(this@MainActivity) { it?.let { transferViewModel.view(it) } }
+            setSchedule(scheduleId)
+        }
+
+        Utils.logAnalyticsEvent(getString(R.string.clicked_schedule_notification), this)
+    }
+
+    private fun createFromRequest(link: String) {
+        transferViewModel.decrypt(link)
+        observeRequest()
+        Utils.logAnalyticsEvent(getString(R.string.clicked_request_link), this)
+    }
+
+    private fun observeRequest() {
+        val alertDialog = StaxDialog(this).setDialogMessage(R.string.loading_link_dialoghead).showIt()
+        transferViewModel.request.observe(this@MainActivity, { it?.let { alertDialog?.dismiss() } })
+    }
+
 }

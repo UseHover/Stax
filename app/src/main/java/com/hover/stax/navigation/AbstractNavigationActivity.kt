@@ -10,6 +10,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
 import com.hover.stax.home.MainActivity
@@ -30,8 +31,8 @@ abstract class AbstractNavigationActivity : AppCompatActivity(), NavigationInter
     fun setUpNav() {
         setBottomBar()
 
-        if (intent.getBooleanExtra(SettingsFragment.LANG_CHANGE, false))
-            navigate(this, Constants.NAV_SETTINGS, null)
+//        if (intent.getBooleanExtra(SettingsFragment.LANG_CHANGE, false))
+//            navigate(this, Constants.NAV_SETTINGS, null)
     }
 
     private fun setBottomBar() {
@@ -52,9 +53,16 @@ abstract class AbstractNavigationActivity : AppCompatActivity(), NavigationInter
 
     private fun setNavClickListener(nav: BottomNavigationView) {
         nav.setOnNavigationItemSelectedListener {
-            if (this is MainActivity)
-                checkPermissionsAndNavigate(getNavConst(it.itemId))
-            else
+            if (this is MainActivity) {
+                val navConst = getNavConst(it.itemId)
+
+                if(navConst == Constants.NAV_TRANSFER)
+                    this.setActionType(HoverAction.P2P)
+                else if(navConst == Constants.NAV_AIRTIME)
+                    this.setActionType(HoverAction.AIRTIME)
+
+                checkPermissionsAndNavigate(navConst)
+            } else
                 navigateThruHome(it.itemId)
             true
         }
