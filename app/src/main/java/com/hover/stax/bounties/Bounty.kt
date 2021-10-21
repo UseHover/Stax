@@ -21,7 +21,7 @@ class Bounty(val action: HoverAction, val transactions: List<StaxTransaction>) {
         HoverAction.P2P -> c.getString(R.string.descrip_bounty_p2p, c.getString(R.string.descrip_bounty_offnet,
                 if (action.isOnNetwork) action.from_institution_name else action.to_institution_name))
         HoverAction.ME2ME -> c.getString(R.string.descrip_bounty_me2me, action.to_institution_name)
-        HoverAction.C2B -> c.getString(R.string.descrip_bounty_c2b)
+        HoverAction.C2B -> c.getString(R.string.descrip_bounty_c2b, if (action.isOnNetwork) "" else c.getString(R.string.descrip_bounty_c2b_b, action.to_institution_name))
         else -> c.getString(R.string.check_balance)
     }
 
@@ -31,7 +31,7 @@ class Bounty(val action: HoverAction, val transactions: List<StaxTransaction>) {
         HoverAction.P2P -> c.getString(R.string.bounty_p2p_explain, c.getString(R.string.descrip_bounty_offnet,
                 if (action.isOnNetwork) action.from_institution_name else action.to_institution_name))
         HoverAction.ME2ME -> c.getString(R.string.bounty_me2me_explain, action.to_institution_name)
-        HoverAction.C2B -> c.getString(R.string.bounty_c2b_explain)
+        HoverAction.C2B -> c.getString(R.string.bounty_c2b_explain, if (action.isOnNetwork) c.getString(R.string.bounty_c2b_any) else action.to_institution_name)
         else -> c.getString(R.string.bounty_balance_explain)
     }
 }

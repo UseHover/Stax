@@ -47,10 +47,8 @@ class SettingsFragment : Fragment(), NavigationInterface {
 
         setUpAccounts(viewModel)
         setUpChooseLang()
-        setUpContactStax()
-        setupRequestFeature()
+        setUpSupport()
         setUpEnableTestMode()
-        setupFaq()
         setupAppVersionInfo()
 
         binding.bountyCard.getStartedWithBountyButton.setOnClickListener { (requireActivity() as MainActivity).getStartedWithBountyButton() }
@@ -87,20 +85,15 @@ class SettingsFragment : Fragment(), NavigationInterface {
         binding.staxAndDeviceInfo.text = getString(R.string.app_version_and_device_id, appVersion, versionCode, deviceId)
     }
 
-    private fun setUpContactStax() {
-        with(binding.contactStax) {
+    private fun setUpSupport() {
+        with(binding.staxSupport) {
             twitterContact.setOnClickListener { Utils.openUrl(getString(R.string.stax_twitter_url), requireActivity()) }
             receiveStaxUpdate.setOnClickListener { Utils.openUrl(getString(R.string.receive_stax_updates_url), requireActivity()) }
+            requestFeature.setOnClickListener { Utils.openUrl(getString(R.string.stax_nolt_url), requireActivity()) }
+            contactSupport.setOnClickListener { Utils.openEmail(getString(R.string.stax_emailing_subject, Hover.getDeviceId(requireContext())), requireContext()) }
+            faq.setOnClickListener { findNavController().navigate(R.id.action_navigation_settings_to_faqFragment) }
         }
-
-        binding.getSupportStax.contactSupport.setOnClickListener { (requireActivity() as MainActivity).openSupportEmailClient() }
     }
-
-    private fun setupRequestFeature() = binding.getSupportStax.requestFeature.setOnClickListener {
-        Utils.openUrl(getString(R.string.stax_nolt_url), requireActivity())
-    }
-
-    private fun setupFaq() = binding.getSupportStax.faq.setOnClickListener { findNavController().navigate(R.id.action_navigation_settings_to_faqFragment) }
 
     private fun showAccounts(accounts: List<Account>) {
         val lv = binding.cardAccounts.accountsList
@@ -122,11 +115,11 @@ class SettingsFragment : Fragment(), NavigationInterface {
     }
 
     private fun setUpEnableTestMode() {
-        binding.contactStax.testMode.setOnCheckedChangeListener { _, isChecked ->
+        binding.cardAccounts.testMode.setOnCheckedChangeListener { _, isChecked ->
             Utils.saveBoolean(Constants.TEST_MODE, isChecked, requireContext())
             UIHelper.flashMessage(requireContext(), if (isChecked) R.string.test_mode_toast else R.string.test_mode_disabled)
         }
-        binding.contactStax.testMode.visibility = if (Utils.getBoolean(Constants.TEST_MODE, requireContext())) VISIBLE else GONE
+        binding.cardAccounts.testMode.visibility = if (Utils.getBoolean(Constants.TEST_MODE, requireContext())) VISIBLE else GONE
         binding.disclaimer.setOnClickListener {
             clickCounter++
             if (clickCounter == 5) UIHelper.flashMessage(requireContext(), R.string.test_mode_almost_toast) else if (clickCounter == 7) enableTestMode()
@@ -135,7 +128,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
 
     private fun enableTestMode() {
         Utils.saveBoolean(Constants.TEST_MODE, true, requireActivity())
-        binding.contactStax.testMode.visibility = VISIBLE
+        binding.cardAccounts.testMode.visibility = VISIBLE
         UIHelper.flashMessage(requireContext(), R.string.test_mode_toast)
     }
 

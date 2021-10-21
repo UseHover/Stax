@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.databinding.LibraryListItemBinding
+import com.hover.stax.utils.Utils
 
 class ChannelsAdapter(private val channelList: List<Channel>, val dialListener: DialListener) : RecyclerView.Adapter<ChannelsAdapter.ViewHolder>() {
 

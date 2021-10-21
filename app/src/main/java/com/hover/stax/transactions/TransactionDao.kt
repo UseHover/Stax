@@ -11,8 +11,9 @@ interface TransactionDao {
     @Query("SELECT * FROM stax_transactions WHERE transaction_type != 'balance' AND status != 'failed' AND environment != 3 ORDER BY initiated_at DESC")
     fun getCompleteAndPendingTransfers(): LiveData<List<StaxTransaction>>?
 
-    @Query("SELECT * FROM stax_transactions WHERE account_id = :accountId AND transaction_type != 'balance' AND environment != 3 ORDER BY initiated_at DESC")
-    fun getAllTransfers(accountId: Int): LiveData<List<StaxTransaction>>?
+    @Transaction
+    @Query("SELECT * FROM stax_transactions WHERE account_id = :accountId AND environment != 3 ORDER BY initiated_at DESC")
+    fun getAccountTransactions(accountId: Int): LiveData<List<StaxTransaction>>?
 
     @get:Query("SELECT * FROM stax_transactions WHERE status != 'failed' AND environment != 3 ORDER BY initiated_at DESC LIMIT 4")
     val transactionsForAppReview: LiveData<List<StaxTransaction>>?

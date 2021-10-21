@@ -22,7 +22,7 @@ class PinsViewModel(val repo: DatabaseRepo) : ViewModel() {
     }
 
     private fun loadAccounts() {
-        accounts = repo.allAccounts
+        accounts = repo.allAccountsLive
     }
 
     fun loadAccount(id: Int) {

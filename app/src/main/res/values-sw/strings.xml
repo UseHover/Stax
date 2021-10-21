@@ -490,8 +490,6 @@
 
   <string name="network_label">Akaunti ya mpokeaji</string>
 
-  <string name="id_label">Kitambulisho cha Muamala</string>
-
   <string name="session_cardhead">Ujumbe</string>
 
   <!-- Canceling -->
@@ -554,21 +552,15 @@
 
   <string name="disclaimer">Majina yote ya bidhaa, chapa, na alama za biashara ni mali ya wamiliki wao. Matumizi haimaanishi ushirika.</string>
 
-  <string name="contact_stax_cardhead">Endelea kuwasiliana</string>
-
   <string name="twitter" translatable="false">Twitter</string>
 
   <string name="stax_twitter_url" translatable="false">http://twitter.com/joinstax</string>
 
   <string name="receive_stax_updates">Pokea sasisho za Stax</string>
 
-  <string name="support">Msaada</string>
-
   <string name="FAQs">Maswali Yanayoulizwa mara nyingi</string>
 
-  <string name="request_feature">Omba huduma katika Stax!</string>
-
-  <string name="contact_support">Wasiliana na msaada</string>
+  <string name="request_feature">Omba huduma katika Stax</string>
 
   <string name="stax_support_email">support\@stax.me</string>
 
@@ -679,10 +671,6 @@
   <string name="descrip_bounty_me2me">Hamisha pesa kwenye akaunti yako ya %1$s</string>
 
   <string name="bounty_me2me_explain">Tuma kiasi chochote kwa akaunti yako ya %1$s</string>
-
-  <string name="descrip_bounty_c2b">Lipa bili</string>
-
-  <string name="bounty_c2b_explain">Tuma kiasi chochote kwa biashara yoyote</string>
 
   <string name="descrip_bounty_balance">Angalia salio</string>
 
