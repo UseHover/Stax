@@ -69,11 +69,11 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     fun getChannelsByIds(ids: List<Int>): List<Channel> = channelDao.getChannelsByIds(ids)
 
     fun getChannelsByCountry(channelIds: IntArray, countryCode: String): LiveData<List<Channel>> {
-        return channelDao.getChannels(countryCode, channelIds)
+        return channelDao.getChannels(countryCode.uppercase(), channelIds)
     }
 
     fun getChannelsByCountry(countryCode: String): List<Channel> {
-        return channelDao.getChannels(countryCode)
+        return channelDao.getChannels(countryCode.uppercase())
     }
 
     fun update(channel: Channel?) {

@@ -26,7 +26,7 @@ public class CountryDropdown extends StaxDropdownLayout {
         super(context, attrs);
     }
 
-    public void updateChoices(List<Channel> channels) {
+    public void updateChoices(List<Channel> channels, String currentCountry) {
         Log.d(TAG, "loading countries");
         if (channels == null || channels.size() == 0) {
             setEmptyState();
@@ -36,6 +36,8 @@ public class CountryDropdown extends StaxDropdownLayout {
         autoCompleteTextView.setAdapter(adapter);
         autoCompleteTextView.setDropDownHeight(UIHelper.dpToPx(600));
         autoCompleteTextView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((String) adapterView.getItemAtPosition(pos)));
+        setDropdownValue(currentCountry);
+        adapter.notifyDataSetChanged();
     }
 
     private String[] getCountryCodes(List<Channel> channelList) {
@@ -66,8 +68,10 @@ public class CountryDropdown extends StaxDropdownLayout {
         if (selectListener != null) selectListener.countrySelect(code);
     }
 
-    private void setDropdownValue(String countryCode) {
-        if (countryCode != null && adapter != null)
+    public void setDropdownValue(String countryCode) {
+        if (countryCode == null)
+            countryCode = CountryAdapter.codeRepresentingAllCountries();
+        if (adapter != null)
             autoCompleteTextView.setText(adapter.getCountryString(countryCode));
     }
 }

@@ -32,7 +32,7 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
     val actions: LiveData<List<HoverAction>>
     val channels: LiveData<List<Channel>>
     val transactions: LiveData<List<StaxTransaction>>
-    private val filteredBountyChannels: MutableLiveData<List<Channel>?>
+    var currentCountryFilter: MutableLiveData<String> = MutableLiveData()
     private val bountyList = MediatorLiveData<List<Bounty>>()
 
     var sims: MutableLiveData<List<SimInfo>> = MutableLiveData()
@@ -43,9 +43,8 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
     val didLoginFail = MutableLiveData(false)
 
     init {
+        currentCountryFilter.value = CountryAdapter.codeRepresentingAllCountries()
         loadSims()
-        filteredBountyChannels = MutableLiveData()
-        filteredBountyChannels.value = null
         actions = repo.bountyActions
         channels = Transformations.switchMap(actions, this::loadChannels)
         transactions = repo.bountyTransactions!!
@@ -99,7 +98,11 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
 //        val ids = getChannelIdArray(actions)
 //        Timber.e("channel id length %s", ids.size)
 //        return repo.getChannels(ids)
-        val ids = getChannelIdArray(actions.distinctBy { it.id }).toList()
+        val ids = getChannelIdArray(actions).toList()
+
+//        filterChannels(countryCode)
+//
+//        repo.getChannelsByCountry(getChannelIdArray(actions), countryCode)
 
         val channelList = runBlocking {
             getChannelsAsync(ids).await()

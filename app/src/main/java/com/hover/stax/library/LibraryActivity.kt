@@ -1,18 +1,15 @@
 package com.hover.stax.library
 
-import android.Manifest
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.ActivityLibraryBinding
 import com.hover.stax.navigation.AbstractNavigationActivity
-import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class LibraryActivity : AbstractNavigationActivity(), CountryAdapter.SelectListener {
 
@@ -35,15 +32,12 @@ class LibraryActivity : AbstractNavigationActivity(), CountryAdapter.SelectListe
 
     private fun setObservers() {
         with(viewModel) {
-            allChannels.observe(this@LibraryActivity) {
-                it?.let {
-                    binding!!.countryDropdown.updateChoices(it)
-                    if (filteredChannels.value == null)
-                        filterChannels(CountryAdapter.codeRepresentingAllCountries())
-                }
-            }
-
             filteredChannels.observe(this@LibraryActivity) { it?.let { updateList(it) } }
+            country.observe(this@LibraryActivity) { it?.let { binding?.countryDropdown?.setDropdownValue(it) } }
+            allChannels.observe(this@LibraryActivity) { it?.let {
+                binding!!.countryDropdown.updateChoices(it, viewModel.country.value)
+                updateList(it)
+            } }
         }
     }
 
@@ -52,5 +46,5 @@ class LibraryActivity : AbstractNavigationActivity(), CountryAdapter.SelectListe
             binding!!.shortcodes.adapter = ChannelsAdapter(channels)
     }
 
-    override fun countrySelect(countryCode: String) = viewModel.filterChannels(countryCode)
+    override fun countrySelect(countryCode: String) = viewModel.setCountry(countryCode)
 }
