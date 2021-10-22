@@ -38,18 +38,16 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     private lateinit var contactInput: ContactInput
     private lateinit var recipientValue: Stax2LineItem
 
-    private lateinit var binding: FragmentTransferBinding
+    private var _binding: FragmentTransferBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         abstractFormViewModel = getSharedViewModel<TransferViewModel>()
         transferViewModel = abstractFormViewModel as TransferViewModel
 
-        arguments?.getString(Constants.TRANSACTION_TYPE)?.let {
-            transferViewModel.setTransactionType(it)
-            channelsViewModel.setType(it)
-        }
+        setTransactionType(arguments!!.getString(Constants.TRANSACTION_TYPE)!!)
 
-        binding = FragmentTransferBinding.inflate(inflater, container, false)
+        _binding = FragmentTransferBinding.inflate(inflater, container, false)
 
         init(binding.root)
         startObservers(binding.root)
@@ -82,6 +80,11 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         accountDropdown.setHint(getString(R.string.channel_label))
     }
 
+    private fun setTransactionType(txnType: String) {
+        transferViewModel.setTransactionType(txnType)
+        channelsViewModel.setType(txnType)
+    }
+
     private fun setTitle() {
         val titleRes = if (TransactionType.type == HoverAction.AIRTIME) R.string.cta_airtime else R.string.cta_transfer
         binding.editCard.transferCard.setTitle(getString(titleRes))
@@ -92,7 +95,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         super.startObservers(root)
 
         actionSelectViewModel.activeAction.observe(viewLifecycleOwner, {
-            Timber.e("Active action $it - ${it.transaction_type}")
             binding.summaryCard.accountValue.setSubtitle(it.getNetworkSubtitle(requireContext()))
             actionSelect.selectRecipientNetwork(it)
             setRecipientHint(it)
@@ -230,6 +232,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     private fun setRecipientHint(action: HoverAction) {
+        Timber.e("${action.from_institution_name} - ${action.transaction_type} - ${action.requiresRecipient()}")
+
         editCard?.findViewById<LinearLayout>(R.id.recipient_entry)?.visibility = if (action.requiresRecipient()) View.VISIBLE else View.GONE
         binding.summaryCard.recipientRow.visibility = if (action.requiresRecipient()) View.VISIBLE else View.GONE
 
@@ -258,5 +262,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         transferViewModel.setEditing(r.amount.isNullOrEmpty())
         accountDropdown.setState(getString(R.string.channel_request_fieldinfo, r.requester_institution_id.toString()), AbstractStatefulInput.INFO)
         Utils.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext())
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

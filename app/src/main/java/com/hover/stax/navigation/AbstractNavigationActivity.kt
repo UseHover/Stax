@@ -54,14 +54,7 @@ abstract class AbstractNavigationActivity : AppCompatActivity(), NavigationInter
     private fun setNavClickListener(nav: BottomNavigationView) {
         nav.setOnNavigationItemSelectedListener {
             if (this is MainActivity) {
-                val navConst = getNavConst(it.itemId)
-
-                if(navConst == Constants.NAV_TRANSFER)
-                    this.setActionType(HoverAction.P2P)
-                else if(navConst == Constants.NAV_AIRTIME)
-                    this.setActionType(HoverAction.AIRTIME)
-
-                checkPermissionsAndNavigate(navConst)
+                checkPermissionsAndNavigate(getNavConst(it.itemId))
             } else
                 navigateThruHome(it.itemId)
             true

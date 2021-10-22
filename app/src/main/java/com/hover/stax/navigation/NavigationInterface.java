@@ -125,18 +125,6 @@ public interface NavigationInterface {
         navController.navigate(R.id.accountDetailsFragment, bundle);
     }
 
-//    default void navigateToLanguageSelectionFragment(Activity activity) {
-//        Intent intentLanguage = new Intent(activity, SelectLanguageActivity.class);
-//        intentLanguage.putExtra(LANG_CHANGE, true);
-//        activity.startActivity(intentLanguage);
-//    }
-
-//    default void navigateToPinUpdateFragment(int accountId, Fragment fragment) {
-//        Bundle bundle = new Bundle();
-//        bundle.putInt("accountId", accountId);
-//        NavHostFragment.findNavController(fragment).navigate(R.id.action_navigation_settings_to_pinUpdateFragment, bundle);
-//    }
-
     default void navigateToTransactionDetailsFragment(String uuid, FragmentManager manager, Boolean isFullScreen) {
         TransactionDetailsFragment frag = TransactionDetailsFragment.Companion.newInstance(uuid, isFullScreen);
         frag.show(manager, "dialogFrag");

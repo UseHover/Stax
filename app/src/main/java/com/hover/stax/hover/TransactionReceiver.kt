@@ -47,8 +47,13 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
 
             if (inputExtras.containsKey(Constants.ACCOUNT_ID)) {
                 val accountId = inputExtras[Constants.ACCOUNT_ID]
+                Timber.e("AccountId  - $accountId")
 
-                accountId?.let { account = repo.getAccount(accountId.toInt()) }
+                accountId?.let {
+                    Timber.e("Here")
+                    account = repo.getAccount(accountId.toInt())
+                    Timber.e("$account")
+                }
             }
         }
 
@@ -56,6 +61,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
             val parsedVariables = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as HashMap<String, String>
 
             if (account != null && parsedVariables.containsKey("balance")) {
+                Timber.e("$account has balance")
                 account!!.updateBalance(parsedVariables)
                 repo.update(account!!)
             }
@@ -69,7 +75,6 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
     }
 
     private fun updateTransaction(intent: Intent, c: Context) {
-        Timber.e("Updating transaction")
         repo.insertOrUpdateTransaction(intent, action!!, contact!!, c)
     }
 
