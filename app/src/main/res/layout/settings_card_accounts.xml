@@ -45,4 +45,17 @@
         android:text="@string/test_mode_enabled"
         android:textColor="@color/offWhite"
         android:textSize="@dimen/text_16" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/manageStax"
+            style="@style/StaxButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="@string/manage_account_btn" />
+    </RelativeLayout>
 </com.hover.stax.views.StaxCardView>

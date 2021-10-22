@@ -54,6 +54,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
 
     private fun setUpAccounts(viewModel: PinsViewModel) {
         accountAdapter = ArrayAdapter(requireActivity(), R.layout.stax_spinner_item)
+        binding.cardAccounts.manageStax.setOnClickListener { navigateToManageAccount(this@SettingsFragment) }
         viewModel.accounts.observe(viewLifecycleOwner) {
             showAccounts(it)
 

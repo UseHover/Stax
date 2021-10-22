@@ -322,6 +322,7 @@
 	<string name="security_cardhead">Security</string>
 	<string name="security_cardbody">Stax meets the criteria of 740.17(b)(3) (i) security classification of the United States Bureau of Industry and Security. This software uses HTTPS for server communication; symmetric key RSA encryption to temporarily store the user\'s credentials on their own device using Android Keystore; and code obfuscation using DRM.</string>
 	<string name="defaultacct_label">Default account</string>
+	<string name="manage_account_btn">Manage Account</string>
 	<string name="security_head">Secure with Stax</string>
 	<string name="btn_removepins">Remove PINs</string>
 	<string name="removepins_dialoghead">Remove all PINs now</string>
@@ -393,7 +394,8 @@
 	<string name="bounty_msg">Stax will pay you USD $5 - $50 to go through a USSD flow.</string>
 	<string name="get_started">Get started</string>
 	<string name="bounty_email_stage_title">🗺️  MAP USSD FLOWS</string>
-	<string name="bounty_email_stage_desc1"><b>Welcome to Money Mapper.</b> Stax wants to make USSD easier for everyone. To bring Stax to more people in more countries, we need to map every USSD menu globally. Join Stax as a Money Mapper and earn $5 - $20 USD for every USSD transaction you successfully map. USSD menus we still need (bounties) are listed on the next page. We add new bounties often!</string> <string name="bounty_email_stage_desc2"><b>1.</b>   Sign in with your Google account.\n<b>2.</b> Find an open bounty for any of your bank or mobile money accounts.\n<b>3.</b> Complete the <a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c">USSD transaction</a> described on the bounty, like Check Balance or Buy Airtime.\n <b>4.</b> Review the transaction details. Retry if it failed or is incomplete.\n<b>5.</b> Stax will review your submissions, which may take 7-10 days. \n<b>6.</b> You get paid at the end of each week </string>
+	<string name="bounty_email_stage_desc1"><b>Welcome to Money Mapper.</b> Stax wants to make USSD easier for everyone. To bring Stax to more people in more countries, we need to map every USSD menu globally. Join Stax as a Money Mapper and earn $5 - $20 USD for every USSD transaction you successfully map. USSD menus we still need (bounties) are listed on the next page. We add new bounties often!</string>
+	<string name="bounty_email_stage_desc2"><b>1.</b>   Sign in with your Google account.\n<b>2.</b> Find an open bounty for any of your bank or mobile money accounts.\n<b>3.</b> Complete the <a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c">USSD transaction</a> described on the bounty, like Check Balance or Buy Airtime.\n <b>4.</b> Review the transaction details. Retry if it failed or is incomplete.\n<b>5.</b> Stax will review your submissions, which may take 7-10 days. \n<b>6.</b> You get paid at the end of each week </string>
 	<string name="descrip_bounty_airtime">Buy airtime for any person %1$s</string>
 	<string name="bounty_airtime_explain">Buy airtime for someone else %1$s</string>
 	<string name="descrip_bounty_p2p">Send money to someone else %1$s</string>
@@ -484,18 +486,34 @@
 	<string name="loading">Loading…</string>
 	<string name="loading_error">Unable to load FAQ, please try again</string>
 	<string name="faq_internet_error">This feature requires internet connection, please try again</string>
-    <string name="working_offline">Working offline</string>
+	<string name="working_offline">Working offline</string>
 
-    <string name="marketing_email_optin">Stax can send me emails in the future.</string>
-    <string name="email_client_not_found">No email client found on device.</string>
-    <string name="enable_call_permission">Please enable call permission to dial USSD code.</string>
+	<string name="marketing_email_optin">Stax can send me emails in the future.</string>
+	<string name="email_client_not_found">No email client found on device.</string>
+	<string name="enable_call_permission">Please enable call permission to dial USSD code.</string>
 
 	<string name="rename_account">Rename Account</string>
 	<string name="current_name">Current name</string>
 	<string name="hint_enter_new_name">Enter a new name</string>
 
-    <string name="original_name">Original name</string>
-    <string name="which_account">Which account?</string>
-    <string name="account_select_header">You have more than one %1$s account. Please choose which one you want to use to %2$s.</string>
+	<string name="original_name">Original name</string>
+	<string name="which_account">Which account?</string>
+	<string name="account_select_header">You have more than one %1$s account. Please choose which one you want to use to %2$s.</string>
+	<!-- Preference Titles -->
+	<string name="messages_header">Messages</string>
+	<string name="sync_header">Sync</string>
+
+	<!-- Messages Preferences -->
+	<string name="signature_title">Your signature</string>
+	<string name="reply_title">Default reply action</string>
+
+	<!-- Sync Preferences -->
+	<string name="sync_title">Sync email periodically</string>
+	<string name="attachment_title">Download incoming attachments</string>
+	<string name="attachment_summary_on">Automatically download attachments for incoming emails
+	</string>
+	<string name="attachment_summary_off">Only download attachments when manually requested</string>
+	<!-- TODO: Remove or change this placeholder text -->
+	<string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

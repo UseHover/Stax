@@ -3,9 +3,7 @@ package com.hover.stax.navigation;
 import static com.hover.stax.settings.SettingsFragment.LANG_CHANGE;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +13,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.hover.sdk.actions.HoverAction;
-import com.hover.sdk.api.Hover;
 import com.hover.stax.R;
 import com.hover.stax.bounties.BountyActivity;
 import com.hover.stax.channels.AddChannelsFragment;
@@ -24,9 +21,6 @@ import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.transactions.TransactionDetailsFragment;
 import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.Constants;
-import com.hover.stax.utils.UIHelper;
-
-import timber.log.Timber;
 
 public interface NavigationInterface {
 
@@ -124,6 +118,10 @@ public interface NavigationInterface {
         NavHostFragment.findNavController(fragment).navigate(R.id.pinUpdateFragment, bundle);
     }
 
+    default void navigateToManageAccountFragment(Fragment fragment) {
+        NavHostFragment.findNavController(fragment).navigate(R.id.manageStaxFragment);
+    }
+
     default void navigateToTransactionDetailsFragment(String uuid, FragmentManager manager, Boolean isFullScreen) {
         TransactionDetailsFragment frag = TransactionDetailsFragment.Companion.newInstance(uuid, isFullScreen);
         frag.show(manager, "dialogFrag");
@@ -143,6 +141,10 @@ public interface NavigationInterface {
 
     default void navigateToBountyListFragment(NavController navController) {
         navController.navigate(R.id.bountyListFragment);
+    }
+
+    default void navigateToManageAccount(Fragment fragment) {
+        NavHostFragment.findNavController(fragment).navigate(R.id.manageStaxFragment);
     }
 
     default void navigateFAQ(Fragment fragment) {
