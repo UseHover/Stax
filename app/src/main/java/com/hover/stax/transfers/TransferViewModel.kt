@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.account.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.contacts.StaxContact

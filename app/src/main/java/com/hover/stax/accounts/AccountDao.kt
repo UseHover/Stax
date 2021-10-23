@@ -1,4 +1,4 @@
-package com.hover.stax.account
+package com.hover.stax.accounts
 
 import androidx.lifecycle.LiveData
 import androidx.room.*

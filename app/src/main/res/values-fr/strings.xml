@@ -388,7 +388,7 @@
 
   <string name="requester_number_label">Compte</string>
 
-  <string name="requester_account_number_label">Numéro de compte</string>
+  <string name="account_number_label">Numéro de compte</string>
 
   <string name="request_error_recipient">Veuillez saisir un numéro de téléphone.</string>
 

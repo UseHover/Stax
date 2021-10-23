@@ -389,7 +389,7 @@
 
     <string name="requester_number_label">መለያ</string>
 
-    <string name="requester_account_number_label">የመለያ ቁጥር</string>
+    <string name="account_number_label">የመለያ ቁጥር</string>
 
     <string name="request_error_recipient">እባክዎ ስልክ ቁጥር ያስገቡ።</string>
 

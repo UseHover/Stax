@@ -2,10 +2,9 @@ package com.hover.stax.transfers
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.lifecycle.Observer
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.account.Account
+import com.hover.stax.accounts.Account
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
@@ -21,7 +20,6 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInterface {
 

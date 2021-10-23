@@ -17,7 +17,7 @@
 
     <fragment
             android:id="@+id/accountsFrag"
-            android:name="com.hover.stax.account.AccountsFragment"
+            android:name="com.hover.stax.accounts.AccountsFragment"
             android:label="AccountsFragment"
             tools:layout="@layout/fragment_accounts">
         <action

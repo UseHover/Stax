@@ -5,7 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.R
-import com.hover.stax.account.Account
+import com.hover.stax.accounts.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.database.DatabaseRepo

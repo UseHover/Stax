@@ -9,7 +9,6 @@ import android.widget.*
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.account.Account
 import com.hover.stax.databinding.ActionSelectBinding
 import com.hover.stax.utils.Constants.size55
 import com.hover.stax.utils.UIHelper

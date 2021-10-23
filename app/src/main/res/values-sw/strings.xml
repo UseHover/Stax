@@ -388,7 +388,7 @@
 
   <string name="requester_number_label">Akaunti</string>
 
-  <string name="requester_account_number_label">Nambari ya akaunti</string>
+  <string name="account_number_label">Nambari ya akaunti</string>
 
   <string name="request_error_recipient">Tafadhali ingiza nambari ya simu.</string>
 

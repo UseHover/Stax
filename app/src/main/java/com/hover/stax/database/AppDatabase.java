@@ -9,8 +9,8 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.hover.stax.account.Account;
-import com.hover.stax.account.AccountDao;
+import com.hover.stax.accounts.Account;
+import com.hover.stax.accounts.AccountDao;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
 import com.hover.stax.contacts.ContactDao;

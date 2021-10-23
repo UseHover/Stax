@@ -112,12 +112,6 @@ public interface NavigationInterface {
         activity.startActivity(intentLanguage);
     }
 
-    default void navigateToPinUpdateFragment(int accountId, Fragment fragment) {
-        Bundle bundle = new Bundle();
-        bundle.putInt("accountId", accountId);
-        NavHostFragment.findNavController(fragment).navigate(R.id.pinUpdateFragment, bundle);
-    }
-
     default void navigateToManageAccountFragment(Fragment fragment) {
         NavHostFragment.findNavController(fragment).navigate(R.id.manageStaxFragment);
     }

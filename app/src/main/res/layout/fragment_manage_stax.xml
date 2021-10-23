@@ -16,5 +16,9 @@
 			android:id="@+id/cardAccounts"
 			layout="@layout/settings_card_accounts" />
 
+		<include
+			android:id="@+id/cardReferee"
+			layout="@layout/settings_card_referee" />
+
 	</LinearLayout>
 </androidx.core.widget.NestedScrollView>

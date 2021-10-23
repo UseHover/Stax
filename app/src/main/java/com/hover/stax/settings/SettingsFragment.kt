@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
-import com.hover.stax.account.Account
+import com.hover.stax.accounts.Account
 import com.hover.stax.databinding.FragmentSettingsBinding
 import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.library.LibraryActivity
@@ -33,7 +33,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
     private var accountAdapter: ArrayAdapter<Account>? = null
     private var clickCounter = 0
 
-    private val viewModel: PinsViewModel by viewModel()
+    private val viewModel: SettingsViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
@@ -52,26 +52,14 @@ class SettingsFragment : Fragment(), NavigationInterface {
         setupAppVersionInfo();
     }
 
-    private fun setUpAccounts(viewModel: PinsViewModel) {
-        accountAdapter = ArrayAdapter(requireActivity(), R.layout.stax_spinner_item)
+    private fun setUpAccounts(viewModel: SettingsViewModel) {
         binding.cardAccounts.manageStax.setOnClickListener { navigateToManageAccount(this@SettingsFragment) }
         viewModel.accounts.observe(viewLifecycleOwner) {
-            showAccounts(it)
-
             if (!it.isNullOrEmpty() && it.size > 1)
                 createDefaultSelector(it)
             else
                 binding.cardAccounts.defaultAccountEntry.visibility = GONE
         }
-    }
-
-    private fun showAccounts(accounts: List<Account>) {
-        val lv = binding.cardAccounts.accountsList
-        accountAdapter!!.clear()
-        accountAdapter!!.addAll(accounts)
-        lv.adapter = accountAdapter
-        lv.setOnItemClickListener { _, _, position, _ -> navigateToPinUpdateFragment(accounts[position].id, this@SettingsFragment) }
-        UIHelper.fixListViewHeight(lv)
     }
 
     private fun createDefaultSelector(accounts: List<Account>) {

@@ -37,7 +37,7 @@ public class SelectLanguageActivity extends AppCompatActivity {
         Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_language)), this);
 
         if (getIntent().hasExtra(SettingsFragment.LANG_CHANGE))
-            binding.staxCardView.setBackButtonVisibility(View.VISIBLE);
+            binding.detailsCard.setBackButtonVisibility(View.VISIBLE);
 
         selectedCode = Lingver.getInstance().getLanguage();
         final RadioGroup radioGrp = binding.languageRadioGroup;
