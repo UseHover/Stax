@@ -369,7 +369,7 @@
 
     <string name="btn_addcontact">+ ሌላ ሰው ይጨምሩ</string>
 
-    <string name="sms_request_template">በቀዳሚ ምቾትዎ %1$s ን በደግነት ይረዱኝ። %2$s%3$s</string>
+    <string name="sms_request_template">በቀዳሚ ምቾትዎ %1$s ን በደግነት ይረዱኝ። %2$s %3$s</string>
 
     <string name="sms_amount_detail">%1$s </string>
 

@@ -368,7 +368,7 @@
 
   <string name="btn_addcontact">+ Ajouter une autre personne</string>
 
-  <string name="sms_request_template">Veuillez me staxer %1$s dans les meilleurs délais. %2$s%3$s</string>
+  <string name="sms_request_template">Veuillez me staxer %1$s dans les meilleurs délais. %2$s %3$s</string>
 
   <string name="sms_amount_detail">%1$s </string>
 

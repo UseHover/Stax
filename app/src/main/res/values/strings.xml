@@ -236,7 +236,7 @@
 	<string name="amount_label_opt">Amount (Optional)</string>
 	<string name="reqfrom_label">To</string>
 	<string name="btn_addcontact">+ Add another person</string>
-	<string name="sms_request_template">Kindly stax me %1$s at your earliest convenience. %2$s%3$s</string>
+	<string name="sms_request_template">Kindly stax me %1$s at your earliest convenience. %2$s %3$s</string>
 	<string name="sms_amount_detail">%1$s </string>
 	<string name="sms_note_detail">Note: \"%1$s\" </string>
 	<string name="reqsave_head">Save request?</string>

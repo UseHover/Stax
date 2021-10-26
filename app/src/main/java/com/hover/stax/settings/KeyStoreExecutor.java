@@ -51,8 +51,6 @@ final public class KeyStoreExecutor {
 
             return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
         } catch (Exception e) {
-            if (c != null) {
-            }
             Log.println(Log.ERROR, TAG, c.getString(R.string.hsdk_log_pin_encrypt_err));
         }
         return null;
@@ -100,8 +98,6 @@ final public class KeyStoreExecutor {
             }
         } while (privateKeyEntry == null && count < 4);
 
-        if (privateKeyEntry == null) {
-        }
         return privateKeyEntry;
     }
 
