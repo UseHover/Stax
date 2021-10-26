@@ -4,10 +4,12 @@ import android.content.Context
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
+import com.hover.stax.contacts.StaxContact
+import com.hover.stax.utils.Utils
 
 class TransactionStatus(val transaction: StaxTransaction) {
 
-    fun getIcon(action: HoverAction?, c: Context): Int {
+    fun getIcon(): Int {
         return when (transaction.status) {
             Transaction.FAILED -> R.drawable.ic_info_red
             Transaction.PENDING -> {
@@ -39,22 +41,16 @@ class TransactionStatus(val transaction: StaxTransaction) {
         else return when (transaction.status) {
             Transaction.FAILED -> lookupFailureMessage(action, c)
             Transaction.PENDING -> c.getString(R.string.pending_cardhead)
-            else -> {
-                return if (transaction.balance == null) "\\u2014"
-                else transaction.balance
-            }
+            else -> getStringOrEmdash(transaction.balance, R.string.new_balance, c)
         }
     }
 
-    fun getStatusDetail(action: HoverAction, c: Context): String {
+    fun getStatusDetail(action: HoverAction?, messages: UssdCallResponse?, sms: List<UssdCallResponse>?,  c: Context): String {
         if (transaction.isRecorded) return getRecordedStatusDetail(c)
         else return when (transaction.status) {
             Transaction.FAILED -> lookupFailureDescription(action, c)
             Transaction.PENDING -> c.getString(R.string.pending_cardbody)
-            else -> {
-                return if (transaction.balance == null) "\\u2014"
-                else c.getString(R.string.new_balance, transaction.balance)
-            }
+            else -> lookupSuccessDescription(messages, sms, c)
         }
     }
 
@@ -90,6 +86,20 @@ class TransactionStatus(val transaction: StaxTransaction) {
             StaxTransaction.NO_RESPONSE_ERROR -> c.getString(R.string.no_response_desc, getServiceName(a, c))
             else -> c.getString(R.string.unspecified_error_desc)
         }
+    }
+
+    private fun lookupSuccessDescription(last_message: UssdCallResponse?, sms: List<UssdCallResponse>?, c: Context): String {
+        if (!sms.isNullOrEmpty())
+            return sms.sortedByDescending { it.responseMessage.length }.map { it.responseMessage }.toString()
+        else if (!(last_message?.responseMessage.isNullOrEmpty()))
+            return last_message!!.responseMessage
+        else
+            return c.getString(R.string.loading)
+    }
+
+    fun getStringOrEmdash(value: String, stringRes: Int, c: Context): String {
+        return if (value == null) "\\u2014"
+        else c.getString(stringRes, value)
     }
 
     private fun getServiceName(a: HoverAction?, c: Context): String {

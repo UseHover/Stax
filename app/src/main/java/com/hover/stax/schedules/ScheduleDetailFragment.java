@@ -71,7 +71,7 @@ public class ScheduleDetailFragment extends Fragment {
         binding.scheduleDetailsCard.setTitle(schedule.description);
 
         binding.summaryCard.detailsAmount.setText(Utils.formatAmount(schedule.amount));
-        binding.summaryCard.detailsDate.setText(DateUtils.humanFriendlyDate(schedule.start_date));
+        binding.summaryCard.detailsDate.setText(DateUtils.humanFriendlyDateTime(schedule.start_date));
 
         binding.summaryCard.frequencyRow.setVisibility(schedule.frequency == Schedule.ONCE ? View.GONE : View.VISIBLE);
         binding.summaryCard.detailsFrequency.setText(schedule.humanFrequency(getContext()));

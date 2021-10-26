@@ -17,7 +17,7 @@ class LibraryViewModel(val repo: DatabaseRepo) : ViewModel() {
 
     init {
         allChannels = repo.allChannels
-        filteredChannels.value = allChannels.value
+        filteredChannels.value = null
     }
 
     fun filterChannels(countryCode: String) {

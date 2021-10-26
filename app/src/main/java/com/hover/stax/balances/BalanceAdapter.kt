@@ -64,7 +64,7 @@ class BalanceAdapter(val accounts: List<Account>, val balanceListener: BalanceLi
             when {
                 account.latestBalance != null && showBalance -> {
                     binding.balanceSubtitle.visibility = View.VISIBLE
-                    binding.balanceSubtitle.text = DateUtils.humanFriendlyDate(account.latestBalanceTimestamp)
+                    binding.balanceSubtitle.text = DateUtils.humanFriendlyDateTime(account.latestBalanceTimestamp)
                     binding.balanceAmount.text = Utils.formatAmount(account.latestBalance!!)
                 }
                 account.latestBalance == null && showBalance -> {

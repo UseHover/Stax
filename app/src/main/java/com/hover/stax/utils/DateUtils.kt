@@ -30,6 +30,15 @@ object DateUtils {
     }
 
     @JvmStatic
+    fun humanFriendlyDateTime(timestamp: Long): String {
+        val time = Calendar.getInstance()
+        time.timeInMillis = timestamp
+        var str = String.format("%02d:%02d", time[Calendar.HOUR_OF_DAY], time[Calendar.MINUTE])
+        str += " on " + humanFriendlyDate(timestamp)
+        return str
+    }
+
+    @JvmStatic
     fun humanFriendlyDate(timestamp: Long): String {
         if (timestamp == -1L) return ""
         val now = Calendar.getInstance()

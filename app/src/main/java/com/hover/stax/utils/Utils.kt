@@ -315,7 +315,12 @@ object Utils {
 
     @JvmStatic
     fun dial(shortCode: String, c: Context) {
-        logAnalyticsEvent(c.getString(R.string.clicked_dial_shortcode), c)
+        val data = JSONObject()
+        try {
+            data.put("shortcode", shortCode)
+        } catch (ignored: JSONException) {
+        }
+        logAnalyticsEvent(c.getString(R.string.clicked_dial_shortcode), data, c)
 
         val dialIntent = Intent(Intent.ACTION_CALL, Uri.parse("tel:".plus(shortCode.replace("#", Uri.encode("#"))))).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
