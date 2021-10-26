@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
@@ -125,13 +126,11 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
     private fun onRefresh() = viewModel.account.value?.let { (activity as MainActivity).onTapRefresh(it.id) }
 
-    override fun viewRequestDetail(id: Int) {
-        navigateToRequestDetailsFragment(id, this)
-    }
+    override fun viewRequestDetail(id: Int) =
+            findNavController().navigate(R.id.action_accountDetailsFragment_to_requestDetailsFragment, bundleOf("id" to id))
 
-    override fun viewScheduledDetail(id: Int) {
-        navigateToScheduleDetailsFragment(id, this)
-    }
+    override fun viewScheduledDetail(id: Int) =
+            findNavController().navigate(R.id.action_accountDetailsFragment_to_scheduleDetailsFragment, bundleOf("id" to id))
 
     override fun viewTransactionDetail(uuid: String?) {
         navigateToTransactionDetailsFragment(uuid, childFragmentManager, true)

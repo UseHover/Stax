@@ -19,6 +19,9 @@
         <action
                 android:id="@+id/action_navigation_home_to_navigation_transfer"
                 app:destination="@id/navigation_transfer" />
+        <action
+                android:id="@+id/action_navigation_home_to_navigation_request"
+                app:destination="@id/navigation_request" />
 
     </fragment>
 
@@ -78,6 +81,11 @@
         <argument
                 android:name="id"
                 app:argType="integer" />
+        <action
+                android:id="@+id/action_scheduleDetailsFragment_to_accountDetailsFragment"
+                app:destination="@id/accountDetailsFragment"
+                app:popUpTo="@id/accountDetailsFragment"
+                app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
@@ -88,6 +96,11 @@
         <argument
                 android:name="id"
                 app:argType="integer" />
+        <action
+                android:id="@+id/action_requestDetailsFragment_to_accountDetailsFragment"
+                app:destination="@id/accountDetailsFragment"
+                app:popUpTo="@id/accountDetailsFragment"
+                app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
@@ -103,6 +116,12 @@
                 app:destination="@id/navigation_home"
                 app:popUpTo="@id/navigation_home"
                 app:popUpToInclusive="true"/>
+        <action
+                android:id="@+id/action_accountDetailsFragment_to_requestDetailsFragment"
+                app:destination="@id/requestDetailsFragment" />
+        <action
+                android:id="@+id/action_accountDetailsFragment_to_scheduleDetailsFragment"
+                app:destination="@id/scheduleDetailsFragment" />
     </fragment>
 
     <fragment
@@ -155,6 +174,20 @@
                 app:destination="@id/navigation_transfer"
                 app:popUpTo="@id/navigation_transfer"
                 app:popUpToInclusive="true" />
+        <action
+                android:id="@+id/action_accountsFragment_to_navigation_request"
+                app:destination="@id/navigation_request" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/navigation_request"
+            android:name="com.hover.stax.requests.NewRequestFragment"
+            android:label="@string/nav_request"
+            tools:layout="@layout/fragment_request">
+
+        <action
+                android:id="@+id/action_navigation_request_to_accountsFragment"
+                app:destination="@id/accountsFragment" />
     </fragment>
 
 </navigation>

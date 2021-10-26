@@ -184,11 +184,11 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     val allContacts: LiveData<List<StaxContact>>
         get() = contactDao.all
 
-    fun getContacts(ids: Array<String?>?): List<StaxContact> {
+    fun getContacts(ids: Array<String>): List<StaxContact> {
         return contactDao[ids]
     }
 
-    fun getLiveContacts(ids: Array<String?>?): LiveData<List<StaxContact>> {
+    fun getLiveContacts(ids: Array<String>): LiveData<List<StaxContact>> {
         return contactDao.getLive(ids)
     }
 
@@ -235,8 +235,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     val transactionsForAppReview: LiveData<List<StaxTransaction>>?
         get() = transactionDao.transactionsForAppReview
 
-    fun getSchedule(id: Int): Schedule {
-        return scheduleDao[id]
+    fun getSchedule(id: Int): Schedule? {
+        return scheduleDao.get(id)
     }
 
     fun insert(schedule: Schedule?) {

@@ -17,7 +17,6 @@ import com.hover.sdk.api.Hover;
 import com.hover.stax.R;
 import com.hover.stax.bounties.BountyActivity;
 import com.hover.stax.channels.AddChannelsFragment;
-import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.transactions.TransactionDetailsFragment;
 import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.Constants;
@@ -28,14 +27,6 @@ import timber.log.Timber;
 public interface NavigationInterface {
 
     default void navigate(AppCompatActivity activity, int toWhere) {
-        navigate(activity, toWhere, null);
-    }
-
-    default void navigate(AppCompatActivity activity, int toWhere, Object data) {
-        navigate(activity, toWhere, null, data);
-    }
-
-    default void navigate(AppCompatActivity activity, int toWhere, Intent intent, Object data) {
         NavHostFragment navHostFragment = (NavHostFragment) activity.getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         NavController navController = navHostFragment.getNavController();
 
@@ -45,10 +36,9 @@ public interface NavigationInterface {
                 break;
             case Constants.NAV_AIRTIME:
                 navigateToTransferFragment(navController, HoverAction.AIRTIME);
-                //navigateToTransferActivity(HoverAction.AIRTIME, false, intent, activity);
                 break;
             case Constants.NAV_REQUEST:
-                navigateToRequestFragment(activity);
+                navigateToRequestFragment(navController);
                 break;
             case Constants.NAV_HOME:
                 navigateToHomeFragment(navController);
@@ -62,9 +52,6 @@ public interface NavigationInterface {
             case Constants.NAV_LINK_ACCOUNT:
                 navigateToChannelsListFragment(navController, true);
                 break;
-//            case Constants.NAV_LANGUAGE_SELECTION:
-//                navigateToLanguageSelectionFragment(activity);
-//                break;
             case Constants.NAV_BOUNTY:
                 activity.startActivity(new Intent(activity, BountyActivity.class));
                 break;
@@ -82,8 +69,8 @@ public interface NavigationInterface {
         navController.navigate(R.id.libraryFragment);
     }
 
-    default void navigateToRequestFragment(Activity activity) {
-        activity.startActivityForResult(new Intent(activity, RequestActivity.class), Constants.REQUEST_REQUEST);
+    default void navigateToRequestFragment(NavController navController) {
+        navController.navigate(R.id.navigation_request);
     }
 
     default void navigateToHomeFragment(NavController navController) {
@@ -104,42 +91,15 @@ public interface NavigationInterface {
         navController.navigate(R.id.action_navigation_home_to_navigation_linkAccount, bundle);
     }
 
-    default void navigateToTransferActivity(String type, boolean isFromStaxLink, Intent received, Activity activity) {
-        Intent i = new Intent(activity, TransferActivity.class);
-        i.setAction(type);
-        if (isFromStaxLink)
-            i.putExtra(Constants.REQUEST_LINK, received.getExtras().getString(Constants.REQUEST_LINK));
-
-        activity.startActivityForResult(i, Constants.TRANSFER_REQUEST);
-    }
-
     default void navigateToTransferFragment(NavController navController, String actionType) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.TRANSACTION_TYPE, actionType);
         navController.navigate(R.id.action_navigation_home_to_navigation_transfer, bundle);
     }
 
-    default void navigateToAccountDetailsFragment(int accountId, NavController navController) {
-        Bundle bundle = new Bundle();
-        bundle.putInt(Constants.ACCOUNT_ID, accountId);
-        navController.navigate(R.id.accountDetailsFragment, bundle);
-    }
-
     default void navigateToTransactionDetailsFragment(String uuid, FragmentManager manager, Boolean isFullScreen) {
         TransactionDetailsFragment frag = TransactionDetailsFragment.Companion.newInstance(uuid, isFullScreen);
         frag.show(manager, "dialogFrag");
-    }
-
-    default void navigateToScheduleDetailsFragment(int id, Fragment fragment) {
-        Bundle bundle = new Bundle();
-        bundle.putInt("id", id);
-        NavHostFragment.findNavController(fragment).navigate(R.id.scheduleDetailsFragment, bundle);
-    }
-
-    default void navigateToRequestDetailsFragment(int id, Fragment fragment) {
-        Bundle bundle = new Bundle();
-        bundle.putInt("id", id);
-        NavHostFragment.findNavController(fragment).navigate(R.id.requestDetailsFragment, bundle);
     }
 
     default void navigateToBountyListFragment(NavController navController) {

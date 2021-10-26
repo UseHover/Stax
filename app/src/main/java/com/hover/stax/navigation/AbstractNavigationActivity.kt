@@ -42,7 +42,7 @@ abstract class AbstractNavigationActivity : AppCompatActivity(), NavigationInter
         navHostFragment?.let {
             navController = getNavController()
             NavigationUI.setupWithNavController(nav, navController!!)
-            appBarConfiguration = AppBarConfiguration.Builder(R.id.navigation_home, R.id.navigation_balance, R.id.libraryFragment, R.id.navigation_settings).build()
+            appBarConfiguration = AppBarConfiguration.Builder(R.id.navigation_home, R.id.navigation_balance, R.id.navigation_request, R.id.libraryFragment, R.id.navigation_settings).build()
         }
 
         setNavClickListener(nav)
@@ -103,7 +103,7 @@ abstract class AbstractNavigationActivity : AppCompatActivity(), NavigationInter
             destId == R.id.navigation_settings -> intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_SETTINGS)
             destId == R.id.navigation_request -> intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_REQUEST)
             destId != R.id.navigation_home -> {
-                onBackPressed();
+                onBackPressed()
                 return
             }
         }

@@ -4,11 +4,14 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.view.View
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.hover.sdk.actions.HoverAction
+import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
 import com.hover.stax.account.Account
 import com.hover.stax.account.DUMMY
@@ -23,6 +26,9 @@ import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.navigation.AbstractNavigationActivity
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
+import com.hover.stax.requests.NewRequestViewModel
+import com.hover.stax.requests.RequestSenderInterface
+import com.hover.stax.requests.SmsSentObserver
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.schedules.ScheduleDetailViewModel
 import com.hover.stax.settings.BiometricChecker
@@ -40,16 +46,15 @@ import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class MainActivity : AbstractNavigationActivity(),
-        BalancesViewModel.RunBalanceListener,
-        BalanceAdapter.BalanceListener,
-        BiometricChecker.AuthListener, PushNotificationTopicsInterface {
+class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener,
+        BiometricChecker.AuthListener, PushNotificationTopicsInterface, RequestSenderInterface, SmsSentObserver.SmsSentListener {
 
     private val balancesViewModel: BalancesViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
     private val actionSelectViewModel: ActionSelectViewModel by viewModel()
     private val channelsViewModel: ChannelsViewModel by viewModel()
     private val transferViewModel: TransferViewModel by viewModel()
+    private val requestViewModel: NewRequestViewModel by viewModel()
     private lateinit var scheduleViewModel: ScheduleDetailViewModel
 
     private lateinit var binding: ActivityMainBinding
@@ -109,7 +114,7 @@ class MainActivity : AbstractNavigationActivity(),
                 route.contains(getString(R.string.deeplink_sendmoney)) ->
                     navigateToTransferFragment(getNavController(), HoverAction.P2P)
                 route.contains(getString(R.string.deeplink_airtime)) ->
-                    navigateToTransferFragment(getNavController(),  HoverAction.AIRTIME)
+                    navigateToTransferFragment(getNavController(), HoverAction.AIRTIME)
                 route.contains(getString(R.string.deeplink_linkaccount)) ->
                     navigateToChannelsListFragment(getNavController(), true)
                 route.contains(getString(R.string.deeplink_balance)) || route.contains(getString(R.string.deeplink_history)) ->
@@ -334,17 +339,23 @@ class MainActivity : AbstractNavigationActivity(),
 
     private fun initFromIntent() {
         when {
-            intent.hasExtra(Schedule.SCHEDULE_ID) -> createFromSchedule(intent.getIntExtra(Schedule.SCHEDULE_ID, -1))
+            intent.hasExtra(Schedule.SCHEDULE_ID) -> createFromSchedule(intent.getIntExtra(Schedule.SCHEDULE_ID, -1), intent.getBooleanExtra(Constants.REQUEST_TYPE, false))
             intent.hasExtra(Constants.REQUEST_LINK) -> createFromRequest(intent.getStringExtra(Constants.REQUEST_LINK)!!)
             else -> Utils.logAnalyticsEvent(getString(R.string.visit_screen, intent.action), this)
         }
     }
 
-    private fun createFromSchedule(scheduleId: Int) {
+    private fun createFromSchedule(scheduleId: Int, isRequestType: Boolean) {
         scheduleViewModel = getViewModel()
         with(scheduleViewModel) {
-            action.observe(this@MainActivity) { it?.let { actionSelectViewModel.setActiveAction(it) } }
-            schedule.observe(this@MainActivity) { it?.let { transferViewModel.view(it) } }
+            if (isRequestType) {
+                schedule.observe(this@MainActivity) { it?.let { requestViewModel.setSchedule(it) } }
+                Utils.logAnalyticsEvent(getString(R.string.clicked_schedule_notification), this@MainActivity)
+            } else {
+                action.observe(this@MainActivity) { it?.let { actionSelectViewModel.setActiveAction(it) } }
+                schedule.observe(this@MainActivity) { it?.let { transferViewModel.view(it) } }
+            }
+
             setSchedule(scheduleId)
         }
 
@@ -360,6 +371,50 @@ class MainActivity : AbstractNavigationActivity(),
     private fun observeRequest() {
         val alertDialog = StaxDialog(this).setDialogMessage(R.string.loading_link_dialoghead).showIt()
         transferViewModel.request.observe(this@MainActivity, { it?.let { alertDialog?.dismiss() } })
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode == Constants.SMS && PermissionHelper(this).permissionsGranted(grantResults)){
+            Utils.logAnalyticsEvent(getString(R.string.perms_sms_granted), this)
+            sendSms()
+        }else if(requestCode == Constants.SMS){
+            Utils.logAnalyticsEvent(getString(R.string.perms_sms_denied), this)
+            UIHelper.flashMessage(this, getString(R.string.toast_error_smsperm))
+        }
+    }
+
+    fun sendSms(){
+        requestViewModel.saveRequest()
+        SmsSentObserver(this, requestViewModel.requestees.value, Handler(), this).start()
+        sendSms(requestViewModel.formulatedRequest.value, requestViewModel.requestees.value, this)
+    }
+
+    fun sendWhatsapp(){
+        requestViewModel.saveRequest()
+        sendWhatsapp(requestViewModel.formulatedRequest.value, requestViewModel.requestees.value, requestViewModel.activeChannel.value, this)
+    }
+
+    fun copyShareLink(view: View) {
+        requestViewModel.saveRequest()
+        copyShareLink(requestViewModel.formulatedRequest.value, view.findViewById(R.id.copylink_share_selection), this)
+    }
+
+    override fun onSmsSendEvent(sent: Boolean) {
+        if(sent) onFinished(Constants.SMS)
+    }
+
+    private fun onFinished(type: Int) = setResult(RESULT_OK, createSuccessIntent(type))
+
+    private fun createSuccessIntent(type: Int): Intent =
+            Intent().apply { action = if(type == Constants.SCHEDULE_REQUEST) Constants.SCHEDULED else Constants.TRANSFERRED }
+
+    fun cancel() = setResult(RESULT_CANCELED)
+
+
+    fun makeCall(action: HoverAction, channel: Channel){
+        val hsb = HoverSession.Builder(action, channel , this, Constants.REQUEST_REQUEST)
+        hsb.run()
     }
 
 }
