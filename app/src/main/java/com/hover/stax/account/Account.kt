@@ -1,10 +1,7 @@
 package com.hover.stax.account
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
+import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
-import androidx.room.PrimaryKey
 import com.hover.stax.channels.Channel
 import com.hover.stax.utils.DateUtils.now
 import java.util.*
@@ -13,7 +10,8 @@ const val DUMMY = -1
 
 @Entity(
         tableName = "accounts",
-        foreignKeys = [ForeignKey(entity = Channel::class, parentColumns = ["id"], childColumns = ["channelId"], onDelete = CASCADE)]
+        foreignKeys = [ForeignKey(entity = Channel::class, parentColumns = ["id"], childColumns = ["channelId"], onDelete = CASCADE)],
+        indices = [Index(value = ["name"], unique = true)]
 )
 data class Account(
         val name: String,
@@ -37,6 +35,10 @@ data class Account(
 
         var isDefault: Boolean = false
 ) : Comparable<Account> {
+
+    constructor(name: String, channel: Channel) : this(
+        name, name, channel.logoUrl, "", channel.id, channel.primaryColorHex, channel.secondaryColorHex
+    )
 
     constructor(name: String, primaryColor: String) : this(
             name, alias = name, logoUrl = "", accountNo = "", channelId = -1, primaryColor, secondaryColorHex = "#1E232A"
@@ -76,9 +78,10 @@ data class Account(
         }
     }
 
+//    Name is unique
     override fun equals(other: Any?): Boolean {
         if (other !is Account) return false
-        return id == other.id
+        return id == other.id || other.name == other.name
     }
 
     override fun compareTo(other: Account): Int = toString().compareTo(other.toString())

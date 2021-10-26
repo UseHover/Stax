@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.databinding.StaxCardViewBinding
 import com.hover.stax.transactions.TransactionStatus
@@ -104,14 +105,7 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
         }
     }
 
-    @SuppressLint("ResourceAsColor")
-    fun setStateInfo(status: TransactionStatus?) {
-        if (status != null) {
-            updateState(status.getIcon(), status.getBackgroundColor(), status.getTitle())
-        }
-    }
-
-    private fun updateState(icon: Int, backgroundColor: Int, title: Int) {
+    fun updateState(icon: Int, backgroundColor: Int, title: Int) {
         with(binding.cardViewHeader) {
             setBackButtonVisibility(View.VISIBLE);
             setIcon(icon);

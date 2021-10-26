@@ -122,7 +122,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         val hniList = ArrayList<String>()
 
         for (sim in sims) {
-            if (!hniList.contains(sim.osReportedHni)) {
+            if (!hniList.contains(sim.osReportedHni) && sim.countryIso != null) {
                 FirebaseMessaging.getInstance().subscribeToTopic("sim-".plus(sim.osReportedHni))
                 FirebaseMessaging.getInstance().subscribeToTopic(sim.countryIso.uppercase())
                 hniList.add(sim.osReportedHni)
@@ -165,18 +165,26 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             activeChannel.value = channels.first { it.defaultAccount }
     }
 
-    private fun setActiveChannel(channel: Channel) {
+    fun setActiveChannel(channel: Channel) {
         activeChannel.postValue(channel)
     }
 
-    //TODO make another function to set active account from channel actions
+    fun setActiveAccount(account: Account?) {
+        activeAccount.postValue(account)
+    }
+
     private fun setActiveChannel(actions: List<HoverAction>) {
         if (actions.isNullOrEmpty()) return
 
         activeChannel.removeSource(channelActions)
 
         viewModelScope.launch {
-            activeChannel.postValue(repo.getChannel(actions.first().channel_id))
+            val channelAccounts = repo.getChannelAndAccounts(actions.first().channel_id)
+            Timber.e("Channel with accounts $channelAccounts")
+            channelAccounts?.let {
+                activeChannel.postValue(it.channel)
+                setActiveAccount(it.accounts.firstOrNull())
+            }
         }
     }
 
@@ -299,6 +307,11 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
                 createAccounts(selectedChannels.value!!)
             }
         }
+    }
+
+    fun fetchAccounts(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        val channelAccounts = repo.getAccounts(channelId)
+        accounts.postValue(channelAccounts)
     }
 
     override fun onCleared() {

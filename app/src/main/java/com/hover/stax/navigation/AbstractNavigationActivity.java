@@ -22,6 +22,7 @@ import com.hover.stax.settings.SettingsFragment;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.Utils;
 import com.hover.stax.utils.network.NetworkReceiver;
+import com.hover.stax.navigation.NavigationInterface;
 
 public abstract class AbstractNavigationActivity extends AppCompatActivity implements NavigationInterface {
 
@@ -133,10 +134,6 @@ public abstract class AbstractNavigationActivity extends AppCompatActivity imple
 
     public void getStartedWithBountyButton(View view) {
         checkPermissionsAndNavigate(Constants.NAV_BOUNTY);
-    }
-
-    public void openSupportEmailClient(View view) {
-        checkPermissionsAndNavigate(Constants.NAV_EMAIL_CLIENT, R.string.permission_support_desc);
     }
 
     @Override

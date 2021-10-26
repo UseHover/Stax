@@ -21,6 +21,7 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInterface {
 
@@ -70,7 +71,7 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
 
     private fun observeRequest() {
         val alertDialog = StaxDialog(this).setDialogMessage(R.string.loading_link_dialoghead).showIt()
-        transferViewModel.request.observe(this@TransferActivity, Observer { it?.let { alertDialog?.dismiss() } })
+        transferViewModel.request.observe(this@TransferActivity, { it?.let { alertDialog?.dismiss() } })
     }
 
     fun submit(account: Account) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account) }
@@ -84,9 +85,14 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
         makeCall(action, selectedAccount = account)
     }
 
+    private fun getRequestCode(transactionType: String) : Int {
+        return if(transactionType == HoverAction.FETCH_ACCOUNTS) Constants.FETCH_ACCOUNT_REQUEST
+        else Constants.TRANSFER_REQUEST
+    }
+
     fun makeCall(action: HoverAction, channel: Channel? = null, selectedAccount: Account? = null) {
         val hsb = HoverSession.Builder(action, channel
-                ?: channelsViewModel.activeChannel.value!!, this, Constants.TRANSFER_REQUEST)
+                ?: channelsViewModel.activeChannel.value!!, this, getRequestCode(action.transaction_type))
 
         if (action.transaction_type != HoverAction.FETCH_ACCOUNTS) {
             hsb.extra(HoverAction.AMOUNT_KEY, transferViewModel.amount.value)
@@ -94,7 +100,6 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
                     .extra(Constants.ACCOUNT_NAME, selectedAccount?.name)
 
             selectedAccount?.run { hsb.setAccountId(id.toString()) }
-
             transferViewModel.contact.value?.let { addRecipientInfo(hsb) }
         }
 
@@ -129,6 +134,7 @@ class TransferActivity : AbstractNavigationActivity(), PushNotificationTopicsInt
         setResult(result, i)
         finish()
     }
+
 
     override fun onBackPressed() = if (transferViewModel.isEditing.value == false) transferViewModel.setEditing(true) else super.onBackPressed()
 

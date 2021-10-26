@@ -7,7 +7,10 @@ import androidx.room.*
 interface AccountDao {
 
     @Query("SELECT * FROM accounts ORDER BY alias ASC")
-    fun getAllAccounts(): LiveData<List<Account>>
+    fun getAllAccountsLive(): LiveData<List<Account>>
+
+    @Query("SELECT * FROM accounts ORDER BY alias ASC")
+    fun getAllAccounts(): List<Account>
 
     @Query("SELECT * FROM accounts WHERE channelId = :channelId ORDER BY alias ASC")
     fun getAccounts(channelId: Int): List<Account>

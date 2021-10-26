@@ -1,5 +1,6 @@
 package com.hover.stax.utils
 
+import android.Manifest
 import android.app.Activity
 import android.content.*
 import android.graphics.Bitmap
@@ -17,6 +18,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
+import com.hover.stax.permissions.PermissionUtils
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
@@ -274,17 +276,29 @@ object Utils {
     fun openUrl(url: String?, ctx: Context) {
         val i = Intent(Intent.ACTION_VIEW)
         i.data = Uri.parse(url)
-        ctx.startActivity(i)
+
+        try {
+            ctx.startActivity(i)
+        } catch (e: ActivityNotFoundException) {
+            Timber.e("No activity found to handle intent")
+        }
     }
 
     fun openUrl(urlRes: Int, ctx: Context) {
         openUrl(ctx.resources.getString(urlRes), ctx)
     }
 
-    fun openEmail(email: String, subject: String, ctx: Context) {
-        val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", email, null))
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
-        ctx.startActivity(Intent.createChooser(emailIntent, "Send email..."))
+    @JvmStatic
+    fun openEmail(subject: String, context: Context) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        val recipientEmail = context.getString(R.string.stax_support_email)
+        intent.data = Uri.parse("mailto:$recipientEmail ?subject=$subject")
+        try {
+            context.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Timber.e("Activity not found")
+            UIHelper.flashMessage(context, context.getString(R.string.email_client_not_found))
+        }
     }
 
     @JvmStatic
@@ -297,5 +311,24 @@ object Utils {
         } catch (e: ActivityNotFoundException) {
             activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(activity.baseContext.getString(R.string.stax_url_playstore_review_link))))
         }
+    }
+
+    @JvmStatic
+    fun dial(shortCode: String, c: Context) {
+        val data = JSONObject()
+        try {
+            data.put("shortcode", shortCode)
+        } catch (ignored: JSONException) {
+        }
+        logAnalyticsEvent(c.getString(R.string.clicked_dial_shortcode), data, c)
+
+        val dialIntent = Intent(Intent.ACTION_CALL, Uri.parse("tel:".plus(shortCode.replace("#", Uri.encode("#"))))).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+
+        if (PermissionUtils.has(arrayOf(Manifest.permission.CALL_PHONE), c))
+            c.startActivity(dialIntent)
+        else
+            UIHelper.flashMessage(c, c.getString(R.string.enable_call_permission))
     }
 }

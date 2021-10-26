@@ -1,7 +1,9 @@
 package com.hover.stax.navigation;
 
+import static com.hover.stax.settings.SettingsFragment.LANG_CHANGE;
+
 import android.app.Activity;
-import android.content.Context;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,7 +16,6 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
-import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.bounties.BountyActivity;
 import com.hover.stax.channels.AddChannelsFragment;
@@ -23,8 +24,9 @@ import com.hover.stax.requests.RequestActivity;
 import com.hover.stax.transactions.TransactionDetailsFragment;
 import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.Constants;
+import com.hover.stax.utils.UIHelper;
 
-import static com.hover.stax.settings.SettingsFragment.LANG_CHANGE;
+import timber.log.Timber;
 
 public interface NavigationInterface {
 
@@ -67,9 +69,6 @@ public interface NavigationInterface {
                 break;
             case Constants.NAV_BOUNTY:
                 activity.startActivity(new Intent(activity, BountyActivity.class));
-                break;
-            case Constants.NAV_EMAIL_CLIENT:
-                openSupportEmailClient(activity);
                 break;
             default:
                 break;
@@ -126,7 +125,7 @@ public interface NavigationInterface {
     }
 
     default void navigateToTransactionDetailsFragment(String uuid, FragmentManager manager, Boolean isFullScreen) {
-        TransactionDetailsFragment frag = new TransactionDetailsFragment(uuid, isFullScreen);
+        TransactionDetailsFragment frag = TransactionDetailsFragment.Companion.newInstance(uuid, isFullScreen);
         frag.show(manager, "dialogFrag");
     }
 
@@ -148,15 +147,5 @@ public interface NavigationInterface {
 
     default void navigateFAQ(Fragment fragment) {
         NavHostFragment.findNavController(fragment).navigate(R.id.faqFragment);
-    }
-
-    default void openSupportEmailClient(Activity activity) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        String recipientEmail = activity.getString(R.string.stax_support_email);
-        String subject = activity.getString(R.string.stax_emailing_subject, Hover.getDeviceId(activity.getBaseContext()));
-
-        Uri data = Uri.parse("mailto:" + recipientEmail + " ?subject=" + subject);
-        intent.setData(data);
-        activity.startActivity(intent);
     }
 }

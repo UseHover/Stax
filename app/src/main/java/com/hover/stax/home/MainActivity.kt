@@ -12,7 +12,6 @@ import com.hover.stax.R
 import com.hover.stax.account.Account
 import com.hover.stax.account.DUMMY
 import com.hover.stax.balances.BalanceAdapter
-import com.hover.stax.balances.BalancesFragment
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.databinding.ActivityMainBinding
@@ -104,6 +103,8 @@ class MainActivity : AbstractNavigationActivity(),
                 route.contains(getString(R.string.deeplink_reviews)) ->
                     launchStaxReview()
             }
+
+            intent.data = null
         }
     }
 
@@ -153,10 +154,7 @@ class MainActivity : AbstractNavigationActivity(),
         }
     }
 
-    override fun startRun(actionPair: Pair<Account?, HoverAction>, index: Int) {
-        Timber.e("Starting run for ${actionPair.first?.name} - ${actionPair.second.transaction_type}")
-        run(actionPair, index)
-    }
+    override fun startRun(actionPair: Pair<Account?, HoverAction>, index: Int) = run(actionPair, index)
 
     override fun onTapRefresh(accountId: Int) {
         if (accountId == DUMMY)
@@ -174,7 +172,7 @@ class MainActivity : AbstractNavigationActivity(),
             navigateToAccountDetailsFragment(accountId, getNavController())
     }
 
-    override fun onAuthError(error: String?) {
+    override fun onAuthError(error: String) {
         Timber.e("Error : $error")
     }
 
@@ -220,15 +218,6 @@ class MainActivity : AbstractNavigationActivity(),
         }
     }
 
-    private fun onProbableHoverCall(data: Intent) {
-        if (data.action != null && data.action == Constants.SCHEDULED) {
-            showMessage(getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))))
-        } else {
-            Utils.logAnalyticsEvent(getString(R.string.finish_load_screen), this)
-            historyViewModel.saveTransaction(data, this)
-        }
-    }
-
     private fun onRequest(data: Intent) {
         if (data.action == Constants.SCHEDULED)
             showMessage(getString(R.string.toast_request_scheduled, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))))
@@ -240,42 +229,30 @@ class MainActivity : AbstractNavigationActivity(),
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        Timber.e("recieved result. %s", data?.action)
+        Timber.e("uuid? %s", data?.extras?.getString("uuid"))
 
-        showPopUpTransactionDetailsIfRequired(requestCode, data)
-        handleAllOtherResults(requestCode, resultCode, data)
-    }
-
-    private fun handleAllOtherResults(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            Constants.TRANSFER_REQUEST -> data?.let { onProbableHoverCall(it) }
-            Constants.REQUEST_REQUEST -> if (resultCode == RESULT_OK) onRequest(data!!)
-            else -> {
+        if (requestCode == Constants.TRANSFER_REQUEST && data != null && data.action == Constants.SCHEDULED) {
+            showMessage(getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))))
+        } else if (requestCode == Constants.REQUEST_REQUEST) {
+            if (resultCode == RESULT_OK && data != null) onRequest(data)
+        } else {
+            if (requestCode != Constants.TRANSFER_REQUEST) {
                 balancesViewModel.setRan(requestCode)
-                if (resultCode == RESULT_OK && data != null && data.action != null) onProbableHoverCall(data)
-
-                showBalanceCards()
+                balancesViewModel.showBalances(true)
             }
+            showPopUpTransactionDetailsIfRequired(data)
         }
     }
 
-    private fun showBalanceCards() {
-        val balanceFragment = navHostFragment.childFragmentManager.findFragmentById(R.id.navigation_balance) as? BalancesFragment
-        balanceFragment?.showBalanceCards(true)
-    }
-
-    private fun showPopUpTransactionDetailsIfRequired(requestCode: Int, data: Intent?) {
-        data?.let {
-            if (it.action.equals(Constants.TRANSFERRED) || requestCode == Constants.TRANSFERRED_INT) {
-                val uuid: String? = it.extras?.getString("uuid")
-                uuid?.let {
-                    showTransactionPopup(uuid);
-                }
-                return@let
-            }
+    private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
+        if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
+            Timber.e("showing popup")
+            navigateToTransactionDetailsFragment(
+                data.extras!!.getString("uuid")!!,
+                supportFragmentManager,
+                false
+            )
         }
-    }
-
-    private fun showTransactionPopup(uuid: String) {
-        navigateToTransactionDetailsFragment(uuid, supportFragmentManager, false)
     }
 }

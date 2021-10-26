@@ -490,8 +490,6 @@
 
   <string name="network_label">Compte bénéficiaire</string>
 
-  <string name="id_label">ID de transaction</string>
-
   <string name="session_cardhead">Messages</string>
 
   <!-- Canceling -->
@@ -554,21 +552,15 @@
 
   <string name="disclaimer">Tous les noms de produits, marques et marques déposées appartiennent à leurs propriétaires respectifs. L\'utilisation n\'implique pas d\'affiliation.</string>
 
-  <string name="contact_stax_cardhead">Reste en contact</string>
-
   <string name="twitter" translatable="false">Twitter</string>
 
   <string name="stax_twitter_url" translatable="false">http://twitter.com/joinstax</string>
 
   <string name="receive_stax_updates">Recevez les mises à jour Stax</string>
 
-  <string name="support">Soutien</string>
-
   <string name="FAQs">FAQ</string>
 
-  <string name="request_feature">Demandez une fonctionnalité dans Stax!&#13;\n</string>
-
-  <string name="contact_support">Contactez le support</string>
+  <string name="request_feature">Demandez une fonctionnalité dans Stax</string>
 
   <string name="stax_support_email">support\@stax.me</string>
 
@@ -679,10 +671,6 @@
   <string name="descrip_bounty_me2me">Transférer de l\'argent sur votre compte %1$s</string>
 
   <string name="bounty_me2me_explain">Envoyez n\'importe quel montant sur votre propre compte %1$s</string>
-
-  <string name="descrip_bounty_c2b">Payer une facture</string>
-
-  <string name="bounty_c2b_explain">Envoyez n\'importe quel montant à n\'importe quelle entreprise</string>
 
   <string name="descrip_bounty_balance">Vérifier le solde</string>
 

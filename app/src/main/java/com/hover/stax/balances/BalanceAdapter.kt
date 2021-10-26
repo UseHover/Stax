@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.account.Account
 import com.hover.stax.account.DUMMY
-import com.hover.stax.channels.Channel
 import com.hover.stax.databinding.BalanceItemBinding
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.UIHelper
@@ -45,16 +44,14 @@ class BalanceAdapter(val accounts: List<Account>, val balanceListener: BalanceLi
         holder.binding.balanceRefreshIcon.setColorFilter(secondary)
     }
 
-    private fun setColorForEmptyAmount(show: Boolean, holder: BalancesViewHolder, secondary: Int) {
-        if (show) {
-            var drawable = ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_remove)
+    private fun setColorForEmptyAmount(holder: BalancesViewHolder, secondary: Int) {
+        var drawable = ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_remove)
 
-            if (drawable != null) {
-                drawable = DrawableCompat.wrap(drawable)
-                DrawableCompat.setTint(drawable.mutate(), secondary)
-                holder.binding.balanceAmount.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
-            }
-        } else holder.binding.balanceAmount.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+        if (drawable != null) {
+            drawable = DrawableCompat.wrap(drawable)
+            DrawableCompat.setTint(drawable.mutate(), secondary)
+            holder.binding.balanceAmount.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
+        }
     }
 
     inner class BalancesViewHolder(val binding: BalanceItemBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -67,7 +64,7 @@ class BalanceAdapter(val accounts: List<Account>, val balanceListener: BalanceLi
             when {
                 account.latestBalance != null && showBalance -> {
                     binding.balanceSubtitle.visibility = View.VISIBLE
-                    binding.balanceSubtitle.text = DateUtils.humanFriendlyDate(account.latestBalanceTimestamp)
+                    binding.balanceSubtitle.text = DateUtils.humanFriendlyDateTime(account.latestBalanceTimestamp)
                     binding.balanceAmount.text = Utils.formatAmount(account.latestBalance!!)
                 }
                 account.latestBalance == null && showBalance -> {
@@ -77,13 +74,13 @@ class BalanceAdapter(val accounts: List<Account>, val balanceListener: BalanceLi
                 }
                 else -> {
                     binding.balanceAmount.text = ""
-                    setColorForEmptyAmount(true, holder, UIHelper.getColor(account.secondaryColorHex, false, binding.root.context))
+                    setColorForEmptyAmount(holder, UIHelper.getColor(account.secondaryColorHex, false, binding.root.context))
                 }
             }
 
             setColors(
-                holder, UIHelper.getColor(account.primaryColorHex, true, holder.itemView.context),
-                UIHelper.getColor(account.secondaryColorHex, false, holder.itemView.context)
+                    holder, UIHelper.getColor(account.primaryColorHex, true, holder.itemView.context),
+                    UIHelper.getColor(account.secondaryColorHex, false, holder.itemView.context)
             )
 
             if (account.id == DUMMY) {
@@ -104,6 +101,6 @@ class BalanceAdapter(val accounts: List<Account>, val balanceListener: BalanceLi
     interface BalanceListener {
         fun onTapRefresh(accountId: Int)
 
-        fun onTapDetail(channelId: Int)
+        fun onTapDetail(accountId: Int)
     }
 }

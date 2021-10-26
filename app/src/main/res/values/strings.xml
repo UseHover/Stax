@@ -132,14 +132,24 @@
 	<string name="transfer_msg">Transferring money</string>
 	<string name="fetch_accounts">Fetching accounts</string>
 
-	<!-- TRANSACTION STATUS -->
-	<string name="confirmed_cardHead">SUCCEEDED</string>
-	<string name="pending_cardHead">PENDING</string>
-	<string name="unsuccessful_cardHead">UNSUCCESSFUL</string>
-	<string name="confirmed_desc">We got a message from %1$s confirming that this transaction was successful.</string>
-	<string name="unsuccessful_incomplete_desc">We received no response from %1$s. We don\’t think this transaction worked. Please try again.</string>
-	<string name="unsuccessful_desc">We got a message from %1$s confirming that this transaction has failed. Please try again.</string>
-	<string name="from_this_service">from this service</string>
+	<!-- Transaction statuses -->
+	<string name="succeeded_cardHead">Succeeded</string>
+	<string name="pending_cardHead">Pending</string>
+	<string name="failed_cardHead">Unsuccessful</string>
+	<string name="null_service_name_text">this USSD service</string>
+	<string name="no_response_error">No response from %1$s.</string>
+	<string name="incomplete_error">It appears that %1$s stopped responding part way through.</string>
+	<string name="pin_error">PIN error. %1$s asks you to please check your PIN and retry.</string>
+	<string name="balance_error">%1$s says your balance is too low to complete this transaction.</string>
+	<string name="unregistered_error">%1$s says you are not registered for this service.</string>
+	<string name="invalid_entry">One of your inputs was invalid, view details to see what went wrong.</string>
+	<string name="mmi_error">Your network returned an error, please try again.</string>
+	<string name="unspecified_error">Unknown error.</string>
+	<string name="no_response_desc">We received no response from %1$s. We don\’t think this transaction worked. Please try again.</string>
+	<string name="incomplete_desc">We received only a partial response from %1$s. We don\’t think this transaction worked. Please try again.</string>
+	<string name="invalid_entry_desc">One of your inputs was invalid, see session details below to see what went wrong. Make sure any amounts, phone numbers, or account numbers are correct. See session details below.</string>
+	<string name="mmi_error_desc">Your network returned an error, please try again. If this happens a lot please contact your network provider or money service to complain.</string>
+	<string name="unspecified_error_desc">Unknown error, see details below to find out what went wrong. Please try again.</string>
 
 	<!-- SDK Overrides -->
 	<string name="hsdk_overlay_msg"><![CDATA[<font color="#1E232A">Show progress updates by turning <b>switch ON</b> in the next screen.</font>]]></string>
@@ -195,17 +205,25 @@
 	<string name="accounts_label">Pay from</string>
 	<string name="self_only_money_warning">This can only be used to move money to your own account.</string>
 	<string name="self_only_airtime_warning">This can only be used to buy airtime for your own account.</string>
-	<string name="descrip_multcontacts">%1$d contacts</string>
-	<string name="descrip_airtime_sent">%1$s sent airtime to %2$s</string>
-	<string name="descrip_transfer_sent">%1$s sent money to %2$s</string>
-	<string name="descrip_transfer_received">received money from %1$s</string>
-	<string name="descrip_fetch_accounts">fetched accounts from %1$s</string>
-	<string name="descrip_bill_paid">paid %1$s bill</string>
-	<string name="descrip_recorded">Recorded USSD session on %1$s</string>
+
 	<string name="fab_transfernow">Send money now</string>
 	<string name="fab_airtimenow">Buy airtime now</string>
 	<string name="noworry_explain">You can review this info in the next step.</string>
+	<string name="descrip_multcontacts">%1$d contacts</string>
+
+	<string name="descrip_balance">%1$s check balance</string>
+	<string name="descrip_airtime_sent">%1$s send airtime to %2$s</string>
+	<string name="descrip_transfer_sent">%1$s send money to %2$s</string>
+	<string name="descrip_transfer_received">received money from %1$s</string>
+	<string name="descrip_fetch_accounts">fetched accounts from %1$s</string>
+	<string name="descrip_bill_paid">pay %1$s bill</string>
+	<string name="descrip_recorded">Recorded USSD session on %1$s</string>
 	<string name="descrip_airtime_sched">Buy airtime with %1$s for %2$s</string>
+
+	<string name="descrip_long_airtime_send">buy %1$s airtime with %2$s for %3$s</string>
+	<string name="descrip_long_transfer_send">send %1$s from %2$s to %3$s on %4$s</string>
+	<string name="descrip_long_move">move %1$s from %2$s to %3$s</string>
+	<string name="descrip_long_bill_paid">pay %1$s from %2$s to %3$s</string>
 
 	<!-- Request -->
 	<string name="req_cardhead">Request money</string>
@@ -284,8 +302,10 @@
 	<string name="transactions_cardhead">Transactions</string>
 	<string name="network_label">Recipient account</string>
 	<string name="id_label">Transaction ID</string>
+	<string name="stax_id_label">Stax ID</string>
 	<string name="session_cardhead">Messages</string>
-	<string name="see_more">See more</string>
+	<string name="view_full_details">View full details</string>
+	<string name="new_balance">New balance %1$s</string>
 
 	<!-- Canceling -->
 	<string name="cancelfuture_head">Cancel future transaction</string>
@@ -319,15 +339,14 @@
 	<string name="app_version_and_device_id">App version: %1$s\nVersion code:%2$s\nDevice ID: %3$s</string>
 	<string name="disclaimer">All products names, brands, and trademarks are property of their respective owners. Use does not imply affiliation.</string>
 
-	<string name="contact_stax_cardhead">Stay in touch</string>
+	<string name="contact_stax_cardhead">Get in touch</string>
 	<string name="twitter" translatable="false">Twitter</string>
 	<string name="stax_twitter_url" translatable="false">http://twitter.com/joinstax</string>
 	<string name="receive_stax_updates">Receive Stax updates</string>
 
-	<string name="support">Support</string>
 	<string name="FAQs">FAQs</string>
-	<string name="request_feature">Request a feature in Stax!</string>
-	<string name="contact_support">Contact support</string>
+	<string name="request_feature">Request a feature in Stax</string>
+	<string name="email_support">Email support</string>
 	<string name="stax_support_email">help@stax.me</string>
 	<string name="stax_support_email_mailTo">https://help@stax.me</string>
 	<string name="stax_emailing_subject">Stax support id - %1$s</string>
@@ -381,8 +400,11 @@
 	<string name="bounty_p2p_explain">Send any amount to any person %1$s</string>
 	<string name="descrip_bounty_me2me">Move money to your %1$s account</string>
 	<string name="bounty_me2me_explain">Send any amount to your own %1$s account</string>
-	<string name="descrip_bounty_c2b">Pay any bill</string>
-	<string name="bounty_c2b_explain">Send any amount to any business</string>
+	<string name="descrip_bounty_c2b">Pay a bill%1$s</string>
+	<string name="descrip_bounty_c2b_b"> from %1$s</string>
+	<string name="bounty_c2b_explain">Send any amount to %1$s</string>
+	<string name="bounty_c2b_any">any business</string>
+
 	<string name="descrip_bounty_balance">Check balance</string>
 	<string name="bounty_balance_explain">Check your balance</string>
 	<string name="descrip_bounty_offnet">on %1$s</string>
@@ -464,13 +486,16 @@
 	<string name="faq_internet_error">This feature requires internet connection, please try again</string>
     <string name="working_offline">Working offline</string>
 
+    <string name="marketing_email_optin">Stax can send me emails in the future.</string>
+    <string name="email_client_not_found">No email client found on device.</string>
+    <string name="enable_call_permission">Please enable call permission to dial USSD code.</string>
+
 	<string name="rename_account">Rename Account</string>
 	<string name="current_name">Current name</string>
 	<string name="hint_enter_new_name">Enter a new name</string>
+
     <string name="original_name">Original name</string>
     <string name="which_account">Which account?</string>
-	<string name="account_select_header">You have more than one %1$s account. Please choose which one you want to use to %2$s.</string>
-
-    <string name="marketing_email_optin">"Stax can send me emails in the future. "</string>
+    <string name="account_select_header">You have more than one %1$s account. Please choose which one you want to use to %2$s.</string>
 
 </resources>

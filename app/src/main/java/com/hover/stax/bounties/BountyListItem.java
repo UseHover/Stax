@@ -16,17 +16,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.hover.stax.R;
-import com.hover.stax.databinding.HomeListItemBinding;
+import com.hover.stax.databinding.BountyListItemBinding;
 
 class BountyListItem extends LinearLayout {
     private Bounty bounty;
     private SelectListener selectListener;
 
-    private final HomeListItemBinding binding;
+    private final BountyListItemBinding binding;
 
     BountyListItem(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        binding = HomeListItemBinding.inflate(LayoutInflater.from(context), this, true);
+        binding = BountyListItemBinding.inflate(LayoutInflater.from(context), this, true);
     }
 
     public void setBounty(Bounty b, SelectListener listener) {
@@ -69,11 +69,11 @@ class BountyListItem extends LinearLayout {
     private void setState(int color, int noticeString, int noticeIcon, boolean isOpen, View.OnClickListener listener) {
         setBackgroundColor(getContext().getResources().getColor(color));
         if (noticeString != 0) {
-            binding.liCallout.setText(Html.fromHtml(getContext().getString(noticeString)));
-            binding.liCallout.setMovementMethod(LinkMovementMethod.getInstance());
+            binding.liStatus.setText(Html.fromHtml(getContext().getString(noticeString)));
+            binding.liStatus.setMovementMethod(LinkMovementMethod.getInstance());
         }
-        binding.liCallout.setCompoundDrawablesWithIntrinsicBounds(noticeIcon, 0, 0, 0);
-        binding.liCallout.setVisibility(noticeString != 0 ? View.VISIBLE : View.GONE);
+        binding.liStatus.setCompoundDrawablesWithIntrinsicBounds(noticeIcon, 0, 0, 0);
+        binding.liStatus.setVisibility(noticeString != 0 ? View.VISIBLE : View.GONE);
 
         if (!isOpen) strikeThrough(binding.liAmount);
         if (!isOpen) strikeThrough(binding.liDescription);

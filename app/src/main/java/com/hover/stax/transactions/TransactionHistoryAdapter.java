@@ -1,7 +1,5 @@
 package com.hover.stax.transactions;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,37 +7,42 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.transactions.Transaction;
-import com.hover.stax.R;
-import com.hover.stax.databinding.HomeListItemBinding;
+import com.hover.stax.databinding.TransactionListItemBinding;
 import com.hover.stax.utils.DateUtils;
 
 import java.util.List;
 
-import timber.log.Timber;
-
 public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionHistoryAdapter.HistoryViewHolder> {
 
-    private final List<StaxTransaction> transactionList;
+    private List<StaxTransaction> transactions;
+    private List<HoverAction> actions;
     private final SelectListener selectListener;
 
-    public TransactionHistoryAdapter(List<StaxTransaction> transactions, SelectListener selectListener) {
-        this.transactionList = transactions;
+    public TransactionHistoryAdapter(List<StaxTransaction> transactions, List<HoverAction> actions, SelectListener selectListener) {
+        this.transactions = transactions;
+        this.actions = actions;
         this.selectListener = selectListener;
+    }
+
+    public void updateData(List<StaxTransaction> ts, List<HoverAction> as) {
+        if (ts == null || as == null) return;
+        transactions = ts;
+        actions = as;
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        HomeListItemBinding binding = HomeListItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        TransactionListItemBinding binding = TransactionListItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new HistoryViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
-        StaxTransaction t = transactionList.get(position);
-
-        setBGAndCallout(t, holder);
+        StaxTransaction t = transactions.get(position);
 
         holder.binding.liDescription.setText(String.format("%s%s", t.description.substring(0, 1).toUpperCase(), t.description.substring(1)));
         holder.binding.liAmount.setText(t.getDisplayAmount());
@@ -47,43 +50,42 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
         holder.binding.liHeader.setText(DateUtils.humanFriendlyDate(t.initiated_at));
 
         holder.itemView.setOnClickListener(view -> selectListener.viewTransactionDetail(t.uuid));
+        setStatus(t, holder);
     }
 
-    private void setBGAndCallout(StaxTransaction t, HistoryViewHolder holder) {
-        if (t.status.equals(Transaction.PENDING)) {
-            holder.binding.transactionItemLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.cardDarkBlue));
-            holder.binding.liCallout.setVisibility(View.VISIBLE);
-        }
-        else if(t.status.equals(Transaction.FAILED)) {
-            Resources res = holder.itemView.getContext().getResources();
-            holder.binding.transactionItemLayout.setBackgroundColor(res.getColor(R.color.cardDarkRed));
-            holder.binding.liCallout.setText(res.getString(t.getFullStatus().getDetail(), res.getString(R.string.from_this_service) ));
-            holder.binding.liCallout.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_info_red, 0, 0, 0);
-            holder.binding.liCallout.setVisibility(View.VISIBLE);
-        }
-        else {
-            holder.binding.transactionItemLayout.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.colorPrimary));
-            holder.binding.liCallout.setVisibility(View.GONE);
-        }
+    private void setStatus(StaxTransaction t, HistoryViewHolder holder) {
+        TransactionStatus ts = new TransactionStatus(t);
+        HoverAction a = findAction(t.action_id);
+        holder.binding.liAmount.setAlpha((float) (t.status.equals(Transaction.FAILED) ? 0.54: 1.0));
+        holder.binding.transactionItemLayout.setBackgroundColor(holder.binding.getRoot().getContext().getResources().getColor(ts.getBackgroundColor()));
+        holder.binding.liStatus.setText(ts.getShortStatusDetail(a, holder.binding.getRoot().getContext()));
+        holder.binding.liStatus.setCompoundDrawablesRelativeWithIntrinsicBounds(ts.getIcon(), 0, 0, 0);
     }
 
+    private HoverAction findAction(String public_id) {
+        for (HoverAction a: actions) {
+            if (a.public_id.equals(public_id))
+                return a;
+        }
+        return null;
+    }
 
     private boolean shouldShowDate(StaxTransaction t, int position) {
         return position == 0 ||
-                !DateUtils.humanFriendlyDate(transactionList.get(position - 1).initiated_at)
+                !DateUtils.humanFriendlyDate(transactions.get(position - 1).initiated_at)
                         .equals(DateUtils.humanFriendlyDate(t.initiated_at));
     }
 
     @Override
     public int getItemCount() {
-        return transactionList != null ? transactionList.size() : 0;
+        return transactions != null ? transactions.size() : 0;
     }
 
     static class HistoryViewHolder extends RecyclerView.ViewHolder {
 
-        public HomeListItemBinding binding;
+        public TransactionListItemBinding binding;
 
-        HistoryViewHolder(HomeListItemBinding binding) {
+        HistoryViewHolder(TransactionListItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

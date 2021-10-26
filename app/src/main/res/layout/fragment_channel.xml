@@ -154,8 +154,8 @@
                 layout="@layout/home_card_future" />
 
         <include
-                android:id="@+id/homeCardTransactions"
-                layout="@layout/home_card_transactions" />
+                android:id="@+id/history_card"
+                layout="@layout/transaction_card_history" />
 
         <include
                 android:id="@+id/renameCard"

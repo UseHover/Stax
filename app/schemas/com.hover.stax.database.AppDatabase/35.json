@@ -1,12 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 32,
-<<<<<<< HEAD
-    "identityHash": "7b995a5aacc2674bda5a1d44694c68b0",
-=======
-    "identityHash": "e9dc3dbe16f88faa4d9a646e8503ec05",
->>>>>>> development
+    "version": 35,
+    "identityHash": "bf51a3c3de670d70bb9f4db7f2d78476",
     "entities": [
       {
         "tableName": "channels",
@@ -130,11 +126,7 @@
       },
       {
         "tableName": "stax_transactions",
-<<<<<<< HEAD
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uuid` TEXT NOT NULL, `action_id` TEXT NOT NULL, `environment` INTEGER NOT NULL DEFAULT 0, `transaction_type` TEXT NOT NULL, `channel_id` INTEGER NOT NULL, `status` TEXT NOT NULL DEFAULT 'pending', `category` TEXT, `initiated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `description` TEXT, `amount` REAL, `fee` REAL, `confirm_code` TEXT, `recipient_id` TEXT, `balance` TEXT, `counterparty` TEXT)",
-=======
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uuid` TEXT NOT NULL, `action_id` TEXT NOT NULL, `environment` INTEGER NOT NULL DEFAULT 0, `transaction_type` TEXT NOT NULL, `channel_id` INTEGER NOT NULL, `status` TEXT NOT NULL DEFAULT 'pending', `initiated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `description` TEXT, `amount` REAL, `fee` REAL, `confirm_code` TEXT, `recipient_id` TEXT, `category` TEXT, `counterparty` TEXT)",
->>>>>>> development
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uuid` TEXT NOT NULL, `action_id` TEXT NOT NULL, `environment` INTEGER NOT NULL DEFAULT 0, `transaction_type` TEXT NOT NULL, `channel_id` INTEGER NOT NULL, `status` TEXT NOT NULL DEFAULT 'pending', `category` TEXT, `initiated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `updated_at` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, `description` TEXT, `amount` REAL, `fee` REAL, `confirm_code` TEXT, `recipient_id` TEXT, `balance` TEXT, `account_id` INTEGER, `counterparty` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -181,15 +173,12 @@
             "defaultValue": "'pending'"
           },
           {
-<<<<<<< HEAD
             "fieldPath": "category",
             "columnName": "category",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-=======
->>>>>>> development
             "fieldPath": "initiated_at",
             "columnName": "initiated_at",
             "affinity": "INTEGER",
@@ -234,14 +223,15 @@
             "notNull": false
           },
           {
-<<<<<<< HEAD
             "fieldPath": "balance",
             "columnName": "balance",
-=======
-            "fieldPath": "category",
-            "columnName": "category",
->>>>>>> development
             "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "accountId",
+            "columnName": "account_id",
+            "affinity": "INTEGER",
             "notNull": false
           },
           {
@@ -505,12 +495,10 @@
         },
         "indices": [],
         "foreignKeys": []
-<<<<<<< HEAD
-=======
       },
       {
         "tableName": "accounts",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `alias` TEXT NOT NULL, `logo_url` TEXT NOT NULL, `account_no` TEXT, `channelId` INTEGER NOT NULL, `primary_color_hex` TEXT NOT NULL, `secondary_color_hex` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `latestBalance` TEXT, `latestBalanceTimestamp` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(`channelId`) REFERENCES `channels`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `alias` TEXT, `logo_url` TEXT NOT NULL, `account_no` TEXT, `channelId` INTEGER NOT NULL, `primary_color_hex` TEXT NOT NULL, `secondary_color_hex` TEXT NOT NULL, `isDefault` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `latestBalance` TEXT, `latestBalanceTimestamp` INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(`channelId`) REFERENCES `channels`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "name",
@@ -522,7 +510,7 @@
             "fieldPath": "alias",
             "columnName": "alias",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "logoUrl",
@@ -555,6 +543,12 @@
             "notNull": true
           },
           {
+            "fieldPath": "isDefault",
+            "columnName": "isDefault",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
@@ -582,6 +576,14 @@
         },
         "indices": [
           {
+            "name": "index_accounts_name",
+            "unique": true,
+            "columnNames": [
+              "name"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_accounts_name` ON `${TABLE_NAME}` (`name`)"
+          },
+          {
             "name": "index_accounts_channelId",
             "unique": false,
             "columnNames": [
@@ -603,17 +605,12 @@
             ]
           }
         ]
->>>>>>> development
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-<<<<<<< HEAD
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7b995a5aacc2674bda5a1d44694c68b0')"
-=======
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e9dc3dbe16f88faa4d9a646e8503ec05')"
->>>>>>> development
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bf51a3c3de670d70bb9f4db7f2d78476')"
     ]
   }
 }

@@ -82,7 +82,7 @@ public class RequestDetailFragment extends Fragment implements RequestSenderInte
 
     private void setUpSummary(Request request) {
         binding.summaryCard.requestMoneyCard.setTitle(request.description);
-        binding.summaryCard.dateValue.setText(DateUtils.humanFriendlyDate(request.date_sent));
+        binding.summaryCard.dateValue.setText(DateUtils.humanFriendlyDateTime(request.date_sent));
 
         if (request.amount != null && !request.amount.isEmpty()) {
             binding.summaryCard.amountRow.setVisibility(View.VISIBLE);
