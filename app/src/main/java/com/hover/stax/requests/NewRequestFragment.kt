@@ -24,6 +24,7 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.*
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
+import timber.log.Timber
 
 
 class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterface {
@@ -56,6 +57,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        requestViewModel.reset()
         startObservers(binding.root)
         startListeners()
         setDefaultHelperText()
@@ -103,7 +105,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
             accounts.observe(viewLifecycleOwner) {
                 //no channels selected. navigate user to accounts fragment
                 if (it.isNullOrEmpty())
-                    setDropdownTouchListener(R.id.action_navigation_request_to_accountsFrag)
+                    setDropdownTouchListener(R.id.action_navigation_request_to_accountsFragment)
             }
             activeChannel.observe(viewLifecycleOwner, channelsObserver)
         }
@@ -111,7 +113,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         with(requestViewModel) {
             amount.observe(viewLifecycleOwner, {
                 binding.summaryCard.amountRow.visibility = if (validAmount()) View.VISIBLE else View.GONE
-                binding.summaryCard.amountValue.text = Utils.formatAmount(it)
+                binding.summaryCard.amountValue.text = it?.let { Utils.formatAmount(it) }
             })
 
             requesterNumber.observe(viewLifecycleOwner, { accountValue.setSubtitle(it) })
@@ -207,12 +209,12 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
         override fun afterTextChanged(editable: Editable) {}
         override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+            Timber.e(charSequence.toString())
             requestViewModel.setRecipient(charSequence.toString())
         }
     }
 
     private fun fabClicked() {
-        requestViewModel.removeInvalidRequestees()
         if (requestViewModel.isEditing.value!! && validates()) {
             updatePushNotifGroupStatus()
             requestViewModel.setEditing(false)

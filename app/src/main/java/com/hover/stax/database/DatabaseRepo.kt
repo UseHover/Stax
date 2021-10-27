@@ -323,8 +323,6 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun getAccount(id: Int): Account? = accountDao.getAccount(id)
 
-    fun getAccount(name: String): Account? = accountDao.getAccount(name)
-
     fun getLiveAccount(id: Int): LiveData<Account> = accountDao.getLiveAccount(id)
 
     suspend fun getAccounts(ids: List<Int>): List<Account> = accountDao.getAccounts(ids)

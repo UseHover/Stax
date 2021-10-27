@@ -302,23 +302,10 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
                 showPopUpTransactionDetailsIfRequired(data)
             }
         }
-
-//        if (requestCode == Constants.TRANSFER_REQUEST && data != null && data.action == Constants.SCHEDULED) {
-//            showMessage(getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))))
-//        } else if (requestCode == Constants.REQUEST_REQUEST) {
-//            if (resultCode == RESULT_OK && data != null) onRequest(data)
-//        } else {
-//            if (requestCode != Constants.TRANSFER_REQUEST) {
-//                balancesViewModel.setRan(requestCode)
-//                balancesViewModel.showBalances(true)
-//            }
-//            showPopUpTransactionDetailsIfRequired(data)
-//        }
     }
 
     private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
-            Timber.e("showing popup")
             navigateToTransactionDetailsFragment(
                     data.extras!!.getString("uuid")!!,
                     supportFragmentManager,
@@ -437,13 +424,13 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
 
     fun sendSms() {
         requestViewModel.saveRequest()
-        SmsSentObserver(this, requestViewModel.requestees.value, Handler(), this).start()
-        sendSms(requestViewModel.formulatedRequest.value, requestViewModel.requestees.value, this)
+        SmsSentObserver(this, listOf(requestViewModel.requestee.value), Handler(), this).start()
+        sendSms(requestViewModel.formulatedRequest.value, listOf(requestViewModel.requestee.value), this)
     }
 
     fun sendWhatsapp() {
         requestViewModel.saveRequest()
-        sendWhatsapp(requestViewModel.formulatedRequest.value, requestViewModel.requestees.value, requestViewModel.activeChannel.value, this)
+        sendWhatsapp(requestViewModel.formulatedRequest.value, listOf(requestViewModel.requestee.value), requestViewModel.activeChannel.value, this)
     }
 
     fun copyShareLink(view: View) {

@@ -10,12 +10,10 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
 import com.hover.stax.home.MainActivity
 import com.hover.stax.permissions.PermissionUtils
-import com.hover.stax.settings.SettingsFragment
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkReceiver
@@ -66,7 +64,7 @@ abstract class AbstractNavigationActivity : AppCompatActivity(), NavigationInter
         it.addOnDestinationChangedListener { _, destination, _ ->
             nav.visibility = if (destination.id == R.id.navigation_linkAccount) View.GONE else View.VISIBLE
 
-            if (destination.id == R.id.bounty_navigation)
+            if (destination.id == R.id.bountyEmailFragment || destination.id == R.id.bountyListFragment)
                 nav.menu.findItem(R.id.navigation_settings).isChecked = true
         }
     }
@@ -93,7 +91,7 @@ abstract class AbstractNavigationActivity : AppCompatActivity(), NavigationInter
 
     fun checkPermissionsAndNavigate(toWhere: Int) = checkPermissionsAndNavigate(toWhere, 0)
 
-    fun navigateThruHome(destId: Int) {
+    private fun navigateThruHome(destId: Int) {
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
         }
@@ -110,8 +108,6 @@ abstract class AbstractNavigationActivity : AppCompatActivity(), NavigationInter
 
         startActivity(intent)
     }
-
-    fun getStartedWithBountyButton() = checkPermissionsAndNavigate(Constants.NAV_BOUNTY)
 
     fun openSupportEmailClient() = checkPermissionsAndNavigate(Constants.NAV_EMAIL_CLIENT, R.string.permission_support_desc)
 

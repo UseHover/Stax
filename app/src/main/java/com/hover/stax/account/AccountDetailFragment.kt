@@ -22,6 +22,7 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 
 class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListener, ScheduledAdapter.SelectListener,
@@ -79,6 +80,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
             spentThisMonth.observe(viewLifecycleOwner) {
                 binding.detailsMoneyOut.text = Utils.formatAmount(it ?: 0.0)
             }
+
             feesThisYear.observe(viewLifecycleOwner) {
                 binding.detailsFees.text = Utils.formatAmount(it ?: 0.0)
             }
@@ -113,6 +115,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
             }
 
             requestsByChannel(channelId).observe(viewLifecycleOwner) {
+                Timber.e("Requests ${it.size}")
                 requestsAdapter?.updateData(it)
                 setFutureVisible(scheduled.value, it)
             }

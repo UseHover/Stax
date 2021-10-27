@@ -96,9 +96,6 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
 
     private fun loadChannels(actions: List<HoverAction>?): LiveData<List<Channel>> {
         if (actions == null) return MutableLiveData()
-//        val ids = getChannelIdArray(actions)
-//        Timber.e("channel id length %s", ids.size)
-//        return repo.getChannels(ids)
         val ids = getChannelIdArray(actions.distinctBy { it.id }).toList()
 
         val channelList = runBlocking {

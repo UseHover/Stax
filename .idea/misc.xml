@@ -17,6 +17,8 @@
         <entry key="app/src/main/res/layout/activity_language.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/activity_library.xml" value="0.296875" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.14437689969604864" />
+        <entry key="app/src/main/res/layout/activity_request.xml" value="0.13500506585612967" />
+        <entry key="app/src/main/res/layout/activity_transfer.xml" value="0.13500506585612967" />
         <entry key="app/src/main/res/layout/balance_item.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/basic_perm_dialog.xml" value="0.2890625" />
         <entry key="app/src/main/res/layout/contact_input.xml" value="0.15678824721377912" />
@@ -32,6 +34,7 @@
         <entry key="app/src/main/res/layout/fragment_request.xml" value="0.14868287740628167" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/fragment_transfer.xml" value="0.13903985507246377" />
+        <entry key="app/src/main/res/layout/home_card_future.xml" value="0.11398176291793313" />
         <entry key="app/src/main/res/layout/home_card_transactions.xml" value="0.14766970618034447" />
         <entry key="app/src/main/res/layout/rename_account_layout.xml" value="0.3134057971014493" />
         <entry key="app/src/main/res/layout/repeat_inputs.xml" value="0.18697916666666667" />

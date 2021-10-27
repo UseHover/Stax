@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -15,10 +14,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.stax.R;
-import com.hover.stax.bounties.BountyActivity;
 import com.hover.stax.channels.AddChannelsFragment;
 import com.hover.stax.transactions.TransactionDetailsFragment;
-import com.hover.stax.transfers.TransferActivity;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
 
@@ -97,10 +94,6 @@ public interface NavigationInterface {
     default void navigateToTransactionDetailsFragment(String uuid, FragmentManager manager, Boolean isFullScreen) {
         TransactionDetailsFragment frag = TransactionDetailsFragment.Companion.newInstance(uuid, isFullScreen);
         frag.show(manager, "dialogFrag");
-    }
-
-    default void navigateToBountyListFragment(NavController navController) {
-        navController.navigate(R.id.bountyListFragment);
     }
 
     default void openSupportEmailClient(Activity activity) {

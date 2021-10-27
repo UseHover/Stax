@@ -14,6 +14,7 @@ import com.hover.stax.transfers.AbstractFormViewModel
 import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -34,7 +35,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
         requesterNumber.addSource(activeChannel, this::setRequesterNumber)
     }
 
-    fun setAmount(a: String) = amount.postValue(a)
+    fun setAmount(a: String?) = amount.postValue(a)
 
     fun setActiveChannel(c: Channel) {
         activeChannel.postValue(c)
@@ -63,7 +64,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
         requestee.value = contact
     }
 
-    fun setNote(n: String) = note.postValue(n)
+    fun setNote(n: String?) = note.postValue(n)
 
     fun validAmount(): Boolean = (!amount.value.isNullOrEmpty() && amount.value!!.matches("\\d+".toRegex()) && !amount.value!!.matches("[0]+".toRegex()))
 
@@ -78,6 +79,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
 
     fun validNote(): Boolean = !note.value.isNullOrEmpty()
 
+    //TODO validate that this works from schedule
     fun setSchedule(s: Schedule) {
         schedule.postValue(s)
         setAmount(s.amount)
@@ -97,40 +99,26 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
     }
 
     fun saveRequest() {
-        if (!finalRequests.value.isNullOrEmpty() && requestees.value != null && finalRequests.value!!.size == requestees.value!!.size)
-            return
+        val request = Request(formulatedRequest.value!!, requestee.value, application)
+        repo.insert(request)
 
-        val requests = ArrayList<Request>()
-        requestees.value!!.forEach { recipient ->
-            val request = Request(formulatedRequest.value!!, recipient, application)
-            requests.add(request)
-            repo.insert(request)
-        }
-
-        finalRequests.value = if (!requests.isNullOrEmpty()) requests else null
-    }
-
-    fun removeInvalidRequestees() {
-        if (!requestees.value.isNullOrEmpty()) {
-            val contacts = ArrayList<StaxContact>()
-
-            requestees.value?.forEach { contact ->
-                if (!contact.accountNumber.isNullOrEmpty()) contacts.add(contact)
-            }
-
-            requestees.postValue(contacts)
-        }
+        finalRequests.value = listOf(request)
     }
 
     private fun saveContacts() {
-        requestees.value?.let { contacts ->
+        requestee.value?.let { contact ->
             viewModelScope.launch {
-                contacts.filter { contact -> !contact.accountNumber.isNullOrEmpty() }
-                    .forEach { contact ->
-                        contact.lastUsedTimestamp = DateUtils.now()
-                        repo.save(contact)
-                    }
+                if (!contact.accountNumber.isNullOrEmpty()) {
+                    contact.lastUsedTimestamp = DateUtils.now()
+                    repo.save(contact)
+                }
             }
         }
+    }
+
+    fun reset() {
+        setAmount(null)
+        setNote(null)
+        requestee.value = null
     }
 }

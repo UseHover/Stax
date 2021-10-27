@@ -44,11 +44,10 @@ class AccountDetailViewModel(val application: Application, val repo: DatabaseRep
 
     fun newNameError(): String? = if (newAccountName.value.isNullOrEmpty()) application.getString(R.string.account_name_error) else null
 
-    fun updateAccountName() {
-        viewModelScope.launch {
-            val a = account.value!!
-            a.alias = newAccountName.value!!
-            repo.update(a)
-        }
+    fun updateAccountName() = viewModelScope.launch {
+        val a = account.value!!
+        a.alias = newAccountName.value!!
+        repo.update(a)
     }
+
 }
