@@ -64,6 +64,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
         binding.shareCard.shareText.setOnClickListener { Utils.shareStax(requireActivity()) }
         viewModel.email.observe(viewLifecycleOwner) { updateReferralInfo(it) }
         viewModel.refereeCode.observe(viewLifecycleOwner) { updateRefereeInfo(it) }
+        viewModel.fetchUsername()
     }
 
     private fun updateReferralInfo(email: String?) {
@@ -72,7 +73,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
             if (!viewModel.username.value.isNullOrEmpty()) {
                 binding.shareCard.referralCode.text = getString(R.string.referral_text, viewModel.username.value)
                 binding.shareCard.referralCode.setOnClickListener { Utils.copyToClipboard(viewModel.username.value, requireContext()) }
-                binding.shareCard.referralCode.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_copy, 0, 0)
+                binding.shareCard.referralCode.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_copy,0)
             } else {
                 binding.shareCard.referralCode.text = getString(R.string.referral_error_data)
                 binding.shareCard.referralCode.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)

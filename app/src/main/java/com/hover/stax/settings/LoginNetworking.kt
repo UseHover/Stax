@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
@@ -19,22 +20,14 @@ class LoginNetworking(private val context: Context) {
     private val client = OkHttpClient()
     private val url: String = context.getString(R.string.api_url) + context.getString(R.string.users_endpoint)
 
-    fun uploadUserToStax(email: String, optedIn: Boolean): Map<Int, String?> {
+    fun uploadUserToStax(email: String, optedIn: Boolean): Response {
         val json = getJson(email, optedIn)
-        val resultMap: MutableMap<Int, String?> = HashMap()
-        return try {
-            val body: RequestBody = json.toString().toRequestBody("application/json".toMediaTypeOrNull())
-            val request: Request = Request.Builder().url(url)
-                    .addHeader("Authorization", "Token token=" + Hover.getApiKey(context))
-                    .post(body)
-                    .build()
-            val response = client.newCall(request).execute()
-            resultMap[response.code] = response.toString()
-            resultMap
-        } catch (e: IOException) {
-            resultMap[0] = e.message
-            resultMap
-        }
+        val body: RequestBody = json.toString().toRequestBody("application/json".toMediaTypeOrNull())
+        val request: Request = Request.Builder().url(url)
+                .addHeader("Authorization", "Token token=" + Hover.getApiKey(context))
+                .post(body)
+                .build()
+        return client.newCall(request).execute()
     }
 
     private fun getJson(email: String, optedIn: Boolean): JSONObject {

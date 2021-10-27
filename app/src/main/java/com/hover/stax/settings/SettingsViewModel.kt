@@ -22,6 +22,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent
 import timber.log.Timber
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.gson.JsonObject
+import org.json.JSONObject
+
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
     private val repo = KoinJavaComponent.get(DatabaseRepo::class.java)
@@ -119,25 +123,34 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             }
     }
 
-    private fun uploadUserToStax(user: FirebaseUser) {
+    fun fetchUsername() {
+        Timber.e("Getting username?")
+        val account = GoogleSignIn.getLastSignedInAccount(getApplication())
+        if (account != null)
+            uploadUserToStax(user.value)
+        else
+            Timber.e("No account found")
+    }
+
+    fun uploadUserToStax(user: FirebaseUser?) {
         if (getUsername().isNullOrEmpty()) {
-            user.email?.let {
+            email.value?.let {
                 progress.value = 66
                 viewModelScope.launch(Dispatchers.IO) {
-                    val result = LoginNetworking(getApplication()).uploadUserToStax(user.email!!, optedIn.value!!)
-                    Timber.e("uploading to server")
-                    Timber.e("%s", result)
-                    val entry = result.entries.iterator().next()
-                    if (entry.key in 200..299) onSuccess(entry.value)
-                    else onError(entry.value)
+                    val result = LoginNetworking(getApplication()).uploadUserToStax(email.value!!, optedIn.value!!)
+                    if (result.code in 200..299)
+                        onSuccess(JSONObject(result.body!!.string()))
+                    else
+                        onError(result.body!!.string())
                 }
             }
         }
     }
 
-    private fun onSuccess(message: String?) {
+    private fun onSuccess(json: JSONObject?) {
         progress.postValue(100)
-        setUsername(message)
+        Timber.e(json.toString())
+        setUsername(json?.getString("username"))
         Utils.logAnalyticsEvent((getApplication() as Context).getString(R.string.create_login_success), getApplication())
     }
 

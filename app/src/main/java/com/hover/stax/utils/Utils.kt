@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import com.amplitude.api.Amplitude
 import com.amplitude.api.Identify
 import com.appsflyer.AppsFlyerLib
@@ -155,9 +156,10 @@ object Utils {
     @JvmStatic
     fun copyToClipboard(content: String?, c: Context): Boolean {
         val clipboard = c.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
-        val clip = ClipData.newPlainText("Stax payment link", content)
+        val clip = ClipData.newPlainText("Stax content", content)
         if (clipboard != null) {
             clipboard.setPrimaryClip(clip)
+            UIHelper.flashMessage(c, c.getString(R.string.copied))
             return true
         }
         return false
@@ -296,6 +298,7 @@ object Utils {
 
     @JvmStatic
     fun shareStax(activity: Activity) {
+        logAnalyticsEvent(activity.getString(R.string.clicked_share), activity)
         val sharingIntent = Intent(Intent.ACTION_SEND)
         sharingIntent.type = "text/plain"
         sharingIntent.putExtra(Intent.EXTRA_SUBJECT, activity.getString(R.string.share_sub))
