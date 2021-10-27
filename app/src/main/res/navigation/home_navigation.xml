@@ -55,6 +55,12 @@
         <action
                 android:id="@+id/action_navigation_settings_to_languageSelectFragment"
                 app:destination="@id/languageSelectFragment" />
+        <action
+                android:id="@+id/action_navigation_settings_to_bountyEmailFragment"
+                app:destination="@id/bountyEmailFragment" />
+        <action
+                android:id="@+id/action_navigation_settings_to_bountyListFragment"
+                app:destination="@id/bountyListFragment" />
     </fragment>
 
     <fragment
@@ -71,6 +77,9 @@
         <argument
                 android:name="uuid"
                 app:argType="string" />
+        <action
+                android:id="@+id/action_transactionDetailsFragment_to_bountyListFragment"
+                app:destination="@id/bountyListFragment" />
     </fragment>
 
     <fragment
@@ -188,6 +197,38 @@
         <action
                 android:id="@+id/action_navigation_request_to_accountsFragment"
                 app:destination="@id/accountsFragment" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/bountyEmailFragment"
+            android:name="com.hover.stax.bounties.BountyEmailFragment"
+            android:label="@string/nav_bounty"
+            android:tag="@string/nav_bounty"
+            tools:layout="@layout/fragment_bounty_email">
+        <action
+                android:id="@+id/action_bountyEmailFragment_to_bountyListFragment"
+                app:destination="@id/bountyListFragment" />
+        <action
+                android:id="@+id/action_bountyEmailFragment_to_navigation_settings"
+                app:destination="@id/navigation_settings"
+                app:popUpTo="@id/navigation_settings"
+                app:popUpToInclusive="true"/>
+    </fragment>
+
+    <fragment
+            android:id="@+id/bountyListFragment"
+            android:name="com.hover.stax.bounties.BountyListFragment"
+            android:label="@string/nav_bounty"
+            tools:layout="@layout/bounty_card_channel">
+        <action
+                android:id="@+id/action_bountyListFragment_to_transactionDetailsFragment"
+                app:destination="@id/transactionDetailsFragment"
+                />
+        <action
+                android:id="@+id/action_bountyListFragment_to_navigation_settings"
+                app:destination="@id/navigation_settings"
+                app:popUpTo="@id/navigation_settings"
+                app:popUpToInclusive="true"/>
     </fragment>
 
 </navigation>

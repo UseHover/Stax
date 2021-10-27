@@ -14,7 +14,6 @@ import com.hover.stax.channels.ChannelsRecyclerViewAdapter
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentAccountsBinding
 import com.hover.stax.home.MainActivity
-import com.hover.stax.requests.RequestActivity
 import com.hover.stax.transfers.TransactionType
 import com.hover.stax.utils.UIHelper
 import kotlinx.coroutines.launch
@@ -72,7 +71,7 @@ class AccountsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener,
 
     private fun fetchAccounts(action: HoverAction, channel: Channel) {
         (activity as? MainActivity)?.makeCall(action, channel)
-                ?: (activity as? RequestActivity)?.makeCall(action, channel)
+                ?: (activity as? MainActivity)?.makeCall(action, channel)
     }
 
     override fun accountSelected(account: Account) {

@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
@@ -51,7 +53,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
         setUpEnableTestMode()
         setupAppVersionInfo()
 
-        binding.bountyCard.getStartedWithBountyButton.setOnClickListener { (requireActivity() as MainActivity).getStartedWithBountyButton() }
+        binding.bountyCard.getStartedWithBountyButton.setOnClickListener { startBounties() }
     }
 
     private fun setUpAccounts(viewModel: PinsViewModel) {
@@ -130,6 +132,15 @@ class SettingsFragment : Fragment(), NavigationInterface {
         Utils.saveBoolean(Constants.TEST_MODE, true, requireActivity())
         binding.cardAccounts.testMode.visibility = VISIBLE
         UIHelper.flashMessage(requireContext(), R.string.test_mode_toast)
+    }
+
+    private fun startBounties(){
+        val navAction = if(Firebase.auth.currentUser != null)
+            R.id.action_navigation_settings_to_bountyListFragment
+        else
+            R.id.action_navigation_settings_to_bountyEmailFragment
+
+        findNavController().navigate(navAction)
     }
 
     companion object {

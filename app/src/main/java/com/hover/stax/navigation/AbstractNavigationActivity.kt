@@ -76,7 +76,7 @@ abstract class AbstractNavigationActivity : AppCompatActivity(), NavigationInter
         when {
             toWhere == Constants.NAV_SETTINGS ||
                     toWhere == Constants.NAV_HOME ||
-                    permissionHelper.hasBasicPerms() -> navigate(this, toWhere, intent, false)
+                    permissionHelper.hasBasicPerms() -> navigate(this, toWhere)
             else -> PermissionUtils.showInformativeBasicPermissionDialog(permissionMsg,
                     { PermissionUtils.requestPerms(getNavConst(toWhere), this) },
                     { Utils.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), this) }, this)

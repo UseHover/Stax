@@ -12,6 +12,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentBountyEmailBinding
+import com.hover.stax.home.MainActivity
 import com.hover.stax.navigation.NavigationInterface
 import com.hover.stax.utils.Utils.logAnalyticsEvent
 import com.hover.stax.utils.Utils.logErrorAndReportToFirebase
@@ -63,7 +64,7 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
         if (networkMonitor.isNetworkConnected) {
             logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext())
             updateProgress(0)
-            (activity as BountyActivity).signIn()
+            (activity as MainActivity).signIn()
         } else {
             showOfflineDialog()
         }
@@ -113,7 +114,7 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
         updateProgress(100)
 
         logAnalyticsEvent(getString(R.string.bounty_email_success), requireContext())
-        saveString(BountyActivity.EMAIL_KEY, viewModel.user.value!!.email, requireActivity())
+        saveString(MainActivity.EMAIL_KEY, viewModel.user.value!!.email, requireActivity())
         findNavController().navigate(R.id.action_bountyEmailFragment_to_bountyListFragment)
     }
 

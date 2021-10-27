@@ -52,9 +52,6 @@ public interface NavigationInterface {
             case Constants.NAV_LINK_ACCOUNT:
                 navigateToChannelsListFragment(navController, true);
                 break;
-            case Constants.NAV_BOUNTY:
-                activity.startActivity(new Intent(activity, BountyActivity.class));
-                break;
             case Constants.NAV_EMAIL_CLIENT:
                 openSupportEmailClient(activity);
                 break;
