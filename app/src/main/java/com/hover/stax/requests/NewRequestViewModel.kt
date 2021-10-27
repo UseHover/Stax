@@ -99,10 +99,12 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
     }
 
     fun saveRequest() {
-        val request = Request(formulatedRequest.value!!, requestee.value, application)
-        repo.insert(request)
+        if(formulatedRequest.value != null) {
+            val request = Request(formulatedRequest.value!!, requestee.value, application)
+            repo.insert(request)
 
-        finalRequests.value = listOf(request)
+            finalRequests.value = listOf(request)
+        }
     }
 
     private fun saveContacts() {

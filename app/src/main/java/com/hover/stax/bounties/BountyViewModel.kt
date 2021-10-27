@@ -162,9 +162,8 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
                     }
                     bounties.add(Bounty(action, filterTransactions))
                 }
-                return@async bounties
+                bounties
             }
-
         }
         return bountyListAsync.await()
     }

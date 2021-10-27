@@ -80,10 +80,6 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         accountValue = binding.summaryCard.accountValue
         shareCard = binding.shareCard.root
 
-        amountInput.text = requestViewModel.amount.value
-        noteInput.text = requestViewModel.note.value
-        requesterNumberInput.text = requestViewModel.requesterNumber.value
-
         super.init(root)
     }
 
@@ -249,6 +245,16 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
            }
         }
     })
+
+    /**
+     * Since the fragment is only created after first launch, amount, requestee and note fields will be repopulated with viewmodel values.
+     * To manage this, whenever summary card is shown and the fragment is paused, edit mode is enabled to allow for correct state management
+     * when fragment is resumed.
+     */
+    override fun onPause() {
+        super.onPause()
+        requestViewModel.setEditing(true)
+    }
 
     private fun askAreYouSure(){
         dialog = StaxDialog(requireActivity())
