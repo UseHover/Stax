@@ -10,9 +10,6 @@
             android:name="com.hover.stax.home.HomeFragment"
             android:label="@string/nav_home"
             tools:layout="@layout/fragment_main">
-        <action
-                android:id="@+id/action_navigation_home_to_navigation_linkAccount"
-                app:destination="@id/navigation_linkAccount" />
     </fragment>
 
     <fragment
@@ -82,11 +79,4 @@
                 android:name="channel_id"
                 app:argType="integer" />
     </fragment>
-
-    <fragment
-        android:id="@+id/manageStaxFragment"
-        android:name="com.hover.stax.settings.ManageStaxFragment"
-        android:label="ManageStaxFrament"
-        tools:layout="@layout/fragment_manage_stax" />
-
 </navigation>

@@ -512,7 +512,7 @@
 
   <!-- Settings -->
 
-  <string name="accts_cardhead">Comptes</string>
+  <string name="meta_cardhead">Comptes</string>
 
   <string name="security_cardhead">Sécurité</string>
 
@@ -758,7 +758,7 @@
 
   <string name="try_again">Réessayer</string>
 
-  <string name="edge_case_bounty_email_error">Cela arrive rarement, mais si l\'erreur persiste, veuillez fermer l\'application et redémarrer.</string>
+  <string name="unknown_login_error">Cela arrive rarement, mais si l\'erreur persiste, veuillez fermer l\'application et redémarrer.</string>
 
   <string name="no_account_selected_error">Veuillez choisir au moins un compte à ajouter à Stax</string>
 

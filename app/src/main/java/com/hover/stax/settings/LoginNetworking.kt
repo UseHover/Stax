@@ -1,4 +1,4 @@
-package com.hover.stax.bounties
+package com.hover.stax.settings
 
 import android.content.Context
 import com.hover.sdk.api.Hover
@@ -14,12 +14,12 @@ import timber.log.Timber
 import java.io.IOException
 import java.util.*
 
-class BountyEmailNetworking(private val context: Context) {
+class LoginNetworking(private val context: Context) {
 
     private val client = OkHttpClient()
     private val url: String = context.getString(R.string.api_url) + context.getString(R.string.users_endpoint)
 
-    fun uploadBountyUser(email: String, optedIn: Boolean): Map<Int, String?> {
+    fun uploadUserToStax(email: String, optedIn: Boolean): Map<Int, String?> {
         val json = getJson(email, optedIn)
         val resultMap: MutableMap<Int, String?> = HashMap()
         return try {

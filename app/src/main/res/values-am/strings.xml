@@ -513,7 +513,7 @@
 
     <!-- Settings -->
 
-    <string name="accts_cardhead">መለያዎች</string>
+    <string name="meta_cardhead">መለያዎች</string>
 
     <string name="security_cardhead">ደህንነት</string>
 
@@ -759,7 +759,7 @@
 
     <string name="try_again">እንደገና ሞክር</string>
 
-    <string name="edge_case_bounty_email_error">ይህ አልፎ አልፎ ይከሰታል ፣ ግን ስህተቱ ከቀጠለ እባክዎ መተግበሪያውን ይዝጉ እና እንደገና ያስጀምሩ።</string>
+    <string name="unknown_login_error">ይህ አልፎ አልፎ ይከሰታል ፣ ግን ስህተቱ ከቀጠለ እባክዎ መተግበሪያውን ይዝጉ እና እንደገና ያስጀምሩ።</string>
 
     <string name="no_account_selected_error">ወደ ስታክስ ለማከል እባክዎ ቢያንስ አንድ መለያ ይምረጡ</string>
 

@@ -88,7 +88,7 @@ public interface NavigationInterface {
     default void navigateToChannelsListFragment(NavController navController, boolean forceReturnData) {
         Bundle bundle = new Bundle();
         bundle.putBoolean(AddChannelsFragment.FORCE_RETURN_DATA, forceReturnData);
-        navController.navigate(R.id.action_navigation_home_to_navigation_linkAccount, bundle);
+        navController.navigate(R.id.navigation_linkAccount);
     }
 
     default void navigateToTransferActivity(String type, boolean isFromStaxLink, Intent received, Activity activity) {
@@ -113,7 +113,7 @@ public interface NavigationInterface {
     }
 
     default void navigateToManageAccountFragment(Fragment fragment) {
-        NavHostFragment.findNavController(fragment).navigate(R.id.manageStaxFragment);
+//        NavHostFragment.findNavController(fragment).navigate(R.id.manageStaxFragment);
     }
 
     default void navigateToTransactionDetailsFragment(String uuid, FragmentManager manager, Boolean isFullScreen) {
@@ -135,10 +135,6 @@ public interface NavigationInterface {
 
     default void navigateToBountyListFragment(NavController navController) {
         navController.navigate(R.id.bountyListFragment);
-    }
-
-    default void navigateToManageAccount(Fragment fragment) {
-        NavHostFragment.findNavController(fragment).navigate(R.id.manageStaxFragment);
     }
 
     default void navigateFAQ(Fragment fragment) {

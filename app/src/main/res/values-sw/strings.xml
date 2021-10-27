@@ -512,7 +512,7 @@
 
   <!-- Settings -->
 
-  <string name="accts_cardhead">Akaunti</string>
+  <string name="meta_cardhead">Akaunti</string>
 
   <string name="security_cardhead">Usalama</string>
 
@@ -758,7 +758,7 @@
 
   <string name="try_again">Jaribu tena</string>
 
-  <string name="edge_case_bounty_email_error">Hii hufanyika mara chache, lakini ikiwa kosa linaendelea, tafadhali funga programu na uanze tena.</string>
+  <string name="unknown_login_error">Hii hufanyika mara chache, lakini ikiwa kosa linaendelea, tafadhali funga programu na uanze tena.</string>
 
   <string name="no_account_selected_error">Tafadhali chagua angalau akaunti moja kuongeza kwenye Stax</string>
 

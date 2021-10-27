@@ -36,11 +36,7 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
     private val bountyList = MediatorLiveData<List<Bounty>>()
 
     var sims: MutableLiveData<List<SimInfo>> = MutableLiveData()
-    val bountyEmailLiveData: MutableLiveData<Map<Int, String?>> = MutableLiveData()
     private lateinit var bountyListAsync: Deferred<MutableList<Bounty>>
-
-    val user = MutableLiveData<FirebaseUser>()
-    val didLoginFail = MutableLiveData(false)
 
     init {
         currentCountryFilter.value = CountryAdapter.codeRepresentingAllCountries()
@@ -50,21 +46,6 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
         transactions = repo.bountyTransactions!!
         bountyList.addSource(actions, this::makeBounties)
         bountyList.addSource(transactions, this::makeBountiesIfActions)
-    }
-
-    fun setUser(firebaseUser: FirebaseUser) {
-        user.value = firebaseUser
-    }
-
-    fun setLoginFailed(failed: Boolean) {
-        didLoginFail.value = failed
-    }
-
-    fun uploadBountyUser(email: String, optedIn: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val result = BountyEmailNetworking(getApplication()).uploadBountyUser(email, optedIn)
-            bountyEmailLiveData.postValue(result)
-        }
     }
 
     private fun loadSims() {

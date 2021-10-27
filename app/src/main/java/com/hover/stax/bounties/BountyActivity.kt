@@ -8,6 +8,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
@@ -18,6 +19,7 @@ import com.hover.stax.R
 import com.hover.stax.databinding.ActivityBountyBinding
 import com.hover.stax.navigation.AbstractNavigationActivity
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
+import com.hover.stax.settings.SettingsViewModel
 import com.hover.stax.utils.Utils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -26,9 +28,7 @@ import timber.log.Timber
 class BountyActivity : AbstractNavigationActivity(), PushNotificationTopicsInterface {
 
     private val bountyViewModel: BountyViewModel by viewModel()
-
-    private lateinit var auth: FirebaseAuth
-    private lateinit var signInClient: GoogleSignInClient
+    private val loginViewModel: SettingsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,11 +38,7 @@ class BountyActivity : AbstractNavigationActivity(), PushNotificationTopicsInter
         setContentView(binding.root)
 
         setUpNav()
-
         initAuth()
-
-        if (auth.currentUser == null)
-            Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_email)), this)
     }
 
     private fun initAuth() {
@@ -50,12 +46,13 @@ class BountyActivity : AbstractNavigationActivity(), PushNotificationTopicsInter
                 .requestIdToken(getString(R.string.google_server_client_id))
                 .requestEmail()
                 .build()
-        signInClient = GoogleSignIn.getClient(this, gso)
-        auth = Firebase.auth
+        loginViewModel.signInClient = GoogleSignIn.getClient(this, gso)
+        loginViewModel.email.observe(this) { Timber.e("Got email from google %s", it) }
+        loginViewModel.username.observe(this) { navigateOnUsernameLoad(it) }
     }
 
     fun signIn() {
-        val signInIntent = signInClient.signInIntent
+        val signInIntent = loginViewModel.signInClient.signInIntent
         startActivityForResult(signInIntent, LOGIN_REQUEST)
     }
 
@@ -63,10 +60,15 @@ class BountyActivity : AbstractNavigationActivity(), PushNotificationTopicsInter
         super.onStart()
         AppsFlyerLib.getInstance().start(this)
 
-        val currentUser = auth.currentUser
-        currentUser?.let {
+        if (loginViewModel.auth.currentUser == null)
+            Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_email)), this)
+    }
+
+    private fun navigateOnUsernameLoad(username: String?) {
+        Timber.e("Username: %s", username)
+        Timber.e("is it empty?: %b", username.isNullOrEmpty())
+        if (!username.isNullOrEmpty())
             navigateToBountyListFragment(getNavController())
-        }
     }
 
     fun makeCall(a: HoverAction) {
@@ -92,36 +94,18 @@ class BountyActivity : AbstractNavigationActivity(), PushNotificationTopicsInter
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Timber.d("called on activity result")
-        if (requestCode == BOUNTY_REQUEST) {
-            if (data != null) {
-                val transactionUUID = data.getStringExtra("uuid")
-                if (transactionUUID != null) navigateToTransactionDetailsFragment(transactionUUID, supportFragmentManager, true)
-            }
-        } else if (requestCode == LOGIN_REQUEST) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                val account = task.getResult(ApiException::class.java)!!
-                fetchAccount(account.idToken!!)
-            } catch (e: ApiException) {
-                Timber.e(e, "Google sign in failed")
-                bountyViewModel.setLoginFailed(true)
-            }
-        }
+        Timber.e("called on activity result")
+        if (requestCode == BOUNTY_REQUEST)
+            showBountyDetails(data)
+        else if (requestCode == LOGIN_REQUEST)
+            loginViewModel.signIntoFirebaseAsync(data, (findViewById<MaterialCheckBox>(R.id.marketingOptIn)).isChecked, this)
     }
 
-    private fun fetchAccount(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        auth.signInWithCredential(credential)
-                .addOnCompleteListener(this) {
-                    if (it.isSuccessful) {
-                        Timber.i("Sign in with credential: success")
-                        auth.currentUser?.let { user -> bountyViewModel.setUser(user) }
-                    } else {
-                        bountyViewModel.setLoginFailed(true)
-                        Timber.e(it.exception, "Sign in with credential failed")
-                    }
-                }
+    private fun showBountyDetails(data: Intent?) {
+        if (data != null) {
+            val transactionUUID = data.getStringExtra("uuid")
+            if (transactionUUID != null) navigateToTransactionDetailsFragment(transactionUUID, supportFragmentManager, true)
+        }
     }
 
     override fun onBackPressed() {
@@ -135,7 +119,6 @@ class BountyActivity : AbstractNavigationActivity(), PushNotificationTopicsInter
     }
 
     companion object {
-        const val EMAIL_KEY = "email_for_bounties"
         const val BOUNTY_REQUEST = 3000
         const val LOGIN_REQUEST = 4000
     }

@@ -11,6 +11,10 @@
         <entry key="app/src/main/res/drawable/button_bg_colored.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_dark.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_grey.xml" value="0.32037037037037036" />
+        <entry key="app/src/main/res/drawable/ic_remove.xml" value="0.3768518518518518" />
+        <entry key="app/src/main/res/drawable/ic_settings.xml" value="0.3768518518518518" />
+        <entry key="app/src/main/res/drawable/ic_share.xml" value="0.3768518518518518" />
+        <entry key="app/src/main/res/drawable/ic_sms.xml" value="0.165625" />
         <entry key="app/src/main/res/layout/account_card_layout.xml" value="0.378125" />
         <entry key="app/src/main/res/layout/account_card_manage.xml" value="0.378125" />
         <entry key="app/src/main/res/layout/account_card_shortcode.xml" value="0.14947916666666666" />
@@ -53,7 +57,9 @@
         <entry key="app/src/main/res/layout/settings_card_accounts.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/settings_card_bounties.xml" value="0.378125" />
         <entry key="app/src/main/res/layout/settings_card_contact_us.xml" value="0.3640625" />
+        <entry key="app/src/main/res/layout/settings_card_meta.xml" value="0.14947916666666666" />
         <entry key="app/src/main/res/layout/settings_card_referee.xml" value="0.378125" />
+        <entry key="app/src/main/res/layout/settings_card_share.xml" value="0.378125" />
         <entry key="app/src/main/res/layout/settings_card_support.xml" value="0.378125" />
         <entry key="app/src/main/res/layout/stax_card_view.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/stax_dropdown.xml" value="0.13903985507246377" />

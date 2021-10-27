@@ -60,7 +60,6 @@ class AccountDetailViewModel(val application: Application, val repo: DatabaseRep
         val defaultChanged = account.isDefault
         val accounts = repo.getAllAccounts()
 
-        //remove the channel from selected
         if (repo.getAccounts(account.channelId).size == 1) {
             val channel = repo.getChannel(account.channelId)!!.apply {
                 selected = false

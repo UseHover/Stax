@@ -3,22 +3,27 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="@string/accts_cardhead">
+        app:title="@string/meta_cardhead">
 
-    <ListView
-            android:id="@+id/accounts_list"
-            android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/connectAccounts"
+            style="@style/StaxButtonColored"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_10"
-            android:layout_marginBottom="@dimen/margin_21"
-            android:divider="@null" />
+            android:layout_alignParentEnd="true"
+            android:visibility="gone"
+            android:text="@string/connect_accounts" />
+    </RelativeLayout>
 
     <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/defaultAccountEntry"
             style="@style/StaxLabeledDropdown"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_21"
             android:fontFamily="font-normal"
             android:hint="@string/defaultacct_label">
 
@@ -39,23 +44,11 @@
         android:id="@+id/testMode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_10"
         android:checked="true"
         android:fontFamily="font-normal"
         android:padding="@dimen/margin_10"
         android:text="@string/test_mode_enabled"
         android:textColor="@color/offWhite"
         android:textSize="@dimen/text_16" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/manageStax"
-            style="@style/StaxButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text="@string/manage_account" />
-    </RelativeLayout>
 </com.hover.stax.views.StaxCardView>
