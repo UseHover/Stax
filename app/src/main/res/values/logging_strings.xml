@@ -73,6 +73,8 @@
 	<string name="uploaded_to_hover">Successfully %1$s to Hover server</string>
 	<string name="upload_user">created user</string>
 	<string name="upload_referee">set referee</string>
+	<string name="upload_user_error">could not connect, please try again</string>
+	<string name="upload_referee_error">invalid, please check the code and try again</string>
 
 	<string name="clicked_push_notification">From push notification: %1$s</string>
 	<string name="clicked_request_link" translatable="false">Clicked link from request</string>
@@ -83,6 +85,7 @@
 	<string name="clicked_copylink_request" translatable="false">Clicked copy link</string>
 	<string name="clicked_dial_shortcode" translatable="false">Manual USSD dial</string>
 
+	<string name="changed_default_account" translatable="false">Changed default account</string>
 	<string name="clicked_bounty_email_continue_btn" translatable="false">Clicked bounty email continue button</string>
 	<string name="clicked_run_bounty_session" translatable="false">Clicked run bounty USSD session</string>
 	<string name="clicked_retry_bounty_session" translatable="false">Clicked retry bounty from transaction detail page</string>

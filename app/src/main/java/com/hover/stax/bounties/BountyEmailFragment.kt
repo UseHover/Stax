@@ -72,13 +72,9 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
         findNavController().navigate(R.id.bountyListFragment)
     }
 
-    private fun showError(message: String?) {
-        if (isAdded && networkMonitor.isNetworkConnected) {
-            //logout user so that they start the login afresh
-            Firebase.auth.signOut()
-            updateProgress(-1)
-            showDialog(0, R.string.unknown_login_error, R.string.btn_ok)
-        } else showDialog(R.string.internet_required, R.string.internet_required_bounty_desc, R.string.btn_ok)
+    private fun showError(message: String) {
+        updateProgress(-1)
+        showDialog(0, message, R.string.btn_ok)
     }
 
     private fun showDialog(title: Int, msg: Int, btn: Int) {

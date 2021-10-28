@@ -143,7 +143,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                 if (result.code in 200..299)
                     onSuccess(JSONObject(result.body!!.string()), (getApplication() as Context).getString(R.string.uploaded_to_hover, getString(R.string.upload_user)))
                 else
-                    onError(result.body!!.string())
+                    onError(getString(R.string.upload_user_error))
             }
         }
     }
@@ -155,7 +155,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                 if (result.code in 200..299)
                     onSuccess(JSONObject(result.body!!.string()), getString(R.string.upload_referee))
                 else
-                    onError(result.body!!.string())
+                    onError(getString(R.string.upload_referee_error))
             }
         }
     }
@@ -168,7 +168,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     }
 
     private fun onError(message: String?) {
-        Utils.logErrorAndReportToFirebase(BountyEmailFragment.TAG, message!!, null)
+        Utils.logErrorAndReportToFirebase(TAG, message!!, null)
         Utils.logAnalyticsEvent(message, getApplication())
         progress.postValue(-1)
         error.postValue(message)
@@ -179,6 +179,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun setDefaultAccount(account: Account) {
+        Utils.logAnalyticsEvent(getString(R.string.changed_default_account), getApplication())
         if (!accounts.value.isNullOrEmpty()) {
             for (a in accounts.value!!) {
                 a.isDefault = a.id == account.id
@@ -195,6 +196,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 //      DEPRECIATED, Migrating
         const val BOUNTY_EMAIL_KEY = "email_for_bounties"
 
+        const val TAG = "SettingsViewModel"
         const val EMAIL = "email"
         const val REFEREE_CODE = "referee"
         const val USERNAME = "username"
