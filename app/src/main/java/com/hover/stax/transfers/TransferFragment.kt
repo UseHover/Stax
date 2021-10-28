@@ -67,7 +67,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         amountInput.apply {
             text = transferViewModel.amount.value
             requestFocus()
-
         }
 
         super.init(root)
@@ -232,8 +231,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     private fun setRecipientHint(action: HoverAction) {
-        Timber.e("${action.from_institution_name} - ${action.transaction_type} - ${action.requiresRecipient()}")
-
         editCard?.findViewById<LinearLayout>(R.id.recipient_entry)?.visibility = if (action.requiresRecipient()) View.VISIBLE else View.GONE
         binding.summaryCard.recipientRow.visibility = if (action.requiresRecipient()) View.VISIBLE else View.GONE
 
