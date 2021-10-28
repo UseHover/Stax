@@ -22,8 +22,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent
 import timber.log.Timber
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.gson.JsonObject
 import org.json.JSONObject
 
 
@@ -46,35 +44,41 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     var error = MutableLiveData<String?>()
 
     init {
-        username.addSource(user, this::uploadUserToStax)
-        email.addSource(username, this::setUserEmail)
+        username.addSource(email, this::uploadUserToStax)
         loadAccounts()
         getEmail()
         getUsername()
         getRefereeCode()
     }
 
-    fun setUser(firebaseUser: FirebaseUser) {
-        user.value = firebaseUser
+    private fun setUser(firebaseUser: FirebaseUser) {
+        user.postValue(firebaseUser)
+        setEmail(firebaseUser.email)
     }
 
-    private fun setUserEmail(username: String?): String? {
-        if (username != null && Utils.getString(EMAIL, getApplication()).isNullOrEmpty() && user.value?.email != null) {
-            Utils.saveString(EMAIL, user.value!!.email, getApplication())
-            email.value = user.value!!.email
-        } else email.value = Utils.getString(EMAIL, getApplication())
-        return email.value
+    private fun saveResponseData(json: JSONObject?) {
+        Timber.e("response: %s", json.toString())
+        setUsername(json?.optString("username"))
+        setRefereeCode(json)
     }
 
     private fun setUsername(name: String?) {
-        if (name == null) return
-        Utils.saveString(USERNAME, name, getApplication())
-        username.postValue(name)
+        if (!name.isNullOrEmpty()) {
+            username.postValue(name)
+            Utils.saveString(USERNAME, name, getApplication())
+        }
     }
 
-    fun setRefereeCode(code: String) {
-        Utils.saveString(REFEREE_CODE, code, getApplication())
-        refereeCode.value = code
+    private fun setRefereeCode(json: JSONObject?) {
+        if (!json?.optString("referee_id").isNullOrEmpty() && !json!!.isNull("referee_id")) {
+            refereeCode.postValue(json.optString("referee_id"))
+            Utils.saveString(REFEREE_CODE, json.optString("referee_id"), getApplication())
+        }
+    }
+
+    private fun setEmail(address: String?) {
+        Utils.saveString(EMAIL, address, getApplication())
+        email.postValue(address)
     }
 
     fun getEmail(): String? {
@@ -104,7 +108,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             signIntoFirebase(account.idToken!!, activity)
         } catch (e: ApiException) {
             Timber.e(e, "Google sign in failed")
-            onError((getApplication() as Context).getString(R.string.login_google_err))
+            onError(getString(R.string.login_google_err))
         }
     }
 
@@ -117,41 +121,50 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                     Timber.i("Sign in with credential: success")
                     auth.currentUser?.let { user -> setUser(user) }
                 } else {
-                    onError((getApplication() as Context).getString(R.string.login_google_err))
+                    onError(getString(R.string.login_google_err))
                     Timber.e(it.exception, "Sign in with credential failed")
                 }
             }
     }
 
     fun fetchUsername() {
-        Timber.e("Getting username?")
         val account = GoogleSignIn.getLastSignedInAccount(getApplication())
         if (account != null)
-            uploadUserToStax(user.value)
+            uploadUserToStax(email.value)
         else
             Timber.e("No account found")
     }
 
-    fun uploadUserToStax(user: FirebaseUser?) {
-        if (getUsername().isNullOrEmpty()) {
-            email.value?.let {
-                progress.value = 66
-                viewModelScope.launch(Dispatchers.IO) {
-                    val result = LoginNetworking(getApplication()).uploadUserToStax(email.value!!, optedIn.value!!)
-                    if (result.code in 200..299)
-                        onSuccess(JSONObject(result.body!!.string()))
-                    else
-                        onError(result.body!!.string())
-                }
+    private fun uploadUserToStax(email: String?) {
+        if (getUsername().isNullOrEmpty() && !email.isNullOrEmpty()) {
+            progress.value = 66
+            viewModelScope.launch(Dispatchers.IO) {
+                val result = LoginNetworking(getApplication()).uploadUserToStax(email, optedIn.value!!)
+                if (result.code in 200..299)
+                    onSuccess(JSONObject(result.body!!.string()), (getApplication() as Context).getString(R.string.uploaded_to_hover, getString(R.string.upload_user)))
+                else
+                    onError(result.body!!.string())
             }
         }
     }
 
-    private fun onSuccess(json: JSONObject?) {
-        progress.postValue(100)
+    fun saveReferee(refereeCode: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (!email.value.isNullOrEmpty()) {
+                val result = LoginNetworking(getApplication()).uploadReferee(email.value!!, refereeCode)
+                if (result.code in 200..299)
+                    onSuccess(JSONObject(result.body!!.string()), getString(R.string.upload_referee))
+                else
+                    onError(result.body!!.string())
+            }
+        }
+    }
+
+    private fun onSuccess(json: JSONObject, successLog: String) {
         Timber.e(json.toString())
-        setUsername(json?.getString("username"))
-        Utils.logAnalyticsEvent((getApplication() as Context).getString(R.string.create_login_success), getApplication())
+        Utils.logAnalyticsEvent((getApplication() as Context).getString(R.string.uploaded_to_hover, successLog), getApplication())
+        progress.postValue(100)
+        saveResponseData(json)
     }
 
     private fun onError(message: String?) {
@@ -172,6 +185,10 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                 repo.update(a)
             }
         }
+    }
+
+    private fun getString(res: Int): String {
+        return (getApplication() as Context).getString(res)
     }
 
     companion object {

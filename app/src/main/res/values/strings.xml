@@ -7,12 +7,12 @@
 	<string name="root_url" translatable="false">https://www.usehover.com</string>
 	<string name="api_url" translatable="false">https://www.usehover.com/api</string>
 	<string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
-	<string name="bounty_endpoint">/stax_bounty_hunters</string>
-	<string name="users_endpoint">/stax_users</string>
+	<string name="users_endpoint" translatable="false">/stax_users</string>
+	<string name="referee_endpoint" translatable="false">/set_referee</string>
 	<string name="stax_market_playstore_link" translatable="false">market://details?id=com.hover.stax</string>
 	<string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
-	<string name="stax_nolt_url">https://stax.nolt.io/</string>
-	<string name="receive_stax_updates_url">https://416e906b.sibforms.com/serve/MUIEAAS88NDe6oTn7nl8YrIqgutsJ_GgyCYRWVsZ-S54quVNmBhvpsu70WpNXrZd-n6H5r8m1ZRfuTl8ckiQrB4sLIdNSx0Y_DFZ7_hQGCDv9PG6N0ncsHwWW3OYsMlPMHgQSR6OZf8xK8HC-NA3p3T71Pv1Coy_n9oiDRwIu7HCryUfDtfHr11mXSQ5S3JwcOd8cN7FL1ewDRqu</string>
+	<string name="stax_nolt_url" translatable="false">https://stax.nolt.io/</string>
+	<string name="receive_stax_updates_url" translatable="false">https://416e906b.sibforms.com/serve/MUIEAAS88NDe6oTn7nl8YrIqgutsJ_GgyCYRWVsZ-S54quVNmBhvpsu70WpNXrZd-n6H5r8m1ZRfuTl8ckiQrB4sLIdNSx0Y_DFZ7_hQGCDv9PG6N0ncsHwWW3OYsMlPMHgQSR6OZf8xK8HC-NA3p3T71Pv1Coy_n9oiDRwIu7HCryUfDtfHr11mXSQ5S3JwcOd8cN7FL1ewDRqu</string>
 	<string name="mixpanel_token" translatable="false">82efeb23b6d38509989f592c8f4b21c2</string>
 	<string name="bounty_transactions_endpoint" translatable="false">/get_bounty_results?device_id=%1$s</string>
 	<string name="google_server_client_id" translatable="false">1098235122453-5u1hct3brr4t626317k9fgjkkfdmsbvs.apps.googleusercontent.com</string>
@@ -333,7 +333,7 @@
 	<string name="share_sub">Stax app</string>
 	<string name="share_explain">Share app via</string>
 	<string name="share_msg">Check out this app https://play.google.com/store/apps/details?id=com.hover.stax</string>
-	<string name="connect_accounts">Connect your accounts to get started</string>
+	<string name="connect_accounts">Connect your accounts</string>
 
 	<string name="login_google_err">Could not connect to Google, please try again.</string>
 	<string name="referral_text">Referral code: %1$s</string>

@@ -77,7 +77,7 @@ class MainActivity : AbstractNavigationActivity(),
     }
 
     private fun logResult(result: String, size: Int) {
-        Timber.e(result.plus(" $size"))
+        Timber.i(result.plus(" $size"))
     }
 
     override fun onResume() {

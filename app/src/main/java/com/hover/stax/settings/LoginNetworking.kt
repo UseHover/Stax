@@ -9,39 +9,54 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
-import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
-import java.io.IOException
 import java.util.*
 
 class LoginNetworking(private val context: Context) {
 
     private val client = OkHttpClient()
-    private val url: String = context.getString(R.string.api_url) + context.getString(R.string.users_endpoint)
 
     fun uploadUserToStax(email: String, optedIn: Boolean): Response {
-        val json = getJson(email, optedIn)
-        val body: RequestBody = json.toString().toRequestBody("application/json".toMediaTypeOrNull())
+        return upload(context.getString(R.string.api_url) + context.getString(R.string.users_endpoint), getUserJson(email, optedIn))
+    }
+
+    fun uploadReferee(email: String, referralCode: String): Response {
+        return upload(context.getString(R.string.api_url) + context.getString(R.string.referee_endpoint), getReferralJson(email, referralCode))
+    }
+
+    private fun getUserJson(email: String, optedIn: Boolean): JSONObject {
+        val userJson = JSONObject()
+        userJson.put("email", email)
+        userJson.put("device_id", Hover.getDeviceId(context))
+        userJson.put("is_mapper", true)
+        userJson.put("marketing_opted_in", optedIn)
+        return wrapJson(userJson)
+    }
+
+    private fun getReferralJson(email: String, referralCode: String): JSONObject {
+        val userJson = JSONObject()
+        userJson.put("email", email)
+        userJson.put("referee_id", referralCode)
+        return wrapJson(userJson)
+    }
+
+    private fun upload(url: String, json: JSONObject): Response {
         val request: Request = Request.Builder().url(url)
-                .addHeader("Authorization", "Token token=" + Hover.getApiKey(context))
-                .post(body)
-                .build()
+            .addHeader("Authorization", "Token token=" + Hover.getApiKey(context))
+            .post(createBody(json))
+            .build()
         return client.newCall(request).execute()
     }
 
-    private fun getJson(email: String, optedIn: Boolean): JSONObject {
+    private fun wrapJson(deets: JSONObject): JSONObject {
         val root = JSONObject()
-        try {
-            val staxBountyHunter = JSONObject()
-            staxBountyHunter.put("email", email)
-            staxBountyHunter.put("device_id", Hover.getDeviceId(context))
-            staxBountyHunter.put("is_mapper", true)
-            staxBountyHunter.put("marketing_opted_in", optedIn)
-            root.put("stax_user", staxBountyHunter)
-            Timber.d("uploading %s", root)
-        } catch (ignored: JSONException) {
-        }
+        root.put("stax_user", deets)
+        Timber.d("uploading %s", root)
         return root
+    }
+
+    private fun createBody(json: JSONObject): RequestBody {
+        return json.toString().toRequestBody("application/json".toMediaTypeOrNull())
     }
 }

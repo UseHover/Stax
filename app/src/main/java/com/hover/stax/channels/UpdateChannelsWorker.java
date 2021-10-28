@@ -87,6 +87,7 @@ public class UpdateChannelsWorker extends Worker {
     private JSONObject downloadChannels(String url) throws IOException, JSONException {
         Request request = new Request.Builder().url(url).build();
         Response response = client.newCall(request).execute();
+//        Timber.e("response %s", response.body().string());
         JSONObject data = new JSONObject(response.body().string());
         return data;
     }

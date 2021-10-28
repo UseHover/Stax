@@ -11,6 +11,7 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import com.google.android.material.checkbox.MaterialCheckBox
+import com.google.gson.JsonObject
 import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
@@ -26,8 +27,10 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxTextInputLayout
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 
 class SettingsFragment : Fragment(), NavigationInterface {
@@ -42,8 +45,6 @@ class SettingsFragment : Fragment(), NavigationInterface {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
-//        if (viewModel.username.value == null)
-//            viewModel.refereeCode.value = binding.shareCard.refereeInput.text.toString()
         return binding.root
     }
 
@@ -62,8 +63,10 @@ class SettingsFragment : Fragment(), NavigationInterface {
 
     private fun setUpShare() {
         binding.shareCard.shareText.setOnClickListener { Utils.shareStax(requireActivity()) }
-        viewModel.email.observe(viewLifecycleOwner) { updateReferralInfo(it) }
+        viewModel.username.observe(viewLifecycleOwner) { it?.let { updateRefereeInfo(viewModel.refereeCode.value) } }
+        viewModel.email.observe(viewLifecycleOwner) { Timber.e("got email: %s", it); updateReferralInfo(it) }
         viewModel.refereeCode.observe(viewLifecycleOwner) { updateRefereeInfo(it) }
+        viewModel.error.observe(viewLifecycleOwner) { it?.let { setRefereeState(it, AbstractStatefulInput.ERROR) } }
         viewModel.fetchUsername()
     }
 
@@ -85,20 +88,22 @@ class SettingsFragment : Fragment(), NavigationInterface {
         if (!viewModel.username.value.isNullOrEmpty() && code.isNullOrEmpty()) {
             binding.shareCard.refereeSaveBtn.setOnClickListener { attemptSaveReferee() }
             binding.shareCard.refereeLayout.visibility = VISIBLE
-        }
+        } else if (viewModel.progress.value == 100 && !code.isNullOrEmpty())
+            setRefereeState(getString(R.string.saved), AbstractStatefulInput.SUCCESS)
+        else
+            binding.shareCard.refereeLayout.visibility = GONE
     }
 
     private fun attemptSaveReferee() {
         if (!binding.shareCard.refereeInput.text.toString().isNullOrEmpty()) {
-//            val response = viewModel.saveReferee(binding.shareCard.refereeInput.text.toString())
-//            if (response && offline)
-//                binding.shareCard.refereeInput.setState(getString(R.string.saved), AbstractStatefulInput.SUCCESS)
-//            else
-//                binding.shareCard.refereeInput.setState(getString(R.string.referral_error_offline), AbstractStatefulInput.ERROR)
-//            else
-                binding.shareCard.refereeInput.setState(getString(R.string.referral_error_invalid), AbstractStatefulInput.ERROR)
-        } else
-            binding.shareCard.refereeInput.setState(getString(R.string.referral_error_blank), AbstractStatefulInput.ERROR)
+            viewModel.saveReferee(binding.shareCard.refereeInput.text.toString())
+        } else viewModel.error.value = getString(R.string.referral_error_offline)
+
+    }
+
+    private fun setRefereeState(msg: String, type: Int) {
+        Timber.e(msg)
+        binding.shareCard.refereeInput.setState(msg, type)
     }
 
     private fun setUpMeta(viewModel: SettingsViewModel) {
