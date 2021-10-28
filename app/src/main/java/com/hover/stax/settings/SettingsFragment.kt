@@ -83,7 +83,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
     private fun setupAppVersionInfo() {
         val deviceId = Hover.getDeviceId(requireContext())
         val appVersion: String = BuildConfig.VERSION_NAME
-        val versionCode: String = java.lang.String.valueOf(BuildConfig.VERSION_CODE)
+        val versionCode: String = BuildConfig.VERSION_CODE.toString()
         binding.staxAndDeviceInfo.text = getString(R.string.app_version_and_device_id, appVersion, versionCode, deviceId)
     }
 
@@ -141,10 +141,5 @@ class SettingsFragment : Fragment(), NavigationInterface {
             R.id.action_navigation_settings_to_bountyEmailFragment
 
         findNavController().navigate(navAction)
-    }
-
-    companion object {
-        @JvmField
-        val LANG_CHANGE = "Settings"
     }
 }

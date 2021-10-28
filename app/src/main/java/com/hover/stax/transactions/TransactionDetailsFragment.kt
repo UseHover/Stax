@@ -11,6 +11,7 @@ import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.RecyclerView
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.transactions.Transaction
@@ -105,14 +106,22 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
         val messagesView = binding.convoRecyclerView
         messagesView.layoutManager = UIHelper.setMainLinearManagers(requireActivity())
         messagesView.setHasFixedSize(true)
-        viewModel.messages.observe(viewLifecycleOwner, { if (it != null) messagesView.adapter = MessagesAdapter(it) })
+        viewModel.messages.observe(viewLifecycleOwner, { updateWithSessionDetails(it, messagesView) })
     }
 
     private fun createSmsMessagesRecyclerView() {
         val smsView = binding.smsRecyclerView
         smsView.layoutManager = UIHelper.setMainLinearManagers(requireActivity())
         smsView.setHasFixedSize(true)
-        viewModel.sms.observe(viewLifecycleOwner, { if (it != null) smsView.adapter = MessagesAdapter(it) })
+        viewModel.sms.observe(viewLifecycleOwner, { updateWithSessionDetails(it, smsView) })
+    }
+
+    private fun updateWithSessionDetails(messages: List<UssdCallResponse>?, v: RecyclerView) {
+        if (messages != null) {
+            if (viewModel.transaction.value?.status == Transaction.SUCCEEDED)
+                setStatusText(viewModel.action.value, viewModel.transaction.value)
+            v.adapter = MessagesAdapter(messages)
+        }
     }
 
     private fun setupSeeMoreButton() {
@@ -189,7 +198,10 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
         if (isFullScreen)
             binding.transactionDetailsCard.setTitle(transaction.description)
         else {
-            if (viewModel.action.value != null) binding.transactionDetailsCard.setTitle(transaction.generateLongDescription(viewModel.action.value, viewModel.contact.value, requireContext()))
+            if (viewModel.action.value != null)
+                binding.transactionDetailsCard.setTitle(
+                        transaction.generateLongDescription(viewModel.action.value, viewModel.contact.value, requireContext())
+                )
             binding.infoCard.root.visibility = GONE
         }
 
@@ -220,8 +232,14 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
 
     private fun updateStatus(action: HoverAction?, transaction: StaxTransaction?) {
         if (action != null && transaction != null) {
-            binding.statusCard.updateState(transaction.fullStatus.getIcon(action, binding.statusCard.context), transaction.fullStatus.getBackgroundColor(), transaction.fullStatus.getTitle())
-            binding.statusText.text = Html.fromHtml(transaction.fullStatus.getStatusDetail(action, requireContext()))
+            binding.statusCard.updateState(transaction.fullStatus.getIcon(), transaction.fullStatus.getBackgroundColor(), transaction.fullStatus.getTitle())
+            setStatusText(action, transaction)
+        }
+    }
+
+    private fun setStatusText(action: HoverAction?, transaction: StaxTransaction?) {
+        if (transaction != null) {
+            binding.statusText.text = transaction.fullStatus.getStatusDetail(action, viewModel.messages?.value?.last(), viewModel.sms?.value, requireContext())
         }
     }
 

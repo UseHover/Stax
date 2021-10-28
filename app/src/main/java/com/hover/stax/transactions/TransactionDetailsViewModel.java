@@ -100,8 +100,8 @@ public class TransactionDetailsViewModel extends AndroidViewModel {
     }
 
     LiveData<List<UssdCallResponse>> getSms() {
-        if (messages == null) {
-            messages = new MediatorLiveData<>();
+        if (sms == null) {
+            sms = new MediatorLiveData<>();
         }
         return sms;
     }

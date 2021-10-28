@@ -73,7 +73,7 @@ class ScheduleDetailFragment : Fragment() {
 
         with(binding.summaryCard) {
             detailsAmount.text = Utils.formatAmount(schedule.amount)
-            detailsDate.text = DateUtils.humanFriendlyDate(schedule.start_date)
+            detailsDate.text = DateUtils.humanFriendlyDateTime(schedule.start_date)
 
             frequencyRow.visibility = if (schedule.frequency == Schedule.ONCE) View.GONE else View.VISIBLE
             detailsFrequency.text = schedule.humanFrequency(context)

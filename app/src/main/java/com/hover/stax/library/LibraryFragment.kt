@@ -23,7 +23,7 @@ class LibraryFragment : Fragment(), ChannelsAdapter.DialListener, CountryAdapter
     private var _binding: FragmentLibraryBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentLibraryBinding.inflate(inflater, container, false)
 
         return binding.root
@@ -44,7 +44,9 @@ class LibraryFragment : Fragment(), ChannelsAdapter.DialListener, CountryAdapter
             allChannels.observe(viewLifecycleOwner) {
                 it?.let {
                     binding.countryDropdown.updateChoices(it)
-                    filterChannels(CountryAdapter.codeRepresentingAllCountries())
+
+                    if (filteredChannels.value == null)
+                        filterChannels(CountryAdapter.codeRepresentingAllCountries())
                 }
             }
 

@@ -12,9 +12,9 @@
 		android:layout_height="wrap_content"
 		android:paddingHorizontal="@dimen/margin_10"
 		android:paddingVertical="@dimen/margin_16"
-		android:textColor="@color/brightBlue"
+		android:textColor="@color/grey"
 		android:textSize="@dimen/text_13"
-		android:fontFamily="font-normal"
+		android:fontFamily="font-medium"
 		android:background="@color/cardViewColor"
 		android:visibility="gone" />
 

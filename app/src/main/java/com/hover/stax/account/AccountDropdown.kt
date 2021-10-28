@@ -48,8 +48,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     private fun accountUpdate(accounts: List<Account>) {
-        if (!accounts.isNullOrEmpty() && !hasExistingContent()) {
-//            setState(null, NONE)
+        if (!accounts.isNullOrEmpty() /*&& !hasExistingContent()*/) {
             updateChoices(accounts)
         } else if (!hasExistingContent()) {
             setEmptyState()
@@ -63,7 +62,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     private fun setDropdownValue(account: Account?) {
         highlightedAccount = account
-        autoCompleteTextView.setText(account?.toString() ?: "", false)
+        autoCompleteTextView.setText(account?.alias ?: "", false)
         account?.logoUrl?.let { UIHelper.loadPicasso(it, size55, this) }
     }
 
@@ -79,7 +78,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         }
 
         if (showSelected)
-            setDropdownValue(accounts.first { it.isDefault })
+            setDropdownValue(accounts.firstOrNull { it.isDefault })
     }
 
     private fun onSelect(account: Account) {
@@ -110,9 +109,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
             sims.observe(lifecycleOwner, simsObserver)
             simHniList.observe(lifecycleOwner, hniListObserver)
-            accounts.observe(lifecycleOwner) {
-                accountUpdate(it)
-            }
+            accounts.observe(lifecycleOwner) { accountUpdate(it) }
 
             selectedChannels.observe(lifecycleOwner, selectedObserver)
             activeChannel.observe(lifecycleOwner) { if (it != null && showSelected) setState(helperText, NONE); Timber.e("Setting state null") }

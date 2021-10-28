@@ -7,7 +7,7 @@ import com.hover.stax.R
 
 class TransactionStatus(val transaction: StaxTransaction) {
 
-    fun getIcon(action: HoverAction?, c: Context): Int {
+    fun getIcon(): Int {
         return when (transaction.status) {
             Transaction.FAILED -> R.drawable.ic_info_red
             Transaction.PENDING -> {
@@ -35,26 +35,20 @@ class TransactionStatus(val transaction: StaxTransaction) {
     }
 
     fun getShortStatusDetail(action: HoverAction?, c: Context): String {
-        if (transaction.isRecorded) return getRecordedStatusDetail(c)
-        else return when (transaction.status) {
+        return if (transaction.isRecorded) getRecordedStatusDetail(c)
+        else when (transaction.status) {
             Transaction.FAILED -> lookupFailureMessage(action, c)
             Transaction.PENDING -> c.getString(R.string.pending_cardhead)
-            else -> {
-                return if (transaction.balance == null) "\\u2014"
-                else transaction.balance
-            }
+            else -> getStringOrEmdash(transaction.balance, R.string.new_balance, c)
         }
     }
 
-    fun getStatusDetail(action: HoverAction, c: Context): String {
-        if (transaction.isRecorded) return getRecordedStatusDetail(c)
-        else return when (transaction.status) {
+    fun getStatusDetail(action: HoverAction?, messages: UssdCallResponse?, sms: List<UssdCallResponse>?, c: Context): String {
+        return if (transaction.isRecorded) getRecordedStatusDetail(c)
+        else when (transaction.status) {
             Transaction.FAILED -> lookupFailureDescription(action, c)
             Transaction.PENDING -> c.getString(R.string.pending_cardbody)
-            else -> {
-                return if (transaction.balance == null) "\\u2014"
-                else c.getString(R.string.new_balance, transaction.balance)
-            }
+            else -> lookupSuccessDescription(messages, sms, c)
         }
     }
 
@@ -92,7 +86,21 @@ class TransactionStatus(val transaction: StaxTransaction) {
         }
     }
 
+    private fun lookupSuccessDescription(last_message: UssdCallResponse?, sms: List<UssdCallResponse>?, c: Context): String {
+        return if (!sms.isNullOrEmpty())
+            sms.sortedByDescending { it.responseMessage.length }.map { it.responseMessage }.toString()
+        else if (!(last_message?.responseMessage.isNullOrEmpty()))
+            last_message!!.responseMessage
+        else
+            c.getString(R.string.loading)
+    }
+
+    private fun getStringOrEmdash(value: String?, stringRes: Int, c: Context): String {
+        return if (value == null) "\\u2014"
+        else c.getString(stringRes, value)
+    }
+
     private fun getServiceName(a: HoverAction?, c: Context): String {
-        if (a == null) return c.getString(R.string.null_service_name_text) else return a.from_institution_name
+        return a?.from_institution_name ?: c.getString(R.string.null_service_name_text)
     }
 }
