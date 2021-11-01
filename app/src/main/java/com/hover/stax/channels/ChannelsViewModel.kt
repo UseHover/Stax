@@ -12,8 +12,8 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
-import com.hover.stax.account.Account
-import com.hover.stax.account.AccountDropdown
+import com.hover.stax.accounts.Account
+import com.hover.stax.accounts.AccountDropdown
 
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
@@ -160,9 +160,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun setActiveChannelIfNull(channels: List<Channel>) {
-        Timber.e("Setting active channel ${channels.firstOrNull()}")
         if (!channels.isNullOrEmpty() && activeChannel.value == null)
-            activeChannel.value = channels.first { it.defaultAccount }
+            activeChannel.value = channels.firstOrNull { it.defaultAccount }
     }
 
     fun setActiveChannel(channel: Channel) {

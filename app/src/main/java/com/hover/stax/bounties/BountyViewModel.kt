@@ -23,8 +23,7 @@ import java.util.*
 
 private const val MAX_LOOKUP_COUNT = 40
 
-class BountyViewModel(application: Application) : AndroidViewModel(application) {
-    private val repo = get(DatabaseRepo::class.java)
+class BountyViewModel(application: Application, val repo: DatabaseRepo) : AndroidViewModel(application) {
 
     @JvmField
     var country: String = CountryAdapter.codeRepresentingAllCountries()
@@ -32,40 +31,20 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
     val actions: LiveData<List<HoverAction>>
     val channels: LiveData<List<Channel>>
     val transactions: LiveData<List<StaxTransaction>>
-    private val filteredBountyChannels: MutableLiveData<List<Channel>?>
+    var currentCountryFilter = MutableLiveData<String>()
     private val bountyList = MediatorLiveData<List<Bounty>>()
 
     var sims: MutableLiveData<List<SimInfo>> = MutableLiveData()
-    val bountyEmailLiveData: MutableLiveData<Map<Int, String?>> = MutableLiveData()
     private lateinit var bountyListAsync: Deferred<MutableList<Bounty>>
 
-    val user = MutableLiveData<FirebaseUser>()
-    val didLoginFail = MutableLiveData(false)
-
     init {
+        currentCountryFilter.value = CountryAdapter.codeRepresentingAllCountries()
         loadSims()
-        filteredBountyChannels = MutableLiveData()
-        filteredBountyChannels.value = null
         actions = repo.bountyActions
         channels = Transformations.switchMap(actions, this::loadChannels)
         transactions = repo.bountyTransactions!!
         bountyList.addSource(actions, this::makeBounties)
         bountyList.addSource(transactions, this::makeBountiesIfActions)
-    }
-
-    fun setUser(firebaseUser: FirebaseUser) {
-        user.value = firebaseUser
-    }
-
-    fun setLoginFailed(failed: Boolean) {
-        didLoginFail.value = failed
-    }
-
-    fun uploadBountyUser(email: String, optedIn: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val result = BountyEmailNetworking(getApplication()).uploadBountyUser(email, optedIn)
-            bountyEmailLiveData.postValue(result)
-        }
     }
 
     private fun loadSims() {

@@ -7,7 +7,7 @@
         android:orientation="vertical">
 
     <com.hover.stax.views.StaxCardView
-            android:id="@+id/staxCardView"
+            android:id="@+id/detailsCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:showBack="true"

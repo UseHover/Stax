@@ -59,6 +59,12 @@ public class StaxTextInputLayout extends AbstractStatefulInput {
             setState(null, SUCCESS);
     }
 
+    public void setText(String text, boolean updateState) {
+        editText.setText(text);
+        if (updateState && text != null && !text.isEmpty())
+            setState(null, SUCCESS);
+    }
+
     public String getText() {
         return editText.getText().toString();
     }

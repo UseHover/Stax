@@ -8,7 +8,7 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.databinding.LibraryListItemBinding
 import com.hover.stax.utils.Utils
 
-class ChannelsAdapter(private val channelList: List<Channel>, val dialListener: DialListener) : RecyclerView.Adapter<ChannelsAdapter.ViewHolder>() {
+class ChannelsAdapter(private val channelList: List<Channel>) : RecyclerView.Adapter<ChannelsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = LibraryListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -27,14 +27,10 @@ class ChannelsAdapter(private val channelList: List<Channel>, val dialListener: 
             with(binding) {
                 liDescription.text = channel.name
                 liButton.apply {
-                    text = liButton.context.getString(R.string.library_dial_btn, channel.rootCode)
-                    setOnClickListener { dialListener.dial(channel.rootCode) }
+                    text = liButton.context.getString(R.string.dial_btn, channel.rootCode)
+                    setOnClickListener { Utils.dial(channel.rootCode, binding.root.context) }
                 }
             }
         }
-    }
-
-    interface DialListener {
-        fun dial(shortCode: String)
     }
 }

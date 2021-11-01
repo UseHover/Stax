@@ -13,6 +13,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
@@ -22,8 +23,8 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.HoverParameters
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
-import com.hover.stax.account.Account
-import com.hover.stax.account.DUMMY
+import com.hover.stax.accounts.Account
+import com.hover.stax.accounts.DUMMY
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.balances.BalanceAdapter
 import com.hover.stax.balances.BalancesViewModel
@@ -42,6 +43,7 @@ import com.hover.stax.requests.SmsSentObserver
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.schedules.ScheduleDetailViewModel
 import com.hover.stax.settings.BiometricChecker
+import com.hover.stax.settings.SettingsViewModel
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransactionType
@@ -65,10 +67,8 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
     private val channelsViewModel: ChannelsViewModel by viewModel()
     private val transferViewModel: TransferViewModel by viewModel()
     private val requestViewModel: NewRequestViewModel by viewModel()
-    private val bountyViewModel: BountyViewModel by viewModel()
+    private val settingsViewModel: SettingsViewModel by viewModel()
 
-    private lateinit var auth: FirebaseAuth
-    private lateinit var signInClient: GoogleSignInClient
     private lateinit var scheduleViewModel: ScheduleDetailViewModel
 
     private lateinit var binding: ActivityMainBinding
@@ -113,7 +113,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
     }
 
     private fun logResult(result: String, size: Int) {
-        Timber.e(result.plus(" $size"))
+        Timber.i(result.plus(" $size"))
     }
 
     override fun onResume() {
@@ -277,23 +277,8 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
             requestCode == Constants.TRANSFER_REQUEST && data != null && data.action == Constants.SCHEDULED ->
                 showMessage(getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))))
             requestCode == Constants.REQUEST_REQUEST -> if (resultCode == RESULT_OK && data != null) onRequest(data)
-            requestCode == BOUNTY_REQUEST -> {
-                Timber.e("Request code is bounty")
-                if (data != null) {
-                    val transactionUUID = data.getStringExtra("uuid")
-                    if (transactionUUID != null) navigateToTransactionDetailsFragment(transactionUUID, supportFragmentManager, true)
-                }
-            }
-            requestCode == LOGIN_REQUEST -> {
-                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-                try {
-                    val account = task.getResult(ApiException::class.java)!!
-                    fetchAccount(account.idToken!!)
-                } catch (e: ApiException) {
-                    Timber.e(e, "Google sign in failed")
-                    bountyViewModel.setLoginFailed(true)
-                }
-            }
+            requestCode == BOUNTY_REQUEST -> showBountyDetails(data)
+            requestCode == LOGIN_REQUEST -> settingsViewModel.signIntoFirebaseAsync(data, (findViewById<MaterialCheckBox>(R.id.marketingOptIn).isChecked), this)
             else -> {
                 if (requestCode != Constants.TRANSFER_REQUEST) {
                     balancesViewModel.setRan(requestCode)
@@ -301,6 +286,14 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
                 }
                 showPopUpTransactionDetailsIfRequired(data)
             }
+        }
+    }
+
+    private fun showBountyDetails(data: Intent?){
+        Timber.e("Request code is bounty")
+        if (data != null) {
+            val transactionUUID = data.getStringExtra("uuid")
+            if (transactionUUID != null) navigateToTransactionDetailsFragment(transactionUUID, supportFragmentManager, true)
         }
     }
 
@@ -365,7 +358,6 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         joinAllBountiesGroup(this)
         joinBountyCountryGroup(a.country_alpha2.uppercase(), this)
     }
-
 
     private fun returnResult(type: Int, result: Int, data: Intent?) {
         val i = data?.let { Intent(it) } ?: Intent()
@@ -476,33 +468,17 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
                 .requestIdToken(getString(R.string.google_server_client_id))
                 .requestEmail()
                 .build()
-        signInClient = GoogleSignIn.getClient(this, gso)
-        auth = Firebase.auth
+        settingsViewModel.signInClient = GoogleSignIn.getClient(this, gso)
     }
 
     fun signIn() {
-        val signInIntent = signInClient.signInIntent
+        val signInIntent = settingsViewModel.signInClient.signInIntent
         startActivityForResult(signInIntent, LOGIN_REQUEST)
-    }
-
-    private fun fetchAccount(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        auth.signInWithCredential(credential)
-                .addOnCompleteListener(this) {
-                    if (it.isSuccessful) {
-                        Timber.i("Sign in with credential: success")
-                        auth.currentUser?.let { user -> bountyViewModel.setUser(user) }
-                    } else {
-                        bountyViewModel.setLoginFailed(true)
-                        Timber.e(it.exception, "Sign in with credential failed")
-                    }
-                }
     }
 
     companion object {
         private const val BOUNTY_REQUEST = 3000
         private const val LOGIN_REQUEST = 4000
-        const val EMAIL_KEY = "email_for_bounties"
     }
 
 }

@@ -105,9 +105,11 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
         dialog!!.showIt()
     }
 
-    private fun initCountryDropdown() {
-        binding.bountyCountryDropdown.isEnabled = true
+    private fun initCountryDropdown(channels: List<Channel>) {
         binding.bountyCountryDropdown.setListener(this)
+        binding.bountyCountryDropdown.updateChoices(channels, bountyViewModel.currentCountryFilter.value)
+        binding.bountyCountryDropdown.isEnabled = true
+        binding.progressIndicator.hide()
     }
 
     private fun initRecyclerView() {
@@ -120,10 +122,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
         sims.observe(viewLifecycleOwner) { Timber.v("Sims update ${it.size}") }
         bounties.observe(viewLifecycleOwner) { updateChannelList(channels.value, it) }
         channels.observe(viewLifecycleOwner) {
-            binding.progressIndicator.hide()
-            initCountryDropdown()
-
-            binding.bountyCountryDropdown.updateChoices(it)
+            initCountryDropdown(it)
             updateChannelList(it, bounties.value)
         }
     }

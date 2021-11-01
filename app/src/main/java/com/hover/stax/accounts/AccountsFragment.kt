@@ -1,4 +1,4 @@
-package com.hover.stax.account
+package com.hover.stax.accounts
 
 import android.os.Bundle
 import android.view.LayoutInflater

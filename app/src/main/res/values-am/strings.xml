@@ -1,654 +1,625 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
+  <string name="nav_home">ቤት</string>
 
-    <string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
+  <string name="nav_balance_and_history">ሚዛን እና ታሪክ</string>
 
-    <string name="appsflyer_key" public="false" translatable="false">4B6DDdYFw55PmVPTwr8Ski</string>
+  <string name="nav_balances">ሚዛኖች</string>
 
-    <string name="app_name" translatable="false">Stax</string>
+  <string name="nav_get_paid">ይከፈልህ</string>
 
-    <string name="payment_root_url" translatable="false">https://stax.me/pay?%1$s</string>
+  <string name="nav_link_account">መለያ ያገናኙ</string>
 
-    <string name="payment_url_end" translatable="false">%1$s-%2$d-%3$s-%4$d</string>
+  <string name="nav_airtime">የአየር ሰዓት ይግዙ</string>
 
-    <string name="root_url" translatable="false">https://www.usehover.com</string>
+  <string name="nav_transfer">ማስተላለፍ</string>
 
-    <string name="api_url" translatable="false">https://www.usehover.com/api</string>
+  <string name="nav_new_request">አዲስ ጥያቄ</string>
 
-    <string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
+  <string name="nav_settings">ቅንብሮች</string>
 
-    <string name="bounty_endpoint">/stax_bounty_hunters</string>
+  <string name="nav_account_detail">የመለያ ዝርዝሮች</string>
 
-    <string name="stax_market_playstore_link" translatable="false">market://details?id=com.hover.stax</string>
+  <string name="nav_transaction">የግብይት ዝርዝሮች</string>
 
-    <string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
+  <string name="nav_schedule">የዝርዝር ዝርዝሮች</string>
 
-    <string name="stax_nolt_url">https://stax.nolt.io/</string>
+  <string name="nav_request">ዝርዝሮችን ይጠይቁ</string>
 
-    <string name="receive_stax_updates_url">https://416e906b.sibforms.com/serve/MUIEAAS88NDe6oTn7nl8YrIqgutsJ_GgyCYRWVsZ-S54quVNmBhvpsu70WpNXrZd-n6H5r8m1ZRfuTl8ckiQrB4sLIdNSx0Y_DFZ7_hQGCDv9PG6N0ncsHwWW3OYsMlPMHgQSR6OZf8xK8HC-NA3p3T71Pv1Coy_n9oiDRwIu7HCryUfDtfHr11mXSQ5S3JwcOd8cN7FL1ewDRqu</string>
+  <string name="nav_transfer_detail">የዝውውር ዝርዝሮች</string>
 
-    <string name="mixpanel_token" translatable="false">82efeb23b6d38509989f592c8f4b21c2</string>
+  <string name="lang_cardhead">ቋንቋ ይምረጡ</string>
 
-    <string name="nav_home">ቤት</string>
+  <string-array name="supported_lang_codes">
 
-    <string name="nav_balance_and_history">ሚዛን እና ታሪክ</string>
+    <item>ነኝ</item>
 
-    <string name="nav_balances">ሚዛኖች</string>
+    <item>en</item>
 
-    <string name="nav_get_paid">ይከፈልህ</string>
+    <item>ኤፍ</item>
 
-    <string name="nav_link_account">መለያ ያገናኙ</string>
+    <item>ስ</item>
 
-    <string name="nav_airtime">የአየር ሰዓት ይግዙ</string>
+  </string-array>
 
-    <string name="nav_transfer">ማስተላለፍ</string>
+  <string name="btn_ok">እሺ</string>
 
-    <string name="nav_new_request">አዲስ ጥያቄ</string>
+  <string name="btn_cancel">ሰርዝ</string>
 
-    <string name="nav_settings">ቅንብሮች</string>
+  <string name="btn_save">አስቀምጥ</string>
 
-    <string name="nav_account_detail">የመለያ ዝርዝሮች</string>
+  <string name="btn_dontsave">ተወው</string>
 
-    <string name="nav_transaction">የግብይት ዝርዝሮች</string>
+  <string name="btn_continue">ቀጥል</string>
 
-    <string name="nav_schedule">የዝርዝር ዝርዝሮች</string>
+  <string name="btn_send">ላክ</string>
 
-    <string name="nav_request">ዝርዝሮችን ይጠይቁ</string>
+  <string name="btn_edit">አርትዕ</string>
 
-    <string name="nav_transfer_detail">የዝውውር ዝርዝሮች</string>
+  <string name="btn_back">ተመለስ</string>
 
-    <string name="lang_cardhead">ቋንቋ ይምረጡ</string>
+  <string name="btn_test">ሙከራ</string>
 
-    <string-array name="supported_lang_codes">
+  <!-- ONBOARDING -->
 
-        <item>ነኝ</item>
+  <string name="stax_tagline">ያለ ውጥረት ገንዘብን ያንቀሳቅሱ</string>
 
-        <item>en</item>
+  <string name="splash_screen_img_desc">ስቴክስ ዳራ</string>
 
-        <item>ኤፍ</item>
+  <string name="slide_1_title">ሁሉንም ግብይቶችዎን ከመስመር ውጭ ያድርጉ!</string>
 
-        <item>ስ</item>
+  <string name="slide_1_desc">ገንዘብ ለማንቀሳቀስ ወይም በስታክስ ላይ የሂሳብዎን ቀሪ ሂሳብ ለመፈተሽ በይነመረብ አያስፈልግዎትም።</string>
 
-    </string-array>
+  <string name="slide_2_title">ያለ ውጥረት \nገንዘብን ያንቀሳቅሱ!</string>
 
-    <string name="btn_ok">እሺ</string>
+  <string name="slide_2_desc">በመለያዎችዎ መካከል ገንዘብ ያስተላልፉ ፣ የአየር ሰዓት ይግዙ ፣ ገንዘብ ይላኩ እና ይጠይቁ።</string>
 
-    <string name="btn_cancel">ሰርዝ</string>
+  <string name="slide_3_title">በአንድ መተግበሪያ ውስጥ ሁሉም የእርስዎ የፋይናንስ መለያዎች።</string>
 
-    <string name="btn_save">አስቀምጥ</string>
+  <string name="slide_3_desc">ሁሉንም የባንክ እና የሞባይል ገንዘብ ሂሳቦችዎን ወደ ስታክስ ያገናኙ እና ገንዘብን ከአንድ ቦታ ያንቀሳቅሱ።</string>
 
-    <string name="btn_dontsave">ተወው</string>
+  <!-- Home -->
 
-    <string name="btn_continue">ቀጥል</string>
+  <string name="welcome_to">እንኩአን ደህና መጡ</string>
 
-    <string name="btn_send">ላክ</string>
+  <string name="cta_transfer">ገንዘብ ይላኩ</string>
 
-    <string name="btn_edit">አርትዕ</string>
+  <string name="cta_airtime">የአየር ሰዓት ይግዙ</string>
 
-    <string name="btn_back">ተመለስ</string>
+  <string name="cta_request">ገንዘብ ይጠይቁ</string>
 
-    <string name="btn_test">ሙከራ</string>
+  <!-- Balances -->
 
-    <!-- ONBOARDING -->
+  <string name="bal_cardhead">ሚዛኖች</string>
 
-    <string name="stax_tagline">ያለ ውጥረት ገንዘብን ያንቀሳቅሱ</string>
+  <string name="channels_error_nodata">አገልግሎቶችን ለመጫን እባክዎ ውሂብን ያብሩ።</string>
 
-    <string name="splash_screen_img_desc">ስቴክስ ዳራ</string>
+  <string name="channels_error_nosim">ምርጫዎችን ለማጣራት እባክዎ የሚደገፍ ሲም ያስገቡ።</string>
 
-    <string name="slide_1_title">ሁሉንም ግብይቶችዎን ከመስመር ውጭ ያድርጉ!</string>
+  <string name="channels_error_noselect">አንድ አገልግሎት መምረጥ አለብዎት።</string>
 
-    <string name="slide_1_desc">ገንዘብ ለማንቀሳቀስ ወይም በስታክስ ላይ የሂሳብዎን ቀሪ ሂሳብ ለመፈተሽ በይነመረብ አያስፈልግዎትም።</string>
+  <string name="link_account">መለያ አገናኝ</string>
 
-    <string name="slide_2_title">ያለ ውጥረት \nገንዘብን ያንቀሳቅሱ!</string>
+  <string name="link_account_error">ለማገናኘት መለያ ይምረጡ።</string>
 
-    <string name="slide_2_desc">በመለያዎችዎ መካከል ገንዘብ ያስተላልፉ ፣ የአየር ሰዓት ይግዙ ፣ ገንዘብ ይላኩ እና ይጠይቁ።</string>
-
-    <string name="slide_3_title">በአንድ መተግበሪያ ውስጥ ሁሉም የእርስዎ የፋይናንስ መለያዎች።</string>
-
-    <string name="slide_3_desc">ሁሉንም የባንክ እና የሞባይል ገንዘብ ሂሳቦችዎን ወደ ስታክስ ያገናኙ እና ገንዘብን ከአንድ ቦታ ያንቀሳቅሱ።</string>
-
-    <!-- Home -->
-
-    <string name="welcome_to">እንኩአን ደህና መጡ</string>
-
-    <string name="cta_transfer">ገንዘብ ይላኩ</string>
-
-    <string name="cta_airtime">የአየር ሰዓት ይግዙ</string>
-
-    <string name="cta_request">ገንዘብ ይጠይቁ</string>
-
-    <!-- Balances -->
-
-    <string name="bal_cardhead">ሚዛኖች</string>
-
-    <string name="channels_error_nodata">አገልግሎቶችን ለመጫን እባክዎ ውሂብን ያብሩ።</string>
-
-    <string name="channels_error_nosim">ምርጫዎችን ለማጣራት እባክዎ የሚደገፍ ሲም ያስገቡ።</string>
-
-    <string name="channels_error_noselect">አንድ አገልግሎት መምረጥ አለብዎት።</string>
-
-    <string name="link_account">መለያ አገናኝ</string>
-
-    <string name="link_account_error">ለማገናኘት መለያ ይምረጡ።</string>
-
-    <string name="link_another">
+  <string name="link_another">
     <u>+ ሌላ መለያ ያገናኙ</u>
   </string>
 
-    <string name="add_another_account">
+  <string name="add_another_account">
     <u>+ ሌላ መለያ ያክሉ</u>
   </string>
 
-    <string name="hist_cardhead">ታሪክ</string>
+  <string name="hist_cardhead">ታሪክ</string>
 
-    <string name="hist_zerobody">እስካሁን ምንም ታሪክ የለዎትም። ለመጀመር ገንዘብ ይላኩ ወይም የአየር ሰዓት ይግዙ።</string>
+  <string name="hist_zerobody">እስካሁን ምንም ታሪክ የለዎትም። ለመጀመር ገንዘብ ይላኩ ወይም የአየር ሰዓት ይግዙ።</string>
 
-    <string name="future_cardhead">የወደፊት ግብይቶች</string>
+  <string name="future_cardhead">የወደፊት ግብይቶች</string>
 
-    <string name="pending_callout">ግብይት ተልኳል። ማረጋገጫ በመጠባበቅ ላይ።</string>
+  <string name="pending_callout">ግብይት ተልኳል። ማረጋገጫ በመጠባበቅ ላይ።</string>
 
-    <string name="refresh_balance_desc">ሚዛንዎን ያድሱ</string>
+  <string name="refresh_balance_desc">ሚዛንዎን ያድሱ</string>
 
-    <string name="refresh_balances">ሚዛኖችን ያድሱ</string>
+  <string name="refresh_balances">ሚዛኖችን ያድሱ</string>
 
-    <string name="refresh">አድስ</string>
+  <string name="refresh">አድስ</string>
 
-    <string name="refresh_balance_error">ቀሪ ሂሳብዎን ለማረጋገጥ መለያ ያክሉ።</string>
+  <string name="refresh_balance_error">ቀሪ ሂሳብዎን ለማረጋገጥ መለያ ያክሉ።</string>
 
-    <string name="check_balance_title">ሚዛን ይፈትሹ</string>
+  <string name="check_balance_title">ሚዛን ይፈትሹ</string>
 
-    <string name="check_balance_desc">ጥሩ! የመጀመሪያ መለያዎን አክለዋል። አሁን በስታክስ ላይ ሚዛንዎን ማረጋገጥ ይችላሉ።</string>
+  <string name="check_balance_desc">ጥሩ! የመጀመሪያ መለያዎን አክለዋል። አሁን በስታክስ ላይ ሚዛንዎን ማረጋገጥ ይችላሉ።</string>
 
-    <string name="check_balance_alt">ጥሩ! መለያ በተሳካ ሁኔታ ታክሏል። አሁን በስታክስ ላይ ሚዛንዎን ማረጋገጥ ይችላሉ።</string>
+  <string name="check_balance_alt">ጥሩ! መለያ በተሳካ ሁኔታ ታክሏል። አሁን በስታክስ ላይ ሚዛንዎን ማረጋገጥ ይችላሉ።</string>
 
-    <string name="check_balance_alt_plural">ጥሩ! መለያዎች በተሳካ ሁኔታ ታክለዋል። አሁን በስታክስ ላይ ሚዛንዎን ማረጋገጥ ይችላሉ።</string>
+  <string name="check_balance_alt_plural">ጥሩ! መለያዎች በተሳካ ሁኔታ ታክለዋል። አሁን በስታክስ ላይ ሚዛንዎን ማረጋገጥ ይችላሉ።</string>
 
-    <string name="later">በኋላ</string>
+  <string name="later">በኋላ</string>
 
-    <string name="no_connecion">ግንኙነት የለም</string>
+  <string name="no_connecion">ግንኙነት የለም</string>
 
-    <string name="your_main_account">ዋናው መለያዎ</string>
+  <string name="your_main_account">ዋናው መለያዎ</string>
 
-    <string name="your_other_account">የእርስዎ ሌላ መለያ</string>
+  <string name="your_other_account">የእርስዎ ሌላ መለያ</string>
 
-    <!-- ADD ACCOUNT -->
+  <!-- ADD ACCOUNT -->
 
-    <string name="your_accounts">የእርስዎ መለያዎች</string>
+  <string name="your_accounts">የእርስዎ መለያዎች</string>
 
-    <string name="add_an_account">መለያ ያክሉ</string>
+  <string name="add_an_account">መለያ ያክሉ</string>
 
-    <string name="add_accounts_to_stax">ወደ Stax መለያዎችን ያክሉ</string>
+  <string name="add_accounts_to_stax">ወደ Stax መለያዎችን ያክሉ</string>
 
-    <!-- Permissions -->
+  <!-- Permissions -->
 
-    <string name="permissions_title">ፈቃዶች ያስፈልጋሉ</string>
+  <string name="permissions_title">ፈቃዶች ያስፈልጋሉ</string>
 
-    <string name="permissions_basic_desc">የትኞቹ መለያዎች ሊኖሩዎት እንደሚችሉ ለማየት የስልክ ፈቃዶች ያስፈልጉናል።</string>
+  <string name="permissions_basic_desc">የትኞቹ መለያዎች ሊኖሩዎት እንደሚችሉ ለማየት የስልክ ፈቃዶች ያስፈልጉናል።</string>
 
-    <string name="permission_support_desc">የድጋፍ መታወቂያዎን ለማመንጨት የስልክ ፈቃዶች ያስፈልጉናል</string>
+  <string name="permission_support_desc">የድጋፍ መታወቂያዎን ለማመንጨት የስልክ ፈቃዶች ያስፈልጉናል</string>
 
-    <string name="nav_sim_permission">የሲም ፈቃድ ይስጡ</string>
+  <string name="nav_sim_permission">የሲም ፈቃድ ይስጡ</string>
 
-    <string name="perm_dialoghead">አንድ የመጨረሻ ነገር…</string>
+  <string name="perm_dialoghead">አንድ የመጨረሻ ነገር…</string>
 
-    <string name="perm_dialogbody">Stax ለ %1$s 2 ፈቃዶች ይፈልጋል።</string>
+  <string name="perm_dialogbody">Stax ለ %1$s 2 ፈቃዶች ይፈልጋል።</string>
 
-    <string name="use_ussd">USSD ን ይጠቀሙ</string>
+  <string name="use_ussd">USSD ን ይጠቀሙ</string>
 
-    <string name="buy_airtime">የአየር ሰዓት ይግዙ</string>
+  <string name="buy_airtime">የአየር ሰዓት ይግዙ</string>
 
-    <string name="check_balance">ሚዛን ይፈትሹ</string>
+  <string name="check_balance">ሚዛን ይፈትሹ</string>
 
-    <string name="send_money">ገንዘብ መላክ</string>
+  <string name="send_money">ገንዘብ መላክ</string>
 
-    <string name="send_money_to">ገንዘብ ይላኩ</string>
+  <string name="send_money_to">ገንዘብ ይላኩ</string>
 
-    <string name="move_money">ገንዘብ ማንቀሳቀስ</string>
+  <string name="move_money">ገንዘብ ማንቀሳቀስ</string>
 
-    <string name="perm_accessibiltiy_dialogbody">Stax ለ %1$s የተደራሽነት ፈቃድ ይፈልጋል</string>
+  <string name="perm_accessibiltiy_dialogbody">Stax ለ %1$s የተደራሽነት ፈቃድ ይፈልጋል</string>
 
-    <string name="perm_progress1">የ 2 ደረጃ 1 ፦ የማሳያ ፈቃድ</string>
+  <string name="perm_progress1">የ 2 ደረጃ 1 ፦ የማሳያ ፈቃድ</string>
 
-    <string name="perm_progress2">ደረጃ 2 ከ 2 - የተደራሽነት ፈቃድ</string>
+  <string name="perm_progress2">ደረጃ 2 ከ 2 - የተደራሽነት ፈቃድ</string>
 
-    <string name="perm_cta1">ቅንብሮችን አሳይ</string>
+  <string name="perm_cta1">ቅንብሮችን አሳይ</string>
 
-    <string name="perm_cta2">ቅንብሮችን እንደገና አሳይ</string>
+  <string name="perm_cta2">ቅንብሮችን እንደገና አሳይ</string>
 
-    <!-- Hover Session -->
+  <!-- Hover Session -->
 
-    <string name="balance_msg">የ %1$s ሂሳብን በመፈተሽ ላይ</string>
+  <string name="balance_msg">የ %1$s ሂሳብን በመፈተሽ ላይ</string>
 
-    <string name="airtime_msg">የአየር ሰዓት መግዛት</string>
+  <string name="airtime_msg">የአየር ሰዓት መግዛት</string>
 
-    <string name="transfer_msg">ገንዘብ ማስተላለፍ</string>
+  <string name="transfer_msg">ገንዘብ ማስተላለፍ</string>
 
-    <!-- SDK Overrides -->
+  <!-- SDK Overrides -->
 
-    <string name="hsdk_overlay_msg">&lt;font color="#1E232A"&gt;በሚቀጥለው ማያ ገጽ ላይ &lt;b&gt;ማብራት ን&lt;/b&gt; በማብራት የሂደት ዝመናዎችን ያሳዩ።&lt;/font&gt;</string>
+  <string name="hsdk_overlay_msg">&lt;font color="#1E232A"&gt;በሚቀጥለው ማያ ገጽ ላይ &lt;b&gt;ማብራት ን&lt;/b&gt; በማብራት የሂደት ዝመናዎችን ያሳዩ።&lt;/font&gt;</string>
 
-    <string name="hsdk_access_msg">&lt;font color="#0A9A8D"&gt;ተደራሽነትን ያብሩ&lt;/font&gt; &lt;font color="#1E232A"&gt;በውስጡ&lt;b&gt;የሚቀጥለው ማያ ገጽ&lt;/b&gt; የ USSD ክፍለ ጊዜዎችን ለማካሄድ&lt;/font&gt;</string>
+  <string name="hsdk_access_msg">&lt;font color="#0A9A8D"&gt;ተደራሽነትን ያብሩ&lt;/font&gt; &lt;font color="#1E232A"&gt;በውስጡ&lt;b&gt;የሚቀጥለው ማያ ገጽ&lt;/b&gt; የ USSD ክፍለ ጊዜዎችን ለማካሄድ&lt;/font&gt;</string>
 
-    <string name="hsdk_access_btn">ቅንብሮችን ይክፈቱ</string>
+  <string name="hsdk_access_btn">ቅንብሮችን ይክፈቱ</string>
 
-    <string name="hsdk_overlay_tip">በመቀጠል ማብሪያ / ማጥፊያውን መታ ያድርጉ</string>
+  <string name="hsdk_overlay_tip">በመቀጠል ማብሪያ / ማጥፊያውን መታ ያድርጉ</string>
 
-    <string name="hsdk_overlay_example">በሌሎች መተግበሪያዎች ላይ ማሳያ ይፍቀዱ</string>
+  <string name="hsdk_overlay_example">በሌሎች መተግበሪያዎች ላይ ማሳያ ይፍቀዱ</string>
 
-    <string name="hsdk_settings">ቅንብሮች</string>
+  <string name="hsdk_settings">ቅንብሮች</string>
 
-    <string name="hsdk_off">ጠፍቷል</string>
+  <string name="hsdk_off">ጠፍቷል</string>
 
-    <string name="hsdk_accessibility">ተደራሽነት</string>
+  <string name="hsdk_accessibility">ተደራሽነት</string>
 
-    <string name="hsdk_accessibility_sub">አገልግሎቶች</string>
+  <string name="hsdk_accessibility_sub">አገልግሎቶች</string>
 
-    <string name="hsdk_enable_accessibility">ተደራሽነትን ያንቁ</string>
+  <string name="hsdk_enable_accessibility">ተደራሽነትን ያንቁ</string>
 
-    <string name="access_service_summary">እርስዎን በመወከል ከሞባይል ገንዘብ እና ከቴሌኮም አገልግሎቶች ጋር ይገናኙ</string>
+  <string name="access_service_summary">እርስዎን በመወከል ከሞባይል ገንዘብ እና ከቴሌኮም አገልግሎቶች ጋር ይገናኙ</string>
 
-    <string name="access_service_descript">ይህ ቀለል ያለ እና የበለጠ ተደራሽ የሆነ ተሞክሮ ለማቅረብ ከ USSD ምናሌዎች ጋር ለማንበብ እና ለመገናኘት ያገለግላል።</string>
+  <string name="access_service_descript">ይህ ቀለል ያለ እና የበለጠ ተደራሽ የሆነ ተሞክሮ ለማቅረብ ከ USSD ምናሌዎች ጋር ለማንበብ እና ለመገናኘት ያገለግላል።</string>
 
-    <string name="hsdk_manual_env">በእጅ አካባቢ ንቁ። ይህ ክፍለ ጊዜ ይመዘገባል።</string>
+  <string name="hsdk_manual_env">በእጅ አካባቢ ንቁ። ይህ ክፍለ ጊዜ ይመዘገባል።</string>
 
-    <string name="hsdk_overlay_header">ግብይት</string>
+  <string name="hsdk_overlay_header">ግብይት</string>
 
-    <string name="hsdk_complete">ግብይት ተጠናቅቋል</string>
+  <string name="hsdk_complete">ግብይት ተጠናቅቋል</string>
 
-    <!-- Onboarding showcase -->
+  <!-- Onboarding showcase -->
 
-    <string name="onboard_addaccounthead">ለመጀመር መለያ ያክሉ።</string>
+  <string name="onboard_addaccounthead">ለመጀመር መለያ ያክሉ።</string>
 
-    <string name="onboard_addaccountdesc">ገንዘብዎን በአንድ ቦታ ይከታተሉ። ገንዘቦችዎ ከመለያዎ አይወጡም ወይም አይቀላቀሉ።</string>
+  <string name="onboard_addaccountdesc">ገንዘብዎን በአንድ ቦታ ይከታተሉ። ገንዘቦችዎ ከመለያዎ አይወጡም ወይም አይቀላቀሉ።</string>
 
-    <string name="onboard_addaccount_greatwork_head">ታላቅ ሥራ!</string>
+  <string name="onboard_addaccount_greatwork_head">ታላቅ ሥራ!</string>
 
-    <string name="onboard_addaccount_greatwork_desc">ሁሉንም መለያዎችዎን በአንድ ቦታ ላይ ለማየት እንዲችሉ አሁን ሌሎች መለያዎችዎን ያክሉ።</string>
+  <string name="onboard_addaccount_greatwork_desc">ሁሉንም መለያዎችዎን በአንድ ቦታ ላይ ለማየት እንዲችሉ አሁን ሌሎች መለያዎችዎን ያክሉ።</string>
 
-    <!-- Transfer -->
+  <!-- Transfer -->
 
-    <string name="loading_link_dialoghead">በመጫን ላይ ፣ አንድ አፍታ</string>
+  <string name="loading_link_dialoghead">በመጫን ላይ ፣ አንድ አፍታ</string>
 
-    <string name="transfer_amount_label">መጠን</string>
+  <string name="transfer_amount_label">መጠን</string>
 
-    <string name="channel_label">መለያ</string>
+  <string name="channel_label">መለያ</string>
 
-    <string name="actions_fielderror">ይህ መለያ የአየር ሰዓት መግዛትን አይደግፍም። እባክዎ የተለየ መለያ ይምረጡ።</string>
+  <string name="actions_fielderror">ይህ መለያ የአየር ሰዓት መግዛትን አይደግፍም። እባክዎ የተለየ መለያ ይምረጡ።</string>
 
-    <string name="recipientphone_label">የእውቂያ ስልክ ቁጥር</string>
+  <string name="recipientphone_label">የእውቂያ ስልክ ቁጥር</string>
 
-    <string name="recipientacct_label">የእውቂያ መለያ ቁጥር</string>
+  <string name="recipientacct_label">የእውቂያ መለያ ቁጥር</string>
 
-    <string name="toast_error_contactperm">ከአድራሻ ደብተርዎ አንድ ቁጥር ለመምረጥ የተነበቡ እውቂያዎችን ፈቃድ መስጠት አለብዎት።</string>
+  <string name="toast_error_contactperm">ከአድራሻ ደብተርዎ አንድ ቁጥር ለመምረጥ የተነበቡ እውቂያዎችን ፈቃድ መስጠት አለብዎት።</string>
 
-    <string name="toast_error_contactselect">የእርስዎን እውቂያ መምረጥ ላይ ችግር ነበር። እባክዎ ዳግም ይሞክሩ.</string>
+  <string name="toast_error_contactselect">የእርስዎን እውቂያ መምረጥ ላይ ችግር ነበር። እባክዎ ዳግም ይሞክሩ.</string>
 
-    <string name="transfer_error_recipient_general">እባክዎ የተቀባዩን ቁጥር ያስገቡ።</string>
+  <string name="transfer_error_recipient_general">እባክዎ የተቀባዩን ቁጥር ያስገቡ።</string>
 
-    <string name="transfer_error_recipient_phone">እባክዎ ስልክ ቁጥር ያስገቡ።</string>
+  <string name="transfer_error_recipient_phone">እባክዎ ስልክ ቁጥር ያስገቡ።</string>
 
-    <string name="transfer_error_recipient_account">እባክዎ የመለያ ቁጥር ያስገቡ።</string>
+  <string name="transfer_error_recipient_account">እባክዎ የመለያ ቁጥር ያስገቡ።</string>
 
-    <string name="amount_fielderror">እባክዎ ልክ የሆነ መጠን ያስገቡ።</string>
+  <string name="amount_fielderror">እባክዎ ልክ የሆነ መጠን ያስገቡ።</string>
 
-    <string name="channel_fielderror">እባክዎን አንድ አገልግሎት ይምረጡ።</string>
+  <string name="channel_fielderror">እባክዎን አንድ አገልግሎት ይምረጡ።</string>
 
-    <string name="action_fielderror">እባክዎ የተቀባዩን አውታረ መረብ ይምረጡ።</string>
+  <string name="action_fielderror">እባክዎ የተቀባዩን አውታረ መረብ ይምረጡ።</string>
 
-    <string name="channel_request_fieldinfo">እባክዎ ምርጫዎ ወደ %1$s መላክ እንደሚችል ያረጋግጡ</string>
+  <string name="channel_request_fieldinfo">እባክዎ ምርጫዎ ወደ %1$s መላክ እንደሚችል ያረጋግጡ</string>
 
-    <string name="no_actions_fielderror">ይህ አገልግሎት ለ %1$s ጥቅም ላይ ሊውል አይችልም።</string>
+  <string name="no_actions_fielderror">ይህ አገልግሎት ለ %1$s ጥቅም ላይ ሊውል አይችልም።</string>
 
-    <string name="toast_pleasefix">እባክዎን በቀይ የሚታዩትን ስህተቶች ያስተካክሉ።</string>
+  <string name="toast_pleasefix">እባክዎን በቀይ የሚታዩትን ስህተቶች ያስተካክሉ።</string>
 
-    <string name="self_choice">እኔ ራሴ</string>
+  <string name="self_choice">እኔ ራሴ</string>
 
-    <string name="other_choice">ሌላ ሰው</string>
+  <string name="other_choice">ሌላ ሰው</string>
 
-    <string name="onnet_choice">በአውታረ መረብ ላይ</string>
+  <string name="onnet_choice">በአውታረ መረብ ላይ</string>
 
-    <string name="offnet_choice">ወደ %1$s</string>
+  <string name="offnet_choice">ወደ %1$s</string>
 
-    <string name="note_cardhead">መግለጫ</string>
+  <string name="note_cardhead">መግለጫ</string>
 
-    <string name="request_note_label">ጥያቄዎ ምንድነው?</string>
+  <string name="request_note_label">ጥያቄዎ ምንድነው?</string>
 
-    <string name="recipient_label">ወደ</string>
+  <string name="recipient_label">ወደ</string>
 
-    <string name="sender_label">ከ</string>
+  <string name="sender_label">ከ</string>
 
-    <string name="send_who_header">ገንዘብ ይላኩ</string>
+  <string name="send_who_header">ገንዘብ ይላኩ</string>
 
-    <string name="airtime_who_header">የአየር ሰዓት ይግዙ ለ</string>
+  <string name="airtime_who_header">የአየር ሰዓት ይግዙ ለ</string>
 
-    <string name="accounts_label">ከ ይክፈሉ</string>
+  <string name="accounts_label">ከ ይክፈሉ</string>
 
-    <string name="self_only_money_warning">ይህ ገንዘብን ወደ የራስዎ ሂሳብ ለማዛወር ብቻ ሊያገለግል ይችላል።</string>
+  <string name="self_only_money_warning">ይህ ገንዘብን ወደ የራስዎ ሂሳብ ለማዛወር ብቻ ሊያገለግል ይችላል።</string>
 
-    <string name="self_only_airtime_warning">ይህ ለራስዎ መለያ የአየር ሰዓት ለመግዛት ብቻ ሊያገለግል ይችላል።</string>
+  <string name="self_only_airtime_warning">ይህ ለራስዎ መለያ የአየር ሰዓት ለመግዛት ብቻ ሊያገለግል ይችላል።</string>
 
-    <string name="descrip_multcontacts">%1$d እውቂያዎች</string>
+  <string name="descrip_multcontacts">%1$d እውቂያዎች</string>
 
-    <string name="descrip_airtime_sent">%1$s የአየር ሰዓት ወደ %2$s ልኳል</string>
+  <string name="descrip_airtime_sent">%1$s የአየር ሰዓት ወደ %2$s ልኳል</string>
 
-    <string name="descrip_transfer_sent">%1$s ገንዘብ ለ %2$s ልኳል</string>
+  <string name="descrip_transfer_sent">%1$s ገንዘብ ለ %2$s ልኳል</string>
 
-    <string name="descrip_transfer_received">ገንዘብ ከ %1$s ተቀብሏል</string>
+  <string name="descrip_transfer_received">ገንዘብ ከ %1$s ተቀብሏል</string>
 
-    <string name="descrip_bill_paid">%1$s ሂሳብ ከፍሏል</string>
+  <string name="descrip_bill_paid">%1$s ሂሳብ ከፍሏል</string>
 
-    <string name="descrip_recorded">%1$s ላይ የ USSD ክፍለ ጊዜ ተመዝግቧል</string>
+  <string name="descrip_recorded">%1$s ላይ የ USSD ክፍለ ጊዜ ተመዝግቧል</string>
 
-    <string name="fab_transfernow">አሁን ገንዘብ ይላኩ</string>
+  <string name="fab_transfernow">አሁን ገንዘብ ይላኩ</string>
 
-    <string name="fab_airtimenow">አሁን የአየር ሰዓት ይግዙ</string>
+  <string name="fab_airtimenow">አሁን የአየር ሰዓት ይግዙ</string>
 
-    <string name="noworry_explain">አይጨነቁ። ቀጥል የሚለውን ቁልፍ ከተጫኑ በኋላ መረጃውን መገምገም ይችላሉ።</string>
+  <string name="noworry_explain">አይጨነቁ። ቀጥል የሚለውን ቁልፍ ከተጫኑ በኋላ መረጃውን መገምገም ይችላሉ።</string>
 
-    <string name="descrip_airtime_sched">በ %2$s ከ %1$s ጋር የአየር ሰዓት ይግዙ</string>
+  <string name="descrip_airtime_sched">በ %2$s ከ %1$s ጋር የአየር ሰዓት ይግዙ</string>
 
-    <!-- Request -->
+  <!-- Request -->
 
-    <string name="req_cardhead">ገንዘብ ይጠይቁ</string>
+  <string name="req_cardhead">ገንዘብ ይጠይቁ</string>
 
-    <string name="into_account">ወደ መለያ</string>
+  <string name="into_account">ወደ መለያ</string>
 
-    <string name="put_in">መጨመር ማስገባት መክተት</string>
+  <string name="put_in">መጨመር ማስገባት መክተት</string>
 
-    <string name="put_in_desc">የተጠየቀውን ገንዘብ ለመቀበል የሚፈልጉበት ቦታ ይህ ነው</string>
+  <string name="put_in_desc">የተጠየቀውን ገንዘብ ለመቀበል የሚፈልጉበት ቦታ ይህ ነው</string>
 
-    <string name="account_num_desc">ለምሳሌ የሞባይል ገንዘብ ስልክ ቁጥር ወይም የባንክ ሂሳብ ቁጥር</string>
+  <string name="account_num_desc">ለምሳሌ የሞባይል ገንዘብ ስልክ ቁጥር ወይም የባንክ ሂሳብ ቁጥር</string>
 
-    <string name="send_request_to">ጥያቄ ይላኩ ለ</string>
+  <string name="send_request_to">ጥያቄ ይላኩ ለ</string>
 
-    <string name="request_amount_label">ምን ያህል ገንዘብ?</string>
+  <string name="request_amount_label">ምን ያህል ገንዘብ?</string>
 
-    <string name="amount_label_opt">መጠን (ከተፈለገ)</string>
+  <string name="amount_label_opt">መጠን (ከተፈለገ)</string>
 
-    <string name="reqfrom_label">ወደ</string>
+  <string name="reqfrom_label">ወደ</string>
 
-    <string name="btn_addcontact">+ ሌላ ሰው ይጨምሩ</string>
+  <string name="btn_addcontact">+ ሌላ ሰው ይጨምሩ</string>
 
-    <string name="sms_request_template">በቀዳሚ ምቾትዎ %1$s ን በደግነት ይረዱኝ። %2$s %3$s</string>
+  <string name="sms_request_template">በቀዳሚ ምቾትዎ %1$s ን በደግነት ይረዱኝ። %2$s%3$s</string>
 
-    <string name="sms_amount_detail">%1$s </string>
+  <string name="sms_amount_detail">%1$s </string>
 
-    <string name="sms_note_detail">ማስታወሻ ፦ «%1$s» </string>
+  <string name="sms_note_detail">ማስታወሻ ፦ «%1$s» </string>
 
-    <string name="reqsave_head">ጥያቄ ይቀመጥ?</string>
+  <string name="reqsave_head">ጥያቄ ይቀመጥ?</string>
 
-    <string name="toast_error_smsperm">ጥያቄው ሲላክ ወይም ሲፈፀም ስቴክስ እንዲያውቅ ለንባብ የኤስኤምኤስ ፈቃድ መስጠት አለብዎት።</string>
+  <string name="toast_error_smsperm">ጥያቄው ሲላክ ወይም ሲፈፀም ስቴክስ እንዲያውቅ ለንባብ የኤስኤምኤስ ፈቃድ መስጠት አለብዎት።</string>
 
-    <string name="reqsave_msg">ጥያቄዎን ያልላኩ ይመስላል። ለማንኛውም ማስቀመጥ ይፈልጋሉ?</string>
+  <string name="reqsave_msg">ጥያቄዎን ያልላኩ ይመስላል። ለማንኛውም ማስቀመጥ ይፈልጋሉ?</string>
 
-    <string name="toast_confirm_request">ጥያቄዎ ተቀምጧል።</string>
+  <string name="toast_confirm_request">ጥያቄዎ ተቀምጧል።</string>
 
-    <string name="toast_request_scheduled">ጥያቄዎ መርሐግብር ተይዞለታል። በ %1$s ላይ መልዕክት እንዲልኩ ያስታውሰዎታል</string>
+  <string name="toast_request_scheduled">ጥያቄዎ መርሐግብር ተይዞለታል። በ %1$s ላይ መልዕክት እንዲልኩ ያስታውሰዎታል</string>
 
-    <string name="descrip_request">ለ %1$s ጥያቄ</string>
+  <string name="descrip_request">ለ %1$s ጥያቄ</string>
 
-    <string name="requester_number_label">መለያ</string>
+  <string name="requester_number_label">መለያ</string>
 
-    <string name="requester_account_number_label">የመለያ ቁጥር</string>
+  <string name="account_number_label">የመለያ ቁጥር</string>
 
-    <string name="request_error_recipient">እባክዎ ስልክ ቁጥር ያስገቡ።</string>
+  <string name="request_error_recipient">እባክዎ ስልክ ቁጥር ያስገቡ።</string>
 
-    <string name="requester_number_fielderror">እባክዎን ገንዘቡን ለመቀበል የሚፈልጉትን መለያ ወይም ስልክ ቁጥር ያስገቡ</string>
+  <string name="requester_number_fielderror">እባክዎን ገንዘቡን ለመቀበል የሚፈልጉትን መለያ ወይም ስልክ ቁጥር ያስገቡ</string>
 
-    <string name="requester_account_error">ገንዘብዎን ለመቀበል እባክዎ መለያ ይምረጡ ወይም አዲስ ያክሉ</string>
+  <string name="requester_account_error">ገንዘብዎን ለመቀበል እባክዎ መለያ ይምረጡ ወይም አዲስ ያክሉ</string>
 
-    <string name="sms_label">ኤስኤምኤስ</string>
+  <string name="sms_label">ኤስኤምኤስ</string>
 
-    <string name="whatsapp_label">ዋትሳፕ</string>
+  <string name="whatsapp_label">ዋትሳፕ</string>
 
-    <string name="copyLink_label">አገናኝ ቅዳ</string>
+  <string name="copyLink_label">አገናኝ ቅዳ</string>
 
-    <string name="link_copied_label">አገናኝ ተቀድቷል</string>
+  <string name="link_copied_label">አገናኝ ተቀድቷል</string>
 
-    <string name="share_request_link_cardhead">የጥያቄ አገናኝን ያጋሩ</string>
+  <string name="share_request_link_cardhead">የጥያቄ አገናኝን ያጋሩ</string>
 
-    <string name="share_again_cardhead">የጥያቄ አገናኝን እንደገና ያጋሩ</string>
+  <string name="share_again_cardhead">የጥያቄ አገናኝን እንደገና ያጋሩ</string>
 
-    <!-- Scheduling -->
+  <!-- Scheduling -->
 
-    <string name="future_toggle">በኋላ ላክ</string>
+  <string name="future_toggle">በኋላ ላክ</string>
 
-    <string name="date_label">ቀን</string>
+  <string name="date_label">ቀን</string>
 
-    <string name="repeat_toggle">ከአንድ ጊዜ በላይ ላክ</string>
+  <string name="repeat_toggle">ከአንድ ጊዜ በላይ ላክ</string>
 
-    <string name="repeatfreq_label">በየስንት ግዜው?</string>
+  <string name="repeatfreq_label">በየስንት ግዜው?</string>
 
-    <string name="end_label">ማብቂያ ቀን</string>
+  <string name="end_label">ማብቂያ ቀን</string>
 
-    <string name="end_label_opt">የማብቂያ ቀን (አማራጭ)</string>
+  <string name="end_label_opt">የማብቂያ ቀን (አማራጭ)</string>
 
-    <string name="repeatnum_label_opt">ስንት ጊዜ? (አማራጭ)</string>
+  <string name="repeatnum_label_opt">ስንት ጊዜ? (አማራጭ)</string>
 
-    <string name="repeatnum_label">ስንት ጊዜ?</string>
+  <string name="repeatnum_label">ስንት ጊዜ?</string>
 
-    <string name="toast_confirm_schedule">ዝውውር ተይዞለታል። በ %1$s ላይ ዝውውር እንዲያደርጉ እናስታውስዎታለን</string>
+  <string name="toast_confirm_schedule">ዝውውር ተይዞለታል። በ %1$s ላይ ዝውውር እንዲያደርጉ እናስታውስዎታለን</string>
 
-    <string-array name="frequency_choices">
+  <string-array name="frequency_choices">
 
-        <item>በየቀኑ</item>
+    <item>በየቀኑ</item>
 
-        <item>በየሳምንቱ</item>
+    <item>በየሳምንቱ</item>
 
-        <item>በየ 2 ሳምንቱ</item>
+    <item>በየ 2 ሳምንቱ</item>
 
-        <item>በየወሩ</item>
+    <item>በየወሩ</item>
 
-    </string-array>
+  </string-array>
 
-    <string-array name="frequency_choices_values" translatable="false">
+  <string-array name="frequency_choices_values" translatable="false">
 
-        <item>0daily</item>
+    <item>0daily</item>
 
-        <item>1weekly</item>
+    <item>1weekly</item>
 
-        <item>2biweekly</item>
+    <item>2biweekly</item>
 
-        <item>3monthly</item>
+    <item>3monthly</item>
 
-    </string-array>
+  </string-array>
 
-    <string name="fab_schedule">የጊዜ ሰሌዳ</string>
+  <string name="fab_schedule">የጊዜ ሰሌዳ</string>
 
-    <!-- Notifications -->
+  <!-- Notifications -->
 
-    <string name="notify_default_title">ተጠቃሚ መርሐግብር ተይዞለታል</string>
+  <string name="notify_default_title">ተጠቃሚ መርሐግብር ተይዞለታል</string>
 
-    <string name="notify_default_channel_descrip">በእርስዎ የታቀዱ ዝውውሮችን እና ጥያቄዎችን ለማድረግ ማሳወቂያዎችን ያሳዩ።</string>
+  <string name="notify_default_channel_descrip">በእርስዎ የታቀዱ ዝውውሮችን እና ጥያቄዎችን ለማድረግ ማሳወቂያዎችን ያሳዩ።</string>
 
-    <string name="notify_transfer">በ Stax ገንዘብ %1$s ለማስተላለፍ ጊዜው አሁን ነው።</string>
+  <string name="notify_transfer">በ Stax ገንዘብ %1$s ለማስተላለፍ ጊዜው አሁን ነው።</string>
 
-    <string name="notify_transfer_cta">አሁን ያስተላልፉ</string>
+  <string name="notify_transfer_cta">አሁን ያስተላልፉ</string>
 
-    <string name="notify_request">በ Stax የገንዘብ ጥያቄን ወደ %1$s ለመላክ ጊዜው አሁን ነው።</string>
+  <string name="notify_request">በ Stax የገንዘብ ጥያቄን ወደ %1$s ለመላክ ጊዜው አሁን ነው።</string>
 
-    <string name="notify_request_cta">ጥያቄ ይላኩ</string>
+  <string name="notify_request_cta">ጥያቄ ይላኩ</string>
 
-    <string name="notify_airtime">ከስታክስ ጋር የአየር ሰዓት ለመግዛት ጊዜው አሁን ነው።</string>
+  <string name="notify_airtime">ከስታክስ ጋር የአየር ሰዓት ለመግዛት ጊዜው አሁን ነው።</string>
 
-    <string name="notify_airtime_cta">የአየር ሰዓት ይግዙ</string>
+  <string name="notify_airtime_cta">የአየር ሰዓት ይግዙ</string>
 
-    <!-- Details -->
+  <!-- Details -->
 
-    <string name="pending_cardhead">ማረጋገጫ በመጠበቅ ላይ</string>
+  <string name="pending_cardhead">ማረጋገጫ በመጠበቅ ላይ</string>
 
-    <string name="pending_cardbody">የ USSD ክፍለ ጊዜ ተጠናቅቋል ፣ ግን የማረጋገጫ ኤስኤምኤስ እስካሁን አልደረሰንም።</string>
+  <string name="pending_cardbody">የ USSD ክፍለ ጊዜ ተጠናቅቋል ፣ ግን የማረጋገጫ ኤስኤምኤስ እስካሁን አልደረሰንም።</string>
 
-    <string name="balance_label">ሚዛን</string>
+  <string name="balance_label">ሚዛን</string>
 
-    <string name="moneyout_label">በዚህ ወር ገንዘብ ማውጣት</string>
+  <string name="moneyout_label">በዚህ ወር ገንዘብ ማውጣት</string>
 
-    <string name="moneyin_label">በዚህ ወር ውስጥ ገንዘብ</string>
+  <string name="moneyin_label">በዚህ ወር ውስጥ ገንዘብ</string>
 
-    <string name="fees_label">በዚህ ዓመት ለ %1$s የተከፈለ ክፍያ</string>
+  <string name="fees_label">በዚህ ዓመት ለ %1$s የተከፈለ ክፍያ</string>
 
-    <string name="transactions_cardhead">ግብይቶች</string>
+  <string name="transactions_cardhead">ግብይቶች</string>
 
-    <string name="network_label">ተቀባዩ ሂሳብ</string>
+  <string name="network_label">ተቀባዩ ሂሳብ</string>
 
-    <string name="session_cardhead">መልእክቶች</string>
+  <string name="session_cardhead">መልእክቶች</string>
 
-    <!-- Canceling -->
+  <!-- Canceling -->
 
-    <string name="cancelfuture_head">የወደፊቱን ግብይት ሰርዝ</string>
+  <string name="cancelfuture_head">የወደፊቱን ግብይት ሰርዝ</string>
 
-    <string name="btn_canceltrans">ግብይቶችን ሰርዝ</string>
+  <string name="btn_canceltrans">ግብይቶችን ሰርዝ</string>
 
-    <string name="cancelfuture_msg">ይህ የወደፊት ግብይቶችን ይሰርዛል። በማንኛውም ጊዜ ግብይቶችን እንደገና መርሐግብር ማስያዝ ይችላሉ።</string>
+  <string name="cancelfuture_msg">ይህ የወደፊት ግብይቶችን ይሰርዛል። በማንኛውም ጊዜ ግብይቶችን እንደገና መርሐግብር ማስያዝ ይችላሉ።</string>
 
-    <string name="toast_confirm_cancelfuture">የወደፊት ግብይቶች ተሰርዘዋል።</string>
+  <string name="toast_confirm_cancelfuture">የወደፊት ግብይቶች ተሰርዘዋል።</string>
 
-    <string name="cancelreq_head">ጥያቄን ሰርዝ</string>
+  <string name="cancelreq_head">ጥያቄን ሰርዝ</string>
 
-    <string name="btn_cancelreq">ጥያቄን ሰርዝ</string>
+  <string name="btn_cancelreq">ጥያቄን ሰርዝ</string>
 
-    <string name="cancelreq_msg">ይህ ይህንን ጥያቄ ይሰርዛል። በማንኛውም ጊዜ ከአንድ ሰው ገንዘብ እንደገና መጠየቅ ይችላሉ።</string>
+  <string name="cancelreq_msg">ይህ ይህንን ጥያቄ ይሰርዛል። በማንኛውም ጊዜ ከአንድ ሰው ገንዘብ እንደገና መጠየቅ ይችላሉ።</string>
 
-    <string name="toast_confirm_cancelreq">ጥያቄ ተሰር .ል።</string>
+  <string name="toast_confirm_cancelreq">ጥያቄ ተሰር .ል።</string>
 
-    <!-- Settings -->
+  <!-- Settings -->
 
-    <string name="accts_cardhead">መለያዎች</string>
+  <string name="meta_cardhead">መለያዎች</string>
 
-    <string name="security_cardhead">ደህንነት</string>
+  <string name="security_cardhead">ደህንነት</string>
 
-    <string name="security_cardbody">ስታክስ የአሜሪካ የኢንዱስትሪ እና ደህንነት ቢሮ 740.17(ለ)(3) (i) የደህንነት ምደባ መስፈርቶችን ያሟላል። ይህ ሶፍትዌር ለአገልጋይ ግንኙነት ኤችቲቲፒኤስን ይጠቀማል ፤ Android Keystore ን በመጠቀም የተጠቃሚውን ምስክርነቶች በጊዜያዊነት ለማከማቸት የተመጣጠነ ቁልፍ RSA ምስጠራ። እና DRM ን በመጠቀም የኮድ ግድየለሽነት።</string>
+  <string name="security_cardbody">ስታክስ የአሜሪካ የኢንዱስትሪ እና ደህንነት ቢሮ 740.17(ለ)(3) (i) የደህንነት ምደባ መስፈርቶችን ያሟላል። ይህ ሶፍትዌር ለአገልጋይ ግንኙነት ኤችቲቲፒኤስን ይጠቀማል ፤ Android Keystore ን በመጠቀም የተጠቃሚውን ምስክርነቶች በጊዜያዊነት ለማከማቸት የተመጣጠነ ቁልፍ RSA ምስጠራ። እና DRM ን በመጠቀም የኮድ ግድየለሽነት።</string>
 
-    <string name="defaultacct_label">ነባሪ መለያ</string>
+  <string name="defaultacct_label">ነባሪ መለያ</string>
 
-    <string name="security_head">ከስታክስ ጋር ደህንነቱ የተጠበቀ</string>
+  <string name="security_head">ከስታክስ ጋር ደህንነቱ የተጠበቀ</string>
 
-    <string name="btn_removepins">ፒኖችን ያስወግዱ</string>
+  <string name="btn_removepins">ፒኖችን ያስወግዱ</string>
 
-    <string name="removepins_dialoghead">ሁሉንም ፒኖች አሁን ያስወግዱ</string>
+  <string name="removepins_dialoghead">ሁሉንም ፒኖች አሁን ያስወግዱ</string>
 
-    <string name="removepin_dialoghead">የ %1$s ፒን አሁን ያስወግዱ</string>
+  <string name="removepin_dialoghead">የ %1$s ፒን አሁን ያስወግዱ</string>
 
-    <string name="btn_removeaccount">መለያ አስወግድ</string>
+  <string name="btn_removeaccount">መለያ አስወግድ</string>
 
-    <string name="removepins_dialogmes">በማንኛውም ጊዜ መለያዎን ወደ Stax ማከል ይችላሉ።</string>
+  <string name="removepins_dialogmes">በማንኛውም ጊዜ መለያዎን ወደ Stax ማከል ይችላሉ።</string>
 
-    <string name="toast_confirm_removepin">ፒን በተሳካ ሁኔታ ተወግዷል</string>
+  <string name="toast_confirm_removepin">ፒን በተሳካ ሁኔታ ተወግዷል</string>
 
-    <string name="btn_savepin">ፒን አስቀምጥ</string>
+  <string name="btn_savepin">ፒን አስቀምጥ</string>
 
-    <string name="btn_editpin">ፒን ያርትዑ</string>
+  <string name="btn_editpin">ፒን ያርትዑ</string>
 
-    <string name="editpin_label">ፒን</string>
+  <string name="editpin_label">ፒን</string>
 
-    <string name="btn_removeacct">መለያ አስወግድ</string>
+  <string name="btn_removeacct">መለያ አስወግድ</string>
 
-    <string name="toast_confirm_acctremoved">መለያ በተሳካ ሁኔታ ተወግዷል</string>
+  <string name="toast_confirm_acctremoved">መለያ በተሳካ ሁኔታ ተወግዷል</string>
 
-    <string name="toast_confirm_pinupdate">ፒን ተቀምጧል</string>
+  <string name="toast_confirm_pinupdate">ፒን ተቀምጧል</string>
 
-    <string name="language_cardhead">ቋንቋ</string>
+  <string name="language_cardhead">ቋንቋ</string>
 
-    <string name="app_version_and_device_id">የመተግበሪያ ስሪት ፦ %1$s የስሪት ኮድ ፦ %2$s የመሣሪያ መታወቂያ ፦ %3$s</string>
+  <string name="app_version_and_device_id">የመተግበሪያ ስሪት ፦ %1$s የስሪት ኮድ ፦ %2$s የመሣሪያ መታወቂያ ፦ %3$s</string>
 
-    <string name="disclaimer">ሁሉም የምርት ስሞች ፣ የምርት ስሞች እና የንግድ ምልክቶች የየባለቤቶቻቸው ንብረት ናቸው። አጠቃቀም ቁርኝት አያመለክትም።</string>
+  <string name="disclaimer">ሁሉም የምርት ስሞች ፣ የምርት ስሞች እና የንግድ ምልክቶች የየባለቤቶቻቸው ንብረት ናቸው። አጠቃቀም ቁርኝት አያመለክትም።</string>
 
-    <string name="twitter" translatable="false">Twitter</string>
+  <string name="twitter" translatable="false">Twitter</string>
 
-    <string name="stax_twitter_url" translatable="false">http://twitter.com/joinstax</string>
+  <string name="stax_twitter_url" translatable="false">http://twitter.com/joinstax</string>
 
-    <string name="receive_stax_updates">የ Stax ዝመናዎችን ይቀበሉ</string>
+  <string name="receive_stax_updates">የ Stax ዝመናዎችን ይቀበሉ</string>
 
-    <string name="FAQs">ተደጋጋሚ ጥያቄዎች</string>
+  <string name="FAQs">ተደጋጋሚ ጥያቄዎች</string>
 
-    <string name="request_feature">በስታክስ ውስጥ ባህሪን ይጠይቁ</string>
+  <string name="request_feature">በስታክስ ውስጥ ባህሪን ይጠይቁ</string>
 
-    <string name="stax_support_email">support\@stax.me</string>
+  <string name="stax_support_email">support\@stax.me</string>
 
-    <string name="stax_emailing_subject">የ Stax ድጋፍ መታወቂያ - %1$s</string>
+  <string name="stax_emailing_subject">የ Stax ድጋፍ መታወቂያ - %1$s</string>
 
-    <string name="send_email_using">በመጠቀም ኢሜል ይላኩ…</string>
+  <string name="send_email_using">በመጠቀም ኢሜል ይላኩ…</string>
 
-    <!-- System auth check -->
+  <!-- System auth check -->
 
-    <string name="auth_title">በ Stax ያረጋግጡ</string>
+  <string name="auth_title">በ Stax ያረጋግጡ</string>
 
-    <string name="auth_descrip">በጣት አሻራዎ ያረጋግጡ</string>
+  <string name="auth_descrip">በጣት አሻራዎ ያረጋግጡ</string>
 
-    <string name="toast_error_auth">ማረጋገጥ አልተሳካም</string>
+  <string name="toast_error_auth">ማረጋገጥ አልተሳካም</string>
 
-    <!-- Self destruct -->
+  <!-- Self destruct -->
 
-    <string name="destruct_cardbody">ይህ የስታክስ ግንባታ ጊዜው አልፎበታል። \n\nStax ን መጠቀሙን ለመቀጠል የቅርብ ጊዜውን ግንባታ ያውርዱ።</string>
+  <string name="destruct_cardbody">ይህ የስታክስ ግንባታ ጊዜው አልፎበታል። \n\nStax ን መጠቀሙን ለመቀጠል የቅርብ ጊዜውን ግንባታ ያውርዱ።</string>
 
-    <string name="btn_download">አዲስ ስሪት ያውርዱ</string>
+  <string name="btn_download">አዲስ ስሪት ያውርዱ</string>
 
-    <string name="uninstall_cardbody">የእርስዎ ዝማኔ በማውረድ ላይ ነው። \n\nይህን ስሪት ለማራገፍ ከታች ያለውን አዝራር ጠቅ ያድርጉ። አንዴ ማውረዱ ከተጠናቀቀ አዲሱን ስሪት ለመጫን ማሳወቂያውን መታ ያድርጉ።</string>
+  <string name="uninstall_cardbody">የእርስዎ ዝማኔ በማውረድ ላይ ነው። \n\nይህን ስሪት ለማራገፍ ከታች ያለውን አዝራር ጠቅ ያድርጉ። አንዴ ማውረዱ ከተጠናቀቀ አዲሱን ስሪት ለመጫን ማሳወቂያውን መታ ያድርጉ።</string>
 
-    <string name="btn_uninstall">አራግፍ</string>
+  <string name="btn_uninstall">አራግፍ</string>
 
-    <string name="notify_download_head">ስቴክስ ዝመና</string>
+  <string name="notify_download_head">ስቴክስ ዝመና</string>
 
-    <string name="notify_download_body">በማውረድ ላይ</string>
+  <string name="notify_download_body">በማውረድ ላይ</string>
 
-    <!-- Time -->
+  <!-- Time -->
 
-    <string name="timeago_ago">ከ %1$s በፊት</string>
+  <string name="timeago_ago">ከ %1$s በፊት</string>
 
-    <string name="timeago_from_now">%1$s ከአሁን ጀምሮ</string>
+  <string name="timeago_from_now">%1$s ከአሁን ጀምሮ</string>
 
-    <string name="timeago_secondes">ከአንድ ደቂቃ በታች</string>
+  <string name="timeago_secondes">ከአንድ ደቂቃ በታች</string>
 
-    <string name="timeago_minute">አንድ ደቂቃ ያህል</string>
+  <string name="timeago_minute">አንድ ደቂቃ ያህል</string>
 
-    <string name="timeago_minutes">%1$d ደቂቃዎች</string>
+  <string name="timeago_minutes">%1$d ደቂቃዎች</string>
 
-    <string name="timeago_hour">አንድ ሰዓት ያህል</string>
+  <string name="timeago_hour">አንድ ሰዓት ያህል</string>
 
-    <string name="timeago_hours">ወደ %1$d ሰዓታት</string>
+  <string name="timeago_hours">ወደ %1$d ሰዓታት</string>
 
-    <string name="timeago_day">አንድ ቀን</string>
+  <string name="timeago_day">አንድ ቀን</string>
 
-    <string name="timeago_days">%1$d ቀናት</string>
+  <string name="timeago_days">%1$d ቀናት</string>
 
-    <string name="timeago_month">አንድ ወር ገደማ</string>
+  <string name="timeago_month">አንድ ወር ገደማ</string>
 
-    <string name="timeago_months">%1$d ወሮች</string>
+  <string name="timeago_months">%1$d ወሮች</string>
 
-    <string name="timeago_year">አንድ ዓመት ገደማ</string>
+  <string name="timeago_year">አንድ ዓመት ገደማ</string>
 
-    <string name="timeago_years">%1$d ዓመታት</string>
+  <string name="timeago_years">%1$d ዓመታት</string>
 
-    <!-- SWIPE REFRESH -->
+  <!-- SWIPE REFRESH -->
 
-    <string name="csr_text_state_normal">ሚዛንን ለማደስ ያንሸራትቱ </string>
+  <string name="csr_text_state_normal">ሚዛንን ለማደስ ያንሸራትቱ </string>
 
-    <string name="csr_text_state_ready">ሚዛንን ለማደስ ይልቀቁ</string>
+  <string name="csr_text_state_ready">ሚዛንን ለማደስ ይልቀቁ</string>
 
-    <string name="csr_text_state_refresh">ሚዛንን የሚያድስ…</string>
+  <string name="csr_text_state_refresh">ሚዛንን የሚያድስ…</string>
 
-    <string name="csr_text_state_complete">የሚያድስ ሚዛን ተጠናቋል</string>
+  <string name="csr_text_state_complete">የሚያድስ ሚዛን ተጠናቋል</string>
 
-    <string name="csr_text_last_refresh">የመጨረሻው ዝማኔ ፦</string>
+  <string name="csr_text_last_refresh">የመጨረሻው ዝማኔ ፦</string>
 
-    <!-- BOUNTY -->
+  <!-- BOUNTY -->
 
-    <string name="nav_bounty">ጉርሻ</string>
+  <string name="nav_bounty">ጉርሻ</string>
 
-    <string name="bounty_title">PA ደመወዝ ያግኙ! የ MAP USSD ፍሰቶች</string>
+  <string name="bounty_title">PA ደመወዝ ያግኙ! የ MAP USSD ፍሰቶች</string>
 
-    <string name="bounty_msg">በዩኤስኤስዲ ፍሰት ለማለፍ ስታክስ $ 5 - 50 ዶላር ይከፍልዎታል።</string>
+  <string name="bounty_msg">በዩኤስኤስዲ ፍሰት ለማለፍ ስታክስ $ 5 - 50 ዶላር ይከፍልዎታል።</string>
 
-    <string name="get_started">እንጀምር</string>
+  <string name="get_started">እንጀምር</string>
 
-    <string name="bounty_email_stage_title">&#128506;️ የ MAP USSD ፍሰቶች</string>
+  <string name="bounty_email_stage_title">&#128506;️ የ MAP USSD ፍሰቶች</string>
 
-    <string name="bounty_email_stage_desc1">
+  <string name="bounty_email_stage_desc1">
     ስታክስ ከመስመር ውጭ በማንኛውም ቦታ ዲጂታል ገንዘብን ለማንም ሰው ማግኘት ይፈልጋል። በብዙ አገሮች ውስጥ ስቴክስን ወደ ብዙ ሰዎች ለማምጣት በዓለም ውስጥ ያሉትን ሁሉንም የ USSD አገልግሎቶች ካርታ መገንባት አለብን።
     <b> በሚቀጥለው ገጽ ላይ በማንኛውም የ USSD ፍሰቶች ውስጥ ለማለፍ Stax 5-50 ዶላር የሚከፍልዎት ለዚህ ነው።</b>
   </string>
 
-    <string name="bounty_email_stage_desc2">
+  <string name="bounty_email_stage_desc2">
     <b>1.</b>
        እኛ ልንከፍልዎ እንድንችል ኢሜልዎን ያስገቡ።\n
     <b>2.</b>
@@ -661,176 +632,171 @@
        ይከፈልዎታል።
   </string>
 
-    <string name="descrip_bounty_airtime">ለማንኛውም ሰው የአየር ሰዓት ይግዙ %1$s</string>
+  <string name="descrip_bounty_airtime">ለማንኛውም ሰው የአየር ሰዓት ይግዙ %1$s</string>
 
-    <string name="bounty_airtime_explain">ለሌላ ሰው የአየር ሰዓት ይግዙ %1$s</string>
+  <string name="bounty_airtime_explain">ለሌላ ሰው የአየር ሰዓት ይግዙ %1$s</string>
 
-    <string name="descrip_bounty_p2p">ለሌላ ሰው ገንዘብ ይላኩ %1$s</string>
+  <string name="descrip_bounty_p2p">ለሌላ ሰው ገንዘብ ይላኩ %1$s</string>
 
-    <string name="bounty_p2p_explain">ለማንኛውም መጠን %1$s ለማንኛውም ሰው ይላኩ</string>
+  <string name="bounty_p2p_explain">ለማንኛውም መጠን %1$s ለማንኛውም ሰው ይላኩ</string>
 
-    <string name="descrip_bounty_me2me">ገንዘብ ወደ የእርስዎ %1$s መለያ ይውሰዱ</string>
+  <string name="descrip_bounty_me2me">ገንዘብ ወደ የእርስዎ %1$s መለያ ይውሰዱ</string>
 
-    <string name="bounty_me2me_explain">ማንኛውንም መጠን ወደ የራስዎ %1$s መለያ ይላኩ</string>
+  <string name="bounty_me2me_explain">ማንኛውንም መጠን ወደ የራስዎ %1$s መለያ ይላኩ</string>
 
-    <string name="descrip_bounty_balance">ሚዛን ይፈትሹ</string>
+  <string name="descrip_bounty_balance">ሚዛን ይፈትሹ</string>
 
-    <string name="bounty_balance_explain">ሚዛንዎን ይፈትሹ</string>
+  <string name="bounty_balance_explain">ሚዛንዎን ይፈትሹ</string>
 
-    <string name="descrip_bounty_offnet">በ %1$s</string>
+  <string name="descrip_bounty_offnet">በ %1$s</string>
 
-    <string name="bounty_email">ኢሜል</string>
+  <string name="bounty_email">ኢሜል</string>
 
-    <string name="bounty_email_error">እባክህን ትክክለኛ ኢሜል አስገባ</string>
+  <string name="bounty_email_error">እባክህን ትክክለኛ ኢሜል አስገባ</string>
 
-    <string name="bounty_uploading_email">በማገናኘት ላይ ፣ እባክዎ ይጠብቁ…</string>
+  <string name="bounty_uploading_email">በማገናኘት ላይ ፣ እባክዎ ይጠብቁ…</string>
 
-    <string name="bounty_api_internet_error">እባክዎ የበይነመረብ ግንኙነት እንዳለዎት ያረጋግጡ</string>
+  <string name="bounty_api_internet_error">እባክዎ የበይነመረብ ግንኙነት እንዳለዎት ያረጋግጡ</string>
 
-    <string name="bounty_api_other_error">እባክዎ ዳግም ይሞክሩ. ይህ ከቀጠለ በደግነት እኛን ያነጋግሩን ussd\@stax.me.</string>
+  <string name="bounty_api_other_error">እባክዎ ዳግም ይሞክሩ. ይህ ከቀጠለ በደግነት እኛን ያነጋግሩን ussd\@stax.me.</string>
 
-    <string name="bounty_pending_short_desc">ግብይትዎን እያረጋገጥን ነው። ከተሳካ በ 7 የሥራ ቀናት ውስጥ እንደሚከፈል ይጠብቁ።</string>
+  <string name="bounty_pending_short_desc">ግብይትዎን እያረጋገጥን ነው። ከተሳካ በ 7 የሥራ ቀናት ውስጥ እንደሚከፈል ይጠብቁ።</string>
 
-    <string name="done">ተከናውኗል</string>
+  <string name="done">ተከናውኗል</string>
 
-    <string name="bounty_transaction_failed">ይህ ማስረከብ መስፈርታችንን አላሟላም</string>
+  <string name="bounty_transaction_failed">ይህ ማስረከብ መስፈርታችንን አላሟላም</string>
 
-    <string name="bounty_transaction_failed_try_again">ይህ ግቤት መስፈርታችንን አላሟላም ፣ ግን እንደገና መሞከር ይችላሉ</string>
+  <string name="bounty_transaction_failed_try_again">ይህ ግቤት መስፈርታችንን አላሟላም ፣ ግን እንደገና መሞከር ይችላሉ</string>
 
-    <string name="available_flows">ሊገኙ የሚችሉ ፍሰቶች</string>
+  <string name="available_flows">ሊገኙ የሚችሉ ፍሰቶች</string>
 
-    <string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
+  <string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
 
-    <string name="bounty_claim_explained">$ %1$d ዶላር ለመጠየቅ ፣ %2$s።\n\nልክ እንደጨረሱ ለክፍያ መረጃ ለመሰብሰብ ኢሜይል እንልክልዎታለን። በ1-5 የሥራ ቀናት ውስጥ ይከፈልዎታል </string>
+  <string name="bounty_claim_explained">$ %1$d ዶላር ለመጠየቅ ፣ %2$s።\n\nልክ እንደጨረሱ ለክፍያ መረጃ ለመሰብሰብ ኢሜይል እንልክልዎታለን። በ1-5 የሥራ ቀናት ውስጥ ይከፈልዎታል </string>
 
-    <string name="start_USSD_Flow">የ USSD ፍሰትን ይጀምሩ</string>
+  <string name="start_USSD_Flow">የ USSD ፍሰትን ይጀምሩ</string>
 
-    <string name="checking_your_flow">ፍሰትዎን በመፈተሽ ላይ</string>
+  <string name="checking_your_flow">ፍሰትዎን በመፈተሽ ላይ</string>
 
-    <string name="bounty_flow_pending_dialog_msg">ስላቀረቡልን እናመሰግናለን። ግብይቱ ካልተሳካ ፣ እባክዎ እንደገና ይሞክሩ። አንዴ የተሳካ ግብይትን ካረጋገጥን በኋላ ለክፍያ ዝርዝሮችዎ እርስዎን እናገኛለን።&lt;br/&gt;&lt;br/&gt;ጥያቄዎች ካሉዎት እባክዎን በኢሜል ይላኩልን&lt;a href="https://ussd@stax.me"&gt; &lt;b&gt;&lt;font color=#1878F9&gt; ussd\@stax.me &lt;/b&gt;&lt;/a&gt;</string>
+  <string name="bounty_flow_pending_dialog_msg">ስላቀረቡልን እናመሰግናለን። ግብይቱ ካልተሳካ ፣ እባክዎ እንደገና ይሞክሩ። አንዴ የተሳካ ግብይትን ካረጋገጥን በኋላ ለክፍያ ዝርዝሮችዎ እርስዎን እናገኛለን።&lt;br/&gt;&lt;br/&gt;ጥያቄዎች ካሉዎት እባክዎን በኢሜል ይላኩልን&lt;a href="https://ussd@stax.me"&gt; &lt;b&gt;&lt;font color=#1878F9&gt; ussd\@stax.me &lt;/b&gt;&lt;/a&gt;</string>
 
-    <string name="flow_done_title">ፍሰት ተከናውኗል</string>
+  <string name="flow_done_title">ፍሰት ተከናውኗል</string>
 
-    <string name="flow_done_desc">ፍሰቱን ፈትሸን እና ጥሩ ይመስላል! ከክፍያ መረጃ ጋር በገቢ መልእክት ሳጥንዎ ውስጥ ኢሜል ሊኖርዎት ይገባል።</string>
+  <string name="flow_done_desc">ፍሰቱን ፈትሸን እና ጥሩ ይመስላል! ከክፍያ መረጃ ጋር በገቢ መልእክት ሳጥንዎ ውስጥ ኢሜል ሊኖርዎት ይገባል።</string>
 
-    <string name="go_through_another_flow">በሌላ ፍሰት ውስጥ ይሂዱ</string>
+  <string name="go_through_another_flow">በሌላ ፍሰት ውስጥ ይሂዱ</string>
 
-    <string name="flow_recorded">ፍሰት ተመዝግቧል</string>
+  <string name="flow_recorded">ፍሰት ተመዝግቧል</string>
 
-    <string name="bounty_amount_with_currency">የአሜሪካ ዶላር %1$d</string>
+  <string name="bounty_amount_with_currency">የአሜሪካ ዶላር %1$d</string>
 
-    <string name="select_country">አገር ይምረጡ</string>
+  <string name="select_country">አገር ይምረጡ</string>
 
-    <string name="filter_by_country">በሀገር አጣራ</string>
+  <string name="filter_by_country">በሀገር አጣራ</string>
 
-    <string name="filtering_in_progress">በማጣራት ፣ እባክዎን ይጠብቁ…</string>
+  <string name="filtering_in_progress">በማጣራት ፣ እባክዎን ይጠብቁ…</string>
 
-    <string name="country">ሀገር</string>
+  <string name="country">ሀገር</string>
 
-    <string name="country_error_nodata">አገልግሎቶችን እና አገሮችን ለመጫን እባክዎ ውሂብን ያብሩ።</string>
+  <string name="country_error_nodata">አገልግሎቶችን እና አገሮችን ለመጫን እባክዎ ውሂብን ያብሩ።</string>
 
-    <string name="country_with_emoji">%1$s  %2$s </string>
+  <string name="country_with_emoji">%1$s  %2$s </string>
 
-    <string name="all_countries_with_emoji">ሁሉም አገሮች</string>
+  <string name="all_countries_with_emoji">ሁሉም አገሮች</string>
 
-    <string name="bounty_sim_err_header">ትክክለኛውን ሲም ያስገቡ</string>
+  <string name="bounty_sim_err_header">ትክክለኛውን ሲም ያስገቡ</string>
 
-    <string name="bounty_sim_err_desc">እባክዎ በመሣሪያዎ ውስጥ ከ %1$s ሲም ካርድ ያስገቡ እና እንደገና ይሞክሩ።</string>
+  <string name="bounty_sim_err_desc">እባክዎ በመሣሪያዎ ውስጥ ከ %1$s ሲም ካርድ ያስገቡ እና እንደገና ይሞክሩ።</string>
 
-    <string name="retry">እንደገና ሞክር</string>
+  <string name="retry">እንደገና ሞክር</string>
 
-    <string name="submit_flow">ፍሰት ያቅርቡ</string>
+  <string name="submit_flow">ፍሰት ያቅርቡ</string>
 
-    <string name="bounty_submitted_successfully">ጉርሻ በተሳካ ሁኔታ ገብቷል</string>
+  <string name="bounty_submitted_successfully">ጉርሻ በተሳካ ሁኔታ ገብቷል</string>
 
-    <string name="language">ቋንቋ</string>
+  <string name="language">ቋንቋ</string>
 
-    <string name="bounty">ጉርሻ</string>
+  <string name="bounty">ጉርሻ</string>
 
-    <string name="library_cardhead">የ USSD ቤተ -መጽሐፍት</string>
+  <string name="library_cardhead">የ USSD ቤተ -መጽሐፍት</string>
 
-    <string name="visit_library">የ USSD አቋራጮችን ይፈልጉ</string>
+  <string name="visit_library">የ USSD አቋራጮችን ይፈልጉ</string>
 
-    <string name="library_dial_btn">%1$s ን ይደውሉ</string>
+  <string name="library_dial_btn">%1$s ን ይደውሉ</string>
 
-    <string name="internet_required">በይነመረብ ያስፈልጋል</string>
+  <string name="internet_required">በይነመረብ ያስፈልጋል</string>
 
-    <string name="internet_required_bounty_desc">የዩኤስኤስዲ ፍሰቶችን ካርታ ለመለየት የውሂብ ወይም የ Wifi ግንኙነት ያስፈልግዎታል። እባክዎ ይገናኙ እና እንደገና ይሞክሩ።</string>
+  <string name="internet_required_bounty_desc">የዩኤስኤስዲ ፍሰቶችን ካርታ ለመለየት የውሂብ ወይም የ Wifi ግንኙነት ያስፈልግዎታል። እባክዎ ይገናኙ እና እንደገና ይሞክሩ።</string>
 
-    <string name="try_again">እንደገና ሞክር</string>
+  <string name="try_again">እንደገና ሞክር</string>
 
-    <string name="edge_case_bounty_email_error">ይህ አልፎ አልፎ ይከሰታል ፣ ግን ስህተቱ ከቀጠለ እባክዎ መተግበሪያውን ይዝጉ እና እንደገና ያስጀምሩ።</string>
+  <string name="unknown_login_error">ይህ አልፎ አልፎ ይከሰታል ፣ ግን ስህተቱ ከቀጠለ እባክዎ መተግበሪያውን ይዝጉ እና እንደገና ያስጀምሩ።</string>
 
-    <string name="no_account_selected_error">ወደ ስታክስ ለማከል እባክዎ ቢያንስ አንድ መለያ ይምረጡ</string>
+  <string name="no_account_selected_error">ወደ ስታክስ ለማከል እባክዎ ቢያንስ አንድ መለያ ይምረጡ</string>
 
-    <!-- IN-APP BANNERS -->
+  <!-- IN-APP BANNERS -->
 
-    <string name="banner_permission_title">ሲም ፣ ኤስኤምኤስ ፣ ተደራሽነት እና ተደራቢ</string>
+  <string name="banner_permission_title">ሲም ፣ ኤስኤምኤስ ፣ ተደራሽነት እና ተደራቢ</string>
 
-    <string name="banner_permission_desc">ስቴክስ ለምን እነዚህን ፈቃዶች ይጠይቃል?</string>
+  <string name="banner_permission_desc">ስቴክስ ለምን እነዚህን ፈቃዶች ይጠይቃል?</string>
 
-    <string name="banner_permission_cta">
+  <string name="banner_permission_cta">
     ለማወቅ
     <u>እዚህ መታ ያድርጉ</u>
   </string>
 
-    <string name="banner_roundupnews_title">የቅርብ ጊዜውን የስታክስ ወርሃዊ ማጠቃለያ ያግኙ</string>
+  <string name="banner_roundupnews_title">የቅርብ ጊዜውን የስታክስ ወርሃዊ ማጠቃለያ ያግኙ</string>
 
-    <string name="banner_roundupnews_cta">
+  <string name="banner_roundupnews_cta">
     <u>አሁን ለማንበብ መታ ያድርጉ</u>
   </string>
 
-    <string name="banner_gist_title">ብቸኛ የ Stax gist ይፈልጋሉ?</string>
+  <string name="banner_gist_title">ብቸኛ የ Stax gist ይፈልጋሉ?</string>
 
-    <string name="banner_gist_cta">
+  <string name="banner_gist_cta">
     <u>ለደብዳቤ መላኪያ ዝርዝራችን አሁን ይመዝገቡ</u>
   </string>
 
-    <string name="banner_upvote_title">ከእኛ ጋር ይገንቡ! የባህሪ ጥያቄን ያክሉ/ይደግፉ ወይም ስህተትን ሪፖርት ያድርጉ።</string>
+  <string name="banner_upvote_title">ከእኛ ጋር ይገንቡ! የባህሪ ጥያቄን ያክሉ/ይደግፉ ወይም ስህተትን ሪፖርት ያድርጉ።</string>
 
-    <string name="banner_upvote_cta">
+  <string name="banner_upvote_cta">
     <u>አሁን ግብረመልስ ይስጡ</u>
   </string>
 
-    <string name="stax_banner_img_desc">የስታክስ ሰንደቅ አዶ</string>
+  <string name="stax_banner_img_desc">የስታክስ ሰንደቅ አዶ</string>
 
-    <string name="banner_research_title">ስታክስን የበለጠ የተሻለ ለማድረግ ክፍያ ማግኘት ይፈልጋሉ?</string>
+  <string name="banner_research_title">ስታክስን የበለጠ የተሻለ ለማድረግ ክፍያ ማግኘት ይፈልጋሉ?</string>
 
-    <string name="banner_research_cta">ለምርምር ጥናት ዛሬ ይመዝገቡ</string>
+  <string name="banner_research_cta">ለምርምር ጥናት ዛሬ ይመዝገቡ</string>
 
-    <string name="banner_permission_url">https://joinstax.medium.com/phone-phone-on-stax-a0ec82533570</string>
+  <string name="banner_permission_url">https://joinstax.medium.com/phone-phone-on-stax-a0ec82533570</string>
 
-    <string name="banner_roundupnews_url">https://joinstax.medium.com/</string>
+  <string name="banner_roundupnews_url">https://joinstax.medium.com/</string>
 
-    <string name="banner_upvoteurl">https://stax.nolt.io/</string>
+  <string name="banner_upvoteurl">https://stax.nolt.io/</string>
 
-    <string name="banner_research_url">https://joinstax.typeform.com/to/JiloPnVy</string>
+  <string name="banner_research_url">https://joinstax.typeform.com/to/JiloPnVy</string>
 
-    <!-- TEST MODE -->
+  <!-- TEST MODE -->
 
-    <string name="test_mode_toast">አሁን በሙከራ ሁኔታ ውስጥ ነዎት።</string>
+  <string name="test_mode_toast">አሁን በሙከራ ሁኔታ ውስጥ ነዎት።</string>
 
-    <string name="test_mode_disabled">የሙከራ ሁነታ ተሰናክሏል።</string>
+  <string name="test_mode_disabled">የሙከራ ሁነታ ተሰናክሏል።</string>
 
-    <string name="test_mode_almost_toast">ሊደርስ ነው!</string>
+  <string name="test_mode_almost_toast">ሊደርስ ነው!</string>
 
-    <string name="test_mode_enabled">የሙከራ ሁነታ ተሰማራ</string>
+  <string name="test_mode_enabled">የሙከራ ሁነታ ተሰማራ</string>
 
-    <string name="faq_title">ተደጋግሞ የሚነሱ ጥያቄዎች</string>
+  <string name="faq_title">ተደጋግሞ የሚነሱ ጥያቄዎች</string>
 
-    <string name="faq_content"> %1$s &lt;p/&gt;አሁንም ጥያቄዎች አሉዎት? &lt;p/&gt; &lt;a href="mailto:support@stax.me?subject=Stax-support-%2$s"&gt;&lt;u&gt; &lt;b&gt;&lt;font color=#1878F9&gt; የኢሜይል stax ድጋፍ &lt;/b&gt;&lt;u&gt;&lt;/a&gt;</string>
+  <string name="faq_content"> %1$s &lt;p/&gt;አሁንም ጥያቄዎች አሉዎት? &lt;p/&gt; &lt;a href="mailto:support@stax.me?subject=Stax-support-%2$s"&gt;&lt;u&gt; &lt;b&gt;&lt;font color=#1878F9&gt; የኢሜይል stax ድጋፍ &lt;/b&gt;&lt;u&gt;&lt;/a&gt;</string>
 
-    <string name="loading">በመጫን ላይ…</string>
+  <string name="loading">በመጫን ላይ…</string>
 
-    <string name="loading_error">ተደጋጋሚ ጥያቄዎችን መጫን አልተቻለም ፣ እባክዎ እንደገና ይሞክሩ</string>
+  <string name="loading_error">ተደጋጋሚ ጥያቄዎችን መጫን አልተቻለም ፣ እባክዎ እንደገና ይሞክሩ</string>
 
-    <string name="faq_internet_error">ይህ ባህሪ የበይነመረብ ግንኙነት ይፈልጋል ፣ እባክዎ እንደገና ይሞክሩ</string>
+  <string name="faq_internet_error">ይህ ባህሪ የበይነመረብ ግንኙነት ይፈልጋል ፣ እባክዎ እንደገና ይሞክሩ</string>
 
-    <string name="working_offline">ከመስመር ውጭ በመስራት ላይ</string>
-
-  <string name="marketing_email_optin">"Stax can send me emails in the future."</string>
-  <string name="email_client_not_found">በመሣሪያው ላይ ምንም የኢሜል ደንበኛ አልተገኘም</string>
-  <string name="enable_call_permission">"Please enable call permission to dial USSD code."</string>
-  <string name="ussd_lib">USSD Lib</string>
+  <string name="working_offline">ከመስመር ውጭ በመስራት ላይ</string>
 
 </resources>

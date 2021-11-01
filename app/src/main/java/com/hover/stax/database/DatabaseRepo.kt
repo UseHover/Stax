@@ -12,9 +12,9 @@ import com.hover.sdk.sims.SimInfo
 import com.hover.sdk.sims.SimInfoDao
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
-import com.hover.stax.account.Account
-import com.hover.stax.account.AccountDao
-import com.hover.stax.account.ChannelWithAccounts
+import com.hover.stax.accounts.Account
+import com.hover.stax.accounts.AccountDao
+import com.hover.stax.accounts.ChannelWithAccounts
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelDao
 import com.hover.stax.contacts.ContactDao
@@ -31,7 +31,6 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.utils.paymentLinkCryptography.Encryption
 import timber.log.Timber
 import java.security.NoSuchAlgorithmException
-import java.util.regex.Pattern
 
 class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
@@ -69,11 +68,11 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     fun getChannelsByIds(ids: List<Int>): List<Channel> = channelDao.getChannelsByIds(ids)
 
     fun getChannelsByCountry(channelIds: IntArray, countryCode: String): LiveData<List<Channel>> {
-        return channelDao.getChannels(countryCode, channelIds)
+        return channelDao.getChannels(countryCode.uppercase(), channelIds)
     }
 
     fun getChannelsByCountry(countryCode: String): List<Channel> {
-        return channelDao.getChannels(countryCode)
+        return channelDao.getChannels(countryCode.uppercase())
     }
 
     fun update(channel: Channel?) {

@@ -39,6 +39,7 @@ class LanguageSelectFragment : Fragment() {
         val radioGroup = binding.languageRadioGroup.apply {
             setOnCheckedChangeListener { _, checkedId -> onSelect(checkedId) }
         }
+
         languageViewModel.languages.observe(viewLifecycleOwner) {
             createRadios(it, radioGroup)
         }
