@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.TransactionContract
-import com.hover.stax.account.Account
+import com.hover.stax.accounts.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.database.DatabaseRepo

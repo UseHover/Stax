@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import com.amplitude.api.Amplitude
 import com.amplitude.api.Identify
 import com.appsflyer.AppsFlyerLib
@@ -152,19 +153,13 @@ object Utils {
         return false
     }
 
-    fun bitmapToByteArray(bitmap: Bitmap?): ByteArray? {
-        if (bitmap == null) return null
-        val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-        return stream.toByteArray()
-    }
-
     @JvmStatic
     fun copyToClipboard(content: String?, c: Context): Boolean {
         val clipboard = c.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
-        val clip = ClipData.newPlainText("Stax payment link", content)
+        val clip = ClipData.newPlainText("Stax content", content)
         if (clipboard != null) {
             clipboard.setPrimaryClip(clip)
+            UIHelper.flashMessage(c, c.getString(R.string.copied))
             return true
         }
         return false
@@ -291,14 +286,24 @@ object Utils {
     @JvmStatic
     fun openEmail(subject: String, context: Context) {
         val intent = Intent(Intent.ACTION_VIEW)
-        val recipientEmail = context.getString(R.string.stax_support_email)
-        intent.data = Uri.parse("mailto:$recipientEmail ?subject=$subject")
+        val senderEmail = context.getString(R.string.stax_support_email)
+        intent.data = Uri.parse("mailto:$senderEmail ?subject=$subject")
         try {
             context.startActivity(intent)
         } catch (e: ActivityNotFoundException) {
             Timber.e("Activity not found")
             UIHelper.flashMessage(context, context.getString(R.string.email_client_not_found))
         }
+    }
+
+    @JvmStatic
+    fun shareStax(activity: Activity) {
+        logAnalyticsEvent(activity.getString(R.string.clicked_share), activity)
+        val sharingIntent = Intent(Intent.ACTION_SEND)
+        sharingIntent.type = "text/plain"
+        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, activity.getString(R.string.share_sub))
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, activity.getString(R.string.share_msg))
+        activity.startActivity(Intent.createChooser(sharingIntent, activity.getString(R.string.share_explain)))
     }
 
     @JvmStatic

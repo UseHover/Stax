@@ -10,9 +10,6 @@
             android:name="com.hover.stax.home.HomeFragment"
             android:label="@string/nav_home"
             tools:layout="@layout/fragment_main">
-        <action
-                android:id="@+id/action_navigation_home_to_navigation_linkAccount"
-                app:destination="@id/navigation_linkAccount" />
     </fragment>
 
     <fragment
@@ -75,22 +72,11 @@
 
     <fragment
             android:id="@+id/accountDetailsFragment"
-            android:name="com.hover.stax.account.AccountDetailFragment"
+            android:name="com.hover.stax.accounts.AccountDetailFragment"
             android:label="ChannelsDetailsFragment"
-            tools:layout="@layout/fragment_channel">
+            tools:layout="@layout/fragment_account">
         <argument
                 android:name="channel_id"
                 app:argType="integer" />
     </fragment>
-
-    <fragment
-            android:id="@+id/pinUpdateFragment"
-            android:name="com.hover.stax.settings.PinUpdateFragment"
-            android:label="PinUpdateFragment"
-            tools:layout="@layout/fragment_pin_update">
-        <argument
-                android:name="channel_id"
-                app:argType="integer" />
-    </fragment>
-
 </navigation>

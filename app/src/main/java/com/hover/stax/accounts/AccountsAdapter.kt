@@ -1,4 +1,4 @@
-package com.hover.stax.account
+package com.hover.stax.accounts
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable

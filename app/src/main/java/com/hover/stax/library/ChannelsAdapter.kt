@@ -27,7 +27,7 @@ class ChannelsAdapter(private val channelList: List<Channel>) : RecyclerView.Ada
             with(binding) {
                 liDescription.text = channel.name
                 liButton.apply {
-                    text = liButton.context.getString(R.string.library_dial_btn, channel.rootCode)
+                    text = liButton.context.getString(R.string.dial_btn, channel.rootCode)
                     setOnClickListener { Utils.dial(channel.rootCode, binding.root.context) }
                 }
             }

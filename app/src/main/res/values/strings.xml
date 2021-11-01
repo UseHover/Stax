@@ -7,12 +7,12 @@
 	<string name="root_url" translatable="false">https://www.usehover.com</string>
 	<string name="api_url" translatable="false">https://www.usehover.com/api</string>
 	<string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
-	<string name="bounty_endpoint">/stax_bounty_hunters</string>
-	<string name="users_endpoint">/stax_users</string>
+	<string name="users_endpoint" translatable="false">/stax_users</string>
+	<string name="referee_endpoint" translatable="false">/set_referee</string>
 	<string name="stax_market_playstore_link" translatable="false">market://details?id=com.hover.stax</string>
 	<string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
-	<string name="stax_nolt_url">https://stax.nolt.io/</string>
-	<string name="receive_stax_updates_url">https://416e906b.sibforms.com/serve/MUIEAAS88NDe6oTn7nl8YrIqgutsJ_GgyCYRWVsZ-S54quVNmBhvpsu70WpNXrZd-n6H5r8m1ZRfuTl8ckiQrB4sLIdNSx0Y_DFZ7_hQGCDv9PG6N0ncsHwWW3OYsMlPMHgQSR6OZf8xK8HC-NA3p3T71Pv1Coy_n9oiDRwIu7HCryUfDtfHr11mXSQ5S3JwcOd8cN7FL1ewDRqu</string>
+	<string name="stax_nolt_url" translatable="false">https://stax.nolt.io/</string>
+	<string name="receive_stax_updates_url" translatable="false">https://416e906b.sibforms.com/serve/MUIEAAS88NDe6oTn7nl8YrIqgutsJ_GgyCYRWVsZ-S54quVNmBhvpsu70WpNXrZd-n6H5r8m1ZRfuTl8ckiQrB4sLIdNSx0Y_DFZ7_hQGCDv9PG6N0ncsHwWW3OYsMlPMHgQSR6OZf8xK8HC-NA3p3T71Pv1Coy_n9oiDRwIu7HCryUfDtfHr11mXSQ5S3JwcOd8cN7FL1ewDRqu</string>
 	<string name="mixpanel_token" translatable="false">82efeb23b6d38509989f592c8f4b21c2</string>
 	<string name="bounty_transactions_endpoint" translatable="false">/get_bounty_results?device_id=%1$s</string>
 	<string name="google_server_client_id" translatable="false">1098235122453-5u1hct3brr4t626317k9fgjkkfdmsbvs.apps.googleusercontent.com</string>
@@ -99,6 +99,14 @@
 	<string name="your_accounts">Your accounts</string>
 	<string name="add_an_account">Add an account</string>
 	<string name="add_accounts_to_stax">Add accounts to Stax</string>
+	<string name="nickname">Nickname</string>
+	<string name="saved">Saved</string>
+	<string name="account_number_label">Account number</string>
+	<string name="hint_enter_new_name">Enter a new name</string>
+
+	<string name="official_name">Official name</string>
+	<string name="which_account">Which account?</string>
+	<string name="account_select_header">You have more than one %1$s account. Please choose which one you want to use to %2$s.</string>
 
 	<!-- Permissions -->
 	<string name="permissions_title">Permissions needed</string>
@@ -246,7 +254,6 @@
 	<string name="toast_request_scheduled">Your request has been scheduled. You will be reminded to send a message on %1$s</string>
 	<string name="descrip_request">Request to %1$s</string>
 	<string name="requester_number_label">Account</string>
-	<string name="requester_account_number_label">Account number</string>
 	<string name="request_error_recipient">Please enter a phone number.</string>
 	<string name="requester_number_fielderror">Please enter the account or phone number you\'d like to receive the money into</string>
 	<string name="requester_account_error">Please select an account or add a new one to receive your money</string>
@@ -256,7 +263,8 @@
 	<string name="link_copied_label">Link copied</string>
 	<string name="share_request_link_cardhead">Share request link</string>
 	<string name="share_again_cardhead">Share request link again</string>
-	<string name="account_name_error">Please enter a new account name</string>
+	<string name="account_name_error">Please enter a new nickname</string>
+	<string name="account_number_error">Please enter a new account number</string>
 
 	<!-- Scheduling -->
 	<string name="future_toggle">Send later</string>
@@ -318,10 +326,27 @@
 	<string name="toast_confirm_cancelreq">Request canceled.</string>
 
 	<!-- Settings -->
-	<string name="accts_cardhead">Accounts</string>
+	<string name="meta_cardhead">Options</string>
+	<string name="share_text">Share</string>
+	<string name="share_stax">Share Stax</string>
+	<string name="copied">Copied</string>
+	<string name="share_sub">Stax app</string>
+	<string name="share_explain">Share app via</string>
+	<string name="share_msg">Check out this app https://play.google.com/store/apps/details?id=com.hover.stax</string>
+	<string name="connect_accounts">Connect your accounts</string>
+
+	<string name="login_google_err">Could not connect to Google, please make sure you are online and try again.</string>
+	<string name="referral_text">Referral code: %1$s</string>
+	<string name="referral_label">Stax agent referral code</string>
+	<string name="referral_help">Enter the referral code of the Stax user who onboarded you.</string>
+	<string name="referral_error_blank">Please enter a referral code.</string>
+	<string name="referral_error_invalid">Please enter a valid referral code.</string>
+	<string name="referral_error_offline">Please go online to save referral code.</string>
+	<string name="referral_error_data">Please go online to get your referral code.</string>
 	<string name="security_cardhead">Security</string>
 	<string name="security_cardbody">Stax meets the criteria of 740.17(b)(3) (i) security classification of the United States Bureau of Industry and Security. This software uses HTTPS for server communication; symmetric key RSA encryption to temporarily store the user\'s credentials on their own device using Android Keystore; and code obfuscation using DRM.</string>
 	<string name="defaultacct_label">Default account</string>
+	<string name="manage_account">Manage Account</string>
 	<string name="security_head">Secure with Stax</string>
 	<string name="btn_removepins">Remove PINs</string>
 	<string name="removepins_dialoghead">Remove all PINs now</string>
@@ -393,7 +418,8 @@
 	<string name="bounty_msg">Stax will pay you USD $5 - $50 to go through a USSD flow.</string>
 	<string name="get_started">Get started</string>
 	<string name="bounty_email_stage_title">🗺️  MAP USSD FLOWS</string>
-	<string name="bounty_email_stage_desc1"><b>Welcome to Money Mapper.</b> Stax wants to make USSD easier for everyone. To bring Stax to more people in more countries, we need to map every USSD menu globally. Join Stax as a Money Mapper and earn $5 - $20 USD for every USSD transaction you successfully map. USSD menus we still need (bounties) are listed on the next page. We add new bounties often!</string> <string name="bounty_email_stage_desc2"><b>1.</b>   Sign in with your Google account.\n<b>2.</b> Find an open bounty for any of your bank or mobile money accounts.\n<b>3.</b> Complete the <a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c">USSD transaction</a> described on the bounty, like Check Balance or Buy Airtime.\n <b>4.</b> Review the transaction details. Retry if it failed or is incomplete.\n<b>5.</b> Stax will review your submissions, which may take 7-10 days. \n<b>6.</b> You get paid at the end of each week </string>
+	<string name="bounty_email_stage_desc1"><b>Welcome to Money Mapper.</b> Stax wants to make USSD easier for everyone. To bring Stax to more people in more countries, we need to map every USSD menu globally. Join Stax as a Money Mapper and earn $5 - $20 USD for every USSD transaction you successfully map. USSD menus we still need (bounties) are listed on the next page. We add new bounties often!</string>
+	<string name="bounty_email_stage_desc2"><b>1.</b>   Sign in with your Google account.\n<b>2.</b> Find an open bounty for any of your bank or mobile money accounts.\n<b>3.</b> Complete the <a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c">USSD transaction</a> described on the bounty, like Check Balance or Buy Airtime.\n <b>4.</b> Review the transaction details. Retry if it failed or is incomplete.\n<b>5.</b> Stax will review your submissions, which may take 7-10 days. \n<b>6.</b> You get paid at the end of each week </string>
 	<string name="descrip_bounty_airtime">Buy airtime for any person %1$s</string>
 	<string name="bounty_airtime_explain">Buy airtime for someone else %1$s</string>
 	<string name="descrip_bounty_p2p">Send money to someone else %1$s</string>
@@ -445,12 +471,14 @@
 
 	<string name="library_cardhead">USSD Library</string>
 	<string name="visit_library">Find USSD shortcodes</string>
-	<string name="library_dial_btn">Dial %1$s</string>
+	<string name="shortcode">Shortcode</string>
+	<string name="dial_btn">Dial %1$s</string>
+	<string name="dial_default">Dial</string>
 
 	<string name="internet_required">Internet required</string>
 	<string name="internet_required_bounty_desc">You need a data or Wifi connection to map USSD flows. Please connect and try again.</string>
 	<string name="try_again">Try again</string>
-	<string name="edge_case_bounty_email_error">This rarely happens, but if error persists, please close the app and restart.</string>
+	<string name="unknown_login_error">Unknown error, please try again. If error persists, please close the app and restart.</string>
 
 	<string name="no_account_selected_error">Please choose at least one account to add to Stax</string>
 
@@ -484,18 +512,27 @@
 	<string name="loading">Loading…</string>
 	<string name="loading_error">Unable to load FAQ, please try again</string>
 	<string name="faq_internet_error">This feature requires internet connection, please try again</string>
-    <string name="working_offline">Working offline</string>
+	<string name="working_offline">Working offline</string>
 
-    <string name="marketing_email_optin">Stax can send me emails in the future.</string>
-    <string name="email_client_not_found">No email client found on device.</string>
-    <string name="enable_call_permission">Please enable call permission to dial USSD code.</string>
+	<string name="marketing_email_optin">Stax can send me emails in the future.</string>
+	<string name="email_client_not_found">No email client found on device.</string>
+	<string name="enable_call_permission">Please enable call permission to dial USSD code.</string>
 
-	<string name="rename_account">Rename Account</string>
-	<string name="current_name">Current name</string>
-	<string name="hint_enter_new_name">Enter a new name</string>
+	<!-- Preference Titles -->
+	<string name="messages_header">Messages</string>
+	<string name="sync_header">Sync</string>
 
-    <string name="original_name">Original name</string>
-    <string name="which_account">Which account?</string>
-    <string name="account_select_header">You have more than one %1$s account. Please choose which one you want to use to %2$s.</string>
+	<!-- Messages Preferences -->
+	<string name="signature_title">Your signature</string>
+	<string name="reply_title">Default reply action</string>
+
+	<!-- Sync Preferences -->
+	<string name="sync_title">Sync email periodically</string>
+	<string name="attachment_title">Download incoming attachments</string>
+	<string name="attachment_summary_on">Automatically download attachments for incoming emails
+	</string>
+	<string name="attachment_summary_off">Only download attachments when manually requested</string>
+	<!-- TODO: Remove or change this placeholder text -->
+	<string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

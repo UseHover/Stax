@@ -7,8 +7,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
-import com.hover.stax.account.Account
-import com.hover.stax.account.DUMMY
+import com.hover.stax.accounts.Account
+import com.hover.stax.accounts.DUMMY
 import com.hover.stax.databinding.BalanceItemBinding
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.UIHelper

@@ -32,40 +32,20 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
     val actions: LiveData<List<HoverAction>>
     val channels: LiveData<List<Channel>>
     val transactions: LiveData<List<StaxTransaction>>
-    private val filteredBountyChannels: MutableLiveData<List<Channel>?>
+    var currentCountryFilter: MutableLiveData<String> = MutableLiveData()
     private val bountyList = MediatorLiveData<List<Bounty>>()
 
     var sims: MutableLiveData<List<SimInfo>> = MutableLiveData()
-    val bountyEmailLiveData: MutableLiveData<Map<Int, String?>> = MutableLiveData()
     private lateinit var bountyListAsync: Deferred<MutableList<Bounty>>
 
-    val user = MutableLiveData<FirebaseUser>()
-    val didLoginFail = MutableLiveData(false)
-
     init {
+        currentCountryFilter.value = CountryAdapter.codeRepresentingAllCountries()
         loadSims()
-        filteredBountyChannels = MutableLiveData()
-        filteredBountyChannels.value = null
         actions = repo.bountyActions
         channels = Transformations.switchMap(actions, this::loadChannels)
         transactions = repo.bountyTransactions!!
         bountyList.addSource(actions, this::makeBounties)
         bountyList.addSource(transactions, this::makeBountiesIfActions)
-    }
-
-    fun setUser(firebaseUser: FirebaseUser) {
-        user.value = firebaseUser
-    }
-
-    fun setLoginFailed(failed: Boolean) {
-        didLoginFail.value = failed
-    }
-
-    fun uploadBountyUser(email: String, optedIn: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val result = BountyEmailNetworking(getApplication()).uploadBountyUser(email, optedIn)
-            bountyEmailLiveData.postValue(result)
-        }
     }
 
     private fun loadSims() {
@@ -99,7 +79,11 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
 //        val ids = getChannelIdArray(actions)
 //        Timber.e("channel id length %s", ids.size)
 //        return repo.getChannels(ids)
-        val ids = getChannelIdArray(actions.distinctBy { it.id }).toList()
+        val ids = getChannelIdArray(actions).toList()
+
+//        filterChannels(countryCode)
+//
+//        repo.getChannelsByCountry(getChannelIdArray(actions), countryCode)
 
         val channelList = runBlocking {
             getChannelsAsync(ids).await()

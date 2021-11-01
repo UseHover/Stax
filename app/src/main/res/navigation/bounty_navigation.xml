@@ -21,10 +21,6 @@
             android:name="com.hover.stax.bounties.BountyListFragment"
             android:label="@string/nav_bounty"
             tools:layout="@layout/bounty_card_channel">
-        <action
-                android:id="@+id/action_bountyListFragment_to_transactionDetailsFragment"
-                app:destination="@id/transactionDetailsFragment"
-                />
     </fragment>
 
     <fragment
