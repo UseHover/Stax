@@ -10,15 +10,9 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.play.core.review.ReviewManagerFactory
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.HoverParameters
 import com.hover.sdk.permissions.PermissionHelper
@@ -28,7 +22,6 @@ import com.hover.stax.accounts.DUMMY
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.balances.BalanceAdapter
 import com.hover.stax.balances.BalancesViewModel
-import com.hover.stax.bounties.BountyViewModel
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.contacts.PhoneHelper
@@ -210,7 +203,6 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
             checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT)
         else
             getNavController().navigate(R.id.action_navigation_home_to_accountDetailsFragment, bundleOf(Constants.ACCOUNT_ID to accountId))
-//            navigateToAccountDetailsFragment(accountId, getNavController())
     }
 
     override fun onAuthError(error: String) {
@@ -231,7 +223,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
                     .extra(HoverAction.ACCOUNT_KEY, accountNumber)
                     .extra(HoverAction.PHONE_KEY, accountNumber)
 
-            hsb.run()
+            runAction(hsb)
         }
     }
 
@@ -243,7 +235,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
 
             if (index + 1 < balancesViewModel.accounts.value!!.size) hsb.finalScreenTime(0)
 
-            hsb.run()
+            runAction(hsb)
         } else {
 //            the only way to get the reference to the observer is to move this out onto it's own block.
             val selectedChannelsObserver = object : Observer<List<Channel>> {
@@ -257,6 +249,12 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
 
             balancesViewModel.selectedChannels.observe(this, selectedChannelsObserver)
         }
+    }
+
+    private fun runAction(hsb: HoverSession.Builder) = try {
+        hsb.run()
+    } catch (e: Exception) {
+        Timber.e(e)
     }
 
     private fun onRequest(data: Intent) {
@@ -289,7 +287,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         }
     }
 
-    private fun showBountyDetails(data: Intent?){
+    private fun showBountyDetails(data: Intent?) {
         Timber.e("Request code is bounty")
         if (data != null) {
             val transactionUUID = data.getStringExtra("uuid")
@@ -336,7 +334,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
             transferViewModel.contact.value?.let { addRecipientInfo(hsb) }
         }
 
-        hsb.run()
+        runAction(hsb)
     }
 
     private fun addRecipientInfo(hsb: HoverSession.Builder) {
@@ -364,7 +362,6 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         transferViewModel.contact.value?.let { i.putExtra(StaxContact.ID_KEY, it.lookupKey) }
         i.action = if (type == Constants.SCHEDULE_REQUEST) Constants.SCHEDULED else Constants.TRANSFERRED
         setResult(result, i)
-//        finish()
     }
 
     private fun initFromIntent() {
@@ -441,10 +438,9 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
 
     fun cancel() = setResult(RESULT_CANCELED)
 
-
     fun makeCall(action: HoverAction, channel: Channel) {
         val hsb = HoverSession.Builder(action, channel, this, Constants.REQUEST_REQUEST)
-        hsb.run()
+        runAction(hsb)
     }
 
     fun makeCall(a: HoverAction) {
