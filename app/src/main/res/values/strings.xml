@@ -21,7 +21,7 @@
 	<string name="nav_balance_and_history">Balance and history</string>
 	<string name="nav_balances">Balances</string>
 
-	<string name="nav_get_paid">Get paid</string>
+	<string name="nav_get_paid">Get Paid</string>
 
 	<string name="nav_link_account">Link an account</string>
 	<string name="nav_airtime">Buy Airtime</string>
@@ -536,6 +536,6 @@
 	</string>
 	<string name="attachment_summary_off">Only download attachments when manually requested</string>
 
-    <string name="ussd_lib">Library</string>
+    <string name="ussd_lib">Dial USSD</string>
 
 </resources>
