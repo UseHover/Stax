@@ -49,6 +49,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
 
         _binding = FragmentTransferBinding.inflate(inflater, container, false)
 
+        transferViewModel.reset()
         init(binding.root)
         startObservers(binding.root)
         startListeners()
@@ -70,6 +71,11 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         }
 
         super.init(root)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        transferViewModel.setEditing(true)
     }
 
     override fun onResume() {
@@ -120,7 +126,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
 
             with(transferViewModel) {
                 amount.observe(viewLifecycleOwner, {
-                    binding.summaryCard.amountValue.text = Utils.formatAmount(it)
+                    it?.let {
+                        binding.summaryCard.amountValue.text = Utils.formatAmount(it)
+                    }
                 })
 
                 note.observe(viewLifecycleOwner, {
