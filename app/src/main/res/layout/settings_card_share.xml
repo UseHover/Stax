@@ -18,37 +18,13 @@
 		app:drawableEndCompat="@drawable/ic_share"
 		android:text="@string/share_stax" />
 
-	<TextView
-		android:id="@+id/referral_code"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginHorizontal="@dimen/margin_10"
-		android:layout_marginBottom="@dimen/margin_8"
-		android:paddingVertical="@dimen/margin_21"
-		android:fontFamily="font-normal"
-		android:background="?attr/selectableItemBackground"
-		android:textSize="@dimen/text_16"
-		app:drawableEndCompat="@drawable/ic_copy"
-		android:text="@string/referral_label" />
-
 	<RelativeLayout android:id="@+id/referee_layout"
 		android:visibility="gone"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 
-		<com.hover.stax.views.StaxTextInputLayout
-			android:id="@+id/referee_input"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentStart="true"
-			android:layout_alignParentTop="true"
-			android:layout_toStartOf="@+id/referee_save_btn"
-			android:layout_centerVertical="true"
-			android:hint="@string/referral_label"
-			android:inputType="text" />
-
 		<androidx.appcompat.widget.AppCompatButton
-			android:id="@+id/referee_save_btn"
+			android:id="@+id/open_referee_btn"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			style="@style/StaxButton"
@@ -56,6 +32,8 @@
 			android:layout_alignParentTop="true"
 			android:layout_marginTop="@dimen/margin_13"
 			android:fontFamily="font-normal"
-			android:text="@string/btn_save" />
+			android:text="@string/add_referee_info" />
 	</RelativeLayout>
+
+
 </com.hover.stax.views.StaxCardView>

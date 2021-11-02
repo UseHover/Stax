@@ -64,6 +64,8 @@
         <entry key="app/src/main/res/layout/stax_card_view.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/stax_dropdown.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/stax_input.xml" value="0.13903985507246377" />
+        <entry key="app/src/main/res/layout/stax_permission_dialog.xml" value="0.1838905775075988" />
+        <entry key="app/src/main/res/layout/stax_referral_dialog.xml" value="0.378125" />
         <entry key="app/src/main/res/layout/stax_spinner_2line.xml" value="0.24592391304347827" />
         <entry key="app/src/main/res/layout/stax_spinner_item_with_logo.xml" value="0.13134057971014493" />
         <entry key="app/src/main/res/layout/stayintouch_stax_layout.xml" value="0.378125" />

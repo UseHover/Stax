@@ -277,7 +277,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
-    private fun getChannelIds(channels: List<Channel>): IntArray = channels.map { it.id }.toIntArray()
+    private fun getChannelIds(channels: List<Channel>?): IntArray? = channels?.map { it.id }?.toIntArray()
 
     fun view(s: Schedule) {
         setType(s.type)
