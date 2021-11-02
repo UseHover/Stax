@@ -68,18 +68,16 @@ class SettingsFragment : Fragment(), NavigationInterface {
 
     private fun setUpShare() {
         binding.shareCard.shareText.setOnClickListener { Utils.shareStax(requireActivity()) }
-        viewModel.email.observe(viewLifecycleOwner) { Timber.e("got email: %s", it); updateReferralInfo(it) }
-        viewModel.fetchUsername()
-    }
-
-    private fun updateReferralInfo(email: String?) {
-        binding.shareCard.refereeLayout.visibility = if (!email.isNullOrEmpty()) VISIBLE else GONE
         binding.shareCard.openRefereeBtn.setOnClickListener { openRefereeDialog() }
+        viewModel.fetchUsername()
     }
 
     private fun openRefereeDialog() {
         Utils.logAnalyticsEvent(getString(R.string.referrals_tap), requireContext())
-        ReferralDialog().show(childFragmentManager, ReferralDialog.TAG)
+        if (!viewModel.email.value.isNullOrEmpty())
+            ReferralDialog().show(childFragmentManager, ReferralDialog.TAG)
+        else
+            LoginDialog().show(childFragmentManager, LoginDialog.TAG)
     }
 
     private fun setUpMeta(viewModel: SettingsViewModel) {

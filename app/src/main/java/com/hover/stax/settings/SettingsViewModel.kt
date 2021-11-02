@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -51,7 +52,16 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         getRefereeCode()
     }
 
+    fun createGoogleClient(activity: AppCompatActivity) {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.google_server_client_id))
+            .requestEmail()
+            .build()
+        signInClient = GoogleSignIn.getClient(activity, gso)
+    }
+
     private fun setUser(firebaseUser: FirebaseUser) {
+        Timber.e("setting user: %s", firebaseUser.email)
         user.postValue(firebaseUser)
         setEmail(firebaseUser.email)
     }
@@ -81,7 +91,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         email.postValue(address)
     }
 
-    fun getEmail(): String? {
+    private fun getEmail(): String? {
         if (Utils.getString(EMAIL, getApplication()) == null && Utils.getString(BOUNTY_EMAIL_KEY, getApplication()) != null) {
             email.value = Utils.getString(BOUNTY_EMAIL_KEY, getApplication())
             Utils.saveString(EMAIL, email.value, getApplication())
@@ -193,6 +203,8 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     }
 
     companion object {
+        const val LOGIN_REQUEST = 4000
+
 //      DEPRECIATED, Migrating
         const val BOUNTY_EMAIL_KEY = "email_for_bounties"
 

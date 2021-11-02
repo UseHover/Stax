@@ -53,15 +53,16 @@ class ReferralDialog : DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewModel.progress.value = -1
         binding.refereeInput.addTextChangedListener(refereeWatcher)
 
-        viewModel.username.observe(viewLifecycleOwner) { it?.let { updateRefereeInfo(viewModel.refereeCode.value) } }
-        viewModel.email.observe(viewLifecycleOwner) { Timber.e("got email: %s", it); updateReferralCode() }
+        viewModel.username.observe(viewLifecycleOwner) { it?.let { updatePersonalCode(); updateRefereeInfo(viewModel.refereeCode.value) } }
+        viewModel.email.observe(viewLifecycleOwner) { Timber.e("got email: %s", it); updatePersonalCode() }
         viewModel.refereeCode.observe(viewLifecycleOwner) { updateRefereeInfo(it) }
         viewModel.error.observe(viewLifecycleOwner) { it?.let { setRefereeState(it, AbstractStatefulInput.ERROR) } }
 
-        updateReferralCode()
-        updateRefereeInfo(viewModel.refereeCode.value)
+//        updatePersonalCode()
+//        updateRefereeInfo(viewModel.refereeCode.value)
     }
 
     private val refereeWatcher: TextWatcher = object : TextWatcher {
@@ -86,7 +87,7 @@ class ReferralDialog : DialogFragment() {
         }
     }
 
-    private fun updateReferralCode() {
+    private fun updatePersonalCode() {
         if (!viewModel.username.value.isNullOrEmpty()) {
             binding.referralCode.text = viewModel.username.value
             binding.referralCode.setOnClickListener { copyToClipboard(viewModel.username.value, requireContext()) }
@@ -133,6 +134,12 @@ class ReferralDialog : DialogFragment() {
             binding.posBtn.isEnabled = true
             binding.refereeInput.setState(msg, type)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.error.value = null
+        viewModel.progress.value = -1
     }
 
     companion object {

@@ -25,11 +25,13 @@
         <entry key="app/src/main/res/layout/bounty_list_item.xml" value="0.21927083333333333" />
         <entry key="app/src/main/res/layout/country_item.xml" value="0.24592391304347827" />
         <entry key="app/src/main/res/layout/fragment_account.xml" value="0.378125" />
+        <entry key="app/src/main/res/layout/fragment_add_channels.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/fragment_balance.xml" value="0.24592391304347827" />
         <entry key="app/src/main/res/layout/fragment_bounty_email.xml" value="0.14817629179331307" />
         <entry key="app/src/main/res/layout/fragment_bounty_list.xml" value="0.1342451874366768" />
         <entry key="app/src/main/res/layout/fragment_channel.xml" value="0.14766970618034447" />
         <entry key="app/src/main/res/layout/fragment_channels_list.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.378125" />
         <entry key="app/src/main/res/layout/fragment_main.xml" value="0.24592391304347827" />
         <entry key="app/src/main/res/layout/fragment_manage_account.xml" value="0.378125" />
         <entry key="app/src/main/res/layout/fragment_manage_stax.xml" value="0.14947916666666666" />

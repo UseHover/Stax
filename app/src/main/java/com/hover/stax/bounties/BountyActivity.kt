@@ -42,18 +42,13 @@ class BountyActivity : AbstractNavigationActivity(), PushNotificationTopicsInter
     }
 
     private fun initAuth() {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.google_server_client_id))
-                .requestEmail()
-                .build()
-        loginViewModel.signInClient = GoogleSignIn.getClient(this, gso)
+        loginViewModel.createGoogleClient(this)
         loginViewModel.email.observe(this) { Timber.e("Got email from google %s", it) }
         loginViewModel.username.observe(this) { navigateOnUsernameLoad(it) }
     }
 
     fun signIn() {
-        val signInIntent = loginViewModel.signInClient.signInIntent
-        startActivityForResult(signInIntent, LOGIN_REQUEST)
+        startActivityForResult(loginViewModel.signInClient.signInIntent, SettingsViewModel.LOGIN_REQUEST)
     }
 
     override fun onStart() {
@@ -97,7 +92,7 @@ class BountyActivity : AbstractNavigationActivity(), PushNotificationTopicsInter
         Timber.e("called on activity result")
         if (requestCode == BOUNTY_REQUEST)
             showBountyDetails(data)
-        else if (requestCode == LOGIN_REQUEST)
+        else if (requestCode == SettingsViewModel.LOGIN_REQUEST)
             loginViewModel.signIntoFirebaseAsync(data, (findViewById<MaterialCheckBox>(R.id.marketingOptIn)).isChecked, this)
     }
 
@@ -120,6 +115,5 @@ class BountyActivity : AbstractNavigationActivity(), PushNotificationTopicsInter
 
     companion object {
         const val BOUNTY_REQUEST = 3000
-        const val LOGIN_REQUEST = 4000
     }
 }

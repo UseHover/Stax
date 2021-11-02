@@ -45,17 +45,18 @@ public class StaxDialog extends AlertDialog {
     }
 
     public StaxDialog setDialogTitle(int title) {
-        if(title == 0) setDialogMessage("");
+        if (title == 0) setDialogMessage("");
         else setDialogTitle(context.getString(title));
         return this;
     }
 
     public StaxDialog setDialogTitle(String title) {
         LinearLayout headerLayout = view.findViewById(R.id.header);
-        if(headerLayout !=null) {
+        if (headerLayout != null)
             headerLayout.setVisibility(View.VISIBLE);
+
+        if (view.findViewById(R.id.title) != null)
             ((TextView) view.findViewById(R.id.title)).setText(title);
-        }
         return this;
     }
 

@@ -329,6 +329,7 @@
 	<string name="meta_cardhead">Options</string>
 	<string name="share_text">Share</string>
 	<string name="share_stax">Share Stax</string>
+	<string name="first_login_dialoghead">First, please sign in</string>
 	<string name="add_referee_info">View referrals</string>
 	<string name="saved_referral">Saved referral</string>
 	<string name="copied">Copied</string>
