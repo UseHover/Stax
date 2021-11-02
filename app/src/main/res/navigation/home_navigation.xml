@@ -58,6 +58,9 @@
         <action
                 android:id="@+id/action_navigation_settings_to_bountyListFragment"
                 app:destination="@id/bountyListFragment" />
+        <action
+                android:id="@+id/action_navigation_settings_to_navigation_linkAccount"
+                app:destination="@id/navigation_linkAccount" />
     </fragment>
 
     <fragment

@@ -30,17 +30,18 @@ private const val BOUNTY_EMAIL_KEY = "email_for_bounties"
 
 class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : ViewModel() {
 
-    var auth: FirebaseAuth = Firebase.auth
+    private var auth: FirebaseAuth = Firebase.auth
     lateinit var signInClient: GoogleSignInClient
+
+    private val user = MutableLiveData<FirebaseUser>()
+    private var optedIn = MutableLiveData(false)
 
     var accounts: LiveData<List<Account>> = MutableLiveData()
     var account = MutableLiveData<Account>()
     val channel = MutableLiveData<Channel>()
-    val user = MutableLiveData<FirebaseUser>()
-    var optedIn = MutableLiveData(false)
-    var email = MediatorLiveData<String>()
-    var username = MediatorLiveData<String>()
-    var refereeCode = MutableLiveData<String>()
+    var email = MediatorLiveData<String?>()
+    var username = MediatorLiveData<String?>()
+    var refereeCode = MutableLiveData<String?>()
     var progress = MutableLiveData(-1)
     var error = MutableLiveData<String>()
 
@@ -82,7 +83,7 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
         email.postValue(address)
     }
 
-    fun getEmail(): String? {
+    private fun getEmail(): String? {
         if (Utils.getString(EMAIL, application) == null && Utils.getString(BOUNTY_EMAIL_KEY, application) != null) {
             email.value = Utils.getString(BOUNTY_EMAIL_KEY, application)
             Utils.saveString(EMAIL, email.value, application)
@@ -177,44 +178,6 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
 
     private fun loadAccounts() {
         accounts = repo.allAccountsLive
-    }
-
-    fun loadAccount(id: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val a = repo.getAccount(id)
-            account.postValue(a)
-            channel.postValue(repo.getChannel(a!!.channelId))
-        }
-    }
-
-    fun savePin(channel: Channel, c: Context) {
-        if (channel.pin != null && channel.pin.isNotEmpty()) {
-            channel.pin = KeyStoreExecutor.createNewKey(channel.pin, c)
-            repo.update(channel)
-        }
-    }
-
-    fun removeAccount(account: Account) = viewModelScope.launch(Dispatchers.IO) {
-        val defaultChanged = account.isDefault
-
-        //remove the channel from selected
-        if (repo.getAccounts(account.channelId).size == 1) {
-            val channel = repo.getChannel(account.channelId)!!.apply {
-                selected = false
-                defaultAccount = false
-            }
-            repo.update(channel)
-        }
-
-        //delete the account
-        repo.delete(account)
-
-        //set a random one as the default
-        if (!accounts.value.isNullOrEmpty() && defaultChanged)
-            accounts.value?.random()?.let {
-                it.isDefault = true
-                repo.update(it)
-            }
     }
 
     fun setDefaultAccount(account: Account) {

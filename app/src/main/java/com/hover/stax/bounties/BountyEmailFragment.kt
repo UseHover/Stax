@@ -56,7 +56,7 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
             progress.observe(viewLifecycleOwner) { updateProgress(it) }
             error.observe(viewLifecycleOwner) { it?.let { showError(it) } }
             email.observe(viewLifecycleOwner) { Timber.e("Got email from Google $it")}
-            username.observe(viewLifecycleOwner) { Timber.e("Username $it"); it?.let { complete() }}
+            username.observe(viewLifecycleOwner) { Timber.e("Got username : $it") }
         }
     }
 
@@ -87,10 +87,6 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
     private fun showError(message: String) {
         updateProgress(-1)
         showDialog(0, message, R.string.btn_ok)
-    }
-
-    private fun showDialog(title: Int, msg: Int, btn: Int) {
-        showDialog(title, getString(msg), btn)
     }
 
     private fun showDialog(title: Int, msg: String, btn: Int) {

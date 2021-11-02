@@ -197,7 +197,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
             if (dialog != null && dialog!!.isShowing)
                 dialog!!.dismiss()
             else
-                findNavController().popBackStack()
+                findNavController().navigate(R.id.action_bountyListFragment_to_navigation_settings)
         }
     })
 
