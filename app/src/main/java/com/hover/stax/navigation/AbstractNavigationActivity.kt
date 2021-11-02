@@ -28,9 +28,6 @@ abstract class AbstractNavigationActivity : AppCompatActivity(), NavigationInter
 
     fun setUpNav() {
         setBottomBar()
-
-//        if (intent.getBooleanExtra(SettingsFragment.LANG_CHANGE, false))
-//            navigate(this, Constants.NAV_SETTINGS, null)
     }
 
     private fun setBottomBar() {

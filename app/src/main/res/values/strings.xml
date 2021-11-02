@@ -536,6 +536,6 @@
 	</string>
 	<string name="attachment_summary_off">Only download attachments when manually requested</string>
 
-    <string name="ussd_lib">USSD Lib</string>
+    <string name="ussd_lib">Library</string>
 
 </resources>
