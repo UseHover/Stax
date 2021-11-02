@@ -28,16 +28,18 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
     private var action: HoverAction? = null
     private var contact: StaxContact? = null
 
-    override fun onReceive(context: Context, intent: Intent) {
-        CoroutineScope(Dispatchers.IO).launch {
-            action = repo.getAction(intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID))
-            channel = repo.getChannel(action!!.channel_id)
+    override fun onReceive(context: Context, intent: Intent?) {
+        intent?.let {
+            CoroutineScope(Dispatchers.IO).launch {
+                action = repo.getAction(intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID))
+                channel = repo.getChannel(action!!.channel_id)
 
-            createAccounts(intent)
-            updateBalance(intent)
-            updateContacts(intent)
-            updateTransaction(intent, context.applicationContext)
-            updateRequests(intent)
+                createAccounts(intent)
+                updateBalance(intent)
+                updateContacts(intent)
+                updateTransaction(intent, context.applicationContext)
+                updateRequests(intent)
+            }
         }
     }
 

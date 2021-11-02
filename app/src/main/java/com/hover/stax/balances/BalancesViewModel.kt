@@ -141,7 +141,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         if (toRun.value!!.size > i + 1) {
             hasRunList.add(toRun.value!![i].second.id)
 
-            while (hasRunList.contains(toRun.value!![i + 1].second.id))
+            while (toRun.value!!.lastIndex != (i + 1) && hasRunList.contains(toRun.value!![i + 1].second.id))
                 i += 1
 
             if (toRun.value!!.size > i + 1)
@@ -157,7 +157,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         runFlag.value = NONE
         hasRunList.clear()
     }
-    
+
     private fun getAccountActions(flag: Int): Pair<Account?, HoverAction> {
         val account = repo.getAccount(flag)
 
@@ -165,8 +165,6 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
             updateActionsIfRequired(actions.value!!.filter { it.channel_id == flag })
         else
             updateActionsIfRequired(actions.value!!.filter { it.channel_id == account.channelId })
-
-        Timber.e("Action ${actionsToRun.first().transaction_type} - Inst ${actionsToRun.first().from_institution_name}")
 
         return Pair(account, actionsToRun.first())
     }

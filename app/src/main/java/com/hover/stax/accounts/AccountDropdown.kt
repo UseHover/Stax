@@ -101,6 +101,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
                     Timber.i("Got new sim hni list $t")
                 }
             }
+
             val selectedObserver = object : Observer<List<Channel>> {
                 override fun onChanged(t: List<Channel>?) {
                     Timber.e("Got new selected channels ${t?.size}")
