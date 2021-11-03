@@ -59,18 +59,32 @@
 			android:inputType="text" />
 
 		<com.hover.stax.views.StaxTextInputLayout
-			android:id="@+id/user_name"
+			android:id="@+id/name_input"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/name_label"
 			android:inputType="text" />
 
 		<com.hover.stax.views.StaxTextInputLayout
-			android:id="@+id/user_phone"
+			android:id="@+id/phone_input"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/phone_label"
-			android:inputType="text" />
+			android:inputType="phone" />
+
+		<TextView
+			android:id="@+id/error_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/margin_13"
+			android:drawablePadding="@dimen/margin_5"
+			android:layout_marginBottom="@dimen/margin_8"
+			android:fontFamily="font-medium"
+			android:gravity="center_vertical"
+			android:text="@string/login_google_err"
+			android:textColor="@color/stax_state_red"
+			android:visibility="gone"
+			app:drawableStartCompat="@drawable/ic_error" />
 
 		<RelativeLayout
 			android:layout_width="match_parent"

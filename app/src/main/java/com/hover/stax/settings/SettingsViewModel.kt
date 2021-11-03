@@ -45,7 +45,6 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     var error = MutableLiveData<String?>()
 
     init {
-        username.addSource(email, this::uploadUserToStax)
         loadAccounts()
         getEmail()
         getUsername()
@@ -64,15 +63,21 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         Timber.e("setting user: %s", firebaseUser.email)
         user.postValue(firebaseUser)
         setEmail(firebaseUser.email)
+        firebaseUser.getIdToken(false).addOnSuccessListener {
+            uploadUserToStax(firebaseUser.email, it.token)
+        }
     }
 
     private fun saveResponseData(json: JSONObject?) {
         Timber.e("response: %s", json.toString())
-        setUsername(json?.optString("username"))
-        setRefereeCode(json)
+        Timber.e("response: %s", json?.optJSONObject("data"))
+        val data = json?.optJSONObject("data")?.optJSONObject("attributes")
+        setUsername(data?.optString("username"))
+        setRefereeCode(data)
     }
 
     private fun setUsername(name: String?) {
+        Timber.e("setting username %s", name)
         if (!name.isNullOrEmpty()) {
             username.postValue(name)
             Utils.saveString(USERNAME, name, getApplication())
@@ -140,16 +145,16 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     fun fetchUsername() {
         val account = GoogleSignIn.getLastSignedInAccount(getApplication())
         if (account != null)
-            uploadUserToStax(email.value)
+            uploadUserToStax(email.value, account.idToken)
         else
             Timber.e("No account found")
     }
 
-    private fun uploadUserToStax(email: String?) {
+    private fun uploadUserToStax(email: String?, token: String?) {
         if (getUsername().isNullOrEmpty() && !email.isNullOrEmpty()) {
             progress.value = 66
             viewModelScope.launch(Dispatchers.IO) {
-                val result = LoginNetworking(getApplication()).uploadUserToStax(email, optedIn.value!!)
+                val result = LoginNetworking(getApplication()).uploadUserToStax(email, optedIn.value!!, token)
                 if (result.code in 200..299)
                     onSuccess(JSONObject(result.body!!.string()), (getApplication() as Context).getString(R.string.uploaded_to_hover, getString(R.string.upload_user)))
                 else
@@ -158,10 +163,11 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun saveReferee(refereeCode: String) {
+    fun saveReferee(refereeCode: String, name: String, phone: String) {
         viewModelScope.launch(Dispatchers.IO) {
             if (!email.value.isNullOrEmpty()) {
-                val result = LoginNetworking(getApplication()).uploadReferee(email.value!!, refereeCode)
+                val account = GoogleSignIn.getLastSignedInAccount(getApplication())
+                val result = LoginNetworking(getApplication()).uploadReferee(email.value!!, refereeCode, name, phone, account?.idToken)
                 if (result.code in 200..299)
                     onSuccess(JSONObject(result.body!!.string()), getString(R.string.upload_referee))
                 else

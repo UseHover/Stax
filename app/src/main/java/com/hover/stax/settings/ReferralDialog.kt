@@ -12,7 +12,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.hover.stax.R
+import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.databinding.StaxReferralDialogBinding
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils.copyToClipboard
@@ -55,14 +57,13 @@ class ReferralDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel.progress.value = -1
         binding.refereeInput.addTextChangedListener(refereeWatcher)
+        binding.nameInput.addTextChangedListener(nameWatcher)
+        binding.phoneInput.addTextChangedListener(phoneWatcher)
 
         viewModel.username.observe(viewLifecycleOwner) { it?.let { updatePersonalCode(); updateRefereeInfo(viewModel.refereeCode.value) } }
         viewModel.email.observe(viewLifecycleOwner) { Timber.e("got email: %s", it); updatePersonalCode() }
         viewModel.refereeCode.observe(viewLifecycleOwner) { updateRefereeInfo(it) }
-        viewModel.error.observe(viewLifecycleOwner) { it?.let { setRefereeState(it, AbstractStatefulInput.ERROR) } }
-
-//        updatePersonalCode()
-//        updateRefereeInfo(viewModel.refereeCode.value)
+        viewModel.error.observe(viewLifecycleOwner) { it?.let { showError(it) } }
     }
 
     private val refereeWatcher: TextWatcher = object : TextWatcher {
@@ -74,16 +75,40 @@ class ReferralDialog : DialogFragment() {
         }
     }
 
+    private val nameWatcher: TextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+        override fun afterTextChanged(editable: Editable) {}
+        override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+            if (charSequence.isNotEmpty())
+                binding.nameInput.setState(null, AbstractStatefulInput.NONE)
+        }
+    }
+
+    private val phoneWatcher: TextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+        override fun afterTextChanged(editable: Editable) {}
+        override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+            if (charSequence.isNotEmpty())
+                binding.phoneInput.setState(null, AbstractStatefulInput.NONE)
+        }
+    }
+
     private fun attemptSaveReferee() {
         if (binding.refereeInput.text.toString().isNullOrEmpty())
-            viewModel.error.value = getString(R.string.referral_error_invalid)
+            binding.refereeInput.setError(getString(R.string.referral_error_invalid))
         else if (binding.refereeInput.text.toString() == viewModel.username.value)
-            viewModel.error.value = getString(R.string.referral_error_self)
+            binding.refereeInput.setError(getString(R.string.referral_error_self))
+        else if (binding.nameInput.text.toString().isNullOrEmpty())
+            binding.nameInput.setError(getString(R.string.referral_error_name))
+        else if (binding.phoneInput.text.toString().isNullOrEmpty())
+            binding.phoneInput.setError(getString(R.string.referral_error_phone))
+        else if (binding.refereeInput.text.toString() == viewModel.username.value)
+            binding.refereeInput.setError(getString(R.string.referral_error_self))
         else if (!networkMonitor.isNetworkConnected)
             viewModel.error.value = getString(R.string.referral_error_offline)
         else {
             binding.posBtn.isEnabled = false
-            viewModel.saveReferee(binding.refereeInput.text.toString())
+            viewModel.saveReferee(binding.refereeInput.text.toString(), binding.nameInput.text.toString(),binding.phoneInput.text.toString())
         }
     }
 
@@ -111,8 +136,8 @@ class ReferralDialog : DialogFragment() {
     private fun showForm(show: Boolean) {
         binding.vertDivider.visibility = if (show) View.VISIBLE else View.GONE
         binding.refereeInput.visibility = if (show) View.VISIBLE else View.GONE
-        binding.userName.visibility = if (show) View.VISIBLE else View.GONE
-        binding.userPhone.visibility = if (show) View.VISIBLE else View.GONE
+        binding.nameInput.visibility = if (show) View.VISIBLE else View.GONE
+        binding.phoneInput.visibility = if (show) View.VISIBLE else View.GONE
         binding.posBtn.visibility = if (show) View.VISIBLE else View.GONE
         binding.divider.visibility = if (show) View.VISIBLE else View.GONE
         binding.negBtn.text = getString(if (show) R.string.btn_cancel else R.string.btn_ok)
@@ -134,6 +159,11 @@ class ReferralDialog : DialogFragment() {
             binding.posBtn.isEnabled = true
             binding.refereeInput.setState(msg, type)
         }
+    }
+
+    private fun showError(message: String) {
+        binding.errorText.text = message
+        binding.errorText.visibility = View.VISIBLE
     }
 
     override fun onDestroy() {

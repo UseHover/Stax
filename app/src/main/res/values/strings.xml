@@ -8,7 +8,6 @@
 	<string name="api_url" translatable="false">https://www.usehover.com/api</string>
 	<string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
 	<string name="users_endpoint" translatable="false">/stax_users</string>
-	<string name="referee_endpoint" translatable="false">/set_referee</string>
 	<string name="stax_market_playstore_link" translatable="false">market://details?id=com.hover.stax</string>
 	<string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
 	<string name="stax_nolt_url" translatable="false">https://stax.nolt.io/</string>
@@ -330,7 +329,7 @@
 	<string name="share_text">Share</string>
 	<string name="share_stax">Share Stax</string>
 	<string name="first_login_dialoghead">First, please sign in</string>
-	<string name="add_referee_info">View referrals</string>
+	<string name="add_referee_info">View referral info</string>
 	<string name="saved_referral">Saved referral</string>
 	<string name="copied">Copied</string>
 	<string name="share_sub">Stax app</string>
@@ -340,13 +339,15 @@
 
 	<string name="login_google_err">Could not connect to Google, please make sure you are online and try again.</string>
 	<string name="referral_text">Your code:</string>
-	<string name="referral_label">Stax agent referral code</string>
+	<string name="referral_label">Agent\'s code</string>
 
 	<string name="name_label">Enter your full name</string>
 	<string name="phone_label">Enter your phone number</string>
 	<string name="referral_help">Enter the referral code of the Stax agent who onboarded you.</string>
 	<string name="referral_error_blank">Please enter a referral code.</string>
 	<string name="referral_error_invalid">Please enter a valid referral code.</string>
+	<string name="referral_error_name">Please enter a valid name.</string>
+	<string name="referral_error_phone">Please enter a valid phone number.</string>
 	<string name="referral_error_offline">Please go online to save referral code.</string>
 	<string name="referral_error_self">You cannot refer yourself.</string>
 	<string name="referral_error_data">Please go online to get your referral code.</string>
