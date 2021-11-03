@@ -149,12 +149,8 @@ class ReferralDialog : DialogFragment() {
             UIHelper.flashMessage(requireContext(), getString(R.string.saved_referral))
             binding.posBtn.text = getString(R.string.saved)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                binding.posBtn.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.green_state_color))
-            Handler(Looper.getMainLooper()).postDelayed({
-                viewModel.error.value = null
-                viewModel.progress.value = -1
-                this.dismiss()
-            }, 3000)
+                binding.posBtn.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.stax_state_green))
+            Handler(Looper.getMainLooper()).postDelayed({ this.dismiss() }, 1000)
         } else {
             binding.posBtn.isEnabled = true
             binding.refereeInput.setState(msg, type)
