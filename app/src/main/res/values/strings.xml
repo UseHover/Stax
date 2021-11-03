@@ -9,7 +9,7 @@
 	<string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
 	<string name="users_endpoint" translatable="false">/stax_users</string>
 	<string name="referee_endpoint" translatable="false">/set_referee</string>
-	<string name="stax_market_playstore_link" translatable="false">market://details?id=com.hover.stax</string>
+	<string name="stax_market_playstore_link" translatable="false">https://stax.onelink.me/nR0j/fb15b3f2</string>
 	<string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
 	<string name="stax_nolt_url" translatable="false">https://stax.nolt.io/</string>
 	<string name="receive_stax_updates_url" translatable="false">https://416e906b.sibforms.com/serve/MUIEAAS88NDe6oTn7nl8YrIqgutsJ_GgyCYRWVsZ-S54quVNmBhvpsu70WpNXrZd-n6H5r8m1ZRfuTl8ckiQrB4sLIdNSx0Y_DFZ7_hQGCDv9PG6N0ncsHwWW3OYsMlPMHgQSR6OZf8xK8HC-NA3p3T71Pv1Coy_n9oiDRwIu7HCryUfDtfHr11mXSQ5S3JwcOd8cN7FL1ewDRqu</string>

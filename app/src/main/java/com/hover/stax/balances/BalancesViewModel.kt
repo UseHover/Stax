@@ -12,7 +12,6 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel() {
@@ -83,7 +82,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
             when (flag) {
                 NONE, null -> toRun.postValue(ArrayList())
                 ALL -> startRun(getAccountActions(actions.value!!))
-                else -> startRun(listOf(getAccountActions(flag)))
+                else -> startRun(getAccountActions(flag))
             }
         }
     }
@@ -94,7 +93,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
                 runFlag.value == null || toRun.value!!.isNotEmpty() -> {
                 }
                 runFlag.value == ALL -> startRun(getAccountActions(actions))
-                runFlag.value != NONE -> startRun(listOf(getAccountActions(runFlag.value!!)))
+                runFlag.value != NONE -> startRun(getAccountActions(runFlag.value!!))
             }
         }
     }
@@ -158,7 +157,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         hasRunList.clear()
     }
 
-    private fun getAccountActions(flag: Int): Pair<Account?, HoverAction> {
+    private fun getAccountActions(flag: Int): List<Pair<Account?, HoverAction>> {
         val account = repo.getAccount(flag)
 
         val actionsToRun = if (account == null)
@@ -166,7 +165,10 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         else
             updateActionsIfRequired(actions.value!!.filter { it.channel_id == account.channelId })
 
-        return Pair(account, actionsToRun.first())
+        return if (actionsToRun.isNotEmpty())
+            listOf(Pair(account, actionsToRun.first()))
+        else
+            emptyList()
     }
 
     private fun getAccountActions(actions: List<HoverAction>): List<Pair<Account, HoverAction>> {
