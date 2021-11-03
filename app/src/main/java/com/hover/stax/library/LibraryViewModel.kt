@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent
 import timber.log.Timber
+import java.lang.Exception
 
 class LibraryViewModel(application: Application) : AndroidViewModel(application) {
     private val repo = KoinJavaComponent.get(DatabaseRepo::class.java)
@@ -84,5 +85,12 @@ class LibraryViewModel(application: Application) : AndroidViewModel(application)
             else
                 filteredChannels.postValue(repo.getChannelsByCountry(countryCode))
         }
+    }
+
+    override fun onCleared() {
+        try {
+            LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(simReceiver)
+        } catch (ignored: Exception) {}
+        super.onCleared()
     }
 }

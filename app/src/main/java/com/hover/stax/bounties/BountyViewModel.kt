@@ -19,6 +19,7 @@ import com.hover.stax.utils.Utils.getPackage
 import kotlinx.coroutines.*
 import org.koin.java.KoinJavaComponent.get
 import timber.log.Timber
+import java.lang.Exception
 import java.util.*
 
 private const val MAX_LOOKUP_COUNT = 40
@@ -154,5 +155,12 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
 
         }
         return bountyListAsync.await()
+    }
+
+    override fun onCleared() {
+        try {
+            LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(simReceiver)
+        } catch (ignored: Exception) {}
+        super.onCleared()
     }
 }
