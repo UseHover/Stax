@@ -112,9 +112,9 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
             if (parsedVariables.containsKey("userAccountList")) {
                 accounts.addAll(parseAccounts(parsedVariables["userAccountList"]!!))
             }
-        }
 
-        repo.saveAccounts(accounts)
+            repo.saveAccounts(accounts)
+        }
     }
 
     private fun parseAccounts(accountList: String): List<Account> {

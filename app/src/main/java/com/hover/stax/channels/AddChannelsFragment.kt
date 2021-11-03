@@ -40,11 +40,12 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val wm = WorkManager.getInstance(requireContext())
         wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAddChannelsBinding.inflate(inflater, container, false)
 
         Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_link_account)), requireContext())
@@ -74,9 +75,9 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
         setUpMultiselect()
 
-        channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { channels -> onSelectedLoaded(channels) }
-        channelsViewModel.simChannels.observe(viewLifecycleOwner) { channels -> onSimsLoaded(channels) }
-        channelsViewModel.allChannels.observe(viewLifecycleOwner) { channels -> onAllLoaded(channels) }
+        channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
+        channelsViewModel.simChannels.observe(viewLifecycleOwner) { onSimsLoaded(it) }
+        channelsViewModel.allChannels.observe(viewLifecycleOwner) { onAllLoaded(it) }
     }
 
     private fun setUpMultiselect() {
@@ -175,11 +176,6 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
                 else
                     balancesViewModel.setAllRunning(requireActivity())
             })
-    }
-
-    private fun viewAccountDetails(account: Account) {
-        val balanceListener: BalanceListener? = activity as MainActivity?
-        balanceListener?.onTapDetail(account.id)
     }
 
     override fun clickedChannel(channel: Channel) {

@@ -1,7 +1,6 @@
 package com.hover.stax.settings
 
 import android.app.Application
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
@@ -109,7 +108,6 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
             val account = task.getResult(ApiException::class.java)!!
             signIntoFirebase(account.idToken!!, activity)
         } catch (e: ApiException) {
-            Timber.e(e, "Google sign in failed")
             onError(application.getString(R.string.login_google_err))
         }
     }
@@ -120,11 +118,9 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
                 .addOnCompleteListener(activity) {
                     progress.value = 33
                     if (it.isSuccessful) {
-                        Timber.i("Sign in with credential: success")
                         auth.currentUser?.let { user -> setUser(user) }
                     } else {
                         onError(application.getString(R.string.login_google_err))
-                        Timber.e(it.exception, "Sign in with credential failed")
                     }
                 }
     }
@@ -182,10 +178,9 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
 
     fun setDefaultAccount(account: Account) {
         if (!accounts.value.isNullOrEmpty()) {
-            for (a in accounts.value!!) {
-                a.isDefault = a.id == account.id
-                repo.update(a)
-            }
+            val a = accounts.value!!.first { it.id == account.id }
+            a.isDefault = true
+            repo.update(a)
         }
     }
 }

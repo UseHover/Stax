@@ -85,6 +85,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
         allChannels = repo.allChannels
         selectedChannels = repo.selected
+
+        updateAccounts()
     }
 
     /**
@@ -179,7 +181,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
         viewModelScope.launch {
             val channelAccounts = repo.getChannelAndAccounts(actions.first().channel_id)
-            Timber.e("Channel with accounts $channelAccounts")
             channelAccounts?.let {
                 activeChannel.postValue(it.channel)
                 setActiveAccount(it.accounts.firstOrNull())
@@ -285,32 +286,45 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     fun getFetchAccountAction(channelId: Int): HoverAction? = repo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()
 
-    fun createAccounts(channels: List<Channel>) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val defaultAccount = repo.getDefaultAccount()
+    fun createAccounts(channels: List<Channel>) = viewModelScope.launch(Dispatchers.IO) {
+        val defaultAccount = repo.getDefaultAccount()
 
-            channels.forEach {
-                if (getFetchAccountAction(it.id) == null) {
-                    with(it) {
-                        val account = Account(name, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex, defaultAccount == null)
-                        repo.insert(account)
-                    }
+        channels.forEach {
+            if (getFetchAccountAction(it.id) == null) {
+                with(it) {
+                    val account = Account(name, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex, defaultAccount == null)
+                    repo.insert(account)
                 }
             }
         }
     }
 
-    fun migrateAccounts() {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (accounts.value.isNullOrEmpty() && !selectedChannels.value.isNullOrEmpty()) {
-                createAccounts(selectedChannels.value!!)
-            }
+    fun migrateAccounts() = viewModelScope.launch(Dispatchers.IO) {
+        if (accounts.value.isNullOrEmpty() && !selectedChannels.value.isNullOrEmpty()) {
+            createAccounts(selectedChannels.value!!)
         }
     }
 
     fun fetchAccounts(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
         val channelAccounts = repo.getAccounts(channelId)
         accounts.postValue(channelAccounts)
+    }
+
+    private fun updateAccounts() = viewModelScope.launch(Dispatchers.IO) {
+        val savedAccounts = repo.getAllAccounts()
+        if(savedAccounts.isNullOrEmpty()) return@launch
+
+        if(savedAccounts.none { it.isDefault }){
+            val defaultChannel: Channel? = selectedChannels.value?.firstOrNull { it.defaultAccount }
+
+            if(defaultChannel != null){
+                val ids = savedAccounts.filter { it.channelId == defaultChannel.id }.map { it.id }.toList()
+                ids.minOrNull()?.let { id -> repo.update(savedAccounts.first { it.id == id }) }
+            }
+        } else {
+            Timber.e("Nothing to update. Default account set")
+        }
+
     }
 
     override fun onCleared() {
