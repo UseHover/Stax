@@ -69,8 +69,6 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     }
 
     private fun saveResponseData(json: JSONObject?) {
-        Timber.e("response: %s", json.toString())
-        Timber.e("response: %s", json?.optJSONObject("data"))
         val data = json?.optJSONObject("data")?.optJSONObject("attributes")
         setUsername(data?.optString("username"))
         setRefereeCode(data)

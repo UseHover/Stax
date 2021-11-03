@@ -22,7 +22,7 @@ class LoginNetworking(private val context: Context) {
     }
 
     fun uploadReferee(email: String, referralCode: String, name: String, phone: String, token: String?): Response {
-        return put(context.getString(R.string.api_url) + context.getString(R.string.users_endpoint), getReferralJson(email, referralCode, name, phone, token))
+        return put(context.getString(R.string.api_url) + context.getString(R.string.users_endpoint) + "/" + email, getReferralJson(email, referralCode, name, phone, token))
     }
 
     private fun getUserJson(email: String, optedIn: Boolean, token: String?): JSONObject {
