@@ -264,8 +264,8 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
             data.put("actionId", hsb.action.id)
         } catch (ignored: JSONException) {
         }
-        
-        Utils.logAnalyticsEvent("HoverAction Error", data, this)
+
+        Utils.logAnalyticsEvent("Failed Actions", data, this)
         Timber.e(e)
     }
 
@@ -280,7 +280,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Timber.e("recieved result. %s", data?.action)
+        Timber.e("received result. %s", data?.action)
         Timber.e("uuid? %s", data?.extras?.getString("uuid"))
 
         when {
