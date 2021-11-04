@@ -118,7 +118,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
         spinner.setAdapter(accountAdapter)
 
         val account = accounts.firstOrNull { it.isDefault }
-        val defaultAccount = if(account != null)
+        val defaultAccount = if (account != null)
             account
         else {
             val a = accounts.minByOrNull { it.id }

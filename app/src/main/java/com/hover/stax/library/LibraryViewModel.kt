@@ -15,6 +15,7 @@ import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
 import timber.log.Timber
 
 class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : ViewModel() {
@@ -75,5 +76,12 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
             filteredChannels.postValue(channels)
         else
             filteredChannels.postValue(repo.getChannelsByCountry(countryCode))
+    }
+
+    override fun onCleared() {
+        try {
+            LocalBroadcastManager.getInstance(application).unregisterReceiver(simReceiver)
+        } catch (ignored: Exception) {}
+        super.onCleared()
     }
 }

@@ -15,8 +15,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:visibility="gone"
-                android:text="@string/connect_accounts" />
+                android:text="@string/connect_accounts"
+                android:visibility="gone" />
     </RelativeLayout>
 
     <com.google.android.material.textfield.TextInputLayout

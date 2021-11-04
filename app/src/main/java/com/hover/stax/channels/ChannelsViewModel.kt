@@ -41,8 +41,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     val accounts = MediatorLiveData<List<Account>>()
     private val activeAccount = MutableLiveData<Account>()
 
-    private val localBroadcastManager: LocalBroadcastManager = LocalBroadcastManager.getInstance(application)
-
     private val simReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             viewModelScope.launch {
@@ -114,7 +112,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             sims.postValue(repo.presentSims)
         }
 
-        localBroadcastManager.registerReceiver(simReceiver, IntentFilter(Utils.getPackage(application).plus(".NEW_SIM_INFO_ACTION")))
+        LocalBroadcastManager.getInstance(application)
+                .registerReceiver(simReceiver, IntentFilter(Utils.getPackage(application).plus(".NEW_SIM_INFO_ACTION")))
         Hover.updateSimInfo(application)
     }
 
@@ -277,7 +276,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
-    private fun getChannelIds(channels: List<Channel>): IntArray = channels.map { it.id }.toIntArray()
+    private fun getChannelIds(channels: List<Channel>?): IntArray? = channels?.map { it.id }?.toIntArray()
 
     fun view(s: Schedule) {
         setType(s.type)
@@ -312,12 +311,12 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     private fun updateAccounts() = viewModelScope.launch(Dispatchers.IO) {
         val savedAccounts = repo.getAllAccounts()
-        if(savedAccounts.isNullOrEmpty()) return@launch
+        if (savedAccounts.isNullOrEmpty()) return@launch
 
-        if(savedAccounts.none { it.isDefault }){
+        if (savedAccounts.none { it.isDefault }) {
             val defaultChannel: Channel? = selectedChannels.value?.firstOrNull { it.defaultAccount }
 
-            if(defaultChannel != null){
+            if (defaultChannel != null) {
                 val ids = savedAccounts.filter { it.channelId == defaultChannel.id }.map { it.id }.toList()
                 ids.minOrNull()?.let { id -> repo.update(savedAccounts.first { it.id == id }) }
             }
@@ -327,20 +326,19 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     }
 
-    override fun onCleared() {
-        try {
-            localBroadcastManager.unregisterReceiver(simReceiver)
-        } catch (ignored: Exception) {
-        }
-
-        super.onCleared()
-    }
-
     override fun highlightAccount(account: Account) {
         viewModelScope.launch(Dispatchers.IO) {
             val channel = repo.getChannel(account.channelId)
             setActiveChannel(channel!!)
             activeAccount.postValue(account)
         }
+    }
+
+    override fun onCleared() {
+        try {
+            LocalBroadcastManager.getInstance(application).unregisterReceiver(simReceiver)
+        } catch (ignored: Exception) {
+        }
+        super.onCleared()
     }
 }

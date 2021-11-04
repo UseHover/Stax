@@ -19,6 +19,7 @@ import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
 import org.json.JSONObject
 import timber.log.Timber
 
@@ -113,6 +114,7 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
             val account = task.getResult(ApiException::class.java)!!
             signIntoFirebase(account.idToken!!, activity)
         } catch (e: ApiException) {
+            Timber.e(e, "Google sign in failed")
             onError(application.getString(R.string.login_google_err))
         }
     }
@@ -167,6 +169,7 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
 
     private fun onSuccess(json: JSONObject, successLog: String) {
         Timber.e(json.toString())
+
         Utils.logAnalyticsEvent(application.getString(R.string.uploaded_to_hover, successLog), application)
         progress.postValue(100)
         saveResponseData(json)
@@ -175,6 +178,7 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
     private fun onError(message: String?) {
         Utils.logErrorAndReportToFirebase(SettingsViewModel::class.java.simpleName, message!!, null)
         Utils.logAnalyticsEvent(message, application)
+
         progress.postValue(-1)
         error.postValue(message)
     }

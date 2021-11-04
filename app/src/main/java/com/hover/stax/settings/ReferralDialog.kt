@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
+
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -151,7 +152,6 @@ class ReferralDialog : DialogFragment() {
                 delay(1000)
                 this@ReferralDialog.dismiss()
             }
-
         } else {
             binding.posBtn.isEnabled = true
             binding.refereeInput.setState(msg, type)

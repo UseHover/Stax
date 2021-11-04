@@ -13,6 +13,8 @@
         <entry key="app/src/main/res/drawable/button_bg_grey.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.2601851851851852" />
         <entry key="app/src/main/res/drawable/ic_noun_hashtag_2733013.xml" value="0.175" />
+        <entry key="app/src/main/res/drawable/ic_refresh_white_13dp.xml" value="0.25833333333333336" />
+        <entry key="app/src/main/res/drawable/ic_settings.xml" value="0.25833333333333336" />
         <entry key="app/src/main/res/drawable/ic_share.xml" value="0.22962962962962963" />
         <entry key="app/src/main/res/drawable/ic_ussd_lib.xml" value="0.3546875" />
         <entry key="app/src/main/res/layout/account_card_layout.xml" value="0.15704154002026344" />

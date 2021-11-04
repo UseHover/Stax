@@ -110,6 +110,7 @@
                 android:id="@+id/shortcode_card"
                 layout="@layout/account_card_shortcode" />
 
+
         <include
                 android:id="@+id/scheduled_card"
                 layout="@layout/home_card_future" />

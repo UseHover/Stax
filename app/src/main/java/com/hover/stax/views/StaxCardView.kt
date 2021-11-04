@@ -28,6 +28,7 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.StaxCardView, 0, 0)
         try {
             title = a.getString(R.styleable.StaxCardView_title)
+            subtitle = a.getString(R.styleable.StaxCardView_subtitle)
             showBack = a.getBoolean(R.styleable.StaxCardView_showBack, false)
             useContextBackPress = a.getBoolean(R.styleable.StaxCardView_defaultBackPress, true)
             backDrawable = a.getResourceId(R.styleable.StaxCardView_backRes, 0)

@@ -16,8 +16,6 @@ import com.hover.stax.home.MainActivity
 import com.hover.stax.navigation.NavigationInterface
 import com.hover.stax.settings.SettingsViewModel
 import com.hover.stax.utils.Utils.logAnalyticsEvent
-import com.hover.stax.utils.Utils.logErrorAndReportToFirebase
-import com.hover.stax.utils.Utils.saveString
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -47,7 +45,6 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
 
         binding.progressIndicator.setVisibilityAfterHide(View.GONE)
         binding.instructions.movementMethod = LinkMovementMethod.getInstance()
-
         startObservers()
     }
 
@@ -66,7 +63,7 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
             updateProgress(0)
             (activity as MainActivity).signIn()
         } else {
-            showOfflineDialog()
+            showDialog(R.string.internet_required, getString(R.string.internet_required_bounty_desc), R.string.btn_ok)
         }
     }
 
@@ -106,7 +103,6 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
                 .setDialogMessage(R.string.internet_required_bounty_desc)
                 .setPosButton(R.string.btn_ok, null)
                 .makeSticky()
-
         dialog!!.showIt()
     }
 

@@ -72,6 +72,7 @@
 
 	<string name="uploaded_to_hover">Successfully %1$s to Hover server</string>
 	<string name="upload_user">created user</string>
+
 	<string name="referrals_tap" translatable="false">Tapped referrals button</string>
 	<string name="referee_dialog" translatable="false">Referee dialog shown</string>
 	<string name="upload_referee" translatable="false">successfully set referee</string>

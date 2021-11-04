@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.hover.stax.views.StaxCardView xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:title="@string/manage_account">
@@ -21,11 +21,11 @@
 
         <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/account_save_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
                 style="@style/StaxButton"
-                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
                 android:layout_marginTop="@dimen/margin_13"
                 android:fontFamily="font-normal"
                 android:text="@string/btn_save" />
@@ -41,18 +41,18 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_toStartOf="@+id/nickname_save_btn"
                 android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/nickname_save_btn"
                 android:hint="@string/nickname"
                 android:inputType="textCapWords" />
 
         <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/nickname_save_btn"
+                style="@style/StaxButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/StaxButton"
-                android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
                 android:layout_marginTop="@dimen/margin_13"
                 android:fontFamily="font-normal"
                 android:text="@string/btn_save" />
@@ -64,10 +64,10 @@
 
         <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/remove_acct_btn"
+                style="@style/StaxButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                style="@style/StaxButton"
                 android:background="@color/stax_state_red"
                 android:text="@string/btn_removeaccount" />
     </RelativeLayout>

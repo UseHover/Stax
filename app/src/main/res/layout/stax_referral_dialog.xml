@@ -117,5 +117,4 @@
                     android:text="@string/btn_save" />
         </RelativeLayout>
     </LinearLayout>
-
 </ScrollView>

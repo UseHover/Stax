@@ -70,11 +70,11 @@ class AccountDetailViewModel(val application: Application, val repo: DatabaseRep
             accounts.firstOrNull()?.let {
                 it.isDefault = true
                 repo.update(it)
+
                 val channel = repo.getChannel(it.channelId)!!.apply {
                     defaultAccount = true
                 }
                 repo.update(channel)
             }
     }
-
 }

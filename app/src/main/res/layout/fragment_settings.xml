@@ -25,6 +25,10 @@
                 layout="@layout/settings_card_bounties" />
 
         <include
+                android:id="@+id/library_card"
+                layout="@layout/settings_card_ussd_library" />
+
+        <include
                 android:id="@+id/stax_support"
                 layout="@layout/settings_card_support" />
 

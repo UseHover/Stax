@@ -33,7 +33,6 @@ public class CountryDropdown extends StaxDropdownLayout {
         autoCompleteTextView.setAdapter(adapter);
         autoCompleteTextView.setDropDownHeight(UIHelper.dpToPx(600));
         autoCompleteTextView.setOnItemClickListener((adapterView, view2, pos, id) -> onSelect((String) adapterView.getItemAtPosition(pos)));
-
         setDropdownValue(currentCountry);
         adapter.notifyDataSetChanged();
     }

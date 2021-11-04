@@ -16,7 +16,6 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-
 import timber.log.Timber
 
 class LoginDialog: DialogFragment(), View.OnClickListener {

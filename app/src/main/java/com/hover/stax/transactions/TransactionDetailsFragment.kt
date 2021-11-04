@@ -2,7 +2,6 @@ package com.hover.stax.transactions
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -21,7 +20,7 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.navigation.NavigationInterface
-import com.hover.stax.utils.DateUtils.humanFriendlyDate
+import com.hover.stax.utils.DateUtils.humanFriendlyDateTime
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.Utils.logAnalyticsEvent
@@ -207,7 +206,7 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
 
         binding.infoCard.detailsRecipientLabel.setText(if (transaction.transaction_type == HoverAction.RECEIVE) R.string.sender_label else R.string.recipient_label)
         binding.infoCard.detailsAmount.text = transaction.displayAmount
-        binding.infoCard.detailsDate.text = humanFriendlyDate(transaction.initiated_at)
+        binding.infoCard.detailsDate.text = humanFriendlyDateTime(transaction.updated_at)
         binding.infoCard.detailsServiceId.text = transaction.confirm_code
         binding.infoCard.detailsStaxUuid.text = transaction.uuid
 

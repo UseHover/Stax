@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
+
   <string name="nav_home">ቤት</string>
 
   <string name="nav_balance_and_history">ሚዛን እና ታሪክ</string>
