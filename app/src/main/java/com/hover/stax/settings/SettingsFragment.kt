@@ -8,7 +8,6 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.ktx.auth
@@ -24,11 +23,8 @@ import com.hover.stax.navigation.NavigationInterface
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import com.hover.stax.views.AbstractStatefulInput
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 
 class SettingsFragment : Fragment(), NavigationInterface {
@@ -118,8 +114,19 @@ class SettingsFragment : Fragment(), NavigationInterface {
     private fun createDefaultSelector(accounts: List<Account>) {
         val spinner = binding.settingsCard.defaultAccountSpinner
         binding.settingsCard.defaultAccountEntry.visibility = VISIBLE
+        accountAdapter = ArrayAdapter(requireActivity(), R.layout.stax_spinner_item, accounts)
         spinner.setAdapter(accountAdapter)
-        spinner.setText(accounts.first { it.isDefault }.alias, false);
+
+        val account = accounts.firstOrNull { it.isDefault }
+        val defaultAccount = if(account != null)
+            account
+        else {
+            val a = accounts.minByOrNull { it.id }
+            a?.let { viewModel.setDefaultAccount(it) }
+            a
+        }
+
+        spinner.setText(defaultAccount?.alias, false);
         spinner.onItemClickListener = OnItemClickListener { _, _, pos: Int, _ -> if (pos != 0) viewModel.setDefaultAccount(accounts[pos]) }
     }
 

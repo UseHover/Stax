@@ -49,6 +49,7 @@ class LoginDialog: DialogFragment(), View.OnClickListener {
             setOnClickListener(this@LoginDialog)
         }
         binding.progressIndicator.setVisibilityAfterHide(View.GONE)
+
         (requireActivity() as MainActivity).initAuth()
 
         viewModel.username.observe(this) { Timber.e("Loaded username: %s", it) }
