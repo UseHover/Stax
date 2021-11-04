@@ -48,6 +48,8 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxDialog
 import kotlinx.coroutines.*
+import org.json.JSONException
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -255,6 +257,15 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
     private fun runAction(hsb: HoverSession.Builder) = try {
         hsb.run()
     } catch (e: Exception) {
+        UIHelper.flashMessage(this, getString(R.string.error_running_action))
+
+        val data = JSONObject()
+        try {
+            data.put("actionId", hsb.action.id)
+        } catch (ignored: JSONException) {
+        }
+        
+        Utils.logAnalyticsEvent("HoverAction Error", data, this)
         Timber.e(e)
     }
 
