@@ -25,11 +25,13 @@
         <entry key="app/src/main/res/layout/bounty_list_item.xml" value="0.21927083333333333" />
         <entry key="app/src/main/res/layout/country_item.xml" value="0.24592391304347827" />
         <entry key="app/src/main/res/layout/fragment_account.xml" value="0.378125" />
+        <entry key="app/src/main/res/layout/fragment_add_channels.xml" value="0.16979166666666667" />
         <entry key="app/src/main/res/layout/fragment_balance.xml" value="0.24592391304347827" />
         <entry key="app/src/main/res/layout/fragment_bounty_email.xml" value="0.14817629179331307" />
         <entry key="app/src/main/res/layout/fragment_bounty_list.xml" value="0.1342451874366768" />
         <entry key="app/src/main/res/layout/fragment_channel.xml" value="0.14766970618034447" />
         <entry key="app/src/main/res/layout/fragment_channels_list.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.378125" />
         <entry key="app/src/main/res/layout/fragment_main.xml" value="0.24592391304347827" />
         <entry key="app/src/main/res/layout/fragment_manage_account.xml" value="0.378125" />
         <entry key="app/src/main/res/layout/fragment_manage_stax.xml" value="0.14947916666666666" />
@@ -64,6 +66,8 @@
         <entry key="app/src/main/res/layout/stax_card_view.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/stax_dropdown.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/stax_input.xml" value="0.13903985507246377" />
+        <entry key="app/src/main/res/layout/stax_permission_dialog.xml" value="0.1838905775075988" />
+        <entry key="app/src/main/res/layout/stax_referral_dialog.xml" value="0.378125" />
         <entry key="app/src/main/res/layout/stax_spinner_2line.xml" value="0.24592391304347827" />
         <entry key="app/src/main/res/layout/stax_spinner_item_with_logo.xml" value="0.13134057971014493" />
         <entry key="app/src/main/res/layout/stayintouch_stax_layout.xml" value="0.378125" />

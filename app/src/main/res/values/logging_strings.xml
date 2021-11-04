@@ -72,11 +72,14 @@
 
 	<string name="uploaded_to_hover">Successfully %1$s to Hover server</string>
 	<string name="upload_user">created user</string>
-	<string name="upload_referee">set referee</string>
-	<string name="upload_user_error">could not connect, please try again</string>
-	<string name="upload_referee_error">invalid, please check the code and try again</string>
 
-	<string name="clicked_push_notification">From push notification: %1$s</string>
+	<string name="referrals_tap" translatable="false">Tapped referrals button</string>
+	<string name="referee_dialog" translatable="false">Referee dialog shown</string>
+	<string name="upload_referee" translatable="false">successfully set referee</string>
+	<string name="upload_user_error" translatable="false">could not connect, please try again</string>
+	<string name="upload_referee_error" translatable="false">Invalid, please check the code and try again</string>
+
+	<string name="clicked_push_notification" translatable="false">From push notification: %1$s</string>
 	<string name="clicked_request_link" translatable="false">Clicked link from request</string>
 	<string name="loaded_request_link" translatable="false">Loaded request from link</string>
 	<string name="saved_unsent_request" translatable="false">Saved unsent request</string>

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -44,25 +45,37 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     var error = MutableLiveData<String?>()
 
     init {
-        username.addSource(email, this::uploadUserToStax)
         loadAccounts()
         getEmail()
         getUsername()
         getRefereeCode()
     }
 
+    fun createGoogleClient(activity: AppCompatActivity) {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.google_server_client_id))
+            .requestEmail()
+            .build()
+        signInClient = GoogleSignIn.getClient(activity, gso)
+    }
+
     private fun setUser(firebaseUser: FirebaseUser) {
+        Timber.e("setting user: %s", firebaseUser.email)
         user.postValue(firebaseUser)
         setEmail(firebaseUser.email)
+        firebaseUser.getIdToken(false).addOnSuccessListener {
+            uploadUserToStax(firebaseUser.email, it.token)
+        }
     }
 
     private fun saveResponseData(json: JSONObject?) {
-        Timber.e("response: %s", json.toString())
-        setUsername(json?.optString("username"))
-        setRefereeCode(json)
+        val data = json?.optJSONObject("data")?.optJSONObject("attributes")
+        setUsername(data?.optString("username"))
+        setRefereeCode(data)
     }
 
     private fun setUsername(name: String?) {
+        Timber.e("setting username %s", name)
         if (!name.isNullOrEmpty()) {
             username.postValue(name)
             Utils.saveString(USERNAME, name, getApplication())
@@ -81,7 +94,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         email.postValue(address)
     }
 
-    fun getEmail(): String? {
+    private fun getEmail(): String? {
         if (Utils.getString(EMAIL, getApplication()) == null && Utils.getString(BOUNTY_EMAIL_KEY, getApplication()) != null) {
             email.value = Utils.getString(BOUNTY_EMAIL_KEY, getApplication())
             Utils.saveString(EMAIL, email.value, getApplication())
@@ -130,16 +143,16 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     fun fetchUsername() {
         val account = GoogleSignIn.getLastSignedInAccount(getApplication())
         if (account != null)
-            uploadUserToStax(email.value)
+            uploadUserToStax(email.value, account.idToken)
         else
             Timber.e("No account found")
     }
 
-    private fun uploadUserToStax(email: String?) {
+    private fun uploadUserToStax(email: String?, token: String?) {
         if (getUsername().isNullOrEmpty() && !email.isNullOrEmpty()) {
             progress.value = 66
             viewModelScope.launch(Dispatchers.IO) {
-                val result = LoginNetworking(getApplication()).uploadUserToStax(email, optedIn.value!!)
+                val result = LoginNetworking(getApplication()).uploadUserToStax(email, optedIn.value!!, token)
                 if (result.code in 200..299)
                     onSuccess(JSONObject(result.body!!.string()), (getApplication() as Context).getString(R.string.uploaded_to_hover, getString(R.string.upload_user)))
                 else
@@ -148,10 +161,11 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun saveReferee(refereeCode: String) {
+    fun saveReferee(refereeCode: String, name: String, phone: String) {
         viewModelScope.launch(Dispatchers.IO) {
             if (!email.value.isNullOrEmpty()) {
-                val result = LoginNetworking(getApplication()).uploadReferee(email.value!!, refereeCode)
+                val account = GoogleSignIn.getLastSignedInAccount(getApplication())
+                val result = LoginNetworking(getApplication()).uploadReferee(email.value!!, refereeCode, name, phone, account?.idToken)
                 if (result.code in 200..299)
                     onSuccess(JSONObject(result.body!!.string()), getString(R.string.upload_referee))
                 else
@@ -193,6 +207,8 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     }
 
     companion object {
+        const val LOGIN_REQUEST = 4000
+
 //      DEPRECIATED, Migrating
         const val BOUNTY_EMAIL_KEY = "email_for_bounties"
 

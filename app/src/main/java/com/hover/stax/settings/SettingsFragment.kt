@@ -10,9 +10,12 @@ import android.view.ViewGroup
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.gson.JsonObject
+import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
+import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
@@ -22,6 +25,7 @@ import com.hover.stax.home.MainActivity
 import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.library.LibraryActivity
 import com.hover.stax.navigation.NavigationInterface
+import com.hover.stax.permissions.PermissionsFragment
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -29,6 +33,7 @@ import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxTextInputLayout
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.getViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -41,7 +46,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
     private var accountAdapter: ArrayAdapter<Account>? = null
     private var clickCounter = 0
 
-    private val viewModel: SettingsViewModel by viewModel()
+    private val viewModel: SettingsViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
@@ -63,47 +68,16 @@ class SettingsFragment : Fragment(), NavigationInterface {
 
     private fun setUpShare() {
         binding.shareCard.shareText.setOnClickListener { Utils.shareStax(requireActivity()) }
-        viewModel.username.observe(viewLifecycleOwner) { it?.let { updateRefereeInfo(viewModel.refereeCode.value) } }
-        viewModel.email.observe(viewLifecycleOwner) { Timber.e("got email: %s", it); updateReferralInfo(it) }
-        viewModel.refereeCode.observe(viewLifecycleOwner) { updateRefereeInfo(it) }
-        viewModel.error.observe(viewLifecycleOwner) { it?.let { setRefereeState(it, AbstractStatefulInput.ERROR) } }
+        binding.shareCard.openRefereeBtn.setOnClickListener { openRefereeDialog() }
         viewModel.fetchUsername()
     }
 
-    private fun updateReferralInfo(email: String?) {
-        if (!email.isNullOrEmpty()) {
-            binding.shareCard.referralCode.visibility = VISIBLE
-            if (!viewModel.username.value.isNullOrEmpty()) {
-                binding.shareCard.referralCode.text = getString(R.string.referral_text, viewModel.username.value)
-                binding.shareCard.referralCode.setOnClickListener { Utils.copyToClipboard(viewModel.username.value, requireContext()) }
-                binding.shareCard.referralCode.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_copy,0)
-            } else {
-                binding.shareCard.referralCode.text = getString(R.string.referral_error_data)
-                binding.shareCard.referralCode.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
-            }
-        } else binding.shareCard.referralCode.visibility = GONE
-    }
-
-    private fun updateRefereeInfo(code: String?) {
-        if (!viewModel.username.value.isNullOrEmpty() && code.isNullOrEmpty()) {
-            binding.shareCard.refereeSaveBtn.setOnClickListener { attemptSaveReferee() }
-            binding.shareCard.refereeLayout.visibility = VISIBLE
-        } else if (viewModel.progress.value == 100 && !code.isNullOrEmpty())
-            setRefereeState(getString(R.string.saved), AbstractStatefulInput.SUCCESS)
+    private fun openRefereeDialog() {
+        Utils.logAnalyticsEvent(getString(R.string.referrals_tap), requireContext())
+        if (!viewModel.email.value.isNullOrEmpty())
+            ReferralDialog().show(childFragmentManager, ReferralDialog.TAG)
         else
-            binding.shareCard.refereeLayout.visibility = GONE
-    }
-
-    private fun attemptSaveReferee() {
-        if (!binding.shareCard.refereeInput.text.toString().isNullOrEmpty()) {
-            viewModel.saveReferee(binding.shareCard.refereeInput.text.toString())
-        } else viewModel.error.value = getString(R.string.referral_error_offline)
-
-    }
-
-    private fun setRefereeState(msg: String, type: Int) {
-        Timber.e(msg)
-        binding.shareCard.refereeInput.setState(msg, type)
+            LoginDialog().show(childFragmentManager, LoginDialog.TAG)
     }
 
     private fun setUpMeta(viewModel: SettingsViewModel) {

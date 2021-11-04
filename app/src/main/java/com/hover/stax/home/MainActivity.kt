@@ -19,6 +19,7 @@ import com.hover.stax.hover.HoverSession
 import com.hover.stax.navigation.AbstractNavigationActivity
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
+import com.hover.stax.settings.SettingsViewModel
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.utils.Constants
@@ -36,6 +37,7 @@ class MainActivity : AbstractNavigationActivity(),
 
     private val balancesViewModel: BalancesViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
+    private val settingsViewModel: SettingsViewModel by viewModel()
 
     private lateinit var binding: ActivityMainBinding
 
