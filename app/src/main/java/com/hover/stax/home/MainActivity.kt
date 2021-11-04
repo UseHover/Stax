@@ -37,6 +37,7 @@ import com.hover.stax.schedules.Schedule
 import com.hover.stax.schedules.ScheduleDetailViewModel
 import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.settings.SettingsViewModel
+import com.hover.stax.settings.SettingsViewModel.Companion.LOGIN_REQUEST
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransactionType
@@ -459,7 +460,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         startActivityForResult(i, BOUNTY_REQUEST)
     }
 
-    private fun initAuth() {
+    fun initAuth() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.google_server_client_id))
                 .requestEmail()
@@ -467,14 +468,10 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         settingsViewModel.signInClient = GoogleSignIn.getClient(this, gso)
     }
 
-    fun signIn() {
-        val signInIntent = settingsViewModel.signInClient.signInIntent
-        startActivityForResult(signInIntent, LOGIN_REQUEST)
-    }
+    fun signIn() = startActivityForResult(settingsViewModel.signInClient.signInIntent, LOGIN_REQUEST)
 
     companion object {
         private const val BOUNTY_REQUEST = 3000
-        private const val LOGIN_REQUEST = 4000
     }
 
 }

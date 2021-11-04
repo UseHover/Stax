@@ -45,7 +45,6 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
     var error = MutableLiveData<String>()
 
     init {
-        username.addSource(email, this::uploadUserToStax)
         loadAccounts()
         getEmail()
         getUsername()
@@ -53,17 +52,23 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
     }
 
     private fun setUser(firebaseUser: FirebaseUser) {
+        Timber.e("setting user: %s", firebaseUser.email)
         user.postValue(firebaseUser)
         setEmail(firebaseUser.email)
+
+        firebaseUser.getIdToken(false).addOnSuccessListener {
+            uploadUserToStax(firebaseUser.email, it.token)
+        }
     }
 
     private fun saveResponseData(json: JSONObject?) {
-        Timber.e("response: %s", json.toString())
-        setUsername(json?.optString("username"))
-        setRefereeCode(json)
+        val data = json?.optJSONObject("data")?.optJSONObject("attributes")
+        setUsername(data?.optString("username"))
+        setRefereeCode(data)
     }
 
     private fun setUsername(name: String?) {
+        Timber.e("setting username %s", name)
         if (!name.isNullOrEmpty()) {
             username.postValue(name)
             Utils.saveString(USERNAME, name, application)
@@ -128,16 +133,16 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
     fun fetchUsername() {
         val account = GoogleSignIn.getLastSignedInAccount(application)
         if (account != null)
-            uploadUserToStax(email.value)
+            uploadUserToStax(email.value, account.idToken)
         else
             Timber.e("No account found")
     }
 
-    private fun uploadUserToStax(email: String?) {
+    private fun uploadUserToStax(email: String?, token: String?) {
         if (getUsername().isNullOrEmpty() && !email.isNullOrEmpty()) {
             progress.value = 66
             viewModelScope.launch(Dispatchers.IO) {
-                val result = LoginNetworking(application).uploadUserToStax(email, optedIn.value!!)
+                val result = LoginNetworking(application).uploadUserToStax(email, optedIn.value!!, token)
                 if (result.code in 200..299)
                     onSuccess(JSONObject(result.body!!.string()), application.getString(R.string.uploaded_to_hover, application.getString(R.string.upload_user)))
                 else
@@ -146,10 +151,12 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
         }
     }
 
-    fun saveReferee(refereeCode: String) {
+    fun saveReferee(refereeCode: String, name: String, phone: String) {
         viewModelScope.launch(Dispatchers.IO) {
             if (!email.value.isNullOrEmpty()) {
-                val result = LoginNetworking(application).uploadReferee(email.value!!, refereeCode)
+                val account = GoogleSignIn.getLastSignedInAccount(application)
+                val result = LoginNetworking(application).uploadReferee(email.value!!, refereeCode, name, phone, account?.idToken)
+
                 if (result.code in 200..299)
                     onSuccess(JSONObject(result.body!!.string()), application.getString(R.string.upload_referee))
                 else
@@ -182,5 +189,9 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
             a.isDefault = true
             repo.update(a)
         }
+    }
+
+    companion object {
+        const val LOGIN_REQUEST = 4000
     }
 }
