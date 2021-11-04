@@ -26,7 +26,7 @@ class AccountDropdownAdapter(val accounts: List<Account>, context: Context) : Ar
             val binding = StaxSpinnerItemWithLogoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             view = binding.root
             holder = ViewHolder(binding)
-            view.setTag(holder)
+            view.tag = holder
         } else
             holder = view.tag as ViewHolder
 
@@ -44,7 +44,7 @@ class AccountDropdownAdapter(val accounts: List<Account>, context: Context) : Ar
     inner class ViewHolder(val binding: StaxSpinnerItemWithLogoBinding) : Target {
 
         fun setAccount(account: Account) {
-            binding.serviceItemNameId.text = account.toString()
+            binding.serviceItemNameId.text = account.alias
             UIHelper.loadPicasso(account.logoUrl, size55, this)
         }
 

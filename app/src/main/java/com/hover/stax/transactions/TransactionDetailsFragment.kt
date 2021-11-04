@@ -16,7 +16,6 @@ import com.hover.sdk.api.Hover
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.ApplicationInstance
 import com.hover.stax.R
-import com.hover.stax.bounties.BountyActivity
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
 import com.hover.stax.home.MainActivity
@@ -89,7 +88,7 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
     private fun startObservers() {
         viewModel.transaction.observe(viewLifecycleOwner, { showTransaction(it) })
         viewModel.action.observe(viewLifecycleOwner, { showActionDetails(it) })
-        viewModel.contact.observe(viewLifecycleOwner, {  updateRecipient(it) })
+        viewModel.contact.observe(viewLifecycleOwner, { updateRecipient(it) })
     }
 
     private fun setToPopupDesign() {
@@ -198,7 +197,10 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
         if (isFullScreen)
             binding.transactionDetailsCard.setTitle(transaction.description)
         else {
-            if (viewModel.action.value != null) binding.transactionDetailsCard.setTitle(transaction.generateLongDescription(viewModel.action.value, viewModel.contact.value, requireContext()))
+            if (viewModel.action.value != null)
+                binding.transactionDetailsCard.setTitle(
+                        transaction.generateLongDescription(viewModel.action.value, viewModel.contact.value, requireContext())
+                )
             binding.infoCard.root.visibility = GONE
         }
 
@@ -213,10 +215,10 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
     }
 
     private fun setVisibleDetails(transaction: StaxTransaction) {
-        binding.infoCard.amountRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) View.GONE else View.VISIBLE
-        binding.infoCard.recipientRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) View.GONE else View.VISIBLE
-        binding.infoCard.recipAccountRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) View.GONE else View.VISIBLE
-        binding.infoCard.serviceIdRow.visibility = if (transaction.isRecorded || transaction.confirm_code.isNullOrBlank()) View.GONE else View.VISIBLE
+        binding.infoCard.amountRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) GONE else View.VISIBLE
+        binding.infoCard.recipientRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) GONE else View.VISIBLE
+        binding.infoCard.recipAccountRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) GONE else View.VISIBLE
+        binding.infoCard.serviceIdRow.visibility = if (transaction.isRecorded || transaction.confirm_code.isNullOrBlank()) GONE else View.VISIBLE
     }
 
     private fun showActionDetails(action: HoverAction?) {
@@ -258,7 +260,7 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
         this.dismiss()
 
         viewModel.transaction.value?.let {
-            (requireActivity() as BountyActivity).retryCall(it.action_id)
+            (requireActivity() as MainActivity).retryCall(it.action_id)
         }
     }
 

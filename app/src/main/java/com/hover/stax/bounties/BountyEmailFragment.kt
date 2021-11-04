@@ -12,12 +12,14 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentBountyEmailBinding
+import com.hover.stax.home.MainActivity
 import com.hover.stax.navigation.NavigationInterface
 import com.hover.stax.settings.SettingsViewModel
 import com.hover.stax.utils.Utils.logAnalyticsEvent
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListener {
 
@@ -25,8 +27,7 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
     private val binding get() = _binding!!
     private var dialog: StaxDialog? = null
     private lateinit var networkMonitor: NetworkMonitor
-    private val viewModel: BountyViewModel by sharedViewModel()
-    private val loginViewModel: SettingsViewModel by sharedViewModel()
+    private val settingsViewModel: SettingsViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentBountyEmailBinding.inflate(inflater, container, false)
@@ -44,51 +45,64 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
 
         binding.progressIndicator.setVisibilityAfterHide(View.GONE)
         binding.instructions.movementMethod = LinkMovementMethod.getInstance()
+        startObservers()
+    }
 
-        loginViewModel.progress.observe(viewLifecycleOwner) { updateProgress(it) }
-        loginViewModel.error.observe(viewLifecycleOwner) { it?.let { showError(it) } }
+    private fun startObservers(){
+        with(settingsViewModel) {
+            progress.observe(viewLifecycleOwner) { updateProgress(it) }
+            error.observe(viewLifecycleOwner) { it?.let { showError(it) } }
+            email.observe(viewLifecycleOwner) { Timber.e("Got email from Google $it")}
+            username.observe(viewLifecycleOwner) { Timber.e("Got username : $it") }
+        }
     }
 
     override fun onClick(v: View) {
         if (networkMonitor.isNetworkConnected) {
             logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext())
             updateProgress(0)
-            (activity as BountyActivity).signIn()
+            (activity as MainActivity).signIn()
         } else {
-            showDialog(R.string.internet_required, R.string.internet_required_bounty_desc, R.string.btn_ok)
+            showDialog(R.string.internet_required, getString(R.string.internet_required_bounty_desc), R.string.btn_ok)
         }
     }
 
     private fun updateProgress(progress: Int) = with(binding.progressIndicator) {
         when (progress) {
             0 -> show()
-            -1 -> { hide() }
-            100 -> { hide(); complete() }
+            -1 -> hide()
+            100 -> {
+                hide()
+                complete()
+            }
             else -> setProgressCompat(progress, true)
         }
     }
 
-    private fun complete() {
-        findNavController().navigate(R.id.bountyListFragment)
-    }
+    private fun complete() = findNavController().navigate(R.id.action_bountyEmailFragment_to_bountyListFragment)
 
     private fun showError(message: String) {
         updateProgress(-1)
         showDialog(0, message, R.string.btn_ok)
     }
 
-    private fun showDialog(title: Int, msg: Int, btn: Int) {
-        showDialog(title, getString(msg), btn)
-    }
-
     private fun showDialog(title: Int, msg: String, btn: Int) {
         dialog = StaxDialog(requireActivity())
-            .setDialogMessage(msg)
-            .setPosButton(btn, null)
-            .makeSticky()
+                .setDialogMessage(msg)
+                .setPosButton(btn, null)
+                .makeSticky()
 
         if (title != 0)
             dialog?.setDialogTitle(title)
+        dialog!!.showIt()
+    }
+
+    private fun showOfflineDialog() {
+        dialog = StaxDialog(requireActivity())
+                .setDialogTitle(R.string.internet_required)
+                .setDialogMessage(R.string.internet_required_bounty_desc)
+                .setPosButton(R.string.btn_ok, null)
+                .makeSticky()
         dialog!!.showIt()
     }
 
@@ -96,9 +110,5 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
         super.onDestroyView()
         if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
         _binding = null
-    }
-
-    companion object {
-        const val TAG = "BountyEmailFragment"
     }
 }

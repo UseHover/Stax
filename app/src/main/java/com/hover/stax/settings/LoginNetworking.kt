@@ -9,9 +9,9 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+
 import org.json.JSONObject
 import timber.log.Timber
-import java.util.*
 
 class LoginNetworking(private val context: Context) {
 
@@ -47,15 +47,15 @@ class LoginNetworking(private val context: Context) {
 
     private fun post(url: String, json: JSONObject): Response {
         val request: Request = getUploadRequest(url)
-            .post(createBody(json))
-            .build()
+                .post(createBody(json))
+                .build()
         return client.newCall(request).execute()
     }
 
     private fun put(url: String, json: JSONObject): Response {
         val request: Request = getUploadRequest(url)
-            .put(createBody(json))
-            .build()
+                .put(createBody(json))
+                .build()
         return client.newCall(request).execute()
     }
 

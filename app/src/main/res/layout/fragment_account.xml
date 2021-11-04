@@ -19,8 +19,8 @@
                 app:title="@string/nav_account_detail">
 
             <include
-                android:id="@+id/balance_card"
-                layout="@layout/balance_item" />
+                    android:id="@+id/balance_card"
+                    layout="@layout/balance_item" />
 
             <TableLayout
                     android:layout_width="match_parent"
@@ -107,8 +107,9 @@
         </com.hover.stax.views.StaxCardView>
 
         <include
-            android:id="@+id/shortcode_card"
-            layout="@layout/account_card_shortcode" />
+                android:id="@+id/shortcode_card"
+                layout="@layout/account_card_shortcode" />
+
 
         <include
                 android:id="@+id/scheduled_card"
@@ -119,8 +120,8 @@
                 layout="@layout/transaction_card_history" />
 
         <include
-            android:id="@+id/manage_card"
-            layout="@layout/account_card_manage" />
+                android:id="@+id/manage_card"
+                layout="@layout/account_card_manage" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -4,6 +4,7 @@ import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
 import com.hover.stax.channels.Channel
 import com.hover.stax.utils.DateUtils.now
+import timber.log.Timber
 import java.util.*
 
 const val DUMMY = -1
@@ -54,6 +55,8 @@ data class Account(
 
     fun updateBalance(parsed_variables: HashMap<String, String>) {
         if (parsed_variables.containsKey("balance")) latestBalance = parsed_variables["balance"]
+
+        Timber.e("Balance is $latestBalance")
 
         latestBalanceTimestamp = if (parsed_variables.containsKey("update_timestamp") && parsed_variables["update_timestamp"] != null) {
             parsed_variables["update_timestamp"]!!.toLong()

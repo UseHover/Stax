@@ -8,7 +8,9 @@
 	<string name="api_url" translatable="false">https://www.usehover.com/api</string>
 	<string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
 	<string name="users_endpoint" translatable="false">/stax_users</string>
-	<string name="stax_market_playstore_link" translatable="false">market://details?id=com.hover.stax</string>
+
+	<string name="referee_endpoint" translatable="false">/set_referee</string>
+	<string name="stax_market_playstore_link" translatable="false">https://stax.onelink.me/nR0j/fb15b3f2</string>
 	<string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
 	<string name="stax_nolt_url" translatable="false">https://stax.nolt.io/</string>
 	<string name="receive_stax_updates_url" translatable="false">https://416e906b.sibforms.com/serve/MUIEAAS88NDe6oTn7nl8YrIqgutsJ_GgyCYRWVsZ-S54quVNmBhvpsu70WpNXrZd-n6H5r8m1ZRfuTl8ckiQrB4sLIdNSx0Y_DFZ7_hQGCDv9PG6N0ncsHwWW3OYsMlPMHgQSR6OZf8xK8HC-NA3p3T71Pv1Coy_n9oiDRwIu7HCryUfDtfHr11mXSQ5S3JwcOd8cN7FL1ewDRqu</string>
@@ -20,7 +22,7 @@
 	<string name="nav_balance_and_history">Balance and history</string>
 	<string name="nav_balances">Balances</string>
 
-	<string name="nav_get_paid">Get paid</string>
+	<string name="nav_get_paid">Get Paid</string>
 
 	<string name="nav_link_account">Link an account</string>
 	<string name="nav_airtime">Buy Airtime</string>
@@ -98,6 +100,7 @@
 	<string name="your_accounts">Your accounts</string>
 	<string name="add_an_account">Add an account</string>
 	<string name="add_accounts_to_stax">Add accounts to Stax</string>
+
 	<string name="nickname">Nickname</string>
 	<string name="saved">Saved</string>
 	<string name="account_number_label">Account number</string>
@@ -243,7 +246,7 @@
 	<string name="amount_label_opt">Amount (Optional)</string>
 	<string name="reqfrom_label">To</string>
 	<string name="btn_addcontact">+ Add another person</string>
-	<string name="sms_request_template">Kindly stax me %1$s at your earliest convenience. %2$s%3$s</string>
+	<string name="sms_request_template">Kindly stax me %1$s at your earliest convenience. %2$s %3$s</string>
 	<string name="sms_amount_detail">%1$s </string>
 	<string name="sms_note_detail">Note: \"%1$s\" </string>
 	<string name="reqsave_head">Save request?</string>
@@ -351,6 +354,7 @@
 	<string name="referral_error_offline">Please go online to save referral code.</string>
 	<string name="referral_error_self">You cannot refer yourself.</string>
 	<string name="referral_error_data">Please go online to get your referral code.</string>
+
 	<string name="security_cardhead">Security</string>
 	<string name="security_cardbody">Stax meets the criteria of 740.17(b)(3) (i) security classification of the United States Bureau of Industry and Security. This software uses HTTPS for server communication; symmetric key RSA encryption to temporarily store the user\'s credentials on their own device using Android Keystore; and code obfuscation using DRM.</string>
 	<string name="defaultacct_label">Default account</string>
@@ -520,6 +524,7 @@
 	<string name="loading">Loading…</string>
 	<string name="loading_error">Unable to load FAQ, please try again</string>
 	<string name="faq_internet_error">This feature requires internet connection, please try again</string>
+
 	<string name="working_offline">Working offline</string>
 
 	<string name="marketing_email_optin">Stax can send me emails in the future.</string>
@@ -540,7 +545,7 @@
 	<string name="attachment_summary_on">Automatically download attachments for incoming emails
 	</string>
 	<string name="attachment_summary_off">Only download attachments when manually requested</string>
-	<!-- TODO: Remove or change this placeholder text -->
-	<string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="ussd_lib">Dial USSD</string>
 
 </resources>

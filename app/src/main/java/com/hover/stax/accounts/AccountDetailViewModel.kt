@@ -40,20 +40,16 @@ class AccountDetailViewModel(val application: Application, val repo: DatabaseRep
 
     private fun loadFeesThisYear(id: Int): LiveData<Double>? = repo.getFees(id, calendar.get(Calendar.YEAR))
 
-    fun updateAccountName(newName: String) {
-        viewModelScope.launch {
-            val a = account.value!!
-            a.alias = newName
-            repo.update(a)
-        }
+    fun updateAccountName(newName: String) = viewModelScope.launch {
+        val a = account.value!!
+        a.alias = newName
+        repo.update(a)
     }
 
-    fun updateAccountNumber(newNumber: String) {
-        viewModelScope.launch {
-            val a = account.value!!
-            a.accountNo = newNumber
-            repo.update(a)
-        }
+    fun updateAccountNumber(newNumber: String) = viewModelScope.launch {
+        val a = account.value!!
+        a.accountNo = newNumber
+        repo.update(a)
     }
 
     fun removeAccount(account: Account) = viewModelScope.launch(Dispatchers.IO) {
@@ -71,9 +67,10 @@ class AccountDetailViewModel(val application: Application, val repo: DatabaseRep
         repo.delete(account)
 
         if (!accounts.isNullOrEmpty() && defaultChanged)
-            accounts.first()?.let {
+            accounts.firstOrNull()?.let {
                 it.isDefault = true
                 repo.update(it)
+
                 val channel = repo.getChannel(it.channelId)!!.apply {
                     defaultAccount = true
                 }

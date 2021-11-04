@@ -8,13 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
-import androidx.navigation.fragment.findNavController
 import com.google.android.gms.common.SignInButton
-import com.google.android.material.checkbox.MaterialCheckBox
 import com.hover.stax.R
-import com.hover.stax.bounties.BountyActivity
 import com.hover.stax.databinding.FragmentLoginBinding
-import com.hover.stax.databinding.StaxReferralDialogBinding
+import com.hover.stax.home.MainActivity
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
@@ -51,7 +48,8 @@ class LoginDialog: DialogFragment(), View.OnClickListener {
             setOnClickListener(this@LoginDialog)
         }
         binding.progressIndicator.setVisibilityAfterHide(View.GONE)
-        viewModel.createGoogleClient(requireActivity() as AppCompatActivity)
+
+        (requireActivity() as MainActivity).initAuth()
 
         viewModel.username.observe(this) { Timber.e("Loaded username: %s", it) }
         viewModel.progress.observe(viewLifecycleOwner) { updateProgress(it) }
@@ -95,10 +93,12 @@ class LoginDialog: DialogFragment(), View.OnClickListener {
         binding.errorText.visibility = View.VISIBLE
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         viewModel.error.value = null
         viewModel.progress.value = -1
+
+        _binding = null
     }
 
     companion object {

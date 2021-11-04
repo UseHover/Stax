@@ -4,17 +4,15 @@ import android.app.Dialog
 import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import com.google.android.gms.auth.api.signin.GoogleSignIn
+import androidx.lifecycle.lifecycleScope
 import com.hover.stax.R
-import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.databinding.StaxReferralDialogBinding
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils.copyToClipboard
@@ -22,6 +20,8 @@ import com.hover.stax.utils.Utils.logAnalyticsEvent
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
@@ -40,11 +40,11 @@ class ReferralDialog : DialogFragment() {
         networkMonitor = NetworkMonitor(requireContext())
         _binding = StaxReferralDialogBinding.inflate(LayoutInflater.from(context))
         dialog = StaxDialog(requireActivity(), binding.root)
-            .setDialogTitle(R.string.perm_dialoghead)
-            .setDialogMessage(R.string.perm_dialogbody)
-            .setNegButton(R.string.btn_cancel) { dismiss() }
-            .setPosButton(R.string.btn_save) { attemptSaveReferee() }
-            .highlightPos()
+                .setDialogTitle(R.string.perm_dialoghead)
+                .setDialogMessage(R.string.perm_dialogbody)
+                .setNegButton(R.string.btn_cancel) { dismiss() }
+                .setPosButton(R.string.btn_save) { attemptSaveReferee() }
+                .highlightPos()
 
         dialogView = dialog.view
         return dialog.createIt()
@@ -94,21 +94,17 @@ class ReferralDialog : DialogFragment() {
     }
 
     private fun attemptSaveReferee() {
-        if (binding.refereeInput.text.toString().isNullOrEmpty())
-            binding.refereeInput.setError(getString(R.string.referral_error_invalid))
-        else if (binding.refereeInput.text.toString() == viewModel.username.value)
-            binding.refereeInput.setError(getString(R.string.referral_error_self))
-        else if (binding.nameInput.text.toString().isNullOrEmpty())
-            binding.nameInput.setError(getString(R.string.referral_error_name))
-        else if (binding.phoneInput.text.toString().isNullOrEmpty())
-            binding.phoneInput.setError(getString(R.string.referral_error_phone))
-        else if (binding.refereeInput.text.toString() == viewModel.username.value)
-            binding.refereeInput.setError(getString(R.string.referral_error_self))
-        else if (!networkMonitor.isNetworkConnected)
-            viewModel.error.value = getString(R.string.referral_error_offline)
-        else {
-            binding.posBtn.isEnabled = false
-            viewModel.saveReferee(binding.refereeInput.text.toString(), binding.nameInput.text.toString(),binding.phoneInput.text.toString())
+        when {
+            binding.refereeInput.text.toString().isEmpty() -> binding.refereeInput.setError(getString(R.string.referral_error_invalid))
+            binding.refereeInput.text.toString() == viewModel.username.value -> binding.refereeInput.setError(getString(R.string.referral_error_self))
+            binding.nameInput.text.toString().isEmpty() -> binding.nameInput.setError(getString(R.string.referral_error_name))
+            binding.phoneInput.text.toString().isEmpty() -> binding.phoneInput.setError(getString(R.string.referral_error_phone))
+            binding.refereeInput.text.toString() == viewModel.username.value -> binding.refereeInput.setError(getString(R.string.referral_error_self))
+            !networkMonitor.isNetworkConnected -> viewModel.error.value = getString(R.string.referral_error_offline)
+            else -> {
+                binding.posBtn.isEnabled = false
+                viewModel.saveReferee(binding.refereeInput.text.toString(), binding.nameInput.text.toString(), binding.phoneInput.text.toString())
+            }
         }
     }
 
@@ -116,7 +112,7 @@ class ReferralDialog : DialogFragment() {
         if (!viewModel.username.value.isNullOrEmpty()) {
             binding.referralCode.text = viewModel.username.value
             binding.referralCode.setOnClickListener { copyToClipboard(viewModel.username.value, requireContext()) }
-            binding.referralCode.setCompoundDrawablesWithIntrinsicBounds(0,0, R.drawable.ic_copy,0)
+            binding.referralCode.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_copy, 0)
         } else {
             binding.referralCode.text = getString(R.string.referral_error_data)
             binding.referralCode.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
@@ -148,9 +144,14 @@ class ReferralDialog : DialogFragment() {
         if (type == AbstractStatefulInput.SUCCESS) {
             UIHelper.flashMessage(requireContext(), getString(R.string.saved_referral))
             binding.posBtn.text = getString(R.string.saved)
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 binding.posBtn.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.stax_state_green))
-            Handler(Looper.getMainLooper()).postDelayed({ this.dismiss() }, 1000)
+
+            lifecycleScope.launch {
+                delay(1000)
+                this@ReferralDialog.dismiss()
+            }
         } else {
             binding.posBtn.isEnabled = true
             binding.refereeInput.setState(msg, type)
@@ -162,10 +163,11 @@ class ReferralDialog : DialogFragment() {
         binding.errorText.visibility = View.VISIBLE
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         viewModel.error.value = null
         viewModel.progress.value = -1
+        _binding = null
     }
 
     companion object {

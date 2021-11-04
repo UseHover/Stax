@@ -9,8 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
+
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentAccountBinding
 import com.hover.stax.futureTransactions.FutureViewModel
@@ -43,6 +46,8 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
+
+    private var dialog: StaxDialog? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentAccountBinding.inflate(inflater, container, false)
@@ -97,9 +102,9 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
             v.setState(null, AbstractStatefulInput.NONE)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             btn.backgroundTintList = ColorStateList.valueOf(
-                if (newText.isNotEmpty() && comparator != null && newText != comparator)
-                    resources.getColor(R.color.brightBlue)
-                else resources.getColor(R.color.buttonColor)
+                    if (newText.isNotEmpty() && comparator != null && newText != comparator)
+                        resources.getColor(R.color.brightBlue)
+                    else resources.getColor(R.color.buttonColor)
             )
         }
     }
@@ -111,17 +116,18 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     private fun updateAccountNumber() {
         validateInput(binding.manageCard.accountNumberInput, viewModel.account.value?.accountNo, R.string.account_number_error, viewModel::updateAccountNumber)
     }
-    
+
     private fun validateInput(v: StaxTextInputLayout, comparison: String?, errorMsg: Int, successFun: (text: String) -> Unit) {
         val msg = validates(v, comparison, errorMsg)
         if (msg == null)
             successFun(v.text)
-        v.setState(msg ?: getString(R.string.saved), if (msg == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        v.setState(msg
+                ?: getString(R.string.saved), if (msg == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
     }
 
     private fun validates(v: StaxTextInputLayout, comparison: String?, errorMsg: Int): String? {
         return if (v.text.isNullOrEmpty() || v.text.toString() == comparison) getString(errorMsg)
-            else null
+        else null
     }
 
     private fun setupObservers() {
@@ -152,7 +158,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
             transactions.observe(viewLifecycleOwner) {
                 binding.historyCard.noHistory.visibility = if (it.isNullOrEmpty()) View.VISIBLE else View.GONE
-                transactionsAdapter!!.updateData(it, viewModel.actions.getValue())
+                transactionsAdapter!!.updateData(it, viewModel.actions.value)
             }
 
             actions.observe(viewLifecycleOwner) { transactionsAdapter!!.updateData(viewModel.transactions.value, it) }
@@ -160,6 +166,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
             spentThisMonth.observe(viewLifecycleOwner) {
                 binding.detailsMoneyOut.text = Utils.formatAmount(it ?: 0.0)
             }
+
             feesThisYear.observe(viewLifecycleOwner) {
                 binding.detailsFees.text = Utils.formatAmount(it ?: 0.0)
             }
@@ -167,13 +174,13 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     }
 
     private fun setUpRemoveAccount(account: Account) {
-        StaxDialog(requireActivity())
-            .setDialogTitle(getString(R.string.removepin_dialoghead, account.alias))
-            .setDialogMessage(R.string.removepins_dialogmes)
-            .setPosButton(R.string.btn_removeaccount) { removeAccount(account) }
-            .setNegButton(R.string.btn_cancel, null)
-            .isDestructive
-            .showIt()
+        dialog = StaxDialog(requireActivity())
+                .setDialogTitle(getString(R.string.removepin_dialoghead, account.alias))
+                .setDialogMessage(R.string.removepins_dialogmes)
+                .setPosButton(R.string.btn_removeaccount) { removeAccount(account) }
+                .setNegButton(R.string.btn_cancel, null)
+                .isDestructive
+        dialog!!.showIt()
     }
 
     private fun removeAccount(account: Account) {
@@ -186,7 +193,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         binding.historyCard.transactionsRecycler.apply {
             layoutManager = UIHelper.setMainLinearManagers(context)
             transactionsAdapter = TransactionHistoryAdapter(null, null, this@AccountDetailFragment)
-           adapter = transactionsAdapter
+            adapter = transactionsAdapter
         }
 
         binding.scheduledCard.scheduledRecyclerView.apply {
@@ -223,20 +230,19 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
     private fun onRefresh() = viewModel.account.value?.let { (activity as MainActivity).onTapRefresh(it.id) }
 
-    override fun viewRequestDetail(id: Int) {
-        navigateToRequestDetailsFragment(id, this)
-    }
+    override fun viewRequestDetail(id: Int) =
+            findNavController().navigate(R.id.action_accountDetailsFragment_to_requestDetailsFragment, bundleOf("id" to id))
 
-    override fun viewScheduledDetail(id: Int) {
-        navigateToScheduleDetailsFragment(id, this)
-    }
+    override fun viewScheduledDetail(id: Int) =
+            findNavController().navigate(R.id.action_accountDetailsFragment_to_scheduleDetailsFragment, bundleOf("id" to id))
 
-    override fun viewTransactionDetail(uuid: String?) {
-        navigateToTransactionDetailsFragment(uuid, childFragmentManager, true)
-    }
+    override fun viewTransactionDetail(uuid: String?) = navigateToTransactionDetailsFragment(uuid, childFragmentManager, true)
 
     override fun onDestroyView() {
         super.onDestroyView()
+
+        if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
+
         _binding = null
     }
 }

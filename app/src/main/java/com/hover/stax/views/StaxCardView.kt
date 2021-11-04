@@ -14,6 +14,7 @@ import com.hover.stax.databinding.StaxCardViewBinding
 import com.hover.stax.transactions.TransactionStatus
 
 open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
+
     private var title: String? = null
     private var subtitle: String? = null
     private var showBack = false
@@ -119,11 +120,11 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
     }
 
     fun updateState(icon: Int, backgroundColor: Int, title: Int) {
-        with(binding.cardViewHeader) {
-            setBackButtonVisibility(View.VISIBLE);
-            setIcon(icon);
-            setTitle(title);
-            this@StaxCardView.setBackgroundColor(backgroundColor)
+        binding.cardViewHeader.apply {
+            setBackButtonVisibility(View.VISIBLE)
+            setIcon(icon)
+            setTitle(title)
+            setBackgroundColor(backgroundColor)
         }
     }
 

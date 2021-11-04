@@ -17,7 +17,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
-class SmsSentObserver extends ContentObserver {
+public class SmsSentObserver extends ContentObserver {
     private static final Uri uri = Uri.parse("content://sms/");
 
     private static final int MESSAGE_TYPE_SENT = 2;

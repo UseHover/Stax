@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
@@ -14,6 +15,7 @@ import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
+import com.hover.stax.home.MainActivity
 import com.hover.stax.requests.Request
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
@@ -23,6 +25,7 @@ import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener {
@@ -35,14 +38,18 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     private lateinit var contactInput: ContactInput
     private lateinit var recipientValue: Stax2LineItem
 
-    private lateinit var binding: FragmentTransferBinding
+    private var _binding: FragmentTransferBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         abstractFormViewModel = getSharedViewModel<TransferViewModel>()
         transferViewModel = abstractFormViewModel as TransferViewModel
 
-        binding = FragmentTransferBinding.inflate(inflater, container, false)
+        setTransactionType(arguments!!.getString(Constants.TRANSACTION_TYPE)!!)
 
+        _binding = FragmentTransferBinding.inflate(inflater, container, false)
+
+        transferViewModel.reset()
         init(binding.root)
         startObservers(binding.root)
         startListeners()
@@ -66,11 +73,21 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         super.init(root)
     }
 
+    override fun onPause() {
+        super.onPause()
+        transferViewModel.setEditing(true)
+    }
+
     override fun onResume() {
         super.onResume()
 
         amountInput.setHint(getString(R.string.transfer_amount_label))
         accountDropdown.setHint(getString(R.string.channel_label))
+    }
+
+    private fun setTransactionType(txnType: String) {
+        transferViewModel.setTransactionType(txnType)
+        channelsViewModel.setType(txnType)
     }
 
     private fun setTitle() {
@@ -109,7 +126,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
 
             with(transferViewModel) {
                 amount.observe(viewLifecycleOwner, {
-                    binding.summaryCard.amountValue.text = Utils.formatAmount(it)
+                    it?.let {
+                        binding.summaryCard.amountValue.text = Utils.formatAmount(it)
+                    }
                 })
 
                 note.observe(viewLifecycleOwner, {
@@ -155,8 +174,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         }
 
         actionSelect.setListener(this)
-//        noteInput.addTextChangedListener(noteWatcher)
         fab.setOnClickListener { fabClicked() }
+
+        binding.summaryCard.transferSummaryCard.setOnClickIcon { transferViewModel.setEditing(true) }
     }
 
     private fun fabClicked() {
@@ -165,7 +185,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
                 transferViewModel.saveContact()
                 transferViewModel.setEditing(false)
             } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
-        } else (activity as TransferActivity).submit(accountDropdown.highlightedAccount!!)
+        } else {
+            (requireActivity() as MainActivity).submit(accountDropdown.highlightedAccount!!)
+            findNavController().popBackStack()
+        }
     }
 
     private val amountWatcher: TextWatcher = object : TextWatcher {
@@ -244,5 +267,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         transferViewModel.setEditing(r.amount.isNullOrEmpty())
         accountDropdown.setState(getString(R.string.channel_request_fieldinfo, r.requester_institution_id.toString()), AbstractStatefulInput.INFO)
         Utils.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext())
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

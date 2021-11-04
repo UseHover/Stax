@@ -15,12 +15,10 @@ import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.koin.java.KoinJavaComponent
-import timber.log.Timber
-import java.lang.Exception
 
-class LibraryViewModel(application: Application) : AndroidViewModel(application) {
-    private val repo = KoinJavaComponent.get(DatabaseRepo::class.java)
+import timber.log.Timber
+
+class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : ViewModel() {
 
     var allChannels: LiveData<List<Channel>> = MutableLiveData()
     val filteredChannels = MediatorLiveData<List<Channel>>()
@@ -42,9 +40,9 @@ class LibraryViewModel(application: Application) : AndroidViewModel(application)
             sims.postValue(repo.presentSims)
         }
 
-        LocalBroadcastManager.getInstance(getApplication())
-            .registerReceiver(simReceiver, IntentFilter(Utils.getPackage(getApplication()) + ".NEW_SIM_INFO_ACTION"))
-        Hover.updateSimInfo(getApplication())
+        LocalBroadcastManager.getInstance(application)
+                .registerReceiver(simReceiver, IntentFilter(Utils.getPackage(application) + ".NEW_SIM_INFO_ACTION"))
+        Hover.updateSimInfo(application)
     }
 
     private fun pickFirstCountry(sims: List<SimInfo>?) {
@@ -54,11 +52,9 @@ class LibraryViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun setCountry(countryCode: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            Timber.e("Updating country: %s", countryCode)
-            country.postValue(countryCode)
-        }
+    fun setCountry(countryCode: String) = viewModelScope.launch(Dispatchers.IO) {
+        Timber.e("Updating country: %s", countryCode)
+        country.postValue(countryCode)
     }
 
     private val simReceiver: BroadcastReceiver = object : BroadcastReceiver() {
@@ -69,27 +65,22 @@ class LibraryViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    private fun filterChannels(channels: List<Channel>?) {
-        filterChannels(channels, country.value)
-    }
+    private fun filterChannels(channels: List<Channel>?) = filterChannels(channels, country.value)
 
-    private fun filterChannels(countryCode: String?) {
-        filterChannels(allChannels.value, countryCode)
-    }
+    private fun filterChannels(countryCode: String?) = filterChannels(allChannels.value, countryCode)
 
-    private fun filterChannels(channels: List<Channel>?, countryCode: String?) {
-        viewModelScope.launch(Dispatchers.IO) {
-            Timber.e("Filtering channels %s", countryCode)
-            if (countryCode == null || countryCode == CountryAdapter.codeRepresentingAllCountries())
-                filteredChannels.postValue(channels)
-            else
-                filteredChannels.postValue(repo.getChannelsByCountry(countryCode))
-        }
+    private fun filterChannels(channels: List<Channel>?, countryCode: String?) = viewModelScope.launch(Dispatchers.IO) {
+        Timber.i("Filtering channels: $countryCode")
+
+        if (countryCode == null || countryCode == CountryAdapter.codeRepresentingAllCountries())
+            filteredChannels.postValue(channels)
+        else
+            filteredChannels.postValue(repo.getChannelsByCountry(countryCode))
     }
 
     override fun onCleared() {
         try {
-            LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(simReceiver)
+            LocalBroadcastManager.getInstance(application).unregisterReceiver(simReceiver)
         } catch (ignored: Exception) {}
         super.onCleared()
     }

@@ -183,11 +183,11 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     val allContacts: LiveData<List<StaxContact>>
         get() = contactDao.all
 
-    fun getContacts(ids: Array<String?>?): List<StaxContact> {
+    fun getContacts(ids: Array<String>): List<StaxContact> {
         return contactDao[ids]
     }
 
-    fun getLiveContacts(ids: Array<String?>?): LiveData<List<StaxContact>> {
+    fun getLiveContacts(ids: Array<String>): LiveData<List<StaxContact>> {
         return contactDao.getLive(ids)
     }
 
@@ -234,8 +234,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     val transactionsForAppReview: LiveData<List<StaxTransaction>>?
         get() = transactionDao.transactionsForAppReview
 
-    fun getSchedule(id: Int): Schedule {
-        return scheduleDao[id]
+    fun getSchedule(id: Int): Schedule? {
+        return scheduleDao.get(id)
     }
 
     fun insert(schedule: Schedule?) {
@@ -322,8 +322,6 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun getAccount(id: Int): Account? = accountDao.getAccount(id)
 
-    fun getAccount(name: String): Account? = accountDao.getAccount(name)
-
     fun getLiveAccount(id: Int): LiveData<Account> = accountDao.getLiveAccount(id)
 
     suspend fun getAccounts(ids: List<Int>): List<Account> = accountDao.getAccounts(ids)
@@ -352,7 +350,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         AppDatabase.databaseWriteExecutor.execute { accountDao.insert(account) }
     }
 
-    fun update(account: Account) {
+    fun update(account: Account?) {
         AppDatabase.databaseWriteExecutor.execute { accountDao.update(account) }
     }
 

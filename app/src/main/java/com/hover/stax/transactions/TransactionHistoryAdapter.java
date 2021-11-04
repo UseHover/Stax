@@ -1,5 +1,6 @@
 package com.hover.stax.transactions;
 
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +59,7 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
         HoverAction a = findAction(t.action_id);
         holder.binding.liAmount.setAlpha((float) (t.status.equals(Transaction.FAILED) ? 0.54: 1.0));
         holder.binding.transactionItemLayout.setBackgroundColor(holder.binding.getRoot().getContext().getResources().getColor(ts.getBackgroundColor()));
-        holder.binding.liStatus.setText(ts.getShortStatusDetail(a, holder.binding.getRoot().getContext()));
+        holder.binding.liStatus.setText(Html.fromHtml(ts.getShortStatusDetail(a, holder.binding.getRoot().getContext())));
         holder.binding.liStatus.setCompoundDrawablesRelativeWithIntrinsicBounds(ts.getIcon(), 0, 0, 0);
     }
 

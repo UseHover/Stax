@@ -32,11 +32,11 @@ val appModule = module {
     viewModel { TransactionHistoryViewModel(get()) }
     viewModel { BannerViewModel(get(), get()) }
     viewModel { FutureViewModel(get()) }
-    viewModel { SettingsViewModel(get()) }
+    viewModel { SettingsViewModel(get(), get()) }
     viewModel { TransactionDetailsViewModel(get()) }
-    viewModel { LibraryViewModel(get()) }
+    viewModel { LibraryViewModel(get(), get()) }
     viewModel { LanguageViewModel(get()) }
-    viewModel { BountyViewModel(get()) }
+    viewModel { BountyViewModel(get(), get()) }
 }
 
 val dataModule = module(createdAtStart = true) {

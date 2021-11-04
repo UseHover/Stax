@@ -2,7 +2,6 @@ package com.hover.stax.countries;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +16,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class CountryDropdown extends StaxDropdownLayout {
-    private static final String TAG = "CountryDropdown";
 
     CountryAdapter adapter;
     private CountryAdapter.SelectListener selectListener;
@@ -27,7 +25,6 @@ public class CountryDropdown extends StaxDropdownLayout {
     }
 
     public void updateChoices(List<Channel> channels, String currentCountry) {
-        Log.d(TAG, "loading countries");
         if (channels == null || channels.size() == 0) {
             setEmptyState();
             return;
@@ -41,7 +38,6 @@ public class CountryDropdown extends StaxDropdownLayout {
     }
 
     private String[] getCountryCodes(List<Channel> channelList) {
-        Log.d(TAG, "loading countries by channels");
         List<String> countryCodes = new ArrayList<>();
 
         countryCodes.add(CountryAdapter.codeRepresentingAllCountries());
@@ -71,6 +67,7 @@ public class CountryDropdown extends StaxDropdownLayout {
     public void setDropdownValue(String countryCode) {
         if (countryCode == null)
             countryCode = CountryAdapter.codeRepresentingAllCountries();
+
         if (adapter != null)
             autoCompleteTextView.setText(adapter.getCountryString(countryCode));
     }

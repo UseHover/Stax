@@ -65,13 +65,21 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     private fun setupActionDropdownObservers(viewModel: ChannelsViewModel, lifecycleOwner: LifecycleOwner) {
-        viewModel.activeChannel.observe(lifecycleOwner, { channel: Channel -> Timber.i("Got new active channel: $channel ${channel.countryAlpha2}") })
-        viewModel.channelActions.observe(lifecycleOwner, { actions: List<HoverAction?> -> Timber.i("Got new actions: %s", actions.size) })
+        val activeChannelObserver = object : Observer<Channel> {
+            override fun onChanged(t: Channel?) {
+                Timber.i("Got new active channel: $t ${t?.countryAlpha2}")
+            }
+        }
+        val actionsObserver = object : Observer<List<HoverAction>> {
+            override fun onChanged(t: List<HoverAction>?) {
+                Timber.i("Got new actions: %s", t?.size)
+            }
+        }
+        viewModel.activeChannel.observe(lifecycleOwner, activeChannelObserver)
+        viewModel.channelActions.observe(lifecycleOwner, actionsObserver)
     }
 
     open fun showEdit(isEditing: Boolean) {
-//        channelDropdown?.highlighted?.let { channelsViewModel.setChannelsSelected(listOf(it)) }
-
         editCard?.visibility = if (isEditing) View.VISIBLE else View.GONE
         editRequestCard?.visibility = if (isEditing) View.VISIBLE else View.GONE
 

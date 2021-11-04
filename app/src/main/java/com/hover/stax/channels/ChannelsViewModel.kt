@@ -39,7 +39,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     val activeChannel = MediatorLiveData<Channel>()
     val channelActions = MediatorLiveData<List<HoverAction>>()
     val accounts = MediatorLiveData<List<Account>>()
-    val activeAccount = MutableLiveData<Account>()
+    private val activeAccount = MutableLiveData<Account>()
 
     private val simReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -83,6 +83,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
         allChannels = repo.allChannels
         selectedChannels = repo.selected
+
+        updateAccounts()
     }
 
     /**
@@ -110,7 +112,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             sims.postValue(repo.presentSims)
         }
 
-        LocalBroadcastManager.getInstance(application).registerReceiver(simReceiver, IntentFilter(Utils.getPackage(application).plus(".NEW_SIM_INFO_ACTION")))
+        LocalBroadcastManager.getInstance(application)
+                .registerReceiver(simReceiver, IntentFilter(Utils.getPackage(application).plus(".NEW_SIM_INFO_ACTION")))
         Hover.updateSimInfo(application)
     }
 
@@ -158,7 +161,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun setActiveChannelIfNull(channels: List<Channel>) {
-        Timber.e("Setting active channel ${channels.firstOrNull()}")
         if (!channels.isNullOrEmpty() && activeChannel.value == null)
             activeChannel.value = channels.firstOrNull { it.defaultAccount }
     }
@@ -178,7 +180,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
         viewModelScope.launch {
             val channelAccounts = repo.getChannelAndAccounts(actions.first().channel_id)
-            Timber.e("Channel with accounts $channelAccounts")
             channelAccounts?.let {
                 activeChannel.postValue(it.channel)
                 setActiveAccount(it.accounts.firstOrNull())
@@ -284,32 +285,45 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     fun getFetchAccountAction(channelId: Int): HoverAction? = repo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()
 
-    fun createAccounts(channels: List<Channel>) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val defaultAccount = repo.getDefaultAccount()
+    fun createAccounts(channels: List<Channel>) = viewModelScope.launch(Dispatchers.IO) {
+        val defaultAccount = repo.getDefaultAccount()
 
-            channels.forEach {
-                if (getFetchAccountAction(it.id) == null) {
-                    with(it) {
-                        val account = Account(name, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex, defaultAccount == null)
-                        repo.insert(account)
-                    }
+        channels.forEach {
+            if (getFetchAccountAction(it.id) == null) {
+                with(it) {
+                    val account = Account(name, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex, defaultAccount == null)
+                    repo.insert(account)
                 }
             }
         }
     }
 
-    fun migrateAccounts() {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (accounts.value.isNullOrEmpty() && !selectedChannels.value.isNullOrEmpty()) {
-                createAccounts(selectedChannels.value!!)
-            }
+    fun migrateAccounts() = viewModelScope.launch(Dispatchers.IO) {
+        if (accounts.value.isNullOrEmpty() && !selectedChannels.value.isNullOrEmpty()) {
+            createAccounts(selectedChannels.value!!)
         }
     }
 
     fun fetchAccounts(channelId: Int) = viewModelScope.launch(Dispatchers.IO) {
         val channelAccounts = repo.getAccounts(channelId)
         accounts.postValue(channelAccounts)
+    }
+
+    private fun updateAccounts() = viewModelScope.launch(Dispatchers.IO) {
+        val savedAccounts = repo.getAllAccounts()
+        if (savedAccounts.isNullOrEmpty()) return@launch
+
+        if (savedAccounts.none { it.isDefault }) {
+            val defaultChannel: Channel? = selectedChannels.value?.firstOrNull { it.defaultAccount }
+
+            if (defaultChannel != null) {
+                val ids = savedAccounts.filter { it.channelId == defaultChannel.id }.map { it.id }.toList()
+                ids.minOrNull()?.let { id -> repo.update(savedAccounts.first { it.id == id }) }
+            }
+        } else {
+            Timber.e("Nothing to update. Default account set")
+        }
+
     }
 
     override fun highlightAccount(account: Account) {
@@ -323,7 +337,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     override fun onCleared() {
         try {
             LocalBroadcastManager.getInstance(application).unregisterReceiver(simReceiver)
-        } catch (ignored: Exception) { }
+        } catch (ignored: Exception) {
+        }
         super.onCleared()
     }
 }

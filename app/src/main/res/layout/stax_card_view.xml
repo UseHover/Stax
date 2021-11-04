@@ -47,37 +47,37 @@
                         app:srcCompat="@drawable/ic_arrow_back" />
 
                 <TextView
-                    android:id="@+id/title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|end"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentTop="true"
-                    android:fontFamily="font-bold"
-                    android:gravity="center_vertical|end"
-                    android:paddingHorizontal="@dimen/margin_10"
-                    android:text="@string/bal_cardhead"
-                    android:textAlignment="viewEnd"
-                    android:textAllCaps="true"
-                    android:textColor="@color/offWhite"
-                    android:textSize="@dimen/text_16" />
+                        android:id="@+id/title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_gravity="center_vertical|end"
+                        android:fontFamily="font-bold"
+                        android:gravity="center_vertical|end"
+                        android:paddingHorizontal="@dimen/margin_10"
+                        android:text="@string/bal_cardhead"
+                        android:textAlignment="viewEnd"
+                        android:textAllCaps="true"
+                        android:textColor="@color/offWhite"
+                        android:textSize="@dimen/text_16" />
 
                 <TextView
-                    android:id="@+id/subtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|end"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/title"
-                    android:fontFamily="font-bold"
-                    android:gravity="center_vertical|end"
-                    android:paddingHorizontal="@dimen/margin_10"
-                    android:text="@string/bal_cardhead"
-                    android:textAlignment="viewEnd"
-                    android:textAllCaps="true"
-                    android:textColor="@color/offWhite"
-                    android:textSize="@dimen/text_13"
-                    android:visibility="gone"/>
+                        android:id="@+id/subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/title"
+                        android:layout_alignParentEnd="true"
+                        android:layout_gravity="center_vertical|end"
+                        android:fontFamily="font-bold"
+                        android:gravity="center_vertical|end"
+                        android:paddingHorizontal="@dimen/margin_10"
+                        android:text="@string/bal_cardhead"
+                        android:textAlignment="viewEnd"
+                        android:textAllCaps="true"
+                        android:textColor="@color/offWhite"
+                        android:textSize="@dimen/text_13"
+                        android:visibility="gone" />
             </RelativeLayout>
 
         </LinearLayout>

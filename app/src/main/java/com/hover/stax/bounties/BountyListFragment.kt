@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
@@ -16,6 +17,7 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentBountyListBinding
+import com.hover.stax.home.MainActivity
 import com.hover.stax.navigation.NavigationInterface
 import com.hover.stax.transactions.UpdateBountyTransactionsWorker
 import com.hover.stax.utils.UIHelper
@@ -23,6 +25,7 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.util.*
@@ -32,7 +35,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
 
     private lateinit var networkMonitor: NetworkMonitor
 
-    private val bountyViewModel: BountyViewModel by viewModel()
+    private val bountyViewModel: BountyViewModel by sharedViewModel()
     private var _binding: FragmentBountyListBinding? = null
     private val binding get() = _binding!!
 
@@ -167,7 +170,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
 
     private fun startBounty(b: Bounty) {
         Utils.setFirebaseMessagingTopic("BOUNTY".plus(b.action.root_code))
-        (requireActivity() as BountyActivity).makeCall(b.action)
+        (requireActivity() as MainActivity).makeCall(b.action)
     }
 
     private fun showLoadingState() {
@@ -194,7 +197,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
             if (dialog != null && dialog!!.isShowing)
                 dialog!!.dismiss()
             else
-                requireActivity().onBackPressed()
+                findNavController().navigate(R.id.action_bountyListFragment_to_navigation_settings)
         }
     })
 

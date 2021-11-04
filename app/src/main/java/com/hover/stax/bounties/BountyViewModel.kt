@@ -24,8 +24,7 @@ import java.util.*
 
 private const val MAX_LOOKUP_COUNT = 40
 
-class BountyViewModel(application: Application) : AndroidViewModel(application) {
-    private val repo = get(DatabaseRepo::class.java)
+class BountyViewModel(application: Application, val repo: DatabaseRepo) : AndroidViewModel(application) {
 
     @JvmField
     var country: String = CountryAdapter.codeRepresentingAllCountries()
@@ -33,7 +32,7 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
     val actions: LiveData<List<HoverAction>>
     val channels: LiveData<List<Channel>>
     val transactions: LiveData<List<StaxTransaction>>
-    var currentCountryFilter: MutableLiveData<String> = MutableLiveData()
+    var currentCountryFilter = MutableLiveData<String>()
     private val bountyList = MediatorLiveData<List<Bounty>>()
 
     var sims: MutableLiveData<List<SimInfo>> = MutableLiveData()
@@ -77,14 +76,7 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
 
     private fun loadChannels(actions: List<HoverAction>?): LiveData<List<Channel>> {
         if (actions == null) return MutableLiveData()
-//        val ids = getChannelIdArray(actions)
-//        Timber.e("channel id length %s", ids.size)
-//        return repo.getChannels(ids)
-        val ids = getChannelIdArray(actions).toList()
-
-//        filterChannels(countryCode)
-//
-//        repo.getChannelsByCountry(getChannelIdArray(actions), countryCode)
+        val ids = getChannelIdArray(actions.distinctBy { it.id }).toList()
 
         val channelList = runBlocking {
             getChannelsAsync(ids).await()
@@ -150,9 +142,8 @@ class BountyViewModel(application: Application) : AndroidViewModel(application) 
                     }
                     bounties.add(Bounty(action, filterTransactions))
                 }
-                return@async bounties
+                bounties
             }
-
         }
         return bountyListAsync.await()
     }

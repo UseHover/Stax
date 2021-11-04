@@ -6,17 +6,17 @@
         app:title="@string/meta_cardhead">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/connectAccounts"
-            style="@style/StaxButtonColored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:visibility="gone"
-            android:text="@string/connect_accounts" />
+                android:id="@+id/connectAccounts"
+                style="@style/StaxButtonColored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="@string/connect_accounts"
+                android:visibility="gone" />
     </RelativeLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -41,14 +41,14 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <CheckBox
-        android:id="@+id/testMode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_10"
-        android:checked="true"
-        android:fontFamily="font-normal"
-        android:padding="@dimen/margin_10"
-        android:text="@string/test_mode_enabled"
-        android:textColor="@color/offWhite"
-        android:textSize="@dimen/text_16" />
+            android:id="@+id/testMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_10"
+            android:checked="true"
+            android:fontFamily="font-normal"
+            android:padding="@dimen/margin_10"
+            android:text="@string/test_mode_enabled"
+            android:textColor="@color/offWhite"
+            android:textSize="@dimen/text_16" />
 </com.hover.stax.views.StaxCardView>

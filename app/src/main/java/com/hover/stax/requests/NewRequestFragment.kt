@@ -16,16 +16,15 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentRequestBinding
+import com.hover.stax.home.MainActivity
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
 import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import com.hover.stax.views.AbstractStatefulInput
-import com.hover.stax.views.Stax2LineItem
-import com.hover.stax.views.StaxCardView
-import com.hover.stax.views.StaxTextInputLayout
+import com.hover.stax.views.*
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
+import timber.log.Timber
 
 
 class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterface {
@@ -39,6 +38,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
     private lateinit var shareCard: StaxCardView
     private lateinit var recipientValue: Stax2LineItem
 
+    private var dialog: StaxDialog? = null
     private var _binding: FragmentRequestBinding? = null
     private val binding get() = _binding!!
 
@@ -47,6 +47,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         requestViewModel = abstractFormViewModel as NewRequestViewModel
 
         _binding = FragmentRequestBinding.inflate(inflater, container, false)
+        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_new_request)), requireActivity())
 
         init(binding.root)
 
@@ -56,6 +57,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        requestViewModel.reset()
         startObservers(binding.root)
         startListeners()
         setDefaultHelperText()
@@ -65,7 +67,8 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         handleBackPress()
     }
 
-    private fun setDefaultHelperText() = requesterNumberInput.setState(getString(R.string.account_num_desc), AbstractStatefulInput.NONE)
+    private fun setDefaultHelperText() = requesterNumberInput.setState(getString(R.string.account_num_desc),
+            AbstractStatefulInput.NONE)
 
     override fun init(root: View) {
         amountInput = binding.editRequestCard.cardAmount.amountInput
@@ -76,10 +79,6 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         recipientValue = binding.summaryCard.recipientValue
         accountValue = binding.summaryCard.accountValue
         shareCard = binding.shareCard.root
-
-        amountInput.text = requestViewModel.amount.value
-        noteInput.text = requestViewModel.note.value
-        requesterNumberInput.text = requestViewModel.requesterNumber.value
 
         super.init(root)
     }
@@ -102,7 +101,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
             accounts.observe(viewLifecycleOwner) {
                 //no channels selected. navigate user to accounts fragment
                 if (it.isNullOrEmpty())
-                    setDropdownTouchListener(R.id.action_navigation_request_to_accountsFrag)
+                    setDropdownTouchListener(R.id.action_navigation_request_to_accountsFragment)
             }
             activeChannel.observe(viewLifecycleOwner, channelsObserver)
         }
@@ -110,7 +109,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         with(requestViewModel) {
             amount.observe(viewLifecycleOwner, {
                 binding.summaryCard.amountRow.visibility = if (validAmount()) View.VISIBLE else View.GONE
-                binding.summaryCard.amountValue.text = Utils.formatAmount(it)
+                binding.summaryCard.amountValue.text = it?.let { Utils.formatAmount(it) }
             })
 
             requesterNumber.observe(viewLifecycleOwner, { accountValue.setSubtitle(it) })
@@ -172,7 +171,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
     }
 
     private fun setClickListeners() {
-        val activity = activity as RequestActivity
+        val activity = activity as MainActivity
         binding.shareCard.smsShareSelection.setOnClickListener { activity.sendSms() }
         binding.shareCard.whatsappShareSelection.setOnClickListener { activity.sendWhatsapp() }
         binding.shareCard.copylinkShareSelection.setOnClickListener { activity.copyShareLink(it) }
@@ -206,12 +205,12 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
         override fun afterTextChanged(editable: Editable) {}
         override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+            Timber.e(charSequence.toString())
             requestViewModel.setRecipient(charSequence.toString())
         }
     }
 
     private fun fabClicked() {
-        requestViewModel.removeInvalidRequestees()
         if (requestViewModel.isEditing.value!! && validates()) {
             updatePushNotifGroupStatus()
             requestViewModel.setEditing(false)
@@ -239,16 +238,43 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
     private fun handleBackPress() = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            if (requestViewModel.isEditing.value == false)
-                requestViewModel.setEditing(true)
-            else
-                findNavController().popBackStack()
+           when {
+               !requestViewModel.isEditing.value!! && requestViewModel.formulatedRequest.value == null -> requestViewModel.setEditing(true)
+               !requestViewModel.isEditing.value!! && requestViewModel.formulatedRequest.value != null -> askAreYouSure()
+               else -> findNavController().popBackStack()
+           }
         }
     })
+
+    /**
+     * Since the fragment is only created after first launch, amount, requestee and note fields will be repopulated with viewmodel values.
+     * To manage this, whenever summary card is shown and the fragment is paused, edit mode is enabled to allow for correct state management
+     * when fragment is resumed.
+     */
+    override fun onPause() {
+        super.onPause()
+        requestViewModel.setEditing(true)
+    }
+
+    private fun askAreYouSure(){
+        dialog = StaxDialog(requireActivity())
+                .setDialogTitle(R.string.reqsave_head)
+                .setDialogMessage(R.string.reqsave_msg)
+                .setPosButton(R.string.btn_save) { saveUnsent() }
+                .setNegButton(R.string.btn_dontsave) { (activity as MainActivity).cancel() }
+        dialog!!.showIt()
+    }
+
+    private fun saveUnsent(){
+        requestViewModel.saveRequest()
+        Utils.logAnalyticsEvent(getString(R.string.saved_unsent_request), requireActivity())
+        findNavController().popBackStack()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
 
+        if(dialog != null && dialog!!.isShowing) dialog!!.dismiss()
         _binding = null
     }
 }
