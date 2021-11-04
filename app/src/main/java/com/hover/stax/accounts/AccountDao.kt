@@ -43,7 +43,7 @@ interface AccountDao {
     fun insert(account: Account)
 
     @Update
-    fun update(account: Account)
+    fun update(account: Account?)
 
     @Update
     fun updateAll(accounts: List<Account>)

@@ -350,7 +350,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         AppDatabase.databaseWriteExecutor.execute { accountDao.insert(account) }
     }
 
-    fun update(account: Account) {
+    fun update(account: Account?) {
         AppDatabase.databaseWriteExecutor.execute { accountDao.update(account) }
     }
 

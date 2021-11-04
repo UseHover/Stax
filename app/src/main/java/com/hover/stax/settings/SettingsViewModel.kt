@@ -185,6 +185,11 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
 
     fun setDefaultAccount(account: Account) {
         if (!accounts.value.isNullOrEmpty()) {
+            //remove current default account
+            val current: Account? = accounts.value!!.firstOrNull { it.isDefault }
+            current?.isDefault = false
+            repo.update(current)
+
             val a = accounts.value!!.first { it.id == account.id }
             a.isDefault = true
             repo.update(a)
