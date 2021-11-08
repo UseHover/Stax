@@ -192,7 +192,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun loadActions(t: String) {
-        Timber.e("$t")
         if ((t == HoverAction.BALANCE && selectedChannels.value == null) || (t != HoverAction.BALANCE && activeChannel.value == null)) return
         if (t == HoverAction.BALANCE) loadActions(selectedChannels.value!!, t) else loadActions(activeChannel.value!!, t)
     }
@@ -206,25 +205,17 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             loadActions(channels, type.value!!)
     }
 
-    private fun loadActions(channel: Channel, t: String) {
-        Timber.e("Loading actions for $t")
-        viewModelScope.launch {
-            channelActions.value = if (t == HoverAction.P2P) repo.getTransferActions(channel.id) else repo.getActions(channel.id, t)
-        }
+    private fun loadActions(channel: Channel, t: String) = viewModelScope.launch {
+        channelActions.value = if (t == HoverAction.P2P) repo.getTransferActions(channel.id) else repo.getActions(channel.id, t)
     }
 
-    private fun loadAccounts(channels: List<Channel>) {
-        viewModelScope.launch {
-            val ids = channels.map { it.id }
-            accounts.value = repo.getAccounts(ids)
-        }
+    private fun loadAccounts(channels: List<Channel>) = viewModelScope.launch {
+        val ids = channels.map { it.id }
+        accounts.value = repo.getAccounts(ids)
     }
 
     private fun loadActions(channels: List<Channel>, t: String) {
-        val ids = IntArray(channels.size)
-
-        for (i in channels.indices)
-            ids[i] = channels[i].id
+        val ids = channels.map { it.id }.toIntArray()
 
         viewModelScope.launch {
             channelActions.value = repo.getActions(ids, t)

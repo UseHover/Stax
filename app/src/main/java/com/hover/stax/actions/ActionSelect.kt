@@ -51,10 +51,6 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
         actions = filteredActions
         highlightedAction = null
 
-        filteredActions.forEach {
-            Timber.e("${it.from_institution_name} - ${it.transaction_type}")
-        }
-
         val uniqueActions = sort(filteredActions)
 
         val actionDropdownAdapter = ActionDropdownAdapter(uniqueActions, context)
