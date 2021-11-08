@@ -50,7 +50,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     init {
-        type.value = HoverAction.BALANCE
+//        type.value = HoverAction.BALANCE
 
         loadChannels()
         loadSims()
@@ -192,6 +192,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun loadActions(t: String) {
+        Timber.e("$t")
         if ((t == HoverAction.BALANCE && selectedChannels.value == null) || (t != HoverAction.BALANCE && activeChannel.value == null)) return
         if (t == HoverAction.BALANCE) loadActions(selectedChannels.value!!, t) else loadActions(activeChannel.value!!, t)
     }
@@ -206,6 +207,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun loadActions(channel: Channel, t: String) {
+        Timber.e("Loading actions for $t")
         viewModelScope.launch {
             channelActions.value = if (t == HoverAction.P2P) repo.getTransferActions(channel.id) else repo.getActions(channel.id, t)
         }

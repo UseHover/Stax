@@ -49,6 +49,11 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
 
         actions = filteredActions
         highlightedAction = null
+
+        filteredActions.forEach {
+            Timber.e("${it.from_institution_name} - ${it.transaction_type}")
+        }
+
         val uniqueActions = sort(filteredActions)
 
         val actionDropdownAdapter = ActionDropdownAdapter(uniqueActions, context)
@@ -64,7 +69,19 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
         }
     }
 
-    fun sort(actions: List<HoverAction>): List<HoverAction> = actions.distinctBy { it.recipientInstitutionId() }.toList()
+    fun sort(actions: List<HoverAction>): List<HoverAction> {
+        val uniqRecipInstIds = ArrayList<Int>()
+        val uniqRecipActions = ArrayList<HoverAction>()
+
+        for (a in actions) {
+            if (!uniqRecipInstIds.contains(a.recipientInstitutionId())) {
+                uniqRecipInstIds.add(a.recipientInstitutionId())
+                uniqRecipActions.add(a)
+            }
+        }
+
+        return uniqRecipActions
+    }
 
     private fun showRecipientNetwork(actions: List<HoverAction>) = actions.size > 1 || (actions.size == 1 && !actions.first().isOnNetwork)
 
@@ -90,7 +107,7 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
         } else createRadios(options)
     }
 
-    fun selectAction(action: HoverAction) {
+    private fun selectAction(action: HoverAction) {
         highlightedAction = action
         highlightListener?.highlightAction(action)
     }
