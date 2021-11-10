@@ -41,16 +41,16 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     val accounts = MediatorLiveData<List<Account>>()
     private val activeAccount = MutableLiveData<Account>()
 
-    private val simReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            viewModelScope.launch {
-                sims.postValue(repo.presentSims)
-            }
-        }
-    }
+    private var simReceiver: BroadcastReceiver? = null
 
     init {
-//        type.value = HoverAction.BALANCE
+        simReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                viewModelScope.launch {
+                    sims.postValue(repo.presentSims)
+                }
+            }
+        }
 
         loadChannels()
         loadSims()
@@ -112,8 +112,11 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             sims.postValue(repo.presentSims)
         }
 
-        LocalBroadcastManager.getInstance(application)
-                .registerReceiver(simReceiver, IntentFilter(Utils.getPackage(application).plus(".NEW_SIM_INFO_ACTION")))
+        simReceiver?.let {
+            LocalBroadcastManager.getInstance(application)
+                    .registerReceiver(it, IntentFilter(Utils.getPackage(application).plus(".NEW_SIM_INFO_ACTION")))
+        }
+
         Hover.updateSimInfo(application)
     }
 
@@ -329,7 +332,9 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     override fun onCleared() {
         try {
-            LocalBroadcastManager.getInstance(application).unregisterReceiver(simReceiver)
+            simReceiver?.let {
+                LocalBroadcastManager.getInstance(application).unregisterReceiver(it)
+            }
         } catch (ignored: Exception) {
         }
         super.onCleared()
