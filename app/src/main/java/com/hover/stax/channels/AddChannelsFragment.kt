@@ -33,7 +33,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     private var _binding: FragmentAddChannelsBinding? = null
     private val binding get() = _binding!!
 
-    private var selectAdapter: ChannelsRecyclerViewAdapter = ChannelsRecyclerViewAdapter(ArrayList(0), this)
+    private val selectAdapter: ChannelsRecyclerViewAdapter = ChannelsRecyclerViewAdapter(ArrayList(0), this)
     private var tracker: SelectionTracker<Long>? = null
 
     private var dialog: StaxDialog? = null
