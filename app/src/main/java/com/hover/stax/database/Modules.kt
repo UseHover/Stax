@@ -33,7 +33,7 @@ val appModule = module {
     viewModel { BannerViewModel(get(), get()) }
     viewModel { FutureViewModel(get()) }
     viewModel { SettingsViewModel(get(), get()) }
-    viewModel { TransactionDetailsViewModel(get()) }
+    viewModel { TransactionDetailsViewModel(get(), get()) }
     viewModel { LibraryViewModel(get(), get()) }
     viewModel { LanguageViewModel(get()) }
     viewModel { BountyViewModel(get(), get()) }

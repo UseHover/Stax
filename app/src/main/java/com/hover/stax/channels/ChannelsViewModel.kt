@@ -41,16 +41,16 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     val accounts = MediatorLiveData<List<Account>>()
     private val activeAccount = MutableLiveData<Account>()
 
-    private val simReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            viewModelScope.launch {
-                sims.postValue(repo.presentSims)
-            }
-        }
-    }
+    private var simReceiver: BroadcastReceiver? = null
 
     init {
-//        type.value = HoverAction.BALANCE
+        simReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                viewModelScope.launch {
+                    sims.postValue(repo.presentSims)
+                }
+            }
+        }
 
         loadChannels()
         loadSims()
@@ -112,8 +112,11 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             sims.postValue(repo.presentSims)
         }
 
-        LocalBroadcastManager.getInstance(application)
-                .registerReceiver(simReceiver, IntentFilter(Utils.getPackage(application).plus(".NEW_SIM_INFO_ACTION")))
+        simReceiver?.let {
+            LocalBroadcastManager.getInstance(application)
+                    .registerReceiver(it, IntentFilter(Utils.getPackage(application).plus(".NEW_SIM_INFO_ACTION")))
+        }
+
         Hover.updateSimInfo(application)
     }
 
@@ -191,16 +194,21 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         c?.let { setActiveChannel(it) }
     }
 
-    private fun loadActions(t: String) {
+    private fun loadActions(t: String?) {
+        if(t == null) return
+
         if ((t == HoverAction.BALANCE && selectedChannels.value == null) || (t != HoverAction.BALANCE && activeChannel.value == null)) return
         if (t == HoverAction.BALANCE) loadActions(selectedChannels.value!!, t) else loadActions(activeChannel.value!!, t)
     }
 
-    private fun loadActions(channel: Channel) {
+    private fun loadActions(channel: Channel?) {
+        if(channel == null || type.value.isNullOrEmpty()) return
         loadActions(channel, type.value!!)
     }
 
     private fun loadActions(channels: List<Channel>) {
+        if(channels.isNullOrEmpty()) return
+
         if (type.value == HoverAction.BALANCE)
             loadActions(channels, type.value!!)
     }
@@ -329,7 +337,9 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     override fun onCleared() {
         try {
-            LocalBroadcastManager.getInstance(application).unregisterReceiver(simReceiver)
+            simReceiver?.let {
+                LocalBroadcastManager.getInstance(application).unregisterReceiver(it)
+            }
         } catch (ignored: Exception) {
         }
         super.onCleared()

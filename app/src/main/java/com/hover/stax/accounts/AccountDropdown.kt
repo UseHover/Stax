@@ -25,8 +25,9 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     private var showSelected: Boolean = true
     private var helperText: String? = null
-    var highlightedAccount: Account? = null
     private var highlightListener: HighlightListener? = null
+
+    var highlightedAccount: Account? = null
 
     init {
         getAttrs(context, attributeSet)
@@ -77,26 +78,26 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
             setOnItemClickListener { parent, _, position, _ -> onSelect(parent.getItemAtPosition(position) as Account) }
         }
 
-        if (showSelected)
-            setDropdownValue(accounts.firstOrNull { it.isDefault })
+//        if (showSelected)
+        onSelect(accounts.firstOrNull { it.isDefault })
     }
 
-    private fun onSelect(account: Account) {
+    private fun onSelect(account: Account?) {
         setDropdownValue(account)
-        highlightListener?.highlightAccount(account)
+        account?.let { highlightListener?.highlightAccount(it) }
     }
 
     private fun hasExistingContent(): Boolean = autoCompleteTextView.adapter != null && autoCompleteTextView.adapter.count > 0
 
     fun setObservers(viewModel: ChannelsViewModel, lifecycleOwner: LifecycleOwner) {
         with(viewModel) {
-            val simsObserver = object: Observer<List<SimInfo>> {
+            val simsObserver = object : Observer<List<SimInfo>> {
                 override fun onChanged(t: List<SimInfo>?) {
                     Timber.i("Got sims ${t?.size}")
                 }
             }
 
-            val hniListObserver = object: Observer<List<String>> {
+            val hniListObserver = object : Observer<List<String>> {
                 override fun onChanged(t: List<String>?) {
                     Timber.i("Got new sim hni list $t")
                 }

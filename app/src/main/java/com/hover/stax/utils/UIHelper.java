@@ -48,7 +48,7 @@ public class UIHelper {
     }
 
     private static void showSnack(View view, String message) {
-        Snackbar s = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
+        Snackbar s = Snackbar.make(view, message, Snackbar.LENGTH_SHORT);
         s.setAnchorView(view);
         s.show();
     }

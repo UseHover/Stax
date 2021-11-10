@@ -75,6 +75,8 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setUpNav()
+
         initFromIntent()
         startObservers()
         checkForRequest(intent)
@@ -257,7 +259,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
     private fun runAction(hsb: HoverSession.Builder) = try {
         hsb.run()
     } catch (e: Exception) {
-        UIHelper.flashMessage(this, getString(R.string.error_running_action))
+        runOnUiThread { UIHelper.flashMessage(this, getString(R.string.error_running_action)) }
 
         val data = JSONObject()
         try {
