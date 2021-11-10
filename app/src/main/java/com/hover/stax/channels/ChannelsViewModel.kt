@@ -202,7 +202,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun loadActions(channel: Channel?) {
-        if(channel == null) return
+        if(channel == null || type.value.isNullOrEmpty()) return
         loadActions(channel, type.value!!)
     }
 
