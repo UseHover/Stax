@@ -27,10 +27,6 @@ abstract class AbstractNavigationActivity : AppCompatActivity(), NavigationInter
     private val networkReceiver = NetworkReceiver()
 
     fun setUpNav() {
-        setBottomBar()
-    }
-
-    private fun setBottomBar() {
         val nav = findViewById<BottomNavigationView>(R.id.nav_view)
         navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 

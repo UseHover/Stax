@@ -75,6 +75,8 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setUpNav()
+
         initFromIntent()
         startObservers()
         checkForRequest(intent)
