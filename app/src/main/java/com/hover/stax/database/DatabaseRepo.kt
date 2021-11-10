@@ -346,17 +346,11 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         }
     }
 
-    fun insert(account: Account) {
-        AppDatabase.databaseWriteExecutor.execute { accountDao.insert(account) }
-    }
+    fun insert(account: Account) = AppDatabase.databaseWriteExecutor.execute { accountDao.insert(account) }
 
-    fun update(account: Account?) {
-        AppDatabase.databaseWriteExecutor.execute { accountDao.update(account) }
-    }
+    fun update(account: Account?) = account?.let { AppDatabase.databaseWriteExecutor.execute { accountDao.update(it) } }
 
-    fun delete(account: Account) {
-        AppDatabase.databaseWriteExecutor.execute { accountDao.delete(account) }
-    }
+    fun delete(account: Account) = AppDatabase.databaseWriteExecutor.execute { accountDao.delete(account) }
 
     companion object {
         private val TAG = DatabaseRepo::class.java.simpleName
