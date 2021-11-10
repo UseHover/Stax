@@ -80,7 +80,7 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
         if (!isFullScreen) setToPopupDesign()
         createUSSDMessagesRecyclerView()
         createSmsMessagesRecyclerView()
-        viewModel.setTransaction(uuid)
+        viewModel.setTransaction(uuid!!)
         binding.transactionDetailsCard.setOnClickIcon { this.dismiss() }
         setupSeeMoreButton()
     }
@@ -238,7 +238,7 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
 
     private fun setStatusText(action: HoverAction?, transaction: StaxTransaction?) {
         if (transaction != null) {
-            binding.statusText.text = transaction.fullStatus.getStatusDetail(action, viewModel.messages?.value?.last(), viewModel.sms?.value, requireContext())
+            binding.statusText.text = transaction.fullStatus.getStatusDetail(action, viewModel.messages.value?.last(), viewModel.sms.value, requireContext())
         }
     }
 
