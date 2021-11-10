@@ -10,9 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
-import com.hover.stax.account.Account
-import com.hover.stax.account.DUMMY
-import com.hover.stax.channels.Channel
+import com.hover.stax.accounts.Account
+import com.hover.stax.accounts.DUMMY
 import com.hover.stax.databinding.FragmentBalanceBinding
 import com.hover.stax.home.HomeFragment
 import com.hover.stax.home.MainActivity
@@ -22,10 +21,6 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.staxcardstack.StaxCardStackView
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
-import java.lang.StringBuilder
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 
 class BalancesFragment : Fragment(), NavigationInterface {

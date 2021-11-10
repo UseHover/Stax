@@ -11,23 +11,42 @@
         <entry key="app/src/main/res/drawable/button_bg_colored.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_dark.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_grey.xml" value="0.32037037037037036" />
+        <entry key="app/src/main/res/drawable/ic_close.xml" value="0.2601851851851852" />
+        <entry key="app/src/main/res/drawable/ic_noun_hashtag_2733013.xml" value="0.175" />
+        <entry key="app/src/main/res/drawable/ic_refresh_white_13dp.xml" value="0.25833333333333336" />
+        <entry key="app/src/main/res/drawable/ic_settings.xml" value="0.25833333333333336" />
+        <entry key="app/src/main/res/drawable/ic_share.xml" value="0.22962962962962963" />
+        <entry key="app/src/main/res/drawable/ic_ussd_lib.xml" value="0.3546875" />
         <entry key="app/src/main/res/layout/account_card_layout.xml" value="0.15704154002026344" />
+        <entry key="app/src/main/res/layout/account_card_manage.xml" value="0.30572916666666666" />
+        <entry key="app/src/main/res/layout/account_card_shortcode.xml" value="0.30572916666666666" />
         <entry key="app/src/main/res/layout/action_select.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/activity_bounty.xml" value="0.14817629179331307" />
+        <entry key="app/src/main/res/layout/activity_language.xml" value="0.1646403242147923" />
+        <entry key="app/src/main/res/layout/activity_library.xml" value="0.296875" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.14437689969604864" />
+        <entry key="app/src/main/res/layout/activity_request.xml" value="0.13500506585612967" />
+        <entry key="app/src/main/res/layout/activity_transfer.xml" value="0.13500506585612967" />
         <entry key="app/src/main/res/layout/balance_item.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/basic_perm_dialog.xml" value="0.2890625" />
         <entry key="app/src/main/res/layout/contact_input.xml" value="0.15678824721377912" />
+        <entry key="app/src/main/res/layout/fragment_account.xml" value="0.30572916666666666" />
         <entry key="app/src/main/res/layout/fragment_accounts.xml" value="0.15704154002026344" />
         <entry key="app/src/main/res/layout/fragment_bounty_email.xml" value="0.14817629179331307" />
         <entry key="app/src/main/res/layout/fragment_bounty_list.xml" value="0.1342451874366768" />
         <entry key="app/src/main/res/layout/fragment_channel.xml" value="0.14766970618034447" />
         <entry key="app/src/main/res/layout/fragment_channels_list.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/fragment_faq.xml" value="0.24010416666666667" />
+        <entry key="app/src/main/res/layout/fragment_language.xml" value="0.30572916666666666" />
+        <entry key="app/src/main/res/layout/fragment_library.xml" value="0.13323201621073963" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/fragment_main.xml" value="0.1331521739130435" />
         <entry key="app/src/main/res/layout/fragment_pin_update.xml" value="0.13405797101449277" />
         <entry key="app/src/main/res/layout/fragment_request.xml" value="0.14868287740628167" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.15602836879432624" />
+        <entry key="app/src/main/res/layout/fragment_transaction.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/fragment_transfer.xml" value="0.13903985507246377" />
+        <entry key="app/src/main/res/layout/home_card_future.xml" value="0.11398176291793313" />
         <entry key="app/src/main/res/layout/home_card_transactions.xml" value="0.14766970618034447" />
         <entry key="app/src/main/res/layout/rename_account_layout.xml" value="0.3134057971014493" />
         <entry key="app/src/main/res/layout/repeat_inputs.xml" value="0.18697916666666667" />
@@ -42,16 +61,26 @@
         <entry key="app/src/main/res/layout/self_destruct_layout.xml" value="0.3140625" />
         <entry key="app/src/main/res/layout/settings_bounty_card_layout.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/settings_card_accounts.xml" value="0.13903985507246377" />
+        <entry key="app/src/main/res/layout/settings_card_bounties.xml" value="0.30842391304347827" />
         <entry key="app/src/main/res/layout/settings_card_contact_us.xml" value="0.3640625" />
+        <entry key="app/src/main/res/layout/settings_card_meta.xml" value="0.16666666666666666" />
+        <entry key="app/src/main/res/layout/settings_card_share.xml" value="0.16666666666666666" />
         <entry key="app/src/main/res/layout/stax_card_view.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/stax_dialog.xml" value="0.3120471014492754" />
         <entry key="app/src/main/res/layout/stax_dropdown.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/stax_input.xml" value="0.13903985507246377" />
+        <entry key="app/src/main/res/layout/stax_nav_view.xml" value="0.14437689969604864" />
+        <entry key="app/src/main/res/layout/stax_radio_button.xml" value="0.3179347826086957" />
+        <entry key="app/src/main/res/layout/stax_referral_dialog.xml" value="0.32155797101449274" />
+        <entry key="app/src/main/res/layout/stax_spinner_item.xml" value="0.30625" />
         <entry key="app/src/main/res/layout/stax_spinner_item_with_logo.xml" value="0.13134057971014493" />
+        <entry key="app/src/main/res/layout/support_stax_layout.xml" value="0.1646403242147923" />
+        <entry key="app/src/main/res/layout/transaction_list_item.xml" value="0.30027173913043476" />
         <entry key="app/src/main/res/layout/transfer_card_edit.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/transfer_card_future.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/transfer_card_summary.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/transfer_note.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/nav_main.xml" value="0.27870370370370373" />
       </map>
     </option>
   </component>

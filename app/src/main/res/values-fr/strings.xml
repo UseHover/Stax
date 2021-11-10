@@ -1,40 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?><resources>
-
-  <string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
-
-  <string name="appsflyer_key" public="false" translatable="false">4B6DDdYFw55PmVPTwr8Ski</string>
-
-  <string name="app_name" translatable="false">Stax</string>
-
-  <string name="payment_root_url" translatable="false">https://stax.me/pay?%1$s</string>
-
-  <string name="payment_url_end" translatable="false">%1$s-%2$d-%3$s-%4$d</string>
-
-  <string name="root_url" translatable="false">https://www.usehover.com</string>
-
-  <string name="api_url" translatable="false">https://www.usehover.com/api</string>
-
-  <string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
-
-  <string name="bounty_endpoint">/stax_bounty_hunters</string>
-
-  <string name="stax_market_playstore_link" translatable="false">market://details?id=com.hover.stax</string>
-
-  <string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
-
-  <string name="stax_nolt_url">https://stax.nolt.io/</string>
-
-  <string name="receive_stax_updates_url">https://416e906b.sibforms.com/serve/MUIEAAS88NDe6oTn7nl8YrIqgutsJ_GgyCYRWVsZ-S54quVNmBhvpsu70WpNXrZd-n6H5r8m1ZRfuTl8ckiQrB4sLIdNSx0Y_DFZ7_hQGCDv9PG6N0ncsHwWW3OYsMlPMHgQSR6OZf8xK8HC-NA3p3T71Pv1Coy_n9oiDRwIu7HCryUfDtfHr11mXSQ5S3JwcOd8cN7FL1ewDRqu</string>
-
-  <string name="mixpanel_token" translatable="false">82efeb23b6d38509989f592c8f4b21c2</string>
-
   <string name="nav_home">Accueil</string>
 
   <string name="nav_balance_and_history">Équilibre et histoire</string>
 
   <string name="nav_balances">Soldes</string>
 
-  <string name="nav_get_paid">Soyez payé</string>
+  <string name="nav_get_paid">Soyez Payé</string>
 
   <string name="nav_link_account">Lier un compte</string>
 
@@ -94,7 +65,7 @@
 
   <string name="splash_screen_img_desc">Fond de Stax</string>
 
-  <string name="slide_1_title">Faites toutes vos transactions hors ligne !</string>
+  <string name="slide_1_title">Faites toutes vos transactions hors ligne !</string>
 
   <string name="slide_1_desc">Vous n\'avez pas besoin d\'Internet pour transférer de l\'argent ou vérifier les soldes de votre compte sur Stax.</string>
 
@@ -131,11 +102,11 @@
   <string name="link_account_error">Choisissez un compte à associer.</string>
 
   <string name="link_another">
-    <u>+ Associer un autre compte</u>
+    <u>+ Associer un autre compte</u>
   </string>
 
   <string name="add_another_account">
-    <u>+ Ajouter un autre compte</u>
+    <u>+ Ajouter un autre compte</u>
   </string>
 
   <string name="hist_cardhead">Historique</string>
@@ -190,7 +161,7 @@
 
   <string name="perm_dialoghead">Une dernière chose…</string>
 
-  <string name="perm_dialogbody">Stax a besoin de deux autorisations pour %1$s.</string>
+  <string name="perm_dialogbody">Stax a besoin de deux autorisations pour %1$s.</string>
 
   <string name="use_ussd">utiliser USSD</string>
 
@@ -206,7 +177,7 @@
 
   <string name="perm_accessibiltiy_dialogbody">Stax a besoin d\'une autorisation d\'accessibilité pour %1$s</string>
 
-  <string name="perm_progress1">Étape 1 sur 2: Autorisation d\'affichage</string>
+  <string name="perm_progress1">Étape 1 sur 2: Autorisation d\'affichage</string>
 
   <string name="perm_progress2">Étape 2 sur 2: Autorisation d\'accessibilité</string>
 
@@ -244,7 +215,7 @@
 
   <string name="hsdk_enable_accessibility">Activer l\'accessibilité</string>
 
-  <string name="access_service_summary">Connectez-vous avec les services Mobile Money et Telecom en votre nom</string>
+  <string name="access_service_summary">Connectez-vous avec les services Mobile Money et Telecom en votre nom</string>
 
   <string name="access_service_descript">Ceci est utilisé pour lire et interagir avec les menus USSD afin de fournir une expérience simplifiée et plus accessible.</string>
 
@@ -334,7 +305,7 @@
 
   <string name="descrip_transfer_received">reçu de l\'argent de %1$s</string>
 
-  <string name="descrip_bill_paid">%1$s facture payée</string>
+  <string name="descrip_bill_paid">%1$s facture payée</string>
 
   <string name="descrip_recorded">Session USSD enregistrée le %1$s</string>
 
@@ -360,7 +331,7 @@
 
   <string name="send_request_to">Envoyer la demande à</string>
 
-  <string name="request_amount_label">Combien d\'argent ?</string>
+  <string name="request_amount_label">Combien d\'argent ?</string>
 
   <string name="amount_label_opt">Montant (facultatif)</string>
 
@@ -372,13 +343,13 @@
 
   <string name="sms_amount_detail">%1$s </string>
 
-  <string name="sms_note_detail">Remarque : \"%1$s\" </string>
+  <string name="sms_note_detail">Remarque : \"%1$s\" </string>
 
-  <string name="reqsave_head">Enregistrer la demande ?</string>
+  <string name="reqsave_head">Enregistrer la demande ?</string>
 
   <string name="toast_error_smsperm">Vous devez accorder l\'autorisation de lecture de SMS pour que Stax puisse savoir quand une demande est envoyée ou satisfaite.</string>
 
-  <string name="reqsave_msg">Il semble que vous n\'ayez pas envoyé votre demande. Souhaitez-vous quand même l\'enregistrer ?</string>
+  <string name="reqsave_msg">Il semble que vous n\'ayez pas envoyé votre demande. Souhaitez-vous quand même l\'enregistrer ?</string>
 
   <string name="toast_confirm_request">Votre demande a été enregistrée.</string>
 
@@ -388,7 +359,7 @@
 
   <string name="requester_number_label">Compte</string>
 
-  <string name="requester_account_number_label">Numéro de compte</string>
+  <string name="account_number_label">Numéro de compte</string>
 
   <string name="request_error_recipient">Veuillez saisir un numéro de téléphone.</string>
 
@@ -416,15 +387,15 @@
 
   <string name="repeat_toggle">Envoyer plus d\'une fois</string>
 
-  <string name="repeatfreq_label">À quelle fréquence ?</string>
+  <string name="repeatfreq_label">À quelle fréquence ?</string>
 
   <string name="end_label">Date de fin</string>
 
   <string name="end_label_opt">Date de fin (facultatif)</string>
 
-  <string name="repeatnum_label_opt">Combien de fois ? (facultatif)</string>
+  <string name="repeatnum_label_opt">Combien de fois ? (facultatif)</string>
 
-  <string name="repeatnum_label">Combien de fois ?</string>
+  <string name="repeatnum_label">Combien de fois ?</string>
 
   <string name="toast_confirm_schedule">Transfert prévu. Nous vous rappellerons d\'effectuer un virement le %1$s</string>
 
@@ -512,11 +483,11 @@
 
   <!-- Settings -->
 
-  <string name="accts_cardhead">Comptes</string>
+  <string name="meta_cardhead">Comptes</string>
 
   <string name="security_cardhead">Sécurité</string>
 
-  <string name="security_cardbody">Stax répond aux critères de la classification de sécurité 740.17(b)(3)(i) du Bureau of Industry and Security des États-Unis. Ce logiciel utilise HTTPS pour la communication avec le serveur ; cryptage RSA à clé symétrique pour stocker temporairement les informations d\'identification de l\'utilisateur sur son propre appareil à l\'aide d\'Android Keystore ; et obfuscation de code à l\'aide de DRM.</string>
+  <string name="security_cardbody">Stax répond aux critères de la classification de sécurité 740.17(b)(3)(i) du Bureau of Industry and Security des États-Unis. Ce logiciel utilise HTTPS pour la communication avec le serveur ; cryptage RSA à clé symétrique pour stocker temporairement les informations d\'identification de l\'utilisateur sur son propre appareil à l\'aide d\'Android Keystore ; et obfuscation de code à l\'aide de DRM.</string>
 
   <string name="defaultacct_label">Compte par défaut</string>
 
@@ -564,7 +535,7 @@
 
   <string name="stax_support_email">support\@stax.me</string>
 
-  <string name="stax_emailing_subject">Identifiant d\'assistance Stax – %1$s</string>
+  <string name="stax_emailing_subject">Identifiant d\'assistance Stax – %1$s</string>
 
   <string name="send_email_using">Envoyer un courrier en utilisant…</string>
 
@@ -628,7 +599,7 @@
 
   <string name="csr_text_state_complete">Actualisation du solde terminée</string>
 
-  <string name="csr_text_last_refresh">dernière mise à jour :</string>
+  <string name="csr_text_last_refresh">dernière mise à jour :</string>
 
   <!-- BOUNTY -->
 
@@ -636,7 +607,7 @@
 
   <string name="bounty_title">SOYEZ PAYÉ ! CARTE DES FLUX USSD</string>
 
-  <string name="bounty_msg">Stax vous paiera 5 $à 50 $ US pour passer par un flux USSD.</string>
+  <string name="bounty_msg">Stax vous paiera 5 $à 50 $ US pour passer par un flux USSD.</string>
 
   <string name="get_started">Commencer</string>
 
@@ -644,14 +615,14 @@
 
   <string name="bounty_email_stage_desc1">
     Stax veut rendre l\'argent numérique accessible à tous, n\'importe où hors ligne. Pour apporter Stax à plus de personnes dans plus de pays, nous devons créer une carte de tous les services USSD dans le monde.
-    <b> C\'est pourquoi Stax vous paiera 5 à 50 USD pour parcourir l\'un des flux USSD de la page suivante.</b>
+    <b> C\'est pourquoi Stax vous paiera 5 à 50 USD pour parcourir l\'un des flux USSD de la page suivante.</b>
   </string>
 
   <string name="bounty_email_stage_desc2">
     <b>1.</b>
        Entrez votre courriel afin que nous puissions vous payer.\n
     <b>2.</b>
-       Choisissez un flux USSD comme « vérifier le solde » de votre banque ou du service d\'argent mobile sur la page suivante.\n
+       Choisissez un flux USSD comme « vérifier le solde » de votre banque ou du service d\'argent mobile sur la page suivante.\n
     <b>3.</b>
        Parcourez le flux USSD normalement.\n
     <b>4.</b>
@@ -698,7 +669,7 @@
 
   <string name="available_flows">FLUX DISPONIBLES</string>
 
-  <string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
+  <string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
 
   <string name="bounty_claim_explained">Pour réclamer %1$d $USD, %2$s.\n\nDès que vous aurez terminé, nous vous enverrons un courriel pour collecter les informations nécessaires au paiement. Vous serez payé en 1 à 5 jours ouvrables </string>
 
@@ -758,7 +729,7 @@
 
   <string name="try_again">Réessayer</string>
 
-  <string name="edge_case_bounty_email_error">Cela arrive rarement, mais si l\'erreur persiste, veuillez fermer l\'application et redémarrer.</string>
+  <string name="unknown_login_error">Cela arrive rarement, mais si l\'erreur persiste, veuillez fermer l\'application et redémarrer.</string>
 
   <string name="no_account_selected_error">Veuillez choisir au moins un compte à ajouter à Stax</string>
 
@@ -816,7 +787,7 @@
 
   <string name="faq_title">Questions fréquemment posées</string>
 
-  <string name="faq_content"> %1$s &lt;p/&gt;Vous avez encore des questions ? &lt;p/&gt; &lt;a href="mailto:support@stax.me?subject=Stax-support-%2$s"&gt;&lt;u&gt; &lt;b&gt;&lt;font color=#1878F9&gt; Assistance en matière de taxes par courriel &lt;/b&gt;&lt;u&gt;&lt;/a&gt;</string>
+  <string name="faq_content"> %1$s &lt;p/&gt;Vous avez encore des questions ? &lt;p/&gt; &lt;a href="mailto:support@stax.me?subject=Stax-support-%2$s"&gt;&lt;u&gt; &lt;b&gt;&lt;font color=#1878F9&gt; Assistance en matière de taxes par courriel &lt;/b&gt;&lt;u&gt;&lt;/a&gt;</string>
 
   <string name="loading">Chargement…</string>
 

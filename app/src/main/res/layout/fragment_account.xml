@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_13"
+            android:layout_marginBottom="@dimen/margin_55"
+            android:orientation="vertical">
+
+        <com.hover.stax.views.StaxCardView
+                android:id="@+id/detailsCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:showBack="true"
+                app:title="@string/nav_account_detail">
+
+            <include
+                    android:id="@+id/balance_card"
+                    layout="@layout/balance_item" />
+
+            <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_10">
+
+                <TableRow android:layout_marginVertical="@dimen/margin_21">
+
+                    <TextView
+                            android:layout_weight="1"
+                            android:fontFamily="font-normal"
+                            android:text="@string/moneyout_label"
+                            android:textColor="@color/offWhite"
+                            android:textSize="@dimen/text_16" />
+
+                    <TextView
+                            android:id="@+id/details_money_out"
+                            android:fontFamily="font-normal"
+                            android:textAlignment="viewEnd"
+                            android:textColor="@color/offWhite"
+                            android:textSize="@dimen/text_21"
+                            android:textStyle="bold" />
+                </TableRow>
+
+                <TableRow
+                        android:layout_marginVertical="@dimen/margin_21"
+                        android:visibility="gone">
+
+                    <TextView
+                            android:layout_weight="1"
+                            android:fontFamily="font-normal"
+                            android:text="@string/moneyin_label"
+                            android:textColor="@color/offWhite"
+                            android:textSize="@dimen/text_16" />
+
+                    <TextView
+                            android:id="@+id/details_money_in"
+                            android:fontFamily="font-normal"
+                            android:textAlignment="viewEnd"
+                            android:textColor="@color/offWhite"
+                            android:textSize="@dimen/text_21"
+                            android:textStyle="bold" />
+                </TableRow>
+
+                <TableRow android:layout_marginVertical="@dimen/margin_21">
+
+                    <TextView
+                            android:id="@+id/fees_description"
+                            android:layout_weight="1"
+                            android:fontFamily="font-normal"
+                            android:text="@string/fees_label"
+                            android:textColor="@color/offWhite"
+                            android:textSize="@dimen/text_16" />
+
+                    <TextView
+                            android:id="@+id/details_fees"
+                            android:fontFamily="font-normal"
+                            android:textAlignment="viewEnd"
+                            android:textColor="@color/offWhite"
+                            android:textSize="@dimen/text_21"
+                            android:textStyle="bold" />
+                </TableRow>
+
+                <TableRow android:layout_marginVertical="@dimen/margin_21">
+
+                    <TextView
+                            android:id="@+id/official_name_label"
+                            android:layout_weight="1"
+                            android:fontFamily="font-normal"
+                            android:text="@string/official_name"
+                            android:textColor="@color/offWhite"
+                            android:textSize="@dimen/text_16" />
+
+                    <TextView
+                            android:id="@+id/official_name"
+                            android:fontFamily="font-normal"
+                            android:textAlignment="viewEnd"
+                            android:textColor="@color/offWhite"
+                            android:textSize="@dimen/text_16"
+                            android:textStyle="bold" />
+                </TableRow>
+            </TableLayout>
+
+        </com.hover.stax.views.StaxCardView>
+
+        <include
+                android:id="@+id/shortcode_card"
+                layout="@layout/account_card_shortcode" />
+
+
+        <include
+                android:id="@+id/scheduled_card"
+                layout="@layout/home_card_future" />
+
+        <include
+                android:id="@+id/history_card"
+                layout="@layout/transaction_card_history" />
+
+        <include
+                android:id="@+id/manage_card"
+                layout="@layout/account_card_manage" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

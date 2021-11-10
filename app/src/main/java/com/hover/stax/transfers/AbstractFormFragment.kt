@@ -19,7 +19,7 @@ import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
-import com.hover.stax.account.AccountDropdown
+import com.hover.stax.accounts.AccountDropdown
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.contacts.StaxContact
@@ -65,13 +65,21 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     private fun setupActionDropdownObservers(viewModel: ChannelsViewModel, lifecycleOwner: LifecycleOwner) {
-        viewModel.activeChannel.observe(lifecycleOwner, { channel: Channel -> Timber.i("Got new active channel: $channel ${channel.countryAlpha2}") })
-        viewModel.channelActions.observe(lifecycleOwner, { actions: List<HoverAction?> -> Timber.i("Got new actions: %s", actions.size) })
+        val activeChannelObserver = object : Observer<Channel> {
+            override fun onChanged(t: Channel?) {
+                Timber.i("Got new active channel: $t ${t?.countryAlpha2}")
+            }
+        }
+        val actionsObserver = object : Observer<List<HoverAction>> {
+            override fun onChanged(t: List<HoverAction>?) {
+                Timber.i("Got new actions: %s", t?.size)
+            }
+        }
+        viewModel.activeChannel.observe(lifecycleOwner, activeChannelObserver)
+        viewModel.channelActions.observe(lifecycleOwner, actionsObserver)
     }
 
     open fun showEdit(isEditing: Boolean) {
-//        channelDropdown?.highlighted?.let { channelsViewModel.setChannelsSelected(listOf(it)) }
-
         editCard?.visibility = if (isEditing) View.VISIBLE else View.GONE
         editRequestCard?.visibility = if (isEditing) View.VISIBLE else View.GONE
 
@@ -127,7 +135,7 @@ abstract class AbstractFormFragment : Fragment() {
     fun setDropdownTouchListener(action: Int) {
         accountDropdown.autoCompleteTextView.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN)
-                findNavController().navigate(action, bundleOf())
+                findNavController().navigate(action)
             true
         }
     }

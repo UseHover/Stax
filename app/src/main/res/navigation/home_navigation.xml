@@ -13,6 +13,16 @@
         <action
                 android:id="@+id/action_navigation_home_to_navigation_linkAccount"
                 app:destination="@id/navigation_linkAccount" />
+        <action
+                android:id="@+id/action_navigation_home_to_accountDetailsFragment"
+                app:destination="@id/accountDetailsFragment" />
+        <action
+                android:id="@+id/action_navigation_home_to_navigation_transfer"
+                app:destination="@id/navigation_transfer" />
+        <action
+                android:id="@+id/action_navigation_home_to_navigation_request"
+                app:destination="@id/navigation_request" />
+
     </fragment>
 
     <fragment
@@ -35,7 +45,23 @@
             android:id="@+id/navigation_settings"
             android:name="com.hover.stax.settings.SettingsFragment"
             android:label="@string/nav_settings"
-            tools:layout="@layout/fragment_settings" />
+            tools:layout="@layout/fragment_settings">
+        <action
+                android:id="@+id/action_navigation_settings_to_faqFragment"
+                app:destination="@id/faqFragment" />
+        <action
+                android:id="@+id/action_navigation_settings_to_languageSelectFragment"
+                app:destination="@id/languageSelectFragment" />
+        <action
+                android:id="@+id/action_navigation_settings_to_bountyEmailFragment"
+                app:destination="@id/bountyEmailFragment" />
+        <action
+                android:id="@+id/action_navigation_settings_to_bountyListFragment"
+                app:destination="@id/bountyListFragment" />
+        <action
+                android:id="@+id/action_navigation_settings_to_navigation_linkAccount"
+                app:destination="@id/navigation_linkAccount" />
+    </fragment>
 
     <fragment
             android:id="@+id/faqFragment"
@@ -51,6 +77,9 @@
         <argument
                 android:name="uuid"
                 app:argType="string" />
+        <action
+                android:id="@+id/action_transactionDetailsFragment_to_bountyListFragment"
+                app:destination="@id/bountyListFragment" />
     </fragment>
 
     <fragment
@@ -61,6 +90,11 @@
         <argument
                 android:name="id"
                 app:argType="integer" />
+        <action
+                android:id="@+id/action_scheduleDetailsFragment_to_accountDetailsFragment"
+                app:destination="@id/accountDetailsFragment"
+                app:popUpTo="@id/accountDetailsFragment"
+                app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
@@ -71,26 +105,121 @@
         <argument
                 android:name="id"
                 app:argType="integer" />
+        <action
+                android:id="@+id/action_requestDetailsFragment_to_accountDetailsFragment"
+                app:destination="@id/accountDetailsFragment"
+                app:popUpTo="@id/accountDetailsFragment"
+                app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
             android:id="@+id/accountDetailsFragment"
-            android:name="com.hover.stax.account.AccountDetailFragment"
+            android:name="com.hover.stax.accounts.AccountDetailFragment"
             android:label="ChannelsDetailsFragment"
-            tools:layout="@layout/fragment_channel">
+            tools:layout="@layout/fragment_account">
         <argument
                 android:name="channel_id"
                 app:argType="integer" />
+        <action
+                android:id="@+id/action_accountDetailsFragment_to_navigation_home"
+                app:destination="@id/navigation_home"
+                app:popUpTo="@id/navigation_home"
+                app:popUpToInclusive="true"/>
+        <action
+                android:id="@+id/action_accountDetailsFragment_to_requestDetailsFragment"
+                app:destination="@id/requestDetailsFragment" />
+        <action
+                android:id="@+id/action_accountDetailsFragment_to_scheduleDetailsFragment"
+                app:destination="@id/scheduleDetailsFragment" />
     </fragment>
 
     <fragment
-            android:id="@+id/pinUpdateFragment"
-            android:name="com.hover.stax.settings.PinUpdateFragment"
-            android:label="PinUpdateFragment"
-            tools:layout="@layout/fragment_pin_update">
-        <argument
-                android:name="channel_id"
-                app:argType="integer" />
+            android:id="@+id/libraryFragment"
+            android:name="com.hover.stax.library.LibraryFragment"
+            android:label="USSD Library"
+            tools:layout="@layout/fragment_library" />
+    <fragment
+            android:id="@+id/languageSelectFragment"
+            android:name="com.hover.stax.languages.LanguageSelectFragment"
+            android:label="LanguageSelectFragment"
+            tools:layout="@layout/fragment_language">
+        <action
+                android:id="@+id/action_languageSelectFragment_to_navigation_settings"
+                app:destination="@id/navigation_settings"
+                app:popUpTo="@id/navigation_settings"
+                app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/navigation_transfer"
+            android:name="com.hover.stax.transfers.TransferFragment"
+            android:label="@string/nav_transfer"
+            tools:layout="@layout/fragment_transfer">
+        <action
+                android:id="@+id/action_navigation_transfer_to_accountsFragment"
+                app:destination="@id/accountsFragment" />
+        <action
+                android:id="@+id/action_navigation_transfer_to_navigation_home"
+                app:destination="@id/navigation_home"
+                app:popUpTo="@id/navigation_home"
+                app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+            android:id="@+id/accountsFragment"
+            android:name="com.hover.stax.accounts.AccountsFragment"
+            android:label="AccountsFragment"
+            tools:layout="@layout/fragment_accounts">
+        <action
+                android:id="@+id/action_accountsFragment_to_navigation_transfer"
+                app:destination="@id/navigation_transfer"
+                app:popUpTo="@id/navigation_transfer"
+                app:popUpToInclusive="true" />
+        <action
+                android:id="@+id/action_accountsFragment_to_navigation_request"
+                app:destination="@id/navigation_request" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/navigation_request"
+            android:name="com.hover.stax.requests.NewRequestFragment"
+            android:label="@string/nav_request"
+            tools:layout="@layout/fragment_request">
+
+        <action
+                android:id="@+id/action_navigation_request_to_accountsFragment"
+                app:destination="@id/accountsFragment" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/bountyEmailFragment"
+            android:name="com.hover.stax.bounties.BountyEmailFragment"
+            android:label="@string/nav_bounty"
+            android:tag="@string/nav_bounty"
+            tools:layout="@layout/fragment_bounty_email">
+        <action
+                android:id="@+id/action_bountyEmailFragment_to_bountyListFragment"
+                app:destination="@id/bountyListFragment" />
+        <action
+                android:id="@+id/action_bountyEmailFragment_to_navigation_settings"
+                app:destination="@id/navigation_settings"
+                app:popUpTo="@id/navigation_settings"
+                app:popUpToInclusive="true"/>
+    </fragment>
+
+    <fragment
+            android:id="@+id/bountyListFragment"
+            android:name="com.hover.stax.bounties.BountyListFragment"
+            android:label="@string/nav_bounty"
+            tools:layout="@layout/bounty_card_channel">
+        <action
+                android:id="@+id/action_bountyListFragment_to_transactionDetailsFragment"
+                app:destination="@id/transactionDetailsFragment"
+                />
+        <action
+                android:id="@+id/action_bountyListFragment_to_navigation_settings"
+                app:destination="@id/navigation_settings"
+                app:popUpTo="@id/navigation_settings"
+                app:popUpToInclusive="true"/>
     </fragment>
 
 </navigation>

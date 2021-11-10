@@ -13,17 +13,17 @@
             android:orientation="vertical">
 
         <include
-                android:id="@+id/cardAccounts"
-                layout="@layout/settings_card_accounts" />
+                android:id="@+id/share_card"
+                layout="@layout/settings_card_share" />
 
         <include
-                android:id="@+id/bountyCard"
-                layout="@layout/settings_card_bounties"
-                android:visibility="visible" />
+                android:id="@+id/settings_card"
+                layout="@layout/settings_card_meta" />
 
-        <include layout="@layout/settings_card_ussd_library"
-            android:id="@+id/library_card"/>
-
+        <include
+                android:id="@+id/bounty_card"
+                layout="@layout/settings_card_bounties" />
+        
         <include
                 android:id="@+id/stax_support"
                 layout="@layout/settings_card_support" />

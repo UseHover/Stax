@@ -5,14 +5,13 @@ import android.content.Context
 import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.account.Account
+import com.hover.stax.accounts.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel() {
@@ -82,8 +81,8 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         viewModelScope.launch(Dispatchers.IO) {
             when (flag) {
                 NONE, null -> toRun.postValue(ArrayList())
-                ALL -> startRun(getAccountActions(actions.value!!))
-                else -> startRun(listOf(getAccountActions(flag)))
+                ALL -> if (actions.value != null) startRun(getAccountActions(actions.value!!))
+                else -> startRun(getAccountActions(flag))
             }
         }
     }
@@ -94,7 +93,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
                 runFlag.value == null || toRun.value!!.isNotEmpty() -> {
                 }
                 runFlag.value == ALL -> startRun(getAccountActions(actions))
-                runFlag.value != NONE -> startRun(listOf(getAccountActions(runFlag.value!!)))
+                runFlag.value != NONE -> startRun(getAccountActions(runFlag.value!!))
             }
         }
     }
@@ -141,7 +140,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         if (toRun.value!!.size > i + 1) {
             hasRunList.add(toRun.value!![i].second.id)
 
-            while (hasRunList.contains(toRun.value!![i + 1].second.id))
+            while (toRun.value!!.lastIndex != (i + 1) && hasRunList.contains(toRun.value!![i + 1].second.id))
                 i += 1
 
             if (toRun.value!!.size > i + 1)
@@ -157,8 +156,8 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         runFlag.value = NONE
         hasRunList.clear()
     }
-    
-    private fun getAccountActions(flag: Int): Pair<Account?, HoverAction> {
+
+    private fun getAccountActions(flag: Int): List<Pair<Account?, HoverAction>> {
         val account = repo.getAccount(flag)
 
         val actionsToRun = if (account == null)
@@ -166,16 +165,17 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         else
             updateActionsIfRequired(actions.value!!.filter { it.channel_id == account.channelId })
 
-        Timber.e("Action ${actionsToRun.first().transaction_type} - Inst ${actionsToRun.first().from_institution_name}")
-
-        return Pair(account, actionsToRun.first())
+        return if (actionsToRun.isNotEmpty())
+            listOf(Pair(account, actionsToRun.first()))
+        else
+            emptyList()
     }
 
     private fun getAccountActions(actions: List<HoverAction>): List<Pair<Account, HoverAction>> {
         val updatedActions = updateActionsIfRequired(actions)
 
         return if (!accounts.value.isNullOrEmpty())
-            return accounts.value!!.map { account -> Pair(account, updatedActions.first { it.channel_id == it.channel_id }) }
+            return accounts.value!!.map { account -> Pair(account, updatedActions.first { it.channel_id == account.channelId }) }
         else
             emptyList()
     }

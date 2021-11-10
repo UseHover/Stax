@@ -37,17 +37,17 @@ class TransactionStatus(val transaction: StaxTransaction) {
     }
 
     fun getShortStatusDetail(action: HoverAction?, c: Context): String {
-        if (transaction.isRecorded) return getRecordedStatusDetail(c)
-        else return when (transaction.status) {
+        return if (transaction.isRecorded) getRecordedStatusDetail(c)
+        else when (transaction.status) {
             Transaction.FAILED -> lookupFailureMessage(action, c)
             Transaction.PENDING -> c.getString(R.string.pending_cardhead)
             else -> getStringOrEmdash(transaction.balance, R.string.new_balance, c)
         }
     }
 
-    fun getStatusDetail(action: HoverAction?, messages: UssdCallResponse?, sms: List<UssdCallResponse>?,  c: Context): String {
-        if (transaction.isRecorded) return getRecordedStatusDetail(c)
-        else return when (transaction.status) {
+    fun getStatusDetail(action: HoverAction?, messages: UssdCallResponse?, sms: List<UssdCallResponse>?, c: Context): String {
+        return if (transaction.isRecorded) getRecordedStatusDetail(c)
+        else when (transaction.status) {
             Transaction.FAILED -> lookupFailureDescription(action, c)
             Transaction.PENDING -> c.getString(R.string.pending_cardbody)
             else -> lookupSuccessDescription(messages, sms, c)
@@ -89,20 +89,20 @@ class TransactionStatus(val transaction: StaxTransaction) {
     }
 
     private fun lookupSuccessDescription(last_message: UssdCallResponse?, sms: List<UssdCallResponse>?, c: Context): String {
-        if (!sms.isNullOrEmpty())
-            return sms.sortedByDescending { it.responseMessage.length }.map { it.responseMessage }.toString()
+        return if (!sms.isNullOrEmpty())
+            sms.sortedByDescending { it.responseMessage.length }.map { it.responseMessage }.toString()
         else if (!(last_message?.responseMessage.isNullOrEmpty()))
-            return last_message!!.responseMessage
+            last_message!!.responseMessage
         else
-            return c.getString(R.string.loading)
+            c.getString(R.string.loading)
     }
 
-    fun getStringOrEmdash(value: String, stringRes: Int, c: Context): String {
+    private fun getStringOrEmdash(value: String?, stringRes: Int, c: Context): String {
         return if (value == null) "\\u2014"
         else c.getString(stringRes, value)
     }
 
     private fun getServiceName(a: HoverAction?, c: Context): String {
-        if (a == null) return c.getString(R.string.null_service_name_text) else return a.from_institution_name
+        return a?.from_institution_name ?: c.getString(R.string.null_service_name_text)
     }
 }

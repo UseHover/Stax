@@ -60,7 +60,6 @@ public class RequestDetailFragment extends Fragment implements RequestSenderInte
             binding.summaryCard.requesterAccountRow.setVisibility(channel != null ? View.VISIBLE : View.GONE);
             if (channel != null) {
                 ((Stax2LineItem) view.findViewById(R.id.requesterValue)).setTitle(channel.name);
-//				Timber.e("Activity is null? %s", (getActivity() == null));
             }
         });
 

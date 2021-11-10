@@ -7,8 +7,8 @@ import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.hover.stax.di.appModule
-import com.hover.stax.di.dataModule
+import com.hover.stax.database.appModule
+import com.hover.stax.database.dataModule
 import com.hover.stax.utils.fonts.FontReplacer
 import com.hover.stax.utils.network.NetworkMonitor
 import com.yariksoffice.lingver.Lingver

@@ -12,9 +12,9 @@ import com.hover.sdk.sims.SimInfo
 import com.hover.sdk.sims.SimInfoDao
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
-import com.hover.stax.account.Account
-import com.hover.stax.account.AccountDao
-import com.hover.stax.account.ChannelWithAccounts
+import com.hover.stax.accounts.Account
+import com.hover.stax.accounts.AccountDao
+import com.hover.stax.accounts.ChannelWithAccounts
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelDao
 import com.hover.stax.contacts.ContactDao
@@ -31,7 +31,6 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.utils.paymentLinkCryptography.Encryption
 import timber.log.Timber
 import java.security.NoSuchAlgorithmException
-import java.util.regex.Pattern
 
 class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
@@ -69,11 +68,11 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     fun getChannelsByIds(ids: List<Int>): List<Channel> = channelDao.getChannelsByIds(ids)
 
     fun getChannelsByCountry(channelIds: IntArray, countryCode: String): LiveData<List<Channel>> {
-        return channelDao.getChannels(countryCode, channelIds)
+        return channelDao.getChannels(countryCode.uppercase(), channelIds)
     }
 
     fun getChannelsByCountry(countryCode: String): List<Channel> {
-        return channelDao.getChannels(countryCode)
+        return channelDao.getChannels(countryCode.uppercase())
     }
 
     fun update(channel: Channel?) {
@@ -184,11 +183,11 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     val allContacts: LiveData<List<StaxContact>>
         get() = contactDao.all
 
-    fun getContacts(ids: Array<String?>?): List<StaxContact> {
+    fun getContacts(ids: Array<String>): List<StaxContact> {
         return contactDao[ids]
     }
 
-    fun getLiveContacts(ids: Array<String?>?): LiveData<List<StaxContact>> {
+    fun getLiveContacts(ids: Array<String>): LiveData<List<StaxContact>> {
         return contactDao.getLive(ids)
     }
 
@@ -235,8 +234,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     val transactionsForAppReview: LiveData<List<StaxTransaction>>?
         get() = transactionDao.transactionsForAppReview
 
-    fun getSchedule(id: Int): Schedule {
-        return scheduleDao[id]
+    fun getSchedule(id: Int): Schedule? {
+        return scheduleDao.get(id)
     }
 
     fun insert(schedule: Schedule?) {
@@ -323,8 +322,6 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun getAccount(id: Int): Account? = accountDao.getAccount(id)
 
-    fun getAccount(name: String): Account? = accountDao.getAccount(name)
-
     fun getLiveAccount(id: Int): LiveData<Account> = accountDao.getLiveAccount(id)
 
     suspend fun getAccounts(ids: List<Int>): List<Account> = accountDao.getAccounts(ids)
@@ -349,17 +346,11 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         }
     }
 
-    fun insert(account: Account) {
-        AppDatabase.databaseWriteExecutor.execute { accountDao.insert(account) }
-    }
+    fun insert(account: Account) = AppDatabase.databaseWriteExecutor.execute { accountDao.insert(account) }
 
-    fun update(account: Account) {
-        AppDatabase.databaseWriteExecutor.execute { accountDao.update(account) }
-    }
+    fun update(account: Account?) = account?.let { AppDatabase.databaseWriteExecutor.execute { accountDao.update(it) } }
 
-    fun delete(account: Account) {
-        AppDatabase.databaseWriteExecutor.execute { accountDao.delete(account) }
-    }
+    fun delete(account: Account) = AppDatabase.databaseWriteExecutor.execute { accountDao.delete(account) }
 
     companion object {
         private val TAG = DatabaseRepo::class.java.simpleName

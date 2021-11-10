@@ -5,11 +5,11 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.*
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.account.Account
 import com.hover.stax.databinding.ActionSelectBinding
 import com.hover.stax.utils.Constants.size55
 import com.hover.stax.utils.UIHelper
@@ -50,6 +50,7 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
 
         actions = filteredActions
         highlightedAction = null
+
         val uniqueActions = sort(filteredActions)
 
         val actionDropdownAdapter = ActionDropdownAdapter(uniqueActions, context)
@@ -57,10 +58,8 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
             setAdapter(actionDropdownAdapter)
             dropDownHeight = UIHelper.dpToPx(300)
             setOnItemClickListener { parent, _, position, _ -> selectRecipientNetwork(parent.getItemAtPosition(position) as HoverAction) }
-            Timber.e("Unique recipient networks ${uniqueActions.size}")
-            visibility = if (showRecipientNetwork(uniqueActions)) VISIBLE else GONE
+            dropdownLayout?.visibility = if (showRecipientNetwork(uniqueActions)) View.VISIBLE else View.GONE
 
-            Timber.e("Transaction type ${actions?.first()?.transaction_type}")
             radioHeader!!.setText(if (actions!!.first().transaction_type == HoverAction.AIRTIME) R.string.airtime_who_header else R.string.send_who_header)
         }
     }
@@ -91,7 +90,7 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
         } else createRadios(options)
     }
 
-    fun selectAction(action: HoverAction) {
+    private fun selectAction(action: HoverAction) {
         highlightedAction = action
         highlightListener?.highlightAction(action)
     }
