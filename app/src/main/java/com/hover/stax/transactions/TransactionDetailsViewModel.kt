@@ -10,7 +10,7 @@ import com.hover.stax.database.DatabaseRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class TransactionDetailsViewModel(val repo: DatabaseRepo, private val application: Application) : ViewModel() {
+class TransactionDetailsViewModel(val repo: DatabaseRepo, val application: Application) : ViewModel() {
 
     val transaction = MutableLiveData<StaxTransaction>()
     val messages = MediatorLiveData<List<UssdCallResponse>>()
