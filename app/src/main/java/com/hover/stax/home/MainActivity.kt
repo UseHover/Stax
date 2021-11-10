@@ -257,7 +257,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
     private fun runAction(hsb: HoverSession.Builder) = try {
         hsb.run()
     } catch (e: Exception) {
-        UIHelper.flashMessage(this, getString(R.string.error_running_action))
+        runOnUiThread { UIHelper.flashMessage(this, getString(R.string.error_running_action)) }
 
         val data = JSONObject()
         try {
