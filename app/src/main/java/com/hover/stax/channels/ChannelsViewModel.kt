@@ -194,16 +194,21 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         c?.let { setActiveChannel(it) }
     }
 
-    private fun loadActions(t: String) {
+    private fun loadActions(t: String?) {
+        if(t == null) return
+
         if ((t == HoverAction.BALANCE && selectedChannels.value == null) || (t != HoverAction.BALANCE && activeChannel.value == null)) return
         if (t == HoverAction.BALANCE) loadActions(selectedChannels.value!!, t) else loadActions(activeChannel.value!!, t)
     }
 
-    private fun loadActions(channel: Channel) {
+    private fun loadActions(channel: Channel?) {
+        if(channel == null) return
         loadActions(channel, type.value!!)
     }
 
     private fun loadActions(channels: List<Channel>) {
+        if(channels.isNullOrEmpty()) return
+
         if (type.value == HoverAction.BALANCE)
             loadActions(channels, type.value!!)
     }
