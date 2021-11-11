@@ -87,7 +87,7 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
 
     private fun startObservers() {
         viewModel.transaction.observe(viewLifecycleOwner, { showTransaction(it) })
-        viewModel.action.observe(viewLifecycleOwner, { showActionDetails(it) })
+        viewModel.action.observe(viewLifecycleOwner, { it?.let { showActionDetails(it) } })
         viewModel.contact.observe(viewLifecycleOwner, { updateRecipient(it) })
     }
 
@@ -221,7 +221,7 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
         binding.infoCard.serviceIdRow.visibility = if (transaction.isRecorded || transaction.confirm_code.isNullOrBlank()) GONE else View.VISIBLE
     }
 
-    private fun showActionDetails(action: HoverAction?) {
+    private fun showActionDetails(action: HoverAction) {
         if (!isFullScreen) {
             binding.transactionDetailsCard.setTitle(viewModel.transaction.value?.generateLongDescription(action, viewModel.contact.value, requireContext()))
         }
