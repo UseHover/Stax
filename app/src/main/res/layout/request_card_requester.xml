@@ -5,8 +5,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <com.hover.stax.channels.ChannelDropdown
-            android:id="@+id/channel_dropdown"
+    <com.hover.stax.accounts.AccountDropdown
+            android:id="@+id/accountDropdown"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/put_in"
@@ -16,7 +16,7 @@
             android:id="@+id/accountNumberInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/requester_account_number_label"
+            android:hint="@string/account_number_label"
             android:inputType="number" />
 
 </LinearLayout>

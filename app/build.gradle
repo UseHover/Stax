@@ -43,8 +43,8 @@ android {
         applicationId "com.hover.stax"
         minSdkVersion 18
         targetSdkVersion 30
-        versionCode 88
-        versionName "1.5.6.7"
+        versionCode 94
+        versionName "1.7.0.2"
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -104,7 +104,7 @@ dependencies {
 
     // Google
     implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
@@ -114,10 +114,14 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.viewpager:viewpager:1.0.0'
     implementation 'androidx.recyclerview:recyclerview-selection:1.1.0'
-    kapt "androidx.lifecycle:lifecycle-common-java8:2.3.1"
+    kapt "androidx.lifecycle:lifecycle-common-java8:2.4.0"
+
     implementation "androidx.room:room-runtime:2.3.0"
     kapt "androidx.room:room-compiler:2.3.0"
     androidTestImplementation "androidx.room:room-testing:2.3.0"
+
+    implementation 'androidx.preference:preference-ktx:1.1.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     //logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
@@ -129,7 +133,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-inappmessaging-display'
     implementation 'com.google.firebase:firebase-config'
-    implementation 'com.google.android.play:core:1.10.0'
+    implementation 'com.google.android.play:core:1.10.2'
     implementation 'com.google.firebase:firebase-perf'
     implementation 'com.google.firebase:firebase-firestore-ktx'
 
@@ -145,9 +149,6 @@ dependencies {
     implementation "com.github.YarikSOffice:lingver:1.3.0"
     implementation 'com.appsflyer:af-android-sdk:6.2.3'
     implementation 'com.android.installreferrer:installreferrer:2.2'
-
-    //mixpanel
-    implementation 'com.mixpanel.android:mixpanel-android:5.9.1'
 
     // Kotlin
     implementation "androidx.room:room-ktx:2.3.0"
@@ -166,7 +167,7 @@ dependencies {
 
     // Hover SDK
     debugImplementation project(":hover.sdk")
-    def sdk_version = "2.0.0-stax-1.5.0-pro"
+    def sdk_version = "2.0.0-stax-1.5.7.0-pro"
 
     releaseImplementation "com.hover:android-sdk:$sdk_version"
     debugImplementation 'com.android.volley:volley:1.2.1'

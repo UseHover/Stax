@@ -1,33 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?><resources>
-
-  <string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
-
-  <string name="appsflyer_key" public="false" translatable="false">4B6DDdYFw55PmVPTwr8Ski</string>
-
-  <string name="app_name" translatable="false">Stax</string>
-
-  <string name="payment_root_url" translatable="false">https://stax.me/pay?%1$s</string>
-
-  <string name="payment_url_end" translatable="false">%1$s-%2$d-%3$s-%4$d</string>
-
-  <string name="root_url" translatable="false">https://www.usehover.com</string>
-
-  <string name="api_url" translatable="false">https://www.usehover.com/api</string>
-
-  <string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
-
-  <string name="bounty_endpoint">/stax_bounty_hunters</string>
-
-  <string name="stax_market_playstore_link" translatable="false">market://details?id=com.hover.stax</string>
-
-  <string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
-
-  <string name="stax_nolt_url">https://stax.nolt.io/</string>
-
-  <string name="receive_stax_updates_url">https://416e906b.sibforms.com/serve/MUIEAAS88NDe6oTn7nl8YrIqgutsJ_GgyCYRWVsZ-S54quVNmBhvpsu70WpNXrZd-n6H5r8m1ZRfuTl8ckiQrB4sLIdNSx0Y_DFZ7_hQGCDv9PG6N0ncsHwWW3OYsMlPMHgQSR6OZf8xK8HC-NA3p3T71Pv1Coy_n9oiDRwIu7HCryUfDtfHr11mXSQ5S3JwcOd8cN7FL1ewDRqu</string>
-
-  <string name="mixpanel_token" translatable="false">82efeb23b6d38509989f592c8f4b21c2</string>
-
   <string name="nav_home">Nyumbani</string>
 
   <string name="nav_balance_and_history">Salio na historia</string>
@@ -388,7 +359,7 @@
 
   <string name="requester_number_label">Akaunti</string>
 
-  <string name="requester_account_number_label">Nambari ya akaunti</string>
+  <string name="account_number_label">Nambari ya akaunti</string>
 
   <string name="request_error_recipient">Tafadhali ingiza nambari ya simu.</string>
 
@@ -490,8 +461,6 @@
 
   <string name="network_label">Akaunti ya mpokeaji</string>
 
-  <string name="id_label">Kitambulisho cha Muamala</string>
-
   <string name="session_cardhead">Ujumbe</string>
 
   <!-- Canceling -->
@@ -514,7 +483,7 @@
 
   <!-- Settings -->
 
-  <string name="accts_cardhead">Akaunti</string>
+  <string name="meta_cardhead">Akaunti</string>
 
   <string name="security_cardhead">Usalama</string>
 
@@ -554,21 +523,15 @@
 
   <string name="disclaimer">Majina yote ya bidhaa, chapa, na alama za biashara ni mali ya wamiliki wao. Matumizi haimaanishi ushirika.</string>
 
-  <string name="contact_stax_cardhead">Endelea kuwasiliana</string>
-
   <string name="twitter" translatable="false">Twitter</string>
 
   <string name="stax_twitter_url" translatable="false">http://twitter.com/joinstax</string>
 
   <string name="receive_stax_updates">Pokea sasisho za Stax</string>
 
-  <string name="support">Msaada</string>
-
   <string name="FAQs">Maswali Yanayoulizwa mara nyingi</string>
 
-  <string name="request_feature">Omba huduma katika Stax!</string>
-
-  <string name="contact_support">Wasiliana na msaada</string>
+  <string name="request_feature">Omba huduma katika Stax</string>
 
   <string name="stax_support_email">support\@stax.me</string>
 
@@ -680,10 +643,6 @@
 
   <string name="bounty_me2me_explain">Tuma kiasi chochote kwa akaunti yako ya %1$s</string>
 
-  <string name="descrip_bounty_c2b">Lipa bili</string>
-
-  <string name="bounty_c2b_explain">Tuma kiasi chochote kwa biashara yoyote</string>
-
   <string name="descrip_bounty_balance">Angalia salio</string>
 
   <string name="bounty_balance_explain">Angalia salio lako</string>
@@ -770,7 +729,7 @@
 
   <string name="try_again">Jaribu tena</string>
 
-  <string name="edge_case_bounty_email_error">Hii hufanyika mara chache, lakini ikiwa kosa linaendelea, tafadhali funga programu na uanze tena.</string>
+  <string name="unknown_login_error">Hii hufanyika mara chache, lakini ikiwa kosa linaendelea, tafadhali funga programu na uanze tena.</string>
 
   <string name="no_account_selected_error">Tafadhali chagua angalau akaunti moja kuongeza kwenye Stax</string>
 

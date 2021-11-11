@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <com.hover.stax.views.StaxCardView
+            android:id="@+id/accountListCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:showBack="true"
+            app:title="@string/which_account">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/accountsRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:itemCount="5"
+                    tools:layout="@layout/stax_spinner_item_with_logo" />
+
+            <TextView
+                    android:id="@+id/error_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_13"
+                    android:layout_marginTop="@dimen/margin_13"
+                    android:layout_marginBottom="@dimen/margin_8"
+                    android:drawablePadding="@dimen/margin_5"
+                    android:fontFamily="font-medium"
+                    android:gravity="center_vertical"
+                    android:text="@string/channels_error_nodata"
+                    android:textColor="@color/stax_state_red"
+                    android:visibility="gone"
+                    app:drawableStartCompat="@drawable/ic_error"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/accountsRV"
+                    app:layout_goneMarginBottom="@dimen/margin_13" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.hover.stax.views.StaxCardView>
+
+    <include
+            android:id="@+id/accountsCard"
+            layout="@layout/account_card_layout"
+            android:visibility="gone" />
+
+</FrameLayout>

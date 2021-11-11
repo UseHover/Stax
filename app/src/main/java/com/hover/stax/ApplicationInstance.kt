@@ -7,8 +7,8 @@ import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.hover.stax.di.appModule
-import com.hover.stax.di.dataModule
+import com.hover.stax.database.appModule
+import com.hover.stax.database.dataModule
 import com.hover.stax.utils.fonts.FontReplacer
 import com.hover.stax.utils.network.NetworkMonitor
 import com.yariksoffice.lingver.Lingver
@@ -81,6 +81,10 @@ class ApplicationInstance : Application() {
         AppsFlyerLib.getInstance().init(getString(R.string.appsflyer_key), conversionListener, this)
     }
 
+    companion object {
+        val txnDetailsRetryCounter : MutableMap <String, Int>  by Delegates.observable(HashMap(), { _, _, _->})
+    }
+
     @RequiresApi(21)
     override fun registerComponentCallbacks(callback: ComponentCallbacks?) {
         super.registerComponentCallbacks(callback)
@@ -91,9 +95,5 @@ class ApplicationInstance : Application() {
     override fun unregisterComponentCallbacks(callback: ComponentCallbacks?) {
         super.unregisterComponentCallbacks(callback)
         NetworkMonitor(this).stopNetworkCallback()
-    }
-
-    companion object {
-        val txnDetailsRetryCounter : MutableMap <String, Int>  by Delegates.observable(HashMap(), { _, _, _->})
     }
 }

@@ -15,8 +15,8 @@
         android:imeOptions="actionNext"
         android:inputType="numberDecimal" />
 
-    <com.hover.stax.channels.ChannelDropdown
-        android:id="@+id/channel_dropdown"
+    <com.hover.stax.accounts.AccountDropdown
+        android:id="@+id/accountDropdown"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/channel_label" />
@@ -32,14 +32,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <!--If this should not be shown, do we still need to watch the text and pass it to the viewmodel? -->
-    <com.hover.stax.views.StaxTextInputLayout
-        android:id="@+id/noteInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/request_note_label"
-        android:imeOptions="actionDone"
-        android:inputType="textCapSentences"
-        android:visibility="gone" />
+<!--    &lt;!&ndash;If this should not be shown, do we still need to watch the text and pass it to the viewmodel? &ndash;&gt;-->
+<!--    <com.hover.stax.views.StaxTextInputLayout-->
+<!--        android:id="@+id/noteInput"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:hint="@string/request_note_label"-->
+<!--        android:imeOptions="actionDone"-->
+<!--        android:inputType="textCapSentences"-->
+<!--        android:visibility="gone" />-->
 
 </com.hover.stax.views.StaxCardView>

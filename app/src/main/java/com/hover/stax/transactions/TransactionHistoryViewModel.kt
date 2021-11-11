@@ -10,13 +10,12 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.database.DatabaseRepo
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import org.koin.java.KoinJavaComponent.get
 
 class TransactionHistoryViewModel(application: Application?) : AndroidViewModel(application!!) {
     private val repo = get(DatabaseRepo::class.java)
-    var staxTransactions: LiveData<List<StaxTransaction>> = MutableLiveData()
+    private var staxTransactions: LiveData<List<StaxTransaction>> = MutableLiveData()
     private val appReviewLiveData: LiveData<Boolean>
 
     fun showAppReviewLiveData(): LiveData<Boolean> {
@@ -33,14 +32,10 @@ class TransactionHistoryViewModel(application: Application?) : AndroidViewModel(
         return if (balancesTransactions >= 4) true else transfersAndAirtime >= 2
     }
 
-    fun saveTransaction(data: Intent?, c: Context?) {
-        if (data != null) repo.insertOrUpdateTransaction(data, c)
-    }
-
     suspend fun getActionAndChannel (actionId: String, channelId: Int): Pair<HoverAction, Channel>{
        val pairResult : Deferred<Pair<HoverAction, Channel>> =  viewModelScope.async (Dispatchers.IO) {
             val action: HoverAction = repo.getAction(actionId)
-            val channel: Channel = repo.getChannel(channelId)
+            val channel: Channel = repo.getChannel(channelId)!!
             return@async Pair(action, channel);
         }
 
@@ -49,7 +44,7 @@ class TransactionHistoryViewModel(application: Application?) : AndroidViewModel(
 
     suspend fun getAccountNumber(contact_id: String) : String? {
        val accountNumberDeferred : Deferred<String?> =   viewModelScope.async {
-            val contact : StaxContact? = repo.getContact_Suspended(contact_id)
+            val contact : StaxContact? = repo.getContactAsync(contact_id)
             return@async contact?.accountNumber
         }
         return accountNumberDeferred.await()
@@ -57,6 +52,6 @@ class TransactionHistoryViewModel(application: Application?) : AndroidViewModel(
 
     init {
         staxTransactions = repo.completeAndPendingTransferTransactions!!
-        appReviewLiveData = Transformations.map(repo.transactionsForAppReview!!) { staxTransactions: List<StaxTransaction> -> showAppReview(staxTransactions) }
+        appReviewLiveData = Transformations.map(repo.transactionsForAppReview!!) { showAppReview(it) }
     }
 }

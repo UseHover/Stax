@@ -25,33 +25,38 @@ public class StaxDialog extends AlertDialog {
     protected View.OnClickListener customPosListener;
 
     public StaxDialog(@NonNull Activity a) {
-        this(a, a.getLayoutInflater(), false);
+        this(a, a.getLayoutInflater(), R.layout.stax_dialog);
     }
 
-    public StaxDialog(@NonNull Activity a, boolean usePermissionDesign) {
-        this(a, a.getLayoutInflater(), usePermissionDesign);
+    public StaxDialog(@NonNull Activity a, int layoutRes) {
+        this(a, a.getLayoutInflater(), layoutRes);
     }
 
-    private StaxDialog(Context c, LayoutInflater inflater, boolean usePermissionDesign) {
+    private StaxDialog(Context c, LayoutInflater inflater, int layoutRes) {
+        this(c, inflater.inflate(layoutRes, null));
+    }
+
+    public StaxDialog(Context c, View v) {
         super(c);
         context = c;
-        view = inflater.inflate(usePermissionDesign ? R.layout.basic_perm_dialog : R.layout.stax_dialog, null);
+        view = v;
         customNegListener = null;
         customPosListener = null;
     }
 
     public StaxDialog setDialogTitle(int title) {
-        if(title == 0) setDialogMessage("");
+        if (title == 0) setDialogMessage("");
         else setDialogTitle(context.getString(title));
         return this;
     }
 
     public StaxDialog setDialogTitle(String title) {
         LinearLayout headerLayout = view.findViewById(R.id.header);
-        if(headerLayout !=null) {
+        if (headerLayout != null)
             headerLayout.setVisibility(View.VISIBLE);
+
+        if (view.findViewById(R.id.title) != null)
             ((TextView) view.findViewById(R.id.title)).setText(title);
-        }
         return this;
     }
 

@@ -1,51 +1,53 @@
 <resources>
-	<declare-styleable name="StaxCardView">
-		<attr name="title" format="string" />
-		<attr name="showBack" format="string" />
-		<attr name="backRes" format="reference"/>
-		<attr name="defaultBackPress" format="string"/>
-		<attr name="staxCardColor" format="color"/>
-		<attr name="isFlatView" format="boolean"/>
-	</declare-styleable>
 
-	<declare-styleable name="ChannelDropdown">
-		<attr name="show_selected" format="boolean" />
-		<attr name="initial_helper_text" format="string"/>
-	</declare-styleable>
+    <declare-styleable name="StaxCardView">
+        <attr name="title" format="string" />
+        <attr name="subtitle" format="string" />
+        <attr name="showBack" format="string" />
+        <attr name="backRes" format="reference" />
+        <attr name="defaultBackPress" format="string" />
+        <attr name="staxCardColor" format="color" />
+        <attr name="isFlatView" format="boolean" />
+    </declare-styleable>
 
-	<declare-styleable name="StaxTextInputLayout">
-		<attr name="android:hint" />
-		<attr name="android:inputType" />
-		<attr name="android:imeOptions" />
-	</declare-styleable>
+    <declare-styleable name="ChannelDropdown">
+        <attr name="show_selected" format="boolean" />
+        <attr name="initial_helper_text" format="string" />
+    </declare-styleable>
 
-	<declare-styleable name="StaxDropdownLayout">
-		<attr name="android:hint" />
-		<attr name="android:editable" />
-		<attr name="android:text" />
-		<attr name="android:imeOptions"/>
-	</declare-styleable>
+    <declare-styleable name="StaxTextInputLayout">
+        <attr name="android:hint" />
+        <attr name="android:inputType" />
+        <attr name="android:imeOptions" />
+    </declare-styleable>
 
-	<declare-styleable name="CustomSwipeRefreshLayout">
-		<attr name="enable_top_progress_bar" format="boolean" />
-		<attr name="refresh_mode" format="enum" >
-			<enum name="swipe_mode" value="1" />
-			<enum name="pull_mode" value="2" />
-		</attr>
-		<attr name="time_out_return_to_top" format="integer" />
-		<attr name="time_out_refresh_complete" format="integer" />
-		<attr name="return_to_top_duration" format="integer" />
-		<attr name="return_to_header_duration" format="integer" />
-		<attr name="keep_refresh_head" format="boolean" />
-		<attr name="top_progress_bar_color_1" format="color|reference" />
-		<attr name="top_progress_bar_color_2" format="color|reference" />
-		<attr name="top_progress_bar_color_3" format="color|reference" />
-		<attr name="top_progress_bar_color_4" format="color|reference" />
+    <declare-styleable name="StaxDropdownLayout">
+        <attr name="android:hint" />
+        <attr name="android:editable" />
+        <attr name="android:text" />
+        <attr name="android:imeOptions" />
+    </declare-styleable>
 
-	</declare-styleable>
+    <declare-styleable name="CustomSwipeRefreshLayout">
+        <attr name="enable_top_progress_bar" format="boolean" />
+        <attr name="refresh_mode" format="enum">
+            <enum name="swipe_mode" value="1" />
+            <enum name="pull_mode" value="2" />
+        </attr>
+        <attr name="time_out_return_to_top" format="integer" />
+        <attr name="time_out_refresh_complete" format="integer" />
+        <attr name="return_to_top_duration" format="integer" />
+        <attr name="return_to_header_duration" format="integer" />
+        <attr name="keep_refresh_head" format="boolean" />
+        <attr name="top_progress_bar_color_1" format="color|reference" />
+        <attr name="top_progress_bar_color_2" format="color|reference" />
+        <attr name="top_progress_bar_color_3" format="color|reference" />
+        <attr name="top_progress_bar_color_4" format="color|reference" />
 
-	<declare-styleable name="CardStackView">
-		<attr name="stackOverlapGaps" format="dimension"/>
-		<attr name="stackHeaderHeight" format="dimension"/>
-	</declare-styleable>
+    </declare-styleable>
+
+    <declare-styleable name="CardStackView">
+        <attr name="stackOverlapGaps" format="dimension" />
+        <attr name="stackHeaderHeight" format="dimension" />
+    </declare-styleable>
 </resources>

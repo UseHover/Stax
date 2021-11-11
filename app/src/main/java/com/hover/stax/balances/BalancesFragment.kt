@@ -10,7 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
-import com.hover.stax.channels.Channel
+import com.hover.stax.accounts.Account
+import com.hover.stax.accounts.DUMMY
 import com.hover.stax.databinding.FragmentBalanceBinding
 import com.hover.stax.home.HomeFragment
 import com.hover.stax.home.MainActivity
@@ -30,7 +31,7 @@ class BalancesFragment : Fragment(), NavigationInterface {
     private lateinit var balancesRecyclerView: RecyclerView
 
     private var balancesVisible = false
-    private var channelList: List<Channel>? = null
+    private var accountList: List<Account>? = null
 
     private var _binding: FragmentBalanceBinding? = null
     private val binding get() = _binding!!
@@ -53,9 +54,9 @@ class BalancesFragment : Fragment(), NavigationInterface {
     private fun setUpBalances() {
         initBalanceCard()
 
-        val observer = Observer<List<Channel>> { t -> updateServices(ArrayList(t)) }
+        val observer = Observer<List<Account>> { t -> updateServices(ArrayList(t)) }
         with(balancesViewModel) {
-            selectedChannels.observe(viewLifecycleOwner, observer)
+            accounts.observe(viewLifecycleOwner, observer)
             shouldShowBalances.observe(viewLifecycleOwner) {
                 if (it == true) {
                     showBalanceCards(true)
@@ -104,23 +105,23 @@ class BalancesFragment : Fragment(), NavigationInterface {
         Utils.logAnalyticsEvent(getString(if (balancesVisible) R.string.show_balances else R.string.hide_balances), requireActivity())
     }
 
-    private fun updateServices(channels: ArrayList<Channel>) {
-        SHOW_ADD_ANOTHER_ACCOUNT = !channels.isNullOrEmpty() && !Channel.hasDummy(channels) && channels.size > 1
-        addDummyChannelsIfRequired(channels)
+    private fun updateServices(accounts: ArrayList<Account>) {
+        SHOW_ADD_ANOTHER_ACCOUNT = !accounts.isNullOrEmpty() && accounts.none { it.id == DUMMY } && accounts.size > 1
+        addDummyAccountsIfRequired(accounts)
 
-        val balancesAdapter = BalanceAdapter(channels, activity as MainActivity)
+        val balancesAdapter = BalanceAdapter(accounts, activity as MainActivity)
         balancesRecyclerView.adapter = balancesAdapter
         balancesAdapter.showBalanceAmounts(true)
 
-        showBalanceCards(Channel.areAllDummies(channels))
-        updateStackCard(channels)
+        showBalanceCards(accounts.all { id == DUMMY })
+        updateStackCard(accounts)
 
-        channelList = channels
+        accountList = accounts
     }
 
-    private fun updateStackCard(channels: List<Channel>?) {
-        channels?.let {
-            val temp = channels.reversed()
+    private fun updateStackCard(accounts: List<Account>?) {
+        accounts?.let {
+            val temp = accounts.reversed()
 
             val cardStackAdapter = BalanceCardStackAdapter(requireActivity())
             balanceStack.setAdapter(cardStackAdapter)
@@ -142,14 +143,14 @@ class BalancesFragment : Fragment(), NavigationInterface {
         balanceStack.layoutParams = params
     }
 
-    private fun addDummyChannelsIfRequired(channels: ArrayList<Channel>?) {
-        channels?.let {
+    private fun addDummyAccountsIfRequired(accounts: ArrayList<Account>?) {
+        accounts?.let {
             if (it.isEmpty()) {
-                channels.add(Channel().dummy(getString(R.string.your_main_account), GREEN_BG))
-                channels.add(Channel().dummy(getString(R.string.your_other_account), BLUE_BG))
+                accounts.add(Account(getString(R.string.your_main_account), GREEN_BG).dummy())
+                accounts.add(Account(getString(R.string.your_other_account), BLUE_BG).dummy())
             }
             if (it.size == 1) {
-                channels.add(Channel().dummy(getString(R.string.your_other_account), BLUE_BG))
+                accounts.add(Account(getString(R.string.your_other_account), BLUE_BG).dummy())
             }
         }
     }
@@ -171,7 +172,5 @@ class BalancesFragment : Fragment(), NavigationInterface {
         const val ROTATE_UPSIDE_DOWN = 180f
 
         private var SHOW_ADD_ANOTHER_ACCOUNT = false
-        private var SHOWN_BUBBLE_MAIN_ACCOUNT = false
-        private var SHOWN_BUBBLE_OTHER_ACCOUNT = false
     }
 }

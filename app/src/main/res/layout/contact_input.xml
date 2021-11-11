@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:orientation="horizontal"
-	android:id="@+id/recipient_entry">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/recipient_entry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-	<com.hover.stax.views.StaxDropdownLayout
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:id="@+id/contactDropdownLayout"
-		android:hint="@string/recipientphone_label"
-		android:editable="true"
-		android:layout_weight="1"
-		tools:layout="@layout/stax_dropdown"/>
+    <com.hover.stax.views.StaxDropdownLayout
+            android:id="@+id/contactDropdownLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/recipientphone_label"
+            tools:layout="@layout/stax_dropdown" />
 
-	<ImageButton android:id="@+id/contact_button"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_gravity="center"
-		android:gravity="center"
-	    android:paddingEnd="@dimen/margin_13"
-	    android:paddingStart="0dp"
-		android:paddingBottom="@dimen/margin_21"
-	    app:srcCompat="@drawable/ic_contacts"
-	    android:background="@color/transparent"/>
+    <ImageButton
+            android:id="@+id/contact_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/transparent"
+            android:gravity="center"
+            android:paddingStart="0dp"
+            android:paddingEnd="@dimen/margin_13"
+            android:paddingBottom="@dimen/margin_21"
+            app:srcCompat="@drawable/ic_contacts" />
 
 </LinearLayout>

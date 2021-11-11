@@ -2,12 +2,15 @@ package com.hover.stax.database;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.hover.stax.accounts.Account;
+import com.hover.stax.accounts.AccountDao;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
 import com.hover.stax.contacts.ContactDao;
@@ -22,7 +25,7 @@ import com.hover.stax.transactions.TransactionDao;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class}, version = 31)
+@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class, Account.class}, version = 35)
 public abstract class AppDatabase extends RoomDatabase {
     private static final int NUMBER_OF_THREADS = 8;
     static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -39,6 +42,8 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract ScheduleDao scheduleDao();
 
+    public abstract AccountDao accountDao();
+
     public static synchronized AppDatabase getInstance(Context context) {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
@@ -53,6 +58,10 @@ public abstract class AppDatabase extends RoomDatabase {
                             .addMigrations(M28_29)
                             .addMigrations(M29_30)
                             .addMigrations(M30_31)
+                            .addMigrations(M31_32)
+                            .addMigrations(M32_33)
+                            .addMigrations(M33_34)
+                            .addMigrations(M34_35)
                             .build();
                 }
             }
@@ -99,20 +108,53 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
-	static final Migration M29_30 = new Migration(29, 30) {
-		@Override
-		public void migrate(SupportSQLiteDatabase database) {
-			database.execSQL("DROP INDEX index_stax_contacts_lookup_key");
-			database.execSQL("DROP INDEX index_stax_contacts_id_phone_number");
-			database.execSQL("CREATE UNIQUE INDEX index_stax_contacts_id ON stax_contacts(id)");
-			database.execSQL("CREATE UNIQUE INDEX index_stax_contacts_phone_number ON stax_contacts(phone_number)");
-		}
-	};
+    static final Migration M29_30 = new Migration(29, 30) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("DROP INDEX index_stax_contacts_lookup_key");
+            database.execSQL("DROP INDEX index_stax_contacts_id_phone_number");
+            database.execSQL("CREATE UNIQUE INDEX index_stax_contacts_id ON stax_contacts(id)");
+            database.execSQL("CREATE UNIQUE INDEX index_stax_contacts_phone_number ON stax_contacts(phone_number)");
+        }
+    };
 
     static final Migration M30_31 = new Migration(30, 31) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE stax_transactions ADD COLUMN category TEXT");
+        }
+    };
+
+    static final Migration M31_32 = new Migration(31, 32) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS accounts (name TEXT NOT NULL, alias TEXT NOT NULL, logo_url TEXT NOT NULL, " +
+                    "account_no TEXT, channelId INTEGER NOT NULL, primary_color_hex TEXT NOT NULL, secondary_color_hex TEXT NOT NULL, " +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, latestBalance TEXT, latestBalanceTimestamp INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+                    "FOREIGN KEY(channelId) REFERENCES channels(id) ON UPDATE NO ACTION ON DELETE CASCADE)");
+            database.execSQL("CREATE INDEX IF NOT EXISTS index_accounts_channelId ON accounts(channelId)");
+        }
+    };
+
+    static final Migration M32_33 = new Migration(32, 33) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE accounts ADD COLUMN isDefault INTEGER NOT NULL DEFAULT 0");
+        }
+    };
+
+    static final Migration M33_34 = new Migration(33, 34) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE stax_transactions ADD COLUMN account_id INTEGER");
+        }
+    };
+
+    static final Migration M34_35 = new Migration(34, 35) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE stax_transactions ADD COLUMN balance TEXT");
+            database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_accounts_name ON accounts(name)");
         }
     };
 }

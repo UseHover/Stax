@@ -18,10 +18,7 @@ abstract class AbstractFormViewModel(val application: Application, val repo: Dat
 
     init {
         isEditing.value = true
-
-//        if (!repo.allContacts.value.isNullOrEmpty()) {
-            recentContacts = repo.allContacts
-//        }
+        recentContacts = repo.allContacts
     }
 
     fun setEditing(editing: Boolean) {

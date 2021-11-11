@@ -12,18 +12,17 @@ interface ContactDao {
     val all: LiveData<List<StaxContact>>
 
     @Query("SELECT * FROM stax_contacts WHERE id IN (:ids) ORDER BY name, phone_number, last_used_timestamp")
-    operator fun get(ids: Array<String?>?): List<StaxContact>
+    operator fun get(ids: Array<String>): List<StaxContact>
 
     @Query("SELECT * FROM stax_contacts WHERE id IN (:ids)")
-    fun getLive(ids: Array<String?>?): LiveData<List<StaxContact>>
+    fun getLive(ids: Array<String>): LiveData<List<StaxContact>>
 
     @Query("SELECT * FROM stax_contacts WHERE id  = :id LIMIT 1")
     operator fun get(id: String?): StaxContact?
 
     @Query("SELECT * FROM stax_contacts WHERE id  = :id LIMIT 1")
-    suspend fun get_suspended(id: String?): StaxContact?
 
-
+    suspend fun getAsync(id: String?): StaxContact?
 
     @Query("SELECT * FROM stax_contacts WHERE lookup_key  = :lookupKey LIMIT 1")
     fun lookup(lookupKey: String?): StaxContact

@@ -1,7 +1,5 @@
 package com.hover.stax.faq
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,32 +8,32 @@ import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import timber.log.Timber
 
-data class FAQ (var id: String, var topic:String, var content:String)
+data class FAQ(var id: String, var topic: String, var content: String)
 
-internal fun getFAQList() : LiveData<List<FAQ>> {
+internal fun getFAQList(): LiveData<List<FAQ>> {
     val db = Firebase.firestore
     val settings = firestoreSettings { isPersistenceEnabled = true }
     db.firestoreSettings = settings
 
-    val liveData : MutableLiveData<List<FAQ>> = MutableLiveData()
+    val liveData: MutableLiveData<List<FAQ>> = MutableLiveData()
 
     db.collection("faqs")
-            .get().addOnSuccessListener { result ->
-                val faqList : MutableList<FAQ> = mutableListOf()
-                for (document in result) {
-                    faqList.add(FAQ(document.id, document.data["topic"].toString(), document.data["content"].toString()))
-                }
-                
-                liveData.value = faqList
-                return@addOnSuccessListener
-            }.addOnFailureListener { exception ->
-                Timber.e(exception)
-                return@addOnFailureListener
+        .get().addOnSuccessListener { result ->
+            val faqList: MutableList<FAQ> = mutableListOf()
+            for (document in result) {
+                faqList.add(FAQ(document.id, document.data["topic"].toString(), document.data["content"].toString()))
             }
+
+            liveData.value = faqList
+            return@addOnSuccessListener
+        }.addOnFailureListener { exception ->
+            Timber.e(exception)
+            return@addOnFailureListener
+        }
 
     return liveData
 }
 
-class FaqViewModel() : ViewModel() {
-    val faqLiveData : LiveData<List<FAQ>> = getFAQList()
+class FaqViewModel : ViewModel() {
+    val faqLiveData: LiveData<List<FAQ>> = getFAQList()
 }

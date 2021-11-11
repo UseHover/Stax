@@ -25,7 +25,7 @@
                 android:paddingHorizontal="@dimen/margin_3"
                 android:paddingVertical="@dimen/margin_10">
 
-            <LinearLayout
+            <RelativeLayout
                     android:id="@+id/header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -36,6 +36,8 @@
                         android:id="@+id/backButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
                         android:layout_gravity="start"
                         android:layout_marginEnd="@dimen/margin_21"
                         android:background="?attr/selectableItemBackgroundBorderless"
@@ -46,10 +48,11 @@
 
                 <TextView
                         android:id="@+id/title"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_gravity="center_vertical|end"
-                        android:layout_weight="1"
                         android:fontFamily="font-bold"
                         android:gravity="center_vertical|end"
                         android:paddingHorizontal="@dimen/margin_10"
@@ -57,8 +60,25 @@
                         android:textAlignment="viewEnd"
                         android:textAllCaps="true"
                         android:textColor="@color/offWhite"
-                        android:textSize="@dimen/text_13" />
-            </LinearLayout>
+                        android:textSize="@dimen/text_16" />
+
+                <TextView
+                        android:id="@+id/subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/title"
+                        android:layout_alignParentEnd="true"
+                        android:layout_gravity="center_vertical|end"
+                        android:fontFamily="font-bold"
+                        android:gravity="center_vertical|end"
+                        android:paddingHorizontal="@dimen/margin_10"
+                        android:text="@string/bal_cardhead"
+                        android:textAlignment="viewEnd"
+                        android:textAllCaps="true"
+                        android:textColor="@color/offWhite"
+                        android:textSize="@dimen/text_13"
+                        android:visibility="gone" />
+            </RelativeLayout>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

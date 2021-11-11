@@ -17,9 +17,8 @@ import com.yariksoffice.lingver.Lingver;
 import java.util.Locale;
 
 public class CountryAdapter extends ArrayAdapter<String> {
-    private static final String TAG = "CountryAdapter";
 
-    private String[] countryCodes;
+    private final String[] countryCodes;
 
     public CountryAdapter(@NonNull String[] codes, @NonNull Context context) {
         super(context, 0, codes);
@@ -66,8 +65,8 @@ public class CountryAdapter extends ArrayAdapter<String> {
     }
 
     private static String countryCodeToEmoji(String countryCode) {
-        int firstLetter = Character.codePointAt(countryCode, 0) - 0x41 + 0x1F1E6;
-        int secondLetter = Character.codePointAt(countryCode, 1) - 0x41 + 0x1F1E6;
+        int firstLetter = Character.codePointAt(countryCode.toUpperCase(), 0) - 0x41 + 0x1F1E6;
+        int secondLetter = Character.codePointAt(countryCode.toUpperCase(), 1) - 0x41 + 0x1F1E6;
         return new String(Character.toChars(firstLetter)) + new String(Character.toChars(secondLetter));
     }
 

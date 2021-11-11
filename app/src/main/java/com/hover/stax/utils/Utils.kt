@@ -1,5 +1,6 @@
 package com.hover.stax.utils
 
+import android.Manifest
 import android.app.Activity
 import android.content.*
 import android.graphics.Bitmap
@@ -8,6 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import com.amplitude.api.Amplitude
 import com.amplitude.api.Identify
 import com.appsflyer.AppsFlyerLib
@@ -17,6 +19,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
+import com.hover.stax.permissions.PermissionUtils
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
@@ -150,19 +153,13 @@ object Utils {
         return false
     }
 
-    fun bitmapToByteArray(bitmap: Bitmap?): ByteArray? {
-        if (bitmap == null) return null
-        val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-        return stream.toByteArray()
-    }
-
     @JvmStatic
     fun copyToClipboard(content: String?, c: Context): Boolean {
         val clipboard = c.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
-        val clip = ClipData.newPlainText("Stax payment link", content)
+        val clip = ClipData.newPlainText("Stax content", content)
         if (clipboard != null) {
             clipboard.setPrimaryClip(clip)
+            UIHelper.flashMessage(c, c.getString(R.string.copied))
             return true
         }
         return false
@@ -265,11 +262,6 @@ object Utils {
         }
     }
 
-    fun hideSoftKeyboard(context: Context, view: View) {
-        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-    }
-
     @JvmStatic
     fun openUrl(url: String?, ctx: Context) {
         val i = Intent(Intent.ACTION_VIEW)
@@ -286,10 +278,27 @@ object Utils {
         openUrl(ctx.resources.getString(urlRes), ctx)
     }
 
-    fun openEmail(email: String, subject: String, ctx: Context) {
-        val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", email, null))
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
-        ctx.startActivity(Intent.createChooser(emailIntent, "Send email..."))
+    @JvmStatic
+    fun openEmail(subject: String, context: Context) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        val senderEmail = context.getString(R.string.stax_support_email)
+        intent.data = Uri.parse("mailto:$senderEmail ?subject=$subject")
+        try {
+            context.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Timber.e("Activity not found")
+            UIHelper.flashMessage(context, context.getString(R.string.email_client_not_found))
+        }
+    }
+
+    @JvmStatic
+    fun shareStax(activity: Activity) {
+        logAnalyticsEvent(activity.getString(R.string.clicked_share), activity)
+        val sharingIntent = Intent(Intent.ACTION_SEND)
+        sharingIntent.type = "text/plain"
+        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, activity.getString(R.string.share_sub))
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, activity.getString(R.string.share_msg))
+        activity.startActivity(Intent.createChooser(sharingIntent, activity.getString(R.string.share_explain)))
     }
 
     @JvmStatic
@@ -302,5 +311,24 @@ object Utils {
         } catch (e: ActivityNotFoundException) {
             activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(activity.baseContext.getString(R.string.stax_url_playstore_review_link))))
         }
+    }
+
+    @JvmStatic
+    fun dial(shortCode: String, c: Context) {
+        val data = JSONObject()
+        try {
+            data.put("shortcode", shortCode)
+        } catch (ignored: JSONException) {
+        }
+        logAnalyticsEvent(c.getString(R.string.clicked_dial_shortcode), data, c)
+
+        val dialIntent = Intent(Intent.ACTION_CALL, Uri.parse("tel:".plus(shortCode.replace("#", Uri.encode("#"))))).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+
+        if (PermissionUtils.has(arrayOf(Manifest.permission.CALL_PHONE), c))
+            c.startActivity(dialIntent)
+        else
+            UIHelper.flashMessage(c, c.getString(R.string.enable_call_permission))
     }
 }

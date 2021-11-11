@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import timber.log.Timber;
 
 public class UpdateChannelsWorker extends Worker {
     public final static String TAG = "UpdateChannelsWorker";
@@ -57,7 +58,7 @@ public class UpdateChannelsWorker extends Worker {
     @Override
     public Worker.Result doWork() {
         try {
-            Log.v(TAG, "Downloading channels...");
+            Timber.v("Downloading channels...");
             JSONObject channelsJson = downloadChannels(getUrl());
             JSONArray data = channelsJson.getJSONArray("data");
             for (int j = 0; j < data.length(); j++) {
@@ -68,13 +69,13 @@ public class UpdateChannelsWorker extends Worker {
                 } else
                     channelDao.update(channel.update(data.getJSONObject(j).getJSONObject("attributes"), getApplicationContext().getString(R.string.root_url)));
             }
-            Log.i(TAG, "Successfully downloaded and saved channels.");
+            Timber.i("Successfully downloaded and saved channels.");
             return Result.success();
         } catch (JSONException | NullPointerException e) {
-            Log.e(TAG, "Error parsing channel data.", e);
+            Timber.e(e, "Error parsing channel data.");
             return Result.failure();
         } catch (IOException e) {
-            Log.e(TAG, "Timeout downloading channel data, will try again.", e);
+            Timber.e(e, "Timeout downloading channel data, will try again.");
             return Result.retry();
         }
     }

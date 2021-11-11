@@ -8,12 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.databinding.StaxCardViewBinding
 import com.hover.stax.transactions.TransactionStatus
 
 open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
+
     private var title: String? = null
+    private var subtitle: String? = null
     private var showBack = false
     private var useContextBackPress = false
     private var backDrawable = 0
@@ -25,6 +28,7 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.StaxCardView, 0, 0)
         try {
             title = a.getString(R.styleable.StaxCardView_title)
+            subtitle = a.getString(R.styleable.StaxCardView_subtitle)
             showBack = a.getBoolean(R.styleable.StaxCardView_showBack, false)
             useContextBackPress = a.getBoolean(R.styleable.StaxCardView_defaultBackPress, true)
             backDrawable = a.getResourceId(R.styleable.StaxCardView_backRes, 0)
@@ -60,6 +64,13 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
         if (titleString != 0) binding.title.text = context.getString(titleString)
     }
 
+    fun setSubtitle(titleString: String?) {
+        if (titleString != null) {
+            binding.subtitle.visibility = VISIBLE
+            binding.subtitle.text = titleString
+        } else binding.subtitle.visibility = GONE
+    }
+
     fun setIcon(icon: Int) {
         if (icon != 0) {
             binding.backButton.setImageResource(icon)
@@ -74,6 +85,10 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
 
     private fun fillFromAttrs() {
         if (title != null) binding.title.text = title else binding.header.visibility = GONE
+        if (subtitle != null) {
+            binding.subtitle.text = title
+            binding.subtitle.visibility = VISIBLE
+        }
         if (useContextBackPress) binding.backButton.setOnClickListener { view: View? -> triggerBack() }
         if (showBack) binding.backButton.visibility = VISIBLE
         if (backDrawable != 0) binding.backButton.setImageResource(backDrawable)
@@ -104,19 +119,12 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
         }
     }
 
-    @SuppressLint("ResourceAsColor")
-    fun setStateInfo(status: TransactionStatus?) {
-        if (status != null) {
-            updateState(status.getIcon(), status.getBackgroundColor(), status.getTitle())
-        }
-    }
-
-    private fun updateState(icon: Int, backgroundColor: Int, title: Int) {
-        with(binding.cardViewHeader) {
-            setBackButtonVisibility(View.VISIBLE);
-            setIcon(icon);
-            setTitle(title);
-            this@StaxCardView.setBackgroundColor(backgroundColor)
+    fun updateState(icon: Int, backgroundColor: Int, title: Int) {
+        binding.cardViewHeader.apply {
+            setBackButtonVisibility(View.VISIBLE)
+            setIcon(icon)
+            setTitle(title)
+            setBackgroundColor(backgroundColor)
         }
     }
 

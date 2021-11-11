@@ -30,7 +30,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
 
     fun setAmount(a: String) = amount.postValue(a)
 
-    fun setContact(contactIds: String?) = contactIds?.let {
+    private fun setContact(contactIds: String?) = contactIds?.let {
         viewModelScope.launch {
             val contacts = repo.getContacts(contactIds.split(",").toTypedArray())
             if (contacts.isNotEmpty()) contact.postValue(contacts.first())
@@ -64,7 +64,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
         }
     }
 
-    fun setNote(n: String) = note.postValue(n)
+    private fun setNote(n: String) = note.postValue(n)
 
     fun amountErrors(): String? {
         return if (!amount.value.isNullOrEmpty() && amount.value!!.matches("[\\d.]+".toRegex()) && !amount.value!!.matches("[0]+".toRegex())) null
@@ -113,5 +113,10 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
                 repo.save(sc)
             }
         }
+    }
+
+    fun reset() {
+        amount.value = null
+        contact.value = null
     }
 }
