@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
@@ -26,7 +26,6 @@ import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.util.*
 
@@ -54,10 +53,11 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
 
         initRecyclerView()
         startObservers()
-        handleBackPress()
 
         binding.bountyCountryDropdown.isEnabled = false
         binding.progressIndicator.show()
+
+        binding.countryFilter.setOnClickIcon { findNavController().navigate(R.id.action_bountyListFragment_to_navigation_settings) }
     }
 
     override fun onResume() {
@@ -117,7 +117,13 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
     }
 
     private fun startObservers() = with(bountyViewModel) {
-        actions.observe(viewLifecycleOwner) { Timber.v("Actions update: ${it.size}") }
+        val actionsObserver = object : Observer<List<HoverAction>> {
+            override fun onChanged(t: List<HoverAction>?) {
+                Timber.v("Actions update: ${t?.size}")
+            }
+        }
+
+        actions.observe(viewLifecycleOwner, actionsObserver)
         transactions.observe(viewLifecycleOwner) { Timber.v("Transactions update ${it.size}") }
         sims.observe(viewLifecycleOwner) { Timber.v("Sims update ${it.size}") }
         bounties.observe(viewLifecycleOwner) { updateChannelList(channels.value, it) }
@@ -191,15 +197,6 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
 
         Hover.updateSimInfo(requireActivity())
     }
-
-    private fun handleBackPress() = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            if (dialog != null && dialog!!.isShowing)
-                dialog!!.dismiss()
-            else
-                findNavController().navigate(R.id.action_bountyListFragment_to_navigation_settings)
-        }
-    })
 
     override fun onDestroyView() {
         super.onDestroyView()
