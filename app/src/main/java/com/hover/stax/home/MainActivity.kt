@@ -290,7 +290,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
                 showMessage(getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))))
             requestCode == Constants.REQUEST_REQUEST -> if (resultCode == RESULT_OK && data != null) onRequest(data)
             requestCode == BOUNTY_REQUEST -> showBountyDetails(data)
-            requestCode == LOGIN_REQUEST -> settingsViewModel.signIntoFirebaseAsync(data, (findViewById<MaterialCheckBox>(R.id.marketingOptIn).isChecked), this)
+            requestCode == LOGIN_REQUEST -> settingsViewModel.signIntoFirebaseAsync(data, (findViewById<MaterialCheckBox>(R.id.marketingOptIn)?.isChecked : false), this)
             else -> {
                 if (requestCode != Constants.TRANSFER_REQUEST) {
                     balancesViewModel.setRan(requestCode)
