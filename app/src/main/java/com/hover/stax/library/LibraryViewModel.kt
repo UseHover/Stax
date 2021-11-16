@@ -25,7 +25,16 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
     var sims: MutableLiveData<List<SimInfo>> = MutableLiveData()
     var country: MediatorLiveData<String> = MediatorLiveData()
 
+    private var simReceiver: BroadcastReceiver? = null
     init {
+        simReceiver =  object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                viewModelScope.launch(Dispatchers.IO) {
+                    sims.postValue(repo.presentSims)
+                }
+            }
+        }
+
         country.value = null
         country.addSource(sims, this::pickFirstCountry)
         filteredChannels.addSource(allChannels, this::filterChannels)
@@ -40,8 +49,11 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
             sims.postValue(repo.presentSims)
         }
 
-        LocalBroadcastManager.getInstance(application)
-                .registerReceiver(simReceiver, IntentFilter(Utils.getPackage(application) + ".NEW_SIM_INFO_ACTION"))
+        simReceiver?.let {
+            LocalBroadcastManager.getInstance(application)
+                    .registerReceiver(it, IntentFilter(Utils.getPackage(application) + ".NEW_SIM_INFO_ACTION"))
+        }
+
         Hover.updateSimInfo(application)
     }
 
@@ -57,13 +69,7 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
         country.postValue(countryCode)
     }
 
-    private val simReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            viewModelScope.launch(Dispatchers.IO) {
-                sims.postValue(repo.presentSims)
-            }
-        }
-    }
+
 
     private fun filterChannels(channels: List<Channel>?) = filterChannels(channels, country.value)
 
@@ -80,7 +86,9 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
 
     override fun onCleared() {
         try {
-            LocalBroadcastManager.getInstance(application).unregisterReceiver(simReceiver)
+            simReceiver?.let {
+                LocalBroadcastManager.getInstance(application).unregisterReceiver(it)
+            }
         } catch (ignored: Exception) {}
         super.onCleared()
     }
