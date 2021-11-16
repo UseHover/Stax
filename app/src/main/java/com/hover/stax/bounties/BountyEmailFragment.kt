@@ -6,10 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.common.SignInButton
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentBountyEmailBinding
 import com.hover.stax.home.MainActivity
@@ -48,12 +47,24 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
         startObservers()
     }
 
-    private fun startObservers(){
+    private fun startObservers() {
         with(settingsViewModel) {
+            val emailObserver = object : Observer<String?> {
+                override fun onChanged(t: String?) {
+                    Timber.e("Got email from Google $t")
+                }
+            }
+
+            val usernameObserver = object : Observer<String?> {
+                override fun onChanged(t: String?) {
+                    Timber.e("Got username : $t")
+                }
+            }
+
             progress.observe(viewLifecycleOwner) { updateProgress(it) }
             error.observe(viewLifecycleOwner) { it?.let { showError(it) } }
-            email.observe(viewLifecycleOwner) { Timber.e("Got email from Google $it")}
-            username.observe(viewLifecycleOwner) { Timber.e("Got username : $it") }
+            email.observe(viewLifecycleOwner, emailObserver)
+            username.observe(viewLifecycleOwner, usernameObserver)
         }
     }
 
@@ -94,15 +105,6 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
 
         if (title != 0)
             dialog?.setDialogTitle(title)
-        dialog!!.showIt()
-    }
-
-    private fun showOfflineDialog() {
-        dialog = StaxDialog(requireActivity())
-                .setDialogTitle(R.string.internet_required)
-                .setDialogMessage(R.string.internet_required_bounty_desc)
-                .setPosButton(R.string.btn_ok, null)
-                .makeSticky()
         dialog!!.showIt()
     }
 
