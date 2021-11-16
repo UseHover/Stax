@@ -39,7 +39,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     val activeChannel = MediatorLiveData<Channel>()
     val channelActions = MediatorLiveData<List<HoverAction>>()
     val accounts = MediatorLiveData<List<Account>>()
-    private val activeAccount = MutableLiveData<Account>()
+    val activeAccount = MutableLiveData<Account>()
 
     private var simReceiver: BroadcastReceiver? = null
 
@@ -181,7 +181,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
         activeChannel.removeSource(channelActions)
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val channelAccounts = repo.getChannelAndAccounts(actions.first().channel_id)
             channelAccounts?.let {
                 activeChannel.postValue(it.channel)
@@ -195,19 +195,19 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun loadActions(t: String?) {
-        if(t == null) return
+        if (t == null) return
 
         if ((t == HoverAction.BALANCE && selectedChannels.value == null) || (t != HoverAction.BALANCE && activeChannel.value == null)) return
         if (t == HoverAction.BALANCE) loadActions(selectedChannels.value!!, t) else loadActions(activeChannel.value!!, t)
     }
 
     private fun loadActions(channel: Channel?) {
-        if(channel == null || type.value.isNullOrEmpty()) return
+        if (channel == null || type.value.isNullOrEmpty()) return
         loadActions(channel, type.value!!)
     }
 
     private fun loadActions(channels: List<Channel>) {
-        if(channels.isNullOrEmpty()) return
+        if (channels.isNullOrEmpty()) return
 
         if (type.value == HoverAction.BALANCE)
             loadActions(channels, type.value!!)
@@ -255,7 +255,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     fun errorCheck(): String? {
         return when {
-            activeChannel.value == null -> application.getString(R.string.channels_error_noselect)
+            activeChannel.value == null || activeAccount.value == null -> application.getString(R.string.channels_error_noselect)
             channelActions.value.isNullOrEmpty() -> application.getString(R.string.no_actions_fielderror,
                     HoverAction.getHumanFriendlyType(application, type.value))
             else -> null
