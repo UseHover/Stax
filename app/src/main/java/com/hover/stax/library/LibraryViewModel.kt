@@ -46,7 +46,7 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
     }
 
     private fun pickFirstCountry(sims: List<SimInfo>?) {
-        if (sims != null) {
+        if (!sims.isNullOrEmpty()) {
             Timber.e("Picking first country: %s", sims.first().countryIso)
             country.postValue(sims.first().countryIso)
         }
