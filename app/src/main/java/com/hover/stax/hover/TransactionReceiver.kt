@@ -31,14 +31,17 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
     override fun onReceive(context: Context, intent: Intent?) {
         intent?.let {
             CoroutineScope(Dispatchers.IO).launch {
-                action = repo.getAction(intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID))
-                channel = repo.getChannel(action!!.channel_id)
+                val actionId = intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID)
+                if (actionId != null) {
+                    action = repo.getAction(actionId)
+                    channel = repo.getChannel(action!!.channel_id)
 
-                createAccounts(intent)
-                updateBalance(intent)
-                updateContacts(intent)
-                updateTransaction(intent, context.applicationContext)
-                updateRequests(intent)
+                    createAccounts(intent)
+                    updateBalance(intent)
+                    updateContacts(intent)
+                    updateTransaction(intent, context.applicationContext)
+                    updateRequests(intent)
+                }
             }
         }
     }
