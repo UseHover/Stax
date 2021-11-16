@@ -81,7 +81,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         viewModelScope.launch(Dispatchers.IO) {
             when (flag) {
                 NONE, null -> toRun.postValue(ArrayList())
-                ALL -> if (actions.value != null) startRun(getAccountActions(actions.value!!))
+                ALL -> if (!actions.value.isNullOrEmpty()) startRun(getAccountActions(actions.value!!))
                 else -> startRun(getAccountActions(flag))
             }
         }
@@ -175,7 +175,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         val updatedActions = updateActionsIfRequired(actions)
 
         return if (!accounts.value.isNullOrEmpty())
-            return accounts.value!!.map { account -> Pair(account, updatedActions.first { it.channel_id == account.channelId }) }
+            return accounts.value!!.mapNotNull { account -> updatedActions.firstOrNull { a -> a.channel_id == account.channelId }?.let { Pair(account, it) } }
         else
             emptyList()
     }
