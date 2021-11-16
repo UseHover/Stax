@@ -27,7 +27,7 @@ private const val MAX_LOOKUP_COUNT = 40
 class BountyViewModel(application: Application, val repo: DatabaseRepo) : AndroidViewModel(application) {
 
     @JvmField
-    var country: String = CountryAdapter.codeRepresentingAllCountries()
+    var country: String = CountryAdapter.CODE_ALL_COUNTRIES
 
     val actions: LiveData<List<HoverAction>>
     val channels: LiveData<List<Channel>>
@@ -38,8 +38,16 @@ class BountyViewModel(application: Application, val repo: DatabaseRepo) : Androi
     var sims: MutableLiveData<List<SimInfo>> = MutableLiveData()
     private lateinit var bountyListAsync: Deferred<MutableList<Bounty>>
 
+    private val simReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            viewModelScope.launch(Dispatchers.IO) {
+                sims.postValue(repo.presentSims)
+            }
+        }
+    }
+
     init {
-        currentCountryFilter.value = CountryAdapter.codeRepresentingAllCountries()
+        currentCountryFilter.value = CountryAdapter.CODE_ALL_COUNTRIES
         loadSims()
         actions = repo.bountyActions
         channels = Transformations.switchMap(actions, this::loadChannels)
@@ -56,14 +64,6 @@ class BountyViewModel(application: Application, val repo: DatabaseRepo) : Androi
         LocalBroadcastManager.getInstance(getApplication())
                 .registerReceiver(simReceiver, IntentFilter(getPackage(getApplication()) + ".NEW_SIM_INFO_ACTION"))
         Hover.updateSimInfo(getApplication())
-    }
-
-    private val simReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            viewModelScope.launch(Dispatchers.IO) {
-                sims.postValue(repo.presentSims)
-            }
-        }
     }
 
     fun isSimPresent(b: Bounty): Boolean {
@@ -103,7 +103,7 @@ class BountyViewModel(application: Application, val repo: DatabaseRepo) : Androi
         country = countryCode
         val actions = actions.value ?: return MutableLiveData(ArrayList<Channel>())
 
-        return if (countryCode == CountryAdapter.codeRepresentingAllCountries())
+        return if (countryCode == CountryAdapter.CODE_ALL_COUNTRIES)
             loadChannels(actions)
         else
             repo.getChannelsByCountry(getChannelIdArray(actions), countryCode)

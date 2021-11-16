@@ -72,7 +72,7 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
     private fun filterChannels(channels: List<Channel>?, countryCode: String?) = viewModelScope.launch(Dispatchers.IO) {
         Timber.i("Filtering channels: $countryCode")
 
-        if (countryCode == null || countryCode == CountryAdapter.codeRepresentingAllCountries())
+        if (countryCode == null || countryCode == CountryAdapter.CODE_ALL_COUNTRIES)
             filteredChannels.postValue(channels)
         else
             filteredChannels.postValue(repo.getChannelsByCountry(countryCode))
