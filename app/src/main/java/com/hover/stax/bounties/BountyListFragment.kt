@@ -26,7 +26,6 @@ import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.util.*
 
@@ -155,7 +154,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
                 .setDialogTitle(getString(R.string.bounty_sim_err_header))
                 .setDialogMessage(getString(R.string.bounty_sim_err_desc, b.action.network_name))
                 .setNegButton(R.string.btn_cancel, null)
-                .setPosButton(R.string.retry) { retrySimMatch(b) }
+                .setPosButton(R.string.retry) { if(activity != null) retrySimMatch(b) }
         dialog!!.showIt()
     }
 
@@ -194,18 +193,24 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
 
     private fun handleBackPress() = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            if (dialog != null && dialog!!.isShowing)
-                dialog!!.dismiss()
-            else
-                findNavController().navigate(R.id.action_bountyListFragment_to_navigation_settings)
+            dismissDialog()
+            findNavController().popBackStack()
         }
     })
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onPause() {
+        super.onPause()
+        dismissDialog()
+    }
 
+    private fun dismissDialog() {
         if (dialog != null && dialog!!.isShowing)
             dialog!!.dismiss()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        dismissDialog()
 
         _binding = null
     }

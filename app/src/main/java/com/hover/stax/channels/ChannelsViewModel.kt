@@ -266,7 +266,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         if (r != null && !selectedChannels.value.isNullOrEmpty()) {
             viewModelScope.launch {
                 var actions = repo.getActions(getChannelIds(selectedChannels.value!!), r.requester_institution_id)
-                if (actions.isEmpty())
+
+                if (actions.isEmpty() && !simChannels.value.isNullOrEmpty())
                     actions = repo.getActions(getChannelIds(simChannels.value!!), r.requester_institution_id)
 
                 if (actions.isNotEmpty())
