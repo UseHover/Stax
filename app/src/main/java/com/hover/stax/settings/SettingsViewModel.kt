@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 
 import org.json.JSONObject
 import timber.log.Timber
+import java.io.IOException
 
 private const val EMAIL = "email"
 private const val REFEREE_CODE = "referee"
@@ -144,11 +145,13 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
         if (getUsername().isNullOrEmpty() && !email.isNullOrEmpty()) {
             progress.value = 66
             viewModelScope.launch(Dispatchers.IO) {
-                val result = LoginNetworking(application).uploadUserToStax(email, optedIn.value!!, token)
-                if (result.code in 200..299)
-                    onSuccess(JSONObject(result.body!!.string()), application.getString(R.string.uploaded_to_hover, application.getString(R.string.upload_user)))
-                else
+                try {
+                    val result = LoginNetworking(application).uploadUserToStax(email, optedIn.value!!, token)
+                    if (result.code in 200..299)
+                        onSuccess(JSONObject(result.body!!.string()), application.getString(R.string.uploaded_to_hover, application.getString(R.string.upload_user)))
+                } catch (e: IOException) {
                     onError(application.getString(R.string.upload_user_error))
+                }
             }
         }
     }
@@ -157,12 +160,15 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
         viewModelScope.launch(Dispatchers.IO) {
             if (!email.value.isNullOrEmpty()) {
                 val account = GoogleSignIn.getLastSignedInAccount(application)
-                val result = LoginNetworking(application).uploadReferee(email.value!!, refereeCode, name, phone, account?.idToken)
 
-                if (result.code in 200..299)
-                    onSuccess(JSONObject(result.body!!.string()), application.getString(R.string.upload_referee))
-                else
+                try {
+                    val result = LoginNetworking(application).uploadReferee(email.value!!, refereeCode, name, phone, account?.idToken)
+
+                    if (result.code in 200..299)
+                        onSuccess(JSONObject(result.body!!.string()), application.getString(R.string.upload_referee))
+                } catch (e: IOException) {
                     onError(application.getString(R.string.upload_referee_error))
+                }
             }
         }
     }

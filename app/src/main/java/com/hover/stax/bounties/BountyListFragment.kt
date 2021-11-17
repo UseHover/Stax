@@ -135,7 +135,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
 
     private fun updateChannelList(channels: List<Channel>?, bounties: List<Bounty>?) {
         if (!channels.isNullOrEmpty() && !bounties.isNullOrEmpty() &&
-                bountyViewModel.country == CountryAdapter.codeRepresentingAllCountries() || channels?.firstOrNull()?.countryAlpha2 == bountyViewModel.country) {
+                bountyViewModel.country == CountryAdapter.CODE_ALL_COUNTRIES || channels?.firstOrNull()?.countryAlpha2 == bountyViewModel.country) {
             val adapter = BountyChannelsAdapter(channels, bounties!!, this)
             binding.bountiesRecyclerView.adapter = adapter
             hideLoadingState()
@@ -161,7 +161,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
                 .setDialogTitle(getString(R.string.bounty_sim_err_header))
                 .setDialogMessage(getString(R.string.bounty_sim_err_desc, b.action.network_name))
                 .setNegButton(R.string.btn_cancel, null)
-                .setPosButton(R.string.retry) { retrySimMatch(b) }
+                .setPosButton(R.string.retry) { if(activity != null) retrySimMatch(b) }
         dialog!!.showIt()
     }
 
@@ -198,11 +198,26 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
         Hover.updateSimInfo(requireActivity())
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    private fun handleBackPress() = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            dismissDialog()
+            findNavController().popBackStack()
+        }
+    })
 
+    override fun onPause() {
+        super.onPause()
+        dismissDialog()
+    }
+
+    private fun dismissDialog() {
         if (dialog != null && dialog!!.isShowing)
             dialog!!.dismiss()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        dismissDialog()
 
         _binding = null
     }

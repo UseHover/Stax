@@ -25,7 +25,6 @@ import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener {
@@ -180,15 +179,16 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     private fun fabClicked() {
-        if (transferViewModel.isEditing.value == true) {
-            if (validates()) {
+        if (validates()) {
+            if (transferViewModel.isEditing.value == true) {
                 transferViewModel.saveContact()
                 transferViewModel.setEditing(false)
-            } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
-        } else {
-            (requireActivity() as MainActivity).submit(accountDropdown.highlightedAccount!!)
-            findNavController().popBackStack()
-        }
+            } else {
+                (requireActivity() as MainActivity).submit(accountDropdown.highlightedAccount
+                        ?: channelsViewModel.activeAccount.value!!)
+                findNavController().popBackStack()
+            }
+        } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
     }
 
     private val amountWatcher: TextWatcher = object : TextWatcher {
