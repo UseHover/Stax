@@ -224,8 +224,8 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
     }
 
     private fun validates(): Boolean {
-        val channelError = channelsViewModel.errorCheck()
-        accountDropdown.setState(channelError, if (channelError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        val accountError = requestViewModel.accountError()
+        accountDropdown.setState(accountError, if (accountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         val requesterAcctNoError = requestViewModel.requesterAcctNoError()
         requesterNumberInput.setState(requesterAcctNoError, if (requesterAcctNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
@@ -233,7 +233,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         val recipientError = requestViewModel.requesteeErrors()
         requesteeInput.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
-        return channelError == null && requesterAcctNoError == null && recipientError == null
+        return accountError == null && requesterAcctNoError == null && recipientError == null
     }
 
     private fun handleBackPress() = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {

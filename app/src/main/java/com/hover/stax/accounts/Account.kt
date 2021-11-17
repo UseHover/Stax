@@ -17,7 +17,7 @@ const val DUMMY = -1
 data class Account(
         val name: String,
 
-        var alias: String?,
+        var alias: String,
 
         @ColumnInfo(name = "logo_url")
         val logoUrl: String,
@@ -34,6 +34,7 @@ data class Account(
         @ColumnInfo(name = "secondary_color_hex")
         val secondaryColorHex: String,
 
+        @ColumnInfo(defaultValue = "0")
         var isDefault: Boolean = false
 ) : Comparable<Account> {
 

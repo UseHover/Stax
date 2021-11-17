@@ -267,6 +267,7 @@
 	<string name="share_again_cardhead">Share request link again</string>
 	<string name="account_name_error">Please enter a new nickname</string>
 	<string name="account_number_error">Please enter a new account number</string>
+	<string name="accounts_error_noselect">Please select an account.</string>
 
 	<!-- Scheduling -->
 	<string name="future_toggle">Send later</string>
