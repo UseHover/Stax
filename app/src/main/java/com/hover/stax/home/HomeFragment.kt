@@ -34,6 +34,10 @@ class HomeFragment : Fragment() {
 
         binding.airtime.setOnClickListener { navigateTo(Constants.NAV_AIRTIME, requireActivity()) }
         binding.transfer.setOnClickListener { navigateTo(Constants.NAV_TRANSFER, requireActivity()) }
+
+        NetworkMonitor.StateLiveData.get().observe(viewLifecycleOwner) {
+            updateOfflineIndicator(it)
+        }
     }
 
     private fun setupBanner() {
@@ -51,10 +55,6 @@ class HomeFragment : Fragment() {
                     }
                 } else binding.homeBanner.visibility = View.GONE
             })
-        }
-
-        NetworkMonitor.StateLiveData.get().observe(viewLifecycleOwner) {
-            updateOfflineIndicator(it)
         }
     }
 
