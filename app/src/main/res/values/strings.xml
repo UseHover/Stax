@@ -550,4 +550,7 @@
     <string name="ussd_lib">Dial USSD</string>
     <string name="error_running_action">"Sorry, this service integration is broken. "</string>
 
+	<!-- Wellness Tips -->
+    <string name="financial_wellness_tips">Financial Wellness Tips</string>
+
 </resources>

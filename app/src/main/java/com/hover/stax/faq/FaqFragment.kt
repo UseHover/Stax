@@ -20,7 +20,6 @@ class FaqFragment : Fragment(), FAQAdapter.SelectListener {
     private var _binding: FragmentFaqBinding? = null
     private val binding get() = _binding!!
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.FAQs)), requireContext())
         _binding = FragmentFaqBinding.inflate(inflater, container, false)

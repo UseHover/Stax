@@ -17,6 +17,7 @@ import com.hover.stax.settings.SettingsViewModel
 import com.hover.stax.transactions.TransactionDetailsViewModel
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransferViewModel
+import com.hover.stax.wellness.WellnessViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -37,6 +38,7 @@ val appModule = module {
     viewModel { LibraryViewModel(get(), get()) }
     viewModel { LanguageViewModel(get()) }
     viewModel { BountyViewModel(get(), get()) }
+    viewModel { WellnessViewModel() }
 }
 
 val dataModule = module(createdAtStart = true) {

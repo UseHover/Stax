@@ -22,6 +22,9 @@
         <action
                 android:id="@+id/action_navigation_home_to_navigation_request"
                 app:destination="@id/navigation_request" />
+        <action
+                android:id="@+id/action_navigation_home_to_wellnessFragment"
+                app:destination="@id/wellnessFragment" />
 
     </fragment>
 
@@ -220,6 +223,25 @@
                 app:destination="@id/navigation_settings"
                 app:popUpTo="@id/navigation_settings"
                 app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+            android:id="@+id/wellnessFragment"
+            android:name="com.hover.stax.wellness.WellnessFragment"
+            android:label="WellnessFragment" >
+        <action
+                android:id="@+id/action_wellnessFragment_to_wellnessDetailsFragment"
+                app:destination="@id/wellnessDetailsFragment" />
+        <action
+                android:id="@+id/action_wellnessFragment_to_navigation_home"
+                app:destination="@id/navigation_home" />
+    </fragment>
+    <fragment
+            android:id="@+id/wellnessDetailsFragment"
+            android:name="com.hover.stax.wellness.WellnessDetailsFragment"
+            android:label="WellnessDetailsFragment" >
+        <action
+                android:id="@+id/action_wellnessDetailsFragment_to_wellnessFragment"
+                app:destination="@id/wellnessFragment" />
     </fragment>
 
 </navigation>

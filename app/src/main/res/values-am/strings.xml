@@ -800,4 +800,7 @@
 
   <string name="working_offline">ከመስመር ውጭ በመስራት ላይ</string>
 
+  <!--Financial wellness tips -->>
+  <string name="financial_wellness_tips">የፋይናንስ ደህንነት ምክሮች</string>
+
 </resources>
