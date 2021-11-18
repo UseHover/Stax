@@ -32,7 +32,7 @@ class FaqFragment : Fragment(), FAQAdapter.SelectListener {
         observeFAQRecycler()
     }
 
-    fun observeFAQRecycler() {
+    private fun observeFAQRecycler() {
         val faqRecyclerView = binding.faqRecyclerView
         faqRecyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
 
@@ -66,11 +66,13 @@ class FaqFragment : Fragment(), FAQAdapter.SelectListener {
             binding.faqListCard.setOnClickIcon { requireActivity().onBackPressed() }
         }
     }
+
     private fun showResponseText(resId: Int){
         binding.responseText.setText(resId)
         binding.responseText.visibility = View.VISIBLE
         binding.faqRecyclerView.visibility = View.GONE
     }
+
     private fun updateLoadingStatus(status: Status) {
             when(status) {
                 Status.SUCCESS -> {
@@ -83,6 +85,7 @@ class FaqFragment : Fragment(), FAQAdapter.SelectListener {
 
             }
     }
+
     private enum class Status {
         SUCCESS, LOADING, FAILED, FAILED_NO_INTERNET
     }
@@ -98,6 +101,7 @@ class FaqFragment : Fragment(), FAQAdapter.SelectListener {
         val id: String = Hover.getDeviceId(requireContext())
         return if(id == "null") return "" else id
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

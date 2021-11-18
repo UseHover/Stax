@@ -95,11 +95,13 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         startWorkers()
         initFirebaseMessagingTopics()
 
-        FirebaseInstallations.getInstance().getToken(false)
+        with(FirebaseInstallations.getInstance()){
+            getToken(false)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) Timber.i("Installation auth token: ${task.result?.token}")
                 }
-        FirebaseInstallations.getInstance().id.addOnCompleteListener { Timber.i("Firebase installation ID is ${it.result}") }
+            id.addOnCompleteListener { Timber.i("Firebase installation ID is ${it.result}") }
+        }
 
         initRemoteConfigs()
         updateBannerSessionCounter()
