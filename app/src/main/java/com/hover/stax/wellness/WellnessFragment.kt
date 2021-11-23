@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.hover.stax.databinding.FragmentWellnessBinding
 import com.hover.stax.utils.UIHelper
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -29,6 +31,17 @@ class WellnessFragment : Fragment(), WellnessAdapter.SelectListener {
                 showWellnessTips(it)
             }
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
+    }
+
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (binding.wellnessDetail.visibility == View.VISIBLE)
+                showTipList()
+            else
+                findNavController().popBackStack()
+        }
     }
 
     private fun showWellnessTips(tips: List<WellnessTip>) {
@@ -42,10 +55,9 @@ class WellnessFragment : Fragment(), WellnessAdapter.SelectListener {
         binding.tipsCard.visibility = View.GONE
         binding.wellnessDetail.apply {
             visibility = View.VISIBLE
+            setTitle(tip.title)
             setOnClickIcon { showTipList() }
         }
-        binding.wellnessDetail.setBackButtonVisibility(View.VISIBLE)
-        binding.wellnessDetail.setTitle(tip.title)
         binding.contentText.text = tip.content
     }
 
