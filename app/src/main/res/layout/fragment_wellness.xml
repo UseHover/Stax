@@ -1,15 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/tipsCard"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:showBack="true"
-        app:title="@string/financial_wellness_tips">
+        android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/wellnessTips"
+    <com.hover.stax.views.StaxCardView
+            android:id="@+id/tipsCard"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:showBack="true"
+            app:title="@string/financial_wellness_tips">
 
-</com.hover.stax.views.StaxCardView>
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/wellnessTips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+    </com.hover.stax.views.StaxCardView>
+
+    <com.hover.stax.views.StaxCardView
+            android:id="@+id/wellnessDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:showBack="true"
+            app:title="@string/financial_wellness_tips">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/margin_13">
+
+            <TextView
+                    android:id="@+id/contentText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="font-normal"
+                    android:textSize="@dimen/text_16" />
+
+            <Button
+                    android:id="@+id/share_btn"
+                    style="@style/StaxFabExtended"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="@dimen/margin_13"
+                    android:text="@string/btn_share" />
+
+        </LinearLayout>
+
+    </com.hover.stax.views.StaxCardView>
+
+</FrameLayout>
+

@@ -552,5 +552,6 @@
 
 	<!-- Wellness Tips -->
     <string name="financial_wellness_tips">Financial Wellness Tips</string>
+    <string name="btn_share">Share</string>
 
 </resources>

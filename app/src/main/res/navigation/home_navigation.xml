@@ -97,7 +97,7 @@
                 android:id="@+id/action_scheduleDetailsFragment_to_accountDetailsFragment"
                 app:destination="@id/accountDetailsFragment"
                 app:popUpTo="@id/accountDetailsFragment"
-                app:popUpToInclusive="true"/>
+                app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -112,7 +112,7 @@
                 android:id="@+id/action_requestDetailsFragment_to_accountDetailsFragment"
                 app:destination="@id/accountDetailsFragment"
                 app:popUpTo="@id/accountDetailsFragment"
-                app:popUpToInclusive="true"/>
+                app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -127,7 +127,7 @@
                 android:id="@+id/action_accountDetailsFragment_to_navigation_home"
                 app:destination="@id/navigation_home"
                 app:popUpTo="@id/navigation_home"
-                app:popUpToInclusive="true"/>
+                app:popUpToInclusive="true" />
         <action
                 android:id="@+id/action_accountDetailsFragment_to_requestDetailsFragment"
                 app:destination="@id/requestDetailsFragment" />
@@ -165,7 +165,7 @@
                 android:id="@+id/action_navigation_transfer_to_navigation_home"
                 app:destination="@id/navigation_home"
                 app:popUpTo="@id/navigation_home"
-                app:popUpToInclusive="true"/>
+                app:popUpToInclusive="true" />
     </fragment>
     <fragment
             android:id="@+id/accountsFragment"
@@ -206,7 +206,7 @@
                 android:id="@+id/action_bountyEmailFragment_to_navigation_settings"
                 app:destination="@id/navigation_settings"
                 app:popUpTo="@id/navigation_settings"
-                app:popUpToInclusive="true"/>
+                app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -216,32 +216,22 @@
             tools:layout="@layout/bounty_card_channel">
         <action
                 android:id="@+id/action_bountyListFragment_to_transactionDetailsFragment"
-                app:destination="@id/transactionDetailsFragment"
-                />
+                app:destination="@id/transactionDetailsFragment" />
         <action
                 android:id="@+id/action_bountyListFragment_to_navigation_settings"
                 app:destination="@id/navigation_settings"
                 app:popUpTo="@id/navigation_settings"
-                app:popUpToInclusive="true"/>
+                app:popUpToInclusive="true" />
     </fragment>
     <fragment
             android:id="@+id/wellnessFragment"
             android:name="com.hover.stax.wellness.WellnessFragment"
-            android:label="WellnessFragment" >
-        <action
-                android:id="@+id/action_wellnessFragment_to_wellnessDetailsFragment"
-                app:destination="@id/wellnessDetailsFragment" />
+            android:label="WellnessFragment">
         <action
                 android:id="@+id/action_wellnessFragment_to_navigation_home"
-                app:destination="@id/navigation_home" />
-    </fragment>
-    <fragment
-            android:id="@+id/wellnessDetailsFragment"
-            android:name="com.hover.stax.wellness.WellnessDetailsFragment"
-            android:label="WellnessDetailsFragment" >
-        <action
-                android:id="@+id/action_wellnessDetailsFragment_to_wellnessFragment"
-                app:destination="@id/wellnessFragment" />
+                app:destination="@id/navigation_home"
+                app:popUpTo="@id/navigation_home"
+                app:popUpToInclusive="true" />
     </fragment>
 
 </navigation>

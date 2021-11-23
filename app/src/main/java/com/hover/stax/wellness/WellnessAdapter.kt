@@ -23,13 +23,13 @@ class WellnessAdapter(private val tips: List<WellnessTip>, val selectListener: S
         fun setItems(tip: WellnessTip) {
             binding.faqTopicItem.apply {
                 text = tip.title
-                setOnClickListener { selectListener.onTipSelected(tip.id) }
+                setOnClickListener { selectListener.onTipSelected(tip) }
             }
 
         }
     }
 
     interface SelectListener {
-        fun onTipSelected(id: String)
+        fun onTipSelected(tip: WellnessTip)
     }
 }

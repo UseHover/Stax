@@ -4,17 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import com.hover.stax.R
 import com.hover.stax.databinding.FragmentWellnessBinding
 import com.hover.stax.utils.UIHelper
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class WellnessFragment : Fragment(), WellnessAdapter.SelectListener {
 
-    private val viewModel: WellnessViewModel by viewModels()
+    private val viewModel: WellnessViewModel by viewModel()
 
     private var _binding: FragmentWellnessBinding? = null
     private val binding get() = _binding!!
@@ -27,7 +24,6 @@ class WellnessFragment : Fragment(), WellnessAdapter.SelectListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getTips()
         viewModel.tips.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
                 showWellnessTips(it)
@@ -42,13 +38,25 @@ class WellnessFragment : Fragment(), WellnessAdapter.SelectListener {
         }
     }
 
+    override fun onTipSelected(tip: WellnessTip) {
+        binding.tipsCard.visibility = View.GONE
+        binding.wellnessDetail.apply {
+            visibility = View.VISIBLE
+            setOnClickIcon { showTipList() }
+        }
+        binding.wellnessDetail.setBackButtonVisibility(View.VISIBLE)
+        binding.wellnessDetail.setTitle(tip.title)
+        binding.contentText.text = tip.content
+    }
+
+    private fun showTipList() {
+        binding.wellnessDetail.visibility = View.GONE
+        binding.tipsCard.visibility = View.VISIBLE
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
 
         _binding = null
-    }
-
-    override fun onTipSelected(id: String) {
-        findNavController().navigate(R.id.action_wellnessFragment_to_wellnessDetailsFragment, bundleOf(WellnessDetailsFragment.TIP_ID to id))
     }
 }

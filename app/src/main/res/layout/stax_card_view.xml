@@ -1,85 +1,81 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/frameLayout"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/cardViewHeader"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_13"
+        android:layout_marginTop="@dimen/margin_5"
+        android:layout_marginBottom="@dimen/margin_21"
+        app:cardBackgroundColor="@color/cardViewColor"
+        app:cardCornerRadius="@dimen/radius"
+        app:cardElevation="8dp">
 
-    <androidx.cardview.widget.CardView
-            android:id="@+id/cardViewHeader"
+    <LinearLayout
+            android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_13"
-            android:layout_marginTop="@dimen/margin_5"
-            android:layout_marginBottom="@dimen/margin_21"
-            app:cardBackgroundColor="@color/cardViewColor"
-            app:cardCornerRadius="@dimen/radius"
-            app:cardElevation="8dp">
+            android:clipChildren="false"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/margin_5"
+            android:paddingVertical="@dimen/margin_13">
 
-        <LinearLayout
-                android:id="@+id/content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/header"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/cardViewColor"
-                android:clipChildren="false"
-                android:orientation="vertical"
-                android:paddingHorizontal="@dimen/margin_3"
-                android:paddingVertical="@dimen/margin_10">
+                android:layout_height="wrap_content">
 
-            <RelativeLayout
-                    android:id="@+id/header"
-                    android:layout_width="match_parent"
+            <ImageButton
+                    android:id="@+id/backButton"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_21"
-                    android:orientation="horizontal">
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="start"
+                    android:padding="@dimen/margin_10"
+                    android:visibility="visible"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_arrow_back"
+                    tools:ignore="ContentDescription" />
 
-                <ImageButton
-                        android:id="@+id/backButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_gravity="start"
-                        android:layout_marginEnd="@dimen/margin_21"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:gravity="start"
-                        android:padding="@dimen/margin_10"
-                        android:visibility="gone"
-                        app:srcCompat="@drawable/ic_arrow_back" />
+            <TextView
+                    android:id="@+id/title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_21"
+                    android:fontFamily="font-bold"
+                    android:gravity="end"
+                    android:paddingHorizontal="@dimen/margin_10"
+                    android:text="@string/bal_cardhead"
+                    android:textAlignment="viewEnd"
+                    android:textAllCaps="true"
+                    android:textColor="@color/offWhite"
+                    android:textSize="@dimen/text_16"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/backButton"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                        android:id="@+id/title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_gravity="center_vertical|end"
-                        android:fontFamily="font-bold"
-                        android:gravity="center_vertical|end"
-                        android:paddingHorizontal="@dimen/margin_10"
-                        android:text="@string/bal_cardhead"
-                        android:textAlignment="viewEnd"
-                        android:textAllCaps="true"
-                        android:textColor="@color/offWhite"
-                        android:textSize="@dimen/text_16" />
+            <TextView
+                    android:id="@+id/subtitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="center_vertical|end"
+                    android:fontFamily="font-bold"
+                    android:gravity="center_vertical|end"
+                    android:paddingHorizontal="@dimen/margin_10"
+                    android:text="@string/bal_cardhead"
+                    android:textAlignment="viewEnd"
+                    android:textAllCaps="true"
+                    android:textColor="@color/offWhite"
+                    android:textSize="@dimen/text_13"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/title"
+                    app:layout_constraintTop_toBottomOf="@id/title" />
 
-                <TextView
-                        android:id="@+id/subtitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/title"
-                        android:layout_alignParentEnd="true"
-                        android:layout_gravity="center_vertical|end"
-                        android:fontFamily="font-bold"
-                        android:gravity="center_vertical|end"
-                        android:paddingHorizontal="@dimen/margin_10"
-                        android:text="@string/bal_cardhead"
-                        android:textAlignment="viewEnd"
-                        android:textAllCaps="true"
-                        android:textColor="@color/offWhite"
-                        android:textSize="@dimen/text_13"
-                        android:visibility="gone" />
-            </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-</FrameLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

@@ -102,5 +102,16 @@
                     app:drawableEndCompat="@drawable/ic_system_upate_24" />
         </androidx.cardview.widget.CardView>
 
+        <include
+                android:id="@+id/wellnessCard"
+                layout="@layout/item_wellness_tips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_13"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/margin_13"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/airtime" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

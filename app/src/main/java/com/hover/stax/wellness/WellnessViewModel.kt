@@ -6,6 +6,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import timber.log.Timber
+import java.util.*
 
 class WellnessViewModel : ViewModel() {
 
@@ -14,15 +15,20 @@ class WellnessViewModel : ViewModel() {
 
     init {
         db.firestoreSettings = settings
+        getTips()
     }
 
     val tips = MutableLiveData<List<WellnessTip>>()
 
-    fun getTips() {
+    private fun getTips() {
         db.collection("wellness_tips").get()
                 .addOnSuccessListener { snapshot ->
                     val wellnessTips = snapshot.map { document ->
-                        WellnessTip(document.id, document.data["title"].toString(), document.data["content"].toString(), document.data["date"].toString())
+                        WellnessTip(document.id, document.data["title"].toString(), document.data["content"].toString(), document.getDate("date"))
+                    }
+
+                    wellnessTips.forEach {
+                        Timber.e("${it.title} - ${it.content} - ${it.date}")
                     }
 
                     tips.postValue(wellnessTips)
@@ -34,4 +40,4 @@ class WellnessViewModel : ViewModel() {
     }
 }
 
-data class WellnessTip(val id: String, val title: String, val content: String, val timestamp: String)
+data class WellnessTip(val id: String, val title: String, val content: String, val date: Date?)
