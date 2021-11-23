@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/tipsCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_13"
+        app:cardBackgroundColor="@color/banner_permission_primary"
+        app:cardCornerRadius="@dimen/radius"
+        app:cardElevation="@dimen/margin_8">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_13"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginEnd="@dimen/margin_13"
+                android:fontFamily="font-medium"
+                android:gravity="start"
+                android:textColor="@color/banner_text"
+                android:textSize="@dimen/text_21"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="This is a test title" />
+
+        <TextView
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_13"
+                android:layout_marginEnd="@dimen/margin_13"
+                android:ellipsize="end"
+                android:fontFamily="font-normal"
+                android:gravity="start"
+                android:maxLines="3"
+                android:textColor="@color/banner_text"
+                android:textSize="@dimen/text_16"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                tools:text="This is test content" />
+
+        <TextView
+                android:id="@+id/date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_13"
+                android:background="@color/banner_secondary"
+                android:fontFamily="font-normal"
+                android:gravity="start"
+                android:padding="@dimen/margin_10"
+                android:textColor="@color/banner_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/content"
+                tools:text="3 days ago." />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

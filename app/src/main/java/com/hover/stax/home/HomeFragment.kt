@@ -1,7 +1,6 @@
 package com.hover.stax.home
 
 import android.app.Activity
-import android.icu.text.RelativeDateTimeFormatter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -82,20 +81,24 @@ class HomeFragment : Fragment() {
     }
 
     private fun showTip(tip: WellnessTip) {
-        with(binding.wellnessCard) {
-            tipsCard.visibility = View.VISIBLE
+        tip.date?.let {
+            if (!android.text.format.DateUtils.isToday(it.time)) {
+                with(binding.wellnessCard) {
+                    tipsCard.visibility = View.VISIBLE
 
-            title.text = tip.title
-            content.text = tip.content
+                    title.text = tip.title
+                    content.text = tip.content
 
-            tip.date?.let {
-                date.text = DateUtils.timeAgo(requireActivity(), it.time)
-            }
+                    date.text = DateUtils.timeAgo(requireActivity(), it.time)
 
-            tipsCard.setOnClickListener {
-                findNavController().navigate(R.id.action_navigation_home_to_wellnessFragment)
-            }
+                    tipsCard.setOnClickListener {
+                        findNavController().navigate(R.id.action_navigation_home_to_wellnessFragment)
+                    }
+                }
+            } else
+                Timber.i("No tips available today")
         }
+
     }
 
     override fun onDestroyView() {

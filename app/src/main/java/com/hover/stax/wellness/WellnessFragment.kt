@@ -47,6 +47,7 @@ class WellnessFragment : Fragment(), WellnessAdapter.SelectListener {
     private fun showWellnessTips(tips: List<WellnessTip>) {
         binding.wellnessTips.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireActivity())
+            isNestedScrollingEnabled = false
             adapter = WellnessAdapter(tips, this@WellnessFragment)
         }
     }

@@ -23,7 +23,6 @@ object DateUtils {
 
     fun todayDate(): Date = Calendar.getInstance().time
 
-
     fun timeAgo(context: Context, millis: Long): String {
         return humanFriendlyTime(context, System.currentTimeMillis() - millis)
     }
@@ -170,7 +169,6 @@ object DateUtils {
         cal.timeInMillis = dateLong
         return cal.time
     }
-
 
     fun beginningOfTheMonth(): Date {
         val cacheCalendar: Calendar = Calendar.getInstance()
