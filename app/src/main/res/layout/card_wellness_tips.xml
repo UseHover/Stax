@@ -45,19 +45,27 @@
                 app:layout_constraintTop_toBottomOf="@id/title"
                 tools:text="This is test content" />
 
-        <TextView
-                android:id="@+id/date"
+        <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_13"
                 android:background="@color/banner_secondary"
-                android:fontFamily="font-normal"
-                android:gravity="start"
                 android:padding="@dimen/margin_10"
-                android:textColor="@color/banner_text"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/content"
-                tools:text="3 days ago." />
+                app:layout_constraintTop_toBottomOf="@id/content">
+
+            <TextView
+                    android:id="@+id/more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/margin_3"
+                    android:fontFamily="font-medium"
+                    android:gravity="start"
+                    android:text="@string/read_more"
+                    android:textColor="@color/banner_text"
+                    android:textSize="@dimen/text_16"
+                    app:drawableEndCompat="@drawable/ic_twotone_chevron_right_24" />
+        </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

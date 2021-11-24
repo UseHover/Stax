@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
-import com.hover.stax.databinding.FragmentMainBinding
+import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.DateUtils
@@ -22,7 +22,7 @@ import timber.log.Timber
 
 class HomeFragment : Fragment() {
 
-    private var _binding: FragmentMainBinding? = null
+    private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
     private val bannerViewModel: BannerViewModel by viewModel()
@@ -30,7 +30,7 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
-        _binding = FragmentMainBinding.inflate(inflater, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -88,8 +88,6 @@ class HomeFragment : Fragment() {
 
                     title.text = tip.title
                     content.text = tip.content
-
-                    date.text = DateUtils.timeAgo(requireActivity(), it.time)
 
                     tipsCard.setOnClickListener {
                         findNavController().navigate(R.id.action_navigation_home_to_wellnessFragment)
