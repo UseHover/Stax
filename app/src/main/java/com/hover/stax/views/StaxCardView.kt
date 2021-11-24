@@ -52,6 +52,16 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
         binding.content.setBackgroundColor(bgColor)
     }
 
+//    fun showProgressIndicator() {
+//        binding.progressIndicator.visibility = View.VISIBLE
+//    }
+//
+//    fun hideProgressIndicator() {
+//        binding.progressIndicator.apply {
+//            visibility = View.GONE
+//        }
+//    }
+
     fun setBackButtonVisibility(visibility: Int) {
         binding.backButton.visibility = visibility
     }

@@ -27,11 +27,7 @@ class WellnessViewModel : ViewModel() {
                         WellnessTip(document.id, document.data["title"].toString(), document.data["content"].toString(), document.getDate("date"))
                     }
 
-                    wellnessTips.forEach {
-                        Timber.e("${it.title} - ${it.content} - ${it.date}")
-                    }
-
-                    tips.postValue(wellnessTips)
+                    tips.postValue(wellnessTips.filterNot { it.date == null }.sortedBy { it.date!!.time })
                 }
                 .addOnFailureListener {
                     Timber.e("Error fetching wellness tips: ${it.localizedMessage}")

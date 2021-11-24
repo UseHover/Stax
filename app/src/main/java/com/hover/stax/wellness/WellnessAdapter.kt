@@ -23,7 +23,7 @@ class WellnessAdapter(private val tips: List<WellnessTip>, val selectListener: S
 
         fun setItems(tip: WellnessTip) {
             tip.date?.let {
-                binding.date.text = DateUtils.timeAgo(binding.root.context, it.time)
+                binding.date.text = DateUtils.humanFriendlyDate(it.time)
             }
             binding.title.text = tip.title
             binding.contentText.text = tip.content

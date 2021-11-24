@@ -38,7 +38,7 @@
                 android:ellipsize="end"
                 android:fontFamily="font-normal"
                 android:gravity="start"
-                android:maxLines="3"
+                android:maxLines="2"
                 android:textColor="@color/banner_text"
                 android:textSize="@dimen/text_16"
                 app:layout_constraintStart_toStartOf="parent"

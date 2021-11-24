@@ -1,5 +1,6 @@
 package com.hover.stax.wellness
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.hover.stax.R
 import com.hover.stax.databinding.FragmentWellnessBinding
 import com.hover.stax.utils.UIHelper
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -60,6 +62,16 @@ class WellnessFragment : Fragment(), WellnessAdapter.SelectListener {
             setOnClickIcon { showTipList() }
         }
         binding.contentText.text = tip.content
+
+        binding.shareBtn.setOnClickListener {
+            val share = Intent.createChooser(Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TITLE, tip.title)
+                putExtra(Intent.EXTRA_TEXT, tip.title.plus(" \n\n ").plus(tip.content))
+                type = "text/plain"
+            }, getString(R.string.share_wellness_tip))
+            startActivity(share)
+        }
     }
 
     private fun showTipList() {
