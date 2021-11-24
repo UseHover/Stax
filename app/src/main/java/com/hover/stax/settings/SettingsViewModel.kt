@@ -165,7 +165,7 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
                     val result = LoginNetworking(application).uploadReferee(email.value!!, refereeCode, name, phone, account?.idToken)
 
                     if (result.code in 200..299)
-                        onSuccess(JSONObject(result.body!!.string()), application.getString(R.string.upload_referee))
+                        onSuccess(JSONObject(result.body!!.string()), name)
                 } catch (e: IOException) {
                     onError(application.getString(R.string.upload_referee_error))
                 }
@@ -173,10 +173,21 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
         }
     }
 
-    private fun onSuccess(json: JSONObject, successLog: String) {
+    private fun onSuccess(json: JSONObject, name: String) {
         Timber.e(json.toString())
 
-        Utils.logAnalyticsEvent(application.getString(R.string.uploaded_to_hover, successLog), application)
+//        Utils.logAnalyticsEvent(application.getString(R.string.uploaded_to_hover, successLog), application)
+        refereeCode.value?.let {
+            val data = JSONObject()
+            try {
+                data.put("referee ID", it)
+                data.put("username", name)
+                Utils.logAnalyticsEvent(application.getString(R.string.upload_referee_success_event), data, application)
+            } catch (e: Exception) {
+                Timber.e(e.localizedMessage)
+            }
+        }
+
         progress.postValue(100)
         saveResponseData(json)
     }

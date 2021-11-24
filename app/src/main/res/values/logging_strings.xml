@@ -78,6 +78,7 @@
 	<string name="upload_referee" translatable="false">successfully set referee</string>
 	<string name="upload_user_error" translatable="false">could not connect, please try again</string>
 	<string name="upload_referee_error" translatable="false">Invalid, please check the code and try again</string>
+	<string name="upload_referee_success_event" translatable="false">Successfully set referee ID on Hover</string>
 
 	<string name="clicked_push_notification" translatable="false">From push notification: %1$s</string>
 	<string name="clicked_request_link" translatable="false">Clicked link from request</string>

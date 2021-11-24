@@ -11,7 +11,6 @@ import com.hover.stax.R
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.utils.Constants
-import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.wellness.WellnessTip
