@@ -26,7 +26,7 @@ class WellnessAdapter(private val tips: List<WellnessTip>, val selectListener: S
                 binding.date.text = DateUtils.humanFriendlyDate(it.time)
             }
             binding.title.text = tip.title
-            binding.contentText.text = tip.content
+            binding.snippet.text = tip.snippet ?: tip.content
 
             binding.root.setOnClickListener { selectListener.onTipSelected(tip) }
         }

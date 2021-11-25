@@ -9,22 +9,55 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <com.hover.stax.views.StaxCardView
-                android:id="@+id/tipsCard"
+        <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:showBack="true"
-                app:title="@string/financial_wellness_tips">
+                android:id="@+id/tipsCard"
+                android:layout_marginTop="@dimen/margin_10">
+
+            <ImageButton
+                    android:id="@+id/backButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="start"
+                    android:padding="@dimen/margin_10"
+                    android:layout_marginStart="@dimen/margin_13"
+                    android:visibility="visible"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_arrow_back"
+                    tools:ignore="ContentDescription" />
+
+            <TextView
+                    android:id="@+id/title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_18"
+                    android:layout_marginEnd="@dimen/margin_13"
+                    android:fontFamily="font-bold"
+                    android:gravity="end"
+                    android:paddingHorizontal="@dimen/margin_10"
+                    android:text="@string/bal_cardhead"
+                    android:textAlignment="viewEnd"
+                    android:textAllCaps="true"
+                    android:textColor="@color/offWhite"
+                    android:textSize="@dimen/text_16"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/backButton"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/wellnessTips"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:itemCount="5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/backButton"
                     android:nestedScrollingEnabled="false"
+                    tools:itemCount="5"
                     tools:listitem="@layout/item_wellness_tips" />
 
-        </com.hover.stax.views.StaxCardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.hover.stax.views.StaxCardView
                 android:id="@+id/wellnessDetail"
@@ -57,7 +90,6 @@
                         android:text="@string/btn_share" />
 
             </LinearLayout>
-
         </com.hover.stax.views.StaxCardView>
 
     </FrameLayout>

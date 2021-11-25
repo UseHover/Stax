@@ -18,26 +18,41 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Sun 20th Nov" />
 
-    <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
+    <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="font-medium"
-            android:textSize="19sp"
+            android:layout_marginTop="@dimen/margin_5"
+            app:cardCornerRadius="@dimen/radius"
+            app:cardElevation="@dimen/margin_8"
+            app:cardBackgroundColor="@color/cardViewColor"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/date"
-            tools:text="What did you spend your money on?" />
+            app:layout_constraintTop_toBottomOf="@id/date">
 
-    <TextView
-            android:id="@+id/contentText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:fontFamily="font-normal"
-            android:maxLines="2"
-            android:textSize="@dimen/text_16"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title"
-            tools:text="What did you spend your money on?" />
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_13"
+                android:layout_marginVertical="@dimen/margin_13"
+                android:orientation="vertical">
+
+            <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="font-medium"
+                    android:textSize="19sp"
+                    tools:text="What did you spend your money on?" />
+
+            <TextView
+                    android:id="@+id/snippet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="font-normal"
+                    android:maxLines="2"
+                    android:textSize="@dimen/text_16"
+                    tools:text="What did you spend your money on?" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -28,13 +28,14 @@ class WellnessFragment : Fragment(), WellnessAdapter.SelectListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.title.text = getString(R.string.financial_wellness_tips)
         viewModel.tips.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
                 showWellnessTips(it)
             }
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
+        initBackNavigation()
     }
 
     private val backPressedCallback = object : OnBackPressedCallback(true) {
@@ -77,6 +78,11 @@ class WellnessFragment : Fragment(), WellnessAdapter.SelectListener {
     private fun showTipList() {
         binding.wellnessDetail.visibility = View.GONE
         binding.tipsCard.visibility = View.VISIBLE
+    }
+
+    private fun initBackNavigation() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
+        binding.backButton.setOnClickListener { findNavController().popBackStack() }
     }
 
     override fun onDestroyView() {

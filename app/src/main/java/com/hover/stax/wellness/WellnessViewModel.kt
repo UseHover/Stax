@@ -24,7 +24,7 @@ class WellnessViewModel : ViewModel() {
         db.collection("wellness_tips").get()
                 .addOnSuccessListener { snapshot ->
                     val wellnessTips = snapshot.map { document ->
-                        WellnessTip(document.id, document.data["title"].toString(), document.data["content"].toString(), document.getDate("date"))
+                        WellnessTip(document.id, document.data["title"].toString(), document.data["content"].toString(), document.data["snippet"].toString(), document.getDate("date"))
                     }
 
                     tips.postValue(wellnessTips.filterNot { it.date == null }.sortedBy { it.date!!.time })
@@ -36,4 +36,4 @@ class WellnessViewModel : ViewModel() {
     }
 }
 
-data class WellnessTip(val id: String, val title: String, val content: String, val date: Date?)
+data class WellnessTip(val id: String, val title: String, val content: String, val snippet: String?, val date: Date?)

@@ -86,7 +86,7 @@ class HomeFragment : Fragment() {
                     tipsCard.visibility = View.VISIBLE
 
                     title.text = tip.title
-                    content.text = tip.content
+                    snippet.text = tip.snippet ?: tip.content
 
                     tipsCard.setOnClickListener {
                         findNavController().navigate(R.id.action_navigation_home_to_wellnessFragment)

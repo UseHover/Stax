@@ -30,7 +30,7 @@
                 tools:text="This is a test title" />
 
         <TextView
-                android:id="@+id/content"
+                android:id="@+id/snippet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_13"
@@ -52,7 +52,7 @@
                 android:background="@color/banner_secondary"
                 android:padding="@dimen/margin_10"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/content">
+                app:layout_constraintTop_toBottomOf="@id/snippet">
 
             <TextView
                     android:id="@+id/more"
