@@ -1,9 +1,15 @@
 package com.hover.stax.channels
 
 import android.content.Context
+import androidx.lifecycle.viewModelScope
 import androidx.work.*
+import androidx.work.CoroutineWorker
+import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.database.AppDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -30,17 +36,13 @@ class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Worker(
     override fun doWork(): Result {
         Timber.v("Downloading channels")
 
+        importChannels()
+
         try {
             val channelsJson = downloadChannels(url)
             channelsJson?.let {
                 val data: JSONArray = it.getJSONArray("data")
-                for (j in 0 until data.length()) {
-                    var channel = channelDao!!.getChannel(data.getJSONObject(j).getJSONObject("attributes").getInt("id"))
-                    if (channel == null) {
-                        channel = Channel(data.getJSONObject(j).getJSONObject("attributes"), applicationContext.getString(R.string.root_url))
-                        channelDao!!.insert(channel)
-                    } else channelDao!!.update(channel.update(data.getJSONObject(j).getJSONObject("attributes"), applicationContext.getString(R.string.root_url)))
-                }
+                updateChannels(data)
 
                 Timber.i("Successfully downloaded and saved channels.")
                 return Result.success()
@@ -60,6 +62,16 @@ class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Worker(
         }
     }
 
+    private fun updateChannels(data: JSONArray){
+        for (j in 0 until data.length()) {
+            var channel = channelDao!!.getChannel(data.getJSONObject(j).getJSONObject("attributes").getInt("id"))
+            if (channel == null) {
+                channel = Channel(data.getJSONObject(j).getJSONObject("attributes"), applicationContext.getString(R.string.root_url))
+                channelDao!!.insert(channel)
+            } else channelDao!!.update(channel.update(data.getJSONObject(j).getJSONObject("attributes"), applicationContext.getString(R.string.root_url)))
+        }
+    }
+
     private val url get() = applicationContext.getString(R.string.api_url).plus(applicationContext.getString(R.string.channels_endpoint))
 
     @Throws(IOException::class, JSONException::class)
@@ -67,6 +79,44 @@ class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Worker(
         val request: Request = Request.Builder().url(url).build()
         val response: Response = client.newCall(request).execute()
         return response.body?.let { JSONObject(it.string()) }
+    }
+
+    fun importChannels() = CoroutineScope(Dispatchers.IO).launch {
+        val hasChannels = channelDao!!.getChannelsAndAccounts().isNotEmpty()
+
+        if (!hasChannels) {
+            parseChannelJson()?.let {
+                val channelsJson = JSONObject(it)
+                val data: JSONArray = channelsJson.getJSONArray("data")
+                updateChannels(data)
+
+                Timber.i("Channels imported successfully")
+            } ?: Timber.e("Error importing channels")
+        } else {
+            Timber.i("Has channels, nothing to do here")
+        }
+    }
+
+    private fun parseChannelJson(): String? {
+        var channelsString: String? = null
+
+        val fileToUse = if (BuildConfig.DEBUG)
+            applicationContext.getString(R.string.channels_json_staging)
+        else
+            applicationContext.getString(R.string.channels_json_prod)
+
+        try {
+            val inputStream = applicationContext.assets.open(fileToUse)
+            val size = inputStream.available()
+            val buffer = ByteArray(size)
+            inputStream.read(buffer)
+            inputStream.close()
+            channelsString = String(buffer, Charsets.UTF_8)
+        } catch (e: IOException) {
+            Timber.e(e)
+        }
+
+        return channelsString
     }
 
     companion object {

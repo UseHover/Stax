@@ -85,7 +85,6 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
     private fun startBackgroundProcesses() {
         with(channelsViewModel){
             accounts.observe(this@SplashScreenActivity) { hasAccounts = it.isNotEmpty() }
-            importChannels()
             migrateAccounts()
         }
 
