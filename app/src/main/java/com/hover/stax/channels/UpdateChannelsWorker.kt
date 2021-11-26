@@ -36,8 +36,6 @@ class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Worker(
     override fun doWork(): Result {
         Timber.v("Downloading channels")
 
-        importChannels()
-
         try {
             val channelsJson = downloadChannels(url)
             channelsJson?.let {
@@ -79,44 +77,6 @@ class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Worker(
         val request: Request = Request.Builder().url(url).build()
         val response: Response = client.newCall(request).execute()
         return response.body?.let { JSONObject(it.string()) }
-    }
-
-    fun importChannels() = CoroutineScope(Dispatchers.IO).launch {
-        val hasChannels = channelDao!!.getChannelsAndAccounts().isNotEmpty()
-
-        if (!hasChannels) {
-            parseChannelJson()?.let {
-                val channelsJson = JSONObject(it)
-                val data: JSONArray = channelsJson.getJSONArray("data")
-                updateChannels(data)
-
-                Timber.i("Channels imported successfully")
-            } ?: Timber.e("Error importing channels")
-        } else {
-            Timber.i("Has channels, nothing to do here")
-        }
-    }
-
-    private fun parseChannelJson(): String? {
-        var channelsString: String? = null
-
-        val fileToUse = if (BuildConfig.DEBUG)
-            applicationContext.getString(R.string.channels_json_staging)
-        else
-            applicationContext.getString(R.string.channels_json_prod)
-
-        try {
-            val inputStream = applicationContext.assets.open(fileToUse)
-            val size = inputStream.available()
-            val buffer = ByteArray(size)
-            inputStream.read(buffer)
-            inputStream.close()
-            channelsString = String(buffer, Charsets.UTF_8)
-        } catch (e: IOException) {
-            Timber.e(e)
-        }
-
-        return channelsString
     }
 
     companion object {
