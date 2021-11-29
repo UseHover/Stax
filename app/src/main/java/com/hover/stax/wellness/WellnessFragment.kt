@@ -28,10 +28,12 @@ class WellnessFragment : Fragment(), WellnessAdapter.SelectListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val tipId = arguments?.getString(TIP_ID)
+
         binding.title.text = getString(R.string.financial_wellness_tips)
         viewModel.tips.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
-                showWellnessTips(it)
+                showWellnessTips(it, tipId)
             }
         }
 
@@ -47,28 +49,46 @@ class WellnessFragment : Fragment(), WellnessAdapter.SelectListener {
         }
     }
 
-    private fun showWellnessTips(tips: List<WellnessTip>) {
-        binding.wellnessTips.apply {
-            layoutManager = UIHelper.setMainLinearManagers(requireActivity())
-            isNestedScrollingEnabled = false
-            adapter = WellnessAdapter(tips, this@WellnessFragment)
+    private fun showWellnessTips(tips: List<WellnessTip>, id: String? = null) {
+        if (id != null) {
+            tips.firstOrNull { it.id == id }?.let { onTipSelected(it, true) }
+        } else {
+            binding.wellnessTips.apply {
+                layoutManager = UIHelper.setMainLinearManagers(requireActivity())
+                isNestedScrollingEnabled = false
+                adapter = WellnessAdapter(tips, this@WellnessFragment)
+            }
         }
     }
 
-    override fun onTipSelected(tip: WellnessTip) {
+    override fun onTipSelected(tip: WellnessTip, isFromDeeplink: Boolean) {
         binding.tipsCard.visibility = View.GONE
         binding.wellnessDetail.apply {
             visibility = View.VISIBLE
             setTitle(tip.title)
-            setOnClickIcon { showTipList() }
+
+            //ensures proper back navigation
+            setOnClickIcon {
+                if (isFromDeeplink)
+                    findNavController().navigate(R.id.action_wellnessFragment_to_navigation_home)
+                else
+                    showTipList()
+            }
         }
         binding.contentText.text = tip.content
 
         binding.shareBtn.setOnClickListener {
+            val shareableContent = buildString {
+                append(tip.title)
+                append("\n\n")
+                append(tip.snippet ?: tip.content)
+                append("\n\n")
+                append("https://stax.me/wellnessTips?id=${tip.id}")
+            }
+
             val share = Intent.createChooser(Intent().apply {
                 action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TITLE, tip.title)
-                putExtra(Intent.EXTRA_TEXT, tip.title.plus(" \n\n ").plus(tip.content))
+                putExtra(Intent.EXTRA_TEXT, shareableContent)
                 type = "text/plain"
             }, getString(R.string.share_wellness_tip))
             startActivity(share)
@@ -89,5 +109,9 @@ class WellnessFragment : Fragment(), WellnessAdapter.SelectListener {
         super.onDestroyView()
 
         _binding = null
+    }
+
+    companion object {
+        const val TIP_ID = "tipId"
     }
 }

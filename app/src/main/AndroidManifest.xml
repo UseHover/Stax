@@ -23,8 +23,8 @@
 
         <activity
                 android:name=".SplashScreenActivity"
-                android:label="@string/app_name"
                 android:exported="true"
+                android:label="@string/app_name"
                 android:theme="@style/StaxTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -50,8 +50,8 @@
 
         <activity
                 android:name=".home.MainActivity"
-                android:label="@string/app_name"
                 android:exported="true"
+                android:label="@string/app_name"
                 android:theme="@style/StaxTheme">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
@@ -131,17 +131,22 @@
                         android:host="stax.me"
                         android:pathPattern="@string/deeplink_bounty"
                         android:scheme="http" />
+                <data
+                        android:host="stax.me"
+                        android:pathPattern="@string/deeplink_wellness_tips"
+                        android:scheme="https" />
             </intent-filter>
         </activity>
 
         <activity
                 android:name=".permissions.PermissionsActivity"
-                android:launchMode="singleTask"
                 android:exported="false"
+                android:launchMode="singleTask"
                 android:theme="@style/StaxTheme" />
 
-        <activity android:name=".destruct.SelfDestructActivity"
-                android:exported="false"/>
+        <activity
+                android:name=".destruct.SelfDestructActivity"
+                android:exported="false" />
         <activity
                 android:name=".onboarding.OnBoardingActivity"
                 android:exported="false"

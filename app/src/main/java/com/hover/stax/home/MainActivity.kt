@@ -9,6 +9,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.checkbox.MaterialCheckBox
@@ -136,6 +137,8 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
                     navigateToSettingsFragment(getNavController())
                 route.contains(getString(R.string.deeplink_reviews)) ->
                     launchStaxReview()
+                route.contains(getString(R.string.deeplink_wellness_tips)) ->
+                    intent.data?.getQueryParameter("id")?.let { navigateToWellnessFragment(getNavController(), it) }
             }
 
             intent.data = null

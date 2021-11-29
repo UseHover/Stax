@@ -33,6 +33,6 @@ class WellnessAdapter(private val tips: List<WellnessTip>, val selectListener: S
     }
 
     interface SelectListener {
-        fun onTipSelected(tip: WellnessTip)
+        fun onTipSelected(tip: WellnessTip, isFromDeeplink: Boolean = false)
     }
 }
