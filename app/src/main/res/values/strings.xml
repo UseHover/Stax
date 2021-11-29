@@ -1,559 +1,563 @@
 <resources>
-	<string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
-	<string name="appsflyer_key" public="false" translatable="false">4B6DDdYFw55PmVPTwr8Ski</string>
-	<string name="app_name" translatable="false">Stax</string>
-	<string name="payment_root_url" translatable="false">https://stax.me/pay?%1$s</string>
-	<string name="payment_url_end" translatable="false">%1$s-%2$d-%3$s-%4$d</string>
-	<string name="root_url" translatable="false">https://www.usehover.com</string>
-	<string name="api_url" translatable="false">https://www.usehover.com/api</string>
-	<string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
-	<string name="users_endpoint" translatable="false">/stax_users</string>
+    <string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
+    <string name="appsflyer_key" public="false" translatable="false">4B6DDdYFw55PmVPTwr8Ski</string>
+    <string name="app_name" translatable="false">Stax</string>
+    <string name="payment_root_url" translatable="false">https://stax.me/pay?%1$s</string>
+    <string name="payment_url_end" translatable="false">%1$s-%2$d-%3$s-%4$d</string>
+    <string name="root_url" translatable="false">https://www.usehover.com</string>
+    <string name="api_url" translatable="false">https://www.usehover.com/api</string>
+    <string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
+    <string name="users_endpoint" translatable="false">/stax_users</string>
 
-	<string name="referee_endpoint" translatable="false">/set_referee</string>
-	<string name="stax_market_playstore_link" translatable="false">https://stax.onelink.me/nR0j/fb15b3f2</string>
-	<string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
-	<string name="stax_nolt_url" translatable="false">https://stax.nolt.io/</string>
-	<string name="receive_stax_updates_url" translatable="false">https://416e906b.sibforms.com/serve/MUIEAAS88NDe6oTn7nl8YrIqgutsJ_GgyCYRWVsZ-S54quVNmBhvpsu70WpNXrZd-n6H5r8m1ZRfuTl8ckiQrB4sLIdNSx0Y_DFZ7_hQGCDv9PG6N0ncsHwWW3OYsMlPMHgQSR6OZf8xK8HC-NA3p3T71Pv1Coy_n9oiDRwIu7HCryUfDtfHr11mXSQ5S3JwcOd8cN7FL1ewDRqu</string>
-	<string name="mixpanel_token" translatable="false">82efeb23b6d38509989f592c8f4b21c2</string>
-	<string name="bounty_transactions_endpoint" translatable="false">/get_bounty_results?device_id=%1$s</string>
-	<string name="google_server_client_id" translatable="false">1098235122453-5u1hct3brr4t626317k9fgjkkfdmsbvs.apps.googleusercontent.com</string>
+    <string name="channels_json_staging" translatable="false">channels-staging.json</string>
+    <string name="channels_json_prod" translatable="false">channels-prod.json</string>
 
-	<string name="nav_home">Home</string>
-	<string name="nav_balance_and_history">Balance and history</string>
-	<string name="nav_balances">Balances</string>
+    <string name="referee_endpoint" translatable="false">/set_referee</string>
+    <string name="stax_market_playstore_link" translatable="false">https://stax.onelink.me/nR0j/fb15b3f2</string>
+    <string name="stax_url_playstore_review_link" translatable="false">http://play.google.com/store/apps/details?id=com.hover.stax&amp;showAllReviews=true</string>
+    <string name="stax_nolt_url" translatable="false">https://stax.nolt.io/</string>
+    <string name="receive_stax_updates_url" translatable="false">https://416e906b.sibforms.com/serve/MUIEAAS88NDe6oTn7nl8YrIqgutsJ_GgyCYRWVsZ-S54quVNmBhvpsu70WpNXrZd-n6H5r8m1ZRfuTl8ckiQrB4sLIdNSx0Y_DFZ7_hQGCDv9PG6N0ncsHwWW3OYsMlPMHgQSR6OZf8xK8HC-NA3p3T71Pv1Coy_n9oiDRwIu7HCryUfDtfHr11mXSQ5S3JwcOd8cN7FL1ewDRqu</string>
+    <string name="mixpanel_token" translatable="false">82efeb23b6d38509989f592c8f4b21c2</string>
+    <string name="bounty_transactions_endpoint" translatable="false">/get_bounty_results?device_id=%1$s</string>
+    <string name="google_server_client_id" translatable="false">1098235122453-5u1hct3brr4t626317k9fgjkkfdmsbvs.apps.googleusercontent.com</string>
 
-	<string name="nav_get_paid">Get Paid</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_balance_and_history">Balance and history</string>
+    <string name="nav_balances">Balances</string>
 
-	<string name="nav_link_account">Link an account</string>
-	<string name="nav_airtime">Buy Airtime</string>
-	<string name="nav_transfer">Transfer</string>
-	<string name="nav_new_request">New Request</string>
-	<string name="nav_settings">Settings</string>
-	<string name="nav_account_detail">Account Details</string>
-	<string name="nav_transaction">Transaction Details</string>
-	<string name="nav_schedule">Schedule Details</string>
-	<string name="nav_request">Request Details</string>
-	<string name="nav_transfer_detail">Transfer Details</string>
+    <string name="nav_get_paid">Get Paid</string>
 
-	<string name="lang_cardhead">Choose a language</string>
-	<string-array name="supported_lang_codes">
-		<item>am</item>
-		<item>en</item>
-		<item>fr</item>
-		<item>sw</item>
-	</string-array>
+    <string name="nav_link_account">Link an account</string>
+    <string name="nav_airtime">Buy Airtime</string>
+    <string name="nav_transfer">Transfer</string>
+    <string name="nav_new_request">New Request</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_account_detail">Account Details</string>
+    <string name="nav_transaction">Transaction Details</string>
+    <string name="nav_schedule">Schedule Details</string>
+    <string name="nav_request">Request Details</string>
+    <string name="nav_transfer_detail">Transfer Details</string>
 
-	<string name="btn_ok">OK</string>
-	<string name="btn_cancel">Cancel</string>
-	<string name="btn_save">Save</string>
-	<string name="btn_dontsave">Abandon</string>
-	<string name="btn_continue">Continue</string>
-	<string name="btn_send">Send</string>
-	<string name="btn_edit">Edit</string>
-	<string name="btn_back">Back</string>
-	<string name="btn_test">Test</string>
-	<string name="btn_google_signin">Sign in With Google</string>
+    <string name="lang_cardhead">Choose a language</string>
+    <string-array name="supported_lang_codes">
+        <item>am</item>
+        <item>en</item>
+        <item>fr</item>
+        <item>sw</item>
+    </string-array>
 
-	<!-- ONBOARDING -->
-	<string name="stax_tagline">Move money without stress</string>
-	<string name="splash_screen_img_desc">Stax background</string>
-	<string name="slide_1_title">Secure. Fast. Convenient</string>
-	<string name="slide_1_desc">Send money and buy airtime offline using your existing bank and momo accounts</string>
-	<string name="onboarding_link_accounts">Link your accounts now</string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_dontsave">Abandon</string>
+    <string name="btn_continue">Continue</string>
+    <string name="btn_send">Send</string>
+    <string name="btn_edit">Edit</string>
+    <string name="btn_back">Back</string>
+    <string name="btn_test">Test</string>
+    <string name="btn_google_signin">Sign in With Google</string>
 
-	<!-- Home -->
-	<string name="welcome_to">Welcome to</string>
-	<string name="cta_transfer">Send money</string>
-	<string name="cta_airtime">Buy airtime</string>
-	<string name="cta_request">Request money</string>
+    <!-- ONBOARDING -->
+    <string name="stax_tagline">Move money without stress</string>
+    <string name="splash_screen_img_desc">Stax background</string>
+    <string name="slide_1_title">Secure. Fast. Convenient</string>
+    <string name="slide_1_desc">Send money and buy airtime offline using your existing bank and momo accounts</string>
+    <string name="onboarding_link_accounts">Link your accounts now</string>
 
-	<!-- Balances -->
-	<string name="bal_cardhead">Balances</string>
-	<string name="channels_error_nodata">Please turn on data to load services.</string>
-	<string name="channels_error_nosim">Please insert a supported SIM to filter choices.</string>
-	<string name="channels_error_noselect">You must select a service.</string>
-	<string name="accounts_error_no_accounts">No accounts added</string>
-	<string name="link_account">Link account</string>
-	<string name="link_account_error">Choose an account to link.</string>
-	<string name="link_another"><u>+ Link another account</u></string>
-	<string name="add_another_account"><u>+ Add another account</u></string>
-	<string name="hist_cardhead">History</string>
-	<string name="hist_zerobody">You do not have any history yet. Send money or buy airtime to get started.</string>
-	<string name="future_cardhead">Future Transactions</string>
-	<string name="pending_callout">Transaction sent. Waiting for confirmation.</string>
-	<string name="refresh_balance_desc">Refresh your balance</string>
-	<string name="refresh_balances">Refresh balances</string>
-	<string name="refresh">Refresh</string>
-	<string name="refresh_balance_error">Add an account to check your balance.</string>
+    <!-- Home -->
+    <string name="welcome_to">Welcome to</string>
+    <string name="cta_transfer">Send money</string>
+    <string name="cta_airtime">Buy airtime</string>
+    <string name="cta_request">Request money</string>
 
-	<string name="check_balance_title">Check balance</string>
-	<string name="check_balance_desc">Nice! You added your first account. Now you can check your balance on Stax.</string>
-	<string name="check_balance_alt">Nice! Account added successfully. Now you can check your balance on Stax.</string>
-	<string name="check_balance_alt_plural">Nice! Accounts added successfully. Now you can check your balance on Stax.</string>
+    <!-- Balances -->
+    <string name="bal_cardhead">Balances</string>
+    <string name="channels_error_nodata">Please turn on data to load services.</string>
+    <string name="channels_error_nosim">Please insert a supported SIM to filter choices.</string>
+    <string name="channels_error_noselect">You must select a service.</string>
+    <string name="accounts_error_no_accounts">No accounts added</string>
+    <string name="link_account">Link account</string>
+    <string name="link_account_error">Choose an account to link.</string>
+    <string name="link_another"><u>+ Link another account</u></string>
+    <string name="add_another_account"><u>+ Add another account</u></string>
+    <string name="hist_cardhead">History</string>
+    <string name="hist_zerobody">You do not have any history yet. Send money or buy airtime to get started.</string>
+    <string name="future_cardhead">Future Transactions</string>
+    <string name="pending_callout">Transaction sent. Waiting for confirmation.</string>
+    <string name="refresh_balance_desc">Refresh your balance</string>
+    <string name="refresh_balances">Refresh balances</string>
+    <string name="refresh">Refresh</string>
+    <string name="refresh_balance_error">Add an account to check your balance.</string>
 
-	<string name="later">Later</string>
-	<string name="no_connecion">No connection</string>
-	<string name="your_main_account">Your main account</string>
-	<string name="your_other_account">Your other account</string>
+    <string name="check_balance_title">Check balance</string>
+    <string name="check_balance_desc">Nice! You added your first account. Now you can check your balance on Stax.</string>
+    <string name="check_balance_alt">Nice! Account added successfully. Now you can check your balance on Stax.</string>
+    <string name="check_balance_alt_plural">Nice! Accounts added successfully. Now you can check your balance on Stax.</string>
 
-	<!-- ADD ACCOUNT -->
-	<string name="your_accounts">Your accounts</string>
-	<string name="add_an_account">Add an account</string>
-	<string name="add_accounts_to_stax">Add accounts to Stax</string>
+    <string name="later">Later</string>
+    <string name="no_connecion">No connection</string>
+    <string name="your_main_account">Your main account</string>
+    <string name="your_other_account">Your other account</string>
 
-	<string name="nickname">Nickname</string>
-	<string name="saved">Saved</string>
-	<string name="account_number_label">Account number</string>
-	<string name="hint_enter_new_name">Enter a new name</string>
+    <!-- ADD ACCOUNT -->
+    <string name="your_accounts">Your accounts</string>
+    <string name="add_an_account">Add an account</string>
+    <string name="add_accounts_to_stax">Add accounts to Stax</string>
 
-	<string name="official_name">Official name</string>
-	<string name="which_account">Which account?</string>
-	<string name="account_select_header">You have more than one %1$s account. Please choose which one you want to use to %2$s.</string>
+    <string name="nickname">Nickname</string>
+    <string name="saved">Saved</string>
+    <string name="account_number_label">Account number</string>
+    <string name="hint_enter_new_name">Enter a new name</string>
 
-	<!-- Permissions -->
-	<string name="permissions_title">Permissions needed</string>
-	<string name="permissions_basic_title">Grant us phone and SMS permission.</string>
-	<string name="permissions_basic_desc_1">Phone permission allows Stax to detect your SIM so we can show you the financial services available in your country.</string>
-	<string name="permissions_basic_desc_2">It also enables you to select recipients from your contacts when sending airtime or money.</string>
-	<string name="permissions_basic_desc_3">SMS Permission helps us detect via SMS receipt that your transactions are successful.</string>
-	<string name="permissions_overlay_desc">These permissions allow Stax to dial USSD codes on your behalf and create an overlay that shows you the transaction progress.</string>
-	<string name="permissions_accessibility_desc">In order to provide you with the ability to check your balance, transfer money or buy airtime, Stax needs your display and accessibility permission</string>
+    <string name="official_name">Official name</string>
+    <string name="which_account">Which account?</string>
+    <string name="account_select_header">You have more than one %1$s account. Please choose which one you want to use to %2$s.</string>
+
+    <!-- Permissions -->
+    <string name="permissions_title">Permissions needed</string>
+    <string name="permissions_basic_title">Grant us phone and SMS permission.</string>
+    <string name="permissions_basic_desc_1">Phone permission allows Stax to detect your SIM so we can show you the financial services available in your country.</string>
+    <string name="permissions_basic_desc_2">It also enables you to select recipients from your contacts when sending airtime or money.</string>
+    <string name="permissions_basic_desc_3">SMS Permission helps us detect via SMS receipt that your transactions are successful.</string>
+    <string name="permissions_overlay_desc">These permissions allow Stax to dial USSD codes on your behalf and create an overlay that shows you the transaction progress.</string>
+    <string name="permissions_accessibility_desc">In order to provide you with the ability to check your balance, transfer money or buy airtime, Stax needs your display and accessibility permission</string>
 
 
-	<string name="permission_support_desc">We need phone permissions to generate your support ID</string>
-	<string name="nav_sim_permission">Grant SIM permission</string>
-	<string name="perm_dialoghead">One last thing…</string>
-	<string name="perm_dialogbody">Stax needs 2 permissions to %1$s.</string>
-	<string name="use_ussd">use USSD</string>
-	<string name="buy_airtime">buy airtime</string>
-	<string name="check_balance">check balance</string>
-	<string name="send_money">send money</string>
-	<string name="send_money_to">send money to</string>
-	<string name="move_money">move money</string>
-	<string name="perm_accessibiltiy_dialogbody">Stax needs accessibility permission to %1$s</string>
-	<string name="perm_progress1">Step 1 of 2: Display permission</string>
-	<string name="perm_progress2">Step 2 of 2: Accessibility permission</string>
-	<string name="perm_cta1">Show settings</string>
-	<string name="perm_cta2">Show settings again</string>
+    <string name="permission_support_desc">We need phone permissions to generate your support ID</string>
+    <string name="nav_sim_permission">Grant SIM permission</string>
+    <string name="perm_dialoghead">One last thing…</string>
+    <string name="perm_dialogbody">Stax needs 2 permissions to %1$s.</string>
+    <string name="use_ussd">use USSD</string>
+    <string name="buy_airtime">buy airtime</string>
+    <string name="check_balance">check balance</string>
+    <string name="send_money">send money</string>
+    <string name="send_money_to">send money to</string>
+    <string name="move_money">move money</string>
+    <string name="perm_accessibiltiy_dialogbody">Stax needs accessibility permission to %1$s</string>
+    <string name="perm_progress1">Step 1 of 2: Display permission</string>
+    <string name="perm_progress2">Step 2 of 2: Accessibility permission</string>
+    <string name="perm_cta1">Show settings</string>
+    <string name="perm_cta2">Show settings again</string>
 
-	<!-- Hover Session -->
-	<string name="balance_msg">Checking %1$s balance</string>
-	<string name="airtime_msg">Buying airtime</string>
-	<string name="transfer_msg">Transferring money</string>
-	<string name="fetch_accounts">Fetching accounts</string>
+    <!-- Hover Session -->
+    <string name="balance_msg">Checking %1$s balance</string>
+    <string name="airtime_msg">Buying airtime</string>
+    <string name="transfer_msg">Transferring money</string>
+    <string name="fetch_accounts">Fetching accounts</string>
 
-	<!-- Transaction statuses -->
-	<string name="succeeded_cardHead">Succeeded</string>
-	<string name="pending_cardHead">Pending</string>
-	<string name="failed_cardHead">Unsuccessful</string>
-	<string name="null_service_name_text">this USSD service</string>
-	<string name="no_response_error">No response from %1$s.</string>
-	<string name="incomplete_error">It appears that %1$s stopped responding part way through.</string>
-	<string name="pin_error">PIN error. %1$s asks you to please check your PIN and retry.</string>
-	<string name="balance_error">%1$s says your balance is too low to complete this transaction.</string>
-	<string name="unregistered_error">%1$s says you are not registered for this service.</string>
-	<string name="invalid_entry">One of your inputs was invalid, view details to see what went wrong.</string>
-	<string name="mmi_error">Your network returned an error, please try again.</string>
-	<string name="unspecified_error">Unknown error.</string>
-	<string name="no_response_desc">We received no response from %1$s. We don\’t think this transaction worked. Please try again.</string>
-	<string name="incomplete_desc">We received only a partial response from %1$s. We don\’t think this transaction worked. Please try again.</string>
-	<string name="invalid_entry_desc">One of your inputs was invalid, see session details below to see what went wrong. Make sure any amounts, phone numbers, or account numbers are correct. See session details below.</string>
-	<string name="mmi_error_desc">Your network returned an error, please try again. If this happens a lot please contact your network provider or money service to complain.</string>
-	<string name="unspecified_error_desc">Unknown error, see details below to find out what went wrong. Please try again.</string>
+    <!-- Transaction statuses -->
+    <string name="succeeded_cardHead">Succeeded</string>
+    <string name="pending_cardHead">Pending</string>
+    <string name="failed_cardHead">Unsuccessful</string>
+    <string name="null_service_name_text">this USSD service</string>
+    <string name="no_response_error">No response from %1$s.</string>
+    <string name="incomplete_error">It appears that %1$s stopped responding part way through.</string>
+    <string name="pin_error">PIN error. %1$s asks you to please check your PIN and retry.</string>
+    <string name="balance_error">%1$s says your balance is too low to complete this transaction.</string>
+    <string name="unregistered_error">%1$s says you are not registered for this service.</string>
+    <string name="invalid_entry">One of your inputs was invalid, view details to see what went wrong.</string>
+    <string name="mmi_error">Your network returned an error, please try again.</string>
+    <string name="unspecified_error">Unknown error.</string>
+    <string name="no_response_desc">We received no response from %1$s. We don\’t think this transaction worked. Please try again.</string>
+    <string name="incomplete_desc">We received only a partial response from %1$s. We don\’t think this transaction worked. Please try again.</string>
+    <string name="invalid_entry_desc">One of your inputs was invalid, see session details below to see what went wrong. Make sure any amounts, phone numbers, or account numbers are correct. See session details below.</string>
+    <string name="mmi_error_desc">Your network returned an error, please try again. If this happens a lot please contact your network provider or money service to complain.</string>
+    <string name="unspecified_error_desc">Unknown error, see details below to find out what went wrong. Please try again.</string>
 
-	<!-- SDK Overrides -->
-	<string name="hsdk_overlay_msg"><![CDATA[<font color="#1E232A">Show progress updates by turning <b>switch ON</b> in the next screen.</font>]]></string>
-	<string name="hsdk_access_msg"><![CDATA[<font color="#0A9A8D">Turn on Accessibility</font> <font color="#1E232A">in the <b>next screen</b> to run USSD sessions</font>]]></string>
-	<string name="hsdk_access_btn">Open Settings</string>
-	<string name="hsdk_overlay_tip">Next, tap the switch ON</string>
-	<string name="hsdk_overlay_example">Allow display over other apps</string>
-	<string name="hsdk_settings">Settings</string>
-	<string name="hsdk_off">Off</string>
-	<string name="hsdk_accessibility">Accessibility</string>
-	<string name="hsdk_accessibility_sub">Services</string>
-	<string name="hsdk_enable_accessibility">Enable Accessibility</string>
-	<string name="access_service_summary">Connect with Mobile Money and Telecom services on your behalf</string>
-	<string name="access_service_descript">This is used to read and interact with USSD menus to provide a simplified and more accessible experience.</string>
-	<string name="hsdk_manual_env">Manual environment active. This session will be recorded.</string>
-	<string name="hsdk_overlay_header">Transacting</string>
-	<string name="hsdk_complete">Transaction complete</string>
+    <!-- SDK Overrides -->
+    <string name="hsdk_overlay_msg"><![CDATA[<font color="#1E232A">Show progress updates by turning <b>switch ON</b> in the next screen.</font>]]></string>
+    <string name="hsdk_access_msg"><![CDATA[<font color="#0A9A8D">Turn on Accessibility</font> <font color="#1E232A">in the <b>next screen</b> to run USSD sessions</font>]]></string>
+    <string name="hsdk_access_btn">Open Settings</string>
+    <string name="hsdk_overlay_tip">Next, tap the switch ON</string>
+    <string name="hsdk_overlay_example">Allow display over other apps</string>
+    <string name="hsdk_settings">Settings</string>
+    <string name="hsdk_off">Off</string>
+    <string name="hsdk_accessibility">Accessibility</string>
+    <string name="hsdk_accessibility_sub">Services</string>
+    <string name="hsdk_enable_accessibility">Enable Accessibility</string>
+    <string name="access_service_summary">Connect with Mobile Money and Telecom services on your behalf</string>
+    <string name="access_service_descript">This is used to read and interact with USSD menus to provide a simplified and more accessible experience.</string>
+    <string name="hsdk_manual_env">Manual environment active. This session will be recorded.</string>
+    <string name="hsdk_overlay_header">Transacting</string>
+    <string name="hsdk_complete">Transaction complete</string>
 
-	<!-- Onboarding showcase -->
-	<string name="onboard_addaccounthead">Add an account to get started.</string>
-	<string name="onboard_addaccountdesc">Keep track of your money all in one place. Your funds never leave your account or mix.</string>
-	<string name="onboard_addaccount_greatwork_head">Great work!</string>
-	<string name="onboard_addaccount_greatwork_desc">Now add your other accounts so you can view all your separate balances in one place.</string>
+    <!-- Onboarding showcase -->
+    <string name="onboard_addaccounthead">Add an account to get started.</string>
+    <string name="onboard_addaccountdesc">Keep track of your money all in one place. Your funds never leave your account or mix.</string>
+    <string name="onboard_addaccount_greatwork_head">Great work!</string>
+    <string name="onboard_addaccount_greatwork_desc">Now add your other accounts so you can view all your separate balances in one place.</string>
 
-	<!-- Transfer -->
-	<string name="loading_link_dialoghead">Loading, one moment</string>
-	<string name="transfer_amount_label">Amount</string>
-	<string name="channel_label">Account</string>
-	<string name="actions_fielderror">This account does not support buy airtime. Please select a different account.</string>
-	<string name="recipientphone_label">Contact phone number</string>
-	<string name="recipientacct_label">Contact account number</string>
-	<string name="toast_error_contactperm">You must grant the read contacts permission to choose a number from your address book.</string>
-	<string name="toast_error_contactselect">There was a problem selecting your contact. Please try again.</string>
-	<string name="transfer_error_recipient_general">Please enter a recipient number.</string>
-	<string name="transfer_error_recipient_phone">Please enter a phone number.</string>
-	<string name="transfer_error_recipient_account">Please enter an account number.</string>
-	<string name="amount_fielderror">Please enter a valid amount.</string>
-	<string name="channel_fielderror">Please select a service.</string>
-	<string name="action_fielderror">Please select a recipient network.</string>
-	<string name="channel_request_fieldinfo">Please check that your choice can send to %1$s</string>
-	<string name="no_actions_fielderror">This service cannot be used for %1$s.</string>
-	<string name="toast_pleasefix">Please fix the errors shown in red.</string>
-	<string name="self_choice">Myself</string>
-	<string name="other_choice">Someone else</string>
-	<string name="onnet_choice">on network</string>
-	<string name="offnet_choice">To %1$s</string>
-	<string name="note_cardhead">Description</string>
-	<string name="request_note_label">What is your request for?</string>
-	<string name="recipient_label">To</string>
-	<string name="sender_label">From</string>
-	<string name="send_who_header">Send money to</string>
-	<string name="airtime_who_header">Buy airtime for</string>
-	<string name="accounts_label">Pay from</string>
-	<string name="self_only_money_warning">This can only be used to move money to your own account.</string>
-	<string name="self_only_airtime_warning">This can only be used to buy airtime for your own account.</string>
+    <!-- Transfer -->
+    <string name="loading_link_dialoghead">Loading, one moment</string>
+    <string name="transfer_amount_label">Amount</string>
+    <string name="channel_label">Account</string>
+    <string name="actions_fielderror">This account does not support buy airtime. Please select a different account.</string>
+    <string name="recipientphone_label">Contact phone number</string>
+    <string name="recipientacct_label">Contact account number</string>
+    <string name="toast_error_contactperm">You must grant the read contacts permission to choose a number from your address book.</string>
+    <string name="toast_error_contactselect">There was a problem selecting your contact. Please try again.</string>
+    <string name="transfer_error_recipient_general">Please enter a recipient number.</string>
+    <string name="transfer_error_recipient_phone">Please enter a phone number.</string>
+    <string name="transfer_error_recipient_account">Please enter an account number.</string>
+    <string name="amount_fielderror">Please enter a valid amount.</string>
+    <string name="channel_fielderror">Please select a service.</string>
+    <string name="action_fielderror">Please select a recipient network.</string>
+    <string name="channel_request_fieldinfo">Please check that your choice can send to %1$s</string>
+    <string name="no_actions_fielderror">This service cannot be used for %1$s.</string>
+    <string name="toast_pleasefix">Please fix the errors shown in red.</string>
+    <string name="self_choice">Myself</string>
+    <string name="other_choice">Someone else</string>
+    <string name="onnet_choice">on network</string>
+    <string name="offnet_choice">To %1$s</string>
+    <string name="note_cardhead">Description</string>
+    <string name="request_note_label">What is your request for?</string>
+    <string name="recipient_label">To</string>
+    <string name="sender_label">From</string>
+    <string name="send_who_header">Send money to</string>
+    <string name="airtime_who_header">Buy airtime for</string>
+    <string name="accounts_label">Pay from</string>
+    <string name="self_only_money_warning">This can only be used to move money to your own account.</string>
+    <string name="self_only_airtime_warning">This can only be used to buy airtime for your own account.</string>
 
-	<string name="fab_transfernow">Send money now</string>
-	<string name="fab_airtimenow">Buy airtime now</string>
-	<string name="noworry_explain">You can review this info in the next step.</string>
-	<string name="descrip_multcontacts">%1$d contacts</string>
+    <string name="fab_transfernow">Send money now</string>
+    <string name="fab_airtimenow">Buy airtime now</string>
+    <string name="noworry_explain">You can review this info in the next step.</string>
+    <string name="descrip_multcontacts">%1$d contacts</string>
 
-	<string name="descrip_balance">%1$s check balance</string>
-	<string name="descrip_airtime_sent">%1$s send airtime to %2$s</string>
-	<string name="descrip_transfer_sent">%1$s send money to %2$s</string>
-	<string name="descrip_transfer_received">received money from %1$s</string>
-	<string name="descrip_fetch_accounts">fetched accounts from %1$s</string>
-	<string name="descrip_bill_paid">pay %1$s bill</string>
-	<string name="descrip_recorded">Recorded USSD session on %1$s</string>
-	<string name="descrip_airtime_sched">Buy airtime with %1$s for %2$s</string>
+    <string name="descrip_balance">%1$s check balance</string>
+    <string name="descrip_airtime_sent">%1$s send airtime to %2$s</string>
+    <string name="descrip_transfer_sent">%1$s send money to %2$s</string>
+    <string name="descrip_transfer_received">received money from %1$s</string>
+    <string name="descrip_fetch_accounts">fetched accounts from %1$s</string>
+    <string name="descrip_bill_paid">pay %1$s bill</string>
+    <string name="descrip_recorded">Recorded USSD session on %1$s</string>
+    <string name="descrip_airtime_sched">Buy airtime with %1$s for %2$s</string>
 
-	<string name="descrip_long_airtime_send">buy %1$s airtime with %2$s for %3$s</string>
-	<string name="descrip_long_transfer_send">send %1$s from %2$s to %3$s on %4$s</string>
-	<string name="descrip_long_move">move %1$s from %2$s to %3$s</string>
-	<string name="descrip_long_bill_paid">pay %1$s from %2$s to %3$s</string>
+    <string name="descrip_long_airtime_send">buy %1$s airtime with %2$s for %3$s</string>
+    <string name="descrip_long_transfer_send">send %1$s from %2$s to %3$s on %4$s</string>
+    <string name="descrip_long_move">move %1$s from %2$s to %3$s</string>
+    <string name="descrip_long_bill_paid">pay %1$s from %2$s to %3$s</string>
 
-	<!-- Request -->
-	<string name="req_cardhead">Request money</string>
-	<string name="into_account">Into account</string>
-	<string name="put_in">Put in</string>
-	<string name="put_in_desc">This is where you want to receive the requested money</string>
-	<string name="account_num_desc">e.g. your mobile money phone number or bank account number</string>
-	<string name="send_request_to">Send request to</string>
-	<string name="request_amount_label">How much money?</string>
-	<string name="amount_label_opt">Amount (Optional)</string>
-	<string name="reqfrom_label">To</string>
-	<string name="btn_addcontact">+ Add another person</string>
-	<string name="sms_request_template">Kindly stax me %1$s at your earliest convenience. %2$s %3$s</string>
-	<string name="sms_amount_detail">%1$s </string>
-	<string name="sms_note_detail">Note: \"%1$s\" </string>
-	<string name="reqsave_head">Save request?</string>
-	<string name="toast_error_smsperm">You must grant the read SMS permission so Stax can tell when a request is sent or fulfilled.</string>
-	<string name="reqsave_msg">Looks like you haven\'t sent your request. Would you like to save it anyway?</string>
-	<string name="toast_confirm_request">Your request has been saved.</string>
-	<string name="toast_request_scheduled">Your request has been scheduled. You will be reminded to send a message on %1$s</string>
-	<string name="descrip_request">Request to %1$s</string>
-	<string name="requester_number_label">Account</string>
-	<string name="request_error_recipient">Please enter a phone number.</string>
-	<string name="requester_number_fielderror">Please enter the account or phone number you\'d like to receive the money into</string>
-	<string name="requester_account_error">Please select an account or add a new one to receive your money</string>
-	<string name="sms_label">SMS</string>
-	<string name="whatsapp_label">WhatsApp</string>
-	<string name="copyLink_label">Copy link</string>
-	<string name="link_copied_label">Link copied</string>
-	<string name="share_request_link_cardhead">Share request link</string>
-	<string name="share_again_cardhead">Share request link again</string>
-	<string name="account_name_error">Please enter a new nickname</string>
-	<string name="account_number_error">Please enter a new account number</string>
-	<string name="accounts_error_noselect">Please select an account.</string>
+    <!-- Request -->
+    <string name="req_cardhead">Request money</string>
+    <string name="into_account">Into account</string>
+    <string name="put_in">Put in</string>
+    <string name="put_in_desc">This is where you want to receive the requested money</string>
+    <string name="account_num_desc">e.g. your mobile money phone number or bank account number</string>
+    <string name="send_request_to">Send request to</string>
+    <string name="request_amount_label">How much money?</string>
+    <string name="amount_label_opt">Amount (Optional)</string>
+    <string name="reqfrom_label">To</string>
+    <string name="btn_addcontact">+ Add another person</string>
+    <string name="sms_request_template">Kindly stax me %1$s at your earliest convenience. %2$s %3$s</string>
+    <string name="sms_amount_detail">%1$s </string>
+    <string name="sms_note_detail">Note: \"%1$s\" </string>
+    <string name="reqsave_head">Save request?</string>
+    <string name="toast_error_smsperm">You must grant the read SMS permission so Stax can tell when a request is sent or fulfilled.</string>
+    <string name="reqsave_msg">Looks like you haven\'t sent your request. Would you like to save it anyway?</string>
+    <string name="toast_confirm_request">Your request has been saved.</string>
+    <string name="toast_request_scheduled">Your request has been scheduled. You will be reminded to send a message on %1$s</string>
+    <string name="descrip_request">Request to %1$s</string>
+    <string name="requester_number_label">Account</string>
+    <string name="request_error_recipient">Please enter a phone number.</string>
+    <string name="requester_number_fielderror">Please enter the account or phone number you\'d like to receive the money into</string>
+    <string name="requester_account_error">Please select an account or add a new one to receive your money</string>
+    <string name="sms_label">SMS</string>
+    <string name="whatsapp_label">WhatsApp</string>
+    <string name="copyLink_label">Copy link</string>
+    <string name="link_copied_label">Link copied</string>
+    <string name="share_request_link_cardhead">Share request link</string>
+    <string name="share_again_cardhead">Share request link again</string>
+    <string name="account_name_error">Please enter a new nickname</string>
+    <string name="account_number_error">Please enter a new account number</string>
+    <string name="accounts_error_noselect">Please select an account.</string>
 
-	<!-- Scheduling -->
-	<string name="future_toggle">Send later</string>
-	<string name="date_label">Date</string>
-	<string name="repeat_toggle">Send more than once</string>
-	<string name="repeatfreq_label">How often?</string>
-	<string name="end_label">End date</string>
-	<string name="end_label_opt">End date (optional)</string>
-	<string name="repeatnum_label_opt">How many times? (optional)</string>
-	<string name="repeatnum_label">How many times?</string>
-	<string name="toast_confirm_schedule">Transfer scheduled. We will remind you to make a transfer on %1$s</string>
-	<string-array name="frequency_choices">
-		<item>Every day</item>
-		<item>Every week</item>
-		<item>Every 2 weeks</item>
-		<item>Every month</item>
-	</string-array>
-	<string-array name="frequency_choices_values" translatable="false">
-		<item>0daily</item>
-		<item>1weekly</item>
-		<item>2biweekly</item>
-		<item>3monthly</item>
-	</string-array>
-	<string name="fab_schedule">Schedule</string>
+    <!-- Scheduling -->
+    <string name="future_toggle">Send later</string>
+    <string name="date_label">Date</string>
+    <string name="repeat_toggle">Send more than once</string>
+    <string name="repeatfreq_label">How often?</string>
+    <string name="end_label">End date</string>
+    <string name="end_label_opt">End date (optional)</string>
+    <string name="repeatnum_label_opt">How many times? (optional)</string>
+    <string name="repeatnum_label">How many times?</string>
+    <string name="toast_confirm_schedule">Transfer scheduled. We will remind you to make a transfer on %1$s</string>
+    <string-array name="frequency_choices">
+        <item>Every day</item>
+        <item>Every week</item>
+        <item>Every 2 weeks</item>
+        <item>Every month</item>
+    </string-array>
+    <string-array name="frequency_choices_values" translatable="false">
+        <item>0daily</item>
+        <item>1weekly</item>
+        <item>2biweekly</item>
+        <item>3monthly</item>
+    </string-array>
+    <string name="fab_schedule">Schedule</string>
 
-	<!-- Notifications -->
-	<string name="notify_default_title">User scheduled</string>
-	<string name="notify_default_channel_descrip">Show notifications to make transfers and requests scheduled by you.</string>
-	<string name="notify_transfer">It\'s time to transfer money %1$s with Stax.</string>
-	<string name="notify_transfer_cta">Transfer now</string>
-	<string name="notify_request">It\'s time to send a money request to %1$s with Stax.</string>
-	<string name="notify_request_cta">Send request</string>
-	<string name="notify_airtime">It\'s time to buy airtime with Stax.</string>
-	<string name="notify_airtime_cta">Buy airtime</string>
+    <!-- Notifications -->
+    <string name="notify_default_title">User scheduled</string>
+    <string name="notify_default_channel_descrip">Show notifications to make transfers and requests scheduled by you.</string>
+    <string name="notify_transfer">It\'s time to transfer money %1$s with Stax.</string>
+    <string name="notify_transfer_cta">Transfer now</string>
+    <string name="notify_request">It\'s time to send a money request to %1$s with Stax.</string>
+    <string name="notify_request_cta">Send request</string>
+    <string name="notify_airtime">It\'s time to buy airtime with Stax.</string>
+    <string name="notify_airtime_cta">Buy airtime</string>
 
-	<!-- Details -->
-	<string name="pending_cardhead">Waiting for confirmation</string>
-	<string name="pending_cardbody">The USSD session is complete, but we have not received a confirmation SMS yet.</string>
-	<string name="balance_label">Balance</string>
-	<string name="moneyout_label">Money out this month</string>
-	<string name="moneyin_label">Money in this month</string>
-	<string name="fees_label">Fees paid to %1$s this year</string>
-	<string name="transactions_cardhead">Transactions</string>
-	<string name="network_label">Recipient account</string>
-	<string name="id_label">Transaction ID</string>
-	<string name="stax_id_label">Stax ID</string>
-	<string name="session_cardhead">Messages</string>
-	<string name="view_full_details">View full details</string>
-	<string name="new_balance">New balance %1$s</string>
+    <!-- Details -->
+    <string name="pending_cardhead">Waiting for confirmation</string>
+    <string name="pending_cardbody">The USSD session is complete, but we have not received a confirmation SMS yet.</string>
+    <string name="balance_label">Balance</string>
+    <string name="moneyout_label">Money out this month</string>
+    <string name="moneyin_label">Money in this month</string>
+    <string name="fees_label">Fees paid to %1$s this year</string>
+    <string name="transactions_cardhead">Transactions</string>
+    <string name="network_label">Recipient account</string>
+    <string name="id_label">Transaction ID</string>
+    <string name="stax_id_label">Stax ID</string>
+    <string name="session_cardhead">Messages</string>
+    <string name="view_full_details">View full details</string>
+    <string name="new_balance">New balance %1$s</string>
 
-	<!-- Canceling -->
-	<string name="cancelfuture_head">Cancel future transaction</string>
-	<string name="btn_canceltrans">Cancel transactions</string>
-	<string name="cancelfuture_msg">This will cancel future transactions. You can re-schedule the transactions at any time.</string>
-	<string name="toast_confirm_cancelfuture">Future transactions canceled.</string>
-	<string name="cancelreq_head">Cancel request</string>
-	<string name="btn_cancelreq">Cancel request</string>
-	<string name="cancelreq_msg">This will cancel this request. You can re-request money from someone at any time.</string>
-	<string name="toast_confirm_cancelreq">Request canceled.</string>
+    <!-- Canceling -->
+    <string name="cancelfuture_head">Cancel future transaction</string>
+    <string name="btn_canceltrans">Cancel transactions</string>
+    <string name="cancelfuture_msg">This will cancel future transactions. You can re-schedule the transactions at any time.</string>
+    <string name="toast_confirm_cancelfuture">Future transactions canceled.</string>
+    <string name="cancelreq_head">Cancel request</string>
+    <string name="btn_cancelreq">Cancel request</string>
+    <string name="cancelreq_msg">This will cancel this request. You can re-request money from someone at any time.</string>
+    <string name="toast_confirm_cancelreq">Request canceled.</string>
 
-	<!-- Settings -->
-	<string name="meta_cardhead">Options</string>
-	<string name="share_text">Share</string>
-	<string name="share_stax">Share Stax</string>
-	<string name="first_login_dialoghead">First, please sign in</string>
-	<string name="add_referee_info">View referral info</string>
-	<string name="saved_referral">Saved referral</string>
-	<string name="copied">Copied</string>
-	<string name="share_sub">Stax app</string>
-	<string name="share_explain">Share app via</string>
-	<string name="share_msg">Check out this app https://play.google.com/store/apps/details?id=com.hover.stax</string>
-	<string name="connect_accounts">Connect your accounts</string>
+    <!-- Settings -->
+    <string name="meta_cardhead">Options</string>
+    <string name="share_text">Share</string>
+    <string name="share_stax">Share Stax</string>
+    <string name="first_login_dialoghead">First, please sign in</string>
+    <string name="add_referee_info">View referral info</string>
+    <string name="saved_referral">Saved referral</string>
+    <string name="copied">Copied</string>
+    <string name="share_sub">Stax app</string>
+    <string name="share_explain">Share app via</string>
+    <string name="share_msg">Check out this app https://play.google.com/store/apps/details?id=com.hover.stax</string>
+    <string name="connect_accounts">Connect your accounts</string>
 
-	<string name="login_google_err">Could not connect to Google, please make sure you are online and try again.</string>
-	<string name="referral_text">Your code:</string>
-	<string name="referral_label">Agent\'s code</string>
+    <string name="login_google_err">Could not connect to Google, please make sure you are online and try again.</string>
+    <string name="referral_text">Your code:</string>
+    <string name="referral_label">Agent\'s code</string>
 
-	<string name="name_label">Enter your full name</string>
-	<string name="phone_label">Enter your phone number</string>
-	<string name="referral_help">Enter the referral code of the Stax agent who onboarded you.</string>
-	<string name="referral_error_blank">Please enter a referral code.</string>
-	<string name="referral_error_invalid">Please enter a valid referral code.</string>
-	<string name="referral_error_name">Please enter a valid name.</string>
-	<string name="referral_error_phone">Please enter a valid phone number.</string>
-	<string name="referral_error_offline">Please go online to save referral code.</string>
-	<string name="referral_error_self">You cannot refer yourself.</string>
-	<string name="referral_error_data">Please go online to get your referral code.</string>
+    <string name="name_label">Enter your full name</string>
+    <string name="phone_label">Enter your phone number</string>
+    <string name="referral_help">Enter the referral code of the Stax agent who onboarded you.</string>
+    <string name="referral_error_blank">Please enter a referral code.</string>
+    <string name="referral_error_invalid">Please enter a valid referral code.</string>
+    <string name="referral_error_name">Please enter a valid name.</string>
+    <string name="referral_error_phone">Please enter a valid phone number.</string>
+    <string name="referral_error_offline">Please go online to save referral code.</string>
+    <string name="referral_error_self">You cannot refer yourself.</string>
+    <string name="referral_error_data">Please go online to get your referral code.</string>
 
-	<string name="security_cardhead">Security</string>
-	<string name="security_cardbody">Stax meets the criteria of 740.17(b)(3) (i) security classification of the United States Bureau of Industry and Security. This software uses HTTPS for server communication; symmetric key RSA encryption to temporarily store the user\'s credentials on their own device using Android Keystore; and code obfuscation using DRM.</string>
-	<string name="defaultacct_label">Default account</string>
-	<string name="manage_account">Manage Account</string>
-	<string name="security_head">Secure with Stax</string>
-	<string name="btn_removepins">Remove PINs</string>
-	<string name="removepins_dialoghead">Remove all PINs now</string>
-	<string name="removepin_dialoghead">Remove %1$s PIN now</string>
-	<string name="btn_removeaccount">Remove account</string>
-	<string name="removepins_dialogmes">You can add your account to Stax again at any time.</string>
-	<string name="toast_confirm_removepin">PIN removed successfully</string>
-	<string name="btn_savepin">Save PIN</string>
-	<string name="btn_editpin">Edit PIN</string>
-	<string name="editpin_label">PIN</string>
-	<string name="btn_removeacct">Remove Account</string>
-	<string name="toast_confirm_acctremoved">Account removed successfully</string>
-	<string name="toast_confirm_pinupdate">Pin saved</string>
-	<string name="language_cardhead">Language</string>
-	<string name="app_version_and_device_id">App version: %1$s\nVersion code:%2$s\nDevice ID: %3$s</string>
-	<string name="disclaimer">All products names, brands, and trademarks are property of their respective owners. Use does not imply affiliation.</string>
+    <string name="security_cardhead">Security</string>
+    <string name="security_cardbody">Stax meets the criteria of 740.17(b)(3) (i) security classification of the United States Bureau of Industry and Security. This software uses HTTPS for server communication; symmetric key RSA encryption to temporarily store the user\'s credentials on their own device using Android Keystore; and code obfuscation using DRM.</string>
+    <string name="defaultacct_label">Default account</string>
+    <string name="manage_account">Manage Account</string>
+    <string name="security_head">Secure with Stax</string>
+    <string name="btn_removepins">Remove PINs</string>
+    <string name="removepins_dialoghead">Remove all PINs now</string>
+    <string name="removepin_dialoghead">Remove %1$s PIN now</string>
+    <string name="btn_removeaccount">Remove account</string>
+    <string name="removepins_dialogmes">You can add your account to Stax again at any time.</string>
+    <string name="toast_confirm_removepin">PIN removed successfully</string>
+    <string name="btn_savepin">Save PIN</string>
+    <string name="btn_editpin">Edit PIN</string>
+    <string name="editpin_label">PIN</string>
+    <string name="btn_removeacct">Remove Account</string>
+    <string name="toast_confirm_acctremoved">Account removed successfully</string>
+    <string name="toast_confirm_pinupdate">Pin saved</string>
+    <string name="language_cardhead">Language</string>
+    <string name="app_version_and_device_id">App version: %1$s\nVersion code:%2$s\nDevice ID: %3$s</string>
+    <string name="disclaimer">All products names, brands, and trademarks are property of their respective owners. Use does not imply affiliation.</string>
 
-	<string name="contact_stax_cardhead">Get in touch</string>
-	<string name="twitter" translatable="false">Twitter</string>
-	<string name="stax_twitter_url" translatable="false">http://twitter.com/joinstax</string>
-	<string name="receive_stax_updates">Receive Stax updates</string>
+    <string name="contact_stax_cardhead">Get in touch</string>
+    <string name="twitter" translatable="false">Twitter</string>
+    <string name="stax_twitter_url" translatable="false">http://twitter.com/joinstax</string>
+    <string name="receive_stax_updates">Receive Stax updates</string>
 
-	<string name="FAQs">FAQs</string>
-	<string name="request_feature">Request a feature in Stax</string>
-	<string name="email_support">Email support</string>
-	<string name="stax_support_email">help@stax.me</string>
-	<string name="stax_support_email_mailTo">https://help@stax.me</string>
-	<string name="stax_emailing_subject">Stax support id - %1$s</string>
-	<string name="send_email_using">Send mail using…</string>
+    <string name="FAQs">FAQs</string>
+    <string name="request_feature">Request a feature in Stax</string>
+    <string name="email_support">Email support</string>
+    <string name="stax_support_email">help@stax.me</string>
+    <string name="stax_support_email_mailTo">https://help@stax.me</string>
+    <string name="stax_emailing_subject">Stax support id - %1$s</string>
+    <string name="send_email_using">Send mail using…</string>
 
-	<!-- System auth check -->
-	<string name="auth_title">Authenticate with Stax</string>
-	<string name="auth_descrip">Authenticate with your fingerprint</string>
-	<string name="toast_error_auth">Authentication failed</string>
+    <!-- System auth check -->
+    <string name="auth_title">Authenticate with Stax</string>
+    <string name="auth_descrip">Authenticate with your fingerprint</string>
+    <string name="toast_error_auth">Authentication failed</string>
 
-	<!-- Self destruct -->
-	<string name="destruct_cardbody">This build of Stax has expired. \n\nDownload the latest build to keep using Stax.</string>
-	<string name="btn_download">Download new version</string>
-	<string name="uninstall_cardbody">Your update is downloading. \n\nClick the button below to uninstall this version. Once your download is complete tap the notification to install the new version.</string>
-	<string name="btn_uninstall">Uninstall</string>
-	<string name="notify_download_head">Stax update</string>
-	<string name="notify_download_body">Downloading</string>
+    <!-- Self destruct -->
+    <string name="destruct_cardbody">This build of Stax has expired. \n\nDownload the latest build to keep using Stax.</string>
+    <string name="btn_download">Download new version</string>
+    <string name="uninstall_cardbody">Your update is downloading. \n\nClick the button below to uninstall this version. Once your download is complete tap the notification to install the new version.</string>
+    <string name="btn_uninstall">Uninstall</string>
+    <string name="notify_download_head">Stax update</string>
+    <string name="notify_download_body">Downloading</string>
 
-	<!-- Time -->
-	<string name="timeago_ago">%1$s ago</string>
-	<string name="timeago_from_now">%1$s from now</string>
-	<string name="timeago_secondes">less than a minute</string>
-	<string name="timeago_minute">about a minute</string>
-	<string name="timeago_minutes">%1$d minutes</string>
-	<string name="timeago_hour">about an hour</string>
-	<string name="timeago_hours">about %1$d hours</string>
-	<string name="timeago_day">a day</string>
-	<string name="timeago_days">%1$d days</string>
-	<string name="timeago_month">about a month</string>
-	<string name="timeago_months">%1$d months</string>
-	<string name="timeago_year">about a year</string>
-	<string name="timeago_years">%1$d years</string>
+    <!-- Time -->
+    <string name="timeago_ago">%1$s ago</string>
+    <string name="timeago_from_now">%1$s from now</string>
+    <string name="timeago_secondes">less than a minute</string>
+    <string name="timeago_minute">about a minute</string>
+    <string name="timeago_minutes">%1$d minutes</string>
+    <string name="timeago_hour">about an hour</string>
+    <string name="timeago_hours">about %1$d hours</string>
+    <string name="timeago_day">a day</string>
+    <string name="timeago_days">%1$d days</string>
+    <string name="timeago_month">about a month</string>
+    <string name="timeago_months">%1$d months</string>
+    <string name="timeago_year">about a year</string>
+    <string name="timeago_years">%1$d years</string>
 
-	<!-- SWIPE REFRESH -->
-	<string name="csr_text_state_normal">Swipe to refresh balance </string>
-	<string name="csr_text_state_ready">Release to refresh balance</string>
-	<string name="csr_text_state_refresh">Refreshing balance…</string>
-	<string name="csr_text_state_complete">Refreshing balance complete</string>
-	<string name="csr_text_last_refresh">last update:</string>
+    <!-- SWIPE REFRESH -->
+    <string name="csr_text_state_normal">Swipe to refresh balance </string>
+    <string name="csr_text_state_ready">Release to refresh balance</string>
+    <string name="csr_text_state_refresh">Refreshing balance…</string>
+    <string name="csr_text_state_complete">Refreshing balance complete</string>
+    <string name="csr_text_last_refresh">last update:</string>
 
-	<!-- BOUNTY -->
-	<string name="nav_bounty">Bounty</string>
-	<string name="bounty_title">💸  GET PAID! MAP USSD FLOWS</string>
-	<string name="bounty_msg">Stax will pay you USD $5 - $50 to go through a USSD flow.</string>
-	<string name="get_started">Get started</string>
-	<string name="bounty_email_stage_title">🗺️  MAP USSD FLOWS</string>
-	<string name="bounty_email_stage_desc1"><b>Welcome to Money Mapper.</b> Stax wants to make USSD easier for everyone. To bring Stax to more people in more countries, we need to map every USSD menu globally. Join Stax as a Money Mapper and earn $5 - $20 USD for every USSD transaction you successfully map. USSD menus we still need (bounties) are listed on the next page. We add new bounties often!</string>
-	<string name="bounty_email_stage_desc2"><b>1.</b>   Sign in with your Google account.\n<b>2.</b> Find an open bounty for any of your bank or mobile money accounts.\n<b>3.</b> Complete the <a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c">USSD transaction</a> described on the bounty, like Check Balance or Buy Airtime.\n <b>4.</b> Review the transaction details. Retry if it failed or is incomplete.\n<b>5.</b> Stax will review your submissions, which may take 7-10 days. \n<b>6.</b> You get paid at the end of each week </string>
-	<string name="descrip_bounty_airtime">Buy airtime for any person %1$s</string>
-	<string name="bounty_airtime_explain">Buy airtime for someone else %1$s</string>
-	<string name="descrip_bounty_p2p">Send money to someone else %1$s</string>
-	<string name="bounty_p2p_explain">Send any amount to any person %1$s</string>
-	<string name="descrip_bounty_me2me">Move money to your %1$s account</string>
-	<string name="bounty_me2me_explain">Send any amount to your own %1$s account</string>
-	<string name="descrip_bounty_c2b">Pay a bill%1$s</string>
-	<string name="descrip_bounty_c2b_b"> from %1$s</string>
-	<string name="bounty_c2b_explain">Send any amount to %1$s</string>
-	<string name="bounty_c2b_any">any business</string>
+    <!-- BOUNTY -->
+    <string name="nav_bounty">Bounty</string>
+    <string name="bounty_title">💸  GET PAID! MAP USSD FLOWS</string>
+    <string name="bounty_msg">Stax will pay you USD $5 - $50 to go through a USSD flow.</string>
+    <string name="get_started">Get started</string>
+    <string name="bounty_email_stage_title">🗺️  MAP USSD FLOWS</string>
+    <string name="bounty_email_stage_desc1"><b>Welcome to Money Mapper.</b> Stax wants to make USSD easier for everyone. To bring Stax to more people in more countries, we need to map every USSD menu globally. Join Stax as a Money Mapper and earn $5 - $20 USD for every USSD transaction you successfully map. USSD menus we still need (bounties) are listed on the next page. We add new bounties often!</string>
+    <string name="bounty_email_stage_desc2"><b>1.</b>   Sign in with your Google account.\n<b>2.</b> Find an open bounty for any of your bank or mobile money accounts.\n<b>3.</b> Complete the <a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c">USSD transaction</a> described on the bounty, like Check Balance or Buy Airtime.\n <b>4.</b> Review the transaction details. Retry if it failed or is incomplete.\n<b>5.</b> Stax will review your submissions, which may take 7-10 days. \n<b>6.</b> You get paid at the end of each week </string>
+    <string name="descrip_bounty_airtime">Buy airtime for any person %1$s</string>
+    <string name="bounty_airtime_explain">Buy airtime for someone else %1$s</string>
+    <string name="descrip_bounty_p2p">Send money to someone else %1$s</string>
+    <string name="bounty_p2p_explain">Send any amount to any person %1$s</string>
+    <string name="descrip_bounty_me2me">Move money to your %1$s account</string>
+    <string name="bounty_me2me_explain">Send any amount to your own %1$s account</string>
+    <string name="descrip_bounty_c2b">Pay a bill%1$s</string>
+    <string name="descrip_bounty_c2b_b"> from %1$s</string>
+    <string name="bounty_c2b_explain">Send any amount to %1$s</string>
+    <string name="bounty_c2b_any">any business</string>
 
-	<string name="descrip_bounty_balance">Check balance</string>
-	<string name="bounty_balance_explain">Check your balance</string>
-	<string name="descrip_bounty_offnet">on %1$s</string>
-	<string name="bounty_email">Email</string>
-	<string name="bounty_email_error">Please enter a valid email address</string>
-	<string name="bounty_uploading_email">Connecting, please wait…</string>
-	<string name="bounty_api_internet_error">Please ensure you have a data internet connection</string>
-	<string name="bounty_api_other_error">Please try again. If this persists, kindly contact us at ussd@stax.me.</string>
-	<string name="bounty_pending_short_desc">We are verifying your transaction. If successful, expect to be paid within 10 business days.</string>
-	<string name="done">Done</string>
-	<string name="bounty_transaction_failed"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c"><u> <b> our requirements </b></u></a></font> and is no longer available]]></string>
-	<string name="bounty_transaction_failed_try_again"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c"><u> <b> our requirements. </b></u></a></font> Please try again]]></string>
-	<string name="available_flows">AVAILABLE FLOWS</string>
-	<string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
-	<string name="bounty_claim_explained">To claim USD $%1$d, %2$s.\n\nAs soon as you\’re done, we will send you an email to collect information for payment. You will be paid in 7–10 business days </string>
-	<string name="start_USSD_Flow">Start USSD Flow</string>
-	<string name="checking_your_flow">Checking your flow</string>
-	<string name="bounty_flow_pending_dialog_msg"><![CDATA[Thank you for your submission. If the transaction failed, please retry. Once we verify a successful transaction, we will reach out to you for your payment details.<br/><br/>If you have questions, please email us at <a href="https://ussd@stax.me"> <b><font color=#1878F9> ussd@stax.me </b></a>]]></string>
-	<string name="flow_done_title">FLOW DONE</string>
-	<string name="flow_done_desc">We checked the flow and it looks good! You should have an email in your inbox with payment information.</string>
-	<string name="go_through_another_flow">Go through another flow</string>
-	<string name="flow_recorded">FLOW RECORDED</string>
-	<string name="bounty_amount_with_currency">USD $%1$d</string>
-	<string name="select_country">Select country</string>
-	<string name="filter_by_country">Filter by country</string>
-	<string name="filtering_in_progress">Filtering, please wait…</string>
-	<string name="country">Country</string>
-	<string name="country_error_nodata">Please turn on data to load services and countries.</string>
-	<string name="country_with_emoji">%1$s  %2$s </string>
-	<string name="all_countries_with_emoji">🌎 All countries</string>
-	<string name="bounty_sim_err_header">Insert correct SIM</string>x
-	<string name="bounty_sim_err_desc">Please input a SIM card from %1$s in your device and try again.</string>
-	<string name="retry">Retry</string>
-	<string name="submit_flow">Submit flow</string>
-	<string name="bounty_submitted_successfully">Bounty submitted successfully</string>
-	<string name="language">Language</string>
-	<string name="bounty">Bounty</string>
+    <string name="descrip_bounty_balance">Check balance</string>
+    <string name="bounty_balance_explain">Check your balance</string>
+    <string name="descrip_bounty_offnet">on %1$s</string>
+    <string name="bounty_email">Email</string>
+    <string name="bounty_email_error">Please enter a valid email address</string>
+    <string name="bounty_uploading_email">Connecting, please wait…</string>
+    <string name="bounty_api_internet_error">Please ensure you have a data internet connection</string>
+    <string name="bounty_api_other_error">Please try again. If this persists, kindly contact us at ussd@stax.me.</string>
+    <string name="bounty_pending_short_desc">We are verifying your transaction. If successful, expect to be paid within 10 business days.</string>
+    <string name="done">Done</string>
+    <string name="bounty_transaction_failed"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c"><u> <b> our requirements </b></u></a></font> and is no longer available]]></string>
+    <string name="bounty_transaction_failed_try_again"><![CDATA[This submission does not meet <font color=#FFFFFF><a href="https://usehover.notion.site/Requirements-for-successful-bounties-469e965fb21b4467b47a6eb5df82952c"><u> <b> our requirements. </b></u></a></font> Please try again]]></string>
+    <string name="available_flows">AVAILABLE FLOWS</string>
+    <string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
+    <string name="bounty_claim_explained">To claim USD $%1$d, %2$s.\n\nAs soon as you\’re done, we will send you an email to collect information for payment. You will be paid in 7–10 business days </string>
+    <string name="start_USSD_Flow">Start USSD Flow</string>
+    <string name="checking_your_flow">Checking your flow</string>
+    <string name="bounty_flow_pending_dialog_msg"><![CDATA[Thank you for your submission. If the transaction failed, please retry. Once we verify a successful transaction, we will reach out to you for your payment details.<br/><br/>If you have questions, please email us at <a href="https://ussd@stax.me"> <b><font color=#1878F9> ussd@stax.me </b></a>]]></string>
+    <string name="flow_done_title">FLOW DONE</string>
+    <string name="flow_done_desc">We checked the flow and it looks good! You should have an email in your inbox with payment information.</string>
+    <string name="go_through_another_flow">Go through another flow</string>
+    <string name="flow_recorded">FLOW RECORDED</string>
+    <string name="bounty_amount_with_currency">USD $%1$d</string>
+    <string name="select_country">Select country</string>
+    <string name="filter_by_country">Filter by country</string>
+    <string name="filtering_in_progress">Filtering, please wait…</string>
+    <string name="country">Country</string>
+    <string name="country_error_nodata">Please turn on data to load services and countries.</string>
+    <string name="country_with_emoji">%1$s  %2$s </string>
+    <string name="all_countries_with_emoji">🌎 All countries</string>
+    <string name="bounty_sim_err_header">Insert correct SIM</string>x
+    <string name="bounty_sim_err_desc">Please input a SIM card from %1$s in your device and try again.</string>
+    <string name="retry">Retry</string>
+    <string name="submit_flow">Submit flow</string>
+    <string name="bounty_submitted_successfully">Bounty submitted successfully</string>
+    <string name="language">Language</string>
+    <string name="bounty">Bounty</string>
 
-	<string name="library_cardhead">USSD Library</string>
-	<string name="visit_library">Find USSD shortcodes</string>
-	<string name="shortcode">Shortcode</string>
-	<string name="dial_btn">Dial %1$s</string>
-	<string name="dial_default">Dial</string>
+    <string name="library_cardhead">USSD Library</string>
+    <string name="visit_library">Find USSD shortcodes</string>
+    <string name="shortcode">Shortcode</string>
+    <string name="dial_btn">Dial %1$s</string>
+    <string name="dial_default">Dial</string>
 
-	<string name="internet_required">Internet required</string>
-	<string name="internet_required_bounty_desc">You need a data or Wifi connection to map USSD flows. Please connect and try again.</string>
-	<string name="try_again">Try again</string>
-	<string name="unknown_login_error">Unknown error, please try again. If error persists, please close the app and restart.</string>
+    <string name="internet_required">Internet required</string>
+    <string name="internet_required_bounty_desc">You need a data or Wifi connection to map USSD flows. Please connect and try again.</string>
+    <string name="try_again">Try again</string>
+    <string name="unknown_login_error">Unknown error, please try again. If error persists, please close the app and restart.</string>
 
-	<string name="no_account_selected_error">Please choose at least one account to add to Stax</string>
+    <string name="no_account_selected_error">Please choose at least one account to add to Stax</string>
 
-	<!-- IN-APP BANNERS -->
-	<string name="banner_permission_title">SIM, SMS, Accessibility &amp; Overlay</string>
-	<string name="banner_permission_desc">Why does Stax ask for these permissions?</string>
-	<string name="banner_permission_cta"><u>Tap here to find out</u></string>
-	<string name="banner_roundupnews_title">Catch up on the latest Stax Monthly Roundup</string>
-	<string name="banner_roundupnews_cta"><u>Tap to read now</u></string>
-	<string name="banner_gist_title">Want exclusive Stax gist?</string>
-	<string name="banner_gist_cta"><u>Subscribe to our mailing list now</u></string>
-	<string name="banner_upvote_title">Build with us! Add/upvote a feature request or report a bug.</string>
-	<string name="banner_upvote_cta"><u>Give feedback now</u></string>
-	<string name="stax_banner_img_desc">Stax banner icon</string>
-	<string name="banner_research_title">Want to get paid to make Stax even better?</string>
-	<string name="banner_research_cta">Sign up for a research study today</string>
+    <!-- IN-APP BANNERS -->
+    <string name="banner_permission_title">SIM, SMS, Accessibility &amp; Overlay</string>
+    <string name="banner_permission_desc">Why does Stax ask for these permissions?</string>
+    <string name="banner_permission_cta"><u>Tap here to find out</u></string>
+    <string name="banner_roundupnews_title">Catch up on the latest Stax Monthly Roundup</string>
+    <string name="banner_roundupnews_cta"><u>Tap to read now</u></string>
+    <string name="banner_gist_title">Want exclusive Stax gist?</string>
+    <string name="banner_gist_cta"><u>Subscribe to our mailing list now</u></string>
+    <string name="banner_upvote_title">Build with us! Add/upvote a feature request or report a bug.</string>
+    <string name="banner_upvote_cta"><u>Give feedback now</u></string>
+    <string name="stax_banner_img_desc">Stax banner icon</string>
+    <string name="banner_research_title">Want to get paid to make Stax even better?</string>
+    <string name="banner_research_cta">Sign up for a research study today</string>
 
-	<string name="banner_permission_url">https://joinstax.medium.com/phone-permissions-on-stax-a0ec82533570</string>
-	<string name="banner_roundupnews_url">https://joinstax.medium.com/</string>
-	<string name="banner_upvoteurl">https://stax.nolt.io/</string>
-	<string name="banner_research_url">https://joinstax.typeform.com/to/JiloPnVy</string>
+    <string name="banner_permission_url">https://joinstax.medium.com/phone-permissions-on-stax-a0ec82533570</string>
+    <string name="banner_roundupnews_url">https://joinstax.medium.com/</string>
+    <string name="banner_upvoteurl">https://stax.nolt.io/</string>
+    <string name="banner_research_url">https://joinstax.typeform.com/to/JiloPnVy</string>
 
-	<!-- TEST MODE -->
-	<string name="test_mode_toast">You are now in test mode.</string>
-	<string name="test_mode_disabled">Test mode disabled.</string>
-	<string name="test_mode_almost_toast">Almost there!</string>
-	<string name="test_mode_enabled">Test mode engaged</string>
+    <!-- TEST MODE -->
+    <string name="test_mode_toast">You are now in test mode.</string>
+    <string name="test_mode_disabled">Test mode disabled.</string>
+    <string name="test_mode_almost_toast">Almost there!</string>
+    <string name="test_mode_enabled">Test mode engaged</string>
 
-	<string name="faq_title">Frequently asked questions</string>
-	<string name="faq_content"><![CDATA[ %1$s <p/>Still have questions? <p/> <a href="mailto:help@stax.me?subject=Stax-support-%2$s"><u> <b><font color=#1878F9> Email stax support </b><u></a>]]></string>
-	<string name="loading">Loading…</string>
-	<string name="loading_error">Unable to load FAQ, please try again</string>
-	<string name="faq_internet_error">This feature requires internet connection, please try again</string>
+    <string name="faq_title">Frequently asked questions</string>
+    <string name="faq_content"><![CDATA[ %1$s <p/>Still have questions? <p/> <a href="mailto:help@stax.me?subject=Stax-support-%2$s"><u> <b><font color=#1878F9> Email stax support </b><u></a>]]></string>
+    <string name="loading">Loading…</string>
+    <string name="loading_error">Unable to load FAQ, please try again</string>
+    <string name="faq_internet_error">This feature requires internet connection, please try again</string>
 
-	<string name="working_offline">Working offline</string>
+    <string name="working_offline">Working offline</string>
 
-	<string name="marketing_email_optin">Stax can send me emails in the future.</string>
-	<string name="email_client_not_found">No email client found on device.</string>
-	<string name="enable_call_permission">Please enable call permission to dial USSD code.</string>
+    <string name="marketing_email_optin">Stax can send me emails in the future.</string>
+    <string name="email_client_not_found">No email client found on device.</string>
+    <string name="enable_call_permission">Please enable call permission to dial USSD code.</string>
 
-	<!-- Preference Titles -->
-	<string name="messages_header">Messages</string>
-	<string name="sync_header">Sync</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
 
-	<!-- Messages Preferences -->
-	<string name="signature_title">Your signature</string>
-	<string name="reply_title">Default reply action</string>
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
 
-	<!-- Sync Preferences -->
-	<string name="sync_title">Sync email periodically</string>
-	<string name="attachment_title">Download incoming attachments</string>
-	<string name="attachment_summary_on">Automatically download attachments for incoming emails
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
 	</string>
-	<string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
     <string name="ussd_lib">Dial USSD</string>
     <string name="error_running_action">"Sorry, this service integration is broken. "</string>
 
-	<!-- Wellness Tips -->
+    <!-- Wellness Tips -->
     <string name="financial_wellness_tips">Financial Wellness Tips</string>
     <string name="btn_share">Share</string>
     <string name="share_wellness_tip">Share Wellness Tip</string>
     <string name="read_more"><u>Read more</u></string>
+
 
 </resources>
