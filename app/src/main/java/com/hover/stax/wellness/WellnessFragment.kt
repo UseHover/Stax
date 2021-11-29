@@ -82,6 +82,7 @@ class WellnessFragment : Fragment(), WellnessAdapter.SelectListener {
                 append(tip.title)
                 append("\n\n")
                 append(tip.snippet ?: tip.content)
+                append(getString(R.string.stax_handle))
                 append("\n\n")
                 append("https://stax.me/wellnessTips?id=${tip.id}")
             }
