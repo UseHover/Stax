@@ -198,13 +198,6 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
         Hover.updateSimInfo(requireActivity())
     }
 
-    private fun handleBackPress() = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            dismissDialog()
-            findNavController().popBackStack()
-        }
-    })
-
     override fun onPause() {
         super.onPause()
         dismissDialog()
