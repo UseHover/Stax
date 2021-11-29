@@ -13,13 +13,10 @@ import androidx.recyclerview.selection.StorageStrategy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
-import com.hover.stax.balances.BalanceAdapter.BalanceListener
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.databinding.FragmentAddChannelsBinding
-import com.hover.stax.home.MainActivity
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -48,7 +45,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAddChannelsBinding.inflate(inflater, container, false)
 
-        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_link_account)), requireContext())
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_link_account)), requireContext())
         initArguments()
 
         return binding.root

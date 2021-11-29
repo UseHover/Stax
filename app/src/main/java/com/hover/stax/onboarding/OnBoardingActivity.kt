@@ -9,6 +9,7 @@ import com.hover.stax.R
 import com.hover.stax.databinding.OnboardingLayoutBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.permissions.PermissionUtils
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -29,11 +30,11 @@ class OnBoardingActivity : AppCompatActivity() {
     }
 
     private fun logEvents() {
-        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_onboarding)), this)
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_onboarding)), this)
     }
 
     private fun initContinueButton() = binding.onboardingContinueBtn.setOnClickListener {
-        Utils.logAnalyticsEvent(getString(R.string.clicked_getstarted), this)
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_getstarted), this)
         setPassedThrough()
         checkPermissionsAndNavigate()
     }
@@ -51,7 +52,7 @@ class OnBoardingActivity : AppCompatActivity() {
         } else {
             PermissionUtils.showInformativeBasicPermissionDialog(0,
                     { PermissionUtils.requestPerms(Constants.NAV_HOME, this@OnBoardingActivity) }, {
-                Utils.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), this@OnBoardingActivity)
+                AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), this@OnBoardingActivity)
             }, this)
         }
     }

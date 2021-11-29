@@ -8,10 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.databinding.StaxCardViewBinding
-import com.hover.stax.transactions.TransactionStatus
 
 open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
 

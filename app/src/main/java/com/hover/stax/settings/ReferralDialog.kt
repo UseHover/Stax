@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
-
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -14,9 +13,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.hover.stax.R
 import com.hover.stax.databinding.StaxReferralDialogBinding
+import com.hover.stax.utils.AnalyticsUtil.Companion.logAnalyticsEvent
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils.copyToClipboard
-import com.hover.stax.utils.Utils.logAnalyticsEvent
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog

@@ -16,6 +16,7 @@ import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -176,14 +177,14 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
     private fun onSuccess(json: JSONObject, successLog: String) {
         Timber.e(json.toString())
 
-        Utils.logAnalyticsEvent(application.getString(R.string.uploaded_to_hover, successLog), application)
+        AnalyticsUtil.logAnalyticsEvent(application.getString(R.string.uploaded_to_hover, successLog), application)
         progress.postValue(100)
         saveResponseData(json)
     }
 
     private fun onError(message: String?) {
-        Utils.logErrorAndReportToFirebase(SettingsViewModel::class.java.simpleName, message!!, null)
-        Utils.logAnalyticsEvent(message, application)
+        AnalyticsUtil.logErrorAndReportToFirebase(SettingsViewModel::class.java.simpleName, message!!, null)
+        AnalyticsUtil.logAnalyticsEvent(message, application)
 
         progress.postValue(-1)
         error.postValue(message)

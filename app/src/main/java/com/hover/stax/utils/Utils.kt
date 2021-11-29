@@ -3,29 +3,17 @@ package com.hover.stax.utils
 import android.Manifest
 import android.app.Activity
 import android.content.*
-import android.graphics.Bitmap
 import android.net.ConnectivityManager
 import android.net.Uri
-import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
-import com.amplitude.api.Amplitude
-import com.amplitude.api.Identify
-import com.appsflyer.AppsFlyerLib
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.messaging.FirebaseMessaging
-import com.hover.sdk.api.Hover
-import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.permissions.PermissionUtils
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
-import java.io.ByteArrayOutputStream
 import java.text.DecimalFormat
-import java.util.*
 
 object Utils {
     private const val SHARED_PREFS = "staxprefs"
@@ -165,13 +153,6 @@ object Utils {
         return false
     }
 
-    @JvmStatic
-    fun logErrorAndReportToFirebase(tag: String, message: String, e: Exception?) {
-        Timber.e(e, message)
-        if (BuildConfig.BUILD_TYPE == "release") {
-            if (e != null) FirebaseCrashlytics.getInstance().recordException(e) else FirebaseCrashlytics.getInstance().log("$tag - $message")
-        }
-    }
 
     fun isInternetConnected(c: Context): Boolean {
         val cm = c.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -189,70 +170,9 @@ object Utils {
         FirebaseMessaging.getInstance().unsubscribeFromTopic(topic!!)
     }
 
-    @JvmStatic
-    fun logAnalyticsEvent(event: String, context: Context) {
-        val amplitude = Amplitude.getInstance()
-        val identify = Identify().set("deviceId", Hover.getDeviceId(context))
-        amplitude.apply { identify(identify); logEvent(event) }
 
-        FirebaseAnalytics.getInstance(context).logEvent(strippedForFireAnalytics(event), null)
-        AppsFlyerLib.getInstance().logEvent(context, event, null)
-    }
 
-    @JvmStatic
-    fun logAnalyticsEvent(event: String, context: Context, excludeAmplitude: Boolean) {
-        FirebaseAnalytics.getInstance(context).logEvent(strippedForFireAnalytics(event), null)
-        AppsFlyerLib.getInstance().logEvent(context, event, null)
-    }
 
-    @JvmStatic
-    fun logAnalyticsEvent(event: String, args: JSONObject, context: Context) {
-        val bundle = convertJSONObjectToBundle(args)
-        val map = convertJSONObjectToHashMap(args)
-
-        val amplitude = Amplitude.getInstance()
-        val identify = Identify().set("deviceId", Hover.getDeviceId(context))
-        amplitude.apply { identify(identify); logEvent(event, args) }
-
-        FirebaseAnalytics.getInstance(context).logEvent(strippedForFireAnalytics(event), bundle)
-        AppsFlyerLib.getInstance().logEvent(context, event, map)
-    }
-
-    private fun strippedForFireAnalytics(firebaseEventLog: String): String {
-        return firebaseEventLog.replace(" ", "_").lowercase()
-    }
-
-    private fun convertJSONObjectToBundle(args: JSONObject): Bundle {
-        val bundle = Bundle()
-        val iter = args.keys()
-        while (iter.hasNext()) {
-            val key = iter.next()
-            var value: String? = null
-            try {
-                value = args[key].toString()
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-            bundle.putString(strippedForFireAnalytics(key), value)
-        }
-        return bundle
-    }
-
-    private fun convertJSONObjectToHashMap(args: JSONObject): Map<String, Any?> {
-        val map: MutableMap<String, Any?> = HashMap()
-        val iter = args.keys()
-        while (iter.hasNext()) {
-            val key = iter.next()
-            var value: String? = null
-            try {
-                value = args[key].toString()
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-            map[key] = value
-        }
-        return map
-    }
 
     @JvmStatic
     fun showSoftKeyboard(context: Context, view: View) {
@@ -293,7 +213,7 @@ object Utils {
 
     @JvmStatic
     fun shareStax(activity: Activity) {
-        logAnalyticsEvent(activity.getString(R.string.clicked_share), activity)
+        AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.clicked_share), activity)
         val sharingIntent = Intent(Intent.ACTION_SEND)
         sharingIntent.type = "text/plain"
         sharingIntent.putExtra(Intent.EXTRA_SUBJECT, activity.getString(R.string.share_sub))
@@ -320,7 +240,7 @@ object Utils {
             data.put("shortcode", shortCode)
         } catch (ignored: JSONException) {
         }
-        logAnalyticsEvent(c.getString(R.string.clicked_dial_shortcode), data, c)
+        AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.clicked_dial_shortcode), data, c)
 
         val dialIntent = Intent(Intent.ACTION_CALL, Uri.parse("tel:".plus(shortCode.replace("#", Uri.encode("#"))))).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK

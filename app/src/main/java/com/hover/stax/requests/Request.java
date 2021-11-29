@@ -18,7 +18,6 @@ import com.hover.stax.utils.paymentLinkCryptography.Base64;
 import com.hover.stax.utils.paymentLinkCryptography.Encryption;
 import com.yariksoffice.lingver.Lingver;
 
-import java.sql.Time;
 import java.util.List;
 
 import timber.log.Timber;

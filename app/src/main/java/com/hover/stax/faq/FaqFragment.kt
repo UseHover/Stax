@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import com.hover.sdk.api.Hover
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentFaqBinding
-import com.hover.stax.databinding.FragmentRequestBinding
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import org.koin.androidx.viewmodel.ext.android.getViewModel
@@ -22,7 +22,7 @@ class FaqFragment : Fragment(), FAQAdapter.SelectListener {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.FAQs)), requireContext())
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.FAQs)), requireContext())
         _binding = FragmentFaqBinding.inflate(inflater, container, false)
         return binding.root
     }

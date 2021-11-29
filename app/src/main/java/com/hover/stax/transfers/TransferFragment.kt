@@ -17,6 +17,7 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.requests.Request
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -266,7 +267,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
 
         transferViewModel.setEditing(r.amount.isNullOrEmpty())
         accountDropdown.setState(getString(R.string.channel_request_fieldinfo, r.requester_institution_id.toString()), AbstractStatefulInput.INFO)
-        Utils.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext())
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext())
     }
 
     override fun onDestroyView() {
