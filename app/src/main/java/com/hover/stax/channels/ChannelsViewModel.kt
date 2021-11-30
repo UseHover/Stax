@@ -338,50 +338,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
-    fun importChannels() = viewModelScope.launch(Dispatchers.IO) {
-        val hasChannels = repo.getChannelsAndAccounts().isNotEmpty()
-
-        if (!hasChannels) {
-            parseChannelJson()?.let {
-                val channelsJson = JSONObject(it)
-                val data: JSONArray = channelsJson.getJSONArray("data")
-                for (j in 0 until data.length()) {
-                    var channel = repo.getChannel(data.getJSONObject(j).getJSONObject("attributes").getInt("id"))
-                    if (channel == null) {
-                        channel = Channel(data.getJSONObject(j).getJSONObject("attributes"), application.getString(R.string.root_url))
-                        repo.insert(channel)
-                    } else repo.update(channel.update(data.getJSONObject(j).getJSONObject("attributes"), application.getString(R.string.root_url)))
-                }
-
-                Timber.i("Channels imported successfully")
-            } ?: Timber.e("Error importing channels")
-        } else {
-            Timber.i("Has channels, nothing to do here")
-        }
-    }
-
-    private fun parseChannelJson(): String? {
-        var channelsString: String? = null
-
-        val fileToUse = if (BuildConfig.DEBUG)
-            application.getString(R.string.channels_json_staging)
-        else
-            application.getString(R.string.channels_json_prod)
-
-        try {
-            val inputStream = application.assets.open(fileToUse)
-            val size = inputStream.available()
-            val buffer = ByteArray(size)
-            inputStream.read(buffer)
-            inputStream.close()
-            channelsString = String(buffer, Charsets.UTF_8)
-        } catch (e: IOException) {
-            Timber.e(e)
-        }
-
-        return channelsString
-    }
-
     override fun onCleared() {
         try {
             simReceiver?.let {

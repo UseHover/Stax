@@ -29,6 +29,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.stax.channels.ChannelsViewModel
+import com.hover.stax.channels.ImportChannelsWorker
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.databinding.SplashScreenLayoutBinding
 import com.hover.stax.destruct.SelfDestructActivity
@@ -85,7 +86,6 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
     private fun startBackgroundProcesses() {
         with(channelsViewModel){
             accounts.observe(this@SplashScreenActivity) { hasAccounts = it.isNotEmpty() }
-            importChannels()
             migrateAccounts()
         }
 
@@ -225,6 +225,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
 
     private fun startWorkers() {
         val wm = WorkManager.getInstance(this)
+        wm.enqueue(ImportChannelsWorker.channelsImportRequest())
         startChannelWorker(wm)
         startScheduleWorker(wm)
     }

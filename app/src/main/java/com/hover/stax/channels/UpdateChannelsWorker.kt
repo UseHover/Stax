@@ -22,16 +22,9 @@ import timber.log.Timber
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Worker(context, params), KoinComponent {
+class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
 
     private val client = OkHttpClient()
-    private var channelDao: ChannelDao? = null
-
-    private val db: AppDatabase by inject()
-
-    init {
-        channelDao = db.channelDao()
-    }
 
     override fun doWork(): Result {
         Timber.v("Downloading channels")
@@ -40,7 +33,7 @@ class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Worker(
             val channelsJson = downloadChannels(url)
             channelsJson?.let {
                 val data: JSONArray = it.getJSONArray("data")
-                updateChannels(data)
+                ChannelUtil.updateChannels(data, applicationContext)
 
                 Timber.i("Successfully downloaded and saved channels.")
                 return Result.success()
@@ -57,16 +50,6 @@ class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Worker(
         } catch(e: IOException){
             Timber.e(e, "Timeout downloading channel data, will try again.")
             return Result.retry()
-        }
-    }
-
-    private fun updateChannels(data: JSONArray){
-        for (j in 0 until data.length()) {
-            var channel = channelDao!!.getChannel(data.getJSONObject(j).getJSONObject("attributes").getInt("id"))
-            if (channel == null) {
-                channel = Channel(data.getJSONObject(j).getJSONObject("attributes"), applicationContext.getString(R.string.root_url))
-                channelDao!!.insert(channel)
-            } else channelDao!!.update(channel.update(data.getJSONObject(j).getJSONObject("attributes"), applicationContext.getString(R.string.root_url)))
         }
     }
 
