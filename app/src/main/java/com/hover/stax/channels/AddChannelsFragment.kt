@@ -20,6 +20,7 @@ import com.hover.stax.databinding.FragmentAddChannelsBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
+import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -59,6 +60,8 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.channelsListCard.showProgressIndicator()
+
         binding.channelsListCard.setTitle(getString(R.string.add_accounts_to_stax))
         binding.selectedList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireContext())
@@ -75,10 +78,12 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
         setUpMultiselect()
 
-        channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
-        channelsViewModel.simChannels.observe(viewLifecycleOwner) { onSimsLoaded(it) }
-        channelsViewModel.allChannels.observe(viewLifecycleOwner) { onAllLoaded(it) }
+        channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { hideProgressDialog(); onSelectedLoaded(it) }
+        channelsViewModel.simChannels.observe(viewLifecycleOwner) { hideProgressDialog(); onSimsLoaded(it) }
+        channelsViewModel.allChannels.observe(viewLifecycleOwner) { hideProgressDialog(); onAllLoaded(it) }
     }
+
+    fun hideProgressDialog() = binding.channelsListCard.hideProgressIndicator()
 
     private fun setUpMultiselect() {
         tracker = SelectionTracker.Builder(
@@ -119,7 +124,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         if (!channels.isNullOrEmpty() && binding.channelsList.adapter?.itemCount == 0) {
             updateAdapter(Channel.sort(channels, false))
             setError(R.string.channels_error_nosim)
-        } else if (channels.isNullOrEmpty())
+        } else if (channels.isNullOrEmpty() && !NetworkMonitor(requireActivity()).isNetworkConnected)
             setError(R.string.channels_error_nodata)
     }
 
