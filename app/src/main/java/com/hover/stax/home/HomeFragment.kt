@@ -81,7 +81,7 @@ class HomeFragment : Fragment() {
 
     private fun showTip(tip: WellnessTip) {
         tip.date?.let {
-            if (!android.text.format.DateUtils.isToday(it.time)) {
+            if (android.text.format.DateUtils.isToday(it.time)) {
                 with(binding.wellnessCard) {
                     tipsCard.visibility = View.VISIBLE
 
