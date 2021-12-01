@@ -60,6 +60,7 @@ class AnalyticsUtil {
             val firebaseAnalytics = FirebaseAnalytics.getInstance(context)
             firebaseAnalytics.apply { setUserId(deviceId); logEvent(strippedForFireAnalytics(event), bundle) }
         }
+
         private fun logAppsFlyer(event: String, args: JSONObject?, context: Context) {
             var map : Map<String, Any?>? = null
             if(args !=null) {

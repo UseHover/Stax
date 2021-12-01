@@ -170,10 +170,6 @@ object Utils {
         FirebaseMessaging.getInstance().unsubscribeFromTopic(topic!!)
     }
 
-
-
-
-
     @JvmStatic
     fun showSoftKeyboard(context: Context, view: View) {
         if (view.requestFocus()) {
