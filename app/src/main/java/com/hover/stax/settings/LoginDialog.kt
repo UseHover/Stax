@@ -51,7 +51,7 @@ class LoginDialog: DialogFragment(), View.OnClickListener {
 
         (requireActivity() as MainActivity).initAuth()
 
-        viewModel.username.observe(this) { Timber.e("Loaded username: %s", it) }
+        viewModel.username.observe(this) { Timber.i("Loaded username: %s", it ?: "null") }
         viewModel.progress.observe(viewLifecycleOwner) { updateProgress(it) }
         viewModel.error.observe(viewLifecycleOwner) { it?.let { showError(it) } }
     }
