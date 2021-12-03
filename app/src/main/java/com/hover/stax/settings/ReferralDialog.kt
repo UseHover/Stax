@@ -114,9 +114,13 @@ class ReferralDialog : DialogFragment() {
             binding.referralCode.setOnClickListener { copyToClipboard(viewModel.username.value, requireContext()) }
             binding.referralCode.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_copy, 0)
         } else {
-            binding.referralCode.text = getString(R.string.referral_error_data)
+            tryAgain_fetchUsername()
+            binding.referralCode.text = getString(R.string.referral_error_try_again)
             binding.referralCode.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
         }
+    }
+    private fun tryAgain_fetchUsername() {
+        viewModel.fetchUsername()
     }
 
     private fun updateRefereeInfo(code: String?) {

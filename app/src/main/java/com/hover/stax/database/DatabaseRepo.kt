@@ -88,7 +88,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     }
 
     // Actions
-    fun getAction(public_id: String?): HoverAction {
+    fun getAction(public_id: String): HoverAction {
         return actionDao.getAction(public_id)
     }
 
