@@ -17,6 +17,7 @@
 	<string name="mixpanel_token" translatable="false">82efeb23b6d38509989f592c8f4b21c2</string>
 	<string name="bounty_transactions_endpoint" translatable="false">/get_bounty_results?device_id=%1$s</string>
 	<string name="google_server_client_id" translatable="false">1098235122453-5u1hct3brr4t626317k9fgjkkfdmsbvs.apps.googleusercontent.com</string>
+	<string name="privacy_policy_link" translatable="false">https://www.usehover.com/terms#privacy-policy</string>
 
 	<string name="nav_home">Home</string>
 	<string name="nav_balance_and_history">Balance and history</string>
@@ -344,6 +345,7 @@
 	<string name="login_google_err">Could not connect to Google, please make sure you are online and try again.</string>
 	<string name="referral_text">Your code:</string>
 	<string name="referral_label">Agent\'s code</string>
+	<string name="privacy_policy_label">By logging in, you agree to our terms of service and read the privacy policy</string>
 
 	<string name="name_label">Enter your full name</string>
 	<string name="phone_label">Enter your phone number</string>
