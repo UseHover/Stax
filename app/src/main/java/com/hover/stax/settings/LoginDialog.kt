@@ -48,6 +48,7 @@ class LoginDialog: DialogFragment(), View.OnClickListener {
             setOnClickListener(this@LoginDialog)
         }
         binding.progressIndicator.setVisibilityAfterHide(View.GONE)
+        binding.privacyPolicyText.setOnClickListener { Utils.openUrl(R.string.privacy_policy_link, requireContext()) }
 
         (requireActivity() as MainActivity).initAuth()
 
