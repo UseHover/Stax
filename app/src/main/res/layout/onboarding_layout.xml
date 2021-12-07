@@ -34,22 +34,32 @@
                 android:layout_marginHorizontal="@dimen/margin_24"
                 android:text="@string/slide_1_desc"/>
 
-    <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_13"
-            android:layout_marginBottom="@dimen/margin_34">
 
-        <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/onboarding_continue_btn"
-                style="@style/StaxButtonColored"
+        <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_13"
+                android:layout_marginBottom="@dimen/margin_34"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:fontFamily="font-medium"
-                android:text="@string/onboarding_link_accounts" />
+                android:orientation="vertical"
+                android:layout_alignParentBottom="true">
 
-    </RelativeLayout>
+            <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/onboarding_continue_btn"
+                    style="@style/StaxButtonColored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="font-medium"
+                    android:layout_gravity="end"
+                    android:text="@string/onboarding_link_accounts" />
+
+            <com.hover.stax.views.PrivacyPolicyText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:textAlignment="viewEnd"
+                    />
+
+        </LinearLayout>
 
 </RelativeLayout>
