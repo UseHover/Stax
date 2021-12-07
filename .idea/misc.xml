@@ -8,6 +8,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.25925925925925924" />
         <entry key="app/src/main/res/drawable/button_bg_colored.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_dark.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_grey.xml" value="0.32037037037037036" />
@@ -31,6 +32,8 @@
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/fragment_transfer.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/home_card_transactions.xml" value="0.14766970618034447" />
+        <entry key="app/src/main/res/layout/onboarding_layout.xml" value="0.1276595744680851" />
+        <entry key="app/src/main/res/layout/privacypolicy.xml" value="0.2441123188405797" />
         <entry key="app/src/main/res/layout/rename_account_layout.xml" value="0.3134057971014493" />
         <entry key="app/src/main/res/layout/repeat_inputs.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/layout/request_card_amount.xml" value="0.15602836879432624" />
