@@ -16,8 +16,7 @@ import org.json.JSONObject
 import timber.log.Timber
 import java.util.*
 
-class AnalyticsUtil {
-    companion object {
+object AnalyticsUtil {
         @JvmStatic
         fun logErrorAndReportToFirebase(tag: String, message: String, e: Exception?) {
             Timber.e(e, message)
@@ -104,5 +103,4 @@ class AnalyticsUtil {
             }
             return map
         }
-    }
 }
