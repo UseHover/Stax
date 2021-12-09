@@ -2,6 +2,7 @@ package com.hover.stax.wellness
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -75,13 +76,13 @@ class WellnessFragment : Fragment(), WellnessAdapter.SelectListener {
                     showTipList()
             }
         }
-        binding.contentText.text = tip.content
+        binding.contentText.text = Html.fromHtml(tip.content)
 
         binding.shareBtn.setOnClickListener {
             val shareableContent = buildString {
                 append(tip.title)
                 append("\n\n")
-                append(tip.snippet ?: tip.content)
+                append(tip.snippet ?: Html.fromHtml(tip.content))
                 append(getString(R.string.stax_handle))
                 append("\n\n")
                 append("https://stax.me/wellnessTips?id=${tip.id}")
