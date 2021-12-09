@@ -22,7 +22,7 @@ class WellnessViewModel : ViewModel() {
     val tips = MutableLiveData<List<WellnessTip>>()
 
     private fun getTips() {
-        db.collection("wellness_tips").whereLessThanOrEqualTo("date",Date()) .get()
+        db.collection("wellness_tips").whereLessThanOrEqualTo("date",Date()).limit(15) .get()
                 .addOnSuccessListener { snapshot ->
                     val wellnessTips = snapshot.map { document ->
                         WellnessTip(document.id, document.data["title"].toString(), document.data["content"].toString(), document.data["snippet"].toString(), document.getDate("date"))
