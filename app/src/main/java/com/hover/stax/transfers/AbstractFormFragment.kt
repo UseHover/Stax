@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import androidx.annotation.CallSuper
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -25,9 +24,9 @@ import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.transfers.TransactionType.Companion.type
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.Utils
 import com.hover.stax.views.StaxCardView
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
@@ -89,7 +88,7 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     open fun contactPicker(requestCode: Int, c: Context) {
-        Utils.logAnalyticsEvent(getString(R.string.try_contact_select), c)
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.try_contact_select), c)
 
         if (PermissionUtils.hasContactPermission(c))
             startContactIntent(requestCode);
@@ -106,10 +105,10 @@ abstract class AbstractFormFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (PermissionHelper(requireContext()).permissionsGranted(grantResults)) {
-            Utils.logAnalyticsEvent(getString(R.string.contact_perm_success), requireContext())
+            AnalyticsUtil.logAnalyticsEvent(getString(R.string.contact_perm_success), requireContext())
             startContactIntent(requestCode)
         } else {
-            Utils.logAnalyticsEvent(getString(R.string.contact_perm_denied), requireContext());
+            AnalyticsUtil.logAnalyticsEvent(getString(R.string.contact_perm_denied), requireContext());
             UIHelper.flashMessage(requireContext(), getString(R.string.toast_error_contactperm));
         }
     }
@@ -120,10 +119,10 @@ abstract class AbstractFormFragment : Fragment() {
         if (requestCode != Constants.ADD_SERVICE && resultCode == Activity.RESULT_OK) {
             val staxContact = StaxContact(data, requireContext())
             staxContact.accountNumber?.let {
-                Utils.logAnalyticsEvent(getString(R.string.contact_select_success), requireContext())
+                AnalyticsUtil.logAnalyticsEvent(getString(R.string.contact_select_success), requireContext())
                 onContactSelected(requestCode, staxContact);
             } ?: run {
-                Utils.logAnalyticsEvent(getString(R.string.contact_select_error), requireContext());
+                AnalyticsUtil.logAnalyticsEvent(getString(R.string.contact_select_error), requireContext());
                 UIHelper.flashMessage(requireContext(), getString(R.string.toast_error_contactselect));
             }
         }

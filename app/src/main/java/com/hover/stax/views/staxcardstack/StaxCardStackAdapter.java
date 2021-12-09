@@ -3,7 +3,6 @@ package com.hover.stax.views.staxcardstack;
 import android.content.Context;
 import android.view.LayoutInflater;
 
-
 import java.util.ArrayList;
 import java.util.List;
 

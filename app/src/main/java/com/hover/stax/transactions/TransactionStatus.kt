@@ -4,8 +4,6 @@ import android.content.Context
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
-import com.hover.stax.contacts.StaxContact
-import com.hover.stax.utils.Utils
 
 class TransactionStatus(val transaction: StaxTransaction) {
 

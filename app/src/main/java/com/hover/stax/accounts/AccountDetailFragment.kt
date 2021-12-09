@@ -24,10 +24,7 @@ import com.hover.stax.navigation.NavigationInterface
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.transactions.TransactionHistoryAdapter
-import com.hover.stax.utils.Constants
-import com.hover.stax.utils.DateUtils
-import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.Utils
+import com.hover.stax.utils.*
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInputLayout
@@ -56,7 +53,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_channel)), requireActivity());
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_channel)), requireActivity());
 
         initRecyclerViews()
         setupObservers()

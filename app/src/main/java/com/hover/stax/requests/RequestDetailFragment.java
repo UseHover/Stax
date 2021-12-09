@@ -14,6 +14,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.hover.stax.R;
 import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.databinding.FragmentRequestDetailBinding;
+import com.hover.stax.utils.AnalyticsUtil;
 import com.hover.stax.utils.DateUtils;
 import com.hover.stax.utils.UIHelper;
 import com.hover.stax.utils.Utils;
@@ -38,7 +39,7 @@ public class RequestDetailFragment extends Fragment implements RequestSenderInte
         } catch (JSONException ignored) {
         }
 
-        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_request_detail)), data, requireContext());
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_request_detail)), data, requireContext());
 
         binding = FragmentRequestDetailBinding.inflate(inflater, container, false);
         return binding.getRoot();

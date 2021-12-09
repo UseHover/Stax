@@ -20,6 +20,7 @@ import com.hover.stax.databinding.FragmentSettingsBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.navigation.NavigationInterface
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -44,7 +45,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_security)), requireActivity())
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_security)), requireActivity())
 
         setUpShare()
         setUpMeta(viewModel)
@@ -63,7 +64,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
     }
 
     private fun openRefereeDialog() {
-        Utils.logAnalyticsEvent(getString(R.string.referrals_tap), requireContext())
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.referrals_tap), requireContext())
 
         if (!viewModel.email.value.isNullOrEmpty())
             ReferralDialog().show(childFragmentManager, ReferralDialog.TAG)

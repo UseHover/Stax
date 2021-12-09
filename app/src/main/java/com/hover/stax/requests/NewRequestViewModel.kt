@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.channels.Channel

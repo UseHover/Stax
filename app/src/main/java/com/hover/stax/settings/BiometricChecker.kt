@@ -9,7 +9,7 @@ import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.utils.Utils
+import com.hover.stax.utils.AnalyticsUtil
 
 class BiometricChecker(private val authListener: AuthListener, val activity: AppCompatActivity) : BiometricPrompt.AuthenticationCallback() {
 
@@ -45,7 +45,7 @@ class BiometricChecker(private val authListener: AuthListener, val activity: App
 
     override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
         super.onAuthenticationSucceeded(result)
-        Utils.logAnalyticsEvent(activity.getString(R.string.biometrics_succeeded), activity.baseContext)
+        AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.biometrics_succeeded), activity.baseContext)
         authListener.onAuthSuccess(action)
     }
 
@@ -54,12 +54,12 @@ class BiometricChecker(private val authListener: AuthListener, val activity: App
         if (errorCode == BiometricPrompt.ERROR_NO_BIOMETRICS)
             authListener.onAuthError(errString.toString())
         else
-            Utils.logAnalyticsEvent(activity.getString(R.string.biometrics_not_setup), activity.baseContext)
+            AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.biometrics_not_setup), activity.baseContext)
     }
 
     override fun onAuthenticationFailed() {
         super.onAuthenticationFailed()
-        Utils.logAnalyticsEvent(activity.getString(R.string.biometrics_failed), activity.baseContext)
+        AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.biometrics_failed), activity.baseContext)
     }
 
     interface AuthListener {

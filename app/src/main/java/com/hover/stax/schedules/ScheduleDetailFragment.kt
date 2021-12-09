@@ -11,6 +11,7 @@ import androidx.work.WorkManager
 import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentScheduleBinding
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -65,7 +66,7 @@ class ScheduleDetailFragment : Fragment() {
         } catch (ignored: JSONException) {
         }
 
-        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_schedule)), data, requireContext());
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_schedule)), data, requireContext());
     }
 
     private fun setUpSummary(schedule: Schedule) {
