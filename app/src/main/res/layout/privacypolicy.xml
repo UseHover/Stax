@@ -14,7 +14,7 @@
             android:fontFamily="font-medium"
             android:gravity="center_vertical"
             android:text="@string/privacy_policy_label"
-            android:textColor="@color/stax_state_blue"
+            android:textColor="@color/brightBluePressed"
             android:visibility="visible"
             />
 </FrameLayout>
