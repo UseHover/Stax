@@ -2,16 +2,12 @@
     <string name="amp" public="false" translatable="false">e3b51457136ad623213ade89a42a288f</string>
     <string name="appsflyer_key" public="false" translatable="false">4B6DDdYFw55PmVPTwr8Ski</string>
     <string name="app_name" translatable="false">Stax</string>
-    <string name="stax_handle" translatable="false"> \@joinstax</string>
     <string name="payment_root_url" translatable="false">https://stax.me/pay?%1$s</string>
     <string name="payment_url_end" translatable="false">%1$s-%2$d-%3$s-%4$d</string>
     <string name="root_url" translatable="false">https://www.usehover.com</string>
     <string name="api_url" translatable="false">https://www.usehover.com/api</string>
     <string name="channels_endpoint" translatable="false">/channels?bookmarked=true</string>
     <string name="users_endpoint" translatable="false">/stax_users</string>
-
-    <string name="channels_json_staging" translatable="false">channels-staging.json</string>
-    <string name="channels_json_prod" translatable="false">channels-prod.json</string>
 
     <string name="referee_endpoint" translatable="false">/set_referee</string>
     <string name="stax_market_playstore_link" translatable="false">https://stax.onelink.me/nR0j/fb15b3f2</string>
@@ -21,6 +17,7 @@
     <string name="mixpanel_token" translatable="false">82efeb23b6d38509989f592c8f4b21c2</string>
     <string name="bounty_transactions_endpoint" translatable="false">/get_bounty_results?device_id=%1$s</string>
     <string name="google_server_client_id" translatable="false">1098235122453-5u1hct3brr4t626317k9fgjkkfdmsbvs.apps.googleusercontent.com</string>
+    <string name="privacy_policy_link" translatable="false">https://docs.usehover.com/staxpolicy</string>
 
     <string name="nav_home">Home</string>
     <string name="nav_balance_and_history">Balance and history</string>
@@ -348,6 +345,7 @@
     <string name="login_google_err">Could not connect to Google, please make sure you are online and try again.</string>
     <string name="referral_text">Your code:</string>
     <string name="referral_label">Agent\'s code</string>
+    <string name="privacy_policy_label">By using Stax App, you\'ve read our privacy policy and agree to the terms of service. Click to read</string>
 
     <string name="name_label">Enter your full name</string>
     <string name="phone_label">Enter your phone number</string>
@@ -359,6 +357,7 @@
     <string name="referral_error_offline">Please go online to save referral code.</string>
     <string name="referral_error_self">You cannot refer yourself.</string>
     <string name="referral_error_data">Please go online to get your referral code.</string>
+    <string name="referral_error_try_again">Please try again after a few seconds</string>
 
     <string name="security_cardhead">Security</string>
     <string name="security_cardbody">Stax meets the criteria of 740.17(b)(3) (i) security classification of the United States Bureau of Industry and Security. This software uses HTTPS for server communication; symmetric key RSA encryption to temporarily store the user\'s credentials on their own device using Android Keystore; and code obfuscation using DRM.</string>

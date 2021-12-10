@@ -41,11 +41,12 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
     var account = MutableLiveData<Account>()
     val channel = MutableLiveData<Channel>()
     var email = MediatorLiveData<String?>()
-    var username = MediatorLiveData<String?>()
     var refereeCode = MutableLiveData<String?>()
     var progress = MutableLiveData(-1)
     var error = MutableLiveData<String>()
 
+
+    var username = MediatorLiveData<String?>()
     init {
         loadAccounts()
         getEmail()
@@ -160,12 +161,11 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
         viewModelScope.launch(Dispatchers.IO) {
             if (!email.value.isNullOrEmpty()) {
                 val account = GoogleSignIn.getLastSignedInAccount(application)
-
+                Timber.i("save in referee method, now trying")
                 try {
                     val result = LoginNetworking(application).uploadReferee(email.value!!, refereeCode, name, phone, account?.idToken)
-
-                    if (result.code in 200..299)
-                        onSuccess(JSONObject(result.body!!.string()), name)
+                    if (result.code in 200..299) onSuccess(JSONObject(result.body!!.string()), name)
+                    else onError(application.getString(R.string.upload_referee_error))
                 } catch (e: IOException) {
                     onError(application.getString(R.string.upload_referee_error))
                 }

@@ -5,7 +5,7 @@
         android:layout_height="wrap_content"
         android:visibility="visible">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -13,28 +13,25 @@
 
         <TextView
                 android:id="@+id/title"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_21"
                 android:fontFamily="font-bold"
                 android:textAlignment="viewEnd"
                 android:textAllCaps="true"
                 android:textColor="@color/offWhite"
-                android:textSize="@dimen/text_13"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:textSize="@dimen/text_13" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
                 android:id="@+id/marketingOptIn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_5"
-                android:layout_marginTop="@dimen/margin_21"
                 android:fontFamily="font-normal"
                 android:gravity="center"
-                android:text="@string/marketing_email_optin"
                 android:textColor="@android:color/white"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title" />
+                android:text="@string/marketing_email_optin"
+                app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
                 android:id="@+id/error_text"
@@ -42,47 +39,50 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_13"
                 android:layout_marginTop="@dimen/margin_13"
-                android:layout_marginBottom="@dimen/margin_8"
                 android:drawablePadding="@dimen/margin_5"
+                android:layout_marginBottom="@dimen/margin_8"
                 android:fontFamily="font-medium"
                 android:gravity="center_vertical"
                 android:text="@string/login_google_err"
                 android:textColor="@color/stax_state_red"
                 android:visibility="gone"
-                app:drawableStartCompat="@drawable/ic_error"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/marketingOptIn" />
+                app:drawableStartCompat="@drawable/ic_error" />
 
-        <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/neg_btn"
-                style="@style/StaxButton"
+        <com.hover.stax.views.PrivacyPolicyText
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginTop="@dimen/margin_21"
-                android:layout_toStartOf="@id/btnSignIn"
-                android:text="@string/btn_cancel"
-                app:layout_constraintEnd_toStartOf="@id/btnSignIn"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/error_text" />
-
-        <com.google.android.gms.common.SignInButton
-                android:id="@+id/btnSignIn"
-                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="@dimen/margin_8"
-                android:layout_marginTop="@dimen/margin_21"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/neg_btn"
-                app:layout_constraintTop_toBottomOf="@id/error_text" />
+                />
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|end"
+                android:layout_marginTop="@dimen/margin_21">
+
+            <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/neg_btn"
+                    style="@style/StaxButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_21"
+                    android:text="@string/btn_cancel"
+                    android:layout_toStartOf="@id/btnSignIn"/>
+
+            <com.google.android.gms.common.SignInButton
+                    android:id="@+id/btnSignIn"
+                    android:layout_width="233dp"
+                    android:layout_height="68dp"
+                    android:layout_marginTop="-1dp"
+                    android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/progressIndicator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_13"
                 android:indeterminate="true"
                 android:minHeight="4dp"
+                android:layout_marginTop="@dimen/margin_13"
                 android:visibility="gone"
                 app:hideAnimationBehavior="inward"
                 app:indicatorColor="@color/brightBluePressed"
@@ -90,5 +90,5 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:showAnimationBehavior="outward" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </androidx.core.widget.NestedScrollView>
