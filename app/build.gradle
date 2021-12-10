@@ -36,15 +36,15 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
-    compileSdkVersion 30
+    compileSdkVersion 31
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.hover.stax"
         minSdkVersion 18
         targetSdkVersion 30
-        versionCode 106
-        versionName "1.8.1.0"
+        versionCode 107
+        versionName "1.8.1.1"
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -91,6 +91,7 @@ android {
     lintOptions {
         disable 'MissingTranslation'
         disable 'ExtraTranslation'
+        abortOnError false
     }
 
     buildFeatures {
