@@ -11,10 +11,10 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
+import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountDropdown
-
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
 import com.hover.stax.requests.Request
@@ -23,8 +23,10 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONArray
 import org.json.JSONObject
 import timber.log.Timber
+import java.io.IOException
 
 
 class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel(),

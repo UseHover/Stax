@@ -1,0 +1,3032 @@
+{
+  "data": [
+    {
+      "id": "640246",
+      "type": "channel",
+      "attributes": {
+        "id": 640246,
+        "name": "MPESA STK",
+        "description": null,
+        "country_alpha2": "ke",
+        "hni_list": [
+          "63902"
+        ],
+        "primary_color_hex": "#FFFFFF",
+        "secondary_color_hex": "#39B54A",
+        "transport_type": "stk",
+        "root_code": "",
+        "sms_senders": [
+          "MPESA",
+          "Safaricom"
+        ],
+        "languages": "en",
+        "first_menu_id": 516995,
+        "institution_id": 573732,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2172
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-08-07T23:38:30Z",
+        "updated_at": "2020-09-08T18:45:24Z",
+        "menus_count": 25,
+        "custom_actions_count": 110,
+        "channel_actions_count": 3,
+        "transactions_count": 511,
+        "pending_percent": 43,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "KES",
+        "operators": [
+          [
+            "Safaricom Ltd.",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZDA9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--257452e9439443b57fd046edb58e4efb0b0acbe0/test-logo"
+      }
+    },
+    {
+      "id": "273262",
+      "type": "channel",
+      "attributes": {
+        "id": 273262,
+        "name": "AirtelTigo Money",
+        "description": "",
+        "country_alpha2": "gh",
+        "hni_list": [
+          "62006",
+          "62003"
+        ],
+        "primary_color_hex": "#FFFFFF",
+        "secondary_color_hex": "#1E3F77",
+        "transport_type": "ussd",
+        "root_code": "*110#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 601953,
+        "institution_id": 809847,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2003,
+          2000
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-08-07T23:38:18Z",
+        "updated_at": "2020-09-29T20:19:38Z",
+        "menus_count": 20,
+        "custom_actions_count": 9,
+        "channel_actions_count": 5,
+        "transactions_count": 1,
+        "pending_percent": 100,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "GHS",
+        "operators": [
+          [
+            "Airtel/ZAIN",
+            null
+          ],
+          [
+            "Milicom/Tigo",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZVU9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--db95c84cf78ee2b9fec083655eb16db2936c0ccc/test-logo"
+      }
+    },
+    {
+      "id": "577403",
+      "type": "channel",
+      "attributes": {
+        "id": 577403,
+        "name": "Vodafone Cash",
+        "description": "",
+        "country_alpha2": "gh",
+        "hni_list": [
+          "62002"
+        ],
+        "primary_color_hex": "#E30000",
+        "secondary_color_hex": "#FFFFFF",
+        "transport_type": "ussd",
+        "root_code": "*110#",
+        "sms_senders": [
+          "VFCASH"
+        ],
+        "languages": "en",
+        "first_menu_id": 479392,
+        "institution_id": 720673,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2002
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:18Z",
+        "updated_at": "2020-09-08T17:22:33Z",
+        "menus_count": 9,
+        "custom_actions_count": 13,
+        "channel_actions_count": 1,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "GHS",
+        "operators": [
+          [
+            "Vodafone",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZVE9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--696b62fb2bf8fcb8c09c2203065ef1418affcf37/test-logo"
+      }
+    },
+    {
+      "id": "296767",
+      "type": "channel",
+      "attributes": {
+        "id": 296767,
+        "name": "Vodacom M-Pesa",
+        "description": "",
+        "country_alpha2": "za",
+        "hni_list": [
+          "65501"
+        ],
+        "primary_color_hex": "#FFFFFF",
+        "secondary_color_hex": "#39B54A",
+        "transport_type": "ussd",
+        "root_code": "*111#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 359761,
+        "institution_id": 573732,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2507
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:37:57Z",
+        "updated_at": "2020-09-25T19:40:40Z",
+        "menus_count": 3,
+        "custom_actions_count": 20,
+        "channel_actions_count": 1,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "ZAR",
+        "operators": [
+          [
+            "Vodacom",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZDA9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--257452e9439443b57fd046edb58e4efb0b0acbe0/test-logo"
+      }
+    },
+    {
+      "id": "745894",
+      "type": "channel",
+      "attributes": {
+        "id": 745894,
+        "name": "MTN MoMo",
+        "description": "",
+        "country_alpha2": "cm",
+        "hni_list": [
+          "62401"
+        ],
+        "primary_color_hex": "#FFCB05",
+        "secondary_color_hex": "#00678F",
+        "transport_type": "ussd",
+        "root_code": "*126#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 240348,
+        "institution_id": 253946,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          1803
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-08-07T23:37:58Z",
+        "updated_at": "2020-09-24T22:48:42Z",
+        "menus_count": 26,
+        "custom_actions_count": 20,
+        "channel_actions_count": 3,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "XAF",
+        "operators": [
+          [
+            "MTN",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZUU9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--9ce011c992c62196a5f5a5e0985a7c775dda8129/test-logo"
+      }
+    },
+    {
+      "id": "429359",
+      "type": "channel",
+      "attributes": {
+        "id": 429359,
+        "name": "Africell Money",
+        "description": "",
+        "country_alpha2": "ug",
+        "hni_list": [
+          "64114",
+          "64101",
+          "64122"
+        ],
+        "primary_color_hex": "#FFFFFF",
+        "secondary_color_hex": "#AE0C78",
+        "transport_type": "ussd",
+        "root_code": "*144#",
+        "sms_senders": [
+          "Afrimoney"
+        ],
+        "languages": "en",
+        "first_menu_id": 921350,
+        "institution_id": 303186,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2646,
+          2642,
+          2650
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-08-07T23:38:09Z",
+        "updated_at": "2020-09-07T02:14:02Z",
+        "menus_count": 17,
+        "custom_actions_count": 67,
+        "channel_actions_count": 4,
+        "transactions_count": 6,
+        "pending_percent": 100,
+        "bounties_count": 1,
+        "open_bounties_count": 1,
+        "currency": "UGX",
+        "operators": [
+          [
+            "Orange",
+            null
+          ],
+          [
+            "Airtel/Celtel",
+            null
+          ],
+          [
+            "Airtel/Warid",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZTg9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--214cf73c2f2d7f29d3dc1eb6073686611040b5e0/test-logo"
+      }
+    },
+    {
+      "id": "690864",
+      "type": "channel",
+      "attributes": {
+        "id": 690864,
+        "name": "Orange Money",
+        "description": "",
+        "country_alpha2": "cd",
+        "hni_list": [
+          "63086",
+          "63089"
+        ],
+        "primary_color_hex": "FF5900",
+        "secondary_color_hex": "#FFFFFF",
+        "transport_type": "ussd",
+        "root_code": "*144#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 517761,
+        "institution_id": 864942,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          1869,
+          1871
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-08-07T23:38:14Z",
+        "updated_at": "2020-09-28T23:46:13Z",
+        "menus_count": 17,
+        "custom_actions_count": 92,
+        "channel_actions_count": 3,
+        "transactions_count": 88,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "CDF",
+        "operators": [
+          [
+            "Orange RDC sarl",
+            null
+          ],
+          [
+            "TIGO/Oasis",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY3c9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--30855f380f6a468f99363cc88c02b4f04750dbf5/test-logo"
+      }
+    },
+    {
+      "id": "619076",
+      "type": "channel",
+      "attributes": {
+        "id": 619076,
+        "name": "Orange Money",
+        "description": "",
+        "country_alpha2": "cm",
+        "hni_list": [
+          "62402"
+        ],
+        "primary_color_hex": "FF5900",
+        "secondary_color_hex": "#FFFFFF",
+        "transport_type": "ussd",
+        "root_code": "#150#",
+        "sms_senders": [
+          "OrangeMoney"
+        ],
+        "languages": "en",
+        "first_menu_id": 963626,
+        "institution_id": 864942,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          1805
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-08-07T23:38:00Z",
+        "updated_at": "2020-09-24T22:48:57Z",
+        "menus_count": 14,
+        "custom_actions_count": 12,
+        "channel_actions_count": 3,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "XAF",
+        "operators": [
+          [
+            "Orange",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY3c9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--30855f380f6a468f99363cc88c02b4f04750dbf5/test-logo"
+      }
+    },
+    {
+      "id": "505894",
+      "type": "channel",
+      "attributes": {
+        "id": 505894,
+        "name": "Vodacom M-Pesa",
+        "description": "",
+        "country_alpha2": "tz",
+        "hni_list": [
+          "64004"
+        ],
+        "primary_color_hex": "#FFFFFF",
+        "secondary_color_hex": "#39B54A",
+        "transport_type": "ussd",
+        "root_code": "*150*00#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 482214,
+        "institution_id": 573732,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2610
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-08-07T23:37:57Z",
+        "updated_at": "2020-09-24T19:33:10Z",
+        "menus_count": 33,
+        "custom_actions_count": 484,
+        "channel_actions_count": 5,
+        "transactions_count": 7,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "TZS",
+        "operators": [
+          [
+            "Vodacom Ltd",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZDA9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--257452e9439443b57fd046edb58e4efb0b0acbe0/test-logo"
+      }
+    },
+    {
+      "id": "989574",
+      "type": "channel",
+      "attributes": {
+        "id": 989574,
+        "name": "Tigo Pesa",
+        "description": "",
+        "country_alpha2": "tz",
+        "hni_list": [
+          "64002"
+        ],
+        "primary_color_hex": "#20409A",
+        "secondary_color_hex": "#FFFFFF",
+        "transport_type": "ussd",
+        "root_code": "*150*01#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 52132,
+        "institution_id": 409833,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2608
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-08-07T23:37:58Z",
+        "updated_at": "2020-09-25T14:28:59Z",
+        "menus_count": 43,
+        "custom_actions_count": 321,
+        "channel_actions_count": 7,
+        "transactions_count": 3,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "TZS",
+        "operators": [
+          [
+            "TIGO/MIC",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZGs9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--d44edbf5901c86ddc4c31725a9fdf3f743594b10/test-logo"
+      }
+    },
+    {
+      "id": "185839",
+      "type": "channel",
+      "attributes": {
+        "id": 185839,
+        "name": "Zantel EzyPesa",
+        "description": "",
+        "country_alpha2": "tz",
+        "hni_list": [
+          "64003"
+        ],
+        "primary_color_hex": "#8CC63F",
+        "secondary_color_hex": "#FFFFFF",
+        "transport_type": "ussd",
+        "root_code": "*150*02#",
+        "sms_senders": [
+          "Unknown"
+        ],
+        "languages": "en",
+        "first_menu_id": 207179,
+        "institution_id": 246682,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2612
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-08-07T23:37:58Z",
+        "updated_at": "2020-09-25T13:39:24Z",
+        "menus_count": 149,
+        "custom_actions_count": 44,
+        "channel_actions_count": 5,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "TZS",
+        "operators": [
+          [
+            "Zantel/Zanzibar Telecom",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYzg9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--56f3f1cc6ebc22074086a191375e1bf424ea241d/test-logo"
+      }
+    },
+    {
+      "id": "487765",
+      "type": "channel",
+      "attributes": {
+        "id": 487765,
+        "name": "CRDB SimBanking",
+        "description": "",
+        "country_alpha2": "tz",
+        "hni_list": [
+          "64004",
+          "64009",
+          "64005",
+          "64002"
+        ],
+        "primary_color_hex": "#FFFFFF",
+        "secondary_color_hex": "#4CAE48",
+        "transport_type": "ussd",
+        "root_code": "*150*03#",
+        "sms_senders": [
+          "CRDB BANK"
+        ],
+        "languages": "en",
+        "first_menu_id": null,
+        "institution_id": 496373,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2610,
+          2605,
+          2611,
+          2608
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:20Z",
+        "updated_at": "2020-09-25T21:36:12Z",
+        "menus_count": 0,
+        "custom_actions_count": 71,
+        "channel_actions_count": 0,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "TZS",
+        "operators": [
+          [
+            "Vodacom Ltd",
+            null
+          ],
+          [
+            "Halotel/Viettel Ltd",
+            null
+          ],
+          [
+            "Airtel/ZAIN/Celtel",
+            null
+          ],
+          [
+            "TIGO/MIC",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYzQ9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--563320e66bebd2fb87b80fe4c3539fa79a8275dd/test-logo"
+      }
+    },
+    {
+      "id": "393456",
+      "type": "channel",
+      "attributes": {
+        "id": 393456,
+        "name": "EXIM Mobile",
+        "description": "",
+        "country_alpha2": "tz",
+        "hni_list": [
+          "64005",
+          "64004",
+          "64002",
+          "64003",
+          "64007",
+          "64009"
+        ],
+        "primary_color_hex": "#19388A",
+        "secondary_color_hex": "#FFFFFF",
+        "transport_type": "ussd",
+        "root_code": "*150*11#",
+        "sms_senders": [
+          "EximBank"
+        ],
+        "languages": "en",
+        "first_menu_id": 689056,
+        "institution_id": 196388,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2611,
+          2610,
+          2608,
+          2612,
+          2607,
+          2605
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:20Z",
+        "updated_at": "2020-09-08T17:23:33Z",
+        "menus_count": 2,
+        "custom_actions_count": 24,
+        "channel_actions_count": 0,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "TZS",
+        "operators": [
+          [
+            "Airtel/ZAIN/Celtel",
+            null
+          ],
+          [
+            "Vodacom Ltd",
+            null
+          ],
+          [
+            "TIGO/MIC",
+            null
+          ],
+          [
+            "Zantel/Zanzibar Telecom",
+            null
+          ],
+          [
+            "Tanzania Telecommunications Company Ltd (TTCL)",
+            null
+          ],
+          [
+            "Halotel/Viettel Ltd",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY2c9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--23cd36e6a2e27dcc1f28764afea5c9a7796491ab/test-logo"
+      }
+    },
+    {
+      "id": "369251",
+      "type": "channel",
+      "attributes": {
+        "id": 369251,
+        "name": "NBC Kiganjani",
+        "description": "",
+        "country_alpha2": "tz",
+        "hni_list": [
+          "64005",
+          "64003",
+          "64004",
+          "64002",
+          "64007",
+          "64009"
+        ],
+        "primary_color_hex": "#FFFFFF",
+        "secondary_color_hex": "#233C98",
+        "transport_type": "ussd",
+        "root_code": "*150*55#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 946226,
+        "institution_id": 622000,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2611,
+          2612,
+          2610,
+          2608,
+          2607,
+          2605
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:12Z",
+        "updated_at": "2020-09-24T19:45:39Z",
+        "menus_count": 5,
+        "custom_actions_count": 24,
+        "channel_actions_count": 1,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "TZS",
+        "operators": [
+          [
+            "Airtel/ZAIN/Celtel",
+            null
+          ],
+          [
+            "Zantel/Zanzibar Telecom",
+            null
+          ],
+          [
+            "Vodacom Ltd",
+            null
+          ],
+          [
+            "TIGO/MIC",
+            null
+          ],
+          [
+            "Tanzania Telecommunications Company Ltd (TTCL)",
+            null
+          ],
+          [
+            "Halotel/Viettel Ltd",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBYzA9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--2852f71ad148a443873f826c70d1e02eed4ec632/test-logo"
+      }
+    },
+    {
+      "id": "386410",
+      "type": "channel",
+      "attributes": {
+        "id": 386410,
+        "name": "Airtel Money",
+        "description": "",
+        "country_alpha2": "tz",
+        "hni_list": [
+          "64005"
+        ],
+        "primary_color_hex": "#FFFFFF",
+        "secondary_color_hex": "#F80319",
+        "transport_type": "ussd",
+        "root_code": "*150*60#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 361365,
+        "institution_id": 693284,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2611
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-08-07T23:37:58Z",
+        "updated_at": "2020-09-24T21:23:03Z",
+        "menus_count": 32,
+        "custom_actions_count": 233,
+        "channel_actions_count": 5,
+        "transactions_count": 5,
+        "pending_percent": 100,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "TZS",
+        "operators": [
+          [
+            "Airtel/ZAIN/Celtel",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY289IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--6d0bfc7e9ce455e0a282c9708a0a5cf3a31448b5/test-logo"
+      }
+    },
+    {
+      "id": "907643",
+      "type": "channel",
+      "attributes": {
+        "id": 907643,
+        "name": "NMB Mkononi",
+        "description": "",
+        "country_alpha2": "tz",
+        "hni_list": [
+          "64007",
+          "64005",
+          "64002",
+          "64004",
+          "64009"
+        ],
+        "primary_color_hex": "#005BAA",
+        "secondary_color_hex": "#FFFFFF",
+        "transport_type": "ussd",
+        "root_code": "*150*66#",
+        "sms_senders": [
+          "NMB"
+        ],
+        "languages": "en",
+        "first_menu_id": null,
+        "institution_id": 240717,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2607,
+          2611,
+          2608,
+          2610,
+          2605
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:01Z",
+        "updated_at": "2020-09-25T21:44:09Z",
+        "menus_count": 0,
+        "custom_actions_count": 83,
+        "channel_actions_count": 0,
+        "transactions_count": 3,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "TZS",
+        "operators": [
+          [
+            "Tanzania Telecommunications Company Ltd (TTCL)",
+            null
+          ],
+          [
+            "Airtel/ZAIN/Celtel",
+            null
+          ],
+          [
+            "TIGO/MIC",
+            null
+          ],
+          [
+            "Vodacom Ltd",
+            null
+          ],
+          [
+            "Halotel/Viettel Ltd",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZEk9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--5644a8e9c7a3bb70ceff791198b55708e64c2e65/test-logo"
+      }
+    },
+    {
+      "id": "577339",
+      "type": "channel",
+      "attributes": {
+        "id": 577339,
+        "name": "T-PESA",
+        "description": "",
+        "country_alpha2": "tz",
+        "hni_list": [
+          "64007"
+        ],
+        "primary_color_hex": "#FCCB0C",
+        "secondary_color_hex": "#000000",
+        "transport_type": "ussd",
+        "root_code": "*150*71#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 169375,
+        "institution_id": 555200,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2607
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-08-07T23:38:02Z",
+        "updated_at": "2020-09-25T17:35:37Z",
+        "menus_count": 28,
+        "custom_actions_count": 86,
+        "channel_actions_count": 5,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "TZS",
+        "operators": [
+          [
+            "Tanzania Telecommunications Company Ltd (TTCL)",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZE09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--705226fcc74f0d794938f2a2bf73734a3aa3214b/test-logo"
+      }
+    },
+    {
+      "id": "136094",
+      "type": "channel",
+      "attributes": {
+        "id": 136094,
+        "name": "Halotel Halopesa",
+        "description": "",
+        "country_alpha2": "tz",
+        "hni_list": [
+          "64009"
+        ],
+        "primary_color_hex": "#FFFFFF",
+        "secondary_color_hex": "#F6891E",
+        "transport_type": "ussd",
+        "root_code": "*150*88#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 513506,
+        "institution_id": 200255,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2605
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-08-07T23:38:01Z",
+        "updated_at": "2020-09-25T13:40:38Z",
+        "menus_count": 35,
+        "custom_actions_count": 122,
+        "channel_actions_count": 5,
+        "transactions_count": 1,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "TZS",
+        "operators": [
+          [
+            "Halotel/Viettel Ltd",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZEE9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--001a7da815c146ce1805352d49a6015966f69053/test-logo"
+      }
+    },
+    {
+      "id": "546843",
+      "type": "channel",
+      "attributes": {
+        "id": 546843,
+        "name": "Econet EcoCash",
+        "description": "",
+        "country_alpha2": "zw",
+        "hni_list": [
+          "64804"
+        ],
+        "primary_color_hex": "undefined",
+        "secondary_color_hex": "undefined",
+        "transport_type": "ussd",
+        "root_code": "*151#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 859838,
+        "institution_id": 575042,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2826
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-08-07T23:38:00Z",
+        "updated_at": "2020-09-25T19:44:31Z",
+        "menus_count": 16,
+        "custom_actions_count": 24,
+        "channel_actions_count": 3,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "USD",
+        "operators": [
+          [
+            "Econet",
+            null
+          ]
+        ],
+        "logo_url": null
+      }
+    },
+    {
+      "id": "498058",
+      "type": "channel",
+      "attributes": {
+        "id": 498058,
+        "name": "TKash",
+        "description": "",
+        "country_alpha2": "ke",
+        "hni_list": [
+          "63907"
+        ],
+        "primary_color_hex": "#00B4CD",
+        "secondary_color_hex": "#FFFFFF",
+        "transport_type": "ussd",
+        "root_code": "*160#",
+        "sms_senders": [
+          "T-kash"
+        ],
+        "languages": "en",
+        "first_menu_id": 551254,
+        "institution_id": 290688,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2171
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:21Z",
+        "updated_at": "2020-09-07T01:41:41Z",
+        "menus_count": 8,
+        "custom_actions_count": 1,
+        "channel_actions_count": 1,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "KES",
+        "operators": [
+          [
+            "Orange",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZHc9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--bc75b151db9e84b93bea2125a4a55e560243bfb6/test-logo"
+      }
+    },
+    {
+      "id": "1",
+      "type": "channel",
+      "attributes": {
+        "id": 1,
+        "name": "MTN Mobile Money",
+        "description": null,
+        "country_alpha2": "ug",
+        "hni_list": [
+          "64110"
+        ],
+        "primary_color_hex": "#FFCB05",
+        "secondary_color_hex": "#00678F",
+        "transport_type": "ussd",
+        "root_code": "*165#",
+        "sms_senders": [
+          "MTNMobMon",
+          "MTNMobileMoney"
+        ],
+        "languages": "en",
+        "first_menu_id": 1,
+        "institution_id": 253946,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2645
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-07-16T20:45:09Z",
+        "updated_at": "2020-08-19T22:32:20Z",
+        "menus_count": 198,
+        "custom_actions_count": 102,
+        "channel_actions_count": 3,
+        "transactions_count": 23,
+        "pending_percent": 100,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "UGX",
+        "operators": [
+          [
+            "MTN Ltd.",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZUU9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--9ce011c992c62196a5f5a5e0985a7c775dda8129/test-logo"
+      }
+    },
+    {
+      "id": "581731",
+      "type": "channel",
+      "attributes": {
+        "id": 581731,
+        "name": "MTN MoMo",
+        "description": "",
+        "country_alpha2": "gh",
+        "hni_list": [
+          "62001"
+        ],
+        "primary_color_hex": "#FFCB05",
+        "secondary_color_hex": "#00678F",
+        "transport_type": "ussd",
+        "root_code": "*170#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 715434,
+        "institution_id": 253946,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2001
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-08-07T23:37:59Z",
+        "updated_at": "2020-09-25T18:11:09Z",
+        "menus_count": 21,
+        "custom_actions_count": 60,
+        "channel_actions_count": 3,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "GHS",
+        "operators": [
+          [
+            "MTN",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZUU9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--9ce011c992c62196a5f5a5e0985a7c775dda8129/test-logo"
+      }
+    },
+    {
+      "id": "385156",
+      "type": "channel",
+      "attributes": {
+        "id": 385156,
+        "name": "Airtel Money",
+        "description": "",
+        "country_alpha2": "ug",
+        "hni_list": [
+          "64122",
+          "64101"
+        ],
+        "primary_color_hex": "#FFFFFF",
+        "secondary_color_hex": "#F80319",
+        "transport_type": "ussd",
+        "root_code": "*185#",
+        "sms_senders": [
+          "AirtelMoney"
+        ],
+        "languages": "en",
+        "first_menu_id": 15273,
+        "institution_id": 693284,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2650,
+          2642
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-08-07T23:38:02Z",
+        "updated_at": "2020-09-24T22:10:50Z",
+        "menus_count": 22,
+        "custom_actions_count": 71,
+        "channel_actions_count": 5,
+        "transactions_count": 7,
+        "pending_percent": 100,
+        "bounties_count": 2,
+        "open_bounties_count": 2,
+        "currency": "UGX",
+        "operators": [
+          [
+            "Airtel/Warid",
+            null
+          ],
+          [
+            "Airtel/Celtel",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY289IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--6d0bfc7e9ce455e0a282c9708a0a5cf3a31448b5/test-logo"
+      }
+    },
+    {
+      "id": "666093",
+      "type": "channel",
+      "attributes": {
+        "id": 666093,
+        "name": "Stanbic Bank",
+        "description": "",
+        "country_alpha2": "ke",
+        "hni_list": [
+          "63902",
+          "63905",
+          "63907",
+          "63903"
+        ],
+        "primary_color_hex": "#235BAC",
+        "secondary_color_hex": "#FCFFF8",
+        "transport_type": "ussd",
+        "root_code": "*208#",
+        "sms_senders": [
+          "Stanbic"
+        ],
+        "languages": "en",
+        "first_menu_id": 867767,
+        "institution_id": 248682,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2172,
+          2170,
+          2171,
+          2173
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-08-07T23:37:59Z",
+        "updated_at": "2020-09-03T00:44:45Z",
+        "menus_count": 29,
+        "custom_actions_count": 18,
+        "channel_actions_count": 6,
+        "transactions_count": 192,
+        "pending_percent": 67,
+        "bounties_count": 1,
+        "open_bounties_count": 1,
+        "currency": "KES",
+        "operators": [
+          [
+            "Safaricom Ltd.",
+            null
+          ],
+          [
+            "Econet Wireless",
+            null
+          ],
+          [
+            "Orange",
+            null
+          ],
+          [
+            "Airtel/Zain/Celtel Ltd.",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY2M9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--fb53e4f512e8dccaf2a632553d7f121c50e50993/test-logo"
+      }
+    },
+    {
+      "id": "795932",
+      "type": "channel",
+      "attributes": {
+        "id": 795932,
+        "name": "Steward Bank",
+        "description": "",
+        "country_alpha2": "zw",
+        "hni_list": [
+          "64804",
+          "64801",
+          "64803"
+        ],
+        "primary_color_hex": "#642A8E",
+        "secondary_color_hex": "#FFFFFF",
+        "transport_type": "ussd",
+        "root_code": "*210#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 441485,
+        "institution_id": 545134,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2826,
+          2827,
+          2828
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:18Z",
+        "updated_at": "2020-09-07T01:55:11Z",
+        "menus_count": 5,
+        "custom_actions_count": 4,
+        "channel_actions_count": 0,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "USD",
+        "operators": [
+          [
+            "Econet",
+            null
+          ],
+          [
+            "Net One",
+            null
+          ],
+          [
+            "Telecel",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZDg9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--626cd31e857d2aea24f45a4b3695593cbcf356e1/test-logo"
+      }
+    },
+    {
+      "id": "534890",
+      "type": "channel",
+      "attributes": {
+        "id": 534890,
+        "name": "Absa Bank",
+        "description": "",
+        "country_alpha2": "ke",
+        "hni_list": [
+          "63902",
+          "63905",
+          "63907",
+          "63903"
+        ],
+        "primary_color_hex": "#FFFFFF",
+        "secondary_color_hex": "#DC012F",
+        "transport_type": "ussd",
+        "root_code": "*224#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 575662,
+        "institution_id": 874293,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2172,
+          2170,
+          2171,
+          2173
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:15Z",
+        "updated_at": "2020-09-06T15:46:07Z",
+        "menus_count": 6,
+        "custom_actions_count": 7,
+        "channel_actions_count": 5,
+        "transactions_count": 71,
+        "pending_percent": 87,
+        "bounties_count": 4,
+        "open_bounties_count": 4,
+        "currency": "KES",
+        "operators": [
+          [
+            "Safaricom Ltd.",
+            null
+          ],
+          [
+            "Econet Wireless",
+            null
+          ],
+          [
+            "Orange",
+            null
+          ],
+          [
+            "Airtel/Zain/Celtel Ltd.",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZFU9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--022060d062d5944eedfc2d89bb13fbac684ae470/test-logo"
+      }
+    },
+    {
+      "id": "166729",
+      "type": "channel",
+      "attributes": {
+        "id": 166729,
+        "name": "CBZ Touch",
+        "description": "",
+        "country_alpha2": "zw",
+        "hni_list": [
+          "64804",
+          "64801",
+          "64803"
+        ],
+        "primary_color_hex": "#FFFFFF",
+        "secondary_color_hex": "#1F355E",
+        "transport_type": "ussd",
+        "root_code": "*230#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 301559,
+        "institution_id": 628483,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2826,
+          2827,
+          2828
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:01Z",
+        "updated_at": "2020-09-04T00:36:09Z",
+        "menus_count": 5,
+        "custom_actions_count": 6,
+        "channel_actions_count": 0,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "USD",
+        "operators": [
+          [
+            "Econet",
+            null
+          ],
+          [
+            "Net One",
+            null
+          ],
+          [
+            "Telecel",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZDQ9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e80effb2e6ac471697450734af2ac7d0e613abbe/test-logo"
+      }
+    },
+    {
+      "id": "135580",
+      "type": "channel",
+      "attributes": {
+        "id": 135580,
+        "name": "bKash",
+        "description": "",
+        "country_alpha2": "bd",
+        "hni_list": [
+          "47001",
+          "47002",
+          "47003",
+          "47007",
+          "47004"
+        ],
+        "primary_color_hex": "#F60A6E",
+        "secondary_color_hex": "#FFFFFF",
+        "transport_type": "ussd",
+        "root_code": "*247#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 359725,
+        "institution_id": 615260,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          1725,
+          1723,
+          1726,
+          1728,
+          1727
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:00Z",
+        "updated_at": "2020-09-08T17:24:27Z",
+        "menus_count": 10,
+        "custom_actions_count": 7,
+        "channel_actions_count": 1,
+        "transactions_count": 10,
+        "pending_percent": 100,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "BDT",
+        "operators": [
+          [
+            "GrameenPhone",
+            null
+          ],
+          [
+            "Robi/Aktel",
+            null
+          ],
+          [
+            "Orascom/Banglalink",
+            null
+          ],
+          [
+            "Airtel/Warid",
+            null
+          ],
+          [
+            "TeleTalk",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZVk9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--ad3fe61a41f9b1c11a0f47cb1f4107b3c438c858/test-logo"
+      }
+    },
+    {
+      "id": "847306",
+      "type": "channel",
+      "attributes": {
+        "id": 847306,
+        "name": "Stanbic Bank",
+        "description": "",
+        "country_alpha2": "ug",
+        "hni_list": [
+          "64110",
+          "64101",
+          "64114",
+          "64111",
+          "64122",
+          "64130",
+          "64133"
+        ],
+        "primary_color_hex": "#235BAC",
+        "secondary_color_hex": "#FCFFF8",
+        "transport_type": "ussd",
+        "root_code": "*290#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 17488,
+        "institution_id": 248682,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2645,
+          2642,
+          2646,
+          2649,
+          2650,
+          2644,
+          2647
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:00Z",
+        "updated_at": "2020-09-04T01:12:14Z",
+        "menus_count": 8,
+        "custom_actions_count": 29,
+        "channel_actions_count": 1,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "UGX",
+        "operators": [
+          [
+            "MTN Ltd.",
+            null
+          ],
+          [
+            "Airtel/Celtel",
+            null
+          ],
+          [
+            "Orange",
+            null
+          ],
+          [
+            "Uganda Telecom Ltd.",
+            null
+          ],
+          [
+            "Airtel/Warid",
+            null
+          ],
+          [
+            "K2 Telecom Ltd",
+            null
+          ],
+          [
+            "Smile Communications Uganda Ltd",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY2M9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--fb53e4f512e8dccaf2a632553d7f121c50e50993/test-logo"
+      }
+    },
+    {
+      "id": "248952",
+      "type": "channel",
+      "attributes": {
+        "id": 248952,
+        "name": "MTN MoMo",
+        "description": "",
+        "country_alpha2": "zm",
+        "hni_list": [
+          "64502"
+        ],
+        "primary_color_hex": "#FFCB05",
+        "secondary_color_hex": "#00678F",
+        "transport_type": "ussd",
+        "root_code": "*303#",
+        "sms_senders": [
+          "MMoney"
+        ],
+        "languages": "en",
+        "first_menu_id": 690683,
+        "institution_id": 253946,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2824
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:22Z",
+        "updated_at": "2020-09-13T15:54:16Z",
+        "menus_count": 7,
+        "custom_actions_count": 12,
+        "channel_actions_count": 1,
+        "transactions_count": 1,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "ZMW",
+        "operators": [
+          [
+            "MTN/Telecel",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZUU9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--9ce011c992c62196a5f5a5e0985a7c775dda8129/test-logo"
+      }
+    },
+    {
+      "id": "782085",
+      "type": "channel",
+      "attributes": {
+        "id": 782085,
+        "name": "Family Bank PesaPap",
+        "description": "",
+        "country_alpha2": "ke",
+        "hni_list": [
+          "63902",
+          "63905",
+          "63907",
+          "63903"
+        ],
+        "primary_color_hex": "#EEF0F4",
+        "secondary_color_hex": "#595CA1",
+        "transport_type": "ussd",
+        "root_code": "*325#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 391385,
+        "institution_id": 20162,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2172,
+          2170,
+          2171,
+          2173
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:05Z",
+        "updated_at": "2020-09-07T00:30:58Z",
+        "menus_count": 3,
+        "custom_actions_count": 2,
+        "channel_actions_count": 0,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "KES",
+        "operators": [
+          [
+            "Safaricom Ltd.",
+            null
+          ],
+          [
+            "Econet Wireless",
+            null
+          ],
+          [
+            "Orange",
+            null
+          ],
+          [
+            "Airtel/Zain/Celtel Ltd.",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZHM9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--46823fc81336305d95d531cf2cfcf1277ccd83f4/test-logo"
+      }
+    },
+    {
+      "id": "662060",
+      "type": "channel",
+      "attributes": {
+        "id": 662060,
+        "name": "M-PESA USSD",
+        "description": "",
+        "country_alpha2": "ke",
+        "hni_list": [
+          "63902"
+        ],
+        "primary_color_hex": "#FFFFFF",
+        "secondary_color_hex": "#39B54A",
+        "transport_type": "ussd",
+        "root_code": "*334#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 174169,
+        "institution_id": 573732,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2172
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-08-07T23:38:29Z",
+        "updated_at": "2020-12-02T01:28:52Z",
+        "menus_count": 43,
+        "custom_actions_count": 43,
+        "channel_actions_count": 7,
+        "transactions_count": 705,
+        "pending_percent": 40,
+        "bounties_count": 2,
+        "open_bounties_count": 1,
+        "currency": "KES",
+        "operators": [
+          [
+            "Safaricom Ltd.",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZDA9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--257452e9439443b57fd046edb58e4efb0b0acbe0/test-logo"
+      }
+    },
+    {
+      "id": "381188",
+      "type": "channel",
+      "attributes": {
+        "id": 381188,
+        "name": "USD (Dollar)",
+        "description": null,
+        "country_alpha2": "ng",
+        "hni_list": [
+          "62120",
+          "62160",
+          "62150",
+          "62140",
+          "62130",
+          "62199",
+          "62125",
+          "62101"
+        ],
+        "primary_color_hex": "undefined",
+        "secondary_color_hex": "undefined",
+        "transport_type": null,
+        "root_code": "*347*06#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 77029,
+        "institution_id": 570928,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2337,
+          2338,
+          2339,
+          2340,
+          2341,
+          2342,
+          2343
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2021-09-21T17:42:14Z",
+        "updated_at": "2021-09-30T17:07:10Z",
+        "menus_count": 35,
+        "custom_actions_count": 0,
+        "channel_actions_count": 2,
+        "transactions_count": 34,
+        "pending_percent": 29,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "NGN",
+        "operators": [
+          [
+            "Airtel/ZAIN/Econet",
+            null
+          ],
+          [
+            "ETISALAT",
+            null
+          ],
+          [
+            "Glo Mobile",
+            null
+          ],
+          [
+            "M-Tel/Nigeria Telecom. Ltd.",
+            null
+          ],
+          [
+            "MTN",
+            null
+          ],
+          [
+            "Starcomms",
+            null
+          ],
+          [
+            "Visafone",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZkk9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--15107e7f8dba07df31c1e49ca892ccd3571a22da/test-logo"
+      }
+    },
+    {
+      "id": "634113",
+      "type": "channel",
+      "attributes": {
+        "id": 634113,
+        "name": "NG Crypto via Stax",
+        "description": "Transact crypto in NG",
+        "country_alpha2": "ng",
+        "hni_list": [
+          "62160",
+          "62150",
+          "62120",
+          "62130"
+        ],
+        "primary_color_hex": "undefined",
+        "secondary_color_hex": "undefined",
+        "transport_type": null,
+        "root_code": "*347*06#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": null,
+        "institution_id": 570928,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2338,
+          2339,
+          2337,
+          2341
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2021-09-22T07:59:25Z",
+        "updated_at": "2021-09-22T07:59:25Z",
+        "menus_count": 0,
+        "custom_actions_count": 0,
+        "channel_actions_count": 0,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "NGN",
+        "operators": [
+          [
+            "ETISALAT",
+            null
+          ],
+          [
+            "Glo Mobile",
+            null
+          ],
+          [
+            "Airtel/ZAIN/Econet",
+            null
+          ],
+          [
+            "MTN",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZkk9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--15107e7f8dba07df31c1e49ca892ccd3571a22da/test-logo"
+      }
+    },
+    {
+      "id": "722635",
+      "type": "channel",
+      "attributes": {
+        "id": 722635,
+        "name": "Diamond Trust Bank",
+        "description": "",
+        "country_alpha2": "ke",
+        "hni_list": [
+          "63902",
+          "63905",
+          "63907",
+          "63903"
+        ],
+        "primary_color_hex": "#E30B40",
+        "secondary_color_hex": "#FFFFFF",
+        "transport_type": "ussd",
+        "root_code": "*382#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 153262,
+        "institution_id": 714415,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2172,
+          2170,
+          2171,
+          2173
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:37:58Z",
+        "updated_at": "2020-09-06T15:49:15Z",
+        "menus_count": 15,
+        "custom_actions_count": 5,
+        "channel_actions_count": 0,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "KES",
+        "operators": [
+          [
+            "Safaricom Ltd.",
+            null
+          ],
+          [
+            "Econet Wireless",
+            null
+          ],
+          [
+            "Orange",
+            null
+          ],
+          [
+            "Airtel/Zain/Celtel Ltd.",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZFk9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e9e27dcff40252905653a7ae094822a02528e7d5/test-logo"
+      }
+    },
+    {
+      "id": "855420",
+      "type": "channel",
+      "attributes": {
+        "id": 855420,
+        "name": "USD (Dollar)",
+        "description": "",
+        "country_alpha2": "ke",
+        "hni_list": [
+          "63903",
+          "63902",
+          "63907",
+          "63905"
+        ],
+        "primary_color_hex": "undefined",
+        "secondary_color_hex": "undefined",
+        "transport_type": null,
+        "root_code": "*384*94#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 542472,
+        "institution_id": 570928,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2173,
+          2172,
+          2171,
+          2170
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2021-09-14T01:51:22Z",
+        "updated_at": "2021-09-30T17:07:42Z",
+        "menus_count": 35,
+        "custom_actions_count": 0,
+        "channel_actions_count": 2,
+        "transactions_count": 24,
+        "pending_percent": 50,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "KES",
+        "operators": [
+          [
+            "Airtel/Zain/Celtel Ltd.",
+            null
+          ],
+          [
+            "Safaricom Ltd.",
+            null
+          ],
+          [
+            "Orange",
+            null
+          ],
+          [
+            "Econet Wireless",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZkk9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--15107e7f8dba07df31c1e49ca892ccd3571a22da/test-logo"
+      }
+    },
+    {
+      "id": "843011",
+      "type": "channel",
+      "attributes": {
+        "id": 843011,
+        "name": "Zanaco Xapit",
+        "description": "",
+        "country_alpha2": "zm",
+        "hni_list": [
+          "64503",
+          "64502",
+          "64501"
+        ],
+        "primary_color_hex": "#CE0125",
+        "secondary_color_hex": "#FFFFFF",
+        "transport_type": "ussd",
+        "root_code": "*444#",
+        "sms_senders": [
+          "Zanaco"
+        ],
+        "languages": "en",
+        "first_menu_id": 499853,
+        "institution_id": 724742,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2823,
+          2824,
+          2825
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:28Z",
+        "updated_at": "2020-09-07T02:00:28Z",
+        "menus_count": 8,
+        "custom_actions_count": 2,
+        "channel_actions_count": 0,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "ZMW",
+        "operators": [
+          [
+            "Zamtel/Cell Z/MTS",
+            null
+          ],
+          [
+            "MTN/Telecel",
+            null
+          ],
+          [
+            "Airtel/Zain/Celtel",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZUE9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--9de2b7086371c66ce99b89b19d60947fc5b3ba00/test-logo"
+      }
+    },
+    {
+      "id": "664264",
+      "type": "channel",
+      "attributes": {
+        "id": 664264,
+        "name": "Airtel Money",
+        "description": "",
+        "country_alpha2": "cd",
+        "hni_list": [
+          "63002"
+        ],
+        "primary_color_hex": "#FFFFFF",
+        "secondary_color_hex": "#F80319",
+        "transport_type": "ussd",
+        "root_code": "*501#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 233161,
+        "institution_id": 693284,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          1874
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:37:59Z",
+        "updated_at": "2020-09-24T22:55:28Z",
+        "menus_count": 7,
+        "custom_actions_count": 124,
+        "channel_actions_count": 1,
+        "transactions_count": 51,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "CDF",
+        "operators": [
+          [
+            "Airtel/ZAIN",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY289IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--6d0bfc7e9ce455e0a282c9708a0a5cf3a31448b5/test-logo"
+      }
+    },
+    {
+      "id": "169209",
+      "type": "channel",
+      "attributes": {
+        "id": 169209,
+        "name": "KCB Mobile Banking",
+        "description": "",
+        "country_alpha2": "ke",
+        "hni_list": [
+          "63902",
+          "63905",
+          "63907",
+          "63903"
+        ],
+        "primary_color_hex": "#FFFFFF",
+        "secondary_color_hex": "#0C466A",
+        "transport_type": "ussd",
+        "root_code": "*522#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 283636,
+        "institution_id": 376452,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2172,
+          2170,
+          2171,
+          2173
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-08-07T23:38:05Z",
+        "updated_at": "2020-09-24T18:49:35Z",
+        "menus_count": 17,
+        "custom_actions_count": 7,
+        "channel_actions_count": 6,
+        "transactions_count": 27,
+        "pending_percent": 92,
+        "bounties_count": 3,
+        "open_bounties_count": 3,
+        "currency": "KES",
+        "operators": [
+          [
+            "Safaricom Ltd.",
+            null
+          ],
+          [
+            "Econet Wireless",
+            null
+          ],
+          [
+            "Orange",
+            null
+          ],
+          [
+            "Airtel/Zain/Celtel Ltd.",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZGc9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--7a60bd46b2f8799385e8491ce4711687e67aee65/test-logo"
+      }
+    },
+    {
+      "id": "495619",
+      "type": "channel",
+      "attributes": {
+        "id": 495619,
+        "name": "Gabon Telecom Mobicash",
+        "description": "",
+        "country_alpha2": "ga",
+        "hni_list": [
+          "62801",
+          "62802"
+        ],
+        "primary_color_hex": "#1A64AD",
+        "secondary_color_hex": "#FFFFFF",
+        "transport_type": "ussd",
+        "root_code": "*555*5*1#",
+        "sms_senders": [
+          "Mobicash"
+        ],
+        "languages": "en",
+        "first_menu_id": null,
+        "institution_id": 350597,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          1976,
+          1977
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:01Z",
+        "updated_at": "2020-09-24T23:24:16Z",
+        "menus_count": 0,
+        "custom_actions_count": 1,
+        "channel_actions_count": 0,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "XAF",
+        "operators": [
+          [
+            "Libertis S.A.",
+            null
+          ],
+          [
+            "MOOV/Telecel",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY2s9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--499eaeb122cd0a5263bf81c13cb6cf88710b0f16/test-logo"
+      }
+    },
+    {
+      "id": "748230",
+      "type": "channel",
+      "attributes": {
+        "id": 748230,
+        "name": "CBAMobile",
+        "description": "",
+        "country_alpha2": "ke",
+        "hni_list": [
+          "63902",
+          "63905",
+          "63907",
+          "63903"
+        ],
+        "primary_color_hex": "#352422",
+        "secondary_color_hex": "#FFFFFF",
+        "transport_type": "ussd",
+        "root_code": "*654#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 17564,
+        "institution_id": 466956,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2172,
+          2170,
+          2171,
+          2173
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:37:59Z",
+        "updated_at": "2020-09-06T23:54:05Z",
+        "menus_count": 7,
+        "custom_actions_count": 4,
+        "channel_actions_count": 1,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "KES",
+        "operators": [
+          [
+            "Safaricom Ltd.",
+            null
+          ],
+          [
+            "Econet Wireless",
+            null
+          ],
+          [
+            "Orange",
+            null
+          ],
+          [
+            "Airtel/Zain/Celtel Ltd.",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZTQ9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--a2b70880814791005c4fd5f9481ea4990c119ce3/test-logo"
+      }
+    },
+    {
+      "id": "350544",
+      "type": "channel",
+      "attributes": {
+        "id": 350544,
+        "name": "COOP Bank M-Coop Cash",
+        "description": "",
+        "country_alpha2": "ke",
+        "hni_list": [
+          "63902",
+          "63905",
+          "63907",
+          "63903"
+        ],
+        "primary_color_hex": "#00563B",
+        "secondary_color_hex": "#FFFFFF",
+        "transport_type": "ussd",
+        "root_code": "*667#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 668890,
+        "institution_id": 471353,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2172,
+          2170,
+          2171,
+          2173
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:02Z",
+        "updated_at": "2020-09-24T18:51:15Z",
+        "menus_count": 13,
+        "custom_actions_count": 9,
+        "channel_actions_count": 1,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "KES",
+        "operators": [
+          [
+            "Safaricom Ltd.",
+            null
+          ],
+          [
+            "Econet Wireless",
+            null
+          ],
+          [
+            "Orange",
+            null
+          ],
+          [
+            "Airtel/Zain/Celtel Ltd.",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZkU9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--7df0b0a77c1183273be29469615005982052b4b8/test-logo"
+      }
+    },
+    {
+      "id": "734569",
+      "type": "channel",
+      "attributes": {
+        "id": 734569,
+        "name": "GTBank",
+        "description": "",
+        "country_alpha2": "ng",
+        "hni_list": [
+          "62125",
+          "62101",
+          "62199",
+          "62130",
+          "62140",
+          "62150",
+          "62160",
+          "62120"
+        ],
+        "primary_color_hex": "#DD4F15",
+        "secondary_color_hex": "#FEFEFE",
+        "transport_type": "ussd",
+        "root_code": "*737#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 927925,
+        "institution_id": 726616,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2343,
+          2342,
+          2341,
+          2340,
+          2339,
+          2338,
+          2337
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-08-07T23:38:01Z",
+        "updated_at": "2021-10-15T15:23:34Z",
+        "menus_count": 16,
+        "custom_actions_count": 54,
+        "channel_actions_count": 7,
+        "transactions_count": 343,
+        "pending_percent": 50,
+        "bounties_count": 4,
+        "open_bounties_count": 3,
+        "currency": "NGN",
+        "operators": [
+          [
+            "Visafone",
+            null
+          ],
+          [
+            "Starcomms",
+            null
+          ],
+          [
+            "MTN",
+            null
+          ],
+          [
+            "M-Tel/Nigeria Telecom. Ltd.",
+            null
+          ],
+          [
+            "Glo Mobile",
+            null
+          ],
+          [
+            "ETISALAT",
+            null
+          ],
+          [
+            "Airtel/ZAIN/Econet",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY1k9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--f9eadfb1cdaaf3f1428895de8f87abfc565fbd5e/test-logo"
+      }
+    },
+    {
+      "id": "80574",
+      "type": "channel",
+      "attributes": {
+        "id": 80574,
+        "name": "Jazz Cash",
+        "description": "",
+        "country_alpha2": "pk",
+        "hni_list": [
+          "41001",
+          "41007"
+        ],
+        "primary_color_hex": "#141414",
+        "secondary_color_hex": "#FFB600",
+        "transport_type": "ussd",
+        "root_code": "*786#",
+        "sms_senders": [
+          "8558"
+        ],
+        "languages": "en",
+        "first_menu_id": 300211,
+        "institution_id": 611956,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2359,
+          2362
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:13Z",
+        "updated_at": "2020-09-07T04:11:41Z",
+        "menus_count": 10,
+        "custom_actions_count": 7,
+        "channel_actions_count": 2,
+        "transactions_count": 4,
+        "pending_percent": 100,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "PKR",
+        "operators": [
+          [
+            "Mobilink",
+            null
+          ],
+          [
+            "Warid Telecom",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZUk9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--58fad5ce18c828e22c51974dd5117ef08f0e50e2/test-logo"
+      }
+    },
+    {
+      "id": "773695",
+      "type": "channel",
+      "attributes": {
+        "id": 773695,
+        "name": "Hello Cash - Lion Bank",
+        "description": "",
+        "country_alpha2": "et",
+        "hni_list": [
+          "63601"
+        ],
+        "primary_color_hex": "#255572",
+        "secondary_color_hex": "#FFF201",
+        "transport_type": "ussd",
+        "root_code": "*803#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 384983,
+        "institution_id": 528506,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          1936
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:26Z",
+        "updated_at": "2020-09-24T18:27:47Z",
+        "menus_count": 1,
+        "custom_actions_count": 1,
+        "channel_actions_count": 0,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "ETB",
+        "operators": [
+          [
+            "ETH/MTN",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZTA9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--ebf0ade26fa45ff90a01168053abe9fcbdcfa6e3/test-logo"
+      }
+    },
+    {
+      "id": "90320",
+      "type": "channel",
+      "attributes": {
+        "id": 90320,
+        "name": "United Bank Mobile Banking",
+        "description": "",
+        "country_alpha2": "et",
+        "hni_list": [
+          "63601"
+        ],
+        "primary_color_hex": "#FFFFFF",
+        "secondary_color_hex": "#4B176D",
+        "transport_type": "ussd",
+        "root_code": "*811#",
+        "sms_senders": [
+          "HelloCash",
+          "United Bank"
+        ],
+        "languages": "en",
+        "first_menu_id": 876908,
+        "institution_id": 535301,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          1936
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:24Z",
+        "updated_at": "2020-09-24T18:33:17Z",
+        "menus_count": 11,
+        "custom_actions_count": 1,
+        "channel_actions_count": 1,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "ETB",
+        "operators": [
+          [
+            "ETH/MTN",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZXc9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--bf0ee4801d20d81364a012641f1b8ba0ad2cf84a/test-logo"
+      }
+    },
+    {
+      "id": "665814",
+      "type": "channel",
+      "attributes": {
+        "id": 665814,
+        "name": "Union Bank",
+        "description": null,
+        "country_alpha2": "ng",
+        "hni_list": [
+          "62120",
+          "62160",
+          "62150",
+          "62140",
+          "62130",
+          "62199",
+          "62125",
+          "62101"
+        ],
+        "primary_color_hex": "undefined",
+        "secondary_color_hex": "undefined",
+        "transport_type": null,
+        "root_code": "*826#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 173987,
+        "institution_id": 145286,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2337,
+          2338,
+          2339,
+          2340,
+          2341,
+          2342,
+          2343
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2021-09-20T18:20:59Z",
+        "updated_at": "2021-09-21T01:45:27Z",
+        "menus_count": 6,
+        "custom_actions_count": 0,
+        "channel_actions_count": 3,
+        "transactions_count": 75,
+        "pending_percent": 54,
+        "bounties_count": 2,
+        "open_bounties_count": 1,
+        "currency": "NGN",
+        "operators": [
+          [
+            "Airtel/ZAIN/Econet",
+            null
+          ],
+          [
+            "ETISALAT",
+            null
+          ],
+          [
+            "Glo Mobile",
+            null
+          ],
+          [
+            "M-Tel/Nigeria Telecom. Ltd.",
+            null
+          ],
+          [
+            "MTN",
+            null
+          ],
+          [
+            "Starcomms",
+            null
+          ],
+          [
+            "Visafone",
+            null
+          ]
+        ],
+        "logo_url": null
+      }
+    },
+    {
+      "id": "195794",
+      "type": "channel",
+      "attributes": {
+        "id": 195794,
+        "name": "CBE Birr",
+        "description": "",
+        "country_alpha2": "et",
+        "hni_list": [
+          "63601"
+        ],
+        "primary_color_hex": "#FFFFFF",
+        "secondary_color_hex": "#1E232A",
+        "transport_type": "ussd",
+        "root_code": "*847#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 959535,
+        "institution_id": 324284,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          1936
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:01Z",
+        "updated_at": "2020-09-07T05:26:15Z",
+        "menus_count": 8,
+        "custom_actions_count": 10,
+        "channel_actions_count": 0,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "ETB",
+        "operators": [
+          [
+            "ETH/MTN",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZkE9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--fce3d09f2bec040c1041b5025436ed8df603e7fc/test-logo"
+      }
+    },
+    {
+      "id": "211395",
+      "type": "channel",
+      "attributes": {
+        "id": 211395,
+        "name": "First Bank",
+        "description": "",
+        "country_alpha2": "ng",
+        "hni_list": [
+          "62120",
+          "62160",
+          "62150",
+          "62140",
+          "62130",
+          "62199",
+          "62125",
+          "62101"
+        ],
+        "primary_color_hex": "#004771",
+        "secondary_color_hex": "#FFFFFF",
+        "transport_type": "ussd",
+        "root_code": "*894#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 714942,
+        "institution_id": 222340,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2337,
+          2338,
+          2339,
+          2340,
+          2341,
+          2342,
+          2343
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:19Z",
+        "updated_at": "2020-09-07T04:42:27Z",
+        "menus_count": 6,
+        "custom_actions_count": 13,
+        "channel_actions_count": 1,
+        "transactions_count": 9,
+        "pending_percent": 100,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "NGN",
+        "operators": [
+          [
+            "Airtel/ZAIN/Econet",
+            null
+          ],
+          [
+            "ETISALAT",
+            null
+          ],
+          [
+            "Glo Mobile",
+            null
+          ],
+          [
+            "M-Tel/Nigeria Telecom. Ltd.",
+            null
+          ],
+          [
+            "MTN",
+            null
+          ],
+          [
+            "Starcomms",
+            null
+          ],
+          [
+            "Visafone",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZWs9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--c5ba5de23dd93f12651915d508a08120975dc306/test-logo"
+      }
+    },
+    {
+      "id": "22930",
+      "type": "channel",
+      "attributes": {
+        "id": 22930,
+        "name": "Access Bank",
+        "description": "",
+        "country_alpha2": "ng",
+        "hni_list": [
+          "62120",
+          "62160",
+          "62150",
+          "62140",
+          "62130",
+          "62199",
+          "62125",
+          "62101"
+        ],
+        "primary_color_hex": "#FFFFFF",
+        "secondary_color_hex": "#004085",
+        "transport_type": "ussd",
+        "root_code": "*901#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 553525,
+        "institution_id": 887518,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2337,
+          2338,
+          2339,
+          2340,
+          2341,
+          2342,
+          2343
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-08-07T23:38:12Z",
+        "updated_at": "2021-10-15T15:14:46Z",
+        "menus_count": 14,
+        "custom_actions_count": 21,
+        "channel_actions_count": 5,
+        "transactions_count": 24,
+        "pending_percent": 70,
+        "bounties_count": 3,
+        "open_bounties_count": 2,
+        "currency": "NGN",
+        "operators": [
+          [
+            "Airtel/ZAIN/Econet",
+            null
+          ],
+          [
+            "ETISALAT",
+            null
+          ],
+          [
+            "Glo Mobile",
+            null
+          ],
+          [
+            "M-Tel/Nigeria Telecom. Ltd.",
+            null
+          ],
+          [
+            "MTN",
+            null
+          ],
+          [
+            "Starcomms",
+            null
+          ],
+          [
+            "Visafone",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZWc9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--c393fdf7db68fe1ef712ff76cd92f8607383b999/test-logo"
+      }
+    },
+    {
+      "id": "805004",
+      "type": "channel",
+      "attributes": {
+        "id": 805004,
+        "name": "Stanbic IBTC",
+        "description": "",
+        "country_alpha2": "ng",
+        "hni_list": [
+          "62160",
+          "62120",
+          "62130"
+        ],
+        "primary_color_hex": "#235BAC",
+        "secondary_color_hex": "#FCFFF8",
+        "transport_type": "ussd",
+        "root_code": "*909#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 602669,
+        "institution_id": 248682,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2338,
+          2337,
+          2341
+        ],
+        "bookmarked": true,
+        "published": true,
+        "created_at": "2020-08-07T23:38:27Z",
+        "updated_at": "2021-09-27T17:53:19Z",
+        "menus_count": 19,
+        "custom_actions_count": 7,
+        "channel_actions_count": 5,
+        "transactions_count": 2,
+        "pending_percent": 100,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "NGN",
+        "operators": [
+          [
+            "ETISALAT",
+            null
+          ],
+          [
+            "Airtel/ZAIN/Econet",
+            null
+          ],
+          [
+            "MTN",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBY2M9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--fb53e4f512e8dccaf2a632553d7f121c50e50993/test-logo"
+      }
+    },
+    {
+      "id": "348967",
+      "type": "channel",
+      "attributes": {
+        "id": 348967,
+        "name": "Zenith Bank",
+        "description": "",
+        "country_alpha2": "ng",
+        "hni_list": [
+          "62120",
+          "62160",
+          "62150",
+          "62130",
+          "62140",
+          "62125",
+          "62101",
+          "62199"
+        ],
+        "primary_color_hex": "#FFFFFF",
+        "secondary_color_hex": "#777777",
+        "transport_type": "ussd",
+        "root_code": "*966#",
+        "sms_senders": [],
+        "languages": "en",
+        "first_menu_id": 206601,
+        "institution_id": 583331,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2337,
+          2338,
+          2339,
+          2341,
+          2340,
+          2343,
+          2342
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:38:11Z",
+        "updated_at": "2020-09-07T04:54:31Z",
+        "menus_count": 8,
+        "custom_actions_count": 17,
+        "channel_actions_count": 1,
+        "transactions_count": 3,
+        "pending_percent": 100,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "NGN",
+        "operators": [
+          [
+            "Airtel/ZAIN/Econet",
+            null
+          ],
+          [
+            "ETISALAT",
+            null
+          ],
+          [
+            "Glo Mobile",
+            null
+          ],
+          [
+            "MTN",
+            null
+          ],
+          [
+            "M-Tel/Nigeria Telecom. Ltd.",
+            null
+          ],
+          [
+            "Visafone",
+            null
+          ],
+          [
+            "Starcomms",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZW89IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--814d60faa0dfa4913b5bf17ac24af05599dd9e04/test-logo"
+      }
+    },
+    {
+      "id": "329906",
+      "type": "channel",
+      "attributes": {
+        "id": 329906,
+        "name": "Bank of Africa",
+        "description": "",
+        "country_alpha2": "ke",
+        "hni_list": [
+          "63902",
+          "63905",
+          "63907",
+          "63903"
+        ],
+        "primary_color_hex": "#008457",
+        "secondary_color_hex": "#FFFFFF",
+        "transport_type": "ussd",
+        "root_code": "*987#",
+        "sms_senders": [
+          "BOA"
+        ],
+        "languages": "en",
+        "first_menu_id": 504265,
+        "institution_id": 501212,
+        "institution_type": "bank",
+        "world_operator_ids": [
+          2172,
+          2170,
+          2171,
+          2173
+        ],
+        "bookmarked": true,
+        "published": false,
+        "created_at": "2020-08-07T23:37:59Z",
+        "updated_at": "2020-09-07T00:11:12Z",
+        "menus_count": 3,
+        "custom_actions_count": 2,
+        "channel_actions_count": 0,
+        "transactions_count": 0,
+        "pending_percent": null,
+        "bounties_count": 0,
+        "open_bounties_count": 0,
+        "currency": "KES",
+        "operators": [
+          [
+            "Safaricom Ltd.",
+            null
+          ],
+          [
+            "Econet Wireless",
+            null
+          ],
+          [
+            "Orange",
+            null
+          ],
+          [
+            "Airtel/Zain/Celtel Ltd.",
+            null
+          ]
+        ],
+        "logo_url": "/rails/active_storage/blobs/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZFE9IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--377350cf5558fa0b3fb2d478b4f446525c8f2f40/test-logo"
+      }
+    }
+  ],
+  "meta": {
+    "count": 53
+  }
+}

@@ -76,9 +76,9 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return channelDao.getChannels(countryCode.uppercase())
     }
 
-    fun update(channel: Channel?) {
-        AppDatabase.databaseWriteExecutor.execute { channelDao.update(channel) }
-    }
+    fun update(channel: Channel?) = AppDatabase.databaseWriteExecutor.execute { channelDao.update(channel) }
+
+    fun insert(channel: Channel) = AppDatabase.databaseWriteExecutor.execute { channelDao.insert(channel) }
 
     // SIMs
     val presentSims: List<SimInfo>
@@ -316,6 +316,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     val allAccountsLive: LiveData<List<Account>> = accountDao.getAllAccountsLive()
 
     fun getAllAccounts(): List<Account> = accountDao.getAllAccounts()
+
+    fun getAccountsCount(): Int = accountDao.getDataCount()
 
     fun getAccounts(channelId: Int): List<Account> = accountDao.getAccounts(channelId)
 

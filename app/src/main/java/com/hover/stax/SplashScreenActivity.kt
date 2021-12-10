@@ -29,6 +29,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.stax.channels.ChannelsViewModel
+import com.hover.stax.channels.ImportChannelsWorker
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.databinding.SplashScreenLayoutBinding
 import com.hover.stax.destruct.SelfDestructActivity
@@ -96,11 +97,13 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         startWorkers()
         initFirebaseMessagingTopics()
 
-        FirebaseInstallations.getInstance().getToken(false)
+        with(FirebaseInstallations.getInstance()){
+            getToken(false)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) Timber.i("Installation auth token: ${task.result?.token}")
                 }
-        FirebaseInstallations.getInstance().id.addOnCompleteListener { Timber.i("Firebase installation ID is ${it.result}") }
+            id.addOnCompleteListener { Timber.i("Firebase installation ID is ${it.result}") }
+        }
 
         initRemoteConfigs()
         updateBannerSessionCounter()
@@ -223,6 +226,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
 
     private fun startWorkers() {
         val wm = WorkManager.getInstance(this)
+        wm.enqueue(ImportChannelsWorker.channelsImportRequest())
         startChannelWorker(wm)
         startScheduleWorker(wm)
     }

@@ -8,8 +8,7 @@ import com.hover.stax.databinding.FaqItemsBinding
 class FAQAdapter(private val faqs: List<FAQ>, private val selectListener: SelectListener) :
         RecyclerView.Adapter<FAQAdapter.FAQViewHolder>() {
 
-
-    inner class FAQViewHolder(private val itemBinding: FaqItemsBinding) : RecyclerView.ViewHolder(itemBinding.root) {
+    class FAQViewHolder(private val itemBinding: FaqItemsBinding) : RecyclerView.ViewHolder(itemBinding.root) {
         fun setItem(faq: FAQ, selectListener: SelectListener) {
             itemBinding.faqTopicItem.text = faq.topic
             itemBinding.root.setOnClickListener { selectListener.onTopicClicked(faq) }
@@ -19,7 +18,6 @@ class FAQAdapter(private val faqs: List<FAQ>, private val selectListener: Select
     interface SelectListener {
         fun onTopicClicked(faq: FAQ)
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FAQViewHolder {
         val binding: FaqItemsBinding = FaqItemsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -34,13 +32,4 @@ class FAQAdapter(private val faqs: List<FAQ>, private val selectListener: Select
     override fun getItemCount(): Int {
         return faqs.size
     }
-
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return position
-    }
-
 }

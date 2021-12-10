@@ -13,7 +13,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.hover.stax.R
 import com.hover.stax.databinding.StaxReferralDialogBinding
-import com.hover.stax.utils.AnalyticsUtil.Companion.logAnalyticsEvent
+import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils.copyToClipboard
 import com.hover.stax.utils.network.NetworkMonitor

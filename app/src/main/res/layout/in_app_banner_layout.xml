@@ -60,7 +60,6 @@
                         android:scaleType="centerCrop"
                         app:srcCompat="@drawable/banner_gist" />
 
-
             </LinearLayout>
 
             <FrameLayout
