@@ -797,4 +797,8 @@
 
   <string name="working_offline">Travailler hors ligne</string>
 
+  <!-- Financial wellness tips -->
+  <string name="financial_wellness_tips">Conseils de bien-être financier</string>
+  <string name="read_more"><u>Lire la suite</u></string>
+
 </resources>

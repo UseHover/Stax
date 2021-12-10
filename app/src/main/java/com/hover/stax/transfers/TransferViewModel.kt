@@ -12,6 +12,7 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
@@ -58,7 +59,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
                     val sc = repo.getContactByPhone(formattedPhone)
                     sc?.let { contact.postValue(it) }
                 } catch (e: NumberFormatException) {
-                    Utils.logErrorAndReportToFirebase(TransferViewModel::class.java.simpleName, e.message!!, e)
+                    AnalyticsUtil.logErrorAndReportToFirebase(TransferViewModel::class.java.simpleName, e.message!!, e)
                 }
             }
         }

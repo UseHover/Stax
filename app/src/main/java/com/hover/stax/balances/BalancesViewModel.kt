@@ -8,8 +8,8 @@ import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -73,7 +73,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     fun setAllRunning(c: Context) {
-        Utils.logAnalyticsEvent(c.getString(R.string.refresh_balance_all), c)
+        AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.refresh_balance_all), c)
         runFlag.value = ALL
     }
 

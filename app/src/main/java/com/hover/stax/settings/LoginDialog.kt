@@ -12,7 +12,7 @@ import com.google.android.gms.common.SignInButton
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentLoginBinding
 import com.hover.stax.home.MainActivity
-import com.hover.stax.utils.Utils
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -29,7 +29,7 @@ class LoginDialog: DialogFragment(), View.OnClickListener {
     private val viewModel: SettingsViewModel by sharedViewModel()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        Utils.logAnalyticsEvent(getString(R.string.referee_dialog), requireContext())
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.referee_dialog), requireContext())
         networkMonitor = NetworkMonitor(requireContext())
         _binding = FragmentLoginBinding.inflate(LayoutInflater.from(context))
         dialog = StaxDialog(requireActivity(), binding.root).setDialogTitle(R.string.first_login_dialoghead).setNegButton(R.string.btn_cancel) { dismiss() }
@@ -60,7 +60,7 @@ class LoginDialog: DialogFragment(), View.OnClickListener {
         viewModel.error.value = null
         binding.errorText.visibility = View.GONE
         if (networkMonitor.isNetworkConnected) {
-            Utils.logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext())
+            AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext())
             updateProgress(0)
             startActivityForResult(viewModel.signInClient.signInIntent, SettingsViewModel.LOGIN_REQUEST)
         } else

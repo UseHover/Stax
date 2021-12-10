@@ -18,6 +18,7 @@ import com.hover.stax.channels.AddChannelsFragment;
 import com.hover.stax.transactions.TransactionDetailsFragment;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
+import com.hover.stax.wellness.WellnessFragment;
 
 import timber.log.Timber;
 
@@ -94,6 +95,12 @@ public interface NavigationInterface {
     default void navigateToTransactionDetailsFragment(String uuid, FragmentManager manager, Boolean isFullScreen) {
         TransactionDetailsFragment frag = TransactionDetailsFragment.Companion.newInstance(uuid, isFullScreen);
         frag.show(manager, "dialogFrag");
+    }
+
+    default void navigateToWellnessFragment(NavController navController, String id) {
+        Bundle bundle = new Bundle();
+        bundle.putString(WellnessFragment.TIP_ID, id);
+        navController.navigate(R.id.action_navigation_home_to_wellnessFragment, bundle);
     }
 
     default void openSupportEmailClient(Activity activity) {

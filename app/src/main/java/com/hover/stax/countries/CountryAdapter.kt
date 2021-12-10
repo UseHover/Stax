@@ -9,7 +9,6 @@ import android.widget.TextView
 import com.hover.stax.R
 import com.hover.stax.databinding.CountryItemBinding
 import com.yariksoffice.lingver.Lingver
-import timber.log.Timber
 import java.util.*
 
 class CountryAdapter(val codes: Array<String>, context: Context) : ArrayAdapter<String>(context, 0) {

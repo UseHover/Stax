@@ -2,13 +2,20 @@ package com.hover.stax.inapp_banner
 
 import android.content.Context
 import com.hover.sdk.permissions.PermissionHelper
+import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.Utils
+import kotlinx.coroutines.*
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 import java.util.*
 import kotlin.properties.Delegates
 
-class BannerUtils(val context: Context) {
+class BannerUtils(val context: Context) : KoinComponent {
+
+    private val repo: DatabaseRepo by inject()
+
     private val FIRST_WEEK = 1;
     private val SECOND_WEEK = 2;
     private val THIRD_WEEK = 3
@@ -48,7 +55,7 @@ class BannerUtils(val context: Context) {
 
 
     private fun invalidatePermissionCampaign() = Utils.saveBoolean(PERM_CLICKED, true, context)
-    private fun isPermissionCampaignValid() = !Utils.getBoolean(PERM_CLICKED, context) && areCampaignsUnlocked()
+    private fun isPermissionCampaignValid() = !Utils.getBoolean(PERM_CLICKED, context) && areCampaignsUnlocked() && !hasAccounts()
     private fun areCampaignsUnlocked(): Boolean = Utils.getInt(APP_SESSIONS, context) >= 3
 
     private fun setGeneralLastImpressionDate() = Utils.saveLong(GENERAL_LAST_IMP_DATE, DateUtils.today(), context)
@@ -160,8 +167,21 @@ class BannerUtils(val context: Context) {
         if (bannerId == Banner.PERMISSION) invalidatePermissionCampaign()
         else if (bannerId == Banner.RESEARCH) updateResearchBannerPref()
 
-        if(getImpression() < 2) renewImpression(getImpression() + 1)
+        if (getImpression() < 2) renewImpression(getImpression() + 1)
         bannerId_in_cache = 0
+    }
+
+    private fun hasAccounts(): Boolean {
+        val count: Deferred<Int> = CoroutineScope(Dispatchers.IO).async {
+            val dataCount = repo.getAccountsCount()
+            dataCount
+        }
+
+        val number = runBlocking {
+            count.await()
+        }
+
+        return number != 0
     }
 
     companion object {

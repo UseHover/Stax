@@ -8,10 +8,9 @@ import android.net.Uri;
 import android.os.Handler;
 import android.telephony.PhoneNumberUtils;
 
-import com.amplitude.api.Amplitude;
 import com.hover.stax.R;
 import com.hover.stax.contacts.StaxContact;
-import com.hover.stax.utils.Utils;
+import com.hover.stax.utils.AnalyticsUtil;
 
 import java.util.List;
 
@@ -71,7 +70,7 @@ public class SmsSentObserver extends ContentObserver {
                         wasSent = true;
                         callBack();
 
-                        Utils.logAnalyticsEvent(successMsg, context);
+                        AnalyticsUtil.logAnalyticsEvent(successMsg, context);
 
                         break;
                     }

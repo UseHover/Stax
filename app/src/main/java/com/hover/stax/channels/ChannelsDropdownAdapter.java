@@ -1,5 +1,7 @@
 package com.hover.stax.channels;
 
+import static com.hover.stax.utils.Constants.size55;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -25,8 +27,6 @@ import com.squareup.picasso.Target;
 import java.util.List;
 
 import timber.log.Timber;
-
-import static com.hover.stax.utils.Constants.size55;
 
 public class ChannelsDropdownAdapter extends ArrayAdapter<Channel> {
     private List<Channel> channels;

@@ -26,6 +26,7 @@ import com.hover.stax.schedules.Schedule
 import com.hover.stax.schedules.ScheduleDao
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionDao
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils.lastMonth
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.paymentLinkCryptography.Encryption
@@ -75,9 +76,9 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return channelDao.getChannels(countryCode.uppercase())
     }
 
-    fun update(channel: Channel?) {
-        AppDatabase.databaseWriteExecutor.execute { channelDao.update(channel) }
-    }
+    fun update(channel: Channel?) = AppDatabase.databaseWriteExecutor.execute { channelDao.update(channel) }
+
+    fun insert(channel: Channel) = AppDatabase.databaseWriteExecutor.execute { channelDao.insert(channel) }
 
     // SIMs
     val presentSims: List<SimInfo>
@@ -163,12 +164,12 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
                 var t = getTransaction(intent.getStringExtra(TransactionContract.COLUMN_UUID))
 
                 if (t == null) {
-                    Utils.logAnalyticsEvent(c.getString(R.string.transaction_started), c, true)
+                    AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.transaction_started), c, true)
                     t = StaxTransaction(intent, action, contact, c)
                     transactionDao.insert(t)
                     t = transactionDao.getTransaction(t.uuid)
                 } else {
-                    Utils.logAnalyticsEvent(c.getString(R.string.transaction_completed), c, true)
+                    AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.transaction_completed), c, true)
                     t.update(intent, action, contact, c)
                     transactionDao.update(t)
                 }
@@ -217,7 +218,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
                 try {
                     contactDao.insert(contact)
                 } catch (e: Exception) {
-                    Utils.logErrorAndReportToFirebase(TAG, "failed to insert contact", e)
+                    AnalyticsUtil.logErrorAndReportToFirebase(TAG, "failed to insert contact", e)
                 }
             } else contactDao.update(contact)
         }
@@ -292,11 +293,11 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
                 }
 
                 override fun onError(exception: Exception) {
-                    Utils.logErrorAndReportToFirebase(TAG, "failed link decryption", exception)
+                    AnalyticsUtil.logErrorAndReportToFirebase(TAG, "failed link decryption", exception)
                 }
             })
         } catch (e: NoSuchAlgorithmException) {
-            Utils.logErrorAndReportToFirebase(TAG, "decryption failure", e)
+            AnalyticsUtil.logErrorAndReportToFirebase(TAG, "decryption failure", e)
         }
     }
 
@@ -315,6 +316,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     val allAccountsLive: LiveData<List<Account>> = accountDao.getAllAccountsLive()
 
     fun getAllAccounts(): List<Account> = accountDao.getAllAccounts()
+
+    fun getAccountsCount(): Int = accountDao.getDataCount()
 
     fun getAccounts(channelId: Int): List<Account> = accountDao.getAccounts(channelId)
 
@@ -341,7 +344,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
                     }
                 }
             } catch (e: Exception) {
-                Utils.logErrorAndReportToFirebase(TAG, "failed to insert/update account", e)
+                AnalyticsUtil.logErrorAndReportToFirebase(TAG, "failed to insert/update account", e)
             }
         }
     }

@@ -1,5 +1,7 @@
 package com.hover.stax.requests;
 
+import static org.koin.java.KoinJavaComponent.get;
+
 import android.app.Application;
 
 import androidx.annotation.NonNull;
@@ -13,8 +15,6 @@ import com.hover.stax.contacts.StaxContact;
 import com.hover.stax.database.DatabaseRepo;
 
 import java.util.List;
-
-import static org.koin.java.KoinJavaComponent.get;
 
 public class RequestDetailViewModel extends AndroidViewModel {
 

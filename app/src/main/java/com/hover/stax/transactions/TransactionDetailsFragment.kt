@@ -20,11 +20,11 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.navigation.NavigationInterface
+import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
+import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase
 import com.hover.stax.utils.DateUtils.humanFriendlyDateTime
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import com.hover.stax.utils.Utils.logAnalyticsEvent
-import com.hover.stax.utils.Utils.logErrorAndReportToFirebase
 import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
