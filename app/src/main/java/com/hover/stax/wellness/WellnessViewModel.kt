@@ -22,12 +22,12 @@ class WellnessViewModel : ViewModel() {
     val tips = MutableLiveData<List<WellnessTip>>()
 
     private fun getTips() {
-        db.collection("wellness_tips").whereLessThanOrEqualTo("date",Date()).limit(20) .get()
+        db.collection("wellness_tips").whereLessThanOrEqualTo("date", Date()).limit(20).get()
                 .addOnSuccessListener { snapshot ->
                     val wellnessTips = snapshot.map { document ->
                         WellnessTip(document.id, document.data["title"].toString(), document.data["content"].toString(), document.data["snippet"].toString(), document.getDate("date"))
                     }
-                    tips.postValue(wellnessTips.filterNot { it.date == null }.sortedByDescending{ it.date!!.time })
+                    tips.postValue(wellnessTips.filterNot { it.date == null }.sortedByDescending { it.date!!.time })
                 }
                 .addOnFailureListener {
                     Timber.e("Error fetching wellness tips: ${it.localizedMessage}")

@@ -17,7 +17,6 @@ import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.wellness.WellnessTip
 import com.hover.stax.wellness.WellnessViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 
 class HomeFragment : Fragment() {
@@ -75,29 +74,25 @@ class HomeFragment : Fragment() {
     private fun setUpWellnessTips() {
         wellnessViewModel.tips.observe(viewLifecycleOwner) {
             if (it.isNotEmpty())
-                showTip(it.first())
+                showTip(it.firstOrNull { tip -> android.text.format.DateUtils.isToday(tip.date!!.time) })
             else
                 binding.wellnessCard.tipsCard.visibility = View.GONE
         }
     }
 
-    private fun showTip(tip: WellnessTip) {
-        tip.date?.let {
-            if (android.text.format.DateUtils.isToday(it.time)) {
-                with(binding.wellnessCard) {
-                    tipsCard.visibility = View.VISIBLE
+    private fun showTip(tip: WellnessTip?) {
+        tip?.let {
+            with(binding.wellnessCard) {
+                tipsCard.visibility = View.VISIBLE
 
-                    title.text = tip.title
-                    snippet.text = tip.snippet ?: tip.content
+                title.text = tip.title
+                snippet.text = tip.snippet ?: tip.content
 
-                    tipsCard.setOnClickListener {
-                        findNavController().navigate(R.id.action_navigation_home_to_wellnessFragment)
-                    }
+                tipsCard.setOnClickListener {
+                    findNavController().navigate(R.id.action_navigation_home_to_wellnessFragment)
                 }
-            } else
-                Timber.i("No tips available today")
+            }
         }
-
     }
 
     override fun onDestroyView() {
