@@ -134,7 +134,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
                     navigateToSettingsFragment(getNavController())
                 route.contains(getString(R.string.deeplink_reviews)) ->
                     launchStaxReview()
-                route.contains(getString(R.string.deeplink_wellness_tips)) ->
+                route.contains(getString(R.string.deeplink_financial_tips)) ->
                     intent.data?.getQueryParameter("id")?.let { navigateToWellnessFragment(getNavController(), it) }
             }
 

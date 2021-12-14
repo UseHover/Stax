@@ -14,8 +14,8 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
-import com.hover.stax.wellness.WellnessTip
-import com.hover.stax.wellness.WellnessViewModel
+import com.hover.stax.financialTip.FinancialTip
+import com.hover.stax.financialTip.FinancialTipsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -26,7 +26,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val bannerViewModel: BannerViewModel by viewModel()
-    private val wellnessViewModel: WellnessViewModel by viewModel()
+    private val wellnessViewModel: FinancialTipsViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
@@ -81,7 +81,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun showTip(tip: WellnessTip) {
+    private fun showTip(tip: FinancialTip) {
         tip.date?.let {
             if (android.text.format.DateUtils.isToday(it.time)) {
                 with(binding.wellnessCard) {
