@@ -19,6 +19,7 @@ import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -252,7 +253,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         } catch (ignored: Exception) {
         }
 
-        Utils.logAnalyticsEvent(application.getString(R.string.new_channel_selected), args, application.baseContext)
+        AnalyticsUtil.logAnalyticsEvent(application.getString(R.string.new_channel_selected), args, application.baseContext)
     }
 
     fun errorCheck(): String? {

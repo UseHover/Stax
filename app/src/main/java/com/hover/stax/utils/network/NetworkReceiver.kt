@@ -3,8 +3,6 @@ package com.hover.stax.utils.network
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 class NetworkReceiver: BroadcastReceiver(){
 

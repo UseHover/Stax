@@ -59,5 +59,10 @@
                 android:textColor="@color/darkGrey"
                 android:textSize="@dimen/text_13" />
 
+        <com.hover.stax.views.PrivacyPolicyText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

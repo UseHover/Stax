@@ -1,16 +1,15 @@
 package com.hover.stax.permissions
 
 import android.Manifest
-import com.hover.stax.utils.Utils.logAnalyticsEvent
 import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
+import android.view.View
+import androidx.core.app.ActivityCompat
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
-import android.os.Build
-import androidx.core.app.ActivityCompat
-import android.content.pm.PackageManager
-import android.view.View
-import com.hover.stax.permissions.PermissionUtils
+import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.views.StaxDialog
 
 object PermissionUtils {

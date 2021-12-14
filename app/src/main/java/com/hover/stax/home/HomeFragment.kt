@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.inapp_banner.BannerViewModel
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
@@ -28,8 +29,9 @@ class HomeFragment : Fragment() {
     private val wellnessViewModel: WellnessViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_home)), requireContext())
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
@@ -51,12 +53,12 @@ class HomeFragment : Fragment() {
         with(bannerViewModel) {
             qualifiedBanner().observe(viewLifecycleOwner, { banner ->
                 if (banner != null) {
-                    Utils.logAnalyticsEvent(getString(R.string.displaying_in_app_banner, banner.id), requireContext())
+                    AnalyticsUtil.logAnalyticsEvent(getString(R.string.displaying_in_app_banner, banner.id), requireContext())
                     binding.homeBanner.visibility = View.VISIBLE
                     binding.homeBanner.display(banner)
 
                     binding.homeBanner.setOnClickListener {
-                        Utils.logAnalyticsEvent(getString(R.string.clicked_on_banner), requireContext())
+                        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_on_banner), requireContext())
                         Utils.openUrl(banner.url, requireActivity())
                         closeCampaign(banner.id)
                     }

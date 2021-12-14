@@ -16,6 +16,7 @@ import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,11 +42,12 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
     var account = MutableLiveData<Account>()
     val channel = MutableLiveData<Channel>()
     var email = MediatorLiveData<String?>()
-    var username = MediatorLiveData<String?>()
     var refereeCode = MutableLiveData<String?>()
     var progress = MutableLiveData(-1)
     var error = MutableLiveData<String>()
 
+
+    var username = MediatorLiveData<String?>()
     init {
         loadAccounts()
         getEmail()
@@ -160,12 +162,11 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
         viewModelScope.launch(Dispatchers.IO) {
             if (!email.value.isNullOrEmpty()) {
                 val account = GoogleSignIn.getLastSignedInAccount(application)
-
+                Timber.i("save in referee method, now trying")
                 try {
                     val result = LoginNetworking(application).uploadReferee(email.value!!, refereeCode, name, phone, account?.idToken)
-
-                    if (result.code in 200..299)
-                        onSuccess(JSONObject(result.body!!.string()), name)
+                    if (result.code in 200..299) onSuccess(JSONObject(result.body!!.string()), name)
+                    else onError(application.getString(R.string.upload_referee_error))
                 } catch (e: IOException) {
                     onError(application.getString(R.string.upload_referee_error))
                 }
@@ -176,13 +177,12 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
     private fun onSuccess(json: JSONObject, name: String) {
         Timber.e(json.toString())
 
-//        Utils.logAnalyticsEvent(application.getString(R.string.uploaded_to_hover, successLog), application)
         refereeCode.value?.let {
             val data = JSONObject()
             try {
                 data.put("referee ID", it)
                 data.put("username", name)
-                Utils.logAnalyticsEvent(application.getString(R.string.upload_referee_success_event), data, application)
+                AnalyticsUtil.logAnalyticsEvent(application.getString(R.string.upload_referee_success_event), data, application)
             } catch (e: Exception) {
                 Timber.e(e.localizedMessage)
             }
@@ -193,8 +193,8 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
     }
 
     private fun onError(message: String?) {
-        Utils.logErrorAndReportToFirebase(SettingsViewModel::class.java.simpleName, message!!, null)
-        Utils.logAnalyticsEvent(message, application)
+        AnalyticsUtil.logErrorAndReportToFirebase(SettingsViewModel::class.java.simpleName, message!!, null)
+        AnalyticsUtil.logAnalyticsEvent(message, application)
 
         progress.postValue(-1)
         error.postValue(message)

@@ -20,6 +20,7 @@ import com.hover.stax.databinding.FragmentBountyListBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.navigation.NavigationInterface
 import com.hover.stax.transactions.UpdateBountyTransactionsWorker
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
@@ -41,7 +42,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
     private var dialog: StaxDialog? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_list)), requireActivity())
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_list)), requireActivity())
 
         _binding = FragmentBountyListBinding.inflate(inflater, container, false)
         return binding.root
@@ -75,7 +76,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
 
     private fun updateActionConfig() = Hover.initialize(requireActivity(), object : Hover.DownloadListener {
         override fun onError(p0: String?) {
-            Utils.logErrorAndReportToFirebase(BountyListFragment::class.java.simpleName, "Failed to update action configs: $p0", null)
+            AnalyticsUtil.logErrorAndReportToFirebase(BountyListFragment::class.java.simpleName, "Failed to update action configs: $p0", null)
         }
 
         override fun onSuccess(p0: ArrayList<HoverAction>?) {
