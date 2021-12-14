@@ -76,12 +76,10 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
         setUpMultiselect()
 
-        channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { hideProgressDialog(); onSelectedLoaded(it) }
-        channelsViewModel.simChannels.observe(viewLifecycleOwner) { hideProgressDialog(); onSimsLoaded(it) }
-        channelsViewModel.allChannels.observe(viewLifecycleOwner) { hideProgressDialog(); onAllLoaded(it) }
+        channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
+        channelsViewModel.simChannels.observe(viewLifecycleOwner) { onSimsLoaded(it) }
+        channelsViewModel.allChannels.observe(viewLifecycleOwner) { onAllLoaded(it) }
     }
-
-    fun hideProgressDialog() = binding.channelsListCard.hideProgressIndicator()
 
     private fun setUpMultiselect() {
         tracker = SelectionTracker.Builder(
@@ -101,6 +99,8 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     }
 
     private fun onSelectedLoaded(channels: List<Channel>) {
+        binding.channelsListCard.hideProgressIndicator()
+
         showSelected(!channels.isNullOrEmpty())
         if (!channels.isNullOrEmpty())
             binding.selectedList.adapter = ChannelsRecyclerViewAdapter(channels, this)
@@ -112,13 +112,17 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     }
 
     private fun onSimsLoaded(channels: List<Channel>) {
+        binding.channelsListCard.hideProgressIndicator()
+
         if (!channels.isNullOrEmpty()) {
             binding.errorText.visibility = GONE
-            updateAdapter(Channel.sort(channels, false));
+            updateAdapter(Channel.sort(channels, false))
         }
     }
 
     private fun onAllLoaded(channels: List<Channel>) {
+        binding.channelsListCard.hideProgressIndicator()
+
         if (!channels.isNullOrEmpty() && binding.channelsList.adapter?.itemCount == 0) {
             updateAdapter(Channel.sort(channels, false))
             setError(R.string.channels_error_nosim)

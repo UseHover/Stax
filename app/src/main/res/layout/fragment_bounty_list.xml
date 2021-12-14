@@ -10,22 +10,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-        <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:id="@+id/progressIndicator"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_13"
-                android:layout_marginEnd="@dimen/margin_13"
-                android:indeterminate="true"
-                android:minHeight="4dp"
-                android:visibility="gone"
-                app:hideAnimationBehavior="inward"
-                app:indicatorColor="@color/brightBluePressed"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:showAnimationBehavior="outward" />
-
         <com.hover.stax.views.StaxCardView
                 android:id="@+id/countryFilter"
                 android:layout_width="match_parent"
@@ -39,6 +23,7 @@
                     android:id="@+id/bounty_country_dropdown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8"
                     android:hint="@string/select_country"
                     android:text="@string/country" />
         </com.hover.stax.views.StaxCardView>
@@ -48,9 +33,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="false"
-                android:nestedScrollingEnabled="false"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/countryFilter" />
+
+        <TextView
+                android:id="@+id/msgNoBounties"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_16"
+                android:fontFamily="font-normal"
+                android:gravity="center"
+                android:text="@string/bounty_error_none"
+                android:textSize="@dimen/text_16"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/countryFilter" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

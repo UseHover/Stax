@@ -489,6 +489,7 @@
     <string name="bounty_submitted_successfully">Bounty submitted successfully</string>
     <string name="language">Language</string>
     <string name="bounty">Bounty</string>
+    <string name="bounty_error_none">No bounties available. Please check again later.</string>
 
     <string name="library_cardhead">USSD Library</string>
     <string name="visit_library">Find USSD shortcodes</string>
@@ -556,12 +557,12 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
     <string name="ussd_lib">Dial USSD</string>
-    <string name="error_running_action">"Sorry, this service integration is broken. "</string>
+    <string name="error_running_action">"Sorry, this service integration is broken."</string>
 
-    <!-- Wellness Tips -->
+    <!-- Financial Tips -->
     <string name="financial_wellness_tips">Financial Wellness Tips</string>
     <string name="btn_share">Share</string>
-    <string name="share_wellness_tip">Share Wellness Tip</string>
+    <string name="share_wellness_tip">Share Financial Tip</string>
     <string name="read_more"><u>Read more</u></string>
 
 </resources>

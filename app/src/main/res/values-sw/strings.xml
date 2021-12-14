@@ -668,6 +668,8 @@
 
     <string name="bounty_transaction_failed_try_again">Uwasilishaji huu haukutimiza mahitaji yetu, lakini unaweza kujaribu tena</string>
 
+    <string name="bounty_error_none">Hakuna fadhila zinazopatikana. Tafadhali angalia tena baadaye.</string>
+
     <string name="available_flows">MITIRIRIKO INAYOPATIKANA</string>
 
     <string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
