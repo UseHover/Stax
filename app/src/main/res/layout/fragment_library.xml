@@ -12,12 +12,14 @@
         <com.hover.stax.views.StaxCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/countryCard"
                 app:title="@string/filter_by_country">
 
             <com.hover.stax.countries.CountryDropdown
                     android:id="@+id/country_dropdown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8"
                     android:hint="@string/select_country"
                     android:text="@string/country" />
         </com.hover.stax.views.StaxCardView>

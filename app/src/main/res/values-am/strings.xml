@@ -675,6 +675,8 @@
 
     <string name="bounty_claim_explained">$ %1$d ዶላር ለመጠየቅ ፣ %2$s።\n\nልክ እንደጨረሱ ለክፍያ መረጃ ለመሰብሰብ ኢሜይል እንልክልዎታለን። በ1-5 የሥራ ቀናት ውስጥ ይከፈልዎታል </string>
 
+    <string name="bounty_error_none">ምንም ጉርሻዎች የሉም። እባክዎ ቆይተው እንደገና ያረጋግጡ።</string>
+
     <string name="start_USSD_Flow">የ USSD ፍሰትን ይጀምሩ</string>
 
     <string name="checking_your_flow">ፍሰትዎን በመፈተሽ ላይ</string>

@@ -56,7 +56,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
         startObservers()
 
         binding.bountyCountryDropdown.isEnabled = false
-        binding.progressIndicator.show()
+        binding.countryFilter.showProgressIndicator()
 
         binding.countryFilter.setOnClickIcon { findNavController().navigate(R.id.action_bountyListFragment_to_navigation_settings) }
     }
@@ -95,7 +95,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
     }
 
     private fun showOfflineDialog() {
-        binding.progressIndicator.hide()
+        binding.countryFilter.hideProgressIndicator()
 
         dialog = StaxDialog(requireActivity())
                 .setDialogTitle(R.string.internet_required)
@@ -110,7 +110,6 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
         binding.bountyCountryDropdown.setListener(this)
         binding.bountyCountryDropdown.updateChoices(channels, bountyViewModel.currentCountryFilter.value)
         binding.bountyCountryDropdown.isEnabled = true
-        binding.progressIndicator.hide()
     }
 
     private fun initRecyclerView() {
@@ -135,11 +134,17 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
     }
 
     private fun updateChannelList(channels: List<Channel>?, bounties: List<Bounty>?) {
+        binding.countryFilter.hideProgressIndicator()
+
         if (!channels.isNullOrEmpty() && !bounties.isNullOrEmpty() &&
                 bountyViewModel.country == CountryAdapter.CODE_ALL_COUNTRIES || channels?.firstOrNull()?.countryAlpha2 == bountyViewModel.country) {
+            binding.msgNoBounties.visibility = View.GONE
+
             val adapter = BountyChannelsAdapter(channels, bounties!!, this)
             binding.bountiesRecyclerView.adapter = adapter
             hideLoadingState()
+        } else {
+            binding.msgNoBounties.visibility = View.VISIBLE
         }
     }
 

@@ -76,6 +76,19 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progressIndicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_13"
+                android:indeterminate="true"
+                android:minHeight="4dp"
+                android:visibility="gone"
+                app:indicatorColor="@color/brightBluePressed"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
