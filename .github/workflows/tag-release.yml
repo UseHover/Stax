@@ -18,23 +18,12 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
 
-      - name: Set release name
-        run: echo ::set-env name=RELEASE_NAME::$(echo ${GITHUB_REF:11})
-
       - name: Create release
         id: create-release
-        uses: actions/create-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: marvinpinto/action-automatic-releases@latest
         with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ env.RELEASE_NAME }}
-          body: |
-            What is new :
-              - First Change
-              - Second Change
-          draft: true
-          prerelease: false
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: true
 
 
 #  publish:
