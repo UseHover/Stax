@@ -1,4 +1,4 @@
-package com.hover.stax.wellness
+package com.hover.stax.financialTip
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.databinding.ItemWellnessTipsBinding
 import com.hover.stax.utils.DateUtils
 
-class WellnessAdapter(private val tips: List<WellnessTip>, val selectListener: SelectListener) : RecyclerView.Adapter<WellnessAdapter.ViewHolder>() {
+class FinancialTipsAdapter(private val tips: List<FinancialTip>, val selectListener: SelectListener) : RecyclerView.Adapter<FinancialTipsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemWellnessTipsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -21,7 +21,7 @@ class WellnessAdapter(private val tips: List<WellnessTip>, val selectListener: S
 
     inner class ViewHolder(val binding: ItemWellnessTipsBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun setItems(tip: WellnessTip) {
+        fun setItems(tip: FinancialTip) {
             tip.date?.let {
                 binding.date.text = DateUtils.humanFriendlyDate(it.time)
             }
@@ -33,6 +33,6 @@ class WellnessAdapter(private val tips: List<WellnessTip>, val selectListener: S
     }
 
     interface SelectListener {
-        fun onTipSelected(tip: WellnessTip, isFromDeeplink: Boolean = false)
+        fun onTipSelected(tip: FinancialTip, isFromDeeplink: Boolean = false)
     }
 }

@@ -48,7 +48,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/wellnessTips"
+                    android:id="@+id/financialTips"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
@@ -60,7 +60,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.hover.stax.views.StaxCardView
-                android:id="@+id/wellnessDetail"
+                android:id="@+id/financialTipsDetail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
