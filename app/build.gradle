@@ -104,7 +104,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // Google
-    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.appcompat:appcompat:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
@@ -114,7 +114,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.viewpager:viewpager:1.0.0'
     implementation 'androidx.recyclerview:recyclerview-selection:1.1.0'
-    implementation 'androidx.work:work-runtime-ktx:2.6.0'
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'
     kapt "androidx.lifecycle:lifecycle-common-java8:2.4.0"
 
     implementation "androidx.room:room-runtime:2.3.0"
@@ -139,7 +139,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx'
 
     //auth
-    implementation 'com.google.android.gms:play-services-auth:19.2.0'
+    implementation 'com.google.android.gms:play-services-auth:20.0.0'
     implementation 'com.google.firebase:firebase-auth-ktx'
 
     implementation 'com.amplitude:android-sdk:2.23.2'
@@ -153,7 +153,7 @@ dependencies {
 
     // Kotlin
     implementation "androidx.room:room-ktx:2.3.0"
-    implementation "androidx.core:core-ktx:1.6.0"
+    implementation "androidx.core:core-ktx:1.7.0"
 
     //di
     def koin_version= "2.2.2"
@@ -172,7 +172,7 @@ dependencies {
 
     releaseImplementation "com.hover:android-sdk:$sdk_version"
     debugImplementation 'com.android.volley:volley:1.2.1'
-    debugImplementation 'com.google.android.gms:play-services-analytics:17.0.1'
+    debugImplementation 'com.google.android.gms:play-services-analytics:18.0.0'
 
     debugImplementation 'io.sentry:sentry-android:4.3.0'
 }
