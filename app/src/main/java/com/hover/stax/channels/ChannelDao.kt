@@ -8,7 +8,10 @@ import com.hover.stax.accounts.ChannelWithAccounts
 interface ChannelDao {
 
     @get:Query("SELECT * FROM channels WHERE published = 1 ORDER BY name ASC")
-    val allInAlphaOrder: LiveData<List<Channel>>
+    val publishedChannels: LiveData<List<Channel>>
+
+    @get:Query("SELECT * FROM channels ORDER BY name ASC")
+    val allChannels: LiveData<List<Channel>>
 
     @Query("SELECT * FROM channels WHERE selected = :selected ORDER BY defaultAccount DESC, name ASC")
     fun getSelected(selected: Boolean): LiveData<List<Channel>>

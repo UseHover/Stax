@@ -69,8 +69,6 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
         country.postValue(countryCode)
     }
 
-
-
     private fun filterChannels(channels: List<Channel>?) = filterChannels(channels, country.value)
 
     private fun filterChannels(countryCode: String?) = filterChannels(allChannels.value, countryCode)

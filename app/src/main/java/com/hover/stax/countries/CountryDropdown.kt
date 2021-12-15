@@ -6,6 +6,7 @@ import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDropdownLayout
+import timber.log.Timber
 
 class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdownLayout(context, attributeSet) {
 
@@ -25,7 +26,7 @@ class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
             setOnItemClickListener { parent, _, position, _ -> onSelect(parent.getItemAtPosition(position) as String) }
         }
         setDropdownValue(currentCountry)
-        countryAdapter!!.notifyDataSetChanged()
+//        countryAdapter!!.notifyDataSetChanged()
     }
 
     private fun getCountryCodes(channelList: List<Channel>): Array<String> {
