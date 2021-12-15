@@ -32,8 +32,9 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
         intent?.let {
             CoroutineScope(Dispatchers.IO).launch {
                 val actionId = intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID)
-                if (actionId != null) {
-                    action = repo.getAction(actionId)
+
+                actionId?.let {
+                    action = repo.getAction(it)
                     channel = repo.getChannel(action!!.channel_id)
 
                     createAccounts(intent)
@@ -52,10 +53,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
 
             if (inputExtras.containsKey(Constants.ACCOUNT_ID)) {
                 val accountId = inputExtras[Constants.ACCOUNT_ID]
-                Timber.e("AccountId  - $accountId")
-
                 accountId?.let {
-                    Timber.e("Here")
                     account = repo.getAccount(accountId.toInt())
                     Timber.e("$account")
                 }
@@ -66,7 +64,6 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
             val parsedVariables = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as HashMap<String, String>
 
             if (account != null && parsedVariables.containsKey("balance")) {
-                Timber.e("$account has balance")
                 account!!.updateBalance(parsedVariables)
                 repo.update(account!!)
             }

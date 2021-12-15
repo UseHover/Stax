@@ -56,9 +56,16 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
         startObservers()
 
         binding.bountyCountryDropdown.isEnabled = false
-        binding.countryFilter.showProgressIndicator()
-
-        binding.countryFilter.setOnClickIcon { findNavController().navigate(R.id.action_bountyListFragment_to_navigation_settings) }
+        binding.countryFilter.apply {
+            showProgressIndicator()
+            setOnClickIcon {
+                try {
+                    findNavController().navigate(R.id.action_bountyListFragment_to_navigation_settings)
+                } catch (ignored: Exception) {
+                    Timber.w("User already on Settings fragment")
+                }
+            }
+        }
     }
 
     override fun onResume() {
@@ -167,7 +174,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
                 .setDialogTitle(getString(R.string.bounty_sim_err_header))
                 .setDialogMessage(getString(R.string.bounty_sim_err_desc, b.action.network_name))
                 .setNegButton(R.string.btn_cancel, null)
-                .setPosButton(R.string.retry) { if(activity != null) retrySimMatch(b) }
+                .setPosButton(R.string.retry) { if (activity != null) retrySimMatch(b) }
         dialog!!.showIt()
     }
 
