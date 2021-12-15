@@ -28,7 +28,6 @@ import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionDao
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils.lastMonth
-import com.hover.stax.utils.Utils
 import com.hover.stax.utils.paymentLinkCryptography.Encryption
 import timber.log.Timber
 import java.security.NoSuchAlgorithmException
@@ -47,7 +46,9 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     private val accountDao: AccountDao = db.accountDao()
 
     // Channels
-    val allChannels: LiveData<List<Channel>> = channelDao.allInAlphaOrder
+    val publishedChannels: LiveData<List<Channel>> = channelDao.publishedChannels
+    val allChannels = channelDao.allChannels
+
     val selected: LiveData<List<Channel>> = channelDao.getSelected(true)
 
     fun getChannelsAndAccounts(): List<ChannelWithAccounts> = channelDao.getChannelsAndAccounts()
@@ -190,10 +191,6 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun getLiveContacts(ids: Array<String>): LiveData<List<StaxContact>> {
         return contactDao.getLive(ids)
-    }
-
-    fun lookupContact(lookupKey: String?): StaxContact {
-        return contactDao.lookup(lookupKey)
     }
 
     fun getContact(id: String?): StaxContact? {

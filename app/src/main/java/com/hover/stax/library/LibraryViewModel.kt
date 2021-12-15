@@ -37,8 +37,10 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
 
         country.value = null
         country.addSource(sims, this::pickFirstCountry)
-        filteredChannels.addSource(allChannels, this::filterChannels)
+
         filteredChannels.addSource(country, this::filterChannels)
+        filteredChannels.addSource(allChannels, this::filterChannels)
+
         loadSims()
         allChannels = repo.allChannels
         filteredChannels.value = null
@@ -59,17 +61,13 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
 
     private fun pickFirstCountry(sims: List<SimInfo>?) {
         if (!sims.isNullOrEmpty()) {
-            Timber.e("Picking first country: %s", sims.first().countryIso)
             country.postValue(sims.first().countryIso)
         }
     }
 
     fun setCountry(countryCode: String) = viewModelScope.launch(Dispatchers.IO) {
-        Timber.e("Updating country: %s", countryCode)
         country.postValue(countryCode)
     }
-
-
 
     private fun filterChannels(channels: List<Channel>?) = filterChannels(channels, country.value)
 
