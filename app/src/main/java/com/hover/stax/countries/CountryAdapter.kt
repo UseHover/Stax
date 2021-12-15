@@ -53,14 +53,10 @@ class CountryAdapter(val codes: Array<String>, context: Context) : ArrayAdapter<
 
     class ViewHolder(val binding: CountryItemBinding) {
 
-        private var countryText: TextView? = null
-
-        init {
-            countryText = binding.countryTextId
-        }
+        private var countryText: TextView = binding.countryTextId
 
         fun setText(country: String) {
-            countryText!!.text = country
+            countryText.text = country
         }
     }
 

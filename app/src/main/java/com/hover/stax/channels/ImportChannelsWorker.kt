@@ -46,7 +46,7 @@ class ImportChannelsWorker(context: Context, params: WorkerParameters) : Corouti
         var channelsString: String? = null
 
         val fileToUse = if (BuildConfig.DEBUG)
-            applicationContext.getString(R.string.channels_json_prod)
+            applicationContext.getString(R.string.channels_json_staging)
         else
             applicationContext.getString(R.string.channels_json_prod)
 

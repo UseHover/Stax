@@ -39,15 +39,8 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
     private fun setObservers() {
         with(viewModel) {
             filteredChannels.observe(viewLifecycleOwner) { it?.let { updateList(it) } }
-
             country.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
-
-            allChannels.observe(viewLifecycleOwner) {
-                it?.let {
-                    binding.countryDropdown.updateChoices(it, viewModel.country.value)
-                    updateList(it)
-                }
-            }
+            allChannels.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, viewModel.country.value) } }
         }
     }
 
