@@ -14,8 +14,8 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
-import com.hover.stax.financialTip.FinancialTip
-import com.hover.stax.financialTip.FinancialTipsViewModel
+import com.hover.stax.financialTips.FinancialTip
+import com.hover.stax.financialTips.FinancialTipsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -41,6 +41,7 @@ class HomeFragment : Fragment() {
 
         binding.airtime.setOnClickListener { navigateTo(Constants.NAV_AIRTIME, requireActivity()) }
         binding.transfer.setOnClickListener { navigateTo(Constants.NAV_TRANSFER, requireActivity()) }
+        binding.paybill.setOnClickListener { navigateTo(Constants.NAV_PAYBILL, requireActivity()) }
 
         NetworkMonitor.StateLiveData.get().observe(viewLifecycleOwner) {
             updateOfflineIndicator(it)

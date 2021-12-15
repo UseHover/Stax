@@ -242,7 +242,7 @@
 
     <string name="transfer_amount_label">Kiasi</string>
 
-    <string name="channel_label">Akaunti</string>
+    <string name="account_label">Akaunti</string>
 
     <string name="actions_fielderror">Akaunti hii haitumiki kununua muda wa maongezi. Tafadhali chagua akaunti tofauti.</string>
 

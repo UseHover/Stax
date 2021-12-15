@@ -13,9 +13,11 @@
         <entry key="app/src/main/res/drawable/button_bg_grey.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.2601851851851852" />
         <entry key="app/src/main/res/drawable/ic_noun_hashtag_2733013.xml" value="0.175" />
+        <entry key="app/src/main/res/drawable/ic_payment.xml" value="0.6125" />
         <entry key="app/src/main/res/drawable/ic_refresh_white_13dp.xml" value="0.25833333333333336" />
         <entry key="app/src/main/res/drawable/ic_settings.xml" value="0.25833333333333336" />
         <entry key="app/src/main/res/drawable/ic_share.xml" value="0.22962962962962963" />
+        <entry key="app/src/main/res/drawable/ic_system_upate_24.xml" value="0.6125" />
         <entry key="app/src/main/res/drawable/ic_ussd_lib.xml" value="0.3546875" />
         <entry key="app/src/main/res/layout/account_card_layout.xml" value="0.15704154002026344" />
         <entry key="app/src/main/res/layout/account_card_manage.xml" value="0.30572916666666666" />
@@ -45,6 +47,7 @@
         <entry key="app/src/main/res/layout/fragment_library.xml" value="0.13323201621073963" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/fragment_main.xml" value="0.1331521739130435" />
+        <entry key="app/src/main/res/layout/fragment_paybill.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_pin_update.xml" value="0.13405797101449277" />
         <entry key="app/src/main/res/layout/fragment_request.xml" value="0.14868287740628167" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.15602836879432624" />
@@ -56,6 +59,7 @@
         <entry key="app/src/main/res/layout/home_card_transactions.xml" value="0.14766970618034447" />
         <entry key="app/src/main/res/layout/in_app_banner_layout.xml" value="0.15704154002026344" />
         <entry key="app/src/main/res/layout/item_wellness_tips.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/paybill_card_details.xml" value="0.33" />
         <entry key="app/src/main/res/layout/rename_account_layout.xml" value="0.3134057971014493" />
         <entry key="app/src/main/res/layout/repeat_inputs.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/layout/request_card_amount.xml" value="0.15602836879432624" />
@@ -86,7 +90,7 @@
         <entry key="app/src/main/res/layout/support_stax_layout.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/transaction_list_item.xml" value="0.30027173913043476" />
         <entry key="app/src/main/res/layout/transfer_card_edit.xml" value="0.13903985507246377" />
-        <entry key="app/src/main/res/layout/transfer_card_future.xml" value="0.13903985507246377" />
+        <entry key="app/src/main/res/layout/transfer_card_future.xml" value="0.33" />
         <entry key="app/src/main/res/layout/transfer_card_summary.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/transfer_note.xml" value="0.1" />
         <entry key="app/src/main/res/menu/nav_main.xml" value="0.27870370370370373" />

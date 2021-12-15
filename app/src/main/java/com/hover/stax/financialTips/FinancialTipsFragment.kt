@@ -1,4 +1,4 @@
-package com.hover.stax.financialTip
+package com.hover.stax.financialTips
 
 import android.content.Intent
 import android.os.Bundle
@@ -14,7 +14,7 @@ import com.hover.stax.databinding.FragmentWellnessBinding
 import com.hover.stax.utils.UIHelper
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FinancialTipFragment : Fragment(), FinancialTipsAdapter.SelectListener {
+class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
 
     private val viewModel: FinancialTipsViewModel by viewModel()
 
@@ -57,7 +57,7 @@ class FinancialTipFragment : Fragment(), FinancialTipsAdapter.SelectListener {
             binding.financialTips.apply {
                 layoutManager = UIHelper.setMainLinearManagers(requireActivity())
                 isNestedScrollingEnabled = false
-                adapter = FinancialTipsAdapter(tips, this@FinancialTipFragment)
+                adapter = FinancialTipsAdapter(tips, this@FinancialTipsFragment)
             }
         }
     }

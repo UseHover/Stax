@@ -82,7 +82,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         super.onResume()
 
         amountInput.setHint(getString(R.string.transfer_amount_label))
-        accountDropdown.setHint(getString(R.string.channel_label))
+        accountDropdown.setHint(getString(R.string.account_label))
     }
 
     private fun setTransactionType(txnType: String) {

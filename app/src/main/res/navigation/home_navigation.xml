@@ -25,6 +25,9 @@
         <action
                 android:id="@+id/action_navigation_home_to_wellnessFragment"
                 app:destination="@id/wellnessFragment" />
+        <action
+                android:id="@+id/action_navigation_home_to_paybillFragment"
+                app:destination="@id/paybillFragment" />
 
     </fragment>
 
@@ -225,7 +228,7 @@
     </fragment>
     <fragment
             android:id="@+id/wellnessFragment"
-            android:name="com.hover.stax.financialTip.FinancialTipFragment"
+            android:name="com.hover.stax.financialTips.FinancialTipsFragment"
             android:label="WellnessFragment">
         <action
                 android:id="@+id/action_wellnessFragment_to_navigation_home"
@@ -233,5 +236,10 @@
                 app:popUpTo="@id/navigation_home"
                 app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+            android:id="@+id/paybillFragment"
+            android:name="com.hover.stax.bills.PaybillFragment"
+            android:label="@string/cta_paybill"
+            tools:layout="@layout/fragment_paybill" />
 
 </navigation>

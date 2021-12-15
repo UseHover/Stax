@@ -241,7 +241,7 @@
 
   <string name="transfer_amount_label">Montant</string>
 
-  <string name="channel_label">Compte</string>
+  <string name="account_label">Compte</string>
 
   <string name="actions_fielderror">Ce compte ne prend pas en charge l\'achat de temps d\'antenne. Veuillez sélectionner un autre compte.</string>
 

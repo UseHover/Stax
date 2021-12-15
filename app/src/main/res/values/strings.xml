@@ -72,6 +72,7 @@
     <string name="cta_transfer">Send money</string>
     <string name="cta_airtime">Buy airtime</string>
     <string name="cta_request">Request money</string>
+    <string name="cta_paybill">Pay a bill</string>
 
     <!-- Balances -->
     <string name="bal_cardhead">Balances</string>
@@ -193,7 +194,7 @@
     <!-- Transfer -->
     <string name="loading_link_dialoghead">Loading, one moment</string>
     <string name="transfer_amount_label">Amount</string>
-    <string name="channel_label">Account</string>
+    <string name="account_label">Account</string>
     <string name="actions_fielderror">This account does not support buy airtime. Please select a different account.</string>
     <string name="recipientphone_label">Contact phone number</string>
     <string name="recipientacct_label">Contact account number</string>
@@ -564,5 +565,10 @@
     <string name="btn_share">Share</string>
     <string name="share_wellness_tip">Share Financial Tip</string>
     <string name="read_more"><u>Read more</u></string>
+
+    <!-- Paybill -->
+    <string name="business_number_label">Business Number</string>
+    <string name="save_bill">Save this bill</string>
+    <string name="save_bill_prompt">Enter business number</string>
 
 </resources>

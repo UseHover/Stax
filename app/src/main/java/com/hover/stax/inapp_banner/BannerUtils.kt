@@ -55,7 +55,7 @@ class BannerUtils(val context: Context) : KoinComponent {
 
 
     private fun invalidatePermissionCampaign() = Utils.saveBoolean(PERM_CLICKED, true, context)
-    private fun isPermissionCampaignValid() = !Utils.getBoolean(PERM_CLICKED, context) && areCampaignsUnlocked() && !hasAccounts()
+    private fun isPermissionCampaignValid() = !Utils.getBoolean(PERM_CLICKED, context) && areCampaignsUnlocked() && hasNoAccounts()
     private fun areCampaignsUnlocked(): Boolean = Utils.getInt(APP_SESSIONS, context) >= 3
 
     private fun setGeneralLastImpressionDate() = Utils.saveLong(GENERAL_LAST_IMP_DATE, DateUtils.today(), context)
@@ -171,7 +171,7 @@ class BannerUtils(val context: Context) : KoinComponent {
         bannerId_in_cache = 0
     }
 
-    private fun hasAccounts(): Boolean {
+    private fun hasNoAccounts(): Boolean {
         val count: Deferred<Int> = CoroutineScope(Dispatchers.IO).async {
             val dataCount = repo.getAccountsCount()
             dataCount
@@ -181,7 +181,8 @@ class BannerUtils(val context: Context) : KoinComponent {
             count.await()
         }
 
-        return number != 0
+        Timber.e("Accounts found $number")
+        return number == 0
     }
 
     companion object {

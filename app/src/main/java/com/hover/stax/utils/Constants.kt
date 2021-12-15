@@ -8,7 +8,7 @@ object Constants {
     const val NAV_BALANCE = 604
     const val NAV_SETTINGS = 605
     const val NAV_LINK_ACCOUNT = 606
-    const val NAV_BOUNTY = 608
+    const val NAV_PAYBILL = 608
     const val NAV_EMAIL_CLIENT = 609
     const val NAV_USSD_LIB = 610
 
