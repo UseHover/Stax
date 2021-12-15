@@ -72,8 +72,10 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
 
     private fun updateContacts(intent: Intent) {
         contact = StaxContact.findOrInit(intent, channel!!.countryAlpha2, repo)
-        contact!!.updateNames(intent)
-        repo.save(contact!!)
+        contact?.let {
+            it.updateNames(intent)
+            repo.save(it)
+        }
     }
 
     private fun updateTransaction(intent: Intent, c: Context) {

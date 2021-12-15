@@ -61,7 +61,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
             setOnClickIcon {
                 try {
                     findNavController().navigate(R.id.action_bountyListFragment_to_navigation_settings)
-                } catch (ignored: Exception) {
+                } catch (ignored: IllegalArgumentException) {
                     Timber.w("User already on Settings fragment")
                 }
             }
