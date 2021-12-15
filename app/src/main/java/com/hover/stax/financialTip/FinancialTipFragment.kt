@@ -1,4 +1,4 @@
-package com.hover.stax.wellness
+package com.hover.stax.financialTip
 
 import android.content.Intent
 import android.os.Bundle
@@ -14,9 +14,9 @@ import com.hover.stax.databinding.FragmentWellnessBinding
 import com.hover.stax.utils.UIHelper
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class WellnessFragment : Fragment(), WellnessAdapter.SelectListener {
+class FinancialTipFragment : Fragment(), FinancialTipsAdapter.SelectListener {
 
-    private val viewModel: WellnessViewModel by viewModel()
+    private val viewModel: FinancialTipsViewModel by viewModel()
 
     private var _binding: FragmentWellnessBinding? = null
     private val binding get() = _binding!!
@@ -34,7 +34,7 @@ class WellnessFragment : Fragment(), WellnessAdapter.SelectListener {
         binding.title.text = getString(R.string.financial_wellness_tips)
         viewModel.tips.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
-                showWellnessTips(it, tipId)
+                showFinancialTips(it, tipId)
             }
         }
 
@@ -43,28 +43,28 @@ class WellnessFragment : Fragment(), WellnessAdapter.SelectListener {
 
     private val backPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            if (binding.wellnessDetail.visibility == View.VISIBLE)
+            if (binding.financialTipsDetail.visibility == View.VISIBLE)
                 showTipList()
             else
                 findNavController().popBackStack()
         }
     }
 
-    private fun showWellnessTips(tips: List<WellnessTip>, id: String? = null) {
+    private fun showFinancialTips(tips: List<FinancialTip>, id: String? = null) {
         if (id != null) {
             tips.firstOrNull { it.id == id }?.let { onTipSelected(it, true) }
         } else {
-            binding.wellnessTips.apply {
+            binding.financialTips.apply {
                 layoutManager = UIHelper.setMainLinearManagers(requireActivity())
                 isNestedScrollingEnabled = false
-                adapter = WellnessAdapter(tips, this@WellnessFragment)
+                adapter = FinancialTipsAdapter(tips, this@FinancialTipFragment)
             }
         }
     }
 
-    override fun onTipSelected(tip: WellnessTip, isFromDeeplink: Boolean) {
+    override fun onTipSelected(tip: FinancialTip, isFromDeeplink: Boolean) {
         binding.tipsCard.visibility = View.GONE
-        binding.wellnessDetail.apply {
+        binding.financialTipsDetail.apply {
             visibility = View.VISIBLE
             setTitle(tip.title)
 
@@ -85,7 +85,7 @@ class WellnessFragment : Fragment(), WellnessAdapter.SelectListener {
                 append(tip.snippet ?: Html.fromHtml(tip.content))
                 append(getString(R.string.stax_handle))
                 append("\n\n")
-                append("https://stax.me/wellnessTips?id=${tip.id}")
+                append("https://stax.me/financialTips?id=${tip.id}")
             }
 
             val share = Intent.createChooser(Intent().apply {
@@ -98,7 +98,7 @@ class WellnessFragment : Fragment(), WellnessAdapter.SelectListener {
     }
 
     private fun showTipList() {
-        binding.wellnessDetail.visibility = View.GONE
+        binding.financialTipsDetail.visibility = View.GONE
         binding.tipsCard.visibility = View.VISIBLE
     }
 

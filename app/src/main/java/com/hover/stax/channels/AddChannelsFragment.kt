@@ -17,6 +17,8 @@ import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.databinding.FragmentAddChannelsBinding
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.network.NetworkMonitor
+
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -55,6 +57,8 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.channelsListCard.showProgressIndicator()
 
         binding.channelsListCard.setTitle(getString(R.string.add_accounts_to_stax))
         binding.selectedList.apply {
@@ -95,6 +99,8 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     }
 
     private fun onSelectedLoaded(channels: List<Channel>) {
+        binding.channelsListCard.hideProgressIndicator()
+
         showSelected(!channels.isNullOrEmpty())
         if (!channels.isNullOrEmpty())
             binding.selectedList.adapter = ChannelsRecyclerViewAdapter(channels, this)
@@ -106,17 +112,21 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     }
 
     private fun onSimsLoaded(channels: List<Channel>) {
+        binding.channelsListCard.hideProgressIndicator()
+
         if (!channels.isNullOrEmpty()) {
             binding.errorText.visibility = GONE
-            updateAdapter(Channel.sort(channels, false));
+            updateAdapter(Channel.sort(channels, false))
         }
     }
 
     private fun onAllLoaded(channels: List<Channel>) {
+        binding.channelsListCard.hideProgressIndicator()
+
         if (!channels.isNullOrEmpty() && binding.channelsList.adapter?.itemCount == 0) {
             updateAdapter(Channel.sort(channels, false))
             setError(R.string.channels_error_nosim)
-        } else if (channels.isNullOrEmpty())
+        } else if (channels.isNullOrEmpty() && !NetworkMonitor(requireActivity()).isNetworkConnected)
             setError(R.string.channels_error_nodata)
     }
 

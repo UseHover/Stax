@@ -133,7 +133,7 @@
                         android:scheme="http" />
                 <data
                         android:host="stax.me"
-                        android:pathPattern="@string/deeplink_wellness_tips"
+                        android:pathPattern="@string/deeplink_financial_tips"
                         android:scheme="https" />
             </intent-filter>
         </activity>

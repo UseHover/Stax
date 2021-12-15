@@ -661,6 +661,8 @@
 
   <string name="bounty_pending_short_desc">Nous vérifions votre transaction. En cas de succès, attendez-vous à être payé dans les 7 jours ouvrables.</string>
 
+  <string name="bounty_error_none">Aucune prime disponible. Veuillez vérifier à nouveau plus tard.</string>
+
   <string name="done">Terminé</string>
 
   <string name="bounty_transaction_failed">Cette soumission n\'a pas répondu à notre exigence</string>

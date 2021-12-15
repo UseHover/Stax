@@ -29,6 +29,7 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
         super.onViewCreated(view, savedInstanceState)
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, LibraryFragment::class.java.simpleName), requireActivity())
 
+        binding.countryCard.showProgressIndicator()
         binding.countryDropdown.setListener(this)
         binding.shortcodes.layoutManager = UIHelper.setMainLinearManagers(requireActivity())
 
@@ -38,19 +39,14 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
     private fun setObservers() {
         with(viewModel) {
             filteredChannels.observe(viewLifecycleOwner) { it?.let { updateList(it) } }
-
             country.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.setDropdownValue(it) } }
-
-            allChannels.observe(viewLifecycleOwner) {
-                it?.let {
-                    binding.countryDropdown.updateChoices(it, viewModel.country.value)
-                    updateList(it)
-                }
-            }
+            allChannels.observe(viewLifecycleOwner) { it?.let { binding.countryDropdown.updateChoices(it, viewModel.country.value) } }
         }
     }
 
     private fun updateList(channels: List<Channel>) {
+        binding.countryCard.hideProgressIndicator()
+
         if (!channels.isNullOrEmpty())
             binding.shortcodes.adapter = ChannelsAdapter(channels)
     }
