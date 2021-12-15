@@ -129,21 +129,23 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
     private fun setupObservers() {
         with(viewModel) {
-            account.observe(viewLifecycleOwner) { acct ->
-                binding.detailsCard.setTitle(acct.alias)
-                if (acct.latestBalance != null) {
-                    binding.balanceCard.balanceAmount.text = acct.latestBalance
-                    binding.balanceCard.balanceSubtitle.text = DateUtils.humanFriendlyDateTime(acct.latestBalanceTimestamp)
-                } else binding.balanceCard.balanceSubtitle.text = getString(R.string.refresh_balance_desc)
+            account.observe(viewLifecycleOwner) {
+                it?.let { acct ->
+                    binding.detailsCard.setTitle(acct.alias)
+                    if (acct.latestBalance != null) {
+                        binding.balanceCard.balanceAmount.text = acct.latestBalance
+                        binding.balanceCard.balanceSubtitle.text = DateUtils.humanFriendlyDateTime(acct.latestBalanceTimestamp)
+                    } else binding.balanceCard.balanceSubtitle.text = getString(R.string.refresh_balance_desc)
 
-                binding.feesDescription.text = getString(R.string.fees_label, acct.name)
-                binding.officialName.text = acct.name
+                    binding.feesDescription.text = getString(R.string.fees_label, acct.name)
+                    binding.officialName.text = acct.name
 
-                binding.manageCard.nicknameInput.setText(acct.alias, false)
-                binding.manageCard.accountNumberInput.setText(acct.accountNo, false)
-                binding.manageCard.removeAcctBtn.setOnClickListener { setUpRemoveAccount(acct) }
+                    binding.manageCard.nicknameInput.setText(acct.alias, false)
+                    binding.manageCard.accountNumberInput.setText(acct.accountNo, false)
+                    binding.manageCard.removeAcctBtn.setOnClickListener { setUpRemoveAccount(acct) }
 
-                setUpFuture(acct.channelId)
+                    setUpFuture(acct.channelId)
+                }
             }
 
             channel.observe(viewLifecycleOwner) { c ->
