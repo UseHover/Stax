@@ -48,6 +48,7 @@
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/fragment_main.xml" value="0.1331521739130435" />
         <entry key="app/src/main/res/layout/fragment_paybill.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_paybill_list.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_pin_update.xml" value="0.13405797101449277" />
         <entry key="app/src/main/res/layout/fragment_request.xml" value="0.14868287740628167" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.15602836879432624" />
@@ -58,6 +59,8 @@
         <entry key="app/src/main/res/layout/home_card_future.xml" value="0.11398176291793313" />
         <entry key="app/src/main/res/layout/home_card_transactions.xml" value="0.14766970618034447" />
         <entry key="app/src/main/res/layout/in_app_banner_layout.xml" value="0.15704154002026344" />
+        <entry key="app/src/main/res/layout/item_paybill.xml" value="0.8125" />
+        <entry key="app/src/main/res/layout/item_paybill_saved.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_wellness_tips.xml" value="0.25" />
         <entry key="app/src/main/res/layout/paybill_card_details.xml" value="0.33" />
         <entry key="app/src/main/res/layout/paybill_card_save_bill.xml" value="0.33" />

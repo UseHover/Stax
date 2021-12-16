@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <com.hover.stax.views.StaxCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:showBack="true"
+            app:title="@string/business_number_label">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <include
+                    android:id="@+id/enterBillNumber"
+                    layout="@layout/item_paybill" />
+
+            <TextView
+                    android:id="@+id/savedHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:fontFamily="font-normal"
+                    android:text="@string/saved"
+                    android:textSize="@dimen/text_16" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/savedList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:itemCount="4"
+                    tools:listitem="@layout/item_paybill_saved" />
+
+            <TextView
+                    android:id="@+id/popularHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8"
+                    android:fontFamily="font-normal"
+                    android:text="@string/saved"
+                    android:textSize="@dimen/text_16" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/popularList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:itemCount="4"
+                    tools:listitem="@layout/item_paybill" />
+
+        </LinearLayout>
+
+    </com.hover.stax.views.StaxCardView>
+</androidx.core.widget.NestedScrollView>
