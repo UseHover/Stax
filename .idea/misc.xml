@@ -60,6 +60,7 @@
         <entry key="app/src/main/res/layout/in_app_banner_layout.xml" value="0.15704154002026344" />
         <entry key="app/src/main/res/layout/item_wellness_tips.xml" value="0.25" />
         <entry key="app/src/main/res/layout/paybill_card_details.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/paybill_card_save_bill.xml" value="0.33" />
         <entry key="app/src/main/res/layout/rename_account_layout.xml" value="0.3134057971014493" />
         <entry key="app/src/main/res/layout/repeat_inputs.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/layout/request_card_amount.xml" value="0.15602836879432624" />
@@ -112,7 +113,7 @@
       </profile-state>
     </entry>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_X" project-jdk-name="11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_15" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

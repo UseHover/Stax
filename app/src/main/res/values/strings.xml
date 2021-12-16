@@ -567,8 +567,10 @@
     <string name="read_more"><u>Read more</u></string>
 
     <!-- Paybill -->
-    <string name="business_number_label">Business Number</string>
+    <string name="business_number_label">Business number</string>
     <string name="save_bill">Save this bill</string>
     <string name="save_bill_prompt">Enter business number</string>
+    <string name="bill_name_label">Nickname</string>
+    <string name="amount_checkbox_label">Always pay the same amount</string>
 
 </resources>
