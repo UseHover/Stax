@@ -573,5 +573,6 @@
     <string name="bill_name_label">Nickname</string>
     <string name="amount_checkbox_label">Always pay the same amount</string>
     <string name="business_number_prompt">Enter business number</string>
+    <string name="btn_delete">Delete</string>
 
 </resources>

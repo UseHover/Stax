@@ -240,6 +240,20 @@
             android:id="@+id/paybillFragment"
             android:name="com.hover.stax.bills.PaybillFragment"
             android:label="@string/cta_paybill"
-            tools:layout="@layout/fragment_paybill" />
+            tools:layout="@layout/fragment_paybill">
+        <action
+                android:id="@+id/action_paybillFragment_to_paybillListFragment2"
+                app:destination="@id/paybillListFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/paybillListFragment"
+            android:name="com.hover.stax.bills.PaybillListFragment"
+            android:label="PaybillListFragment">
+        <action
+                android:id="@+id/action_paybillListFragment_to_paybillFragment"
+                app:destination="@id/paybillFragment"
+                app:popUpTo="@id/paybillFragment"
+                app:popUpToInclusive="true" />
+    </fragment>
 
 </navigation>
