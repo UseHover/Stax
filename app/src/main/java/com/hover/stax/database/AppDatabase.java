@@ -11,8 +11,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.hover.stax.accounts.Account;
 import com.hover.stax.accounts.AccountDao;
-import com.hover.stax.bills.Bill;
-import com.hover.stax.bills.BillDao;
+import com.hover.stax.bills.Paybill;
+import com.hover.stax.bills.PaybillDao;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
 import com.hover.stax.contacts.ContactDao;
@@ -27,7 +27,7 @@ import com.hover.stax.transactions.TransactionDao;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class, Account.class, Bill.class}, version = 36)
+@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class, Account.class, Paybill.class}, version = 36)
 public abstract class AppDatabase extends RoomDatabase {
     private static final int NUMBER_OF_THREADS = 8;
     static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -46,7 +46,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract AccountDao accountDao();
 
-    public abstract BillDao billDao();
+    public abstract PaybillDao paybillDao();
 
     public static synchronized AppDatabase getInstance(Context context) {
         if (INSTANCE == null) {
@@ -166,13 +166,13 @@ public abstract class AppDatabase extends RoomDatabase {
     static final Migration M35_36 = new Migration(35, 36) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
-            database.execSQL("CREATE TABLE IF NOT EXISTS bills (name TEXT NOT NULL, business_no TEXT NOT NULL, account_no TEXT, logo INTEGER NOT NULL, " +
+            database.execSQL("CREATE TABLE IF NOT EXISTS paybills (name TEXT NOT NULL, business_no TEXT NOT NULL, account_no TEXT, logo INTEGER NOT NULL, " +
                     "channelId INTEGER NOT NULL, accountId INTEGER NOT NULL, id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, recurring_amount INTEGER NOT NULL," +
-                    " isSaved INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(channelId) REFERENCES channels(id) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(accountId) REFERENCES accounts(id) " +
-                    "ON UPDATE NO ACTION ON DELETE NO ACTION )");
-            database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_bills_business_no_account_no ON bills(business_no, account_no)");
-            database.execSQL("CREATE INDEX IF NOT EXISTS index_bills_channelId ON bills (channelId)");
-            database.execSQL("CREATE INDEX IF NOT EXISTS index_bills_accountId ON bills (accountId)");
+                    " isSaved INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(channelId) REFERENCES channels(id) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(accountId)" +
+                    " REFERENCES accounts(id) ON UPDATE NO ACTION ON DELETE NO ACTION )");
+            database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_paybills_business_no_account_no ON paybills(business_no, account_no)");
+            database.execSQL("CREATE INDEX IF NOT EXISTS index_paybills_channelId ON paybills (channelId)");
+            database.execSQL("CREATE INDEX IF NOT EXISTS index_paybills_accountId ON paybills (accountId)");
         }
     };
 }

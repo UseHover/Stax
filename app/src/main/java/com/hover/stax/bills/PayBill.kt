@@ -5,12 +5,12 @@ import com.hover.stax.accounts.Account
 import com.hover.stax.channels.Channel
 
 @Entity(
-        tableName = "bills",
+        tableName = "paybills",
         foreignKeys = [ForeignKey(entity = Channel::class, parentColumns = ["id"], childColumns = ["channelId"]),
             ForeignKey(entity = Account::class, parentColumns = ["id"], childColumns = ["accountId"])],
         indices = [Index(value = ["business_no", "account_no"], unique = true)]
 )
-data class Bill(
+data class Paybill(
 
         val name: String,
 
@@ -20,24 +20,23 @@ data class Bill(
         @ColumnInfo(name = "account_no")
         var accountNo: String? = null,
 
-        var logo: Int = 0,
-
         @ColumnInfo(index = true)
         val channelId: Int,
 
         @ColumnInfo(index = true)
         val accountId: Int,
-
-        @ColumnInfo(defaultValue = "0")
-        var isSaved: Boolean = false
-
-) : Comparable<Bill> {
+) : Comparable<Paybill> {
 
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 
     @ColumnInfo(name = "recurring_amount")
     var recurringAmount: Int = 0
+
+    var logo: Int = 0
+
+    @ColumnInfo(defaultValue = "0")
+    var isSaved: Boolean = false
 
     override fun toString() = buildString {
         append(name)
@@ -50,11 +49,10 @@ data class Bill(
         }
     }
 
-    //    Name is unique
     override fun equals(other: Any?): Boolean {
         if (other !is Account) return false
         return id == other.id || other.name == other.name
     }
 
-    override fun compareTo(other: Bill): Int = toString().compareTo(other.toString())
+    override fun compareTo(other: PayBill): Int = toString().compareTo(other.toString())
 }
