@@ -60,10 +60,12 @@
         <entry key="app/src/main/res/layout/home_card_future.xml" value="0.11398176291793313" />
         <entry key="app/src/main/res/layout/home_card_transactions.xml" value="0.14766970618034447" />
         <entry key="app/src/main/res/layout/in_app_banner_layout.xml" value="0.15704154002026344" />
+        <entry key="app/src/main/res/layout/item_icons.xml" value="0.90375" />
         <entry key="app/src/main/res/layout/item_paybill.xml" value="0.8125" />
         <entry key="app/src/main/res/layout/item_paybill_saved.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_wellness_tips.xml" value="0.25" />
         <entry key="app/src/main/res/layout/paybill_card_details.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/paybill_card_icons.xml" value="0.6026315789473684" />
         <entry key="app/src/main/res/layout/paybill_card_save_bill.xml" value="0.33" />
         <entry key="app/src/main/res/layout/rename_account_layout.xml" value="0.3134057971014493" />
         <entry key="app/src/main/res/layout/repeat_inputs.xml" value="0.18697916666666667" />

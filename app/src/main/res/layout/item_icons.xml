@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.imageview.ShapeableImageView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/billIcon"
+        android:layout_width="@dimen/margin_65"
+        android:layout_height="@dimen/margin_65"
+        android:layout_marginBottom="@dimen/margin_5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/StaxIconShape"
+        app:srcCompat="@drawable/banner_permission" />
