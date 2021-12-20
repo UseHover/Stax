@@ -22,6 +22,7 @@ import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 
 class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener {
@@ -154,7 +155,6 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
             channelsViewModel.setChannelsSelected(selectedChannels)
             channelsViewModel.createAccounts(selectedChannels)
-
             showCheckBalanceDialog(
                     if (selectedChannels.size > 1) R.string.check_balance_alt_plural
                     else R.string.check_balance_alt,

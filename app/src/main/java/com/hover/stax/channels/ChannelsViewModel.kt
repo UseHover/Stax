@@ -285,18 +285,15 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         setActiveChannel(repo.getChannel(s.channel_id)!!)
     }
 
-    fun getFetchAccountAction(channelId: Int): HoverAction? = repo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()
+    fun getFetchAccountAction(channelId: Int): HoverAction? = repo.getActions(channelId, HoverAction.FETCH_ACCOUNTS) .firstOrNull()
 
     fun createAccounts(channels: List<Channel>) = viewModelScope.launch(Dispatchers.IO) {
         val defaultAccount = repo.getDefaultAccount()
-
         channels.forEach {
-            if (getFetchAccountAction(it.id) == null) {
                 with(it) {
-                    val account = Account(name, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex, defaultAccount == null)
-                    repo.insert(account)
+                        val account = Account(name, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex, defaultAccount == null)
+                        repo.insert(account)
                 }
-            }
         }
     }
 
