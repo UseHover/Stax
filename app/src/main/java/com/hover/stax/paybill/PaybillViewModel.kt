@@ -19,7 +19,7 @@ class PaybillViewModel(val repo: PaybillRepo, val application: Application) : Vi
     val selectedPaybill = MutableLiveData<Paybill>()
     val businessNumber = MutableLiveData<String>()
     val accountNumber = MutableLiveData<String>()
-    val amount = MutableLiveData<Int>()
+    val amount = MutableLiveData<String>()
     val iconDrawable = MutableLiveData<Int>()
 
     fun getSavedPaybills(accountId: Int) = viewModelScope.launch {
@@ -42,7 +42,7 @@ class PaybillViewModel(val repo: PaybillRepo, val application: Application) : Vi
         accountNumber.value = number
     }
 
-    fun setAmount(value: Int) {
+    fun setAmount(value: String) {
         amount.value = value
     }
 

@@ -40,13 +40,9 @@ data class Paybill(
 
     override fun toString() = buildString {
         append(name)
-        append(" - ")
+        append(" (")
         append(businessNo)
-
-        accountNo?.let {
-            append(" - ")
-            append(it)
-        }
+        append(")")
     }
 
     override fun equals(other: Any?): Boolean {

@@ -25,7 +25,7 @@ class PaybillAdapter(private val paybills: List<Paybill>, private val clickListe
         fun bindItems(paybill: Paybill) {
             formatLayout(paybill)
 
-            binding.nickname.text = binding.root.context.getString(R.string.paybill_nickname_label, paybill.name, paybill.businessNo)
+            binding.nickname.text = paybill.toString()
 
             if (paybill.isSaved)
                 binding.accountNumber.text = binding.root.context.getString(R.string.account_no_label, paybill.name)

@@ -2,6 +2,8 @@ package com.hover.stax.paybill
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -17,7 +19,6 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentPaybillBinding
 import com.hover.stax.utils.Constants
-import com.hover.stax.utils.UIHelper
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -42,6 +43,7 @@ class PaybillFragment : Fragment() {
 
         initListeners()
         startObservers()
+        setWatchers()
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -64,6 +66,10 @@ class PaybillFragment : Fragment() {
     }
 
     private fun startObservers() {
+        paybillViewModel.selectedPaybill.observe(viewLifecycleOwner) {
+            binding.billDetailsLayout.businessNoInput.text = it.name
+        }
+
         with(channelsViewModel) {
             binding.billDetailsLayout.accountDropdown.apply {
                 setListener(this@with)
@@ -90,6 +96,36 @@ class PaybillFragment : Fragment() {
 
         viewModel.activeChannel.observe(lifecycleOwner, activeChannelObserver)
         viewModel.channelActions.observe(lifecycleOwner, actionsObserver)
+    }
+
+    private fun setWatchers() = with(binding.billDetailsLayout) {
+        businessNoInput.addTextChangedListener(businessNoWatcher)
+        accountNoInput.addTextChangedListener(accountNoWatcher)
+        amountInput.addTextChangedListener(amountWatcher)
+    }
+
+    private val amountWatcher: TextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+        override fun afterTextChanged(editable: Editable) {}
+        override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+            paybillViewModel.setAmount(charSequence.toString().replace(",".toRegex(), ""))
+        }
+    }
+
+    private val businessNoWatcher: TextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+        override fun afterTextChanged(editable: Editable) {}
+        override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+            paybillViewModel.setBusinessNumber(charSequence.toString())
+        }
+    }
+
+    private val accountNoWatcher: TextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+        override fun afterTextChanged(editable: Editable) {}
+        override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+            paybillViewModel.setAccountNumber(charSequence.toString().replace(",".toRegex(), ""))
+        }
     }
 
 }
