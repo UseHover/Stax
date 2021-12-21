@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.databinding.ItemPaybillSavedBinding
 
-class PaybillAdapter(private val paybills: List<Paybill>, private val clickListener: ClickListener): RecyclerView.Adapter<PaybillAdapter.PaybillViewHolder>() {
+class PaybillAdapter(private val paybills: List<Paybill>, private val clickListener: ClickListener) : RecyclerView.Adapter<PaybillAdapter.PaybillViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PaybillViewHolder {
         val binding = ItemPaybillSavedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -25,19 +25,10 @@ class PaybillAdapter(private val paybills: List<Paybill>, private val clickListe
         fun bindItems(paybill: Paybill) {
             formatLayout(paybill)
 
-            binding.nickname.text = buildString {
-                append(paybill.name)
-                append(" (")
-                append(paybill.businessNo)
-                append(")")
-            }
+            binding.nickname.text = binding.root.context.getString(R.string.paybill_nickname_label, paybill.name, paybill.businessNo)
 
             if (paybill.isSaved)
-                binding.accountNumber.text = buildString {
-                    append(binding.root.context.getString(R.string.account_no_label))
-                    append(" ")
-                    append(paybill.accountNo)
-                }
+                binding.accountNumber.text = binding.root.context.getString(R.string.account_no_label, paybill.name)
 
             binding.root.setOnClickListener { clickListener.onSelectPaybill(paybill) }
             binding.removeBill.setOnClickListener { clickListener.onDeletePaybill(paybill) }

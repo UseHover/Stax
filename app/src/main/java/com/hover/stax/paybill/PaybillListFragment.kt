@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.hover.stax.R
 import com.hover.stax.databinding.FragmentPaybillListBinding
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener {
@@ -17,6 +19,8 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener {
     private val binding get() = _binding!!
 
     private val paybillViewModel: PaybillViewModel by sharedViewModel()
+
+    private var dialog: StaxDialog? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentPaybillListBinding.inflate(inflater, container, false)
@@ -82,9 +86,26 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener {
     }
 
     override fun onDeletePaybill(paybill: Paybill) {
-        paybillViewModel.deletePaybill(paybill)
+        dialog = StaxDialog(requireActivity())
+                .setDialogTitle(getString(R.string.paybill_delete_header))
+                .setDialogMessage(getString(R.string.paybill_delete_msg, paybill.name))
+                .setNegButton(R.string.btn_cancel, null)
+                .setPosButton(R.string.btn_delete) { if (activity != null) paybillViewModel.deletePaybill(paybill) }
+        dialog!!.showIt()
     }
 
     override fun onSelectPaybill(paybill: Paybill) = paybillViewModel.selectPaybill(paybill)
+
+    override fun onPause() {
+        super.onPause()
+
+        if(dialog != null && dialog!!.isShowing) dialog!!.dismiss()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        _binding = null
+    }
 
 }

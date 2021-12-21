@@ -575,7 +575,10 @@
     <string name="business_number_prompt">Enter business number</string>
     <string name="btn_delete">Delete</string>
     <string name="choose_icon_title">Choose Logo</string>
-    <string name="account_no_label">"Account no: "</string>
+    <string name="account_no_label">Account no: %1$s</string>
+    <string name="paybill_nickname_label">%1$s (%2$s)</string>
     <string name="paybill_delete_success">Paybill deleted successfully</string>
+    <string name="paybill_delete_header">Delete Paybill</string>
+    <string name="paybill_delete_msg">Are you sure you want to delete %1$s?</string>
 
 </resources>

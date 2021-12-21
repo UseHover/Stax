@@ -805,7 +805,9 @@
     <!--Financial wellness tips -->>
     <string name="financial_wellness_tips">የፋይናንስ ደህንነት ምክሮች</string>
     <string name="read_more"><u>ተጨማሪ ያንብቡ</u></string>
-    <string name="account_no_label">"Account no: "</string>
-  <string name="paybill_delete_success">Paybill deleted successfully</string>
+    <string name="account_no_label">Account no: %1$s</string>
+    <string name="paybill_delete_success">Paybill deleted successfully</string>
+    <string name="paybill_delete_header">Delete Paybill</string>
+    <string name="paybill_delete_msg">Are you sure you want to delete %1$s?</string>
 
 </resources>
