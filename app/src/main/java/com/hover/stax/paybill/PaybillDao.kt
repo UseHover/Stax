@@ -1,4 +1,4 @@
-package com.hover.stax.bills
+package com.hover.stax.paybill
 
 import androidx.room.Dao
 import androidx.room.Query

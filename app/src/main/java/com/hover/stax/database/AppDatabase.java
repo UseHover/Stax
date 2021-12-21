@@ -11,8 +11,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.hover.stax.accounts.Account;
 import com.hover.stax.accounts.AccountDao;
-import com.hover.stax.bills.Paybill;
-import com.hover.stax.bills.PaybillDao;
+import com.hover.stax.paybill.Paybill;
+import com.hover.stax.paybill.PaybillDao;
 import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
 import com.hover.stax.contacts.ContactDao;

@@ -238,7 +238,7 @@
     </fragment>
     <fragment
             android:id="@+id/paybillFragment"
-            android:name="com.hover.stax.bills.PaybillFragment"
+            android:name="com.hover.stax.paybill.PaybillFragment"
             android:label="@string/cta_paybill"
             tools:layout="@layout/fragment_paybill">
         <action
@@ -247,7 +247,7 @@
     </fragment>
     <fragment
             android:id="@+id/paybillListFragment"
-            android:name="com.hover.stax.bills.PaybillListFragment"
+            android:name="com.hover.stax.paybill.PaybillListFragment"
             android:label="PaybillListFragment">
         <action
                 android:id="@+id/action_paybillListFragment_to_paybillFragment"

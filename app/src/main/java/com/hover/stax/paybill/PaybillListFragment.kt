@@ -1,4 +1,4 @@
-package com.hover.stax.bills
+package com.hover.stax.paybill
 
 import android.os.Bundle
 import android.view.LayoutInflater

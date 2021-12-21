@@ -117,10 +117,6 @@ dependencies {
     implementation 'androidx.work:work-runtime-ktx:2.7.1'
     kapt "androidx.lifecycle:lifecycle-common-java8:2.4.0"
 
-    implementation "androidx.room:room-runtime:2.3.0"
-    kapt "androidx.room:room-compiler:2.3.0"
-    androidTestImplementation "androidx.room:room-testing:2.3.0"
-
     implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
@@ -151,8 +147,12 @@ dependencies {
     implementation 'com.appsflyer:af-android-sdk:6.2.3'
     implementation 'com.android.installreferrer:installreferrer:2.2'
 
-    // Kotlin
-    implementation "androidx.room:room-ktx:2.3.0"
+    def roomVersion = "2.3.0"
+    implementation "androidx.room:room-ktx:$roomVersion"
+    implementation "androidx.room:room-runtime:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+    androidTestImplementation "androidx.room:room-testing:$roomVersion"
+
     implementation "androidx.core:core-ktx:1.7.0"
 
     //di

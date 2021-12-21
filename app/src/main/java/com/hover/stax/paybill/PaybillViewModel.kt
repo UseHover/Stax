@@ -1,4 +1,4 @@
-package com.hover.stax.bills
+package com.hover.stax.paybill
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
