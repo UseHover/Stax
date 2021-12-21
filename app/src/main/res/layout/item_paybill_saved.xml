@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="font-normal"
                 android:textSize="@dimen/text_16"
-                tools:text="@string/business_number_prompt" />
+                tools:text="@string/nickname" />
 
         <TextView
                 android:id="@+id/accountNumber"
@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="font-normal"
                 android:textSize="@dimen/text_16"
-                tools:text="@string/business_number_prompt" />
+                tools:text="@string/account_num_desc" />
     </LinearLayout>
 
     <ImageButton

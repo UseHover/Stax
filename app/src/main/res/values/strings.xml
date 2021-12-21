@@ -575,5 +575,7 @@
     <string name="business_number_prompt">Enter business number</string>
     <string name="btn_delete">Delete</string>
     <string name="choose_icon_title">Choose Logo</string>
+    <string name="account_no_label">"Account no: "</string>
+    <string name="paybill_delete_success">Paybill deleted successfully</string>
 
 </resources>

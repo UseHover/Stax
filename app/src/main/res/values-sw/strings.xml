@@ -803,5 +803,7 @@
     <string name="financial_wellness_tips">Vidokezo vya ustawi wa kifedha</string>
 
     <string name="read_more"><u>Soma zaidi</u></string>
+    <string name="account_no_label">"Account no: "</string>
+  <string name="paybill_delete_success">Paybill deleted successfully</string>
 
 </resources>

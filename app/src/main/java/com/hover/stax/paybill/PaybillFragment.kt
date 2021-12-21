@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -15,6 +16,8 @@ import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentPaybillBinding
+import com.hover.stax.utils.Constants
+import com.hover.stax.utils.UIHelper
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -49,7 +52,9 @@ class PaybillFragment : Fragment() {
 
         binding.billDetailsLayout.businessNoInput.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
-                findNavController().navigate(R.id.action_paybillFragment_to_paybillListFragment)
+                channelsViewModel.activeAccount.value?.id?.let {
+                    findNavController().navigate(R.id.action_paybillFragment_to_paybillListFragment, bundleOf(Constants.ACCOUNT_ID to it))
+                } ?: Timber.e("Active account not set")
                 true
             } else
                 false

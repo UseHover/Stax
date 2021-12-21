@@ -17,7 +17,7 @@
                 android:orientation="vertical">
 
             <include
-                    android:id="@+id/enterBillNumber"
+                    android:id="@+id/newPaybill"
                     layout="@layout/item_paybill" />
 
             <TextView

@@ -1,13 +1,17 @@
 package com.hover.stax.paybill
 
+import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hover.stax.R
+import com.hover.stax.utils.UIHelper
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-class PaybillViewModel(val repo: PaybillRepo) : ViewModel() {
+class PaybillViewModel(val repo: PaybillRepo, val application: Application) : ViewModel() {
 
     val savedPaybills = MutableLiveData<List<Paybill>>()
     val accountPaybills = MutableLiveData<List<Paybill>>()
@@ -48,5 +52,12 @@ class PaybillViewModel(val repo: PaybillRepo) : ViewModel() {
 
     fun savePaybill(channelId: Int) {
 
+    }
+
+    fun deletePaybill(paybill: Paybill) = viewModelScope.launch(Dispatchers.IO) {
+        paybill.isSaved = false
+        repo.update(paybill)
+
+        UIHelper.flashMessage(application.applicationContext, R.string.paybill_delete_success)
     }
 }
