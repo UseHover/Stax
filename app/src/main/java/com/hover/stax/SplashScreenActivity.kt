@@ -29,6 +29,9 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.stax.channels.ChannelsViewModel
+
+import com.hover.stax.channels.ImportChannelsWorker
+
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.databinding.SplashScreenLayoutBinding
 import com.hover.stax.destruct.SelfDestructActivity
@@ -39,6 +42,7 @@ import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
 import com.hover.stax.schedules.ScheduleWorker
 import com.hover.stax.settings.BiometricChecker
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Constants.FRAGMENT_DIRECT
 import com.hover.stax.utils.UIHelper
@@ -95,11 +99,13 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         startWorkers()
         initFirebaseMessagingTopics()
 
-        FirebaseInstallations.getInstance().getToken(false)
+        with(FirebaseInstallations.getInstance()){
+            getToken(false)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) Timber.i("Installation auth token: ${task.result?.token}")
                 }
-        FirebaseInstallations.getInstance().id.addOnCompleteListener { Timber.i("Firebase installation ID is ${it.result}") }
+            id.addOnCompleteListener { Timber.i("Firebase installation ID is ${it.result}") }
+        }
 
         initRemoteConfigs()
         updateBannerSessionCounter()
@@ -172,7 +178,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
 
     private fun logPushNotificationIfRequired() = intent.extras?.let {
         val fcmTitle = it.getString(Constants.FROM_FCM)
-        fcmTitle?.let { title -> Utils.logAnalyticsEvent(getString(R.string.clicked_push_notification, title), this) }
+        fcmTitle?.let { title -> AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_push_notification, title), this) }
     }
 
     private fun initHover() {
@@ -222,6 +228,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
 
     private fun startWorkers() {
         val wm = WorkManager.getInstance(this)
+        wm.enqueue(ImportChannelsWorker.channelsImportRequest())
         startChannelWorker(wm)
         startScheduleWorker(wm)
     }
@@ -268,7 +275,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         try {
             redirectLink?.let { intent.putExtra(FRAGMENT_DIRECT, redirectLink.toInt()) }
         } catch (e: NumberFormatException) {
-            Utils.logErrorAndReportToFirebase(SplashScreenActivity::class.java.simpleName, getString(R.string.firebase_fcm_redirect_format_err), e)
+            AnalyticsUtil.logErrorAndReportToFirebase(SplashScreenActivity::class.java.simpleName, getString(R.string.firebase_fcm_redirect_format_err), e)
         }
 
         startActivity(intent)

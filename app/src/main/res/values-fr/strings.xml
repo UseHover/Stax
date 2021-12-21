@@ -661,6 +661,8 @@
 
   <string name="bounty_pending_short_desc">Nous vérifions votre transaction. En cas de succès, attendez-vous à être payé dans les 7 jours ouvrables.</string>
 
+  <string name="bounty_error_none">Aucune prime disponible. Veuillez vérifier à nouveau plus tard.</string>
+
   <string name="done">Terminé</string>
 
   <string name="bounty_transaction_failed">Cette soumission n\'a pas répondu à notre exigence</string>
@@ -796,5 +798,9 @@
   <string name="faq_internet_error">Cette fonctionnalité nécessite une connexion Internet, veuillez réessayer</string>
 
   <string name="working_offline">Travailler hors ligne</string>
+
+  <!-- Financial wellness tips -->
+  <string name="financial_wellness_tips">Conseils de bien-être financier</string>
+  <string name="read_more"><u>Lire la suite</u></string>
 
 </resources>

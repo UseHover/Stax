@@ -20,11 +20,13 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.navigation.NavigationInterface
+
+import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
+import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase
+
 import com.hover.stax.utils.DateUtils.humanFriendlyDateTime
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import com.hover.stax.utils.Utils.logAnalyticsEvent
-import com.hover.stax.utils.Utils.logErrorAndReportToFirebase
 import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -87,7 +89,7 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
 
     private fun startObservers() {
         viewModel.transaction.observe(viewLifecycleOwner, { showTransaction(it) })
-        viewModel.action.observe(viewLifecycleOwner, { showActionDetails(it) })
+        viewModel.action.observe(viewLifecycleOwner, { it?.let { showActionDetails(it) } })
         viewModel.contact.observe(viewLifecycleOwner, { updateRecipient(it) })
     }
 
@@ -221,7 +223,7 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
         binding.infoCard.serviceIdRow.visibility = if (transaction.isRecorded || transaction.confirm_code.isNullOrBlank()) GONE else View.VISIBLE
     }
 
-    private fun showActionDetails(action: HoverAction?) {
+    private fun showActionDetails(action: HoverAction) {
         if (!isFullScreen) {
             binding.transactionDetailsCard.setTitle(viewModel.transaction.value?.generateLongDescription(action, viewModel.contact.value, requireContext()))
         }

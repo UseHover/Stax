@@ -69,6 +69,7 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
     <Button
             android:id="@+id/continue_btn"
             style="@style/StaxFabExtended"

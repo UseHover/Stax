@@ -9,6 +9,8 @@ import com.hover.sdk.api.HoverParameters
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.PhoneHelper
+
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
 import org.json.JSONException
@@ -67,7 +69,7 @@ class HoverSession private constructor(b: Builder) {
 
     private fun startHover(builder: HoverParameters.Builder, a: Activity) {
         val i = builder.buildIntent()
-        Utils.logAnalyticsEvent(a.getString(R.string.start_load_screen), a)
+        AnalyticsUtil.logAnalyticsEvent(a.getString(R.string.start_load_screen), a)
         if (frag != null) frag.startActivityForResult(i, requestCode) else a.startActivityForResult(i, requestCode)
     }
 

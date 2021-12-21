@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.appsflyer.AppsFlyerLib
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentLanguageBinding
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
 import com.yariksoffice.lingver.Lingver
@@ -32,7 +33,7 @@ class LanguageSelectFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_language)), requireActivity())
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_language)), requireActivity())
 
         selectedCode = Lingver.getInstance().getLanguage()
 

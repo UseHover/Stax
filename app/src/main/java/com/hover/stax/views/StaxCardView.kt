@@ -11,7 +11,6 @@ import android.widget.FrameLayout
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.databinding.StaxCardViewBinding
-import com.hover.stax.transactions.TransactionStatus
 
 open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
 
@@ -52,6 +51,14 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
         binding.content.setBackgroundColor(bgColor)
     }
 
+    fun showProgressIndicator() {
+        binding.progressIndicator.show()
+    }
+
+    fun hideProgressIndicator() {
+        binding.progressIndicator.hide()
+    }
+
     fun setBackButtonVisibility(visibility: Int) {
         binding.backButton.visibility = visibility
     }
@@ -89,10 +96,13 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
             binding.subtitle.text = title
             binding.subtitle.visibility = VISIBLE
         }
-        if (useContextBackPress) binding.backButton.setOnClickListener { view: View? -> triggerBack() }
+
+        if (useContextBackPress) binding.backButton.setOnClickListener { triggerBack() }
         if (showBack) binding.backButton.visibility = VISIBLE
         if (backDrawable != 0) binding.backButton.setImageResource(backDrawable)
         binding.content.setBackgroundColor(bgColor)
+
+        binding.progressIndicator.setVisibilityAfterHide(View.GONE)
 
         if (isFlatView) makeFlatView()
     }

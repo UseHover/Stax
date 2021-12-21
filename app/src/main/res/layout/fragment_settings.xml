@@ -23,7 +23,7 @@
         <include
                 android:id="@+id/bounty_card"
                 layout="@layout/settings_card_bounties" />
-        
+
         <include
                 android:id="@+id/stax_support"
                 layout="@layout/settings_card_support" />
@@ -58,6 +58,10 @@
                 android:text="@string/disclaimer"
                 android:textColor="@color/darkGrey"
                 android:textSize="@dimen/text_13" />
+
+        <com.hover.stax.views.PrivacyPolicyText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

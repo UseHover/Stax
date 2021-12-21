@@ -9,17 +9,19 @@ import com.hover.stax.database.DatabaseRepo
 import kotlinx.coroutines.launch
 
 class BannerViewModel(application: Application, repo: DatabaseRepo) : ViewModel() {
-    private val qualifiedBannerLiveData: MutableLiveData<Banner> = MutableLiveData<Banner>()
+
+    private val qualifiedBannerLiveData = MutableLiveData<Banner>()
     private val bannerUtils = BannerUtils(application)
 
     init {
-            viewModelScope.launch {
-                val hasTransactionLastMonth: Boolean = repo.hasTransactionLastMonth()
-                qualifiedBannerLiveData.postValue(bannerUtils.getQualifiedBanner(hasTransactionLastMonth))
-            }
+        viewModelScope.launch {
+            val hasTransactionLastMonth: Boolean = repo.hasTransactionLastMonth()
+            qualifiedBannerLiveData.postValue(bannerUtils.getQualifiedBanner(hasTransactionLastMonth))
+        }
     }
 
     fun qualifiedBanner(): LiveData<Banner> = qualifiedBannerLiveData
+
     fun closeCampaign(bannerId: Int) {
         bannerUtils.closeCampaign(bannerId)
         qualifiedBannerLiveData.postValue(null)

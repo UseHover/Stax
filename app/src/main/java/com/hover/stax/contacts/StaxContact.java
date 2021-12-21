@@ -1,5 +1,7 @@
 package com.hover.stax.contacts;
 
+import static com.google.i18n.phonenumbers.PhoneNumberUtil.MatchType.NO_MATCH;
+
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -20,7 +22,6 @@ import com.hover.sdk.transactions.TransactionContract;
 import com.hover.stax.R;
 import com.hover.stax.database.Converters;
 import com.hover.stax.database.DatabaseRepo;
-import com.hover.stax.transactions.StaxTransaction;
 import com.hover.stax.utils.DateUtils;
 
 import java.util.ArrayList;
@@ -30,8 +31,6 @@ import java.util.List;
 import java.util.UUID;
 
 import timber.log.Timber;
-
-import static com.google.i18n.phonenumbers.PhoneNumberUtil.MatchType.NO_MATCH;
 
 @Entity(tableName = "stax_contacts", indices = {@Index(value ="id", unique = true), @Index(value ="phone_number", unique = true)})
 @TypeConverters({Converters.class})

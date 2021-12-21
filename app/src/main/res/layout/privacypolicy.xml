@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView android:id="@+id/privacy_policy_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_13"
+            android:layout_marginTop="@dimen/margin_13"
+            android:drawablePadding="@dimen/margin_5"
+            android:layout_marginBottom="@dimen/margin_8"
+            android:fontFamily="font-medium"
+            android:gravity="center_vertical"
+            android:text="@string/privacy_policy_label"
+            android:textColor="@color/brightBluePressed"
+            android:visibility="visible"
+            />
+</FrameLayout>

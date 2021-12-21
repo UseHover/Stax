@@ -1,5 +1,8 @@
 package com.hover.stax.permissions;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -14,11 +17,8 @@ import androidx.fragment.app.DialogFragment;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.permissions.PermissionHelper;
 import com.hover.stax.R;
+import com.hover.stax.utils.AnalyticsUtil;
 import com.hover.stax.utils.Constants;
-import com.hover.stax.utils.Utils;
-
-import static android.app.Activity.RESULT_CANCELED;
-import static android.app.Activity.RESULT_OK;
 
 public class PermissionsFragment extends DialogFragment {
     private static String TAG = "PermissionsFragment", REASON = "reason", STARTWITH = "start_with";
@@ -43,7 +43,7 @@ public class PermissionsFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         helper = new PermissionHelper(getContext());
         current = helper.hasOverlayPerm() ? ACCESS : OVERLAY;
-        Utils.logAnalyticsEvent(getString(current == OVERLAY ? R.string.perms_overlay_dialog : R.string.perms_accessibility_dialog), requireContext());
+        AnalyticsUtil.logAnalyticsEvent(getString(current == OVERLAY ? R.string.perms_overlay_dialog : R.string.perms_accessibility_dialog), requireContext());
         dialog = (StaxPermissionDialog) new StaxPermissionDialog(getActivity())
                 .setDialogTitle(R.string.perm_dialoghead)
                 .setDialogMessage(getString(R.string.perm_dialogbody, getArguments().getString(REASON)))
@@ -56,13 +56,13 @@ public class PermissionsFragment extends DialogFragment {
 
     public void requestOverlay() {
         hasLeft = true;
-        Utils.logAnalyticsEvent(getString(R.string.perms_overlay_requested), requireContext());
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_overlay_requested), requireContext());
         helper.requestOverlayPerm();
     }
 
     public void requestAccessibility() {
         hasLeft = true;
-        Utils.logAnalyticsEvent(getString(R.string.perms_accessibility_requested), requireContext());
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_accessibility_requested), requireContext());
         Hover.setPermissionActivity(Constants.PERM_ACTIVITY, getContext());
         helper.requestAccessPerm();
     }
@@ -77,9 +77,9 @@ public class PermissionsFragment extends DialogFragment {
     private void logReturnEvent() {
         if (hasLeft) {
             if (current == OVERLAY)
-                Utils.logAnalyticsEvent(getString(helper.hasOverlayPerm() ? R.string.perms_overlay_granted : R.string.perms_overlay_notgranted), requireContext());
+                AnalyticsUtil.logAnalyticsEvent(getString(helper.hasOverlayPerm() ? R.string.perms_overlay_granted : R.string.perms_overlay_notgranted), requireContext());
             else if (current == ACCESS)
-                Utils.logAnalyticsEvent(getString(helper.hasAccessPerm() ? R.string.perms_accessibility_granted : R.string.perms_accessibility_notgranted), requireContext());
+                AnalyticsUtil.logAnalyticsEvent(getString(helper.hasAccessPerm() ? R.string.perms_accessibility_granted : R.string.perms_accessibility_notgranted), requireContext());
         }
     }
 
@@ -122,7 +122,7 @@ public class PermissionsFragment extends DialogFragment {
     }
 
     private void cancel() {
-        Utils.logAnalyticsEvent(getString(current == OVERLAY ? R.string.perms_overlay_cancelled : R.string.perms_accessibility_cancelled), requireContext());
+        AnalyticsUtil.logAnalyticsEvent(getString(current == OVERLAY ? R.string.perms_overlay_cancelled : R.string.perms_accessibility_cancelled), requireContext());
         if (dialog != null) dialog.dismiss();
         getActivity().setResult(RESULT_CANCELED);
         getActivity().finish();

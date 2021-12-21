@@ -9,6 +9,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.checkbox.MaterialCheckBox
@@ -42,10 +43,7 @@ import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransactionType
 import com.hover.stax.transfers.TransferViewModel
-import com.hover.stax.utils.Constants
-import com.hover.stax.utils.DateUtils
-import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.Utils
+import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
 import kotlinx.coroutines.*
 import org.json.JSONException
@@ -136,6 +134,8 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
                     navigateToSettingsFragment(getNavController())
                 route.contains(getString(R.string.deeplink_reviews)) ->
                     launchStaxReview()
+                route.contains(getString(R.string.deeplink_financial_tips)) ->
+                    intent.data?.getQueryParameter("id")?.let { navigateToWellnessFragment(getNavController(), it) }
             }
 
             intent.data = null
@@ -145,7 +145,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
     private fun observeForAppReview() = historyViewModel.showAppReviewLiveData().observe(this, { if (it) launchReviewDialog() })
 
     private fun launchStaxReview() {
-        Utils.logAnalyticsEvent(getString(R.string.visited_rating_review_screen), this)
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visited_rating_review_screen), this)
 
         if (Utils.getBoolean(Constants.APP_RATED_NATIVELY, this))
             openStaxPlaystorePage()
@@ -198,7 +198,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         if (accountId == DUMMY)
             checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT)
         else {
-            Utils.logAnalyticsEvent(getString(R.string.refresh_balance_single), this)
+            AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), this)
             balancesViewModel.setRunning(accountId)
         }
     }
@@ -267,7 +267,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         } catch (ignored: JSONException) {
         }
 
-        Utils.logAnalyticsEvent("Failed Actions", data, this)
+        AnalyticsUtil.logAnalyticsEvent("Failed Actions", data, this)
         Timber.e(e)
     }
 
@@ -290,7 +290,8 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
                 showMessage(getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))))
             requestCode == Constants.REQUEST_REQUEST -> if (resultCode == RESULT_OK && data != null) onRequest(data)
             requestCode == BOUNTY_REQUEST -> showBountyDetails(data)
-            requestCode == LOGIN_REQUEST -> settingsViewModel.signIntoFirebaseAsync(data, (findViewById<MaterialCheckBox>(R.id.marketingOptIn).isChecked), this)
+
+            requestCode == LOGIN_REQUEST -> settingsViewModel.signIntoFirebaseAsync(data, findViewById<MaterialCheckBox>(R.id.marketingOptIn)?.isChecked ?: false, this)
             else -> {
                 if (requestCode != Constants.TRANSFER_REQUEST) {
                     balancesViewModel.setRan(requestCode)
@@ -322,7 +323,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
     fun submit(account: Account) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account) }
 
     private fun makeHoverCall(action: HoverAction, account: Account) {
-        Utils.logAnalyticsEvent(getString(R.string.finish_transfer, TransactionType.type), this)
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.finish_transfer, TransactionType.type), this)
         updatePushNotifGroupStatus()
 
         transferViewModel.checkSchedule()
@@ -382,7 +383,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         when {
             intent.hasExtra(Schedule.SCHEDULE_ID) -> createFromSchedule(intent.getIntExtra(Schedule.SCHEDULE_ID, -1), intent.getBooleanExtra(Constants.REQUEST_TYPE, false))
             intent.hasExtra(Constants.REQUEST_LINK) -> createFromRequest(intent.getStringExtra(Constants.REQUEST_LINK)!!)
-            else -> Utils.logAnalyticsEvent(getString(R.string.visit_screen, intent.action), this)
+            else -> AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, intent.action), this)
         }
     }
 
@@ -391,7 +392,6 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         with(scheduleViewModel) {
             if (isRequestType) {
                 schedule.observe(this@MainActivity) { it?.let { requestViewModel.setSchedule(it) } }
-                Utils.logAnalyticsEvent(getString(R.string.clicked_schedule_notification), this@MainActivity)
             } else {
                 action.observe(this@MainActivity) { it?.let { actionSelectViewModel.setActiveAction(it) } }
                 schedule.observe(this@MainActivity) { it?.let { transferViewModel.view(it) } }
@@ -400,13 +400,13 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
             setSchedule(scheduleId)
         }
 
-        Utils.logAnalyticsEvent(getString(R.string.clicked_schedule_notification), this)
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_schedule_notification), this)
     }
 
     private fun createFromRequest(link: String) {
         transferViewModel.decrypt(link)
         observeRequest()
-        Utils.logAnalyticsEvent(getString(R.string.clicked_request_link), this)
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_request_link), this)
     }
 
     private fun observeRequest() {
@@ -416,11 +416,12 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
         if (requestCode == Constants.SMS && PermissionHelper(this).permissionsGranted(grantResults)) {
-            Utils.logAnalyticsEvent(getString(R.string.perms_sms_granted), this)
+            AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_granted), this)
             sendSms()
         } else if (requestCode == Constants.SMS) {
-            Utils.logAnalyticsEvent(getString(R.string.perms_sms_denied), this)
+            AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_denied), this)
             UIHelper.flashMessage(this, getString(R.string.toast_error_smsperm))
         }
     }
@@ -458,13 +459,13 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
     }
 
     fun makeCall(a: HoverAction) {
-        Utils.logAnalyticsEvent(getString(R.string.clicked_run_bounty_session), this)
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_run_bounty_session), this)
         updatePushNotifGroupStatus(a)
         call(a.public_id)
     }
 
     fun retryCall(actionId: String) {
-        Utils.logAnalyticsEvent(getString(R.string.clicked_retry_bounty_session), this)
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_retry_bounty_session), this)
         call(actionId)
     }
 

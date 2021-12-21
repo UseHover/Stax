@@ -11,4 +11,5 @@
 	<string name="deeplink_settings" translatable="false">/settings</string>
 	<string name="deeplink_reviews" translatable="false">/reviews</string>
 	<string name="deeplink_lib" translatable="false">/library</string>
+	<string name="deeplink_financial_tips" translatable="false">/financialTips</string>
 </resources>

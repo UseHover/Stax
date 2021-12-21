@@ -12,7 +12,11 @@ import com.google.android.gms.common.SignInButton
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentLoginBinding
 import com.hover.stax.home.MainActivity
+<<<<<<< HEAD
+import com.hover.stax.utils.AnalyticsUtil
+=======
 import com.hover.stax.utils.Utils
+>>>>>>> master
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -29,7 +33,11 @@ class LoginDialog: DialogFragment(), View.OnClickListener {
     private val viewModel: SettingsViewModel by sharedViewModel()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+<<<<<<< HEAD
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.referee_dialog), requireContext())
+=======
         Utils.logAnalyticsEvent(getString(R.string.referee_dialog), requireContext())
+>>>>>>> master
         networkMonitor = NetworkMonitor(requireContext())
         _binding = FragmentLoginBinding.inflate(LayoutInflater.from(context))
         dialog = StaxDialog(requireActivity(), binding.root).setDialogTitle(R.string.first_login_dialoghead).setNegButton(R.string.btn_cancel) { dismiss() }
@@ -51,7 +59,11 @@ class LoginDialog: DialogFragment(), View.OnClickListener {
 
         (requireActivity() as MainActivity).initAuth()
 
+<<<<<<< HEAD
+        viewModel.username.observe(this) { Timber.i("Loaded username: %s", it ?: "null") }
+=======
         viewModel.username.observe(this) { Timber.e("Loaded username: %s", it) }
+>>>>>>> master
         viewModel.progress.observe(viewLifecycleOwner) { updateProgress(it) }
         viewModel.error.observe(viewLifecycleOwner) { it?.let { showError(it) } }
     }
@@ -60,7 +72,11 @@ class LoginDialog: DialogFragment(), View.OnClickListener {
         viewModel.error.value = null
         binding.errorText.visibility = View.GONE
         if (networkMonitor.isNetworkConnected) {
+<<<<<<< HEAD
+            AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext())
+=======
             Utils.logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext())
+>>>>>>> master
             updateProgress(0)
             startActivityForResult(viewModel.signInClient.signInIntent, SettingsViewModel.LOGIN_REQUEST)
         } else

@@ -16,12 +16,16 @@ import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.database.DatabaseRepo
+
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
 import org.json.JSONObject
 import timber.log.Timber
+
+import java.io.IOException
+
 
 private const val EMAIL = "email"
 private const val REFEREE_CODE = "referee"
@@ -40,10 +44,12 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
     var account = MutableLiveData<Account>()
     val channel = MutableLiveData<Channel>()
     var email = MediatorLiveData<String?>()
-    var username = MediatorLiveData<String?>()
+
     var refereeCode = MutableLiveData<String?>()
     var progress = MutableLiveData(-1)
     var error = MutableLiveData<String>()
+
+    var username = MediatorLiveData<String?>()
 
     init {
         loadAccounts()
@@ -144,11 +150,13 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
         if (getUsername().isNullOrEmpty() && !email.isNullOrEmpty()) {
             progress.value = 66
             viewModelScope.launch(Dispatchers.IO) {
-                val result = LoginNetworking(application).uploadUserToStax(email, optedIn.value!!, token)
-                if (result.code in 200..299)
-                    onSuccess(JSONObject(result.body!!.string()), application.getString(R.string.uploaded_to_hover, application.getString(R.string.upload_user)))
-                else
+                try {
+                    val result = LoginNetworking(application).uploadUserToStax(email, optedIn.value!!, token)
+                    if (result.code in 200..299)
+                        onSuccess(JSONObject(result.body!!.string()), application.getString(R.string.uploaded_to_hover, application.getString(R.string.upload_user)))
+                } catch (e: IOException) {
                     onError(application.getString(R.string.upload_user_error))
+                }
             }
         }
     }
@@ -157,27 +165,40 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
         viewModelScope.launch(Dispatchers.IO) {
             if (!email.value.isNullOrEmpty()) {
                 val account = GoogleSignIn.getLastSignedInAccount(application)
-                val result = LoginNetworking(application).uploadReferee(email.value!!, refereeCode, name, phone, account?.idToken)
 
-                if (result.code in 200..299)
-                    onSuccess(JSONObject(result.body!!.string()), application.getString(R.string.upload_referee))
-                else
+                Timber.i("save in referee method, now trying")
+                try {
+                    val result = LoginNetworking(application).uploadReferee(email.value!!, refereeCode, name, phone, account?.idToken)
+                    if (result.code in 200..299) onSuccess(JSONObject(result.body!!.string()), name)
+                    else onError(application.getString(R.string.upload_referee_error))
+                } catch (e: IOException) {
                     onError(application.getString(R.string.upload_referee_error))
+                }
             }
         }
     }
 
-    private fun onSuccess(json: JSONObject, successLog: String) {
+    private fun onSuccess(json: JSONObject, name: String) {
         Timber.e(json.toString())
 
-        Utils.logAnalyticsEvent(application.getString(R.string.uploaded_to_hover, successLog), application)
+        refereeCode.value?.let {
+            val data = JSONObject()
+            try {
+                data.put("referee ID", it)
+                data.put("username", name)
+                AnalyticsUtil.logAnalyticsEvent(application.getString(R.string.upload_referee_success_event), data, application)
+            } catch (e: Exception) {
+                Timber.e(e.localizedMessage)
+            }
+        }
+
         progress.postValue(100)
         saveResponseData(json)
     }
 
     private fun onError(message: String?) {
-        Utils.logErrorAndReportToFirebase(SettingsViewModel::class.java.simpleName, message!!, null)
-        Utils.logAnalyticsEvent(message, application)
+        AnalyticsUtil.logErrorAndReportToFirebase(SettingsViewModel::class.java.simpleName, message!!, null)
+        AnalyticsUtil.logAnalyticsEvent(message, application)
 
         progress.postValue(-1)
         error.postValue(message)

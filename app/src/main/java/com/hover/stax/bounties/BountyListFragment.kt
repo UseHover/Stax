@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
+
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
@@ -20,13 +21,14 @@ import com.hover.stax.databinding.FragmentBountyListBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.navigation.NavigationInterface
 import com.hover.stax.transactions.UpdateBountyTransactionsWorker
+
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.util.*
 
@@ -42,7 +44,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
     private var dialog: StaxDialog? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        Utils.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_list)), requireActivity())
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_bounty_list)), requireActivity())
 
         _binding = FragmentBountyListBinding.inflate(inflater, container, false)
         return binding.root
@@ -54,10 +56,18 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
 
         initRecyclerView()
         startObservers()
-        handleBackPress()
 
         binding.bountyCountryDropdown.isEnabled = false
-        binding.progressIndicator.show()
+        binding.countryFilter.apply {
+            showProgressIndicator()
+            setOnClickIcon {
+                try {
+                    findNavController().navigate(R.id.action_bountyListFragment_to_navigation_settings)
+                } catch (ignored: IllegalArgumentException) {
+                    Timber.w("User already on Settings fragment")
+                }
+            }
+        }
     }
 
     override fun onResume() {
@@ -75,7 +85,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
 
     private fun updateActionConfig() = Hover.initialize(requireActivity(), object : Hover.DownloadListener {
         override fun onError(p0: String?) {
-            Utils.logErrorAndReportToFirebase(BountyListFragment::class.java.simpleName, "Failed to update action configs: $p0", null)
+            AnalyticsUtil.logErrorAndReportToFirebase(BountyListFragment::class.java.simpleName, "Failed to update action configs: $p0", null)
         }
 
         override fun onSuccess(p0: ArrayList<HoverAction>?) {
@@ -94,7 +104,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
     }
 
     private fun showOfflineDialog() {
-        binding.progressIndicator.hide()
+        binding.countryFilter.hideProgressIndicator()
 
         dialog = StaxDialog(requireActivity())
                 .setDialogTitle(R.string.internet_required)
@@ -109,7 +119,6 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
         binding.bountyCountryDropdown.setListener(this)
         binding.bountyCountryDropdown.updateChoices(channels, bountyViewModel.currentCountryFilter.value)
         binding.bountyCountryDropdown.isEnabled = true
-        binding.progressIndicator.hide()
     }
 
     private fun initRecyclerView() {
@@ -117,7 +126,13 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
     }
 
     private fun startObservers() = with(bountyViewModel) {
-        actions.observe(viewLifecycleOwner) { Timber.v("Actions update: ${it.size}") }
+        val actionsObserver = object : Observer<List<HoverAction>> {
+            override fun onChanged(t: List<HoverAction>?) {
+                Timber.v("Actions update: ${t?.size}")
+            }
+        }
+
+        actions.observe(viewLifecycleOwner, actionsObserver)
         transactions.observe(viewLifecycleOwner) { Timber.v("Transactions update ${it.size}") }
         sims.observe(viewLifecycleOwner) { Timber.v("Sims update ${it.size}") }
         bounties.observe(viewLifecycleOwner) { updateChannelList(channels.value, it) }
@@ -128,11 +143,17 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
     }
 
     private fun updateChannelList(channels: List<Channel>?, bounties: List<Bounty>?) {
+        binding.countryFilter.hideProgressIndicator()
+
         if (!channels.isNullOrEmpty() && !bounties.isNullOrEmpty() &&
-                bountyViewModel.country == CountryAdapter.codeRepresentingAllCountries() || channels?.firstOrNull()?.countryAlpha2 == bountyViewModel.country) {
+                bountyViewModel.country == CountryAdapter.CODE_ALL_COUNTRIES || channels?.firstOrNull()?.countryAlpha2 == bountyViewModel.country) {
+            binding.msgNoBounties.visibility = View.GONE
+
             val adapter = BountyChannelsAdapter(channels, bounties!!, this)
             binding.bountiesRecyclerView.adapter = adapter
             hideLoadingState()
+        } else {
+            binding.msgNoBounties.visibility = View.VISIBLE
         }
     }
 
@@ -155,7 +176,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
                 .setDialogTitle(getString(R.string.bounty_sim_err_header))
                 .setDialogMessage(getString(R.string.bounty_sim_err_desc, b.action.network_name))
                 .setNegButton(R.string.btn_cancel, null)
-                .setPosButton(R.string.retry) { retrySimMatch(b) }
+                .setPosButton(R.string.retry) { if (activity != null) retrySimMatch(b) }
         dialog!!.showIt()
     }
 
@@ -192,20 +213,19 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
         Hover.updateSimInfo(requireActivity())
     }
 
-    private fun handleBackPress() = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            if (dialog != null && dialog!!.isShowing)
-                dialog!!.dismiss()
-            else
-                findNavController().navigate(R.id.action_bountyListFragment_to_navigation_settings)
-        }
-    })
+    override fun onPause() {
+        super.onPause()
+        dismissDialog()
+    }
+
+    private fun dismissDialog() {
+        if (dialog != null && dialog!!.isShowing)
+            dialog!!.dismiss()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
-
-        if (dialog != null && dialog!!.isShowing)
-            dialog!!.dismiss()
+        dismissDialog()
 
         _binding = null
     }

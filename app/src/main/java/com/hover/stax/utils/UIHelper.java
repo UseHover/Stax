@@ -9,7 +9,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;

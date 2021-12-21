@@ -31,14 +31,18 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
     override fun onReceive(context: Context, intent: Intent?) {
         intent?.let {
             CoroutineScope(Dispatchers.IO).launch {
-                action = repo.getAction(intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID))
-                channel = repo.getChannel(action!!.channel_id)
+                val actionId = intent.getStringExtra(TransactionContract.COLUMN_ACTION_ID)
 
-                createAccounts(intent)
-                updateBalance(intent)
-                updateContacts(intent)
-                updateTransaction(intent, context.applicationContext)
-                updateRequests(intent)
+                actionId?.let {
+                    action = repo.getAction(it)
+                    channel = repo.getChannel(action!!.channel_id)
+
+                    createAccounts(intent)
+                    updateBalance(intent)
+                    updateContacts(intent)
+                    updateTransaction(intent, context.applicationContext)
+                    updateRequests(intent)
+                }
             }
         }
     }
@@ -49,10 +53,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
 
             if (inputExtras.containsKey(Constants.ACCOUNT_ID)) {
                 val accountId = inputExtras[Constants.ACCOUNT_ID]
-                Timber.e("AccountId  - $accountId")
-
                 accountId?.let {
-                    Timber.e("Here")
                     account = repo.getAccount(accountId.toInt())
                     Timber.e("$account")
                 }
@@ -63,7 +64,6 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
             val parsedVariables = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as HashMap<String, String>
 
             if (account != null && parsedVariables.containsKey("balance")) {
-                Timber.e("$account has balance")
                 account!!.updateBalance(parsedVariables)
                 repo.update(account!!)
             }
@@ -72,8 +72,10 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
 
     private fun updateContacts(intent: Intent) {
         contact = StaxContact.findOrInit(intent, channel!!.countryAlpha2, repo)
-        contact!!.updateNames(intent)
-        repo.save(contact!!)
+        contact?.let {
+            it.updateNames(intent)
+            repo.save(it)
+        }
     }
 
     private fun updateTransaction(intent: Intent, c: Context) {
@@ -83,7 +85,7 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
     private fun updateRequests(intent: Intent) {
         if (intent.getStringExtra(TransactionContract.COLUMN_TYPE) == HoverAction.RECEIVE) {
             repo.requests.forEach {
-                if (it.requestee_ids.contains(contact!!.id) && Utils.getAmount(it.amount) == Utils.getAmount(getAmount(intent)!!)) {
+                if (it.requestee_ids.contains(contact!!.id) && Utils.getAmount(it.amount ?: "00") == Utils.getAmount(getAmount(intent)!!)) {
                     it.matched_transaction_uuid = intent.getStringExtra(TransactionContract.COLUMN_UUID)
                     repo.update(it)
                 }

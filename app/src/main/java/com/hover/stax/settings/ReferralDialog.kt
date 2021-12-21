@@ -14,9 +14,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.hover.stax.R
 import com.hover.stax.databinding.StaxReferralDialogBinding
+import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils.copyToClipboard
-import com.hover.stax.utils.Utils.logAnalyticsEvent
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
@@ -114,9 +114,13 @@ class ReferralDialog : DialogFragment() {
             binding.referralCode.setOnClickListener { copyToClipboard(viewModel.username.value, requireContext()) }
             binding.referralCode.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_copy, 0)
         } else {
-            binding.referralCode.text = getString(R.string.referral_error_data)
+            tryAgain_fetchUsername()
+            binding.referralCode.text = getString(R.string.referral_error_try_again)
             binding.referralCode.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
         }
+    }
+    private fun tryAgain_fetchUsername() {
+        viewModel.fetchUsername()
     }
 
     private fun updateRefereeInfo(code: String?) {

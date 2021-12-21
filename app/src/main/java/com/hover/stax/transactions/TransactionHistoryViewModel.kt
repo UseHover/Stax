@@ -1,8 +1,6 @@
 package com.hover.stax.transactions
 
 import android.app.Application
-import android.content.Context
-import android.content.Intent
 import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.channels.Channel
@@ -32,8 +30,8 @@ class TransactionHistoryViewModel(application: Application?) : AndroidViewModel(
         return if (balancesTransactions >= 4) true else transfersAndAirtime >= 2
     }
 
-    suspend fun getActionAndChannel (actionId: String, channelId: Int): Pair<HoverAction, Channel>{
-       val pairResult : Deferred<Pair<HoverAction, Channel>> =  viewModelScope.async (Dispatchers.IO) {
+    suspend fun getActionAndChannel(actionId: String, channelId: Int): Pair<HoverAction, Channel> {
+        val pairResult: Deferred<Pair<HoverAction, Channel>> = viewModelScope.async(Dispatchers.IO) {
             val action: HoverAction = repo.getAction(actionId)
             val channel: Channel = repo.getChannel(channelId)!!
             return@async Pair(action, channel);
@@ -42,9 +40,9 @@ class TransactionHistoryViewModel(application: Application?) : AndroidViewModel(
         return pairResult.await()
     }
 
-    suspend fun getAccountNumber(contact_id: String) : String? {
-       val accountNumberDeferred : Deferred<String?> =   viewModelScope.async {
-            val contact : StaxContact? = repo.getContactAsync(contact_id)
+    suspend fun getAccountNumber(contact_id: String): String? {
+        val accountNumberDeferred: Deferred<String?> = viewModelScope.async {
+            val contact: StaxContact? = repo.getContactAsync(contact_id)
             return@async contact?.accountNumber
         }
         return accountNumberDeferred.await()

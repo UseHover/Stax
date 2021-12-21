@@ -7,6 +7,7 @@ import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.bounties.BountyViewModel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.faq.FaqViewModel
+import com.hover.stax.financialTip.FinancialTipsViewModel
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.languages.LanguageViewModel
@@ -37,6 +38,7 @@ val appModule = module {
     viewModel { LibraryViewModel(get(), get()) }
     viewModel { LanguageViewModel(get()) }
     viewModel { BountyViewModel(get(), get()) }
+    viewModel { FinancialTipsViewModel() }
 }
 
 val dataModule = module(createdAtStart = true) {

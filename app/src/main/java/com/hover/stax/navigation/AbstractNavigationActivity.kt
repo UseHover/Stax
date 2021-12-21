@@ -14,8 +14,9 @@ import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
 import com.hover.stax.home.MainActivity
 import com.hover.stax.permissions.PermissionUtils
+
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
-import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkReceiver
 
 abstract class AbstractNavigationActivity : AppCompatActivity(), NavigationInterface {
@@ -70,7 +71,7 @@ abstract class AbstractNavigationActivity : AppCompatActivity(), NavigationInter
                     permissionHelper.hasBasicPerms() -> navigate(this, toWhere)
             else -> PermissionUtils.showInformativeBasicPermissionDialog(permissionMsg,
                     { PermissionUtils.requestPerms(getNavConst(toWhere), this) },
-                    { Utils.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), this) }, this)
+                    { AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), this) }, this)
         }
     }
 

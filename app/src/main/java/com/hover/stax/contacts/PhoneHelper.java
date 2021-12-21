@@ -7,6 +7,7 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.hover.sdk.actions.HoverAction;
 import com.hover.stax.channels.Channel;
+import com.hover.stax.utils.AnalyticsUtil;
 import com.hover.stax.utils.Utils;
 
 public class PhoneHelper {
@@ -53,7 +54,7 @@ public class PhoneHelper {
 			Phonenumber.PhoneNumber phone = phoneUtil.parse(number, country);
 			return phoneUtil.getNationalSignificantNumber(phone);
 		} catch (NumberParseException | IllegalStateException e) {
-			Utils.logErrorAndReportToFirebase(TAG, "Failed to transform number for contact; doing it the old fashioned way.", e);
+			AnalyticsUtil.logErrorAndReportToFirebase(TAG, "Failed to transform number for contact; doing it the old fashioned way.", e);
 			return number.startsWith("+") ? number.substring(4) : (number.startsWith("0") ? number.substring(1) : number);
 		}
 	}
@@ -70,7 +71,7 @@ public class PhoneHelper {
 		try {
 			return getInternationalNumber(country, accountNumber).replace("+", "");
 		} catch (NumberParseException | IllegalStateException e) {
-			Utils.logErrorAndReportToFirebase(TAG, "Failed to transform number for contact; doing it the old fashioned way.", e);
+			AnalyticsUtil.logErrorAndReportToFirebase(TAG, "Failed to transform number for contact; doing it the old fashioned way.", e);
 			return accountNumber.replace("+", "");
 		}
 	}

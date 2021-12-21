@@ -5,6 +5,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.hover.stax.R
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 object DateUtils {
     const val MIN = 60 * 1000
@@ -21,7 +22,6 @@ object DateUtils {
     }
 
     fun todayDate(): Date = Calendar.getInstance().time
-
 
     fun timeAgo(context: Context, millis: Long): String {
         return humanFriendlyTime(context, System.currentTimeMillis() - millis)
@@ -42,7 +42,7 @@ object DateUtils {
     }
 
     fun humanFriendlyTime(context: Context, diffMillis: Long): String {
-        val seconds = (Math.abs(diffMillis) / 1000).toDouble()
+        val seconds = (abs(diffMillis) / 1000).toDouble()
         val minutes = seconds / 60
         val hours = minutes / 60
         val days = hours / 24
@@ -170,7 +170,6 @@ object DateUtils {
         cal.timeInMillis = dateLong
         return cal.time
     }
-
 
     fun beginningOfTheMonth(): Date {
         val cacheCalendar: Calendar = Calendar.getInstance()

@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.lifecycle.*
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.google.firebase.auth.FirebaseUser
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
@@ -17,9 +16,7 @@ import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.utils.Utils.getPackage
 import kotlinx.coroutines.*
-import org.koin.java.KoinJavaComponent.get
-import timber.log.Timber
-import java.lang.Exception
+
 import java.util.*
 
 private const val MAX_LOOKUP_COUNT = 40
@@ -27,7 +24,7 @@ private const val MAX_LOOKUP_COUNT = 40
 class BountyViewModel(application: Application, val repo: DatabaseRepo) : AndroidViewModel(application) {
 
     @JvmField
-    var country: String = CountryAdapter.codeRepresentingAllCountries()
+    var country: String = CountryAdapter.CODE_ALL_COUNTRIES
 
     val actions: LiveData<List<HoverAction>>
     val channels: LiveData<List<Channel>>
@@ -38,8 +35,19 @@ class BountyViewModel(application: Application, val repo: DatabaseRepo) : Androi
     var sims: MutableLiveData<List<SimInfo>> = MutableLiveData()
     private lateinit var bountyListAsync: Deferred<MutableList<Bounty>>
 
+    private var simReceiver: BroadcastReceiver? = null
+
     init {
-        currentCountryFilter.value = CountryAdapter.codeRepresentingAllCountries()
+        simReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                viewModelScope.launch {
+                    sims.postValue(repo.presentSims)
+                }
+            }
+        }
+
+        currentCountryFilter.value = CountryAdapter.CODE_ALL_COUNTRIES
+
         loadSims()
         actions = repo.bountyActions
         channels = Transformations.switchMap(actions, this::loadChannels)
@@ -53,17 +61,11 @@ class BountyViewModel(application: Application, val repo: DatabaseRepo) : Androi
             sims.postValue(repo.presentSims)
         }
 
-        LocalBroadcastManager.getInstance(getApplication())
-                .registerReceiver(simReceiver, IntentFilter(getPackage(getApplication()) + ".NEW_SIM_INFO_ACTION"))
-        Hover.updateSimInfo(getApplication())
-    }
-
-    private val simReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            viewModelScope.launch(Dispatchers.IO) {
-                sims.postValue(repo.presentSims)
-            }
+        simReceiver?.let {
+            LocalBroadcastManager.getInstance(getApplication())
+                    .registerReceiver(it, IntentFilter(getPackage(getApplication()) + ".NEW_SIM_INFO_ACTION"))
         }
+        Hover.updateSimInfo(getApplication())
     }
 
     fun isSimPresent(b: Bounty): Boolean {
@@ -85,7 +87,7 @@ class BountyViewModel(application: Application, val repo: DatabaseRepo) : Androi
         return MutableLiveData(channelList)
     }
 
-    private fun getChannelsAsync(ids:List<Int>): Deferred<List<Channel>> = viewModelScope.async(Dispatchers.IO) {
+    private fun getChannelsAsync(ids: List<Int>): Deferred<List<Channel>> = viewModelScope.async(Dispatchers.IO) {
         val channels = ArrayList<Channel>()
 
         ids.chunked(MAX_LOOKUP_COUNT).forEach { idList ->
@@ -103,7 +105,7 @@ class BountyViewModel(application: Application, val repo: DatabaseRepo) : Androi
         country = countryCode
         val actions = actions.value ?: return MutableLiveData(ArrayList<Channel>())
 
-        return if (countryCode == CountryAdapter.codeRepresentingAllCountries())
+        return if (countryCode == CountryAdapter.CODE_ALL_COUNTRIES)
             loadChannels(actions)
         else
             repo.getChannelsByCountry(getChannelIdArray(actions), countryCode)
@@ -150,8 +152,11 @@ class BountyViewModel(application: Application, val repo: DatabaseRepo) : Androi
 
     override fun onCleared() {
         try {
-            LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(simReceiver)
-        } catch (ignored: Exception) {}
+            simReceiver?.let {
+                LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(it)
+            }
+        } catch (ignored: Exception) {
+        }
         super.onCleared()
     }
 }

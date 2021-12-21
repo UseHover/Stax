@@ -25,11 +25,23 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
     var sims: MutableLiveData<List<SimInfo>> = MutableLiveData()
     var country: MediatorLiveData<String> = MediatorLiveData()
 
+    private var simReceiver: BroadcastReceiver? = null
+
     init {
+        simReceiver =  object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                viewModelScope.launch(Dispatchers.IO) {
+                    sims.postValue(repo.presentSims)
+                }
+            }
+        }
+
         country.value = null
         country.addSource(sims, this::pickFirstCountry)
-        filteredChannels.addSource(allChannels, this::filterChannels)
+
         filteredChannels.addSource(country, this::filterChannels)
+        filteredChannels.addSource(allChannels, this::filterChannels)
+
         loadSims()
         allChannels = repo.allChannels
         filteredChannels.value = null
@@ -40,29 +52,22 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
             sims.postValue(repo.presentSims)
         }
 
-        LocalBroadcastManager.getInstance(application)
-                .registerReceiver(simReceiver, IntentFilter(Utils.getPackage(application) + ".NEW_SIM_INFO_ACTION"))
+        simReceiver?.let {
+            LocalBroadcastManager.getInstance(application)
+                    .registerReceiver(it, IntentFilter(Utils.getPackage(application) + ".NEW_SIM_INFO_ACTION"))
+        }
+
         Hover.updateSimInfo(application)
     }
 
     private fun pickFirstCountry(sims: List<SimInfo>?) {
-        if (sims != null) {
-            Timber.e("Picking first country: %s", sims.first().countryIso)
+        if (!sims.isNullOrEmpty()) {
             country.postValue(sims.first().countryIso)
         }
     }
 
     fun setCountry(countryCode: String) = viewModelScope.launch(Dispatchers.IO) {
-        Timber.e("Updating country: %s", countryCode)
         country.postValue(countryCode)
-    }
-
-    private val simReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            viewModelScope.launch(Dispatchers.IO) {
-                sims.postValue(repo.presentSims)
-            }
-        }
     }
 
     private fun filterChannels(channels: List<Channel>?) = filterChannels(channels, country.value)
@@ -72,7 +77,7 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
     private fun filterChannels(channels: List<Channel>?, countryCode: String?) = viewModelScope.launch(Dispatchers.IO) {
         Timber.i("Filtering channels: $countryCode")
 
-        if (countryCode == null || countryCode == CountryAdapter.codeRepresentingAllCountries())
+        if (countryCode == null || countryCode == CountryAdapter.CODE_ALL_COUNTRIES)
             filteredChannels.postValue(channels)
         else
             filteredChannels.postValue(repo.getChannelsByCountry(countryCode))
@@ -80,7 +85,9 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
 
     override fun onCleared() {
         try {
-            LocalBroadcastManager.getInstance(application).unregisterReceiver(simReceiver)
+            simReceiver?.let {
+                LocalBroadcastManager.getInstance(application).unregisterReceiver(it)
+            }
         } catch (ignored: Exception) {}
         super.onCleared()
     }
