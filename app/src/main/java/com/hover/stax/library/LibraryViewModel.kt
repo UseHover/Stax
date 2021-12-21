@@ -26,6 +26,7 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
     var country: MediatorLiveData<String> = MediatorLiveData()
 
     private var simReceiver: BroadcastReceiver? = null
+
     init {
         simReceiver =  object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {

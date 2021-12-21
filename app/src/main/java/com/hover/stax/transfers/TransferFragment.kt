@@ -267,6 +267,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
 
         transferViewModel.setEditing(r.amount.isNullOrEmpty())
         accountDropdown.setState(getString(R.string.channel_request_fieldinfo, r.requester_institution_id.toString()), AbstractStatefulInput.INFO)
+
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext())
     }
 

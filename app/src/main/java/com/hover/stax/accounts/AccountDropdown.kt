@@ -78,6 +78,10 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
             setOnItemClickListener { parent, _, position, _ -> onSelect(parent.getItemAtPosition(position) as Account) }
         }
 
+<<<<<<< HEAD
+=======
+//        if (showSelected)
+>>>>>>> master
         onSelect(accounts.firstOrNull { it.isDefault })
     }
 

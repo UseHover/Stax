@@ -9,6 +9,7 @@ import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentLibraryBinding
+
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -46,7 +47,6 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
 
     private fun updateList(channels: List<Channel>) {
         binding.countryCard.hideProgressIndicator()
-
         if (!channels.isNullOrEmpty())
             binding.shortcodes.adapter = ChannelsAdapter(channels)
     }
