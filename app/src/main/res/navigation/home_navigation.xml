@@ -242,7 +242,7 @@
             android:label="@string/cta_paybill"
             tools:layout="@layout/fragment_paybill">
         <action
-                android:id="@+id/action_paybillFragment_to_paybillListFragment2"
+                android:id="@+id/action_paybillFragment_to_paybillListFragment"
                 app:destination="@id/paybillListFragment" />
     </fragment>
     <fragment

@@ -9,5 +9,11 @@ class PaybillRepo(db: AppDatabase) {
 
     val allBills: Flow<List<Paybill>> = paybillDao.allBills
 
-    fun getPaybills(accountId: Int): Flow<List<Paybill>> = paybillDao.getBillsByAccount(accountId)
+    fun getSavedPaybills(accountId: Int): Flow<List<Paybill>> = paybillDao.getSavedPaybills(accountId)
+
+    fun getPaybills(accountId: Int): Flow<List<Paybill>> = paybillDao.getPaybillsByAccount(accountId)
+
+    fun save(paybill: Paybill) = paybillDao.insert(paybill)
+
+    fun update(paybill: Paybill) = paybillDao.update(paybill)
 }

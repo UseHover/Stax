@@ -4,21 +4,49 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class PaybillViewModel(val repo: PaybillRepo) : ViewModel() {
 
     val savedPaybills = MutableLiveData<List<Paybill>>()
-    val allPaybills = MutableLiveData<List<Paybill>>()
+    val accountPaybills = MutableLiveData<List<Paybill>>()
 
-    fun getPaybills(accountId: Int) = viewModelScope.launch {
-        repo.getPaybills(accountId).collect { paybills ->
-            savedPaybills.postValue(paybills.filter { it.isSaved })
-            allPaybills.postValue(paybills.filterNot { it.isSaved })
-        }
+    val selectedPaybill = MutableLiveData<Paybill>()
+    val businessNumber = MutableLiveData<String>()
+    val accountNumber = MutableLiveData<String>()
+    val amount = MutableLiveData<Int>()
+    val iconDrawable = MutableLiveData<Int>()
+
+    fun getSavedPaybills(accountId: Int) = viewModelScope.launch {
+        repo.getSavedPaybills(accountId).collect { savedPaybills.postValue(it) }
     }
 
-    fun getPaybills() = viewModelScope.launch {
-        repo.allBills.collect { allPaybills.postValue(it) }
+    fun getPaybills(accountId: Int) = viewModelScope.launch {
+        repo.getPaybills(accountId).map { paybills -> paybills.filterNot { it.isSaved } }.collect { accountPaybills.postValue(it) }
+    }
+
+    fun selectPaybill(paybill: Paybill){
+        selectedPaybill.value = paybill
+    }
+
+    fun setBusinessNumber(number: String) {
+        businessNumber.value = number
+    }
+
+    fun setAccountNumber(number: String) {
+        accountNumber.value = number
+    }
+
+    fun setAmount(value: Int) {
+        amount.value = value
+    }
+
+    fun setIconDrawable(drawable: Int) {
+        iconDrawable.value = drawable
+    }
+
+    fun savePaybill(channelId: Int) {
+
     }
 }

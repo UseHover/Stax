@@ -1,7 +1,6 @@
 package com.hover.stax.paybill
 
-import androidx.room.Dao
-import androidx.room.Query
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -11,8 +10,29 @@ interface PaybillDao {
     val allBills: Flow<List<Paybill>>
 
     @Query("SELECT * FROM paybills WHERE accountId = :accountId ORDER BY name ASC")
-    fun getBillsByAccount(accountId: Int): Flow<List<Paybill>>
+    fun getPaybillsByAccount(accountId: Int): Flow<List<Paybill>>
+
+    @Query("SELECT * FROM paybills WHERE accountId = :accountId and isSaved = 1 ORDER BY name ASC")
+    fun getSavedPaybills(accountId: Int): Flow<List<Paybill>>
 
     @Query("SELECT * FROM paybills WHERE id = :id")
-    fun getBill(id: Int): Paybill?
+    fun getPaybill(id: Int): Paybill?
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insert(vararg paybill: Paybill?)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(paybill: Paybill)
+
+    @Update
+    fun update(paybill: Paybill)
+
+    @Update
+    fun update(paybill: List<Paybill>)
+
+    @Delete
+    fun delete(paybill: Paybill)
+
+    @Query("DELETE FROM paybills")
+    fun deleteAll()
 }
