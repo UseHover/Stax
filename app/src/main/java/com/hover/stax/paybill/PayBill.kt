@@ -54,5 +54,5 @@ data class Paybill(
         return id == other.id || other.name == other.name
     }
 
-    override fun compareTo(other: PayBill): Int = toString().compareTo(other.toString())
+    override fun compareTo(other: Paybill): Int = toString().compareTo(other.toString())
 }

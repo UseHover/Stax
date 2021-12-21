@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 36,
-    "identityHash": "003f35846b4fa3dd0ba4bfc5188dacd6",
+    "identityHash": "c2335279af709e55fa19b3e591001300",
     "entities": [
       {
         "tableName": "channels",
@@ -608,8 +608,8 @@
         ]
       },
       {
-        "tableName": "bills",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `business_no` TEXT NOT NULL, `account_no` TEXT, `logo` INTEGER NOT NULL, `channelId` INTEGER NOT NULL, `accountId` INTEGER NOT NULL, `isSaved` INTEGER NOT NULL DEFAULT 0, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `recurring_amount` INTEGER NOT NULL, FOREIGN KEY(`channelId`) REFERENCES `channels`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`accountId`) REFERENCES `accounts`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "tableName": "paybills",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `business_no` TEXT NOT NULL, `account_no` TEXT, `channelId` INTEGER NOT NULL, `accountId` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `recurring_amount` INTEGER NOT NULL, `logo` INTEGER NOT NULL, `isSaved` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`channelId`) REFERENCES `channels`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`accountId`) REFERENCES `accounts`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "name",
@@ -630,12 +630,6 @@
             "notNull": false
           },
           {
-            "fieldPath": "logo",
-            "columnName": "logo",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
             "fieldPath": "channelId",
             "columnName": "channelId",
             "affinity": "INTEGER",
@@ -648,13 +642,6 @@
             "notNull": true
           },
           {
-            "fieldPath": "isSaved",
-            "columnName": "isSaved",
-            "affinity": "INTEGER",
-            "notNull": true,
-            "defaultValue": "0"
-          },
-          {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
@@ -665,6 +652,19 @@
             "columnName": "recurring_amount",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "logo",
+            "columnName": "logo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isSaved",
+            "columnName": "isSaved",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
           }
         ],
         "primaryKey": {
@@ -675,29 +675,29 @@
         },
         "indices": [
           {
-            "name": "index_bills_business_no_account_no",
+            "name": "index_paybills_business_no_account_no",
             "unique": true,
             "columnNames": [
               "business_no",
               "account_no"
             ],
-            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_bills_business_no_account_no` ON `${TABLE_NAME}` (`business_no`, `account_no`)"
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_paybills_business_no_account_no` ON `${TABLE_NAME}` (`business_no`, `account_no`)"
           },
           {
-            "name": "index_bills_channelId",
+            "name": "index_paybills_channelId",
             "unique": false,
             "columnNames": [
               "channelId"
             ],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_bills_channelId` ON `${TABLE_NAME}` (`channelId`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_paybills_channelId` ON `${TABLE_NAME}` (`channelId`)"
           },
           {
-            "name": "index_bills_accountId",
+            "name": "index_paybills_accountId",
             "unique": false,
             "columnNames": [
               "accountId"
             ],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_bills_accountId` ON `${TABLE_NAME}` (`accountId`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_paybills_accountId` ON `${TABLE_NAME}` (`accountId`)"
           }
         ],
         "foreignKeys": [
@@ -729,7 +729,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '003f35846b4fa3dd0ba4bfc5188dacd6')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c2335279af709e55fa19b3e591001300')"
     ]
   }
 }
