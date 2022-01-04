@@ -167,7 +167,7 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("CREATE TABLE IF NOT EXISTS paybills (name TEXT NOT NULL, business_no TEXT NOT NULL, account_no TEXT, logo INTEGER NOT NULL, " +
-                    "channelId INTEGER NOT NULL, accountId INTEGER NOT NULL, id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, recurring_amount INTEGER NOT NULL," +
+                    "logo_url TEXT NOT NULL, channelId INTEGER NOT NULL, accountId INTEGER NOT NULL, id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, recurring_amount INTEGER NOT NULL," +
                     " isSaved INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(channelId) REFERENCES channels(id) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(accountId)" +
                     " REFERENCES accounts(id) ON UPDATE NO ACTION ON DELETE NO ACTION )");
             database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_paybills_business_no_account_no ON paybills(business_no, account_no)");

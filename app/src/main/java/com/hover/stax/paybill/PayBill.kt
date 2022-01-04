@@ -25,6 +25,9 @@ data class Paybill(
 
         @ColumnInfo(index = true)
         val accountId: Int,
+
+        @ColumnInfo(name = "logo_url")
+        val logoUrl: String
 ) : Comparable<Paybill> {
 
     @PrimaryKey(autoGenerate = true)

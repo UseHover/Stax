@@ -65,6 +65,7 @@ class PaybillFragment : Fragment() {
         binding.continueBtn.setOnClickListener { }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun startObservers() {
         paybillViewModel.selectedPaybill.observe(viewLifecycleOwner) {
             binding.billDetailsLayout.businessNoInput.text = it.name
@@ -77,6 +78,15 @@ class PaybillFragment : Fragment() {
             }
 
             setupActionDropdownObservers(this, viewLifecycleOwner)
+
+            accounts.observe(viewLifecycleOwner) {
+                if (it.isEmpty())
+                    binding.billDetailsLayout.accountDropdown.autoCompleteTextView.setOnTouchListener { _, event ->
+                        if (event.action == MotionEvent.ACTION_DOWN)
+                            findNavController().navigate(R.id.action_paybillFragment_to_accountsFragment)
+                        true
+                    }
+            }
         }
     }
 

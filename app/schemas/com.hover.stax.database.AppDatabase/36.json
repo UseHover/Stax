@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 36,
-    "identityHash": "c2335279af709e55fa19b3e591001300",
+    "identityHash": "0d4a05dbc4b3f529ab2bd139bfad6e40",
     "entities": [
       {
         "tableName": "channels",
@@ -609,7 +609,7 @@
       },
       {
         "tableName": "paybills",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `business_no` TEXT NOT NULL, `account_no` TEXT, `channelId` INTEGER NOT NULL, `accountId` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `recurring_amount` INTEGER NOT NULL, `logo` INTEGER NOT NULL, `isSaved` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`channelId`) REFERENCES `channels`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`accountId`) REFERENCES `accounts`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `business_no` TEXT NOT NULL, `account_no` TEXT, `channelId` INTEGER NOT NULL, `accountId` INTEGER NOT NULL, `logo_url` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `recurring_amount` INTEGER NOT NULL, `logo` INTEGER NOT NULL, `isSaved` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`channelId`) REFERENCES `channels`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`accountId`) REFERENCES `accounts`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "name",
@@ -639,6 +639,12 @@
             "fieldPath": "accountId",
             "columnName": "accountId",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "logoUrl",
+            "columnName": "logo_url",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -729,7 +735,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c2335279af709e55fa19b3e591001300')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0d4a05dbc4b3f529ab2bd139bfad6e40')"
     ]
   }
 }

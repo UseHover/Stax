@@ -182,7 +182,14 @@
                 app:popUpToInclusive="true" />
         <action
                 android:id="@+id/action_accountsFragment_to_navigation_request"
-                app:destination="@id/navigation_request" />
+                app:destination="@id/navigation_request"
+                app:popUpTo="@id/navigation_request"
+                app:popUpToInclusive="true"/>
+        <action
+                android:id="@+id/action_accountsFragment_to_paybillFragment"
+                app:destination="@id/paybillFragment"
+                app:popUpTo="@id/paybillFragment"
+                app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
@@ -244,6 +251,9 @@
         <action
                 android:id="@+id/action_paybillFragment_to_paybillListFragment"
                 app:destination="@id/paybillListFragment" />
+        <action
+                android:id="@+id/action_paybillFragment_to_accountsFragment"
+                app:destination="@id/accountsFragment" />
     </fragment>
     <fragment
             android:id="@+id/paybillListFragment"
