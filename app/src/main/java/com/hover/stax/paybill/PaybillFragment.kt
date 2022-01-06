@@ -58,11 +58,17 @@ class PaybillFragment : Fragment() {
                     findNavController().navigate(R.id.action_paybillFragment_to_paybillListFragment, bundleOf(Constants.ACCOUNT_ID to it))
                 } ?: Timber.e("Active account not set")
                 true
-            } else
-                false
+            } else false
         }
 
         binding.continueBtn.setOnClickListener { }
+
+        binding.billDetailsLayout.businessNoInput.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                findNavController().navigate(R.id.action_paybillFragment_to_paybillListFragment)
+                true
+            } else false
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -138,4 +144,14 @@ class PaybillFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        //sometimes when navigating back from another fragment, the labels get all messed up
+        with(binding.billDetailsLayout) {
+            accountDropdown.setHint(getString(R.string.account_label))
+            businessNoInput.setHint(getString(R.string.business_number_label))
+            accountNoInput.setHint(getString(R.string.account_number_label))
+            amountInput.setHint(getString(R.string.transfer_amount_label))
+        }
+    }
 }
