@@ -4,7 +4,6 @@
         android:id="@+id/newPaybillCard"
         android:layout_width="match_parent"
         android:layout_marginVertical="@dimen/margin_10"
-        android:layout_marginHorizontal="@dimen/margin_16"
         android:layout_height="wrap_content">
 
     <ImageView

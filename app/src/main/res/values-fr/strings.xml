@@ -806,5 +806,8 @@
   <string name="account_no_label">Account no: %1$s</string>
   <string name="paybill_delete_header">Delete Paybill</string>
   <string name="paybill_delete_msg">Are you sure you want to delete %1$s?</string>
+    <string name="paybill_save_success">Paybill saved successfully</string>
+  <string name="bill_name_error">Please enter a valid name</string>
+    <string name="label_popular">Popular</string>
 
 </resources>

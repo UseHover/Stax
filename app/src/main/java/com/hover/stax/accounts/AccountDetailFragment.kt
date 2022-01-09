@@ -119,7 +119,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         if (msg == null)
             successFun(v.text)
         v.setState(msg
-                ?: getString(R.string.saved), if (msg == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+                ?: getString(R.string.label_saved), if (msg == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
     }
 
     private fun validates(v: StaxTextInputLayout, comparison: String?, errorMsg: Int): String? {

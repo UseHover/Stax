@@ -6,15 +6,16 @@
         android:layout_height="match_parent">
 
     <com.hover.stax.views.StaxCardView
+            android:id="@+id/contentLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/contentLayout"
             app:showBack="true"
             app:title="@string/business_number_label">
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_16"
                 android:orientation="vertical">
 
             <include
@@ -26,8 +27,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_8"
-                    android:fontFamily="font-normal"
-                    android:text="@string/saved"
+                    android:fontFamily="font-medium"
+                    android:text="@string/label_saved"
                     android:textSize="@dimen/text_16" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -42,8 +43,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_8"
-                    android:fontFamily="font-normal"
-                    android:text="@string/saved"
+                    android:fontFamily="font-medium"
+                    android:text="@string/label_popular"
                     android:textSize="@dimen/text_16" />
 
             <androidx.recyclerview.widget.RecyclerView
