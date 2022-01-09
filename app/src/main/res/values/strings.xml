@@ -58,6 +58,7 @@
     <string name="btn_edit">Edit</string>
     <string name="btn_back">Back</string>
     <string name="btn_test">Test</string>
+    <string name="btn_done">Done</string>
     <string name="btn_google_signin">Sign in With Google</string>
 
     <!-- ONBOARDING -->
@@ -579,5 +580,6 @@
     <string name="paybill_delete_success">Paybill deleted successfully</string>
     <string name="paybill_delete_header">Delete Paybill</string>
     <string name="paybill_delete_msg">Are you sure you want to delete %1$s?</string>
+    <string name="paybill_error_business_number">Please enter a valid business number</string>
 
 </resources>

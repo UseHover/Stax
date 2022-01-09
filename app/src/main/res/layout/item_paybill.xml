@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
         android:id="@+id/newPaybillCard"
+        android:layout_width="match_parent"
+        android:layout_marginVertical="@dimen/margin_10"
+        android:layout_marginHorizontal="@dimen/margin_16"
         android:layout_height="wrap_content">
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <ImageView
             android:id="@+id/billIcon"
-            android:layout_width="@dimen/margin_65"
-            android:layout_height="@dimen/margin_65"
+            android:layout_width="@dimen/margin_24"
+            android:layout_height="@dimen/margin_24"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/StaxIconShape"
-            app:srcCompat="@drawable/banner_permission" />
+            app:srcCompat="@drawable/ic_dialpad" />
 
     <TextView
             android:id="@+id/billNumber"
@@ -21,10 +22,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_10"
             android:fontFamily="font-normal"
+            android:text="@string/business_number_prompt"
             android:textSize="@dimen/text_16"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/billIcon"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/business_number_prompt" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

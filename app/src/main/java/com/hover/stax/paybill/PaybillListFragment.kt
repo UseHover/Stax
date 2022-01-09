@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentPaybillListBinding
 import com.hover.stax.utils.Constants
@@ -30,13 +30,18 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.contentLayout.setOnClickIcon { findNavController().popBackStack() }
+
         arguments?.getInt(Constants.ACCOUNT_ID)?.let {
             paybillViewModel.getSavedPaybills(it)
             paybillViewModel.getPaybills(it)
         }
 
         startObservers()
-        binding.newPaybill.newPaybillCard.setOnClickListener {  }
+
+        binding.newPaybill.newPaybillCard.setOnClickListener {
+            PaybillDialog().show(childFragmentManager, PaybillDialog::class.java.simpleName)
+        }
     }
 
     private fun startObservers() {
@@ -76,13 +81,13 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener {
     }
 
     private fun toggleSavedPaybills(show: Boolean) {
-        binding.savedHeader.visibility = if(show) View.VISIBLE else View.GONE
-        binding.savedList.visibility = if(show) View.VISIBLE else View.GONE
+        binding.savedHeader.visibility = if (show) View.VISIBLE else View.GONE
+        binding.savedList.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     private fun toggleAccountPaybills(show: Boolean) {
-        binding.popularHeader.visibility = if(show) View.VISIBLE else View.GONE
-        binding.popularList.visibility = if(show) View.VISIBLE else View.GONE
+        binding.popularHeader.visibility = if (show) View.VISIBLE else View.GONE
+        binding.popularList.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     override fun onDeletePaybill(paybill: Paybill) {
@@ -99,7 +104,7 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener {
     override fun onPause() {
         super.onPause()
 
-        if(dialog != null && dialog!!.isShowing) dialog!!.dismiss()
+        if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
     }
 
     override fun onDestroyView() {

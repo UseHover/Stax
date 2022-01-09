@@ -1,6 +1,9 @@
 package com.hover.stax.paybill
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -41,6 +44,8 @@ class PaybillFragment : Fragment() {
 
         channelsViewModel.setType(HoverAction.C2B)
 
+        arguments?.getBoolean(UPDATE_BUSINESS_NO, false)?.let { binding.billDetailsLayout.businessNoInput.setText(paybillViewModel.businessNumber.value) }
+
         initListeners()
         startObservers()
         setWatchers()
@@ -52,7 +57,7 @@ class PaybillFragment : Fragment() {
             binding.saveBillLayout.saveBillCard.visibility = if (isChecked) View.VISIBLE else View.GONE
         }
 
-        binding.billDetailsLayout.businessNoInput.setOnTouchListener { _, event ->
+        binding.billDetailsLayout.businessNoInput.editText.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 channelsViewModel.activeAccount.value?.id?.let {
                     findNavController().navigate(R.id.action_paybillFragment_to_paybillListFragment, bundleOf(Constants.ACCOUNT_ID to it))
@@ -62,19 +67,12 @@ class PaybillFragment : Fragment() {
         }
 
         binding.continueBtn.setOnClickListener { }
-
-        binding.billDetailsLayout.businessNoInput.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                findNavController().navigate(R.id.action_paybillFragment_to_paybillListFragment)
-                true
-            } else false
-        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun startObservers() {
         paybillViewModel.selectedPaybill.observe(viewLifecycleOwner) {
-            binding.billDetailsLayout.businessNoInput.text = it.name
+            binding.billDetailsLayout.businessNoInput.setText(it.name)
         }
 
         with(channelsViewModel) {
@@ -152,6 +150,16 @@ class PaybillFragment : Fragment() {
             businessNoInput.setHint(getString(R.string.business_number_label))
             accountNoInput.setHint(getString(R.string.account_number_label))
             amountInput.setHint(getString(R.string.transfer_amount_label))
+
+            businessNoInput.binding.inputLayout.apply {
+                setEndIconDrawable(R.drawable.ic_twotone_chevron_right_24)
+                setEndIconTintMode(PorterDuff.Mode.SRC_IN)
+                setEndIconTintList(ColorStateList.valueOf(Color.WHITE))
+            }
         }
+    }
+
+    companion object {
+        const val UPDATE_BUSINESS_NO: String = "update_business_no"
     }
 }

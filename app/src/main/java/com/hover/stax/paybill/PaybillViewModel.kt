@@ -54,10 +54,24 @@ class PaybillViewModel(val repo: PaybillRepo, val application: Application) : Vi
 
     }
 
+    fun businessNoError(): String? = if(businessNumber.value.isNullOrEmpty())
+        application.getString(R.string.paybill_error_business_number)
+    else null
+
+    fun amountError(): String? {
+        return if (!amount.value.isNullOrEmpty() && amount.value!!.matches("[\\d.]+".toRegex()) && !amount.value!!.matches("[0]+".toRegex())) null
+        else application.getString(R.string.amount_fielderror)
+    }
+
+    fun accountNoError(): String? = if(accountNumber.value.isNullOrEmpty())
+        application.getString(R.string.transfer_error_recipient_account)
+    else null
+
     fun deletePaybill(paybill: Paybill) = viewModelScope.launch(Dispatchers.IO) {
         paybill.isSaved = false
         repo.update(paybill)
 
-        UIHelper.flashMessage(application.applicationContext, R.string.paybill_delete_success)
+        //TODO show this on the main thread
+        //UIHelper.flashMessage(application.applicationContext, R.string.paybill_delete_success)
     }
 }

@@ -123,7 +123,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     }
 
     private fun validates(v: StaxTextInputLayout, comparison: String?, errorMsg: Int): String? {
-        return if (v.text.isNullOrEmpty() || v.text.toString() == comparison) getString(errorMsg)
+        return if (v.text.isEmpty() || v.text == comparison) getString(errorMsg)
         else null
     }
 

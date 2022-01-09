@@ -66,7 +66,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         recipientValue = binding.summaryCard.recipientValue
 
         amountInput.apply {
-            text = transferViewModel.amount.value
+            setText(transferViewModel.amount.value)
             requestFocus()
         }
 
@@ -262,7 +262,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         }
 
         channelsViewModel.setChannelFromRequest(r)
-        amountInput.text = r.amount
+        amountInput.setText(r.amount)
         contactInput.setText(r.requester_number, false)
 
         transferViewModel.setEditing(r.amount.isNullOrEmpty())

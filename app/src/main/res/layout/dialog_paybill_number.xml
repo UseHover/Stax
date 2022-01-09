@@ -6,11 +6,12 @@
         android:padding="@dimen/margin_13">
 
     <TextView
-            android:id="@+id/header"
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/business_number_prompt"
-            android:textSize="@dimen/text_16"
+            android:textSize="@dimen/text_21"
+            android:fontFamily="font-medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -18,26 +19,26 @@
             android:id="@+id/businessNoInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_13"
+            android:layout_marginTop="@dimen/margin_16"
             android:hint="@string/business_number_label"
             android:imeOptions="actionNext"
             android:inputType="numberDecimal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/header" />
+            app:layout_constraintTop_toBottomOf="@id/title" />
 
     <Button
-            android:id="@+id/deleteBtn"
+            android:id="@+id/doneBtn"
             style="@style/StaxFabExtended"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:fontFamily="font-medium"
-            android:text="@string/btn_delete"
+            android:text="@string/btn_done"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/businessNoInput" />
 
     <Button
-            android:id="@+id/cancelBtn"
+            android:id="@+id/neg_btn"
             style="@style/StaxFabExtended"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,7 +46,7 @@
             android:layout_marginEnd="@dimen/margin_10"
             android:fontFamily="font-medium"
             android:text="@string/btn_cancel"
-            app:layout_constraintEnd_toStartOf="@id/deleteBtn"
+            app:layout_constraintEnd_toStartOf="@id/doneBtn"
             app:layout_constraintTop_toBottomOf="@id/businessNoInput" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

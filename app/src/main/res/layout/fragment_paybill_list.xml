@@ -8,6 +8,7 @@
     <com.hover.stax.views.StaxCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/contentLayout"
             app:showBack="true"
             app:title="@string/business_number_label">
 
@@ -50,7 +51,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:itemCount="4"
-                    tools:listitem="@layout/item_paybill" />
+                    tools:listitem="@layout/item_paybill_saved" />
 
         </LinearLayout>
 

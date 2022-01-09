@@ -45,7 +45,7 @@ class ReferralDialog : DialogFragment() {
                 .setPosButton(R.string.btn_save) { attemptSaveReferee() }
                 .highlightPos()
 
-        dialogView = dialog.view
+        dialogView = dialog.mView
         return dialog.createIt()
     }
 
