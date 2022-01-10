@@ -24,6 +24,7 @@ class PaybillViewModel(val repo: PaybillRepo, val application: Application) : Vi
     val name = MutableLiveData<String>()
     val amount = MutableLiveData<String>()
     val iconDrawable = MutableLiveData<Int>()
+    val isEditing = MutableLiveData(true)
 
     fun getSavedPaybills(accountId: Int) = viewModelScope.launch {
         repo.getSavedPaybills(accountId).collect { savedPaybills.postValue(it) }
@@ -55,6 +56,10 @@ class PaybillViewModel(val repo: PaybillRepo, val application: Application) : Vi
 
     fun setNickname(nickname: String) {
         name.value = nickname
+    }
+
+    fun setEditing(editing: Boolean) {
+        isEditing.value = editing
     }
 
     fun savePaybill(account: Account?, recurringAmount: Boolean) = viewModelScope.launch(Dispatchers.IO) {

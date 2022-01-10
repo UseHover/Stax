@@ -99,7 +99,10 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener {
         dialog!!.showIt()
     }
 
-    override fun onSelectPaybill(paybill: Paybill) = paybillViewModel.selectPaybill(paybill)
+    override fun onSelectPaybill(paybill: Paybill) {
+        paybillViewModel.selectPaybill(paybill)
+        findNavController().popBackStack()
+    }
 
     override fun onPause() {
         super.onPause()

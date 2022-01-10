@@ -69,18 +69,39 @@ class PaybillFragment : Fragment() {
 
         binding.continueBtn.setOnClickListener {
             if (validates()) {
-                if (binding.saveBillLayout.saveBill.isChecked) {
-                    Timber.e("Saving bill")
-                    paybillViewModel.savePaybill(channelsViewModel.activeAccount.value, binding.saveBillLayout.amountCheckBox.isChecked)
+                if (paybillViewModel.isEditing.value == true) {
+                    if (binding.saveBillLayout.saveBill.isChecked) {
+                        paybillViewModel.savePaybill(channelsViewModel.activeAccount.value, binding.saveBillLayout.amountCheckBox.isChecked)
+                    }
+
+                    paybillViewModel.setEditing(false)
+                    Timber.e("Here")
+                } else {
+                    //TODO run actions here
+                    Timber.e("Is not editing")
                 }
+            } else {
+                Timber.e("Not validated")
             }
         }
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun startObservers() {
-        paybillViewModel.selectedPaybill.observe(viewLifecycleOwner) {
-            binding.billDetailsLayout.businessNoInput.setText(it.name)
+        with(paybillViewModel) {
+            selectedPaybill.observe(viewLifecycleOwner) {
+                with(binding.billDetailsLayout) {
+                    businessNoInput.setText(it.name)
+                    accountNoInput.setText(it.accountNo)
+                }
+            }
+
+            isEditing.observe(viewLifecycleOwner) {
+                if (it == false)
+                    showSummary()
+                else
+                    showContent()
+            }
         }
 
         with(channelsViewModel) {
@@ -118,6 +139,35 @@ class PaybillFragment : Fragment() {
 
         viewModel.activeChannel.observe(lifecycleOwner, activeChannelObserver)
         viewModel.channelActions.observe(lifecycleOwner, actionsObserver)
+    }
+
+    private fun showContent() {
+        with(binding) {
+            paybillSummary.paybillSummaryCard.visibility = View.GONE
+            billDetailsLayout.cardPaybillDetails.visibility = View.VISIBLE
+            saveBillLayout.cardSavePaybill.visibility = View.VISIBLE
+
+            continueBtn.text = getString(R.string.btn_continue)
+        }
+    }
+
+    private fun showSummary() {
+        binding.billDetailsLayout.cardPaybillDetails.visibility = View.GONE
+        binding.saveBillLayout.cardSavePaybill.visibility = View.GONE
+
+        with(binding.paybillSummary) {
+            paybillSummaryCard.visibility = View.VISIBLE
+
+            with(paybillViewModel) {
+                paybillSummaryCard.setOnClickIcon { setEditing(true) }
+                payFromAcct.text = channelsViewModel.activeAccount.value?.name
+                recipient.text = businessNumber.value
+                accountNo.text = accountNumber.value
+                amountValue.text = amount.value
+            }
+        }
+
+        binding.continueBtn.text = getString(R.string.pay_now)
     }
 
     private fun setWatchers() {
@@ -167,6 +217,7 @@ class PaybillFragment : Fragment() {
         val accountNoError = paybillViewModel.accountNoError()
         val amountError = paybillViewModel.amountError()
         val nickNameError = paybillViewModel.nameError()
+        val saveBill = binding.saveBillLayout.saveBill.isChecked
 
         with(binding.billDetailsLayout) {
             businessNoInput.setState(businessNoError, if (businessNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.NONE)
@@ -174,10 +225,15 @@ class PaybillFragment : Fragment() {
             amountInput.setState(amountError, if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.NONE)
         }
 
-        if (binding.saveBillLayout.saveBill.isChecked)
+        if (saveBill)
             binding.saveBillLayout.billNameInput.setState(nickNameError, if (nickNameError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.NONE)
 
-        return businessNoError == null && accountNoError == null && amountError == null && nickNameError == null
+        return businessNoError == null && accountNoError == null && amountError == null && (if (saveBill) nickNameError == null else true)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        paybillViewModel.setEditing(true)
     }
 
     override fun onResume() {

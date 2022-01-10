@@ -28,7 +28,7 @@ class PaybillAdapter(private val paybills: List<Paybill>, private val clickListe
             binding.nickname.text = paybill.toString()
 
             if (paybill.isSaved)
-                binding.accountNumber.text = binding.root.context.getString(R.string.account_no_label, paybill.name)
+                binding.accountNumber.text = binding.root.context.getString(R.string.account_no_label, paybill.accountNo)
 
             binding.root.setOnClickListener { clickListener.onSelectPaybill(paybill) }
             binding.removeBill.setOnClickListener { clickListener.onDeletePaybill(paybill) }

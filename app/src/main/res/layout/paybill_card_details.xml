@@ -4,12 +4,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:title="@string/cta_paybill"
+        android:id="@+id/cardPaybillDetails"
         app:showBack="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/margin_8">
+            android:layout_marginTop="@dimen/margin_13">
 
         <com.hover.stax.accounts.AccountDropdown
                 android:id="@+id/accountDropdown"

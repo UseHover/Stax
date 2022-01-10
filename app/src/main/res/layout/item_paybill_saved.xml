@@ -3,8 +3,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_marginVertical="@dimen/margin_10"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/margin_10">
 
     <ImageView
             android:id="@+id/billIcon"
@@ -32,6 +32,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="font-normal"
                 android:textSize="@dimen/text_16"
+                android:layout_marginBottom="@dimen/margin_3"
                 tools:text="@string/nickname" />
 
         <TextView
@@ -40,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="font-normal"
                 android:textSize="@dimen/text_16"
-                tools:text="@string/account_num_desc" />
+                tools:text="@string/account_number_label" />
     </LinearLayout>
 
     <ImageButton

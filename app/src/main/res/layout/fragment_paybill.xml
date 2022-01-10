@@ -2,7 +2,7 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/margin_13">
+        android:layout_marginVertical="@dimen/margin_13">
 
     <LinearLayout
             android:layout_width="match_parent"
@@ -17,6 +17,10 @@
         <include
                 android:id="@+id/saveBillLayout"
                 layout="@layout/paybill_card_save_bill" />
+
+        <include
+                android:id="@+id/paybillSummary"
+                layout="@layout/paybill_summary" />
 
         <Button
                 android:id="@+id/continue_btn"

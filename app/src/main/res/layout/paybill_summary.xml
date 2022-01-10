@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:showBack="true"
+        android:visibility="gone"
+        android:id="@+id/paybillSummaryCard"
+        app:title="@string/cta_paybill">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_13"
+            android:layout_marginHorizontal="@dimen/margin_16">
+
+        <TextView
+                android:id="@+id/payFromLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="font-normal"
+                android:text="@string/accounts_label"
+                android:textSize="@dimen/text_16"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+                android:id="@+id/payFromAcct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="font-normal"
+                android:textSize="@dimen/text_21"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="MPESA" />
+
+        <TextView
+                android:id="@+id/toLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_21"
+                android:fontFamily="font-normal"
+                android:text="@string/recipient_label"
+                android:textSize="@dimen/text_16"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/payFromLabel" />
+
+        <TextView
+                android:id="@+id/recipient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="font-normal"
+                android:textSize="@dimen/text_21"
+                app:layout_constraintBaseline_toBaselineOf="@id/toLabel"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/payFromAcct"
+                tools:text="@string/recipient_label" />
+
+        <TextView
+                android:id="@+id/accountLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_21"
+                android:fontFamily="font-normal"
+                android:text="@string/account_label"
+                android:textSize="@dimen/text_16"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toLabel" />
+
+        <TextView
+                android:id="@+id/accountNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="font-normal"
+                android:textSize="@dimen/text_21"
+                app:layout_constraintBaseline_toBaselineOf="@id/accountLabel"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recipient"
+                tools:text="@string/account_label" />
+
+        <TextView
+                android:id="@+id/amountLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_21"
+                android:fontFamily="font-normal"
+                android:text="@string/transfer_amount_label"
+                android:textSize="@dimen/text_16"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/accountLabel" />
+
+        <TextView
+                android:id="@+id/amountValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="font-normal"
+                android:textSize="@dimen/text_21"
+                app:layout_constraintBaseline_toBaselineOf="@id/amountLabel"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/accountNo"
+                tools:text="@string/transfer_amount_label" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.hover.stax.views.StaxCardView>
