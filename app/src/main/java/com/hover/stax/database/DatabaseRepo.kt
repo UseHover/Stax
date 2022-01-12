@@ -32,6 +32,7 @@ import com.hover.stax.utils.paymentLinkCryptography.Encryption
 import timber.log.Timber
 import java.security.NoSuchAlgorithmException
 
+//TODO split this up into smaller constituent repos
 class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     private val decryptedRequest: MutableLiveData<Request> = MutableLiveData()
@@ -116,6 +117,10 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun getActions(channelId: Int, type: String?): List<HoverAction> {
         return actionDao.getActions(channelId, type)
+    }
+
+    fun getLiveActions(channelId: Int, type: String): LiveData<List<HoverAction>> {
+        return actionDao.getLiveActions(channelId, type)
     }
 
     fun getActions(channelIds: IntArray?, type: String?): List<HoverAction> {

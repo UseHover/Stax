@@ -1,11 +1,14 @@
 package com.hover.stax.paybill
 
 import android.app.Application
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
+import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.utils.UIHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -13,10 +16,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class PaybillViewModel(val repo: PaybillRepo, val application: Application) : ViewModel() {
+class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, val application: Application) : ViewModel() {
 
     val savedPaybills = MutableLiveData<List<Paybill>>()
-    val accountPaybills = MutableLiveData<List<Paybill>>()
+    val popularPaybills = MutableLiveData<List<HoverAction>>()
 
     val selectedPaybill = MutableLiveData<Paybill>()
     val businessNumber = MutableLiveData<String>()
@@ -30,8 +33,11 @@ class PaybillViewModel(val repo: PaybillRepo, val application: Application) : Vi
         repo.getSavedPaybills(accountId).collect { savedPaybills.postValue(it) }
     }
 
-    fun getPaybills(accountId: Int) = viewModelScope.launch {
-        repo.getPaybills(accountId).map { paybills -> paybills.filterNot { it.isSaved } }.collect { accountPaybills.postValue(it) }
+    fun getPopularPaybills(accountId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        dbRepo.getAccount(accountId)?.let {
+            val actions = dbRepo.getActions(it.channelId, HoverAction.C2B)
+            popularPaybills.postValue(actions)
+        }
     }
 
     fun selectPaybill(paybill: Paybill) {
@@ -67,7 +73,7 @@ class PaybillViewModel(val repo: PaybillRepo, val application: Application) : Vi
         val accountNo = accountNumber.value
 
         if (account != null) {
-            val payBill = Paybill(name.value!!, businessNo!!, accountNo, account.channelId, account.id, account.logoUrl)
+            val payBill = Paybill(name.value!!, businessNo!!, accountNo, account.channelId, account.id, account.logoUrl).apply {  }
             if (recurringAmount) payBill.recurringAmount = amount.value!!.toInt()
             payBill.isSaved = true
 
@@ -99,8 +105,7 @@ class PaybillViewModel(val repo: PaybillRepo, val application: Application) : Vi
     else null
 
     fun deletePaybill(paybill: Paybill) = viewModelScope.launch(Dispatchers.IO) {
-        paybill.isSaved = false
-        repo.update(paybill)
+        repo.delete(paybill)
 
         launch(Dispatchers.Main) {
             UIHelper.flashMessage(application.applicationContext, R.string.paybill_delete_success)

@@ -331,7 +331,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         } else {
             Timber.e("Nothing to update. Default account set")
         }
-
     }
 
     override fun highlightAccount(account: Account) {
