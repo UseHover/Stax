@@ -47,7 +47,7 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconListener {
         channelsViewModel.setType(HoverAction.C2B)
 
         arguments?.getBoolean(UPDATE_BUSINESS_NO, false)?.let {
-            binding.billDetailsLayout.businessNoInput.setText(paybillViewModel.businessNumber.value)
+            binding.billDetailsLayout.businessNoInput.setText(paybillViewModel.selectedPaybill.value.toString())
         }
 
         initListeners()

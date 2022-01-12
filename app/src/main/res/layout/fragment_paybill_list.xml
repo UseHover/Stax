@@ -15,7 +15,8 @@
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_16"
+                android:layout_marginStart="@dimen/margin_16"
+                android:layout_marginEnd="@dimen/margin_8"
                 android:orientation="vertical">
 
             <include
@@ -52,7 +53,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:itemCount="4"
-                    tools:listitem="@layout/item_paybill_saved" />
+                    tools:listitem="@layout/item_paybill" />
 
         </LinearLayout>
 

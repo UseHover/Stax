@@ -6,14 +6,26 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/margin_10">
 
-    <ImageView
-            android:id="@+id/billIcon"
-            android:layout_width="@dimen/margin_24"
-            android:layout_height="@dimen/margin_24"
-            app:layout_constraintBottom_toBottomOf="parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/iconLayout"
+            android:layout_width="@dimen/margin_55"
+            android:layout_height="@dimen/margin_55"
+            android:background="@drawable/icon_bg_circle"
+            android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_dialpad" />
+            app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+                android:id="@+id/billIcon"
+                android:layout_width="@dimen/margin_34"
+                android:layout_height="@dimen/margin_34"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@drawable/ic_water" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
             android:layout_width="0dp"
@@ -23,16 +35,16 @@
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/removeBill"
-            app:layout_constraintStart_toEndOf="@id/billIcon"
+            app:layout_constraintStart_toEndOf="@id/iconLayout"
             app:layout_constraintTop_toTopOf="parent">
 
         <TextView
                 android:id="@+id/nickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_3"
                 android:fontFamily="font-normal"
                 android:textSize="@dimen/text_16"
-                android:layout_marginBottom="@dimen/margin_3"
                 tools:text="@string/nickname" />
 
         <TextView

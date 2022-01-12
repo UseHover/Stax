@@ -231,5 +231,6 @@
 
     <style name="StaxIconShape" parent="">
         <item name="cornerSize">50%</item>
+        <item name="android:solidColor">@color/buttonColor</item>
     </style>
 </resources>
