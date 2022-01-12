@@ -22,10 +22,10 @@ import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentPaybillBinding
+import com.hover.stax.home.MainActivity
 import com.hover.stax.utils.Constants
 import com.hover.stax.views.AbstractStatefulInput
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class PaybillFragment : Fragment(), PaybillIconsAdapter.IconListener {
@@ -33,7 +33,7 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconListener {
     private var _binding: FragmentPaybillBinding? = null
     private val binding get() = _binding!!
 
-    private val channelsViewModel: ChannelsViewModel by viewModel()
+    private val channelsViewModel: ChannelsViewModel by sharedViewModel()
     private val paybillViewModel: PaybillViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -47,7 +47,7 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconListener {
         channelsViewModel.setType(HoverAction.C2B)
 
         arguments?.getBoolean(UPDATE_BUSINESS_NO, false)?.let {
-            binding.billDetailsLayout.businessNoInput.setText(paybillViewModel.selectedPaybill.value.toString())
+            binding.billDetailsLayout.businessNoInput.setText(paybillViewModel.businessNumber.value)
         }
 
         initListeners()
@@ -82,11 +82,7 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconListener {
                     }
 
                     paybillViewModel.setEditing(false)
-                    Timber.e("Here")
-                } else {
-                    //TODO run actions here
-                    Timber.e("Is not editing")
-                }
+                } else submitRequest()
             } else {
                 Timber.e("Not validated")
             }
@@ -98,9 +94,12 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconListener {
         with(paybillViewModel) {
             selectedPaybill.observe(viewLifecycleOwner) {
                 with(binding.billDetailsLayout) {
-                    businessNoInput.setText(it.name)
+                    businessNoInput.setText(it.businessNo)
                     accountNoInput.setText(it.accountNo)
                 }
+
+                if (it.isSaved)
+                    binding.saveBillLayout.cardSavePaybill.visibility = View.GONE
             }
 
             isEditing.observe(viewLifecycleOwner) {
@@ -265,6 +264,16 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconListener {
         }
     }
 
+    private fun submitRequest() = with(channelsViewModel) {
+        val actions = channelActions.value
+        val channel = activeChannel.value
+        val account = activeAccount.value
+
+        if (!actions.isNullOrEmpty() && channel != null && account != null)
+            (requireActivity() as MainActivity).submitPaymentRequest(actions.first(), channel, account)
+        else
+            Timber.e("Request composition not complete; ${actions?.firstOrNull()}, $channel $account")
+    }
 
     override fun onPause() {
         super.onPause()
@@ -290,14 +299,14 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconListener {
         binding.paybillIconsLayout.cardPaybillIcons.visibility = View.GONE
     }
 
-    companion object {
-        const val UPDATE_BUSINESS_NO: String = "update_business_no"
-    }
-
     override fun onSelectIcon(id: Int) {
         paybillViewModel.setIconDrawable(id)
 
         binding.paybillIconsLayout.cardPaybillIcons.visibility = View.GONE
         toggleMainContent(true)
+    }
+
+    companion object {
+        const val UPDATE_BUSINESS_NO: String = "update_business_no"
     }
 }

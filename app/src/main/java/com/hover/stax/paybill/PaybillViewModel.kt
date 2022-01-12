@@ -1,7 +1,6 @@
 package com.hover.stax.paybill
 
 import android.app.Application
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +11,6 @@ import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.utils.UIHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -73,9 +71,11 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
         val accountNo = accountNumber.value
 
         if (account != null) {
-            val payBill = Paybill(name.value!!, businessNo!!, accountNo, account.channelId, account.id, account.logoUrl).apply {  }
+            val payBill = Paybill(name.value!!, businessNo!!, accountNo, account.channelId, account.id, account.logoUrl).apply {
+                isSaved = true
+                logo = iconDrawable.value ?: 0
+            }
             if (recurringAmount) payBill.recurringAmount = amount.value!!.toInt()
-            payBill.isSaved = true
 
             repo.save(payBill)
 

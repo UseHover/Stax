@@ -99,10 +99,6 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         return actionDao.getLiveAction(public_id)
     }
 
-    fun getLiveActions(channelIds: IntArray?, type: String?): LiveData<List<HoverAction>> {
-        return actionDao.getLiveActions(channelIds, type)
-    }
-
     fun getChannelActions(channelId: Int): LiveData<List<HoverAction>> {
         return actionDao.getLiveChannelActions(channelId)
     }
@@ -117,10 +113,6 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun getActions(channelId: Int, type: String?): List<HoverAction> {
         return actionDao.getActions(channelId, type)
-    }
-
-    fun getLiveActions(channelId: Int, type: String): LiveData<List<HoverAction>> {
-        return actionDao.getLiveActions(channelId, type)
     }
 
     fun getActions(channelIds: IntArray?, type: String?): List<HoverAction> {
