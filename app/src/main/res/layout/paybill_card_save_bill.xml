@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cardSavePaybill"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/cardSavePaybill"
         android:layout_marginTop="@dimen/margin_8">
 
     <LinearLayout
@@ -15,28 +15,27 @@
                 android:id="@+id/saveBill"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_5"
                 android:fontFamily="font-normal"
                 android:text="@string/save_bill"
-                android:layout_marginStart="@dimen/margin_5"
                 android:textSize="@dimen/text_16" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/saveBillCard"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_8">
+                android:layout_marginTop="@dimen/margin_8"
+                android:visibility="gone">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/billIcon"
+            <include
+                    android:id="@+id/billIconLayout"
+                    layout="@layout/item_icons"
                     android:layout_width="@dimen/margin_65"
                     android:layout_height="@dimen/margin_65"
+                    android:layout_marginStart="@dimen/margin_5"
+                    android:layout_marginTop="@dimen/margin_8"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="@dimen/margin_5"
-                    android:layout_marginStart="@dimen/margin_8"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:shapeAppearanceOverlay="@style/StaxIconShape"
-                    app:srcCompat="@drawable/banner_permission" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
             <com.hover.stax.views.StaxTextInputLayout
                     android:id="@+id/billNameInput"
@@ -46,8 +45,8 @@
                     android:hint="@string/bill_name_label"
                     android:imeOptions="actionNext"
                     android:inputType="textCapWords"
-                    app:layout_constraintStart_toEndOf="@id/billIcon"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/billIconLayout"
                     app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.checkbox.MaterialCheckBox

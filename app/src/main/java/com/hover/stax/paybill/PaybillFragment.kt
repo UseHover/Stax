@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
@@ -27,7 +28,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class PaybillFragment : Fragment() {
+class PaybillFragment : Fragment(), PaybillIconsAdapter.IconListener {
 
     private var _binding: FragmentPaybillBinding? = null
     private val binding get() = _binding!!
@@ -45,7 +46,9 @@ class PaybillFragment : Fragment() {
 
         channelsViewModel.setType(HoverAction.C2B)
 
-        arguments?.getBoolean(UPDATE_BUSINESS_NO, false)?.let { binding.billDetailsLayout.businessNoInput.setText(paybillViewModel.businessNumber.value) }
+        arguments?.getBoolean(UPDATE_BUSINESS_NO, false)?.let {
+            binding.billDetailsLayout.businessNoInput.setText(paybillViewModel.businessNumber.value)
+        }
 
         initListeners()
         startObservers()
@@ -54,8 +57,12 @@ class PaybillFragment : Fragment() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initListeners() {
-        binding.saveBillLayout.saveBill.setOnCheckedChangeListener { _, isChecked ->
-            binding.saveBillLayout.saveBillCard.visibility = if (isChecked) View.VISIBLE else View.GONE
+        with(binding.saveBillLayout) {
+            saveBill.setOnCheckedChangeListener { _, isChecked ->
+                binding.saveBillLayout.saveBillCard.visibility = if (isChecked) View.VISIBLE else View.GONE
+            }
+
+            billIconLayout.iconLayout.setOnClickListener { showIconsChooser() }
         }
 
         binding.billDetailsLayout.businessNoInput.editText.setOnTouchListener { _, event ->
@@ -102,6 +109,12 @@ class PaybillFragment : Fragment() {
                 else
                     showContent()
             }
+
+            iconDrawable.observe(viewLifecycleOwner) {
+                if (it != 0) {
+                    binding.saveBillLayout.billIconLayout.billIcon.setImageDrawable(ContextCompat.getDrawable(requireContext(), it))
+                }
+            }
         }
 
         with(channelsViewModel) {
@@ -144,16 +157,14 @@ class PaybillFragment : Fragment() {
     private fun showContent() {
         with(binding) {
             paybillSummary.paybillSummaryCard.visibility = View.GONE
-            billDetailsLayout.cardPaybillDetails.visibility = View.VISIBLE
-            saveBillLayout.cardSavePaybill.visibility = View.VISIBLE
+            toggleMainContent(true)
 
             continueBtn.text = getString(R.string.btn_continue)
         }
     }
 
     private fun showSummary() {
-        binding.billDetailsLayout.cardPaybillDetails.visibility = View.GONE
-        binding.saveBillLayout.cardSavePaybill.visibility = View.GONE
+        toggleMainContent(false)
 
         with(binding.paybillSummary) {
             paybillSummaryCard.visibility = View.VISIBLE
@@ -168,6 +179,13 @@ class PaybillFragment : Fragment() {
         }
 
         binding.continueBtn.text = getString(R.string.pay_now)
+    }
+
+    private fun toggleMainContent(show: Boolean) {
+        binding.billDetailsLayout.cardPaybillDetails.visibility = if (show) View.VISIBLE else View.GONE
+        binding.saveBillLayout.cardSavePaybill.visibility = if (show) View.VISIBLE else View.GONE
+
+        if (show) binding.continueBtn.visibility = View.VISIBLE
     }
 
     private fun setWatchers() {
@@ -231,6 +249,23 @@ class PaybillFragment : Fragment() {
         return businessNoError == null && accountNoError == null && amountError == null && (if (saveBill) nickNameError == null else true)
     }
 
+    private fun showIconsChooser() = with(binding) {
+        toggleMainContent(false)
+        binding.continueBtn.visibility = View.GONE
+
+        with(paybillIconsLayout) {
+            cardPaybillIcons.visibility = View.VISIBLE
+
+            iconList.adapter = PaybillIconsAdapter(this@PaybillFragment)
+
+            cardPaybillIcons.setOnClickIcon {
+                cardPaybillIcons.visibility = View.GONE
+                toggleMainContent(true)
+            }
+        }
+    }
+
+
     override fun onPause() {
         super.onPause()
         paybillViewModel.setEditing(true)
@@ -251,9 +286,18 @@ class PaybillFragment : Fragment() {
                 setEndIconTintList(ColorStateList.valueOf(Color.WHITE))
             }
         }
+
+        binding.paybillIconsLayout.cardPaybillIcons.visibility = View.GONE
     }
 
     companion object {
         const val UPDATE_BUSINESS_NO: String = "update_business_no"
+    }
+
+    override fun onSelectIcon(id: Int) {
+        paybillViewModel.setIconDrawable(id)
+
+        binding.paybillIconsLayout.cardPaybillIcons.visibility = View.GONE
+        toggleMainContent(true)
     }
 }

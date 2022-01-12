@@ -22,6 +22,11 @@
                 android:id="@+id/paybillSummary"
                 layout="@layout/paybill_summary" />
 
+        <include
+                android:id="@+id/paybillIconsLayout"
+                layout="@layout/paybill_card_icons"
+                android:visibility="gone" />
+
         <Button
                 android:id="@+id/continue_btn"
                 style="@style/StaxFabExtended"

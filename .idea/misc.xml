@@ -8,17 +8,24 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/button_bg.xml" value="0.5416666666666666" />
         <entry key="app/src/main/res/drawable/button_bg_colored.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_dark.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_grey.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/ic_caret_down.xml" value="0.53125" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.2601851851851852" />
+        <entry key="app/src/main/res/drawable/ic_garbage.xml" value="0.5416666666666666" />
+        <entry key="app/src/main/res/drawable/ic_internet.xml" value="0.5416666666666666" />
         <entry key="app/src/main/res/drawable/ic_noun_hashtag_2733013.xml" value="0.175" />
         <entry key="app/src/main/res/drawable/ic_refresh_white_13dp.xml" value="0.25833333333333336" />
+        <entry key="app/src/main/res/drawable/ic_rent.xml" value="0.5416666666666666" />
         <entry key="app/src/main/res/drawable/ic_settings.xml" value="0.25833333333333336" />
         <entry key="app/src/main/res/drawable/ic_share.xml" value="0.22962962962962963" />
+        <entry key="app/src/main/res/drawable/ic_tv.xml" value="0.5416666666666666" />
         <entry key="app/src/main/res/drawable/ic_twotone_chevron_right_24.xml" value="0.53125" />
         <entry key="app/src/main/res/drawable/ic_ussd_lib.xml" value="0.3546875" />
+        <entry key="app/src/main/res/drawable/ic_water.xml" value="0.5416666666666666" />
+        <entry key="app/src/main/res/drawable/icon_bg_circle.xml" value="0.5416666666666666" />
         <entry key="app/src/main/res/layout/account_card_layout.xml" value="0.15704154002026344" />
         <entry key="app/src/main/res/layout/account_card_manage.xml" value="0.30572916666666666" />
         <entry key="app/src/main/res/layout/account_card_shortcode.xml" value="0.30572916666666666" />
@@ -60,10 +67,12 @@
         <entry key="app/src/main/res/layout/home_card_future.xml" value="0.11398176291793313" />
         <entry key="app/src/main/res/layout/home_card_transactions.xml" value="0.14766970618034447" />
         <entry key="app/src/main/res/layout/in_app_banner_layout.xml" value="0.15704154002026344" />
+        <entry key="app/src/main/res/layout/item_icons.xml" value="0.3805620608899297" />
         <entry key="app/src/main/res/layout/item_paybill.xml" value="0.8125" />
         <entry key="app/src/main/res/layout/item_paybill_saved.xml" value="0.36768149882903983" />
         <entry key="app/src/main/res/layout/item_wellness_tips.xml" value="0.25" />
         <entry key="app/src/main/res/layout/paybill_card_details.xml" value="0.5077319587628866" />
+        <entry key="app/src/main/res/layout/paybill_card_icons.xml" value="0.3805620608899297" />
         <entry key="app/src/main/res/layout/paybill_card_save_bill.xml" value="0.3805620608899297" />
         <entry key="app/src/main/res/layout/paybill_summary.xml" value="0.5153846153846153" />
         <entry key="app/src/main/res/layout/rename_account_layout.xml" value="0.3134057971014493" />
