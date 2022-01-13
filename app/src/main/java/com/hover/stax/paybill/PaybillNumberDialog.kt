@@ -57,7 +57,7 @@ class PaybillNumberDialog : DialogFragment() {
 
     private fun validates(): Boolean {
         val businessNoError = viewModel.businessNoError()
-        binding.businessNoInput.setState(businessNoError, if (businessNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.NONE)
+        binding.businessNoInput.setState(businessNoError, if (businessNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         return businessNoError == null
     }
