@@ -14,11 +14,10 @@ import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils
-import com.hover.stax.views.AbstractStatefulInput
+import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
-import kotlin.collections.ArrayList
+import timber.log.Timber
 
 class TransferViewModel(application: Application, repo: DatabaseRepo) : AbstractFormViewModel(application, repo) {
 
@@ -26,7 +25,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     val contact = MutableLiveData<StaxContact>()
     val note = MutableLiveData<String>()
     var request: LiveData<Request> = MutableLiveData()
-    val nonTemplateVariables   =  MutableLiveData<ArrayList<NonTemplateVariable>>()
+    private var nonTemplateVariables   =  MutableLiveData<HashMap<String, String>>()
 
     fun setTransactionType(transaction_type: String) {
         TransactionType.type = transaction_type
@@ -119,46 +118,13 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
         }
     }
 
-    fun initNonTemplateVariables(entries: List<String>) {
-        val itemList = ArrayList<NonTemplateVariable>()
-        entries.map { itemList.add(NonTemplateVariable(it, null)) }
-        nonTemplateVariables.postValue(itemList)
-    }
+    fun updateNonTemplateVariables(key: String, value: String) {
+        var currentMap = nonTemplateVariables.value
+        if(currentMap == null) currentMap = HashMap()
 
-    fun nullifyNonTemplateVariables() {
-        nonTemplateVariables.postValue(null)
-    }
-    fun updateNonTemplateVariables(nonTemplateVariable: NonTemplateVariable) {
-        var itemList = nonTemplateVariables.value
-        if(itemList == null) itemList = ArrayList()
+        currentMap.put(key, value)
+        nonTemplateVariables.postValue(currentMap);
 
-        itemList.find { it.key == nonTemplateVariable.key }
-                ?.let { it.value = nonTemplateVariable.value }
-                ?: itemList.add(nonTemplateVariable)
-
-        nonTemplateVariables.postValue(itemList);
-    }
-
-    fun nonTemplateVariablesAnError(): Boolean {
-        with(nonTemplateVariables.value) {
-            when {
-                this == null -> return false
-                this.isEmpty() -> return true
-                else -> {
-                    this.forEachIndexed{index, it->
-                        if (it.value == null) it.editTextState = AbstractStatefulInput.ERROR
-                        else {
-                            if (it.value!!.replace(" ".toRegex(), "").isEmpty()) it.editTextState = AbstractStatefulInput.ERROR
-                            else it.editTextState = AbstractStatefulInput.SUCCESS
-                            it.value = it.value //Required to prevent editText value changing
-                        }
-                    }
-
-                    nonTemplateVariables.postValue(this)
-                    return find { it.editTextState == AbstractStatefulInput.ERROR } != null
-                }
-            }
-        }
     }
 
     fun reset() {
