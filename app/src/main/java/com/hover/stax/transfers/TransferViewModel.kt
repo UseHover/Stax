@@ -17,6 +17,7 @@ import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class TransferViewModel(application: Application, repo: DatabaseRepo) : AbstractFormViewModel(application, repo) {
 
@@ -24,6 +25,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     val contact = MutableLiveData<StaxContact>()
     val note = MutableLiveData<String>()
     var request: LiveData<Request> = MutableLiveData()
+    private var nonTemplateVariables   =  MutableLiveData<HashMap<String, String>>()
 
     fun setTransactionType(transaction_type: String) {
         TransactionType.type = transaction_type
@@ -114,6 +116,15 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
                 repo.save(sc)
             }
         }
+    }
+
+    fun updateNonTemplateVariables(key: String, value: String) {
+        var currentMap = nonTemplateVariables.value
+        if(currentMap == null) currentMap = HashMap()
+
+        currentMap.put(key, value)
+        nonTemplateVariables.postValue(currentMap);
+
     }
 
     fun reset() {
