@@ -9,9 +9,9 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="font-medium"
             android:text="@string/business_number_prompt"
             android:textSize="@dimen/text_21"
-            android:fontFamily="font-medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,25 +26,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/doneBtn"
-            style="@style/StaxFabExtended"
+            style="@style/StaxButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:fontFamily="font-medium"
             android:text="@string/btn_done"
+            app:backgroundTint="@color/stax_state_blue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/businessNoInput" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/neg_btn"
-            style="@style/StaxFabExtended"
+            style="@style/StaxButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="@dimen/margin_10"
             android:fontFamily="font-medium"
+            android:radius="5dp"
             android:text="@string/btn_cancel"
             app:layout_constraintEnd_toStartOf="@id/doneBtn"
             app:layout_constraintTop_toBottomOf="@id/businessNoInput" />

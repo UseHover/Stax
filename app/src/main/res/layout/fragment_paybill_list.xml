@@ -36,6 +36,7 @@
                     android:id="@+id/savedList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_13"
                     tools:itemCount="4"
                     tools:listitem="@layout/item_paybill_saved" />
 
@@ -51,6 +52,7 @@
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/popularList"
                     android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/margin_13"
                     android:layout_height="wrap_content"
                     tools:itemCount="4"
                     tools:listitem="@layout/item_paybill" />

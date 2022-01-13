@@ -34,12 +34,19 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
     fun getPopularPaybills(accountId: Int) = viewModelScope.launch(Dispatchers.IO) {
         dbRepo.getAccount(accountId)?.let {
             val actions = dbRepo.getActions(it.channelId, HoverAction.C2B)
-            popularPaybills.postValue(actions)
+
+            actions.forEach { Timber.e("${it.to_institution_name}") }
+            popularPaybills.postValue(actions.filterNot { action -> action.to_institution_name == null })
         }
     }
 
     fun selectPaybill(paybill: Paybill) {
         selectedPaybill.value = paybill
+    }
+
+    fun selectPaybill(action: HoverAction) {
+        val paybill = Paybill(action.to_institution_name, action.to_institution_id.toString(), null, action.channel_id, 0, action.to_institution_logo)
+        selectPaybill(paybill)
     }
 
     fun setBusinessNumber(number: String) {

@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -118,6 +119,10 @@ public class UIHelper {
                 .load(url)
                 .config(Bitmap.Config.RGB_565)
                 .resize(size, size).into(target);
+    }
+
+    public static void loadPicasso(String url, ImageView imageView) {
+        Picasso.get().load(url).config(Bitmap.Config.RGB_565).placeholder(R.color.buttonColor).into(imageView);
     }
 
     public static void loadPicasso(int resId, int size, Target target) {

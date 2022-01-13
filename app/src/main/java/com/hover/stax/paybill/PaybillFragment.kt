@@ -101,16 +101,11 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
                         amountInput.setText(it.recurringAmount.toString())
                 }
 
-                if (it.isSaved)
-                    binding.saveBillLayout.cardSavePaybill.visibility = View.GONE
+//                if (it.isSaved)
+
             }
 
-            isEditing.observe(viewLifecycleOwner) {
-                if (it == false)
-                    showSummary()
-                else
-                    showContent()
-            }
+            isEditing.observe(viewLifecycleOwner) { if (it == false) showSummary() else showContent() }
 
             iconDrawable.observe(viewLifecycleOwner) {
                 if (it != 0) {
@@ -240,13 +235,13 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
         val saveBill = binding.saveBillLayout.saveBill.isChecked
 
         with(binding.billDetailsLayout) {
-            businessNoInput.setState(businessNoError, if (businessNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.NONE)
-            accountNoInput.setState(accountNoError, if (accountNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.NONE)
-            amountInput.setState(amountError, if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.NONE)
+            businessNoInput.setState(businessNoError, if (businessNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+            accountNoInput.setState(accountNoError, if (accountNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+            amountInput.setState(amountError, if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
         }
 
         if (saveBill)
-            binding.saveBillLayout.billNameInput.setState(nickNameError, if (nickNameError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.NONE)
+            binding.saveBillLayout.billNameInput.setState(nickNameError, if (nickNameError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         return businessNoError == null && accountNoError == null && amountError == null && (if (saveBill) nickNameError == null else true)
     }

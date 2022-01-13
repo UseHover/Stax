@@ -16,6 +16,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_5"
+                android:fontFamily="font-normal"
                 android:paddingStart="@dimen/margin_13"
                 android:paddingEnd="@dimen/margin_5"
                 android:text="@string/save_bill"

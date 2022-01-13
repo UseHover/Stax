@@ -106,7 +106,8 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
     }
 
     override fun onSelectPaybill(action: HoverAction) {
-        TODO("Not yet implemented")
+        paybillViewModel.selectPaybill(action)
+        findNavController().popBackStack()
     }
 
     override fun onPause() {
