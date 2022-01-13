@@ -319,15 +319,15 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         }
     }
 
-    fun submit(account: Account) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account) }
+    fun submit(account: Account, otherSessionExtras:Map<String, String>? = null) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account, otherSessionExtras) }
 
-    private fun makeHoverCall(action: HoverAction, account: Account) {
+    private fun makeHoverCall(action: HoverAction, account: Account, otherSessionExtras:Map<String, String>?) {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.finish_transfer, TransactionType.type), this)
         updatePushNotifGroupStatus()
 
         transferViewModel.checkSchedule()
 
-        makeCall(action, selectedAccount = account)
+        makeCall(action, selectedAccount = account, otherSessionExtras = otherSessionExtras)
     }
 
     private fun getRequestCode(transactionType: String): Int {
@@ -335,7 +335,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         else Constants.TRANSFER_REQUEST
     }
 
-    private fun makeCall(action: HoverAction, channel: Channel? = null, selectedAccount: Account? = null) {
+    private fun makeCall(action: HoverAction, channel: Channel? = null, selectedAccount: Account? = null, otherSessionExtras:Map<String, String>? = null) {
         val hsb = HoverSession.Builder(action, channel
                 ?: channelsViewModel.activeChannel.value!!, this, getRequestCode(action.transaction_type))
 
@@ -343,6 +343,12 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
             hsb.extra(HoverAction.AMOUNT_KEY, transferViewModel.amount.value)
                     .extra(HoverAction.NOTE_KEY, transferViewModel.note.value)
                     .extra(Constants.ACCOUNT_NAME, selectedAccount?.name)
+
+            if(otherSessionExtras!=null && otherSessionExtras.isNotEmpty()) {
+                otherSessionExtras.forEach {
+                    hsb.extra(it.key, it.value)
+                }
+            }
 
             selectedAccount?.run { hsb.setAccountId(id.toString()) }
             transferViewModel.contact.value?.let { addRecipientInfo(hsb) }

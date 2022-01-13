@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
@@ -28,7 +29,7 @@ import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
-class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener {
+class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonTemplateVariableAdapter.NonTemplateVariableInputListener {
 
     private val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
     private lateinit var transferViewModel: TransferViewModel
@@ -150,6 +151,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         }
     }
 
+
     private fun startListeners() {
         amountInput.apply {
             addTextChangedListener(amountWatcher)
@@ -214,6 +216,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
         }
     }
 
+
     private fun validates(): Boolean {
         val amountError = transferViewModel.amountErrors()
         amountInput.setState(amountError, if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
@@ -236,7 +239,24 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     }
 
     override fun highlightAction(action: HoverAction?) {
-        action?.let { actionSelectViewModel.setActiveAction(it) }
+        action?.let {
+            actionSelectViewModel.setActiveAction(it)
+            val tempList = mutableListOf<String>()
+            tempList.add("Country")
+            tempList.add("City")
+            updateNonTemplateVariableStatus(tempList)
+        }
+    }
+
+    private fun updateNonTemplateVariableStatus( variableKeys: List<String>) {
+        val recyclerView = binding.editCard.nonTemplateVariableRecyclerView
+        if(variableKeys.isEmpty()) recyclerView.visibility = View.GONE
+        else {
+            recyclerView.visibility = View.VISIBLE
+            val nonTemplateVariableAdapter = NonTemplateVariableAdapter(variableKeys, this)
+            recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
+            recyclerView.adapter = nonTemplateVariableAdapter
+        }
     }
 
     private fun setRecipientHint(action: HoverAction) {
@@ -273,5 +293,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun nonTemplateVariableInputUpdated(key: String, value: String) {
+        transferViewModel.updateNonTemplateVariables(key, value)
     }
 }
