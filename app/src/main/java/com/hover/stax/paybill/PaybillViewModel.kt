@@ -33,10 +33,8 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
 
     fun getPopularPaybills(accountId: Int) = viewModelScope.launch(Dispatchers.IO) {
         dbRepo.getAccount(accountId)?.let {
-            val actions = dbRepo.getActions(it.channelId, HoverAction.C2B)
-
-            actions.forEach { Timber.e("${it.to_institution_name}") }
-            popularPaybills.postValue(actions.filterNot { action -> action.to_institution_name == null })
+            val actions = dbRepo.getActions(it.channelId, HoverAction.C2B).filterNot { action -> action.to_institution_id == 0 }
+            popularPaybills.postValue(actions)
         }
     }
 
