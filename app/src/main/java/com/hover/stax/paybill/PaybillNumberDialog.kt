@@ -16,7 +16,7 @@ import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class PaybillDialog : DialogFragment() {
+class PaybillNumberDialog : DialogFragment() {
 
     private var _binding: DialogPaybillNumberBinding? = null
     private val binding get() = _binding!!

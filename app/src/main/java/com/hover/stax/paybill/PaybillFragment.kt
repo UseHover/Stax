@@ -28,7 +28,7 @@ import com.hover.stax.views.AbstractStatefulInput
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
-class PaybillFragment : Fragment(), PaybillIconsAdapter.IconListener {
+class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
 
     private var _binding: FragmentPaybillBinding? = null
     private val binding get() = _binding!!
@@ -52,7 +52,7 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconListener {
 
         initListeners()
         startObservers()
-        setWatchers()
+        setTextWatchers()
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -187,7 +187,7 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconListener {
         if (show) binding.continueBtn.visibility = View.VISIBLE
     }
 
-    private fun setWatchers() {
+    private fun setTextWatchers() {
         with(binding.billDetailsLayout) {
             businessNoInput.addTextChangedListener(businessNoWatcher)
             accountNoInput.addTextChangedListener(accountNoWatcher)

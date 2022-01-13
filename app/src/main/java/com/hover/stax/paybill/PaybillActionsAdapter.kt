@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import timber.log.Timber
 
-class PaybillActionsAdapter(private val paybillActions: List<HoverAction>, private val clickListener: ClickListener) : RecyclerView.Adapter<PaybillActionsAdapter.ActionsViewHolder>() {
+class PaybillActionsAdapter(private val paybillActions: List<HoverAction>, private val clickListener: PaybillActionsClickListener) : RecyclerView.Adapter<PaybillActionsAdapter.ActionsViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActionsViewHolder {
         val binding = ItemPaybillSavedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -26,7 +26,7 @@ class PaybillActionsAdapter(private val paybillActions: List<HoverAction>, priva
 
     override fun getItemCount(): Int = paybillActions.size
 
-    class ActionsViewHolder(val binding: ItemPaybillSavedBinding, private val clickListener: ClickListener) : RecyclerView.ViewHolder(binding.root), Target {
+    class ActionsViewHolder(val binding: ItemPaybillSavedBinding, private val clickListener: PaybillActionsClickListener) : RecyclerView.ViewHolder(binding.root), Target {
 
         val logo = binding.billIcon
 
@@ -61,7 +61,7 @@ class PaybillActionsAdapter(private val paybillActions: List<HoverAction>, priva
         override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
     }
 
-    interface ClickListener {
+    interface PaybillActionsClickListener {
         fun onSelectPaybill(action: HoverAction)
     }
 }

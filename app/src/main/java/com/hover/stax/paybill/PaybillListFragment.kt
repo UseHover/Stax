@@ -14,7 +14,7 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillActionsAdapter.ClickListener {
+class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillActionsAdapter.PaybillActionsClickListener {
 
     private var _binding: FragmentPaybillListBinding? = null
     private val binding get() = _binding!!
@@ -41,7 +41,7 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
         startObservers()
 
         binding.newPaybill.newPaybillCard.setOnClickListener {
-            PaybillDialog().show(childFragmentManager, PaybillDialog::class.java.simpleName)
+            PaybillNumberDialog().show(childFragmentManager, PaybillNumberDialog::class.java.simpleName)
         }
     }
 
