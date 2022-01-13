@@ -16,8 +16,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_5"
-                android:fontFamily="font-normal"
+                android:paddingStart="@dimen/margin_13"
+                android:paddingEnd="@dimen/margin_5"
                 android:text="@string/save_bill"
+                android:textColor="@android:color/white"
                 android:textSize="@dimen/text_16" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -55,6 +57,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_5"
                     android:fontFamily="font-normal"
+                    android:paddingStart="@dimen/margin_13"
+                    android:paddingEnd="@dimen/margin_5"
                     android:text="@string/amount_checkbox_label"
                     android:textSize="@dimen/text_16"
                     app:layout_constraintStart_toStartOf="parent"

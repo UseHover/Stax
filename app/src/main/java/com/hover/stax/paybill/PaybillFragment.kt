@@ -96,6 +96,9 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
                 with(binding.billDetailsLayout) {
                     businessNoInput.setText(it.businessNo)
                     accountNoInput.setText(it.accountNo)
+
+                    if (it.recurringAmount != 0)
+                        amountInput.setText(it.recurringAmount.toString())
                 }
 
                 if (it.isSaved)
