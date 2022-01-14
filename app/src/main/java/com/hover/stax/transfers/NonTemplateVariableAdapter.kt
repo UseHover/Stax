@@ -1,26 +1,50 @@
 package com.hover.stax.transfers
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.hover.stax.R
 import com.hover.stax.databinding.NonTemplateVariableItemBinding
+import com.hover.stax.views.AbstractStatefulInput
+import java.util.*
 
-class NonTemplateVariableAdapter(private val variables: List<String>, private val editTextListener: NonTemplateVariableInputListener) : RecyclerView.Adapter<NonTemplateVariableAdapter.ViewHolder>() {
+class NonTemplateVariableAdapter(private var variables: LinkedList<NonTemplateVariable>, private val editTextListener: NonTemplateVariableInputListener) : RecyclerView.Adapter<NonTemplateVariableAdapter.ViewHolder>() {
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateStates(variables: LinkedList<NonTemplateVariable>) {
+        this.variables = variables
+        notifyDataSetChanged()
+    }
 
     inner class ViewHolder(val binding: NonTemplateVariableItemBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bindItems(variableKey: String) {
+        fun bindItems(nonTemplateVariable: NonTemplateVariable) {
+
             val inputTextWatcher: TextWatcher = object : TextWatcher {
                 override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
                 override fun afterTextChanged(editable: Editable) {}
                 override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                    editTextListener.nonTemplateVariableInputUpdated (variableKey,  charSequence.toString().replace(",".toRegex(), ""))
+                    nonTemplateVariable.value = charSequence.toString().replace(",".toRegex(), "")
+                    editTextListener.nonTemplateVariableInputUpdated (nonTemplateVariable)
                 }
             }
 
-            binding.variableInput.setHint(variableKey)
             binding.variableInput.addTextChangedListener(inputTextWatcher)
+            binding.variableInput.setHint(nonTemplateVariable.key)
+
+            nonTemplateVariable.editTextState?.let {
+                val ctx : Context = binding.root.context
+                val title = nonTemplateVariable.key
+
+                if(it == AbstractStatefulInput.ERROR) {
+                    val message = ctx.getString(R.string.enterValue_non_template_error, title).lowercase()
+                    binding.variableInput.setState(message, it)
+                }
+                else binding.variableInput.setState(null, it)
+            }
         }
     }
 
@@ -34,7 +58,7 @@ class NonTemplateVariableAdapter(private val variables: List<String>, private va
     }
 
     interface NonTemplateVariableInputListener {
-        fun nonTemplateVariableInputUpdated(key:String, value: String)
+        fun nonTemplateVariableInputUpdated(nonTemplateVariable: NonTemplateVariable)
     }
 
     override fun getItemCount(): Int {
