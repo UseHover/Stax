@@ -27,6 +27,7 @@ import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import java.util.*
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonTemplateVariableAdapter.NonTemplateVariableInputListener {
@@ -43,6 +44,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private val binding get() = _binding!!
 
     private lateinit var nonTemplateSummaryAdapter: NonTemplateSummaryAdapter
+    private lateinit var nonTemplateVariableAdapter : NonTemplateVariableAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         abstractFormViewModel = getSharedViewModel<TransferViewModel>()
@@ -190,7 +192,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 transferViewModel.setEditing(false)
             } else {
                 (requireActivity() as MainActivity).submit(accountDropdown.highlightedAccount
-                        ?: channelsViewModel.activeAccount.value!!)
+                        ?: channelsViewModel.activeAccount.value!!, transferViewModel.nonTemplateVariables.value)
                 findNavController().popBackStack()
             }
         } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
@@ -232,7 +234,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         val recipientError = transferViewModel.recipientErrors(actionSelectViewModel.activeAction.value)
         contactInput.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
-        return channelError == null && actionError == null && amountError == null && recipientError == null
+        val nonTemplateVariableHasError = transferViewModel.nonTemplateVariablesAnError()
+        nonTemplateVariableAdapter.updateStates(transferViewModel.nonTemplateVariables.value!!)
+
+        return channelError == null && actionError == null && amountError == null && recipientError == null && !nonTemplateVariableHasError
     }
 
     override fun onContactSelected(requestCode: Int, contact: StaxContact) {
@@ -243,18 +248,22 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     override fun highlightAction(action: HoverAction?) {
         action?.let {
             actionSelectViewModel.setActiveAction(it)
-            val tempList = mutableListOf<String>()
+            val tempList = LinkedList<String>()
             tempList.add("Country")
             tempList.add("City")
             updateNonTemplateVariableStatus(tempList)
         }
     }
 
-    private fun updateNonTemplateVariableStatus( variableKeys: List<String>) {
+    private fun updateNonTemplateVariableStatus( variableKeys: LinkedList<String>) {
         updateNonTemplateForEntryList(variableKeys)
         updateNonTemplateForSummaryCard(variableKeys)
+
+        if(variableKeys.isNotEmpty()) transferViewModel.initNonTemplateVariables(variableKeys)
+        else transferViewModel.nullifyNonTemplateVariables()
     }
-    private fun updateNonTemplateForSummaryCard(variableKeys: List<String>) {
+
+    private fun updateNonTemplateForSummaryCard(variableKeys: LinkedList<String>) {
         val recyclerView = binding.summaryCard.nonTemplateSummaryRecycler
         if(variableKeys.isEmpty()) recyclerView.visibility = View.GONE
         else {
@@ -265,12 +274,12 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun updateNonTemplateForEntryList(variableKeys: List<String>) {
+    private fun updateNonTemplateForEntryList(variableKeys: LinkedList<String>) {
         val recyclerView = binding.editCard.nonTemplateVariableRecyclerView
         if(variableKeys.isEmpty()) recyclerView.visibility = View.GONE
         else {
             recyclerView.visibility = View.VISIBLE
-            val nonTemplateVariableAdapter = NonTemplateVariableAdapter(variableKeys, this)
+            nonTemplateVariableAdapter = NonTemplateVariableAdapter(NonTemplateVariable.getList(variableKeys), this)
             recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
             recyclerView.adapter = nonTemplateVariableAdapter
         }
@@ -313,8 +322,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         _binding = null
     }
 
-    override fun nonTemplateVariableInputUpdated(key: String, value: String) {
-        transferViewModel.updateNonTemplateVariables(key, value)
-        nonTemplateSummaryAdapter.updateList(key, value)
+    override fun nonTemplateVariableInputUpdated(nonTemplateVariable: NonTemplateVariable) {
+        with(nonTemplateVariable) {
+            transferViewModel.updateNonTemplateVariables(this)
+            nonTemplateSummaryAdapter.updateList(this.key, this.value ?: "")
+        }
     }
 }
