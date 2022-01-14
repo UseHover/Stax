@@ -26,7 +26,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     val contact = MutableLiveData<StaxContact>()
     val note = MutableLiveData<String>()
     var request: LiveData<Request> = MutableLiveData()
-    val nonTemplateVariables   =  MutableLiveData<LinkedList<NonTemplateVariable>>()
+    val nonTemplateVariables   =  MutableLiveData<ArrayList<NonTemplateVariable>>()
 
     fun setTransactionType(transaction_type: String) {
         TransactionType.type = transaction_type
@@ -120,7 +120,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     }
 
     fun initNonTemplateVariables(entries: List<String>) {
-        val itemList = LinkedList<NonTemplateVariable>()
+        val itemList = ArrayList<NonTemplateVariable>()
         entries.forEach {
             itemList.add(NonTemplateVariable(it, null))
         }
@@ -131,9 +131,8 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
         nonTemplateVariables.postValue(null)
     }
     fun updateNonTemplateVariables(nonTemplateVariable: NonTemplateVariable) {
-
         var itemList = nonTemplateVariables.value
-        if(itemList == null) itemList = LinkedList()
+        if(itemList == null) itemList = ArrayList()
 
         itemList.find { it.key == nonTemplateVariable.key }
                 ?.let { it.value = nonTemplateVariable.value }
