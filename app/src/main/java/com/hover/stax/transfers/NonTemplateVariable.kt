@@ -2,7 +2,7 @@ package com.hover.stax.transfers
 
 import java.util.*
 
-class NonTemplateVariable(val key: String,
+data class NonTemplateVariable(val key: String,
                           var value: String? = null,
                           var editTextState: Int? = null) {
 
