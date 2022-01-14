@@ -6,13 +6,16 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.databinding.NonTemplateVariableItemBinding
 import com.hover.stax.views.AbstractStatefulInput
 import java.util.*
 
-class NonTemplateVariableAdapter(private var variables: LinkedList<NonTemplateVariable>, private val editTextListener: NonTemplateVariableInputListener) : RecyclerView.Adapter<NonTemplateVariableAdapter.ViewHolder>() {
+class NonTemplateVariableAdapter(private var variables: LinkedList<NonTemplateVariable>, private val editTextListener: NonTemplateVariableInputListener) :
+        ListAdapter<NonTemplateVariable, NonTemplateVariableAdapter.ViewHolder>(NonTemplateDiffCallback()) {
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateStates(variables: LinkedList<NonTemplateVariable>) {
@@ -34,6 +37,7 @@ class NonTemplateVariableAdapter(private var variables: LinkedList<NonTemplateVa
 
             binding.variableInput.addTextChangedListener(inputTextWatcher)
             binding.variableInput.setHint(nonTemplateVariable.key)
+            binding.variableInput.tag = nonTemplateVariable.key
 
             nonTemplateVariable.editTextState?.let {
                 val ctx : Context = binding.root.context
@@ -64,4 +68,15 @@ class NonTemplateVariableAdapter(private var variables: LinkedList<NonTemplateVa
     override fun getItemCount(): Int {
      return variables.size
     }
+}
+
+private class NonTemplateDiffCallback : DiffUtil.ItemCallback<NonTemplateVariable>() {
+    override fun areItemsTheSame(oldItem: NonTemplateVariable, newItem: NonTemplateVariable): Boolean {
+        return oldItem.key == newItem.key
+    }
+
+    override fun areContentsTheSame(oldItem: NonTemplateVariable, newItem: NonTemplateVariable): Boolean {
+        return oldItem == newItem
+    }
+
 }
