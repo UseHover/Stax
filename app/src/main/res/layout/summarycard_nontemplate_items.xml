@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        android:id="@+id/itemRow"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/margin_21"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+            android:fontFamily="font-normal"
+            android:id="@+id/itemKey"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/accounts_label"
+            android:textColor="@color/offWhite"
+            android:textSize="@dimen/text_16" />
+
+    <TextView
+            android:fontFamily="font-normal"
+            android:id="@+id/itemValue"
+            android:text="@string/accounts_label"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textAlignment="viewEnd"
+            android:textColor="@color/offWhite"
+            android:textSize="@dimen/text_21" />
+</LinearLayout>
