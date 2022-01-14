@@ -12,13 +12,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.databinding.NonTemplateVariableItemBinding
 import com.hover.stax.views.AbstractStatefulInput
-import java.util.*
 
-class NonTemplateVariableAdapter(private var variables: LinkedList<NonTemplateVariable>, private val editTextListener: NonTemplateVariableInputListener) :
+class NonTemplateVariableAdapter(private var variables: List<NonTemplateVariable>, private val editTextListener: NonTemplateVariableInputListener) :
         ListAdapter<NonTemplateVariable, NonTemplateVariableAdapter.ViewHolder>(NonTemplateDiffCallback()) {
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateStates(variables: LinkedList<NonTemplateVariable>) {
+    fun updateStates(variables: List<NonTemplateVariable>) {
         this.variables = variables
         notifyDataSetChanged()
     }
