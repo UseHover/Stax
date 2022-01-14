@@ -148,12 +148,12 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
                 this == null -> return false
                 this.isEmpty() -> return true
                 else -> {
-                    this.forEach {
+                    this.forEachIndexed{index, it->
                         if (it.value == null) it.editTextState = AbstractStatefulInput.ERROR
                         else {
-                            if (it.value!!.replace(" ".toRegex(), "").isEmpty()) {
-                                it.editTextState = AbstractStatefulInput.ERROR
-                            } else it.editTextState = AbstractStatefulInput.SUCCESS
+                            if (it.value!!.replace(" ".toRegex(), "").isEmpty()) it.editTextState = AbstractStatefulInput.ERROR
+                            else it.editTextState = AbstractStatefulInput.SUCCESS
+                            it.value = it.value //Required to prevent editText value changing
                         }
                     }
 
