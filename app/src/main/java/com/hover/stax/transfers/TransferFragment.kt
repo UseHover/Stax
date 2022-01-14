@@ -248,14 +248,19 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     override fun highlightAction(action: HoverAction?) {
         action?.let {
             actionSelectViewModel.setActiveAction(it)
-            val tempList = LinkedList<String>()
+            updateNonTemplateVariableStatus(action.nonTemplateVariableKeys)
+
+        /* This should be used for easy functional testing,
+        and should be removed once PR is approved before merging
+
+        val tempList = LinkedList<String>()
             tempList.add("Country")
             tempList.add("City")
-            updateNonTemplateVariableStatus(tempList)
+            updateNonTemplateVariableStatus(tempList) */
         }
     }
 
-    private fun updateNonTemplateVariableStatus( variableKeys: LinkedList<String>) {
+    private fun updateNonTemplateVariableStatus( variableKeys: List<String>) {
         updateNonTemplateForEntryList(variableKeys)
         updateNonTemplateForSummaryCard(variableKeys)
 
@@ -263,7 +268,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         else transferViewModel.nullifyNonTemplateVariables()
     }
 
-    private fun updateNonTemplateForSummaryCard(variableKeys: LinkedList<String>) {
+    private fun updateNonTemplateForSummaryCard(variableKeys: List<String>) {
         val recyclerView = binding.summaryCard.nonTemplateSummaryRecycler
         if(variableKeys.isEmpty()) recyclerView.visibility = View.GONE
         else {
@@ -274,7 +279,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun updateNonTemplateForEntryList(variableKeys: LinkedList<String>) {
+    private fun updateNonTemplateForEntryList(variableKeys: List<String>) {
         val recyclerView = binding.editCard.nonTemplateVariableRecyclerView
         if(variableKeys.isEmpty()) recyclerView.visibility = View.GONE
         else {
