@@ -243,6 +243,8 @@
     <string name="descrip_long_move">move %1$s from %2$s to %3$s</string>
     <string name="descrip_long_bill_paid">pay %1$s from %2$s to %3$s</string>
 
+    <string name="enterValue_non_template_error">Please enter a valid %1$s</string>
+
     <!-- Request -->
     <string name="req_cardhead">Request money</string>
     <string name="into_account">Into account</string>
