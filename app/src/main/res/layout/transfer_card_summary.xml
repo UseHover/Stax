@@ -81,6 +81,13 @@
                 android:textColor="@color/offWhite"
                 android:textSize="@dimen/text_21" />
         </TableRow>
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/nonTemplateSummaryRecycler"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+            />
     </TableLayout>
 
     <RelativeLayout
