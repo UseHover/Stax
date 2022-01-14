@@ -38,6 +38,7 @@ class NonTemplateVariableAdapter(private var variables: LinkedList<NonTemplateVa
             binding.variableInput.addTextChangedListener(inputTextWatcher)
             binding.variableInput.setHint(nonTemplateVariable.key)
             binding.variableInput.tag = nonTemplateVariable.key
+            binding.variableInput.text = nonTemplateVariable.value
 
             nonTemplateVariable.editTextState?.let {
                 val ctx : Context = binding.root.context
