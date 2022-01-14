@@ -42,6 +42,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private var _binding: FragmentTransferBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var nonTemplateSummaryAdapter: NonTemplateSummaryAdapter
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         abstractFormViewModel = getSharedViewModel<TransferViewModel>()
         transferViewModel = abstractFormViewModel as TransferViewModel
@@ -249,6 +251,21 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun updateNonTemplateVariableStatus( variableKeys: List<String>) {
+        updateNonTemplateForEntryList(variableKeys)
+        updateNonTemplateForSummaryCard(variableKeys)
+    }
+    private fun updateNonTemplateForSummaryCard(variableKeys: List<String>) {
+        val recyclerView = binding.summaryCard.nonTemplateSummaryRecycler
+        if(variableKeys.isEmpty()) recyclerView.visibility = View.GONE
+        else {
+            recyclerView.visibility = View.VISIBLE
+            recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
+            nonTemplateSummaryAdapter = NonTemplateSummaryAdapter()
+            recyclerView.adapter = nonTemplateSummaryAdapter
+        }
+    }
+
+    private fun updateNonTemplateForEntryList(variableKeys: List<String>) {
         val recyclerView = binding.editCard.nonTemplateVariableRecyclerView
         if(variableKeys.isEmpty()) recyclerView.visibility = View.GONE
         else {
@@ -297,5 +314,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     override fun nonTemplateVariableInputUpdated(key: String, value: String) {
         transferViewModel.updateNonTemplateVariables(key, value)
+        nonTemplateSummaryAdapter.updateList(key, value)
     }
 }
