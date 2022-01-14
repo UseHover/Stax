@@ -7,8 +7,8 @@ data class NonTemplateVariable(val key: String,
                           var editTextState: Int? = null) {
 
     companion object {
-        fun getList(keys: LinkedList<String>) : LinkedList<NonTemplateVariable> {
-            val nonTemplateVariables = LinkedList<NonTemplateVariable>()
+        fun getList(keys: List<String>) : List<NonTemplateVariable> {
+            val nonTemplateVariables = ArrayList<NonTemplateVariable>()
             keys.forEach {
                 nonTemplateVariables.add(NonTemplateVariable(it))
             }
