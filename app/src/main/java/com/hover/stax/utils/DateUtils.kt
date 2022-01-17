@@ -27,6 +27,7 @@ object DateUtils {
         return humanFriendlyTime(context, System.currentTimeMillis() - millis)
     }
 
+
     @JvmStatic
     fun humanFriendlyDate(timestamp: Long): String {
         if (timestamp == -1L) return ""
