@@ -121,9 +121,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
 
     fun initNonTemplateVariables(entries: List<String>) {
         val itemList = ArrayList<NonTemplateVariable>()
-        entries.forEach {
-            itemList.add(NonTemplateVariable(it, null))
-        }
+        entries.map { itemList.add(NonTemplateVariable(it, null)) }
         nonTemplateVariables.postValue(itemList)
     }
 
