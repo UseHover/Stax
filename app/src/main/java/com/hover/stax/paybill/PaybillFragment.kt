@@ -306,11 +306,11 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
         resetViews()
     }
 
-    override fun onResume() {
-        super.onResume()
-        //sometimes when navigating back from another fragment, the labels get all messed up
-        resetViews()
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        //sometimes when navigating back from another fragment, the labels get all messed up
+//        resetViews()
+//    }
 
     private fun resetViews() {
         with(binding.billDetailsLayout) {
