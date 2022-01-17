@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.hover.stax.onboarding.variant_one.StaxAutoScrollViewPager
+        android:id="@+id/vpPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/onboarding_v1_desc"
+            android:textColor="@color/offWhite"
+            android:textSize="@dimen/text_13"
+            android:text="@string/onboarding_v1_general_desc"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/margin_13"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Continue with Google"
+            android:layout_marginBottom="@dimen/text_13"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/use_stax_no_sigin"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/termsOfServiceFullLabel"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/offWhite"
+            android:layout_marginTop="@dimen/margin_21"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/privacyPolicyFullLabel"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/offWhite"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

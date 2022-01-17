@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_onboarding_default">
+
+    <fragment
+        android:id="@+id/navigation_onboarding_default"
+        android:name="com.hover.stax.onboarding.variant_default.OnboardingVariantDefaultFragment"
+        android:label="@string/onboarding_v1_slide1_title"
+        tools:layout="@layout/onboarding_layout_default" />
+
+    <fragment
+        android:id="@+id/navigation_onboarding_v1"
+        android:name="com.hover.stax.onboarding.variant_one.OnboardingVariantOneFragment"
+        android:label="@string/onboarding_v1_slide1_title"
+        tools:layout="@layout/onboarding_variant_one"/>
+
+</navigation>
