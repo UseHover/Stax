@@ -9,7 +9,7 @@
 
     <TextView
             android:fontFamily="font-normal"
-            android:id="@+id/itemKey"
+            android:id="@+id/itemLabel"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

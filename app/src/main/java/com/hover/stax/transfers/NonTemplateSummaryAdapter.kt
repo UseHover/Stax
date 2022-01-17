@@ -17,7 +17,7 @@ class NonTemplateSummaryAdapter : RecyclerView.Adapter<NonTemplateSummaryAdapter
 
     inner class ViewHolder(val binding: SummarycardNontemplateItemsBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bindItems(key: String, value: String) {
-            binding.itemKey.text = key
+            binding.itemLabel.text = key
             binding.itemValue.setText(value)
         }
     }
