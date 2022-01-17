@@ -1,6 +1,5 @@
 package com.hover.stax.transactions
 
-import android.app.Application
 import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.channels.Channel
@@ -9,10 +8,8 @@ import com.hover.stax.database.DatabaseRepo
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import org.koin.java.KoinJavaComponent.get
 
-class TransactionHistoryViewModel(application: Application?) : AndroidViewModel(application!!) {
-    private val repo = get(DatabaseRepo::class.java)
+class TransactionHistoryViewModel(val repo: DatabaseRepo) : ViewModel() {
     private var staxTransactions: LiveData<List<StaxTransaction>> = MutableLiveData()
     private val appReviewLiveData: LiveData<Boolean>
 
