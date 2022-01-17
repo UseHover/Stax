@@ -19,8 +19,6 @@
         <entry key="app/src/main/res/drawable/ic_share.xml" value="0.22962962962962963" />
         <entry key="app/src/main/res/drawable/ic_system_upate_24.xml" value="0.6125" />
         <entry key="app/src/main/res/drawable/ic_ussd_lib.xml" value="0.3546875" />
-        <entry key="app/src/main/res/drawable/splash_logo.xml" value="0.75625" />
-        <entry key="app/src/main/res/drawable/splash_window_background.xml" value="0.75625" />
         <entry key="app/src/main/res/layout/account_card_layout.xml" value="0.15704154002026344" />
         <entry key="app/src/main/res/layout/account_card_manage.xml" value="0.30572916666666666" />
         <entry key="app/src/main/res/layout/account_card_shortcode.xml" value="0.30572916666666666" />
@@ -65,8 +63,8 @@
         <entry key="app/src/main/res/layout/item_paybill.xml" value="0.8125" />
         <entry key="app/src/main/res/layout/item_paybill_saved.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_wellness_tips.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/onboarding_variant_one.xml" value="0.3078125" />
-        <entry key="app/src/main/res/layout/paybill_summary.xml" value="0.8125" />
+        <entry key="app/src/main/res/layout/onboarding_layout.xml" value="0.1082427536231884" />
+        <entry key="app/src/main/res/layout/onboarding_variant_one.xml" value="0.196875" />
         <entry key="app/src/main/res/layout/rename_account_layout.xml" value="0.3134057971014493" />
         <entry key="app/src/main/res/layout/repeat_inputs.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/layout/request_card_amount.xml" value="0.15602836879432624" />
@@ -119,7 +117,7 @@
       </profile-state>
     </entry>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
