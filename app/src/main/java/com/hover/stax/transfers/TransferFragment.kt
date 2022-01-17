@@ -25,6 +25,7 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.util.*
@@ -248,7 +249,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     override fun highlightAction(action: HoverAction?) {
         action?.let {
             actionSelectViewModel.setActiveAction(it)
-            updateNonTemplateVariableStatus(action.nonTemplateVariableKeys)
+            val nonTemplateParams = getNonTemplateParams(action)
+            updateNonTemplateVariableStatus(nonTemplateParams)
 
         /* This should be used for easy functional testing,
         and should be removed once PR is approved before merging
@@ -258,6 +260,19 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             tempList.add("City")
             updateNonTemplateVariableStatus(tempList) */
         }
+    }
+
+    private fun getNonTemplateParams(action: HoverAction) : List<String> {
+        val variableKeys = mutableListOf<String>()
+        action.requiredParams.forEach { 
+            if(!isATemplateParam(it)) variableKeys.add(it)
+        }
+        return variableKeys
+    }
+    private fun isATemplateParam(param: String): Boolean {
+        return param == HoverAction.PHONE_KEY || param == HoverAction.ACCOUNT_KEY 
+                || param == HoverAction.AMOUNT_KEY || param == HoverAction.NOTE_KEY 
+                || param == HoverAction.PIN_KEY
     }
 
     private fun updateNonTemplateVariableStatus( variableKeys: List<String>) {
