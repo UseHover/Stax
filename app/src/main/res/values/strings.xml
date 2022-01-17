@@ -585,5 +585,9 @@
     <string name="bill_name_error">Please enter a valid name</string>
     <string name="label_popular">Popular</string>
     <string name="pay_now">Pay now</string>
+    <string name="paybill_update_header">Update Paybill</string>
+    <string name="paybill_update_msg">Are you sure you want to update %1$s?</string>
+    <string name="paybill_update_success">Paybill updated successfully</string>
+    <string name="btn_update">Update</string>
 
 </resources>

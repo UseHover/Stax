@@ -27,6 +27,8 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
     val iconDrawable = MutableLiveData<Int>()
     val isEditing = MutableLiveData(true)
 
+    val selectedAction = MutableLiveData<HoverAction>()
+
     fun getSavedPaybills(accountId: Int) = viewModelScope.launch {
         repo.getSavedPaybills(accountId).collect { savedPaybills.postValue(it) }
     }
@@ -43,6 +45,8 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
     }
 
     fun selectPaybill(action: HoverAction) {
+        selectedAction.value = action
+
         val paybill = Paybill(action.to_institution_name, action.to_institution_id.toString(), null, action.channel_id, 0, action.to_institution_logo)
         selectPaybill(paybill)
     }
@@ -83,10 +87,6 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
             if (recurringAmount) payBill.recurringAmount = amount.value!!.toInt()
 
             repo.save(payBill)
-
-            launch(Dispatchers.Main) {
-                UIHelper.flashMessage(application.applicationContext, R.string.paybill_save_success) //TODO add to other language strings
-            }
         } else {
             Timber.e("Active account not set")
         }
@@ -111,9 +111,17 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
 
     fun deletePaybill(paybill: Paybill) = viewModelScope.launch(Dispatchers.IO) {
         repo.delete(paybill)
+    }
 
-        launch(Dispatchers.Main) {
-            UIHelper.flashMessage(application.applicationContext, R.string.paybill_delete_success)
-        }
+    fun updatePaybill(paybill: Paybill) = viewModelScope.launch(Dispatchers.IO) {
+        repo.update(paybill)
+    }
+
+    fun reset() = viewModelScope.launch {
+        selectedPaybill.postValue(null)
+        businessNumber.postValue(null)
+        accountNumber.postValue(null)
+        amount.postValue(null)
+        iconDrawable.postValue(0)
     }
 }
