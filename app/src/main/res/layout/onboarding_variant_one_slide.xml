@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_horizontal">
-    
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
     <ImageView
-        android:layout_width="196dp"
-        android:layout_height="196dp"
-        android:id="@+id/onboarding_v1_image"
-        android:layout_gravity="center"
-            android:scaleType="centerCrop"
-        android:contentDescription="@string/viewing_onboarding_slide"
+            android:id="@+id/onboarding_v1_image"
+            android:layout_width="196dp"
+            android:layout_height="196dp"
+            android:layout_gravity="center"
             android:layout_marginBottom="@dimen/margin_21"
-        android:src="@drawable/img_check"/>
+            android:contentDescription="@string/viewing_onboarding_slide"
+            android:scaleType="centerCrop"
+            android:src="@drawable/img_check" />
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/onboarding_v1_title"
-        android:text="@string/onboarding_v1_slide1_title"
-        android:textSize="@dimen/text_21"
+            android:id="@+id/onboarding_v1_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:fontFamily="font-medium"
-        android:textColor="@color/white"
-        android:gravity="center"
-        />
+            android:gravity="center"
+            android:text="@string/onboarding_v1_slide1_title"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_21" />
 </LinearLayout>

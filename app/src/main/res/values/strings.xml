@@ -76,8 +76,10 @@
     <string name="onboarding_v1_general_desc">Continue with Google to enjoy the full Stax experience</string>
 
     <string name="use_stax_no_sigin">Use Stax without sign in</string>
-    <string name="termsOfServiceFullLabel">By continuing, you agree to Stax\'s Terms of service.</string>
-    <string name="privacyPolicyFullLabel">See how we use your data in our Privacy Policy.</string>
+    <string name="termsOfServiceFullLabel"><![CDATA[By continuing, you agree to Stax\'s <b><font color=#FFFFFF><a href="https://docs.usehover.com/staxpolicy">Terms of service</a></font></b>]]></string>
+    <string name="privacyPolicyFullLabel"><![CDATA[See how we use your data in our <b> <font color=#FFFFFF><a href="https://docs.usehover.com/staxpolicy">Privacy Policy</a></font></b>]]></string>
+
+    <string name="continue_with_google">Continue with Google</string>
 
 
 

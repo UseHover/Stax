@@ -1,72 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:gravity="center"
-    android:orientation="vertical">
-
-    <com.hover.stax.onboarding.variant_one.StaxAutoScrollViewPager
-        android:id="@+id/vpPager"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_13">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="@dimen/margin_5"
+                android:id="@+id/onoboarding_v1_progressbar1"/>
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="@dimen/margin_5"
+                android:id="@+id/onoboarding_v1_progressbar2"/>
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="@dimen/margin_5"
+                android:id="@+id/onoboarding_v1_progressbar3"/>
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/onoboarding_v1_progressbar4"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+
+    <com.hover.stax.onboarding.variant_one.StaxAutoScrollViewPager
+            android:id="@+id/vpPager"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:gravity="top"
-        android:orientation="vertical">
+            android:orientation="vertical">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/onboarding_v1_desc"
-            android:textColor="@color/offWhite"
-            android:textSize="@dimen/text_13"
-            android:text="@string/onboarding_v1_general_desc"
-            android:gravity="center"
+                android:id="@+id/onboarding_v1_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_13"
                 android:fontFamily="font-normal"
-            android:layout_marginBottom="@dimen/margin_13"
-            />
+                android:gravity="center"
+                android:text="@string/onboarding_v1_general_desc"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_13" />
+
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_13"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/margin_13">
+
+            <ImageView
+                    android:layout_width="@dimen/margin_24"
+                    android:layout_height="@dimen/margin_24"
+                    android:layout_marginEnd="@dimen/margin_24"
+                    android:contentDescription="@string/continue_with_google"
+                    android:src="@drawable/google_logo" />
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="font-normal"
+                    android:text="@string/continue_with_google"
+                    android:textSize="@dimen/text_16" />
+        </LinearLayout>
 
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Continue with Google"
+                android:id="@+id/continue_btn"
+                style="@style/StaxFabExtended"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:fontFamily="font-normal"
-            android:layout_marginBottom="@dimen/text_13"
-            />
+                android:text="@string/use_stax_no_sigin"
+                android:textSize="@dimen/text_16" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-                android:fontFamily="font-normal"
-            android:text="@string/use_stax_no_sigin"
-            />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/termsOfServiceFullLabel"
-            android:layout_gravity="center"
-            android:gravity="center"
+                android:id="@+id/onboarding_v1_tos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_21"
                 android:fontFamily="font-normal"
-            android:textColor="@color/offWhite"
-            android:layout_marginTop="@dimen/margin_21"
-            />
+                android:gravity="center"
+                android:text="@string/termsOfServiceFullLabel"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/privacyPolicyFullLabel"
-            android:layout_gravity="center"
-            android:gravity="center"
+                android:id="@+id/onboarding_v1_privacyPolicy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:fontFamily="font-normal"
-            android:textColor="@color/offWhite"
-            />
+                android:gravity="center"
+                android:text="@string/privacyPolicyFullLabel"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
+
+    </LinearLayout>
 
     </LinearLayout>
 
