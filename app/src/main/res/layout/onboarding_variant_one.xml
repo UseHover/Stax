@@ -79,7 +79,9 @@
             <ImageView
                     android:layout_width="@dimen/margin_24"
                     android:layout_height="@dimen/margin_24"
+                    style="@style/StaxFlatOutlined"
                     android:layout_marginEnd="@dimen/margin_24"
+                    android:background="?selectableItemBackground"
                     android:contentDescription="@string/continue_with_google"
                     android:src="@drawable/google_logo" />
 

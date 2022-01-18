@@ -75,6 +75,62 @@ class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener 
         animator4 = ValueAnimator.ofInt(0, progressBar4.max)
     }
 
+    private fun setUpSlides() {
+        val viewPagerAdapter = SlidesPagerAdapter(requireContext())
+        val viewPager = binding.vpPager
+        viewPager.apply {
+            startAutoScroll(FIRST_SCROLL_DELAY)
+            setInterval(SCROLL_INTERVAL)
+            setCycle(true)
+            setAutoScrollDurationFactor(AUTO_SCROLL_EASE_DURATION_FACTOR)
+            setSwipeScrollDurationFactor(SWIPE_DURATION_FACTOR)
+            setStopScrollWhenTouch(false)
+            addOnPageChangeListener(this@OnboardingVariantOneFragment)
+            adapter = viewPagerAdapter
+        }
+    }
+
+    private fun setupPrivacyPolicy() {
+        binding.onboardingV1Tos.text = Html.fromHtml(requireContext().getString(R.string.privacyPolicyFullLabel))
+        binding.onboardingV1Tos.movementMethod = LinkMovementMethod.getInstance()
+    }
+
+    private fun setupTermsOfService() {
+        binding.onboardingV1PrivacyPolicy.text = Html.fromHtml(requireContext().getString(R.string.termsOfServiceFullLabel))
+        binding.onboardingV1PrivacyPolicy.movementMethod = LinkMovementMethod.getInstance()
+    }
+
+    private fun updateProgressAnimation(animator: ValueAnimator, progressBar: LinearProgressIndicator) {
+        animator.duration = 3000
+        animator.addUpdateListener { animation ->
+            progressBar.progress = animation.animatedValue as Int
+            if(progressBar.progress > 90) {
+                fillUpProgress(progressBar)
+            }
+        }
+
+        animator.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator?) {
+                super.onAnimationEnd(animation)
+                animation?.cancel()
+            }
+        })
+        animator.start()
+    }
+
+    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+        showProgress(position)
+        Timber.i("On Page scrolled: $position, offset: $positionOffset, offsetPixels: $positionOffsetPixels")
+    }
+
+    override fun onPageSelected(position: Int) {
+        Timber.i("On Page selected: $position")
+    }
+
+    override fun onPageScrollStateChanged(state: Int) {
+        Timber.i("On Page state changed: $state")
+    }
+
     private fun showProgress(currentPos: Int) {
         when(currentPos) {
             0 -> {
@@ -107,61 +163,6 @@ class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener 
         }
     }
 
-    private fun setUpSlides() {
-        val viewPagerAdapter = SlidesPagerAdapter(requireContext())
-        val viewPager = binding.vpPager
-        viewPager.apply {
-            startAutoScroll(FIRST_SCROLL_DELAY)
-            setInterval(SCROLL_INTERVAL)
-            setCycle(true)
-            setAutoScrollDurationFactor(AUTO_SCROLL_EASE_DURATION_FACTOR)
-            setSwipeScrollDurationFactor(SWIPE_DURATION_FACTOR)
-            setStopScrollWhenTouch(false)
-            addOnPageChangeListener(this@OnboardingVariantOneFragment)
-            adapter = viewPagerAdapter
-        }
-    }
-
-    private fun setupPrivacyPolicy() {
-        binding.onboardingV1Tos.text = Html.fromHtml(requireContext().getString(R.string.privacyPolicyFullLabel))
-        binding.onboardingV1Tos.movementMethod = LinkMovementMethod.getInstance()
-    }
-
-    private fun setupTermsOfService() {
-        binding.onboardingV1PrivacyPolicy.text = Html.fromHtml(requireContext().getString(R.string.termsOfServiceFullLabel))
-        binding.onboardingV1PrivacyPolicy.movementMethod = LinkMovementMethod.getInstance()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    companion object {
-        const val FIRST_SCROLL_DELAY = 4000
-        const val SCROLL_INTERVAL = 4000L
-        const val SWIPE_DURATION_FACTOR = 2.0
-        const val AUTO_SCROLL_EASE_DURATION_FACTOR = 5.0
-    }
-
-    private fun updateProgressAnimation(animator: ValueAnimator, progressBar: LinearProgressIndicator) {
-        animator.duration = 3000
-        animator.addUpdateListener { animation ->
-            progressBar.progress = animation.animatedValue as Int
-            if(progressBar.progress > 90) {
-                fillUpProgress(progressBar)
-            }
-        }
-
-        animator.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator?) {
-                super.onAnimationEnd(animation)
-                animation?.cancel()
-            }
-        })
-        animator.start()
-    }
-
     private fun fillUpProgress(progressBar: LinearProgressIndicator) {
         val deepBlue = requireContext().resources.getColor(R.color.stax_state_blue)
         progressBar.progress = 100
@@ -175,16 +176,15 @@ class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener 
 
     }
 
-    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-        showProgress(position)
-        Timber.i("On Page scrolled: $position, offset: $positionOffset, offsetPixels: $positionOffsetPixels")
+    companion object {
+        const val FIRST_SCROLL_DELAY = 4000
+        const val SCROLL_INTERVAL = 4000L
+        const val SWIPE_DURATION_FACTOR = 2.0
+        const val AUTO_SCROLL_EASE_DURATION_FACTOR = 5.0
     }
 
-    override fun onPageSelected(position: Int) {
-        Timber.i("On Page selected: $position")
-    }
-
-    override fun onPageScrollStateChanged(state: Int) {
-        Timber.i("On Page state changed: $state")
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
