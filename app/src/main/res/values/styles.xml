@@ -228,4 +228,17 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@color/colorPrimary</item>
     </style>
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        // Set the splash screen background, animated icon, and animation duration.
+        <item name="windowSplashScreenBackground">@color/colorPrimaryDark</item>
+
+        // Use windowSplashScreenAnimatedIcon to add either a drawable or an
+        // animated drawable. One of these is required.
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo</item>
+        <item name="windowSplashScreenAnimationDuration">200</item>  # Required for
+        # animated icons
+
+        <item name="postSplashScreenTheme">@style/StaxTheme</item>  # Required.
+    </style>
 </resources>
