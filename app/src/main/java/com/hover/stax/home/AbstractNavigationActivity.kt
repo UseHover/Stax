@@ -1,4 +1,4 @@
-package com.hover.stax.navigation
+package com.hover.stax.home
 
 import android.content.Intent
 import android.content.IntentFilter
@@ -12,14 +12,15 @@ import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
-import com.hover.stax.home.MainActivity
+import com.hover.stax.home.NavigationInterface
+import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.permissions.PermissionUtils
 
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.network.NetworkReceiver
 
-abstract class AbstractNavigationActivity : AppCompatActivity(), NavigationInterface {
+abstract class AbstractNavigationActivity : AbstractGoogleAuthActivity(), NavigationInterface {
 
     private var navController: NavController? = null
     private var appBarConfiguration: AppBarConfiguration? = null

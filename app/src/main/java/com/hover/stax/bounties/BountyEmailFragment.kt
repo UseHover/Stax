@@ -12,7 +12,7 @@ import com.google.android.gms.common.SignInButton
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentBountyEmailBinding
 import com.hover.stax.home.MainActivity
-import com.hover.stax.navigation.NavigationInterface
+import com.hover.stax.home.NavigationInterface
 import com.hover.stax.settings.SettingsViewModel
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.network.NetworkMonitor

@@ -1,4 +1,4 @@
-package com.hover.stax.navigation;
+package com.hover.stax.home;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -26,6 +26,7 @@ public interface NavigationInterface {
 
     default void navigate(AppCompatActivity activity, int toWhere) {
         NavHostFragment navHostFragment = (NavHostFragment) activity.getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        assert navHostFragment != null;
         NavController navController = navHostFragment.getNavController();
 
         switch (toWhere) {

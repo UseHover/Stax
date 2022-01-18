@@ -101,7 +101,7 @@ class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener 
     }
 
     private fun updateProgressAnimation(animator: ValueAnimator, progressBar: LinearProgressIndicator) {
-        animator.duration = 3000
+        animator.duration = 4000
         animator.addUpdateListener { animation ->
             progressBar.progress = animation.animatedValue as Int
             if(progressBar.progress > 90) {
@@ -112,7 +112,6 @@ class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener 
         animator.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator?) {
                 super.onAnimationEnd(animation)
-                animation?.cancel()
             }
         })
         animator.start()
