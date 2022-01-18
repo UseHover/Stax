@@ -7,6 +7,7 @@ import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
 import com.hover.stax.home.MainActivity
@@ -19,17 +20,14 @@ import com.hover.stax.utils.Utils
 abstract class AbstractOnboardingNavigationActivity : AppCompatActivity(), OnboardingFragmentsNavigationInterface {
 
 	private lateinit var navController: NavController
-	override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-		super.onCreate(savedInstanceState, persistentState)
-		setupNavigation()
-	}
 
-	private fun setupNavigation() {
-		navController = Navigation.findNavController(this, R.id.nav_host_fragment_onboarding)
+	fun setupNavigation() {
+		val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_onboarding) as NavHostFragment
+		navController = navHostFragment.navController
 	}
 
 	fun navigateMainActivity() = startActivity(Intent(this, MainActivity::class.java))
-	fun navigateOnboardingVariantOne() = navController.navigate(R.id.navigation_onboarding_default)
+	fun navigateOnboardingVariantOne() = navController.navigate(R.id.navigation_onboarding_v1)
 
 	 private fun setPassedOnboarding() = Utils.saveBoolean(OnBoardingActivity::class.java.simpleName, true, this)
 
@@ -72,7 +70,5 @@ abstract class AbstractOnboardingNavigationActivity : AppCompatActivity(), Onboa
 		 setPassedOnboarding()
 		 checkPermissionsAndNavigate()
 	 }
-
-	fun hasPassedOnboarding(context: Context) = Utils.getBoolean(OnBoardingActivity::class.java.simpleName, context)
 
  }

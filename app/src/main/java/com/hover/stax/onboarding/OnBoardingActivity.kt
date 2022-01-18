@@ -1,11 +1,13 @@
 package com.hover.stax.onboarding
 
+import android.content.Context
 import android.os.Bundle
 import com.hover.stax.R
 import com.hover.stax.databinding.OnboardingLayoutBinding
 import com.hover.stax.onboarding.navigation.AbstractOnboardingNavigationActivity
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.Utils
 
 class OnBoardingActivity : AbstractOnboardingNavigationActivity() {
 
@@ -18,6 +20,8 @@ class OnBoardingActivity : AbstractOnboardingNavigationActivity() {
         logEvents()
         binding = OnboardingLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setupNavigation()
         navigateNextScreen()
 
     }
@@ -33,6 +37,9 @@ class OnBoardingActivity : AbstractOnboardingNavigationActivity() {
 
     private fun chooseOnboardingFragment() {
         navigateOnboardingVariantOne()
+    }
+    companion object {
+        fun hasPassedOnboarding(context: Context) = Utils.getBoolean(OnBoardingActivity::class.java.simpleName, context)
     }
 
 }
