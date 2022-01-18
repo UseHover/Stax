@@ -6,12 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.databinding.SummarycardNontemplateItemsBinding
 
-class NonStandardSummaryAdapter : RecyclerView.Adapter<NonStandardSummaryAdapter.ViewHolder>() {
-    private var items = LinkedHashMap<String, String>()
+class NonStandardSummaryAdapter(private var items: LinkedHashMap<String, String>) : RecyclerView.Adapter<NonStandardSummaryAdapter.ViewHolder>() {
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateList(items: LinkedHashMap<String, String>) {
-        this.items = items
+    fun updateList(key: String, value: String) {
+        items[key] = value
         notifyDataSetChanged()
     }
 

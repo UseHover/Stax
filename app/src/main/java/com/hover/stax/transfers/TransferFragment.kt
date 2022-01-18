@@ -185,6 +185,14 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
+    private fun observeNonStandardVariables() {
+        actionSelectViewModel.nonStandardVariables.observe(viewLifecycleOwner) { variables ->
+            if (variables != null) {
+                updateNonStandardForEntryList(variables)
+                updateNonStandardForSummaryCard(variables)
+            }
+        }
+    }
 
     private fun startListeners() {
         setAmountInputListener()
@@ -223,22 +231,17 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun fabClicked() {
-        if (transferViewModel.isEditing.value == true) {
-            runAllEntryValidation()
-        } else {
-            (requireActivity() as MainActivity).submit(accountDropdown.highlightedAccount
-                    ?: channelsViewModel.activeAccount.value!!)
-            findNavController().popBackStack()
-        }
-
-    }
-
-    private fun continueAfterValidation(hasNoError: Boolean) {
-        if (hasNoError) {
-            transferViewModel.saveContact()
-            transferViewModel.setEditing(false)
-        } else
-            UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
+        if (validates()) {
+            if (transferViewModel.isEditing.value == true) {
+                transferViewModel.saveContact()
+                transferViewModel.setEditing(false)
+            } else {
+                (requireActivity() as MainActivity).submit(
+                    accountDropdown.highlightedAccount ?: channelsViewModel.activeAccount.value!!
+                )
+                findNavController().popBackStack()
+            }
+        } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
     }
 
     private val amountWatcher: TextWatcher = object : TextWatcher {
@@ -263,10 +266,22 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
+    private fun validates(): Boolean {
+        val amountError = transferViewModel.amountErrors()
+        amountInput.setState(amountError, if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
-    private fun runAllEntryValidation() {
-        updateNonStandardForEntryList(actionSelectViewModel.nonStandardVariables.value!!, true)
-        //Result of this then calls: "override fun nonStandardVariablesValidation(hasError: Boolean) {"
+        val channelError = channelsViewModel.errorCheck()
+        accountDropdown.setState(channelError, if (channelError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+
+        val actionError = actionSelectViewModel.errorCheck()
+        actionSelect.setState(actionError, if (actionError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+
+        val recipientError = transferViewModel.recipientErrors(actionSelectViewModel.activeAction.value)
+        contactInput.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+
+        val nonStandardVarError = nonStandardVariableAdapter.validates()
+
+        return channelError == null && actionError == null && amountError == null && recipientError == null && !nonStandardVarError
     }
 
     override fun onContactSelected(requestCode: Int, contact: StaxContact) {
@@ -275,47 +290,21 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     override fun highlightAction(action: HoverAction?) {
-        action?.let {
-            actionSelectViewModel.setActiveAction(it)
-        }
+        action?.let { actionSelectViewModel.setActiveAction(it) }
     }
 
-    private fun observeNonStandardVariables() {
-        actionSelectViewModel.nonStandardVariables.observe(viewLifecycleOwner) { variables ->
-            if (variables != null) {
-                updateNonStandardForEntryList(variables)
-                updateNonStandardForSummaryCard(variables)
-            }
-        }
+    private fun updateNonStandardForEntryList(variables: LinkedHashMap<String, String>) {
+        val recyclerView = binding.editCard.nonStandardVariableRecyclerView
+        nonStandardVariableAdapter = NonStandardVariableAdapter(variables, this, recyclerView)
+        recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
+        recyclerView.adapter = nonStandardVariableAdapter
     }
 
     private fun updateNonStandardForSummaryCard(variables: LinkedHashMap<String, String>) {
         val recyclerView = binding.summaryCard.nonStandardSummaryRecycler
-        if (variables.isEmpty()) recyclerView.visibility = View.GONE
-        else {
-            recyclerView.visibility = View.VISIBLE
-            if (recyclerView.adapter == null) {
-                recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
-                nonStandardSummaryAdapter = NonStandardSummaryAdapter()
-                recyclerView.adapter = nonStandardSummaryAdapter
-            }
-            nonStandardSummaryAdapter.updateList(variables)
-        }
-    }
-
-    private fun updateNonStandardForEntryList(variables: LinkedHashMap<String, String>, runValidation: Boolean? = false) {
-        val recyclerView = binding.editCard.nonStandardVariableRecyclerView
-        if (variables.isEmpty()) recyclerView.visibility = View.GONE
-        else {
-            if (recyclerView.adapter == null || runValidation == true) {
-                Timber.i("fire hove as run validation true")
-
-                recyclerView.visibility = View.VISIBLE
-                nonStandardVariableAdapter = NonStandardVariableAdapter(variables, this, runValidation!!)
-                recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
-                recyclerView.adapter = nonStandardVariableAdapter
-            }
-        }
+        recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
+        nonStandardSummaryAdapter = NonStandardSummaryAdapter(variables)
+        recyclerView.adapter = nonStandardSummaryAdapter
     }
 
     private fun setRecipientHint(action: HoverAction) {
@@ -354,26 +343,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         _binding = null
     }
 
-    override fun nonStandardVariableInputUpdated(key: String, value: String) {
+    override fun nonStandardVarUpdate(key: String, value: String) {
         actionSelectViewModel.updateNonStandardVariables(key, value)
+//        nonStandardVarSummaryAdapter.updateList(this.key, this.value ?: "")
     }
-
-    override fun validateFormEntries(nonStandardHasAnError: Boolean) {
-        val amountError = transferViewModel.amountErrors()
-        amountInput.setState(amountError, if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
-
-        val channelError = channelsViewModel.errorCheck()
-        accountDropdown.setState(channelError, if (channelError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
-
-        val actionError = actionSelectViewModel.errorCheck()
-        actionSelect.setState(actionError, if (actionError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
-
-        val recipientError = transferViewModel.recipientErrors(actionSelectViewModel.activeAction.value)
-        contactInput.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
-
-        val hasNoError = !nonStandardHasAnError && amountError == null && channelError == null && actionError == null && recipientError == null
-        continueAfterValidation(hasNoError)
-
-    }
-
 }

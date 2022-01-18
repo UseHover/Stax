@@ -30,9 +30,7 @@
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/nonStandardVariableRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            />
+            android:layout_height="wrap_content" />
 
     <com.hover.stax.contacts.ContactInput
         android:id="@+id/contact_select"

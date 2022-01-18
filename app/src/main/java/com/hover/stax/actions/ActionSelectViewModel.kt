@@ -4,7 +4,9 @@ import android.app.Application
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import com.hover.sdk.actions.HoverAction
+import com.hover.sdk.actions.HoverAction.*
 import com.hover.stax.R
+import java.util.LinkedHashMap
 
  class ActionSelectViewModel(private val application: Application) : ViewModel() {
 
@@ -14,7 +16,7 @@ import com.hover.stax.R
 
     init {
         activeAction.addSource(filteredActions, this::setActiveActionIfOutOfDate)
-        nonStandardVariables.addSource(activeAction, this::setupNonStandardVariables)
+        nonStandardVariables.addSource(activeAction, this::initNonStandardVariables)
     }
 
     private fun setActiveActionIfOutOfDate(actions: List<HoverAction>) {
@@ -32,48 +34,26 @@ import com.hover.stax.R
         return if (activeAction.value == null) application.getString(R.string.action_fielderror) else null
     }
 
-    private fun setupNonStandardVariables(action: HoverAction?) {
-        action?.let {
-            //The commented out is for easy functional testing sake
-            //val variableKeys = ArrayList<String>()
-            //variableKeys.add("Country")
-            // variableKeys.add("City")
-
-            val variableKeys: List<String> = getNonStandardParams(action)
-            if (variableKeys.isEmpty()) nullifyNonStandardVariables()
-            else initNonStandardVariables(variableKeys)
-        }
-    }
-
-    private fun getNonStandardParams(action: HoverAction): List<String> {
-        val variableKeys = mutableListOf<String>()
+    private fun initNonStandardVariables(action: HoverAction) {
+        val variableMap = LinkedHashMap<String, String>()
         action.requiredParams.forEach {
-            if (!isAStandardParam(it)) variableKeys.add(it)
+            if (!isStandardVariable(it)) variableMap[it] = ""
         }
-        return variableKeys
+        nonStandardVariables.postValue(variableMap)
     }
 
-    private fun isAStandardParam(param: String): Boolean {
-        return param == HoverAction.PHONE_KEY || param == HoverAction.ACCOUNT_KEY
-                || param == HoverAction.AMOUNT_KEY || param == HoverAction.NOTE_KEY
-                || param == HoverAction.PIN_KEY
+    private fun isStandardVariable(key: String): Boolean {
+        return key in listOf(PHONE_KEY, ACCOUNT_KEY, AMOUNT_KEY, NOTE_KEY, PIN_KEY, RECIPIENT_INSTITUTION_KEY)
     }
 
-    private fun initNonStandardVariables(variableKeys: List<String>) {
-        val map: LinkedHashMap<String, String> = LinkedHashMap()
-        variableKeys.forEach {
-            map[it] = ""
-        }
-        nonStandardVariables.postValue(map)
+    fun updateNonStandardVariables(key: String, value: String) {
+        var map = nonStandardVariables.value
+        if (map == null) map = linkedMapOf<String, String>()
+        map[key] = value
+        nonStandardVariables.postValue(map!!);
     }
 
     private fun nullifyNonStandardVariables() {
         nonStandardVariables.postValue(null)
-    }
-
-    fun updateNonStandardVariables(key: String, value: String) {
-        val map: LinkedHashMap<String, String> = nonStandardVariables.value!!
-        map[key] = value
-        nonStandardVariables.postValue(map)
     }
 }
