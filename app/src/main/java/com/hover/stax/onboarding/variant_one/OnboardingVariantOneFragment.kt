@@ -91,7 +91,7 @@ class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener 
             setCycle(true)
             setAutoScrollDurationFactor(AUTO_SCROLL_EASE_DURATION_FACTOR)
             setSwipeScrollDurationFactor(SWIPE_DURATION_FACTOR)
-            setStopScrollWhenTouch(false)
+            setStopScrollWhenTouch(true)
             addOnPageChangeListener(this@OnboardingVariantOneFragment)
             adapter = viewPagerAdapter
         }
@@ -170,9 +170,13 @@ class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener 
     }
 
     private fun fillUpProgress(progressBar: LinearProgressIndicator) {
-        val deepBlue = requireContext().resources.getColor(R.color.stax_state_blue)
-        progressBar.progress = 100
-        progressBar.trackColor = deepBlue
+        try{
+            val deepBlue = requireContext().resources.getColor(R.color.stax_state_blue)
+            progressBar.progress = 100
+            progressBar.trackColor = deepBlue
+        }
+            catch (e: IllegalStateException) {Timber.i("animation needed to complete")
+        }
     }
 
     private fun resetFilledProgress(animator: ValueAnimator, progressBar: LinearProgressIndicator) {
