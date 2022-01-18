@@ -8,6 +8,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.24512820512820513" />
         <entry key="app/src/main/res/drawable/button_bg_colored.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_dark.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_grey.xml" value="0.32037037037037036" />
@@ -63,8 +64,10 @@
         <entry key="app/src/main/res/layout/item_paybill.xml" value="0.8125" />
         <entry key="app/src/main/res/layout/item_paybill_saved.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_wellness_tips.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/non_template_variable_item.xml" value="0.22239583333333332" />
         <entry key="app/src/main/res/layout/onboarding_layout.xml" value="0.1082427536231884" />
         <entry key="app/src/main/res/layout/onboarding_variant_one.xml" value="0.196875" />
+        <entry key="app/src/main/res/layout/onboarding_variant_one_slide.xml" value="0.22239583333333332" />
         <entry key="app/src/main/res/layout/rename_account_layout.xml" value="0.3134057971014493" />
         <entry key="app/src/main/res/layout/repeat_inputs.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/layout/request_card_amount.xml" value="0.15602836879432624" />
@@ -82,6 +85,7 @@
         <entry key="app/src/main/res/layout/settings_card_contact_us.xml" value="0.3640625" />
         <entry key="app/src/main/res/layout/settings_card_meta.xml" value="0.16666666666666666" />
         <entry key="app/src/main/res/layout/settings_card_share.xml" value="0.16666666666666666" />
+        <entry key="app/src/main/res/layout/splash_screen_layout.xml" value="0.10815602836879433" />
         <entry key="app/src/main/res/layout/stax_2lineitem.xml" value="0.11956521739130435" />
         <entry key="app/src/main/res/layout/stax_card_view.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/stax_dialog.xml" value="0.3120471014492754" />

@@ -40,6 +40,9 @@ class OnBoardingActivity : AbstractOnboardingNavigationActivity(), StaxGoogleLog
     private fun chooseOnboardingVariant() {
         navigateOnboardingVariantOne()
     }
+    companion object {
+        fun hasPassedOnboarding(context: Context) = Utils.getBoolean(OnBoardingActivity::class.java.simpleName, context)
+    }
 
     override fun googleLoginSuccessful() {
         checkPermissionThenNavigateMainActivity()
