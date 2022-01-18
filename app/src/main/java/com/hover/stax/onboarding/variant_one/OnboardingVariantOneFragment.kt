@@ -42,17 +42,28 @@ class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         initProgressBarView()
         initAnimators()
+
         setUpSlides()
+
         setupPrivacyPolicy()
         setupTermsOfService()
+
         setupSignInWithGoogle()
+        setupContinueNoSignIn()
     }
 
     private fun setupSignInWithGoogle() {
         binding.continueWithGoogle.setOnClickListener {
             (requireActivity() as OnBoardingActivity).signIn(optInMarketing = true)
+        }
+    }
+
+    private fun setupContinueNoSignIn() {
+        binding.continueNoSignIn.setOnClickListener {
+            (requireActivity() as OnBoardingActivity).checkPermissionThenNavigateMainActivity()
         }
     }
 
