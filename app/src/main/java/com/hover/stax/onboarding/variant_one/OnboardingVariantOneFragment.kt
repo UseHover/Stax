@@ -7,7 +7,6 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -17,11 +16,6 @@ import timber.log.Timber
 import android.animation.AnimatorListenerAdapter
 
 import android.animation.ValueAnimator
-import android.animation.ValueAnimator.AnimatorUpdateListener
-import android.annotation.SuppressLint
-import android.graphics.Color
-import android.os.Build
-import androidx.annotation.RequiresApi
 
 
 class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener {
@@ -179,11 +173,6 @@ class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener 
         progressBar.progress = 0
         progressBar.trackColor = brightBlue
 
-    }
-    private fun mildReset(progressBar: LinearProgressIndicator) {
-        progressBar1.progress = 0
-        val brightBlue = requireContext().resources.getColor(R.color.brightBlue)
-        progressBar.trackColor = brightBlue
     }
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
