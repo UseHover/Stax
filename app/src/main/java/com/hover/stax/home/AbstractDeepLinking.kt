@@ -8,8 +8,8 @@ import com.hover.stax.R
 
 abstract class AbstractDeepLinking: AbstractAppReviewActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         checkForDeepLinking()
     }
 

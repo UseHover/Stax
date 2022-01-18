@@ -14,10 +14,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 abstract class AbstractGoogleAuthActivity: AppCompatActivity() {
     private val settingsViewModel: SettingsViewModel by viewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         initGoogleAuth()
-
     }
 
 

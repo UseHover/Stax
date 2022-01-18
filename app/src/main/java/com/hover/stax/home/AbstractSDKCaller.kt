@@ -163,6 +163,7 @@ abstract class AbstractSDKCaller : AbstractNavigationActivity(), PushNotificatio
         joinTransactionGroup(this)
         leaveNoUsageGroup(this)
     }
+
     private fun updatePushNotifGroupStatus(a: HoverAction) {
         joinAllBountiesGroup(this)
         joinBountyCountryGroup(a.country_alpha2.uppercase(), this)

@@ -16,8 +16,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 abstract class AbstractAppReviewActivity : AbstractSDKCaller() {
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         observeForAppReview()
     }
 

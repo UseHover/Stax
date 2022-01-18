@@ -68,6 +68,7 @@
 
 
         <LinearLayout
+                android:id="@+id/continue_withGoogle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_13"
@@ -94,7 +95,7 @@
         </LinearLayout>
 
         <Button
-                android:id="@+id/continue_btn"
+                android:id="@+id/continue_noSignIn"
                 style="@style/StaxFabExtended"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

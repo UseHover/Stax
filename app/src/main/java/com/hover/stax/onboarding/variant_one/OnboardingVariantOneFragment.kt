@@ -16,6 +16,7 @@ import timber.log.Timber
 import android.animation.AnimatorListenerAdapter
 
 import android.animation.ValueAnimator
+import com.hover.stax.login.LoginDialog
 
 
 class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener {
@@ -47,6 +48,13 @@ class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener 
         setUpSlides()
         setupPrivacyPolicy()
         setupTermsOfService()
+        setupSignInWithGoogle()
+    }
+
+    private fun setupSignInWithGoogle() {
+        binding.continueWithGoogle.setOnClickListener {
+            LoginDialog().show(childFragmentManager, LoginDialog.TAG)
+        }
     }
 
     private fun initProgressBarView() {

@@ -11,13 +11,14 @@ import androidx.navigation.fragment.NavHostFragment
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
 import com.hover.stax.home.MainActivity
+import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
 
-abstract class AbstractOnboardingNavigationActivity : AppCompatActivity(), OnboardingFragmentsNavigationInterface {
+abstract class AbstractOnboardingNavigationActivity : AbstractGoogleAuthActivity(), OnboardingFragmentsNavigationInterface {
 
 	private lateinit var navController: NavController
 
