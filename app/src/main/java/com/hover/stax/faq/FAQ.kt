@@ -11,7 +11,6 @@ import timber.log.Timber
 data class FAQ(var id: String, var topic: String, var content: String)
 
 internal fun getFAQList(): LiveData<List<FAQ>> {
-
     val db = Firebase.firestore
     val settings = firestoreSettings { isPersistenceEnabled = true }
     db.firestoreSettings = settings

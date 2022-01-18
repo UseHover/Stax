@@ -9,7 +9,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.checkbox.MaterialCheckBox
@@ -291,6 +291,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
                 showMessage(getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))))
             requestCode == Constants.REQUEST_REQUEST -> if (resultCode == RESULT_OK && data != null) onRequest(data)
             requestCode == BOUNTY_REQUEST -> showBountyDetails(data)
+
             requestCode == LOGIN_REQUEST -> settingsViewModel.signIntoFirebaseAsync(data, findViewById<MaterialCheckBox>(R.id.marketingOptIn)?.isChecked ?: false, this)
             else -> {
                 if (requestCode != Constants.TRANSFER_REQUEST) {
@@ -398,7 +399,6 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         with(scheduleViewModel) {
             if (isRequestType) {
                 schedule.observe(this@MainActivity) { it?.let { requestViewModel.setSchedule(it) } }
-                AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_schedule_notification), this@MainActivity)
             } else {
                 action.observe(this@MainActivity) { it?.let { actionSelectViewModel.setActiveAction(it) } }
                 schedule.observe(this@MainActivity) { it?.let { transferViewModel.view(it) } }
@@ -423,6 +423,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
         if (requestCode == Constants.SMS && PermissionHelper(this).permissionsGranted(grantResults)) {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_granted), this)
             sendSms()
