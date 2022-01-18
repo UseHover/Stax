@@ -1,9 +1,6 @@
 package com.hover.stax.paybill
 
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
-import android.graphics.Color
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -306,11 +303,11 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
         resetViews()
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        //sometimes when navigating back from another fragment, the labels get all messed up
-//        resetViews()
-//    }
+    override fun onResume() {
+        super.onResume()
+        //sometimes when navigating back from another fragment, the labels get all messed up
+        resetViews()
+    }
 
     private fun resetViews() {
         with(binding.billDetailsLayout) {
@@ -319,11 +316,7 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
             accountNoInput.setHint(getString(R.string.account_number_label))
             amountInput.setHint(getString(R.string.transfer_amount_label))
 
-            businessNoInput.binding.inputLayout.apply {
-                setEndIconDrawable(R.drawable.ic_twotone_chevron_right_24)
-                setEndIconTintMode(PorterDuff.Mode.SRC_IN)
-                setEndIconTintList(ColorStateList.valueOf(Color.WHITE))
-            }
+            businessNoInput.binding.inputLayout.setEndIconDrawable(R.drawable.ic_chevron_right)
         }
 
         binding.paybillIconsLayout.cardPaybillIcons.visibility = View.GONE
