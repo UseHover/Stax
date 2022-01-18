@@ -24,7 +24,7 @@ import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class MainActivity : AbstractRequestActivity(),  BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener,
+class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener,
         BiometricChecker.AuthListener, PushNotificationTopicsInterface {
 
     private val balancesViewModel: BalancesViewModel by viewModel()
@@ -97,6 +97,7 @@ class MainActivity : AbstractRequestActivity(),  BalancesViewModel.RunBalanceLis
             checkPermissionsAndNavigate(toWhere)
         }
     }
+
     private fun onRequest(data: Intent) {
         if (data.action == Constants.SCHEDULED)
             showMessage(getString(R.string.toast_request_scheduled, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))))
@@ -172,9 +173,13 @@ class MainActivity : AbstractRequestActivity(),  BalancesViewModel.RunBalanceLis
             getNavController().navigate(R.id.action_navigation_home_to_accountDetailsFragment, bundleOf(Constants.ACCOUNT_ID to accountId))
     }
 
-    override fun onAuthError(error: String) { Timber.e("Error : $error") }
+    override fun onAuthError(error: String) {
+        Timber.e("Error : $error")
+    }
 
-    override fun onAuthSuccess(action: HoverAction?) { Timber.e("Auth success on action: ${action?.public_id}") }
+    override fun onAuthSuccess(action: HoverAction?) {
+        Timber.e("Auth success on action: ${action?.public_id}")
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

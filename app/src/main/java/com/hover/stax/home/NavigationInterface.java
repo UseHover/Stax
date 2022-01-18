@@ -15,7 +15,7 @@ import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.stax.R;
 import com.hover.stax.channels.AddChannelsFragment;
-import com.hover.stax.financialTips.FinancialTipsFragment;
+import com.hover.stax.financialTip.FinancialTipFragment;
 import com.hover.stax.transactions.TransactionDetailsFragment;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
@@ -26,7 +26,6 @@ public interface NavigationInterface {
 
     default void navigate(AppCompatActivity activity, int toWhere) {
         NavHostFragment navHostFragment = (NavHostFragment) activity.getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        assert navHostFragment != null;
         NavController navController = navHostFragment.getNavController();
 
         switch (toWhere) {
@@ -56,10 +55,6 @@ public interface NavigationInterface {
                 break;
             case Constants.NAV_USSD_LIB:
                 navigateToUSSDLib(navController);
-                break;
-            case Constants.NAV_PAYBILL:
-                navController.navigate(R.id.action_navigation_home_to_paybillFragment);
-                break;
             default:
                 break;
         }
@@ -104,7 +99,7 @@ public interface NavigationInterface {
 
     default void navigateToWellnessFragment(NavController navController, String id) {
         Bundle bundle = new Bundle();
-        bundle.putString(FinancialTipsFragment.TIP_ID, id);
+        bundle.putString(FinancialTipFragment.TIP_ID, id);
         navController.navigate(R.id.action_navigation_home_to_wellnessFragment, bundle);
     }
 

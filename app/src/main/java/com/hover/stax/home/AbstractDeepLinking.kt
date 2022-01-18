@@ -2,11 +2,10 @@ package com.hover.stax.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 
-abstract class AbstractDeepLinking: AbstractAppReviewActivity() {
+abstract class AbstractDeepLinking : AbstractAppReviewActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

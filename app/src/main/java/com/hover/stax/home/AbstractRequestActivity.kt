@@ -15,9 +15,9 @@ import com.hover.stax.utils.Constants
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-abstract class AbstractRequestActivity: AbstractDeepLinking(), RequestSenderInterface, SmsSentObserver.SmsSentListener {
+abstract class AbstractRequestActivity : AbstractDeepLinking(), RequestSenderInterface, SmsSentObserver.SmsSentListener {
     private val requestViewModel: NewRequestViewModel by viewModel()
-    private val scheduleViewModel: ScheduleDetailViewModel = getViewModel()
+    private val scheduleViewModel: ScheduleDetailViewModel by viewModel()
     private val actionSelectViewModel: ActionSelectViewModel by viewModel()
     private val transferViewModel: TransferViewModel by viewModel()
 
@@ -26,7 +26,7 @@ abstract class AbstractRequestActivity: AbstractDeepLinking(), RequestSenderInte
         with(scheduleViewModel) {
             if (isRequestType) {
                 schedule.observe(this@AbstractRequestActivity) { it?.let { requestViewModel.setSchedule(it) } }
-                com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent(getString(com.hover.stax.R.string.clicked_schedule_notification), this@AbstractRequestActivity)
+                AnalyticsUtil.logAnalyticsEvent(getString(com.hover.stax.R.string.clicked_schedule_notification), this@AbstractRequestActivity)
             } else {
                 action.observe(this@AbstractRequestActivity) { it?.let { actionSelectViewModel.setActiveAction(it) } }
                 schedule.observe(this@AbstractRequestActivity) { it?.let { transferViewModel.view(it) } }
@@ -37,7 +37,7 @@ abstract class AbstractRequestActivity: AbstractDeepLinking(), RequestSenderInte
 
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_schedule_notification), this)
     }
-    
+
     fun sendSms() {
         requestViewModel.saveRequest()
         SmsSentObserver(this, listOf(requestViewModel.requestee.value), Handler(), this).start()

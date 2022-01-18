@@ -4,7 +4,6 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.PersistableBundle
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.hover.stax.R
 import com.hover.stax.transactions.TransactionHistoryViewModel

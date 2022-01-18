@@ -1,6 +1,8 @@
 package com.hover.stax.onboarding.variant_one
 
 import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
@@ -12,11 +14,8 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.hover.stax.R
 import com.hover.stax.databinding.OnboardingVariantOneBinding
+import com.hover.stax.onboarding.OnBoardingActivity
 import timber.log.Timber
-import android.animation.AnimatorListenerAdapter
-
-import android.animation.ValueAnimator
-import com.hover.stax.login.LoginDialog
 
 
 class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener {
@@ -29,10 +28,10 @@ class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener 
     private lateinit var progressBar3: LinearProgressIndicator
     private lateinit var progressBar4: LinearProgressIndicator
 
-    private lateinit var animator1 : ValueAnimator
-    private lateinit var animator2 : ValueAnimator
-    private lateinit var animator3 : ValueAnimator
-    private lateinit var animator4 : ValueAnimator
+    private lateinit var animator1: ValueAnimator
+    private lateinit var animator2: ValueAnimator
+    private lateinit var animator3: ValueAnimator
+    private lateinit var animator4: ValueAnimator
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -53,7 +52,7 @@ class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener 
 
     private fun setupSignInWithGoogle() {
         binding.continueWithGoogle.setOnClickListener {
-            LoginDialog().show(childFragmentManager, LoginDialog.TAG)
+            (requireActivity() as OnBoardingActivity).signIn(optInMarketing = true)
         }
     }
 
@@ -112,7 +111,7 @@ class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener 
         animator.duration = 4000
         animator.addUpdateListener { animation ->
             progressBar.progress = animation.animatedValue as Int
-            if(progressBar.progress > 90) {
+            if (progressBar.progress > 90) {
                 fillUpProgress(progressBar)
             }
         }
@@ -139,7 +138,7 @@ class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener 
     }
 
     private fun showProgress(currentPos: Int) {
-        when(currentPos) {
+        when (currentPos) {
             0 -> {
                 updateProgressAnimation(animator1, progressBar1)
                 resetFilledProgress(animator2, progressBar2)
@@ -175,6 +174,7 @@ class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener 
         progressBar.progress = 100
         progressBar.trackColor = deepBlue
     }
+
     private fun resetFilledProgress(animator: ValueAnimator, progressBar: LinearProgressIndicator) {
         animator.cancel()
         val brightBlue = requireContext().resources.getColor(R.color.brightBlue)

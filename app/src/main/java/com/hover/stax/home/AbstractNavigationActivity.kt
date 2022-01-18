@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -12,7 +11,6 @@ import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
-import com.hover.stax.home.NavigationInterface
 import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.permissions.PermissionUtils
 

@@ -104,7 +104,7 @@ abstract class AbstractSDKCaller : AbstractNavigationActivity(), PushNotificatio
                     .extra(HoverAction.NOTE_KEY, transferViewModel.note.value)
                     .extra(Constants.ACCOUNT_NAME, selectedAccount?.name)
 
-            if(!nonTemplateVariables.isNullOrEmpty()) {
+            if (!nonTemplateVariables.isNullOrEmpty()) {
                 nonTemplateVariables.forEach {
                     hsb.extra(it.key, it.value)
                 }
