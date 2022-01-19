@@ -13,10 +13,10 @@ import com.hover.stax.channels.Channel
 )
 data class Paybill(
 
-        val name: String,
+        var name: String,
 
         @ColumnInfo(name = "business_no")
-        val businessNo: String,
+        var businessNo: String,
 
         @ColumnInfo(name = "account_no")
         var accountNo: String? = null,

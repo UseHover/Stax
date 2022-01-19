@@ -8,7 +8,8 @@ import com.hover.stax.R
 import com.hover.stax.databinding.ItemPaybillActionBinding
 import com.hover.stax.utils.UIHelper
 
-class PaybillActionsAdapter(private val paybillActions: List<HoverAction>, private val clickListener: PaybillActionsClickListener) : RecyclerView.Adapter<PaybillActionsAdapter.ActionsViewHolder>() {
+class PaybillActionsAdapter(private val paybillActions: List<HoverAction>, private val clickListener: PaybillActionsClickListener)
+    : RecyclerView.Adapter<PaybillActionsAdapter.ActionsViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActionsViewHolder {
         val binding = ItemPaybillActionBinding.inflate(LayoutInflater.from(parent.context), parent, false)

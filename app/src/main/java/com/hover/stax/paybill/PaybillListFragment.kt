@@ -31,7 +31,7 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.contentLayout.setOnClickIcon { findNavController().popBackStack() }
+        binding.contentLayout.setOnClickIcon { findNavController().navigate(R.id.action_paybillListFragment_to_paybillFragment) }
 
         arguments?.getInt(Constants.ACCOUNT_ID)?.let {
             paybillViewModel.getSavedPaybills(it)
@@ -45,23 +45,22 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
         }
     }
 
-    private fun startObservers() {
-        with(paybillViewModel) {
-            savedPaybills.observe(viewLifecycleOwner) {
-                if (it.isNotEmpty())
-                    showSavedPaybills(it)
-                else
-                    toggleSavedPaybills(false)
-            }
+    private fun startObservers() = with(paybillViewModel) {
+        savedPaybills.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty())
+                showSavedPaybills(it)
+            else
+                toggleSavedPaybills(false)
+        }
 
-            popularPaybills.observe(viewLifecycleOwner) {
-                if (it.isNotEmpty())
-                    showPopularPaybills(it)
-                else
-                    togglePopularPaybills(false)
-            }
+        popularPaybills.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty())
+                showPopularPaybills(it)
+            else
+                togglePopularPaybills(false)
         }
     }
+
 
     private fun showPopularPaybills(paybills: List<HoverAction>) {
         togglePopularPaybills(true)
@@ -93,15 +92,15 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
 
     override fun onDeletePaybill(paybill: Paybill) {
         dialog = StaxDialog(requireActivity())
-                .setDialogTitle(getString(R.string.paybill_delete_header))
-                .setDialogMessage(getString(R.string.paybill_delete_msg, paybill.name))
-                .setNegButton(R.string.btn_cancel, null)
-                .setPosButton(R.string.btn_delete) {
-                    if (activity != null) {
-                        paybillViewModel.deletePaybill(paybill)
-                        UIHelper.flashMessage(requireActivity(), R.string.paybill_delete_success)
-                    }
+            .setDialogTitle(getString(R.string.paybill_delete_header))
+            .setDialogMessage(getString(R.string.paybill_delete_msg, paybill.name))
+            .setNegButton(R.string.btn_cancel, null)
+            .setPosButton(R.string.btn_delete) {
+                if (activity != null) {
+                    paybillViewModel.deletePaybill(paybill)
+                    UIHelper.flashMessage(requireActivity(), R.string.paybill_delete_success)
                 }
+            }
         dialog!!.showIt()
     }
 
@@ -111,7 +110,7 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
     }
 
     override fun onSelectPaybill(action: HoverAction) {
-        paybillViewModel.selectPaybill(action)
+        paybillViewModel.selectAction(action)
         findNavController().popBackStack()
     }
 

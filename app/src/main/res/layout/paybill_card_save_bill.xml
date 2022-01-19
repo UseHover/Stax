@@ -58,6 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_5"
                     android:fontFamily="font-normal"
+                    android:textColor="@color/white"
                     android:paddingStart="@dimen/margin_13"
                     android:paddingEnd="@dimen/margin_5"
                     android:text="@string/amount_checkbox_label"

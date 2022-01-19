@@ -8,7 +8,6 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.database.DatabaseRepo
-import com.hover.stax.utils.UIHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -22,9 +21,9 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
     val selectedPaybill = MutableLiveData<Paybill>()
     val businessNumber = MutableLiveData<String>()
     val accountNumber = MutableLiveData<String>()
-    val name = MutableLiveData<String>()
+    val nickname = MutableLiveData<String>()
     val amount = MutableLiveData<String>()
-    val iconDrawable = MutableLiveData<Int>()
+    val iconDrawable = MutableLiveData(0)
     val isEditing = MutableLiveData(true)
 
     val selectedAction = MutableLiveData<HoverAction>()
@@ -44,10 +43,13 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
         selectedPaybill.value = paybill
     }
 
-    fun selectPaybill(action: HoverAction) {
+    fun selectAction(action: HoverAction) {
         selectedAction.value = action
 
-        val paybill = Paybill(action.to_institution_name, action.to_institution_id.toString(), null, action.channel_id, 0, action.to_institution_logo)
+        val paybill = Paybill(
+            action.to_institution_name, action.to_institution_id.toString(), null, action.channel_id,
+            0, application.getString(R.string.root_url).plus(action.to_institution_logo)
+        )
         selectPaybill(paybill)
     }
 
@@ -68,7 +70,7 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
     }
 
     fun setNickname(nickname: String) {
-        name.value = nickname
+        this.nickname.value = nickname
     }
 
     fun setEditing(editing: Boolean) {
@@ -80,7 +82,7 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
         val accountNo = accountNumber.value
 
         if (account != null) {
-            val payBill = Paybill(name.value!!, businessNo!!, accountNo, account.channelId, account.id, account.logoUrl).apply {
+            val payBill = Paybill(nickname.value!!, businessNo!!, accountNo, account.channelId, account.id, selectedPaybill.value?.logoUrl ?: account.logoUrl).apply {
                 isSaved = true
                 logo = iconDrawable.value ?: 0
             }
@@ -105,7 +107,7 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
         application.getString(R.string.transfer_error_recipient_account)
     else null
 
-    fun nameError(): String? = if (name.value.isNullOrEmpty())
+    fun nameError(): String? = if (nickname.value.isNullOrEmpty())
         application.getString(R.string.bill_name_error)
     else null
 
@@ -113,8 +115,18 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
         repo.delete(paybill)
     }
 
-    fun updatePaybill(paybill: Paybill) = viewModelScope.launch(Dispatchers.IO) {
-        repo.update(paybill)
+    fun updatePaybill(paybill: Paybill, setRecurringAmount: Boolean) = viewModelScope.launch(Dispatchers.IO) {
+        with(paybill) {
+            apply {
+                name = nickname.value!!
+                businessNo = businessNumber.value!!
+                accountNo = accountNumber.value!!
+                logo = iconDrawable.value ?: 0
+                recurringAmount = if (setRecurringAmount) amount.value!!.toInt() else 0
+            }
+
+            repo.update(this)
+        }
     }
 
     fun reset() = viewModelScope.launch {
@@ -122,6 +134,7 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
         businessNumber.postValue(null)
         accountNumber.postValue(null)
         amount.postValue(null)
+        nickname.postValue(null)
         iconDrawable.postValue(0)
     }
 }
