@@ -8,9 +8,11 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import timber.log.Timber
 
 class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, val application: Application) : ViewModel() {
@@ -89,9 +91,25 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
             if (recurringAmount) payBill.recurringAmount = amount.value!!.toInt()
 
             repo.save(payBill)
+
+            logPaybill(payBill)
         } else {
             Timber.e("Active account not set")
         }
+    }
+
+    private fun logPaybill(paybill: Paybill, isSaved: Boolean = true) {
+        val data = JSONObject()
+
+        try {
+            data.put("name", paybill.name)
+            data.put("businessNo", paybill.businessNo)
+            data.put("channelId", paybill.channelId)
+        } catch (e: Exception) {
+            Timber.e(e)
+        }
+
+        AnalyticsUtil.logAnalyticsEvent(application.getString(if (!isSaved) R.string.deleted_paybill else R.string.saved_paybill), data, application)
     }
 
     fun businessNoError(): String? = if (businessNumber.value.isNullOrEmpty())
@@ -113,6 +131,7 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
 
     fun deletePaybill(paybill: Paybill) = viewModelScope.launch(Dispatchers.IO) {
         repo.delete(paybill)
+        logPaybill(paybill, false)
     }
 
     fun updatePaybill(paybill: Paybill, setRecurringAmount: Boolean) = viewModelScope.launch(Dispatchers.IO) {

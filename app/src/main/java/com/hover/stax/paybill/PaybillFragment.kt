@@ -20,6 +20,7 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentPaybillBinding
 import com.hover.stax.home.MainActivity
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.AbstractStatefulInput
@@ -44,6 +45,7 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_paybill)), requireActivity())
 
         channelsViewModel.setType(HoverAction.C2B)
 
@@ -383,7 +385,7 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
             saveBill.isChecked = true
             billNameInput.setText(paybill.name)
             amountCheckBox.isChecked = paybill.recurringAmount != 0
-            if(amountCheckBox.isChecked) paybillViewModel.setAmount(paybill.recurringAmount.toString())
+            if (amountCheckBox.isChecked) paybillViewModel.setAmount(paybill.recurringAmount.toString())
 
             if (paybill.logo != 0) {
                 billIconLayout.billIcon.setImageDrawable(ContextCompat.getDrawable(requireActivity(), paybill.logo))

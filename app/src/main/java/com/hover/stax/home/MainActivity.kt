@@ -354,16 +354,23 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
     }
 
     fun submitPaymentRequest(action: HoverAction, channel: Channel, account: Account) {
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.finish_transfer, TransactionType.type), this)
-
         val hsb = HoverSession.Builder(action, channel, this, Constants.PAYBILL_REQUEST)
                 .extra(HoverAction.AMOUNT_KEY, paybillViewModel.amount.value)
                 .extra("businessNo", paybillViewModel.businessNumber.value)
                 .extra(Constants.ACCOUNT_NAME, account.name)
                 .extra(HoverAction.ACCOUNT_KEY, paybillViewModel.accountNumber.value)
         hsb.setAccountId(account.id.toString())
-
+        
         runAction(hsb)
+
+        val data = JSONObject()
+        try {
+            data.put("businessNo", paybillViewModel.businessNumber.value)
+        } catch(e: Exception) {
+            Timber.e(e)
+        }
+
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.finish_transfer, TransactionType.type), data, this)
     }
 
     private fun addRecipientInfo(hsb: HoverSession.Builder) {
