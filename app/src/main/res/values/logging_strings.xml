@@ -134,4 +134,5 @@
 	<string name="clicked_tips_read_more">Clicked financial snippet read more.</string>
 	<string name="read_financial_tip">Read financial tip</string>
 	<string name="visited_financial_tips">Visited financial tips screen</string>
+	<string name="shared_financial_tip">Shared financial tip</string>
 </resources>

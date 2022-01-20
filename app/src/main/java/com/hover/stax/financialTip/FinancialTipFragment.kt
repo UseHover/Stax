@@ -101,7 +101,23 @@ class FinancialTipFragment : Fragment(), FinancialTipsAdapter.SelectListener {
                 type = "text/plain"
             }, getString(R.string.share_wellness_tip))
             startActivity(share)
+
+            logTipShare(tip)
         }
+    }
+
+    private fun logTipShare(tip: FinancialTip) {
+        val data = JSONObject()
+
+        try {
+            data.put("tipId", tip.id)
+            data.put("date", tip.date)
+            data.put("title", tip.title)
+        } catch (e: Exception) {
+            Timber.e(e)
+        }
+
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.shared_financial_tip), data, requireActivity())
     }
 
     private fun logTipRead(tip: FinancialTip, isFromDeeplink: Boolean) {
