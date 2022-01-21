@@ -2,9 +2,12 @@ package com.hover.stax.financialTip
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
+import com.hover.stax.utils.DateUtils
 import timber.log.Timber
 import java.util.*
 
@@ -22,16 +25,23 @@ class FinancialTipsViewModel : ViewModel() {
     val tips = MutableLiveData<List<FinancialTip>>()
 
     private fun getTips() {
-        db.collection("wellness_tips").whereLessThanOrEqualTo("date", Date()).limit(20).get()
-                .addOnSuccessListener { snapshot ->
-                    val financialTip = snapshot.map { document ->
-                        FinancialTip(document.id, document.data["title"].toString(), document.data["content"].toString(), document.data["snippet"].toString(), document.getDate("date"))
-                    }
-                    tips.postValue(financialTip.filterNot { it.date == null }.sortedByDescending { it.date!!.time })
+        val timestamp = Timestamp.now()
+
+        db.collection("wellness_tips")
+            .orderBy("date", Query.Direction.DESCENDING)
+            .whereLessThanOrEqualTo("date", timestamp.toDate())
+            .limit(20)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val financialTip = snapshot.map { document ->
+                    FinancialTip(document.id, document.data["title"].toString(), document.data["content"].toString(), document.data["snippet"].toString(), document.getDate("date"))
                 }
-                .addOnFailureListener {
-                    Timber.e("Error fetching wellness tips: ${it.localizedMessage}")
-                    tips.postValue(emptyList())
-                }
+
+                tips.postValue(financialTip.filterNot { it.date == null }.sortedByDescending { it.date!!.time })
+            }
+            .addOnFailureListener {
+                Timber.e("Error fetching wellness tips: ${it.localizedMessage}")
+                tips.postValue(emptyList())
+            }
     }
 }
