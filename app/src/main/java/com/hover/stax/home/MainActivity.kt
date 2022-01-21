@@ -360,7 +360,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
                 .extra(Constants.ACCOUNT_NAME, account.name)
                 .extra(HoverAction.ACCOUNT_KEY, paybillViewModel.accountNumber.value)
         hsb.setAccountId(account.id.toString())
-        
+
         runAction(hsb)
 
         val data = JSONObject()
