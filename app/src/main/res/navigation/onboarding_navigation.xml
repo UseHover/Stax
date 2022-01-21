@@ -17,4 +17,22 @@
         android:label="@string/onboarding_v1_slide1_title"
         tools:layout="@layout/onboarding_variant_one"/>
 
+    <fragment
+            android:id="@+id/navigation_onboarding_v2"
+            android:name="com.hover.stax.onboarding.variant_two.VariantTwoMainFragment"
+            android:label="@string/onboarding_v1_slide2_title"
+            tools:layout="@layout/onboarding_variant_two"/>
+
+    <fragment
+            android:id="@+id/navigation_onboarding_v2_withCheckbox"
+            android:name="com.hover.stax.onboarding.variant_two.AnswersWithCheckBoxFragment"
+            android:label="@string/onboarding_v1_slide2_title"
+            tools:layout="@layout/variant_two_answer_withcheckbox"/>
+
+    <fragment
+            android:id="@+id/navigation_onboarding_v2_noCheckbox"
+            android:name="com.hover.stax.onboarding.variant_two.AnswersNoCheckBoxFragment"
+            android:label="@string/onboarding_v1_slide2_title"
+            tools:layout="@layout/variant_two_answer_nocheckbox"/>
+
 </navigation>

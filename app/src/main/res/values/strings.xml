@@ -78,6 +78,29 @@
     <string name="termsOfServiceFullLabel">By continuing, you agree to Stax\'s Terms of service.</string>
     <string name="privacyPolicyFullLabel">See how we use your data in our Privacy Policy.</string>
 
+    <!-- ONBOARDING VARIANT_2 -->
+    <string name="welcome_to_stax">Hello, welcome to Stax.</string>
+    <string name="welcome_to_stax_fullContent">If you\’re new to Stax you may have some questions, lets help clarify some. Select the most relevant option to you.</string>
+    <string name="onboarding_variant_2_question1">Is Stax for me?</string>
+    <string name="onboarding_variant_2_question2">Does Stax charge fees? </string>
+    <string name="onboarding_variant_2_question3">What does Stax do?</string>
+    <string name="skip_prefix">Already know about stax?</string>
+    <string name="skip">Skip</string>
+
+    <string name="is_stax_for_you">To figure out if Stax is for you select as many as best describes you</string>
+    <string name="variant_V2_checkbox_option1">I have used USSD in the past?</string>
+    <string name="variant_V2_checkbox_option2">I have more than one bank or Mobile Money account?</string>
+    <string name="variant_V2_checkbox_option3">I turn off my mobile data frequently?</string>
+    <string name="none_apply">None of these apply</string>
+    
+    <string name="variant_v2_nocheckbox_title1">Does Stax charge fees? </string>
+    <string name="variant_V2_nocheckbox_title2">What does Stax do?</string>
+    <string name="variant_v2_nocheckbox_desc1">Stax does not charge you extra fees. Sometimes your bank or mobile money provider will charge you fees for performing a transaction.\n\nStax keeps track of how much money they charge you.</string>
+    <string name="variant_v2_nocheckbox_desc2">Stax uses USSD technology to make it possible for you to transact offline. With Stax, you can check your account balances, send money, buy airtime,  transfer money within own accounts, control multiple financial (banks and mobile money) accounts  from one app.\n\nYou can also create links that other people with Stax can use to send you money.</string>
+
+    <string name="skip_tutorial">Skip tutorial</string>
+
+
 
 
     <!-- Home -->

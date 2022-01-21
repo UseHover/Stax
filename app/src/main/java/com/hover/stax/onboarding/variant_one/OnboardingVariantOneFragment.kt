@@ -18,7 +18,7 @@ import com.hover.stax.onboarding.OnBoardingActivity
 import timber.log.Timber
 
 
-class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener {
+ class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener {
 
     private var _binding: OnboardingVariantOneBinding? = null
     private val binding get() = _binding!!
