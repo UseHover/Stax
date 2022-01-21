@@ -7,7 +7,6 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
-import com.hover.stax.utils.DateUtils
 import timber.log.Timber
 import java.util.*
 
