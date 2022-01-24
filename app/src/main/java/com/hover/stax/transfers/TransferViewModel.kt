@@ -25,7 +25,6 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     val contact = MutableLiveData<StaxContact>()
     val note = MutableLiveData<String>()
     var request: LiveData<Request> = MutableLiveData()
-    val nonStandardVariables   =  MutableLiveData<ArrayList<NonStandardVariable>>()
 
     fun setTransactionType(transaction_type: String) {
         TransactionType.type = transaction_type
@@ -114,48 +113,6 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
             viewModelScope.launch {
                 sc.lastUsedTimestamp = DateUtils.now()
                 repo.save(sc)
-            }
-        }
-    }
-
-    fun initNonStandardVariables(entries: List<String>) {
-        val itemList = ArrayList<NonStandardVariable>()
-        entries.map { itemList.add(NonStandardVariable(it, null)) }
-        nonStandardVariables.postValue(itemList)
-    }
-
-    fun nullifyNonStandardVariables() {
-        nonStandardVariables.postValue(null)
-    }
-    fun updateNonStandardVariables(nonStandardVariable: NonStandardVariable) {
-        var itemList = nonStandardVariables.value
-        if(itemList == null) itemList = ArrayList()
-
-        itemList.find { it.key == nonStandardVariable.key }
-                ?.let { it.value = nonStandardVariable.value }
-                ?: itemList.add(nonStandardVariable)
-
-        nonStandardVariables.postValue(itemList);
-    }
-
-    fun nonStandardVariablesAnError(): Boolean {
-        with(nonStandardVariables.value) {
-            when {
-                this == null -> return false
-                this.isEmpty() -> return true
-                else -> {
-                    this.forEachIndexed{index, it->
-                        if (it.value == null) it.editTextState = AbstractStatefulInput.ERROR
-                        else {
-                            if (it.value!!.replace(" ".toRegex(), "").isEmpty()) it.editTextState = AbstractStatefulInput.ERROR
-                            else it.editTextState = AbstractStatefulInput.SUCCESS
-                            it.value = it.value //Required to prevent editText value changing
-                        }
-                    }
-
-                    nonStandardVariables.postValue(this)
-                    return find { it.editTextState == AbstractStatefulInput.ERROR } != null
-                }
             }
         }
     }

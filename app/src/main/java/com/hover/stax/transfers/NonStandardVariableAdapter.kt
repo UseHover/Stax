@@ -17,7 +17,7 @@ class NonStandardVariableAdapter(private var variables: List<NonStandardVariable
         ListAdapter<NonStandardVariable, NonStandardVariableAdapter.ViewHolder>(NonStandardDiffCallback()) {
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateStates(variables: List<NonStandardVariable>) {
+    fun updateList(variables: List<NonStandardVariable>) {
         this.variables = variables
         notifyDataSetChanged()
     }
