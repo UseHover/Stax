@@ -322,7 +322,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         }
     }
 
-    fun submit(account: Account, nonStandardVariables: List<NonStandardVariable>? = null) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account, nonStandardVariables) }
+    fun submit(account: Account, nonStandardVariables: List<NonStandardVariable>? = null) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account) }
 
     private fun makeHoverCall(action: HoverAction, account: Account) {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.finish_transfer, TransactionType.type), this)
