@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
@@ -25,13 +24,11 @@ import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
-import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import java.util.*
 
 
-class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonTemplateVariableAdapter.NonTemplateVariableInputListener {
+class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
 
     private val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
     private lateinit var transferViewModel: TransferViewModel
@@ -44,8 +41,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private var _binding: FragmentTransferBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var nonTemplateSummaryAdapter: NonTemplateSummaryAdapter
-    private lateinit var nonTemplateVariableAdapter : NonTemplateVariableAdapter
+    private lateinit var nonStandardSummaryAdapter: NonStandardSummaryAdapter
+    private lateinit var nonStandardVariableAdapter : NonStandardVariableAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         abstractFormViewModel = getSharedViewModel<TransferViewModel>()
@@ -193,7 +190,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 transferViewModel.setEditing(false)
             } else {
                 (requireActivity() as MainActivity).submit(accountDropdown.highlightedAccount
-                        ?: channelsViewModel.activeAccount.value!!, transferViewModel.nonTemplateVariables.value)
+                        ?: channelsViewModel.activeAccount.value!!, transferViewModel.nonStandardVariables.value)
                 findNavController().popBackStack()
             }
         } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
@@ -235,10 +232,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         val recipientError = transferViewModel.recipientErrors(actionSelectViewModel.activeAction.value)
         contactInput.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
-        val nonTemplateVariableHasError = transferViewModel.nonTemplateVariablesAnError()
-        nonTemplateVariableAdapter.updateStates(transferViewModel.nonTemplateVariables.value!!)
+        val nonStandardVariableHasError = transferViewModel.nonStandardVariablesAnError()
+        nonStandardVariableAdapter.updateStates(transferViewModel.nonStandardVariables.value!!)
 
-        return channelError == null && actionError == null && amountError == null && recipientError == null && !nonTemplateVariableHasError
+        return channelError == null && actionError == null && amountError == null && recipientError == null && !nonStandardVariableHasError
     }
 
     override fun onContactSelected(requestCode: Int, contact: StaxContact) {
@@ -249,8 +246,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     override fun highlightAction(action: HoverAction?) {
         action?.let {
             actionSelectViewModel.setActiveAction(it)
-            val nonTemplateParams = getNonTemplateParams(action)
-            updateNonTemplateVariableStatus(nonTemplateParams)
+            val nonStandardParams = getNonStandardParams(action)
+            updateNonStandardVariableStatus(nonStandardParams)
 
         /* This should be used for easy functional testing,
         and should be removed once PR is approved before merging
@@ -258,50 +255,50 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         val tempList = LinkedList<String>()
             tempList.add("Country")
             tempList.add("City")
-            updateNonTemplateVariableStatus(tempList) */
+            updateNonStandardVariableStatus(tempList) */
         }
     }
 
-    private fun getNonTemplateParams(action: HoverAction) : List<String> {
+    private fun getNonStandardParams(action: HoverAction) : List<String> {
         val variableKeys = mutableListOf<String>()
         action.requiredParams.forEach { 
-            if(!isATemplateParam(it)) variableKeys.add(it)
+            if(!isAStandardParam(it)) variableKeys.add(it)
         }
         return variableKeys
     }
-    private fun isATemplateParam(param: String): Boolean {
+    private fun isAStandardParam(param: String): Boolean {
         return param == HoverAction.PHONE_KEY || param == HoverAction.ACCOUNT_KEY 
                 || param == HoverAction.AMOUNT_KEY || param == HoverAction.NOTE_KEY 
                 || param == HoverAction.PIN_KEY
     }
 
-    private fun updateNonTemplateVariableStatus( variableKeys: List<String>) {
-        updateNonTemplateForEntryList(variableKeys)
-        updateNonTemplateForSummaryCard(variableKeys)
+    private fun updateNonStandardVariableStatus( variableKeys: List<String>) {
+        updateNonStandardForEntryList(variableKeys)
+        updateNonStandardForSummaryCard(variableKeys)
 
-        if(variableKeys.isNotEmpty()) transferViewModel.initNonTemplateVariables(variableKeys)
-        else transferViewModel.nullifyNonTemplateVariables()
+        if(variableKeys.isNotEmpty()) transferViewModel.initNonStandardVariables(variableKeys)
+        else transferViewModel.nullifyNonStandardVariables()
     }
 
-    private fun updateNonTemplateForSummaryCard(variableKeys: List<String>) {
-        val recyclerView = binding.summaryCard.nonTemplateSummaryRecycler
+    private fun updateNonStandardForSummaryCard(variableKeys: List<String>) {
+        val recyclerView = binding.summaryCard.nonStandardSummaryRecycler
         if(variableKeys.isEmpty()) recyclerView.visibility = View.GONE
         else {
             recyclerView.visibility = View.VISIBLE
             recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
-            nonTemplateSummaryAdapter = NonTemplateSummaryAdapter()
-            recyclerView.adapter = nonTemplateSummaryAdapter
+            nonStandardSummaryAdapter = NonStandardSummaryAdapter()
+            recyclerView.adapter = nonStandardSummaryAdapter
         }
     }
 
-    private fun updateNonTemplateForEntryList(variableKeys: List<String>) {
-        val recyclerView = binding.editCard.nonTemplateVariableRecyclerView
+    private fun updateNonStandardForEntryList(variableKeys: List<String>) {
+        val recyclerView = binding.editCard.nonStandardVariableRecyclerView
         if(variableKeys.isEmpty()) recyclerView.visibility = View.GONE
         else {
             recyclerView.visibility = View.VISIBLE
-            nonTemplateVariableAdapter = NonTemplateVariableAdapter(NonTemplateVariable.getList(variableKeys), this)
+            nonStandardVariableAdapter = NonStandardVariableAdapter(NonStandardVariable.getList(variableKeys), this)
             recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
-            recyclerView.adapter = nonTemplateVariableAdapter
+            recyclerView.adapter = nonStandardVariableAdapter
         }
     }
 
@@ -342,10 +339,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         _binding = null
     }
 
-    override fun nonTemplateVariableInputUpdated(nonTemplateVariable: NonTemplateVariable) {
-        with(nonTemplateVariable) {
-            transferViewModel.updateNonTemplateVariables(this)
-            nonTemplateSummaryAdapter.updateList(this.key, this.value ?: "")
+    override fun nonStandardVariableInputUpdated(nonStandardVariable: NonStandardVariable) {
+        with(nonStandardVariable) {
+            transferViewModel.updateNonStandardVariables(this)
+            nonStandardSummaryAdapter.updateList(this.key, this.value ?: "")
         }
     }
 }
