@@ -78,5 +78,4 @@ private class NonStandardDiffCallback : DiffUtil.ItemCallback<NonStandardVariabl
     override fun areContentsTheSame(oldItem: NonStandardVariable, newItem: NonStandardVariable): Boolean {
         return oldItem == newItem
     }
-
 }
