@@ -324,13 +324,13 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
 
     fun submit(account: Account, nonStandardVariables: List<NonStandardVariable>? = null) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account, nonStandardVariables) }
 
-    private fun makeHoverCall(action: HoverAction, account: Account, nonStandardVariables: List<NonStandardVariable>?) {
+    private fun makeHoverCall(action: HoverAction, account: Account) {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.finish_transfer, TransactionType.type), this)
         updatePushNotifGroupStatus()
 
         transferViewModel.checkSchedule()
 
-        makeCall(action, selectedAccount = account, nonStandardVariables = nonStandardVariables)
+        makeCall(action, selectedAccount = account)
     }
 
     private fun getRequestCode(transactionType: String): Int {
@@ -338,7 +338,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         else Constants.TRANSFER_REQUEST
     }
 
-    private fun makeCall(action: HoverAction, channel: Channel? = null, selectedAccount: Account? = null, nonStandardVariables: List<NonStandardVariable>? = null) {
+    private fun makeCall(action: HoverAction, channel: Channel? = null, selectedAccount: Account? = null) {
         val hsb = HoverSession.Builder(action, channel
                 ?: channelsViewModel.activeChannel.value!!, this, getRequestCode(action.transaction_type))
 
@@ -347,8 +347,8 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
                     .extra(HoverAction.NOTE_KEY, transferViewModel.note.value)
                     .extra(Constants.ACCOUNT_NAME, selectedAccount?.name)
 
-            if(!nonStandardVariables.isNullOrEmpty()) {
-                nonStandardVariables.forEach {
+            if(!transferViewModel.nonStandardVariables.value.isNullOrEmpty()) {
+                transferViewModel.nonStandardVariables.value!!.forEach {
                     hsb.extra(it.key, it.value)
                 }
             }
