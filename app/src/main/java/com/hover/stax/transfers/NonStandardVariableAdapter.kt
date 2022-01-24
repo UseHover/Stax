@@ -10,38 +10,38 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
-import com.hover.stax.databinding.NonTemplateVariableItemBinding
+import com.hover.stax.databinding.NonStandardVariableItemBinding
 import com.hover.stax.views.AbstractStatefulInput
 
-class NonTemplateVariableAdapter(private var variables: List<NonTemplateVariable>, private val editTextListener: NonTemplateVariableInputListener) :
-        ListAdapter<NonTemplateVariable, NonTemplateVariableAdapter.ViewHolder>(NonTemplateDiffCallback()) {
+class NonStandardVariableAdapter(private var variables: List<NonStandardVariable>, private val editTextListener: NonStandardVariableInputListener) :
+        ListAdapter<NonStandardVariable, NonStandardVariableAdapter.ViewHolder>(NonStandardDiffCallback()) {
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateStates(variables: List<NonTemplateVariable>) {
+    fun updateStates(variables: List<NonStandardVariable>) {
         this.variables = variables
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(val binding: NonTemplateVariableItemBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bindItems(nonTemplateVariable: NonTemplateVariable) {
+    inner class ViewHolder(val binding: NonStandardVariableItemBinding): RecyclerView.ViewHolder(binding.root) {
+        fun bindItems(nonStandardVariable: NonStandardVariable) {
 
             val inputTextWatcher: TextWatcher = object : TextWatcher {
                 override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
                 override fun afterTextChanged(editable: Editable) {}
                 override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                    nonTemplateVariable.value = charSequence.toString().replace(",".toRegex(), "")
-                    editTextListener.nonTemplateVariableInputUpdated (nonTemplateVariable)
+                    nonStandardVariable.value = charSequence.toString().replace(",".toRegex(), "")
+                    editTextListener.nonStandardVariableInputUpdated (nonStandardVariable)
                 }
             }
 
             binding.variableInput.addTextChangedListener(inputTextWatcher)
-            binding.variableInput.setHint(nonTemplateVariable.key)
-            binding.variableInput.tag = nonTemplateVariable.key
-            binding.variableInput.text = nonTemplateVariable.value
+            binding.variableInput.setHint(nonStandardVariable.key)
+            binding.variableInput.tag = nonStandardVariable.key
+            binding.variableInput.text = nonStandardVariable.value
 
-            nonTemplateVariable.editTextState?.let {
+            nonStandardVariable.editTextState?.let {
                 val ctx : Context = binding.root.context
-                val title = nonTemplateVariable.key
+                val title = nonStandardVariable.key
 
                 if(it == AbstractStatefulInput.ERROR) {
                     val message = ctx.getString(R.string.enterValue_non_template_error, title).lowercase()
@@ -53,7 +53,7 @@ class NonTemplateVariableAdapter(private var variables: List<NonTemplateVariable
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = NonTemplateVariableItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = NonStandardVariableItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -61,8 +61,8 @@ class NonTemplateVariableAdapter(private var variables: List<NonTemplateVariable
         holder.bindItems(variables[position])
     }
 
-    interface NonTemplateVariableInputListener {
-        fun nonTemplateVariableInputUpdated(nonTemplateVariable: NonTemplateVariable)
+    interface NonStandardVariableInputListener {
+        fun nonStandardVariableInputUpdated(nonStandardVariable: NonStandardVariable)
     }
 
     override fun getItemCount(): Int {
@@ -70,12 +70,12 @@ class NonTemplateVariableAdapter(private var variables: List<NonTemplateVariable
     }
 }
 
-private class NonTemplateDiffCallback : DiffUtil.ItemCallback<NonTemplateVariable>() {
-    override fun areItemsTheSame(oldItem: NonTemplateVariable, newItem: NonTemplateVariable): Boolean {
+private class NonStandardDiffCallback : DiffUtil.ItemCallback<NonStandardVariable>() {
+    override fun areItemsTheSame(oldItem: NonStandardVariable, newItem: NonStandardVariable): Boolean {
         return oldItem.key == newItem.key
     }
 
-    override fun areContentsTheSame(oldItem: NonTemplateVariable, newItem: NonTemplateVariable): Boolean {
+    override fun areContentsTheSame(oldItem: NonStandardVariable, newItem: NonStandardVariable): Boolean {
         return oldItem == newItem
     }
 

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.databinding.SummarycardNontemplateItemsBinding
 
-class NonTemplateSummaryAdapter : RecyclerView.Adapter<NonTemplateSummaryAdapter.ViewHolder>() {
+class NonStandardSummaryAdapter : RecyclerView.Adapter<NonStandardSummaryAdapter.ViewHolder>() {
     private var itemMap = mutableMapOf<String, String>()
 
     @SuppressLint("NotifyDataSetChanged")
