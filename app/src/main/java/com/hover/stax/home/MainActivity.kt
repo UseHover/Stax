@@ -347,8 +347,8 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
                     .extra(HoverAction.NOTE_KEY, transferViewModel.note.value)
                     .extra(Constants.ACCOUNT_NAME, selectedAccount?.name)
 
-            if(!transferViewModel.nonStandardVariables.value.isNullOrEmpty()) {
-                transferViewModel.nonStandardVariables.value!!.forEach {
+            if(!actionSelectViewModel.nonStandardVariables.value.isNullOrEmpty()) {
+                actionSelectViewModel.nonStandardVariables.value!!.forEach {
                     hsb.extra(it.key, it.value)
                 }
             }

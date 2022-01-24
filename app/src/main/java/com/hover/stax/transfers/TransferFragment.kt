@@ -320,13 +320,12 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         val recyclerView = binding.editCard.nonStandardVariableRecyclerView
         if(variables.isEmpty()) recyclerView.visibility = View.GONE
         else {
-            recyclerView.visibility = View.VISIBLE
             if(recyclerView.adapter == null) {
+                recyclerView.visibility = View.VISIBLE
                 nonStandardVariableAdapter = NonStandardVariableAdapter(variables, this)
                 recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
                 recyclerView.adapter = nonStandardVariableAdapter
             }
-            else nonStandardVariableAdapter.updateList(variables)
         }
     }
 
