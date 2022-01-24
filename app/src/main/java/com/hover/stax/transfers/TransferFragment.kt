@@ -49,15 +49,28 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         transferViewModel = abstractFormViewModel as TransferViewModel
 
         setTransactionType(arguments!!.getString(Constants.TRANSACTION_TYPE)!!)
-
         _binding = FragmentTransferBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
+    override fun onPause() {
+        super.onPause()
+        transferViewModel.setEditing(true)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        amountInput.setHint(getString(R.string.transfer_amount_label))
+        accountDropdown.setHint(getString(R.string.channel_label))
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         transferViewModel.reset()
         init(binding.root)
         startObservers(binding.root)
         startListeners()
-
-        return binding.root
     }
 
     override fun init(root: View) {
@@ -76,16 +89,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         super.init(root)
     }
 
-    override fun onPause() {
-        super.onPause()
-        transferViewModel.setEditing(true)
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        amountInput.setHint(getString(R.string.transfer_amount_label))
-        accountDropdown.setHint(getString(R.string.channel_label))
+    private fun setTitle() {
+        val titleRes = if (TransactionType.type == HoverAction.AIRTIME) R.string.cta_airtime else R.string.cta_transfer
+        binding.editCard.transferCard.setTitle(getString(titleRes))
+        binding.summaryCard.transferSummaryCard.setTitle(getString(titleRes))
     }
 
     private fun setTransactionType(txnType: String) {
@@ -93,21 +100,31 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         channelsViewModel.setType(txnType)
     }
 
-    private fun setTitle() {
-        val titleRes = if (TransactionType.type == HoverAction.AIRTIME) R.string.cta_airtime else R.string.cta_transfer
-        binding.editCard.transferCard.setTitle(getString(titleRes))
-        binding.summaryCard.transferSummaryCard.setTitle(getString(titleRes))
-    }
-
     override fun startObservers(root: View) {
         super.startObservers(root)
+        observeActionSelection()
+        observeAccountList()
+        observeActiveChannel()
+        observeChannels()
+        observeAmount()
+        observeNote()
+        observeRecentContacts()
+        observeNonStandardVariables()
+        with(transferViewModel) {
+            contact.observe(viewLifecycleOwner, { recipientValue.setContact(it) })
+            request.observe(viewLifecycleOwner, { it?.let { load(it) } })
+        }
+    }
 
+    private fun observeActionSelection() {
         actionSelectViewModel.activeAction.observe(viewLifecycleOwner, {
             binding.summaryCard.accountValue.setSubtitle(it.getNetworkSubtitle(requireContext()))
             actionSelect.selectRecipientNetwork(it)
             setRecipientHint(it)
         })
+    }
 
+    private fun observeActiveChannel() {
         with(channelsViewModel) {
             activeChannel.observe(viewLifecycleOwner, { channel ->
                 transferViewModel.request.value?.let { request ->
@@ -116,45 +133,69 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 actionSelect.visibility = if (channel != null) View.VISIBLE else View.GONE
                 channel?.let { binding.summaryCard.accountValue.setTitle(channel.toString()) }
             })
+        }
+    }
 
+    private fun observeChannels() {
+        with(channelsViewModel) {
             channelActions.observe(viewLifecycleOwner, {
                 actionSelectViewModel.setActions(it)
                 actionSelect.updateActions(it)
             })
+        }
+    }
 
+    private fun observeAccountList() {
+        with(channelsViewModel) {
             accounts.observe(viewLifecycleOwner) {
                 if (it.isEmpty())
                     setDropdownTouchListener(R.id.action_navigation_transfer_to_accountsFragment)
             }
+        }
+    }
 
-            with(transferViewModel) {
-                amount.observe(viewLifecycleOwner, {
-                    it?.let {
-                        binding.summaryCard.amountValue.text = Utils.formatAmount(it)
-                    }
-                })
+    private fun observeAmount() {
+        with(transferViewModel) {
+            amount.observe(viewLifecycleOwner, {
+                it?.let {
+                    binding.summaryCard.amountValue.text = Utils.formatAmount(it)
+                }
+            })
+        }
+    }
 
-                note.observe(viewLifecycleOwner, {
-                    binding.summaryCard.noteRow.visibility = if (it.isNullOrEmpty()) View.GONE else View.VISIBLE
-                    binding.summaryCard.noteValue.text = it
-                })
+    private fun observeNote() {
+        with(transferViewModel) {
+            note.observe(viewLifecycleOwner, {
+                binding.summaryCard.noteRow.visibility = if (it.isNullOrEmpty()) View.GONE else View.VISIBLE
+                binding.summaryCard.noteValue.text = it
+            })
+        }
+    }
 
-                contact.observe(viewLifecycleOwner, { recipientValue.setContact(it) })
-
-                recentContacts.observe(viewLifecycleOwner, {
-                    if (!it.isNullOrEmpty()) {
-                        contactInput.setRecent(it, requireActivity())
-                        transferViewModel.contact.value?.let { ct -> contactInput.setSelected(ct) }
-                    }
-                })
-
-                request.observe(viewLifecycleOwner, { it?.let { load(it) } })
-            }
+    private fun observeRecentContacts() {
+        with(transferViewModel) {
+            recentContacts.observe(viewLifecycleOwner, {
+                if (!it.isNullOrEmpty()) {
+                    contactInput.setRecent(it, requireActivity())
+                    transferViewModel.contact.value?.let { ct -> contactInput.setSelected(ct) }
+                }
+            })
         }
     }
 
 
     private fun startListeners() {
+        setAmountInputListener()
+        setContactInputListener()
+
+        actionSelect.setListener(this)
+        fab.setOnClickListener { fabClicked() }
+
+        binding.summaryCard.transferSummaryCard.setOnClickIcon { transferViewModel.setEditing(true) }
+    }
+
+    private fun setAmountInputListener() {
         amountInput.apply {
             addTextChangedListener(amountWatcher)
             setOnFocusChangeListener { _, hasFocus ->
@@ -167,7 +208,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                     amountInput.setState(null, AbstractStatefulInput.NONE)
             }
         }
+    }
 
+    private fun setContactInputListener() {
         contactInput.apply {
             setAutocompleteClickListener { view, _, position, _ ->
                 val contact = view.getItemAtPosition(position) as StaxContact
@@ -176,11 +219,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             addTextChangedListener(recipientWatcher)
             setChooseContactListener { contactPicker(Constants.GET_CONTACT, requireContext()) }
         }
-
-        actionSelect.setListener(this)
-        fab.setOnClickListener { fabClicked() }
-
-        binding.summaryCard.transferSummaryCard.setOnClickIcon { transferViewModel.setEditing(true) }
     }
 
     private fun fabClicked() {
@@ -190,7 +228,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 transferViewModel.setEditing(false)
             } else {
                 (requireActivity() as MainActivity).submit(accountDropdown.highlightedAccount
-                        ?: channelsViewModel.activeAccount.value!!, transferViewModel.nonStandardVariables.value)
+                        ?: channelsViewModel.activeAccount.value!!)
                 findNavController().popBackStack()
             }
         } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
@@ -232,8 +270,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         val recipientError = transferViewModel.recipientErrors(actionSelectViewModel.activeAction.value)
         contactInput.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
-        val nonStandardVariableHasError = transferViewModel.nonStandardVariablesAnError()
-        nonStandardVariableAdapter.updateStates(transferViewModel.nonStandardVariables.value!!)
+        val nonStandardVariableHasError = actionSelectViewModel.nonStandardVariablesAnError()
+        nonStandardVariableAdapter.updateList(actionSelectViewModel.nonStandardVariables.value!!)
 
         return channelError == null && actionError == null && amountError == null && recipientError == null && !nonStandardVariableHasError
     }
@@ -246,8 +284,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     override fun highlightAction(action: HoverAction?) {
         action?.let {
             actionSelectViewModel.setActiveAction(it)
-            val nonStandardParams = getNonStandardParams(action)
-            updateNonStandardVariableStatus(nonStandardParams)
 
         /* This should be used for easy functional testing,
         and should be removed once PR is approved before merging
@@ -259,46 +295,38 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun getNonStandardParams(action: HoverAction) : List<String> {
-        val variableKeys = mutableListOf<String>()
-        action.requiredParams.forEach { 
-            if(!isAStandardParam(it)) variableKeys.add(it)
-        }
-        return variableKeys
-    }
-    private fun isAStandardParam(param: String): Boolean {
-        return param == HoverAction.PHONE_KEY || param == HoverAction.ACCOUNT_KEY 
-                || param == HoverAction.AMOUNT_KEY || param == HoverAction.NOTE_KEY 
-                || param == HoverAction.PIN_KEY
+    private fun observeNonStandardVariables() {
+        actionSelectViewModel.nonStandardVariables.observe(viewLifecycleOwner, { variables ->
+            updateNonStandardForEntryList(variables)
+            updateNonStandardForSummaryCard(variables)
+        })
     }
 
-    private fun updateNonStandardVariableStatus( variableKeys: List<String>) {
-        updateNonStandardForEntryList(variableKeys)
-        updateNonStandardForSummaryCard(variableKeys)
-
-        if(variableKeys.isNotEmpty()) transferViewModel.initNonStandardVariables(variableKeys)
-        else transferViewModel.nullifyNonStandardVariables()
-    }
-
-    private fun updateNonStandardForSummaryCard(variableKeys: List<String>) {
+    private fun updateNonStandardForSummaryCard(variables: List<NonStandardVariable>) {
         val recyclerView = binding.summaryCard.nonStandardSummaryRecycler
-        if(variableKeys.isEmpty()) recyclerView.visibility = View.GONE
+        if(variables.isEmpty()) recyclerView.visibility = View.GONE
         else {
             recyclerView.visibility = View.VISIBLE
-            recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
-            nonStandardSummaryAdapter = NonStandardSummaryAdapter()
-            recyclerView.adapter = nonStandardSummaryAdapter
+            if(recyclerView.adapter == null) {
+                recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
+                nonStandardSummaryAdapter = NonStandardSummaryAdapter()
+                recyclerView.adapter = nonStandardSummaryAdapter
+            }
+            nonStandardSummaryAdapter.updateList(variables)
         }
     }
 
-    private fun updateNonStandardForEntryList(variableKeys: List<String>) {
+    private fun updateNonStandardForEntryList(variables: List<NonStandardVariable>) {
         val recyclerView = binding.editCard.nonStandardVariableRecyclerView
-        if(variableKeys.isEmpty()) recyclerView.visibility = View.GONE
+        if(variables.isEmpty()) recyclerView.visibility = View.GONE
         else {
             recyclerView.visibility = View.VISIBLE
-            nonStandardVariableAdapter = NonStandardVariableAdapter(NonStandardVariable.getList(variableKeys), this)
-            recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
-            recyclerView.adapter = nonStandardVariableAdapter
+            if(recyclerView.adapter == null) {
+                nonStandardVariableAdapter = NonStandardVariableAdapter(variables, this)
+                recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
+                recyclerView.adapter = nonStandardVariableAdapter
+            }
+            else nonStandardVariableAdapter.updateList(variables)
         }
     }
 
@@ -339,9 +367,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     override fun nonStandardVariableInputUpdated(nonStandardVariable: NonStandardVariable) {
-        with(nonStandardVariable) {
-            transferViewModel.updateNonStandardVariables(this)
-            nonStandardSummaryAdapter.updateList(this.key, this.value ?: "")
-        }
+        actionSelectViewModel.updateNonStandardVariables(nonStandardVariable)
     }
 }
