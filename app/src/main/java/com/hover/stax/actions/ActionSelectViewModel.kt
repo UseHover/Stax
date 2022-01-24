@@ -9,16 +9,17 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.transfers.NonStandardVariable
 import com.hover.stax.views.AbstractStatefulInput
+import timber.log.Timber
 
 class ActionSelectViewModel(private val application: Application) : ViewModel() {
 
     private val filteredActions = MediatorLiveData<List<HoverAction>>()
     val activeAction = MediatorLiveData<HoverAction>()
-    val nonStandardVariables   =  MutableLiveData<ArrayList<NonStandardVariable>>()
+    val nonStandardVariables   =  MediatorLiveData<ArrayList<NonStandardVariable>>()
 
     init {
         activeAction.addSource(filteredActions, this::setActiveActionIfOutOfDate)
-        Transformations.map(activeAction,this::setupNonStandardVariables)
+        nonStandardVariables.addSource(activeAction,this::setupNonStandardVariables)
     }
 
     private fun setActiveActionIfOutOfDate(actions: List<HoverAction>) {
@@ -36,9 +37,13 @@ class ActionSelectViewModel(private val application: Application) : ViewModel() 
         return if (activeAction.value == null) application.getString(R.string.action_fielderror) else null
     }
 
-
     private fun setupNonStandardVariables(action: HoverAction?) {
         action?.let {
+            //The commented out is for easy functional testing sake
+            //val variableKeys = ArrayList<String>()
+            //variableKeys.add("Country")
+            //variableKeys.add("City")
+
             val variableKeys :  List<String> = getNonStandardParams(action)
             if(variableKeys.isEmpty()) nullifyNonStandardVariables()
             else initNonStandardVariables(variableKeys)
@@ -60,10 +65,13 @@ class ActionSelectViewModel(private val application: Application) : ViewModel() 
     }
 
     private fun initNonStandardVariables(variableKeys :  List<String>) {
+        Timber.i("init standard variables")
+
         val itemList = ArrayList<NonStandardVariable>()
         variableKeys.map { itemList.add(NonStandardVariable(it, null)) }
         nonStandardVariables.postValue(itemList)
     }
+
     private fun nullifyNonStandardVariables() {
         nonStandardVariables.postValue(null)
     }
