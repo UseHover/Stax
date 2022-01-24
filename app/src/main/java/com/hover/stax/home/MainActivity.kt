@@ -41,7 +41,7 @@ import com.hover.stax.settings.SettingsViewModel
 import com.hover.stax.settings.SettingsViewModel.Companion.LOGIN_REQUEST
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionHistoryViewModel
-import com.hover.stax.transfers.NonTemplateVariable
+import com.hover.stax.transfers.NonStandardVariable
 import com.hover.stax.transfers.TransactionType
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.*
@@ -322,15 +322,15 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         }
     }
 
-    fun submit(account: Account, nonTemplateVariables: List<NonTemplateVariable>? = null) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account, nonTemplateVariables) }
+    fun submit(account: Account, nonStandardVariables: List<NonStandardVariable>? = null) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account, nonStandardVariables) }
 
-    private fun makeHoverCall(action: HoverAction, account: Account, nonTemplateVariables: List<NonTemplateVariable>?) {
+    private fun makeHoverCall(action: HoverAction, account: Account, nonStandardVariables: List<NonStandardVariable>?) {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.finish_transfer, TransactionType.type), this)
         updatePushNotifGroupStatus()
 
         transferViewModel.checkSchedule()
 
-        makeCall(action, selectedAccount = account, nonTemplateVariables = nonTemplateVariables)
+        makeCall(action, selectedAccount = account, nonStandardVariables = nonStandardVariables)
     }
 
     private fun getRequestCode(transactionType: String): Int {
@@ -338,7 +338,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         else Constants.TRANSFER_REQUEST
     }
 
-    private fun makeCall(action: HoverAction, channel: Channel? = null, selectedAccount: Account? = null, nonTemplateVariables: List<NonTemplateVariable>? = null) {
+    private fun makeCall(action: HoverAction, channel: Channel? = null, selectedAccount: Account? = null, nonStandardVariables: List<NonStandardVariable>? = null) {
         val hsb = HoverSession.Builder(action, channel
                 ?: channelsViewModel.activeChannel.value!!, this, getRequestCode(action.transaction_type))
 
@@ -347,8 +347,8 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
                     .extra(HoverAction.NOTE_KEY, transferViewModel.note.value)
                     .extra(Constants.ACCOUNT_NAME, selectedAccount?.name)
 
-            if(!nonTemplateVariables.isNullOrEmpty()) {
-                nonTemplateVariables.forEach {
+            if(!nonStandardVariables.isNullOrEmpty()) {
+                nonStandardVariables.forEach {
                     hsb.extra(it.key, it.value)
                 }
             }

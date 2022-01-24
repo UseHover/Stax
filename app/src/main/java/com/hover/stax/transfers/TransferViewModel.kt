@@ -17,7 +17,6 @@ import com.hover.stax.utils.DateUtils
 import com.hover.stax.views.AbstractStatefulInput
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
 import kotlin.collections.ArrayList
 
 class TransferViewModel(application: Application, repo: DatabaseRepo) : AbstractFormViewModel(application, repo) {
@@ -26,7 +25,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     val contact = MutableLiveData<StaxContact>()
     val note = MutableLiveData<String>()
     var request: LiveData<Request> = MutableLiveData()
-    val nonTemplateVariables   =  MutableLiveData<ArrayList<NonTemplateVariable>>()
+    val nonStandardVariables   =  MutableLiveData<ArrayList<NonStandardVariable>>()
 
     fun setTransactionType(transaction_type: String) {
         TransactionType.type = transaction_type
@@ -119,28 +118,28 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
         }
     }
 
-    fun initNonTemplateVariables(entries: List<String>) {
-        val itemList = ArrayList<NonTemplateVariable>()
-        entries.map { itemList.add(NonTemplateVariable(it, null)) }
-        nonTemplateVariables.postValue(itemList)
+    fun initNonStandardVariables(entries: List<String>) {
+        val itemList = ArrayList<NonStandardVariable>()
+        entries.map { itemList.add(NonStandardVariable(it, null)) }
+        nonStandardVariables.postValue(itemList)
     }
 
-    fun nullifyNonTemplateVariables() {
-        nonTemplateVariables.postValue(null)
+    fun nullifyNonStandardVariables() {
+        nonStandardVariables.postValue(null)
     }
-    fun updateNonTemplateVariables(nonTemplateVariable: NonTemplateVariable) {
-        var itemList = nonTemplateVariables.value
+    fun updateNonStandardVariables(nonStandardVariable: NonStandardVariable) {
+        var itemList = nonStandardVariables.value
         if(itemList == null) itemList = ArrayList()
 
-        itemList.find { it.key == nonTemplateVariable.key }
-                ?.let { it.value = nonTemplateVariable.value }
-                ?: itemList.add(nonTemplateVariable)
+        itemList.find { it.key == nonStandardVariable.key }
+                ?.let { it.value = nonStandardVariable.value }
+                ?: itemList.add(nonStandardVariable)
 
-        nonTemplateVariables.postValue(itemList);
+        nonStandardVariables.postValue(itemList);
     }
 
-    fun nonTemplateVariablesAnError(): Boolean {
-        with(nonTemplateVariables.value) {
+    fun nonStandardVariablesAnError(): Boolean {
+        with(nonStandardVariables.value) {
             when {
                 this == null -> return false
                 this.isEmpty() -> return true
@@ -154,7 +153,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
                         }
                     }
 
-                    nonTemplateVariables.postValue(this)
+                    nonStandardVariables.postValue(this)
                     return find { it.editTextState == AbstractStatefulInput.ERROR } != null
                 }
             }
