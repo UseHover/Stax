@@ -225,7 +225,7 @@
     </fragment>
     <fragment
             android:id="@+id/wellnessFragment"
-            android:name="com.hover.stax.financialTip.FinancialTipFragment"
+            android:name="com.hover.stax.financialTips.FinancialTipFragment"
             android:label="WellnessFragment">
         <action
                 android:id="@+id/action_wellnessFragment_to_navigation_home"

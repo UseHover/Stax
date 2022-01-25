@@ -105,9 +105,10 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
 
         if (title != 0)
             dialog?.setDialogTitle(title)
+
         dialog!!.showIt()
     }
-
+    
     override fun onDestroyView() {
         super.onDestroyView()
         if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()

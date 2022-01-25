@@ -7,7 +7,7 @@ import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.bounties.BountyViewModel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.faq.FaqViewModel
-import com.hover.stax.financialTip.FinancialTipsViewModel
+import com.hover.stax.financialTips.FinancialTipsViewModel
 import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.languages.LanguageViewModel

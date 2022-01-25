@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hover.stax.database.DatabaseRepo
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class BannerViewModel(application: Application, repo: DatabaseRepo) : ViewModel() {
@@ -14,7 +15,7 @@ class BannerViewModel(application: Application, repo: DatabaseRepo) : ViewModel(
     private val bannerUtils = BannerUtils(application)
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val hasTransactionLastMonth: Boolean = repo.hasTransactionLastMonth()
             qualifiedBannerLiveData.postValue(bannerUtils.getQualifiedBanner(hasTransactionLastMonth))
         }

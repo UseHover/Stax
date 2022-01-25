@@ -47,6 +47,7 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
 
     private fun updateList(channels: List<Channel>) {
         binding.countryCard.hideProgressIndicator()
+
         if (!channels.isNullOrEmpty())
             binding.shortcodes.adapter = ChannelsAdapter(channels)
     }

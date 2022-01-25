@@ -3,7 +3,6 @@ package com.hover.stax.accounts
 import android.app.Application
 import androidx.lifecycle.*
 import com.hover.sdk.actions.HoverAction
-
 import com.hover.stax.channels.Channel
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.transactions.StaxTransaction
