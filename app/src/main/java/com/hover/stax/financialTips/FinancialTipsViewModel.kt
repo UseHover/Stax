@@ -1,4 +1,4 @@
-package com.hover.stax.financialTip
+package com.hover.stax.financialTips
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
