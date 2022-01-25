@@ -62,7 +62,7 @@ class FinancialTipFragment : Fragment(), FinancialTipsAdapter.SelectListener {
                 isNestedScrollingEnabled = false
                 adapter = FinancialTipsAdapter(tips, this@FinancialTipFragment)
             }
-
+            
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.visited_financial_tips), requireActivity())
         }
     }
@@ -133,6 +133,7 @@ class FinancialTipFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         }
 
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.read_financial_tip), data, requireActivity())
+        }
     }
 
     private fun showTipList() {

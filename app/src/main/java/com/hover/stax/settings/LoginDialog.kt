@@ -30,6 +30,7 @@ class LoginDialog: DialogFragment(), View.OnClickListener {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.referee_dialog), requireContext())
+
         networkMonitor = NetworkMonitor(requireContext())
         _binding = FragmentLoginBinding.inflate(LayoutInflater.from(context))
         dialog = StaxDialog(requireActivity(), binding.root).setDialogTitle(R.string.first_login_dialoghead).setNegButton(R.string.btn_cancel) { dismiss() }
@@ -59,6 +60,7 @@ class LoginDialog: DialogFragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         viewModel.error.value = null
         binding.errorText.visibility = View.GONE
+
         if (networkMonitor.isNetworkConnected) {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext())
             updateProgress(0)
