@@ -43,8 +43,8 @@ android {
         applicationId "com.hover.stax"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 109
-        versionName "1.8.1.5"
+        versionCode 111
+        versionName "1.8.1.6"
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -118,7 +118,6 @@ dependencies {
     kapt "androidx.lifecycle:lifecycle-common-java8:2.4.0"
 
     implementation 'androidx.core:core-splashscreen:1.0.0-beta01'
-
     implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 

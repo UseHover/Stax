@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+        android:shape="oval">
+
+    <size
+            android:width="@dimen/margin_55"
+            android:height="@dimen/margin_55" />
+
+    <solid android:color="@color/buttonColor" />
+
+    <padding
+            android:bottom="@dimen/margin_5"
+            android:left="@dimen/margin_5"
+            android:right="@dimen/margin_5"
+            android:top="@dimen/margin_5" />
+
+</shape>

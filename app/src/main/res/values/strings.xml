@@ -58,6 +58,7 @@
     <string name="btn_edit">Edit</string>
     <string name="btn_back">Back</string>
     <string name="btn_test">Test</string>
+    <string name="btn_done">Done</string>
     <string name="btn_google_signin">Sign in With Google</string>
 
     <!-- ONBOARDING -->
@@ -72,6 +73,7 @@
     <string name="cta_transfer">Send money</string>
     <string name="cta_airtime">Buy airtime</string>
     <string name="cta_request">Request money</string>
+    <string name="cta_paybill">Pay a bill</string>
 
     <!-- Balances -->
     <string name="bal_cardhead">Balances</string>
@@ -108,7 +110,7 @@
     <string name="add_accounts_to_stax">Add accounts to Stax</string>
 
     <string name="nickname">Nickname</string>
-    <string name="saved">Saved</string>
+    <string name="label_saved">Saved</string>
     <string name="account_number_label">Account number</string>
     <string name="hint_enter_new_name">Enter a new name</string>
 
@@ -193,7 +195,7 @@
     <!-- Transfer -->
     <string name="loading_link_dialoghead">Loading, one moment</string>
     <string name="transfer_amount_label">Amount</string>
-    <string name="channel_label">Account</string>
+    <string name="account_label">Account</string>
     <string name="actions_fielderror">This account does not support buy airtime. Please select a different account.</string>
     <string name="recipientphone_label">Contact phone number</string>
     <string name="recipientacct_label">Contact account number</string>
@@ -564,5 +566,28 @@
     <string name="btn_share">Share</string>
     <string name="share_wellness_tip">Share Financial Tip</string>
     <string name="read_more"><u>Read more</u></string>
+
+    <!-- Paybill -->
+    <string name="business_number_label">Business number</string>
+    <string name="save_bill">Save this bill</string>
+    <string name="save_bill_prompt">Enter business number</string>
+    <string name="bill_name_label">Nickname</string>
+    <string name="amount_checkbox_label">Always pay the same amount</string>
+    <string name="business_number_prompt">Enter business number</string>
+    <string name="btn_delete">Delete</string>
+    <string name="choose_icon_title">Choose Logo</string>
+    <string name="account_no_label">Account no: %1$s</string>
+    <string name="paybill_delete_success">Paybill deleted successfully</string>
+    <string name="paybill_delete_header">Delete Paybill</string>
+    <string name="paybill_delete_msg">Are you sure you want to delete %1$s?</string>
+    <string name="paybill_error_business_number">Please enter a valid business number</string>
+    <string name="paybill_save_success">Paybill saved successfully</string>
+    <string name="bill_name_error">Please enter a valid name</string>
+    <string name="label_popular">Popular</string>
+    <string name="pay_now">Pay now</string>
+    <string name="paybill_update_header">Update Paybill</string>
+    <string name="paybill_update_msg">Are you sure you want to update %1$s?</string>
+    <string name="paybill_update_success">Paybill updated successfully</string>
+    <string name="btn_update">Update</string>
 
 </resources>

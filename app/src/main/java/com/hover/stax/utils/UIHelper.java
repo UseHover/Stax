@@ -122,6 +122,10 @@ public class UIHelper {
                 .resize(size, size).into(target);
     }
 
+    public static void loadPicasso(String url, ImageView imageView) {
+        Picasso.get().load(url).config(Bitmap.Config.RGB_565).placeholder(R.color.buttonColor).into(imageView);
+    }
+
     public static void loadPicasso(int resId, int size, Target target) {
         Picasso.get()
                 .load(resId)
