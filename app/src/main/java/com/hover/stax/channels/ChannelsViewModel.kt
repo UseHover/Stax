@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
 
-
+//TODO improve performance
 class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel(),
         ChannelDropdown.HighlightListener, AccountDropdown.HighlightListener, PushNotificationTopicsInterface {
 
@@ -80,10 +80,12 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     private fun loadChannels() {
         removeStaleChannels()
 
-        allChannels = repo.publishedChannels
-        selectedChannels = repo.selected
+        viewModelScope.launch {
+            allChannels = repo.publishedChannels
+            selectedChannels = repo.selected
 
-        updateAccounts()
+            updateAccounts()
+        }
     }
 
     /**
@@ -144,22 +146,24 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun updateSimChannels(simChannels: MediatorLiveData<List<Channel>>, channels: List<Channel>?, hniList: List<String>?) {
-        if (channels == null || hniList == null) return
+        viewModelScope.launch {
+            if (channels == null || hniList == null) return@launch
 
-        val simChannelList = ArrayList<Channel>()
+            val simChannelList = ArrayList<Channel>()
 
-        for (i in channels.indices) {
-            val hniArr = channels[i].hniList.split(",")
+            for (i in channels.indices) {
+                val hniArr = channels[i].hniList.split(",")
 
-            for (s in hniArr) {
-                if (hniList.contains(Utils.stripHniString(s))) {
-                    if (!simChannelList.contains(channels[i]))
-                        simChannelList.add(channels[i])
+                for (s in hniArr) {
+                    if (hniList.contains(Utils.stripHniString(s))) {
+                        if (!simChannelList.contains(channels[i]))
+                            simChannelList.add(channels[i])
+                    }
                 }
             }
-        }
 
-        simChannels.value = simChannelList
+            simChannels.value = simChannelList
+        }
     }
 
     private fun setActiveChannelIfNull(channels: List<Channel>) {
@@ -230,13 +234,15 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     fun setChannelsSelected(channels: List<Channel>?) {
-        if (channels.isNullOrEmpty()) return
+        viewModelScope.launch {
+            if (channels.isNullOrEmpty()) return@launch
 
-        channels.forEachIndexed { index, channel ->
-            logChoice(channel)
-            channel.selected = true
-            channel.defaultAccount = selectedChannels.value.isNullOrEmpty() && index == 0
-            repo.update(channel)
+            channels.forEachIndexed { index, channel ->
+                logChoice(channel)
+                channel.selected = true
+                channel.defaultAccount = selectedChannels.value.isNullOrEmpty() && index == 0
+                repo.update(channel)
+            }
         }
     }
 
@@ -324,7 +330,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         } else {
             Timber.e("Nothing to update. Default account set")
         }
-
     }
 
     override fun highlightAccount(account: Account) {

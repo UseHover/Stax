@@ -34,7 +34,7 @@ class LoginDialog: DialogFragment(), View.OnClickListener {
         _binding = FragmentLoginBinding.inflate(LayoutInflater.from(context))
         dialog = StaxDialog(requireActivity(), binding.root).setDialogTitle(R.string.first_login_dialoghead).setNegButton(R.string.btn_cancel) { dismiss() }
 
-        dialogView = dialog.view
+        dialogView = dialog.mView
         return dialog.createIt()
     }
 

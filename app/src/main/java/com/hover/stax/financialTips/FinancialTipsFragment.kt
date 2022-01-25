@@ -1,4 +1,4 @@
-package com.hover.stax.financialTip
+package com.hover.stax.financialTips
 
 import android.content.Intent
 import android.os.Bundle
@@ -17,7 +17,7 @@ import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class FinancialTipFragment : Fragment(), FinancialTipsAdapter.SelectListener {
+class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
 
     private val viewModel: FinancialTipsViewModel by viewModel()
 
@@ -60,7 +60,7 @@ class FinancialTipFragment : Fragment(), FinancialTipsAdapter.SelectListener {
             binding.financialTips.apply {
                 layoutManager = UIHelper.setMainLinearManagers(requireActivity())
                 isNestedScrollingEnabled = false
-                adapter = FinancialTipsAdapter(tips, this@FinancialTipFragment)
+                adapter = FinancialTipsAdapter(tips, this@FinancialTipsFragment)
             }
 
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.visited_financial_tips), requireActivity())

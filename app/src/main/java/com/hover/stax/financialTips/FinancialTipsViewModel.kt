@@ -1,4 +1,4 @@
-package com.hover.stax.financialTip
+package com.hover.stax.financialTips
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,6 +11,7 @@ import timber.log.Timber
 import java.util.*
 
 data class FinancialTip(val id: String, val title: String, val content: String, val snippet: String?, val date: Date?)
+
 class FinancialTipsViewModel : ViewModel() {
 
     val db = Firebase.firestore

@@ -1,0 +1,113 @@
+package com.hover.stax.views
+
+import android.app.Activity
+import android.content.Context
+import android.graphics.PorterDuff
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
+import com.hover.stax.R
+
+open class StaxDialog(var ctx: Context, var mView: View) : AlertDialog(ctx) {
+
+    var dialog: AlertDialog? = null
+
+    @JvmField
+    protected var customNegListener: View.OnClickListener? = null
+
+    @JvmField
+    protected var customPosListener: View.OnClickListener? = null
+
+    constructor(a: Activity) : this(a, a.layoutInflater, R.layout.stax_dialog)
+    constructor(a: Activity, layoutRes: Int) : this(a, a.layoutInflater, layoutRes)
+    private constructor(c: Context, inflater: LayoutInflater, layoutRes: Int) : this(c, inflater.inflate(layoutRes, null))
+
+    val view get() = mView
+
+    fun setDialogTitle(title: Int): StaxDialog {
+        if (title == 0) setDialogMessage("") else setDialogTitle(ctx.getString(title))
+        return this
+    }
+
+    fun setDialogTitle(title: String?): StaxDialog {
+        mView.findViewById<LinearLayout>(R.id.header)?.let { it.visibility = View.VISIBLE }
+        mView.findViewById<View?>(R.id.title)?.let { (it as TextView).text = title }
+
+        return this
+    }
+
+    fun setDialogMessage(message: Int): StaxDialog {
+        setDialogMessage(context.getString(message))
+        return this
+    }
+
+    fun setDialogMessage(message: String?): StaxDialog {
+        mView.findViewById<TextView>(R.id.message)?.let {
+            it.visibility = View.VISIBLE
+            it.text = message
+        }
+        return this
+    }
+
+    fun setPosButton(label: Int, listener: View.OnClickListener?): StaxDialog {
+        (mView.findViewById<View>(R.id.pos_btn) as AppCompatButton).text = context.getString(label)
+        customPosListener = listener
+        mView.findViewById<View>(R.id.pos_btn).setOnClickListener(posListener)
+        return this
+    }
+
+    fun setNegButton(label: Int, listener: View.OnClickListener?): StaxDialog {
+        val negBtn = mView.findViewById<View>(R.id.neg_btn)
+        negBtn.visibility = View.VISIBLE
+        (negBtn as AppCompatButton).text = context.getString(label)
+        customNegListener = listener
+        negBtn.setOnClickListener(negListener)
+
+        return this
+    }
+
+    val isDestructive: StaxDialog
+        get() {
+            mView.findViewById<View>(R.id.pos_btn).background
+                    .setColorFilter(context.resources.getColor(R.color.stax_state_red), PorterDuff.Mode.SRC)
+            return this
+        }
+
+    fun highlightPos(): StaxDialog {
+        (mView.findViewById<View>(R.id.pos_btn) as Button).setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
+        mView.findViewById<View>(R.id.pos_btn).background
+                .setColorFilter(context.resources.getColor(R.color.brightBlue), PorterDuff.Mode.SRC)
+        return this
+    }
+
+    fun createIt(): AlertDialog {
+        return Builder(context, R.style.StaxDialog).setView(mView).create()
+    }
+
+    fun showIt(): AlertDialog? {
+        if (dialog == null) dialog = createIt()
+        dialog!!.show()
+        return dialog
+    }
+
+    fun makeSticky(): StaxDialog {
+        if (dialog == null) dialog = createIt()
+        dialog!!.setCancelable(false)
+        dialog!!.setCanceledOnTouchOutside(false)
+        return this
+    }
+
+    private val negListener = View.OnClickListener { view: View? ->
+        customNegListener?.onClick(view)
+        dialog?.dismiss()
+    }
+    private val posListener = View.OnClickListener { view: View? ->
+        customPosListener?.onClick(view)
+        dialog?.dismiss()
+    }
+}

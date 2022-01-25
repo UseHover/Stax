@@ -145,7 +145,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
     private fun setSummaryCardBackButton() = binding.summaryCard.root.setOnClickIcon { requestViewModel.setEditing(true) }
 
     private fun updateAcctNo(accountNo: String?) {
-        requesterNumberInput.text = accountNo
+        requesterNumberInput.setText(accountNo)
     }
 
     private fun startListeners() {

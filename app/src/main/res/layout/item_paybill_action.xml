@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_marginVertical="@dimen/margin_5"
+        android:layout_height="wrap_content">
+
+    <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/billIcon"
+            android:layout_width="@dimen/margin_55"
+            android:layout_height="@dimen/margin_55"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/StaxIconShape" />
+
+    <TextView
+            android:id="@+id/billNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_10"
+            android:fontFamily="font-normal"
+            android:textSize="@dimen/text_16"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/billIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/business_number_prompt" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

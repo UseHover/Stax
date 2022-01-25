@@ -46,7 +46,7 @@ class ReferralDialog : DialogFragment() {
                 .setPosButton(R.string.btn_save) { attemptSaveReferee() }
                 .highlightPos()
 
-        dialogView = dialog.view
+        dialogView = dialog.mView
         return dialog.createIt()
     }
 
@@ -128,7 +128,7 @@ class ReferralDialog : DialogFragment() {
             binding.posBtn.setOnClickListener { attemptSaveReferee() }
             showForm(true)
         } else if (viewModel.progress.value == 100 && !code.isNullOrEmpty())
-            setRefereeState(getString(R.string.saved), AbstractStatefulInput.SUCCESS)
+            setRefereeState(getString(R.string.label_saved), AbstractStatefulInput.SUCCESS)
         else
             showForm(false)
     }
@@ -147,7 +147,7 @@ class ReferralDialog : DialogFragment() {
         Timber.e(msg)
         if (type == AbstractStatefulInput.SUCCESS) {
             UIHelper.flashMessage(requireContext(), getString(R.string.saved_referral))
-            binding.posBtn.text = getString(R.string.saved)
+            binding.posBtn.text = getString(R.string.label_saved)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 binding.posBtn.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.stax_state_green))

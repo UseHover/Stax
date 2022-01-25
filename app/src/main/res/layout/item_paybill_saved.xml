@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/margin_10">
+
+    <FrameLayout
+            android:id="@+id/iconFrame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/billLogo"
+                android:layout_width="@dimen/margin_55"
+                android:layout_height="@dimen/margin_55"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/StaxIconShape" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/iconLayout"
+                android:layout_width="@dimen/margin_55"
+                android:layout_height="@dimen/margin_55"
+                android:background="@drawable/icon_bg_circle"
+                android:gravity="center">
+
+            <ImageView
+                    android:id="@+id/billIcon"
+                    android:layout_width="@dimen/margin_24"
+                    android:layout_height="@dimen/margin_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:srcCompat="@drawable/ic_water" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+
+    <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_marginEnd="@dimen/margin_8"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/removeBill"
+            app:layout_constraintStart_toEndOf="@id/iconFrame"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+                android:id="@+id/nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_3"
+                android:fontFamily="font-normal"
+                android:textSize="@dimen/text_16"
+                tools:text="@string/nickname" />
+
+        <TextView
+                android:id="@+id/accountNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="font-normal"
+                android:textSize="@dimen/text_16"
+                tools:text="@string/account_number_label" />
+    </LinearLayout>
+
+    <ImageButton
+            android:id="@+id/removeBill"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_close_white"
+            tools:ignore="ContentDescription" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="@dimen/margin_13">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="afterDescendants"
+            android:orientation="vertical">
+
+        <include
+                android:id="@+id/billDetailsLayout"
+                layout="@layout/paybill_card_details" />
+
+        <include
+                android:id="@+id/saveBillLayout"
+                layout="@layout/paybill_card_save_bill" />
+
+        <include
+                android:id="@+id/paybillSummary"
+                layout="@layout/paybill_summary" />
+
+        <include
+                android:id="@+id/paybillIconsLayout"
+                layout="@layout/paybill_card_icons"
+                android:visibility="gone" />
+
+        <Button
+                android:id="@+id/continue_btn"
+                style="@style/StaxFabExtended"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_marginHorizontal="@dimen/margin_13"
+                android:layout_marginTop="10dp"
+                android:fontFamily="font-medium"
+                android:text="@string/btn_continue" />
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
