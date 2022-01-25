@@ -7,6 +7,7 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+
 import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.stax.R
 import com.hover.stax.permissions.PermissionUtils
@@ -210,6 +211,7 @@ object Utils {
     @JvmStatic
     fun shareStax(activity: Activity) {
         AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.clicked_share), activity)
+
         val sharingIntent = Intent(Intent.ACTION_SEND)
         sharingIntent.type = "text/plain"
         sharingIntent.putExtra(Intent.EXTRA_SUBJECT, activity.getString(R.string.share_sub))
@@ -236,6 +238,7 @@ object Utils {
             data.put("shortcode", shortCode)
         } catch (ignored: JSONException) {
         }
+
         AnalyticsUtil.logAnalyticsEvent(c.getString(R.string.clicked_dial_shortcode), data, c)
 
         val dialIntent = Intent(Intent.ACTION_CALL, Uri.parse("tel:".plus(shortCode.replace("#", Uri.encode("#"))))).apply {

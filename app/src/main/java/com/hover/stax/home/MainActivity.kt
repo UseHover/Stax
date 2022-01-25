@@ -413,7 +413,6 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         with(scheduleViewModel) {
             if (isRequestType) {
                 schedule.observe(this@MainActivity) { it?.let { requestViewModel.setSchedule(it) } }
-                AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_schedule_notification), this@MainActivity)
             } else {
                 action.observe(this@MainActivity) { it?.let { actionSelectViewModel.setActiveAction(it) } }
                 schedule.observe(this@MainActivity) { it?.let { transferViewModel.view(it) } }
@@ -438,6 +437,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
         if (requestCode == Constants.SMS && PermissionHelper(this).permissionsGranted(grantResults)) {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_granted), this)
             sendSms()

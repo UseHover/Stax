@@ -31,6 +31,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.hover.stax.R;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+import com.squareup.picasso.Transformation;
 
 import org.jetbrains.annotations.NotNull;
 

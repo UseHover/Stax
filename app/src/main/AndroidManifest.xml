@@ -144,9 +144,8 @@
                 android:launchMode="singleTask"
                 android:theme="@style/StaxTheme" />
 
-        <activity
-                android:name=".destruct.SelfDestructActivity"
-                android:exported="false" />
+        <activity android:name=".destruct.SelfDestructActivity"
+                android:exported="false"/>
         <activity
                 android:name=".onboarding.OnBoardingActivity"
                 android:exported="false"
