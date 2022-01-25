@@ -589,5 +589,6 @@
     <string name="paybill_update_msg">Are you sure you want to update %1$s?</string>
     <string name="paybill_update_success">Paybill updated successfully</string>
     <string name="btn_update">Update</string>
+    <string name="importing_channels">"Importing channels, please wait. "</string>
 
 </resources>
