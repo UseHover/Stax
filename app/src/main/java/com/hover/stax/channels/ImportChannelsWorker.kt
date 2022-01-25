@@ -67,7 +67,7 @@ class ImportChannelsWorker(context: Context, params: WorkerParameters) : Corouti
     companion object {
         fun channelsImportRequest(): OneTimeWorkRequest {
             return OneTimeWorkRequestBuilder<ImportChannelsWorker>().apply {
-//                setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
             }.build()
         }
     }
