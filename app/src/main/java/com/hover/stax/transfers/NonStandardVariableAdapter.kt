@@ -10,7 +10,7 @@ import com.hover.stax.R
 import com.hover.stax.databinding.NonStandardVariableItemBinding
 import com.hover.stax.views.AbstractStatefulInput
 
-internal class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, String>,
+class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, String>,
                                  private val editTextListener: NonStandardVariableInputListener,
                                  private val runValidation: Boolean) :
         RecyclerView.Adapter<NonStandardVariableAdapter.ViewHolder>() {
