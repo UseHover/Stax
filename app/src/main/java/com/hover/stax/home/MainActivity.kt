@@ -16,7 +16,6 @@ import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
-import com.hover.stax.transfers.NonTemplateVariable
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
@@ -125,7 +124,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         }
     }
 
-    fun submit(account: Account, nonTemplateVariables: List<NonTemplateVariable>? = null) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account, nonTemplateVariables) }
+    fun submit(account: Account) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account) }
 
     private fun initFromIntent() {
         when {

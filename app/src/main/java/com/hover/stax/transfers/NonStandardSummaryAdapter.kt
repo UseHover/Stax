@@ -6,12 +6,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.databinding.SummarycardNontemplateItemsBinding
 
-class NonTemplateSummaryAdapter : RecyclerView.Adapter<NonTemplateSummaryAdapter.ViewHolder>() {
-    private var itemMap = mutableMapOf<String, String>()
+internal class NonStandardSummaryAdapter : RecyclerView.Adapter<NonStandardSummaryAdapter.ViewHolder>() {
+    private var items = LinkedHashMap<String, String>()
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateList(key: String, value: String) {
-        itemMap.put(key, value)
+    fun updateList(items :   LinkedHashMap<String, String>) {
+        this.items = items
         notifyDataSetChanged()
     }
 
@@ -28,14 +28,13 @@ class NonTemplateSummaryAdapter : RecyclerView.Adapter<NonTemplateSummaryAdapter
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        itemMap.onEachIndexed { index, entry ->
-            if (index == position) {
-                holder.bindItems(entry.key, entry.value)
-            }
+        items.onEachIndexed{
+            index, entry ->
+            if(index == position)  holder.bindItems(entry.key, entry.value)
         }
     }
 
     override fun getItemCount(): Int {
-        return itemMap.size
+        return items.size
     }
 }

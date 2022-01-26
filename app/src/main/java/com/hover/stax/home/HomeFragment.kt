@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentHomeBinding
-import com.hover.stax.financialTip.FinancialTip
-import com.hover.stax.financialTip.FinancialTipsViewModel
+import com.hover.stax.financialTips.FinancialTip
+import com.hover.stax.financialTips.FinancialTipsViewModel
 import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants

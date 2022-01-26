@@ -15,7 +15,7 @@ import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
 import com.hover.stax.R;
 import com.hover.stax.channels.AddChannelsFragment;
-import com.hover.stax.financialTip.FinancialTipFragment;
+import com.hover.stax.financialTips.FinancialTipsFragment;
 import com.hover.stax.transactions.TransactionDetailsFragment;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.UIHelper;
@@ -99,7 +99,7 @@ public interface NavigationInterface {
 
     default void navigateToWellnessFragment(NavController navController, String id) {
         Bundle bundle = new Bundle();
-        bundle.putString(FinancialTipFragment.TIP_ID, id);
+        bundle.putString(FinancialTipsFragment.TIP_ID, id);
         navController.navigate(R.id.action_navigation_home_to_wellnessFragment, bundle);
     }
 

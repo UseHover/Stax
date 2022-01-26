@@ -12,10 +12,10 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.hover.HoverSession
+import com.hover.stax.paybill.PaybillViewModel
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionHistoryViewModel
-import com.hover.stax.transfers.NonTemplateVariable
 import com.hover.stax.transfers.TransactionType
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.AnalyticsUtil
@@ -36,6 +36,7 @@ abstract class AbstractSDKCaller : AbstractNavigationActivity(), PushNotificatio
     private val actionSelectViewModel: ActionSelectViewModel by viewModel()
     private val channelsViewModel: ChannelsViewModel by viewModel()
     private val transferViewModel: TransferViewModel by viewModel()
+    private val paybillViewModel : PaybillViewModel by viewModel()
 
     fun reBuildHoverSession(transaction: StaxTransaction) {
         lifecycleScope.launch(Dispatchers.IO) {
@@ -95,7 +96,7 @@ abstract class AbstractSDKCaller : AbstractNavigationActivity(), PushNotificatio
         runAction(hsb)
     }
 
-    private fun makeCall(action: HoverAction, channel: Channel? = null, selectedAccount: Account? = null, nonTemplateVariables: List<NonTemplateVariable>? = null) {
+    private fun makeCall(action: HoverAction, channel: Channel? = null, selectedAccount: Account? = null) {
         val hsb = HoverSession.Builder(action, channel
                 ?: channelsViewModel.activeChannel.value!!, this, getRequestCode(action.transaction_type))
 
@@ -104,8 +105,8 @@ abstract class AbstractSDKCaller : AbstractNavigationActivity(), PushNotificatio
                     .extra(HoverAction.NOTE_KEY, transferViewModel.note.value)
                     .extra(Constants.ACCOUNT_NAME, selectedAccount?.name)
 
-            if (!nonTemplateVariables.isNullOrEmpty()) {
-                nonTemplateVariables.forEach {
+            if (!actionSelectViewModel.nonStandardVariables.value.isNullOrEmpty()) {
+                actionSelectViewModel.nonStandardVariables.value!!.forEach {
                     hsb.extra(it.key, it.value)
                 }
             }
@@ -128,18 +129,38 @@ abstract class AbstractSDKCaller : AbstractNavigationActivity(), PushNotificatio
     }
 
 
-    fun makeHoverCall(action: HoverAction, account: Account, nonTemplateVariables: List<NonTemplateVariable>?) {
+    fun makeHoverCall(action: HoverAction, account: Account) {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.finish_transfer, TransactionType.type), this)
         updatePushNotifGroupStatus()
 
         transferViewModel.checkSchedule()
 
-        makeCall(action, selectedAccount = account, nonTemplateVariables = nonTemplateVariables)
+        makeCall(action, selectedAccount = account)
     }
 
     private fun getRequestCode(transactionType: String): Int {
         return if (transactionType == HoverAction.FETCH_ACCOUNTS) Constants.FETCH_ACCOUNT_REQUEST
         else Constants.TRANSFER_REQUEST
+    }
+
+    fun submitPaymentRequest(action: HoverAction, channel: Channel, account: Account) {
+        val hsb = HoverSession.Builder(action, channel, this, Constants.PAYBILL_REQUEST)
+                .extra(HoverAction.AMOUNT_KEY, paybillViewModel.amount.value)
+                .extra("businessNo", paybillViewModel.businessNumber.value)
+                .extra(Constants.ACCOUNT_NAME, account.name)
+                .extra(HoverAction.ACCOUNT_KEY, paybillViewModel.accountNumber.value)
+        hsb.setAccountId(account.id.toString())
+
+        runAction(hsb)
+
+        val data = JSONObject()
+        try {
+            data.put("businessNo", paybillViewModel.businessNumber.value)
+        } catch(e: Exception) {
+            Timber.e(e)
+        }
+
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.finish_transfer, TransactionType.type), data, this)
     }
 
 
