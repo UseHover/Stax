@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 
-class ActionSelectViewModel(private val application: Application) : ViewModel() {
+ class ActionSelectViewModel(private val application: Application) : ViewModel() {
 
     private val filteredActions = MediatorLiveData<List<HoverAction>>()
     val activeAction = MediatorLiveData<HoverAction>()
