@@ -15,8 +15,6 @@ import com.hover.stax.channels.Channel;
 import com.hover.stax.channels.ChannelDao;
 import com.hover.stax.contacts.ContactDao;
 import com.hover.stax.contacts.StaxContact;
-import com.hover.stax.paybill.Paybill;
-import com.hover.stax.paybill.PaybillDao;
 import com.hover.stax.requests.Request;
 import com.hover.stax.requests.RequestDao;
 import com.hover.stax.schedules.Schedule;
@@ -27,7 +25,7 @@ import com.hover.stax.transactions.TransactionDao;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class, Account.class, Paybill.class}, version = 36)
+@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class, Account.class}, version = 35)
 public abstract class AppDatabase extends RoomDatabase {
     static final Migration M23_24 = new Migration(23, 24) {
         @Override
@@ -106,18 +104,6 @@ public abstract class AppDatabase extends RoomDatabase {
             database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_accounts_name ON accounts(name)");
         }
     };
-    static final Migration M35_36 = new Migration(35, 36) {
-        @Override
-        public void migrate(@NonNull SupportSQLiteDatabase database) {
-            database.execSQL("CREATE TABLE IF NOT EXISTS paybills (name TEXT NOT NULL, business_no TEXT NOT NULL, account_no TEXT, logo INTEGER NOT NULL, " +
-                    "logo_url TEXT NOT NULL, channelId INTEGER NOT NULL, accountId INTEGER NOT NULL, id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, recurring_amount INTEGER NOT NULL," +
-                    " isSaved INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(channelId) REFERENCES channels(id) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(accountId)" +
-                    " REFERENCES accounts(id) ON UPDATE NO ACTION ON DELETE NO ACTION )");
-            database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_paybills_business_no_account_no ON paybills(business_no, account_no)");
-            database.execSQL("CREATE INDEX IF NOT EXISTS index_paybills_channelId ON paybills (channelId)");
-            database.execSQL("CREATE INDEX IF NOT EXISTS index_paybills_accountId ON paybills (accountId)");
-        }
-    };
     private static final int NUMBER_OF_THREADS = 8;
     static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
     private static volatile AppDatabase INSTANCE;
@@ -140,7 +126,6 @@ public abstract class AppDatabase extends RoomDatabase {
                             .addMigrations(M32_33)
                             .addMigrations(M33_34)
                             .addMigrations(M34_35)
-                            .addMigrations(M35_36)
                             .build();
                 }
             }
@@ -159,6 +144,4 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract ScheduleDao scheduleDao();
 
     public abstract AccountDao accountDao();
-
-    public abstract PaybillDao paybillDao();
 }

@@ -181,12 +181,12 @@ class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener 
     }
 
     private fun fillUpProgress(progressBar: LinearProgressIndicator) {
-        try{
+        try {
             val deepBlue = requireContext().resources.getColor(R.color.stax_state_blue)
             progressBar.progress = 100
             progressBar.trackColor = deepBlue
-        }
-            catch (e: IllegalStateException) {Timber.i("animation needed to complete")
+        } catch (e: IllegalStateException) {
+            Timber.i("animation needed to complete")
         }
     }
 

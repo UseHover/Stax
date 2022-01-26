@@ -49,6 +49,7 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
 
 
     var username = MediatorLiveData<String?>()
+
     init {
         loadAccounts()
         getEmail()

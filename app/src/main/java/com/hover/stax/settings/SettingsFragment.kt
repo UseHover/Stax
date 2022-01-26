@@ -18,8 +18,8 @@ import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.databinding.FragmentSettingsBinding
 import com.hover.stax.home.MainActivity
-import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.home.NavigationInterface
+import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.login.LoginDialog
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants

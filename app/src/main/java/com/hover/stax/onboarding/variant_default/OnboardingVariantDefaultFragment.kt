@@ -10,35 +10,37 @@ import com.hover.stax.databinding.OnboardingLayoutDefaultBinding
 import com.hover.stax.onboarding.navigation.OnboardingFragmentsNavigationInterface
 import com.hover.stax.utils.AnalyticsUtil
 
-class OnboardingVariantDefaultFragment: Fragment() {
+class OnboardingVariantDefaultFragment : Fragment() {
 
-	private var _binding: OnboardingLayoutDefaultBinding? = null
-	private val binding get() = _binding!!
+    private var _binding: OnboardingLayoutDefaultBinding? = null
+    private val binding get() = _binding!!
 
-	private lateinit var fragmentsNavigationInterface: OnboardingFragmentsNavigationInterface
-	override fun onCreateView(inflater: LayoutInflater,
-	                          container: ViewGroup?,
-	                          savedInstanceState: Bundle?): View {
-		_binding = OnboardingLayoutDefaultBinding.inflate(inflater, container, false)
-		return binding.root
-	}
+    private lateinit var fragmentsNavigationInterface: OnboardingFragmentsNavigationInterface
+    override fun onCreateView(inflater: LayoutInflater,
+                              container: ViewGroup?,
+                              savedInstanceState: Bundle?): View {
+        _binding = OnboardingLayoutDefaultBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
-		initNavigation()
-		initContinueButton()
-	}
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initNavigation()
+        initContinueButton()
+    }
 
 
-	private fun initNavigation() {
-		fragmentsNavigationInterface = activity as OnboardingFragmentsNavigationInterface
-	}
-	private fun initContinueButton() = binding.onboardingContinueBtn.setOnClickListener {
-		AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_getstarted), requireContext())
-		fragmentsNavigationInterface.checkPermissionThenNavigateMainActivity()
-	}
-	override fun onDestroyView() {
-		super.onDestroyView()
-		_binding = null
-	}
+    private fun initNavigation() {
+        fragmentsNavigationInterface = activity as OnboardingFragmentsNavigationInterface
+    }
+
+    private fun initContinueButton() = binding.onboardingContinueBtn.setOnClickListener {
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_getstarted), requireContext())
+        fragmentsNavigationInterface.checkPermissionThenNavigateMainActivity()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

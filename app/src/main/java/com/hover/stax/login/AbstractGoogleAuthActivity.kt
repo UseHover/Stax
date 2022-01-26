@@ -38,7 +38,7 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             if (requestCode == LOGIN_REQUEST) {
                 val checkBox = findViewById<MaterialCheckBox>(R.id.marketingOptIn)
                 settingsViewModel.signIntoFirebaseAsync(data, checkBox?.isChecked ?: false, this)
@@ -46,11 +46,9 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
                 settingsViewModel.signIntoFirebaseAsync(data, true, this)
             }
             staxGoogleLoginInterface.googleLoginSuccessful()
-        }
-        else {
+        } else {
             staxGoogleLoginInterface.googleLoginFailed()
         }
-
 
 
     }

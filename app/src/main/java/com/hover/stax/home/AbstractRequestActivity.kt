@@ -12,7 +12,6 @@ import com.hover.stax.schedules.ScheduleDetailViewModel
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
-import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 abstract class AbstractRequestActivity : AbstractDeepLinking(), RequestSenderInterface, SmsSentObserver.SmsSentListener {

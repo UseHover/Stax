@@ -17,58 +17,58 @@ import com.hover.stax.utils.Utils
 
 abstract class AbstractOnboardingNavigationActivity : AbstractGoogleAuthActivity(), OnboardingFragmentsNavigationInterface {
 
-	private lateinit var navController: NavController
+    private lateinit var navController: NavController
 
-	fun setupNavigation() {
-		val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_onboarding) as NavHostFragment
-		navController = navHostFragment.navController
-	}
+    fun setupNavigation() {
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_onboarding) as NavHostFragment
+        navController = navHostFragment.navController
+    }
 
-	fun navigateOnboardingVariantOne() = navController.navigate(R.id.navigation_onboarding_v1)
+    fun navigateOnboardingVariantOne() = navController.navigate(R.id.navigation_onboarding_v1)
 
-	private fun navigateToMainActivity() {
-		val intent = Intent(this, MainActivity::class.java).apply {
-			putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_LINK_ACCOUNT)
-			flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-		}
-		startActivity(intent)
-		finish()
-	}
+    private fun navigateToMainActivity() {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_LINK_ACCOUNT)
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        }
+        startActivity(intent)
+        finish()
+    }
 
-	private fun checkPermissionsAndNavigate() {
-		val permissionHelper = PermissionHelper(this)
-		if (permissionHelper.hasBasicPerms()) navigateToMainActivity()
-		else showBasicPermission()
-	}
+    private fun checkPermissionsAndNavigate() {
+        val permissionHelper = PermissionHelper(this)
+        if (permissionHelper.hasBasicPerms()) navigateToMainActivity()
+        else showBasicPermission()
+    }
 
-	private fun showBasicPermission(){
-		PermissionUtils.showInformativeBasicPermissionDialog(0,
-				{ PermissionUtils.requestPerms(Constants.NAV_HOME, this@AbstractOnboardingNavigationActivity) }, {
-			AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), this@AbstractOnboardingNavigationActivity)
-		}, this)
-	}
+    private fun showBasicPermission() {
+        PermissionUtils.showInformativeBasicPermissionDialog(0,
+                { PermissionUtils.requestPerms(Constants.NAV_HOME, this@AbstractOnboardingNavigationActivity) }, {
+            AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), this@AbstractOnboardingNavigationActivity)
+        }, this)
+    }
 
-	override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-		super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-		PermissionUtils.logPermissionsGranted(grantResults, this)
-		checkPermissionsAndNavigate()
-	}
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        PermissionUtils.logPermissionsGranted(grantResults, this)
+        checkPermissionsAndNavigate()
+    }
 
-	override fun continueWithoutSignIn() {
-		setPassedOnboarding()
+    override fun continueWithoutSignIn() {
+        setPassedOnboarding()
 
-	}
+    }
 
-	override fun initiateSignIn() {
-		setPassedOnboarding()
-	}
+    override fun initiateSignIn() {
+        setPassedOnboarding()
+    }
 
-	override fun checkPermissionThenNavigateMainActivity() {
-		setPassedOnboarding()
-		checkPermissionsAndNavigate()
-	}
+    override fun checkPermissionThenNavigateMainActivity() {
+        setPassedOnboarding()
+        checkPermissionsAndNavigate()
+    }
 
-	private fun setPassedOnboarding() = Utils.saveBoolean(OnBoardingActivity::class.java.simpleName, true, this)
-	fun hasPassedOnboarding(context: Context) = Utils.getBoolean(OnBoardingActivity::class.java.simpleName, context)
+    private fun setPassedOnboarding() = Utils.saveBoolean(OnBoardingActivity::class.java.simpleName, true, this)
+    fun hasPassedOnboarding(context: Context) = Utils.getBoolean(OnBoardingActivity::class.java.simpleName, context)
 
 }

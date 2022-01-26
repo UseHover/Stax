@@ -18,9 +18,11 @@ import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.transfers.NonTemplateVariable
 import com.hover.stax.transfers.TransferViewModel
-import com.hover.stax.utils.*
+import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.Constants
+import com.hover.stax.utils.DateUtils
+import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDialog
-import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
