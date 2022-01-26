@@ -28,20 +28,20 @@ class FinancialTipsViewModel : ViewModel() {
         val timestamp = Timestamp.now()
 
         db.collection("wellness_tips")
-            .orderBy("date", Query.Direction.DESCENDING)
-            .whereLessThanOrEqualTo("date", timestamp.toDate())
-            .limit(20)
-            .get()
-            .addOnSuccessListener { snapshot ->
-                val financialTip = snapshot.map { document ->
-                    FinancialTip(document.id, document.data["title"].toString(), document.data["content"].toString(), document.data["snippet"].toString(), document.getDate("date"))
-                }
+                .orderBy("date", Query.Direction.DESCENDING)
+                .whereLessThanOrEqualTo("date", timestamp.toDate())
+                .limit(20)
+                .get()
+                .addOnSuccessListener { snapshot ->
+                    val financialTip = snapshot.map { document ->
+                        FinancialTip(document.id, document.data["title"].toString(), document.data["content"].toString(), document.data["snippet"].toString(), document.getDate("date"))
+                    }
 
-                tips.postValue(financialTip.filterNot { it.date == null }.sortedByDescending { it.date!!.time })
-            }
-            .addOnFailureListener {
-                Timber.e("Error fetching wellness tips: ${it.localizedMessage}")
-                tips.postValue(emptyList())
-            }
+                    tips.postValue(financialTip.filterNot { it.date == null }.sortedByDescending { it.date!!.time })
+                }
+                .addOnFailureListener {
+                    Timber.e("Error fetching wellness tips: ${it.localizedMessage}")
+                    tips.postValue(emptyList())
+                }
     }
 }

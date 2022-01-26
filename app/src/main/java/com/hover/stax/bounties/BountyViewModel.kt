@@ -17,8 +17,6 @@ import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.utils.Utils.getPackage
 import kotlinx.coroutines.*
 
-import java.util.*
-
 private const val MAX_LOOKUP_COUNT = 40
 
 class BountyViewModel(application: Application, val repo: DatabaseRepo) : AndroidViewModel(application) {

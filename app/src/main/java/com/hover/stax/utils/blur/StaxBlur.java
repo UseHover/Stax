@@ -11,13 +11,13 @@ import com.squareup.picasso.Transformation;
 
 public class StaxBlur implements Transformation {
 
-    private static int MAX_RADIUS = 25;
-    private static int DEFAULT_DOWN_SAMPLING = 1;
+    private static final int MAX_RADIUS = 25;
+    private static final int DEFAULT_DOWN_SAMPLING = 1;
 
-    private Context mContext;
+    private final Context mContext;
 
-    private int mRadius;
-    private int mSampling;
+    private final int mRadius;
+    private final int mSampling;
 
     public StaxBlur(Context context) {
         this(context, MAX_RADIUS, DEFAULT_DOWN_SAMPLING);

@@ -67,7 +67,7 @@ class ScheduleDetailFragment : Fragment() {
         } catch (ignored: JSONException) {
         }
 
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_schedule)), data, requireContext());
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_schedule)), data, requireContext())
     }
 
     private fun setUpSummary(schedule: Schedule) {

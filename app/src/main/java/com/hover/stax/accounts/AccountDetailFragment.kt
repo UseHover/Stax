@@ -53,7 +53,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_channel)), requireActivity());
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_channel)), requireActivity())
 
         initRecyclerViews()
         setupObservers()

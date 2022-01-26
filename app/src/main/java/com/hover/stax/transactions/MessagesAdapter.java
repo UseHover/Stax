@@ -35,7 +35,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Transa
         UssdCallResponse model = messagesList.get(position);
         if (!model.enteredValue.isEmpty()) {
             holder.binding.messageEnteredValue.setText(model.enteredValue);
-            if (model.isShortCode) styleAsLink(holder.binding.messageEnteredValue, model.enteredValue);
+            if (model.isShortCode)
+                styleAsLink(holder.binding.messageEnteredValue, model.enteredValue);
         } else holder.binding.messageEnteredValue.setVisibility(View.GONE);
 
         if (!model.responseMessage.isEmpty())

@@ -18,18 +18,18 @@ internal fun getFAQList(): LiveData<List<FAQ>> {
     val liveData: MutableLiveData<List<FAQ>> = MutableLiveData()
 
     db.collection("faqs")
-        .get().addOnSuccessListener { result ->
-            val faqList: MutableList<FAQ> = mutableListOf()
-            for (document in result) {
-                faqList.add(FAQ(document.id, document.data["topic"].toString(), document.data["content"].toString()))
-            }
+            .get().addOnSuccessListener { result ->
+                val faqList: MutableList<FAQ> = mutableListOf()
+                for (document in result) {
+                    faqList.add(FAQ(document.id, document.data["topic"].toString(), document.data["content"].toString()))
+                }
 
-            liveData.value = faqList
-            return@addOnSuccessListener
-        }.addOnFailureListener { exception ->
-            Timber.e(exception)
-            return@addOnFailureListener
-        }
+                liveData.value = faqList
+                return@addOnSuccessListener
+            }.addOnFailureListener { exception ->
+                Timber.e(exception)
+                return@addOnFailureListener
+            }
 
     return liveData
 }

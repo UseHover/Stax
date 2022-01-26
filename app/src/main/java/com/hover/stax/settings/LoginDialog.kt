@@ -18,7 +18,7 @@ import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
-class LoginDialog: DialogFragment(), View.OnClickListener {
+class LoginDialog : DialogFragment(), View.OnClickListener {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
@@ -70,8 +70,12 @@ class LoginDialog: DialogFragment(), View.OnClickListener {
     private fun updateProgress(progress: Int) = with(binding.progressIndicator) {
         when (progress) {
             0 -> show()
-            -1 -> { hide() }
-            100 -> { hide(); complete() }
+            -1 -> {
+                hide()
+            }
+            100 -> {
+                hide(); complete()
+            }
             else -> setProgressCompat(progress, true)
         }
     }

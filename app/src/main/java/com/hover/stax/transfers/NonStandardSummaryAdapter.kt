@@ -10,7 +10,7 @@ class NonStandardSummaryAdapter : RecyclerView.Adapter<NonStandardSummaryAdapter
     private var items = LinkedHashMap<String, String>()
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateList(items :   LinkedHashMap<String, String>) {
+    fun updateList(items: LinkedHashMap<String, String>) {
         this.items = items
         notifyDataSetChanged()
     }
@@ -28,9 +28,8 @@ class NonStandardSummaryAdapter : RecyclerView.Adapter<NonStandardSummaryAdapter
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        items.onEachIndexed{
-            index, entry ->
-            if(index == position)  holder.bindItems(entry.key, entry.value)
+        items.onEachIndexed { index, entry ->
+            if (index == position) holder.bindItems(entry.key, entry.value)
         }
     }
 

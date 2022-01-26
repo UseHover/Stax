@@ -10,7 +10,7 @@ public abstract class StaxCardStackAdapter<T> extends StaxCardStackView.Adapter<
 
     private final Context mContext;
     private final LayoutInflater mInflater;
-    private List<T> mData;
+    private final List<T> mData;
 
     public StaxCardStackAdapter(Context context) {
         this.mContext = context;

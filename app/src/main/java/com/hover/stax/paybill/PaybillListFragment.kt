@@ -94,15 +94,15 @@ class PaybillListFragment : Fragment(), PaybillAdapter.ClickListener, PaybillAct
 
     override fun onDeletePaybill(paybill: Paybill) {
         dialog = StaxDialog(requireActivity())
-            .setDialogTitle(getString(R.string.paybill_delete_header))
-            .setDialogMessage(getString(R.string.paybill_delete_msg, paybill.name))
-            .setNegButton(R.string.btn_cancel, null)
-            .setPosButton(R.string.btn_delete) {
-                if (activity != null) {
-                    paybillViewModel.deletePaybill(paybill)
-                    UIHelper.flashMessage(requireActivity(), R.string.paybill_delete_success)
+                .setDialogTitle(getString(R.string.paybill_delete_header))
+                .setDialogMessage(getString(R.string.paybill_delete_msg, paybill.name))
+                .setNegButton(R.string.btn_cancel, null)
+                .setPosButton(R.string.btn_delete) {
+                    if (activity != null) {
+                        paybillViewModel.deletePaybill(paybill)
+                        UIHelper.flashMessage(requireActivity(), R.string.paybill_delete_success)
+                    }
                 }
-            }
         dialog!!.showIt()
     }
 

@@ -1,22 +1,14 @@
 package com.hover.stax.channels
 
 import android.content.Context
-import androidx.lifecycle.viewModelScope
 import androidx.work.*
-import com.hover.stax.BuildConfig
 import com.hover.stax.R
-import com.hover.stax.database.AppDatabase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import timber.log.Timber
 import java.io.IOException
 import java.util.concurrent.TimeUnit
@@ -43,10 +35,10 @@ class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Worker(
         } catch (e: JSONException) {
             Timber.e(e, "Error parsing channel data")
             return Result.failure()
-        } catch(e: NullPointerException) {
+        } catch (e: NullPointerException) {
             Timber.e(e, "Error parsing channel data")
             return Result.failure()
-        } catch(e: IOException){
+        } catch (e: IOException) {
             Timber.e(e, "Timeout downloading channel data, will try again.")
             return Result.retry()
         }

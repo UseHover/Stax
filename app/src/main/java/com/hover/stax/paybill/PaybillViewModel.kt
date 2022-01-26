@@ -49,8 +49,8 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
         selectedAction.value = action
 
         val paybill = Paybill(
-            action.to_institution_name, action.to_institution_id.toString(), null, action.channel_id,
-            0, application.getString(R.string.root_url).plus(action.to_institution_logo)
+                action.to_institution_name, action.to_institution_id.toString(), null, action.channel_id,
+                0, application.getString(R.string.root_url).plus(action.to_institution_logo)
         )
         selectPaybill(paybill)
     }
@@ -84,7 +84,8 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
         val accountNo = accountNumber.value
 
         if (account != null) {
-            val payBill = Paybill(nickname.value!!, businessNo!!, accountNo, account.channelId, account.id, selectedPaybill.value?.logoUrl ?: account.logoUrl).apply {
+            val payBill = Paybill(nickname.value!!, businessNo!!, accountNo, account.channelId, account.id, selectedPaybill.value?.logoUrl
+                    ?: account.logoUrl).apply {
                 isSaved = true
                 logo = iconDrawable.value ?: 0
             }
