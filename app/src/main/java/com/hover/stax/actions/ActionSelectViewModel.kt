@@ -35,11 +35,11 @@ class ActionSelectViewModel(private val application: Application) : ViewModel() 
     private fun setupNonStandardVariables(action: HoverAction?) {
         action?.let {
             //The commented out is for easy functional testing sake
-            //val variableKeys = ArrayList<String>()
-            //variableKeys.add("Country")
-           // variableKeys.add("City")
+            val variableKeys = ArrayList<String>()
+            variableKeys.add("Country")
+            variableKeys.add("City")
 
-            val variableKeys :  List<String> = getNonStandardParams(action)
+            //val variableKeys :  List<String> = getNonStandardParams(action)
             if(variableKeys.isEmpty()) nullifyNonStandardVariables()
             else initNonStandardVariables(variableKeys)
         }
@@ -75,5 +75,27 @@ class ActionSelectViewModel(private val application: Application) : ViewModel() 
         val map: LinkedHashMap<String, String> = nonStandardVariables.value!!
         map[key] = value
         nonStandardVariables.postValue(map);
+    }
+
+    fun nonStandardVariablesAnError(): Boolean {
+    return false
+      /*  with(nonStandardVariables.value) {
+            when {
+                this == null -> return false
+                this.isEmpty() -> return true
+                else -> {
+                    this.forEachIndexed{index, it->
+                        if (it.value == null) it.editTextState = AbstractStatefulInput.ERROR
+                        else {
+                            if (it.value!!.replace(" ".toRegex(), "").isEmpty()) it.editTextState = AbstractStatefulInput.ERROR
+                            else it.editTextState = AbstractStatefulInput.SUCCESS
+                        }
+                    }
+
+                    nonStandardVariables.postValue(this)
+                    return find { it.editTextState == AbstractStatefulInput.ERROR } != null
+                }
+            }
+        } */
     }
 }
