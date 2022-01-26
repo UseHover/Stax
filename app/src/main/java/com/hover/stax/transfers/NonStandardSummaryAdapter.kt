@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.databinding.SummarycardNontemplateItemsBinding
 
 class NonStandardSummaryAdapter : RecyclerView.Adapter<NonStandardSummaryAdapter.ViewHolder>() {
-    private var items :  List<NonStandardVariable> = listOf()
+    private var items = LinkedHashMap<String, String>()
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateList(items :  List<NonStandardVariable>) {
+    fun updateList(items :   LinkedHashMap<String, String>) {
         this.items = items
         notifyDataSetChanged()
     }
@@ -18,7 +18,7 @@ class NonStandardSummaryAdapter : RecyclerView.Adapter<NonStandardSummaryAdapter
     inner class ViewHolder(val binding: SummarycardNontemplateItemsBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bindItems(key: String, value: String) {
             binding.itemLabel.text = key
-            binding.itemValue.setText(value)
+            binding.itemValue.text = value
         }
     }
 
@@ -28,8 +28,10 @@ class NonStandardSummaryAdapter : RecyclerView.Adapter<NonStandardSummaryAdapter
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = items[position]
-        holder.bindItems(item.key, item.value ?: "")
+        items.onEachIndexed{
+            index, entry ->
+            if(index == position)  holder.bindItems(entry.key, entry.value)
+        }
     }
 
     override fun getItemCount(): Int {

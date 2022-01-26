@@ -2,20 +2,15 @@ package com.hover.stax.actions
 
 import android.app.Application
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.transfers.NonStandardVariable
-import com.hover.stax.views.AbstractStatefulInput
-import timber.log.Timber
 
 class ActionSelectViewModel(private val application: Application) : ViewModel() {
 
     private val filteredActions = MediatorLiveData<List<HoverAction>>()
     val activeAction = MediatorLiveData<HoverAction>()
-    val nonStandardVariables   =  MediatorLiveData<ArrayList<NonStandardVariable>>()
+    val nonStandardVariables   =  MediatorLiveData<LinkedHashMap<String, String>>()
 
     init {
         activeAction.addSource(filteredActions, this::setActiveActionIfOutOfDate)
@@ -40,11 +35,11 @@ class ActionSelectViewModel(private val application: Application) : ViewModel() 
     private fun setupNonStandardVariables(action: HoverAction?) {
         action?.let {
             //The commented out is for easy functional testing sake
-            //val variableKeys = ArrayList<String>()
-            //variableKeys.add("Country")
-            //variableKeys.add("City")
+            val variableKeys = ArrayList<String>()
+            variableKeys.add("Country")
+            variableKeys.add("City")
 
-            val variableKeys :  List<String> = getNonStandardParams(action)
+            //val variableKeys :  List<String> = getNonStandardParams(action)
             if(variableKeys.isEmpty()) nullifyNonStandardVariables()
             else initNonStandardVariables(variableKeys)
         }
@@ -65,30 +60,26 @@ class ActionSelectViewModel(private val application: Application) : ViewModel() 
     }
 
     private fun initNonStandardVariables(variableKeys :  List<String>) {
-        Timber.i("init standard variables")
-
-        val itemList = ArrayList<NonStandardVariable>()
-        variableKeys.map { itemList.add(NonStandardVariable(it, null)) }
-        nonStandardVariables.postValue(itemList)
+        val map: LinkedHashMap<String, String> = LinkedHashMap()
+        variableKeys.forEach {
+            map[it] = ""
+        }
+        nonStandardVariables.postValue(map)
     }
 
     private fun nullifyNonStandardVariables() {
         nonStandardVariables.postValue(null)
     }
 
-    fun updateNonStandardVariables(nonStandardVariable: NonStandardVariable) {
-        var itemList = nonStandardVariables.value
-        if(itemList == null) itemList = ArrayList()
-
-        itemList.find { it.key == nonStandardVariable.key }
-                ?.let { it.value = nonStandardVariable.value }
-                ?: itemList.add(nonStandardVariable)
-
-        nonStandardVariables.postValue(itemList);
+    fun updateNonStandardVariables(key: String, value: String) {
+        val map: LinkedHashMap<String, String> = nonStandardVariables.value!!
+        map[key] = value
+        nonStandardVariables.postValue(map);
     }
 
     fun nonStandardVariablesAnError(): Boolean {
-        with(nonStandardVariables.value) {
+    return false
+      /*  with(nonStandardVariables.value) {
             when {
                 this == null -> return false
                 this.isEmpty() -> return true
@@ -105,6 +96,6 @@ class ActionSelectViewModel(private val application: Application) : ViewModel() 
                     return find { it.editTextState == AbstractStatefulInput.ERROR } != null
                 }
             }
-        }
+        } */
     }
 }
