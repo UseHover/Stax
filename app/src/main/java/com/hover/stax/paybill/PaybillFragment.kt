@@ -70,7 +70,7 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
     private fun setSaveBillCheckedChangeListener() = with(binding.saveBillLayout) {
         saveBill.setOnCheckedChangeListener { _, isChecked ->
             binding.saveBillLayout.saveBillCard.visibility =
-                if (isChecked) View.VISIBLE else View.GONE
+                    if (isChecked) View.VISIBLE else View.GONE
         }
 
         billIconLayout.iconLayout.setOnClickListener { showIconsChooser() }
@@ -78,20 +78,20 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setBusinessNoTouchListener() =
-        binding.billDetailsLayout.businessNoInput.editText.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                resetViews()
-                paybillViewModel.reset()
+            binding.billDetailsLayout.businessNoInput.editText.setOnTouchListener { _, event ->
+                if (event.action == MotionEvent.ACTION_DOWN) {
+                    resetViews()
+                    paybillViewModel.reset()
 
-                channelsViewModel.activeAccount.value?.id?.let {
-                    findNavController().navigate(
-                        R.id.action_paybillFragment_to_paybillListFragment,
-                        bundleOf(Constants.ACCOUNT_ID to it)
-                    )
-                } ?: Timber.e("Active account not set")
-                true
-            } else false
-        }
+                    channelsViewModel.activeAccount.value?.id?.let {
+                        findNavController().navigate(
+                                R.id.action_paybillFragment_to_paybillListFragment,
+                                bundleOf(Constants.ACCOUNT_ID to it)
+                        )
+                    } ?: Timber.e("Active account not set")
+                    true
+                } else false
+            }
 
     private fun setContinueBtnClickListener() = binding.continueBtn.setOnClickListener {
         if (validates()) {
@@ -122,8 +122,8 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
             selected != null && selected.isSaved && !hasChanges -> paybillViewModel.setEditing(false)
             else -> {
                 paybillViewModel.savePaybill(
-                    channelsViewModel.activeAccount.value,
-                    binding.saveBillLayout.amountCheckBox.isChecked
+                        channelsViewModel.activeAccount.value,
+                        binding.saveBillLayout.amountCheckBox.isChecked
                 )
                 UIHelper.flashMessage(requireActivity(), R.string.paybill_save_success) //TODO add to other language strings
                 paybillViewModel.setEditing(false)
@@ -155,10 +155,10 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
             iconDrawable.observe(viewLifecycleOwner) {
                 if (it != 0) {
                     binding.saveBillLayout.billIconLayout.billIcon.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            requireContext(),
-                            it
-                        )
+                            ContextCompat.getDrawable(
+                                    requireContext(),
+                                    it
+                            )
                     )
                 }
             }
@@ -184,8 +184,8 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
     }
 
     private fun setupActionDropdownObservers(
-        viewModel: ChannelsViewModel,
-        lifecycleOwner: LifecycleOwner
+            viewModel: ChannelsViewModel,
+            lifecycleOwner: LifecycleOwner
     ) {
 
         val activeChannelObserver = object : Observer<Channel> {
@@ -238,7 +238,7 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
 
     private fun toggleMainContent(show: Boolean) {
         binding.billDetailsLayout.cardPaybillDetails.visibility =
-            if (show) View.VISIBLE else View.GONE
+                if (show) View.VISIBLE else View.GONE
         binding.saveBillLayout.cardSavePaybill.visibility = if (show) View.VISIBLE else View.GONE
 
         if (show) binding.continueBtn.visibility = View.VISIBLE
@@ -295,23 +295,23 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
 
         with(binding.billDetailsLayout) {
             businessNoInput.setState(
-                businessNoError,
-                if (businessNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+                    businessNoError,
+                    if (businessNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
             )
             accountNoInput.setState(
-                accountNoError,
-                if (accountNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+                    accountNoError,
+                    if (accountNoError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
             )
             amountInput.setState(
-                amountError,
-                if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+                    amountError,
+                    if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
             )
         }
 
         if (saveBill)
             binding.saveBillLayout.billNameInput.setState(
-                nickNameError,
-                if (nickNameError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+                    nickNameError,
+                    if (nickNameError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
             )
 
         return businessNoError == null && accountNoError == null && amountError == null && (if (saveBill) nickNameError == null else true)
@@ -342,8 +342,8 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
 
         if (!actions.isNullOrEmpty() && channel != null && account != null)
             (requireActivity() as MainActivity).submitPaymentRequest(
-                actionToRun
-                    ?: actions.first(), channel, account
+                    actionToRun
+                            ?: actions.first(), channel, account
             )
         else
             Timber.e("Request composition not complete; ${actions?.firstOrNull()}, $channel $account")
@@ -406,16 +406,16 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
 
     private fun showUpdatePaybillConfirmation() = paybillViewModel.selectedPaybill.value?.let {
         dialog = StaxDialog(requireActivity())
-            .setDialogTitle(getString(R.string.paybill_update_header))
-            .setDialogMessage(getString(R.string.paybill_update_msg, it.name))
-            .setNegButton(R.string.btn_cancel, null)
-            .setPosButton(R.string.btn_update) { _ ->
-                if (activity != null) {
-                    paybillViewModel.updatePaybill(it, binding.saveBillLayout.amountCheckBox.isChecked)
-                    UIHelper.flashMessage(requireActivity(), R.string.paybill_update_success)
-                    paybillViewModel.setEditing(false)
+                .setDialogTitle(getString(R.string.paybill_update_header))
+                .setDialogMessage(getString(R.string.paybill_update_msg, it.name))
+                .setNegButton(R.string.btn_cancel, null)
+                .setPosButton(R.string.btn_update) { _ ->
+                    if (activity != null) {
+                        paybillViewModel.updatePaybill(it, binding.saveBillLayout.amountCheckBox.isChecked)
+                        UIHelper.flashMessage(requireActivity(), R.string.paybill_update_success)
+                        paybillViewModel.setEditing(false)
+                    }
                 }
-            }
         dialog!!.showIt()
     }
 

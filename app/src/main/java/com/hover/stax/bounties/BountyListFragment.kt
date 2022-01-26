@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -21,7 +20,6 @@ import com.hover.stax.databinding.FragmentBountyListBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.navigation.NavigationInterface
 import com.hover.stax.transactions.UpdateBountyTransactionsWorker
-
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -30,7 +28,6 @@ import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
-import java.util.*
 
 
 class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.SelectListener, CountryAdapter.SelectListener {

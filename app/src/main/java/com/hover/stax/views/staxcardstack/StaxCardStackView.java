@@ -14,12 +14,12 @@ import java.util.List;
 
 public class StaxCardStackView extends ViewGroup {
     public static final int INVALID_TYPE = -1;
-    private static final String TAG = "CardStackView";
     static final int DEFAULT_SELECT_POSITION = -1;
+    private static final String TAG = "CardStackView";
+    private final ViewDataObserver mObserver = new ViewDataObserver();
     private int mTotalLength;
     private int mOverlapGaps;
     private StaxCardStackAdapter mStaxCardStackAdapter;
-    private final ViewDataObserver mObserver = new ViewDataObserver();
     private int mShowHeight;
     private List<ViewHolder> mViewHolders;
 
@@ -167,6 +167,14 @@ public class StaxCardStackView extends ViewGroup {
         return p instanceof LayoutParams;
     }
 
+    public void setOverlapGaps(int overlapGaps) {
+        mOverlapGaps = overlapGaps;
+    }
+
+    public int getShowHeight() {
+        return mShowHeight;
+    }
+
     public static class LayoutParams extends MarginLayoutParams {
 
         public int mHeaderHeight;
@@ -256,14 +264,6 @@ public class StaxCardStackView extends ViewGroup {
         public void onChanged() {
             refreshView();
         }
-    }
-
-    public void setOverlapGaps(int overlapGaps) {
-        mOverlapGaps = overlapGaps;
-    }
-
-    public int getShowHeight() {
-        return mShowHeight;
     }
 
 }

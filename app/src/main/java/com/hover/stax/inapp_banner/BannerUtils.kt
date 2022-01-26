@@ -16,18 +16,18 @@ class BannerUtils(val context: Context) : KoinComponent {
 
     private val repo: DatabaseRepo by inject()
 
-    private val FIRST_WEEK = 1;
-    private val SECOND_WEEK = 2;
+    private val FIRST_WEEK = 1
+    private val SECOND_WEEK = 2
     private val THIRD_WEEK = 3
-    private val FOURTH_WEEK = 4;
+    private val FOURTH_WEEK = 4
 
     private val TAG: String = "StaxBanner"
     private val IMP: String = "StaxBannerImpressions"
     private val LAST_GIST_IMP_DATE: String = "StaxBannerGistLastShown"
     private val LAST_UPVOTE_IMP_DATE: String = "StaxBannerUpvoteLastShown"
     private val LAST_RESEARCH_IMP_DATE: String = "StaxBannerResearchLastShown"
-    private val PERM_CLICKED = "PermBannerClicked";
-    private val RESEARCH_CLICKED = "ResearchBannerClicked";
+    private val PERM_CLICKED = "PermBannerClicked"
+    private val RESEARCH_CLICKED = "ResearchBannerClicked"
     private val GENERAL_LAST_IMP_DATE = "AnyBannerLastImpDate"
 
     private fun setLastBanner(bannerId: Int) {
@@ -68,7 +68,7 @@ class BannerUtils(val context: Context) : KoinComponent {
     }
 
     private fun run(bannerId: Int, isNewCampaign: Boolean, updateImpression: Boolean): Banner? {
-        var banner: Banner? = null;
+        var banner: Banner? = null
         with(Banner) {
             when (bannerId) {
                 PERMISSION -> banner = if (isPermissionCampaignValid()) permissions() else null
@@ -150,7 +150,7 @@ class BannerUtils(val context: Context) : KoinComponent {
         if (bannerId_in_cache > 0) return run(bannerId_in_cache, isNewCampaign = false, updateImpression = false)
         if (campaignRunning()) return run(lastBanner(), isNewCampaign = false, updateImpression = true)
 
-        var bannerId = 0;
+        var bannerId = 0
         when {
             permissionQualifies() && isPermissionCampaignValid() -> bannerId = Banner.PERMISSION
             roundUpNewsQualifies() -> bannerId = Banner.ROUND_UP_NEWS

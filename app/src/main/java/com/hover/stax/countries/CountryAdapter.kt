@@ -36,7 +36,7 @@ class CountryAdapter(val codes: Array<String>, context: Context) : ArrayAdapter<
     else
         context.getString(R.string.country_with_emoji, countryCodeToEmoji(code), getFullCountryName(code))
 
-    private fun getFullCountryName(code: String) : String {
+    private fun getFullCountryName(code: String): String {
         val locale = Locale(Lingver.getInstance().getLanguage(), code)
         return locale.displayCountry
     }
@@ -47,7 +47,7 @@ class CountryAdapter(val codes: Array<String>, context: Context) : ArrayAdapter<
         return String(Character.toChars(firstLetter)) + String(Character.toChars(secondLetter))
     }
 
-    override fun getItem(position: Int): String? = if(count > 0) codes[position] else null
+    override fun getItem(position: Int): String? = if (count > 0) codes[position] else null
 
     override fun getCount(): Int = codes.size
 

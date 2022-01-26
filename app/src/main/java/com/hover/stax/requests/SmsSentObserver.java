@@ -23,13 +23,12 @@ public class SmsSentObserver extends ContentObserver {
     private static final String COLUMN_TYPE = "type";
     private static final String COLUMN_ADDRESS = "address";
     private static final String[] PROJECTION = {COLUMN_ADDRESS, COLUMN_TYPE};
-
-    private ContentResolver resolver;
     final private SmsSentListener listener;
     final private List<StaxContact> recipients;
-    private boolean wasSent = false;
     final private String successMsg;
-    private Context context;
+    private ContentResolver resolver;
+    private boolean wasSent = false;
+    private final Context context;
 
     public SmsSentObserver(SmsSentListener l, List<StaxContact> contacts, Handler handler, Context c) {
         super(handler);

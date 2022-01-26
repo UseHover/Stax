@@ -22,38 +22,38 @@ import java.util.concurrent.TimeUnit
 
 class UpdateBountyTransactionsWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
 
-   companion object {
-       val TAG = "BountyTransactionWorker"
-       val BOUNTY_TRANSACTION_WORK_ID = "BOUNTY_TRANSACTION"
+    companion object {
+        val TAG = "BountyTransactionWorker"
+        val BOUNTY_TRANSACTION_WORK_ID = "BOUNTY_TRANSACTION"
 
-       fun makeToil(): PeriodicWorkRequest {
-           return PeriodicWorkRequest.Builder(UpdateChannelsWorker::class.java, 24, TimeUnit.HOURS)
-                   .setConstraints(netConstraint())
-                   .build()
-       }
+        fun makeToil(): PeriodicWorkRequest {
+            return PeriodicWorkRequest.Builder(UpdateChannelsWorker::class.java, 24, TimeUnit.HOURS)
+                    .setConstraints(netConstraint())
+                    .build()
+        }
 
-       fun makeWork(): OneTimeWorkRequest {
-           return OneTimeWorkRequest.Builder(UpdateBountyTransactionsWorker::class.java)
-                   .setConstraints(netConstraint())
-                   .build()
-       }
+        fun makeWork(): OneTimeWorkRequest {
+            return OneTimeWorkRequest.Builder(UpdateBountyTransactionsWorker::class.java)
+                    .setConstraints(netConstraint())
+                    .build()
+        }
 
-       private fun netConstraint(): Constraints {
-           return Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-       }
-   }
+        private fun netConstraint(): Constraints {
+            return Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+        }
+    }
 
     private val client = OkHttpClient()
     private val transactionDao = AppDatabase.getInstance(context).transactionDao()
 
     override fun doWork(): Result {
-        try{
+        try {
 
             val bountyResultJson = downloadBountyResult(getUrl())
             Timber.i("url is ${getUrl()}")
             Timber.i("Transaction returns result $bountyResultJson")
 
-            val succeeded : JSONArray = bountyResultJson.getJSONArray("succeeded")
+            val succeeded: JSONArray = bountyResultJson.getJSONArray("succeeded")
             val failed = bountyResultJson.getJSONArray("failed")
 
             CoroutineScope(Dispatchers.IO).launch {
@@ -69,27 +69,27 @@ class UpdateBountyTransactionsWorker(context: Context, workerParams: WorkerParam
             }
 
             return Result.success()
-        }catch (e : JSONException ) {
-            Timber.e(e, "Error parsing bounty result data.");
-            return Result.failure();
-        } catch ( e : IOException) {
-            Timber.e(e, "Timeout downloading bounty result data, will try again.");
+        } catch (e: JSONException) {
+            Timber.e(e, "Error parsing bounty result data.")
+            return Result.failure()
+        } catch (e: IOException) {
+            Timber.e(e, "Timeout downloading bounty result data, will try again.")
 
-            return Result.retry();
+            return Result.retry()
         }
     }
 
     private suspend fun updateTransaction(uuid: String, succeeded: Boolean) {
-        val transaction : StaxTransaction? = transactionDao.getTransactionSuspended(uuid)
+        val transaction: StaxTransaction? = transactionDao.getTransactionSuspended(uuid)
         transaction?.let {
-            transaction.status = if(succeeded) Transaction.SUCCEEDED else Transaction.FAILED
+            transaction.status = if (succeeded) Transaction.SUCCEEDED else Transaction.FAILED
             transactionDao.update(transaction)
         }
     }
 
     private fun getUrl(): String {
-        val deviceId : String = Hover.getDeviceId(applicationContext)
-        return with(applicationContext){ getString(R.string.api_url) + getString(R.string.bounty_transactions_endpoint, deviceId) }
+        val deviceId: String = Hover.getDeviceId(applicationContext)
+        return with(applicationContext) { getString(R.string.api_url) + getString(R.string.bounty_transactions_endpoint, deviceId) }
     }
 
     private fun downloadBountyResult(url: String): JSONObject {

@@ -87,7 +87,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
     }
 
     private fun startBackgroundProcesses() {
-        with(channelsViewModel){
+        with(channelsViewModel) {
             accounts.observe(this@SplashScreenActivity) { hasAccounts = it.isNotEmpty() }
             migrateAccounts()
         }
@@ -99,11 +99,11 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         startWorkers()
         initFirebaseMessagingTopics()
 
-        with(FirebaseInstallations.getInstance()){
+        with(FirebaseInstallations.getInstance()) {
             getToken(false)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) Timber.i("Installation auth token: ${task.result?.token}")
-                }
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) Timber.i("Installation auth token: ${task.result?.token}")
+                    }
             id.addOnCompleteListener { Timber.i("Firebase installation ID is ${it.result}") }
         }
 

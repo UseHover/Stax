@@ -171,7 +171,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
                     t.update(intent, action, contact, c)
                     transactionDao.update(t)
                 }
-                Timber.e("save t with uuid: %s", t?.uuid);
+                Timber.e("save t with uuid: %s", t?.uuid)
             } catch (e: Exception) {
                 Timber.e(e, "error")
             }

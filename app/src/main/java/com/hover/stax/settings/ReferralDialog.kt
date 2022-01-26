@@ -119,6 +119,7 @@ class ReferralDialog : DialogFragment() {
             binding.referralCode.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
         }
     }
+
     private fun tryAgain_fetchUsername() {
         viewModel.fetchUsername()
     }

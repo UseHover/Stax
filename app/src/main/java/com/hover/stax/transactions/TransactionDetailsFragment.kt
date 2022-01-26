@@ -227,7 +227,7 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
         if (!isFullScreen) {
             binding.transactionDetailsCard.setTitle(viewModel.transaction.value?.generateLongDescription(action, viewModel.contact.value, requireContext()))
         }
-        binding.infoCard.detailsNetwork.text = action?.from_institution_name
+        binding.infoCard.detailsNetwork.text = action.from_institution_name
         updateStatus(action, viewModel.transaction.value)
     }
 

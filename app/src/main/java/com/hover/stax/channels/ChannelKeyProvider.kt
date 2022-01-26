@@ -6,5 +6,5 @@ class ChannelKeyProvider(private val adapter: ChannelsRecyclerViewAdapter) : Ite
 
     override fun getKey(position: Int): Long = adapter.channelList[position].id.toLong()
 
-    override fun getPosition(key: Long): Int = adapter.channelList.indexOfFirst {it.id.toLong() == key}
+    override fun getPosition(key: Long): Int = adapter.channelList.indexOfFirst { it.id.toLong() == key }
 }

@@ -7,7 +7,6 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDropdownLayout
 import kotlinx.coroutines.*
-import timber.log.Timber
 
 class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdownLayout(context, attributeSet) {
 
@@ -31,7 +30,7 @@ class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     private fun getCountryCodes(channelList: List<Channel>): Array<String> {
-        val codes : Deferred<Array<String>> = CoroutineScope(Dispatchers.IO).async {
+        val codes: Deferred<Array<String>> = CoroutineScope(Dispatchers.IO).async {
             val countryCodes = mutableListOf(CountryAdapter.CODE_ALL_COUNTRIES)
             countryCodes.addAll(channelList.distinctBy { it.countryAlpha2 }.sortedBy { it.countryAlpha2 }.map { it.countryAlpha2 })
 
@@ -59,7 +58,8 @@ class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     fun setDropdownValue(countryCode: String?) {
         countryAdapter?.let {
-            autoCompleteTextView.setText(it.getCountryString(countryCode ?: CountryAdapter.CODE_ALL_COUNTRIES))
+            autoCompleteTextView.setText(it.getCountryString(countryCode
+                    ?: CountryAdapter.CODE_ALL_COUNTRIES))
         }
     }
 

@@ -28,7 +28,7 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
     private var simReceiver: BroadcastReceiver? = null
 
     init {
-        simReceiver =  object : BroadcastReceiver() {
+        simReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 viewModelScope.launch(Dispatchers.IO) {
                     sims.postValue(repo.presentSims)
@@ -88,7 +88,8 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
             simReceiver?.let {
                 LocalBroadcastManager.getInstance(application).unregisterReceiver(it)
             }
-        } catch (ignored: Exception) {}
+        } catch (ignored: Exception) {
+        }
         super.onCleared()
     }
 }
