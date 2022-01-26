@@ -35,11 +35,11 @@ class ActionSelectViewModel(private val application: Application) : ViewModel() 
     private fun setupNonStandardVariables(action: HoverAction?) {
         action?.let {
             //The commented out is for easy functional testing sake
-            val variableKeys = ArrayList<String>()
-            variableKeys.add("Country")
-            variableKeys.add("City")
+            //val variableKeys = ArrayList<String>()
+            //variableKeys.add("Country")
+           // variableKeys.add("City")
 
-            //val variableKeys :  List<String> = getNonStandardParams(action)
+            val variableKeys :  List<String> = getNonStandardParams(action)
             if(variableKeys.isEmpty()) nullifyNonStandardVariables()
             else initNonStandardVariables(variableKeys)
         }
