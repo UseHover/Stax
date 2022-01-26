@@ -19,7 +19,7 @@
         android:id="@+id/accountDropdown"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/channel_label" />
+        android:hint="@string/account_label" />
 
     <com.hover.stax.actions.ActionSelect
         android:id="@+id/action_select"
