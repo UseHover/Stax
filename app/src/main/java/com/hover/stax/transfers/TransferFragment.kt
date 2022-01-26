@@ -63,7 +63,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         super.onResume()
 
         amountInput.setHint(getString(R.string.transfer_amount_label))
-        accountDropdown.setHint(getString(R.string.channel_label))
+        accountDropdown.setHint(getString(R.string.account_label))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -83,7 +83,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         recipientValue = binding.summaryCard.recipientValue
 
         amountInput.apply {
-            text = transferViewModel.amount.value
+            setText(transferViewModel.amount.value)
             requestFocus()
         }
 
@@ -343,7 +343,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
 
         channelsViewModel.setChannelFromRequest(r)
-        amountInput.text = r.amount
+        amountInput.setText(r.amount)
         contactInput.setText(r.requester_number, false)
 
         transferViewModel.setEditing(r.amount.isNullOrEmpty())

@@ -45,7 +45,8 @@ import com.hover.stax.transfers.TransactionType
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.getViewModel
@@ -346,7 +347,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
                     .extra(HoverAction.NOTE_KEY, transferViewModel.note.value)
                     .extra(Constants.ACCOUNT_NAME, selectedAccount?.name)
 
-            if(!actionSelectViewModel.nonStandardVariables.value.isNullOrEmpty()) {
+            if (!actionSelectViewModel.nonStandardVariables.value.isNullOrEmpty()) {
                 actionSelectViewModel.nonStandardVariables.value!!.forEach {
                     hsb.extra(it.key, it.value)
                 }
@@ -372,7 +373,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         val data = JSONObject()
         try {
             data.put("businessNo", paybillViewModel.businessNumber.value)
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             Timber.e(e)
         }
 

@@ -38,7 +38,7 @@ class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, St
             binding.variableInput.addTextChangedListener(watcher)
 
             if(runValidation) {
-                binding.variableInput.text = value
+                binding.variableInput.setText(value)
                 val ctx : Context = binding.root.context
                 if(value.isEmpty()) {
                     updateValidationStatus(hasError = true)
