@@ -13,42 +13,53 @@ import com.hover.stax.R
 import com.hover.stax.databinding.NonStandardVariableItemBinding
 import com.hover.stax.views.AbstractStatefulInput
 
-class NonStandardVariableAdapter(private var variables: List<NonStandardVariable>, private val editTextListener: NonStandardVariableInputListener) :
-        ListAdapter<NonStandardVariable, NonStandardVariableAdapter.ViewHolder>(NonStandardDiffCallback()) {
+class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, String>,
+                                 private val editTextListener: NonStandardVariableInputListener,
+                                 private val runValidation: Boolean) :
+        RecyclerView.Adapter<NonStandardVariableAdapter.ViewHolder>() {
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateList(variables: List<NonStandardVariable>) {
-        this.variables = variables
-        notifyDataSetChanged()
-    }
+    var seenAnError: Boolean? = null
+    var entryValidationCount = 0;
 
     inner class ViewHolder(val binding: NonStandardVariableItemBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bindItems(nonStandardVariable: NonStandardVariable) {
+        fun bindItems(key: String, value: String) {
 
-            val inputTextWatcher: TextWatcher = object : TextWatcher {
+            val watcher: TextWatcher = object : TextWatcher {
                 override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
                 override fun afterTextChanged(editable: Editable) {}
                 override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                    nonStandardVariable.value = charSequence.toString().replace(",".toRegex(), "")
-                    editTextListener.nonStandardVariableInputUpdated (nonStandardVariable)
+                    val trimmedValue = charSequence.toString().replace(",".toRegex(), "")
+                    editTextListener.nonStandardVariableInputUpdated(key, trimmedValue)
                 }
             }
 
-            binding.variableInput.addTextChangedListener(inputTextWatcher)
-            binding.variableInput.setHint(nonStandardVariable.key)
-            binding.variableInput.tag = nonStandardVariable.key
-            binding.variableInput.text = nonStandardVariable.value
+            binding.variableInput.setHint(key)
+            binding.variableInput.tag = key
+            binding.variableInput.addTextChangedListener(watcher)
 
-            nonStandardVariable.editTextState?.let {
+            if(runValidation) {
+                binding.variableInput.text = value
                 val ctx : Context = binding.root.context
-                val title = nonStandardVariable.key
-
-                if(it == AbstractStatefulInput.ERROR) {
-                    val message = ctx.getString(R.string.enterValue_non_template_error, title).lowercase()
-                    binding.variableInput.setState(message, it)
+                if(value.isEmpty()) {
+                    updateValidationStatus(isError = true)
+                    val message = ctx.getString(R.string.enterValue_non_template_error, key).lowercase()
+                    binding.variableInput.setState(message, AbstractStatefulInput.ERROR)
                 }
-                else binding.variableInput.setState(null, it)
+                else {
+                    updateValidationStatus(isError = false)
+                    binding.variableInput.setState(null, AbstractStatefulInput.SUCCESS)
+                }
             }
+        }
+    }
+
+    private fun updateValidationStatus(isError: Boolean) {
+        entryValidationCount += 1
+        if(seenAnError == null || seenAnError == false) seenAnError = isError
+
+        //Ensure validation result is returned after all entry has been checked
+        if(entryValidationCount == variables.size){
+            editTextListener.nonStandardVariablesValidation(isError)
         }
     }
 
@@ -58,24 +69,20 @@ class NonStandardVariableAdapter(private var variables: List<NonStandardVariable
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindItems(variables[position])
+        variables.onEachIndexed{
+            index, entry ->
+            if(index == position)  holder.bindItems(entry.key, entry.value)
+        }
+
     }
 
     interface NonStandardVariableInputListener {
-        fun nonStandardVariableInputUpdated(nonStandardVariable: NonStandardVariable)
+        fun nonStandardVariableInputUpdated(key: String, value: String)
+        fun nonStandardVariablesValidation(hasError: Boolean)
     }
+
 
     override fun getItemCount(): Int {
      return variables.size
-    }
-}
-
-private class NonStandardDiffCallback : DiffUtil.ItemCallback<NonStandardVariable>() {
-    override fun areItemsTheSame(oldItem: NonStandardVariable, newItem: NonStandardVariable): Boolean {
-        return oldItem.key == newItem.key
-    }
-
-    override fun areContentsTheSame(oldItem: NonStandardVariable, newItem: NonStandardVariable): Boolean {
-        return oldItem == newItem
     }
 }

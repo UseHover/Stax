@@ -41,7 +41,6 @@ import com.hover.stax.settings.SettingsViewModel
 import com.hover.stax.settings.SettingsViewModel.Companion.LOGIN_REQUEST
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionHistoryViewModel
-import com.hover.stax.transfers.NonStandardVariable
 import com.hover.stax.transfers.TransactionType
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.*
@@ -321,7 +320,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         }
     }
 
-    fun submit(account: Account, nonStandardVariables: List<NonStandardVariable>? = null) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account) }
+    fun submit(account: Account) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account) }
 
     private fun makeHoverCall(action: HoverAction, account: Account) {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.finish_transfer, TransactionType.type), this)
