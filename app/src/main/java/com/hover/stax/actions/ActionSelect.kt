@@ -60,7 +60,7 @@ class ActionSelect(context: Context, attrs: AttributeSet) : LinearLayout(context
             setOnItemClickListener { parent, _, position, _ ->
                 val action = parent.getItemAtPosition(position) as HoverAction
                 selectRecipientNetwork(action)
-             }
+            }
             dropdownLayout?.visibility = if (showRecipientNetwork(uniqueActions)) View.VISIBLE else View.GONE
             radioHeader!!.setText(if (actions!!.first().transaction_type == HoverAction.AIRTIME) R.string.airtime_who_header else R.string.send_who_header)
         }

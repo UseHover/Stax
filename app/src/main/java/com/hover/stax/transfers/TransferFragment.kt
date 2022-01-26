@@ -43,7 +43,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private val binding get() = _binding!!
 
     private lateinit var nonStandardSummaryAdapter: NonStandardSummaryAdapter
-    private lateinit var nonStandardVariableAdapter : NonStandardVariableAdapter
+    private lateinit var nonStandardVariableAdapter: NonStandardVariableAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         abstractFormViewModel = getSharedViewModel<TransferViewModel>()
@@ -225,8 +225,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private fun fabClicked() {
         if (transferViewModel.isEditing.value == true) {
             runAllEntryValidation()
-        }
-        else {
+        } else {
             (requireActivity() as MainActivity).submit(accountDropdown.highlightedAccount
                     ?: channelsViewModel.activeAccount.value!!)
             findNavController().popBackStack()
@@ -236,10 +235,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private fun continueAfterValidation(hasNoError: Boolean) {
         if (hasNoError) {
-                transferViewModel.saveContact()
-                transferViewModel.setEditing(false)
-        }
-        else
+            transferViewModel.saveContact()
+            transferViewModel.setEditing(false)
+        } else
             UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
     }
 
@@ -293,10 +291,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private fun updateNonStandardForSummaryCard(variables: LinkedHashMap<String, String>) {
         val recyclerView = binding.summaryCard.nonStandardSummaryRecycler
-        if(variables.isEmpty()) recyclerView.visibility = View.GONE
+        if (variables.isEmpty()) recyclerView.visibility = View.GONE
         else {
             recyclerView.visibility = View.VISIBLE
-            if(recyclerView.adapter == null) {
+            if (recyclerView.adapter == null) {
                 recyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
                 nonStandardSummaryAdapter = NonStandardSummaryAdapter()
                 recyclerView.adapter = nonStandardSummaryAdapter
@@ -307,9 +305,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private fun updateNonStandardForEntryList(variables: LinkedHashMap<String, String>, runValidation: Boolean? = false) {
         val recyclerView = binding.editCard.nonStandardVariableRecyclerView
-        if(variables.isEmpty()) recyclerView.visibility = View.GONE
+        if (variables.isEmpty()) recyclerView.visibility = View.GONE
         else {
-            if(recyclerView.adapter == null || runValidation  == true) {
+            if (recyclerView.adapter == null || runValidation == true) {
                 Timber.i("fire hove as run validation true")
 
                 recyclerView.visibility = View.VISIBLE

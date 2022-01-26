@@ -1,13 +1,10 @@
 package com.hover.stax.transfers
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.databinding.NonStandardVariableItemBinding
@@ -19,9 +16,9 @@ class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, St
         RecyclerView.Adapter<NonStandardVariableAdapter.ViewHolder>() {
 
     var seenAnError: Boolean? = null
-    var entryValidationCount = 0;
+    var entryValidationCount = 0
 
-    inner class ViewHolder(val binding: NonStandardVariableItemBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(val binding: NonStandardVariableItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bindItems(key: String, value: String) {
 
             val watcher: TextWatcher = object : TextWatcher {
@@ -37,15 +34,14 @@ class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, St
             binding.variableInput.tag = key
             binding.variableInput.addTextChangedListener(watcher)
 
-            if(runValidation) {
+            if (runValidation) {
                 binding.variableInput.setText(value)
-                val ctx : Context = binding.root.context
-                if(value.isEmpty()) {
+                val ctx: Context = binding.root.context
+                if (value.isEmpty()) {
                     updateValidationStatus(hasError = true)
                     val message = ctx.getString(R.string.enterValue_non_template_error, key).lowercase()
                     binding.variableInput.setState(message, AbstractStatefulInput.ERROR)
-                }
-                else {
+                } else {
                     updateValidationStatus(hasError = false)
                     binding.variableInput.setState(null, AbstractStatefulInput.SUCCESS)
                 }
@@ -55,10 +51,10 @@ class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, St
 
     private fun updateValidationStatus(hasError: Boolean) {
         entryValidationCount += 1
-        if(seenAnError == null || seenAnError == false) seenAnError = hasError
+        if (seenAnError == null || seenAnError == false) seenAnError = hasError
 
         //Ensure validation result is returned after all entry has been checked
-        if(entryValidationCount == variables.size){
+        if (entryValidationCount == variables.size) {
             editTextListener.validateFormEntries(hasError)
         }
     }
@@ -69,9 +65,8 @@ class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, St
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        variables.onEachIndexed{
-            index, entry ->
-            if(index == position)  holder.bindItems(entry.key, entry.value)
+        variables.onEachIndexed { index, entry ->
+            if (index == position) holder.bindItems(entry.key, entry.value)
         }
 
     }
@@ -83,6 +78,6 @@ class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, St
 
 
     override fun getItemCount(): Int {
-     return variables.size
+        return variables.size
     }
 }

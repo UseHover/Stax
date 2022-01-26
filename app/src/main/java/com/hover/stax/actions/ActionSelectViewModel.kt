@@ -10,11 +10,11 @@ class ActionSelectViewModel(private val application: Application) : ViewModel() 
 
     private val filteredActions = MediatorLiveData<List<HoverAction>>()
     val activeAction = MediatorLiveData<HoverAction>()
-    val nonStandardVariables   =  MediatorLiveData<LinkedHashMap<String, String>>()
+    val nonStandardVariables = MediatorLiveData<LinkedHashMap<String, String>>()
 
     init {
         activeAction.addSource(filteredActions, this::setActiveActionIfOutOfDate)
-        nonStandardVariables.addSource(activeAction,this::setupNonStandardVariables)
+        nonStandardVariables.addSource(activeAction, this::setupNonStandardVariables)
     }
 
     private fun setActiveActionIfOutOfDate(actions: List<HoverAction>) {
@@ -37,18 +37,18 @@ class ActionSelectViewModel(private val application: Application) : ViewModel() 
             //The commented out is for easy functional testing sake
             //val variableKeys = ArrayList<String>()
             //variableKeys.add("Country")
-           // variableKeys.add("City")
+            // variableKeys.add("City")
 
-            val variableKeys :  List<String> = getNonStandardParams(action)
-            if(variableKeys.isEmpty()) nullifyNonStandardVariables()
+            val variableKeys: List<String> = getNonStandardParams(action)
+            if (variableKeys.isEmpty()) nullifyNonStandardVariables()
             else initNonStandardVariables(variableKeys)
         }
     }
 
-    private fun getNonStandardParams(action: HoverAction) : List<String> {
+    private fun getNonStandardParams(action: HoverAction): List<String> {
         val variableKeys = mutableListOf<String>()
         action.requiredParams.forEach {
-            if(!isAStandardParam(it)) variableKeys.add(it)
+            if (!isAStandardParam(it)) variableKeys.add(it)
         }
         return variableKeys
     }
@@ -59,7 +59,7 @@ class ActionSelectViewModel(private val application: Application) : ViewModel() 
                 || param == HoverAction.PIN_KEY
     }
 
-    private fun initNonStandardVariables(variableKeys :  List<String>) {
+    private fun initNonStandardVariables(variableKeys: List<String>) {
         val map: LinkedHashMap<String, String> = LinkedHashMap()
         variableKeys.forEach {
             map[it] = ""
@@ -74,6 +74,6 @@ class ActionSelectViewModel(private val application: Application) : ViewModel() 
     fun updateNonStandardVariables(key: String, value: String) {
         val map: LinkedHashMap<String, String> = nonStandardVariables.value!!
         map[key] = value
-        nonStandardVariables.postValue(map);
+        nonStandardVariables.postValue(map)
     }
 }
