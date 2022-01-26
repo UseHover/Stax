@@ -118,31 +118,31 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun observeActionSelection() {
-        actionSelectViewModel.activeAction.observe(viewLifecycleOwner, {
+        actionSelectViewModel.activeAction.observe(viewLifecycleOwner) {
             binding.summaryCard.accountValue.setSubtitle(it.getNetworkSubtitle(requireContext()))
             actionSelect.selectRecipientNetwork(it)
             setRecipientHint(it)
-        })
+        }
     }
 
     private fun observeActiveChannel() {
         with(channelsViewModel) {
-            activeChannel.observe(viewLifecycleOwner, { channel ->
+            activeChannel.observe(viewLifecycleOwner) { channel ->
                 transferViewModel.request.value?.let { request ->
                     transferViewModel.setRecipientSmartly(request, channel)
                 }
                 actionSelect.visibility = if (channel != null) View.VISIBLE else View.GONE
                 channel?.let { binding.summaryCard.accountValue.setTitle(channel.toString()) }
-            })
+            }
         }
     }
 
     private fun observeChannels() {
         with(channelsViewModel) {
-            channelActions.observe(viewLifecycleOwner, {
+            channelActions.observe(viewLifecycleOwner) {
                 actionSelectViewModel.setActions(it)
                 actionSelect.updateActions(it)
-            })
+            }
         }
     }
 
@@ -157,31 +157,31 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private fun observeAmount() {
         with(transferViewModel) {
-            amount.observe(viewLifecycleOwner, {
+            amount.observe(viewLifecycleOwner) {
                 it?.let {
                     binding.summaryCard.amountValue.text = Utils.formatAmount(it)
                 }
-            })
+            }
         }
     }
 
     private fun observeNote() {
         with(transferViewModel) {
-            note.observe(viewLifecycleOwner, {
+            note.observe(viewLifecycleOwner) {
                 binding.summaryCard.noteRow.visibility = if (it.isNullOrEmpty()) View.GONE else View.VISIBLE
                 binding.summaryCard.noteValue.text = it
-            })
+            }
         }
     }
 
     private fun observeRecentContacts() {
         with(transferViewModel) {
-            recentContacts.observe(viewLifecycleOwner, {
+            recentContacts.observe(viewLifecycleOwner) {
                 if (!it.isNullOrEmpty()) {
                     contactInput.setRecent(it, requireActivity())
                     transferViewModel.contact.value?.let { ct -> contactInput.setSelected(ct) }
                 }
-            })
+            }
         }
     }
 
@@ -223,20 +223,24 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun fabClicked() {
-        runAllEntryValidation()
+        if (transferViewModel.isEditing.value == true) {
+            runAllEntryValidation()
+        }
+        else {
+            (requireActivity() as MainActivity).submit(accountDropdown.highlightedAccount
+                    ?: channelsViewModel.activeAccount.value!!)
+            findNavController().popBackStack()
+        }
+
     }
 
     private fun continueAfterValidation(hasNoError: Boolean) {
         if (hasNoError) {
-            if (transferViewModel.isEditing.value == true) {
                 transferViewModel.saveContact()
                 transferViewModel.setEditing(false)
-            } else {
-                (requireActivity() as MainActivity).submit(accountDropdown.highlightedAccount
-                        ?: channelsViewModel.activeAccount.value!!)
-                findNavController().popBackStack()
-            }
-        } else UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
+        }
+        else
+            UIHelper.flashMessage(requireActivity(), getString(R.string.toast_pleasefix))
     }
 
     private val amountWatcher: TextWatcher = object : TextWatcher {
@@ -306,7 +310,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         if(variables.isEmpty()) recyclerView.visibility = View.GONE
         else {
             if(recyclerView.adapter == null || runValidation  == true) {
-                Timber.i("Is validation triggered? $runValidation")
+                Timber.i("fire hove as run validation true")
 
                 recyclerView.visibility = View.VISIBLE
                 nonStandardVariableAdapter = NonStandardVariableAdapter(variables, this, runValidation!!)
@@ -357,7 +361,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         actionSelectViewModel.updateNonStandardVariables(key, value)
     }
 
-    override fun nonStandardVariablesValidation(hasError: Boolean) {
+    override fun validateFormEntries(nonStandardHasAnError: Boolean) {
         val amountError = transferViewModel.amountErrors()
         amountInput.setState(amountError, if (amountError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
@@ -370,7 +374,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         val recipientError = transferViewModel.recipientErrors(actionSelectViewModel.activeAction.value)
         contactInput.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
-        val hasNoError = !hasError && amountError == null && channelError == null && actionError == null && recipientError == null
+        val hasNoError = !nonStandardHasAnError && amountError == null && channelError == null && actionError == null && recipientError == null
         continueAfterValidation(hasNoError)
 
     }
