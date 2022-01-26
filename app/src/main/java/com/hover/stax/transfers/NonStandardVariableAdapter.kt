@@ -41,25 +41,25 @@ class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, St
                 binding.variableInput.text = value
                 val ctx : Context = binding.root.context
                 if(value.isEmpty()) {
-                    updateValidationStatus(isError = true)
+                    updateValidationStatus(hasError = true)
                     val message = ctx.getString(R.string.enterValue_non_template_error, key).lowercase()
                     binding.variableInput.setState(message, AbstractStatefulInput.ERROR)
                 }
                 else {
-                    updateValidationStatus(isError = false)
+                    updateValidationStatus(hasError = false)
                     binding.variableInput.setState(null, AbstractStatefulInput.SUCCESS)
                 }
             }
         }
     }
 
-    private fun updateValidationStatus(isError: Boolean) {
+    private fun updateValidationStatus(hasError: Boolean) {
         entryValidationCount += 1
-        if(seenAnError == null || seenAnError == false) seenAnError = isError
+        if(seenAnError == null || seenAnError == false) seenAnError = hasError
 
         //Ensure validation result is returned after all entry has been checked
         if(entryValidationCount == variables.size){
-            editTextListener.nonStandardVariablesValidation(isError)
+            editTextListener.validateFormEntries(hasError)
         }
     }
 
@@ -78,7 +78,7 @@ class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, St
 
     interface NonStandardVariableInputListener {
         fun nonStandardVariableInputUpdated(key: String, value: String)
-        fun nonStandardVariablesValidation(hasError: Boolean)
+        fun validateFormEntries(nonStandardHasAnError: Boolean)
     }
 
 
