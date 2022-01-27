@@ -47,7 +47,7 @@
             android:fontFamily="font-medium"
             android:gravity="center"
             android:paddingHorizontal="@dimen/margin_21"
-            android:text="@string/variant_v2_nocheckbox_title1"
+            android:text="@string/does_stax_charge_fees"
             android:textSize="@dimen/text_21"
             app:drawableTopCompat="@drawable/ic_stax" />
 

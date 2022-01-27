@@ -59,7 +59,7 @@
                 android:fontFamily="font-normal"
                 android:gravity="start"
                 android:padding="@dimen/margin_13"
-                android:text="@string/onboarding_variant_2_question2"
+                android:text="@string/does_stax_charge_fees"
                 android:textSize="@dimen/text_15"
                 app:drawableEndCompat="@drawable/chevron_right_bright" />
 
@@ -73,7 +73,7 @@
                 android:fontFamily="font-normal"
                 android:gravity="start"
                 android:padding="@dimen/margin_13"
-                android:text="@string/onboarding_variant_2_question3"
+                android:text="@string/what_does_stax_do"
                 android:textSize="@dimen/text_15"
                 app:drawableEndCompat="@drawable/chevron_right_bright" />
 
