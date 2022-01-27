@@ -38,19 +38,7 @@ class OnBoardingActivity : AbstractOnboardingNavigationActivity(), StaxGoogleLog
     }
 
     private fun chooseOnboardingVariant() {
-        navigateOnbardingVariantTwo()
-    }
-
-    override fun googleLoginSuccessful() {
-        checkPermissionThenNavigateMainActivity()
-    }
-
-    override fun googleLoginFailed() {
-        UIHelper.flashMessage(this, R.string.login_google_err)
-    }
-
-    companion object {
-        fun hasPassedOnboarding(context: Context) = Utils.getBoolean(OnBoardingActivity::class.java.simpleName, context)
+        navigateOnboardingVariantTwo()
     }
 
     override fun googleLoginSuccessful() {

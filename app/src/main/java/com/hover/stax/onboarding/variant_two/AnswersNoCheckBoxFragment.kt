@@ -43,8 +43,9 @@ internal class AnswersNoCheckBoxFragment : Fragment() {
     }
 
     private fun getTitleRes(questionType: Int): Int {
-        return if (questionType == QUESTION_TWO) R.string.variant_v2_nocheckbox_title1
-        else R.string.variant_V2_nocheckbox_title2
+        return if (questionType == QUESTION_TWO) R.string.does_stax_charge_fees
+        else R.string.what_does_stax_do
+
     }
 
     private fun getDescContent(questionType: Int): Int {
