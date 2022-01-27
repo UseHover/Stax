@@ -20,7 +20,7 @@ import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.futureTransactions.RequestsAdapter
 import com.hover.stax.futureTransactions.ScheduledAdapter
 import com.hover.stax.home.MainActivity
-import com.hover.stax.navigation.NavigationInterface
+import com.hover.stax.home.NavigationInterface
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.transactions.TransactionHistoryAdapter

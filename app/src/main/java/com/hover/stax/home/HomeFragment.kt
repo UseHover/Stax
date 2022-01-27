@@ -41,7 +41,6 @@ class HomeFragment : Fragment() {
 
         binding.airtime.setOnClickListener { navigateTo(Constants.NAV_AIRTIME, requireActivity()) }
         binding.transfer.setOnClickListener { navigateTo(Constants.NAV_TRANSFER, requireActivity()) }
-        binding.paybill.setOnClickListener { navigateTo(Constants.NAV_PAYBILL, requireActivity()) }
 
         NetworkMonitor.StateLiveData.get().observe(viewLifecycleOwner) {
             updateOfflineIndicator(it)
@@ -92,7 +91,6 @@ class HomeFragment : Fragment() {
                     snippet.text = tip.snippet ?: tip.content
 
                     tipsCard.setOnClickListener {
-                        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_tips_read_more), requireActivity())
                         findNavController().navigate(R.id.action_navigation_home_to_wellnessFragment)
                     }
                 }

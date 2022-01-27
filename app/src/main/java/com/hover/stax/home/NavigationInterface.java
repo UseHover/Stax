@@ -1,4 +1,4 @@
-package com.hover.stax.navigation;
+package com.hover.stax.home;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -6,10 +6,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
@@ -24,9 +22,7 @@ import timber.log.Timber;
 
 public interface NavigationInterface {
 
-    default void navigate(AppCompatActivity activity, int toWhere) {
-        NavHostFragment navHostFragment = (NavHostFragment) activity.getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        NavController navController = navHostFragment.getNavController();
+    default void navigate(NavController navController, int toWhere, Activity activity) {
 
         switch (toWhere) {
             case Constants.NAV_TRANSFER:
@@ -55,10 +51,6 @@ public interface NavigationInterface {
                 break;
             case Constants.NAV_USSD_LIB:
                 navigateToUSSDLib(navController);
-                break;
-            case Constants.NAV_PAYBILL:
-                navController.navigate(R.id.action_navigation_home_to_paybillFragment);
-                break;
             default:
                 break;
         }

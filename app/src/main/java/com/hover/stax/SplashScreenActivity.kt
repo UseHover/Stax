@@ -167,7 +167,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         delay(NAV_DELAY)
 
         when {
-            !OnBoardingActivity.hasPassedThrough(this@SplashScreenActivity) -> goToOnBoardingActivity()
+            !OnBoardingActivity.hasPassedOnboarding(this@SplashScreenActivity) -> goToOnBoardingActivity()
             hasAccounts -> BiometricChecker(this@SplashScreenActivity, this@SplashScreenActivity).startAuthentication(null)
             else -> goToMainActivity(null)
         }
@@ -244,7 +244,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
 
     private fun chooseNavigation(intent: Intent) {
         when {
-            !OnBoardingActivity.hasPassedThrough(this) -> goToOnBoardingActivity()
+            !OnBoardingActivity.hasPassedOnboarding(this) -> goToOnBoardingActivity()
             isToRedirectFromMainActivity(intent) -> {
                 val redirectLink = intent.extras?.getString(FRAGMENT_DIRECT)
                 redirectLink?.let {

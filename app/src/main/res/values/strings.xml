@@ -61,12 +61,44 @@
     <string name="btn_done">Done</string>
     <string name="btn_google_signin">Sign in With Google</string>
 
-    <!-- ONBOARDING -->
+    <!-- ONBOARDING VARIANT ZERO (DEFAULT)-->
     <string name="stax_tagline">Move money without stress</string>
     <string name="splash_screen_img_desc">Stax background</string>
     <string name="slide_1_title">Secure. Fast. Convenient</string>
     <string name="slide_1_desc">Send money and buy airtime offline using your existing bank and momo accounts</string>
     <string name="onboarding_link_accounts">Link your accounts now</string>
+
+    <!-- ONBOARDING VARIANT_1 -->
+    <string name="onboarding_v1_slide1_title">Stax works offline</string>
+    <string name="onboarding_v1_slide2_title">Send money</string>
+    <string name="onboarding_v1_slide3_title">Request money</string>
+    <string name="onboarding_v1_slide4_title">Buy airtime</string>
+    <string name="onboarding_v1_general_desc">Continue with Google to enjoy the full Stax experience</string>
+    <string name="continue_with_google">Continue with Google</string>
+
+    <string name="use_stax_no_sigin">Use Stax without sign in</string>
+    <string name="termsOfServiceFullLabel">By continuing, you agree to Stax\'s Terms of service.</string>
+    <string name="privacyPolicyFullLabel">See how we use your data in our Privacy Policy.</string>
+
+    <!-- ONBOARDING VARIANT_2 -->
+    <string name="welcome_to_stax">Hello, welcome to Stax.</string>
+    <string name="welcome_to_stax_fullContent">If you\’re new to Stax you may have some questions, lets help clarify some. Select the most relevant option to you.</string>
+    <string name="onboarding_variant_2_question1">Is Stax for me?</string>
+    <string name="skip_prefix">Already know about stax?</string>
+    <string name="skip">Skip</string>
+
+    <string name="does_stax_charge_fees">Does Stax charge fees?</string>
+    <string name="what_does_stax_do">What does Stax do?</string>
+
+    <string name="is_stax_for_you">To figure out if Stax is for you select as many as best describes you</string>
+    <string name="variant_V2_checkbox_option1">I have used USSD in the past?</string>
+    <string name="variant_V2_checkbox_option2">I have more than one bank or Mobile Money account?</string>
+    <string name="variant_V2_checkbox_option3">I turn off my mobile data frequently?</string>
+    <string name="none_apply">None of these apply</string>
+    <string name="variant_v2_nocheckbox_desc1">Stax does not charge you extra fees. Sometimes your bank or mobile money provider will charge you fees for performing a transaction.\n\nStax keeps track of how much money they charge you.</string>
+    <string name="variant_v2_nocheckbox_desc2">Stax uses USSD technology to make it possible for you to transact offline. With Stax, you can check your account balances, send money, buy airtime,  transfer money within own accounts, control multiple financial (banks and mobile money) accounts  from one app.\n\nYou can also create links that other people with Stax can use to send you money.</string>
+
+    <string name="skip_tutorial">Skip tutorial</string>
 
     <!-- Home -->
     <string name="welcome_to">Welcome to</string>

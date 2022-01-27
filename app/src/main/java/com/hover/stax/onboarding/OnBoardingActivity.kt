@@ -1,20 +1,16 @@
 package com.hover.stax.onboarding
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
 import com.hover.stax.databinding.OnboardingLayoutBinding
-import com.hover.stax.home.MainActivity
-import com.hover.stax.permissions.PermissionUtils
+import com.hover.stax.login.StaxGoogleLoginInterface
+import com.hover.stax.onboarding.navigation.AbstractOnboardingNavigationActivity
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 
-class OnBoardingActivity : AppCompatActivity() {
+class OnBoardingActivity : AbstractOnboardingNavigationActivity(), StaxGoogleLoginInterface {
 
     private lateinit var binding: OnboardingLayoutBinding
 
@@ -26,46 +22,35 @@ class OnBoardingActivity : AppCompatActivity() {
         binding = OnboardingLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initContinueButton()
+        setupNavigation()
+        navigateNextScreen()
+        setGoogleLoginInterface(this)
+
     }
 
     private fun logEvents() {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_onboarding)), this)
     }
 
-    private fun initContinueButton() = binding.onboardingContinueBtn.setOnClickListener {
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_getstarted), this)
-        setPassedThrough()
-        checkPermissionsAndNavigate()
+    private fun navigateNextScreen() {
+        if (hasPassedOnboarding(this)) checkPermissionThenNavigateMainActivity()
+        else chooseOnboardingVariant()
     }
 
-    private fun checkPermissionsAndNavigate() {
-        val permissionHelper = PermissionHelper(this)
-
-        if (permissionHelper.hasBasicPerms()) {
-            val intent = Intent(this, MainActivity::class.java).apply {
-                putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_LINK_ACCOUNT)
-                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            }
-            startActivity(intent)
-            finish()
-        } else {
-            PermissionUtils.showInformativeBasicPermissionDialog(0,
-                    { PermissionUtils.requestPerms(Constants.NAV_HOME, this@OnBoardingActivity) }, {
-                AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), this@OnBoardingActivity)
-            }, this)
-        }
+    private fun chooseOnboardingVariant() {
+        navigateOnboardingVariantTwo()
     }
 
-    private fun setPassedThrough() = Utils.saveBoolean(OnBoardingActivity::class.java.simpleName, true, this)
+    override fun googleLoginSuccessful() {
+        checkPermissionThenNavigateMainActivity()
+    }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        PermissionUtils.logPermissionsGranted(grantResults, this)
-        checkPermissionsAndNavigate()
+    override fun googleLoginFailed() {
+        UIHelper.flashMessage(this, R.string.login_google_err)
     }
 
     companion object {
-        fun hasPassedThrough(context: Context) = Utils.getBoolean(OnBoardingActivity::class.java.simpleName, context)
+        fun hasPassedOnboarding(context: Context) = Utils.getBoolean(OnBoardingActivity::class.java.simpleName, context)
     }
+
 }

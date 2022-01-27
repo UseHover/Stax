@@ -1,4 +1,4 @@
-package com.hover.stax.settings
+package com.hover.stax.login
 
 import android.app.Dialog
 import android.content.Intent
@@ -11,7 +11,8 @@ import androidx.fragment.app.DialogFragment
 import com.google.android.gms.common.SignInButton
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentLoginBinding
-import com.hover.stax.home.MainActivity
+import com.hover.stax.settings.ReferralDialog
+import com.hover.stax.settings.SettingsViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
@@ -49,8 +50,6 @@ class LoginDialog : DialogFragment(), View.OnClickListener {
         }
         binding.progressIndicator.setVisibilityAfterHide(View.GONE)
 
-        (requireActivity() as MainActivity).initAuth()
-
         viewModel.username.observe(this) { Timber.i("Loaded username: %s", it ?: "null") }
         viewModel.progress.observe(viewLifecycleOwner) { updateProgress(it) }
         viewModel.error.observe(viewLifecycleOwner) { it?.let { showError(it) } }
@@ -62,7 +61,7 @@ class LoginDialog : DialogFragment(), View.OnClickListener {
         if (networkMonitor.isNetworkConnected) {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext())
             updateProgress(0)
-            startActivityForResult(viewModel.signInClient.signInIntent, SettingsViewModel.LOGIN_REQUEST)
+            startActivityForResult(viewModel.signInClient.signInIntent, AbstractGoogleAuthActivity.LOGIN_REQUEST)
         } else
             showError(getString(R.string.internet_required))
     }
@@ -83,7 +82,7 @@ class LoginDialog : DialogFragment(), View.OnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         Timber.e("called on activity result")
-        if (requestCode == SettingsViewModel.LOGIN_REQUEST)
+        if (requestCode == AbstractGoogleAuthActivity.LOGIN_REQUEST)
             viewModel.signIntoFirebaseAsync(data, binding.marketingOptIn.isChecked, requireActivity() as AppCompatActivity)
     }
 

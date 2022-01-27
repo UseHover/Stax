@@ -90,6 +90,18 @@
         <item name="textAllCaps">false</item>
     </style>
 
+    <style name="StaxFlatOutlined" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:radius">5dp</item>
+        <item name="boxStrokeColor">@color/offWhite</item>
+        <item name="boxBackgroundColor">@color/cardViewColor</item>
+        <item name="boxStrokeWidth">2dp</item>
+        <item name="android:textColorHint">@color/offWhite</item>
+        <item name="hintTextColor">@color/offWhite</item>
+        <item name="android:textColor">@color/offWhite</item>
+        <item name="android:textSize">@dimen/text_16</item>
+        <item name="fontFamily">font-medium</item>
+        <item name="android:fontFamily">font-medium</item>
+    </style>
     <style name="StaxFabExtended" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
         <item name="android:padding">@dimen/margin_13</item>
         <item name="android:radius">5dp</item>
