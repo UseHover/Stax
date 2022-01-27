@@ -51,6 +51,9 @@ public interface NavigationInterface {
                 break;
             case Constants.NAV_USSD_LIB:
                 navigateToUSSDLib(navController);
+            case Constants.NAV_PAYBILL:
+                navController.navigate(R.id.action_navigation_home_to_paybillFragment);
+                break;
             default:
                 break;
         }
