@@ -1,4 +1,4 @@
-package com.hover.stax.onboarding.variant_one
+package com.hover.stax.onboarding.slidingVariant
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter

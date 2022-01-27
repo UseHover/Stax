@@ -7,31 +7,31 @@
 
     <fragment
         android:id="@+id/navigation_onboarding_default"
-        android:name="com.hover.stax.onboarding.variant_default.OnboardingVariantDefaultFragment"
+        android:name="com.hover.stax.onboarding.defaultVariant.OnboardingVariantDefaultFragment"
         android:label="@string/onboarding_v1_slide1_title"
         tools:layout="@layout/onboarding_layout_default" />
 
     <fragment
         android:id="@+id/navigation_onboarding_v1"
-        android:name="com.hover.stax.onboarding.variant_one.OnboardingVariantOneFragment"
+        android:name="com.hover.stax.onboarding.slidingVariant.OnboardingVariantOneFragment"
         android:label="@string/onboarding_v1_slide1_title"
         tools:layout="@layout/onboarding_variant_one"/>
 
     <fragment
             android:id="@+id/navigation_onboarding_v2"
-            android:name="com.hover.stax.onboarding.variant_two.VariantTwoMainFragment"
+            android:name="com.hover.stax.onboarding.questioningVariant.VariantTwoMainFragment"
             android:label="@string/onboarding_v1_slide2_title"
             tools:layout="@layout/onboarding_variant_two"/>
 
     <fragment
             android:id="@+id/navigation_onboarding_v2_withCheckbox"
-            android:name="com.hover.stax.onboarding.variant_two.AnswersWithCheckBoxFragment"
+            android:name="com.hover.stax.onboarding.questioningVariant.AnswersWithCheckBoxFragment"
             android:label="@string/onboarding_v1_slide2_title"
             tools:layout="@layout/variant_two_answer_withcheckbox"/>
 
     <fragment
             android:id="@+id/navigation_onboarding_v2_noCheckbox"
-            android:name="com.hover.stax.onboarding.variant_two.AnswersNoCheckBoxFragment"
+            android:name="com.hover.stax.onboarding.questioningVariant.AnswersNoCheckBoxFragment"
             android:label="@string/onboarding_v1_slide2_title"
             tools:layout="@layout/variant_two_answer_nocheckbox"/>
 

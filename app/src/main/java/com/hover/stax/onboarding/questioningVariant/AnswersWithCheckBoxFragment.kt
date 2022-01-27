@@ -1,4 +1,4 @@
-package com.hover.stax.onboarding.variant_two
+package com.hover.stax.onboarding.questioningVariant
 
 import android.os.Bundle
 import android.view.LayoutInflater

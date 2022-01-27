@@ -1,4 +1,4 @@
-package com.hover.stax.onboarding.variant_default
+package com.hover.stax.onboarding.defaultVariant
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -44,7 +44,7 @@
             android:layout_marginHorizontal="@dimen/margin_13"
             android:orientation="vertical">
 
-    <com.hover.stax.onboarding.variant_one.StaxAutoScrollViewPager
+    <com.hover.stax.onboarding.slidingVariant.StaxAutoScrollViewPager
             android:id="@+id/vpPager"
             android:layout_width="match_parent"
             android:layout_height="300dp" />
