@@ -41,10 +41,10 @@ class SlidesPagerAdapter(private val context: Context) : PagerAdapter() {
 
     private fun getSlideData(position: Int): SlideData {
         return when (position) {
-            0 -> SlideData(R.drawable.img_sms, R.string.onboarding_v1_slide1_title)
-            1 -> SlideData(R.drawable.img_copy, R.string.onboarding_v1_slide2_title)
-            2 -> SlideData(R.drawable.img_check, R.string.onboarding_v1_slide3_title)
-            else -> SlideData(R.drawable.img_whatsapp, R.string.onboarding_v1_slide4_title)
+            0 -> SlideData(R.drawable.send_illustration, R.string.onboarding_v1_slide1_title)
+            1 -> SlideData(R.drawable.send_illustration, R.string.onboarding_v1_slide2_title)
+            2 -> SlideData(R.drawable.request_illustration, R.string.onboarding_v1_slide3_title)
+            else -> SlideData(R.drawable.airtime_illustration, R.string.onboarding_v1_slide4_title)
         }
     }
 
