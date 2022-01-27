@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.hover.stax.databinding.OnboardingVariantTwoBinding
 import com.hover.stax.onboarding.OnBoardingActivity
 
-internal class VariantTwoMainFragment : Fragment() {
+internal class QuestioningVariantFragment : Fragment() {
 
     private var _binding: OnboardingVariantTwoBinding? = null
     private val binding get() = _binding!!

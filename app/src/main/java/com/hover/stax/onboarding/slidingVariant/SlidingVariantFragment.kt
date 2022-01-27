@@ -18,7 +18,7 @@ import com.hover.stax.onboarding.OnBoardingActivity
 import timber.log.Timber
 
 
- class OnboardingVariantOneFragment : Fragment(), ViewPager.OnPageChangeListener {
+ class SlidingVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
 
     private var _binding: OnboardingVariantOneBinding? = null
     private val binding get() = _binding!!
@@ -103,7 +103,7 @@ import timber.log.Timber
             setAutoScrollDurationFactor(AUTO_SCROLL_EASE_DURATION_FACTOR)
             setSwipeScrollDurationFactor(SWIPE_DURATION_FACTOR)
             setStopScrollWhenTouch(true)
-            addOnPageChangeListener(this@OnboardingVariantOneFragment)
+            addOnPageChangeListener(this@SlidingVariantFragment)
             adapter = viewPagerAdapter
         }
     }

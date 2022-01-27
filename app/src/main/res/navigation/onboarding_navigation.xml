@@ -13,13 +13,13 @@
 
     <fragment
         android:id="@+id/navigation_onboarding_v1"
-        android:name="com.hover.stax.onboarding.slidingVariant.OnboardingVariantOneFragment"
+        android:name="com.hover.stax.onboarding.slidingVariant.SlidingVariantFragment"
         android:label="@string/onboarding_v1_slide1_title"
         tools:layout="@layout/onboarding_variant_one"/>
 
     <fragment
             android:id="@+id/navigation_onboarding_v2"
-            android:name="com.hover.stax.onboarding.questioningVariant.VariantTwoMainFragment"
+            android:name="com.hover.stax.onboarding.questioningVariant.QuestioningVariantFragment"
             android:label="@string/onboarding_v1_slide2_title"
             tools:layout="@layout/onboarding_variant_two"/>
 
