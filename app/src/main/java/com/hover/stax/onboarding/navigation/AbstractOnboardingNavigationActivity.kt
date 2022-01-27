@@ -2,6 +2,7 @@ package com.hover.stax.onboarding.navigation
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -25,6 +26,13 @@ abstract class AbstractOnboardingNavigationActivity : AbstractGoogleAuthActivity
     }
 
     fun navigateOnboardingVariantOne() = navController.navigate(R.id.navigation_onboarding_v1)
+    fun navigateOnboardingVariantTwo() = navController.navigate(R.id.navigation_onboarding_v2)
+    fun navigateToVariantTwoWithCheckBox() = navController.navigate(R.id.navigation_onboarding_v2_withCheckbox)
+    fun navigateToVariantTwoNoCheckBox(questionType: Int) {
+        val bundle = Bundle()
+        bundle.putInt(Constants.QUESTION_TYPE, questionType)
+        navController.navigate(R.id.navigation_onboarding_v2_noCheckbox, bundle)
+    }
 
     private fun navigateToMainActivity() {
         val intent = Intent(this, MainActivity::class.java).apply {

@@ -39,6 +39,7 @@ object Constants {
     const val ACCOUNT_ID = "accountId"
     const val ACTION = "action"
     const val TRANSACTION_TYPE = "transaction_type"
+    const val QUESTION_TYPE = "question_type"
 
     const val CONNECTIVITY = "android.net.conn.CONNECTIVITY_CHANGE"
 }

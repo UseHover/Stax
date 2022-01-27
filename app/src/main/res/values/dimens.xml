@@ -2,6 +2,7 @@
 	<dimen name="text_16">16sp</dimen>
 	<dimen name="text_21">21sp</dimen>
 	<dimen name="text_13">13sp</dimen>
+	<dimen name="text_15">15sp</dimen>
 	<dimen name="text_34">34sp</dimen>
 	<dimen name="text_spacing_8">8sp</dimen>
 	<dimen name="stroke">2dp</dimen>

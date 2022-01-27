@@ -35,6 +35,7 @@
         <entry key="app/src/main/res/layout/basic_perm_dialog.xml" value="0.2890625" />
         <entry key="app/src/main/res/layout/card_wellness_tips.xml" value="0.31657608695652173" />
         <entry key="app/src/main/res/layout/contact_input.xml" value="0.15678824721377912" />
+        <entry key="app/src/main/res/layout/dialog_paybill_number.xml" value="0.15677083333333333" />
         <entry key="app/src/main/res/layout/faq_items.xml" value="0.32019927536231885" />
         <entry key="app/src/main/res/layout/fragment_account.xml" value="0.30572916666666666" />
         <entry key="app/src/main/res/layout/fragment_accounts.xml" value="0.15704154002026344" />
@@ -66,6 +67,7 @@
         <entry key="app/src/main/res/layout/item_paybill_saved.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_wellness_tips.xml" value="0.25" />
         <entry key="app/src/main/res/layout/onboarding_variant_one.xml" value="0.3078125" />
+        <entry key="app/src/main/res/layout/onboarding_variant_two.xml" value="0.15677083333333333" />
         <entry key="app/src/main/res/layout/paybill_summary.xml" value="0.8125" />
         <entry key="app/src/main/res/layout/rename_account_layout.xml" value="0.3134057971014493" />
         <entry key="app/src/main/res/layout/repeat_inputs.xml" value="0.18697916666666667" />
@@ -100,6 +102,7 @@
         <entry key="app/src/main/res/layout/transfer_card_future.xml" value="0.33" />
         <entry key="app/src/main/res/layout/transfer_card_summary.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/transfer_note.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/variant_two_answer_nocheckbox.xml" value="0.23541666666666666" />
         <entry key="app/src/main/res/menu/nav_main.xml" value="0.27870370370370373" />
       </map>
     </option>

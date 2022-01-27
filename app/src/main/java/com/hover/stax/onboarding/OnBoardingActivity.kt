@@ -38,7 +38,7 @@ class OnBoardingActivity : AbstractOnboardingNavigationActivity(), StaxGoogleLog
     }
 
     private fun chooseOnboardingVariant() {
-        navigateOnboardingVariantOne()
+        navigateOnboardingVariantTwo()
     }
 
     override fun googleLoginSuccessful() {
