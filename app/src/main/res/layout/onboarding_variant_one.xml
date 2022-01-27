@@ -73,7 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_13"
-                android:background="@color/colorPrimary"
+                android:background="@drawable/grey_background"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="@dimen/margin_13">
@@ -81,7 +81,6 @@
             <ImageView
                     android:layout_width="@dimen/margin_24"
                     android:layout_height="@dimen/margin_24"
-                    style="@style/StaxFlatOutlined"
                     android:layout_marginEnd="@dimen/margin_24"
                     android:background="?selectableItemBackground"
                     android:contentDescription="@string/continue_with_google"
@@ -101,7 +100,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="font-normal"
-
                 android:text="@string/use_stax_no_sigin"
                 android:textSize="@dimen/text_16" />
 
