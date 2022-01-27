@@ -421,6 +421,11 @@
     <string name="app_version_and_device_id">App version: %1$s\nVersion code:%2$s\nDevice ID: %3$s</string>
     <string name="disclaimer">All products names, brands, and trademarks are property of their respective owners. Use does not imply affiliation.</string>
 
+    <string name="learn_stax_cardhead">Learn</string>
+    <string name="stax_features">Features And More on Stax</string>
+    <string name="stax_medium_url">http://joinstax.medium.com/</string>
+
+
     <string name="contact_stax_cardhead">Get in touch</string>
     <string name="twitter" translatable="false">Twitter</string>
     <string name="stax_twitter_url" translatable="false">http://twitter.com/joinstax</string>
