@@ -1,8 +1,9 @@
 package com.hover.stax.home
 
 import android.content.Intent
+import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
-import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.permissions.PermissionHelper
@@ -16,41 +17,76 @@ import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
+import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransferViewModel
-import com.hover.stax.utils.*
+import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.Constants
+import com.hover.stax.utils.Constants.NAV_TRANSFER
+import com.hover.stax.utils.DateUtils
+import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.network.NetworkReceiver
 import com.hover.stax.views.StaxDialog
-import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener,
         BiometricChecker.AuthListener, PushNotificationTopicsInterface {
 
+    private val networkReceiver = NetworkReceiver()
     private val balancesViewModel: BalancesViewModel by viewModel()
     private val actionSelectViewModel: ActionSelectViewModel by viewModel()
     private val transferViewModel: TransferViewModel by viewModel()
+    private val historyViewModel: TransactionHistoryViewModel by viewModel()
     private val bountyRequest = 3000
 
     private lateinit var binding: ActivityMainBinding
+
+    private lateinit var staxNavigation: StaxNavigation
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
+        staxNavigation = StaxNavigation(this, isMainActivity = true)
         setContentView(binding.root)
 
-        setUpNav()
+        staxNavigation.setUpNav()
 
         initFromIntent()
         startObservers()
         checkForRequest(intent)
         checkForFragmentDirection(intent)
+        StaxDeepLinking.navigateIfRequired(this)
+        observeForAppReview()
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         checkForRequest(intent!!)
     }
+
+    override fun onResume() {
+        super.onResume()
+        registerNetworkReceiver()
+        staxNavigation.setUpNav()
+    }
+
+    private fun registerNetworkReceiver() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) registerReceiver(networkReceiver, IntentFilter(Constants.CONNECTIVITY))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+            unregisterReceiver(networkReceiver)
+    }
+
+    fun submit(account: Account) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account) }
+    fun checkPermissionsAndNavigate(destination: Int) {
+        staxNavigation.checkPermissionsAndNavigate(destination)
+    }
+
+    private fun observeForAppReview() = historyViewModel.showAppReviewLiveData().observe(this@MainActivity) { if (it) StaxAppReview.launchStaxReview(this@MainActivity) }
 
     private fun startObservers() {
         with(balancesViewModel) {
@@ -75,17 +111,11 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         Timber.i(result.plus(" $size"))
     }
 
-    override fun onResume() {
-        super.onResume()
-        setUpNav()
-    }
-
-
     private fun showMessage(str: String) = UIHelper.flashMessage(this, findViewById(R.id.fab), str)
 
     private fun checkForRequest(intent: Intent) {
         if (intent.hasExtra(Constants.REQUEST_LINK)) {
-            navigateToTransferFragment(getNavController(), HoverAction.P2P)
+            staxNavigation.checkPermissionsAndNavigate(NAV_TRANSFER)
             createFromRequest(intent.getStringExtra(Constants.REQUEST_LINK)!!)
         }
     }
@@ -93,7 +123,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
     private fun checkForFragmentDirection(intent: Intent) {
         if (intent.hasExtra(Constants.FRAGMENT_DIRECT)) {
             val toWhere = intent.extras!!.getInt(Constants.FRAGMENT_DIRECT, 0)
-            checkPermissionsAndNavigate(toWhere)
+            staxNavigation.checkPermissionsAndNavigate(toWhere)
         }
     }
 
@@ -108,21 +138,19 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         Timber.e("Request code is bounty")
         if (data != null) {
             val transactionUUID = data.getStringExtra("uuid")
-            if (transactionUUID != null) navigateToTransactionDetailsFragment(transactionUUID, supportFragmentManager, true)
+            if (transactionUUID != null) staxNavigation.navigateToTransactionDetailsFragment(transactionUUID, supportFragmentManager, true)
         }
     }
 
     private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
-            navigateToTransactionDetailsFragment(
+            staxNavigation.navigateToTransactionDetailsFragment(
                     data.extras!!.getString("uuid")!!,
                     supportFragmentManager,
                     false
             )
         }
     }
-
-    fun submit(account: Account) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account) }
 
     private fun initFromIntent() {
         when {
@@ -158,7 +186,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
     override fun onTapRefresh(accountId: Int) {
         if (accountId == DUMMY)
-            checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT)
+            staxNavigation.checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT)
         else {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), this)
             balancesViewModel.setRunning(accountId)
@@ -167,9 +195,9 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
     override fun onTapDetail(accountId: Int) {
         if (accountId == DUMMY)
-            checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT)
+            staxNavigation.checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT)
         else
-            getNavController().navigate(R.id.action_navigation_home_to_accountDetailsFragment, bundleOf(Constants.ACCOUNT_ID to accountId))
+            staxNavigation.navigateAccountDetails(accountId)
     }
 
     override fun onAuthError(error: String) {

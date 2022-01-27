@@ -1,9 +1,9 @@
 package com.hover.stax.home
 
 import android.content.Intent
-import android.content.IntentFilter
-import android.os.Build
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -11,24 +11,19 @@ import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
-import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.permissions.PermissionUtils
-
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
-import com.hover.stax.utils.network.NetworkReceiver
 
-abstract class AbstractNavigationActivity : AbstractGoogleAuthActivity(), NavigationInterface {
+internal class StaxNavigation(val activity: AppCompatActivity, private val isMainActivity: Boolean) : NavigationInterface {
 
     private var navController: NavController? = null
     private var appBarConfiguration: AppBarConfiguration? = null
     private var navHostFragment: NavHostFragment? = null
 
-    private val networkReceiver = NetworkReceiver()
-
     fun setUpNav() {
-        val nav = findViewById<BottomNavigationView>(R.id.nav_view)
-        navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val nav = activity.findViewById<BottomNavigationView>(R.id.nav_view)
+        navHostFragment = activity.supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
         navHostFragment?.let {
             navController = getNavController()
@@ -40,11 +35,20 @@ abstract class AbstractNavigationActivity : AbstractGoogleAuthActivity(), Naviga
         setDestinationChangeListener(nav)
     }
 
-    fun getNavController(): NavController = navHostFragment!!.navController
+    fun checkPermissionsAndNavigate(toWhere: Int) = checkPermissionsAndNavigate(toWhere, 0)
+    fun navigateAccountDetails(accountId: Int) {
+        getNavController().navigate(R.id.action_navigation_home_to_accountDetailsFragment, bundleOf(Constants.ACCOUNT_ID to accountId))
+    }
+
+    fun navigateWellness(id: String) {
+        navigateToWellnessFragment(getNavController(), id)
+    }
+
+    private fun getNavController(): NavController = navHostFragment!!.navController
 
     private fun setNavClickListener(nav: BottomNavigationView) {
         nav.setOnNavigationItemSelectedListener {
-            if (this is MainActivity) {
+            if (isMainActivity) {
                 checkPermissionsAndNavigate(getNavConst(it.itemId))
             } else
                 navigateThruHome(it.itemId)
@@ -63,14 +67,14 @@ abstract class AbstractNavigationActivity : AbstractGoogleAuthActivity(), Naviga
     }
 
     private fun checkPermissionsAndNavigate(toWhere: Int, permissionMsg: Int) {
-        val permissionHelper = PermissionHelper(this)
+        val permissionHelper = PermissionHelper(activity)
         when {
             toWhere == Constants.NAV_SETTINGS ||
                     toWhere == Constants.NAV_HOME ||
-                    permissionHelper.hasBasicPerms() -> navigate(this, toWhere)
+                    permissionHelper.hasBasicPerms() -> navigate(getNavController(), toWhere, activity)
             else -> PermissionUtils.showInformativeBasicPermissionDialog(permissionMsg,
-                    { PermissionUtils.requestPerms(getNavConst(toWhere), this) },
-                    { AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_basic_cancelled), this) }, this)
+                    { PermissionUtils.requestPerms(getNavConst(toWhere), activity) },
+                    { AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.perms_basic_cancelled), activity) }, activity)
         }
     }
 
@@ -82,10 +86,9 @@ abstract class AbstractNavigationActivity : AbstractGoogleAuthActivity(), Naviga
         else -> destId
     }
 
-    fun checkPermissionsAndNavigate(toWhere: Int) = checkPermissionsAndNavigate(toWhere, 0)
 
     private fun navigateThruHome(destId: Int) {
-        val intent = Intent(this, MainActivity::class.java).apply {
+        val intent = Intent(activity, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
         }
 
@@ -94,25 +97,11 @@ abstract class AbstractNavigationActivity : AbstractGoogleAuthActivity(), Naviga
             destId == R.id.navigation_settings -> intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_SETTINGS)
             destId == R.id.navigation_request -> intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_REQUEST)
             destId != R.id.navigation_home -> {
-                onBackPressed()
+                activity.onBackPressed()
                 return
             }
         }
 
-        startActivity(intent)
-    }
-
-    fun openSupportEmailClient() = checkPermissionsAndNavigate(Constants.NAV_EMAIL_CLIENT, R.string.permission_support_desc)
-
-    override fun onResume() {
-        super.onResume()
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-            registerReceiver(networkReceiver, IntentFilter(Constants.CONNECTIVITY))
-    }
-
-    override fun onPause() {
-        super.onPause()
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-            unregisterReceiver(networkReceiver)
+        activity.startActivity(intent)
     }
 }

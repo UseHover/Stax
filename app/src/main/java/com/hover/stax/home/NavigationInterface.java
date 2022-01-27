@@ -6,10 +6,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.hover.sdk.actions.HoverAction;
 import com.hover.sdk.api.Hover;
@@ -24,9 +22,7 @@ import timber.log.Timber;
 
 public interface NavigationInterface {
 
-    default void navigate(AppCompatActivity activity, int toWhere) {
-        NavHostFragment navHostFragment = (NavHostFragment) activity.getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        NavController navController = navHostFragment.getNavController();
+    default void navigate(NavController navController, int toWhere, Activity activity) {
 
         switch (toWhere) {
             case Constants.NAV_TRANSFER:

@@ -14,7 +14,7 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-abstract class AbstractRequestActivity : AbstractDeepLinking(), RequestSenderInterface, SmsSentObserver.SmsSentListener {
+abstract class AbstractRequestActivity : AbstractSDKCaller(), RequestSenderInterface, SmsSentObserver.SmsSentListener {
     private val requestViewModel: NewRequestViewModel by viewModel()
     private val scheduleViewModel: ScheduleDetailViewModel by viewModel()
     private val actionSelectViewModel: ActionSelectViewModel by viewModel()

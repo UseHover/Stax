@@ -22,8 +22,7 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
     fun setGoogleLoginInterface(staxGoogleLoginInterface: StaxGoogleLoginInterface) {
         this.staxGoogleLoginInterface = staxGoogleLoginInterface
     }
-
-
+    
     private fun initGoogleAuth() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.google_server_client_id))

@@ -12,6 +12,7 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.hover.HoverSession
+import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.paybill.PaybillViewModel
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
 import com.hover.stax.transactions.StaxTransaction
@@ -29,14 +30,14 @@ import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-abstract class AbstractSDKCaller : AbstractNavigationActivity(), PushNotificationTopicsInterface {
+abstract class AbstractSDKCaller : AbstractGoogleAuthActivity(), PushNotificationTopicsInterface {
 
     private val balancesViewModel: BalancesViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
     private val actionSelectViewModel: ActionSelectViewModel by viewModel()
     private val channelsViewModel: ChannelsViewModel by viewModel()
     private val transferViewModel: TransferViewModel by viewModel()
-    private val paybillViewModel : PaybillViewModel by viewModel()
+    private val paybillViewModel: PaybillViewModel by viewModel()
 
     fun reBuildHoverSession(transaction: StaxTransaction) {
         lifecycleScope.launch(Dispatchers.IO) {
@@ -156,7 +157,7 @@ abstract class AbstractSDKCaller : AbstractNavigationActivity(), PushNotificatio
         val data = JSONObject()
         try {
             data.put("businessNo", paybillViewModel.businessNumber.value)
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             Timber.e(e)
         }
 
