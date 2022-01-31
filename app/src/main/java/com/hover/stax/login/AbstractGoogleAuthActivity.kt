@@ -11,6 +11,7 @@ import com.hover.stax.settings.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
+
     private val settingsViewModel: SettingsViewModel by viewModel()
     private lateinit var staxGoogleLoginInterface: StaxGoogleLoginInterface
 
@@ -48,14 +49,10 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
         } else {
             staxGoogleLoginInterface.googleLoginFailed()
         }
-
-
     }
 
     companion object {
-        val LOGIN_REQUEST = 4000
-        val LOGIN_REQUEST_OPT_IN_MARKETING = 4001
+        const val LOGIN_REQUEST = 4000
+        const val LOGIN_REQUEST_OPT_IN_MARKETING = 4001
     }
-
-
 }

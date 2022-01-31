@@ -15,11 +15,11 @@ import com.hover.stax.utils.Constants
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 abstract class AbstractRequestActivity : AbstractSDKCaller(), RequestSenderInterface, SmsSentObserver.SmsSentListener {
+
     private val requestViewModel: NewRequestViewModel by viewModel()
     private val scheduleViewModel: ScheduleDetailViewModel by viewModel()
     private val actionSelectViewModel: ActionSelectViewModel by viewModel()
     private val transferViewModel: TransferViewModel by viewModel()
-
 
     fun createFromSchedule(scheduleId: Int, isRequestType: Boolean) {
         with(scheduleViewModel) {

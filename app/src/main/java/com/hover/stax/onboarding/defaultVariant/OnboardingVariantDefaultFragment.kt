@@ -29,7 +29,6 @@ class OnboardingVariantDefaultFragment : Fragment() {
         initContinueButton()
     }
 
-
     private fun initNavigation() {
         fragmentsNavigationInterface = activity as OnboardingFragmentsNavigationInterface
     }

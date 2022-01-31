@@ -1,27 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
     <ImageView
             android:id="@+id/onboarding_v1_image"
             android:layout_width="196dp"
             android:layout_height="196dp"
             android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/margin_21"
             android:contentDescription="@string/viewing_onboarding_slide"
             android:scaleType="centerCrop"
-            android:src="@drawable/img_check" />
+            android:src="@drawable/img_check"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3" />
 
     <TextView
             android:id="@+id/onboarding_v1_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_26"
+            android:fontFamily="font-medium"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/onboarding_v1_image"
+            tools:text="@string/onboarding_v1_slide1_title" />
+
+    <TextView
+            android:id="@+id/onboarding_v1_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="font-medium"
+            android:layout_marginStart="@dimen/margin_55"
+            android:layout_marginEnd="@dimen/margin_55"
+            android:fontFamily="font-normal"
             android:gravity="center"
             android:text="@string/onboarding_v1_slide1_title"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_21" />
-</LinearLayout>
+            android:textSize="@dimen/text_16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/onboarding_v1_title" />
+</androidx.constraintlayout.widget.ConstraintLayout>

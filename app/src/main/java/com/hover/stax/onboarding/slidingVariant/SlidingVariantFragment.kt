@@ -9,10 +9,12 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.hover.stax.R
+import com.hover.stax.databinding.OnboardingV1Binding
 import com.hover.stax.databinding.OnboardingVariantOneBinding
 import com.hover.stax.onboarding.OnBoardingActivity
 import timber.log.Timber
@@ -20,7 +22,7 @@ import timber.log.Timber
 
  class SlidingVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
 
-    private var _binding: OnboardingVariantOneBinding? = null
+    private var _binding: OnboardingV1Binding? = null
     private val binding get() = _binding!!
 
     private lateinit var progressBar1: LinearProgressIndicator
@@ -36,7 +38,7 @@ import timber.log.Timber
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        _binding = OnboardingVariantOneBinding.inflate(inflater, container, false)
+        _binding = OnboardingV1Binding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -68,18 +70,18 @@ import timber.log.Timber
     }
 
     private fun initProgressBarView() {
-        progressBar1 = binding.onoboardingV1Progressbar1
-        progressBar2 = binding.onoboardingV1Progressbar2
-        progressBar3 = binding.onoboardingV1Progressbar3
-        progressBar4 = binding.onoboardingV1Progressbar4
+        progressBar1 = binding.pb1
+        progressBar2 = binding.pb2
+        progressBar3 = binding.pb3
+        progressBar4 = binding.pb4
 
-        val brightBlue = requireContext().resources.getColor(R.color.brightBlue)
+        val brightBlue = ContextCompat.getColor(requireActivity(), R.color.brightBlue)
         progressBar1.trackColor = brightBlue
         progressBar2.trackColor = brightBlue
         progressBar3.trackColor = brightBlue
         progressBar4.trackColor = brightBlue
 
-        val deepBlue = requireContext().resources.getColor(R.color.stax_state_blue)
+        val deepBlue = ContextCompat.getColor(requireActivity(), R.color.stax_state_blue)
         progressBar1.setIndicatorColor(deepBlue)
         progressBar2.setIndicatorColor(deepBlue)
         progressBar3.setIndicatorColor(deepBlue)

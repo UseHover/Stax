@@ -76,6 +76,11 @@
     <string name="onboarding_v1_general_desc">Continue with Google to enjoy the full Stax experience</string>
     <string name="continue_with_google">Continue with Google</string>
 
+    <string name="slide2_desc">Transfer money securely and easily. No extra charges.</string>
+    <string name="slide3_desc">Get paid faster by clients and friends with a simple link.</string>
+    <string name="slide4_desc">Top up airtime in seconds for you and your loved ones.</string>
+    <string name="slide1_desc">Use Stax with or without the internet. Anytime. Anywhere.</string>
+
     <string name="use_stax_no_sigin">Use Stax without sign in</string>
     <string name="termsOfServiceFullLabel">By continuing, you agree to Stax\'s Terms of service.</string>
     <string name="privacyPolicyFullLabel">See how we use your data in our Privacy Policy.</string>

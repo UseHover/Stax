@@ -7,6 +7,7 @@ import com.hover.stax.databinding.OnboardingLayoutBinding
 import com.hover.stax.login.StaxGoogleLoginInterface
 import com.hover.stax.onboarding.navigation.AbstractOnboardingNavigationActivity
 import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 
@@ -25,7 +26,6 @@ class OnBoardingActivity : AbstractOnboardingNavigationActivity(), StaxGoogleLog
         setupNavigation()
         navigateNextScreen()
         setGoogleLoginInterface(this)
-
     }
 
     private fun logEvents() {
@@ -37,8 +37,11 @@ class OnBoardingActivity : AbstractOnboardingNavigationActivity(), StaxGoogleLog
         else chooseOnboardingVariant()
     }
 
-    private fun chooseOnboardingVariant() {
-        navigateOnboardingVariantOne()
+    private fun chooseOnboardingVariant() = when (Utils.getString(Constants.VARIANT, this) ?: "baseline") {
+        "baseline" -> navigateOnboardingVariantOne()
+        "multichoice" -> navigateOnboardingVariantTwo()
+        "slides" -> navigateToVariantTwoWithCheckBox()
+        else -> {} //do nothing, load default fragment
     }
 
     override fun googleLoginSuccessful() {

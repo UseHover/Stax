@@ -1,6 +1,5 @@
 package com.hover.stax
 
-import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
@@ -64,7 +63,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     }
 
     private fun startBackgroundProcesses() {
-        with(channelsViewModel){
+        with(channelsViewModel) {
             accounts.observe(this@RoutingActivity) { hasAccounts = it.isNotEmpty() }
             migrateAccounts()
         }
@@ -80,7 +79,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
         createNotificationChannel()
         startWorkers()
 
-        with(FirebaseInstallations.getInstance()){
+        with(FirebaseInstallations.getInstance()) {
             getToken(false)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) Timber.i("Installation auth token: ${task.result?.token}")
@@ -122,6 +121,8 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
             setConfigSettingsAsync(configSettings)
             setDefaultsAsync(R.xml.remote_config_default)
             fetchAndActivate().addOnCompleteListener {
+                Utils.saveString(Constants.VARIANT, remoteConfig.getString("onboarding_variant"), this@RoutingActivity)
+
                 if (!selfDestructWhenAppVersionExpires())
                     validateUser()
             }

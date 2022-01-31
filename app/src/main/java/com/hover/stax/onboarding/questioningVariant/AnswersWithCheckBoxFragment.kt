@@ -24,7 +24,6 @@ internal class AnswersWithCheckBoxFragment : Fragment() {
 
         setTopBarClicks()
         setContinueClick()
-
     }
 
     private fun setTopBarClicks() {

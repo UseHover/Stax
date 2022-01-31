@@ -11,6 +11,7 @@ import androidx.viewpager.widget.ViewPager
 import java.lang.ref.WeakReference
 
 class StaxAutoScrollViewPager : ViewPager {
+
     private var interval = DEFAULT_INTERVAL.toLong()
     private var direction = RIGHT
     private var isCycle = true

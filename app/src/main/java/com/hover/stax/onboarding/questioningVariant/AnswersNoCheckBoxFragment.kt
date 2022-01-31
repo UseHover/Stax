@@ -60,8 +60,8 @@ internal class AnswersNoCheckBoxFragment : Fragment() {
     }
 
     companion object {
-        val QUESTION_TWO: Int = 2
-        val QUESTION_THREE: Int = 3
+        const val QUESTION_TWO: Int = 2
+        const val QUESTION_THREE: Int = 3
     }
 
     override fun onDestroyView() {

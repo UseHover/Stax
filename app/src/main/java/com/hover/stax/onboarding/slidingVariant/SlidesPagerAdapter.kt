@@ -4,31 +4,29 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.hover.stax.R
+import com.hover.stax.databinding.OnboardingVariantOneSlideBinding
 
-private data class SlideData(val imgRes: Int, val titleRes: Int)
+private data class SlideData(val imgRes: Int, val titleRes: Int, val descRes: Int)
 
 class SlidesPagerAdapter(private val context: Context) : PagerAdapter() {
+
     override fun destroyItem(container: ViewGroup, position: Int, arg1: Any) {
         (container as ViewPager).removeView(arg1 as View?)
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val inflater = LayoutInflater.from(context)
-        val view = inflater.inflate(R.layout.onboarding_variant_one_slide, container, false)
+        val binding = OnboardingVariantOneSlideBinding.inflate(LayoutInflater.from(context), container, false)
 
         val slideData = getSlideData(position)
-        val textView = view.findViewById<TextView>(R.id.onboarding_v1_title)
-        textView.setText(slideData.titleRes)
-        val imageView = view.findViewById<ImageView>(R.id.onboarding_v1_image)
-        imageView.setImageResource(slideData.imgRes)
+        binding.onboardingV1Title.setText(slideData.titleRes)
+        binding.onboardingV1Desc.setText(slideData.descRes)
+        binding.onboardingV1Image.setImageResource(slideData.imgRes)
 
-        container.addView(view)
-        return view
+        container.addView(binding.root)
+        return binding.root
     }
 
     override fun getCount(): Int {
@@ -41,10 +39,10 @@ class SlidesPagerAdapter(private val context: Context) : PagerAdapter() {
 
     private fun getSlideData(position: Int): SlideData {
         return when (position) {
-            0 -> SlideData(R.drawable.send_illustration, R.string.onboarding_v1_slide1_title)
-            1 -> SlideData(R.drawable.send_illustration, R.string.onboarding_v1_slide2_title)
-            2 -> SlideData(R.drawable.request_illustration, R.string.onboarding_v1_slide3_title)
-            else -> SlideData(R.drawable.airtime_illustration, R.string.onboarding_v1_slide4_title)
+            0 -> SlideData(R.drawable.send_illustration, R.string.onboarding_v1_slide1_title, R.string.slide1_desc)
+            1 -> SlideData(R.drawable.send_illustration, R.string.onboarding_v1_slide2_title, R.string.slide2_desc)
+            2 -> SlideData(R.drawable.request_illustration, R.string.onboarding_v1_slide3_title, R.string.slide3_desc)
+            else -> SlideData(R.drawable.airtime_illustration, R.string.onboarding_v1_slide4_title, R.string.slide4_desc)
         }
     }
 

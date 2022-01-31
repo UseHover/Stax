@@ -26,8 +26,11 @@ abstract class AbstractOnboardingNavigationActivity : AbstractGoogleAuthActivity
     }
 
     fun navigateOnboardingVariantOne() = navController.navigate(R.id.navigation_onboarding_v1)
+
     fun navigateOnboardingVariantTwo() = navController.navigate(R.id.navigation_onboarding_v2)
+
     fun navigateToVariantTwoWithCheckBox() = navController.navigate(R.id.navigation_onboarding_v2_withCheckbox)
+
     fun navigateToVariantTwoNoCheckBox(questionType: Int) {
         val bundle = Bundle()
         bundle.putInt(Constants.QUESTION_TYPE, questionType)
@@ -64,7 +67,6 @@ abstract class AbstractOnboardingNavigationActivity : AbstractGoogleAuthActivity
 
     override fun continueWithoutSignIn() {
         setPassedOnboarding()
-
     }
 
     override fun initiateSignIn() {
@@ -77,6 +79,7 @@ abstract class AbstractOnboardingNavigationActivity : AbstractGoogleAuthActivity
     }
 
     private fun setPassedOnboarding() = Utils.saveBoolean(OnBoardingActivity::class.java.simpleName, true, this)
+
     fun hasPassedOnboarding(context: Context) = Utils.getBoolean(OnBoardingActivity::class.java.simpleName, context)
 
 }
