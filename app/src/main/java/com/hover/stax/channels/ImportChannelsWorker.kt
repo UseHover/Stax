@@ -38,8 +38,6 @@ class ImportChannelsWorker(val context: Context, params: WorkerParameters) : Cor
             initNotification()
 
             parseChannelJson()?.let {
-                Timber.i("Starting channel import")
-
                 val channelsJson = JSONObject(it)
                 val data: JSONArray = channelsJson.getJSONArray("data")
                 ChannelUtil.updateChannels(data, applicationContext)
@@ -48,7 +46,6 @@ class ImportChannelsWorker(val context: Context, params: WorkerParameters) : Cor
                 return Result.success()
             } ?: Timber.e("Error importing channels"); return Result.retry()
         } else {
-            Timber.i("Has channels, nothing to do here")
             return Result.failure()
         }
     }
