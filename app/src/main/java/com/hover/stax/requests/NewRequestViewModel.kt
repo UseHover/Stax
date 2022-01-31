@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.channels.Channel
@@ -74,7 +73,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
             application.getString(R.string.request_error_recipient)
     }
 
-    fun accountError(): String? = if(activeAccount.value != null) null else application.getString(R.string.accounts_error_noselect)
+    fun accountError(): String? = if (activeAccount.value != null) null else application.getString(R.string.accounts_error_noselect)
 
     fun requesterAcctNoError(): String? = if (!requesterNumber.value.isNullOrEmpty()) null else application.getString(R.string.requester_number_fielderror)
 
@@ -100,7 +99,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
     }
 
     fun saveRequest() {
-        if(formulatedRequest.value != null) {
+        if (formulatedRequest.value != null) {
             val request = Request(formulatedRequest.value!!, requestee.value, application)
             repo.insert(request)
 

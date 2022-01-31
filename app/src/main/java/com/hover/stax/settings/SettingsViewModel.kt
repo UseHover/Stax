@@ -16,16 +16,15 @@ import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.database.DatabaseRepo
-
+import com.hover.stax.login.LoginNetworking
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
 import org.json.JSONObject
 import timber.log.Timber
-
 import java.io.IOException
-
 
 private const val EMAIL = "email"
 private const val REFEREE_CODE = "referee"
@@ -44,10 +43,10 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
     var account = MutableLiveData<Account>()
     val channel = MutableLiveData<Channel>()
     var email = MediatorLiveData<String?>()
-
     var refereeCode = MutableLiveData<String?>()
     var progress = MutableLiveData(-1)
     var error = MutableLiveData<String>()
+
 
     var username = MediatorLiveData<String?>()
 
@@ -165,7 +164,6 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
         viewModelScope.launch(Dispatchers.IO) {
             if (!email.value.isNullOrEmpty()) {
                 val account = GoogleSignIn.getLastSignedInAccount(application)
-
                 Timber.i("save in referee method, now trying")
                 try {
                     val result = LoginNetworking(application).uploadReferee(email.value!!, refereeCode, name, phone, account?.idToken)
@@ -219,9 +217,5 @@ class SettingsViewModel(val repo: DatabaseRepo, val application: Application) : 
             a.isDefault = true
             repo.update(a)
         }
-    }
-
-    companion object {
-        const val LOGIN_REQUEST = 4000
     }
 }

@@ -31,7 +31,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.hover.stax.R;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
-import com.squareup.picasso.Transformation;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -145,15 +144,17 @@ public class UIHelper {
         SpannableString content = new SpannableString(cs);
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         content.setSpan(android.graphics.Typeface.BOLD, 0, content.length(), 0);
-        try{
+        try {
             textView.setText(content);
-        }catch (Exception e) { Timber.e(e); }
+        } catch (Exception e) {
+            Timber.e(e);
+        }
 
     }
 
     public static void removeTextUnderline(TextView textView) {
-        SpannableString ss= new SpannableString(textView.getText());
-        UnderlineSpan[] spans=ss.getSpans(0, textView.getText().length(), UnderlineSpan.class);
+        SpannableString ss = new SpannableString(textView.getText());
+        UnderlineSpan[] spans = ss.getSpans(0, textView.getText().length(), UnderlineSpan.class);
         for (UnderlineSpan span : spans) {
             ss.removeSpan(span);
         }

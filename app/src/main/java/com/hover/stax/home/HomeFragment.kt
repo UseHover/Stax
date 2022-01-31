@@ -9,13 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentHomeBinding
+import com.hover.stax.financialTips.FinancialTip
+import com.hover.stax.financialTips.FinancialTipsViewModel
 import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
-import com.hover.stax.financialTips.FinancialTip
-import com.hover.stax.financialTips.FinancialTipsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -92,7 +92,6 @@ class HomeFragment : Fragment() {
                     snippet.text = tip.snippet ?: tip.content
 
                     tipsCard.setOnClickListener {
-                        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_tips_read_more), requireActivity())
                         findNavController().navigate(R.id.action_navigation_home_to_wellnessFragment)
                     }
                 }

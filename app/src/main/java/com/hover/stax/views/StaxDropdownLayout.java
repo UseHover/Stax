@@ -16,13 +16,11 @@ import com.hover.stax.databinding.StaxDropdownBinding;
 
 public class StaxDropdownLayout extends AbstractStatefulInput {
 
+    private final StaxDropdownBinding binding;
+    public AutoCompleteTextView autoCompleteTextView;
     private String hint, defaultText;
     private boolean editable;
     private int imeOptions;
-
-    public AutoCompleteTextView autoCompleteTextView;
-
-    private final StaxDropdownBinding binding;
 
     public StaxDropdownLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);

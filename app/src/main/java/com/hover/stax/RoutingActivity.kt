@@ -173,7 +173,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
     private fun chooseNavigation(intent: Intent) {
         when {
-            !OnBoardingActivity.hasPassedThrough(this) -> goToOnBoardingActivity()
+            !OnBoardingActivity.hasPassedOnboarding(this) -> goToOnBoardingActivity()
             isToRedirectFromMainActivity(intent) -> {
                 val redirectLink = intent.extras?.getString(FRAGMENT_DIRECT)
                 redirectLink?.let {
@@ -194,7 +194,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
         delay(1500L)
 
         when {
-            !OnBoardingActivity.hasPassedThrough(this@RoutingActivity) -> goToOnBoardingActivity()
+            !OnBoardingActivity.hasPassedOnboarding(this@RoutingActivity) -> goToOnBoardingActivity()
             hasAccounts -> BiometricChecker(this@RoutingActivity, this@RoutingActivity).startAuthentication(null)
             else -> goToMainActivity(null)
         }

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_onboarding_default">
+
+    <fragment
+        android:id="@+id/navigation_onboarding_default"
+        android:name="com.hover.stax.onboarding.defaultVariant.OnboardingVariantDefaultFragment"
+        android:label="@string/onboarding_v1_slide1_title"
+        tools:layout="@layout/onboarding_layout_default" />
+
+    <fragment
+        android:id="@+id/navigation_onboarding_v1"
+        android:name="com.hover.stax.onboarding.slidingVariant.SlidingVariantFragment"
+        android:label="@string/onboarding_v1_slide1_title"
+        tools:layout="@layout/onboarding_variant_one"/>
+
+    <fragment
+            android:id="@+id/navigation_onboarding_v2"
+            android:name="com.hover.stax.onboarding.questioningVariant.QuestioningVariantFragment"
+            android:label="@string/onboarding_v1_slide2_title"
+            tools:layout="@layout/onboarding_variant_two"/>
+
+    <fragment
+            android:id="@+id/navigation_onboarding_v2_withCheckbox"
+            android:name="com.hover.stax.onboarding.questioningVariant.AnswersWithCheckBoxFragment"
+            android:label="@string/onboarding_v1_slide2_title"
+            tools:layout="@layout/variant_two_answer_withcheckbox"/>
+
+    <fragment
+            android:id="@+id/navigation_onboarding_v2_noCheckbox"
+            android:name="com.hover.stax.onboarding.questioningVariant.AnswersNoCheckBoxFragment"
+            android:label="@string/onboarding_v1_slide2_title"
+            tools:layout="@layout/variant_two_answer_nocheckbox"/>
+
+</navigation>

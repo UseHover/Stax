@@ -103,7 +103,7 @@ class AccountsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener,
         }
     }
 
-    private fun getTransactionType(): String = when(TransactionType.type) {
+    private fun getTransactionType(): String = when (TransactionType.type) {
         HoverAction.AIRTIME -> getString(R.string.cta_airtime)
         HoverAction.P2P -> getString(R.string.cta_transfer)
         HoverAction.C2B -> getString(R.string.cta_paybill)

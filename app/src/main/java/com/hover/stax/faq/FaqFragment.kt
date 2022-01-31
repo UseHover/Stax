@@ -91,7 +91,7 @@ class FaqFragment : Fragment(), FAQAdapter.SelectListener {
     override fun onTopicClicked(faq: FAQ) {
         binding.faqListCard.setTitle(faq.topic)
         binding.faqContentId.text = Html.fromHtml(getString(R.string.faq_content, faq.content, deviceId()))
-        binding.faqContentId.movementMethod = LinkMovementMethod.getInstance();
+        binding.faqContentId.movementMethod = LinkMovementMethod.getInstance()
         setShowingContent(true)
     }
 
