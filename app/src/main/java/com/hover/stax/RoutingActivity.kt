@@ -1,22 +1,15 @@
 package com.hover.stax
 
-
+import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.view.View
-import android.view.animation.AnimationUtils
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ResourcesCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
@@ -29,13 +22,9 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.stax.channels.ChannelsViewModel
-
 import com.hover.stax.channels.ImportChannelsWorker
-
 import com.hover.stax.channels.UpdateChannelsWorker
-import com.hover.stax.databinding.SplashScreenLayoutBinding
 import com.hover.stax.destruct.SelfDestructActivity
-import com.hover.stax.faq.FaqViewModel
 import com.hover.stax.home.MainActivity
 import com.hover.stax.inapp_banner.BannerUtils
 import com.hover.stax.onboarding.OnBoardingActivity
@@ -47,32 +36,25 @@ import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Constants.FRAGMENT_DIRECT
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import com.hover.stax.utils.blur.StaxBlur
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-
-class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener, PushNotificationTopicsInterface {
-
-    private lateinit var binding: SplashScreenLayoutBinding
-    private lateinit var remoteConfig: FirebaseRemoteConfig
+class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, PushNotificationTopicsInterface {
 
     private val channelsViewModel: ChannelsViewModel by viewModel()
+    private lateinit var remoteConfig: FirebaseRemoteConfig
     private var hasAccounts = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        UIHelper.setFullscreenView(this)
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        binding = SplashScreenLayoutBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        splashScreen.setKeepOnScreenCondition { true }
 
         remoteConfig = FirebaseRemoteConfig.getInstance()
-
-        startForegroundSequence()
         startBackgroundProcesses()
     }
 
@@ -81,40 +63,32 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         AppsFlyerLib.getInstance().start(this)
     }
 
-    private fun startForegroundSequence() {
-        blurBackground()
-        fadeInLogo()
-    }
-
     private fun startBackgroundProcesses() {
-        with(channelsViewModel) {
-            accounts.observe(this@SplashScreenActivity) { hasAccounts = it.isNotEmpty() }
+        with(channelsViewModel){
+            accounts.observe(this@RoutingActivity) { hasAccounts = it.isNotEmpty() }
             migrateAccounts()
         }
 
-        initAmplitude()
-        logPushNotificationIfRequired()
-        initHover()
+        lifecycleScope.launch(Dispatchers.IO) {
+            initAmplitude()
+            logPushNotificationIfRequired()
+            initHover()
+            initFirebaseMessagingTopics()
+            updateBannerSessionCounter()
+        }
+
         createNotificationChannel()
         startWorkers()
-        initFirebaseMessagingTopics()
 
-        with(FirebaseInstallations.getInstance()) {
+        with(FirebaseInstallations.getInstance()){
             getToken(false)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) Timber.i("Installation auth token: ${task.result?.token}")
-                    }
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) Timber.i("Installation auth token: ${task.result?.token}")
+                }
             id.addOnCompleteListener { Timber.i("Firebase installation ID is ${it.result}") }
         }
 
         initRemoteConfigs()
-        updateBannerSessionCounter()
-        initFAQ()
-    }
-
-    private fun initFAQ() {
-        val faqViewModel: FaqViewModel = getViewModel()
-        faqViewModel.faqLiveData
     }
 
     private fun updateBannerSessionCounter() {
@@ -128,53 +102,8 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         joinNoRequestMoneyGroup(this)
     }
 
-    private fun blurBackground() = lifecycleScope.launch {
-        delay(BLUR_DELAY)
-
-        val bg = BitmapFactory.decodeResource(resources, R.drawable.splash_background)
-        val bitmap = StaxBlur(this@SplashScreenActivity, 16, 1).transform(bg)
-        binding.splashImageBlur.apply {
-            setImageBitmap(bitmap)
-            visibility = View.VISIBLE
-            animation = loadFadeIn(this@SplashScreenActivity)
-        }
-    }
-
-    private fun fadeInLogo() {
-        val tv = binding.splashContent
-        setSplashContentTopDrawable(tv)
-
-        lifecycleScope.launch {
-            delay(LOGO_DELAY)
-
-            tv.apply {
-                visibility = View.VISIBLE
-                animation = loadFadeIn(this@SplashScreenActivity)
-            }
-        }
-    }
-
-    private fun loadFadeIn(context: Context) = AnimationUtils.loadAnimation(context, android.R.anim.fade_in)
-
-    private fun setSplashContentTopDrawable(tv: TextView) {
-        val dr = ResourcesCompat.getDrawable(resources, R.mipmap.stax, null)
-        val bitmap = (dr as BitmapDrawable).bitmap
-        val d = BitmapDrawable(resources, Bitmap.createScaledBitmap(bitmap, SPLASH_ICON_WIDTH, SPLASH_ICON_HEIGHT, true))
-        tv.setCompoundDrawablesRelativeWithIntrinsicBounds(null, d, null, null)
-    }
-
-    private fun validateUser() = lifecycleScope.launchWhenStarted {
-        delay(NAV_DELAY)
-
-        when {
-            !OnBoardingActivity.hasPassedOnboarding(this@SplashScreenActivity) -> goToOnBoardingActivity()
-            hasAccounts -> BiometricChecker(this@SplashScreenActivity, this@SplashScreenActivity).startAuthentication(null)
-            else -> goToMainActivity(null)
-        }
-    }
-
     private fun initAmplitude() = Amplitude.getInstance().initialize(this, getString(R.string.amp))
-            .enableForegroundTracking(application)
+        .enableForegroundTracking(application)
 
     private fun logPushNotificationIfRequired() = intent.extras?.let {
         val fcmTitle = it.getString(Constants.FROM_FCM)
@@ -261,24 +190,38 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         finish()
     }
 
+    private fun validateUser() = lifecycleScope.launchWhenStarted {
+        delay(1500L)
+
+        when {
+            !OnBoardingActivity.hasPassedOnboarding(this@RoutingActivity) -> goToOnBoardingActivity()
+            hasAccounts -> BiometricChecker(this@RoutingActivity, this@RoutingActivity).startAuthentication(null)
+            else -> goToMainActivity(null)
+        }
+    }
+
     private fun goToOnBoardingActivity() {
         startActivity(Intent(this, OnBoardingActivity::class.java))
         finish()
     }
 
-    private fun goToFulfillRequestActivity(intent: Intent) =
-            startActivity(Intent(this, MainActivity::class.java).putExtra(Constants.REQUEST_LINK, intent.data.toString()))
+    private fun goToFulfillRequestActivity(intent: Intent) {
+        startActivity(Intent(this, MainActivity::class.java).putExtra(Constants.REQUEST_LINK, intent.data.toString()))
+        finish()
+    }
 
     private fun goToMainActivity(redirectLink: String?) {
         val intent = Intent(this, MainActivity::class.java)
 
+
         try {
             redirectLink?.let { intent.putExtra(FRAGMENT_DIRECT, redirectLink.toInt()) }
         } catch (e: NumberFormatException) {
-            AnalyticsUtil.logErrorAndReportToFirebase(SplashScreenActivity::class.java.simpleName, getString(R.string.firebase_fcm_redirect_format_err), e)
+            AnalyticsUtil.logErrorAndReportToFirebase(RoutingActivity::class.java.simpleName, getString(R.string.firebase_fcm_redirect_format_err), e)
         }
 
         startActivity(intent)
+        finish()
     }
 
     override fun onAuthError(error: String) = runOnUiThread { UIHelper.flashMessage(this, getString(R.string.toast_error_auth)) }
@@ -293,11 +236,4 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
 
     private fun openUrl(url: String) = startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse(url)))
 
-    companion object {
-        const val BLUR_DELAY = 1000L
-        const val LOGO_DELAY = 1200L
-        const val NAV_DELAY = 1500L
-        const val SPLASH_ICON_WIDTH = 177
-        const val SPLASH_ICON_HEIGHT = 57
-    }
 }

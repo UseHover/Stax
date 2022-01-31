@@ -13,12 +13,14 @@ import com.hover.stax.databinding.FragmentFaqBinding
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import org.koin.androidx.viewmodel.ext.android.getViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FaqFragment : Fragment(), FAQAdapter.SelectListener {
 
     private var _binding: FragmentFaqBinding? = null
     private val binding get() = _binding!!
+
+    private val faqViewModel: FaqViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.FAQs)), requireContext())
@@ -28,6 +30,7 @@ class FaqFragment : Fragment(), FAQAdapter.SelectListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         observeFAQRecycler()
     }
 
@@ -35,8 +38,7 @@ class FaqFragment : Fragment(), FAQAdapter.SelectListener {
         val faqRecyclerView = binding.faqRecyclerView
         faqRecyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
 
-        val faqViewModel: FaqViewModel = getViewModel()
-        faqViewModel.faqLiveData.observe(viewLifecycleOwner, { faqs ->
+        faqViewModel.faqLiveData.observe(viewLifecycleOwner) { faqs ->
             faqs?.let {
                 if (it.isEmpty()) {
                     if (Utils.isInternetConnected(requireContext())) updateLoadingStatus(Status.FAILED)
@@ -47,8 +49,7 @@ class FaqFragment : Fragment(), FAQAdapter.SelectListener {
                     faqRecyclerView.adapter = faqAdapter
                 }
             } ?: updateLoadingStatus(Status.LOADING)
-        })
-
+        }
     }
 
     private fun setShowingContent(showing: Boolean) {

@@ -18,6 +18,8 @@
         <entry key="app/src/main/res/drawable/ic_refresh_white_13dp.xml" value="0.25833333333333336" />
         <entry key="app/src/main/res/drawable/ic_settings.xml" value="0.25833333333333336" />
         <entry key="app/src/main/res/drawable/ic_share.xml" value="0.22962962962962963" />
+        <entry key="app/src/main/res/drawable/ic_stax.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_stax_logo.xml" value="0.1135" />
         <entry key="app/src/main/res/drawable/ic_system_upate_24.xml" value="0.6125" />
         <entry key="app/src/main/res/drawable/ic_ussd_lib.xml" value="0.3546875" />
         <entry key="app/src/main/res/drawable/splash_logo.xml" value="0.75625" />

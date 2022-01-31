@@ -41,8 +41,8 @@ android {
 
     defaultConfig {
         applicationId "com.hover.stax"
-        minSdkVersion 18
-        targetSdkVersion 30
+        minSdkVersion 21
+        targetSdkVersion 31
         versionCode 111
         versionName "1.8.1.6"
 
@@ -117,6 +117,7 @@ dependencies {
     implementation 'androidx.work:work-runtime-ktx:2.7.1'
     kapt "androidx.lifecycle:lifecycle-common-java8:2.4.0"
 
+    implementation 'androidx.core:core-splashscreen:1.0.0-beta01'
     implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
@@ -146,7 +147,7 @@ dependencies {
     implementation 'com.appsflyer:af-android-sdk:6.2.3'
     implementation 'com.android.installreferrer:installreferrer:2.2'
 
-    def roomVersion = "2.3.0"
+    def roomVersion = "2.4.1"
     implementation "androidx.room:room-ktx:$roomVersion"
     implementation "androidx.room:room-runtime:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"

@@ -10,14 +10,17 @@ import timber.log.Timber
 
 data class FAQ(var id: String, var topic: String, var content: String)
 
-internal fun getFAQList(): LiveData<List<FAQ>> {
-    val db = Firebase.firestore
-    val settings = firestoreSettings { isPersistenceEnabled = true }
-    db.firestoreSettings = settings
+class FaqViewModel : ViewModel() {
+    val faqLiveData: LiveData<List<FAQ>> = getFAQList()
 
-    val liveData: MutableLiveData<List<FAQ>> = MutableLiveData()
+    private fun getFAQList(): LiveData<List<FAQ>> {
+        val db = Firebase.firestore
+        val settings = firestoreSettings { isPersistenceEnabled = true }
+        db.firestoreSettings = settings
 
-    db.collection("faqs")
+        val liveData: MutableLiveData<List<FAQ>> = MutableLiveData()
+
+        db.collection("faqs")
             .get().addOnSuccessListener { result ->
                 val faqList: MutableList<FAQ> = mutableListOf()
                 for (document in result) {
@@ -31,9 +34,6 @@ internal fun getFAQList(): LiveData<List<FAQ>> {
                 return@addOnFailureListener
             }
 
-    return liveData
-}
-
-class FaqViewModel : ViewModel() {
-    val faqLiveData: LiveData<List<FAQ>> = getFAQList()
+        return liveData
+    }
 }
