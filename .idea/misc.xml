@@ -77,9 +77,9 @@
         <entry key="app/src/main/res/layout/item_wellness_tips.xml" value="0.25" />
         <entry key="app/src/main/res/layout/onboarding_v1.xml" value="0.3981264637002342" />
         <entry key="app/src/main/res/layout/onboarding_v2.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/onboarding_variant_one.xml" value="0.5133689839572193" />
+        <entry key="app/src/main/res/layout/onboarding_variant_one.xml" value="0.25" />
         <entry key="app/src/main/res/layout/onboarding_variant_one_slide.xml" value="0.3981264637002342" />
-        <entry key="app/src/main/res/layout/onboarding_variant_two.xml" value="0.3253968253968254" />
+        <entry key="app/src/main/res/layout/onboarding_variant_two.xml" value="0.13581278729628082" />
         <entry key="app/src/main/res/layout/paybill_summary.xml" value="0.8125" />
         <entry key="app/src/main/res/layout/rename_account_layout.xml" value="0.3134057971014493" />
         <entry key="app/src/main/res/layout/repeat_inputs.xml" value="0.18697916666666667" />
@@ -114,7 +114,9 @@
         <entry key="app/src/main/res/layout/transfer_card_future.xml" value="0.33" />
         <entry key="app/src/main/res/layout/transfer_card_summary.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/transfer_note.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/variant_two_answer_withcheckbox.xml" value="0.3981264637002342" />
+        <entry key="app/src/main/res/layout/v2_with_checkbox.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/variant_two_answer_nocheckbox.xml" value="0.2778965369816161" />
+        <entry key="app/src/main/res/layout/variant_two_answer_withcheckbox.xml" value="0.13581278729628082" />
         <entry key="app/src/main/res/menu/nav_main.xml" value="0.27870370370370373" />
       </map>
     </option>
