@@ -3,6 +3,7 @@ package com.hover.stax.utils
 import android.content.Context
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.hover.stax.R
+import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
@@ -36,6 +37,7 @@ object DateUtils {
         date.timeInMillis = timestamp
         var str = monthNumToName(date[Calendar.MONTH])
         str += " " + date[Calendar.DAY_OF_MONTH]
+
         if (date[Calendar.YEAR] != now[Calendar.YEAR]) str += " " + date[Calendar.YEAR]
         return str
     }

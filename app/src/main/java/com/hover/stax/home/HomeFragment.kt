@@ -92,6 +92,7 @@ class HomeFragment : Fragment() {
                     snippet.text = tip.snippet ?: tip.content
 
                     tipsCard.setOnClickListener {
+                        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_tips_read_more), requireActivity())
                         findNavController().navigate(R.id.action_navigation_home_to_wellnessFragment)
                     }
                 }

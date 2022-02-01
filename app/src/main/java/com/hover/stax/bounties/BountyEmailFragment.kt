@@ -105,6 +105,7 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
 
         if (title != 0)
             dialog?.setDialogTitle(title)
+
         dialog!!.showIt()
     }
 

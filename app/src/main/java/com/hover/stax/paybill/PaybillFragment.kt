@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -56,6 +57,8 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
         initListeners()
         startObservers()
         setTextWatchers()
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
     }
 
     private fun initListeners() {
@@ -414,6 +417,16 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
                 }
             }
         dialog!!.showIt()
+    }
+
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (paybillViewModel.isEditing.value == false)
+                paybillViewModel.setEditing(true)
+            else
+                findNavController().popBackStack()
+        }
+
     }
 
     companion object {

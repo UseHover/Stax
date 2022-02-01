@@ -40,7 +40,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     val channelActions = MediatorLiveData<List<HoverAction>>()
     val accounts = MediatorLiveData<List<Account>>()
     val activeAccount = MutableLiveData<Account>()
-
     private var simReceiver: BroadcastReceiver? = null
 
     init {
