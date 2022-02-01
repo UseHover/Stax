@@ -46,8 +46,7 @@
 				android:layout_alignParentEnd="true"
 				android:textColor="@color/colorPrimaryDark"
 				android:backgroundTint="@color/brightBlue"
-				style="@style/StaxButton"
-				android:onClick="downloadLatest"/>
+				style="@style/StaxButton" />
 		</RelativeLayout>
 	</com.hover.stax.views.StaxCardView>
 </RelativeLayout>
