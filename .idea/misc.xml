@@ -117,6 +117,7 @@
         <entry key="app/src/main/res/layout/v2_with_checkbox.xml" value="0.33" />
         <entry key="app/src/main/res/layout/variant_two_answer_nocheckbox.xml" value="0.2778965369816161" />
         <entry key="app/src/main/res/layout/variant_two_answer_withcheckbox.xml" value="0.13581278729628082" />
+        <entry key="app/src/main/res/layout/variant_two_without_checkbox.xml" value="0.2778965369816161" />
         <entry key="app/src/main/res/menu/nav_main.xml" value="0.27870370370370373" />
       </map>
     </option>

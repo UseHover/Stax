@@ -21,18 +21,37 @@
             android:id="@+id/navigation_onboarding_v2"
             android:name="com.hover.stax.onboarding.questioningVariant.QuestioningVariantFragment"
             android:label="@string/onboarding_v1_slide2_title"
-            tools:layout="@layout/onboarding_variant_two" />
+            tools:layout="@layout/onboarding_variant_two">
+        <action
+                android:id="@+id/action_navigation_onboarding_v2_to_navigation_onboarding_v2_withCheckbox"
+                app:destination="@id/navigation_onboarding_v2_withCheckbox" />
+        <action
+                android:id="@+id/action_navigation_onboarding_v2_to_navigation_onboarding_v2_noCheckbox"
+                app:destination="@id/navigation_onboarding_v2_noCheckbox" />
+    </fragment>
 
     <fragment
             android:id="@+id/navigation_onboarding_v2_withCheckbox"
             android:name="com.hover.stax.onboarding.questioningVariant.AnswersWithCheckBoxFragment"
             android:label="@string/onboarding_v1_slide2_title"
-            tools:layout="@layout/variant_two_answer_withcheckbox" />
+            tools:layout="@layout/variant_two_with_checkbox">
+        <action
+                android:id="@+id/action_navigation_onboarding_v2_withCheckbox_to_navigation_onboarding_v2"
+                app:destination="@id/navigation_onboarding_v2"
+                app:popUpTo="@id/navigation_onboarding_v2"
+                app:popUpToInclusive="true" />
+    </fragment>
 
     <fragment
             android:id="@+id/navigation_onboarding_v2_noCheckbox"
             android:name="com.hover.stax.onboarding.questioningVariant.AnswersNoCheckBoxFragment"
             android:label="@string/onboarding_v1_slide2_title"
-            tools:layout="@layout/variant_two_answer_nocheckbox" />
+            tools:layout="@layout/variant_two_without_checkbox">
+        <action
+                android:id="@+id/action_navigation_onboarding_v2_noCheckbox_to_navigation_onboarding_v2"
+                app:destination="@id/navigation_onboarding_v2"
+                app:popUpTo="@id/navigation_onboarding_v2"
+                app:popUpToInclusive="true" />
+    </fragment>
 
 </navigation>

@@ -6,18 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.hover.stax.R
-import com.hover.stax.databinding.VariantTwoAnswerNocheckboxBinding
+import com.hover.stax.databinding.VariantTwoWithoutCheckboxBinding
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.utils.Constants
 
 
 internal class AnswersNoCheckBoxFragment : Fragment() {
 
-    private var _binding: VariantTwoAnswerNocheckboxBinding? = null
+    private var _binding: VariantTwoWithoutCheckboxBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = VariantTwoAnswerNocheckboxBinding.inflate(inflater, container, false)
+        _binding = VariantTwoWithoutCheckboxBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -37,7 +37,7 @@ internal class AnswersNoCheckBoxFragment : Fragment() {
 
     private fun setContents() {
         val questionType: Int = arguments?.getInt(Constants.QUESTION_TYPE, QUESTION_TWO)
-                ?: QUESTION_TWO
+            ?: QUESTION_TWO
         binding.variantV2NocheckboxTitle.setText(getTitleRes(questionType))
         binding.variantV2NocheckboxDesc.setText(getDescContent(questionType))
     }
@@ -59,13 +59,13 @@ internal class AnswersNoCheckBoxFragment : Fragment() {
         }
     }
 
-    companion object {
-        const val QUESTION_TWO: Int = 2
-        const val QUESTION_THREE: Int = 3
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        const val QUESTION_TWO: Int = 2
+        const val QUESTION_THREE: Int = 3
     }
 }
