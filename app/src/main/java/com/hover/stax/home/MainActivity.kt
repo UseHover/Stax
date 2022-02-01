@@ -17,7 +17,6 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.HoverParameters
 import com.hover.sdk.permissions.PermissionHelper
-import com.hover.sdk.utils.AnalyticsSingleton
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.DUMMY
@@ -47,7 +46,6 @@ import com.hover.stax.transfers.TransactionType
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
-import io.sentry.Sentry
 import kotlinx.coroutines.*
 import org.json.JSONException
 import org.json.JSONObject
