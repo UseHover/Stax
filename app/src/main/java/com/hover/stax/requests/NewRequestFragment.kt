@@ -145,7 +145,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
     private fun setSummaryCardBackButton() = binding.summaryCard.root.setOnClickIcon { requestViewModel.setEditing(true) }
 
     private fun updateAcctNo(accountNo: String?) {
-        requesterNumberInput.text = accountNo
+        requesterNumberInput.setText(accountNo)
     }
 
     private fun startListeners() {
@@ -239,11 +239,11 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
     private fun handleBackPress() = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-           when {
-               !requestViewModel.isEditing.value!! && requestViewModel.formulatedRequest.value == null -> requestViewModel.setEditing(true)
-               !requestViewModel.isEditing.value!! && requestViewModel.formulatedRequest.value != null -> askAreYouSure()
-               else -> findNavController().popBackStack()
-           }
+            when {
+                !requestViewModel.isEditing.value!! && requestViewModel.formulatedRequest.value == null -> requestViewModel.setEditing(true)
+                !requestViewModel.isEditing.value!! && requestViewModel.formulatedRequest.value != null -> askAreYouSure()
+                else -> findNavController().popBackStack()
+            }
         }
     })
 
@@ -257,7 +257,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         requestViewModel.setEditing(true)
     }
 
-    private fun askAreYouSure(){
+    private fun askAreYouSure() {
         dialog = StaxDialog(requireActivity())
                 .setDialogTitle(R.string.reqsave_head)
                 .setDialogMessage(R.string.reqsave_msg)
@@ -266,7 +266,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         dialog!!.showIt()
     }
 
-    private fun saveUnsent(){
+    private fun saveUnsent() {
         requestViewModel.saveRequest()
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.saved_unsent_request), requireActivity())
         findNavController().popBackStack()
@@ -275,7 +275,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
     override fun onDestroyView() {
         super.onDestroyView()
 
-        if(dialog != null && dialog!!.isShowing) dialog!!.dismiss()
+        if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
         _binding = null
     }
 }

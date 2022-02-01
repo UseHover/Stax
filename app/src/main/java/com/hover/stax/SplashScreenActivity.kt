@@ -29,7 +29,9 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.stax.channels.ChannelsViewModel
+
 import com.hover.stax.channels.ImportChannelsWorker
+
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.databinding.SplashScreenLayoutBinding
 import com.hover.stax.destruct.SelfDestructActivity
@@ -85,7 +87,7 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
     }
 
     private fun startBackgroundProcesses() {
-        with(channelsViewModel){
+        with(channelsViewModel) {
             accounts.observe(this@SplashScreenActivity) { hasAccounts = it.isNotEmpty() }
             migrateAccounts()
         }
@@ -97,11 +99,11 @@ class SplashScreenActivity : AppCompatActivity(), BiometricChecker.AuthListener,
         startWorkers()
         initFirebaseMessagingTopics()
 
-        with(FirebaseInstallations.getInstance()){
+        with(FirebaseInstallations.getInstance()) {
             getToken(false)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) Timber.i("Installation auth token: ${task.result?.token}")
-                }
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) Timber.i("Installation auth token: ${task.result?.token}")
+                    }
             id.addOnCompleteListener { Timber.i("Firebase installation ID is ${it.result}") }
         }
 

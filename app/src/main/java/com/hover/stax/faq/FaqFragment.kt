@@ -36,29 +36,27 @@ class FaqFragment : Fragment(), FAQAdapter.SelectListener {
         faqRecyclerView.layoutManager = UIHelper.setMainLinearManagers(requireContext())
 
         val faqViewModel: FaqViewModel = getViewModel()
-        faqViewModel.faqLiveData.observe(viewLifecycleOwner, { faqs->
+        faqViewModel.faqLiveData.observe(viewLifecycleOwner, { faqs ->
             faqs?.let {
-                if(it.isEmpty()) {
-                    if(Utils.isInternetConnected(requireContext())) updateLoadingStatus(Status.FAILED)
+                if (it.isEmpty()) {
+                    if (Utils.isInternetConnected(requireContext())) updateLoadingStatus(Status.FAILED)
                     else updateLoadingStatus(Status.FAILED_NO_INTERNET)
-                }
-                else {
+                } else {
                     updateLoadingStatus(Status.SUCCESS)
                     val faqAdapter = FAQAdapter(faqs, this@FaqFragment)
                     faqRecyclerView.adapter = faqAdapter
                 }
-            } ?:updateLoadingStatus(Status.LOADING)
+            } ?: updateLoadingStatus(Status.LOADING)
         })
 
     }
 
     private fun setShowingContent(showing: Boolean) {
-        if(showing) {
+        if (showing) {
             binding.faqRecyclerView.visibility = View.GONE
             binding.faqContentId.visibility = View.VISIBLE
             binding.faqListCard.setOnClickIcon { setShowingContent(false) }
-        }
-        else {
+        } else {
             binding.faqRecyclerView.visibility = View.VISIBLE
             binding.faqContentId.visibility = View.GONE
             binding.faqListCard.setTitle(R.string.faq_title)
@@ -66,23 +64,23 @@ class FaqFragment : Fragment(), FAQAdapter.SelectListener {
         }
     }
 
-    private fun showResponseText(resId: Int){
+    private fun showResponseText(resId: Int) {
         binding.responseText.setText(resId)
         binding.responseText.visibility = View.VISIBLE
         binding.faqRecyclerView.visibility = View.GONE
     }
 
     private fun updateLoadingStatus(status: Status) {
-            when(status) {
-                Status.SUCCESS -> {
-                    binding.responseText.visibility = View.GONE
-                    binding.faqRecyclerView.visibility = View.VISIBLE
-                }
-                Status.LOADING -> showResponseText(R.string.loading)
-                Status.FAILED -> showResponseText(R.string.loading_error)
-                Status.FAILED_NO_INTERNET -> showResponseText(R.string.faq_internet_error)
-
+        when (status) {
+            Status.SUCCESS -> {
+                binding.responseText.visibility = View.GONE
+                binding.faqRecyclerView.visibility = View.VISIBLE
             }
+            Status.LOADING -> showResponseText(R.string.loading)
+            Status.FAILED -> showResponseText(R.string.loading_error)
+            Status.FAILED_NO_INTERNET -> showResponseText(R.string.faq_internet_error)
+
+        }
     }
 
     private enum class Status {
@@ -92,13 +90,13 @@ class FaqFragment : Fragment(), FAQAdapter.SelectListener {
     override fun onTopicClicked(faq: FAQ) {
         binding.faqListCard.setTitle(faq.topic)
         binding.faqContentId.text = Html.fromHtml(getString(R.string.faq_content, faq.content, deviceId()))
-        binding.faqContentId.movementMethod = LinkMovementMethod.getInstance();
+        binding.faqContentId.movementMethod = LinkMovementMethod.getInstance()
         setShowingContent(true)
     }
 
     private fun deviceId(): String {
         val id: String = Hover.getDeviceId(requireContext())
-        return if(id == "null") return "" else id
+        return if (id == "null") return "" else id
     }
 
     override fun onDestroyView() {

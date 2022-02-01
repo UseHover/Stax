@@ -31,8 +31,8 @@ public class StaxTransaction {
 
     public final static String CONFIRM_CODE_KEY = "confirmCode", FEE_KEY = "fee", CATEGORY_INCOMPLETE_SESSION = "incomplete_session";
     public final static String MMI_ERROR = "mmi-error", PIN_ERROR = "pin-error", BALANCE_ERROR = "balance-error",
-        UNREGISTERED_ERROR = "unregistered-error", INVALID_ENTRY_ERROR = "invalid-entry",
-        NO_RESPONSE_ERROR = "no-response", INCOMPLETE_ERROR = "incomplete", UNSPECIFIED_ERROR = "unspecified-error";
+            UNREGISTERED_ERROR = "unregistered-error", INVALID_ENTRY_ERROR = "invalid-entry",
+            NO_RESPONSE_ERROR = "no-response", INCOMPLETE_ERROR = "incomplete", UNSPECIFIED_ERROR = "unspecified-error";
 
     @PrimaryKey(autoGenerate = true)
     @NonNull

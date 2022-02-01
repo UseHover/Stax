@@ -1,7 +1,10 @@
 package com.hover.stax.channels
 
 import android.content.Context
-import androidx.work.*
+import androidx.work.CoroutineWorker
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkerParameters
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.database.AppDatabase
@@ -23,12 +26,12 @@ class ImportChannelsWorker(context: Context, params: WorkerParameters) : Corouti
     }
 
     override suspend fun doWork(): Result {
-        Timber.i("Starting channel import")
-
         val hasChannels = channelDao!!.getChannelsAndAccounts().isNotEmpty()
 
         if (!hasChannels) {
             parseChannelJson()?.let {
+                Timber.i("Starting channel import")
+
                 val channelsJson = JSONObject(it)
                 val data: JSONArray = channelsJson.getJSONArray("data")
                 ChannelUtil.updateChannels(data, applicationContext)

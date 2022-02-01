@@ -64,6 +64,8 @@
 	<string name="visit_bounty_list" translatable="false">Bounty List</string>
 	<string name="visit_balance_and_history" translatable="false">Balance and history</string>
 	<string name="visit_link_account" translatable="false">Link an account</string>
+	<string name="visit_paybill" translatable="false">Paybill</string>
+	<string name="visit_paybill_list" translatable="false">Paybill List</string>
 
 	<string name="finish_transfer" translatable="false">Sending %1$s request to the SDK</string>
 	<string name="scheduled_complete" translatable="false">Scheduled new %1$s</string>
@@ -129,4 +131,14 @@
 	<string name="firebase_topic_yes_bounty_no_try" translatable="false">YES-BOUNTY-NO-TRY</string>
 	<string name="firebase_topic_yes_bounty_yes_try" translatable="false">YES-BOUNTY-YES-TRY</string>
 	<string name="firebase_fcm_redirect_format_err" translatable="false">Push notification redirection bad format</string>
+
+	<string name="saved_paybill" translatable="false">Saved paybill</string>
+	<string name="deleted_paybill" translatable="false">Deleted paybill</string>
+
+	<!-- Financial Tips -->
+	<string name="clicked_tips_read_more">Clicked financial snippet read more.</string>
+	<string name="read_financial_tip">Read financial tip</string>
+	<string name="visited_financial_tips">Visited financial tips screen</string>
+	<string name="shared_financial_tip">Shared financial tip</string>
+
 </resources>

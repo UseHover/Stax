@@ -127,7 +127,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
             a
         }
 
-        spinner.setText(defaultAccount?.alias, false);
+        spinner.setText(defaultAccount?.alias, false)
         spinner.onItemClickListener = OnItemClickListener { _, _, pos: Int, _ -> if (pos != 0) viewModel.setDefaultAccount(accounts[pos]) }
     }
 

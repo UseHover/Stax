@@ -1,4 +1,4 @@
-package com.hover.stax.transactions;
+package com.hover.stax.transactions
 
 import android.content.Context
 import com.hover.sdk.actions.HoverAction

@@ -16,13 +16,14 @@ import java.util.List;
 
 public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.RequestsViewHolder> {
 
-    private List<Request> requestList;
     private final SelectListener selectListener;
+    private List<Request> requestList;
 
     public RequestsAdapter(List<Request> requests, SelectListener selectListener) {
         this.requestList = requests;
         this.selectListener = selectListener;
     }
+
     public void updateData(List<Request> requests) {
         this.requestList = requests;
         notifyDataSetChanged();
@@ -57,19 +58,6 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.Reques
         return requestList != null ? requestList.size() : 0;
     }
 
-    static class RequestsViewHolder extends RecyclerView.ViewHolder {
-        public TransactionListItemBinding binding;
-
-        RequestsViewHolder(TransactionListItemBinding binding) {
-            super(binding.getRoot());
-            this.binding = binding;
-        }
-    }
-
-    public interface SelectListener {
-        void viewRequestDetail(int id);
-    }
-
     @Override
     public long getItemId(int position) {
         return position;
@@ -78,5 +66,18 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.Reques
     @Override
     public int getItemViewType(int position) {
         return position;
+    }
+
+    public interface SelectListener {
+        void viewRequestDetail(int id);
+    }
+
+    static class RequestsViewHolder extends RecyclerView.ViewHolder {
+        public TransactionListItemBinding binding;
+
+        RequestsViewHolder(TransactionListItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
     }
 }

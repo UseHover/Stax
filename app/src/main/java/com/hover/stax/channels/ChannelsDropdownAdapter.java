@@ -29,7 +29,7 @@ import java.util.List;
 import timber.log.Timber;
 
 public class ChannelsDropdownAdapter extends ArrayAdapter<Channel> {
-    private List<Channel> channels;
+    private final List<Channel> channels;
     private ViewHolder holder;
     private StaxSpinnerItemWithLogoBinding binding;
 
@@ -56,6 +56,27 @@ public class ChannelsDropdownAdapter extends ArrayAdapter<Channel> {
         holder.setChannel(c);
 
         return view;
+    }
+
+    @Override
+    public int getCount() {
+        return channels.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Nullable
+    @Override
+    public Channel getItem(int position) {
+        return channels.isEmpty() ? null : channels.get(position);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     public static class ViewHolder implements Target {
@@ -91,26 +112,5 @@ public class ChannelsDropdownAdapter extends ArrayAdapter<Channel> {
         @Override
         public void onPrepareLoad(Drawable placeHolderDrawable) {
         }
-    }
-
-    @Override
-    public int getCount() {
-        return channels.size();
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Nullable
-    @Override
-    public Channel getItem(int position) {
-        return channels.isEmpty() ? null : channels.get(position);
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return position;
     }
 }

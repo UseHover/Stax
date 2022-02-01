@@ -4,22 +4,22 @@ import com.hover.stax.R
 
 class Banner
 private constructor(val id: Int,
-                    val title:Int,
-                    val desc:Int?,
+                    val title: Int,
+                    val desc: Int?,
                     val cta: Int,
                     val iconRes: Int,
                     val primaryColor: Int,
                     val secondaryColor: Int,
-                    val url:Int,
-                    val impressions: Int)  {
-    companion  object {
-        const val PERMISSION:Int = 101
+                    val url: Int,
+                    val impressions: Int) {
+    companion object {
+        const val PERMISSION: Int = 101
         const val ROUND_UP_NEWS: Int = 102
         const val GIST: Int = 103
         const val UPVOTE: Int = 104
-        const val RESEARCH:Int = 105
+        const val RESEARCH: Int = 105
 
-        fun permissions() : Banner {
+        fun permissions(): Banner {
             return Banner(
                     PERMISSION,
                     R.string.banner_permission_title,
@@ -29,10 +29,10 @@ private constructor(val id: Int,
                     R.color.banner_permission_primary,
                     R.color.banner_secondary,
                     R.string.banner_permission_url,
-                    3 )
+                    3)
         }
 
-        fun roundupNews() : Banner {
+        fun roundupNews(): Banner {
             return Banner(
                     ROUND_UP_NEWS,
                     R.string.banner_roundupnews_title,
@@ -46,7 +46,7 @@ private constructor(val id: Int,
             )
         }
 
-        fun gist() : Banner {
+        fun gist(): Banner {
             return Banner(
                     GIST,
                     R.string.banner_gist_title,
@@ -60,7 +60,7 @@ private constructor(val id: Int,
             )
         }
 
-        fun upvote() : Banner {
+        fun upvote(): Banner {
             return Banner(
                     UPVOTE,
                     R.string.banner_upvote_title,
@@ -74,7 +74,7 @@ private constructor(val id: Int,
             )
         }
 
-        fun research() : Banner {
+        fun research(): Banner {
             return Banner(
                     RESEARCH,
                     R.string.banner_research_title,

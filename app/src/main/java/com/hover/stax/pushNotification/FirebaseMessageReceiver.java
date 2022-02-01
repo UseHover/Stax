@@ -34,8 +34,7 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
 
         if (remoteMessage.getNotification() != null) {
             showNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), redirect);
-        }
-        else {
+        } else {
             //Supports notification coming from custom servers.
             String title = data.get("title");
             String body = data.get("body");

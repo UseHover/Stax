@@ -9,7 +9,6 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.checkbox.MaterialCheckBox
@@ -30,6 +29,7 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.navigation.AbstractNavigationActivity
+import com.hover.stax.paybill.PaybillViewModel
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.requests.RequestSenderInterface
@@ -45,7 +45,8 @@ import com.hover.stax.transfers.TransactionType
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.getViewModel
@@ -62,6 +63,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
     private val transferViewModel: TransferViewModel by viewModel()
     private val requestViewModel: NewRequestViewModel by viewModel()
     private val settingsViewModel: SettingsViewModel by viewModel()
+    private val paybillViewModel: PaybillViewModel by viewModel()
 
     private lateinit var scheduleViewModel: ScheduleDetailViewModel
 
@@ -290,7 +292,8 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
                 showMessage(getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))))
             requestCode == Constants.REQUEST_REQUEST -> if (resultCode == RESULT_OK && data != null) onRequest(data)
             requestCode == BOUNTY_REQUEST -> showBountyDetails(data)
-            requestCode == LOGIN_REQUEST -> settingsViewModel.signIntoFirebaseAsync(data, findViewById<MaterialCheckBox>(R.id.marketingOptIn)?.isChecked ?: false, this)
+            requestCode == LOGIN_REQUEST -> settingsViewModel.signIntoFirebaseAsync(data, findViewById<MaterialCheckBox>(R.id.marketingOptIn)?.isChecked
+                    ?: false, this)
             else -> {
                 if (requestCode != Constants.TRANSFER_REQUEST) {
                     balancesViewModel.setRan(requestCode)
@@ -344,11 +347,37 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
                     .extra(HoverAction.NOTE_KEY, transferViewModel.note.value)
                     .extra(Constants.ACCOUNT_NAME, selectedAccount?.name)
 
+            if (!actionSelectViewModel.nonStandardVariables.value.isNullOrEmpty()) {
+                actionSelectViewModel.nonStandardVariables.value!!.forEach {
+                    hsb.extra(it.key, it.value)
+                }
+            }
+
             selectedAccount?.run { hsb.setAccountId(id.toString()) }
             transferViewModel.contact.value?.let { addRecipientInfo(hsb) }
         }
 
         runAction(hsb)
+    }
+
+    fun submitPaymentRequest(action: HoverAction, channel: Channel, account: Account) {
+        val hsb = HoverSession.Builder(action, channel, this, Constants.PAYBILL_REQUEST)
+                .extra(HoverAction.AMOUNT_KEY, paybillViewModel.amount.value)
+                .extra("businessNo", paybillViewModel.businessNumber.value)
+                .extra(Constants.ACCOUNT_NAME, account.name)
+                .extra(HoverAction.ACCOUNT_KEY, paybillViewModel.accountNumber.value)
+        hsb.setAccountId(account.id.toString())
+
+        runAction(hsb)
+
+        val data = JSONObject()
+        try {
+            data.put("businessNo", paybillViewModel.businessNumber.value)
+        } catch (e: Exception) {
+            Timber.e(e)
+        }
+
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.finish_transfer, TransactionType.type), data, this)
     }
 
     private fun addRecipientInfo(hsb: HoverSession.Builder) {
@@ -391,7 +420,6 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
         with(scheduleViewModel) {
             if (isRequestType) {
                 schedule.observe(this@MainActivity) { it?.let { requestViewModel.setSchedule(it) } }
-                AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_schedule_notification), this@MainActivity)
             } else {
                 action.observe(this@MainActivity) { it?.let { actionSelectViewModel.setActiveAction(it) } }
                 schedule.observe(this@MainActivity) { it?.let { transferViewModel.view(it) } }
@@ -416,6 +444,7 @@ class MainActivity : AbstractNavigationActivity(), BalancesViewModel.RunBalanceL
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
         if (requestCode == Constants.SMS && PermissionHelper(this).permissionsGranted(grantResults)) {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.perms_sms_granted), this)
             sendSms()

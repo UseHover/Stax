@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_10">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/iconLayout"
+            android:layout_width="@dimen/margin_65"
+            android:layout_height="@dimen/margin_65"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:background="@drawable/icon_bg_circle"
+            android:gravity="center_horizontal|center_vertical">
+
+        <ImageView
+                android:id="@+id/billIcon"
+                android:layout_width="@dimen/margin_34"
+                android:layout_height="@dimen/margin_34"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_edit" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

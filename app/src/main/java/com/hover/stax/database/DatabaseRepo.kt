@@ -32,6 +32,7 @@ import com.hover.stax.utils.paymentLinkCryptography.Encryption
 import timber.log.Timber
 import java.security.NoSuchAlgorithmException
 
+//TODO split this up into smaller constituent repos
 class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     private val decryptedRequest: MutableLiveData<Request> = MutableLiveData()
@@ -96,10 +97,6 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun getLiveAction(public_id: String?): LiveData<HoverAction> {
         return actionDao.getLiveAction(public_id)
-    }
-
-    fun getLiveActions(channelIds: IntArray?, type: String?): LiveData<List<HoverAction>> {
-        return actionDao.getLiveActions(channelIds, type)
     }
 
     fun getChannelActions(channelId: Int): LiveData<List<HoverAction>> {
@@ -174,7 +171,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
                     t.update(intent, action, contact, c)
                     transactionDao.update(t)
                 }
-                Timber.e("save t with uuid: %s", t?.uuid);
+                Timber.e("save t with uuid: %s", t?.uuid)
             } catch (e: Exception) {
                 Timber.e(e, "error")
             }

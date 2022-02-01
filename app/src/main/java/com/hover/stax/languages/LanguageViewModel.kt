@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.hover.stax.R
 import com.yariksoffice.lingver.Lingver
 
-class LanguageViewModel(val application: Application): ViewModel() {
+class LanguageViewModel(val application: Application) : ViewModel() {
 
     val languages = MutableLiveData<List<Lang>>()
 
@@ -19,9 +19,9 @@ class LanguageViewModel(val application: Application): ViewModel() {
 
         val langs = mutableListOf(Lang(Lingver.getInstance().getLanguage()))
 
-        for(code in languageCodes){
+        for (code in languageCodes) {
             val toAdd = Lang(code)
-            if(!langs.contains(toAdd)) langs.add(toAdd)
+            if (!langs.contains(toAdd)) langs.add(toAdd)
         }
 
         return langs

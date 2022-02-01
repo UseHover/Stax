@@ -95,6 +95,7 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
             binding.subtitle.text = title
             binding.subtitle.visibility = VISIBLE
         }
+
         if (useContextBackPress) binding.backButton.setOnClickListener { triggerBack() }
         if (showBack) binding.backButton.visibility = VISIBLE
         if (backDrawable != 0) binding.backButton.setImageResource(backDrawable)

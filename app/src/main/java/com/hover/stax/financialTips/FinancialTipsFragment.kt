@@ -1,4 +1,4 @@
-package com.hover.stax.financialTip
+package com.hover.stax.financialTips
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,10 +11,13 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentWellnessBinding
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
-class FinancialTipFragment : Fragment(), FinancialTipsAdapter.SelectListener {
+class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
 
     private val viewModel: FinancialTipsViewModel by viewModel()
 
@@ -57,12 +60,16 @@ class FinancialTipFragment : Fragment(), FinancialTipsAdapter.SelectListener {
             binding.financialTips.apply {
                 layoutManager = UIHelper.setMainLinearManagers(requireActivity())
                 isNestedScrollingEnabled = false
-                adapter = FinancialTipsAdapter(tips, this@FinancialTipFragment)
+                adapter = FinancialTipsAdapter(tips, this@FinancialTipsFragment)
             }
+
+            AnalyticsUtil.logAnalyticsEvent(getString(R.string.visited_financial_tips), requireActivity())
         }
     }
 
     override fun onTipSelected(tip: FinancialTip, isFromDeeplink: Boolean) {
+        logTipRead(tip, isFromDeeplink)
+
         binding.tipsCard.visibility = View.GONE
         binding.financialTipsDetail.apply {
             visibility = View.VISIBLE
@@ -94,7 +101,38 @@ class FinancialTipFragment : Fragment(), FinancialTipsAdapter.SelectListener {
                 type = "text/plain"
             }, getString(R.string.share_wellness_tip))
             startActivity(share)
+
+            logTipShare(tip)
         }
+    }
+
+    private fun logTipShare(tip: FinancialTip) {
+        val data = JSONObject()
+
+        try {
+            data.put("tipId", tip.id)
+            data.put("date", tip.date)
+            data.put("title", tip.title)
+        } catch (e: Exception) {
+            Timber.e(e)
+        }
+
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.shared_financial_tip), data, requireActivity())
+    }
+
+    private fun logTipRead(tip: FinancialTip, isFromDeeplink: Boolean) {
+        val data = JSONObject()
+
+        try {
+            data.put("tipId", tip.id)
+            data.put("date", tip.date)
+            data.put("title", tip.title)
+            data.put("fromShareLink", isFromDeeplink)
+        } catch (e: Exception) {
+            Timber.e(e)
+        }
+
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.read_financial_tip), data, requireActivity())
     }
 
     private fun showTipList() {

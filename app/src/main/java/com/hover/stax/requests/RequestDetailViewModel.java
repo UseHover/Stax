@@ -18,9 +18,9 @@ import java.util.List;
 
 public class RequestDetailViewModel extends AndroidViewModel {
 
-    private DatabaseRepo repo = get(DatabaseRepo.class);
     private final MutableLiveData<Request> request;
-    private LiveData<Channel> channel;
+    private final DatabaseRepo repo = get(DatabaseRepo.class);
+    private final LiveData<Channel> channel;
     private LiveData<List<StaxContact>> recipients = new MutableLiveData<>();
 
     public RequestDetailViewModel(@NonNull Application application) {
@@ -30,15 +30,15 @@ public class RequestDetailViewModel extends AndroidViewModel {
         recipients = Transformations.switchMap(request, this::loadRecipients);
     }
 
-    public void setRequest(int id) {
-        new Thread(() -> request.postValue(repo.getRequest(id))).start();
-    }
-
     public LiveData<Request> getRequest() {
         if (request == null) {
             return new MutableLiveData<>();
         }
         return request;
+    }
+
+    public void setRequest(int id) {
+        new Thread(() -> request.postValue(repo.getRequest(id))).start();
     }
 
     public LiveData<Channel> getChannel() {

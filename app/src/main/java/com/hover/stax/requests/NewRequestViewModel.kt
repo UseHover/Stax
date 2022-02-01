@@ -73,7 +73,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
             application.getString(R.string.request_error_recipient)
     }
 
-    fun accountError(): String? = if(activeAccount.value != null) null else application.getString(R.string.accounts_error_noselect)
+    fun accountError(): String? = if (activeAccount.value != null) null else application.getString(R.string.accounts_error_noselect)
 
     fun requesterAcctNoError(): String? = if (!requesterNumber.value.isNullOrEmpty()) null else application.getString(R.string.requester_number_fielderror)
 
@@ -99,7 +99,7 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
     }
 
     fun saveRequest() {
-        if(formulatedRequest.value != null) {
+        if (formulatedRequest.value != null) {
             val request = Request(formulatedRequest.value!!, requestee.value, application)
             repo.insert(request)
 

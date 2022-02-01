@@ -28,7 +28,6 @@ import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
-import java.util.*
 
 
 class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.SelectListener, CountryAdapter.SelectListener {

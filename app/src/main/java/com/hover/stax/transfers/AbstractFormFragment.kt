@@ -91,7 +91,7 @@ abstract class AbstractFormFragment : Fragment() {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.try_contact_select), c)
 
         if (PermissionUtils.hasContactPermission(c))
-            startContactIntent(requestCode);
+            startContactIntent(requestCode)
         else
             requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS), requestCode)
     }
@@ -108,8 +108,8 @@ abstract class AbstractFormFragment : Fragment() {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.contact_perm_success), requireContext())
             startContactIntent(requestCode)
         } else {
-            AnalyticsUtil.logAnalyticsEvent(getString(R.string.contact_perm_denied), requireContext());
-            UIHelper.flashMessage(requireContext(), getString(R.string.toast_error_contactperm));
+            AnalyticsUtil.logAnalyticsEvent(getString(R.string.contact_perm_denied), requireContext())
+            UIHelper.flashMessage(requireContext(), getString(R.string.toast_error_contactperm))
         }
     }
 
@@ -120,10 +120,10 @@ abstract class AbstractFormFragment : Fragment() {
             val staxContact = StaxContact(data, requireContext())
             staxContact.accountNumber?.let {
                 AnalyticsUtil.logAnalyticsEvent(getString(R.string.contact_select_success), requireContext())
-                onContactSelected(requestCode, staxContact);
+                onContactSelected(requestCode, staxContact)
             } ?: run {
-                AnalyticsUtil.logAnalyticsEvent(getString(R.string.contact_select_error), requireContext());
-                UIHelper.flashMessage(requireContext(), getString(R.string.toast_error_contactselect));
+                AnalyticsUtil.logAnalyticsEvent(getString(R.string.contact_select_error), requireContext())
+                UIHelper.flashMessage(requireContext(), getString(R.string.toast_error_contactselect))
             }
         }
     }
