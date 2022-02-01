@@ -41,7 +41,7 @@ internal class QuestioningVariantFragment : Fragment() {
     }
 
     private fun setSkipOnboardingClick() {
-        binding.skipOnboarding.setOnClickListener {
+        binding.skipBtn.setOnClickListener {
             onboardingActivity.checkPermissionThenNavigateMainActivity()
         }
     }

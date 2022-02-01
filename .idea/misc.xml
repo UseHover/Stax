@@ -11,17 +11,23 @@
         <entry key="app/src/main/res/drawable/button_bg_colored.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_dark.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_grey.xml" value="0.32037037037037036" />
+        <entry key="app/src/main/res/drawable/chevron_right_bright.xml" value="0.183" />
+        <entry key="app/src/main/res/drawable/grey_background.xml" value="0.183" />
+        <entry key="app/src/main/res/drawable/ic_chevron_right.xml" value="0.183" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.2601851851851852" />
         <entry key="app/src/main/res/drawable/ic_noun_hashtag_2733013.xml" value="0.175" />
         <entry key="app/src/main/res/drawable/ic_payment.xml" value="0.6125" />
         <entry key="app/src/main/res/drawable/ic_refresh_white_13dp.xml" value="0.25833333333333336" />
+        <entry key="app/src/main/res/drawable/ic_rounded_white.xml" value="0.183" />
         <entry key="app/src/main/res/drawable/ic_settings.xml" value="0.25833333333333336" />
         <entry key="app/src/main/res/drawable/ic_share.xml" value="0.22962962962962963" />
         <entry key="app/src/main/res/drawable/ic_stax.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_stax_dark_white.xml" value="0.1125" />
         <entry key="app/src/main/res/drawable/ic_stax_logo.xml" value="0.1135" />
+        <entry key="app/src/main/res/drawable/ic_stax_rounded.xml" value="0.183" />
         <entry key="app/src/main/res/drawable/ic_system_upate_24.xml" value="0.6125" />
         <entry key="app/src/main/res/drawable/ic_ussd_lib.xml" value="0.3546875" />
+        <entry key="app/src/main/res/drawable/logo_bg.xml" value="0.183" />
         <entry key="app/src/main/res/drawable/splash_logo.xml" value="0.75625" />
         <entry key="app/src/main/res/drawable/splash_window_background.xml" value="0.75625" />
         <entry key="app/src/main/res/font/effra.xml" value="0.46875" />
@@ -70,8 +76,10 @@
         <entry key="app/src/main/res/layout/item_paybill_saved.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_wellness_tips.xml" value="0.25" />
         <entry key="app/src/main/res/layout/onboarding_v1.xml" value="0.3981264637002342" />
+        <entry key="app/src/main/res/layout/onboarding_v2.xml" value="0.33" />
         <entry key="app/src/main/res/layout/onboarding_variant_one.xml" value="0.5133689839572193" />
         <entry key="app/src/main/res/layout/onboarding_variant_one_slide.xml" value="0.3981264637002342" />
+        <entry key="app/src/main/res/layout/onboarding_variant_two.xml" value="0.3253968253968254" />
         <entry key="app/src/main/res/layout/paybill_summary.xml" value="0.8125" />
         <entry key="app/src/main/res/layout/rename_account_layout.xml" value="0.3134057971014493" />
         <entry key="app/src/main/res/layout/repeat_inputs.xml" value="0.18697916666666667" />
