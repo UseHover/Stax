@@ -9,10 +9,10 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
-import com.google.android.gms.common.SignInButton
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.hover.stax.R
 import com.hover.stax.databinding.OnboardingVariantOneBinding
@@ -46,7 +46,6 @@ class SlidingVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initProgressBarView()
         initAnimators()
 
@@ -57,18 +56,16 @@ class SlidingVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
 
         setupSignInWithGoogle()
         setupContinueNoSignIn()
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
     }
 
-    private fun setupSignInWithGoogle() {
-        binding.continueWithGoogle.setOnClickListener {
-            (requireActivity() as OnBoardingActivity).signIn(optInMarketing = true)
-        }
+    private fun setupSignInWithGoogle() = binding.continueWithGoogle.setOnClickListener {
+        (requireActivity() as OnBoardingActivity).signIn(optInMarketing = true)
     }
 
-    private fun setupContinueNoSignIn() {
-        binding.continueNoSignIn.setOnClickListener {
-            (requireActivity() as OnBoardingActivity).checkPermissionThenNavigateMainActivity()
-        }
+    private fun setupContinueNoSignIn() = binding.continueNoSignIn.setOnClickListener {
+        (requireActivity() as OnBoardingActivity).checkPermissionsAndNavigate()
     }
 
     private fun initProgressBarView() {
@@ -196,6 +193,13 @@ class SlidingVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
         progressBar.trackColor = brightBlue
 
     }
+
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            Timber.i("Back navigation disabled") //do nothing to prevent navigation back to the home fragment (default variant)
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.VariantTwoWithoutCheckboxBinding
 import com.hover.stax.onboarding.OnBoardingActivity
@@ -29,9 +30,9 @@ internal class AnswersNoCheckBoxFragment : Fragment() {
     }
 
     private fun setTopBarClicks() {
-        binding.backButton.setOnClickListener { requireActivity().onBackPressed() }
+        binding.backButton.setOnClickListener { findNavController().popBackStack() }
         binding.skipTutorial.setOnClickListener {
-            (activity as OnBoardingActivity).checkPermissionThenNavigateMainActivity()
+            (activity as OnBoardingActivity).checkPermissionsAndNavigate()
         }
     }
 
@@ -45,7 +46,6 @@ internal class AnswersNoCheckBoxFragment : Fragment() {
     private fun getTitleRes(questionType: Int): Int {
         return if (questionType == QUESTION_TWO) R.string.does_stax_charge_fees
         else R.string.what_does_stax_do
-
     }
 
     private fun getDescContent(questionType: Int): Int {
@@ -53,10 +53,8 @@ internal class AnswersNoCheckBoxFragment : Fragment() {
         else R.string.variant_v2_nocheckbox_desc2
     }
 
-    private fun setContinueClick() {
-        binding.continueBtn.setOnClickListener {
-            (activity as OnBoardingActivity).checkPermissionThenNavigateMainActivity()
-        }
+    private fun setContinueClick() = binding.continueBtn.setOnClickListener {
+        (activity as OnBoardingActivity).checkPermissionsAndNavigate()
     }
 
     override fun onDestroyView() {

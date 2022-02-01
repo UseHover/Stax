@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.hover.stax.databinding.VariantTwoWithCheckboxBinding
 import com.hover.stax.onboarding.OnBoardingActivity
 
@@ -26,16 +27,16 @@ internal class AnswersWithCheckBoxFragment : Fragment() {
     }
 
     private fun setTopBarClicks() {
-        binding.backButton.setOnClickListener { requireActivity().onBackPressed() }
+        binding.backButton.setOnClickListener { findNavController().popBackStack() }
         binding.skipTutorial.setOnClickListener {
-            (activity as OnBoardingActivity).checkPermissionThenNavigateMainActivity()
+            (activity as OnBoardingActivity).checkPermissionsAndNavigate()
         }
     }
 
     private fun setContinueClick() {
         binding.continueBtn.setOnClickListener {
             //To be replaced to navigate to welcome model: Kombo is working on this separately
-            (activity as OnBoardingActivity).checkPermissionThenNavigateMainActivity()
+            (activity as OnBoardingActivity).checkPermissionsAndNavigate()
         }
     }
 
