@@ -12,17 +12,17 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
+import com.google.android.gms.common.SignInButton
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.hover.stax.R
-import com.hover.stax.databinding.OnboardingV1Binding
 import com.hover.stax.databinding.OnboardingVariantOneBinding
 import com.hover.stax.onboarding.OnBoardingActivity
 import timber.log.Timber
 
 
- class SlidingVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
+class SlidingVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
 
-    private var _binding: OnboardingV1Binding? = null
+    private var _binding: OnboardingVariantOneBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var progressBar1: LinearProgressIndicator
@@ -35,10 +35,12 @@ import timber.log.Timber
     private lateinit var animator3: ValueAnimator
     private lateinit var animator4: ValueAnimator
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-        _binding = OnboardingV1Binding.inflate(inflater, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = OnboardingVariantOneBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -139,16 +141,11 @@ import timber.log.Timber
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
         showProgress(position)
-        Timber.i("On Page scrolled: $position, offset: $positionOffset, offsetPixels: $positionOffsetPixels")
     }
 
-    override fun onPageSelected(position: Int) {
-        Timber.i("On Page selected: $position")
-    }
+    override fun onPageSelected(position: Int) {}
 
-    override fun onPageScrollStateChanged(state: Int) {
-        Timber.i("On Page state changed: $state")
-    }
+    override fun onPageScrollStateChanged(state: Int) {}
 
     private fun showProgress(currentPos: Int) {
         when (currentPos) {
@@ -184,7 +181,7 @@ import timber.log.Timber
 
     private fun fillUpProgress(progressBar: LinearProgressIndicator) {
         try {
-            val deepBlue = requireContext().resources.getColor(R.color.stax_state_blue)
+            val deepBlue = ContextCompat.getColor(requireActivity(), R.color.stax_state_blue)
             progressBar.progress = 100
             progressBar.trackColor = deepBlue
         } catch (e: IllegalStateException) {
@@ -194,10 +191,15 @@ import timber.log.Timber
 
     private fun resetFilledProgress(animator: ValueAnimator, progressBar: LinearProgressIndicator) {
         animator.cancel()
-        val brightBlue = requireContext().resources.getColor(R.color.brightBlue)
+        val brightBlue = ContextCompat.getColor(requireActivity(), R.color.brightBlue)
         progressBar.progress = 0
         progressBar.trackColor = brightBlue
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
@@ -205,10 +207,5 @@ import timber.log.Timber
         const val SCROLL_INTERVAL = 4000L
         const val SWIPE_DURATION_FACTOR = 2.0
         const val AUTO_SCROLL_EASE_DURATION_FACTOR = 5.0
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

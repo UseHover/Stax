@@ -38,7 +38,7 @@ class OnBoardingActivity : AbstractOnboardingNavigationActivity(), StaxGoogleLog
     }
 
     private fun chooseOnboardingVariant() = when (Utils.getString(Constants.VARIANT, this) ?: "baseline") {
-        "baseline" -> navigateOnboardingVariantOne()
+        "baseline" -> navigateOnboardingVariantTwo()
         "multichoice" -> navigateOnboardingVariantTwo()
         "slides" -> navigateToVariantTwoWithCheckBox()
         else -> {} //do nothing, load default fragment

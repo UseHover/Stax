@@ -18,11 +18,13 @@
         <entry key="app/src/main/res/drawable/ic_settings.xml" value="0.25833333333333336" />
         <entry key="app/src/main/res/drawable/ic_share.xml" value="0.22962962962962963" />
         <entry key="app/src/main/res/drawable/ic_stax.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_stax_dark_white.xml" value="0.1125" />
         <entry key="app/src/main/res/drawable/ic_stax_logo.xml" value="0.1135" />
         <entry key="app/src/main/res/drawable/ic_system_upate_24.xml" value="0.6125" />
         <entry key="app/src/main/res/drawable/ic_ussd_lib.xml" value="0.3546875" />
         <entry key="app/src/main/res/drawable/splash_logo.xml" value="0.75625" />
         <entry key="app/src/main/res/drawable/splash_window_background.xml" value="0.75625" />
+        <entry key="app/src/main/res/font/effra.xml" value="0.46875" />
         <entry key="app/src/main/res/layout/account_card_layout.xml" value="0.15704154002026344" />
         <entry key="app/src/main/res/layout/account_card_manage.xml" value="0.30572916666666666" />
         <entry key="app/src/main/res/layout/account_card_shortcode.xml" value="0.30572916666666666" />
@@ -104,6 +106,7 @@
         <entry key="app/src/main/res/layout/transfer_card_future.xml" value="0.33" />
         <entry key="app/src/main/res/layout/transfer_card_summary.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/transfer_note.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/variant_two_answer_withcheckbox.xml" value="0.3981264637002342" />
         <entry key="app/src/main/res/menu/nav_main.xml" value="0.27870370370370373" />
       </map>
     </option>
