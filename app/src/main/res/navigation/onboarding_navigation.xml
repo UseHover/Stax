@@ -65,7 +65,7 @@
     </fragment>
     <fragment
             android:id="@+id/welcomeFragment"
-            android:name="com.hover.stax.onboarding.WelcomeFragment"
+            android:name="com.hover.stax.onboarding.welcome.WelcomeFragment"
             android:label="IntroFragment">
         <action
                 android:id="@+id/action_introFragment_to_noCheckBoxOnboardingFragment"
