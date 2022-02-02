@@ -1,4 +1,4 @@
-package com.hover.stax.onboarding.ui.theme
+package com.hover.stax.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.VariantTwoWithoutCheckboxBinding
 import com.hover.stax.onboarding.OnBoardingActivity
+import com.hover.stax.onboarding.WelcomeFragment
 import com.hover.stax.utils.Constants
 
 
@@ -54,7 +56,7 @@ internal class AnswersNoCheckBoxFragment : Fragment() {
     }
 
     private fun setContinueClick() = binding.continueBtn.setOnClickListener {
-        findNavController().navigate(R.id.action_navigation_onboarding_v2_noCheckbox_to_introFragment)
+        findNavController().navigate(R.id.action_noCheckboxOnboardingFragment_to_welcomeFragment, bundleOf(WelcomeFragment.SALUTATIONS to 3))
     }
 
     override fun onDestroyView() {

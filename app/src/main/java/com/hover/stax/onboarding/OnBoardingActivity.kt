@@ -15,7 +15,6 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import timber.log.Timber
 
 class OnBoardingActivity : AbstractGoogleAuthActivity(), StaxGoogleLoginInterface {
 
@@ -48,13 +47,13 @@ class OnBoardingActivity : AbstractGoogleAuthActivity(), StaxGoogleLoginInterfac
     }
 
     private fun chooseOnboardingVariant() = when (Utils.getString(Constants.VARIANT, this) ?: "baseline") {
-        "multichoice" -> navController.navigate(R.id.navigation_onboarding_v2)
-        "slides" -> navController.navigate(R.id.navigation_onboarding_v1)
-        else -> Timber.i("Loading default fragment") //do nothing, loading default fragment
+        "multichoice" -> navController.navigate(R.id.questionOnboardingFragment)
+        "slides" -> navController.navigate(R.id.slidingOnboardingFragment)
+        else -> navController.navigate(R.id.slidingOnboardingFragment) //Timber.i("Loading default fragment") do nothing, loading default fragment
     }
 
     override fun googleLoginSuccessful() {
-        checkPermissionsAndNavigate()
+        navController.navigate(R.id.action_slidingOnboardingFragment_to_welcomeFragment)
     }
 
     override fun googleLoginFailed() {

@@ -38,17 +38,17 @@ internal class QuestioningVariantFragment : Fragment() {
 
     private fun setQuestionsClick() {
         binding.onboardingVariant2Question1.setOnClickListener {
-            findNavController().navigate(R.id.action_navigation_onboarding_v2_to_navigation_onboarding_v2_withCheckbox)
+            findNavController().navigate(R.id.action_questionOnboardingFragment_to_checkboxOnboardingFragment)
         }
         binding.onboardingVariant2Question2.setOnClickListener {
             findNavController().navigate(
-                R.id.action_navigation_onboarding_v2_to_navigation_onboarding_v2_noCheckbox,
+                R.id.action_questionOnboardingFragment_to_noCheckBoxOnboardingFragment,
                 bundleOf(Constants.QUESTION_TYPE to AnswersNoCheckBoxFragment.QUESTION_TWO)
             )
         }
         binding.onboardingVariant2Question3.setOnClickListener {
             findNavController().navigate(
-                R.id.action_navigation_onboarding_v2_to_navigation_onboarding_v2_noCheckbox,
+                R.id.action_questionOnboardingFragment_to_noCheckBoxOnboardingFragment,
                 bundleOf(Constants.QUESTION_TYPE to AnswersNoCheckBoxFragment.QUESTION_THREE)
             )
         }

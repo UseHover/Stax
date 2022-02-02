@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.VariantTwoWithCheckboxBinding
 import com.hover.stax.onboarding.OnBoardingActivity
+import com.hover.stax.onboarding.WelcomeFragment
 
 internal class AnswersWithCheckBoxFragment : Fragment() {
 
@@ -35,7 +37,8 @@ internal class AnswersWithCheckBoxFragment : Fragment() {
     }
 
     private fun setContinueClick() = binding.continueBtn.setOnClickListener {
-        findNavController().navigate(R.id.action_navigation_onboarding_v2_withCheckbox_to_introFragment)
+        val variation = if(isNoneApply()) 3 else 2
+        findNavController().navigate(R.id.action_checkboxOnboardingFragment_to_welcomeFragment, bundleOf(WelcomeFragment.SALUTATIONS to variation))
     }
 
     private fun isNoneApply(): Boolean {

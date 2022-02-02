@@ -1,4 +1,4 @@
-package com.hover.stax.onboarding.ui.theme
+package com.hover.stax.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
@@ -18,7 +18,7 @@ val Typography = Typography(
     body1 = TextStyle(
         fontFamily = EffraFont,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp
+        fontSize = 18.sp
     ),
     body2 = TextStyle(
         fontFamily = EffraFont,
@@ -28,16 +28,16 @@ val Typography = Typography(
     h1 = TextStyle(
         fontFamily = EffraFont,
         fontWeight = FontWeight.Medium,
-        fontSize = 24.sp
+        fontSize = 30.sp
     ),
     h2 = TextStyle(
         fontFamily = EffraFont,
         fontWeight = FontWeight.Medium,
-        fontSize = 21.sp
+        fontSize = 23.sp
     ),
     button = TextStyle(
         fontFamily = EffraFont,
         fontWeight = FontWeight.Medium,
-        fontSize = 14.sp
+        fontSize = 17.sp
     )
 )

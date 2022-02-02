@@ -15,25 +15,58 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import com.hover.stax.R
-import com.hover.stax.onboarding.ui.theme.BrightBlue
-import com.hover.stax.onboarding.ui.theme.ColorPrimaryDark
-import com.hover.stax.onboarding.ui.theme.StaxTheme
+import com.hover.stax.ui.theme.BrightBlue
+import com.hover.stax.ui.theme.ColorPrimaryDark
+import com.hover.stax.ui.theme.StaxTheme
 
-class IntroFragment : Fragment() {
+class WelcomeFragment : Fragment() {
+
+    private lateinit var title: String
+    private lateinit var subtitle: String
+    private lateinit var buttonText: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = ComposeView(requireContext()).apply {
-        id = R.id.introFragment
+        id = R.id.welcomeFragment
+
+        setGreetings(arguments?.getInt(SALUTATIONS) ?: 1)
 
         setContent {
-            IntroScreen {
+            WelcomeScreen(title, subtitle, buttonText) {
                 (requireActivity() as OnBoardingActivity).checkPermissionsAndNavigate()
             }
         }
     }
+
+    private fun setGreetings(greeting: Int) = when (greeting) {
+        1 -> {
+            title = getString(R.string.welcome_title_one)
+            subtitle = getString(R.string.welcome_sub_one)
+            buttonText = getString(R.string.btn_continue)
+        }
+        2 -> {
+            title = getString(R.string.welcome_title_two)
+            subtitle = getString(R.string.welcome_sub_two)
+            buttonText = getString(R.string.btn_continue)
+        }
+        3 -> {
+            title = getString(R.string.welcome_title_three)
+            subtitle = getString(R.string.welcome_sub_two)
+            buttonText = getString(R.string.explore_btn_text)
+        }
+        else -> {
+            title = getString(R.string.welcome_title_one)
+            subtitle = getString(R.string.welcome_sub_one)
+            buttonText = getString(R.string.btn_continue)
+        }
+    }
+
+    companion object {
+        const val SALUTATIONS = "greetings"
+    }
 }
 
 @Composable
-fun IntroHeader(title: String, desc: String) {
+fun WelcomeHeader(title: String, desc: String) {
     Column {
         Text(
             text = title,
@@ -52,7 +85,7 @@ fun FeatureCard(title: String, desc: String, iconRes: Int) {
         Image(
             painter = painterResource(id = iconRes),
             contentDescription = null,
-            modifier = Modifier.size(40.dp)
+            modifier = Modifier.size(45.dp)
         )
 
         Spacer(modifier = Modifier.width(16.dp))
@@ -74,7 +107,9 @@ fun FeatureCard(title: String, desc: String, iconRes: Int) {
 fun ContinueButton(text: String, modifier: Modifier = Modifier, onClick: (() -> Unit)) {
     Button(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(8.dp),
         shape = MaterialTheme.shapes.medium,
         colors = ButtonDefaults.buttonColors(
             backgroundColor = BrightBlue,
@@ -90,7 +125,8 @@ fun ContinueButton(text: String, modifier: Modifier = Modifier, onClick: (() -> 
 
 //@Preview
 @Composable
-fun IntroScreen(/*introTitle: String, introDesc: String, buttonText: String*/ onClick: (() -> Unit)) {
+fun WelcomeScreen(introTitle: String, introDesc: String, buttonText: String, onClick: (() -> Unit)) {
+
     StaxTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -100,9 +136,9 @@ fun IntroScreen(/*introTitle: String, introDesc: String, buttonText: String*/ on
                 modifier = Modifier.padding(24.dp),
                 content = { innerPadding ->
                     Column(modifier = Modifier.padding(innerPadding)) {
-                        IntroHeader(
-                            title = stringResource(R.string.intro_title_text),
-                            desc = stringResource(R.string.intro_desc_text)
+                        WelcomeHeader(
+                            title = introTitle,
+                            desc = introDesc
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -121,7 +157,7 @@ fun IntroScreen(/*introTitle: String, introDesc: String, buttonText: String*/ on
                             )
 
                             FeatureCard(
-                                title = stringResource(R.string.intr_feature_three_title),
+                                title = stringResource(R.string.intro_feature_three_title),
                                 desc = stringResource(R.string.intro_feature_three_desc),
                                 iconRes = R.drawable.ic_safe
                             )
@@ -129,7 +165,7 @@ fun IntroScreen(/*introTitle: String, introDesc: String, buttonText: String*/ on
                     }
                 },
                 bottomBar = {
-                    ContinueButton(text = stringResource(R.string.explore_btn_text), onClick = onClick)
+                    ContinueButton(text = buttonText, onClick = onClick)
                 }
             )
         }

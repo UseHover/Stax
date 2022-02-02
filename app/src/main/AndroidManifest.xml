@@ -21,11 +21,6 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.App.Starting">
         <activity
-                android:name=".onboarding.MainActivity"
-                android:exported="false"
-                android:label="@string/title_activity_main"
-                android:theme="@style/Theme.App.Starting" />
-        <activity
                 android:name=".RoutingActivity"
                 android:exported="true">
             <intent-filter>
@@ -33,11 +28,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-                android:name=".SplashScreenActivity"
-                android:exported="true"
-                android:theme="@style/StaxTheme">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 

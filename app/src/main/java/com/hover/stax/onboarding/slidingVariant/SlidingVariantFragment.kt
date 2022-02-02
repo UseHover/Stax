@@ -11,12 +11,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.hover.stax.R
 import com.hover.stax.databinding.OnboardingVariantOneBinding
 import com.hover.stax.onboarding.OnBoardingActivity
+import com.hover.stax.onboarding.WelcomeFragment
+import com.hover.stax.utils.Constants
 import timber.log.Timber
 
 
@@ -65,7 +69,7 @@ class SlidingVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
     }
 
     private fun setupContinueNoSignIn() = binding.continueNoSignIn.setOnClickListener {
-        (requireActivity() as OnBoardingActivity).checkPermissionsAndNavigate()
+        findNavController().navigate(R.id.action_slidingOnboardingFragment_to_welcomeFragment, bundleOf(WelcomeFragment.SALUTATIONS to 1))
     }
 
     private fun initProgressBarView() {
