@@ -54,7 +54,7 @@ internal class AnswersNoCheckBoxFragment : Fragment() {
     }
 
     private fun setContinueClick() = binding.continueBtn.setOnClickListener {
-        (activity as OnBoardingActivity).checkPermissionsAndNavigate()
+        findNavController().navigate(R.id.action_navigation_onboarding_v2_noCheckbox_to_introFragment)
     }
 
     override fun onDestroyView() {

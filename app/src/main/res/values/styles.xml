@@ -1,61 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="StaxTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
-        <item name="colorOnPrimary">@color/offWhite</item>
-
-        <item name="colorAccent">@color/brightBlue</item>
-        <item name="colorSecondary">@color/brightBlue</item>
-        <item name="colorSecondaryVariant">@color/brightBlue</item>
-        <item name="colorOnSecondary">@color/cardViewColor</item>
-
-        <item name="colorSurface">@color/cardViewColor</item>
-        <item name="colorOnSurface">@color/offWhite</item>
-        <item name="colorOnBackground">@color/darkGrey</item>
-        <item name="colorError">@color/stax_state_red</item>
-        <item name="colorOnError">@color/offWhite</item>
-
-        <item name="colorControlNormal">@color/buttonColor</item>
-        <item name="colorControlHighlight">@color/brightBlue</item>
-        <item name="colorSwitchThumbNormal">@color/grey</item>
-
-        <item name="windowActionBar">false</item>
-        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark
-        </item>
-        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark
-        </item>
-        <item name="android:windowBackground">@color/colorPrimaryDark</item>
-        <item name="android:fitsSystemWindows">true</item>
-
-        <item name="titleTextColor">@color/offWhite</item>
-        <item name="android:textColor">@color/offWhite</item>
-        <item name="android:buttonStyle">@style/StaxButton</item>
-        <item name="buttonStyle">@style/StaxButton</item>
-
-        <!-- Fab and dropdowns -->
-        <item name="android:popupMenuStyle">@style/StaxPopupMenu</item>
-        <item name="popupMenuStyle">@style/StaxPopupMenu</item>
-        <item name="actionOverflowMenuStyle">@style/StaxPopupMenu</item>
-        <item name="android:listPreferredItemHeightSmall">61dp</item>
-
-        <!-- Snackbars -->
-        <item name="snackbarStyle">@style/StaxSnackbar</item>
-        <item name="snackbarButtonStyle">@style/StaxButton</item>
-        <item name="snackbarTextViewStyle">@style/StaxSnackbarText</item>
-    </style>
-
-    <style name="BottomNavViewText" parent="TextAppearance.AppCompat">
-        <item name="fontFamily">font-medium</item>
-        <item name="android:fontFamily">font-medium</item>
-    </style>
-
-    <style name="SplashTheme" parent="StaxTheme">
-        <item name="android:windowBackground">@drawable/splash_window_background</item>
-    </style>
-
     <style name="StaxHoverTheme" parent="StaxTheme">
         <item name="android:buttonStyle">@style/HoverButton</item>
         <item name="buttonStyle">@style/HoverButton</item>
@@ -208,21 +152,13 @@
         <item name="android:windowBackground">@color/colorPrimary</item>
     </style>
 
-    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
-        // Set the splash screen background, animated icon, and animation duration.
-        <item name="windowSplashScreenBackground">@color/colorPrimaryDark</item>
-
-        // Use windowSplashScreenAnimatedIcon to add either a drawable or an
-        // animated drawable. One of these is required.
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_stax_dark_white</item>
-        <item name="windowSplashScreenAnimationDuration">100</item>  # Required for
-        # animated icons
-
-        <item name="postSplashScreenTheme">@style/StaxTheme</item>  # Required.
-    </style>
-
     <style name="StaxIconShape" parent="">
         <item name="cornerSize">50%</item>
         <item name="android:solidColor">@color/buttonColor</item>
+    </style>
+
+    <style name="BottomNavViewText" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">font-medium</item>
+        <item name="android:fontFamily">font-medium</item>
     </style>
 </resources>

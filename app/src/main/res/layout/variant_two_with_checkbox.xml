@@ -125,7 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_34"
             android:layout_marginHorizontal="@dimen/margin_26"
-            android:fontFamily="@font/effra_regular"
+            android:fontFamily="@font/effra_medium"
             android:text="@string/btn_continue"
             android:textSize="@dimen/text_16"
             app:layout_constraintBottom_toBottomOf="parent"

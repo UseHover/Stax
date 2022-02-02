@@ -40,6 +40,9 @@
                 app:destination="@id/navigation_onboarding_v2"
                 app:popUpTo="@id/navigation_onboarding_v2"
                 app:popUpToInclusive="true" />
+        <action
+                android:id="@+id/action_navigation_onboarding_v2_withCheckbox_to_introFragment"
+                app:destination="@id/introFragment" />
     </fragment>
 
     <fragment
@@ -52,6 +55,20 @@
                 app:destination="@id/navigation_onboarding_v2"
                 app:popUpTo="@id/navigation_onboarding_v2"
                 app:popUpToInclusive="true" />
+        <action
+                android:id="@+id/action_navigation_onboarding_v2_noCheckbox_to_introFragment"
+                app:destination="@id/introFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/introFragment"
+            android:name="com.hover.stax.onboarding.IntroFragment"
+            android:label="IntroFragment">
+        <action
+                android:id="@+id/action_introFragment_to_navigation_onboarding_v2_noCheckbox"
+                app:destination="@id/navigation_onboarding_v2_noCheckbox" />
+        <action
+                android:id="@+id/action_introFragment_to_navigation_onboarding_v2_withCheckbox"
+                app:destination="@id/navigation_onboarding_v2_withCheckbox" />
     </fragment>
 
 </navigation>

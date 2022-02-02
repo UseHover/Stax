@@ -629,5 +629,15 @@
     <string name="paybill_update_success">Paybill updated successfully</string>
     <string name="btn_update">Update</string>
     <string name="importing_channels">"Importing channels, please wait. "</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="intro_title_text">We\'ve got you covered!</string>
+    <string name="intro_desc_text">Here\'s a couple of things to get you excited about Stax.</string>
+    <string name="intro_feature_one_title">Automated USSD</string>
+    <string name="intro_feature_one_desc">No need to remember hundreds of USSD code combinations. We\'ve figured it out for you.</string>
+    <string name="intro_feature_two_title">Be in full control of your money</string>
+    <string name="intro_feature_two_desc">Manage and spend from all your banks and mobile money accounts from Stax.</string>
+    <string name="intr_feature_three_title">Safer by design</string>
+    <string name="intro_feature_three_desc">We leveraged Android\'s built in security designs to keep your information secure at all times.</string>
+    <string name="explore_btn_text">Explore Stax</string>
 
 </resources>

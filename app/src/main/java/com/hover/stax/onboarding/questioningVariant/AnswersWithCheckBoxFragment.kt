@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.hover.stax.R
 import com.hover.stax.databinding.VariantTwoWithCheckboxBinding
 import com.hover.stax.onboarding.OnBoardingActivity
 
@@ -33,11 +34,8 @@ internal class AnswersWithCheckBoxFragment : Fragment() {
         }
     }
 
-    private fun setContinueClick() {
-        binding.continueBtn.setOnClickListener {
-            //To be replaced to navigate to welcome model: Kombo is working on this separately
-            (activity as OnBoardingActivity).checkPermissionsAndNavigate()
-        }
+    private fun setContinueClick() = binding.continueBtn.setOnClickListener {
+        findNavController().navigate(R.id.action_navigation_onboarding_v2_withCheckbox_to_introFragment)
     }
 
     private fun isNoneApply(): Boolean {
