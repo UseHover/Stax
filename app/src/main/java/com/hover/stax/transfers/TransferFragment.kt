@@ -49,7 +49,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         abstractFormViewModel = getSharedViewModel<TransferViewModel>()
         transferViewModel = abstractFormViewModel as TransferViewModel
 
-        setTransactionType(arguments!!.getString(Constants.TRANSACTION_TYPE)!!)
+        setTransactionType(requireArguments().getString(Constants.TRANSACTION_TYPE)!!)
         _binding = FragmentTransferBinding.inflate(inflater, container, false)
         return binding.root
     }

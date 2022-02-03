@@ -200,6 +200,8 @@
     <string name="airtime_msg">Buying airtime</string>
     <string name="transfer_msg">Transferring money</string>
     <string name="fetch_accounts">Fetching accounts</string>
+    <string name="in_progress_text">Communicating with USSD service…</string>
+    <string name="complete_text">Transaction complete</string>
 
     <!-- Transaction statuses -->
     <string name="succeeded_cardHead">Succeeded</string>
@@ -500,6 +502,8 @@
     <string name="bounty_airtime_explain">Buy airtime for someone else %1$s</string>
     <string name="descrip_bounty_p2p">Send money to someone else %1$s</string>
     <string name="bounty_p2p_explain">Send any amount to any person %1$s</string>
+    <string name="descrip_bounty_offnet">on %1$s</string>
+    <string name="descrip_bounty_cross_country">in %1$s on %2$s</string>
     <string name="descrip_bounty_me2me">Move money to your %1$s account</string>
     <string name="bounty_me2me_explain">Send any amount to your own %1$s account</string>
     <string name="descrip_bounty_c2b">Pay a bill%1$s</string>
@@ -509,7 +513,6 @@
 
     <string name="descrip_bounty_balance">Check balance</string>
     <string name="bounty_balance_explain">Check your balance</string>
-    <string name="descrip_bounty_offnet">on %1$s</string>
     <string name="bounty_email">Email</string>
     <string name="bounty_email_error">Please enter a valid email address</string>
     <string name="bounty_uploading_email">Connecting, please wait…</string>

@@ -62,8 +62,8 @@ public class SmsSentObserver extends ContentObserver {
         try (Cursor cursor = resolver.query(uri, PROJECTION, null, null, null)) {
 
             if (cursor != null && cursor.moveToFirst()) {
-                final String address = cursor.getString(cursor.getColumnIndex(COLUMN_ADDRESS));
-                final int type = cursor.getInt(cursor.getColumnIndex(COLUMN_TYPE));
+                final String address = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ADDRESS));
+                final int type = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_TYPE));
                 for (StaxContact c : recipients) {
                     if (PhoneNumberUtils.compare(address, c.accountNumber) && type == MESSAGE_TYPE_SENT) {
                         wasSent = true;
