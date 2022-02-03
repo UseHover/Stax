@@ -18,7 +18,7 @@ val Typography = Typography(
     body1 = TextStyle(
         fontFamily = EffraFont,
         fontWeight = FontWeight.Normal,
-        fontSize = 18.sp
+        fontSize = 16.sp
     ),
     body2 = TextStyle(
         fontFamily = EffraFont,
@@ -28,12 +28,12 @@ val Typography = Typography(
     h1 = TextStyle(
         fontFamily = EffraFont,
         fontWeight = FontWeight.Medium,
-        fontSize = 30.sp
+        fontSize = 28.sp
     ),
     h2 = TextStyle(
         fontFamily = EffraFont,
         fontWeight = FontWeight.Medium,
-        fontSize = 23.sp
+        fontSize = 21.sp
     ),
     button = TextStyle(
         fontFamily = EffraFont,

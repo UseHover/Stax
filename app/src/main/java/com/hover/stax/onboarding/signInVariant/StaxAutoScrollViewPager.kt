@@ -1,4 +1,4 @@
-package com.hover.stax.onboarding.slidingVariant
+package com.hover.stax.onboarding.signInVariant
 
 import android.content.Context
 import android.os.Handler

@@ -11,6 +11,7 @@
         <entry key="../../../../layout/compose-model-1643788841091.xml" value="0.26942567567567566" />
         <entry key="../../../../layout/compose-model-1643793399211.xml" value="0.33" />
         <entry key="../../../../layout/compose-model-1643872065946.xml" value="0.22" />
+        <entry key="../../../../layout/compose-model-1643877900989.xml" value="0.2898148148148148" />
         <entry key="../../../../layout/custom_preview.xml" value="0.5842613214550854" />
         <entry key="app/src/main/res/drawable/button_bg_colored.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_dark.xml" value="0.32037037037037036" />
@@ -68,6 +69,7 @@
         <entry key="app/src/main/res/layout/fragment_transfer.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/fragment_wellness.xml" value="0.14492753623188406" />
         <entry key="app/src/main/res/layout/fragment_wellness_detail.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/frament_default_variant.xml" value="0.2778965369816161" />
         <entry key="app/src/main/res/layout/home_card_future.xml" value="0.11398176291793313" />
         <entry key="app/src/main/res/layout/home_card_transactions.xml" value="0.14766970618034447" />
         <entry key="app/src/main/res/layout/in_app_banner_layout.xml" value="0.15704154002026344" />
@@ -77,6 +79,7 @@
         <entry key="app/src/main/res/layout/item_wellness_tips.xml" value="0.25" />
         <entry key="app/src/main/res/layout/onboarding_layout_default.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/onboarding_variant_one.xml" value="0.27447916666666666" />
+        <entry key="app/src/main/res/layout/onboarding_variant_one_slide.xml" value="0.2778965369816161" />
         <entry key="app/src/main/res/layout/onboarding_variant_two.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/paybill_card_icons.xml" value="0.3805620608899297" />
         <entry key="app/src/main/res/layout/paybill_card_save_bill.xml" value="0.8125" />

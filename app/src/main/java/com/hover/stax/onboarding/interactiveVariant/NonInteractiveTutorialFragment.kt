@@ -1,4 +1,4 @@
-package com.hover.stax.onboarding.questioningVariant
+package com.hover.stax.onboarding.interactiveVariant
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,24 +8,27 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
-import com.hover.stax.databinding.VariantTwoWithoutCheckboxBinding
+import com.hover.stax.databinding.FragmentNonInteractiveTutorialBinding
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.onboarding.welcome.WelcomeFragment
+import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 
 
-internal class AnswersNoCheckBoxFragment : Fragment() {
+internal class NonInteractiveTutorialFragment : Fragment() {
 
-    private var _binding: VariantTwoWithoutCheckboxBinding? = null
+    private var _binding: FragmentNonInteractiveTutorialBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = VariantTwoWithoutCheckboxBinding.inflate(inflater, container, false)
+        _binding = FragmentNonInteractiveTutorialBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_non_interactive_tutorial)), requireActivity())
+
         setTopBarClicks()
         setContents()
         setContinueClick()

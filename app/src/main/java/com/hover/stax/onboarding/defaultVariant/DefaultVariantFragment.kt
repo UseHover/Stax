@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.hover.stax.R
-import com.hover.stax.databinding.OnboardingLayoutDefaultBinding
+import com.hover.stax.databinding.FragmentDefaultVariantBinding
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.utils.AnalyticsUtil
 
-class OnboardingVariantDefaultFragment : Fragment() {
+class DefaultVariantFragment : Fragment() {
 
-    private var _binding: OnboardingLayoutDefaultBinding? = null
+    private var _binding: FragmentDefaultVariantBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -20,7 +20,7 @@ class OnboardingVariantDefaultFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = OnboardingLayoutDefaultBinding.inflate(inflater, container, false)
+        _binding = FragmentDefaultVariantBinding.inflate(inflater, container, false)
         return binding.root
     }
 

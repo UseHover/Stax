@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import com.hover.stax.R
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.ui.theme.StaxTheme
+import com.hover.stax.utils.AnalyticsUtil
 
 class WelcomeFragment : Fragment() {
 
@@ -32,9 +33,15 @@ class WelcomeFragment : Fragment() {
 
         setContent {
             WelcomeScreen(title, subtitle, buttonText) {
+                AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_getstarted), requireActivity())
                 (requireActivity() as OnBoardingActivity).checkPermissionsAndNavigate()
             }
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_welcome)), requireActivity())
     }
 
     private fun setGreetings(greeting: Int) = when (greeting) {
@@ -108,7 +115,7 @@ fun WelcomeScreenPreview() {
                     }
                 },
                 bottomBar = {
-                    ContinueButton(text = stringResource(id = R.string.explore_btn_text), onClick = {  })
+                    ContinueButton(text = stringResource(id = R.string.explore_btn_text), onClick = { })
                 }
             )
         }

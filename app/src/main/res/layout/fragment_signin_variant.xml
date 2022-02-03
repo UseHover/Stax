@@ -44,7 +44,7 @@
             app:layout_constraintStart_toEndOf="@+id/pb3"
             app:layout_constraintTop_toTopOf="parent" />
 
-    <com.hover.stax.onboarding.slidingVariant.StaxAutoScrollViewPager
+    <com.hover.stax.onboarding.signInVariant.StaxAutoScrollViewPager
             android:id="@+id/vpPager"
             android:layout_width="match_parent"
             android:layout_height="0dp"

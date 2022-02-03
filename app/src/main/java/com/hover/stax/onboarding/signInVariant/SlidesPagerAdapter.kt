@@ -1,4 +1,4 @@
-package com.hover.stax.onboarding.slidingVariant
+package com.hover.stax.onboarding.signInVariant
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.hover.stax.R
-import com.hover.stax.databinding.OnboardingVariantOneSlideBinding
+import com.hover.stax.databinding.ItemSiginViewpagerBinding
 
 private data class SlideData(val imgRes: Int, val titleRes: Int, val descRes: Int)
 
@@ -18,7 +18,7 @@ class SlidesPagerAdapter(private val context: Context) : PagerAdapter() {
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val binding = OnboardingVariantOneSlideBinding.inflate(LayoutInflater.from(context), container, false)
+        val binding = ItemSiginViewpagerBinding.inflate(LayoutInflater.from(context), container, false)
 
         val slideData = getSlideData(position)
         binding.onboardingV1Title.setText(slideData.titleRes)

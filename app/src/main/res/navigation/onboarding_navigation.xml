@@ -7,15 +7,15 @@
 
     <fragment
             android:id="@+id/defaultOnboardingFragment"
-            android:name="com.hover.stax.onboarding.defaultVariant.OnboardingVariantDefaultFragment"
+            android:name="com.hover.stax.onboarding.defaultVariant.DefaultVariantFragment"
             android:label="@string/onboarding_v1_slide1_title"
-            tools:layout="@layout/onboarding_layout_default" />
+            tools:layout="@layout/fragment_default_variant" />
 
     <fragment
             android:id="@+id/slidingOnboardingFragment"
-            android:name="com.hover.stax.onboarding.slidingVariant.SlidingVariantFragment"
+            android:name="com.hover.stax.onboarding.signInVariant.SignInVariantFragment"
             android:label="@string/onboarding_v1_slide1_title"
-            tools:layout="@layout/onboarding_variant_one">
+            tools:layout="@layout/fragment_signin_variant">
         <action
                 android:id="@+id/action_slidingOnboardingFragment_to_welcomeFragment"
                 app:destination="@id/welcomeFragment" />
@@ -23,37 +23,37 @@
 
     <fragment
             android:id="@+id/questionOnboardingFragment"
-            android:name="com.hover.stax.onboarding.questioningVariant.QuestioningVariantFragment"
+            android:name="com.hover.stax.onboarding.interactiveVariant.InteractiveOnboardingVariant"
             android:label="@string/onboarding_v1_slide2_title"
-            tools:layout="@layout/onboarding_variant_two">
+            tools:layout="@layout/fragment_interactive_onboarding">
         <action
-                android:id="@+id/action_questionOnboardingFragment_to_checkboxOnboardingFragment"
+                android:id="@+id/action_interactiveOnboardingFragment_to_interactiveTutorialFragment"
                 app:destination="@id/checkboxOnboardingFragment" />
         <action
-                android:id="@+id/action_questionOnboardingFragment_to_noCheckBoxOnboardingFragment"
+                android:id="@+id/action_interactiveOnboardingFragment_to_nonInteractiveTutorialFragment"
                 app:destination="@id/noCheckBoxOnboardingFragment" />
     </fragment>
 
     <fragment
             android:id="@+id/checkboxOnboardingFragment"
-            android:name="com.hover.stax.onboarding.questioningVariant.AnswersWithCheckBoxFragment"
+            android:name="com.hover.stax.onboarding.interactiveVariant.InteractiveTutorialFragment"
             android:label="@string/onboarding_v1_slide2_title"
-            tools:layout="@layout/variant_two_with_checkbox">
+            tools:layout="@layout/fragment_interactive_tutorial">
         <action
                 android:id="@+id/action_checkBoxOnboardingFragment_to_questionOnboardingFragment"
                 app:destination="@id/questionOnboardingFragment"
                 app:popUpTo="@id/questionOnboardingFragment"
                 app:popUpToInclusive="true" />
         <action
-                android:id="@+id/action_checkboxOnboardingFragment_to_welcomeFragment"
+                android:id="@+id/action_interactiveTutorialFragment_to_welcomeFragment"
                 app:destination="@id/welcomeFragment" />
     </fragment>
 
     <fragment
             android:id="@+id/noCheckBoxOnboardingFragment"
-            android:name="com.hover.stax.onboarding.questioningVariant.AnswersNoCheckBoxFragment"
+            android:name="com.hover.stax.onboarding.interactiveVariant.NonInteractiveTutorialFragment"
             android:label="@string/onboarding_v1_slide2_title"
-            tools:layout="@layout/variant_two_without_checkbox">
+            tools:layout="@layout/fragment_non_interactive_tutorial">
         <action
                 android:id="@+id/action_noCheckBoxOnboardingFragment_to_questionOnboardingFragment"
                 app:destination="@id/questionOnboardingFragment"

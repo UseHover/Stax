@@ -1,4 +1,4 @@
-package com.hover.stax.onboarding.slidingVariant
+package com.hover.stax.onboarding.signInVariant
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -17,16 +17,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.hover.stax.R
-import com.hover.stax.databinding.OnboardingVariantOneBinding
+import com.hover.stax.databinding.FragmentSigninVariantBinding
 import com.hover.stax.onboarding.OnBoardingActivity
-import com.hover.stax.onboarding.WelcomeFragment
-import com.hover.stax.utils.Constants
+import com.hover.stax.onboarding.welcome.WelcomeFragment
+import com.hover.stax.utils.AnalyticsUtil
 import timber.log.Timber
 
 
-class SlidingVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
+class SignInVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
 
-    private var _binding: OnboardingVariantOneBinding? = null
+    private var _binding: FragmentSigninVariantBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var progressBar1: LinearProgressIndicator
@@ -39,17 +39,15 @@ class SlidingVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
     private lateinit var animator3: ValueAnimator
     private lateinit var animator4: ValueAnimator
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = OnboardingVariantOneBinding.inflate(inflater, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentSigninVariantBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_sign_in)), requireActivity())
+
         initProgressBarView()
         initAnimators()
 
@@ -65,10 +63,12 @@ class SlidingVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
     }
 
     private fun setupSignInWithGoogle() = binding.continueWithGoogle.setOnClickListener {
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_google_sign_in), requireActivity())
         (requireActivity() as OnBoardingActivity).signIn(optInMarketing = true)
     }
 
     private fun setupContinueNoSignIn() = binding.continueNoSignIn.setOnClickListener {
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_skip_sign_in), requireActivity())
         findNavController().navigate(R.id.action_slidingOnboardingFragment_to_welcomeFragment, bundleOf(WelcomeFragment.SALUTATIONS to 1))
     }
 
@@ -108,7 +108,7 @@ class SlidingVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
             setAutoScrollDurationFactor(AUTO_SCROLL_EASE_DURATION_FACTOR)
             setSwipeScrollDurationFactor(SWIPE_DURATION_FACTOR)
             setStopScrollWhenTouch(true)
-            addOnPageChangeListener(this@SlidingVariantFragment)
+            addOnPageChangeListener(this@SignInVariantFragment)
             adapter = viewPagerAdapter
         }
     }
@@ -123,21 +123,20 @@ class SlidingVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
         binding.onboardingV1PrivacyPolicy.movementMethod = LinkMovementMethod.getInstance()
     }
 
-    private fun updateProgressAnimation(animator: ValueAnimator, progressBar: LinearProgressIndicator) {
-        animator.duration = 4000
-        animator.addUpdateListener { animation ->
+    private fun updateProgressAnimation(animator: ValueAnimator, progressBar: LinearProgressIndicator) = animator.apply {
+        duration = 400
+        addUpdateListener { animation ->
             progressBar.progress = animation.animatedValue as Int
             if (progressBar.progress > 90) {
                 fillUpProgress(progressBar)
             }
         }
-
-        animator.addListener(object : AnimatorListenerAdapter() {
+        addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator?) {
                 super.onAnimationEnd(animation)
             }
         })
-        animator.start()
+        start()
     }
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
@@ -195,7 +194,6 @@ class SlidingVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
         val brightBlue = ContextCompat.getColor(requireActivity(), R.color.brightBlue)
         progressBar.progress = 0
         progressBar.trackColor = brightBlue
-
     }
 
     private val backPressedCallback = object : OnBackPressedCallback(true) {
@@ -203,7 +201,6 @@ class SlidingVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
             Timber.i("Back navigation disabled") //do nothing to prevent navigation back to the home fragment (default variant)
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
