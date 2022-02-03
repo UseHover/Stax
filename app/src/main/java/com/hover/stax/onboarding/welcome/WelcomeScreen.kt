@@ -71,7 +71,6 @@ fun ContinueButton(text: String, modifier: Modifier = Modifier, onClick: (() -> 
     }
 }
 
-//@Preview
 @Composable
 fun WelcomeScreen(introTitle: String, introDesc: String, buttonText: String, onClick: (() -> Unit)) {
 

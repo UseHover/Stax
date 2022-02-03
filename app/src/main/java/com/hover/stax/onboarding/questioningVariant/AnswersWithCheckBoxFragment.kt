@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.VariantTwoWithCheckboxBinding
 import com.hover.stax.onboarding.OnBoardingActivity
-import com.hover.stax.onboarding.WelcomeFragment
+import com.hover.stax.onboarding.welcome.WelcomeFragment
 
 internal class AnswersWithCheckBoxFragment : Fragment() {
 
