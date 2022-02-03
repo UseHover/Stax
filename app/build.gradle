@@ -42,8 +42,8 @@ android {
         applicationId "com.hover.stax"
         minSdk 21
         targetSdk 31
-        versionCode 111
-        versionName "1.8.1.6"
+        versionCode 112
+        versionName "1.8.1.8" //final version 1.9
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -130,8 +130,8 @@ dependencies {
     implementation 'androidx.viewpager:viewpager:1.0.0'
     implementation 'androidx.recyclerview:recyclerview-selection:1.1.0'
     implementation 'androidx.work:work-runtime-ktx:2.7.1'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
-    implementation 'androidx.activity:activity-compose:1.3.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
+    implementation 'androidx.activity:activity-compose:1.4.0'
     kapt "androidx.lifecycle:lifecycle-common-java8:2.4.0"
 
     implementation 'androidx.core:core-splashscreen:1.0.0-beta01'
@@ -159,7 +159,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx'
 
     //auth
-    implementation 'com.google.android.gms:play-services-auth:20.0.1'
+    implementation 'com.google.android.gms:play-services-auth:20.1.0'
     implementation 'com.google.firebase:firebase-auth-ktx'
 
     implementation 'com.amplitude:android-sdk:2.23.2'
