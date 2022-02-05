@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5" />
+
+    <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:contentDescription="@string/app_name"
+            android:layout_marginBottom="@dimen/margin_10"
+            app:layout_constraintBottom_toTopOf="@id/welcomeText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/ic_rounded_white" />
+
+    <TextView
+            android:id="@+id/welcomeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_13"
+            android:fontFamily="@font/effra_medium"
+            android:gravity="center"
+            android:text="@string/welcome_to_stax"
+            android:textSize="23sp"
+            app:layout_constraintBottom_toTopOf="@id/introText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+            android:id="@+id/introText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="40dp"
+            android:layout_marginBottom="@dimen/margin_16"
+            android:fontFamily="@font/effra_regular"
+            android:gravity="center"
+            android:text="@string/welcome_to_stax_fullContent"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text_16"
+            app:layout_constraintBottom_toTopOf="@id/guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+            android:id="@+id/onboarding_variant_2_question1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_26"
+            android:layout_marginTop="@dimen/margin_13"
+            android:background="@drawable/grey_background"
+            android:fontFamily="@font/effra_regular"
+            android:gravity="start"
+            android:padding="@dimen/margin_13"
+            android:text="@string/onboarding_variant_2_question1"
+            android:textSize="@dimen/text_16"
+            app:drawableEndCompat="@drawable/ic_chevron_right"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/guideline" />
+
+    <TextView
+            android:id="@+id/onboarding_variant_2_question2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginHorizontal="@dimen/margin_26"
+            android:layout_marginTop="@dimen/margin_13"
+            android:background="@drawable/grey_background"
+            android:fontFamily="@font/effra_regular"
+            android:gravity="start"
+            android:padding="@dimen/margin_13"
+            android:text="@string/does_stax_charge_fees"
+            android:textSize="@dimen/text_16"
+            app:drawableEndCompat="@drawable/ic_chevron_right"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/onboarding_variant_2_question1" />
+
+    <TextView
+            android:id="@+id/onboarding_variant_2_question3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginHorizontal="@dimen/margin_26"
+            android:layout_marginTop="@dimen/margin_13"
+            android:background="@drawable/grey_background"
+            android:fontFamily="@font/effra_regular"
+            android:gravity="start"
+            android:padding="@dimen/margin_13"
+            android:text="@string/what_does_stax_do"
+            android:textSize="@dimen/text_16"
+            app:drawableEndCompat="@drawable/ic_chevron_right"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/onboarding_variant_2_question2" />
+
+    <TextView
+            android:id="@+id/skipText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_26"
+            android:fontFamily="@font/effra_regular"
+            android:text="@string/skip_prefix"
+            android:textSize="@dimen/text_15"
+            app:layout_constraintBaseline_toBaselineOf="@+id/skipBtn"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/skipBtn"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+            android:id="@+id/skipBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_5"
+            android:fontFamily="@font/effra_medium"
+            android:text="@string/skip"
+            android:textColor="@color/brightBluePressed"
+            android:textSize="@dimen/text_15"
+            android:layout_marginBottom="@dimen/margin_26"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/skipText"
+            tools:layout_editor_absoluteY="840dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

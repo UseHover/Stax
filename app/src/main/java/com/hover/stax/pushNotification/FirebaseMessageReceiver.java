@@ -13,7 +13,7 @@ import androidx.core.app.NotificationCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.hover.stax.R;
-import com.hover.stax.SplashScreenActivity;
+import com.hover.stax.RoutingActivity;
 import com.hover.stax.utils.Constants;
 import com.hover.stax.utils.DateUtils;
 
@@ -21,14 +21,14 @@ import java.util.Date;
 import java.util.Map;
 
 public class FirebaseMessageReceiver extends FirebaseMessagingService {
+
     @Override
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
     }
 
     @Override
-    public void
-    onMessageReceived(RemoteMessage remoteMessage) {
+    public void onMessageReceived(RemoteMessage remoteMessage) {
         Map<String, String> data = remoteMessage.getData();
         String redirect = data.get("redirect");
 
@@ -45,7 +45,7 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
     private void showNotification(String title, String message, String redirect) {
         String channel_id = String.valueOf(DateUtils.now());
 
-        Intent intent = new Intent(this, SplashScreenActivity.class);
+        Intent intent = new Intent(this, RoutingActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra(Constants.FROM_FCM, title);
         intent.putExtra(Constants.FRAGMENT_DIRECT, redirect);

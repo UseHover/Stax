@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:contentDescription="@string/btn_back"
+            android:padding="@dimen/margin_16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_arrow_back" />
+
+    <TextView
+            android:id="@+id/skip_tutorial"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_16"
+            android:fontFamily="@font/effra_medium"
+            android:text="@string/skip_tutorial"
+            android:textColor="@color/brightBlue"
+            android:textSize="@dimen/text_16"
+            app:layout_constraintBottom_toBottomOf="@+id/backButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/backButton" />
+
+    <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="@dimen/margin_34"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:contentDescription="@string/app_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/skip_tutorial"
+            app:srcCompat="@drawable/ic_rounded_white" />
+
+    <TextView
+            android:id="@+id/variant_v2_nocheckbox_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_34"
+            android:layout_marginTop="@dimen/margin_26"
+            android:layout_marginBottom="@dimen/margin_13"
+            android:fontFamily="@font/effra_medium"
+            android:gravity="center"
+            tools:text="@string/is_stax_for_you"
+            android:textSize="23sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageView" />
+
+    <TextView
+            android:id="@+id/variant_v2_nocheckbox_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_34"
+            android:layout_marginBottom="@dimen/margin_21"
+            android:layout_marginTop="@dimen/margin_34"
+            android:fontFamily="@font/effra_regular"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/margin_21"
+            tools:text="@string/variant_v2_nocheckbox_desc1"
+            android:textColor="@color/grey"
+            android:textSize="19sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/variant_v2_nocheckbox_title"/>
+
+    <Button
+            android:id="@+id/continue_btn"
+            style="@style/StaxFabExtended"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_34"
+            android:layout_marginHorizontal="@dimen/margin_26"
+            android:fontFamily="@font/effra_regular"
+            android:text="@string/btn_continue"
+            android:textSize="@dimen/text_16"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

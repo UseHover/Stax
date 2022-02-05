@@ -1,4 +1,4 @@
-package com.hover.stax.settings
+package com.hover.stax.login
 
 import android.content.Context
 import com.hover.sdk.api.Hover

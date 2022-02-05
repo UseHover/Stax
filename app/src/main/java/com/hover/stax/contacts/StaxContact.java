@@ -2,6 +2,7 @@ package com.hover.stax.contacts;
 
 import static com.google.i18n.phonenumbers.PhoneNumberUtil.MatchType.NO_MATCH;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -78,6 +79,7 @@ public class StaxContact {
         name = getNameFromExtras(i);
     }
 
+    @SuppressLint("Range")
     public StaxContact(Intent data, Context c) {
         Uri contactData = data.getData();
         if (contactData != null) {
