@@ -30,9 +30,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener,
-        BiometricChecker.AuthListener, PushNotificationTopicsInterface {
+    BiometricChecker.AuthListener, PushNotificationTopicsInterface {
 
-    private val networkReceiver = NetworkReceiver()
     private val balancesViewModel: BalancesViewModel by viewModel()
     private val actionSelectViewModel: ActionSelectViewModel by viewModel()
     private val transferViewModel: TransferViewModel by viewModel()
@@ -67,21 +66,11 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
     override fun onResume() {
         super.onResume()
-        registerNetworkReceiver()
         staxNavigation.setUpNav()
     }
 
-    private fun registerNetworkReceiver() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) registerReceiver(networkReceiver, IntentFilter(Constants.CONNECTIVITY))
-    }
-
-    override fun onPause() {
-        super.onPause()
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-            unregisterReceiver(networkReceiver)
-    }
-
     fun submit(account: Account) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account) }
+
     fun checkPermissionsAndNavigate(destination: Int) {
         staxNavigation.checkPermissionsAndNavigate(destination)
     }
@@ -101,9 +90,9 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
             }
 
             accounts.observe(this@MainActivity, accountsObserver)
-            toRun.observe(this@MainActivity, { logResult("Observing action to run", it.size) })
-            runFlag.observe(this@MainActivity, { logResult("Observing run flag ", it) })
-            actions.observe(this@MainActivity, { logResult("Observing actions", it.size) })
+            toRun.observe(this@MainActivity) { logResult("Observing action to run", it.size) }
+            runFlag.observe(this@MainActivity) { logResult("Observing run flag ", it) }
+            actions.observe(this@MainActivity) { logResult("Observing actions", it.size) }
         }
     }
 
@@ -145,16 +134,19 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
     private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
             staxNavigation.navigateToTransactionDetailsFragment(
-                    data.extras!!.getString("uuid")!!,
-                    supportFragmentManager,
-                    false
+                data.extras!!.getString("uuid")!!,
+                supportFragmentManager,
+                false
             )
         }
     }
 
     private fun initFromIntent() {
         when {
-            intent.hasExtra(Schedule.SCHEDULE_ID) -> createFromSchedule(intent.getIntExtra(Schedule.SCHEDULE_ID, -1), intent.getBooleanExtra(Constants.REQUEST_TYPE, false))
+            intent.hasExtra(Schedule.SCHEDULE_ID) -> createFromSchedule(
+                intent.getIntExtra(Schedule.SCHEDULE_ID, -1),
+                intent.getBooleanExtra(Constants.REQUEST_TYPE, false)
+            )
             intent.hasExtra(Constants.REQUEST_LINK) -> createFromRequest(intent.getStringExtra(Constants.REQUEST_LINK)!!)
             else -> AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, intent.action), this)
         }
@@ -168,7 +160,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
     private fun observeRequest() {
         val alertDialog = StaxDialog(this).setDialogMessage(R.string.loading_link_dialoghead).showIt()
-        transferViewModel.request.observe(this@MainActivity, { it?.let { alertDialog?.dismiss() } })
+        transferViewModel.request.observe(this@MainActivity) { it?.let { alertDialog?.dismiss() } }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

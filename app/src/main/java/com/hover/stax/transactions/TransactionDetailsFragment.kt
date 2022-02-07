@@ -86,9 +86,9 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
     }
 
     private fun startObservers() {
-        viewModel.transaction.observe(viewLifecycleOwner, { showTransaction(it) })
-        viewModel.action.observe(viewLifecycleOwner, { it?.let { showActionDetails(it) } })
-        viewModel.contact.observe(viewLifecycleOwner, { updateRecipient(it) })
+        viewModel.transaction.observe(viewLifecycleOwner) { showTransaction(it) }
+        viewModel.action.observe(viewLifecycleOwner) { it?.let { showActionDetails(it) } }
+        viewModel.contact.observe(viewLifecycleOwner) { updateRecipient(it) }
     }
 
     private fun setToPopupDesign() {
@@ -105,14 +105,14 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
         val messagesView = binding.convoRecyclerView
         messagesView.layoutManager = UIHelper.setMainLinearManagers(requireActivity())
         messagesView.setHasFixedSize(true)
-        viewModel.messages.observe(viewLifecycleOwner, { updateWithSessionDetails(it, messagesView) })
+        viewModel.messages.observe(viewLifecycleOwner) { updateWithSessionDetails(it, messagesView) }
     }
 
     private fun createSmsMessagesRecyclerView() {
         val smsView = binding.smsRecyclerView
         smsView.layoutManager = UIHelper.setMainLinearManagers(requireActivity())
         smsView.setHasFixedSize(true)
-        viewModel.sms.observe(viewLifecycleOwner, { updateWithSessionDetails(it, smsView) })
+        viewModel.sms.observe(viewLifecycleOwner) { updateWithSessionDetails(it, smsView) }
     }
 
     private fun updateWithSessionDetails(messages: List<UssdCallResponse>?, v: RecyclerView) {

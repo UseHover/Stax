@@ -28,7 +28,9 @@ internal class StaxNavigation(val activity: AppCompatActivity, private val isMai
         navHostFragment?.let {
             navController = getNavController()
             NavigationUI.setupWithNavController(nav, navController!!)
-            appBarConfiguration = AppBarConfiguration.Builder(R.id.navigation_home, R.id.navigation_balance, R.id.navigation_request, R.id.libraryFragment, R.id.navigation_settings).build()
+            appBarConfiguration = AppBarConfiguration.Builder(
+                R.id.navigation_home, R.id.navigation_balance, R.id.navigation_request, R.id.libraryFragment, R.id.navigation_settings
+            ).build()
         }
 
         setNavClickListener(nav)
@@ -36,6 +38,7 @@ internal class StaxNavigation(val activity: AppCompatActivity, private val isMai
     }
 
     fun checkPermissionsAndNavigate(toWhere: Int) = checkPermissionsAndNavigate(toWhere, 0)
+
     fun navigateAccountDetails(accountId: Int) {
         getNavController().navigate(R.id.action_navigation_home_to_accountDetailsFragment, bundleOf(Constants.ACCOUNT_ID to accountId))
     }
@@ -54,7 +57,7 @@ internal class StaxNavigation(val activity: AppCompatActivity, private val isMai
                 navigateThruHome(it.itemId)
             true
         }
-        nav.setOnItemReselectedListener { /*do nothing*/ }
+        nav.setOnItemReselectedListener { navController?.popBackStack() }
     }
 
     private fun setDestinationChangeListener(nav: BottomNavigationView) = navController?.let {
@@ -73,8 +76,9 @@ internal class StaxNavigation(val activity: AppCompatActivity, private val isMai
                     toWhere == Constants.NAV_HOME ||
                     permissionHelper.hasBasicPerms() -> navigate(getNavController(), toWhere, activity)
             else -> PermissionUtils.showInformativeBasicPermissionDialog(permissionMsg,
-                    { PermissionUtils.requestPerms(getNavConst(toWhere), activity) },
-                    { AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.perms_basic_cancelled), activity) }, activity)
+                { PermissionUtils.requestPerms(getNavConst(toWhere), activity) },
+                { AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.perms_basic_cancelled), activity) }, activity
+            )
         }
     }
 
