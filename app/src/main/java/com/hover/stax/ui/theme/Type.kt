@@ -38,7 +38,7 @@ val Typography = Typography(
     h3 = TextStyle(
         fontFamily = EffraFont,
         fontWeight = FontWeight.Medium,
-        fontSize = 17.sp
+        fontSize = 19.sp
     ),
     button = TextStyle(
         fontFamily = EffraFont,

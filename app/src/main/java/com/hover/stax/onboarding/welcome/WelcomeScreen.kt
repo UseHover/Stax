@@ -45,7 +45,7 @@ fun FeatureCard(title: String, desc: String, iconRes: Int) {
             )
             Text(
                 text = desc,
-                style = MaterialTheme.typography.body2
+                style = MaterialTheme.typography.body1
             )
         }
     }
