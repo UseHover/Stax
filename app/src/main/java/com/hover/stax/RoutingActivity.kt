@@ -216,7 +216,6 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     private fun goToMainActivity(redirectLink: String?) {
         val intent = Intent(this, MainActivity::class.java)
 
-
         try {
             redirectLink?.let { intent.putExtra(FRAGMENT_DIRECT, redirectLink.toInt()) }
         } catch (e: NumberFormatException) {
