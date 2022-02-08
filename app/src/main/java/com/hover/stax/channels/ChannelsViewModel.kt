@@ -15,7 +15,7 @@ import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountDropdown
 import com.hover.stax.database.DatabaseRepo
-import com.hover.stax.pushNotification.PushNotificationTopicsInterface
+import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.utils.AnalyticsUtil

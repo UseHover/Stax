@@ -16,6 +16,7 @@ import androidx.work.WorkManager
 import com.amplitude.api.Amplitude
 import com.appsflyer.AppsFlyerLib
 import com.google.firebase.installations.FirebaseInstallations
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.hover.sdk.actions.HoverAction
@@ -27,7 +28,7 @@ import com.hover.stax.destruct.SelfDestructActivity
 import com.hover.stax.home.MainActivity
 import com.hover.stax.inapp_banner.BannerUtils
 import com.hover.stax.onboarding.OnBoardingActivity
-import com.hover.stax.pushNotification.PushNotificationTopicsInterface
+import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.schedules.ScheduleWorker
 import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.utils.AnalyticsUtil
@@ -55,12 +56,27 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
         remoteConfig = FirebaseRemoteConfig.getInstance()
         startBackgroundProcesses()
+
+//        getFirebaseToken()
     }
 
     override fun onStart() {
         super.onStart()
+
         AppsFlyerLib.getInstance().start(this)
     }
+
+//    private fun getFirebaseToken(){
+//        FirebaseMessaging.getInstance().token.addOnCompleteListener {
+//            if (!it.isSuccessful) {
+//                Timber.w(it.exception, RoutingActivity::class.java.simpleName, "Fetching FCM registration token failed")
+//            }
+//
+//            // Get new FCM registration token
+//            val token = it.result
+//            Timber.e("Messaging token: $token")
+//        }
+//    }
 
     private fun startBackgroundProcesses() {
         with(channelsViewModel) {
@@ -101,8 +117,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
         joinNoRequestMoneyGroup(this)
     }
 
-    private fun initAmplitude() = Amplitude.getInstance().initialize(this, getString(R.string.amp))
-        .enableForegroundTracking(application)
+    private fun initAmplitude() = Amplitude.getInstance().initialize(this, getString(R.string.amp)).enableForegroundTracking(application)
 
     private fun logPushNotificationIfRequired() = intent.extras?.let {
         val fcmTitle = it.getString(Constants.FROM_FCM)

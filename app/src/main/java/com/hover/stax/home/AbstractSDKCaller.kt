@@ -14,7 +14,7 @@ import com.hover.stax.contacts.PhoneHelper
 import com.hover.stax.hover.HoverSession
 import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.paybill.PaybillViewModel
-import com.hover.stax.pushNotification.PushNotificationTopicsInterface
+import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransactionType

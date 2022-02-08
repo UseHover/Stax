@@ -1,8 +1,6 @@
 package com.hover.stax.home
 
 import android.content.Intent
-import android.content.IntentFilter
-import android.os.Build
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import com.hover.sdk.actions.HoverAction
@@ -14,7 +12,8 @@ import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.balances.BalanceAdapter
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.databinding.ActivityMainBinding
-import com.hover.stax.pushNotification.PushNotificationTopicsInterface
+import com.hover.stax.financialTips.FinancialTipsFragment
+import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.transactions.TransactionHistoryViewModel
@@ -24,7 +23,6 @@ import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Constants.NAV_TRANSFER
 import com.hover.stax.utils.DateUtils
 import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.network.NetworkReceiver
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -148,6 +146,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
                 intent.getBooleanExtra(Constants.REQUEST_TYPE, false)
             )
             intent.hasExtra(Constants.REQUEST_LINK) -> createFromRequest(intent.getStringExtra(Constants.REQUEST_LINK)!!)
+            intent.hasExtra(FinancialTipsFragment.TIP_ID) -> staxNavigation.navigateWellness(intent.getStringExtra(FinancialTipsFragment.TIP_ID)!!)
             else -> AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, intent.action), this)
         }
     }
