@@ -39,6 +39,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     val activeChannel = MediatorLiveData<Channel>()
     val channelActions = MediatorLiveData<List<HoverAction>>()
     val accounts = MediatorLiveData<List<Account>>()
+    val allLiveAccounts: LiveData<List<Account>> = repo.allAccountsLive
     val activeAccount = MutableLiveData<Account>()
     private var simReceiver: BroadcastReceiver? = null
 
@@ -176,7 +177,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     fun setActiveAccount(account: Account?) {
-        activeAccount.postValue(account)
+        activeAccount.postValue(account!!)
     }
 
     private fun setActiveChannel(actions: List<HoverAction>) {
@@ -337,6 +338,19 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             val channel = repo.getChannel(account.channelId)
             setActiveChannel(channel!!)
             activeAccount.postValue(account)
+        }
+    }
+
+    fun setDefaultAccount(account: Account) {
+        if (!allLiveAccounts.value.isNullOrEmpty()) {
+            //remove current default account
+            val current: Account? = allLiveAccounts.value!!.firstOrNull { it.isDefault }
+            current?.isDefault = false
+            repo.update(current)
+
+            val a = allLiveAccounts.value!!.first { it.id == account.id }
+            a.isDefault = true
+            repo.update(a)
         }
     }
 
