@@ -12,9 +12,7 @@
         // Use windowSplashScreenAnimatedIcon to add either a drawable or an
         // animated drawable. One of these is required.
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_stax_dark_white</item>
-        <item name="windowSplashScreenAnimationDuration">100</item>
-        # Required for
-        # animated icons
+        <item name="windowSplashScreenAnimationDuration">50</item>
 
         <item name="postSplashScreenTheme">@style/StaxTheme</item>
         # Required.

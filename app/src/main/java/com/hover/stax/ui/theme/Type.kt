@@ -28,12 +28,17 @@ val Typography = Typography(
     h1 = TextStyle(
         fontFamily = EffraFont,
         fontWeight = FontWeight.Medium,
-        fontSize = 28.sp
+        fontSize = 24.sp
     ),
     h2 = TextStyle(
         fontFamily = EffraFont,
         fontWeight = FontWeight.Medium,
         fontSize = 21.sp
+    ),
+    h3 = TextStyle(
+        fontFamily = EffraFont,
+        fontWeight = FontWeight.Medium,
+        fontSize = 19.sp
     ),
     button = TextStyle(
         fontFamily = EffraFont,

@@ -194,8 +194,6 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     }
 
     private fun validateUser() = lifecycleScope.launchWhenStarted {
-        delay(1500L)
-
         when {
             !hasPassedOnboarding() -> goToOnBoardingActivity()
             hasAccounts -> BiometricChecker(this@RoutingActivity, this@RoutingActivity).startAuthentication(null)
@@ -215,7 +213,6 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
     private fun goToMainActivity(redirectLink: String?) {
         val intent = Intent(this, MainActivity::class.java)
-
 
         try {
             redirectLink?.let { intent.putExtra(FRAGMENT_DIRECT, redirectLink.toInt()) }
