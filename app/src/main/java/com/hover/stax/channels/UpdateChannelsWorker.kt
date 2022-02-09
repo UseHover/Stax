@@ -3,6 +3,8 @@ package com.hover.stax.channels
 import android.content.Context
 import androidx.work.*
 import com.hover.stax.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -13,35 +15,34 @@ import timber.log.Timber
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
+class UpdateChannelsWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
     private val client = OkHttpClient()
 
-    override fun doWork(): Result {
-        Timber.v("Downloading channels")
+    override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
+            Timber.v("Downloading channels")
+            try {
+                val channelsJson = downloadChannels(url)
+                channelsJson?.let {
+                    val data: JSONArray = it.getJSONArray("data")
+                    ChannelUtil.updateChannels(data, applicationContext)
 
-        try {
-            val channelsJson = downloadChannels(url)
-            channelsJson?.let {
-                val data: JSONArray = it.getJSONArray("data")
-                ChannelUtil.updateChannels(data, applicationContext)
+                    Timber.i("Successfully downloaded and saved channels.")
+                    Result.success()
+                }
 
-                Timber.i("Successfully downloaded and saved channels.")
-                return Result.success()
+                Timber.e("Error parsing channel data")
+                Result.failure()
+            } catch (e: JSONException) {
+                Timber.e(e, "Error parsing channel data")
+                Result.failure()
+            } catch (e: NullPointerException) {
+                Timber.e(e, "Error parsing channel data")
+                Result.failure()
+            } catch (e: IOException) {
+                Timber.e(e, "Timeout downloading channel data, will try again.")
+                Result.retry()
             }
-
-            Timber.e("Error parsing channel data")
-            return Result.failure()
-        } catch (e: JSONException) {
-            Timber.e(e, "Error parsing channel data")
-            return Result.failure()
-        } catch (e: NullPointerException) {
-            Timber.e(e, "Error parsing channel data")
-            return Result.failure()
-        } catch (e: IOException) {
-            Timber.e(e, "Timeout downloading channel data, will try again.")
-            return Result.retry()
-        }
     }
 
     private val url get() = applicationContext.getString(R.string.api_url).plus(applicationContext.getString(R.string.channels_endpoint))
