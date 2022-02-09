@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.text.HtmlCompat;
 
 import com.hover.stax.R;
 import com.hover.stax.databinding.BountyListItemBinding;
@@ -66,7 +67,7 @@ class BountyListItem extends LinearLayout {
     private void setState(int color, int noticeString, int noticeIcon, boolean isOpen, View.OnClickListener listener) {
         setBackgroundColor(getContext().getResources().getColor(color));
         if (noticeString != 0) {
-            binding.liStatus.setText(Html.fromHtml(getContext().getString(noticeString)));
+            binding.liStatus.setText(HtmlCompat.fromHtml(getContext().getString(noticeString), HtmlCompat.FROM_HTML_MODE_LEGACY));
             binding.liStatus.setMovementMethod(LinkMovementMethod.getInstance());
         }
         binding.liStatus.setCompoundDrawablesWithIntrinsicBounds(noticeIcon, 0, 0, 0);
