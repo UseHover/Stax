@@ -2,6 +2,7 @@ package com.hover.stax.transactions
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.sdk.actions.HoverAction
@@ -238,7 +240,11 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
 
     private fun setStatusText(action: HoverAction?, transaction: StaxTransaction?) {
         if (transaction != null) {
-            binding.statusText.text = transaction.fullStatus.getStatusDetail(action, viewModel.messages.value?.last(), viewModel.sms.value, requireContext())
+            binding.statusText.apply {
+                val content = transaction.fullStatus.getStatusDetail(action, viewModel.messages.value?.last(), viewModel.sms.value, requireContext())
+                text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
+                movementMethod = LinkMovementMethod.getInstance()
+            }
         }
     }
 
