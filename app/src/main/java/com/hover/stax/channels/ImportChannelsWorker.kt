@@ -10,6 +10,8 @@ import androidx.work.*
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.database.AppDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.core.component.KoinComponent
@@ -31,10 +33,8 @@ class ImportChannelsWorker(val context: Context, params: WorkerParameters) : Cor
         return ForegroundInfo(NOTIFICATION_ID, createNotification())
     }
 
-    override suspend fun doWork(): Result {
-        val hasChannels = channelDao!!.getChannelsAndAccounts().isNotEmpty()
-
-        if (!hasChannels) {
+    override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
+        if (channelDao!!.channels.isEmpty()) {
             initNotification()
 
             parseChannelJson()?.let {
@@ -43,12 +43,13 @@ class ImportChannelsWorker(val context: Context, params: WorkerParameters) : Cor
                 ChannelUtil.updateChannels(data, applicationContext)
 
                 Timber.i("Channels imported successfully")
-                return Result.success()
-            } ?: Timber.e("Error importing channels"); return Result.retry()
+                Result.success()
+            } ?: Timber.e("Error importing channels"); Result.retry()
         } else {
-            return Result.failure()
+            Result.failure()
         }
     }
+
 
     private fun parseChannelJson(): String? {
         var channelsString: String? = null
@@ -103,7 +104,7 @@ class ImportChannelsWorker(val context: Context, params: WorkerParameters) : Cor
 
     companion object {
         private const val NOTIFICATION_ID = 981
-        private const val CHANNEL_ID = "ChannelsImport"
+        private const val CHANNEL_ID = "ChannelsImport" //TODO update this after the merge with financial tips notifications // branch
 
         fun channelsImportRequest(): OneTimeWorkRequest {
             return OneTimeWorkRequestBuilder<ImportChannelsWorker>()

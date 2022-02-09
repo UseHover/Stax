@@ -13,6 +13,8 @@ object ChannelUtil : KoinComponent {
     private val channelDao = db.channelDao()
 
     fun updateChannels(data: JSONArray, context: Context) {
+        channelDao.deleteAll()
+
         for (j in 0 until data.length()) {
             var channel = channelDao.getChannel(data.getJSONObject(j).getJSONObject("attributes").getInt("id"))
             if (channel == null) {
