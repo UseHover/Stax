@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
@@ -114,12 +115,12 @@ class SignInVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
     }
 
     private fun setupPrivacyPolicy() {
-        binding.onboardingV1Tos.text = Html.fromHtml(requireContext().getString(R.string.privacyPolicyFullLabel))
+        binding.onboardingV1Tos.text = HtmlCompat.fromHtml(requireContext().getString(R.string.privacyPolicyFullLabel), HtmlCompat.FROM_HTML_MODE_LEGACY)
         binding.onboardingV1Tos.movementMethod = LinkMovementMethod.getInstance()
     }
 
     private fun setupTermsOfService() {
-        binding.onboardingV1PrivacyPolicy.text = Html.fromHtml(requireContext().getString(R.string.termsOfServiceFullLabel))
+        binding.onboardingV1PrivacyPolicy.text = HtmlCompat.fromHtml(requireContext().getString(R.string.termsOfServiceFullLabel), HtmlCompat.FROM_HTML_MODE_LEGACY)
         binding.onboardingV1PrivacyPolicy.movementMethod = LinkMovementMethod.getInstance()
     }
 
