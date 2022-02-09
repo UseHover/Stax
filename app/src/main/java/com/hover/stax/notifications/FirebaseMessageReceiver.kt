@@ -31,6 +31,8 @@ class FirebaseMessageReceiver : FirebaseMessagingService() {
         val data = message.data
         val redirect = data["redirect"]
 
+        Timber.e("Data: $data")
+
         if (message.notification != null) {
             Timber.e("Showing notification message")
             showNotification(message.notification!!.title!!, message.notification!!.body!!, redirect)
@@ -41,7 +43,7 @@ class FirebaseMessageReceiver : FirebaseMessagingService() {
     }
 
     private fun showNotification(title: String, message: String, redirect: String?) {
-        val channelId: String = DateUtils.now().toString()
+        val channelId = getString(R.string.default_notification_channel_id)
 
         val pendingIntent = getPendingIntent(title, redirect)
 

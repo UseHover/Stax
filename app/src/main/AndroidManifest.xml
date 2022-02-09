@@ -178,6 +178,9 @@
                 android:name="com.google.firebase.messaging.default_notification_color"
                 android:resource="@color/brightBlue" />
         <meta-data
+                android:name="com.google.firebase.messaging.default_notification_channel_id"
+                android:value="@string/default_notification_channel_id" />
+        <meta-data
                 android:name="io.sentry.dsn"
                 android:value="https://ce9bf386ab104ece903cd33fc563c241@o44209.ingest.sentry.io/5477330" />
         <meta-data
