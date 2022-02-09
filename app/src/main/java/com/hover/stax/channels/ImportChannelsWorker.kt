@@ -50,7 +50,6 @@ class ImportChannelsWorker(val context: Context, params: WorkerParameters) : Cor
         }
     }
 
-
     private fun parseChannelJson(): String? {
         var channelsString: String? = null
 
