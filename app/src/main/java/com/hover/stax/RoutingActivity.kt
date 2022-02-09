@@ -56,31 +56,12 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
         remoteConfig = FirebaseRemoteConfig.getInstance()
         startBackgroundProcesses()
-
-        getFirebaseToken()
-
-        if (intent.hasExtra("redirect"))
-            Timber.e(intent.getStringExtra("redirect"))
-        else
-            Timber.e("Has no extras")
     }
 
     override fun onStart() {
         super.onStart()
 
         AppsFlyerLib.getInstance().start(this)
-    }
-
-    private fun getFirebaseToken() {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener {
-            if (!it.isSuccessful) {
-                Timber.w(it.exception, RoutingActivity::class.java.simpleName, "Fetching FCM registration token failed")
-            }
-
-            // Get new FCM registration token
-            val token = it.result
-            Timber.e("Messaging token: $token")
-        }
     }
 
     private fun startBackgroundProcesses() {
@@ -214,8 +195,6 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
         finish()
     }
 
-    private fun redirectToFinancialTips(): Boolean = intent.hasExtra("redirect") && intent.getStringExtra("redirect")!!.contains(getString(R.string.deeplink_financial_tips))
-
     private fun goToFinancialTips() {
         val tipId = Uri.parse(intent.getStringExtra("redirect")).getQueryParameter("id")
         startActivity(Intent(this, MainActivity::class.java).putExtra(FinancialTipsFragment.TIP_ID, tipId))
@@ -271,5 +250,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     private fun openUrl(url: String) = startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse(url)))
 
     private fun hasPassedOnboarding(): Boolean = Utils.getBoolean(OnBoardingActivity::class.java.simpleName, this)
+
+    private fun redirectToFinancialTips(): Boolean = intent.hasExtra("redirect") && intent.getStringExtra("redirect")!!.contains(getString(R.string.deeplink_financial_tips))
 
 }

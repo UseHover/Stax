@@ -15,15 +15,17 @@ import com.google.firebase.messaging.RemoteMessage
 import com.hover.stax.R
 import com.hover.stax.RoutingActivity
 import com.hover.stax.financialTips.FinancialTipsFragment
+import com.hover.stax.home.MainActivity
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.DateUtils
 import timber.log.Timber
 import kotlin.random.Random
 
-class FirebaseMessageReceiver : FirebaseMessagingService() {
+class MessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(newToken: String) {
         super.onNewToken(newToken)
+        Timber.i("New token received: $newToken")
         // update token on backend if used for notifications
     }
 
@@ -31,26 +33,18 @@ class FirebaseMessageReceiver : FirebaseMessagingService() {
         val data = message.data
         val redirect = data["redirect"]
 
-        Timber.e("Data: $data")
-
         if (message.notification != null) {
-            Timber.e("Showing notification message")
             showNotification(message.notification!!.title!!, message.notification!!.body!!, redirect)
         } else {
-            Timber.e("Showing data message")
             showNotification(data["title"]!!, data["body"]!!, redirect)
         }
     }
 
     private fun showNotification(title: String, message: String, redirect: String?) {
         val channelId = getString(R.string.default_notification_channel_id)
-
         val pendingIntent = getPendingIntent(title, redirect)
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        createNotificationChannel(channelId, notificationManager)
-
-        val builder = NotificationCompat.Builder(applicationContext, channelId).apply {
+        val builder = NotificationCompat.Builder(this, channelId).apply {
             setSmallIcon(R.drawable.ic_stax)
             setAutoCancel(true)
             setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
@@ -65,6 +59,9 @@ class FirebaseMessageReceiver : FirebaseMessagingService() {
             setContentIntent(pendingIntent)
         }
 
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        createNotificationChannel(channelId, notificationManager)
+
         notificationManager.notify(Random.nextInt(), builder.build())
     }
 
@@ -76,8 +73,6 @@ class FirebaseMessageReceiver : FirebaseMessagingService() {
     }
 
     private fun getPendingIntent(title: String, redirect: String?): PendingIntent {
-        Timber.e("Redirect: $redirect")
-
         return if (redirect != null && redirect.contains(getString(R.string.deeplink_financial_tips))) {
             val tipId = Uri.parse(redirect).getQueryParameter("id")
 
@@ -85,9 +80,10 @@ class FirebaseMessageReceiver : FirebaseMessagingService() {
                 .setGraph(R.navigation.home_navigation)
                 .setDestination(R.id.wellnessFragment)
                 .setArguments(bundleOf(FinancialTipsFragment.TIP_ID to tipId))
+                .setComponentName(MainActivity::class.java)
                 .createPendingIntent()
         } else {
-            val intent = Intent(this, RoutingActivity::class.java).apply {
+            val intent = Intent(this, MainActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 putExtra(Constants.FROM_FCM, title)
                 putExtra(Constants.FRAGMENT_DIRECT, redirect)
