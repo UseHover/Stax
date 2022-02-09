@@ -14,6 +14,7 @@ import com.hover.stax.R
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
+import timber.log.Timber
 
 internal class StaxNavigation(val activity: AppCompatActivity, private val isMainActivity: Boolean) : NavigationInterface {
 
