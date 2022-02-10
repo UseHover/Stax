@@ -12,10 +12,15 @@ import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.balances.BalanceAdapter
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.databinding.ActivityMainBinding
+import com.hover.stax.login.LoginViewModel
+import com.hover.stax.login.StaxGoogleLoginInterface
+import com.hover.stax.pushNotification.PushNotificationTopicsInterface
 import com.hover.stax.financialTips.FinancialTipsFragment
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
+import com.hover.stax.settings.ReferralDialog
+import com.hover.stax.settings.SettingsFragment
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.AnalyticsUtil
@@ -28,12 +33,13 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceListener, BalanceAdapter.BalanceListener,
-    BiometricChecker.AuthListener, PushNotificationTopicsInterface {
+    BiometricChecker.AuthListener, PushNotificationTopicsInterface, StaxGoogleLoginInterface {
 
     private val balancesViewModel: BalancesViewModel by viewModel()
     private val actionSelectViewModel: ActionSelectViewModel by viewModel()
     private val transferViewModel: TransferViewModel by viewModel()
     private val historyViewModel: TransactionHistoryViewModel by viewModel()
+    private val loginViewModel : LoginViewModel by viewModel()
     private val bountyRequest = 3000
 
     private lateinit var binding: ActivityMainBinding
@@ -55,6 +61,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         checkForFragmentDirection(intent)
         StaxDeepLinking.navigateIfRequired(this)
         observeForAppReview()
+        setGoogleLoginInterface(this);
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -218,4 +225,13 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
             }
         }
     }
+
+    override fun googleLoginSuccessful() {
+        when(loginViewModel.postGoogleAuthNav.value) {
+                SettingsFragment.SHOW_BOUNTY_LIST -> staxNavigation.navigateToBountyList()
+                SettingsFragment.SHOW_REFERRAL_DIALOG -> ReferralDialog().show(supportFragmentManager, ReferralDialog.TAG)
+            }
+    }
+
+    override fun googleLoginFailed() { UIHelper.flashMessage(this, R.string.login_google_err) }
 }
