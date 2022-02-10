@@ -29,11 +29,11 @@
 
     </fragment>
 
-    <fragment android:id="@+id/action_navigation_home_to_wellnessFragment"
-            android:label="@string/financial_wellness_tips"
+    <fragment
+            android:id="@+id/action_navigation_home_to_wellnessFragment"
             android:name="com.hover.stax.financialTips.FinancialTipsFragment"
-            tools:layout="@layout/fragment_wellness"
-            />
+            android:label="@string/financial_wellness_tips"
+            tools:layout="@layout/fragment_wellness" />
 
     <fragment
             android:id="@+id/navigation_balance"
@@ -71,6 +71,9 @@
         <action
                 android:id="@+id/action_navigation_settings_to_navigation_linkAccount"
                 app:destination="@id/navigation_linkAccount" />
+        <action
+                android:id="@+id/action_navigation_settings_to_wellnessFragment"
+                app:destination="@id/wellnessFragment" />
     </fragment>
 
     <fragment
