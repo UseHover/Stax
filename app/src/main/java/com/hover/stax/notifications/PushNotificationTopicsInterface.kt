@@ -1,4 +1,4 @@
-package com.hover.stax.pushNotification
+package com.hover.stax.notifications
 
 import android.content.Context
 import com.hover.stax.utils.Utils.setFirebaseMessagingTopic

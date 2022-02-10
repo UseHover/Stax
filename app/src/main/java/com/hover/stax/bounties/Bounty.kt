@@ -35,9 +35,11 @@ class Bounty(val action: HoverAction, val transactions: List<StaxTransaction>) {
         else -> c.getString(R.string.bounty_balance_explain)
     }
 
+
+    //TODO revert this once dependencies are resolved
     private fun getP2pRecipientString(c: Context): String {
-        return if (action.isCrossBorder) c.getString(R.string.descrip_bounty_cross_country, getCountryName(action.to_country_alpha2), action.to_institution_name)
-        else if (action.isOnNetwork) action.from_institution_name
+        /*return if (action.isCrossBorder) c.getString(R.string.descrip_bounty_cross_country, getCountryName(action.to_country_alpha2), action.to_institution_name)
+        else*/ return if (action.isOnNetwork) action.from_institution_name
         else action.to_institution_name
     }
 

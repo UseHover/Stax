@@ -12,6 +12,8 @@
         <entry key="../../../../layout/compose-model-1643793399211.xml" value="0.33" />
         <entry key="../../../../layout/compose-model-1643872065946.xml" value="0.22" />
         <entry key="../../../../layout/compose-model-1643877900989.xml" value="0.2898148148148148" />
+        <entry key="../../../../layout/compose-model-1643896712894.xml" value="0.2898148148148148" />
+        <entry key="../../../../layout/compose-model-1644391311874.xml" value="0.13055555555555556" />
         <entry key="../../../../layout/custom_preview.xml" value="0.5842613214550854" />
         <entry key="app/src/main/res/drawable/button_bg_colored.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_dark.xml" value="0.32037037037037036" />
@@ -56,10 +58,13 @@
         <entry key="app/src/main/res/layout/fragment_channels_list.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/fragment_faq.xml" value="0.24010416666666667" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.3541666666666667" />
+        <entry key="app/src/main/res/layout/fragment_interactive_onboarding.xml" value="0.2436281859070465" />
+        <entry key="app/src/main/res/layout/fragment_interactive_tutorial.xml" value="0.38231850117096017" />
         <entry key="app/src/main/res/layout/fragment_language.xml" value="0.30572916666666666" />
         <entry key="app/src/main/res/layout/fragment_library.xml" value="0.13323201621073963" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/fragment_main.xml" value="0.1331521739130435" />
+        <entry key="app/src/main/res/layout/fragment_non_interactive_tutorial.xml" value="0.2436281859070465" />
         <entry key="app/src/main/res/layout/fragment_paybill.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_paybill_list.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_pin_update.xml" value="0.13405797101449277" />
@@ -99,8 +104,10 @@
         <entry key="app/src/main/res/layout/settings_card_accounts.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/settings_card_bounties.xml" value="0.30842391304347827" />
         <entry key="app/src/main/res/layout/settings_card_contact_us.xml" value="0.3640625" />
+        <entry key="app/src/main/res/layout/settings_card_learn.xml" value="0.3333333333333333" />
         <entry key="app/src/main/res/layout/settings_card_meta.xml" value="0.16666666666666666" />
         <entry key="app/src/main/res/layout/settings_card_share.xml" value="0.16666666666666666" />
+        <entry key="app/src/main/res/layout/settings_card_support.xml" value="0.32135416666666666" />
         <entry key="app/src/main/res/layout/stax_2lineitem.xml" value="0.11956521739130435" />
         <entry key="app/src/main/res/layout/stax_card_view.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/stax_dialog.xml" value="0.3120471014492754" />

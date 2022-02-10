@@ -8,6 +8,7 @@ import com.hover.stax.utils.Constants.NAV_BALANCE
 import com.hover.stax.utils.Constants.NAV_LINK_ACCOUNT
 import com.hover.stax.utils.Constants.NAV_SETTINGS
 import com.hover.stax.utils.Constants.NAV_TRANSFER
+import timber.log.Timber
 
 internal object StaxDeepLinking {
     fun navigateIfRequired(activity: AppCompatActivity) {
@@ -28,9 +29,9 @@ internal object StaxDeepLinking {
                         staxNavigation.checkPermissionsAndNavigate(NAV_BALANCE)
                     route.contains(getString(R.string.deeplink_settings)) ->
                         staxNavigation.checkPermissionsAndNavigate(NAV_SETTINGS)
-                    route.contains(getString(R.string.deeplink_reviews)) ->
+                    route.contains(getString(R.string.deeplink_reviews)) -> {
                         StaxAppReview.launchStaxReview(this)
-                    route.contains(getString(R.string.deeplink_financial_tips)) ->
+                    } route.contains(getString(R.string.deeplink_financial_tips)) ->
                         intent.data?.getQueryParameter("id")?.let { staxNavigation.navigateWellness(it) }
                 }
             }
