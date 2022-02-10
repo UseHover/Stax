@@ -6,6 +6,7 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import com.hover.sdk.api.Hover
 import com.hover.stax.R
@@ -90,7 +91,7 @@ class FaqFragment : Fragment(), FAQAdapter.SelectListener {
 
     override fun onTopicClicked(faq: FAQ) {
         binding.faqListCard.setTitle(faq.topic)
-        binding.faqContentId.text = Html.fromHtml(getString(R.string.faq_content, faq.content, deviceId()))
+        binding.faqContentId.text = HtmlCompat.fromHtml(getString(R.string.faq_content, faq.content, deviceId()), HtmlCompat.FROM_HTML_MODE_LEGACY)
         binding.faqContentId.movementMethod = LinkMovementMethod.getInstance()
         setShowingContent(true)
     }

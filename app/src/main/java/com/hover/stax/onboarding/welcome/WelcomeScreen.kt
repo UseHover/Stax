@@ -33,7 +33,7 @@ fun FeatureCard(title: String, desc: String, iconRes: Int) {
         Image(
             painter = painterResource(id = iconRes),
             contentDescription = null,
-            modifier = Modifier.size(45.dp)
+            modifier = Modifier.size(40.dp)
         )
 
         Spacer(modifier = Modifier.width(16.dp))
@@ -41,7 +41,7 @@ fun FeatureCard(title: String, desc: String, iconRes: Int) {
         Column {
             Text(
                 text = title,
-                style = MaterialTheme.typography.h2
+                style = MaterialTheme.typography.h3
             )
             Text(
                 text = desc,
@@ -55,9 +55,7 @@ fun FeatureCard(title: String, desc: String, iconRes: Int) {
 fun ContinueButton(text: String, modifier: Modifier = Modifier, onClick: (() -> Unit)) {
     Button(
         onClick = onClick,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(8.dp),
+        modifier = modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.medium,
         colors = ButtonDefaults.buttonColors(
             backgroundColor = BrightBlue,
@@ -80,7 +78,7 @@ fun WelcomeScreen(introTitle: String, introDesc: String, buttonText: String, onC
             color = MaterialTheme.colors.background
         ) {
             Scaffold(
-                modifier = Modifier.padding(24.dp),
+                modifier = Modifier.padding(21.dp),
                 content = { innerPadding ->
                     Column(modifier = Modifier.padding(innerPadding)) {
                         WelcomeHeader(
@@ -88,7 +86,7 @@ fun WelcomeScreen(introTitle: String, introDesc: String, buttonText: String, onC
                             desc = introDesc
                         )
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
 
                         Column {
                             FeatureCard(

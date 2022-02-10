@@ -145,6 +145,7 @@
 	<string name="clicked_skip_sign_in" translatable="false">Clicked continue without sign in</string>
 	<string name="visit_welcome" translatable="false">welcome onboarding</string>
 	<string name="visit_sign_in" translatable="false">sign in onboarding</string>
+	<string name="visit_default" translatable="false">default onboarding</string>
 	<string name="clicked_onboarding_question" translatable="false">Clicked onboarding question</string>
 	<string name="visit_interactive" translatable="false">interactive onboarding</string>
 	<string name="clicked_skip_tutorial" translatable="false">Clicked skip tutorial</string>

@@ -124,7 +124,7 @@
             android:label="ChannelsDetailsFragment"
             tools:layout="@layout/fragment_account">
         <argument
-                android:name="channel_id"
+                android:name="accountId"
                 app:argType="integer" />
         <action
                 android:id="@+id/action_accountDetailsFragment_to_navigation_home"

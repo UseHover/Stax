@@ -3,10 +3,12 @@ package com.hover.stax.financialTips
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
@@ -83,13 +85,17 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
                     showTipList()
             }
         }
-        binding.contentText.text = Html.fromHtml(tip.content)
+
+        binding.contentText.apply {
+            text = HtmlCompat.fromHtml(tip.content, HtmlCompat.FROM_HTML_MODE_LEGACY)
+            movementMethod = LinkMovementMethod.getInstance()
+        }
 
         binding.shareBtn.setOnClickListener {
             val shareableContent = buildString {
                 append(tip.title)
                 append("\n\n")
-                append(tip.snippet ?: Html.fromHtml(tip.content))
+                append(tip.snippet ?: HtmlCompat.fromHtml(tip.content, HtmlCompat.FROM_HTML_MODE_LEGACY))
                 append(getString(R.string.stax_handle))
                 append("\n\n")
                 append("https://stax.me/financialTips?id=${tip.id}")

@@ -15,6 +15,8 @@ import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.login.StaxGoogleLoginInterface
 import com.hover.stax.pushNotification.PushNotificationTopicsInterface
+import com.hover.stax.financialTips.FinancialTipsFragment
+import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.settings.ReferralDialog
@@ -151,6 +153,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
                 intent.getBooleanExtra(Constants.REQUEST_TYPE, false)
             )
             intent.hasExtra(Constants.REQUEST_LINK) -> createFromRequest(intent.getStringExtra(Constants.REQUEST_LINK)!!)
+            intent.hasExtra(FinancialTipsFragment.TIP_ID) -> staxNavigation.navigateWellness(intent.getStringExtra(FinancialTipsFragment.TIP_ID)!!)
             else -> AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, intent.action), this)
         }
     }
