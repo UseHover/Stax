@@ -19,18 +19,15 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:theme="@style/StaxTheme">
-
+            android:theme="@style/Theme.App.Starting">
         <activity
-                android:name=".SplashScreenActivity"
-                android:exported="true"
-                android:label="@string/app_name"
-                android:theme="@style/StaxTheme">
+                android:name=".RoutingActivity"
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -47,7 +44,6 @@
                         android:scheme="https" />
             </intent-filter>
         </activity>
-
         <activity
                 android:name=".home.MainActivity"
                 android:exported="true"
@@ -137,15 +133,14 @@
                         android:scheme="https" />
             </intent-filter>
         </activity>
-
         <activity
                 android:name=".permissions.PermissionsActivity"
                 android:exported="false"
                 android:launchMode="singleTask"
                 android:theme="@style/StaxTheme" />
-
-        <activity android:name=".destruct.SelfDestructActivity"
-                android:exported="false"/>
+        <activity
+                android:name=".destruct.SelfDestructActivity"
+                android:exported="false" />
         <activity
                 android:name=".onboarding.OnBoardingActivity"
                 android:exported="false"
@@ -159,7 +154,6 @@
                 <action android:name="com.hover.stax.TRANSACTION_UPDATE" />
             </intent-filter>
         </receiver>
-
         <receiver
                 android:name=".requests.SmsReceiver"
                 android:enabled="true"
@@ -169,7 +163,6 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-
         <receiver
                 android:name="com.appsflyer.SingleInstallBroadcastReceiver"
                 android:exported="true">
@@ -178,14 +171,14 @@
             </intent-filter>
         </receiver>
 
-
         <service
-                android:name=".pushNotification.FirebaseMessageReceiver"
+                android:name=".notifications.MessagingService"
                 android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
 
         <meta-data
                 android:name="com.google.firebase.messaging.default_notification_icon"
@@ -193,13 +186,15 @@
         <meta-data
                 android:name="com.google.firebase.messaging.default_notification_color"
                 android:resource="@color/brightBlue" />
-
+        <meta-data
+                android:name="com.google.firebase.messaging.default_notification_channel_id"
+                android:value="@string/default_notification_channel_id" />
         <meta-data
                 android:name="io.sentry.dsn"
                 android:value="https://ce9bf386ab104ece903cd33fc563c241@o44209.ingest.sentry.io/5477330" />
-
         <meta-data
                 android:name="com.hover.ApiKey"
                 android:value="1335646a78bb2b1157304be1510641f6" />
     </application>
+
 </manifest>

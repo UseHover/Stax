@@ -148,6 +148,7 @@
             android:name="com.hover.stax.library.LibraryFragment"
             android:label="USSD Library"
             tools:layout="@layout/fragment_library" />
+
     <fragment
             android:id="@+id/languageSelectFragment"
             android:name="com.hover.stax.languages.LanguageSelectFragment"
@@ -188,12 +189,12 @@
                 android:id="@+id/action_accountsFragment_to_navigation_request"
                 app:destination="@id/navigation_request"
                 app:popUpTo="@id/navigation_request"
-                app:popUpToInclusive="true"/>
+                app:popUpToInclusive="true" />
         <action
                 android:id="@+id/action_accountsFragment_to_paybillFragment"
                 app:destination="@id/paybillFragment"
                 app:popUpTo="@id/paybillFragment"
-                app:popUpToInclusive="true"/>
+                app:popUpToInclusive="true" />
     </fragment>
 
     <fragment

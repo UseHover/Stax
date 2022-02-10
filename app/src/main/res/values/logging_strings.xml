@@ -136,9 +136,22 @@
 	<string name="deleted_paybill" translatable="false">Deleted paybill</string>
 
 	<!-- Financial Tips -->
-	<string name="clicked_tips_read_more">Clicked financial snippet read more.</string>
-	<string name="read_financial_tip">Read financial tip</string>
-	<string name="visited_financial_tips">Visited financial tips screen</string>
-	<string name="shared_financial_tip">Shared financial tip</string>
+	<string name="clicked_tips_read_more" translatable="false">Clicked financial snippet read more.</string>
+	<string name="read_financial_tip" translatable="false">Read financial tip</string>
+	<string name="visited_financial_tips" translatable="false">Visited financial tips screen</string>
+	<string name="shared_financial_tip" translatable="false">Shared financial tip</string>
+
+	<!-- Onboarding MVT -->
+	<string name="clicked_skip_sign_in" translatable="false">Clicked continue without sign in</string>
+	<string name="visit_welcome" translatable="false">welcome onboarding</string>
+	<string name="visit_sign_in" translatable="false">sign in onboarding</string>
+	<string name="visit_default" translatable="false">default onboarding</string>
+	<string name="clicked_onboarding_question" translatable="false">Clicked onboarding question</string>
+	<string name="visit_interactive" translatable="false">interactive onboarding</string>
+	<string name="clicked_skip_tutorial" translatable="false">Clicked skip tutorial</string>
+	<string name="visit_interactive_tutorial" translatable="false">interactive tutorial</string>
+	<string name="visit_non_interactive_tutorial" translatable="false">non-interactive tutorial</string>
+	<string name="interacted_with_tutorial" translatable="false">Interacted with tutorial</string>
+	<string name="clicked_continue" translatable="false">Clicked continue button</string>
 
 </resources>

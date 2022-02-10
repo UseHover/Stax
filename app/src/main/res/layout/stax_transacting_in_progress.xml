@@ -27,7 +27,7 @@
 			android:layout_centerInParent="true"
 			android:id="@+id/animationBackground"
 			android:background="@drawable/processing_card_background"
-			android:radius="@dimen/hsdk__border_radius"
+			android:radius="@dimen/radius"
 			android:layout_height="0dp" />
 
 		<LinearLayout
@@ -128,7 +128,7 @@
 						android:layout_height="wrap_content"
 						android:layout_gravity="center_horizontal"
 						android:gravity="start"
-						android:text="@string/hsdk_average_transaction_text"
+						android:text="@string/in_progress_text"
 						android:textAlignment="textStart"
 						android:textColor="?attr/titleTextColor"
 						android:textSize="14sp" />
@@ -138,7 +138,7 @@
 						android:layout_height="wrap_content"
 						android:layout_gravity="start"
 						android:gravity="start"
-						android:text="@string/hsdk_complete"
+						android:text="@string/complete_text"
 						android:textAlignment="textStart"
 						android:textColor="?attr/titleTextColor"
 						android:textSize="14sp" />
@@ -159,7 +159,7 @@
 				android:text="@string/hsdk_continue"
 				android:id="@+id/continue_text"
 				style="?attr/buttonStyle"
-				android:background="@drawable/hsdk_button_pos"
+				android:background="@drawable/button_bg_colored"
 				android:textColor="?attr/colorPrimaryDark"
 				android:layout_alignParentEnd="true"/>
 		</RelativeLayout>

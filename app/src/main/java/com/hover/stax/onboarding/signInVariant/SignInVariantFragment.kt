@@ -1,4 +1,4 @@
-package com.hover.stax.onboarding.slidingVariant
+package com.hover.stax.onboarding.signInVariant
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -9,18 +9,25 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.hover.stax.R
-import com.hover.stax.databinding.OnboardingVariantOneBinding
+import com.hover.stax.databinding.FragmentSigninVariantBinding
 import com.hover.stax.onboarding.OnBoardingActivity
+import com.hover.stax.onboarding.welcome.WelcomeFragment
+import com.hover.stax.utils.AnalyticsUtil
 import timber.log.Timber
 
 
- class SlidingVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
+class SignInVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
 
-    private var _binding: OnboardingVariantOneBinding? = null
+    private var _binding: FragmentSigninVariantBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var progressBar1: LinearProgressIndicator
@@ -33,15 +40,14 @@ import timber.log.Timber
     private lateinit var animator3: ValueAnimator
     private lateinit var animator4: ValueAnimator
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-        _binding = OnboardingVariantOneBinding.inflate(inflater, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentSigninVariantBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_sign_in)), requireActivity())
 
         initProgressBarView()
         initAnimators()
@@ -53,33 +59,33 @@ import timber.log.Timber
 
         setupSignInWithGoogle()
         setupContinueNoSignIn()
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
     }
 
-    private fun setupSignInWithGoogle() {
-        binding.continueWithGoogle.setOnClickListener {
-            (requireActivity() as OnBoardingActivity).signIn(optInMarketing = true)
-        }
+    private fun setupSignInWithGoogle() = binding.continueWithGoogle.setOnClickListener {
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_google_sign_in), requireActivity())
+        (requireActivity() as OnBoardingActivity).signIn(optInMarketing = true)
     }
 
-    private fun setupContinueNoSignIn() {
-        binding.continueNoSignIn.setOnClickListener {
-            (requireActivity() as OnBoardingActivity).checkPermissionThenNavigateMainActivity()
-        }
+    private fun setupContinueNoSignIn() = binding.continueNoSignIn.setOnClickListener {
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_skip_sign_in), requireActivity())
+        findNavController().navigate(R.id.action_slidingOnboardingFragment_to_welcomeFragment, bundleOf(WelcomeFragment.SALUTATIONS to 1))
     }
 
     private fun initProgressBarView() {
-        progressBar1 = binding.onoboardingV1Progressbar1
-        progressBar2 = binding.onoboardingV1Progressbar2
-        progressBar3 = binding.onoboardingV1Progressbar3
-        progressBar4 = binding.onoboardingV1Progressbar4
+        progressBar1 = binding.pb1
+        progressBar2 = binding.pb2
+        progressBar3 = binding.pb3
+        progressBar4 = binding.pb4
 
-        val brightBlue = requireContext().resources.getColor(R.color.brightBlue)
+        val brightBlue = ContextCompat.getColor(requireActivity(), R.color.brightBlue)
         progressBar1.trackColor = brightBlue
         progressBar2.trackColor = brightBlue
         progressBar3.trackColor = brightBlue
         progressBar4.trackColor = brightBlue
 
-        val deepBlue = requireContext().resources.getColor(R.color.stax_state_blue)
+        val deepBlue = ContextCompat.getColor(requireActivity(), R.color.stax_state_blue)
         progressBar1.setIndicatorColor(deepBlue)
         progressBar2.setIndicatorColor(deepBlue)
         progressBar3.setIndicatorColor(deepBlue)
@@ -103,50 +109,44 @@ import timber.log.Timber
             setAutoScrollDurationFactor(AUTO_SCROLL_EASE_DURATION_FACTOR)
             setSwipeScrollDurationFactor(SWIPE_DURATION_FACTOR)
             setStopScrollWhenTouch(true)
-            addOnPageChangeListener(this@SlidingVariantFragment)
+            addOnPageChangeListener(this@SignInVariantFragment)
             adapter = viewPagerAdapter
         }
     }
 
     private fun setupPrivacyPolicy() {
-        binding.onboardingV1Tos.text = Html.fromHtml(requireContext().getString(R.string.privacyPolicyFullLabel))
+        binding.onboardingV1Tos.text = HtmlCompat.fromHtml(requireContext().getString(R.string.privacyPolicyFullLabel), HtmlCompat.FROM_HTML_MODE_LEGACY)
         binding.onboardingV1Tos.movementMethod = LinkMovementMethod.getInstance()
     }
 
     private fun setupTermsOfService() {
-        binding.onboardingV1PrivacyPolicy.text = Html.fromHtml(requireContext().getString(R.string.termsOfServiceFullLabel))
+        binding.onboardingV1PrivacyPolicy.text = HtmlCompat.fromHtml(requireContext().getString(R.string.termsOfServiceFullLabel), HtmlCompat.FROM_HTML_MODE_LEGACY)
         binding.onboardingV1PrivacyPolicy.movementMethod = LinkMovementMethod.getInstance()
     }
 
-    private fun updateProgressAnimation(animator: ValueAnimator, progressBar: LinearProgressIndicator) {
-        animator.duration = 4000
-        animator.addUpdateListener { animation ->
+    private fun updateProgressAnimation(animator: ValueAnimator, progressBar: LinearProgressIndicator) = animator.apply {
+        duration = 400
+        addUpdateListener { animation ->
             progressBar.progress = animation.animatedValue as Int
             if (progressBar.progress > 90) {
                 fillUpProgress(progressBar)
             }
         }
-
-        animator.addListener(object : AnimatorListenerAdapter() {
+        addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator?) {
                 super.onAnimationEnd(animation)
             }
         })
-        animator.start()
+        start()
     }
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
         showProgress(position)
-        Timber.i("On Page scrolled: $position, offset: $positionOffset, offsetPixels: $positionOffsetPixels")
     }
 
-    override fun onPageSelected(position: Int) {
-        Timber.i("On Page selected: $position")
-    }
+    override fun onPageSelected(position: Int) {}
 
-    override fun onPageScrollStateChanged(state: Int) {
-        Timber.i("On Page state changed: $state")
-    }
+    override fun onPageScrollStateChanged(state: Int) {}
 
     private fun showProgress(currentPos: Int) {
         when (currentPos) {
@@ -182,7 +182,7 @@ import timber.log.Timber
 
     private fun fillUpProgress(progressBar: LinearProgressIndicator) {
         try {
-            val deepBlue = requireContext().resources.getColor(R.color.stax_state_blue)
+            val deepBlue = ContextCompat.getColor(requireActivity(), R.color.stax_state_blue)
             progressBar.progress = 100
             progressBar.trackColor = deepBlue
         } catch (e: IllegalStateException) {
@@ -192,10 +192,20 @@ import timber.log.Timber
 
     private fun resetFilledProgress(animator: ValueAnimator, progressBar: LinearProgressIndicator) {
         animator.cancel()
-        val brightBlue = requireContext().resources.getColor(R.color.brightBlue)
+        val brightBlue = ContextCompat.getColor(requireActivity(), R.color.brightBlue)
         progressBar.progress = 0
         progressBar.trackColor = brightBlue
+    }
 
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            Timber.i("Back navigation disabled") //do nothing to prevent navigation back to the home fragment (default variant)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
@@ -203,10 +213,5 @@ import timber.log.Timber
         const val SCROLL_INTERVAL = 4000L
         const val SWIPE_DURATION_FACTOR = 2.0
         const val AUTO_SCROLL_EASE_DURATION_FACTOR = 5.0
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

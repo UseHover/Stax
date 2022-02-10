@@ -18,6 +18,7 @@
     <string name="bounty_transactions_endpoint" translatable="false">/get_bounty_results?device_id=%1$s</string>
     <string name="google_server_client_id" translatable="false">1098235122453-5u1hct3brr4t626317k9fgjkkfdmsbvs.apps.googleusercontent.com</string>
     <string name="privacy_policy_link" translatable="false">https://docs.usehover.com/staxpolicy</string>
+    <string name="default_notification_channel_id">app.hover.stax</string>
 
     <string name="channels_json_staging" translatable="false">channels-staging.json</string>
     <string name="channels_json_prod" translatable="false">channels-prod.json</string>
@@ -76,6 +77,11 @@
     <string name="onboarding_v1_general_desc">Continue with Google to enjoy the full Stax experience</string>
     <string name="continue_with_google">Continue with Google</string>
 
+    <string name="slide2_desc">Transfer money securely and easily. No extra charges.</string>
+    <string name="slide3_desc">Get paid faster by clients and friends with a simple link.</string>
+    <string name="slide4_desc">Top up airtime in seconds for you and your loved ones.</string>
+    <string name="slide1_desc">Use Stax with or without the internet. Anytime. Anywhere.</string>
+
     <string name="use_stax_no_sigin">Use Stax without sign in</string>
     <string name="termsOfServiceFullLabel">By continuing, you agree to Stax\'s Terms of service.</string>
     <string name="privacyPolicyFullLabel">See how we use your data in our Privacy Policy.</string>
@@ -86,6 +92,20 @@
     <string name="onboarding_variant_2_question1">Is Stax for me?</string>
     <string name="skip_prefix">Already know about stax?</string>
     <string name="skip">Skip</string>
+
+    <string name="welcome_title_one">Welcome to Stax!</string>
+    <string name="welcome_sub_one">Welcome to the Stax Community. You are officially a Staxxer. Here\'s a couple of things to get you excited about Stax.</string>
+    <string name="welcome_title_two">Woohoo! You\'re exactly who we\'ve been looking for!</string>
+
+    <string name="welcome_title_three">We\'ve got you covered!</string>
+    <string name="welcome_sub_two">Here\'s a couple of things to get you excited about Stax.</string>
+    <string name="intro_feature_one_title">Automated USSD</string>
+    <string name="intro_feature_one_desc">No need to remember hundreds of USSD code combinations. We\'ve figured it out for you.</string>
+    <string name="intro_feature_two_title">Be in full control of your money</string>
+    <string name="intro_feature_two_desc">Manage and spend from all your banks and mobile money accounts from Stax.</string>
+    <string name="intro_feature_three_title">Safer by design</string>
+    <string name="intro_feature_three_desc">We leveraged Android\'s built in security designs to keep your information secure at all times.</string>
+    <string name="explore_btn_text">Explore Stax</string>
 
     <string name="does_stax_charge_fees">Does Stax charge fees?</string>
     <string name="what_does_stax_do">What does Stax do?</string>
@@ -181,6 +201,8 @@
     <string name="airtime_msg">Buying airtime</string>
     <string name="transfer_msg">Transferring money</string>
     <string name="fetch_accounts">Fetching accounts</string>
+    <string name="in_progress_text">Communicating with USSD service…</string>
+    <string name="complete_text">Transaction complete</string>
 
     <!-- Transaction statuses -->
     <string name="succeeded_cardHead">Succeeded</string>
@@ -486,6 +508,8 @@
     <string name="bounty_airtime_explain">Buy airtime for someone else %1$s</string>
     <string name="descrip_bounty_p2p">Send money to someone else %1$s</string>
     <string name="bounty_p2p_explain">Send any amount to any person %1$s</string>
+    <string name="descrip_bounty_offnet">on %1$s</string>
+    <string name="descrip_bounty_cross_country">in %1$s on %2$s</string>
     <string name="descrip_bounty_me2me">Move money to your %1$s account</string>
     <string name="bounty_me2me_explain">Send any amount to your own %1$s account</string>
     <string name="descrip_bounty_c2b">Pay a bill%1$s</string>
@@ -495,7 +519,6 @@
 
     <string name="descrip_bounty_balance">Check balance</string>
     <string name="bounty_balance_explain">Check your balance</string>
-    <string name="descrip_bounty_offnet">on %1$s</string>
     <string name="bounty_email">Email</string>
     <string name="bounty_email_error">Please enter a valid email address</string>
     <string name="bounty_uploading_email">Connecting, please wait…</string>
@@ -628,5 +651,6 @@
     <string name="paybill_update_msg">Are you sure you want to update %1$s?</string>
     <string name="paybill_update_success">Paybill updated successfully</string>
     <string name="btn_update">Update</string>
+    <string name="importing_channels">"Importing channels, please wait."</string>
 
 </resources>

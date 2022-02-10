@@ -16,6 +16,10 @@
 
 package com.hover.stax.utils.paymentLinkCryptography;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
@@ -145,7 +149,9 @@ public class Base64 {
      *              adheres to RFC 2045.
      */
     public static String encodeToString(byte[] input, int flags) {
-        return new String(encode(input, flags), StandardCharsets.US_ASCII);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            return new String(encode(input, flags), StandardCharsets.US_ASCII);
+        } else { return new String(encode(input, flags)); }
     }
 
     //  --------------------------------------------------------
