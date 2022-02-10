@@ -53,6 +53,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
         setUpShare()
         setUpMeta()
         setUpChooseLang()
+        setupLearnCard()
         setUpSupport()
         setUpEnableTestMode()
         setupAppVersionInfo()
@@ -113,6 +114,13 @@ class SettingsFragment : Fragment(), NavigationInterface {
             requestFeature.setOnClickListener { Utils.openUrl(getString(R.string.stax_nolt_url), requireActivity()) }
             contactSupport.setOnClickListener { Utils.openEmail(getString(R.string.stax_emailing_subject, Hover.getDeviceId(requireContext())), requireContext()) }
             faq.setOnClickListener { findNavController().navigate(R.id.action_navigation_settings_to_faqFragment) }
+        }
+    }
+
+    private fun setupLearnCard() {
+        with(binding.staxLearn) {
+            learnFinances.setOnClickListener {  findNavController().navigate(R.id.action_navigation_settings_to_wellnessFragment) }
+            learnStax.setOnClickListener { Utils.openUrl(getString(R.string.stax_medium_url), requireActivity())  }
         }
     }
 
