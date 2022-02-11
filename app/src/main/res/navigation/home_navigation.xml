@@ -22,14 +22,18 @@
         <action
                 android:id="@+id/action_navigation_home_to_navigation_request"
                 app:destination="@id/navigation_request" />
-        <action
-                android:id="@+id/action_navigation_home_to_wellnessFragment"
-                app:destination="@id/wellnessFragment" />
+
         <action
                 android:id="@+id/action_navigation_home_to_paybillFragment"
                 app:destination="@id/paybillFragment" />
 
     </fragment>
+
+    <fragment
+            android:id="@+id/action_navigation_home_to_wellnessFragment"
+            android:name="com.hover.stax.financialTips.FinancialTipsFragment"
+            android:label="@string/financial_wellness_tips"
+            tools:layout="@layout/fragment_wellness" />
 
     <fragment
             android:id="@+id/navigation_balance"
@@ -67,6 +71,9 @@
         <action
                 android:id="@+id/action_navigation_settings_to_navigation_linkAccount"
                 app:destination="@id/navigation_linkAccount" />
+        <action
+                android:id="@+id/action_navigation_settings_to_wellnessFragment"
+                app:destination="@id/wellnessFragment" />
     </fragment>
 
     <fragment
@@ -124,7 +131,7 @@
             android:label="ChannelsDetailsFragment"
             tools:layout="@layout/fragment_account">
         <argument
-                android:name="channel_id"
+                android:name="accountId"
                 app:argType="integer" />
         <action
                 android:id="@+id/action_accountDetailsFragment_to_navigation_home"

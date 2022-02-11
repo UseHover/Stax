@@ -14,6 +14,7 @@ import com.hover.stax.R
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
+import timber.log.Timber
 
 internal class StaxNavigation(val activity: AppCompatActivity, private val isMainActivity: Boolean) : NavigationInterface {
 
@@ -47,7 +48,12 @@ internal class StaxNavigation(val activity: AppCompatActivity, private val isMai
         navigateToWellnessFragment(getNavController(), id)
     }
 
+    fun navigateToBountyList() {
+        getNavController().navigate(R.id.action_bountyEmailFragment_to_bountyListFragment)
+    }
+
     private fun getNavController(): NavController = navHostFragment!!.navController
+
 
     private fun setNavClickListener(nav: BottomNavigationView) {
         nav.setOnNavigationItemSelectedListener {
