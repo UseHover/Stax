@@ -44,6 +44,7 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
             } else if (requestCode == LOGIN_REQUEST_OPT_IN_MARKETING) {
                 loginViewModel.signIntoFirebaseAsync(data, true, this)
             }
+
             staxGoogleLoginInterface.googleLoginSuccessful()
         } else {
             staxGoogleLoginInterface.googleLoginFailed()
