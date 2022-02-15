@@ -71,7 +71,7 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
         auth.signInWithCredential(credential).addOnCompleteListener(activity) {
             progress.value = 33
             if (it.isSuccessful) {
-                auth.currentUser?.let { user -> setUser(user) }
+                auth.currentUser?.let { user -> setUser(user, idToken) }
             } else {
                 onError(application.getString(R.string.login_google_err))
             }
@@ -152,15 +152,12 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
         saveResponseData(json)
     }
 
-    private fun setUser(firebaseUser: FirebaseUser) {
+    private fun setUser(firebaseUser: FirebaseUser, idToken: String) {
         Timber.e("setting user: %s", firebaseUser.email)
         user.postValue(firebaseUser)
         setEmail(firebaseUser.email)
 
-        firebaseUser.getIdToken(false).addOnSuccessListener {
-            Timber.e("getting token which is : %s", it.token)
-            uploadUserToStax(firebaseUser.email, it.token)
-        }
+        uploadUserToStax(firebaseUser.email, idToken)
     }
 
     private fun saveResponseData(json: JSONObject?) {
@@ -169,9 +166,7 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
         setRefereeCode(data)
     }
 
-    fun usernameIsNotSet(): Boolean {
-        return !getEmail().isNullOrEmpty() && getEmail().isNullOrEmpty()
-    }
+    fun usernameIsNotSet(): Boolean = getEmail().isNullOrEmpty()
 
     private fun setUsername(name: String?) {
         Timber.e("setting username %s", name)
@@ -194,17 +189,12 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
     }
 
     private fun getEmail(): String? {
-        if (Utils.getString(EMAIL, application) == null && Utils.getString(
-                BOUNTY_EMAIL_KEY,
-                application
-            ) != null
-        ) {
+        if (Utils.getString(EMAIL, application) == null && Utils.getString(BOUNTY_EMAIL_KEY, application) != null) {
             email.value = Utils.getString(BOUNTY_EMAIL_KEY, application)
             Utils.saveString(EMAIL, email.value, application)
         } else email.value = Utils.getString(EMAIL, application)
         return email.value
     }
-
 
     private fun getUsername(): String? {
         username.value = Utils.getString(USERNAME, application)
@@ -216,12 +206,23 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
         return refereeCode.value
     }
 
+    //Sign out user if any step of the login process fails. Have user restart the flow
     private fun onError(message: String) {
-        AnalyticsUtil.logErrorAndReportToFirebase(LoginViewModel::class.java.simpleName, message, null)
-        AnalyticsUtil.logAnalyticsEvent(message, application)
+        Timber.e(message)
+        signInClient.signOut().addOnCompleteListener {
+            AnalyticsUtil.logErrorAndReportToFirebase(LoginViewModel::class.java.simpleName, message, null)
+            AnalyticsUtil.logAnalyticsEvent(message, application)
 
-        progress.postValue(-1)
-        error.postValue(message)
+            resetAccountDetails()
+
+            progress.postValue(-1)
+            error.postValue(message)
+        }
+    }
+
+    private fun resetAccountDetails() {
+        Utils.removeString(EMAIL, application)
+        Utils.removeString(USERNAME, application)
     }
 
 }

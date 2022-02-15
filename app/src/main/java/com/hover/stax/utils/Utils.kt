@@ -27,12 +27,17 @@ object Utils {
     fun saveString(key: String?, value: String?, c: Context) {
         val editor = getSharedPrefs(c).edit()
         editor.putString(key, value)
-        editor.commit()
+        editor.apply()
     }
 
     @JvmStatic
     fun getString(key: String?, c: Context): String? {
         return getSharedPrefs(c).getString(key, "")
+    }
+
+    fun removeString(key: String, context: Context) = getSharedPrefs(context).edit().apply {
+        remove(key)
+        apply()
     }
 
     @JvmStatic
@@ -153,7 +158,6 @@ object Utils {
         }
         return false
     }
-
 
     fun isInternetConnected(c: Context): Boolean {
         val cm = c.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

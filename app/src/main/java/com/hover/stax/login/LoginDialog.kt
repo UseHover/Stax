@@ -32,18 +32,17 @@ class LoginDialog : DialogFragment(), View.OnClickListener {
 	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 		AnalyticsUtil.logAnalyticsEvent(getString(R.string.referee_dialog), requireContext())
 		networkMonitor = NetworkMonitor(requireContext())
-		_binding = FragmentLoginBinding.inflate(LayoutInflater.from(context))
-		dialog = StaxDialog(requireActivity(),
-			binding.root).setDialogTitle(R.string.first_login_dialoghead)
+		_binding = FragmentLoginBinding.inflate(layoutInflater)
+
+		dialog = StaxDialog(requireActivity(), binding.root)
+			.setDialogTitle(R.string.first_login_dialoghead)
 			.setNegButton(R.string.btn_cancel) { dismiss() }
 
 		dialogView = dialog.mView
 		return dialog.createIt()
 	}
 
-	override fun onCreateView(inflater: LayoutInflater,
-	                          container: ViewGroup?,
-	                          savedInstanceState: Bundle?): View {
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 		return dialogView
 	}
 
@@ -53,6 +52,7 @@ class LoginDialog : DialogFragment(), View.OnClickListener {
 			setOnClickListener(this@LoginDialog)
 		}
 		binding.progressIndicator.setVisibilityAfterHide(View.GONE)
+
         try{
             loginViewModel.username.observe(viewLifecycleOwner) { Timber.i("Loaded username: %s", it ?: "null") }
             loginViewModel.progress.observe(viewLifecycleOwner) { updateProgress(it) }
