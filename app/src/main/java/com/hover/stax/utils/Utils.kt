@@ -23,36 +23,33 @@ object Utils {
         return context.getSharedPreferences(getPackage(context) + SHARED_PREFS, Context.MODE_PRIVATE)
     }
 
-    @JvmStatic
     fun saveString(key: String?, value: String?, c: Context) {
         val editor = getSharedPrefs(c).edit()
         editor.putString(key, value)
         editor.apply()
     }
 
-    @JvmStatic
     fun getString(key: String?, c: Context): String? {
         return getSharedPrefs(c).getString(key, "")
     }
 
-    fun removeString(key: String, context: Context) = getSharedPrefs(context).edit().apply {
-        remove(key)
-        apply()
+    fun removeString(key: String, context: Context) {
+        getSharedPrefs(context).edit().apply {
+            remove(key)
+            apply()
+        }
     }
 
-    @JvmStatic
     fun getBoolean(key: String?, c: Context): Boolean {
         return getSharedPrefs(c).getBoolean(key, false)
     }
 
-    @JvmStatic
     fun saveInt(key: String?, value: Int, c: Context) {
         val editor = getSharedPrefs(c).edit()
         editor.putInt(key, value)
         editor.apply()
     }
 
-    @JvmStatic
     fun saveBoolean(key: String?, value: Boolean, c: Context) {
         val editor = getSharedPrefs(c).edit()
         editor.putBoolean(key, value)
@@ -73,12 +70,10 @@ object Utils {
         editor.apply()
     }
 
-    @JvmStatic
     fun isFirebaseTopicInDefaultState(topic: String?, c: Context): Boolean {
         return getSharedPrefs(c).getBoolean(topic, true)
     }
 
-    @JvmStatic
     fun alterFirebaseTopicState(topic: String?, c: Context) {
         val editor = getSharedPrefs(c).edit()
         editor.putBoolean(topic, false)
@@ -131,7 +126,6 @@ object Utils {
         return amount.replace(",".toRegex(), "").toDouble()
     }
 
-    @JvmStatic
     fun usingDebugVariant(c: Context): Boolean {
         return getBuildConfigValue(c, "DEBUG") as Boolean
     }
@@ -165,12 +159,10 @@ object Utils {
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting
     }
 
-    @JvmStatic
     fun setFirebaseMessagingTopic(topic: String?) {
         FirebaseMessaging.getInstance().subscribeToTopic(topic!!)
     }
 
-    @JvmStatic
     fun removeFirebaseMessagingTopic(topic: String?) {
         FirebaseMessaging.getInstance().unsubscribeFromTopic(topic!!)
     }
@@ -183,7 +175,6 @@ object Utils {
         }
     }
 
-    @JvmStatic
     fun openUrl(url: String?, ctx: Context) {
         val i = Intent(Intent.ACTION_VIEW)
         i.data = Uri.parse(url)
@@ -199,7 +190,6 @@ object Utils {
         openUrl(ctx.resources.getString(urlRes), ctx)
     }
 
-    @JvmStatic
     fun openEmail(subject: String, context: Context) {
         val intent = Intent(Intent.ACTION_VIEW)
         val senderEmail = context.getString(R.string.stax_support_email)
@@ -212,7 +202,6 @@ object Utils {
         }
     }
 
-    @JvmStatic
     fun shareStax(activity: Activity) {
         AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.clicked_share), activity)
 
@@ -223,7 +212,6 @@ object Utils {
         activity.startActivity(Intent.createChooser(sharingIntent, activity.getString(R.string.share_explain)))
     }
 
-    @JvmStatic
     fun openStaxPlaystorePage(activity: Activity) {
         val link = Uri.parse(activity.baseContext.getString(R.string.stax_market_playstore_link))
         val goToMarket = Intent(Intent.ACTION_VIEW, link)

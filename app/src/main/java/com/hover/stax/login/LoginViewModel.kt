@@ -138,11 +138,7 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
             try {
                 data.put("referee ID", it)
                 data.put("username", name)
-                AnalyticsUtil.logAnalyticsEvent(
-                    application.getString(R.string.upload_referee_success_event),
-                    data,
-                    application
-                )
+                AnalyticsUtil.logAnalyticsEvent(application.getString(R.string.upload_referee_success_event), data, application)
             } catch (e: Exception) {
                 Timber.e(e.localizedMessage)
             }

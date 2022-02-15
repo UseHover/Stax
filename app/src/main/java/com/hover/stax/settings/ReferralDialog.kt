@@ -2,14 +2,13 @@ package com.hover.stax.settings
 
 import android.app.Dialog
 import android.content.res.ColorStateList
-import android.os.Build
 import android.os.Bundle
-
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.hover.stax.R
@@ -40,13 +39,15 @@ class ReferralDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         logAnalyticsEvent(getString(R.string.referee_dialog), requireContext())
         networkMonitor = NetworkMonitor(requireContext())
-        _binding = StaxReferralDialogBinding.inflate(LayoutInflater.from(context))
+
+        _binding = StaxReferralDialogBinding.inflate(layoutInflater)
+
         dialog = StaxDialog(requireActivity(), binding.root)
-                .setDialogTitle(R.string.perm_dialoghead)
-                .setDialogMessage(R.string.perm_dialogbody)
-                .setNegButton(R.string.btn_cancel) { dismiss() }
-                .setPosButton(R.string.btn_save) { attemptSaveReferee() }
-                .highlightPos()
+            .setDialogTitle(R.string.perm_dialoghead)
+            .setDialogMessage(R.string.perm_dialogbody)
+            .setNegButton(R.string.btn_cancel) { dismiss() }
+            .setPosButton(R.string.btn_save) { attemptSaveReferee() }
+            .highlightPos()
 
         dialogView = dialog.mView
         return dialog.createIt()
@@ -62,7 +63,7 @@ class ReferralDialog : DialogFragment() {
         binding.nameInput.addTextChangedListener(nameWatcher)
         binding.phoneInput.addTextChangedListener(phoneWatcher)
 
-        loginViewModel.username.observe(viewLifecycleOwner) { it?.let { updatePersonalCode();updateRefereeInfo(loginViewModel.refereeCode.value) } }
+        loginViewModel.username.observe(viewLifecycleOwner) { it?.let { updatePersonalCode(); updateRefereeInfo(loginViewModel.refereeCode.value) } }
         loginViewModel.email.observe(viewLifecycleOwner) { Timber.e("got email: %s", it); updatePersonalCode() }
         loginViewModel.refereeCode.observe(viewLifecycleOwner) { updateRefereeInfo(it) }
         loginViewModel.error.observe(viewLifecycleOwner) { it?.let { showError(it) } }
@@ -97,15 +98,15 @@ class ReferralDialog : DialogFragment() {
 
     private fun attemptSaveReferee() {
         when {
-            binding.refereeInput.text.toString().isEmpty() -> binding.refereeInput.setError(getString(R.string.referral_error_invalid))
-            binding.refereeInput.text.toString() == loginViewModel.username.value -> binding.refereeInput.setError(getString(R.string.referral_error_self))
-            binding.nameInput.text.toString().isEmpty() -> binding.nameInput.setError(getString(R.string.referral_error_name))
-            binding.phoneInput.text.toString().isEmpty() -> binding.phoneInput.setError(getString(R.string.referral_error_phone))
-            binding.refereeInput.text.toString() == loginViewModel.username.value -> binding.refereeInput.setError(getString(R.string.referral_error_self))
+            binding.refereeInput.text.isEmpty() -> binding.refereeInput.setError(getString(R.string.referral_error_invalid))
+            binding.refereeInput.text == loginViewModel.username.value -> binding.refereeInput.setError(getString(R.string.referral_error_self))
+            binding.nameInput.text.isEmpty() -> binding.nameInput.setError(getString(R.string.referral_error_name))
+            binding.phoneInput.text.isEmpty() -> binding.phoneInput.setError(getString(R.string.referral_error_phone))
+            binding.refereeInput.text == loginViewModel.username.value -> binding.refereeInput.setError(getString(R.string.referral_error_self))
             !networkMonitor.isNetworkConnected -> loginViewModel.error.value = getString(R.string.referral_error_offline)
             else -> {
                 binding.posBtn.isEnabled = false
-                loginViewModel.saveReferee(binding.refereeInput.text.toString(), binding.nameInput.text.toString(), binding.phoneInput.text.toString())
+                loginViewModel.saveReferee(binding.refereeInput.text, binding.nameInput.text, binding.phoneInput.text)
             }
         }
     }
@@ -117,13 +118,11 @@ class ReferralDialog : DialogFragment() {
             binding.referralCode.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_copy, 0)
         } else {
             retryUploadingUserInfo()
-            binding.referralCode.text = getString(R.string.referral_error_try_again)
-            binding.referralCode.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
         }
     }
 
     private fun retryUploadingUserInfo() {
-        if(!retryUploadingCalled){
+        if (!retryUploadingCalled) {
             retryUploadingCalled = true
             loginViewModel.uploadLastUser()
         }
@@ -155,8 +154,7 @@ class ReferralDialog : DialogFragment() {
             UIHelper.flashMessage(requireContext(), getString(R.string.saved_referral))
             binding.posBtn.text = getString(R.string.label_saved)
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                binding.posBtn.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.stax_state_green))
+            binding.posBtn.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireActivity(), R.color.stax_state_green))
 
             lifecycleScope.launch {
                 delay(1000)
@@ -171,6 +169,9 @@ class ReferralDialog : DialogFragment() {
     private fun showError(message: String) {
         binding.errorText.text = message
         binding.errorText.visibility = View.VISIBLE
+
+//        binding.referralCode.text = getString(R.string.referral_error_try_again)
+//        binding.referralCode.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
     }
 
     override fun onDestroyView() {
