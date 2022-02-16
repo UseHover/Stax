@@ -37,12 +37,12 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
     private var dialog: StaxDialog? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val wm = WorkManager.getInstance(requireContext())
-        wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue()
-    }
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//
+////        val wm = WorkManager.getInstance(requireContext())
+////        wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue()
+//    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAddChannelsBinding.inflate(inflater, container, false)
@@ -177,12 +177,12 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
             requireActivity().onBackPressed()
 
         if (checkBalance)
-            balancesViewModel.actions.observe(viewLifecycleOwner, {
+            balancesViewModel.actions.observe(viewLifecycleOwner) {
                 if (channels.size == 1)
                     balancesViewModel.setRunning(channels.first())
                 else
                     balancesViewModel.setAllRunning(requireActivity())
-            })
+            }
     }
 
     override fun clickedChannel(channel: Channel) {
