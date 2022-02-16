@@ -62,6 +62,7 @@
         <entry key="app/src/main/res/layout/fragment_interactive_tutorial.xml" value="0.38231850117096017" />
         <entry key="app/src/main/res/layout/fragment_language.xml" value="0.30572916666666666" />
         <entry key="app/src/main/res/layout/fragment_library.xml" value="0.13323201621073963" />
+        <entry key="app/src/main/res/layout/fragment_link_account.xml" value="0.24140625" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/fragment_main.xml" value="0.1331521739130435" />
         <entry key="app/src/main/res/layout/fragment_non_interactive_tutorial.xml" value="0.2436281859070465" />
