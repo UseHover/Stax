@@ -265,8 +265,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
 
     private fun runAllEntryValidation() {
-        updateNonStandardForEntryList(actionSelectViewModel.nonStandardVariables.value!!, true)
-        //Result of this then calls: "override fun nonStandardVariablesValidation(hasError: Boolean) {"
+        with(actionSelectViewModel.nonStandardVariables.value) {
+            if(this == null) validateFormEntries(nonStandardHasAnError = false)
+            else updateNonStandardForEntryList(this, true)
+        }
     }
 
     override fun onContactSelected(requestCode: Int, contact: StaxContact) {
