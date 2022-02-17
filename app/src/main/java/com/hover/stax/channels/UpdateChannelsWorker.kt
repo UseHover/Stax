@@ -61,7 +61,7 @@ class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Corouti
         private val netConstraint = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
 
         fun makeToil(): PeriodicWorkRequest {
-            return PeriodicWorkRequest.Builder(UpdateChannelsWorker::class.java, 24, TimeUnit.HOURS)
+            return PeriodicWorkRequest.Builder(UpdateChannelsWorker::class.java, 7, TimeUnit.DAYS)
                     .setConstraints(netConstraint)
                     .build()
         }
