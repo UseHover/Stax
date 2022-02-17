@@ -41,7 +41,8 @@ class HomeFragment : Fragment() {
 
         binding.airtime.setOnClickListener { navigateTo(Constants.NAV_AIRTIME, requireActivity()) }
         binding.transfer.setOnClickListener { navigateTo(Constants.NAV_TRANSFER, requireActivity()) }
-        binding.paybill.setOnClickListener { navigateTo(Constants.NAV_PAYBILL, requireActivity()) }
+
+        setPaybillVisibility()
 
         NetworkMonitor.StateLiveData.get().observe(viewLifecycleOwner) {
             updateOfflineIndicator(it)
@@ -52,7 +53,7 @@ class HomeFragment : Fragment() {
 
     private fun setupBanner() {
         with(bannerViewModel) {
-            qualifiedBanner().observe(viewLifecycleOwner, { banner ->
+            qualifiedBanner().observe(viewLifecycleOwner) { banner ->
                 if (banner != null) {
                     AnalyticsUtil.logAnalyticsEvent(getString(R.string.displaying_in_app_banner, banner.id), requireContext())
                     binding.homeBanner.visibility = View.VISIBLE
@@ -64,7 +65,19 @@ class HomeFragment : Fragment() {
                         closeCampaign(banner.id)
                     }
                 } else binding.homeBanner.visibility = View.GONE
-            })
+            }
+        }
+    }
+
+    private fun setPaybillVisibility() {
+        val countries = Utils.getStringSet(Constants.COUNTRIES, requireActivity())
+
+        binding.paybill.apply {
+            if (!countries.isNullOrEmpty() && countries.any { it.contentEquals("KE", ignoreCase = true) }) {
+                visibility = View.VISIBLE
+                setOnClickListener { navigateTo(Constants.NAV_PAYBILL, requireActivity()) }
+            } else
+                visibility = View.GONE
         }
     }
 
