@@ -12,10 +12,10 @@ import com.hover.stax.utils.AnalyticsUtil;
 public class PhoneHelper {
     final static private String TAG = "PhoneHelper";
 
-    public static String normalizeNumberByCountry(String number, String country) {
+    public static String normalizeNumberByCountry(String number, String from_country, String to_country) {
         String phoneNumber = number;
         try {
-            phoneNumber = convertToCountry(number, country);
+            phoneNumber = convertToCountry(number, from_country, to_country);
             Log.e("Contact", "Normalized number: " + phoneNumber);
         } catch (NumberParseException e) {
             Log.e("Contact", "error formating number", e);
@@ -23,11 +23,12 @@ public class PhoneHelper {
         return phoneNumber;
     }
 
-    private static String convertToCountry(String number, String country) throws NumberParseException, IllegalStateException {
+    private static String convertToCountry(String number, String from_country, String to_country) throws NumberParseException, IllegalStateException {
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
         try {
-            Phonenumber.PhoneNumber phone = phoneUtil.parse(number, country);
-            number = phoneUtil.formatNumberForMobileDialing(phone, country, false);
+            Phonenumber.PhoneNumber phone = phoneUtil.parse(number, to_country);
+//           Most cases we've seen the number format is that used for dialing without the plus
+            number = phoneUtil.formatNumberForMobileDialing(phone, from_country, false).replace("+", "");
         } catch (IllegalStateException e) {
             Log.e(TAG, "Google phone number util failed.", e);
         }

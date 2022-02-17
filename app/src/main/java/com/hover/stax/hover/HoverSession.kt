@@ -54,7 +54,7 @@ class HoverSession private constructor(b: Builder) {
             return null
         }
         return if (key == HoverAction.PHONE_KEY) {
-            PhoneHelper.normalizeNumberByCountry(value, action.to_country_alpha2)
+            PhoneHelper.normalizeNumberByCountry(value, action.country_alpha2, action.to_country_alpha2)
         } else value
     }
 
