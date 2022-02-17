@@ -275,7 +275,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
         val actionError = actionSelectViewModel.errorCheck()
         actionSelect.setState(actionError, if (actionError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
-
+        
         val recipientError = transferViewModel.recipientErrors(actionSelectViewModel.activeAction.value)
         contactInput.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
