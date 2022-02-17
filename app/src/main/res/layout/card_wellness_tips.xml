@@ -14,52 +14,60 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <TextView
-                android:id="@+id/title"
+        <LinearLayout
+                android:id="@+id/contentLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_13"
-                android:layout_marginTop="@dimen/margin_10"
-                android:layout_marginEnd="@dimen/margin_13"
-                android:fontFamily="font-medium"
-                android:gravity="start"
-                android:textColor="@color/banner_text"
-                android:textSize="@dimen/text_21"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/margin_13"
+                android:paddingEnd="@dimen/margin_13"
+                android:paddingTop="@dimen/margin_10"
+                android:paddingBottom="@dimen/margin_10"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="This is a test title" />
+                app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-                android:id="@+id/snippet"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_13"
-                android:layout_marginEnd="@dimen/margin_13"
-                android:ellipsize="end"
-                android:fontFamily="font-normal"
-                android:gravity="start"
-                android:maxLines="2"
-                android:textColor="@color/banner_text"
-                android:textSize="@dimen/text_16"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title"
-                tools:text="This is test content" />
+            <TextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/effra_medium"
+                    android:gravity="start"
+                    android:textColor="@color/banner_text"
+                    android:textSize="@dimen/text_21"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="This is a test title" />
+
+            <TextView
+                    android:id="@+id/snippet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/effra_regular"
+                    android:gravity="start"
+                    android:maxLines="2"
+                    android:textColor="@color/banner_text"
+                    android:textSize="@dimen/text_16"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    tools:text="This is test content" />
+        </LinearLayout>
 
         <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_13"
                 android:background="@color/banner_secondary"
                 android:padding="@dimen/margin_10"
+                android:id="@+id/readMoreLayout"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/snippet">
+                app:layout_constraintTop_toBottomOf="@id/contentLayout">
 
             <TextView
                     android:id="@+id/more"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawablePadding="@dimen/margin_3"
-                    android:fontFamily="font-medium"
+                    android:fontFamily="@font/effra_medium"
                     android:gravity="start"
                     android:text="@string/read_more"
                     android:textColor="@color/banner_text"

@@ -19,6 +19,7 @@ import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -110,8 +111,12 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun loadSims() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             sims.postValue(repo.presentSims)
+
+            //update the countries from sim
+            val countryCodes = repo.presentSims.map { it.countryIso }.toSet()
+            Utils.putStringSet(Constants.COUNTRIES, countryCodes, application)
         }
 
         simReceiver?.let {

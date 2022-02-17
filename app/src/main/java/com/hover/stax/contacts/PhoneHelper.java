@@ -12,19 +12,6 @@ import com.hover.stax.utils.AnalyticsUtil;
 public class PhoneHelper {
     final static private String TAG = "PhoneHelper";
 
-    public static String getNumberFormatForInput(String accountNumber, HoverAction a, Channel c) {
-        try {
-            String format = a.getFormatInfo(HoverAction.PHONE_KEY);
-            if (format != null && format.startsWith(String.valueOf(getPhone(c.countryAlpha2, accountNumber).getCountryCode())))
-                return getInternationalNumberNoPlus(accountNumber, c.countryAlpha2);
-            else
-                return normalizeNumberByCountry(accountNumber, c.countryAlpha2);
-        } catch (NumberParseException e) {
-            Log.e(TAG, "Google phone number util failed.", e);
-        }
-        return accountNumber;
-    }
-
     public static String normalizeNumberByCountry(String number, String country) {
         String phoneNumber = number;
         try {

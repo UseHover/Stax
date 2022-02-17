@@ -1,83 +1,67 @@
 package com.hover.stax.transfers
 
-import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
-import com.hover.stax.databinding.NonStandardVariableItemBinding
+import com.hover.stax.databinding.InputItemBinding
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 
-class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, String>,
-                                 private val editTextListener: NonStandardVariableInputListener,
-                                 private val runValidation: Boolean) :
-        RecyclerView.Adapter<NonStandardVariableAdapter.ViewHolder>() {
+class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, String>, private val editTextListener: NonStandardVariableInputListener, private val recyclerView: RecyclerView) :
+    RecyclerView.Adapter<NonStandardVariableAdapter.ViewHolder>() {
 
-    var seenAnError: Boolean? = null
-    var entryValidationCount = 0
+    inner class ViewHolder(val binding: InputItemBinding): RecyclerView.ViewHolder(binding.root) {
+        val input = binding.variableInput
 
-    inner class ViewHolder(val binding: NonStandardVariableItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bindItems(key: String, value: String) {
 
-            val watcher: TextWatcher = object : TextWatcher {
+            val inputTextWatcher: TextWatcher = object : TextWatcher {
                 override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
                 override fun afterTextChanged(editable: Editable) {}
                 override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                    val trimmedValue = charSequence.toString().replace(",".toRegex(), "")
-                    editTextListener.nonStandardVariableInputUpdated(key, trimmedValue)
+                    editTextListener.nonStandardVarUpdate(key, charSequence.toString())
                 }
             }
-            val humanReadableHint : String = Utils.splitCamelCase(key)
-            binding.variableInput.setHint(humanReadableHint)
-            binding.variableInput.tag = key
-            binding.variableInput.addTextChangedListener(watcher)
 
-            if (runValidation) {
-                binding.variableInput.setText(value)
-                val ctx: Context = binding.root.context
-                if (value.isEmpty()) {
-                    updateValidationStatus(hasError = true)
-                    val message = ctx.getString(R.string.enterValue_non_template_error, humanReadableHint).lowercase()
-                    binding.variableInput.setState(message, AbstractStatefulInput.ERROR)
-                } else {
-                    updateValidationStatus(hasError = false)
-                    binding.variableInput.setState(null, AbstractStatefulInput.SUCCESS)
-                }
-            }
+            input.addTextChangedListener(inputTextWatcher)
+            input.setHint(Utils.splitCamelCase(key))
+            input.tag = key
+            input.setText(value)
         }
     }
 
-    private fun updateValidationStatus(hasError: Boolean) {
-        entryValidationCount += 1
-        if (seenAnError == null || seenAnError == false) seenAnError = hasError
-
-        //Ensure validation result is returned after all entry has been checked
-        if (entryValidationCount == variables.size) {
-            editTextListener.validateFormEntries(hasError)
+    fun validates(): Boolean {
+        var valid = true
+        variables.onEachIndexed { index, entry ->
+            if (entry.value.isBlank()) {
+                valid = false
+                (recyclerView.findViewHolderForAdapterPosition(index) as NonStandardVariableAdapter.ViewHolder).input.setState(
+                    recyclerView.context.getString(R.string.enterValue_non_template_error, entry.key.lowercase()), AbstractStatefulInput.ERROR
+                )
+            } else {
+                (recyclerView.findViewHolderForAdapterPosition(index) as NonStandardVariableAdapter.ViewHolder).input.setState(
+                    null, AbstractStatefulInput.SUCCESS
+                )
+            }
         }
+        return valid
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = NonStandardVariableItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = InputItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        variables.onEachIndexed { index, entry ->
-            if (index == position) holder.bindItems(entry.key, entry.value)
-        }
+        holder.bindItems(variables.keys.toList()[position], variables.values.toList()[position])
     }
 
     interface NonStandardVariableInputListener {
-        fun nonStandardVariableInputUpdated(key: String, value: String)
-        fun validateFormEntries(nonStandardHasAnError: Boolean)
+        fun nonStandardVarUpdate(key: String, value: String)
     }
 
-
-    override fun getItemCount(): Int {
-        return variables.size
-    }
+    override fun getItemCount(): Int { return variables.size }
 }

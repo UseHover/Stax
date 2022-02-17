@@ -41,6 +41,7 @@ object Constants {
     const val TRANSACTION_TYPE = "transaction_type"
     const val QUESTION_TYPE = "question_type"
     const val FINANCIAL_TIPS = "financial_tips"
+    const val COUNTRIES = "countries"
 
     const val RECIPIENT_INSTITUTION= "recipientInstitution"
 
