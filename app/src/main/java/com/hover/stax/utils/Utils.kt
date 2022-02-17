@@ -70,6 +70,14 @@ object Utils {
         editor.apply()
     }
 
+    fun putStringSet(key: String, stringSet: Set<String>, context: Context) {
+        val editor = getSharedPrefs(context).edit()
+        editor.putStringSet(key, stringSet)
+        editor.apply()
+    }
+
+    fun getStringSet(key: String, context: Context): Set<String>? = getSharedPrefs(context).getStringSet(key, setOf(""))
+
     fun isFirebaseTopicInDefaultState(topic: String?, c: Context): Boolean {
         return getSharedPrefs(c).getBoolean(topic, true)
     }
