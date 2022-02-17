@@ -198,6 +198,8 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
             Timber.i("Reloading channels")
             val wm = WorkManager.getInstance(requireContext())
             wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue()
+
+            Utils.saveBoolean(Constants.CHANNELS_REFRESHED, true, requireActivity())
             return
         }
 

@@ -10,7 +10,7 @@ const val DUMMY = -1
 
 @Entity(
         tableName = "accounts",
-        foreignKeys = [ForeignKey(entity = Channel::class, parentColumns = ["id"], childColumns = ["channelId"], onDelete = CASCADE)],
+        foreignKeys = [ForeignKey(entity = Channel::class, parentColumns = ["id"], childColumns = ["channelId"])],
         indices = [Index(value = ["name"], unique = true)]
 )
 data class Account(

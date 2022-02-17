@@ -3,6 +3,7 @@ package com.hover.stax.database;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.room.AutoMigration;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
@@ -27,7 +28,15 @@ import com.hover.stax.transactions.TransactionDao;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class, Account.class, Paybill.class}, version = 36)
+@Database(
+        entities = {
+                Channel.class, StaxTransaction.class, StaxContact.class, Request.class, Schedule.class, Account.class, Paybill.class
+        },
+        version = 37,
+        autoMigrations = {
+                @AutoMigration(from = 36, to = 37)
+        }
+)
 public abstract class AppDatabase extends RoomDatabase {
     static final Migration M23_24 = new Migration(23, 24) {
         @Override

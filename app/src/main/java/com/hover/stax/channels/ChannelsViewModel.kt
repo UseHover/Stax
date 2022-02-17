@@ -9,7 +9,6 @@ import androidx.lifecycle.*
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.sdk.actions.HoverAction
-import com.hover.sdk.api.ActionHelper
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
@@ -26,9 +25,8 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
 
-//TODO improve performance
 class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel(),
-        ChannelDropdown.HighlightListener, AccountDropdown.HighlightListener, PushNotificationTopicsInterface {
+    AccountDropdown.HighlightListener, PushNotificationTopicsInterface {
 
     private var type = MutableLiveData<String>()
     var sims = MutableLiveData<List<SimInfo>>()
@@ -116,7 +114,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
         simReceiver?.let {
             LocalBroadcastManager.getInstance(application)
-                    .registerReceiver(it, IntentFilter(Utils.getPackage(application).plus(".NEW_SIM_INFO_ACTION")))
+                .registerReceiver(it, IntentFilter(Utils.getPackage(application).plus(".NEW_SIM_INFO_ACTION")))
         }
 
         Hover.updateSimInfo(application)
@@ -194,10 +192,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
-    override fun highlightChannel(c: Channel?) {
-        c?.let { setActiveChannel(it) }
-    }
-
     private fun loadActions(t: String?) {
         if (t == null) return
 
@@ -262,8 +256,10 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     fun errorCheck(): String? {
         return when {
             activeChannel.value == null || activeAccount.value == null -> application.getString(R.string.channels_error_noselect)
-            channelActions.value.isNullOrEmpty() -> application.getString(R.string.no_actions_fielderror,
-                    HoverAction.getHumanFriendlyType(application, type.value))
+            channelActions.value.isNullOrEmpty() -> application.getString(
+                R.string.no_actions_fielderror,
+                HoverAction.getHumanFriendlyType(application, type.value)
+            )
             else -> null
         }
     }
