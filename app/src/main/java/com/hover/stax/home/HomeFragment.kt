@@ -111,7 +111,6 @@ class HomeFragment : Fragment() {
             } else
                 Timber.i("No tips available today")
         }
-
     }
 
     override fun onDestroyView() {
