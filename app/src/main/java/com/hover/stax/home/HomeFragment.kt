@@ -43,7 +43,8 @@ class HomeFragment : Fragment() {
 
         binding.airtime.setOnClickListener { navigateTo(Constants.NAV_AIRTIME, requireActivity()) }
         binding.transfer.setOnClickListener { navigateTo(Constants.NAV_TRANSFER, requireActivity()) }
-        binding.paybill.setOnClickListener { navigateTo(Constants.NAV_PAYBILL, requireActivity()) }
+
+        setPaybillVisibility()
 
         NetworkMonitor.StateLiveData.get().observe(viewLifecycleOwner) {
             updateOfflineIndicator(it)
@@ -67,6 +68,18 @@ class HomeFragment : Fragment() {
                     }
                 } else binding.homeBanner.visibility = View.GONE
             }
+        }
+    }
+
+    private fun setPaybillVisibility() {
+        val countries = Utils.getStringSet(Constants.COUNTRIES, requireActivity())
+
+        binding.paybill.apply {
+            if (!countries.isNullOrEmpty() && countries.any { it.contentEquals("KE", ignoreCase = true) }) {
+                visibility = View.VISIBLE
+                setOnClickListener { navigateTo(Constants.NAV_PAYBILL, requireActivity()) }
+            } else
+                visibility = View.GONE
         }
     }
 
@@ -104,7 +117,6 @@ class HomeFragment : Fragment() {
             } else
                 Timber.i("No tips available today")
         }
-
     }
 
     override fun onDestroyView() {
