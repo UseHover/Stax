@@ -23,6 +23,7 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
+import io.sentry.util.StringUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONException
@@ -109,6 +110,12 @@ abstract class AbstractSDKCaller : AbstractGoogleAuthActivity(), PushNotificatio
             if (!actionSelectViewModel.nonStandardVariables.value.isNullOrEmpty()) {
                 actionSelectViewModel.nonStandardVariables.value!!.forEach {
                     hsb.extra(it.key, it.value)
+
+                    actionSelectViewModel.activeAction.value?.apply {
+                        if(this.hasToInstitution()) {
+                            hsb.extra(Constants.RECIPIENT_INSTITUTION, this.to_institution_id.toString())
+                        }
+                    }
                 }
             }
 

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.databinding.NonStandardVariableItemBinding
+import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 
 class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, String>,
@@ -29,8 +30,8 @@ class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, St
                     editTextListener.nonStandardVariableInputUpdated(key, trimmedValue)
                 }
             }
-
-            binding.variableInput.setHint(key)
+            val humanReadableHint : String = Utils.splitCamelCase(key)
+            binding.variableInput.setHint(humanReadableHint)
             binding.variableInput.tag = key
             binding.variableInput.addTextChangedListener(watcher)
 
@@ -39,7 +40,7 @@ class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, St
                 val ctx: Context = binding.root.context
                 if (value.isEmpty()) {
                     updateValidationStatus(hasError = true)
-                    val message = ctx.getString(R.string.enterValue_non_template_error, key).lowercase()
+                    val message = ctx.getString(R.string.enterValue_non_template_error, humanReadableHint).lowercase()
                     binding.variableInput.setState(message, AbstractStatefulInput.ERROR)
                 } else {
                     updateValidationStatus(hasError = false)
@@ -68,7 +69,6 @@ class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, St
         variables.onEachIndexed { index, entry ->
             if (index == position) holder.bindItems(entry.key, entry.value)
         }
-
     }
 
     interface NonStandardVariableInputListener {
