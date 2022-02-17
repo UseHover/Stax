@@ -5,6 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.utils.Constants
 
 class ActionSelectViewModel(private val application: Application) : ViewModel() {
 
@@ -64,7 +65,7 @@ class ActionSelectViewModel(private val application: Application) : ViewModel() 
 		listOfStrings.add(HoverAction.AMOUNT_KEY)
 		listOfStrings.add(HoverAction.NOTE_KEY)
 		listOfStrings.add(HoverAction.PIN_KEY)
-		listOfStrings.add("recipientInstitution")
+		listOfStrings.add(Constants.RECIPIENT_INSTITUTION)
 		return listOfStrings;
 	}
 
