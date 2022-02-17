@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.financialTips.FinancialTip
+import com.hover.stax.financialTips.FinancialTipsFragment
 import com.hover.stax.financialTips.FinancialTipsViewModel
 import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.utils.AnalyticsUtil
@@ -52,7 +54,7 @@ class HomeFragment : Fragment() {
 
     private fun setupBanner() {
         with(bannerViewModel) {
-            qualifiedBanner().observe(viewLifecycleOwner, { banner ->
+            qualifiedBanner().observe(viewLifecycleOwner) { banner ->
                 if (banner != null) {
                     AnalyticsUtil.logAnalyticsEvent(getString(R.string.displaying_in_app_banner, banner.id), requireContext())
                     binding.homeBanner.visibility = View.VISIBLE
@@ -64,7 +66,7 @@ class HomeFragment : Fragment() {
                         closeCampaign(banner.id)
                     }
                 } else binding.homeBanner.visibility = View.GONE
-            })
+            }
         }
     }
 
@@ -91,7 +93,11 @@ class HomeFragment : Fragment() {
                     title.text = tip.title
                     snippet.text = tip.snippet ?: tip.content
 
-                    tipsCard.setOnClickListener {
+                    contentLayout.setOnClickListener {
+                        findNavController().navigate(R.id.action_navigation_home_to_wellnessFragment, bundleOf(FinancialTipsFragment.TIP_ID to tip.id))
+                    }
+
+                    readMoreLayout.setOnClickListener {
                         findNavController().navigate(R.id.action_navigation_home_to_wellnessFragment)
                     }
                 }
