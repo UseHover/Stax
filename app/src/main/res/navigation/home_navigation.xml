@@ -239,7 +239,11 @@
     </fragment>
     <fragment
             android:id="@+id/wellnessFragment"
+<<<<<<< HEAD
             android:name="com.hover.stax.financialTips.FinancialTipsFragment"
+=======
+            android:name="com.hover.stax.financialTips.FinancialTipFragment"
+>>>>>>> origin/qa
             android:label="WellnessFragment">
         <action
                 android:id="@+id/action_wellnessFragment_to_navigation_home"
