@@ -44,6 +44,8 @@ object Constants {
     const val FINANCIAL_TIPS = "financial_tips"
     const val COUNTRIES = "countries"
 
+    const val RECIPIENT_INSTITUTION= "recipientInstitution"
+
     const val VARIANT = "variant"
 
     const val CONNECTIVITY = "android.net.conn.CONNECTIVITY_CHANGE"
