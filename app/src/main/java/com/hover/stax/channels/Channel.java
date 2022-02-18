@@ -21,7 +21,6 @@ import timber.log.Timber;
 @Entity(tableName = "channels")
 public class Channel implements Comparable<Channel> {
 
-    final public static int DUMMY = -1;
     @PrimaryKey
     @NonNull
     public int id;
@@ -68,8 +67,8 @@ public class Channel implements Comparable<Channel> {
     public Long latestBalanceTimestamp;
     @ColumnInfo(name = "account_no")
     public String accountNo;
-    @Ignore
-    public String spentThisMonth, spentDifferenceToLastMonth;
+//    @Ignore
+//    public String spentThisMonth, spentDifferenceToLastMonth;
 
     public Channel() {
     }
@@ -114,37 +113,6 @@ public class Channel implements Comparable<Channel> {
             Timber.d(e.getLocalizedMessage());
         }
         return this;
-    }
-
-    public Channel dummy(String name, String primaryColor) {
-        id = DUMMY;
-        this.name = name;
-        this.primaryColorHex = primaryColor;
-        this.secondaryColorHex = "#1E232A";
-        currency = "NG";
-        published = true;
-        institutionId = DUMMY;
-        latestBalance = "0";
-        latestBalanceTimestamp = Long.parseLong("-1");
-        return this;
-    }
-
-    public void setSpentThisMonth(String spentThisMonth) {
-        this.spentThisMonth = spentThisMonth;
-    }
-
-    public void setSpentDifferenceToLastMonth(String spentDifferenceToLastMonth) {
-        this.spentDifferenceToLastMonth = spentDifferenceToLastMonth;
-    }
-
-    public void updateBalance(HashMap<String, String> parsed_variables) {
-        if (parsed_variables.containsKey("balance"))
-            latestBalance = parsed_variables.get("balance");
-        if (parsed_variables.containsKey("update_timestamp") && parsed_variables.get("update_timestamp") != null) {
-            latestBalanceTimestamp = Long.parseLong(parsed_variables.get("update_timestamp"));
-        } else {
-            latestBalanceTimestamp = DateUtils.now();
-        }
     }
 
     public String getUssdName() {

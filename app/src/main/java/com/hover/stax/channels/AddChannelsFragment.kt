@@ -16,12 +16,15 @@ import com.hover.stax.R
 import com.hover.stax.balances.BalancesViewModel
 import com.hover.stax.databinding.FragmentAddChannelsBinding
 import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
 
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 
 class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener {
@@ -40,8 +43,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val wm = WorkManager.getInstance(requireContext())
-        wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue()
+        refreshChannelsIfRequired()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -83,12 +85,12 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
     private fun setUpMultiselect() {
         tracker = SelectionTracker.Builder(
-                "channelSelection", binding.channelsList,
-                ChannelKeyProvider(selectAdapter),
-                ChannelLookup(binding.channelsList),
-                StorageStrategy.createLongStorage()
+            "channelSelection", binding.channelsList,
+            ChannelKeyProvider(selectAdapter),
+            ChannelLookup(binding.channelsList),
+            StorageStrategy.createLongStorage()
         ).withSelectionPredicate(SelectionPredicates.createSelectAnything())
-                .build()
+            .build()
         selectAdapter.setTracker(tracker!!)
 
         binding.continueBtn.apply {
@@ -156,19 +158,19 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
             channelsViewModel.createAccounts(selectedChannels)
 
             showCheckBalanceDialog(
-                    if (selectedChannels.size > 1) R.string.check_balance_alt_plural
-                    else R.string.check_balance_alt,
-                    selectedChannels
+                if (selectedChannels.size > 1) R.string.check_balance_alt_plural
+                else R.string.check_balance_alt,
+                selectedChannels
             )
         }
     }
 
     private fun showCheckBalanceDialog(message: Int, channels: List<Channel>) {
         dialog = StaxDialog(requireActivity())
-                .setDialogTitle(R.string.check_balance_title)
-                .setDialogMessage(message)
-                .setNegButton(R.string.later) { runActions(channels, false) }
-                .setPosButton(R.string.check_balance_title) { runActions(channels, true) }
+            .setDialogTitle(R.string.check_balance_title)
+            .setDialogMessage(message)
+            .setNegButton(R.string.later) { runActions(channels, false) }
+            .setPosButton(R.string.check_balance_title) { runActions(channels, true) }
         dialog!!.showIt()
     }
 
@@ -177,17 +179,31 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
             requireActivity().onBackPressed()
 
         if (checkBalance)
-            balancesViewModel.actions.observe(viewLifecycleOwner, {
+            balancesViewModel.actions.observe(viewLifecycleOwner) {
                 if (channels.size == 1)
                     balancesViewModel.setRunning(channels.first())
                 else
                     balancesViewModel.setAllRunning(requireActivity())
-            })
+            }
     }
 
     override fun clickedChannel(channel: Channel) {
         if (!channel.selected)
             showCheckBalanceDialog(R.string.check_balance_alt, listOf(channel))
+    }
+
+    //channels will be loaded only once after install then deferred to weekly.
+    private fun refreshChannelsIfRequired() {
+        if (!Utils.getBoolean(Constants.CHANNELS_REFRESHED, requireActivity())) {
+            Timber.i("Reloading channels")
+            val wm = WorkManager.getInstance(requireContext())
+            wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue()
+
+            Utils.saveBoolean(Constants.CHANNELS_REFRESHED, true, requireActivity())
+            return
+        }
+
+        Timber.i("Channels already reloaded")
     }
 
     override fun onDestroyView() {

@@ -9,6 +9,7 @@ import androidx.lifecycle.*
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.sdk.actions.HoverAction
+import com.hover.sdk.api.ActionHelper
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
@@ -26,9 +27,8 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
 
-//TODO improve performance
 class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel(),
-        ChannelDropdown.HighlightListener, AccountDropdown.HighlightListener, PushNotificationTopicsInterface {
+    AccountDropdown.HighlightListener, PushNotificationTopicsInterface {
 
     private var type = MutableLiveData<String>()
     var sims = MutableLiveData<List<SimInfo>>()
@@ -121,7 +121,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
         simReceiver?.let {
             LocalBroadcastManager.getInstance(application)
-                    .registerReceiver(it, IntentFilter(Utils.getPackage(application).plus(".NEW_SIM_INFO_ACTION")))
+                .registerReceiver(it, IntentFilter(Utils.getPackage(application).plus(".NEW_SIM_INFO_ACTION")))
         }
 
         Hover.updateSimInfo(application)
@@ -152,7 +152,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun updateSimChannels(simChannels: MediatorLiveData<List<Channel>>, channels: List<Channel>?, hniList: List<String>?) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             if (channels == null || hniList == null) return@launch
 
             val simChannelList = ArrayList<Channel>()
@@ -168,7 +168,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
                 }
             }
 
-            simChannels.value = simChannelList
+            simChannels.postValue(simChannelList)
         }
     }
 
@@ -199,10 +199,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
-    override fun highlightChannel(c: Channel?) {
-        c?.let { setActiveChannel(it) }
-    }
-
     private fun loadActions(t: String?) {
         if (t == null) return
 
@@ -222,13 +218,13 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             loadActions(channels, type.value!!)
     }
 
-    private fun loadActions(channel: Channel, t: String) = viewModelScope.launch {
-        channelActions.value = if (t == HoverAction.P2P) repo.getTransferActions(channel.id) else repo.getActions(channel.id, t)
+    private fun loadActions(channel: Channel, t: String) = viewModelScope.launch(Dispatchers.IO) {
+        channelActions.postValue(if (t == HoverAction.P2P) repo.getTransferActions(channel.id) else repo.getActions(channel.id, t))
     }
 
-    private fun loadAccounts(channels: List<Channel>) = viewModelScope.launch {
+    private fun loadAccounts(channels: List<Channel>) = viewModelScope.launch(Dispatchers.IO) {
         val ids = channels.map { it.id }
-        accounts.value = repo.getAccounts(ids)
+        accounts.postValue(repo.getAccounts(ids))
     }
 
     private fun loadActions(channels: List<Channel>, t: String) {
@@ -240,7 +236,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     fun setChannelsSelected(channels: List<Channel>?) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             if (channels.isNullOrEmpty()) return@launch
 
             channels.forEachIndexed { index, channel ->
@@ -248,6 +244,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
                 channel.selected = true
                 channel.defaultAccount = selectedChannels.value.isNullOrEmpty() && index == 0
                 repo.update(channel)
+
+                ActionHelper.scheduleActionConfigUpdate(channel.countryAlpha2, 24, application)
             }
         }
     }
@@ -267,15 +265,17 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     fun errorCheck(): String? {
         return when {
             activeChannel.value == null || activeAccount.value == null -> application.getString(R.string.channels_error_noselect)
-            channelActions.value.isNullOrEmpty() -> application.getString(R.string.no_actions_fielderror,
-                    HoverAction.getHumanFriendlyType(application, type.value))
+            channelActions.value.isNullOrEmpty() -> application.getString(
+                R.string.no_actions_fielderror,
+                HoverAction.getHumanFriendlyType(application, type.value)
+            )
             else -> null
         }
     }
 
     fun setChannelFromRequest(r: Request?) {
         if (r != null && !selectedChannels.value.isNullOrEmpty()) {
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
                 var actions = repo.getActions(getChannelIds(selectedChannels.value!!), r.requester_institution_id)
 
                 if (actions.isEmpty() && !simChannels.value.isNullOrEmpty())
@@ -283,9 +283,9 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
                 if (actions.isNotEmpty())
                     channelActions.postValue(actions)
-            }
 
-            activeChannel.addSource(channelActions, this::setActiveChannel)
+                activeChannel.addSource(channelActions) { t -> setActiveChannel(t) }
+            }
         }
     }
 
