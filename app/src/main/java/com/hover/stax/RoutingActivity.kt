@@ -16,6 +16,7 @@ import androidx.work.WorkManager
 import com.amplitude.api.Amplitude
 import com.appsflyer.AppsFlyerLib
 import com.google.firebase.installations.FirebaseInstallations
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.hover.sdk.actions.HoverAction
@@ -24,10 +25,11 @@ import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.channels.ImportChannelsWorker
 import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.destruct.SelfDestructActivity
+import com.hover.stax.financialTips.FinancialTipsFragment
 import com.hover.stax.home.MainActivity
 import com.hover.stax.inapp_banner.BannerUtils
+import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.onboarding.OnBoardingActivity
-import com.hover.stax.pushNotification.PushNotificationTopicsInterface
 import com.hover.stax.schedules.ScheduleWorker
 import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.utils.AnalyticsUtil
@@ -36,7 +38,6 @@ import com.hover.stax.utils.Constants.FRAGMENT_DIRECT
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -59,6 +60,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
     override fun onStart() {
         super.onStart()
+
         AppsFlyerLib.getInstance().start(this)
     }
 
@@ -101,8 +103,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
         joinNoRequestMoneyGroup(this)
     }
 
-    private fun initAmplitude() = Amplitude.getInstance().initialize(this, getString(R.string.amp))
-        .enableForegroundTracking(application)
+    private fun initAmplitude() = Amplitude.getInstance().initialize(this, getString(R.string.amp)).enableForegroundTracking(application)
 
     private fun logPushNotificationIfRequired() = intent.extras?.let {
         val fcmTitle = it.getString(Constants.FROM_FCM)
@@ -151,7 +152,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("DEFAULT", getString(R.string.notify_default_title), importance)
+            val channel = NotificationChannel(getString(R.string.default_notification_channel_id), getString(R.string.notify_default_title), importance)
             channel.description = getString(R.string.notify_default_channel_descrip)
             val notificationManager = getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
@@ -176,6 +177,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     private fun chooseNavigation(intent: Intent) {
         when {
             !hasPassedOnboarding() -> goToOnBoardingActivity()
+            redirectToFinancialTips() -> goToFinancialTips()
             isToRedirectFromMainActivity(intent) -> {
                 val redirectLink = intent.extras?.getString(FRAGMENT_DIRECT)
                 redirectLink?.let {
@@ -192,11 +194,22 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
         finish()
     }
 
+    private fun goToFinancialTips() {
+        val tipId = Uri.parse(intent.getStringExtra("redirect")).getQueryParameter("id")
+        startActivity(Intent(this, MainActivity::class.java).putExtra(FinancialTipsFragment.TIP_ID, tipId))
+        finish()
+    }
+
     private fun validateUser() = lifecycleScope.launchWhenStarted {
         when {
             !hasPassedOnboarding() -> goToOnBoardingActivity()
             hasAccounts -> BiometricChecker(this@RoutingActivity, this@RoutingActivity).startAuthentication(null)
-            else -> goToMainActivity(null)
+            else -> {
+                if (redirectToFinancialTips())
+                    goToFinancialTips()
+                else
+                    goToMainActivity(null)
+            }
         }
     }
 
@@ -235,6 +248,8 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
     private fun openUrl(url: String) = startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse(url)))
 
-    private fun hasPassedOnboarding(): Boolean = Utils.getBoolean(OnBoardingActivity::class.java.simpleName,this)
+    private fun hasPassedOnboarding(): Boolean = Utils.getBoolean(OnBoardingActivity::class.java.simpleName, this)
+
+    private fun redirectToFinancialTips(): Boolean = intent.hasExtra("redirect") && intent.getStringExtra("redirect")!!.contains(getString(R.string.deeplink_financial_tips))
 
 }

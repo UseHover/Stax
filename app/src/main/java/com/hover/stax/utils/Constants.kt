@@ -41,6 +41,8 @@ object Constants {
     const val TRANSACTION_TYPE = "transaction_type"
     const val QUESTION_TYPE = "question_type"
     const val CHANNELS_REFRESHED = "has_refreshed_channels"
+    const val FINANCIAL_TIPS = "financial_tips"
+    const val COUNTRIES = "countries"
 
     const val VARIANT = "variant"
 

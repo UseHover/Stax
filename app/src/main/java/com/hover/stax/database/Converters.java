@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Converters {
+
     @TypeConverter
     public String fromArray(ArrayList<String> strings) {
         if (strings == null) return null;

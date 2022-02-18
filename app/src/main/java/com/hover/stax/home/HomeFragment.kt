@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.financialTips.FinancialTip
+import com.hover.stax.financialTips.FinancialTipsFragment
 import com.hover.stax.financialTips.FinancialTipsViewModel
 import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.utils.AnalyticsUtil
@@ -41,7 +43,8 @@ class HomeFragment : Fragment() {
 
         binding.airtime.setOnClickListener { navigateTo(Constants.NAV_AIRTIME, requireActivity()) }
         binding.transfer.setOnClickListener { navigateTo(Constants.NAV_TRANSFER, requireActivity()) }
-        binding.paybill.setOnClickListener { navigateTo(Constants.NAV_PAYBILL, requireActivity()) }
+
+        setPaybillVisibility()
 
         NetworkMonitor.StateLiveData.get().observe(viewLifecycleOwner) {
             updateOfflineIndicator(it)
@@ -68,6 +71,18 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun setPaybillVisibility() {
+        val countries = Utils.getStringSet(Constants.COUNTRIES, requireActivity())
+
+        binding.paybill.apply {
+            if (!countries.isNullOrEmpty() && countries.any { it.contentEquals("KE", ignoreCase = true) }) {
+                visibility = View.VISIBLE
+                setOnClickListener { navigateTo(Constants.NAV_PAYBILL, requireActivity()) }
+            } else
+                visibility = View.GONE
+        }
+    }
+
     private fun updateOfflineIndicator(isConnected: Boolean) {
         binding.offlineBadge.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_internet_off, 0, 0, 0)
         binding.offlineBadge.visibility = if (isConnected) View.GONE else View.VISIBLE
@@ -91,14 +106,17 @@ class HomeFragment : Fragment() {
                     title.text = tip.title
                     snippet.text = tip.snippet ?: tip.content
 
-                    tipsCard.setOnClickListener {
+                    contentLayout.setOnClickListener {
+                        findNavController().navigate(R.id.action_navigation_home_to_wellnessFragment, bundleOf(FinancialTipsFragment.TIP_ID to tip.id))
+                    }
+
+                    readMoreLayout.setOnClickListener {
                         findNavController().navigate(R.id.action_navigation_home_to_wellnessFragment)
                     }
                 }
             } else
                 Timber.i("No tips available today")
         }
-
     }
 
     override fun onDestroyView() {

@@ -16,10 +16,11 @@ import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountDropdown
 import com.hover.stax.database.DatabaseRepo
-import com.hover.stax.pushNotification.PushNotificationTopicsInterface
+import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,6 +40,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     val activeChannel = MediatorLiveData<Channel>()
     val channelActions = MediatorLiveData<List<HoverAction>>()
     val accounts = MediatorLiveData<List<Account>>()
+    val allLiveAccounts: LiveData<List<Account>> = repo.allAccountsLive
     val activeAccount = MutableLiveData<Account>()
     private var simReceiver: BroadcastReceiver? = null
 
@@ -109,8 +111,12 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun loadSims() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             sims.postValue(repo.presentSims)
+
+            //update the countries from sim
+            val countryCodes = repo.presentSims.map { it.countryIso }.toSet()
+            Utils.putStringSet(Constants.COUNTRIES, countryCodes, application)
         }
 
         simReceiver?.let {
@@ -176,7 +182,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     fun setActiveAccount(account: Account?) {
-        activeAccount.postValue(account)
+        activeAccount.postValue(account!!)
     }
 
     private fun setActiveChannel(actions: List<HoverAction>) {
@@ -337,6 +343,19 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             val channel = repo.getChannel(account.channelId)
             setActiveChannel(channel!!)
             activeAccount.postValue(account)
+        }
+    }
+
+    fun setDefaultAccount(account: Account) {
+        if (!allLiveAccounts.value.isNullOrEmpty()) {
+            //remove current default account
+            val current: Account? = allLiveAccounts.value!!.firstOrNull { it.isDefault }
+            current?.isDefault = false
+            repo.update(current)
+
+            val a = allLiveAccounts.value!!.first { it.id == account.id }
+            a.isDefault = true
+            repo.update(a)
         }
     }
 
