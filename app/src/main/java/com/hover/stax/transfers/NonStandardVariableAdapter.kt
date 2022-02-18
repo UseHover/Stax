@@ -9,6 +9,7 @@ import com.hover.stax.R
 import com.hover.stax.databinding.InputItemBinding
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
+import timber.log.Timber
 
 class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, String>, private val editTextListener: NonStandardVariableInputListener, private val recyclerView: RecyclerView) :
     RecyclerView.Adapter<NonStandardVariableAdapter.ViewHolder>() {
@@ -35,9 +36,11 @@ class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, St
 
     fun validates(): Boolean {
         var valid = true
+
         variables.onEachIndexed { index, entry ->
             if (entry.value.isBlank()) {
                 valid = false
+
                 (recyclerView.findViewHolderForAdapterPosition(index) as NonStandardVariableAdapter.ViewHolder).input.setState(
                     recyclerView.context.getString(R.string.enterValue_non_template_error, entry.key.lowercase()), AbstractStatefulInput.ERROR
                 )

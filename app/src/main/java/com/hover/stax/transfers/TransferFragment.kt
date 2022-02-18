@@ -281,7 +281,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
         val nonStandardVarError = nonStandardVariableAdapter.validates()
 
-        return channelError == null && actionError == null && amountError == null && recipientError == null && !nonStandardVarError
+        return channelError == null && actionError == null && amountError == null && recipientError == null && nonStandardVarError
     }
 
     override fun onContactSelected(requestCode: Int, contact: StaxContact) {
