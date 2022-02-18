@@ -64,6 +64,8 @@
 	<string name="visit_bounty_list" translatable="false">Bounty List</string>
 	<string name="visit_balance_and_history" translatable="false">Balance and history</string>
 	<string name="visit_link_account" translatable="false">Link an account</string>
+	<string name="visit_paybill" translatable="false">Paybill</string>
+	<string name="visit_paybill_list" translatable="false">Paybill List</string>
 
 	<string name="finish_transfer" translatable="false">Sending %1$s request to the SDK</string>
 	<string name="scheduled_complete" translatable="false">Scheduled new %1$s</string>
@@ -130,9 +132,26 @@
 	<string name="firebase_topic_yes_bounty_yes_try" translatable="false">YES-BOUNTY-YES-TRY</string>
 	<string name="firebase_fcm_redirect_format_err" translatable="false">Push notification redirection bad format</string>
 
+	<string name="saved_paybill" translatable="false">Saved paybill</string>
+	<string name="deleted_paybill" translatable="false">Deleted paybill</string>
+
 	<!-- Financial Tips -->
-	<string name="clicked_tips_read_more">Clicked financial snippet read more.</string>
-	<string name="read_financial_tip">Read financial tip</string>
-	<string name="visited_financial_tips">Visited financial tips screen</string>
-	<string name="shared_financial_tip">Shared financial tip</string>
+	<string name="clicked_tips_read_more" translatable="false">Clicked financial snippet read more.</string>
+	<string name="read_financial_tip" translatable="false">Read financial tip</string>
+	<string name="visited_financial_tips" translatable="false">Visited financial tips screen</string>
+	<string name="shared_financial_tip" translatable="false">Shared financial tip</string>
+
+	<!-- Onboarding MVT -->
+	<string name="clicked_skip_sign_in" translatable="false">Clicked continue without sign in</string>
+	<string name="visit_welcome" translatable="false">welcome onboarding</string>
+	<string name="visit_sign_in" translatable="false">sign in onboarding</string>
+	<string name="visit_default" translatable="false">default onboarding</string>
+	<string name="clicked_onboarding_question" translatable="false">Clicked onboarding question</string>
+	<string name="visit_interactive" translatable="false">interactive onboarding</string>
+	<string name="clicked_skip_tutorial" translatable="false">Clicked skip tutorial</string>
+	<string name="visit_interactive_tutorial" translatable="false">interactive tutorial</string>
+	<string name="visit_non_interactive_tutorial" translatable="false">non-interactive tutorial</string>
+	<string name="interacted_with_tutorial" translatable="false">Interacted with tutorial</string>
+	<string name="clicked_continue" translatable="false">Clicked continue button</string>
+
 </resources>

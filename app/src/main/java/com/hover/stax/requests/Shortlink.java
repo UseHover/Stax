@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Shortlink {
-    private String link;
-    private Map<String, String> linksMap = new HashMap<>();
+    private final String link;
+    private final Map<String, String> linksMap = new HashMap<>();
 
     public Shortlink(String link) {
         this.link = link;

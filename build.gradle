@@ -4,22 +4,21 @@ buildscript {
         mavenCentral()
     }
 
-    ext.kotlin_version = '1.5.21'
+    ext.kotlin_version = '1.6.10'
+    ext.compose_version = '1.1.0'
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.4'
+        classpath 'com.android.tools.build:gradle:7.1.1'
         classpath 'com.google.gms:google-services:4.3.10'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.0'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.firebase:perf-plugin:1.4.0'
+        classpath 'com.google.firebase:perf-plugin:1.4.1'
     }
 }
 
 allprojects {
     repositories {
         google()
-        mavenCentral()
-        jcenter()
         mavenCentral()
         maven { url 'https://jitpack.io' }
         maven {

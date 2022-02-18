@@ -1,61 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="StaxTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
-        <item name="colorOnPrimary">@color/offWhite</item>
-
-        <item name="colorAccent">@color/brightBlue</item>
-        <item name="colorSecondary">@color/brightBlue</item>
-        <item name="colorSecondaryVariant">@color/brightBlue</item>
-        <item name="colorOnSecondary">@color/cardViewColor</item>
-
-        <item name="colorSurface">@color/cardViewColor</item>
-        <item name="colorOnSurface">@color/offWhite</item>
-        <item name="colorOnBackground">@color/darkGrey</item>
-        <item name="colorError">@color/stax_state_red</item>
-        <item name="colorOnError">@color/offWhite</item>
-
-        <item name="colorControlNormal">@color/buttonColor</item>
-        <item name="colorControlHighlight">@color/brightBlue</item>
-        <item name="colorSwitchThumbNormal">@color/grey</item>
-
-        <item name="windowActionBar">false</item>
-        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark
-        </item>
-        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark
-        </item>
-        <item name="android:windowBackground">@color/colorPrimaryDark</item>
-        <item name="android:fitsSystemWindows">true</item>
-
-        <item name="titleTextColor">@color/offWhite</item>
-        <item name="android:textColor">@color/offWhite</item>
-        <item name="android:buttonStyle">@style/StaxButton</item>
-        <item name="buttonStyle">@style/StaxButton</item>
-
-        <!-- Fab and dropdowns -->
-        <item name="android:popupMenuStyle">@style/StaxPopupMenu</item>
-        <item name="popupMenuStyle">@style/StaxPopupMenu</item>
-        <item name="actionOverflowMenuStyle">@style/StaxPopupMenu</item>
-        <item name="android:listPreferredItemHeightSmall">61dp</item>
-
-        <!-- Snackbars -->
-        <item name="snackbarStyle">@style/StaxSnackbar</item>
-        <item name="snackbarButtonStyle">@style/StaxButton</item>
-        <item name="snackbarTextViewStyle">@style/StaxSnackbarText</item>
-    </style>
-
-    <style name="BottomNavViewText" parent="TextAppearance.AppCompat">
-        <item name="fontFamily">font-medium</item>
-        <item name="android:fontFamily">font-medium</item>
-    </style>
-
-    <style name="SplashTheme" parent="StaxTheme">
-        <item name="android:windowBackground">@drawable/splash_window_background</item>
-    </style>
-
     <style name="StaxHoverTheme" parent="StaxTheme">
         <item name="android:buttonStyle">@style/HoverButton</item>
         <item name="buttonStyle">@style/HoverButton</item>
@@ -123,27 +67,6 @@
     <style name="ShapeAppearanceOverlayExtended" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">5dp</item>
-    </style>
-
-    <style name="OldStaxLabeledInput" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="android:layout_marginStart">@dimen/margin_10</item>
-        <item name="android:layout_marginEnd">@dimen/margin_10</item>
-        <item name="android:layout_marginBottom">@dimen/margin_8</item>
-        <item name="boxStrokeColor">@color/offWhite</item>
-        <item name="boxBackgroundColor">@color/cardViewColor</item>
-        <item name="boxStrokeWidth">2dp</item>
-        <item name="android:textColorHint">@color/offWhite</item>
-        <item name="hintTextColor">@color/offWhite</item>
-        <item name="android:textColor">@color/offWhite</item>
-        <item name="android:textSize">@dimen/text_13</item>
-        <item name="fontFamily">font-medium</item>
-        <item name="android:fontFamily">font-medium</item>
-        <item name="errorTextColor">@color/stax_state_red</item>
-        <item name="errorIconDrawable">@drawable/ic_error</item>
-        <item name="endIconTint">@color/offWhite</item>
-        <item name="errorEnabled">true</item>
-        <item name="helperTextTextColor">@color/stax_state_blue</item>
-        <item name="helperTextEnabled">true</item>
     </style>
 
     <style name="StaxLabeledInput" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -227,5 +150,15 @@
     <style name="StaxDialogFullScreen" parent="StaxTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@color/colorPrimary</item>
+    </style>
+
+    <style name="StaxIconShape" parent="">
+        <item name="cornerSize">50%</item>
+        <item name="android:solidColor">@color/buttonColor</item>
+    </style>
+
+    <style name="BottomNavViewText" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">font-medium</item>
+        <item name="android:fontFamily">font-medium</item>
     </style>
 </resources>

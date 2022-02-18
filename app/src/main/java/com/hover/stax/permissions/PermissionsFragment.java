@@ -21,10 +21,10 @@ import com.hover.stax.utils.AnalyticsUtil;
 import com.hover.stax.utils.Constants;
 
 public class PermissionsFragment extends DialogFragment {
-    private static String TAG = "PermissionsFragment", REASON = "reason", STARTWITH = "start_with";
-
     public final static int PHONE = 0, SMS = 1, OVERLAY = 2, ACCESS = 3;
-
+    private static final String TAG = "PermissionsFragment";
+    private static final String REASON = "reason";
+    private static final String STARTWITH = "start_with";
     private PermissionHelper helper;
     private StaxPermissionDialog dialog;
     private int current;

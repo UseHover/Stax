@@ -16,7 +16,7 @@ class Lang(val code: String) {
 
     init {
         val locale = Locale(code)
-        name = locale.getDisplayLanguage(locale).apply{
+        name = locale.getDisplayLanguage(locale).apply {
             substring(0, 1).uppercase().plus(substring(1))
         }
     }
@@ -26,7 +26,7 @@ class Lang(val code: String) {
     override fun toString(): String = name!!
 
     override fun equals(other: Any?): Boolean {
-        if(other !is Lang) return false
+        if (other !is Lang) return false
 
         return code == other.code
     }

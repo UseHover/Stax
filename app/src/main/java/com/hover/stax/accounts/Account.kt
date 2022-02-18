@@ -5,13 +5,12 @@ import androidx.room.ForeignKey.CASCADE
 import com.hover.stax.channels.Channel
 import com.hover.stax.utils.DateUtils.now
 import timber.log.Timber
-import java.util.*
 
 const val DUMMY = -1
 
 @Entity(
         tableName = "accounts",
-        foreignKeys = [ForeignKey(entity = Channel::class, parentColumns = ["id"], childColumns = ["channelId"], onDelete = CASCADE)],
+        foreignKeys = [ForeignKey(entity = Channel::class, parentColumns = ["id"], childColumns = ["channelId"])],
         indices = [Index(value = ["name"], unique = true)]
 )
 data class Account(
@@ -39,7 +38,7 @@ data class Account(
 ) : Comparable<Account> {
 
     constructor(name: String, channel: Channel) : this(
-        name, name, channel.logoUrl, "", channel.id, channel.primaryColorHex, channel.secondaryColorHex
+            name, name, channel.logoUrl, "", channel.id, channel.primaryColorHex, channel.secondaryColorHex
     )
 
     constructor(name: String, primaryColor: String) : this(
@@ -82,7 +81,7 @@ data class Account(
         }
     }
 
-//    Name is unique
+    //    Name is unique
     override fun equals(other: Any?): Boolean {
         if (other !is Account) return false
         return id == other.id || other.name == other.name

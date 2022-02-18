@@ -20,7 +20,7 @@ import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.futureTransactions.RequestsAdapter
 import com.hover.stax.futureTransactions.ScheduledAdapter
 import com.hover.stax.home.MainActivity
-import com.hover.stax.navigation.NavigationInterface
+import com.hover.stax.home.NavigationInterface
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.transactions.TransactionHistoryAdapter
@@ -53,7 +53,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_channel)), requireActivity());
+        AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_channel)), requireActivity())
 
         initRecyclerViews()
         setupObservers()
@@ -119,11 +119,11 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         if (msg == null)
             successFun(v.text)
         v.setState(msg
-                ?: getString(R.string.saved), if (msg == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+                ?: getString(R.string.label_saved), if (msg == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
     }
 
     private fun validates(v: StaxTextInputLayout, comparison: String?, errorMsg: Int): String? {
-        return if (v.text.isNullOrEmpty() || v.text.toString() == comparison) getString(errorMsg)
+        return if (v.text.isEmpty() || v.text == comparison) getString(errorMsg)
         else null
     }
 

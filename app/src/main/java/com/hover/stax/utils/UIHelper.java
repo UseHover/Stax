@@ -31,7 +31,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.hover.stax.R;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
-import com.squareup.picasso.Transformation;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -122,6 +121,10 @@ public class UIHelper {
                 .resize(size, size).into(target);
     }
 
+    public static void loadPicasso(String url, ImageView imageView) {
+        Picasso.get().load(url).config(Bitmap.Config.RGB_565).placeholder(R.color.buttonColor).into(imageView);
+    }
+
     public static void loadPicasso(int resId, int size, Target target) {
         Picasso.get()
                 .load(resId)
@@ -141,15 +144,17 @@ public class UIHelper {
         SpannableString content = new SpannableString(cs);
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         content.setSpan(android.graphics.Typeface.BOLD, 0, content.length(), 0);
-        try{
+        try {
             textView.setText(content);
-        }catch (Exception e) { Timber.e(e); }
+        } catch (Exception e) {
+            Timber.e(e);
+        }
 
     }
 
     public static void removeTextUnderline(TextView textView) {
-        SpannableString ss= new SpannableString(textView.getText());
-        UnderlineSpan[] spans=ss.getSpans(0, textView.getText().length(), UnderlineSpan.class);
+        SpannableString ss = new SpannableString(textView.getText());
+        UnderlineSpan[] spans = ss.getSpans(0, textView.getText().length(), UnderlineSpan.class);
         for (UnderlineSpan span : spans) {
             ss.removeSpan(span);
         }

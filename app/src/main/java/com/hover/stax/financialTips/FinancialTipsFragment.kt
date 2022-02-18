@@ -2,11 +2,12 @@ package com.hover.stax.financialTips
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Html
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
@@ -40,8 +41,6 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
                 showFinancialTips(it, tipId)
             }
         }
-
-        initBackNavigation()
     }
 
     private val backPressedCallback = object : OnBackPressedCallback(true) {
@@ -49,7 +48,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
             if (binding.financialTipsDetail.visibility == View.VISIBLE)
                 showTipList()
             else
-                findNavController().popBackStack()
+                findNavController().popBackStack(R.id.navigation_home, true)
         }
     }
 
@@ -65,6 +64,8 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
 
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.visited_financial_tips), requireActivity())
         }
+
+        initBackNavigation()
     }
 
     override fun onTipSelected(tip: FinancialTip, isFromDeeplink: Boolean) {
@@ -77,19 +78,20 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
 
             //ensures proper back navigation
             setOnClickIcon {
-                if (isFromDeeplink)
-                    findNavController().navigate(R.id.action_wellnessFragment_to_navigation_home)
-                else
-                    showTipList()
+                showTipList()
             }
         }
-        binding.contentText.text = Html.fromHtml(tip.content)
+
+        binding.contentText.apply {
+            text = HtmlCompat.fromHtml(tip.content, HtmlCompat.FROM_HTML_MODE_LEGACY)
+            movementMethod = LinkMovementMethod.getInstance()
+        }
 
         binding.shareBtn.setOnClickListener {
             val shareableContent = buildString {
                 append(tip.title)
                 append("\n\n")
-                append(tip.snippet ?: Html.fromHtml(tip.content))
+                append(tip.snippet ?: HtmlCompat.fromHtml(tip.content, HtmlCompat.FROM_HTML_MODE_LEGACY))
                 append(getString(R.string.stax_handle))
                 append("\n\n")
                 append("https://stax.me/financialTips?id=${tip.id}")
@@ -138,11 +140,14 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
     private fun showTipList() {
         binding.financialTipsDetail.visibility = View.GONE
         binding.tipsCard.visibility = View.VISIBLE
+
+        if (!viewModel.tips.value.isNullOrEmpty())
+            showFinancialTips(viewModel.tips.value!!, null)
     }
 
     private fun initBackNavigation() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
-        binding.backButton.setOnClickListener { findNavController().popBackStack() }
+        binding.backButton.setOnClickListener { findNavController().navigate(R.id.action_wellnessFragment_to_navigation_home) }
     }
 
     override fun onDestroyView() {

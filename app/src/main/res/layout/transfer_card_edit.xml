@@ -19,7 +19,7 @@
         android:id="@+id/accountDropdown"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/channel_label" />
+        android:hint="@string/account_label" />
 
     <com.hover.stax.actions.ActionSelect
         android:id="@+id/action_select"
@@ -27,10 +27,17 @@
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/nonStandardVariableRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
     <com.hover.stax.contacts.ContactInput
         android:id="@+id/contact_select"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+
 
 <!--    &lt;!&ndash;If this should not be shown, do we still need to watch the text and pass it to the viewmodel? &ndash;&gt;-->
 <!--    <com.hover.stax.views.StaxTextInputLayout-->

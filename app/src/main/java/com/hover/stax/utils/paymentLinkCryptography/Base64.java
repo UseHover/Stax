@@ -16,7 +16,12 @@
 
 package com.hover.stax.utils.paymentLinkCryptography;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 public class Base64 {
 
@@ -56,11 +61,8 @@ public class Base64 {
     //  shared code
     //  --------------------------------------------------------
 
-    private static abstract class Coder {
-        byte[] output;
-        int op;
-
-    }
+    private Base64() {
+    }   // don't instantiate
 
     //  --------------------------------------------------------
     //  decoding
@@ -137,12 +139,100 @@ public class Base64 {
         return temp;
     }
 
+    /**
+     * Base64-encode the given data and return a newly allocated
+     * String with the result.
+     *
+     * @param input the data to encode
+     * @param flags controls certain features of the encoded output.
+     *              Passing {@code DEFAULT} results in output that
+     *              adheres to RFC 2045.
+     */
+    public static String encodeToString(byte[] input, int flags) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            return new String(encode(input, flags), StandardCharsets.US_ASCII);
+        } else { return new String(encode(input, flags)); }
+    }
+
+    //  --------------------------------------------------------
+    //  encoding
+    //  --------------------------------------------------------
+
+    /**
+     * Base64-encode the given data and return a newly allocated
+     * byte[] with the result.
+     *
+     * @param input the data to encode
+     * @param flags controls certain features of the encoded output.
+     *              Passing {@code DEFAULT} results in output that
+     *              adheres to RFC 2045.
+     */
+    private static byte[] encode(byte[] input, int flags) {
+        return encode(input, 0, input.length, flags);
+    }
+
+    /**
+     * Base64-encode the given data and return a newly allocated
+     * byte[] with the result.
+     *
+     * @param input  the data to encode
+     * @param offset the position within the input array at which to
+     *               start
+     * @param len    the number of bytes of input to encode
+     * @param flags  controls certain features of the encoded output.
+     *               Passing {@code DEFAULT} results in output that
+     *               adheres to RFC 2045.
+     */
+    private static byte[] encode(byte[] input, int offset, int len, int flags) {
+        Encoder encoder = new Encoder(flags, null);
+
+        // Compute the exact length of the array we will produce.
+        int output_len = len / 3 * 4;
+
+        // Account for the tail of the data and the padding bytes, if any.
+        if (encoder.do_padding) {
+            if (len % 3 > 0) {
+                output_len += 4;
+            }
+        } else {
+            switch (len % 3) {
+                case 0:
+                    break;
+                case 1:
+                    output_len += 2;
+                    break;
+                case 2:
+                    output_len += 3;
+                    break;
+            }
+        }
+
+        // Account for the newlines, if any.
+        if (encoder.do_newline && len > 0) {
+            output_len += (((len - 1) / (3 * Encoder.LINE_GROUPS)) + 1) *
+                    (encoder.do_cr ? 2 : 1);
+        }
+
+        encoder.output = new byte[output_len];
+        encoder.process(input, offset, len, true);
+
+        assert encoder.op == output_len;
+
+        return encoder.output;
+    }
+
+    private static abstract class Coder {
+        byte[] output;
+        int op;
+
+    }
+
     private static class Decoder extends Coder {
         /**
          * Lookup table for turning bytes into their position in the
          * Base64 alphabet.
          */
-        private static final int DECODE[] = {
+        private static final int[] DECODE = {
                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63,
@@ -165,7 +255,7 @@ public class Base64 {
          * Decode lookup table for the "web safe" variant (RFC 3548
          * sec. 4) where - and _ replace + and /.
          */
-        private static final int DECODE_WEBSAFE[] = {
+        private static final int[] DECODE_WEBSAFE = {
                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1,
@@ -189,7 +279,7 @@ public class Base64 {
          */
         private static final int SKIP = -1;
         private static final int EQUALS = -2;
-
+        final private int[] alphabet;
         /**
          * States 0-3 are reading through the next input tuple.
          * State 4 is having read one '=' and expecting exactly
@@ -201,8 +291,6 @@ public class Base64 {
          */
         private int state;   // state number (0 to 6)
         private int value;
-
-        final private int[] alphabet;
 
         Decoder(int flags, byte[] output) {
             this.output = output;
@@ -396,91 +484,6 @@ public class Base64 {
         }
     }
 
-    //  --------------------------------------------------------
-    //  encoding
-    //  --------------------------------------------------------
-
-    /**
-     * Base64-encode the given data and return a newly allocated
-     * String with the result.
-     *
-     * @param input the data to encode
-     * @param flags controls certain features of the encoded output.
-     *              Passing {@code DEFAULT} results in output that
-     *              adheres to RFC 2045.
-     */
-    public static String encodeToString(byte[] input, int flags) {
-        try {
-            return new String(encode(input, flags), "US-ASCII");
-        } catch (UnsupportedEncodingException e) {
-            // US-ASCII is guaranteed to be available.
-            throw new AssertionError(e);
-        }
-    }
-
-    /**
-     * Base64-encode the given data and return a newly allocated
-     * byte[] with the result.
-     *
-     * @param input the data to encode
-     * @param flags controls certain features of the encoded output.
-     *              Passing {@code DEFAULT} results in output that
-     *              adheres to RFC 2045.
-     */
-    private static byte[] encode(byte[] input, int flags) {
-        return encode(input, 0, input.length, flags);
-    }
-
-    /**
-     * Base64-encode the given data and return a newly allocated
-     * byte[] with the result.
-     *
-     * @param input  the data to encode
-     * @param offset the position within the input array at which to
-     *               start
-     * @param len    the number of bytes of input to encode
-     * @param flags  controls certain features of the encoded output.
-     *               Passing {@code DEFAULT} results in output that
-     *               adheres to RFC 2045.
-     */
-    private static byte[] encode(byte[] input, int offset, int len, int flags) {
-        Encoder encoder = new Encoder(flags, null);
-
-        // Compute the exact length of the array we will produce.
-        int output_len = len / 3 * 4;
-
-        // Account for the tail of the data and the padding bytes, if any.
-        if (encoder.do_padding) {
-            if (len % 3 > 0) {
-                output_len += 4;
-            }
-        } else {
-            switch (len % 3) {
-                case 0:
-                    break;
-                case 1:
-                    output_len += 2;
-                    break;
-                case 2:
-                    output_len += 3;
-                    break;
-            }
-        }
-
-        // Account for the newlines, if any.
-        if (encoder.do_newline && len > 0) {
-            output_len += (((len - 1) / (3 * Encoder.LINE_GROUPS)) + 1) *
-                    (encoder.do_cr ? 2 : 1);
-        }
-
-        encoder.output = new byte[output_len];
-        encoder.process(input, offset, len, true);
-
-        assert encoder.op == output_len;
-
-        return encoder.output;
-    }
-
     private static class Encoder extends Coder {
         /**
          * Emit a new line every this many output tuples.  Corresponds to
@@ -493,7 +496,7 @@ public class Base64 {
          * Lookup table for turning Base64 alphabet positions (6 bits)
          * into output bytes.
          */
-        private static final byte ENCODE[] = {
+        private static final byte[] ENCODE = {
                 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
                 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
                 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
@@ -504,21 +507,19 @@ public class Base64 {
          * Lookup table for turning Base64 alphabet positions (6 bits)
          * into output bytes.
          */
-        private static final byte ENCODE_WEBSAFE[] = {
+        private static final byte[] ENCODE_WEBSAFE = {
                 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
                 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
                 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
                 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_',
         };
-
-        final private byte[] tail;
-        /* package */ int tailLen;
-        private int count;
-
         final boolean do_padding;
         final boolean do_newline;
         final boolean do_cr;
+        final private byte[] tail;
         final private byte[] alphabet;
+        /* package */ int tailLen;
+        private int count;
 
         Encoder(int flags, byte[] output) {
             this.output = output;
@@ -668,8 +669,5 @@ public class Base64 {
             this.count = count;
         }
     }
-
-    private Base64() {
-    }   // don't instantiate
 
 }

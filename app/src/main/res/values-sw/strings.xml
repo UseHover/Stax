@@ -242,7 +242,7 @@
 
     <string name="transfer_amount_label">Kiasi</string>
 
-    <string name="channel_label">Akaunti</string>
+    <string name="account_label">Akaunti</string>
 
     <string name="actions_fielderror">Akaunti hii haitumiki kununua muda wa maongezi. Tafadhali chagua akaunti tofauti.</string>
 
@@ -674,7 +674,7 @@
 
     <string name="bounty_claim_title">%1$s - %2$s - $%3$d</string>
 
-    <string name="bounty_claim_explained">Ili kudai USD $%1$d, %2$s.\n\nMara tu utakapomaliza, tutakutumia barua pepe kukusanya habari kwa malipo. Utalipwa katika siku 1-5 za biashara </string>
+    <string name="bounty_claim_explained">Ili kudai USD $%1$d, %2$s.\n\nMara tu utakapomaliza, tutakutumia barua pepe kukusanya habari kwa malipo. Utalipwa katika siku 1-5 za biashara</string>
 
     <string name="start_USSD_Flow">Anza Mtiririko wa USSD</string>
 
@@ -740,7 +740,7 @@
 
     <string name="banner_permission_title">SIM, SMS, Upatikanaji na Ufunikaji</string>
 
-    <string name="banner_permission_desc">Kwa nini Stax anauliza ruhusa hizi?</string>
+    <string name="banner_permission_desc">Kwa nini Stax inauliza ruhusa hizi?</string>
 
     <string name="banner_permission_cta">
     <u>Donoa hapa ili ujue</u>
@@ -803,5 +803,7 @@
     <string name="financial_wellness_tips">Vidokezo vya ustawi wa kifedha</string>
 
     <string name="read_more"><u>Soma zaidi</u></string>
+
+
 
 </resources>

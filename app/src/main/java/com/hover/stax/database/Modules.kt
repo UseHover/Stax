@@ -12,9 +12,11 @@ import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.library.LibraryViewModel
+import com.hover.stax.login.LoginViewModel
+import com.hover.stax.paybill.PaybillRepo
+import com.hover.stax.paybill.PaybillViewModel
 import com.hover.stax.requests.NewRequestViewModel
 import com.hover.stax.schedules.ScheduleDetailViewModel
-import com.hover.stax.settings.SettingsViewModel
 import com.hover.stax.transactions.TransactionDetailsViewModel
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transfers.TransferViewModel
@@ -33,12 +35,13 @@ val appModule = module {
     viewModel { TransactionHistoryViewModel(get()) }
     viewModel { BannerViewModel(get(), get()) }
     viewModel { FutureViewModel(get()) }
-    viewModel { SettingsViewModel(get(), get()) }
+    viewModel { LoginViewModel(get(), get())}
     viewModel { TransactionDetailsViewModel(get(), get()) }
     viewModel { LibraryViewModel(get(), get()) }
     viewModel { LanguageViewModel(get()) }
     viewModel { BountyViewModel(get(), get()) }
     viewModel { FinancialTipsViewModel() }
+    viewModel { PaybillViewModel(get(), get(), get()) }
 }
 
 val dataModule = module(createdAtStart = true) {
@@ -46,4 +49,5 @@ val dataModule = module(createdAtStart = true) {
     single { HoverRoomDatabase.getInstance(get()) }
 
     single { DatabaseRepo(get(), get()) }
+    single { PaybillRepo(get()) }
 }

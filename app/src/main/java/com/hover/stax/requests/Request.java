@@ -25,9 +25,8 @@ import timber.log.Timber;
 @Entity(tableName = "requests")
 public class Request {
 
-    private final static String TAG = "Request";
     final public static String PAYMENT_LINK_SEPERATOR = "-";
-
+    private final static String TAG = "Request";
     @PrimaryKey(autoGenerate = true)
     @NonNull
     public int id;
@@ -94,6 +93,68 @@ public class Request {
         return link.length() <= 25;
     }
 
+    public static Encryption.Builder getEncryptionSettings() {
+        return new Encryption.Builder()
+                .setKeyLength(128)
+                .setKeyAlgorithm("AES")
+                .setCharsetName("UTF8")
+                .setIterationCount(65536)
+                .setKey("ves€Z€xs€aBKgh")
+                .setDigestAlgorithm("SHA1")
+                .setSalt("A secured salt")
+                .setBase64Mode(Base64.DEFAULT)
+                .setAlgorithm("AES/CBC/PKCS5Padding")
+                .setSecureRandomAlgorithm("SHA1PRNG")
+                .setSecretKeyType("PBKDF2WithHmacSHA1")
+                .setIv(new byte[]{29, 88, -79, -101, -108, -38, -126, 90, 52, 101, -35, 114, 12, -48, -66, -30});
+    }
+
+    public static String decryptBijective(String value, Context c) {
+        char[] valueChar = value.toCharArray();
+        char[] result = new char[value.toCharArray().length];
+        for (int i = 0; i < valueChar.length; i++) {
+            switch (valueChar[i]) {
+                case 'g':
+                    result[i] = bijectiveExtReverse(c)[0];
+                    break;
+                case 'j':
+                    result[i] = bijectiveExtReverse(c)[1];
+                    break;
+                case 'r':
+                    result[i] = bijectiveExtReverse(c)[2];
+                    break;
+                default:
+                    result[i] = Character.forDigit(getBijectiveIdx(valueChar[i], c), 10);
+                    break;
+            }
+        }
+        return new String(result);
+    }
+
+    private static int getBijectiveIdx(char target, Context c) {
+        char[] entries = bijectiveKey(c);
+        int result = -1;
+        for (int i = 0; i < entries.length; i++) {
+            if (entries[i] == target) {
+                result = i;
+                break;
+            }
+        }
+        return result;
+    }
+
+    private static char[] bijectiveKey(Context c) {
+        return c.getString(R.string.stax_link_bijective_key).toCharArray();
+    }
+
+    private static char[] bijectiveExt(Context c) {
+        return c.getString(R.string.stax_link_bijective_ext).toCharArray();
+    }
+
+    private static char[] bijectiveExtReverse(Context c) {
+        return c.getString(R.string.stax_link_bijective_ext_reverse).toCharArray();
+    }
+
     public boolean hasRequesterInfo() {
         return requester_number != null && !requester_number.isEmpty();
     }
@@ -138,44 +199,6 @@ public class Request {
         return c.getResources().getString(R.string.payment_root_url, encryptedString);
     }
 
-    public static Encryption.Builder getEncryptionSettings() {
-        return new Encryption.Builder()
-                .setKeyLength(128)
-                .setKeyAlgorithm("AES")
-                .setCharsetName("UTF8")
-                .setIterationCount(65536)
-                .setKey("ves€Z€xs€aBKgh")
-                .setDigestAlgorithm("SHA1")
-                .setSalt("A secured salt")
-                .setBase64Mode(Base64.DEFAULT)
-                .setAlgorithm("AES/CBC/PKCS5Padding")
-                .setSecureRandomAlgorithm("SHA1PRNG")
-                .setSecretKeyType("PBKDF2WithHmacSHA1")
-                .setIv(new byte[]{29, 88, -79, -101, -108, -38, -126, 90, 52, 101, -35, 114, 12, -48, -66, -30});
-    }
-
-    public static String decryptBijective(String value, Context c) {
-        char[] valueChar = value.toCharArray();
-        char[] result = new char[value.toCharArray().length];
-        for (int i = 0; i < valueChar.length; i++) {
-            switch (valueChar[i]) {
-                case 'g':
-                    result[i] = bijectiveExtReverse(c)[0];
-                    break;
-                case 'j':
-                    result[i] = bijectiveExtReverse(c)[1];
-                    break;
-                case 'r':
-                    result[i] = bijectiveExtReverse(c)[2];
-                    break;
-                default:
-                    result[i] = Character.forDigit(getBijectiveIdx(valueChar[i], c), 10);
-                    break;
-            }
-        }
-        return new String(result);
-    }
-
     private String encryptBijective(String value, Context c) {
         char[] valueChar = value.toCharArray();
         char[] result = new char[value.toCharArray().length];
@@ -197,30 +220,6 @@ public class Request {
             }
         }
         return new String(result);
-    }
-
-    private static int getBijectiveIdx(char target, Context c) {
-        char[] entries = bijectiveKey(c);
-        int result = -1;
-        for (int i = 0; i < entries.length; i++) {
-            if (entries[i] == target) {
-                result = i;
-                break;
-            }
-        }
-        return result;
-    }
-
-    private static char[] bijectiveKey(Context c) {
-        return c.getString(R.string.stax_link_bijective_key).toCharArray();
-    }
-
-    private static char[] bijectiveExt(Context c) {
-        return c.getString(R.string.stax_link_bijective_ext).toCharArray();
-    }
-
-    private static char[] bijectiveExtReverse(Context c) {
-        return c.getString(R.string.stax_link_bijective_ext_reverse).toCharArray();
     }
 
     @NonNull
