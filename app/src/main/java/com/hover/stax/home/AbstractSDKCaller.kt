@@ -23,6 +23,7 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
+import io.sentry.util.StringUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONException
@@ -106,10 +107,8 @@ abstract class AbstractSDKCaller : AbstractGoogleAuthActivity(), PushNotificatio
                     .extra(HoverAction.NOTE_KEY, transferViewModel.note.value)
                     .extra(Constants.ACCOUNT_NAME, selectedAccount?.name)
 
-            if (!actionSelectViewModel.nonStandardVariables.value.isNullOrEmpty()) {
-                actionSelectViewModel.nonStandardVariables.value!!.forEach {
-                    hsb.extra(it.key, it.value)
-                }
+            actionSelectViewModel.nonStandardVariables.value?.forEach {
+                hsb.extra(it.key, it.value)
             }
 
             selectedAccount?.run { hsb.setAccountId(id.toString()) }
@@ -121,14 +120,8 @@ abstract class AbstractSDKCaller : AbstractGoogleAuthActivity(), PushNotificatio
 
     private fun addRecipientInfo(hsb: HoverSession.Builder) {
         hsb.extra(HoverAction.ACCOUNT_KEY, transferViewModel.contact.value!!.accountNumber)
-                .extra(
-                        HoverAction.PHONE_KEY, PhoneHelper.getNumberFormatForInput(
-                        transferViewModel.contact.value?.accountNumber,
-                        actionSelectViewModel.activeAction.value, channelsViewModel.activeChannel.value
-                )
-                )
+            .extra(HoverAction.PHONE_KEY, transferViewModel.contact.value!!.accountNumber)
     }
-
 
     fun makeHoverCall(action: HoverAction, account: Account) {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.finish_transfer, TransactionType.type), this)

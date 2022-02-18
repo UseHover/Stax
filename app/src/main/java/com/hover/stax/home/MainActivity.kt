@@ -21,6 +21,7 @@ import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.settings.ReferralDialog
 import com.hover.stax.settings.SettingsFragment
 import com.hover.stax.transactions.TransactionHistoryViewModel
+import com.hover.stax.transfers.TransactionType
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants

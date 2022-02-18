@@ -7,14 +7,15 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-
 import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.stax.R
 import com.hover.stax.permissions.PermissionUtils
+import io.sentry.util.StringUtils
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
 import java.text.DecimalFormat
+import java.util.*
 
 object Utils {
     private const val SHARED_PREFS = "staxprefs"
@@ -86,6 +87,19 @@ object Utils {
         val editor = getSharedPrefs(c).edit()
         editor.putBoolean(topic, false)
         editor.apply()
+    }
+
+    fun splitCamelCase(s: String): String {
+        val camelCased : String = s.replace(String.format("%s|%s|%s",
+            "(?<=[A-Z])(?=[A-Z][a-z])",
+            "(?<=[^A-Z])(?=[A-Z])",
+            "(?<=[A-Za-z])(?=[^A-Za-z])").toRegex(), " ")
+        return capitalize(camelCased)
+    }
+
+    private fun capitalize(str: String): String {
+        return if (str.isEmpty()) { str }
+        else str.substring(0, 1).uppercase(Locale.ROOT) + str.substring(1).lowercase(Locale.ROOT)
     }
 
     @JvmStatic
