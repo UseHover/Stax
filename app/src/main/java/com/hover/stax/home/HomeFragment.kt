@@ -52,7 +52,7 @@ class HomeFragment : Fragment() {
 
     private fun setupBanner() {
         with(bannerViewModel) {
-            qualifiedBanner().observe(viewLifecycleOwner, { banner ->
+            qualifiedBanner().observe(viewLifecycleOwner) { banner ->
                 if (banner != null) {
                     AnalyticsUtil.logAnalyticsEvent(getString(R.string.displaying_in_app_banner, banner.id), requireContext())
                     binding.homeBanner.visibility = View.VISIBLE
@@ -64,7 +64,7 @@ class HomeFragment : Fragment() {
                         closeCampaign(banner.id)
                     }
                 } else binding.homeBanner.visibility = View.GONE
-            })
+            }
         }
     }
 

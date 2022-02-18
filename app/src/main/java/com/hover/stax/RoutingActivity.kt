@@ -112,7 +112,6 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     private fun initHover() {
         Hover.initialize(this)
         Hover.setBranding(getString(R.string.app_name), R.mipmap.stax, this)
-//        Hover.setAfterPermissionReturnActivity(Constants.PERM_ACTIVITY, this)
         Hover.setPermissionActivity(Constants.PERM_ACTIVITY, this)
     }
 
@@ -167,7 +166,6 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     }
 
     private fun startChannelWorker(wm: WorkManager) {
-//        wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue()
         wm.enqueueUniquePeriodicWork(UpdateChannelsWorker.TAG, ExistingPeriodicWorkPolicy.KEEP, UpdateChannelsWorker.makeToil())
     }
 
