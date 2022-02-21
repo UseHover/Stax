@@ -9,7 +9,7 @@ import androidx.lifecycle.*
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.sdk.actions.HoverAction
-import com.hover.sdk.api.ActionHelper
+import com.hover.sdk.api.ActionApi
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
@@ -245,7 +245,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
                 channel.defaultAccount = selectedChannels.value.isNullOrEmpty() && index == 0
                 repo.update(channel)
 
-                ActionHelper.scheduleActionConfigUpdate(channel.countryAlpha2, 24, application)
+                ActionApi.scheduleActionConfigUpdate(channel.countryAlpha2, 24, application)
             }
         }
     }
