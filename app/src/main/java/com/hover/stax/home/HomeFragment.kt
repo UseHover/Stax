@@ -44,8 +44,6 @@ class HomeFragment : Fragment() {
         binding.airtime.setOnClickListener { navigateTo(Constants.NAV_AIRTIME, requireActivity()) }
         binding.transfer.setOnClickListener { navigateTo(Constants.NAV_TRANSFER, requireActivity()) }
 
-        setPaybillVisibility()
-
         NetworkMonitor.StateLiveData.get().observe(viewLifecycleOwner) {
             updateOfflineIndicator(it)
         }
@@ -71,9 +69,13 @@ class HomeFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        setPaybillVisibility()
+    }
+
     private fun setPaybillVisibility() {
         val countries = Utils.getStringSet(Constants.COUNTRIES, requireActivity())
-
         binding.paybill.apply {
             if (!countries.isNullOrEmpty() && countries.any { it.contentEquals("KE", ignoreCase = true) }) {
                 visibility = View.VISIBLE
