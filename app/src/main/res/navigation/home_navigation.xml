@@ -45,6 +45,11 @@
         <argument
                 android:name="force_return_data"
                 app:argType="boolean" />
+        <action
+                android:id="@+id/action_navigation_linkAccount_to_navigation_home"
+                app:destination="@id/navigation_home"
+                app:popUpTo="@id/navigation_home"
+                app:popUpToInclusive="true" />
     </fragment>
 
     <fragment

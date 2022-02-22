@@ -113,6 +113,7 @@
                 android:layout_marginBottom="@dimen/margin_34"
                 android:animateLayoutChanges="false"
                 android:clipToPadding="true"
+                android:visibility="gone"
                 app:cardBackgroundColor="@color/cardViewColor"
                 app:cardCornerRadius="@dimen/radius"
                 app:cardElevation="8dp"

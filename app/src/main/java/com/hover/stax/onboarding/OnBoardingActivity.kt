@@ -47,9 +47,9 @@ class OnBoardingActivity : AbstractGoogleAuthActivity(), StaxGoogleLoginInterfac
         else chooseOnboardingVariant()
     }
 
-    private fun chooseOnboardingVariant() = when (Utils.getString(Constants.VARIANT, this) ?: "baseline") {
-        "multichoice" -> navController.navigate(R.id.questionOnboardingFragment)
-        "slides" ->  navController.navigate(R.id.slidingOnboardingFragment)
+    private fun chooseOnboardingVariant() = when (Utils.getString(Constants.VARIANT, this) ?: "default") {
+        "interactive" -> navController.navigate(R.id.questionOnboardingFragment)
+        "informational" ->  navController.navigate(R.id.slidingOnboardingFragment)
         else -> Timber.i("Loading default fragment") //do nothing, loading default fragment
 
     }
