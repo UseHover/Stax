@@ -11,12 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.amplitude.api.Amplitude
 import com.appsflyer.AppsFlyerLib
 import com.google.firebase.installations.FirebaseInstallations
-import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.hover.sdk.actions.HoverAction
@@ -46,6 +44,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
     private val channelsViewModel: ChannelsViewModel by viewModel()
     private lateinit var remoteConfig: FirebaseRemoteConfig
+    private lateinit var workManager: WorkManager
     private var hasAccounts = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +54,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
         splashScreen.setKeepOnScreenCondition { true }
 
         remoteConfig = FirebaseRemoteConfig.getInstance()
+        workManager = WorkManager.getInstance(this)
         startBackgroundProcesses()
     }
 
@@ -67,7 +67,10 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     private fun startBackgroundProcesses() {
         with(channelsViewModel) {
             accounts.observe(this@RoutingActivity) { hasAccounts = it.isNotEmpty() }
-            migrateAccounts()
+            allChannels.observe(this@RoutingActivity) {
+                if (it.isEmpty())
+                    workManager.enqueue(ImportChannelsWorker.channelsImportRequest())
+            }
         }
 
         lifecycleScope.launch(Dispatchers.IO) {
@@ -122,8 +125,8 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
             setConfigSettingsAsync(configSettings)
             setDefaultsAsync(R.xml.remote_config_default)
             fetchAndActivate().addOnCompleteListener {
-                val variant = remoteConfig.getString("onboarding_variant")
-                Timber.e("Variant fetched $variant")
+                val variant = remoteConfig.getString("onboarding_mvt_variant")
+                Timber.i("Onboarding variant fetched $variant")
                 Utils.saveString(Constants.VARIANT, variant, this@RoutingActivity)
 
                 if (!selfDestructWhenAppVersionExpires())
@@ -160,10 +163,8 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
     }
 
     private fun startWorkers() {
-        val wm = WorkManager.getInstance(this)
-        wm.enqueue(ImportChannelsWorker.channelsImportRequest())
-        startChannelWorker(wm)
-        startScheduleWorker(wm)
+        startChannelWorker(workManager)
+        startScheduleWorker(workManager)
     }
 
     private fun startChannelWorker(wm: WorkManager) {

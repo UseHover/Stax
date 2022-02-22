@@ -6,7 +6,9 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
@@ -93,10 +95,8 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
             .build()
         selectAdapter.setTracker(tracker!!)
 
-        binding.continueBtn.apply {
-            setOnClickListener {
-                aggregateSelectedChannels(tracker!!)
-            }
+        binding.continueBtn.setOnClickListener {
+            aggregateSelectedChannels(tracker!!)
         }
     }
 

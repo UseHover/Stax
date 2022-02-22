@@ -112,11 +112,12 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     private fun loadSims() {
         viewModelScope.launch(Dispatchers.IO) {
-            sims.postValue(repo.presentSims)
+            val deviceSims = repo.presentSims
+            sims.postValue(deviceSims)
 
-            //update the countries from sim
-            val countryCodes = repo.presentSims.map { it.countryIso }.toSet()
+            val countryCodes = deviceSims.map { it.countryIso }.toSet()
             Utils.putStringSet(Constants.COUNTRIES, countryCodes, application)
+            Timber.e("Setting SIM countries")
         }
 
         simReceiver?.let {
@@ -311,6 +312,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
+    @Deprecated(message = "Newer versions of the app don't need this", replaceWith = ReplaceWith(""), level = DeprecationLevel.WARNING )
     fun migrateAccounts() = viewModelScope.launch(Dispatchers.IO) {
         if (accounts.value.isNullOrEmpty() && !selectedChannels.value.isNullOrEmpty()) {
             createAccounts(selectedChannels.value!!)
