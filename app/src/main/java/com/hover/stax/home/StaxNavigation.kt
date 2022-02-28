@@ -49,7 +49,10 @@ internal class StaxNavigation(val activity: AppCompatActivity, private val isMai
     }
 
     fun navigateToBountyList() {
-        getNavController().navigate(R.id.action_bountyEmailFragment_to_bountyListFragment)
+        if (getNavController().currentDestination?.id == R.id.bountyEmailFragment)
+            getNavController().navigate(R.id.action_bountyEmailFragment_to_bountyListFragment)
+        else
+            getNavController().navigate(R.id.bountyListFragment)
     }
 
     private fun getNavController(): NavController = navHostFragment!!.navController
