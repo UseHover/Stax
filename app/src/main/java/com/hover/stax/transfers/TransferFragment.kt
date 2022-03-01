@@ -26,7 +26,6 @@ import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
@@ -43,7 +42,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private val binding get() = _binding!!
 
     private lateinit var nonStandardSummaryAdapter: NonStandardSummaryAdapter
-    private lateinit var nonStandardVariableAdapter: NonStandardVariableAdapter
+    private var nonStandardVariableAdapter: NonStandardVariableAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         abstractFormViewModel = getSharedViewModel<TransferViewModel>()
@@ -112,8 +111,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         observeRecentContacts()
         observeNonStandardVariables()
         with(transferViewModel) {
-            contact.observe(viewLifecycleOwner, { recipientValue.setContact(it) })
-            request.observe(viewLifecycleOwner, { it?.let { load(it) } })
+            contact.observe(viewLifecycleOwner) { recipientValue.setContact(it) }
+            request.observe(viewLifecycleOwner) { it?.let { load(it) } }
         }
     }
 
@@ -279,9 +278,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         val recipientError = transferViewModel.recipientErrors(actionSelectViewModel.activeAction.value)
         contactInput.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
-        val nonStandardVarError = nonStandardVariableAdapter.validates()
+        val noNonStandardVarError = nonStandardVariableAdapter?.validates() ?: true
 
-        return channelError == null && actionError == null && amountError == null && recipientError == null && nonStandardVarError
+        return channelError == null && actionError == null && amountError == null && recipientError == null && noNonStandardVarError
     }
 
     override fun onContactSelected(requestCode: Int, contact: StaxContact) {
