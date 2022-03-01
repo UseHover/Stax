@@ -64,7 +64,10 @@ interface NavigationInterface {
     fun navigateToTransferFragment(navController: NavController, actionType: String?) {
         val bundle = Bundle()
         bundle.putString(Constants.TRANSACTION_TYPE, actionType)
-        navController.navigate(R.id.action_navigation_home_to_navigation_transfer, bundle)
+        if (navController.currentDestination?.id == R.id.navigation_home)
+            navController.navigate(R.id.action_navigation_home_to_navigation_transfer, bundle)
+        else
+            navController.navigate(R.id.navigation_transfer, bundle)
     }
 
     fun navigateToTransactionDetailsFragment(uuid: String?, manager: FragmentManager?, isFullScreen: Boolean?) {
