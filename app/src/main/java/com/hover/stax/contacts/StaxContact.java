@@ -110,8 +110,7 @@ public class StaxContact {
 
     public static StaxContact findOrInit(Intent intent, String countryAlpha2, DatabaseRepo dr) {
         StaxContact sc = checkInKeys(intent, countryAlpha2, dr);
-        if (sc == null)
-            sc = checkOutKeys(intent, countryAlpha2, dr);
+        if (sc == null) sc = checkOutKeys(intent, countryAlpha2, dr);
         if (sc == null) sc = new StaxContact(intent);
 
         return sc;
