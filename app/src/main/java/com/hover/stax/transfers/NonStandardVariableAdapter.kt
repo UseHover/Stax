@@ -41,11 +41,11 @@ class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, St
             if (entry.value.isBlank()) {
                 valid = false
 
-                (recyclerView.findViewHolderForAdapterPosition(index) as NonStandardVariableAdapter.ViewHolder).input.setState(
+                (recyclerView.findViewHolderForAdapterPosition(index) as? NonStandardVariableAdapter.ViewHolder)?.input?.setState(
                     recyclerView.context.getString(R.string.enterValue_non_template_error, entry.key.lowercase()), AbstractStatefulInput.ERROR
                 )
             } else {
-                (recyclerView.findViewHolderForAdapterPosition(index) as NonStandardVariableAdapter.ViewHolder).input.setState(
+                (recyclerView.findViewHolderForAdapterPosition(index) as? NonStandardVariableAdapter.ViewHolder)?.input?.setState(
                     null, AbstractStatefulInput.SUCCESS
                 )
             }
