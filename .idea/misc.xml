@@ -53,6 +53,7 @@
         <entry key="app/src/main/res/layout/fragment_pin_update.xml" value="0.13405797101449277" />
         <entry key="app/src/main/res/layout/fragment_request.xml" value="0.14868287740628167" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.15602836879432624" />
+        <entry key="app/src/main/res/layout/fragment_signin_variant.xml" value="0.30510752688172044" />
         <entry key="app/src/main/res/layout/fragment_transaction.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/fragment_transfer.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/fragment_wellness.xml" value="0.14492753623188406" />
