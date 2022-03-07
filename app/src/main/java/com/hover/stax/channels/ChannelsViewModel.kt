@@ -189,14 +189,10 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     private fun setActiveChannel(actions: List<HoverAction>) {
         if (actions.isNullOrEmpty()) return
 
-        activeChannel.removeSource(channelActions)
-
-        viewModelScope.launch(Dispatchers.IO) {
-            val channelAccounts = repo.getChannelAndAccounts(actions.first().channel_id)
-            channelAccounts?.let {
-                activeChannel.postValue(it.channel)
-                setActiveAccount(it.accounts.firstOrNull())
-            }
+        val channelAccounts = repo.getChannelAndAccounts(actions.first().channel_id)
+        channelAccounts?.let {
+            activeChannel.postValue(it.channel)
+            setActiveAccount(it.accounts.firstOrNull())
         }
     }
 
@@ -285,7 +281,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
                 if (actions.isNotEmpty())
                     channelActions.postValue(actions)
 
-                activeChannel.addSource(channelActions) { t -> setActiveChannel(t) }
+                setActiveChannel(actions)
             }
         }
     }
@@ -312,7 +308,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
-    @Deprecated(message = "Newer versions of the app don't need this", replaceWith = ReplaceWith(""), level = DeprecationLevel.WARNING )
+    @Deprecated(message = "Newer versions of the app don't need this", replaceWith = ReplaceWith(""), level = DeprecationLevel.WARNING)
     fun migrateAccounts() = viewModelScope.launch(Dispatchers.IO) {
         if (accounts.value.isNullOrEmpty() && !selectedChannels.value.isNullOrEmpty()) {
             createAccounts(selectedChannels.value!!)
