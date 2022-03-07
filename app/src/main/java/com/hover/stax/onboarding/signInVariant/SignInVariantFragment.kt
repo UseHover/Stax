@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.os.Bundle
-import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
@@ -101,8 +100,7 @@ class SignInVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
 
     private fun setUpSlides() {
         val viewPagerAdapter = SlidesPagerAdapter(requireContext())
-        val viewPager = binding.vpPager
-        viewPager.apply {
+        binding.vpPager.apply {
             startAutoScroll(FIRST_SCROLL_DELAY)
             setInterval(SCROLL_INTERVAL)
             setCycle(true)
@@ -125,7 +123,7 @@ class SignInVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
     }
 
     private fun updateProgressAnimation(animator: ValueAnimator, progressBar: LinearProgressIndicator) = animator.apply {
-        duration = 400
+        duration = 3500
         addUpdateListener { animation ->
             progressBar.progress = animation.animatedValue as Int
             if (progressBar.progress > 90) {
@@ -209,8 +207,8 @@ class SignInVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
     }
 
     companion object {
-        const val FIRST_SCROLL_DELAY = 4000
-        const val SCROLL_INTERVAL = 4000L
+        const val FIRST_SCROLL_DELAY = 3500
+        const val SCROLL_INTERVAL = 3500L
         const val SWIPE_DURATION_FACTOR = 2.0
         const val AUTO_SCROLL_EASE_DURATION_FACTOR = 5.0
     }
