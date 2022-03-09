@@ -22,7 +22,7 @@ class AccountDropdownAdapter(val accounts: List<Account>, context: Context) : Ar
         val account = accounts[position]
         val holder: ViewHolder
 
-        if(view == null){
+        if (view == null) {
             val binding = StaxSpinnerItemWithLogoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             view = binding.root
             holder = ViewHolder(binding)

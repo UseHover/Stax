@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hover.sdk.actions.HoverAction;
@@ -17,9 +18,9 @@ import java.util.List;
 
 public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionHistoryAdapter.HistoryViewHolder> {
 
+    private final SelectListener selectListener;
     private List<StaxTransaction> transactions;
     private List<HoverAction> actions;
-    private final SelectListener selectListener;
 
     public TransactionHistoryAdapter(List<StaxTransaction> transactions, List<HoverAction> actions, SelectListener selectListener) {
         this.transactions = transactions;
@@ -57,14 +58,14 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
     private void setStatus(StaxTransaction t, HistoryViewHolder holder) {
         TransactionStatus ts = new TransactionStatus(t);
         HoverAction a = findAction(t.action_id);
-        holder.binding.liAmount.setAlpha((float) (t.status.equals(Transaction.FAILED) ? 0.54: 1.0));
+        holder.binding.liAmount.setAlpha((float) (t.status.equals(Transaction.FAILED) ? 0.54 : 1.0));
         holder.binding.transactionItemLayout.setBackgroundColor(holder.binding.getRoot().getContext().getResources().getColor(ts.getBackgroundColor()));
-        holder.binding.liStatus.setText(Html.fromHtml(ts.getShortStatusDetail(a, holder.binding.getRoot().getContext())));
+        holder.binding.liStatus.setText(HtmlCompat.fromHtml(ts.getShortStatusDetail(a, holder.binding.getRoot().getContext()), HtmlCompat.FROM_HTML_MODE_LEGACY));
         holder.binding.liStatus.setCompoundDrawablesRelativeWithIntrinsicBounds(ts.getIcon(), 0, 0, 0);
     }
 
     private HoverAction findAction(String public_id) {
-        for (HoverAction a: actions) {
+        for (HoverAction a : actions) {
             if (a.public_id.equals(public_id))
                 return a;
         }
@@ -82,6 +83,15 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
         return transactions != null ? transactions.size() : 0;
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    public interface SelectListener {
+        void viewTransactionDetail(String uuid);
+    }
+
     static class HistoryViewHolder extends RecyclerView.ViewHolder {
 
         public TransactionListItemBinding binding;
@@ -90,14 +100,5 @@ public class TransactionHistoryAdapter extends RecyclerView.Adapter<TransactionH
             super(binding.getRoot());
             this.binding = binding;
         }
-    }
-
-    public interface SelectListener {
-        void viewTransactionDetail(String uuid);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
     }
 }

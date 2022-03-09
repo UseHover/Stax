@@ -2,6 +2,7 @@ package com.hover.stax.transactions
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.sdk.actions.HoverAction
@@ -19,11 +21,9 @@ import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
 import com.hover.stax.home.MainActivity
-import com.hover.stax.navigation.NavigationInterface
-
+import com.hover.stax.home.NavigationInterface
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase
-
 import com.hover.stax.utils.DateUtils.humanFriendlyDateTime
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -88,9 +88,9 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
     }
 
     private fun startObservers() {
-        viewModel.transaction.observe(viewLifecycleOwner, { showTransaction(it) })
-        viewModel.action.observe(viewLifecycleOwner, { it?.let { showActionDetails(it) } })
-        viewModel.contact.observe(viewLifecycleOwner, { updateRecipient(it) })
+        viewModel.transaction.observe(viewLifecycleOwner) { showTransaction(it) }
+        viewModel.action.observe(viewLifecycleOwner) { it?.let { showActionDetails(it) } }
+        viewModel.contact.observe(viewLifecycleOwner) { updateRecipient(it) }
     }
 
     private fun setToPopupDesign() {
@@ -107,14 +107,14 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
         val messagesView = binding.convoRecyclerView
         messagesView.layoutManager = UIHelper.setMainLinearManagers(requireActivity())
         messagesView.setHasFixedSize(true)
-        viewModel.messages.observe(viewLifecycleOwner, { updateWithSessionDetails(it, messagesView) })
+        viewModel.messages.observe(viewLifecycleOwner) { updateWithSessionDetails(it, messagesView) }
     }
 
     private fun createSmsMessagesRecyclerView() {
         val smsView = binding.smsRecyclerView
         smsView.layoutManager = UIHelper.setMainLinearManagers(requireActivity())
         smsView.setHasFixedSize(true)
-        viewModel.sms.observe(viewLifecycleOwner, { updateWithSessionDetails(it, smsView) })
+        viewModel.sms.observe(viewLifecycleOwner) { updateWithSessionDetails(it, smsView) }
     }
 
     private fun updateWithSessionDetails(messages: List<UssdCallResponse>?, v: RecyclerView) {
@@ -227,7 +227,7 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
         if (!isFullScreen) {
             binding.transactionDetailsCard.setTitle(viewModel.transaction.value?.generateLongDescription(action, viewModel.contact.value, requireContext()))
         }
-        binding.infoCard.detailsNetwork.text = action?.from_institution_name
+        binding.infoCard.detailsNetwork.text = action.from_institution_name
         updateStatus(action, viewModel.transaction.value)
     }
 
@@ -240,7 +240,11 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
 
     private fun setStatusText(action: HoverAction?, transaction: StaxTransaction?) {
         if (transaction != null) {
-            binding.statusText.text = transaction.fullStatus.getStatusDetail(action, viewModel.messages.value?.last(), viewModel.sms.value, requireContext())
+            binding.statusText.apply {
+                val content = transaction.fullStatus.getStatusDetail(action, viewModel.messages.value?.last(), viewModel.sms.value, requireContext())
+                text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
+                movementMethod = LinkMovementMethod.getInstance()
+            }
         }
     }
 

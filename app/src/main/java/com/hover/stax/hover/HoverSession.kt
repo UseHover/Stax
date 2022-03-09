@@ -21,7 +21,7 @@ import timber.log.Timber
 class HoverSession private constructor(b: Builder) {
 
     private val frag: Fragment?
-    private val channel: Channel
+    private val action: HoverAction
     private val requestCode: Int
     private val finalScreenTime: Int
     private val accountId: String?
@@ -39,7 +39,7 @@ class HoverSession private constructor(b: Builder) {
                 private_extra(Constants.ACCOUNT_ID, accountId)
             }
 
-    private fun addExtras(builder: HoverParameters.Builder, extras: JSONObject, action: HoverAction) {
+    private fun addExtras(builder: HoverParameters.Builder, extras: JSONObject) {
         val requiredExtras = action.requiredParams
         val keys: Iterator<*> = extras.keys()
         while (keys.hasNext()) {
@@ -54,7 +54,7 @@ class HoverSession private constructor(b: Builder) {
             return null
         }
         return if (key == HoverAction.PHONE_KEY) {
-            PhoneHelper.normalizeNumberByCountry(value, channel.countryAlpha2)
+            PhoneHelper.normalizeNumberByCountry(value, action.country_alpha2, action.to_country_alpha2)
         } else value
     }
 
@@ -122,12 +122,12 @@ class HoverSession private constructor(b: Builder) {
     init {
         Hover.setPermissionActivity(Constants.PERM_ACTIVITY, b.activity)
         frag = b.fragment
-        channel = b.channel
+        action = b.action
         requestCode = b.requestCode
         finalScreenTime = b.finalScreenTime
         accountId = b.account
         val builder = getBasicBuilder(b)
-        addExtras(builder, b.extras, b.action)
+        addExtras(builder, b.extras)
         startHover(builder, b.activity)
     }
 }

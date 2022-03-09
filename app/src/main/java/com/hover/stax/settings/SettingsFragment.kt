@@ -16,10 +16,13 @@ import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
+import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentSettingsBinding
 import com.hover.stax.home.MainActivity
+import com.hover.stax.home.NavigationInterface
 import com.hover.stax.languages.LanguageViewModel
-import com.hover.stax.navigation.NavigationInterface
+import com.hover.stax.login.LoginDialog
+import com.hover.stax.login.LoginViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
@@ -29,14 +32,14 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
 class SettingsFragment : Fragment(), NavigationInterface {
-
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
 
     private var accountAdapter: ArrayAdapter<Account>? = null
     private var clickCounter = 0
 
-    private val viewModel: SettingsViewModel by sharedViewModel()
+    private val channelsViewModel: ChannelsViewModel by sharedViewModel()
+    private val loginViewModel : LoginViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
@@ -48,8 +51,9 @@ class SettingsFragment : Fragment(), NavigationInterface {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_security)), requireActivity())
 
         setUpShare()
-        setUpMeta(viewModel)
+        setUpMeta()
         setUpChooseLang()
+        setupLearnCard()
         setUpSupport()
         setUpEnableTestMode()
         setupAppVersionInfo()
@@ -60,21 +64,22 @@ class SettingsFragment : Fragment(), NavigationInterface {
     private fun setUpShare() {
         binding.shareCard.shareText.setOnClickListener { Utils.shareStax(requireActivity()) }
         binding.shareCard.openRefereeBtn.setOnClickListener { openRefereeDialog() }
-        viewModel.fetchUsername()
+        if(loginViewModel.usernameIsNotSet()) loginViewModel.uploadLastUser()
     }
 
     private fun openRefereeDialog() {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.referrals_tap), requireContext())
 
-        if (!viewModel.email.value.isNullOrEmpty())
+        if (!loginViewModel.email.value.isNullOrEmpty())
             ReferralDialog().show(childFragmentManager, ReferralDialog.TAG)
         else
             LoginDialog().show(childFragmentManager, LoginDialog.TAG)
+            loginViewModel.postGoogleAuthNav.value = SHOW_REFERRAL_DIALOG
     }
 
-    private fun setUpMeta(viewModel: SettingsViewModel) {
+    private fun setUpMeta() {
         binding.settingsCard.connectAccounts.setOnClickListener { (activity as MainActivity).checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT) }
-        viewModel.accounts.observe(viewLifecycleOwner) {
+        channelsViewModel.allLiveAccounts.observe(viewLifecycleOwner) {
             if (it.isNullOrEmpty()) {
                 binding.settingsCard.defaultAccountEntry.visibility = GONE
                 binding.settingsCard.connectAccounts.visibility = VISIBLE
@@ -112,6 +117,13 @@ class SettingsFragment : Fragment(), NavigationInterface {
         }
     }
 
+    private fun setupLearnCard() {
+        with(binding.staxLearn) {
+            learnFinances.setOnClickListener {  findNavController().navigate(R.id.action_navigation_settings_to_wellnessFragment) }
+            learnStax.setOnClickListener { Utils.openUrl(getString(R.string.stax_medium_url), requireActivity())  }
+        }
+    }
+
     private fun createDefaultSelector(accounts: List<Account>) {
         val spinner = binding.settingsCard.defaultAccountSpinner
         binding.settingsCard.defaultAccountEntry.visibility = VISIBLE
@@ -123,12 +135,12 @@ class SettingsFragment : Fragment(), NavigationInterface {
             account
         else {
             val a = accounts.minByOrNull { it.id }
-            a?.let { viewModel.setDefaultAccount(it) }
+            a?.let { channelsViewModel.setDefaultAccount(it) }
             a
         }
 
-        spinner.setText(defaultAccount?.alias, false);
-        spinner.onItemClickListener = OnItemClickListener { _, _, pos: Int, _ -> if (pos != 0) viewModel.setDefaultAccount(accounts[pos]) }
+        spinner.setText(defaultAccount?.alias, false)
+        spinner.onItemClickListener = OnItemClickListener { _, _, pos: Int, _ -> if (pos != 0) channelsViewModel.setDefaultAccount(accounts[pos]) }
     }
 
     private fun setUpEnableTestMode() {
@@ -156,6 +168,11 @@ class SettingsFragment : Fragment(), NavigationInterface {
             R.id.action_navigation_settings_to_bountyEmailFragment
 
         findNavController().navigate(navAction)
+    }
+
+    companion object {
+        const val SHOW_BOUNTY_LIST = 100
+        const val SHOW_REFERRAL_DIALOG = 101
     }
 
     override fun onDestroyView() {

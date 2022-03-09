@@ -52,16 +52,6 @@ public class StaxContactArrayAdapter extends ArrayAdapter<StaxContact> {
         return v;
     }
 
-    static class ViewHolder {
-        TextView title;
-        TextView subtitle;
-
-        public ViewHolder(StaxSpinner2lineBinding binding) {
-            title = binding.title;
-            subtitle = binding.subtitle;
-        }
-    }
-
     @Override
     public Filter getFilter() {
         return new Filter() {
@@ -111,5 +101,15 @@ public class StaxContactArrayAdapter extends ArrayAdapter<StaxContact> {
 
     public long getItemId(int position) {
         return position;
+    }
+
+    static class ViewHolder {
+        TextView title;
+        TextView subtitle;
+
+        public ViewHolder(StaxSpinner2lineBinding binding) {
+            title = binding.title;
+            subtitle = binding.subtitle;
+        }
     }
 }

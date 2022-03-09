@@ -9,6 +9,8 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.database.DatabaseRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONArray
+import timber.log.Timber
 
 class TransactionDetailsViewModel(val repo: DatabaseRepo, val application: Application) : ViewModel() {
 
@@ -27,7 +29,7 @@ class TransactionDetailsViewModel(val repo: DatabaseRepo, val application: Appli
             addSource(action) { loadMessages(it) }
         }
 
-        sms = Transformations.map(transaction) { loadSms(it) }
+        sms = Transformations.map(transaction) { it?.let { loadSms(it) } }
     }
 
     private fun getLiveAction(txn: StaxTransaction?): LiveData<HoverAction>? = if (txn != null)
@@ -54,19 +56,18 @@ class TransactionDetailsViewModel(val repo: DatabaseRepo, val application: Appli
         messages.value = UssdCallResponse.generateConvo(Hover.getTransaction(txn.uuid, application), a)
     }
 
-    private fun loadSms(txn: StaxTransaction?): List<UssdCallResponse>? {
-        if (txn == null) return null
-
+    private fun loadSms(txn: StaxTransaction): List<UssdCallResponse>? {
         val t = Hover.getTransaction(txn.uuid, application)
-        if (t.smsHits == null) return null
+        return generateSmsConvo(if (t.smsHits != null && t.smsHits.length() > 0) t.smsHits else t.smsMisses)
+    }
 
+    private fun generateSmsConvo(smsArr: JSONArray): ArrayList<UssdCallResponse> {
         val smses = ArrayList<UssdCallResponse>()
-
-        for (i in 0 until t.smsHits.length()) {
-            val sms = getSMSMessageByUUID(t.smsHits.optString(i), application)
+        for (i in 0 until smsArr.length()) {
+            val sms = getSMSMessageByUUID(smsArr.optString(i), application)
+            Timber.e(sms.uuid)
             smses.add(UssdCallResponse(null, sms.msg))
         }
-
         return smses
     }
 }

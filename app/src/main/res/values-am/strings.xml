@@ -215,7 +215,7 @@
 
     <string name="transfer_amount_label">መጠን</string>
 
-    <string name="channel_label">መለያ</string>
+    <string name="account_label">መለያ</string>
 
     <string name="actions_fielderror">ይህ መለያ የአየር ሰዓት መግዛትን አይደግፍም። እባክዎ የተለየ መለያ ይምረጡ።</string>
 
@@ -761,5 +761,6 @@
     <!--Financial wellness tips -->>
     <string name="financial_wellness_tips">የፋይናንስ ደህንነት ምክሮች</string>
     <string name="read_more"><u>ተጨማሪ ያንብቡ</u></string>
+
 
 </resources>

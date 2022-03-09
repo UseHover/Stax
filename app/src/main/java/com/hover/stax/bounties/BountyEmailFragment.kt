@@ -12,8 +12,9 @@ import com.google.android.gms.common.SignInButton
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentBountyEmailBinding
 import com.hover.stax.home.MainActivity
-import com.hover.stax.navigation.NavigationInterface
-import com.hover.stax.settings.SettingsViewModel
+import com.hover.stax.home.NavigationInterface
+import com.hover.stax.login.LoginViewModel
+import com.hover.stax.settings.SettingsFragment
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
@@ -26,7 +27,7 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
     private val binding get() = _binding!!
     private var dialog: StaxDialog? = null
     private lateinit var networkMonitor: NetworkMonitor
-    private val settingsViewModel: SettingsViewModel by sharedViewModel()
+    private val loginViewModel: LoginViewModel by sharedViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentBountyEmailBinding.inflate(inflater, container, false)
@@ -48,7 +49,7 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
     }
 
     private fun startObservers() {
-        with(settingsViewModel) {
+        with(loginViewModel) {
             val emailObserver = object : Observer<String?> {
                 override fun onChanged(t: String?) {
                     Timber.e("Got email from Google $t")
@@ -73,6 +74,7 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
             logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext())
             updateProgress(0)
             (activity as MainActivity).signIn()
+            loginViewModel.postGoogleAuthNav.value = SettingsFragment.SHOW_BOUNTY_LIST
         } else {
             showDialog(R.string.internet_required, getString(R.string.internet_required_bounty_desc), R.string.btn_ok)
         }

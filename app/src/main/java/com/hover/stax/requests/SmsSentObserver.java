@@ -23,13 +23,12 @@ public class SmsSentObserver extends ContentObserver {
     private static final String COLUMN_TYPE = "type";
     private static final String COLUMN_ADDRESS = "address";
     private static final String[] PROJECTION = {COLUMN_ADDRESS, COLUMN_TYPE};
-
-    private ContentResolver resolver;
     final private SmsSentListener listener;
     final private List<StaxContact> recipients;
-    private boolean wasSent = false;
     final private String successMsg;
-    private Context context;
+    private ContentResolver resolver;
+    private boolean wasSent = false;
+    private final Context context;
 
     public SmsSentObserver(SmsSentListener l, List<StaxContact> contacts, Handler handler, Context c) {
         super(handler);
@@ -63,8 +62,8 @@ public class SmsSentObserver extends ContentObserver {
         try (Cursor cursor = resolver.query(uri, PROJECTION, null, null, null)) {
 
             if (cursor != null && cursor.moveToFirst()) {
-                final String address = cursor.getString(cursor.getColumnIndex(COLUMN_ADDRESS));
-                final int type = cursor.getInt(cursor.getColumnIndex(COLUMN_TYPE));
+                final String address = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ADDRESS));
+                final int type = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_TYPE));
                 for (StaxContact c : recipients) {
                     if (PhoneNumberUtils.compare(address, c.accountNumber) && type == MESSAGE_TYPE_SENT) {
                         wasSent = true;

@@ -34,6 +34,9 @@ interface ChannelDao {
     @Query("SELECT * FROM channels WHERE id = :id LIMIT 1")
     fun getLiveChannel(id: Int): LiveData<Channel>
 
+    @get:Query("SELECT * FROM channels")
+    val channels: List<Channel>
+
     @Transaction
     @Query("SELECT * FROM channels where selected = 1 ORDER BY name ASC")
     fun getChannelsAndAccounts(): List<ChannelWithAccounts>

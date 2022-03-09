@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class ReplacerImpl implements Replacer {
 
-    private Context context;
+    private final Context context;
 
     ReplacerImpl(Context context) {
         this.context = context;

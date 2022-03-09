@@ -23,6 +23,9 @@
                 android:id="@+id/action_navigation_home_to_navigation_request"
                 app:destination="@id/navigation_request" />
         <action
+                android:id="@+id/action_navigation_home_to_paybillFragment"
+                app:destination="@id/paybillFragment" />
+        <action
                 android:id="@+id/action_navigation_home_to_wellnessFragment"
                 app:destination="@id/wellnessFragment" />
 
@@ -42,6 +45,11 @@
         <argument
                 android:name="force_return_data"
                 app:argType="boolean" />
+        <action
+                android:id="@+id/action_navigation_linkAccount_to_navigation_home"
+                app:destination="@id/navigation_home"
+                app:popUpTo="@id/navigation_home"
+                app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -64,6 +72,9 @@
         <action
                 android:id="@+id/action_navigation_settings_to_navigation_linkAccount"
                 app:destination="@id/navigation_linkAccount" />
+        <action
+                android:id="@+id/action_navigation_settings_to_wellnessFragment"
+                app:destination="@id/wellnessFragment" />
     </fragment>
 
     <fragment
@@ -121,7 +132,7 @@
             android:label="ChannelsDetailsFragment"
             tools:layout="@layout/fragment_account">
         <argument
-                android:name="channel_id"
+                android:name="accountId"
                 app:argType="integer" />
         <action
                 android:id="@+id/action_accountDetailsFragment_to_navigation_home"
@@ -141,6 +152,7 @@
             android:name="com.hover.stax.library.LibraryFragment"
             android:label="USSD Library"
             tools:layout="@layout/fragment_library" />
+
     <fragment
             android:id="@+id/languageSelectFragment"
             android:name="com.hover.stax.languages.LanguageSelectFragment"
@@ -179,7 +191,14 @@
                 app:popUpToInclusive="true" />
         <action
                 android:id="@+id/action_accountsFragment_to_navigation_request"
-                app:destination="@id/navigation_request" />
+                app:destination="@id/navigation_request"
+                app:popUpTo="@id/navigation_request"
+                app:popUpToInclusive="true" />
+        <action
+                android:id="@+id/action_accountsFragment_to_paybillFragment"
+                app:destination="@id/paybillFragment"
+                app:popUpTo="@id/paybillFragment"
+                app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -225,12 +244,34 @@
     </fragment>
     <fragment
             android:id="@+id/wellnessFragment"
-            android:name="com.hover.stax.financialTips.FinancialTipFragment"
+            android:name="com.hover.stax.financialTips.FinancialTipsFragment"
             android:label="WellnessFragment">
         <action
                 android:id="@+id/action_wellnessFragment_to_navigation_home"
                 app:destination="@id/navigation_home"
                 app:popUpTo="@id/navigation_home"
+                app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+            android:id="@+id/paybillFragment"
+            android:name="com.hover.stax.paybill.PaybillFragment"
+            android:label="@string/cta_paybill"
+            tools:layout="@layout/fragment_paybill">
+        <action
+                android:id="@+id/action_paybillFragment_to_paybillListFragment"
+                app:destination="@id/paybillListFragment" />
+        <action
+                android:id="@+id/action_paybillFragment_to_accountsFragment"
+                app:destination="@id/accountsFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/paybillListFragment"
+            android:name="com.hover.stax.paybill.PaybillListFragment"
+            android:label="PaybillListFragment">
+        <action
+                android:id="@+id/action_paybillListFragment_to_paybillFragment"
+                app:destination="@id/paybillFragment"
+                app:popUpTo="@id/paybillFragment"
                 app:popUpToInclusive="true" />
     </fragment>
 

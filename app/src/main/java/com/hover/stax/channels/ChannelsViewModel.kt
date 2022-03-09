@@ -9,25 +9,26 @@ import androidx.lifecycle.*
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.sdk.actions.HoverAction
+import com.hover.sdk.api.ActionApi
 import com.hover.sdk.api.Hover
 import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountDropdown
 import com.hover.stax.database.DatabaseRepo
-import com.hover.stax.pushNotification.PushNotificationTopicsInterface
+import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
 
-
 class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel(),
-        ChannelDropdown.HighlightListener, AccountDropdown.HighlightListener, PushNotificationTopicsInterface {
+    AccountDropdown.HighlightListener, PushNotificationTopicsInterface {
 
     private var type = MutableLiveData<String>()
     var sims = MutableLiveData<List<SimInfo>>()
@@ -39,6 +40,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     val activeChannel = MediatorLiveData<Channel>()
     val channelActions = MediatorLiveData<List<HoverAction>>()
     val accounts = MediatorLiveData<List<Account>>()
+    val allLiveAccounts: LiveData<List<Account>> = repo.allAccountsLive
     val activeAccount = MutableLiveData<Account>()
     private var simReceiver: BroadcastReceiver? = null
 
@@ -80,10 +82,12 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     private fun loadChannels() {
         removeStaleChannels()
 
-        allChannels = repo.publishedChannels
-        selectedChannels = repo.selected
+        viewModelScope.launch {
+            allChannels = repo.publishedChannels
+            selectedChannels = repo.selected
 
-        updateAccounts()
+            updateAccounts()
+        }
     }
 
     /**
@@ -107,13 +111,18 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun loadSims() {
-        viewModelScope.launch {
-            sims.postValue(repo.presentSims)
+        viewModelScope.launch(Dispatchers.IO) {
+            val deviceSims = repo.presentSims
+            sims.postValue(deviceSims)
+
+            val countryCodes = deviceSims.map { it.countryIso }.toSet()
+            Utils.putStringSet(Constants.COUNTRIES, countryCodes, application)
+            Timber.e("Setting SIM countries")
         }
 
         simReceiver?.let {
             LocalBroadcastManager.getInstance(application)
-                    .registerReceiver(it, IntentFilter(Utils.getPackage(application).plus(".NEW_SIM_INFO_ACTION")))
+                .registerReceiver(it, IntentFilter(Utils.getPackage(application).plus(".NEW_SIM_INFO_ACTION")))
         }
 
         Hover.updateSimInfo(application)
@@ -144,22 +153,24 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun updateSimChannels(simChannels: MediatorLiveData<List<Channel>>, channels: List<Channel>?, hniList: List<String>?) {
-        if (channels == null || hniList == null) return
+        viewModelScope.launch(Dispatchers.IO) {
+            if (channels == null || hniList == null) return@launch
 
-        val simChannelList = ArrayList<Channel>()
+            val simChannelList = ArrayList<Channel>()
 
-        for (i in channels.indices) {
-            val hniArr = channels[i].hniList.split(",")
+            for (i in channels.indices) {
+                val hniArr = channels[i].hniList.split(",")
 
-            for (s in hniArr) {
-                if (hniList.contains(Utils.stripHniString(s))) {
-                    if (!simChannelList.contains(channels[i]))
-                        simChannelList.add(channels[i])
+                for (s in hniArr) {
+                    if (hniList.contains(Utils.stripHniString(s))) {
+                        if (!simChannelList.contains(channels[i]))
+                            simChannelList.add(channels[i])
+                    }
                 }
             }
-        }
 
-        simChannels.value = simChannelList
+            simChannels.postValue(simChannelList)
+        }
     }
 
     private fun setActiveChannelIfNull(channels: List<Channel>) {
@@ -172,25 +183,17 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     fun setActiveAccount(account: Account?) {
-        activeAccount.postValue(account)
+        activeAccount.postValue(account!!)
     }
 
     private fun setActiveChannel(actions: List<HoverAction>) {
         if (actions.isNullOrEmpty()) return
 
-        activeChannel.removeSource(channelActions)
-
-        viewModelScope.launch(Dispatchers.IO) {
-            val channelAccounts = repo.getChannelAndAccounts(actions.first().channel_id)
-            channelAccounts?.let {
-                activeChannel.postValue(it.channel)
-                setActiveAccount(it.accounts.firstOrNull())
-            }
+        val channelAccounts = repo.getChannelAndAccounts(actions.first().channel_id)
+        channelAccounts?.let {
+            activeChannel.postValue(it.channel)
+            setActiveAccount(it.accounts.firstOrNull())
         }
-    }
-
-    override fun highlightChannel(c: Channel?) {
-        c?.let { setActiveChannel(it) }
     }
 
     private fun loadActions(t: String?) {
@@ -212,13 +215,13 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             loadActions(channels, type.value!!)
     }
 
-    private fun loadActions(channel: Channel, t: String) = viewModelScope.launch {
-        channelActions.value = if (t == HoverAction.P2P) repo.getTransferActions(channel.id) else repo.getActions(channel.id, t)
+    private fun loadActions(channel: Channel, t: String) = viewModelScope.launch(Dispatchers.IO) {
+        channelActions.postValue(if (t == HoverAction.P2P) repo.getTransferActions(channel.id) else repo.getActions(channel.id, t))
     }
 
     private fun loadAccounts(channels: List<Channel>) = viewModelScope.launch {
         val ids = channels.map { it.id }
-        accounts.value = repo.getAccounts(ids)
+        accounts.postValue(repo.getAccounts(ids))
     }
 
     private fun loadActions(channels: List<Channel>, t: String) {
@@ -230,13 +233,17 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     fun setChannelsSelected(channels: List<Channel>?) {
-        if (channels.isNullOrEmpty()) return
+        viewModelScope.launch(Dispatchers.IO) {
+            if (channels.isNullOrEmpty()) return@launch
 
-        channels.forEachIndexed { index, channel ->
-            logChoice(channel)
-            channel.selected = true
-            channel.defaultAccount = selectedChannels.value.isNullOrEmpty() && index == 0
-            repo.update(channel)
+            channels.forEachIndexed { index, channel ->
+                logChoice(channel)
+                channel.selected = true
+                channel.defaultAccount = selectedChannels.value.isNullOrEmpty() && index == 0
+                repo.update(channel)
+
+                ActionApi.scheduleActionConfigUpdate(channel.countryAlpha2, 24, application)
+            }
         }
     }
 
@@ -255,15 +262,17 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     fun errorCheck(): String? {
         return when {
             activeChannel.value == null || activeAccount.value == null -> application.getString(R.string.channels_error_noselect)
-            channelActions.value.isNullOrEmpty() -> application.getString(R.string.no_actions_fielderror,
-                    HoverAction.getHumanFriendlyType(application, type.value))
+            channelActions.value.isNullOrEmpty() -> application.getString(
+                R.string.no_actions_fielderror,
+                HoverAction.getHumanFriendlyType(application, type.value)
+            )
             else -> null
         }
     }
 
     fun setChannelFromRequest(r: Request?) {
         if (r != null && !selectedChannels.value.isNullOrEmpty()) {
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
                 var actions = repo.getActions(getChannelIds(selectedChannels.value!!), r.requester_institution_id)
 
                 if (actions.isEmpty() && !simChannels.value.isNullOrEmpty())
@@ -271,9 +280,9 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
                 if (actions.isNotEmpty())
                     channelActions.postValue(actions)
-            }
 
-            activeChannel.addSource(channelActions, this::setActiveChannel)
+                setActiveChannel(actions)
+            }
         }
     }
 
@@ -299,6 +308,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
+    @Deprecated(message = "Newer versions of the app don't need this", replaceWith = ReplaceWith(""), level = DeprecationLevel.WARNING)
     fun migrateAccounts() = viewModelScope.launch(Dispatchers.IO) {
         if (accounts.value.isNullOrEmpty() && !selectedChannels.value.isNullOrEmpty()) {
             createAccounts(selectedChannels.value!!)
@@ -324,7 +334,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         } else {
             Timber.e("Nothing to update. Default account set")
         }
-
     }
 
     override fun highlightAccount(account: Account) {
@@ -332,6 +341,19 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             val channel = repo.getChannel(account.channelId)
             setActiveChannel(channel!!)
             activeAccount.postValue(account)
+        }
+    }
+
+    fun setDefaultAccount(account: Account) {
+        if (!allLiveAccounts.value.isNullOrEmpty()) {
+            //remove current default account
+            val current: Account? = allLiveAccounts.value!!.firstOrNull { it.isDefault }
+            current?.isDefault = false
+            repo.update(current)
+
+            val a = allLiveAccounts.value!!.first { it.id == account.id }
+            a.isDefault = true
+            repo.update(a)
         }
     }
 

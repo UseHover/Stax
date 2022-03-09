@@ -15,8 +15,8 @@ import com.hover.stax.utils.Utils;
 import java.util.List;
 
 public class ScheduledAdapter extends RecyclerView.Adapter<ScheduledAdapter.ScheduledViewHolder> {
-    private List<Schedule> scheduleList;
     private final SelectListener selectListener;
+    private List<Schedule> scheduleList;
 
     public ScheduledAdapter(List<Schedule> scheduled, SelectListener selectListener) {
         this.scheduleList = scheduled;
@@ -54,19 +54,6 @@ public class ScheduledAdapter extends RecyclerView.Adapter<ScheduledAdapter.Sche
         return scheduleList != null ? scheduleList.size() : 0;
     }
 
-    static class ScheduledViewHolder extends RecyclerView.ViewHolder {
-        public TransactionListItemBinding binding;
-
-        ScheduledViewHolder(TransactionListItemBinding binding) {
-            super(binding.getRoot());
-            this.binding = binding;
-        }
-    }
-
-    public interface SelectListener {
-        void viewScheduledDetail(int id);
-    }
-
     @Override
     public long getItemId(int position) {
         return position;
@@ -75,5 +62,18 @@ public class ScheduledAdapter extends RecyclerView.Adapter<ScheduledAdapter.Sche
     @Override
     public int getItemViewType(int position) {
         return position;
+    }
+
+    public interface SelectListener {
+        void viewScheduledDetail(int id);
+    }
+
+    static class ScheduledViewHolder extends RecyclerView.ViewHolder {
+        public TransactionListItemBinding binding;
+
+        ScheduledViewHolder(TransactionListItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
     }
 }

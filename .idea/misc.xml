@@ -45,6 +45,7 @@
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.3541666666666667" />
         <entry key="app/src/main/res/layout/fragment_language.xml" value="0.30572916666666666" />
         <entry key="app/src/main/res/layout/fragment_library.xml" value="0.13323201621073963" />
+        <entry key="app/src/main/res/layout/fragment_link_account.xml" value="0.24140625" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/fragment_main.xml" value="0.1331521739130435" />
         <entry key="app/src/main/res/layout/fragment_paybill.xml" value="0.33" />
@@ -52,6 +53,7 @@
         <entry key="app/src/main/res/layout/fragment_pin_update.xml" value="0.13405797101449277" />
         <entry key="app/src/main/res/layout/fragment_request.xml" value="0.14868287740628167" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.15602836879432624" />
+        <entry key="app/src/main/res/layout/fragment_signin_variant.xml" value="0.30510752688172044" />
         <entry key="app/src/main/res/layout/fragment_transaction.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/fragment_transfer.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/fragment_wellness.xml" value="0.14492753623188406" />
@@ -59,10 +61,12 @@
         <entry key="app/src/main/res/layout/home_card_future.xml" value="0.11398176291793313" />
         <entry key="app/src/main/res/layout/home_card_transactions.xml" value="0.14766970618034447" />
         <entry key="app/src/main/res/layout/in_app_banner_layout.xml" value="0.15704154002026344" />
+        <entry key="app/src/main/res/layout/input_item.xml" value="0.2125" />
         <entry key="app/src/main/res/layout/item_icons.xml" value="0.90375" />
         <entry key="app/src/main/res/layout/item_paybill.xml" value="0.8125" />
         <entry key="app/src/main/res/layout/item_paybill_saved.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_wellness_tips.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/non_standard_variable_item.xml" value="0.2125" />
         <entry key="app/src/main/res/layout/rename_account_layout.xml" value="0.3134057971014493" />
         <entry key="app/src/main/res/layout/repeat_inputs.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/layout/request_card_amount.xml" value="0.15602836879432624" />
@@ -115,7 +119,7 @@
       </profile-state>
     </entry>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

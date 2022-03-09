@@ -5,8 +5,8 @@
         <value>40</value>
     </entry>
     <entry>
-        <key>onboarding_app_variant</key>
-        <value>baseline</value>
+        <key>onboarding_mvt_variant</key>
+        <value>default</value>
     </entry>
 
 </defaultsMap>

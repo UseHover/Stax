@@ -15,7 +15,7 @@ import com.hover.stax.accounts.DUMMY
 import com.hover.stax.databinding.FragmentBalanceBinding
 import com.hover.stax.home.HomeFragment
 import com.hover.stax.home.MainActivity
-import com.hover.stax.navigation.NavigationInterface
+import com.hover.stax.home.NavigationInterface
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper

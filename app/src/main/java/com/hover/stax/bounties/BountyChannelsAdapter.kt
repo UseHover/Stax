@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.bounties.BountyChannelsAdapter.CardedBountyListViewHolder
 import com.hover.stax.channels.Channel
 import com.hover.stax.databinding.BountyCardChannelBinding
-import java.util.*
 
 internal class BountyChannelsAdapter(private var channelList: List<Channel>?, private val allBountiesList: List<Bounty>, private val selectListener: BountyListItem.SelectListener) : RecyclerView.Adapter<CardedBountyListViewHolder>() {
 
