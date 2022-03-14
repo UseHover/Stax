@@ -216,6 +216,14 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
         }
     }
 
+    fun silentSignOut() = signInClient.signOut().addOnCompleteListener {
+        AnalyticsUtil.logAnalyticsEvent(application.getString(R.string.logout), application)
+        resetAccountDetails()
+
+        email.value = null
+        username.value = null
+    }
+
     private fun resetAccountDetails() {
         Utils.removeString(EMAIL, application)
         Utils.removeString(USERNAME, application)

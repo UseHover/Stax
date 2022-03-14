@@ -27,6 +27,7 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
+import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -39,7 +40,9 @@ class SettingsFragment : Fragment(), NavigationInterface {
     private var clickCounter = 0
 
     private val channelsViewModel: ChannelsViewModel by sharedViewModel()
-    private val loginViewModel : LoginViewModel by sharedViewModel()
+    private val loginViewModel: LoginViewModel by sharedViewModel()
+
+    private var dialog: StaxDialog? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
@@ -57,6 +60,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
         setUpSupport()
         setUpEnableTestMode()
         setupAppVersionInfo()
+        setUpAccountCard()
 
         binding.bountyCard.getStartedWithBountyButton.setOnClickListener { startBounties() }
     }
@@ -64,7 +68,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
     private fun setUpShare() {
         binding.shareCard.shareText.setOnClickListener { Utils.shareStax(requireActivity()) }
         binding.shareCard.openRefereeBtn.setOnClickListener { openRefereeDialog() }
-        if(loginViewModel.usernameIsNotSet()) loginViewModel.uploadLastUser()
+        if (loginViewModel.usernameIsNotSet()) loginViewModel.uploadLastUser()
     }
 
     private fun openRefereeDialog() {
@@ -74,7 +78,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
             ReferralDialog().show(childFragmentManager, ReferralDialog.TAG)
         else
             LoginDialog().show(childFragmentManager, LoginDialog.TAG)
-            loginViewModel.postGoogleAuthNav.value = SHOW_REFERRAL_DIALOG
+        loginViewModel.postGoogleAuthNav.value = SHOW_REFERRAL_DIALOG
     }
 
     private fun setUpMeta() {
@@ -107,6 +111,20 @@ class SettingsFragment : Fragment(), NavigationInterface {
         binding.staxAndDeviceInfo.text = getString(R.string.app_version_and_device_id, appVersion, versionCode, deviceId)
     }
 
+    private fun setUpAccountCard() {
+        loginViewModel.username.observe(viewLifecycleOwner) { username ->
+            with(binding.accountCard) {
+                if (!username.isNullOrEmpty()) {
+                    accountCard.visibility = VISIBLE
+                    loggedInAccount.text = getString(R.string.logged_in_as, username)
+                    accountCard.setOnClickListener { showLogoutConfirmDialog() }
+                } else {
+                    accountCard.visibility = GONE
+                }
+            }
+        }
+    }
+
     private fun setUpSupport() {
         with(binding.staxSupport) {
             twitterContact.setOnClickListener { Utils.openUrl(getString(R.string.stax_twitter_url), requireActivity()) }
@@ -119,8 +137,8 @@ class SettingsFragment : Fragment(), NavigationInterface {
 
     private fun setupLearnCard() {
         with(binding.staxLearn) {
-            learnFinances.setOnClickListener {  findNavController().navigate(R.id.action_navigation_settings_to_wellnessFragment) }
-            learnStax.setOnClickListener { Utils.openUrl(getString(R.string.stax_medium_url), requireActivity())  }
+            learnFinances.setOnClickListener { findNavController().navigate(R.id.action_navigation_settings_to_wellnessFragment) }
+            learnStax.setOnClickListener { Utils.openUrl(getString(R.string.stax_medium_url), requireActivity()) }
         }
     }
 
@@ -170,6 +188,18 @@ class SettingsFragment : Fragment(), NavigationInterface {
         findNavController().navigate(navAction)
     }
 
+    private fun showLogoutConfirmDialog() {
+        dialog = StaxDialog(requireActivity())
+            .setDialogTitle(R.string.dialog_confirm_logout_header)
+            .setDialogMessage(getString(R.string.dialog_confirm_logout_desc))
+            .setNegButton(R.string.btn_cancel) { dialog?.dismiss() }
+            .setPosButton(R.string.logout) {
+                loginViewModel.silentSignOut()
+                UIHelper.flashMessage(requireActivity(), getString(R.string.logout_out_success))
+            }
+        dialog!!.showIt()
+    }
+
     companion object {
         const val SHOW_BOUNTY_LIST = 100
         const val SHOW_REFERRAL_DIALOG = 101
@@ -177,6 +207,8 @@ class SettingsFragment : Fragment(), NavigationInterface {
 
     override fun onDestroyView() {
         super.onDestroyView()
+
+        if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
 
         _binding = null
     }

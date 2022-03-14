@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/accountCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/account_cardhead">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/margin_16"
+            android:paddingBottom="@dimen/margin_16">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_10"
+                android:fontFamily="@font/effra_regular"
+                android:text="@string/logout"
+                android:textSize="@dimen/text_16" />
+
+        <TextView
+                android:id="@+id/loggedInAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_10"
+                android:fontFamily="@font/effra_regular"
+                android:text="@string/logged_in_as"
+                android:textColor="@color/darkGrey"
+                android:textSize="@dimen/text_13" />
+    </LinearLayout>
+
+</com.hover.stax.views.StaxCardView>
