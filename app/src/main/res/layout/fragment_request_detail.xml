@@ -30,7 +30,7 @@
 				android:background="@color/stax_state_red"
 			    android:backgroundTint="@color/stax_state_red"
 			    android:layout_marginTop="@dimen/margin_21"
-			    android:fontFamily="font-medium" />
+			    android:fontFamily="@font/brutalista_medium" />
 		</FrameLayout>
 
 

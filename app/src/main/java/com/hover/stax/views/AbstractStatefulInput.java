@@ -8,6 +8,7 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.hover.stax.R;
@@ -77,7 +78,7 @@ public abstract class AbstractStatefulInput extends FrameLayout {
             inputLayout.setHintTextColor(csl);
             inputLayout.setBoxStrokeColorStateList(csl);
 
-            inputLayout.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "Effra_Regular.ttf"));
+            inputLayout.setTypeface(ResourcesCompat.getFont(getContext(), R.font.brutalista_regular));
         } catch (IOException | XmlPullParserException | NullPointerException e) {
             Timber.e(e, "Failed to load color state list");
         }

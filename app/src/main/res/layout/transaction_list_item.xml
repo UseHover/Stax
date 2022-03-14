@@ -14,7 +14,7 @@
 		android:paddingVertical="@dimen/margin_16"
 		android:textColor="@color/grey"
 		android:textSize="@dimen/text_13"
-		android:fontFamily="font-medium"
+		android:fontFamily="@font/brutalista_medium"
 		android:background="@color/cardViewColor"
 		android:visibility="gone" />
 
@@ -44,14 +44,14 @@
 				android:gravity="center_vertical"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_16"
-				android:fontFamily="font-normal"/>
+				android:fontFamily="@font/brutalista_regular"/>
 
 			<TextView android:id="@+id/li_status"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="@dimen/margin_5"
 				android:drawablePadding="@dimen/margin_5"
-				android:fontFamily="font-normal"
+				android:fontFamily="@font/brutalista_regular"
 				android:textColor="@color/offWhite"
 				android:textSize="@dimen/text_13"
 				android:text="@string/pending_callout"
@@ -64,7 +64,7 @@
 			android:layout_height="match_parent"
 			android:minWidth="@dimen/margin_89"
 			android:gravity="center_vertical|end"
-			android:fontFamily="font-normal"
+			android:fontFamily="@font/brutalista_regular"
 			android:textColor="@color/white"
 			android:textSize="@dimen/text_21" />
 

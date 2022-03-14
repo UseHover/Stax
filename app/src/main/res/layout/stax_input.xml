@@ -5,7 +5,6 @@
         style="@style/StaxLabeledInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="font-normal"
         app:endIconMode="custom"
         app:endIconTint="@color/white">
 
@@ -13,7 +12,6 @@
             android:id="@+id/inputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="font-normal"
             android:textColor="@color/offWhite"
             android:textCursorDrawable="@null"
             android:textSize="@dimen/text_21" />

@@ -58,7 +58,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_3"
-                android:fontFamily="font-normal"
                 android:textSize="@dimen/text_16"
                 tools:text="@string/nickname" />
 
@@ -66,7 +65,6 @@
                 android:id="@+id/accountNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="font-normal"
                 android:textSize="@dimen/text_16"
                 tools:text="@string/account_number_label" />
     </LinearLayout>

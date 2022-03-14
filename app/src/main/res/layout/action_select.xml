@@ -19,7 +19,6 @@
 		android:layout_marginHorizontal="@dimen/margin_10"
 		android:layout_marginBottom="@dimen/margin_13"
 		android:textSize="@dimen/text_21"
-        android:fontFamily="font-normal"
 		android:text="@string/airtime_who_header"
 		android:visibility="gone"/>
 

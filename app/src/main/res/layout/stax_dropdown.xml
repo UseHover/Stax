@@ -4,8 +4,7 @@
         android:id="@+id/inputLayout"
         style="@style/StaxLabeledDropdown"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="font-normal">
+        android:layout_height="wrap_content">
 
     <AutoCompleteTextView
             android:id="@+id/autoCompleteView"
@@ -16,7 +15,6 @@
             android:drawablePadding="@dimen/margin_13"
             android:dropDownWidth="wrap_content"
             android:dropDownHeight="0dp"
-            android:fontFamily="font-normal"
             android:imeOptions="actionDone"
             android:textColor="@color/offWhite"
             android:autofillHints="phone"

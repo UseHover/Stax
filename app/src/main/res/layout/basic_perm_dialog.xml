@@ -24,7 +24,7 @@
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="font-medium"
+                android:fontFamily="@font/brutalista_medium"
                 android:text="@string/permissions_basic_title"
                 android:textAlignment="viewStart"
                 android:textAllCaps="false"
@@ -38,7 +38,6 @@
                 android:textSize="@dimen/text_16"
                 android:layout_marginBottom="@dimen/margin_13"
                 android:drawablePadding="@dimen/margin_13"
-                android:fontFamily="font-normal"
                 android:textColor="@color/offWhite"
                 android:text="@string/permissions_basic_desc_1"
                 app:drawableStartCompat="@drawable/ic_check" />
@@ -49,7 +48,6 @@
                 android:textSize="@dimen/text_16"
                 android:layout_marginBottom="@dimen/margin_13"
                 android:drawablePadding="@dimen/margin_13"
-                android:fontFamily="font-normal"
                 android:textColor="@color/offWhite"
                 android:text="@string/permissions_basic_desc_3"
                 app:drawableStartCompat="@drawable/ic_check" />

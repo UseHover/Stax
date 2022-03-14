@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawablePadding="@dimen/margin_26"
-                android:fontFamily="font-bold"
+                android:fontFamily="@font/brutalista_bold"
                 android:padding="@dimen/margin_16"
                 android:paddingHorizontal="@dimen/margin_13"
                 android:text="@string/nav_balances"

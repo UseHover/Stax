@@ -85,7 +85,6 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/effra_regular"
                 android:text="@string/continue_with_google"
                 android:textSize="@dimen/text_16" />
     </LinearLayout>
@@ -97,7 +96,6 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_16"
             android:layout_marginTop="@dimen/margin_13"
-            android:fontFamily="@font/effra_regular"
             android:text="@string/use_stax_no_sigin"
             android:textSize="@dimen/text_16"
             app:layout_constraintEnd_toEndOf="parent"
@@ -109,7 +107,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:fontFamily="@font/effra_regular"
             android:gravity="center"
             android:text="@string/termsOfServiceFullLabel"
             android:textColor="@color/offWhite"
@@ -125,7 +122,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:fontFamily="@font/effra_regular"
             android:gravity="center"
             android:text="@string/privacyPolicyFullLabel"
             android:textColor="@color/offWhite"

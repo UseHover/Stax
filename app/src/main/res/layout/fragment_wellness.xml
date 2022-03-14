@@ -35,7 +35,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_18"
                     android:layout_marginEnd="@dimen/margin_13"
-                    android:fontFamily="font-bold"
+                    android:fontFamily="@font/brutalista_bold"
                     android:gravity="end"
                     android:paddingHorizontal="@dimen/margin_10"
                     android:text="@string/bal_cardhead"
@@ -77,7 +77,6 @@
                         android:id="@+id/contentText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="font-normal"
                         android:textSize="@dimen/text_16" />
 
                 <Button

@@ -4,5 +4,5 @@
 	android:layout_height="wrap_content"
 	android:textColor="@color/offWhite"
 	android:textSize="@dimen/text_21"
-	android:fontFamily="font-medium"
+	android:fontFamily="@font/brutalista_medium"
 	android:textAlignment="viewEnd" />

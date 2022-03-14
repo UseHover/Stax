@@ -16,7 +16,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_16"
-                android:fontFamily="font-normal"
                 android:lineSpacingExtra="1.5dp"
                 android:paddingHorizontal="@dimen/margin_13"
                 android:text="@string/account_select_header"

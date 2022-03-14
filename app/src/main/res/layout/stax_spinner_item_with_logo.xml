@@ -36,7 +36,6 @@
                 android:layout_marginStart="@dimen/margin_3"
                 android:layout_toEndOf="@id/service_item_image_id"
                 android:ellipsize="marquee"
-                android:fontFamily="font-normal"
                 android:paddingStart="@dimen/margin_13"
                 android:paddingEnd="@dimen/margin_34"
                 android:singleLine="true"

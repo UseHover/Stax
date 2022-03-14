@@ -36,7 +36,7 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/margin_65"
-                android:fontFamily="font-medium"
+                android:fontFamily="@font/brutalista_medium"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="@dimen/margin_13"
                 android:paddingVertical="@dimen/margin_8"

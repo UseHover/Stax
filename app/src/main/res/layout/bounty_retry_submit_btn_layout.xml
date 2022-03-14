@@ -16,7 +16,7 @@
         style="@style/StaxButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="font-medium"
+        android:fontFamily="@font/brutalista_medium"
         android:text="@string/retry" />
 
 </RelativeLayout>

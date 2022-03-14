@@ -15,7 +15,6 @@
         <TableRow android:id="@+id/amountRow">
 
             <TextView
-                android:fontFamily="font-normal"
                 android:text="@string/transfer_amount_label"
                 android:textColor="@color/offWhite"
                 android:textSize="@dimen/text_16" />
@@ -23,7 +22,6 @@
             <TextView
                 android:id="@+id/amountValue"
                 android:layout_weight="1"
-                android:fontFamily="font-normal"
                 android:textAlignment="viewEnd"
                 android:textColor="@color/offWhite"
                 android:textSize="@dimen/text_21" />
@@ -35,7 +33,6 @@
 
             <TextView
                 android:id="@+id/accountsLabel"
-                android:fontFamily="font-normal"
                 android:text="@string/accounts_label"
                 android:textColor="@color/offWhite"
                 android:textSize="@dimen/text_16" />
@@ -51,7 +48,6 @@
             android:layout_marginTop="@dimen/margin_21">
 
             <TextView
-                android:fontFamily="font-normal"
                 android:text="@string/recipient_label"
                 android:textColor="@color/offWhite"
                 android:textSize="@dimen/text_16" />
@@ -68,7 +64,6 @@
             android:visibility="gone">
 
             <TextView
-                android:fontFamily="font-normal"
                 android:text="@string/note_cardhead"
                 android:textColor="@color/offWhite"
                 android:textSize="@dimen/text_16" />
@@ -76,7 +71,6 @@
             <TextView
                 android:id="@+id/noteValue"
                 android:layout_weight="1"
-                android:fontFamily="font-normal"
                 android:textAlignment="viewEnd"
                 android:textColor="@color/offWhite"
                 android:textSize="@dimen/text_21" />

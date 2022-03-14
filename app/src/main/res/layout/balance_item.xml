@@ -27,7 +27,6 @@
                 android:layout_marginStart="@dimen/margin_13"
                 android:layout_marginEnd="@dimen/margin_8"
                 android:ellipsize="end"
-                android:fontFamily="font-normal"
                 android:maxLines="2"
                 android:text="@string/balance_label"
                 android:textColor="@color/offWhite"
@@ -52,7 +51,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:fontFamily="font-normal"
                     android:gravity="end"
                     android:textColor="@color/offWhite"
                     android:textSize="@dimen/text_21" />
@@ -62,7 +60,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="-5dp"
-                    android:fontFamily="font-normal"
                     android:textColor="@color/offWhite"
                     android:textSize="@dimen/text_13" />
         </LinearLayout>

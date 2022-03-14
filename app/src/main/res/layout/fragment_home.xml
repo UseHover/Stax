@@ -33,7 +33,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginHorizontal="@dimen/margin_13"
                     android:drawablePadding="@dimen/margin_5"
-                    android:fontFamily="font-medium"
+                    android:fontFamily="@font/brutalista_medium"
                     android:text="@string/working_offline"
                     app:layout_goneMarginTop="@dimen/margin_5" />
         </RelativeLayout>
@@ -72,7 +72,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_bg_grey"
-                    android:fontFamily="font-normal"
                     android:padding="@dimen/margin_24"
                     android:text="@string/cta_transfer"
                     android:textSize="@dimen/text_21"
@@ -97,7 +96,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_bg_grey"
-                    android:fontFamily="font-normal"
+
                     android:padding="@dimen/margin_24"
                     android:text="@string/cta_airtime"
                     android:textSize="@dimen/text_21"
@@ -123,7 +122,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_bg_grey"
-                    android:fontFamily="font-normal"
                     android:padding="@dimen/margin_24"
                     android:text="@string/cta_paybill"
                     android:textSize="@dimen/text_21"
