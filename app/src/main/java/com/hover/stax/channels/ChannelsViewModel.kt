@@ -298,11 +298,11 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         val defaultAccount = repo.getDefaultAccount()
 
         channels.forEach {
-                with(it) {
-                    val accountName: String = if(getFetchAccountAction(it.id) == null) name else Constants.PLACEHOLDER //placeholder alias for easier identification later
-                    val account = Account(accountName, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex, defaultAccount == null)
-                    repo.insert(account)
-                }
+            with(it) {
+                val accountName: String = if (getFetchAccountAction(it.id) == null) name else Constants.PLACEHOLDER //placeholder alias for easier identification later
+                val account = Account(accountName, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex, defaultAccount == null)
+                repo.insert(account)
+            }
         }
     }
 

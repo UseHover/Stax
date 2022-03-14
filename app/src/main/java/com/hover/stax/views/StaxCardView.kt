@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.content.ContextCompat
 import com.hover.stax.R
 import com.hover.stax.databinding.StaxCardViewBinding
 
@@ -30,7 +31,7 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
             showBack = a.getBoolean(R.styleable.StaxCardView_showBack, false)
             useContextBackPress = a.getBoolean(R.styleable.StaxCardView_defaultBackPress, true)
             backDrawable = a.getResourceId(R.styleable.StaxCardView_backRes, 0)
-            bgColor = a.getColor(R.styleable.StaxCardView_staxCardColor, context.resources.getColor(R.color.colorPrimary))
+            bgColor = a.getColor(R.styleable.StaxCardView_staxCardColor, ContextCompat.getColor(context, R.color.colorPrimary))
             isFlatView = a.getBoolean(R.styleable.StaxCardView_isFlatView, false)
         } finally {
             a.recycle()
@@ -46,7 +47,7 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
 
     @SuppressLint("ResourceType")
     override fun setBackgroundColor(colorRes: Int) {
-        bgColor = context.resources.getColor(colorRes)
+        bgColor = ContextCompat.getColor(context, colorRes)
         binding.content.setBackgroundColor(bgColor)
     }
 
@@ -99,7 +100,6 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
         if (useContextBackPress) binding.backButton.setOnClickListener { triggerBack() }
         if (showBack) binding.backButton.visibility = VISIBLE
         if (backDrawable != 0) binding.backButton.setImageResource(backDrawable)
-        binding.content.setBackgroundColor(bgColor)
 
         binding.progressIndicator.setVisibilityAfterHide(View.GONE)
 
