@@ -117,7 +117,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
             val countryCodes = deviceSims.map { it.countryIso }.toSet()
             Utils.putStringSet(Constants.COUNTRIES, countryCodes, application)
-            Timber.e("Setting SIM countries")
         }
 
         simReceiver?.let {
@@ -299,12 +298,11 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         val defaultAccount = repo.getDefaultAccount()
 
         channels.forEach {
-            if (getFetchAccountAction(it.id) == null) {
                 with(it) {
-                    val account = Account(name, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex, defaultAccount == null)
+                    val accountName: String = if(getFetchAccountAction(it.id) == null) name else Constants.PLACEHOLDER //placeholder alias for easier identification later
+                    val account = Account(accountName, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex, defaultAccount == null)
                     repo.insert(account)
                 }
-            }
         }
     }
 

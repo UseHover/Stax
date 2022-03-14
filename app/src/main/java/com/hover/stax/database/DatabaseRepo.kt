@@ -349,6 +349,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun delete(account: Account) = AppDatabase.databaseWriteExecutor.execute { accountDao.delete(account) }
 
+    fun deleteAccount(channelId: Int, name: String) { accountDao.delete(channelId, name) }
+
     companion object {
         private val TAG = DatabaseRepo::class.java.simpleName
     }

@@ -53,4 +53,7 @@ interface AccountDao {
 
     @Query("DELETE FROM accounts")
     fun deleteAll()
+
+    @Query("DELETE FROM accounts WHERE channelId = :channelId AND name = :name")
+    fun delete(channelId: Int, name: String)
 }
