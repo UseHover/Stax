@@ -12,7 +12,7 @@
 		android:layout_marginTop="@dimen/margin_21"
 		android:textColor="@color/offWhite"
 		android:textSize="@dimen/text_16"
-		android:fontFamily="@font/brutalista_medium"
+		app:fontFamily="@font/brutalista_medium"
 		android:text="@string/security_head" />
 
 	<TextView

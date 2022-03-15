@@ -56,7 +56,7 @@
             android:layout_gravity="end|bottom"
             android:layout_marginHorizontal="@dimen/margin_13"
             android:layout_marginTop="10dp"
-            android:fontFamily="@font/brutalista_medium"
+            app:fontFamily="@font/brutalista_medium"
             android:text="@string/btn_continue"
             app:layout_anchorGravity="end|bottom" />
 

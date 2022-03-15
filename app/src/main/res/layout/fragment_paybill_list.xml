@@ -28,7 +28,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_8"
-                    android:fontFamily="@font/brutalista_medium"
+                    app:fontFamily="@font/brutalista_medium"
                     android:text="@string/label_saved"
                     android:textSize="@dimen/text_16" />
 
@@ -45,7 +45,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_8"
-                    android:fontFamily="@font/brutalista_medium"
+                    app:fontFamily="@font/brutalista_medium"
                     android:text="@string/label_popular"
                     android:textSize="@dimen/text_16" />
 

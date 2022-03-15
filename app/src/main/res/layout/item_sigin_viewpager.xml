@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_26"
-            android:fontFamily="@font/brutalista_medium"
+            app:fontFamily="@font/brutalista_medium"
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="24sp"
@@ -39,7 +39,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_55"
             android:layout_marginEnd="@dimen/margin_55"
-
             android:gravity="center"
             android:text="@string/onboarding_v1_slide1_title"
             android:textColor="@color/white"

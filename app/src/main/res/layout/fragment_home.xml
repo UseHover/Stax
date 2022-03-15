@@ -33,8 +33,8 @@
                     android:layout_centerVertical="true"
                     android:layout_marginHorizontal="@dimen/margin_13"
                     android:drawablePadding="@dimen/margin_5"
-                    android:fontFamily="@font/brutalista_medium"
                     android:text="@string/working_offline"
+                    app:fontFamily="@font/brutalista_medium"
                     app:layout_goneMarginTop="@dimen/margin_5" />
         </RelativeLayout>
 
@@ -96,7 +96,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_bg_grey"
-
                     android:padding="@dimen/margin_24"
                     android:text="@string/cta_airtime"
                     android:textSize="@dimen/text_21"

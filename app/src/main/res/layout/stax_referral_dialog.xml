@@ -76,7 +76,7 @@
                 android:layout_marginStart="@dimen/margin_13"
                 android:layout_marginBottom="@dimen/margin_8"
                 android:drawablePadding="@dimen/margin_5"
-                android:fontFamily="@font/brutalista_medium"
+                app:fontFamily="@font/brutalista_medium"
                 android:gravity="center_vertical"
                 android:text="@string/login_google_err"
                 android:textColor="@color/stax_state_red"

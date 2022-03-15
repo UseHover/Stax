@@ -27,13 +27,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawablePadding="@dimen/margin_26"
-                android:fontFamily="@font/brutalista_bold"
+                app:fontFamily="@font/brutalista_bold"
                 android:padding="@dimen/margin_16"
                 android:paddingHorizontal="@dimen/margin_13"
                 android:text="@string/nav_balances"
                 android:textAlignment="textEnd"
                 android:textAllCaps="true"
-                android:textSize="@dimen/text_13"
+                android:textSize="@dimen/text_16"
                 app:drawableStartCompat="@drawable/ic_visibility_off" />
 
     </androidx.cardview.widget.CardView>

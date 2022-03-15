@@ -75,7 +75,7 @@
         <entry key="app/src/main/res/layout/fragment_transfer.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/fragment_wellness.xml" value="0.14492753623188406" />
         <entry key="app/src/main/res/layout/fragment_wellness_detail.xml" value="0.165" />
-        <entry key="app/src/main/res/layout/home_card_balances.xml" value="0.14202172096908938" />
+        <entry key="app/src/main/res/layout/home_card_balances.xml" value="0.33" />
         <entry key="app/src/main/res/layout/home_card_future.xml" value="0.11398176291793313" />
         <entry key="app/src/main/res/layout/home_card_header.xml" value="0.2905982905982906" />
         <entry key="app/src/main/res/layout/home_card_transactions.xml" value="0.14766970618034447" />

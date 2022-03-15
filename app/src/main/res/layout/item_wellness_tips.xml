@@ -38,7 +38,7 @@
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/brutalista_medium"
+                    app:fontFamily="@font/brutalista_medium"
                     android:textSize="19sp"
                     tools:text="What did you spend your money on?" />
 

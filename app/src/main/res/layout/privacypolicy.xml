@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
             android:id="@+id/privacy_policy_text"
@@ -11,7 +12,7 @@
             android:layout_marginTop="@dimen/margin_13"
             android:layout_marginBottom="@dimen/margin_8"
             android:drawablePadding="@dimen/margin_5"
-            android:fontFamily="@font/brutalista_medium"
+            app:fontFamily="@font/brutalista_medium"
             android:gravity="center_vertical"
             android:text="@string/privacy_policy_label"
             android:textColor="@color/brightBluePressed"

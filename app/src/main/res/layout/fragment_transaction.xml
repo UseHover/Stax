@@ -69,7 +69,7 @@
                                 style="@style/StaxButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/brutalista_medium"
+                                app:fontFamily="@font/brutalista_medium"
                                 android:text="@string/try_again" />
 
                     </RelativeLayout>
