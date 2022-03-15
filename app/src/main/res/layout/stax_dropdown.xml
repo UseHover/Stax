@@ -19,7 +19,7 @@
             android:textColor="@color/offWhite"
             android:autofillHints="phone"
             android:textCursorDrawable="@null"
-            android:textSize="@dimen/text_21"
+            android:textSize="@dimen/text_19"
             app:endIconMode="dropdown_menu"
             app:errorTextColor="@color/stax_state_red" />
 

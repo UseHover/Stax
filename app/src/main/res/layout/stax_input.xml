@@ -13,7 +13,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/offWhite"
-            android:textCursorDrawable="@null"
-            android:textSize="@dimen/text_21" />
+            android:textSize="@dimen/text_19" />
 
 </com.google.android.material.textfield.TextInputLayout>

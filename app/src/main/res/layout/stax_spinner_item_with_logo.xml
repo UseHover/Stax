@@ -20,8 +20,8 @@
 
         <ImageView
                 android:id="@+id/service_item_image_id"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center_vertical"
                 android:layout_toEndOf="@id/service_item_checkbox"

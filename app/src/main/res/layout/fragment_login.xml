@@ -16,7 +16,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_21"
-                android:fontFamily="@font/brutalista_bold"
+                app:fontFamily="@font/brutalista_bold"
                 android:textAlignment="viewEnd"
                 android:textAllCaps="true"
                 android:textColor="@color/offWhite"
@@ -61,7 +61,7 @@
                     android:id="@+id/neg_btn"
                     style="@style/StaxButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="66dp"
+                    android:layout_height="64dp"
                     android:layout_marginEnd="@dimen/margin_21"
                     android:layout_toStartOf="@id/btnSignIn"
                     android:text="@string/btn_cancel" />
