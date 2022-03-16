@@ -42,8 +42,8 @@ android {
         applicationId "com.hover.stax"
         minSdk 21
         targetSdk 31
-        versionCode 119
-        versionName "1.9.0.6"
+        versionCode 120
+        versionName "1.9.0.7"
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -69,6 +69,9 @@ android {
     buildTypes {
         debug {
             buildConfigField "String", "SELF_DESTRUCT", "\"1622450539\""
+            FirebasePerformance {
+                instrumentationEnabled false
+            }
         }
 
         release {

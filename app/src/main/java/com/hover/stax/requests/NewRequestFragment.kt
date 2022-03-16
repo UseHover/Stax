@@ -89,7 +89,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
         //This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
         //https://stackoverflow.com/a/54939860/2371515
-        val channelsObserver = object : Observer<Channel> {
+        val channelsObserver = object : Observer<Channel?> {
             override fun onChanged(channel: Channel?) {
                 channel?.let {
                     requestViewModel.setActiveChannel(it)
@@ -108,23 +108,23 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         }
 
         with(requestViewModel) {
-            amount.observe(viewLifecycleOwner, {
+            amount.observe(viewLifecycleOwner) {
                 binding.summaryCard.amountRow.visibility = if (validAmount()) View.VISIBLE else View.GONE
                 binding.summaryCard.amountValue.text = it?.let { Utils.formatAmount(it) }
-            })
+            }
 
-            requesterNumber.observe(viewLifecycleOwner, { accountValue.setSubtitle(it) })
-            activeAccount.observe(viewLifecycleOwner, { updateAcctNo(it?.accountNo) })
+            requesterNumber.observe(viewLifecycleOwner) { accountValue.setSubtitle(it) }
+            activeAccount.observe(viewLifecycleOwner) { updateAcctNo(it?.accountNo) }
 
-            recentContacts.observe(viewLifecycleOwner, { it?.let { contacts -> requesteeInput.setRecent(contacts, requireActivity()) } })
-            isEditing.observe(viewLifecycleOwner, { showEdit(it) })
+            recentContacts.observe(viewLifecycleOwner) { it?.let { contacts -> requesteeInput.setRecent(contacts, requireActivity()) } }
+            isEditing.observe(viewLifecycleOwner) { showEdit(it) }
 
-            note.observe(viewLifecycleOwner, {
+            note.observe(viewLifecycleOwner) {
                 binding.summaryCard.noteRow.visibility = if (validNote()) View.VISIBLE else View.GONE
                 binding.summaryCard.noteValue.text = it
-            })
+            }
 
-            requestee.observe(viewLifecycleOwner, { recipientValue.setContact(it) })
+            requestee.observe(viewLifecycleOwner) { recipientValue.setContact(it) }
         }
     }
 

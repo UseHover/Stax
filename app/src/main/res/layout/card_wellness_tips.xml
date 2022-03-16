@@ -34,7 +34,7 @@
                     android:gravity="start"
                     android:layout_marginBottom="@dimen/margin_3"
                     android:textColor="@color/banner_text"
-                    android:textSize="@dimen/text_19"
+                    android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="This is a test title" />

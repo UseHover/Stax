@@ -65,7 +65,7 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     private fun setupActionDropdownObservers(viewModel: ChannelsViewModel, lifecycleOwner: LifecycleOwner) {
-        val activeChannelObserver = object : Observer<Channel> {
+        val activeChannelObserver = object : Observer<Channel?> {
             override fun onChanged(t: Channel?) {
                 Timber.i("Got new active channel: $t ${t?.countryAlpha2}")
             }

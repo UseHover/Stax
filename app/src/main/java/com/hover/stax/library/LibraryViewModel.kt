@@ -44,7 +44,7 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
 
         loadSims()
         allChannels = repo.allChannels
-        filteredChannels.value = null
+        filteredChannels.value = emptyList()
     }
 
     private fun loadSims() {
@@ -54,7 +54,7 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
 
         simReceiver?.let {
             LocalBroadcastManager.getInstance(application)
-                    .registerReceiver(it, IntentFilter(Utils.getPackage(application) + ".NEW_SIM_INFO_ACTION"))
+                .registerReceiver(it, IntentFilter(Utils.getPackage(application) + ".NEW_SIM_INFO_ACTION"))
         }
 
         Hover.updateSimInfo(application)
@@ -78,7 +78,7 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
         Timber.i("Filtering channels: $countryCode")
 
         if (countryCode == null || countryCode == CountryAdapter.CODE_ALL_COUNTRIES)
-            filteredChannels.postValue(channels)
+            channels?.let { filteredChannels.postValue(it) }
         else
             filteredChannels.postValue(repo.getChannelsByCountry(countryCode))
     }

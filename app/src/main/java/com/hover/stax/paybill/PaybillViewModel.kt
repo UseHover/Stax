@@ -20,11 +20,11 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
     val savedPaybills = MutableLiveData<List<Paybill>>()
     val popularPaybills = MutableLiveData<List<HoverAction>>()
 
-    val selectedPaybill = MutableLiveData<Paybill>()
-    val businessNumber = MutableLiveData<String>()
-    val accountNumber = MutableLiveData<String>()
-    val nickname = MutableLiveData<String>()
-    val amount = MutableLiveData<String>()
+    val selectedPaybill = MutableLiveData<Paybill?>()
+    val businessNumber = MutableLiveData<String?>()
+    val accountNumber = MutableLiveData<String?>()
+    val nickname = MutableLiveData<String?>()
+    val amount = MutableLiveData<String?>()
     val iconDrawable = MutableLiveData(0)
     val isEditing = MutableLiveData(true)
 

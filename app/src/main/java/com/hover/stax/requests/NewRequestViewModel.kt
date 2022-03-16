@@ -18,13 +18,13 @@ import java.util.*
 
 class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) : AbstractFormViewModel(application, databaseRepo) {
 
-    val activeAccount = MutableLiveData<Account>()
+    val activeAccount = MutableLiveData<Account?>()
     val activeChannel = MutableLiveData<Channel>()
-    val amount = MutableLiveData<String>()
+    val amount = MutableLiveData<String?>()
     val requestees = MutableLiveData<List<StaxContact>>(Collections.singletonList(StaxContact("")))
-    val requestee = MutableLiveData<StaxContact>()
+    val requestee = MutableLiveData<StaxContact?>()
     val requesterNumber = MediatorLiveData<String>()
-    val note = MutableLiveData<String>()
+    val note = MutableLiveData<String?>()
 
     val formulatedRequest = MutableLiveData<Request>()
     private val finalRequests = MutableLiveData<List<Request>>()
