@@ -49,8 +49,8 @@ import java.util.LinkedHashMap
 
     fun updateNonStandardVariables(key: String, value: String) {
         var map = nonStandardVariables.value
-        if (map == null) map = linkedMapOf<String, String>()
+        if (map == null) map = linkedMapOf()
         map[key] = value
-        nonStandardVariables.postValue(map!!);
+        nonStandardVariables.postValue(map!!)
     }
 }

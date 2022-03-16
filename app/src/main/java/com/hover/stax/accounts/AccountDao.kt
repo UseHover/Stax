@@ -15,8 +15,8 @@ interface AccountDao {
     @Query("SELECT * FROM accounts WHERE channelId = :channelId ORDER BY alias ASC")
     fun getAccounts(channelId: Int): List<Account>
 
-    @Query("SELECT * FROM accounts WHERE channelId in (:channelIds) ORDER BY alias ASC")
-    suspend fun getAccounts(channelIds: List<Int>): List<Account>
+    @Query("SELECT * FROM accounts ORDER BY alias ASC")
+    fun getAccounts(): List<Account>
 
     @Query("SELECT * FROM accounts where name = :name and channelId = :channelId")
     fun getAccount(name: String, channelId: Int): Account?

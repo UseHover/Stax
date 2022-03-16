@@ -7,9 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
+import com.hover.stax.accounts.Account
+import com.hover.stax.accounts.AccountDropdown
 import com.hover.stax.actions.ActionSelect
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.contacts.ContactInput
@@ -23,7 +26,10 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.Stax2LineItem
+import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInputLayout
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -61,6 +67,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     override fun onResume() {
         super.onResume()
 
+        channelsViewModel.loadAccounts()
+
         amountInput.setHint(getString(R.string.transfer_amount_label))
         accountDropdown.setHint(getString(R.string.account_label))
     }
@@ -87,6 +95,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
 
         super.init(root)
+
+        accountDropdown.setFetchAccountListener(this)
     }
 
     private fun setTitle() {
@@ -209,8 +219,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus)
                     amountInput.setState(
-                            null,
-                            if (transferViewModel.amountErrors() == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+                        null,
+                        if (transferViewModel.amountErrors() == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
                     )
                 else
                     amountInput.setState(null, AbstractStatefulInput.NONE)
@@ -274,7 +284,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
         val actionError = actionSelectViewModel.errorCheck()
         actionSelect.setState(actionError, if (actionError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
-        
+
         val recipientError = transferViewModel.recipientErrors(actionSelectViewModel.activeAction.value)
         contactInput.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
@@ -315,10 +325,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         } else {
             transferViewModel.forceUpdateContactUI()
             contactInput.setHint(
-                    if (action.requiredParams.contains(HoverAction.ACCOUNT_KEY))
-                        getString(R.string.recipientacct_label)
-                    else
-                        getString(R.string.recipientphone_label)
+                if (action.requiredParams.contains(HoverAction.ACCOUNT_KEY))
+                    getString(R.string.recipientacct_label)
+                else
+                    getString(R.string.recipientphone_label)
             )
         }
     }
@@ -339,6 +349,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     override fun onDestroyView() {
         super.onDestroyView()
+        if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
+
         _binding = null
     }
 

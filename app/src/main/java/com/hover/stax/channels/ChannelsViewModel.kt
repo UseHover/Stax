@@ -63,8 +63,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
 
         activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull)
-
-        accounts.addSource(selectedChannels, this::loadAccounts)
+        accounts.addSource(selectedChannels) { loadAccounts() }
 
         channelActions.apply {
             addSource(type, this@ChannelsViewModel::loadActions)
@@ -218,9 +217,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         channelActions.postValue(if (t == HoverAction.P2P) repo.getTransferActions(channel.id) else repo.getActions(channel.id, t))
     }
 
-    private fun loadAccounts(channels: List<Channel>) = viewModelScope.launch {
-        val ids = channels.map { it.id }
-        accounts.postValue(repo.getAccounts(ids))
+    fun loadAccounts() = viewModelScope.launch(Dispatchers.IO) {
+        accounts.postValue(repo.getAccounts())
     }
 
     private fun loadActions(channels: List<Channel>, t: String) {
@@ -293,6 +291,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     fun getFetchAccountAction(channelId: Int): HoverAction? = repo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()
+
+    fun getChannel(channelId: Int): Channel? = repo.getChannel(channelId)
 
     fun createAccounts(channels: List<Channel>) = viewModelScope.launch(Dispatchers.IO) {
         val defaultAccount = repo.getDefaultAccount()

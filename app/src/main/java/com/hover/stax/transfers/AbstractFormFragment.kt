@@ -14,25 +14,31 @@ import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
+import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountDropdown
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.contacts.StaxContact
+import com.hover.stax.home.MainActivity
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.transfers.TransactionType.Companion.type
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxCardView
+import com.hover.stax.views.StaxDialog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
 
-abstract class AbstractFormFragment : Fragment() {
+abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchListener {
 
     lateinit var abstractFormViewModel: AbstractFormViewModel
     val channelsViewModel: ChannelsViewModel by sharedViewModel()
@@ -45,6 +51,8 @@ abstract class AbstractFormFragment : Fragment() {
     lateinit var fab: Button
 
     private lateinit var noWorryText: LinearLayout
+
+    var dialog: StaxDialog? = null
 
     @CallSuper
     open fun init(root: View) {
@@ -136,6 +144,24 @@ abstract class AbstractFormFragment : Fragment() {
             if (event.action == MotionEvent.ACTION_DOWN)
                 findNavController().navigate(action)
             true
+        }
+    }
+
+    override fun fetchAccounts(account: Account) {
+        dialog = StaxDialog(requireActivity())
+            .setDialogTitle(getString(R.string.incomplete_account_setup_header))
+            .setDialogMessage(getString(R.string.incomplete_account_setup_desc, account.alias))
+            .setPosButton(R.string.check_balance_title) { runBalanceCheck(account.channelId) }
+            .setNegButton(R.string.btn_cancel, null)
+        dialog!!.showIt()
+    }
+
+    private fun runBalanceCheck(channelId: Int) = lifecycleScope.launch(Dispatchers.IO) {
+        channelsViewModel.getChannel(channelId)?.let {
+            val action = channelsViewModel.getFetchAccountAction(channelId)
+            channelsViewModel.setActiveChannel(it)
+
+            (activity as? MainActivity)?.makeCall(action!!, it)
         }
     }
 }
