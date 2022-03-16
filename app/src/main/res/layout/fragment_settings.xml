@@ -40,6 +40,10 @@
                 android:id="@+id/languageCard"
                 layout="@layout/settings_card_language" />
 
+        <include
+                android:id="@+id/accountCard"
+                layout="@layout/settings_account_card" />
+
         <TextView
                 android:id="@+id/stax_and_device_info"
                 android:layout_width="match_parent"
