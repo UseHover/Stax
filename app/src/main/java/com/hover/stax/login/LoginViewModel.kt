@@ -78,13 +78,13 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
         }
     }
 
-    private fun uploadUserToStax(email: String?, token: String?) {
+    private fun uploadUserToStax(email: String?, username: String?, token: String?) {
         if (getUsername().isNullOrEmpty() && !email.isNullOrEmpty()) {
             Timber.e("Uploading user to stax")
             progress.value = 66
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    val result = LoginNetworking(application).uploadUserToStax(email, optedIn.value!!, token)
+                    val result = LoginNetworking(application).uploadUserToStax(email, username, optedIn.value!!, token)
                     Timber.e("Uploading user to stax came back: ${result.code}")
 
                     if (result.code in 200..299) onSuccess(
@@ -104,7 +104,7 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
 
     fun uploadLastUser() {
         val account = GoogleSignIn.getLastSignedInAccount(application)
-        if (account != null) uploadUserToStax(email.value, account.idToken)
+        if (account != null) uploadUserToStax(email.value, account.displayName!!, account.idToken)
         else Timber.e("No account found")
     }
 
@@ -153,7 +153,7 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
         user.postValue(firebaseUser)
         setEmail(firebaseUser.email)
 
-        uploadUserToStax(firebaseUser.email, idToken)
+        uploadUserToStax(firebaseUser.email, firebaseUser.displayName, idToken)
     }
 
     private fun saveResponseData(json: JSONObject?) {
