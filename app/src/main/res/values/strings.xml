@@ -409,6 +409,9 @@
     <string name="referral_text">Your code:</string>
     <string name="referral_label">Agent\'s code</string>
     <string name="privacy_policy_label">By using Stax App, you\'ve read our privacy policy and agree to the terms of service. Click to read</string>
+    <string name="dialog_confirm_logout_header">Confirm Logout</string>
+    <string name="logout_out_success">Logout successful</string>
+    <string name="dialog_confirm_logout_desc">"Are you sure you want to logout?"</string>
 
     <string name="name_label">Enter your full name</string>
     <string name="phone_label">Enter your phone number</string>
@@ -447,7 +450,6 @@
     <string name="stax_features">Features And More on Stax</string>
     <string name="stax_medium_url">http://joinstax.medium.com/</string>
 
-
     <string name="contact_stax_cardhead">Get in touch</string>
     <string name="twitter" translatable="false">Twitter</string>
     <string name="stax_twitter_url" translatable="false">http://twitter.com/joinstax</string>
@@ -460,6 +462,10 @@
     <string name="stax_support_email_mailTo">https://help@stax.me</string>
     <string name="stax_emailing_subject">Stax support id - %1$s</string>
     <string name="send_email_using">Send mail using…</string>
+
+    <string name="account_cardhead">Account</string>
+    <string name="logout">Logout</string>
+    <string name="logged_in_as">Logged in as %1$s</string>
 
     <!-- System auth check -->
     <string name="auth_title">Authenticate with Stax</string>
@@ -653,5 +659,6 @@
     <string name="paybill_update_success">Paybill updated successfully</string>
     <string name="btn_update">Update</string>
     <string name="importing_channels">"Importing channels, please wait."</string>
+
 
 </resources>
