@@ -267,6 +267,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
+    fun isValidAccount(): Boolean = activeAccount.value!!.name != Constants.PLACEHOLDER
+
     fun setChannelFromRequest(r: Request?) {
         if (r != null && !selectedChannels.value.isNullOrEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {

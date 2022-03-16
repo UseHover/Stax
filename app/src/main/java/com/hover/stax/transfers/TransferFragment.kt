@@ -7,12 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
-import com.hover.stax.accounts.Account
-import com.hover.stax.accounts.AccountDropdown
 import com.hover.stax.actions.ActionSelect
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.contacts.ContactInput
@@ -26,10 +23,7 @@ import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.Stax2LineItem
-import com.hover.stax.views.StaxDialog
 import com.hover.stax.views.StaxTextInputLayout
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -289,6 +283,12 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         contactInput.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         val noNonStandardVarError = nonStandardVariableAdapter?.validates() ?: true
+
+        if (!channelsViewModel.isValidAccount()) {
+            accountDropdown.setState(getString(R.string.incomplete_account_setup_header), AbstractStatefulInput.ERROR)
+            fetchAccounts(channelsViewModel.activeAccount.value!!)
+            return false
+        }
 
         return channelError == null && actionError == null && amountError == null && recipientError == null && noNonStandardVarError
     }

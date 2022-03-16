@@ -653,7 +653,7 @@
     <string name="paybill_update_success">Paybill updated successfully</string>
     <string name="btn_update">Update</string>
     <string name="importing_channels">Importing channels, please wait</string>
-    <string name="incomplete_account_setup_header">Incomplete Account Setup</string>
+    <string name="incomplete_account_setup_header">Incomplete account setup</string>
     <string name="incomplete_account_setup_desc">Your %1$s account has not been fully set up. We need to fetch your accounts before you can proceed. Please run check balance to complete setup.</string>
 
 </resources>
