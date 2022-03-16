@@ -18,6 +18,9 @@
         <entry key="app/src/main/res/drawable/ic_refresh_white_13dp.xml" value="0.25833333333333336" />
         <entry key="app/src/main/res/drawable/ic_settings.xml" value="0.25833333333333336" />
         <entry key="app/src/main/res/drawable/ic_share.xml" value="0.22962962962962963" />
+        <entry key="app/src/main/res/drawable/ic_stax_dark_white.xml" value="0.218" />
+        <entry key="app/src/main/res/drawable/ic_stax_logo.xml" value="0.218" />
+        <entry key="app/src/main/res/drawable/ic_stax_new_logo.xml" value="0.249" />
         <entry key="app/src/main/res/drawable/ic_system_upate_24.xml" value="0.6125" />
         <entry key="app/src/main/res/drawable/ic_ussd_lib.xml" value="0.3546875" />
         <entry key="app/src/main/res/drawable/splash_window_background.xml" value="0.2395" />
@@ -53,7 +56,7 @@
         <entry key="app/src/main/res/layout/fragment_bounty_list.xml" value="0.1342451874366768" />
         <entry key="app/src/main/res/layout/fragment_channel.xml" value="0.14766970618034447" />
         <entry key="app/src/main/res/layout/fragment_channels_list.xml" value="0.15602836879432624" />
-        <entry key="app/src/main/res/layout/fragment_default_variant.xml" value="0.53125" />
+        <entry key="app/src/main/res/layout/fragment_default_variant.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_faq.xml" value="0.24010416666666667" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.3541666666666667" />
         <entry key="app/src/main/res/layout/fragment_interactive_onboarding.xml" value="0.30510752688172044" />

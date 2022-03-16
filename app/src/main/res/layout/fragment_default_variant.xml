@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        android:layout_height="match_parent">
 
     <ImageView
             android:id="@+id/slide_Img"
@@ -18,11 +18,10 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_24"
             android:layout_marginTop="@dimen/margin_34"
-            app:fontFamily="@font/brutalista_bold"
             android:lineHeight="46dp"
             android:text="@string/slide_1_title"
             android:textSize="45sp"
-            android:textStyle="bold" />
+            app:fontFamily="@font/brutalista_bold" />
 
     <TextView
             android:id="@+id/slide_text_desc"
@@ -30,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/slide_text_title"
             android:layout_marginHorizontal="@dimen/margin_24"
-            android:layout_marginTop="-10dp"
+            android:layout_marginTop="@dimen/margin_8"
             android:text="@string/slide_1_desc"
             android:textSize="@dimen/text_21" />
 
@@ -49,8 +48,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                app:fontFamily="@font/brutalista_medium"
-                android:text="@string/onboarding_link_accounts" />
+                android:text="@string/onboarding_link_accounts"
+                app:fontFamily="@font/brutalista_medium" />
 
         <com.hover.stax.views.PrivacyPolicyText
                 android:layout_width="wrap_content"
