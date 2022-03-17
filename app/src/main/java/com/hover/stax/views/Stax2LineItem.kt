@@ -4,11 +4,12 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
+import androidx.core.content.ContextCompat
 import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.Stax2lineitemBinding
 
-class Stax2LineItem(context: Context?, attrs: AttributeSet?) : RelativeLayout(context, attrs) {
+class Stax2LineItem(context: Context, attrs: AttributeSet?) : RelativeLayout(context, attrs) {
 
     private val binding: Stax2lineitemBinding = Stax2lineitemBinding.inflate(LayoutInflater.from(context), this, true)
 
@@ -34,6 +35,6 @@ class Stax2LineItem(context: Context?, attrs: AttributeSet?) : RelativeLayout(co
     init {
         binding.title.textAlignment = TEXT_ALIGNMENT_TEXT_END
         binding.subtitle.textAlignment = TEXT_ALIGNMENT_TEXT_END
-        binding.subtitle.setTextColor(resources.getColor(R.color.offWhite))
+        binding.subtitle.setTextColor(ContextCompat.getColor(context, R.color.offWhite))
     }
 }

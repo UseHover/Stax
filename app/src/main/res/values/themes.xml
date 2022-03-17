@@ -19,14 +19,14 @@
     </style>
 
     <style name="StaxTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/brightBlue</item>
 
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
         <item name="colorOnPrimary">@color/offWhite</item>
 
         <item name="colorAccent">@color/brightBlue</item>
-        <item name="colorSecondary">@color/brightBlue</item>
+        <item name="colorSecondary">@color/colorPrimary</item>
         <item name="colorSecondaryVariant">@color/brightBlue</item>
         <item name="colorOnSecondary">@color/cardViewColor</item>
 
