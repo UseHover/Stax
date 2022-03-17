@@ -18,10 +18,8 @@ import com.hover.stax.login.StaxGoogleLoginInterface
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
-import com.hover.stax.settings.ReferralDialog
 import com.hover.stax.settings.SettingsFragment
 import com.hover.stax.transactions.TransactionHistoryViewModel
-import com.hover.stax.transfers.TransactionType
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
@@ -61,7 +59,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         checkForFragmentDirection(intent)
         StaxDeepLinking.navigateIfRequired(this)
         observeForAppReview()
-        setGoogleLoginInterface(this);
+        setGoogleLoginInterface(this)
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -227,10 +225,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
     }
 
     override fun googleLoginSuccessful() {
-        when (loginViewModel.postGoogleAuthNav.value) {
-            SettingsFragment.SHOW_BOUNTY_LIST -> staxNavigation.navigateToBountyList()
-            SettingsFragment.SHOW_REFERRAL_DIALOG -> ReferralDialog().show(supportFragmentManager, ReferralDialog.TAG)
-        }
+        if (loginViewModel.postGoogleAuthNav.value == SettingsFragment.SHOW_BOUNTY_LIST) staxNavigation.navigateToBountyList()
     }
 
     override fun googleLoginFailed() {

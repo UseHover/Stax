@@ -27,7 +27,6 @@ import java.io.IOException
 
 
 private const val EMAIL = "email"
-private const val REFEREE_CODE = "referee"
 private const val USERNAME = "username"
 private const val BOUNTY_EMAIL_KEY = "email_for_bounties"
 
@@ -40,7 +39,6 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
     private var optedIn = MutableLiveData(false)
 
     var email = MediatorLiveData<String?>()
-    var refereeCode = MutableLiveData<String?>()
     var progress = MutableLiveData(-1)
     var error = MutableLiveData<String>()
     var username = MediatorLiveData<String?>()
@@ -50,7 +48,6 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
     init {
         getEmail()
         getUsername()
-        getRefereeCode()
     }
 
     fun signIntoFirebaseAsync(data: Intent?, inOrOut: Boolean, activity: AppCompatActivity) {
@@ -88,11 +85,7 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
                     Timber.e("Uploading user to stax came back: ${result.code}")
 
                     if (result.code in 200..299) onSuccess(
-                        JSONObject(result.body!!.string()),
-                        application.getString(
-                            R.string.uploaded_to_hover,
-                            application.getString(R.string.upload_user)
-                        )
+                        JSONObject(result.body!!.string())
                     )
                     else onError(application.getString(R.string.upload_user_error))
                 } catch (e: IOException) {
@@ -108,41 +101,8 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
         else Timber.e("No account found")
     }
 
-    fun saveReferee(refereeCode: String, name: String, phone: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (!email.value.isNullOrEmpty()) {
-                val account = GoogleSignIn.getLastSignedInAccount(application)
-                Timber.i("save in referee method, now trying")
-                try {
-                    val result = LoginNetworking(application).uploadReferee(
-                        email.value!!,
-                        refereeCode,
-                        name,
-                        phone,
-                        account?.idToken
-                    )
-                    if (result.code in 200..299) onSuccess(JSONObject(result.body!!.string()), name)
-                    else onError(application.getString(R.string.upload_referee_error))
-                } catch (e: IOException) {
-                    onError(application.getString(R.string.upload_referee_error))
-                }
-            }
-        }
-    }
-
-    private fun onSuccess(json: JSONObject, name: String) {
+    private fun onSuccess(json: JSONObject) {
         Timber.e(json.toString())
-
-        refereeCode.value?.let {
-            val data = JSONObject()
-            try {
-                data.put("referee ID", it)
-                data.put("username", name)
-                AnalyticsUtil.logAnalyticsEvent(application.getString(R.string.upload_referee_success_event), data, application)
-            } catch (e: Exception) {
-                Timber.e(e.localizedMessage)
-            }
-        }
 
         progress.postValue(100)
         saveResponseData(json)
@@ -159,7 +119,6 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
     private fun saveResponseData(json: JSONObject?) {
         val data = json?.optJSONObject("data")?.optJSONObject("attributes")
         setUsername(data?.optString("username"))
-        setRefereeCode(data)
     }
 
     fun usernameIsNotSet(): Boolean = getEmail().isNullOrEmpty()
@@ -169,13 +128,6 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
         if (!name.isNullOrEmpty()) {
             username.postValue(name)
             Utils.saveString(USERNAME, name, application)
-        }
-    }
-
-    private fun setRefereeCode(json: JSONObject?) {
-        if (!json?.optString("referee_id").isNullOrEmpty() && !json!!.isNull("referee_id")) {
-            refereeCode.postValue(json.optString("referee_id"))
-            Utils.saveString(REFEREE_CODE, json.optString("referee_id"), application)
         }
     }
 
@@ -195,11 +147,6 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
     private fun getUsername(): String? {
         username.value = Utils.getString(USERNAME, application)
         return username.value
-    }
-
-    private fun getRefereeCode(): String? {
-        refereeCode.value = Utils.getString(REFEREE_CODE, application)
-        return refereeCode.value
     }
 
     //Sign out user if any step of the login process fails. Have user restart the flow
