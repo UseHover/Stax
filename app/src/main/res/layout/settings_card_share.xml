@@ -5,36 +5,19 @@
         android:layout_height="wrap_content"
         app:title="@string/share_text">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <TextView
+            android:id="@+id/share_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        <TextView
-                android:id="@+id/share_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_10"
-                android:background="?attr/selectableItemBackground"
-                android:fontFamily="font-normal"
-                android:paddingVertical="@dimen/margin_21"
-                android:text="@string/share_stax"
-                android:textSize="@dimen/text_16"
-                app:drawableEndCompat="@drawable/ic_share"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/open_referee_btn"
-                style="@style/StaxButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="@dimen/margin_13"
-                android:fontFamily="font-normal"
-                android:text="@string/add_referee_info"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_10"
+            android:paddingEnd="@dimen/margin_10"
+            android:background="?attr/selectableItemBackground"
+            android:fontFamily="@font/effra_regular"
+            android:paddingVertical="@dimen/margin_21"
+            android:text="@string/share_stax"
+            android:textSize="@dimen/text_16"
+            app:drawableEndCompat="@drawable/ic_share"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 </com.hover.stax.views.StaxCardView>
