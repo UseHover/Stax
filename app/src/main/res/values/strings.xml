@@ -173,9 +173,7 @@
     <!-- Permissions -->
     <string name="permissions_title">Permissions needed</string>
     <string name="permissions_basic_title">Grant us phone and SMS permission.</string>
-    <string name="permissions_basic_desc_1">Phone permission allows Stax to detect your SIM so we can show you the financial services available in your country.</string>
-    <string name="permissions_basic_desc_2">It also enables you to select recipients from your contacts when sending airtime or money.</string>
-    <string name="permissions_basic_desc_3">SMS Permission helps us detect via SMS receipt that your transactions are successful.</string>
+    <string name="perms_basic_desc">To find all your various accounts and detect transactions on those accounts, allow Stax access to your phone and SMSs.</string>
     <string name="permissions_overlay_desc">These permissions allow Stax to dial USSD codes on your behalf and create an overlay that shows you the transaction progress.</string>
     <string name="permissions_accessibility_desc">In order to provide you with the ability to check your balance, transfer money or buy airtime, Stax needs your display and accessibility permission</string>
 
@@ -661,6 +659,7 @@
     <string name="importing_channels">Importing channels, please wait</string>
     <string name="incomplete_account_setup_header">Incomplete account setup</string>
     <string name="incomplete_account_setup_desc">Your %1$s account has not been fully set up. We need to fetch your accounts before you can proceed. Please run check balance to complete setup.</string>
+    <string name="btn_not_now">Not Now</string>
 
 
 </resources>

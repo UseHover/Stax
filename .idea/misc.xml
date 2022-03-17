@@ -8,6 +8,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/compose-model-1647504975633.xml" value="0.2673141891891892" />
         <entry key="app/src/main/res/drawable/button_bg_colored.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_dark.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_grey.xml" value="0.32037037037037036" />
@@ -46,6 +47,7 @@
         <entry key="app/src/main/res/layout/contact_input.xml" value="0.15678824721377912" />
         <entry key="app/src/main/res/layout/contact_stax_layout.xml" value="0.30510752688172044" />
         <entry key="app/src/main/res/layout/country_item.xml" value="0.48828125" />
+        <entry key="app/src/main/res/layout/dialog_basic_perms.xml" value="0.33" />
         <entry key="app/src/main/res/layout/dialog_paybill_number.xml" value="0.30510752688172044" />
         <entry key="app/src/main/res/layout/faq_items.xml" value="0.32019927536231885" />
         <entry key="app/src/main/res/layout/fragment_account.xml" value="0.30572916666666666" />

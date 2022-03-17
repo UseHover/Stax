@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_24">
+
+    <ImageView
+            android:id="@+id/phoneIcon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            app:layout_constraintEnd_toStartOf="@id/plusIcon"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_call" />
+
+    <TextView
+            android:id="@+id/plusIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/margin_16"
+            android:text="+"
+            android:textColor="@color/icon_blue"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toBottomOf="@id/phoneIcon"
+            app:layout_constraintEnd_toStartOf="@id/smsIcon"
+            app:layout_constraintStart_toEndOf="@id/phoneIcon"
+            app:layout_constraintTop_toTopOf="@id/phoneIcon"
+            tools:ignore="HardcodedText" />
+
+    <ImageView
+            android:id="@+id/smsIcon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="@dimen/margin_16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/plusIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_chat_bubble" />
+
+    <TextView
+            android:id="@+id/permsDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_24"
+            android:text="@string/perms_basic_desc"
+            android:textSize="@dimen/text_16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/phoneIcon" />
+
+    <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/neg_btn"
+            style="@style/StaxButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_24"
+            android:text="@string/btn_not_now"
+            app:layout_constraintEnd_toStartOf="@id/pos_btn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/permsDesc" />
+
+    <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/pos_btn"
+            style="@style/StaxButtonColored"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_24"
+            android:layout_marginEnd="0dp"
+            android:text="@string/btn_continue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/neg_btn"
+            app:layout_constraintTop_toBottomOf="@id/permsDesc" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

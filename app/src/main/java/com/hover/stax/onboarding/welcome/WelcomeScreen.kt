@@ -20,6 +20,9 @@ fun WelcomeHeader(title: String, desc: String) {
             text = title,
             style = MaterialTheme.typography.h1
         )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         Text(
             text = desc,
             style = MaterialTheme.typography.body1
@@ -43,6 +46,9 @@ fun FeatureCard(title: String, desc: String, iconRes: Int) {
                 text = title,
                 style = MaterialTheme.typography.h3
             )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
             Text(
                 text = desc,
                 style = MaterialTheme.typography.body1
@@ -63,6 +69,7 @@ fun ContinueButton(text: String, modifier: Modifier = Modifier, onClick: (() -> 
         )
     ) {
         Text(
+            modifier = modifier.padding(top = 5.dp, bottom = 5.dp),
             text = text,
             style = MaterialTheme.typography.button
         )

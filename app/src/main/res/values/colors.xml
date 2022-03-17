@@ -26,6 +26,7 @@
 	<color name="pending_brown">#343734</color>
 	<color name="muted_green">#2A3932</color>
 	<color name="lighter_grey">#3F434A</color>
+	<color name="icon_blue">#0091E3</color>
 
 	<color name="banner_permission_primary">#45E6CE</color>
 	<color name="banner_gist_primary">#00CCFF</color>
