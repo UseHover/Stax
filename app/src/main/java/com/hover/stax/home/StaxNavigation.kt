@@ -57,7 +57,6 @@ internal class StaxNavigation(val activity: AppCompatActivity, private val isMai
 
     private fun getNavController(): NavController = navHostFragment!!.navController
 
-
     private fun setNavClickListener(nav: BottomNavigationView) {
         nav.setOnNavigationItemSelectedListener {
             if (isMainActivity) {

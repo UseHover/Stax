@@ -85,8 +85,11 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
     private fun updateRequests(intent: Intent) {
         if (intent.getStringExtra(TransactionContract.COLUMN_TYPE) == HoverAction.RECEIVE) {
             repo.requests.forEach {
-                if (it.requestee_ids.contains(contact!!.id) && Utils.getAmount(it.amount
-                                ?: "00") == Utils.getAmount(getAmount(intent)!!)) {
+                if (it.requestee_ids.contains(contact!!.id) && Utils.getAmount(
+                        it.amount
+                            ?: "00"
+                    ) == Utils.getAmount(getAmount(intent)!!)
+                ) {
                     it.matched_transaction_uuid = intent.getStringExtra(TransactionContract.COLUMN_UUID)
                     repo.update(it)
                 }
@@ -107,16 +110,18 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
     else null
 
     private fun createAccounts(intent: Intent) {
-        val accounts = repo.getAllAccounts().toMutableList()
-
         if (intent.hasExtra(TransactionContract.COLUMN_PARSED_VARIABLES)) {
             val parsedVariables = intent.getSerializableExtra(TransactionContract.COLUMN_PARSED_VARIABLES) as HashMap<String, String>
 
             if (parsedVariables.containsKey("userAccountList")) {
-                accounts.addAll(parseAccounts(parsedVariables["userAccountList"]!!))
-            }
+                val accounts = repo.getAllAccounts().toMutableList()
+                val parsedAccounts = parseAccounts(parsedVariables["userAccountList"]!!)
 
-            repo.saveAccounts(accounts)
+                removePlaceholders(parsedAccounts, accounts.map { it.channelId }.toIntArray())
+
+                repo.saveAccounts(parseAccounts(parsedVariables["userAccountList"]!!))
+//                accounts.addAll())
+            }
         }
     }
 
@@ -134,5 +139,14 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
             accounts.first().isDefault = true
 
         return accounts
+    }
+
+    private fun removePlaceholders(parsedAccounts: List<Account>, savedAccounts: IntArray) {
+        parsedAccounts.forEach {
+            if (savedAccounts.contains(it.channelId)) {
+                Timber.e("Removing ${it.channelId} from ${it.name}")
+                repo.deleteAccount(it.channelId, Constants.PLACEHOLDER)
+            }
+        }
     }
 }

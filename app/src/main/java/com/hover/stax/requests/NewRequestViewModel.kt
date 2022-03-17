@@ -11,6 +11,7 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.transfers.AbstractFormViewModel
+import com.hover.stax.utils.Constants
 import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -74,6 +75,8 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
     }
 
     fun accountError(): String? = if (activeAccount.value != null) null else application.getString(R.string.accounts_error_noselect)
+
+    fun isValidAccount(): Boolean = activeAccount.value!!.name != Constants.PLACEHOLDER
 
     fun requesterAcctNoError(): String? = if (!requesterNumber.value.isNullOrEmpty()) null else application.getString(R.string.requester_number_fielderror)
 

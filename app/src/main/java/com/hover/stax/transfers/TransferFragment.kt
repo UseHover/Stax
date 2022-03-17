@@ -61,6 +61,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     override fun onResume() {
         super.onResume()
 
+        channelsViewModel.loadAccounts()
+
         amountInput.setHint(getString(R.string.transfer_amount_label))
         accountDropdown.setHint(getString(R.string.account_label))
     }
@@ -87,6 +89,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
 
         super.init(root)
+
+        accountDropdown.setFetchAccountListener(this)
     }
 
     private fun setTitle() {
@@ -209,8 +213,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus)
                     amountInput.setState(
-                            null,
-                            if (transferViewModel.amountErrors() == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+                        null,
+                        if (transferViewModel.amountErrors() == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
                     )
                 else
                     amountInput.setState(null, AbstractStatefulInput.NONE)
@@ -274,11 +278,17 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
         val actionError = actionSelectViewModel.errorCheck()
         actionSelect.setState(actionError, if (actionError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
-        
+
         val recipientError = transferViewModel.recipientErrors(actionSelectViewModel.activeAction.value)
         contactInput.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
         val noNonStandardVarError = nonStandardVariableAdapter?.validates() ?: true
+
+        if (!channelsViewModel.isValidAccount()) {
+            accountDropdown.setState(getString(R.string.incomplete_account_setup_header), AbstractStatefulInput.ERROR)
+            fetchAccounts(channelsViewModel.activeAccount.value!!)
+            return false
+        }
 
         return channelError == null && actionError == null && amountError == null && recipientError == null && noNonStandardVarError
     }
@@ -315,10 +325,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         } else {
             transferViewModel.forceUpdateContactUI()
             contactInput.setHint(
-                    if (action.requiredParams.contains(HoverAction.ACCOUNT_KEY))
-                        getString(R.string.recipientacct_label)
-                    else
-                        getString(R.string.recipientphone_label)
+                if (action.requiredParams.contains(HoverAction.ACCOUNT_KEY))
+                    getString(R.string.recipientacct_label)
+                else
+                    getString(R.string.recipientphone_label)
             )
         }
     }
@@ -339,6 +349,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     override fun onDestroyView() {
         super.onDestroyView()
+        if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
+
         _binding = null
     }
 

@@ -63,8 +63,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
 
         activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull)
-
-        accounts.addSource(selectedChannels, this::loadAccounts)
+        accounts.addSource(selectedChannels) { loadAccounts() }
 
         channelActions.apply {
             addSource(type, this@ChannelsViewModel::loadActions)
@@ -117,7 +116,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
             val countryCodes = deviceSims.map { it.countryIso }.toSet()
             Utils.putStringSet(Constants.COUNTRIES, countryCodes, application)
-            Timber.e("Setting SIM countries")
         }
 
         simReceiver?.let {
@@ -219,9 +217,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         channelActions.postValue(if (t == HoverAction.P2P) repo.getTransferActions(channel.id) else repo.getActions(channel.id, t))
     }
 
-    private fun loadAccounts(channels: List<Channel>) = viewModelScope.launch {
-        val ids = channels.map { it.id }
-        accounts.postValue(repo.getAccounts(ids))
+    fun loadAccounts() = viewModelScope.launch(Dispatchers.IO) {
+        accounts.postValue(repo.getAccounts())
     }
 
     private fun loadActions(channels: List<Channel>, t: String) {
@@ -270,6 +267,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
+    fun isValidAccount(): Boolean = activeAccount.value!!.name != Constants.PLACEHOLDER
+
     fun setChannelFromRequest(r: Request?) {
         if (r != null && !selectedChannels.value.isNullOrEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
@@ -295,15 +294,16 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     fun getFetchAccountAction(channelId: Int): HoverAction? = repo.getActions(channelId, HoverAction.FETCH_ACCOUNTS).firstOrNull()
 
+    fun getChannel(channelId: Int): Channel? = repo.getChannel(channelId)
+
     fun createAccounts(channels: List<Channel>) = viewModelScope.launch(Dispatchers.IO) {
         val defaultAccount = repo.getDefaultAccount()
 
         channels.forEach {
-            if (getFetchAccountAction(it.id) == null) {
-                with(it) {
-                    val account = Account(name, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex, defaultAccount == null)
-                    repo.insert(account)
-                }
+            with(it) {
+                val accountName: String = if (getFetchAccountAction(it.id) == null) name else Constants.PLACEHOLDER //placeholder alias for easier identification later
+                val account = Account(accountName, name, logoUrl, accountNo, id, primaryColorHex, secondaryColorHex, defaultAccount == null)
+                repo.insert(account)
             }
         }
     }
