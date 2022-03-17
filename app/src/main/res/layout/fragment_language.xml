@@ -30,7 +30,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="@dimen/margin_21"
-                    android:fontFamily="font-medium"
+                    app:fontFamily="@font/brutalista_medium"
                     android:text="@string/btn_continue" />
         </RelativeLayout>
     </com.hover.stax.views.StaxCardView>

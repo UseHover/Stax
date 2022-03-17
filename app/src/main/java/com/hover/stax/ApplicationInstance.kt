@@ -38,12 +38,12 @@ class ApplicationInstance : Application() {
     }
 
     private fun setFont() {
-        FontReplacer.Build(this).apply {
-            setBoldFont("Effra_Heavy.ttf")
-            setMediumFont("Effra_Medium.ttf")
-            setDefaultFont("Effra_Regular.ttf")
-            setThinFont("Effra_Regular.ttf")
-        }.also { it.applyFont() }
+//        FontReplacer.Build(this).apply {
+//            setBoldFont("Effra_Heavy.ttf")
+//            setMediumFont("Effra_Medium.ttf")
+//            setDefaultFont("Effra_Regular.ttf")
+//            setThinFont("Effra_Regular.ttf")
+//        }.also { it.applyFont() }
 
         Lingver.init(this, Locale.getDefault())
     }

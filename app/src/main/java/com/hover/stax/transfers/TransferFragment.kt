@@ -131,11 +131,14 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private fun observeActiveChannel() {
         with(channelsViewModel) {
             activeChannel.observe(viewLifecycleOwner) { channel ->
-                transferViewModel.request.value?.let { request ->
-                    transferViewModel.setRecipientSmartly(request, channel)
+                channel?.let {
+                    transferViewModel.request.value?.let { request ->
+                        transferViewModel.setRecipientSmartly(request, it)
+                    }
+                    binding.summaryCard.accountValue.setTitle(it.toString())
                 }
+
                 actionSelect.visibility = if (channel != null) View.VISIBLE else View.GONE
-                channel?.let { binding.summaryCard.accountValue.setTitle(channel.toString()) }
             }
         }
     }

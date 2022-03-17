@@ -31,14 +31,12 @@
 
                     <TextView
                             android:layout_weight="1"
-                            android:fontFamily="font-normal"
                             android:text="@string/moneyout_label"
                             android:textColor="@color/offWhite"
                             android:textSize="@dimen/text_16" />
 
                     <TextView
                             android:id="@+id/details_money_out"
-                            android:fontFamily="font-normal"
                             android:textAlignment="viewEnd"
                             android:textColor="@color/offWhite"
                             android:textSize="@dimen/text_21"
@@ -51,14 +49,12 @@
 
                     <TextView
                             android:layout_weight="1"
-                            android:fontFamily="font-normal"
                             android:text="@string/moneyin_label"
                             android:textColor="@color/offWhite"
                             android:textSize="@dimen/text_16" />
 
                     <TextView
                             android:id="@+id/details_money_in"
-                            android:fontFamily="font-normal"
                             android:textAlignment="viewEnd"
                             android:textColor="@color/offWhite"
                             android:textSize="@dimen/text_21"
@@ -70,14 +66,12 @@
                     <TextView
                             android:id="@+id/fees_description"
                             android:layout_weight="1"
-                            android:fontFamily="font-normal"
                             android:text="@string/fees_label"
                             android:textColor="@color/offWhite"
                             android:textSize="@dimen/text_16" />
 
                     <TextView
                             android:id="@+id/details_fees"
-                            android:fontFamily="font-normal"
                             android:textAlignment="viewEnd"
                             android:textColor="@color/offWhite"
                             android:textSize="@dimen/text_21"
@@ -89,14 +83,12 @@
                     <TextView
                             android:id="@+id/official_name_label"
                             android:layout_weight="1"
-                            android:fontFamily="font-normal"
                             android:text="@string/official_name"
                             android:textColor="@color/offWhite"
                             android:textSize="@dimen/text_16" />
 
                     <TextView
                             android:id="@+id/official_name"
-                            android:fontFamily="font-normal"
                             android:textAlignment="viewEnd"
                             android:textColor="@color/offWhite"
                             android:textSize="@dimen/text_16"
@@ -109,7 +101,6 @@
         <include
                 android:id="@+id/shortcode_card"
                 layout="@layout/account_card_shortcode" />
-
 
         <include
                 android:id="@+id/scheduled_card"

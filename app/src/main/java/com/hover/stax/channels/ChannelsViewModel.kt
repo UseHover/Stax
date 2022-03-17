@@ -37,7 +37,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     var selectedChannels: LiveData<List<Channel>> = MutableLiveData()
 
     var simChannels = MediatorLiveData<List<Channel>>()
-    val activeChannel = MediatorLiveData<Channel>()
+    val activeChannel = MediatorLiveData<Channel?>()
     val channelActions = MediatorLiveData<List<HoverAction>>()
     val accounts = MediatorLiveData<List<Account>>()
     val allLiveAccounts: LiveData<List<Account>> = repo.allAccountsLive

@@ -8,7 +8,6 @@
             style="@style/StaxLabeledDropdown"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="font-normal"
             android:hint="@string/repeatfreq_label">
 
         <AutoCompleteTextView
@@ -17,8 +16,6 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:dropDownWidth="wrap_content"
-                android:editable="false"
-                android:fontFamily="font-normal"
                 android:padding="@dimen/margin_13"
                 android:textColor="@color/offWhite"
                 android:textCursorDrawable="@null"
@@ -38,7 +35,6 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:drawableEnd="@drawable/ic_calendar"
-                android:fontFamily="font-normal"
                 android:padding="@dimen/margin_13"
                 android:textColor="@color/offWhite"
                 android:textCursorDrawable="@null"
@@ -56,7 +52,6 @@
                 android:id="@+id/repeat_times_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="font-normal"
                 android:inputType="number"
                 android:padding="@dimen/margin_13"
                 android:textColor="@color/offWhite"

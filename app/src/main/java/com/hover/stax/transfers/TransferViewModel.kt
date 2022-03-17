@@ -20,8 +20,8 @@ import timber.log.Timber
 
  class TransferViewModel(application: Application, repo: DatabaseRepo) : AbstractFormViewModel(application, repo) {
 
-    val amount = MutableLiveData<String>()
-    val contact = MutableLiveData<StaxContact>()
+    val amount = MutableLiveData<String?>()
+    val contact = MutableLiveData<StaxContact?>()
     val note = MutableLiveData<String>()
     var request: LiveData<Request> = MutableLiveData()
 

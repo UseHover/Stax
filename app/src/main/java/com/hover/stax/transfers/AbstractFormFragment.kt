@@ -10,6 +10,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
@@ -50,7 +51,7 @@ abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchLi
     lateinit var accountDropdown: AccountDropdown
     lateinit var fab: Button
 
-    private lateinit var noWorryText: LinearLayout
+    private lateinit var noWorryText: TextView
 
     var dialog: StaxDialog? = null
 
@@ -58,7 +59,7 @@ abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchLi
     open fun init(root: View) {
         editCard = root.findViewById(R.id.editCard)
         editRequestCard = root.findViewById(R.id.editRequestCard)
-        noWorryText = root.findViewById(R.id.noworry_text)
+        noWorryText = root.findViewById(R.id.noWorryText)
         summaryCard = root.findViewById(R.id.summaryCard)
         fab = root.findViewById(R.id.fab)
         accountDropdown = root.findViewById(R.id.accountDropdown)
@@ -72,7 +73,7 @@ abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchLi
     }
 
     private fun setupActionDropdownObservers(viewModel: ChannelsViewModel, lifecycleOwner: LifecycleOwner) {
-        val activeChannelObserver = object : Observer<Channel> {
+        val activeChannelObserver = object : Observer<Channel?> {
             override fun onChanged(t: Channel?) {
                 Timber.i("Got new active channel: $t ${t?.countryAlpha2}")
             }

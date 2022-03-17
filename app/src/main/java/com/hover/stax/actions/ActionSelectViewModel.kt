@@ -29,7 +29,7 @@ import java.util.LinkedHashMap
 
     fun setActions(actions: List<HoverAction>) = filteredActions.postValue(actions)
 
-    fun setActiveAction(action: HoverAction?) = action?.let { activeAction.postValue(action) }
+    fun setActiveAction(action: HoverAction?) = action?.let { activeAction.postValue(it) }
 
     fun errorCheck(): String? {
         return if (activeAction.value == null) application.getString(R.string.action_fielderror) else null

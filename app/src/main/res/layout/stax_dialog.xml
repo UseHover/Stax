@@ -25,7 +25,7 @@
 				android:textSize="@dimen/text_13"
 				android:textAllCaps="true"
 				android:textAlignment="viewEnd"
-				android:fontFamily="font-bold"
+				android:fontFamily="@font/brutalista_bold"
 				android:textColor="@color/offWhite"/>
 		</LinearLayout>
 
@@ -34,7 +34,6 @@
 			android:layout_height="wrap_content"
 			android:paddingStart="@dimen/margin_5"
 			android:textSize="@dimen/text_16"
-			android:fontFamily="font-normal"
 			android:lineSpacingExtra="@dimen/text_spacing_8"
 			tools:ignore="RtlSymmetry"
 			android:visibility="gone"/>

@@ -28,7 +28,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_8"
-                    android:fontFamily="font-medium"
+                    app:fontFamily="@font/brutalista_medium"
                     android:text="@string/label_saved"
                     android:textSize="@dimen/text_16" />
 
@@ -37,7 +37,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_13"
-                    tools:itemCount="4"
+                    tools:itemCount="3"
                     tools:listitem="@layout/item_paybill_saved" />
 
             <TextView
@@ -45,7 +45,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_8"
-                    android:fontFamily="font-medium"
+                    app:fontFamily="@font/brutalista_medium"
                     android:text="@string/label_popular"
                     android:textSize="@dimen/text_16" />
 
@@ -54,7 +54,7 @@
                     android:layout_width="match_parent"
                     android:layout_marginTop="@dimen/margin_13"
                     android:layout_height="wrap_content"
-                    tools:itemCount="4"
+                    tools:itemCount="3"
                     tools:listitem="@layout/item_paybill" />
 
         </LinearLayout>

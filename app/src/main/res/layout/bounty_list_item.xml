@@ -13,7 +13,6 @@
 		android:paddingHorizontal="@dimen/margin_10"
 	    android:textColor="@color/grey"
 	    android:textSize="@dimen/text_13"
-	    android:fontFamily="font-normal"
 		android:background="@color/cardViewColor"
 		android:visibility="gone" />
 
@@ -35,14 +34,12 @@
 			android:layout_marginEnd="@dimen/margin_13"
 			android:gravity="center_vertical"
 		    android:textColor="@color/offWhite"
-		    android:textSize="@dimen/text_16"
-		    android:fontFamily="font-normal" />
+		    android:textSize="@dimen/text_16" />
 
 		<TextView android:id="@+id/li_amount"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 			android:gravity="center_vertical"
-		    android:fontFamily="font-normal"
 		    android:textColor="@color/white"
 		    android:textSize="@dimen/text_21" />
 
@@ -56,7 +53,6 @@
 		android:layout_marginBottom="@dimen/margin_13"
 	    android:drawablePadding="@dimen/margin_5"
 	    android:gravity="center_vertical"
-	    android:fontFamily="font-normal"
 		android:textColor="@color/offWhite"
 	    android:textSize="@dimen/text_13"
 	    android:visibility="gone"

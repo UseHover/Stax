@@ -25,7 +25,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="font-bold"
+                android:fontFamily="@font/brutalista_bold"
                 android:textAlignment="viewEnd"
                 android:textAllCaps="true"
                 android:textColor="@color/offWhite"
@@ -37,7 +37,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_13"
-            android:fontFamily="font-normal"
             android:textSize="@dimen/text_16"
             android:visibility="gone"
             tools:ignore="RtlSymmetry" />
@@ -52,7 +51,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_13"
-                android:fontFamily="font-normal"
                 android:text="@string/perm_progress1" />
 
             <TextView
@@ -62,7 +60,6 @@
                     android:id="@+id/perm_message"
                     android:layout_marginBottom="@dimen/margin_13"
                     android:drawablePadding="@dimen/margin_13"
-                    android:fontFamily="font-normal"
                     android:textColor="@color/offWhite"
                     android:text="@string/permissions_overlay_desc"
                     app:drawableStartCompat="@drawable/ic_check" />
