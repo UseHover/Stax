@@ -20,7 +20,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
 class RequestDetailFragment: Fragment(), RequestSenderInterface  {
 
     private val viewModel: RequestDetailViewModel by viewModel()
@@ -121,4 +120,5 @@ class RequestDetailFragment: Fragment(), RequestSenderInterface  {
 
         _binding = null
     }
+
 }

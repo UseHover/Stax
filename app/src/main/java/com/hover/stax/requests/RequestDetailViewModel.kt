@@ -29,4 +29,5 @@ class RequestDetailViewModel(val repo: DatabaseRepo) : ViewModel() {
     fun deleteRequest() = viewModelScope.launch(Dispatchers.IO) {
         repo.delete(request.value)
     }
+
 }

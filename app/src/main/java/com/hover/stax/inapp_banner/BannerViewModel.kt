@@ -25,4 +25,5 @@ class BannerViewModel(application: Application, repo: DatabaseRepo) : ViewModel(
         bannerUtils.closeCampaign(bannerId)
         qualifiedBanner.postValue(null)
     }
+
 }
