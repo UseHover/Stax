@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_gravity="center_vertical|end"
-                    android:fontFamily="@font/brutalista_bold"
+                    app:fontFamily="@font/brutalista_bold"
                     android:gravity="center_vertical|end"
                     android:paddingHorizontal="@dimen/margin_10"
                     tools:text="@string/bal_cardhead"
