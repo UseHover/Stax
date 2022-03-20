@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 
 class TransactionHistoryViewModel(val repo: DatabaseRepo) : ViewModel() {
+
     private var staxTransactions: LiveData<List<StaxTransaction>> = MutableLiveData()
     private val appReviewLiveData: LiveData<Boolean>
 
@@ -29,7 +30,7 @@ class TransactionHistoryViewModel(val repo: DatabaseRepo) : ViewModel() {
 
     suspend fun getActionAndChannel(actionId: String, channelId: Int): Pair<HoverAction, Channel> {
         val pairResult: Deferred<Pair<HoverAction, Channel>> = viewModelScope.async(Dispatchers.IO) {
-            val action: HoverAction = repo.getAction(actionId)
+            val action: HoverAction = repo.getAction(actionId)!!
             val channel: Channel = repo.getChannel(channelId)!!
             return@async Pair(action, channel)
         }
