@@ -1,10 +1,7 @@
 package com.hover.stax.contacts
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 
 @Dao
 interface ContactDao {
@@ -33,7 +30,7 @@ interface ContactDao {
     @Query("SELECT * FROM stax_contacts WHERE id  = :id LIMIT 1")
     fun getLive(id: String?): LiveData<StaxContact>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(contact: StaxContact?)
 
     @Update

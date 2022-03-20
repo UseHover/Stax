@@ -45,6 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_5"
                     android:gravity="center"
+                    android:layout_marginTop="@dimen/margin_8"
                     android:textColor="@android:color/white"
                     android:text="@string/marketing_email_optin"
                     app:layout_constraintStart_toStartOf="parent"
@@ -52,7 +53,7 @@
 
             <com.google.android.gms.common.SignInButton
                     android:id="@+id/btnSignIn"
-                    android:layout_width="200dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_13"
                     android:layout_marginEnd="@dimen/margin_8"

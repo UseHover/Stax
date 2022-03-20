@@ -35,13 +35,17 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
 
                 actionId?.let {
                     action = repo.getAction(it)
-                    channel = repo.getChannel(action!!.channel_id)
 
-                    createAccounts(intent)
-                    updateBalance(intent)
-                    updateContacts(intent)
-                    updateTransaction(intent, context.applicationContext)
-                    updateRequests(intent)
+                    //added null check to prevent npe whenever action is null
+                    action?.let { a ->
+                        channel = repo.getChannel(a.channel_id)
+
+                        createAccounts(intent)
+                        updateBalance(intent)
+                        updateContacts(intent)
+                        updateTransaction(intent, context.applicationContext)
+                        updateRequests(intent)
+                    }
                 }
             }
         }
@@ -120,7 +124,6 @@ class TransactionReceiver : BroadcastReceiver(), KoinComponent {
                 removePlaceholders(parsedAccounts, accounts.map { it.channelId }.toIntArray())
 
                 repo.saveAccounts(parseAccounts(parsedVariables["userAccountList"]!!))
-//                accounts.addAll())
             }
         }
     }
