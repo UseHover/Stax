@@ -21,7 +21,6 @@ import com.hover.stax.databinding.FragmentSettingsBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.home.NavigationInterface
 import com.hover.stax.languages.LanguageViewModel
-import com.hover.stax.login.LoginDialog
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
@@ -44,7 +43,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
 
     private var dialog: StaxDialog? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -67,18 +66,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
 
     private fun setUpShare() {
         binding.shareCard.shareText.setOnClickListener { Utils.shareStax(requireActivity()) }
-        binding.shareCard.openRefereeBtn.setOnClickListener { openRefereeDialog() }
         if (loginViewModel.usernameIsNotSet()) loginViewModel.uploadLastUser()
-    }
-
-    private fun openRefereeDialog() {
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.referrals_tap), requireContext())
-
-        if (!loginViewModel.email.value.isNullOrEmpty())
-            ReferralDialog().show(childFragmentManager, ReferralDialog.TAG)
-        else
-            LoginDialog().show(childFragmentManager, LoginDialog.TAG)
-        loginViewModel.postGoogleAuthNav.value = SHOW_REFERRAL_DIALOG
     }
 
     private fun setUpMeta() {
@@ -180,7 +168,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
     }
 
     private fun startBounties() {
-        val navAction = if (Firebase.auth.currentUser != null)
+        val navAction = if ((requireActivity() as MainActivity).isSignedIn())
             R.id.action_navigation_settings_to_bountyListFragment
         else
             R.id.action_navigation_settings_to_bountyEmailFragment

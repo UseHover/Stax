@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.hover.stax.R
@@ -13,10 +14,16 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
 
     private val loginViewModel: LoginViewModel by viewModel()
     private lateinit var staxGoogleLoginInterface: StaxGoogleLoginInterface
+    var signInAccount: GoogleSignInAccount? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initGoogleAuth()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        signInAccount = GoogleSignIn.getLastSignedInAccount(this)
     }
 
     fun setGoogleLoginInterface(staxGoogleLoginInterface: StaxGoogleLoginInterface) {
@@ -50,6 +57,8 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
             staxGoogleLoginInterface.googleLoginFailed()
         }
     }
+
+    fun isSignedIn(): Boolean = signInAccount != null
 
     companion object {
         const val LOGIN_REQUEST = 4000
