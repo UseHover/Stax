@@ -23,7 +23,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/header"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/margin_10">
 
             <ImageButton
                     android:id="@+id/backButton"
@@ -44,7 +45,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_21"
-                    android:fontFamily="font-bold"
+                    app:fontFamily="@font/brutalista_bold"
                     android:gravity="end"
                     android:paddingHorizontal="@dimen/margin_10"
                     tools:text="@string/bal_cardhead"
@@ -62,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_gravity="center_vertical|end"
-                    android:fontFamily="font-bold"
+                    app:fontFamily="@font/brutalista_bold"
                     android:gravity="center_vertical|end"
                     android:paddingHorizontal="@dimen/margin_10"
                     tools:text="@string/bal_cardhead"

@@ -32,7 +32,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_10"
-            android:fontFamily="font-normal"
             android:text="@string/business_number_prompt"
             android:textSize="@dimen/text_16"
             app:layout_constraintBottom_toBottomOf="parent"

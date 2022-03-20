@@ -3,6 +3,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_marginTop="@dimen/margin_13"
         tools:context=".requests.NewRequestFragment">
 
@@ -26,28 +27,16 @@
                 layout="@layout/request_card_share"
                 android:visibility="gone" />
 
-        <LinearLayout
-                android:id="@+id/noworry_text"
-                android:layout_width="match_parent"
+        <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-            <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/margin_13"
-                    android:layout_weight=".62"
-                    android:fontFamily="font-normal"
-                    android:lineSpacingExtra="2sp"
-                    android:text="@string/noworry_explain"
-                    android:textColor="@color/offWhite"
-                    android:textSize="@dimen/text_16" />
-
-            <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".38" />
-        </LinearLayout>
+                android:layout_marginHorizontal="@dimen/margin_13"
+                android:lineSpacingExtra="2sp"
+                android:id="@+id/noWorryText"
+                android:text="@string/noworry_explain"
+                android:textColor="@color/offWhite"
+                android:layout_marginBottom="@dimen/margin_10"
+                android:textSize="@dimen/text_16" />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                 android:id="@+id/fab"
@@ -57,7 +46,7 @@
                 android:layout_gravity="end|bottom"
                 android:layout_marginHorizontal="@dimen/margin_13"
                 android:layout_marginTop="10dp"
-                android:fontFamily="font-medium"
+                app:fontFamily="@font/brutalista_medium"
                 android:text="@string/btn_continue" />
 
     </LinearLayout>

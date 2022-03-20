@@ -18,7 +18,6 @@
         android:layout_marginHorizontal="@dimen/margin_10"
         android:layout_marginTop="@dimen/margin_21"
         android:layout_marginBottom="@dimen/margin_8"
-        android:fontFamily="font-normal"
         android:text="@string/hist_zerobody"
         android:textColor="@color/offWhite"
         android:textSize="@dimen/text_16"

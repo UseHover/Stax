@@ -188,7 +188,7 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
             lifecycleOwner: LifecycleOwner
     ) {
 
-        val activeChannelObserver = object : Observer<Channel> {
+        val activeChannelObserver = object : Observer<Channel?> {
             override fun onChanged(t: Channel?) {
                 Timber.i("Got new active channel: $t ${t?.countryAlpha2}")
             }

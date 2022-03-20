@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:descendantFocusability="afterDescendants"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/ft_mainBg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/colorPrimaryDark"
-    android:orientation="vertical">
+        android:descendantFocusability="afterDescendants"
+        android:orientation="vertical">
 
     <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/margin_13"
-            android:layout_marginBottom="@dimen/margin_55"
-            android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/margin_13"
+                android:layout_marginBottom="@dimen/margin_55"
+                android:orientation="vertical">
 
             <com.hover.stax.views.StaxCardView
                     android:id="@+id/transactionDetailsCard"
@@ -28,7 +28,7 @@
 
                 <include
                         android:id="@+id/info_card"
-                        layout="@layout/transaction_details_info_card"/>
+                        layout="@layout/transaction_details_info_card" />
             </com.hover.stax.views.StaxCardView>
 
 
@@ -53,7 +53,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/margin_10"
                             android:layout_marginBottom="@dimen/margin_3"
-                            android:fontFamily="font-normal"
                             android:textSize="@dimen/text_16" />
 
                     <RelativeLayout
@@ -70,7 +69,7 @@
                                 style="@style/StaxButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="font-medium"
+                                app:fontFamily="@font/brutalista_medium"
                                 android:text="@string/try_again" />
 
                     </RelativeLayout>
@@ -79,29 +78,29 @@
             </com.hover.stax.views.StaxCardView>
 
             <com.hover.stax.views.StaxCardView
-                android:id="@+id/messagesCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:title="@string/session_cardhead">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/convo_recyclerView"
+                    android:id="@+id/messagesCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/margin_10" />
+                    app:title="@string/session_cardhead">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/sms_recyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/margin_10"
-                    android:layout_marginBottom="@dimen/margin_21" />
+                        android:id="@+id/convo_recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_10" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/sms_recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_10"
+                        android:layout_marginBottom="@dimen/margin_21" />
 
             </com.hover.stax.views.StaxCardView>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
     <include
-        android:id="@+id/retrySubmit"
-        layout="@layout/bounty_retry_submit_btn_layout" />
+            android:id="@+id/retrySubmit"
+            layout="@layout/bounty_retry_submit_btn_layout" />
 </RelativeLayout>

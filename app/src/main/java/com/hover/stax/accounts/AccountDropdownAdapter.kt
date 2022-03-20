@@ -45,7 +45,7 @@ class AccountDropdownAdapter(val accounts: List<Account>, context: Context) : Ar
 
         fun setAccount(account: Account) {
             binding.serviceItemNameId.text = account.alias
-            UIHelper.loadPicasso(account.logoUrl, size55, this)
+            UIHelper.loadPicasso(account.logoUrl, this)
         }
 
         override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {

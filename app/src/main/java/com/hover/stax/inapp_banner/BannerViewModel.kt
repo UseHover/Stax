@@ -11,20 +11,19 @@ import kotlinx.coroutines.launch
 
 class BannerViewModel(application: Application, repo: DatabaseRepo) : ViewModel() {
 
-    private val qualifiedBannerLiveData = MutableLiveData<Banner>()
+    val qualifiedBanner = MutableLiveData<Banner?>()
     private val bannerUtils = BannerUtils(application)
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
             val hasTransactionLastMonth: Boolean = repo.hasTransactionLastMonth()
-            qualifiedBannerLiveData.postValue(bannerUtils.getQualifiedBanner(hasTransactionLastMonth))
+            qualifiedBanner.postValue(bannerUtils.getQualifiedBanner(hasTransactionLastMonth))
         }
     }
 
-    fun qualifiedBanner(): LiveData<Banner> = qualifiedBannerLiveData
-
     fun closeCampaign(bannerId: Int) {
         bannerUtils.closeCampaign(bannerId)
-        qualifiedBannerLiveData.postValue(null)
+        qualifiedBanner.postValue(null)
     }
+
 }

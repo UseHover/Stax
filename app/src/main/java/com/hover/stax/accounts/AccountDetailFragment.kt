@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -46,7 +47,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
     private var dialog: StaxDialog? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAccountBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -66,8 +67,8 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     private fun setUpBalance() {
         binding.balanceCard.root.cardElevation = 0F
         binding.balanceCard.balanceAmount.text = " - "
-        binding.balanceCard.balanceChannelName.setTextColor(resources.getColor(R.color.offWhite))
-        binding.balanceCard.balanceAmount.setTextColor(resources.getColor(R.color.offWhite))
+        binding.balanceCard.balanceChannelName.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
+        binding.balanceCard.balanceAmount.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
         binding.balanceCard.balanceRefreshIcon.setOnClickListener { onRefresh() }
     }
 
@@ -97,13 +98,11 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
     private fun toggleButtonHighlight(v: StaxTextInputLayout, btn: AppCompatButton, newText: String, comparator: String?) {
         if (newText.isNotEmpty() && comparator != null && newText != comparator)
             v.setState(null, AbstractStatefulInput.NONE)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            btn.backgroundTintList = ColorStateList.valueOf(
-                    if (newText.isNotEmpty() && comparator != null && newText != comparator)
-                        resources.getColor(R.color.brightBlue)
-                    else resources.getColor(R.color.buttonColor)
-            )
-        }
+        btn.backgroundTintList = ColorStateList.valueOf(
+                if (newText.isNotEmpty() && comparator != null && newText != comparator)
+                    ContextCompat.getColor(requireActivity(), R.color.brightBlue)
+                else ContextCompat.getColor(requireActivity(), R.color.buttonColor)
+        )
     }
 
     private fun updateNickname() {
@@ -138,7 +137,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
                     } else binding.balanceCard.balanceSubtitle.text = getString(R.string.refresh_balance_desc)
 
                     binding.feesDescription.text = getString(R.string.fees_label, acct.name)
-                    binding.officialName.text = acct.name
+                    binding.officialName.text = if(acct.name == Constants.PLACEHOLDER) acct.alias else acct.name
 
                     binding.manageCard.nicknameInput.setText(acct.alias, false)
                     binding.manageCard.accountNumberInput.setText(acct.accountNo, false)

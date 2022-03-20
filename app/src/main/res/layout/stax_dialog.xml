@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:fillViewport="false">
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		android:fillViewport="false">
 
 	<LinearLayout
 		android:layout_width="match_parent"
@@ -25,7 +26,7 @@
 				android:textSize="@dimen/text_13"
 				android:textAllCaps="true"
 				android:textAlignment="viewEnd"
-				android:fontFamily="font-bold"
+				app:fontFamily="@font/brutalista_bold"
 				android:textColor="@color/offWhite"/>
 		</LinearLayout>
 
@@ -34,7 +35,6 @@
 			android:layout_height="wrap_content"
 			android:paddingStart="@dimen/margin_5"
 			android:textSize="@dimen/text_16"
-			android:fontFamily="font-normal"
 			android:lineSpacingExtra="@dimen/text_spacing_8"
 			tools:ignore="RtlSymmetry"
 			android:visibility="gone"/>

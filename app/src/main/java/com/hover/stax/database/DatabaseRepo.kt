@@ -321,7 +321,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun getLiveAccount(id: Int): LiveData<Account> = accountDao.getLiveAccount(id)
 
-    suspend fun getAccounts(ids: List<Int>): List<Account> = accountDao.getAccounts(ids)
+    fun getAccounts(): List<Account> = accountDao.getAccounts()
 
     private fun getAccount(name: String, channelId: Int): Account? = accountDao.getAccount(name, channelId)
 
@@ -348,6 +348,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     fun update(account: Account?) = account?.let { AppDatabase.databaseWriteExecutor.execute { accountDao.update(it) } }
 
     fun delete(account: Account) = AppDatabase.databaseWriteExecutor.execute { accountDao.delete(account) }
+
+    fun deleteAccount(channelId: Int, name: String) { accountDao.delete(channelId, name) }
 
     companion object {
         private val TAG = DatabaseRepo::class.java.simpleName

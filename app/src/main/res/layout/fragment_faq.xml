@@ -21,7 +21,6 @@
                 android:id="@+id/faq_content_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="font-normal"
                 android:padding="@dimen/margin_13"
                 android:textSize="@dimen/text_16" />
 
@@ -30,7 +29,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:fontFamily="font-normal"
                 android:gravity="center"
                 android:padding="@dimen/margin_13"
                 android:textSize="@dimen/text_16"

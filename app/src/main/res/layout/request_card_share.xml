@@ -21,7 +21,6 @@
 			android:layout_height="wrap_content"
 			android:gravity="center"
 			android:text="@string/sms_label"
-			android:fontFamily="font-normal"
 			android:drawablePadding="@dimen/margin_8"
 			app:drawableTopCompat="@drawable/img_sms" />
 
@@ -31,7 +30,6 @@
 			android:layout_weight="1"
 			android:gravity="center"
 			android:text="@string/whatsapp_label"
-			android:fontFamily="font-normal"
 			android:drawablePadding="@dimen/margin_8"
 			app:drawableTopCompat="@drawable/img_whatsapp" />
 
@@ -40,7 +38,6 @@
 			android:layout_height="wrap_content"
 			android:gravity="center"
 			android:text="@string/copyLink_label"
-			android:fontFamily="font-normal"
 			android:drawablePadding="@dimen/margin_8"
 			app:drawableTopCompat="@drawable/img_copy" />
 	</LinearLayout>

@@ -11,7 +11,6 @@
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="font-normal"
             android:textColor="@color/brightBlue"
             android:textSize="@dimen/text_13"
             app:layout_constraintStart_toStartOf="parent"
@@ -21,7 +20,7 @@
     <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_5"
+            android:layout_marginTop="@dimen/margin_8"
             app:cardCornerRadius="@dimen/radius"
             app:cardElevation="@dimen/margin_8"
             app:cardBackgroundColor="@color/cardViewColor"
@@ -32,15 +31,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_13"
-                android:layout_marginVertical="@dimen/margin_13"
+                android:layout_marginVertical="@dimen/margin_16"
                 android:orientation="vertical">
 
             <TextView
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="font-medium"
-                    android:textSize="19sp"
+                    app:fontFamily="@font/brutalista_medium"
+                    android:textSize="17sp"
+                    android:layout_marginBottom="@dimen/margin_8"
                     tools:text="What did you spend your money on?" />
 
             <TextView
@@ -48,9 +48,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:fontFamily="font-normal"
                     android:maxLines="2"
-                    android:textSize="@dimen/text_16"
+                    android:textSize="@dimen/text_15"
                     tools:text="What did you spend your money on?" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>

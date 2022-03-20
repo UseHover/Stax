@@ -33,7 +33,7 @@
                     android:layout_marginTop="@dimen/margin_13"
                     android:layout_marginBottom="@dimen/margin_8"
                     android:drawablePadding="@dimen/margin_5"
-                    android:fontFamily="font-medium"
+                    app:fontFamily="@font/brutalista_medium"
                     android:gravity="center_vertical"
                     android:text="@string/channels_error_nodata"
                     android:textColor="@color/stax_state_red"

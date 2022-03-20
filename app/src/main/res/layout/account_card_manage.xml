@@ -27,7 +27,6 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="@dimen/margin_13"
-                android:fontFamily="font-normal"
                 android:text="@string/btn_save" />
     </RelativeLayout>
 
@@ -54,7 +53,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="@dimen/margin_13"
-                android:fontFamily="font-normal"
+                android:fontFamily="@font/brutalista_regular"
                 android:text="@string/btn_save" />
     </RelativeLayout>
 

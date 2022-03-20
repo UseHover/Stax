@@ -11,6 +11,7 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.transfers.AbstractFormViewModel
+import com.hover.stax.utils.Constants
 import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,13 +19,13 @@ import java.util.*
 
 class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) : AbstractFormViewModel(application, databaseRepo) {
 
-    val activeAccount = MutableLiveData<Account>()
+    val activeAccount = MutableLiveData<Account?>()
     val activeChannel = MutableLiveData<Channel>()
-    val amount = MutableLiveData<String>()
+    val amount = MutableLiveData<String?>()
     val requestees = MutableLiveData<List<StaxContact>>(Collections.singletonList(StaxContact("")))
-    val requestee = MutableLiveData<StaxContact>()
+    val requestee = MutableLiveData<StaxContact?>()
     val requesterNumber = MediatorLiveData<String>()
-    val note = MutableLiveData<String>()
+    val note = MutableLiveData<String?>()
 
     val formulatedRequest = MutableLiveData<Request>()
     private val finalRequests = MutableLiveData<List<Request>>()
@@ -74,6 +75,8 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
     }
 
     fun accountError(): String? = if (activeAccount.value != null) null else application.getString(R.string.accounts_error_noselect)
+
+    fun isValidAccount(): Boolean = activeAccount.value!!.name != Constants.PLACEHOLDER
 
     fun requesterAcctNoError(): String? = if (!requesterNumber.value.isNullOrEmpty()) null else application.getString(R.string.requester_number_fielderror)
 

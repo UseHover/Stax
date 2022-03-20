@@ -9,10 +9,12 @@ import com.hover.stax.accounts.Account
 import com.hover.stax.channels.Channel
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : ViewModel() {
@@ -105,7 +107,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         val channelIds = actionList.distinctBy { it.id }.filter { it.transaction_type == HoverAction.FETCH_ACCOUNTS }.map { it.channel_id }.toList()
 
         channelIds.forEach { id ->
-            val actionToFilter = if (repo.getAccounts(id).isEmpty()) {
+            val actionToFilter = if (hasNoAccounts(id)) {
                 actionList.first { it.channel_id == id && it.transaction_type == HoverAction.BALANCE }
             } else {
                 actionList.first { it.channel_id == id && it.transaction_type == HoverAction.FETCH_ACCOUNTS }
@@ -116,6 +118,8 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
 
         return actionList
     }
+
+    private fun hasNoAccounts(id: Int): Boolean = repo.getAccounts(id).isEmpty() || repo.getAccounts(id).any { it.name == Constants.PLACEHOLDER }
 
     private fun startRun(actionPairs: List<Pair<Account?, HoverAction>>) {
         if (!actionPairs.isNullOrEmpty()) {
@@ -161,10 +165,13 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     private fun getAccountActions(flag: Int): List<Pair<Account?, HoverAction>> {
         val account = repo.getAccount(flag)
 
-        val actionsToRun = if (account == null)
+        val actionsToRun = if (account == null) {
             updateActionsIfRequired(actions.value!!.filter { it.channel_id == flag })
-        else
+        } else {
             updateActionsIfRequired(actions.value!!.filter { it.channel_id == account.channelId })
+        }
+
+        actionsToRun.forEach { Timber.e("${it.from_institution_name} - ${it.transaction_type}") }
 
         return if (actionsToRun.isNotEmpty())
             listOf(Pair(account, actionsToRun.first()))
