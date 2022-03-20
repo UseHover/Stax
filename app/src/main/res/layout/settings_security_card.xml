@@ -12,7 +12,7 @@
 		android:layout_marginTop="@dimen/margin_21"
 		android:textColor="@color/offWhite"
 		android:textSize="@dimen/text_16"
-		android:fontFamily="font-medium"
+		app:fontFamily="@font/brutalista_medium"
 		android:text="@string/security_head" />
 
 	<TextView
@@ -21,7 +21,6 @@
 		android:layout_marginHorizontal="@dimen/margin_10"
 		android:layout_marginTop="@dimen/margin_8"
 		android:layout_marginBottom="@dimen/margin_13"
-		android:fontFamily="font-normal"
 		android:textSize="@dimen/text_16"
 		android:lineSpacingExtra="@dimen/text_spacing_8"
 		android:textColor="@color/offWhite"

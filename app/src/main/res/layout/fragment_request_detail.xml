@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<LinearLayout
 		android:layout_height="wrap_content"
@@ -30,7 +31,7 @@
 				android:background="@color/stax_state_red"
 			    android:backgroundTint="@color/stax_state_red"
 			    android:layout_marginTop="@dimen/margin_21"
-			    android:fontFamily="font-medium" />
+			    app:fontFamily="@font/brutalista_medium" />
 		</FrameLayout>
 
 

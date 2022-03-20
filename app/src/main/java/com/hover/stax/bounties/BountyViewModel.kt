@@ -157,4 +157,5 @@ class BountyViewModel(application: Application, val repo: DatabaseRepo) : Androi
         }
         super.onCleared()
     }
+
 }

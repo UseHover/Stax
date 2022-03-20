@@ -1,6 +1,7 @@
 <resources>
 	<dimen name="text_16">16sp</dimen>
 	<dimen name="text_21">21sp</dimen>
+	<dimen name="text_19">19sp</dimen>
 	<dimen name="text_13">13sp</dimen>
 	<dimen name="text_15">15sp</dimen>
 	<dimen name="text_34">34sp</dimen>

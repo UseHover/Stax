@@ -39,7 +39,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_8"
-                            android:fontFamily="font-medium"
+                            app:fontFamily="@font/brutalista_medium"
                             android:textColor="@color/banner_text"
                             android:textSize="@dimen/text_21" />
 
@@ -47,7 +47,6 @@
                             android:id="@+id/banner_desc"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="font-normal"
                             android:textColor="@color/banner_text"
                             android:textSize="@dimen/text_16" />
                 </LinearLayout>
@@ -75,7 +74,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawablePadding="@dimen/margin_3"
-                        android:fontFamily="font-medium"
+                        app:fontFamily="@font/brutalista_medium"
                         android:textColor="@color/banner_text"
                         android:textSize="@dimen/text_16"
                         app:drawableEndCompat="@drawable/ic_twotone_chevron_right_24" />

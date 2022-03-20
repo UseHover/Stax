@@ -4,7 +4,6 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:layout_marginTop="@dimen/margin_21"
-	android:fontFamily="font-normal"
 	android:buttonTint="@color/radio_color_list"
 	android:textColor="@color/offWhite"
 	android:textSize="@dimen/text_16"

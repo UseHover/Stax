@@ -9,7 +9,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_10"
-            android:fontFamily="font-normal"
             android:paddingHorizontal="@dimen/margin_13"
             android:text="@string/bounty_msg"
             android:textSize="@dimen/text_16" />

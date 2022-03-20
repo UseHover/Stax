@@ -21,12 +21,12 @@ import com.hover.stax.databinding.FragmentSettingsBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.home.NavigationInterface
 import com.hover.stax.languages.LanguageViewModel
-import com.hover.stax.login.LoginDialog
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
+import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -39,9 +39,11 @@ class SettingsFragment : Fragment(), NavigationInterface {
     private var clickCounter = 0
 
     private val channelsViewModel: ChannelsViewModel by sharedViewModel()
-    private val loginViewModel : LoginViewModel by sharedViewModel()
+    private val loginViewModel: LoginViewModel by sharedViewModel()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    private var dialog: StaxDialog? = null
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -57,24 +59,14 @@ class SettingsFragment : Fragment(), NavigationInterface {
         setUpSupport()
         setUpEnableTestMode()
         setupAppVersionInfo()
+        setUpAccountCard()
 
         binding.bountyCard.getStartedWithBountyButton.setOnClickListener { startBounties() }
     }
 
     private fun setUpShare() {
         binding.shareCard.shareText.setOnClickListener { Utils.shareStax(requireActivity()) }
-        binding.shareCard.openRefereeBtn.setOnClickListener { openRefereeDialog() }
-        if(loginViewModel.usernameIsNotSet()) loginViewModel.uploadLastUser()
-    }
-
-    private fun openRefereeDialog() {
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.referrals_tap), requireContext())
-
-        if (!loginViewModel.email.value.isNullOrEmpty())
-            ReferralDialog().show(childFragmentManager, ReferralDialog.TAG)
-        else
-            LoginDialog().show(childFragmentManager, LoginDialog.TAG)
-            loginViewModel.postGoogleAuthNav.value = SHOW_REFERRAL_DIALOG
+        if (loginViewModel.usernameIsNotSet()) loginViewModel.uploadLastUser()
     }
 
     private fun setUpMeta() {
@@ -107,6 +99,20 @@ class SettingsFragment : Fragment(), NavigationInterface {
         binding.staxAndDeviceInfo.text = getString(R.string.app_version_and_device_id, appVersion, versionCode, deviceId)
     }
 
+    private fun setUpAccountCard() {
+        loginViewModel.username.observe(viewLifecycleOwner) { username ->
+            with(binding.accountCard) {
+                if (!username.isNullOrEmpty()) {
+                    accountCard.visibility = VISIBLE
+                    loggedInAccount.text = getString(R.string.logged_in_as, username)
+                    accountCard.setOnClickListener { showLogoutConfirmDialog() }
+                } else {
+                    accountCard.visibility = GONE
+                }
+            }
+        }
+    }
+
     private fun setUpSupport() {
         with(binding.staxSupport) {
             twitterContact.setOnClickListener { Utils.openUrl(getString(R.string.stax_twitter_url), requireActivity()) }
@@ -119,8 +125,8 @@ class SettingsFragment : Fragment(), NavigationInterface {
 
     private fun setupLearnCard() {
         with(binding.staxLearn) {
-            learnFinances.setOnClickListener {  findNavController().navigate(R.id.action_navigation_settings_to_wellnessFragment) }
-            learnStax.setOnClickListener { Utils.openUrl(getString(R.string.stax_medium_url), requireActivity())  }
+            learnFinances.setOnClickListener { findNavController().navigate(R.id.action_navigation_settings_to_wellnessFragment) }
+            learnStax.setOnClickListener { Utils.openUrl(getString(R.string.stax_medium_url), requireActivity()) }
         }
     }
 
@@ -162,12 +168,24 @@ class SettingsFragment : Fragment(), NavigationInterface {
     }
 
     private fun startBounties() {
-        val navAction = if (Firebase.auth.currentUser != null)
+        val navAction = if ((requireActivity() as MainActivity).isSignedIn())
             R.id.action_navigation_settings_to_bountyListFragment
         else
             R.id.action_navigation_settings_to_bountyEmailFragment
 
         findNavController().navigate(navAction)
+    }
+
+    private fun showLogoutConfirmDialog() {
+        dialog = StaxDialog(requireActivity())
+            .setDialogTitle(R.string.dialog_confirm_logout_header)
+            .setDialogMessage(getString(R.string.dialog_confirm_logout_desc))
+            .setNegButton(R.string.btn_cancel) { dialog?.dismiss() }
+            .setPosButton(R.string.logout) {
+                loginViewModel.silentSignOut()
+                UIHelper.flashMessage(requireActivity(), getString(R.string.logout_out_success))
+            }
+        dialog!!.showIt()
     }
 
     companion object {
@@ -177,6 +195,8 @@ class SettingsFragment : Fragment(), NavigationInterface {
 
     override fun onDestroyView() {
         super.onDestroyView()
+
+        if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
 
         _binding = null
     }

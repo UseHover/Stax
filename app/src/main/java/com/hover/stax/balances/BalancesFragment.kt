@@ -23,7 +23,7 @@ import com.hover.stax.views.staxcardstack.StaxCardStackView
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
-class BalancesFragment : Fragment(), NavigationInterface {
+class  BalancesFragment : Fragment(), NavigationInterface {
 
     private lateinit var addChannelLink: CardView
     private lateinit var balanceTitle: TextView

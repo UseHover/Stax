@@ -7,5 +7,4 @@
     android:textSize="@dimen/text_21"
     android:padding="@dimen/margin_13"
     android:textColor="@color/offWhite"
-    android:fontFamily="font-normal"
     android:drawablePadding="@dimen/margin_8"/>

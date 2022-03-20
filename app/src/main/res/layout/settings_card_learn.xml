@@ -15,7 +15,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?selectableItemBackground"
-                android:fontFamily="font-normal"
                 android:padding="@dimen/margin_10"
                 android:text="@string/financial_wellness_tips"
                 android:textSize="@dimen/text_16" />
@@ -25,7 +24,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?selectableItemBackground"
-                android:fontFamily="font-normal"
                 android:padding="@dimen/margin_10"
                 android:text="@string/stax_features"
                 android:textSize="@dimen/text_16"

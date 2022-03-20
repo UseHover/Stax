@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/transferCard"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:showBack="true"
-    app:title="@string/nav_airtime">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/transferCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:showBack="true"
+        app:title="@string/nav_airtime">
 
     <com.hover.stax.views.StaxTextInputLayout
-        android:id="@+id/amountInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/transfer_amount_label"
-        android:imeOptions="actionNext"
-        android:inputType="numberDecimal" />
+            android:id="@+id/amountInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/transfer_amount_label"
+            android:imeOptions="actionNext"
+            android:inputType="numberDecimal" />
 
     <com.hover.stax.accounts.AccountDropdown
-        android:id="@+id/accountDropdown"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/account_label" />
+            android:id="@+id/accountDropdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/account_label" />
 
     <com.hover.stax.actions.ActionSelect
-        android:id="@+id/action_select"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
+            android:id="@+id/action_select"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/nonStandardVariableRecyclerView"
@@ -33,20 +33,8 @@
             android:layout_height="wrap_content" />
 
     <com.hover.stax.contacts.ContactInput
-        android:id="@+id/contact_select"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-
-
-<!--    &lt;!&ndash;If this should not be shown, do we still need to watch the text and pass it to the viewmodel? &ndash;&gt;-->
-<!--    <com.hover.stax.views.StaxTextInputLayout-->
-<!--        android:id="@+id/noteInput"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:hint="@string/request_note_label"-->
-<!--        android:imeOptions="actionDone"-->
-<!--        android:inputType="textCapSentences"-->
-<!--        android:visibility="gone" />-->
+            android:id="@+id/contact_select"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
 </com.hover.stax.views.StaxCardView>

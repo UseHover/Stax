@@ -40,13 +40,16 @@
                 android:id="@+id/languageCard"
                 layout="@layout/settings_card_language" />
 
+        <include
+                android:id="@+id/accountCard"
+                layout="@layout/settings_account_card" />
+
         <TextView
                 android:id="@+id/stax_and_device_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_13"
                 android:layout_marginBottom="@dimen/margin_13"
-                android:fontFamily="font-normal"
                 android:lineSpacingExtra="2sp"
                 android:text="@string/disclaimer"
                 android:textColor="@color/darkGrey"
@@ -57,7 +60,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_13"
-                android:fontFamily="font-normal"
                 android:lineSpacingExtra="2sp"
                 android:text="@string/disclaimer"
                 android:textColor="@color/darkGrey"
