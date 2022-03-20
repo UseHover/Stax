@@ -66,7 +66,7 @@ class RequestDetailFragment: Fragment(), RequestSenderInterface  {
     }
 
     private fun createRecipientEntry(c: StaxContact) {
-        val ss2li = Stax2LineItem(context, null)
+        val ss2li = Stax2LineItem(requireActivity(), null)
         ss2li.setContact(c)
         binding.summaryCard.requesteeValueList.addView(ss2li)
     }

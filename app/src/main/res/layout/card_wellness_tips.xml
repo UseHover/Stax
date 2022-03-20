@@ -32,7 +32,7 @@
                     android:layout_height="wrap_content"
                     app:fontFamily="@font/brutalista_medium"
                     android:gravity="start"
-                    android:layout_marginBottom="@dimen/margin_3"
+                    android:layout_marginBottom="@dimen/margin_8"
                     android:textColor="@color/banner_text"
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"

@@ -82,7 +82,7 @@ object UIHelper {
             .resize(size, size).into(target!!)
     }
 
-    fun loadPicasso(url: String, target: Target) = Picasso.get().load(url).config(Bitmap.Config.RGB_565).centerCrop().into(target)
+    fun loadPicasso(url: String, target: Target) = Picasso.get().load(url).config(Bitmap.Config.RGB_565).into(target)
 
     fun setFullscreenView(activity: Activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
