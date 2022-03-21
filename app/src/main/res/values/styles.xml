@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="StaxHoverTheme" parent="StaxTheme">
+        <item name="colorPrimary">@color/colorPrimary</item>
         <item name="android:buttonStyle">@style/HoverButton</item>
         <item name="buttonStyle">@style/HoverButton</item>
     </style>
