@@ -54,13 +54,8 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         if (!accounts.isNullOrEmpty() /*&& !hasExistingContent()*/) {
             updateChoices(accounts)
         } else if (!hasExistingContent()) {
-            setEmptyState()
+            setState(context.getString(R.string.accounts_error_no_accounts), NONE)
         }
-    }
-
-    private fun setEmptyState() {
-        autoCompleteTextView.dropDownHeight = 0
-        setState(context.getString(R.string.accounts_error_no_accounts), NONE)
     }
 
     private fun setDropdownValue(account: Account?) {
@@ -82,7 +77,6 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         val adapter = AccountDropdownAdapter(accounts, context)
         autoCompleteTextView.apply {
             setAdapter(adapter)
-            dropDownHeight = UIHelper.dpToPx(300)
             setOnItemClickListener { parent, _, position, _ -> onSelect(parent.getItemAtPosition(position) as Account) }
         }
 

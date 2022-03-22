@@ -22,7 +22,6 @@ class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         countryAdapter = CountryAdapter(getCountryCodes(channels), context)
         autoCompleteTextView.apply {
             setAdapter(countryAdapter)
-            dropDownHeight = UIHelper.dpToPx(600)
             setOnItemClickListener { parent, _, position, _ -> onSelect(parent.getItemAtPosition(position) as String) }
         }
 
@@ -43,7 +42,6 @@ class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     private fun setEmptyState() {
-        autoCompleteTextView.dropDownHeight = 0
         setState(context.getString(R.string.channels_error_nodata), ERROR)
     }
 

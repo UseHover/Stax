@@ -51,16 +51,34 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/instructions" />
 
-            <com.google.android.gms.common.SignInButton
-                    android:id="@+id/btnSignIn"
+            <LinearLayout
+                android:id="@+id/btnSignIn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_13"
+                android:layout_marginTop="@dimen/margin_13"
+                android:background="@drawable/grey_background"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/margin_13"
+                app:layout_constraintBottom_toTopOf="@id/progressIndicator"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/marketingOptIn">
+
+                <ImageView
+                    android:layout_width="@dimen/margin_24"
+                    android:layout_height="@dimen/margin_24"
+                    android:layout_marginEnd="@dimen/margin_24"
+                    android:background="?selectableItemBackground"
+                    android:contentDescription="@string/continue_with_google"
+                    android:src="@drawable/google_logo" />
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_13"
-                    android:layout_marginEnd="@dimen/margin_8"
-                    android:layout_marginBottom="@dimen/margin_10"
-                    app:layout_constraintBottom_toTopOf="@id/progressIndicator"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/marketingOptIn" />
+                    android:text="@string/continue_with_google"
+                    android:textSize="@dimen/text_16" />
+            </LinearLayout>
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
                     android:id="@+id/progressIndicator"

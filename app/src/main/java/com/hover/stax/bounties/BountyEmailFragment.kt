@@ -38,10 +38,7 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnSignIn.apply {
-            setSize(SignInButton.SIZE_WIDE)
-            setOnClickListener(this@BountyEmailFragment)
-        }
+        binding.btnSignIn.setOnClickListener(this@BountyEmailFragment)
 
         binding.progressIndicator.setVisibilityAfterHide(View.GONE)
         binding.instructions.movementMethod = LinkMovementMethod.getInstance()
