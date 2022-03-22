@@ -44,7 +44,7 @@ import java.util.LinkedHashMap
     }
 
     private fun isStandardVariable(key: String): Boolean {
-        return key in listOf(PHONE_KEY, ACCOUNT_KEY, AMOUNT_KEY, NOTE_KEY, PIN_KEY, Constants.RECIPIENT_INSTITUTION)
+        return key in listOf(PHONE_KEY, ACCOUNT_KEY, AMOUNT_KEY, NOTE_KEY, PIN_KEY, Constants.RECIPIENT_INSTITUTION, Constants.ACCOUNT_NAME)
     }
 
     fun updateNonStandardVariables(key: String, value: String) {
