@@ -8,7 +8,7 @@
 	<com.hover.stax.views.StaxDropdownLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:id="@+id/action_dropdown_input"
+	    android:id="@+id/action_dropdown"
 	    android:visibility="gone"
 	    android:hint="@string/network_label" />
 
@@ -27,5 +27,5 @@
 	    android:layout_height="wrap_content"
 	    android:layout_marginHorizontal="@dimen/margin_21"
 	    android:layout_marginBottom="@dimen/margin_21"
-	    android:id="@+id/isSelfRadioGroup"/>
+	    android:id="@+id/isSelfRadio"/>
 </LinearLayout>

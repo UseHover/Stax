@@ -214,7 +214,9 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun loadActions(channel: Channel, t: String) = viewModelScope.launch(Dispatchers.IO) {
-        channelActions.postValue(if (t == HoverAction.P2P) repo.getTransferActions(channel.id) else repo.getActions(channel.id, t))
+        channelActions.postValue(
+            if (t == HoverAction.P2P) repo.getTransferActions(channel.id)
+            else repo.getActions(channel.id, t))
     }
 
     fun loadAccounts() = viewModelScope.launch(Dispatchers.IO) {

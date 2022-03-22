@@ -11,7 +11,7 @@ import java.util.LinkedHashMap
 
  class ActionSelectViewModel(private val application: Application) : ViewModel() {
 
-    private val filteredActions = MediatorLiveData<List<HoverAction>>()
+    val filteredActions = MediatorLiveData<List<HoverAction>>()
     val activeAction = MediatorLiveData<HoverAction>()
     val nonStandardVariables = MediatorLiveData<LinkedHashMap<String, String>>()
 
