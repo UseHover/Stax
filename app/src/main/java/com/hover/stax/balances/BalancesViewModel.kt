@@ -38,7 +38,6 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     init {
         selectedChannels = repo.selected
         accounts = repo.allAccountsLive
-        shouldShowBalances.postValue(Utils.getBooleanDefaultTrue(BALANCE_LABEL, application))
 
         actions = Transformations.switchMap(selectedChannels, this::loadActions)
 
@@ -193,7 +192,6 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     fun showBalances(show: Boolean) {
         shouldShowBalances.value = show
-        Utils.saveBoolean(BALANCE_LABEL, show, application)
     }
 
     interface RunBalanceListener {
@@ -203,6 +201,5 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     companion object {
         const val ALL = -1
         const val NONE = 0
-        private const val BALANCE_LABEL : String = "showBalance";
     }
 }
