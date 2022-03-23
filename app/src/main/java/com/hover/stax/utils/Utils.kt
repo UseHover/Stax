@@ -45,6 +45,11 @@ object Utils {
         return getSharedPrefs(c).getBoolean(key, false)
     }
 
+    fun getBooleanDefaultTrue(key: String?, c: Context): Boolean {
+        return getSharedPrefs(c).getBoolean(key, true)
+    }
+
+
     fun saveInt(key: String?, value: Int, c: Context) {
         val editor = getSharedPrefs(c).edit()
         editor.putInt(key, value)
