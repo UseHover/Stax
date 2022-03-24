@@ -116,7 +116,7 @@ class  BalancesFragment : Fragment(), NavigationInterface {
         balancesRecyclerView.adapter = balancesAdapter
         balancesAdapter.showBalanceAmounts(true)
 
-        showBalanceCards(Utils.getBooleanDefaultTrue(BALANCE_LABEL, requireContext()))
+        showBalanceCards(Utils.getBoolean(BALANCE_LABEL, requireContext(), makeDefaultTrue = true))
         updateStackCard(accounts)
 
         accountList = accounts

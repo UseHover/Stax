@@ -41,14 +41,9 @@ object Utils {
         }
     }
 
-    fun getBoolean(key: String?, c: Context): Boolean {
-        return getSharedPrefs(c).getBoolean(key, false)
+    fun getBoolean(key: String?, c: Context, makeDefaultTrue: Boolean = false): Boolean {
+        return getSharedPrefs(c).getBoolean(key, makeDefaultTrue)
     }
-
-    fun getBooleanDefaultTrue(key: String?, c: Context): Boolean {
-        return getSharedPrefs(c).getBoolean(key, true)
-    }
-
 
     fun saveInt(key: String?, value: Int, c: Context) {
         val editor = getSharedPrefs(c).edit()
