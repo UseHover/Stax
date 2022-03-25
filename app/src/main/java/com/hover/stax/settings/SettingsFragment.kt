@@ -71,7 +71,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
 
     private fun setUpMeta() {
         binding.settingsCard.connectAccounts.setOnClickListener { (activity as MainActivity).checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT) }
-        channelsViewModel.allLiveAccounts.observe(viewLifecycleOwner) {
+        channelsViewModel.accounts.observe(viewLifecycleOwner) {
             if (it.isNullOrEmpty()) {
                 binding.settingsCard.defaultAccountEntry.visibility = GONE
                 binding.settingsCard.connectAccounts.visibility = VISIBLE
@@ -146,7 +146,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
         }
 
         spinner.setText(defaultAccount?.alias, false)
-        spinner.onItemClickListener = OnItemClickListener { _, _, pos: Int, _ -> if (pos != 0) channelsViewModel.setDefaultAccount(accounts[pos]) }
+        spinner.onItemClickListener = OnItemClickListener { _, _, pos: Int, _ -> if (pos != -1) channelsViewModel.setDefaultAccount(accounts[pos]) }
     }
 
     private fun setUpEnableTestMode() {

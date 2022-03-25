@@ -86,11 +86,6 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         accountDropdown.setFetchAccountListener(this)
     }
 
-    override fun onResume() {
-        super.onResume()
-        channelsViewModel.loadAccounts()
-    }
-
     override fun startObservers(root: View) {
         super.startObservers(root)
 

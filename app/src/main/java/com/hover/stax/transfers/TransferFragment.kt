@@ -61,8 +61,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     override fun onResume() {
         super.onResume()
 
-        channelsViewModel.loadAccounts()
-
         amountInput.setHint(getString(R.string.transfer_amount_label))
         accountDropdown.setHint(getString(R.string.account_label))
     }
