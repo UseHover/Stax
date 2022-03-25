@@ -41,8 +41,8 @@ object Utils {
         }
     }
 
-    fun getBoolean(key: String?, c: Context): Boolean {
-        return getSharedPrefs(c).getBoolean(key, false)
+    fun getBoolean(key: String?, c: Context, returnTrueDefault: Boolean = false): Boolean {
+        return getSharedPrefs(c).getBoolean(key, returnTrueDefault)
     }
 
     fun saveInt(key: String?, value: Int, c: Context) {
