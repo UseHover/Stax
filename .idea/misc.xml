@@ -122,7 +122,7 @@
         <entry key="app/src/main/res/layout/settings_card_contact_us.xml" value="0.3640625" />
         <entry key="app/src/main/res/layout/settings_card_language.xml" value="0.30510752688172044" />
         <entry key="app/src/main/res/layout/settings_card_learn.xml" value="0.19145299145299147" />
-        <entry key="app/src/main/res/layout/settings_card_meta.xml" value="0.16666666666666666" />
+        <entry key="app/src/main/res/layout/settings_card_meta.xml" value="0.1" />
         <entry key="app/src/main/res/layout/settings_card_share.xml" value="0.16666666666666666" />
         <entry key="app/src/main/res/layout/settings_card_support.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/settings_card_ussd_library.xml" value="0.19145299145299147" />
@@ -132,7 +132,7 @@
         <entry key="app/src/main/res/layout/stax_2lineitem.xml" value="0.11956521739130435" />
         <entry key="app/src/main/res/layout/stax_card_view.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/stax_dialog.xml" value="0.3120471014492754" />
-        <entry key="app/src/main/res/layout/stax_dropdown.xml" value="0.13903985507246377" />
+        <entry key="app/src/main/res/layout/stax_dropdown.xml" value="0.1" />
         <entry key="app/src/main/res/layout/stax_input.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/stax_nav_view.xml" value="0.14437689969604864" />
         <entry key="app/src/main/res/layout/stax_permission_dialog.xml" value="0.19145299145299147" />

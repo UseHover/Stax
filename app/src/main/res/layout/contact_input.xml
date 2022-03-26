@@ -7,6 +7,24 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/inputLayout"-->
+<!--            style="@style/StaxLabeledDropdown"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="@string/recipientphone_label">-->
+
+<!--        <AutoCompleteTextView-->
+<!--                android:id="@+id/autoCompleteView"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@null"-->
+<!--                android:dropDownWidth="wrap_content"-->
+<!--                android:textColor="@color/offWhite"-->
+<!--                android:textCursorDrawable="@null"-->
+<!--                android:textSize="@dimen/text_19" />-->
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
+
     <com.hover.stax.views.StaxDropdownLayout
             android:id="@+id/contactDropdownLayout"
             android:layout_width="0dp"
