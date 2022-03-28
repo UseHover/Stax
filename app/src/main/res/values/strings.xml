@@ -403,7 +403,7 @@
     <string name="share_msg">Check out this app https://play.google.com/store/apps/details?id=com.hover.stax</string>
     <string name="connect_accounts">Connect your accounts</string>
 
-    <string name="login_google_err">Could not connect to Google, please make sure you are online and try again.</string>
+    <string name="login_google_err">An error occurred while signing in to Google. Please try again.</string>
     <string name="referral_text">Your code:</string>
     <string name="referral_label">Agent\'s code</string>
     <string name="privacy_policy_label">By using Stax App, you\'ve read our privacy policy and agree to the terms of service. Click to read</string>
