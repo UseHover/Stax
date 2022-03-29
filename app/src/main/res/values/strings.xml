@@ -161,6 +161,10 @@
     <string name="add_an_account">Add an account</string>
     <string name="add_accounts_to_stax">Add accounts to Stax</string>
 
+    <string name="search">Search</string>
+    <string name="no_accounts_found_desc"><![CDATA[ It looks like <b>" %1$s "</b> has not been listed on Stax yet or its an invalid entry.\nTry searching for something else]]></string>
+    <string name="cant_find_institution">Can\'t find your financial institution?</string>
+    <string name="inform_us_here">Inform us here</string>
     <string name="nickname">Nickname</string>
     <string name="label_saved">Saved</string>
     <string name="account_number_label">Account number</string>

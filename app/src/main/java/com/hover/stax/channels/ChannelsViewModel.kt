@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.text.TextUtils
+import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.*
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.messaging.FirebaseMessaging
@@ -38,6 +40,9 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     var selectedChannels: LiveData<List<Channel>> = MutableLiveData()
 
     var simChannels = MediatorLiveData<List<Channel>>()
+    val filteredSimChannels = MediatorLiveData<List<Channel>>()
+    val filterQuery = MutableLiveData<String>()
+
     val activeChannel = MediatorLiveData<Channel?>()
     val channelActions = MediatorLiveData<List<HoverAction>>()
     val accounts = MutableLiveData<List<Account>>()
@@ -45,6 +50,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     private var simReceiver: BroadcastReceiver? = null
 
     init {
+        filterQuery.value = ""
+
         simReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 viewModelScope.launch {
@@ -61,6 +68,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             addSource(allChannels, this@ChannelsViewModel::onChannelsUpdateHnis)
             addSource(simHniList, this@ChannelsViewModel::onSimUpdate)
         }
+        filteredSimChannels.addSource(simChannels, this@ChannelsViewModel::filterSimChannels)
 
         activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull)
 
@@ -71,6 +79,22 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
 
         loadAccounts()
+    }
+
+    private fun filterSimChannels(channels: List<Channel>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val filteredList = channels.filter { toMatchingString(it.toString()).contains(toMatchingString(filterQuery.value!!)) }
+            Timber.i("accounts matched size is: ${filteredList.size}")
+            filteredSimChannels.postValue(filteredList)
+        }
+    }
+    private fun toMatchingString(value: String) : String {
+        return value.lowercase().replace(" ", "");
+    }
+
+    fun filterSimChannels(value: String) {
+        filterQuery.value = value;
+        filterSimChannels(simChannels.value!!)
     }
 
     fun setType(t: String) {

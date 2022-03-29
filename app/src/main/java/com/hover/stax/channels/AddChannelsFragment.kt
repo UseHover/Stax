@@ -1,6 +1,8 @@
 package com.hover.stax.channels
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -79,12 +81,24 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         }
 
         setUpMultiselect()
+        setSearchInputWatcher()
 
         channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
-        channelsViewModel.simChannels.observe(viewLifecycleOwner) { onSimsLoaded(it) }
+        channelsViewModel.simChannels.observe(viewLifecycleOwner) { Timber.i("Sim channels loaded") }
+        channelsViewModel.filteredSimChannels.observe(viewLifecycleOwner){ loadFilteredChannels(it) }
         channelsViewModel.allChannels.observe(viewLifecycleOwner) { onAllLoaded(it) }
     }
 
+    private fun setSearchInputWatcher() {
+        val searchInputWatcher: TextWatcher = object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun afterTextChanged(editable: Editable) {}
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+               channelsViewModel.filterSimChannels(charSequence.toString())
+            }
+        }
+        binding.searchInput.addTextChangedListener(searchInputWatcher)
+    }
     private fun setUpMultiselect() {
         tracker = SelectionTracker.Builder(
             "channelSelection", binding.channelsList,
@@ -113,12 +127,15 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         binding.channelsListCard.setBackButtonVisibility(if (visible) GONE else VISIBLE)
     }
 
-    private fun onSimsLoaded(channels: List<Channel>) {
+    private fun loadFilteredChannels(channels: List<Channel>) {
         binding.channelsListCard.hideProgressIndicator()
 
         if (!channels.isNullOrEmpty()) {
             binding.errorText.visibility = GONE
             updateAdapter(Channel.sort(channels, false))
+        }
+        else {
+            // show empty emp
         }
     }
 

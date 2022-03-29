@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorPrimaryDark"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_accounts_found_desc"
+        android:gravity="center"
+        android:drawableTop="@drawable/ic_baseline_manage_search_24"
+        app:fontFamily="@font/brutalista_regular"
+        android:padding="@dimen/margin_16"
+        android:drawablePadding="@dimen/margin_16"
+        android:textColor="@color/offWhite"
+        android:layout_marginBottom="32dp"
+        android:textSize="@dimen/text_16"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_10"
+        android:background="@drawable/blue_cornered_background"
+        android:layout_margin="@dimen/margin_13"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cant_find_institution"
+            app:fontFamily="@font/brutalista_regular"
+            android:gravity="center"
+            android:textColor="@color/buttonColor"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/inform_us_here"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:drawablePadding="@dimen/margin_8"
+            android:drawableEnd="@drawable/ic_baseline_open_in_new_16"
+            android:layout_marginTop="@dimen/margin_3"
+            app:fontFamily="@font/brutalista_medium"
+            android:textColor="@color/brightBluePressed"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>

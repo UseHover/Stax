@@ -41,6 +41,12 @@
                     app:showBack="false"
                     app:title="@string/add_an_account">
 
+                <com.hover.stax.views.StaxTextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/search"
+                    android:id="@+id/searchInput"/>
+
                 <TextView
                     android:id="@+id/error_text"
                     android:layout_width="wrap_content"
