@@ -131,11 +131,15 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         binding.channelsListCard.hideProgressIndicator()
 
         if (!channels.isNullOrEmpty()) {
+            binding.channelsList.visibility = VISIBLE
+            binding.emptyState.root.visibility = GONE
             binding.errorText.visibility = GONE
             updateAdapter(Channel.sort(channels, false))
         }
         else {
-            // show empty emp
+            binding.channelsList.visibility = GONE
+            binding.errorText.visibility = GONE
+            binding.emptyState.root.visibility = VISIBLE
         }
     }
 
