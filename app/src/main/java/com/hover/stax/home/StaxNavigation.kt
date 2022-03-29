@@ -5,6 +5,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -14,9 +15,8 @@ import com.hover.stax.R
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
-import timber.log.Timber
 
-internal class StaxNavigation(val activity: AppCompatActivity, private val isMainActivity: Boolean) : NavigationInterface {
+class StaxNavigation(val activity: AppCompatActivity, private val isMainActivity: Boolean) : NavigationInterface {
 
     private var navController: NavController? = null
     private var appBarConfiguration: AppBarConfiguration? = null
@@ -40,13 +40,9 @@ internal class StaxNavigation(val activity: AppCompatActivity, private val isMai
 
     fun checkPermissionsAndNavigate(toWhere: Int) = checkPermissionsAndNavigate(toWhere, 0)
 
-    fun navigateAccountDetails(accountId: Int) {
-        getNavController().navigate(R.id.action_navigation_home_to_accountDetailsFragment, bundleOf(Constants.ACCOUNT_ID to accountId))
-    }
+    fun navigateAccountDetails(accountId: Int) = navigate(HomeFragmentDirections.actionNavigationHomeToAccountDetailsFragment(accountId))
 
-    fun navigateWellness(id: String) {
-        navigateToWellnessFragment(getNavController(), id)
-    }
+    fun navigateWellness(tipId: String?) = navigate(HomeFragmentDirections.actionNavigationHomeToWellnessFragment(tipId))
 
     fun navigateToBountyList() {
         if (getNavController().currentDestination?.id == R.id.bountyEmailFragment)
@@ -83,7 +79,8 @@ internal class StaxNavigation(val activity: AppCompatActivity, private val isMai
             toWhere == Constants.NAV_SETTINGS ||
                     toWhere == Constants.NAV_HOME ||
                     permissionHelper.hasBasicPerms() -> navigate(getNavController(), toWhere, activity)
-            else -> PermissionUtils.showInformativeBasicPermissionDialog(permissionMsg,
+            else -> PermissionUtils.showInformativeBasicPermissionDialog(
+                permissionMsg,
                 { PermissionUtils.requestPerms(getNavConst(toWhere), activity) },
                 { AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.perms_basic_cancelled), activity) }, activity
             )
@@ -115,5 +112,9 @@ internal class StaxNavigation(val activity: AppCompatActivity, private val isMai
         }
 
         activity.startActivity(intent)
+    }
+
+    fun navigate(navDirections: NavDirections) = with(getNavController()) {
+        currentDestination?.getAction(navDirections.actionId)?.let { navigate(navDirections) }
     }
 }

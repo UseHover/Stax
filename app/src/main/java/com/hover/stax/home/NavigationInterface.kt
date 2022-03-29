@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
@@ -73,12 +74,6 @@ interface NavigationInterface {
     fun navigateToTransactionDetailsFragment(uuid: String?, manager: FragmentManager?, isFullScreen: Boolean?) {
         val frag = TransactionDetailsFragment.newInstance(uuid!!, isFullScreen!!)
         frag.show(manager!!, "dialogFrag")
-    }
-
-    fun navigateToWellnessFragment(navController: NavController, id: String?) {
-        val bundle = Bundle()
-        bundle.putString(FinancialTipsFragment.TIP_ID, id)
-        navController.navigate(R.id.action_navigation_home_to_wellnessFragment, bundle)
     }
 
     fun openSupportEmailClient(activity: Activity) {
