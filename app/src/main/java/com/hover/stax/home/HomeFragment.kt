@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentHomeBinding
@@ -109,11 +110,11 @@ class HomeFragment : Fragment() {
                     snippet.text = tip.snippet ?: tip.content
 
                     contentLayout.setOnClickListener {
-                        findNavController().navigate(R.id.action_navigation_home_to_wellnessFragment, bundleOf(FinancialTipsFragment.TIP_ID to tip.id))
+                        navigate(HomeFragmentDirections.actionNavigationHomeToWellnessFragment(tip.id))
                     }
 
                     readMoreLayout.setOnClickListener {
-                        findNavController().navigate(R.id.action_navigation_home_to_wellnessFragment)
+                        navigate(HomeFragmentDirections.actionNavigationHomeToWellnessFragment(null))
                     }
                 }
             } else
@@ -124,6 +125,10 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun navigate(navDirections: NavDirections) = with(findNavController()) {
+        currentDestination?.getAction(navDirections.actionId)?.let { navigate(navDirections) }
     }
 
     companion object {

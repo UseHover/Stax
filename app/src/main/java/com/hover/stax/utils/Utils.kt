@@ -77,7 +77,7 @@ object Utils {
         editor.apply()
     }
 
-    fun getStringSet(key: String, context: Context): Set<String>? = getSharedPrefs(context).getStringSet(key, setOf(""))
+    fun getStringSet(key: String, context: Context): Set<String>? = getSharedPrefs(context).getStringSet(key, emptySet())
 
     fun isFirebaseTopicInDefaultState(topic: String?, c: Context): Boolean {
         return getSharedPrefs(c).getBoolean(topic, true)

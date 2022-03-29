@@ -153,7 +153,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private fun observeAccountList() {
         channelsViewModel.accounts.observe(viewLifecycleOwner) {
             if (it.isEmpty())
-                setDropdownTouchListener(R.id.action_navigation_transfer_to_accountsFragment)
+                setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
         }
     }
 

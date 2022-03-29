@@ -5,14 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentInteractiveOnboardingBinding
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
+import com.hover.stax.utils.NavUtil
 import org.json.JSONObject
 import timber.log.Timber
 
@@ -42,20 +41,20 @@ internal class InteractiveOnboardingVariant : Fragment() {
     private fun setQuestionsClick() {
         binding.onboardingVariant2Question1.setOnClickListener {
             logQuestionClicked(1)
-            findNavController().navigate(R.id.action_interactiveOnboardingFragment_to_interactiveTutorialFragment)
+            NavUtil.navigate(findNavController(), InteractiveOnboardingVariantDirections.actionInteractiveOnboardingFragmentToInteractiveTutorialFragment())
         }
         binding.onboardingVariant2Question2.setOnClickListener {
             logQuestionClicked(2)
-            findNavController().navigate(
-                R.id.action_interactiveOnboardingFragment_to_nonInteractiveTutorialFragment,
-                bundleOf(Constants.QUESTION_TYPE to NonInteractiveTutorialFragment.QUESTION_TWO)
+            NavUtil.navigate(
+                findNavController(),
+                InteractiveOnboardingVariantDirections.actionInteractiveOnboardingFragmentToNonInteractiveTutorialFragment(NonInteractiveTutorialFragment.QUESTION_TWO)
             )
         }
         binding.onboardingVariant2Question3.setOnClickListener {
             logQuestionClicked(3)
-            findNavController().navigate(
-                R.id.action_interactiveOnboardingFragment_to_nonInteractiveTutorialFragment,
-                bundleOf(Constants.QUESTION_TYPE to NonInteractiveTutorialFragment.QUESTION_THREE)
+            NavUtil.navigate(
+                findNavController(),
+                InteractiveOnboardingVariantDirections.actionInteractiveOnboardingFragmentToNonInteractiveTutorialFragment(NonInteractiveTutorialFragment.QUESTION_THREE)
             )
         }
     }
