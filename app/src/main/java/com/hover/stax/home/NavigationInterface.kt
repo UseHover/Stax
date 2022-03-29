@@ -31,7 +31,7 @@ interface NavigationInterface {
             Constants.NAV_LINK_ACCOUNT -> navigateToChannelsListFragment(navController, true)
             Constants.NAV_EMAIL_CLIENT -> openSupportEmailClient(activity)
             Constants.NAV_USSD_LIB -> navigateToUSSDLib(navController)
-            Constants.NAV_PAYBILL -> navController.navigate(R.id.action_navigation_home_to_paybillFragment)
+            Constants.NAV_PAYBILL -> navigate(navController, HomeFragmentDirections.actionNavigationHomeToPaybillFragment())
             else -> {}
         }
     }
@@ -88,5 +88,9 @@ interface NavigationInterface {
             Timber.e("Activity not found")
             UIHelper.flashMessage(activity, activity.getString(R.string.email_client_not_found))
         }
+    }
+
+    fun navigate(navController: NavController, navDirections: NavDirections) = with(navController) {
+        currentDestination?.getAction(navDirections.actionId)?.let { navigate(navDirections) }
     }
 }

@@ -40,9 +40,9 @@ class StaxNavigation(val activity: AppCompatActivity, private val isMainActivity
 
     fun checkPermissionsAndNavigate(toWhere: Int) = checkPermissionsAndNavigate(toWhere, 0)
 
-    fun navigateAccountDetails(accountId: Int) = navigate(HomeFragmentDirections.actionNavigationHomeToAccountDetailsFragment(accountId))
+    fun navigateAccountDetails(accountId: Int) = navigate(getNavController(), HomeFragmentDirections.actionNavigationHomeToAccountDetailsFragment(accountId))
 
-    fun navigateWellness(tipId: String?) = navigate(HomeFragmentDirections.actionNavigationHomeToWellnessFragment(tipId))
+    fun navigateWellness(tipId: String?) = navigate(getNavController(), HomeFragmentDirections.actionNavigationHomeToWellnessFragment(tipId))
 
     fun navigateToBountyList() {
         if (getNavController().currentDestination?.id == R.id.bountyEmailFragment)
@@ -114,7 +114,5 @@ class StaxNavigation(val activity: AppCompatActivity, private val isMainActivity
         activity.startActivity(intent)
     }
 
-    fun navigate(navDirections: NavDirections) = with(getNavController()) {
-        currentDestination?.getAction(navDirections.actionId)?.let { navigate(navDirections) }
-    }
+
 }
