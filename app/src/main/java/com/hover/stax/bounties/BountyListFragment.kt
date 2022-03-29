@@ -19,6 +19,7 @@ import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentBountyListBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.home.NavigationInterface
+import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.UpdateBountyTransactionsWorker
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
@@ -129,8 +130,15 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
             }
         }
 
+        val txnObserver = object: Observer<List<StaxTransaction>> {
+            override fun onChanged(t: List<StaxTransaction>?) {
+                Timber.v("Transactions update ${t?.size}")
+            }
+
+        }
+
         actions.observe(viewLifecycleOwner, actionsObserver)
-        transactions.observe(viewLifecycleOwner) { Timber.v("Transactions update ${it.size}") }
+        transactions.observe(viewLifecycleOwner, txnObserver)
         sims.observe(viewLifecycleOwner) { Timber.v("Sims update ${it.size}") }
         bounties.observe(viewLifecycleOwner) { updateChannelList(channels.value, it) }
         channels.observe(viewLifecycleOwner) {

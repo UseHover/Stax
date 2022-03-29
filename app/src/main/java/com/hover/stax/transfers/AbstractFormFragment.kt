@@ -158,11 +158,11 @@ abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchLi
     }
 
     private fun runBalanceCheck(channelId: Int) = lifecycleScope.launch(Dispatchers.IO) {
-        channelsViewModel.getChannel(channelId)?.let {
+        channelsViewModel.getChannel(channelId)?.let { channel ->
             val action = channelsViewModel.getFetchAccountAction(channelId)
-            channelsViewModel.setActiveChannel(it)
+            channelsViewModel.setActiveChannel(channel)
 
-            (activity as? MainActivity)?.makeCall(action!!, it)
+            action?.let { a -> (activity as? MainActivity)?.makeCall(a, channel) }
         }
     }
 }
