@@ -9,7 +9,6 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hover.stax.database.appModule
 import com.hover.stax.database.dataModule
-import com.hover.stax.utils.fonts.FontReplacer
 import com.hover.stax.utils.network.NetworkMonitor
 import com.yariksoffice.lingver.Lingver
 import org.koin.android.ext.koin.androidContext
@@ -23,7 +22,7 @@ class ApplicationInstance : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        setFont()
+        setLocale()
         initDI()
 
         setLogger()
@@ -37,14 +36,7 @@ class ApplicationInstance : Application() {
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
     }
 
-    private fun setFont() {
-//        FontReplacer.Build(this).apply {
-//            setBoldFont("Effra_Heavy.ttf")
-//            setMediumFont("Effra_Medium.ttf")
-//            setDefaultFont("Effra_Regular.ttf")
-//            setThinFont("Effra_Regular.ttf")
-//        }.also { it.applyFont() }
-
+    private fun setLocale() {
         Lingver.init(this, Locale.getDefault())
     }
 
