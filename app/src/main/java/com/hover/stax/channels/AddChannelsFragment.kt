@@ -2,13 +2,16 @@ package com.hover.stax.channels
 
 import android.os.Bundle
 import android.text.Editable
+import android.text.Html
 import android.text.TextWatcher
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.selection.SelectionPredicates
@@ -131,16 +134,24 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         binding.channelsListCard.hideProgressIndicator()
 
         if (!channels.isNullOrEmpty()) {
+            updateAdapter(Channel.sort(channels, false))
             binding.channelsList.visibility = VISIBLE
             binding.emptyState.root.visibility = GONE
             binding.errorText.visibility = GONE
-            updateAdapter(Channel.sort(channels, false))
         }
-        else {
-            binding.channelsList.visibility = GONE
-            binding.errorText.visibility = GONE
-            binding.emptyState.root.visibility = VISIBLE
+        else showEmptyState()
+    }
+
+    private fun showEmptyState() {
+        val content = resources.getString(R.string.no_accounts_found_desc,  channelsViewModel.filterQuery.value!!)
+        binding.emptyState.noAccountFoundDesc.apply {
+            text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
+            movementMethod = LinkMovementMethod.getInstance()
         }
+
+        binding.channelsList.visibility = GONE
+        binding.errorText.visibility = GONE
+        binding.emptyState.root.visibility = VISIBLE
     }
 
     private fun onAllLoaded(channels: List<Channel>) {

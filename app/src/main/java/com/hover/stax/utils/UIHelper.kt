@@ -87,6 +87,7 @@ object UIHelper {
         }
     }
 
+
     fun setTextUnderline(textView: TextView, cs: String?) {
         val content = SpannableString(cs)
         content.setSpan(UnderlineSpan(), 0, content.length, 0)

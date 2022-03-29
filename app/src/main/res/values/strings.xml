@@ -162,7 +162,7 @@
     <string name="add_accounts_to_stax">Add accounts to Stax</string>
 
     <string name="search">Search</string>
-    <string name="no_accounts_found_desc"><![CDATA[ It looks like <b>" %1$s "</b> has not been listed on Stax yet or its an invalid entry.\nTry searching for something else]]></string>
+    <string name="no_accounts_found_desc"><![CDATA[ It looks like "<b><font color="#39CBFC"> %1$s </font> </b>" has not been listed on Stax yet or its an invalid entry.<br/>Try searching for something else.]]></string>
     <string name="cant_find_institution">Can\'t find your financial institution?</string>
     <string name="inform_us_here">Inform us here</string>
     <string name="nickname">Nickname</string>

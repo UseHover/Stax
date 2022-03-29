@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorPrimaryDark"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
@@ -11,6 +10,7 @@
         android:layout_height="wrap_content"
         android:text="@string/no_accounts_found_desc"
         android:gravity="center"
+        android:id="@+id/noAccountFoundDesc"
         android:drawableTop="@drawable/ic_baseline_manage_search_24"
         app:fontFamily="@font/brutalista_regular"
         android:padding="@dimen/margin_16"
@@ -24,6 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/margin_10"
+        android:id="@+id/informUs"
         android:background="@drawable/blue_cornered_background"
         android:layout_margin="@dimen/margin_13"
         android:orientation="vertical">
