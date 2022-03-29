@@ -16,6 +16,7 @@ import com.hover.stax.channels.AddChannelsFragment
 import com.hover.stax.financialTips.FinancialTipsFragment
 import com.hover.stax.transactions.TransactionDetailsFragment
 import com.hover.stax.utils.Constants
+import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import timber.log.Timber
 
@@ -31,7 +32,7 @@ interface NavigationInterface {
             Constants.NAV_LINK_ACCOUNT -> navigateToChannelsListFragment(navController, true)
             Constants.NAV_EMAIL_CLIENT -> openSupportEmailClient(activity)
             Constants.NAV_USSD_LIB -> navigateToUSSDLib(navController)
-            Constants.NAV_PAYBILL -> navigate(navController, HomeFragmentDirections.actionNavigationHomeToPaybillFragment())
+            Constants.NAV_PAYBILL -> NavUtil.navigate(navController, HomeFragmentDirections.actionNavigationHomeToPaybillFragment())
             else -> {}
         }
     }
@@ -88,9 +89,5 @@ interface NavigationInterface {
             Timber.e("Activity not found")
             UIHelper.flashMessage(activity, activity.getString(R.string.email_client_not_found))
         }
-    }
-
-    fun navigate(navController: NavController, navDirections: NavDirections) = with(navController) {
-        currentDestination?.getAction(navDirections.actionId)?.let { navigate(navDirections) }
     }
 }

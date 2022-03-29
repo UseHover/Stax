@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.permissions.PermissionHelper
@@ -30,6 +31,7 @@ import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.transfers.TransactionType.Companion.type
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
+import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxCardView
 import com.hover.stax.views.StaxDialog
@@ -140,10 +142,10 @@ abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchLi
     abstract fun onContactSelected(requestCode: Int, contact: StaxContact)
 
     @SuppressLint("ClickableViewAccessibility")
-    fun setDropdownTouchListener(action: Int) {
+    fun setDropdownTouchListener(navDirections: NavDirections) {
         accountDropdown.autoCompleteTextView.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN)
-                findNavController().navigate(action)
+                NavUtil.navigate(findNavController(), navDirections)
             true
         }
     }

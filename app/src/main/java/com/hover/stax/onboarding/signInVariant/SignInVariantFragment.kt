@@ -21,6 +21,7 @@ import com.hover.stax.databinding.FragmentSigninVariantBinding
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.onboarding.welcome.WelcomeFragment
 import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.NavUtil
 import timber.log.Timber
 
 
@@ -69,7 +70,7 @@ class SignInVariantFragment : Fragment(), ViewPager.OnPageChangeListener {
 
     private fun setupContinueNoSignIn() = binding.continueNoSignIn.setOnClickListener {
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.clicked_skip_sign_in), requireActivity())
-        findNavController().navigate(R.id.action_slidingOnboardingFragment_to_welcomeFragment, bundleOf(WelcomeFragment.SALUTATIONS to 1))
+        NavUtil.navigate(findNavController(), SignInVariantFragmentDirections.actionSignInVariantFragmentToWelcomeFragment(1))
     }
 
     private fun initProgressBarView() {

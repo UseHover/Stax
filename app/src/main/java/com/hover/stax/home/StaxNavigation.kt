@@ -15,6 +15,7 @@ import com.hover.stax.R
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
+import com.hover.stax.utils.NavUtil
 
 class StaxNavigation(val activity: AppCompatActivity, private val isMainActivity: Boolean) : NavigationInterface {
 
@@ -40,9 +41,9 @@ class StaxNavigation(val activity: AppCompatActivity, private val isMainActivity
 
     fun checkPermissionsAndNavigate(toWhere: Int) = checkPermissionsAndNavigate(toWhere, 0)
 
-    fun navigateAccountDetails(accountId: Int) = navigate(getNavController(), HomeFragmentDirections.actionNavigationHomeToAccountDetailsFragment(accountId))
+    fun navigateAccountDetails(accountId: Int) = NavUtil.navigate(getNavController(), HomeFragmentDirections.actionNavigationHomeToAccountDetailsFragment(accountId))
 
-    fun navigateWellness(tipId: String?) = navigate(getNavController(), HomeFragmentDirections.actionNavigationHomeToWellnessFragment(tipId))
+    fun navigateWellness(tipId: String?) = NavUtil.navigate(getNavController(), HomeFragmentDirections.actionNavigationHomeToWellnessFragment(tipId))
 
     fun navigateToBountyList() {
         if (getNavController().currentDestination?.id == R.id.bountyEmailFragment)
