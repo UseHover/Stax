@@ -87,9 +87,9 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         setSearchInputWatcher()
 
         channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
-        channelsViewModel.simChannels.observe(viewLifecycleOwner) { Timber.i("Sim channels loaded") }
+        channelsViewModel.simChannels.observe(viewLifecycleOwner) { if(it.isEmpty())  setError(R.string.channels_error_nosim) else Timber.i("loaded") }
         channelsViewModel.filteredSimChannels.observe(viewLifecycleOwner){ loadFilteredChannels(it) }
-        channelsViewModel.allChannels.observe(viewLifecycleOwner) { onAllLoaded(it) }
+        channelsViewModel.allChannels.observe(viewLifecycleOwner) { Timber.i("Loaded all channels") }
     }
 
     private fun setSearchInputWatcher() {
@@ -139,7 +139,8 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
             binding.emptyState.root.visibility = GONE
             binding.errorText.visibility = GONE
         }
-        else showEmptyState()
+        else if(channelsViewModel.isInSearchMode()) showEmptyState()
+        else setError(R.string.channels_error_nodata)
     }
 
     private fun showEmptyState() {
@@ -154,15 +155,6 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         binding.emptyState.root.visibility = VISIBLE
     }
 
-    private fun onAllLoaded(channels: List<Channel>) {
-        binding.channelsListCard.hideProgressIndicator()
-
-        if (!channels.isNullOrEmpty() && binding.channelsList.adapter?.itemCount == 0) {
-            updateAdapter(Channel.sort(channels, false))
-            setError(R.string.channels_error_nosim)
-        } else if (channels.isNullOrEmpty() && !NetworkMonitor(requireActivity()).isNetworkConnected)
-            setError(R.string.channels_error_nodata)
-    }
 
     private fun updateAdapter(channels: List<Channel>) {
         selectAdapter.updateList(channels)
@@ -170,8 +162,11 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
     private fun setError(message: Int) {
         binding.errorText.apply {
-            visibility = VISIBLE
-            text = getString(message)
+            if(message != 0) {
+                visibility = VISIBLE
+                text = getString(message)
+            }
+            else visibility = GONE
         }
     }
 

@@ -68,6 +68,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             addSource(allChannels, this@ChannelsViewModel::onChannelsUpdateHnis)
             addSource(simHniList, this@ChannelsViewModel::onSimUpdate)
         }
+        filteredSimChannels.addSource(allChannels, this@ChannelsViewModel::filterSimChannels)
         filteredSimChannels.addSource(simChannels, this@ChannelsViewModel::filterSimChannels)
 
         activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull)
@@ -82,10 +83,12 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun filterSimChannels(channels: List<Channel>) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val filteredList = channels.filter { toMatchingString(it.toString()).contains(toMatchingString(filterQuery.value!!)) }
-            Timber.i("accounts matched size is: ${filteredList.size}")
-            filteredSimChannels.postValue(filteredList)
+        if(channels.isNullOrEmpty()) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val filteredList = channels.filter { toMatchingString(it.toString()).contains(toMatchingString(filterQuery.value!!)) }
+                Timber.i("accounts matched size is: ${filteredList.size}")
+                filteredSimChannels.postValue(filteredList)
+            }
         }
     }
     private fun toMatchingString(value: String) : String {
@@ -95,6 +98,9 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     fun filterSimChannels(value: String) {
         filterQuery.value = value;
         filterSimChannels(simChannels.value!!)
+    }
+    fun isInSearchMode() : Boolean {
+        return toMatchingString(filterQuery.value!!).isNotEmpty()
     }
 
     fun setType(t: String) {
