@@ -103,8 +103,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     fun filterSimChannels(value: String) {
-        filterQuery.value = value;
-        filterSimChannels(simChannels.value!!)
+        filterQuery.value = value
+        filterSimChannels(filteredSimChannels.value!!)
     }
     fun isInSearchMode() : Boolean {
         return toMatchingString(filterQuery.value!!).isNotEmpty()
