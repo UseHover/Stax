@@ -6,9 +6,8 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
@@ -29,18 +28,21 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
-class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener {
+class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
 
     private val channelsViewModel: ChannelsViewModel by viewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
 
+    private val args: AddChannelsFragmentArgs by navArgs()
+
     private var _binding: FragmentAddChannelsBinding? = null
     private val binding get() = _binding!!
 
-    private val selectAdapter: ChannelsRecyclerViewAdapter = ChannelsRecyclerViewAdapter(ArrayList(0), this)
+    private val selectAdapter: ChannelsAdapter = ChannelsAdapter(ArrayList(0), this)
     private var tracker: SelectionTracker<Long>? = null
 
     private var dialog: StaxDialog? = null
+    private var IS_FORCE_RETURN = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +59,9 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         return binding.root
     }
 
-    private fun initArguments() = arguments?.let { IS_FORCE_RETURN = it.getBoolean(FORCE_RETURN_DATA, true) }
+    private fun initArguments() {
+        IS_FORCE_RETURN = args.forceReturnData
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -105,7 +109,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
         showSelected(!channels.isNullOrEmpty())
         if (!channels.isNullOrEmpty())
-            binding.selectedList.adapter = ChannelsRecyclerViewAdapter(channels, this)
+            binding.selectedList.adapter = ChannelsAdapter(channels, this)
     }
 
     private fun showSelected(visible: Boolean) {
@@ -214,7 +218,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     }
 
     companion object {
-        var IS_FORCE_RETURN = true
+
         const val FORCE_RETURN_DATA = "force_return_data"
     }
 }

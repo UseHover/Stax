@@ -231,11 +231,13 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
     private fun onRefresh() = viewModel.account.value?.let { (activity as MainActivity).onTapRefresh(it.id) }
 
-    override fun viewRequestDetail(id: Int) =
-            findNavController().navigate(R.id.action_accountDetailsFragment_to_requestDetailsFragment, bundleOf("id" to id))
+    override fun viewRequestDetail(id: Int) {
+        NavUtil.navigate(findNavController(), AccountDetailFragmentDirections.actionAccountDetailsFragmentToRequestDetailsFragment(id))
+    }
 
-    override fun viewScheduledDetail(id: Int) =
-            findNavController().navigate(R.id.action_accountDetailsFragment_to_scheduleDetailsFragment, bundleOf("id" to id))
+    override fun viewScheduledDetail(id: Int) {
+        NavUtil.navigate(findNavController(), AccountDetailFragmentDirections.actionAccountDetailsFragmentToScheduleDetailsFragment(id))
+    }
 
     override fun viewTransactionDetail(uuid: String?) = navigateToTransactionDetailsFragment(uuid, childFragmentManager, true)
 

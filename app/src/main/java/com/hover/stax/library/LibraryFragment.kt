@@ -49,7 +49,7 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
         binding.countryCard.hideProgressIndicator()
 
         if (!channels.isNullOrEmpty())
-            binding.shortcodes.adapter = ChannelsAdapter(channels)
+            binding.shortcodes.adapter = LibraryChannelsAdapter(channels)
     }
 
     override fun countrySelect(countryCode: String) {

@@ -57,6 +57,7 @@ interface NavigationInterface {
         navController.navigate(R.id.navigation_balance)
     }
 
+    //change to args
     fun navigateToChannelsListFragment(navController: NavController, forceReturnData: Boolean) {
         val bundle = Bundle()
         bundle.putBoolean(AddChannelsFragment.FORCE_RETURN_DATA, forceReturnData)

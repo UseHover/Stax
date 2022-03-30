@@ -10,8 +10,6 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
@@ -22,10 +20,7 @@ import com.hover.stax.home.MainActivity
 import com.hover.stax.home.NavigationInterface
 import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.login.LoginViewModel
-import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
-import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.Utils
+import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -89,7 +84,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
             }
         }
 
-        selectLangBtn.setOnClickListener { findNavController().navigate(R.id.action_navigation_settings_to_languageSelectFragment) }
+        selectLangBtn.setOnClickListener { NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToLanguageSelectFragment()) }
     }
 
     private fun setupAppVersionInfo() {
@@ -119,13 +114,13 @@ class SettingsFragment : Fragment(), NavigationInterface {
             receiveStaxUpdate.setOnClickListener { Utils.openUrl(getString(R.string.receive_stax_updates_url), requireActivity()) }
             requestFeature.setOnClickListener { Utils.openUrl(getString(R.string.stax_nolt_url), requireActivity()) }
             contactSupport.setOnClickListener { Utils.openEmail(getString(R.string.stax_emailing_subject, Hover.getDeviceId(requireContext())), requireContext()) }
-            faq.setOnClickListener { findNavController().navigate(R.id.action_navigation_settings_to_faqFragment) }
+            faq.setOnClickListener { NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToFaqFragment()) }
         }
     }
 
     private fun setupLearnCard() {
         with(binding.staxLearn) {
-            learnFinances.setOnClickListener { findNavController().navigate(R.id.action_navigation_settings_to_wellnessFragment) }
+            learnFinances.setOnClickListener { NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToWellnessFragment(null)) }
             learnStax.setOnClickListener { Utils.openUrl(getString(R.string.stax_medium_url), requireActivity()) }
         }
     }
@@ -168,12 +163,12 @@ class SettingsFragment : Fragment(), NavigationInterface {
     }
 
     private fun startBounties() {
-        val navAction = if ((requireActivity() as MainActivity).isSignedIn())
-            R.id.action_navigation_settings_to_bountyListFragment
+        val navDirection = if ((requireActivity() as MainActivity).isSignedIn())
+            SettingsFragmentDirections.actionNavigationSettingsToBountyListFragment()
         else
-            R.id.action_navigation_settings_to_bountyEmailFragment
+            SettingsFragmentDirections.actionNavigationSettingsToBountyEmailFragment()
 
-        findNavController().navigate(navAction)
+        NavUtil.navigate(findNavController(), navDirection)
     }
 
     private fun showLogoutConfirmDialog() {
@@ -190,7 +185,6 @@ class SettingsFragment : Fragment(), NavigationInterface {
 
     companion object {
         const val SHOW_BOUNTY_LIST = 100
-        const val SHOW_REFERRAL_DIALOG = 101
     }
 
     override fun onDestroyView() {
