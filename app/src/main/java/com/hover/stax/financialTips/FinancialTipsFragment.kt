@@ -91,11 +91,16 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         }
 
         binding.shareBtn.setOnClickListener {
+            val shareCopy = if(tip.shareCopy != "null")
+                tip.shareCopy
+            else
+                tip.snippet
+
             val shareableContent = buildString {
                 append(tip.title)
                 append("\n\n")
-                append(tip.snippet ?: HtmlCompat.fromHtml(tip.content, HtmlCompat.FROM_HTML_MODE_LEGACY))
-                append(getString(R.string.stax_handle))
+                append(shareCopy)
+                append(" ${getString(R.string.stax_handle)}")
                 append("\n\n")
                 append("https://stax.me/financialTips?id=${tip.id}")
             }
