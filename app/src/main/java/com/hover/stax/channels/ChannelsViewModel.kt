@@ -92,7 +92,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     private fun filterSimChannels(channels: List<Channel>) {
         if(!channels.isNullOrEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
-                val filteredList = channels.filter { toMatchingString(it.toString()).contains(toMatchingString(filterQuery.value!!)) }
+                val filteredList = channels.filter { toMatchingString(it.toFilterableString()).contains(toMatchingString(filterQuery.value!!)) }
                 Timber.i("accounts matched size is: ${filteredList.size}")
                 filteredChannels.postValue(filteredList)
             }
