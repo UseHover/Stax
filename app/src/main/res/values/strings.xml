@@ -165,10 +165,20 @@
     <string name="no_accounts_found_desc"><![CDATA[ It looks like "<b><font color="#39CBFC"> %1$s </font> </b>" has not been listed on Stax yet or its an invalid entry.<br/>Try searching for something else.]]></string>
     <string name="cant_find_institution">Can\'t find your financial institution?</string>
     <string name="inform_us_here">Inform us here</string>
+
+    <string name="enter_institution_name">Enter Bank, service or account name</string>
+    <string name="enter_shortcode">Enter shortcode</string>
+    <string name="inform_stax_desc">Inform Stax on your financial institution</string>
+    <string name="enter_financial_inst_err">Enter financial institution name</string>
+    <string name="enter_shortcode_err">Enter the accurate shortcode</string>
+    <string name="thank_you">Thank you</string>
+    <string name="service_request_success_desc">Best rest assured the Stax team will review and get right to adding this service soon</string>
+
     <string name="nickname">Nickname</string>
     <string name="label_saved">Saved</string>
     <string name="account_number_label">Account number</string>
     <string name="hint_enter_new_name">Enter a new name</string>
+
 
     <string name="official_name">Official name</string>
     <string name="which_account">Which account?</string>
@@ -611,6 +621,7 @@
     <string name="loading">Loading…</string>
     <string name="loading_error">Unable to load FAQ, please try again</string>
     <string name="faq_internet_error">This feature requires internet connection, please try again</string>
+    <string name="enter_correct_information">Please enter correct</string>
 
     <string name="working_offline">Working offline</string>
 

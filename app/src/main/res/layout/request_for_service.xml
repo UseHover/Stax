@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fillViewport="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_13">
+
+        <include layout="@layout/dialog_layout_header_area"/>
+
+        <com.hover.stax.views.StaxTextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_institution_name"
+            android:inputType="textShortMessage"
+            android:imeOptions="actionNext"
+            android:layout_marginTop="@dimen/margin_16"
+            android:id="@+id/institutionNameInput"/>
+
+        <com.hover.stax.views.StaxTextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_shortcode"
+            android:inputType="textShortMessage"
+            android:imeOptions="actionDone"
+            android:id="@+id/shortCodeInput"/>
+
+       <include layout="@layout/dialog_layout_button_area"/>
+
+
+    </LinearLayout>
+</ScrollView>
