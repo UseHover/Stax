@@ -104,7 +104,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     fun filterSimChannels(value: String) {
         filterQuery.value = value
-        filterSimChannels(filteredSimChannels.value!!)
+        val listToFilter : List<Channel>? = if(!simChannels.value.isNullOrEmpty()) simChannels.value else allChannels.value
+        filterSimChannels(listToFilter!!)
     }
     fun isInSearchMode() : Boolean {
         return toMatchingString(filterQuery.value!!).isNotEmpty()
