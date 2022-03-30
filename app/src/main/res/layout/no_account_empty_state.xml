@@ -46,7 +46,6 @@
             android:layout_gravity="center"
             android:drawablePadding="@dimen/margin_8"
             android:drawableEnd="@drawable/ic_baseline_open_in_new_16"
-            android:layout_marginTop="@dimen/margin_3"
             app:fontFamily="@font/brutalista_medium"
             android:textColor="@color/brightBluePressed"
             />
