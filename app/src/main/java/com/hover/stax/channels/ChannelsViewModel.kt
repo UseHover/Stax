@@ -34,10 +34,12 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     AccountDropdown.HighlightListener, PushNotificationTopicsInterface {
 
     private var type = MutableLiveData<String>()
+
+    val allChannels: LiveData<List<Channel>> = repo.publishedChannels
+    val selectedChannels: LiveData<List<Channel>> = repo.selected
+
     var sims = MutableLiveData<List<SimInfo>>()
     var simHniList: LiveData<List<String>> = MutableLiveData()
-    var allChannels: LiveData<List<Channel>> = MutableLiveData()
-    var selectedChannels: LiveData<List<Channel>> = MutableLiveData()
 
     var simChannels = MediatorLiveData<List<Channel>>()
     val filteredSimChannels = MediatorLiveData<List<Channel>>()
@@ -50,24 +52,19 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     private var simReceiver: BroadcastReceiver? = null
 
     init {
+        removeStaleChannels()
+        viewModelScope.launch { updateAccounts() }
+
         filterQuery.value = ""
 
-        simReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                viewModelScope.launch {
-                    sims.postValue(repo.presentSims)
-                }
-            }
-        }
-
-        loadChannels()
+        setSimBroadcastReceiver()
         loadSims()
-
         simHniList = Transformations.map(sims, this::getHnisAndSubscribeToFirebase)
         simChannels.apply {
             addSource(allChannels, this@ChannelsViewModel::onChannelsUpdateHnis)
             addSource(simHniList, this@ChannelsViewModel::onSimUpdate)
         }
+
         filteredSimChannels.addSource(allChannels, this@ChannelsViewModel::filterSimChannels)
         filteredSimChannels.addSource(simChannels, this@ChannelsViewModel::filterSimChannels)
 
@@ -82,8 +79,18 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         loadAccounts()
     }
 
+    private fun setSimBroadcastReceiver() {
+        simReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                viewModelScope.launch {
+                    sims.postValue(repo.presentSims)
+                }
+            }
+        }
+    }
+
     private fun filterSimChannels(channels: List<Channel>) {
-        if(channels.isNullOrEmpty()) {
+        if(!channels.isNullOrEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
                 val filteredList = channels.filter { toMatchingString(it.toString()).contains(toMatchingString(filterQuery.value!!)) }
                 Timber.i("accounts matched size is: ${filteredList.size}")
@@ -108,17 +115,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     fun getActionType(): String = type.value!!
-
-    private fun loadChannels() {
-        removeStaleChannels()
-
-        viewModelScope.launch {
-            allChannels = repo.publishedChannels
-            selectedChannels = repo.selected
-
-            updateAccounts()
-        }
-    }
 
     /**
      * A prerequisite for actions to be loaded and run is having channels marked as selected. While adding channels,

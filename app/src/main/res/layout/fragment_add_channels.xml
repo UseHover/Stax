@@ -59,13 +59,13 @@
                     android:layout_marginBottom="@dimen/margin_8"
                     app:fontFamily="@font/brutalista_medium"
                     android:gravity="center_vertical"
-                    android:text="@string/channels_error_nodata"
-                    android:textColor="@color/stax_state_red"
+                    android:text="@string/loading"
+                    android:textColor="@color/stax_state_blue"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:visibility="visible"
-                    app:drawableStartCompat="@drawable/ic_error" />
+                    app:drawableStartCompat="@drawable/ic_info" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/channelsList"

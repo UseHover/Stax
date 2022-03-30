@@ -140,7 +140,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
             binding.errorText.visibility = GONE
         }
         else if(channelsViewModel.isInSearchMode()) showEmptyState()
-        else setError(R.string.channels_error_nodata)
+        else setError(R.string.loading)
     }
 
     private fun showEmptyState() {
@@ -162,11 +162,8 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
     private fun setError(message: Int) {
         binding.errorText.apply {
-            if(message != 0) {
                 visibility = VISIBLE
                 text = getString(message)
-            }
-            else visibility = GONE
         }
     }
 
