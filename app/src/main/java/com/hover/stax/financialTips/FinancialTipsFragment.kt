@@ -10,6 +10,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.appsflyer.internal.by
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentWellnessBinding
 import com.hover.stax.utils.AnalyticsUtil
@@ -21,6 +23,7 @@ import timber.log.Timber
 class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
 
     private val viewModel: FinancialTipsViewModel by viewModel()
+    private val args: FinancialTipsFragmentArgs by navArgs()
 
     private var _binding: FragmentWellnessBinding? = null
     private val binding get() = _binding!!
@@ -33,7 +36,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val tipId = arguments?.getString(TIP_ID)
+        val tipId = args.tipId
 
         binding.title.text = getString(R.string.financial_wellness_tips)
         viewModel.tips.observe(viewLifecycleOwner) {

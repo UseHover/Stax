@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/mobile_navigation"
+        android:id="@+id/onboarding_navigation"
         app:startDestination="@+id/navigation_home">
 
     <fragment
@@ -129,7 +129,7 @@
     <fragment
             android:id="@+id/accountDetailsFragment"
             android:name="com.hover.stax.accounts.AccountDetailFragment"
-            android:label="ChannelsDetailsFragment"
+            android:label="AccountDetailsFragment"
             tools:layout="@layout/fragment_account">
         <argument
                 android:name="accountId"
@@ -246,6 +246,10 @@
             android:id="@+id/wellnessFragment"
             android:name="com.hover.stax.financialTips.FinancialTipsFragment"
             android:label="WellnessFragment">
+        <argument
+                android:name="tipId"
+                app:argType="string"
+                app:nullable="true" />
         <action
                 android:id="@+id/action_wellnessFragment_to_navigation_home"
                 app:destination="@id/navigation_home"

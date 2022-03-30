@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import com.hover.stax.R
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.ui.theme.StaxTheme
@@ -26,10 +27,12 @@ class WelcomeFragment : Fragment() {
     private lateinit var subtitle: String
     private lateinit var buttonText: String
 
+    private val args:  WelcomeFragmentArgs by navArgs()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = ComposeView(requireContext()).apply {
         id = R.id.welcomeFragment
 
-        setGreetings(arguments?.getInt(SALUTATIONS) ?: 1)
+        setGreetings(args.salutation)
 
         setContent {
             WelcomeScreen(title, subtitle, buttonText) {
