@@ -42,7 +42,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     var simHniList: LiveData<List<String>> = MutableLiveData()
 
     var simChannels = MediatorLiveData<List<Channel>>()
-    val filteredSimChannels = MediatorLiveData<List<Channel>>()
+    val filteredChannels = MediatorLiveData<List<Channel>>()
     val filterQuery = MutableLiveData<String>()
 
     val activeChannel = MediatorLiveData<Channel?>()
@@ -65,8 +65,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             addSource(simHniList, this@ChannelsViewModel::onSimUpdate)
         }
 
-        filteredSimChannels.addSource(allChannels, this@ChannelsViewModel::filterSimChannels)
-        filteredSimChannels.addSource(simChannels, this@ChannelsViewModel::filterSimChannels)
+        filteredChannels.addSource(allChannels, this@ChannelsViewModel::filterSimChannels)
+        filteredChannels.addSource(simChannels, this@ChannelsViewModel::filterSimChannels)
 
         activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull)
 
@@ -94,7 +94,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             viewModelScope.launch(Dispatchers.IO) {
                 val filteredList = channels.filter { toMatchingString(it.toString()).contains(toMatchingString(filterQuery.value!!)) }
                 Timber.i("accounts matched size is: ${filteredList.size}")
-                filteredSimChannels.postValue(filteredList)
+                filteredChannels.postValue(filteredList)
             }
         }
     }
