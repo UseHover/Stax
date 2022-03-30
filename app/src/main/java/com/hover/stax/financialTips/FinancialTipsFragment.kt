@@ -11,7 +11,6 @@ import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.appsflyer.internal.by
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentWellnessBinding
 import com.hover.stax.utils.AnalyticsUtil
@@ -91,7 +90,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         }
 
         binding.shareBtn.setOnClickListener {
-            val shareCopy = if(tip.shareCopy != "null")
+            val shareCopy = if (tip.shareCopy != "null")
                 tip.shareCopy
             else
                 tip.snippet
