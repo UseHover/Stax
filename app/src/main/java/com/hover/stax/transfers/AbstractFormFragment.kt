@@ -164,7 +164,10 @@ abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchLi
             val action = channelsViewModel.getFetchAccountAction(channelId)
             channelsViewModel.setActiveChannel(channel)
 
-            action?.let { a -> (activity as? MainActivity)?.makeCall(a, channel) }
+            if (action != null)
+                (activity as? MainActivity)?.makeCall(action, channel)
+            else
+                UIHelper.flashMessage(requireActivity(), getString(R.string.action_run_error))
         }
     }
 }
