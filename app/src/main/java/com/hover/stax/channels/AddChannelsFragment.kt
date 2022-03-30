@@ -88,7 +88,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
         channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
         channelsViewModel.simChannels.observe(viewLifecycleOwner) { if(it.isEmpty())  setError(R.string.channels_error_nosim) else Timber.i("loaded") }
-        channelsViewModel.filteredSimChannels.observe(viewLifecycleOwner){ loadFilteredChannels(it) }
+        channelsViewModel.filteredChannels.observe(viewLifecycleOwner){ loadFilteredChannels(it) }
         channelsViewModel.allChannels.observe(viewLifecycleOwner) { Timber.i("Loaded all channels") }
     }
 
