@@ -98,6 +98,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             }
         }
     }
+
     private fun toMatchingString(value: String) : String {
         return value.lowercase().replace(" ", "");
     }
