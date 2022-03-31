@@ -10,6 +10,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentWellnessBinding
 import com.hover.stax.utils.AnalyticsUtil
@@ -21,6 +22,7 @@ import timber.log.Timber
 class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
 
     private val viewModel: FinancialTipsViewModel by viewModel()
+    private val args: FinancialTipsFragmentArgs by navArgs()
 
     private var _binding: FragmentWellnessBinding? = null
     private val binding get() = _binding!!
@@ -33,7 +35,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val tipId = arguments?.getString(TIP_ID)
+        val tipId = args.tipId
 
         binding.title.text = getString(R.string.financial_wellness_tips)
         viewModel.tips.observe(viewLifecycleOwner) {
@@ -88,11 +90,16 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
         }
 
         binding.shareBtn.setOnClickListener {
+            val shareCopy = if (tip.shareCopy != "null")
+                tip.shareCopy
+            else
+                tip.snippet
+
             val shareableContent = buildString {
                 append(tip.title)
                 append("\n\n")
-                append(tip.snippet ?: HtmlCompat.fromHtml(tip.content, HtmlCompat.FROM_HTML_MODE_LEGACY))
-                append(getString(R.string.stax_handle))
+                append(shareCopy)
+                append(" ${getString(R.string.stax_handle)}")
                 append("\n\n")
                 append("https://stax.me/financialTips?id=${tip.id}")
             }

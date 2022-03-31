@@ -26,7 +26,7 @@ class FinancialTipsAdapter(private val tips: List<FinancialTip>, val selectListe
                 binding.date.text = DateUtils.humanFriendlyDate(it.time)
             }
             binding.title.text = tip.title
-            binding.snippet.text = tip.snippet ?: tip.content
+            binding.snippet.text = tip.snippet
 
             binding.root.setOnClickListener { selectListener.onTipSelected(tip) }
         }

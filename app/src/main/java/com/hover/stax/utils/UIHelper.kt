@@ -59,11 +59,6 @@ object UIHelper {
         }
     }
 
-    @JvmStatic
-    fun dpToPx(dp: Int): Int {
-        return (dp * Resources.getSystem().displayMetrics.density).toInt()
-    }
-
     fun loadPicasso(url: String?, size: Int, target: Target?) {
         Picasso.get()
             .load(url)
@@ -91,6 +86,7 @@ object UIHelper {
             activity.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         }
     }
+
 
     fun setTextUnderline(textView: TextView, cs: String?) {
         val content = SpannableString(cs)

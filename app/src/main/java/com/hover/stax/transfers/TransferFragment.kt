@@ -61,8 +61,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     override fun onResume() {
         super.onResume()
 
-        channelsViewModel.loadAccounts()
-
         amountInput.setHint(getString(R.string.transfer_amount_label))
         accountDropdown.setHint(getString(R.string.account_label))
     }
@@ -155,7 +153,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private fun observeAccountList() {
         channelsViewModel.accounts.observe(viewLifecycleOwner) {
             if (it.isEmpty())
-                setDropdownTouchListener(R.id.action_navigation_transfer_to_accountsFragment)
+                setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
         }
     }
 
@@ -207,7 +205,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             addTextChangedListener(amountWatcher)
             setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus)
-                    this.setState(null,
+                    this.setState(
+                        null,
                         if (transferViewModel.amountErrors() == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
                     )
                 else
@@ -278,10 +277,12 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
         val noNonStandardVarError = nonStandardVariableAdapter?.validates() ?: true
 
-        if (!channelsViewModel.isValidAccount()) {
-            accountDropdown.setState(getString(R.string.incomplete_account_setup_header), AbstractStatefulInput.ERROR)
-            fetchAccounts(channelsViewModel.activeAccount.value!!)
-            return false
+        channelsViewModel.activeAccount.value?.let {
+            if (!channelsViewModel.isValidAccount()) {
+                accountDropdown.setState(getString(R.string.incomplete_account_setup_header), AbstractStatefulInput.ERROR)
+                fetchAccounts(it)
+                return false
+            }
         }
 
         return channelError == null && actionError == null && amountError == null && recipientError == null && noNonStandardVarError

@@ -12,7 +12,6 @@
             android:paddingStart="@dimen/margin_10"
             android:paddingEnd="@dimen/margin_10"
             android:background="?attr/selectableItemBackground"
-            android:fontFamily="@font/effra_regular"
             android:paddingVertical="@dimen/margin_21"
             android:text="@string/share_stax"
             android:textSize="@dimen/text_16"

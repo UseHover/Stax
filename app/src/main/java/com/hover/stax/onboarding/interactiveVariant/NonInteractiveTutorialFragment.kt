@@ -7,18 +7,22 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentNonInteractiveTutorialBinding
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.onboarding.welcome.WelcomeFragment
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
+import com.hover.stax.utils.NavUtil
 
 
 internal class NonInteractiveTutorialFragment : Fragment() {
 
     private var _binding: FragmentNonInteractiveTutorialBinding? = null
     private val binding get() = _binding!!
+
+    private val args: NonInteractiveTutorialFragmentArgs by navArgs()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentNonInteractiveTutorialBinding.inflate(inflater, container, false)
@@ -42,8 +46,7 @@ internal class NonInteractiveTutorialFragment : Fragment() {
     }
 
     private fun setContents() {
-        val questionType: Int = arguments?.getInt(Constants.QUESTION_TYPE, QUESTION_TWO)
-            ?: QUESTION_TWO
+        val questionType: Int = args.questionType
         binding.variantV2NocheckboxTitle.setText(getTitleRes(questionType))
         binding.variantV2NocheckboxDesc.setText(getDescContent(questionType))
     }
@@ -59,7 +62,7 @@ internal class NonInteractiveTutorialFragment : Fragment() {
     }
 
     private fun setContinueClick() = binding.continueBtn.setOnClickListener {
-        findNavController().navigate(R.id.action_noCheckboxOnboardingFragment_to_welcomeFragment, bundleOf(WelcomeFragment.SALUTATIONS to 3))
+        NavUtil.navigate(findNavController(), NonInteractiveTutorialFragmentDirections.actionNoCheckboxOnboardingFragmentToWelcomeFragment(3))
     }
 
     override fun onDestroyView() {
