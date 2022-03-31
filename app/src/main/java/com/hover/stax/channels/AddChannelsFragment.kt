@@ -42,7 +42,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
     private var tracker: SelectionTracker<Long>? = null
 
     private var dialog: StaxDialog? = null
-    private var IS_FORCE_RETURN = true
+    private var forceReturn = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +60,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
     }
 
     private fun initArguments() {
-        IS_FORCE_RETURN = args.forceReturnData
+        forceReturn = args.forceReturnData
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -215,10 +215,5 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
 
         dialog?.let { if (it.isShowing) it.dismiss() }
         _binding = null
-    }
-
-    companion object {
-
-        const val FORCE_RETURN_DATA = "force_return_data"
     }
 }

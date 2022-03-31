@@ -11,7 +11,6 @@ import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentBountyEmailBinding
 import com.hover.stax.home.MainActivity
-import com.hover.stax.home.NavigationInterface
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.settings.SettingsFragment
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
@@ -21,7 +20,7 @@ import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
-class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListener {
+class BountyEmailFragment : Fragment(), View.OnClickListener {
 
     private var _binding: FragmentBountyEmailBinding? = null
     private val binding get() = _binding!!

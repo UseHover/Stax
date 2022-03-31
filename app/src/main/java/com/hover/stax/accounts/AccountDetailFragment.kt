@@ -1,7 +1,6 @@
 package com.hover.stax.accounts
 
 import android.content.res.ColorStateList
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,8 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
-
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -22,7 +19,6 @@ import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.futureTransactions.RequestsAdapter
 import com.hover.stax.futureTransactions.ScheduledAdapter
 import com.hover.stax.home.MainActivity
-import com.hover.stax.home.NavigationInterface
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.transactions.TransactionHistoryAdapter
@@ -34,7 +30,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListener, ScheduledAdapter.SelectListener,
-        RequestsAdapter.SelectListener, NavigationInterface {
+    RequestsAdapter.SelectListener {
 
     private val viewModel: AccountDetailViewModel by viewModel()
     private val futureViewModel: FutureViewModel by viewModel()
@@ -102,9 +98,9 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         if (newText.isNotEmpty() && comparator != null && newText != comparator)
             v.setState(null, AbstractStatefulInput.NONE)
         btn.backgroundTintList = ColorStateList.valueOf(
-                if (newText.isNotEmpty() && comparator != null && newText != comparator)
-                    ContextCompat.getColor(requireActivity(), R.color.brightBlue)
-                else ContextCompat.getColor(requireActivity(), R.color.buttonColor)
+            if (newText.isNotEmpty() && comparator != null && newText != comparator)
+                ContextCompat.getColor(requireActivity(), R.color.brightBlue)
+            else ContextCompat.getColor(requireActivity(), R.color.buttonColor)
         )
     }
 
@@ -120,8 +116,10 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         val msg = validates(v, comparison, errorMsg)
         if (msg == null)
             successFun(v.text)
-        v.setState(msg
-                ?: getString(R.string.label_saved), if (msg == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        v.setState(
+            msg
+                ?: getString(R.string.label_saved), if (msg == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+        )
     }
 
     private fun validates(v: StaxTextInputLayout, comparison: String?, errorMsg: Int): String? {
@@ -140,7 +138,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
                     } else binding.balanceCard.balanceSubtitle.text = getString(R.string.refresh_balance_desc)
 
                     binding.feesDescription.text = getString(R.string.fees_label, acct.name)
-                    binding.officialName.text = if(acct.name == Constants.PLACEHOLDER) acct.alias else acct.name
+                    binding.officialName.text = if (acct.name == Constants.PLACEHOLDER) acct.alias else acct.name
 
                     binding.manageCard.nicknameInput.setText(acct.alias, false)
                     binding.manageCard.accountNumberInput.setText(acct.accountNo, false)
@@ -176,11 +174,11 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
     private fun setUpRemoveAccount(account: Account) {
         dialog = StaxDialog(requireActivity())
-                .setDialogTitle(getString(R.string.removepin_dialoghead, account.alias))
-                .setDialogMessage(R.string.removepins_dialogmes)
-                .setPosButton(R.string.btn_removeaccount) { removeAccount(account) }
-                .setNegButton(R.string.btn_cancel, null)
-                .isDestructive
+            .setDialogTitle(getString(R.string.removepin_dialoghead, account.alias))
+            .setDialogMessage(R.string.removepins_dialogmes)
+            .setPosButton(R.string.btn_removeaccount) { removeAccount(account) }
+            .setNegButton(R.string.btn_cancel, null)
+            .isDestructive
         dialog!!.showIt()
     }
 
@@ -239,7 +237,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         NavUtil.navigate(findNavController(), AccountDetailFragmentDirections.actionAccountDetailsFragmentToScheduleDetailsFragment(id))
     }
 
-    override fun viewTransactionDetail(uuid: String?) = navigateToTransactionDetailsFragment(uuid, childFragmentManager, true)
+    override fun viewTransactionDetail(uuid: String?) = NavUtil.showTransactionDetailsFragment(uuid, childFragmentManager, true)
 
     override fun onDestroyView() {
         super.onDestroyView()

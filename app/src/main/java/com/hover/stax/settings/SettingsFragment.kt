@@ -17,7 +17,6 @@ import com.hover.stax.accounts.Account
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentSettingsBinding
 import com.hover.stax.home.MainActivity
-import com.hover.stax.home.NavigationInterface
 import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.utils.*
@@ -26,7 +25,7 @@ import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
-class SettingsFragment : Fragment(), NavigationInterface {
+class SettingsFragment : Fragment() {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
 
@@ -65,7 +64,10 @@ class SettingsFragment : Fragment(), NavigationInterface {
     }
 
     private fun setUpMeta() {
-        binding.settingsCard.connectAccounts.setOnClickListener { (activity as MainActivity).checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT) }
+        binding.settingsCard.connectAccounts.setOnClickListener {
+            NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToNavigationLinkAccount(true))
+        }
+
         channelsViewModel.accounts.observe(viewLifecycleOwner) {
             if (it.isNullOrEmpty()) {
                 binding.settingsCard.defaultAccountEntry.visibility = GONE

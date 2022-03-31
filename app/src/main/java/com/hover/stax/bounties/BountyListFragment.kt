@@ -18,7 +18,6 @@ import com.hover.stax.channels.UpdateChannelsWorker
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.databinding.FragmentBountyListBinding
 import com.hover.stax.home.MainActivity
-import com.hover.stax.home.NavigationInterface
 import com.hover.stax.transactions.StaxTransaction
 import com.hover.stax.transactions.UpdateBountyTransactionsWorker
 import com.hover.stax.utils.AnalyticsUtil
@@ -32,7 +31,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
 
-class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.SelectListener, CountryAdapter.SelectListener {
+class BountyListFragment : Fragment(), BountyListItem.SelectListener, CountryAdapter.SelectListener {
 
     private lateinit var networkMonitor: NetworkMonitor
 
@@ -151,7 +150,7 @@ class BountyListFragment : Fragment(), NavigationInterface, BountyListItem.Selec
     }
 
     override fun viewTransactionDetail(uuid: String?) {
-        navigateToTransactionDetailsFragment(uuid, childFragmentManager, true)
+        NavUtil.showTransactionDetailsFragment(uuid, childFragmentManager, true)
     }
 
     override fun viewBountyDetail(b: Bounty) {

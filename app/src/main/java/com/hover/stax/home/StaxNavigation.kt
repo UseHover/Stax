@@ -1,23 +1,25 @@
 package com.hover.stax.home
 
-import android.content.Intent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.permissions.PermissionHelper
+import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
+import com.hover.stax.bounties.BountyEmailFragmentDirections
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.NavUtil
+import com.hover.stax.utils.Utils
 
-class StaxNavigation(val activity: AppCompatActivity, private val isMainActivity: Boolean) : NavigationInterface {
+class StaxNavigation(val activity: AppCompatActivity, private val isMainActivity: Boolean) {
 
     private var navController: NavController? = null
     private var appBarConfiguration: AppBarConfiguration? = null
@@ -39,27 +41,28 @@ class StaxNavigation(val activity: AppCompatActivity, private val isMainActivity
         setDestinationChangeListener(nav)
     }
 
-    fun checkPermissionsAndNavigate(toWhere: Int) = checkPermissionsAndNavigate(toWhere, 0)
-
     fun navigateAccountDetails(accountId: Int) = NavUtil.navigate(getNavController(), HomeFragmentDirections.actionNavigationHomeToAccountDetailsFragment(accountId))
 
-    fun navigateWellness(tipId: String?) = NavUtil.navigate(getNavController(), HomeFragmentDirections.actionNavigationHomeToWellnessFragment(tipId))
+    fun navigateWellness(tipId: String?) = NavUtil.navigate(getNavController(), MainNavigationDirections.actionGlobalWellnessFragment(tipId))
 
     fun navigateToBountyList() {
-        if (getNavController().currentDestination?.id == R.id.bountyEmailFragment)
-            getNavController().navigate(R.id.action_bountyEmailFragment_to_bountyListFragment)
-        else
-            getNavController().navigate(R.id.bountyListFragment)
+        NavUtil.navigate(getNavController(), BountyEmailFragmentDirections.actionBountyEmailFragmentToBountyListFragment())
+
+//        if (getNavController().currentDestination?.id == R.id.bountyEmailFragment)
+//            getNavController().navigate(R.id.action_bountyEmailFragment_to_bountyListFragment)
+//        else
+//            getNavController().navigate(R.id.bountyListFragment)
     }
 
     private fun getNavController(): NavController = navHostFragment!!.navController
 
     private fun setNavClickListener(nav: BottomNavigationView) {
         nav.setOnNavigationItemSelectedListener {
-            if (isMainActivity) {
-                checkPermissionsAndNavigate(getNavConst(it.itemId))
-            } else
-                navigateThruHome(it.itemId)
+            when {
+                isMainActivity -> checkPermissionsAndNavigate(getNavDirections(it.itemId))
+                it.itemId == R.id.navigation_home -> activity.onBackPressed()
+                else -> NavUtil.navigate(getNavController(), getNavDirections(it.itemId))
+            }
             true
         }
         nav.setOnItemReselectedListener { navController?.popBackStack() }
@@ -74,46 +77,67 @@ class StaxNavigation(val activity: AppCompatActivity, private val isMainActivity
         }
     }
 
-    private fun checkPermissionsAndNavigate(toWhere: Int, permissionMsg: Int) {
+//    private fun checkPermissionsAndNavigate(toWhere: Int, permissionMsg: Int) {
+//        val permissionHelper = PermissionHelper(activity)
+//        when {
+//            toWhere == Constants.NAV_SETTINGS ||
+//                    toWhere == Constants.NAV_HOME ||
+//                    permissionHelper.hasBasicPerms() -> {
+//            }/*navigate(getNavController(), toWhere)*/
+//            else -> PermissionUtils.showInformativeBasicPermissionDialog(
+//                permissionMsg,
+//                { PermissionUtils.requestPerms(getNavConst(toWhere), activity) },
+//                { AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.perms_basic_cancelled), activity) }, activity
+//            )
+//        }
+//    }
+    fun checkPermissionsAndNavigate(toWhere: Int) = checkPermissionsAndNavigate(getNavDirections(toWhere))
+
+    fun checkPermissionsAndNavigate(navDirections: NavDirections) {
         val permissionHelper = PermissionHelper(activity)
+
         when {
-            toWhere == Constants.NAV_SETTINGS ||
-                    toWhere == Constants.NAV_HOME ||
-                    permissionHelper.hasBasicPerms() -> navigate(getNavController(), toWhere, activity)
+            navDirections == MainNavigationDirections.actionGlobalNavigationSettings() ||
+                    navDirections == MainNavigationDirections.actionGlobalNavigationHome() ||
+                    permissionHelper.hasBasicPerms() -> NavUtil.navigate(getNavController(), navDirections)
             else -> PermissionUtils.showInformativeBasicPermissionDialog(
-                permissionMsg,
-                { PermissionUtils.requestPerms(getNavConst(toWhere), activity) },
+                0,
+                { PermissionUtils.requestPerms(Constants.PERMS_REQ_CODE, activity) },
                 { AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.perms_basic_cancelled), activity) }, activity
             )
         }
     }
 
-    private fun getNavConst(destId: Int): Int = when (destId) {
-        R.id.navigation_request -> Constants.NAV_REQUEST
-        R.id.navigation_settings -> Constants.NAV_SETTINGS
-        R.id.navigation_home -> Constants.NAV_HOME
-        R.id.libraryFragment -> Constants.NAV_USSD_LIB
-        else -> destId
+    private fun getNavDirections(destId: Int): NavDirections = when (destId) {
+        R.id.navigation_request, Constants.NAV_REQUEST -> MainNavigationDirections.actionGlobalNavigationRequest()
+        R.id.navigation_settings, Constants.NAV_SETTINGS -> MainNavigationDirections.actionGlobalNavigationSettings()
+        R.id.navigation_home, Constants.NAV_HOME -> MainNavigationDirections.actionGlobalNavigationHome()
+        R.id.libraryFragment, Constants.NAV_USSD_LIB -> MainNavigationDirections.actionGlobalLibraryFragment()
+        R.id.navigation_balance, Constants.NAV_BALANCE -> MainNavigationDirections.actionGlobalNavigationBalance()
+        Constants.NAV_TRANSFER -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.P2P)
+        Constants.NAV_AIRTIME -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.AIRTIME)
+        Constants.NAV_LINK_ACCOUNT -> MainNavigationDirections.actionGlobalAddChannelsFragment(true)
+        Constants.NAV_PAYBILL -> MainNavigationDirections.actionGlobalPaybillFragment(false)
+        else -> MainNavigationDirections.actionGlobalNavigationHome()
     }
 
-
-    private fun navigateThruHome(destId: Int) {
-        val intent = Intent(activity, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-
-        when {
-            destId == R.id.navigation_balance -> intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_BALANCE)
-            destId == R.id.navigation_settings -> intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_SETTINGS)
-            destId == R.id.navigation_request -> intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_REQUEST)
-            destId != R.id.navigation_home -> {
-                activity.onBackPressed()
-                return
-            }
-        }
-
-        activity.startActivity(intent)
-    }
+//    private fun navigateThruHome(destId: Int) {
+//        val intent = Intent(activity, MainActivity::class.java).apply {
+//            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+//        }
+//
+//        when {
+//            destId == R.id.navigation_balance -> intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_BALANCE)
+//            destId == R.id.navigation_settings -> intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_SETTINGS)
+//            destId == R.id.navigation_request -> intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_REQUEST)
+//            destId != R.id.navigation_home -> {
+//                activity.onBackPressed()
+//                return
+//            }
+//        }
+//
+//        activity.startActivity(intent)
+//    }
 
 
 }

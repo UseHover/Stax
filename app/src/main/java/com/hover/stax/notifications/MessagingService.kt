@@ -13,11 +13,9 @@ import androidx.navigation.NavDeepLinkBuilder
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.hover.stax.R
-import com.hover.stax.RoutingActivity
 import com.hover.stax.financialTips.FinancialTipsFragment
 import com.hover.stax.home.MainActivity
 import com.hover.stax.utils.Constants
-import com.hover.stax.utils.DateUtils
 import timber.log.Timber
 import kotlin.random.Random
 
@@ -78,7 +76,7 @@ class MessagingService : FirebaseMessagingService() {
 
             NavDeepLinkBuilder(this)
                 .setGraph(R.navigation.home_navigation)
-                .setDestination(R.id.wellnessFragment)
+                .setDestination(R.id.tipsFragment)
                 .setArguments(bundleOf(FinancialTipsFragment.TIP_ID to tipId))
                 .setComponentName(MainActivity::class.java)
                 .createPendingIntent()
