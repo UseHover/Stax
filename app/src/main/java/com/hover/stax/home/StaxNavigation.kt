@@ -45,14 +45,7 @@ class StaxNavigation(val activity: AppCompatActivity, private val isMainActivity
 
     fun navigateWellness(tipId: String?) = NavUtil.navigate(getNavController(), MainNavigationDirections.actionGlobalWellnessFragment(tipId))
 
-    fun navigateToBountyList() {
-        NavUtil.navigate(getNavController(), BountyEmailFragmentDirections.actionBountyEmailFragmentToBountyListFragment())
-
-//        if (getNavController().currentDestination?.id == R.id.bountyEmailFragment)
-//            getNavController().navigate(R.id.action_bountyEmailFragment_to_bountyListFragment)
-//        else
-//            getNavController().navigate(R.id.bountyListFragment)
-    }
+    fun navigateToBountyList() = NavUtil.navigate(getNavController(), BountyEmailFragmentDirections.actionBountyEmailFragmentToBountyListFragment())
 
     private fun getNavController(): NavController = navHostFragment!!.navController
 
@@ -77,20 +70,6 @@ class StaxNavigation(val activity: AppCompatActivity, private val isMainActivity
         }
     }
 
-//    private fun checkPermissionsAndNavigate(toWhere: Int, permissionMsg: Int) {
-//        val permissionHelper = PermissionHelper(activity)
-//        when {
-//            toWhere == Constants.NAV_SETTINGS ||
-//                    toWhere == Constants.NAV_HOME ||
-//                    permissionHelper.hasBasicPerms() -> {
-//            }/*navigate(getNavController(), toWhere)*/
-//            else -> PermissionUtils.showInformativeBasicPermissionDialog(
-//                permissionMsg,
-//                { PermissionUtils.requestPerms(getNavConst(toWhere), activity) },
-//                { AnalyticsUtil.logAnalyticsEvent(activity.getString(R.string.perms_basic_cancelled), activity) }, activity
-//            )
-//        }
-//    }
     fun checkPermissionsAndNavigate(toWhere: Int) = checkPermissionsAndNavigate(getNavDirections(toWhere))
 
     fun checkPermissionsAndNavigate(navDirections: NavDirections) {
@@ -120,24 +99,4 @@ class StaxNavigation(val activity: AppCompatActivity, private val isMainActivity
         Constants.NAV_PAYBILL -> MainNavigationDirections.actionGlobalPaybillFragment(false)
         else -> MainNavigationDirections.actionGlobalNavigationHome()
     }
-
-//    private fun navigateThruHome(destId: Int) {
-//        val intent = Intent(activity, MainActivity::class.java).apply {
-//            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-//        }
-//
-//        when {
-//            destId == R.id.navigation_balance -> intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_BALANCE)
-//            destId == R.id.navigation_settings -> intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_SETTINGS)
-//            destId == R.id.navigation_request -> intent.putExtra(Constants.FRAGMENT_DIRECT, Constants.NAV_REQUEST)
-//            destId != R.id.navigation_home -> {
-//                activity.onBackPressed()
-//                return
-//            }
-//        }
-//
-//        activity.startActivity(intent)
-//    }
-
-
 }
