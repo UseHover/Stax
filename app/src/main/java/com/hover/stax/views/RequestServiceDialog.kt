@@ -15,7 +15,7 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.UIHelper
 import org.json.JSONObject
 
-open class RequestServiceDialog (var ctx: Context, var mView: View) : AlertDialog(ctx) {
+open class RequestServiceDialog (private var ctx: Context, private var mView: View) : AlertDialog(ctx) {
 
 	var dialog: AlertDialog? = null
 	private var institutionValue: String = ""
@@ -63,14 +63,14 @@ open class RequestServiceDialog (var ctx: Context, var mView: View) : AlertDialo
 
 	private fun setPosButton() {
 		mView.findViewById<View>(R.id.pos_btn).setOnClickListener{
-			val data: JSONObject = JSONObject()
+			val data = JSONObject()
 			data.put("institutionName", institutionValue)
 			data.put("shortCode", shortCodeValue)
+
 			if(validates()) {
 				AnalyticsUtil.logAnalyticsEvent(ctx.getString(R.string.requested_new_channel), data, ctx)
 				dialog?.dismiss()
 				showSuccessDialog()
-
 			}
 		}
 	}

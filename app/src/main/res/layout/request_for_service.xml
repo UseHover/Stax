@@ -1,36 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:fillViewport="false">
-
-    <LinearLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/margin_13">
+        android:fillViewport="false">
 
-        <include layout="@layout/dialog_layout_header_area"/>
-
-        <com.hover.stax.views.StaxTextInputLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/enter_institution_name"
-            android:inputType="textShortMessage"
-            android:imeOptions="actionNext"
-            android:layout_marginTop="@dimen/margin_16"
-            android:id="@+id/institutionNameInput"/>
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/margin_16">
+
+        <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/inform_stax_desc"
+                android:textAllCaps="true"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16"
+                android:padding="@dimen/margin_16"
+                app:fontFamily="@font/brutalista_bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         <com.hover.stax.views.StaxTextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/enter_shortcode"
-            android:inputType="textShortMessage"
-            android:imeOptions="actionDone"
-            android:id="@+id/shortCodeInput"/>
+                android:id="@+id/institutionNameInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="@dimen/margin_8"
+                android:layout_marginEnd="6dp"
+                android:hint="@string/enter_institution_name"
+                android:imeOptions="actionNext"
+                android:inputType="textShortMessage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title" />
 
-       <include layout="@layout/dialog_layout_button_area"/>
+        <com.hover.stax.views.StaxTextInputLayout
+                android:id="@+id/shortCodeInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"
+                android:hint="@string/enter_shortcode"
+                android:imeOptions="actionDone"
+                android:inputType="textShortMessage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/institutionNameInput" />
 
+        <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/neg_btn"
+                style="@style/StaxButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginEnd="@dimen/margin_10"
+                android:text="@string/btn_cancel"
+                app:layout_constraintEnd_toStartOf="@id/pos_btn"
+                app:layout_constraintTop_toBottomOf="@id/shortCodeInput" />
 
-    </LinearLayout>
+        <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/pos_btn"
+                style="@style/StaxButtonColored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginEnd="16dp"
+                android:text="@string/btn_ok"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/shortCodeInput" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
