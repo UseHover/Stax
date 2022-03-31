@@ -2,7 +2,6 @@ package com.hover.stax.channels
 
 import android.os.Bundle
 import android.text.Editable
-import android.text.Html
 import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
@@ -24,6 +23,7 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
+import com.hover.stax.views.RequestServiceDialog
 
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -87,6 +87,8 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         channelsViewModel.simChannels.observe(viewLifecycleOwner) { if(it.isEmpty())  setError(R.string.channels_error_nosim) else Timber.i("loaded") }
         channelsViewModel.filteredChannels.observe(viewLifecycleOwner){ loadFilteredChannels(it) }
         channelsViewModel.allChannels.observe(viewLifecycleOwner) { Timber.i("Loaded all channels") }
+
+        binding.emptyState.informUs.setOnClickListener { RequestServiceDialog(requireActivity()).showIt() }
     }
 
     private fun setSearchInputWatcher() {
