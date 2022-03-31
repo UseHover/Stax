@@ -19,7 +19,7 @@ import com.hover.stax.utils.Constants
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.Utils
 
-class StaxNavigation(val activity: AppCompatActivity, private val isMainActivity: Boolean) {
+class NavHelper(val activity: AppCompatActivity, private val isMainActivity: Boolean) {
 
     private var navController: NavController? = null
     private var appBarConfiguration: AppBarConfiguration? = null

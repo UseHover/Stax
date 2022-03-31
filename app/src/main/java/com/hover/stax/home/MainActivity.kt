@@ -40,16 +40,16 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
     private lateinit var binding: ActivityMainBinding
 
-    private lateinit var staxNavigation: StaxNavigation
+    private lateinit var navHelper: NavHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-        staxNavigation = StaxNavigation(this, isMainActivity = true)
+        navHelper = NavHelper(this, isMainActivity = true)
         setContentView(binding.root)
 
-        staxNavigation.setUpNav()
+        navHelper.setUpNav()
 
         initFromIntent()
         startObservers()
@@ -67,13 +67,13 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
     override fun onResume() {
         super.onResume()
-        staxNavigation.setUpNav()
+        navHelper.setUpNav()
     }
 
     fun submit(account: Account) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account) }
 
     fun checkPermissionsAndNavigate(navDirections: NavDirections) {
-        staxNavigation.checkPermissionsAndNavigate(navDirections)
+        navHelper.checkPermissionsAndNavigate(navDirections)
     }
 
     private fun observeForAppReview() = historyViewModel.showAppReviewLiveData().observe(this@MainActivity) {
@@ -103,7 +103,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
     private fun checkForRequest(intent: Intent) {
         if (intent.hasExtra(Constants.REQUEST_LINK)) {
-            staxNavigation.checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalTransferFragment(HoverAction.P2P))
+            navHelper.checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalTransferFragment(HoverAction.P2P))
             createFromRequest(intent.getStringExtra(Constants.REQUEST_LINK)!!)
         }
     }
@@ -115,7 +115,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
             if (toWhere == Constants.NAV_EMAIL_CLIENT)
                 Utils.openSupportEmailClient(this)
             else
-                staxNavigation.checkPermissionsAndNavigate(toWhere)
+                navHelper.checkPermissionsAndNavigate(toWhere)
         }
     }
 
@@ -151,7 +151,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
                 intent.getBooleanExtra(Constants.REQUEST_TYPE, false)
             )
             intent.hasExtra(Constants.REQUEST_LINK) -> createFromRequest(intent.getStringExtra(Constants.REQUEST_LINK)!!)
-            intent.hasExtra(FinancialTipsFragment.TIP_ID) -> staxNavigation.navigateWellness(intent.getStringExtra(FinancialTipsFragment.TIP_ID)!!)
+            intent.hasExtra(FinancialTipsFragment.TIP_ID) -> navHelper.navigateWellness(intent.getStringExtra(FinancialTipsFragment.TIP_ID)!!)
             else -> AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, intent.action), this)
         }
     }
@@ -193,7 +193,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         if (accountId == DUMMY)
             checkPermissionsAndNavigate(HomeFragmentDirections.actionNavigationHomeToNavigationLinkAccount(true))
         else
-            staxNavigation.navigateAccountDetails(accountId)
+            navHelper.navigateAccountDetails(accountId)
     }
 
     override fun onAuthError(error: String) {
@@ -225,7 +225,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
     }
 
     override fun googleLoginSuccessful() {
-        if (loginViewModel.postGoogleAuthNav.value == SettingsFragment.SHOW_BOUNTY_LIST) staxNavigation.navigateToBountyList()
+        if (loginViewModel.postGoogleAuthNav.value == SettingsFragment.SHOW_BOUNTY_LIST) navHelper.navigateToBountyList()
     }
 
     override fun googleLoginFailed() {
