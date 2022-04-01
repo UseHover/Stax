@@ -15,6 +15,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentAccountBinding
 import com.hover.stax.futureTransactions.FutureViewModel
@@ -47,6 +48,8 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
     private var dialog: StaxDialog? = null
 
+    private val args: AccountDetailFragmentArgs by navArgs()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAccountBinding.inflate(inflater, container, false)
         return binding.root
@@ -61,7 +64,7 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         setUpBalance()
         setUpManage()
 
-        arguments?.let { viewModel.setAccount(it.getInt(Constants.ACCOUNT_ID)) }
+        viewModel.setAccount(args.accountId)
     }
 
     private fun setUpBalance() {

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import timber.log.Timber;
 
@@ -122,6 +123,12 @@ public class Channel implements Comparable<Channel> {
     @Override
     public String toString() {
         return name + " " + countryAlpha2;
+    }
+
+    public String toFilterableString() {
+        Locale loc = new Locale("",countryAlpha2);
+        String fullCountryName = loc.getDisplayCountry();
+        return name + fullCountryName;
     }
 
     @Override

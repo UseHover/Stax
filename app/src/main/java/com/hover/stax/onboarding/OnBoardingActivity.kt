@@ -5,16 +5,15 @@ import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.hover.sdk.permissions.PermissionHelper
+import com.hover.stax.OnboardingNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.databinding.OnboardingLayoutBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.login.AbstractGoogleAuthActivity
 import com.hover.stax.login.StaxGoogleLoginInterface
+import com.hover.stax.onboarding.signInVariant.SignInVariantFragmentDirections
 import com.hover.stax.permissions.PermissionUtils
-import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
-import com.hover.stax.utils.UIHelper
-import com.hover.stax.utils.Utils
+import com.hover.stax.utils.*
 import timber.log.Timber
 
 class OnBoardingActivity : AbstractGoogleAuthActivity(), StaxGoogleLoginInterface {
@@ -48,14 +47,14 @@ class OnBoardingActivity : AbstractGoogleAuthActivity(), StaxGoogleLoginInterfac
     }
 
     private fun chooseOnboardingVariant() = when (Utils.getString(Constants.VARIANT, this) ?: "default") {
-        "interactive" -> navController.navigate(R.id.questionOnboardingFragment)
-        "informational" ->  navController.navigate(R.id.slidingOnboardingFragment)
+        "interactive" -> NavUtil.navigate(navController, OnboardingNavigationDirections.actionGlobalInteractiveOnboardingVariant())
+        "informational" ->  NavUtil.navigate(navController, OnboardingNavigationDirections.actionGlobalSignInVariantFragment())
         else -> Timber.i("Loading default fragment") //do nothing, loading default fragment
 
     }
 
     override fun googleLoginSuccessful() {
-        navController.navigate(R.id.action_slidingOnboardingFragment_to_welcomeFragment)
+        NavUtil.navigate(navController, SignInVariantFragmentDirections.actionSignInVariantFragmentToWelcomeFragment(1))
     }
 
     override fun googleLoginFailed() {

@@ -35,7 +35,7 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
     private var auth: FirebaseAuth = Firebase.auth
     lateinit var signInClient: GoogleSignInClient
 
-    private val user = MutableLiveData<FirebaseUser>()
+    val user = MutableLiveData<FirebaseUser>()
     private var optedIn = MutableLiveData(false)
 
     var email = MediatorLiveData<String?>()
@@ -50,7 +50,7 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
         getUsername()
     }
 
-    fun signIntoFirebaseAsync(data: Intent?, inOrOut: Boolean, activity: AppCompatActivity) {
+    fun signIntoGoogle(data: Intent?, inOrOut: Boolean, activity: AppCompatActivity) {
         optedIn.value = inOrOut
         progress.value = 25
         val task = GoogleSignIn.getSignedInAccountFromIntent(data)
@@ -155,6 +155,8 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
         signInClient.signOut().addOnCompleteListener {
             AnalyticsUtil.logErrorAndReportToFirebase(LoginViewModel::class.java.simpleName, message, null)
             AnalyticsUtil.logAnalyticsEvent(message, application)
+
+            auth.signOut()
 
             resetAccountDetails()
 

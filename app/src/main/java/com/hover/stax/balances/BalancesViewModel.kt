@@ -11,8 +11,10 @@ import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.Utils
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -24,7 +26,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
     private var hasActive: Boolean = false
 
     var selectedChannels: LiveData<List<Channel>> = MutableLiveData()
-    var accounts: LiveData<List<Account>> = MutableLiveData()
+    var accounts = MutableLiveData<List<Account>>()
 
     var shouldShowBalances = MutableLiveData(false)
     var runFlag = MutableLiveData(NONE)
@@ -35,7 +37,7 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     init {
         selectedChannels = repo.selected
-        accounts = repo.allAccountsLive
+        loadAccounts()
 
         actions = Transformations.switchMap(selectedChannels, this::loadActions)
 
@@ -46,6 +48,10 @@ class BalancesViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
 
         runBalanceError.value = false
+    }
+
+    private fun loadAccounts() = viewModelScope.launch {
+        repo.getAccounts().collect { accounts.postValue(it) }
     }
 
     fun setListener(l: RunBalanceListener) {

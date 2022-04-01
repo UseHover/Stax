@@ -10,7 +10,7 @@ import com.google.firebase.ktx.Firebase
 import timber.log.Timber
 import java.util.*
 
-data class FinancialTip(val id: String, val title: String, val content: String, val snippet: String?, val date: Date?)
+data class FinancialTip(val id: String, val title: String, val content: String, val snippet: String, val date: Date?, val shareCopy: String?)
 
 class FinancialTipsViewModel : ViewModel() {
 
@@ -34,7 +34,8 @@ class FinancialTipsViewModel : ViewModel() {
                 .get()
                 .addOnSuccessListener { snapshot ->
                     val financialTip = snapshot.map { document ->
-                        FinancialTip(document.id, document.data["title"].toString(), document.data["content"].toString(), document.data["snippet"].toString(), document.getDate("date"))
+                        FinancialTip(document.id, document.data["title"].toString(), document.data["content"].toString(),
+                            document.data["snippet"].toString(), document.getDate("date"), document.data["share copy"].toString())
                     }
 
                     tips.postValue(financialTip.filterNot { it.date == null }.sortedByDescending { it.date!!.time })

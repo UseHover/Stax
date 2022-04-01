@@ -12,6 +12,7 @@ import com.hover.stax.databinding.FragmentInteractiveTutorialBinding
 import com.hover.stax.onboarding.OnBoardingActivity
 import com.hover.stax.onboarding.welcome.WelcomeFragment
 import com.hover.stax.utils.AnalyticsUtil
+import com.hover.stax.utils.NavUtil
 import org.json.JSONObject
 import timber.log.Timber
 
@@ -44,7 +45,7 @@ internal class InteractiveTutorialFragment : Fragment() {
     private fun setContinueClick() = binding.continueBtn.setOnClickListener {
         val variation = if (isNoneApply()) 3 else 2
         logOptionsSelected()
-        findNavController().navigate(R.id.action_interactiveTutorialFragment_to_welcomeFragment, bundleOf(WelcomeFragment.SALUTATIONS to variation))
+        NavUtil.navigate(findNavController(), InteractiveTutorialFragmentDirections.actionInteractiveTutorialFragmentToWelcomeFragment(variation))
     }
 
     private fun logOptionsSelected() {
