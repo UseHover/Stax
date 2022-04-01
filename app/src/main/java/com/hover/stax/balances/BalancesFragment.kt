@@ -19,6 +19,7 @@ import com.hover.stax.home.NavigationInterface
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.Utils
 import com.hover.stax.views.staxcardstack.StaxCardStackView
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -88,7 +89,9 @@ class  BalancesFragment : Fragment(), NavigationInterface {
     }
 
     private fun showBalanceCards(status: Boolean) {
+
         toggleLink(status)
+        Utils.saveBoolean(BALANCE_LABEL, status, requireContext())
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(
                 if (status) R.drawable.ic_visibility_on else R.drawable.ic_visibility_off, 0, 0, 0
         )
@@ -113,7 +116,7 @@ class  BalancesFragment : Fragment(), NavigationInterface {
         balancesRecyclerView.adapter = balancesAdapter
         balancesAdapter.showBalanceAmounts(true)
 
-        showBalanceCards(accounts.all { id == DUMMY })
+        showBalanceCards(Utils.getBoolean(BALANCE_LABEL, requireContext(), true))
         updateStackCard(accounts)
 
         accountList = accounts
@@ -170,7 +173,7 @@ class  BalancesFragment : Fragment(), NavigationInterface {
 
         const val STACK_OVERLAY_GAP = 10
         const val ROTATE_UPSIDE_DOWN = 180f
-
+        private const val BALANCE_LABEL : String = "showBalance";
         private var SHOW_ADD_ANOTHER_ACCOUNT = false
     }
 }

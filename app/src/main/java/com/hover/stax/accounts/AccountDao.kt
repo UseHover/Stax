@@ -2,12 +2,13 @@ package com.hover.stax.accounts
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AccountDao {
 
-    @Query("SELECT * FROM accounts ORDER BY alias ASC")
-    fun getAllAccountsLive(): LiveData<List<Account>>
+//    @Query("SELECT * FROM accounts ORDER BY alias ASC")
+//    fun getAllAccountsLive(): LiveData<List<Account>>
 
     @Query("SELECT * FROM accounts ORDER BY alias ASC")
     fun getAllAccounts(): List<Account>
@@ -16,7 +17,7 @@ interface AccountDao {
     fun getAccounts(channelId: Int): List<Account>
 
     @Query("SELECT * FROM accounts ORDER BY alias ASC")
-    fun getAccounts(): List<Account>
+    fun getAccounts(): Flow<List<Account>>
 
     @Query("SELECT * FROM accounts where name = :name and channelId = :channelId")
     fun getAccount(name: String, channelId: Int): Account?

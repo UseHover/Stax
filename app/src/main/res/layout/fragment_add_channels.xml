@@ -41,6 +41,18 @@
                     app:showBack="false"
                     app:title="@string/add_an_account">
 
+                <com.hover.stax.views.StaxTextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/search"
+                    android:inputType="textFilter"
+                    android:imeOptions="actionDone"
+                    android:id="@+id/searchInput"/>
+
+                <include layout="@layout/no_account_empty_state"
+                    android:visibility="gone"
+                    android:id="@+id/emptyState"/>
+
                 <TextView
                     android:id="@+id/error_text"
                     android:layout_width="wrap_content"
@@ -51,13 +63,13 @@
                     android:layout_marginBottom="@dimen/margin_8"
                     app:fontFamily="@font/brutalista_medium"
                     android:gravity="center_vertical"
-                    android:text="@string/channels_error_nodata"
-                    android:textColor="@color/stax_state_red"
+                    android:text="@string/loading"
+                    android:textColor="@color/stax_state_blue"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:visibility="visible"
-                    app:drawableStartCompat="@drawable/ic_error" />
+                    app:drawableStartCompat="@drawable/ic_info" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/channelsList"

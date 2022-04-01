@@ -1,11 +1,14 @@
 import java.nio.file.Paths
 
-apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'com.google.firebase.firebase-perf'
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'com.google.firebase.firebase-perf'
+    id 'androidx.navigation.safeargs'
+}
 
 
 def userHome = Paths.get(System.getProperty('user.home'))
@@ -42,7 +45,7 @@ android {
         applicationId "com.hover.stax"
         minSdk 21
         targetSdk 31
-        versionCode 124
+        versionCode 125
         versionName "1.9.1"
 
         vectorDrawables.useSupportLibrary = true
@@ -135,7 +138,7 @@ dependencies {
     implementation 'androidx.activity:activity-compose:1.4.0'
     kapt "androidx.lifecycle:lifecycle-common-java8:2.4.1"
 
-    implementation 'androidx.core:core-splashscreen:1.0.0-beta01'
+    implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
     implementation 'androidx.preference:preference-ktx:1.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
