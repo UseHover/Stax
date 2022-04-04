@@ -154,7 +154,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
 
     private fun initBackNavigation() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
-        binding.backButton.setOnClickListener { findNavController().navigate(R.id.action_tipsFragment_to_navigation_home) }
+        binding.backButton.setOnClickListener { FinancialTipsFragmentDirections.actionTipsFragmentToNavigationHome() }
     }
 
     override fun onDestroyView() {

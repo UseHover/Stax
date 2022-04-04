@@ -75,10 +75,12 @@
         <deepLink
                 android:id="@+id/balanceDL"
                 app:mimeType="text/plain"
+                android:autoVerify="true"
                 app:uri="stax.me/balance" />
         <deepLink
                 android:id="@+id/historyDL"
                 app:mimeType="text/plain"
+                android:autoVerify="true"
                 app:uri="stax.me/history" />
     </fragment>
 
@@ -95,6 +97,7 @@
         <deepLink
                 android:id="@+id/linkAccountDL"
                 app:mimeType="text/plain"
+                android:autoVerify="true"
                 app:uri="stax.me/linkaccount" />
     </fragment>
 
@@ -205,6 +208,7 @@
         <deepLink
                 android:id="@+id/libDL"
                 app:mimeType="text/plain"
+                android:autoVerify="true"
                 app:uri="stax.me/lib" />
     </fragment>
 
@@ -239,6 +243,7 @@
         <deepLink
                 android:id="@+id/transferDL"
                 app:mimeType="text/plain"
+                android:autoVerify="true"
                 app:uri="stax.me/transfer/{transactionType}" />
     </fragment>
     <fragment
@@ -274,6 +279,7 @@
         <deepLink
                 android:id="@+id/requestDL"
                 app:mimeType="text/plain"
+                android:autoVerify="true"
                 app:uri="stax.me/request" />
     </fragment>
 
@@ -323,6 +329,7 @@
         <deepLink
                 android:id="@+id/tipsDL"
                 app:mimeType="text/plain"
+                android:autoVerify="true"
                 app:uri="stax.me/financialTips?id={tipId}" />
     </fragment>
     <fragment
