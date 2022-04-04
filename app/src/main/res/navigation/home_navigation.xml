@@ -237,7 +237,7 @@
                 android:name="transactionType"
                 app:argType="string" />
         <deepLink
-                android:id="@+id/airtimeDL"
+                android:id="@+id/transferDL"
                 app:mimeType="text/plain"
                 app:uri="stax.me/transfer/{transactionType}" />
     </fragment>
