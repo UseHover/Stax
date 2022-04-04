@@ -75,11 +75,11 @@
         <deepLink
                 android:id="@+id/balanceDL"
                 app:mimeType="text/plain"
-                app:uri="@string/deeplink_balance" />
+                app:uri="stax.me/balance" />
         <deepLink
                 android:id="@+id/historyDL"
                 app:mimeType="text/plain"
-                app:uri="@string/deeplink_history" />
+                app:uri="stax.me/history" />
     </fragment>
 
     <fragment
@@ -95,7 +95,7 @@
         <deepLink
                 android:id="@+id/linkAccountDL"
                 app:mimeType="text/plain"
-                app:uri="@string/deeplink_linkaccount" />
+                app:uri="stax.me/linkaccount" />
     </fragment>
 
     <fragment
@@ -124,7 +124,7 @@
         <deepLink
                 android:id="@+id/settingsDL"
                 app:mimeType="text/plain"
-                app:uri="@string/deeplink_settings" />
+                app:uri="stax.me/settings" />
     </fragment>
 
     <fragment
@@ -205,7 +205,7 @@
         <deepLink
                 android:id="@+id/libDL"
                 app:mimeType="text/plain"
-                app:uri="@string/deeplink_lib" />
+                app:uri="stax.me/lib" />
     </fragment>
 
     <fragment
@@ -237,9 +237,9 @@
                 android:name="transactionType"
                 app:argType="string" />
         <deepLink
-                android:id="@+id/transferDL"
+                android:id="@+id/airtimeDL"
                 app:mimeType="text/plain"
-                app:uri="@string/deeplink_transfer" />
+                app:uri="stax.me/transfer/{transactionType}" />
     </fragment>
     <fragment
             android:id="@+id/accountsFragment"
@@ -268,10 +268,13 @@
             android:name="com.hover.stax.requests.NewRequestFragment"
             android:label="@string/nav_request"
             tools:layout="@layout/fragment_request">
-
         <action
                 android:id="@+id/action_navigation_request_to_accountsFragment"
                 app:destination="@id/accountsFragment" />
+        <deepLink
+                android:id="@+id/requestDL"
+                app:mimeType="text/plain"
+                app:uri="stax.me/request" />
     </fragment>
 
     <fragment
@@ -320,7 +323,7 @@
         <deepLink
                 android:id="@+id/tipsDL"
                 app:mimeType="text/plain"
-                app:uri="@string/deeplink_financial_tips" />
+                app:uri="stax.me/financialTips?id={tipId}" />
     </fragment>
     <fragment
             android:id="@+id/paybillFragment"

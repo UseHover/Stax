@@ -61,7 +61,6 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        navHelper.handleDeeplink(intent!!)
         checkForRequest(intent!!)
     }
 

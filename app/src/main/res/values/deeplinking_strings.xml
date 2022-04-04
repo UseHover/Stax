@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="deeplink_bounty" translatable="false">/bounty</string>
-	<string name="deeplink_request" translatable="false">/request</string>
-	<string name="deeplink_airtime" translatable="false">/airtime</string>
-	<string name="deeplink_sendmoney" translatable="false">/sendmoney</string>
+<!--	<string name="deeplink_request" translatable="false">/request</string>-->
+<!--	<string name="deeplink_airtime" translatable="false">/airtime</string>-->
+<!--	<string name="deeplink_sendmoney" translatable="false">/sendmoney</string>-->
 <!--	<string name="deeplink_balance" translatable="false">/balance</string>-->
 <!--	<string name="deeplink_history" translatable="false">/history</string>-->
 <!--	<string name="deeplink_linkaccount" translatable="false">/linkaccount</string>-->
@@ -11,14 +11,6 @@
 <!--	<string name="deeplink_settings" translatable="false">/settings</string>-->
 	<string name="deeplink_reviews" translatable="false">/reviews</string>
 <!--	<string name="deeplink_lib" translatable="false">/library</string>-->
-<!--	<string name="deeplink_financial_tips" translatable="false">/financialTips</string>-->
+	<string name="deeplink_financial_tips" translatable="false">/financialTips</string>
 
-	<!-- Updated Deeplinks -->
-	<string name="deeplink_transfer" translatable="false">stax.me/transfer/{transactionType}</string>
-	<string name="deeplink_balance" translatable="false">stax.me/balance</string>
-	<string name="deeplink_history" translatable="false">stax.me/history</string>
-	<string name="deeplink_linkaccount" translatable="false">stax.me/linkaccount</string>
-	<string name="deeplink_settings" translatable="false">stax.me/settings</string>
-	<string name="deeplink_lib" translatable="false">stax.me/library</string>
-	<string name="deeplink_financial_tips" translatable="false">stax.me/financialTips?id={tipId}</string>
 </resources>
