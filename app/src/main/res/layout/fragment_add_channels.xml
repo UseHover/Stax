@@ -49,8 +49,9 @@
                     android:imeOptions="actionDone"
                     android:id="@+id/searchInput"/>
 
-                <include layout="@layout/no_account_empty_state"
-                    android:visibility="gone"
+                <com.hover.stax.views.ChannelEmptyStateView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:id="@+id/emptyState"/>
 
                 <TextView

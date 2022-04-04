@@ -9,7 +9,6 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
@@ -23,14 +22,14 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
-import com.hover.stax.views.RequestServiceDialog
+
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
-class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
+class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener {
 
     private val channelsViewModel: ChannelsViewModel by viewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
@@ -38,11 +37,10 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
     private var _binding: FragmentAddChannelsBinding? = null
     private val binding get() = _binding!!
 
-    private val selectAdapter: ChannelsAdapter = ChannelsAdapter(ArrayList(0), this)
+    private val selectAdapter: ChannelsRecyclerViewAdapter = ChannelsRecyclerViewAdapter(ArrayList(0), this)
     private var tracker: SelectionTracker<Long>? = null
 
     private var dialog: StaxDialog? = null
-    private var forceReturn = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,9 +52,12 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
         _binding = FragmentAddChannelsBinding.inflate(inflater, container, false)
 
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_link_account)), requireContext())
+        initArguments()
 
         return binding.root
     }
+
+    private fun initArguments() = arguments?.let { IS_FORCE_RETURN = it.getBoolean(FORCE_RETURN_DATA, true) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -73,20 +74,19 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
         binding.channelsList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireContext())
             setHasFixedSize(true)
-            selectAdapter.setHasStableIds(true)
             adapter = selectAdapter
             isNestedScrollingEnabled = false
         }
+        binding.emptyState.setup(requireActivity())
 
         setUpMultiselect()
         setSearchInputWatcher()
 
-        channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
-        channelsViewModel.simChannels.observe(viewLifecycleOwner) { if (it.isEmpty()) setError(R.string.channels_error_nosim) else Timber.i("loaded") }
-        channelsViewModel.filteredChannels.observe(viewLifecycleOwner) { loadFilteredChannels(it) }
-        channelsViewModel.allChannels.observe(viewLifecycleOwner) { Timber.i("Loaded all channels") }
 
-        binding.emptyState.informUs.setOnClickListener { RequestServiceDialog(requireActivity()).showIt() }
+        channelsViewModel.selectedChannels.observe(viewLifecycleOwner) { onSelectedLoaded(it) }
+        channelsViewModel.simChannels.observe(viewLifecycleOwner) { if(it.isEmpty())  setError(R.string.channels_error_nosim) else Timber.i("loaded") }
+        channelsViewModel.filteredChannels.observe(viewLifecycleOwner){ loadFilteredChannels(it) }
+        channelsViewModel.allChannels.observe(viewLifecycleOwner) { Timber.i("Loaded all channels") }
     }
 
     private fun setSearchInputWatcher() {
@@ -94,12 +94,11 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun afterTextChanged(editable: Editable) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                channelsViewModel.filterSimChannels(charSequence.toString())
+               channelsViewModel.filterSimChannels(charSequence.toString())
             }
         }
         binding.searchInput.addTextChangedListener(searchInputWatcher)
     }
-
     private fun setUpMultiselect() {
         tracker = SelectionTracker.Builder(
             "channelSelection", binding.channelsList,
@@ -120,7 +119,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
 
         showSelected(!channels.isNullOrEmpty())
         if (!channels.isNullOrEmpty())
-            binding.selectedList.adapter = ChannelsAdapter(channels, this)
+            binding.selectedList.adapter = ChannelsRecyclerViewAdapter(channels, this)
     }
 
     private fun showSelected(visible: Boolean) {
@@ -133,23 +132,18 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
 
         if (!channels.isNullOrEmpty()) {
             updateAdapter(Channel.sort(channels, false))
+            binding.emptyState.dismiss()
             binding.channelsList.visibility = VISIBLE
-            binding.emptyState.root.visibility = GONE
             binding.errorText.visibility = GONE
-        } else if (channelsViewModel.isInSearchMode()) showEmptyState()
+        }
+        else if(channelsViewModel.isInSearchMode()) showEmptyState()
         else setError(R.string.channels_error_nodata)
     }
 
     private fun showEmptyState() {
-        val content = resources.getString(R.string.no_accounts_found_desc, channelsViewModel.filterQuery.value!!)
-        binding.emptyState.noAccountFoundDesc.apply {
-            text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
-            movementMethod = LinkMovementMethod.getInstance()
-        }
-
+        binding.emptyState.show(channelsViewModel.filterQuery.value!!)
         binding.channelsList.visibility = GONE
         binding.errorText.visibility = GONE
-        binding.emptyState.root.visibility = VISIBLE
     }
 
 
@@ -159,8 +153,8 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
 
     private fun setError(message: Int) {
         binding.errorText.apply {
-            visibility = VISIBLE
-            text = getString(message)
+                visibility = VISIBLE
+                text = getString(message)
         }
     }
 
@@ -232,5 +226,10 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
 
         dialog?.let { if (it.isShowing) it.dismiss() }
         _binding = null
+    }
+
+    companion object {
+        var IS_FORCE_RETURN = true
+        const val FORCE_RETURN_DATA = "force_return_data"
     }
 }
