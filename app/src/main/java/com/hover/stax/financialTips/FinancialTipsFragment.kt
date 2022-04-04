@@ -95,13 +95,18 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
             else
                 tip.snippet
 
+            val shareableLink = if (tip.deepLink != "null")
+                tip.deepLink
+            else
+                "https://stax.me/financialTips?id=${tip.id}"
+
             val shareableContent = buildString {
                 append(tip.title)
                 append("\n\n")
                 append(shareCopy)
                 append(" ${getString(R.string.stax_handle)}")
                 append("\n\n")
-                append("https://stax.me/financialTips?id=${tip.id}")
+                append(shareableLink)
             }
 
             val share = Intent.createChooser(Intent().apply {
