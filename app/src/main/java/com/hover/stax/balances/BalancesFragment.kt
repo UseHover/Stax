@@ -68,7 +68,7 @@ class BalancesFragment : Fragment() {
     private fun setUpLinkNewAccount() {
         addChannelLink = binding.newAccountLink
         addChannelLink.setOnClickListener {
-            (requireActivity() as MainActivity).checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalAddChannelsFragment(true))
+            (requireActivity() as MainActivity).checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalAddChannelsFragment())
         }
     }
 

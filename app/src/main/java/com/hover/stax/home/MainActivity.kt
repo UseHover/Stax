@@ -55,13 +55,13 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         startObservers()
         checkForRequest(intent)
         checkForFragmentDirection(intent)
-        StaxDeepLinking.navigateIfRequired(this)
         observeForAppReview()
         setGoogleLoginInterface(this)
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+        navHelper.handleDeeplink(intent!!)
         checkForRequest(intent!!)
     }
 
@@ -182,7 +182,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
     override fun onTapRefresh(accountId: Int) {
         if (accountId == DUMMY)
-            checkPermissionsAndNavigate(HomeFragmentDirections.actionNavigationHomeToNavigationLinkAccount(true))
+            checkPermissionsAndNavigate(HomeFragmentDirections.actionNavigationHomeToNavigationLinkAccount())
         else {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), this)
             balancesViewModel.setRunning(accountId)
@@ -191,7 +191,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
     override fun onTapDetail(accountId: Int) {
         if (accountId == DUMMY)
-            checkPermissionsAndNavigate(HomeFragmentDirections.actionNavigationHomeToNavigationLinkAccount(true))
+            checkPermissionsAndNavigate(HomeFragmentDirections.actionNavigationHomeToNavigationLinkAccount())
         else
             navHelper.navigateAccountDetails(accountId)
     }

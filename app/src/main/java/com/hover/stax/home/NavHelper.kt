@@ -1,5 +1,6 @@
 package com.hover.stax.home
 
+import android.content.Intent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -40,6 +41,8 @@ class NavHelper(val activity: AppCompatActivity, private val isMainActivity: Boo
         setNavClickListener(nav)
         setDestinationChangeListener(nav)
     }
+
+    fun handleDeeplink(intent: Intent) = getNavController().handleDeepLink(intent)
 
     fun navigateAccountDetails(accountId: Int) = NavUtil.navigate(getNavController(), HomeFragmentDirections.actionNavigationHomeToAccountDetailsFragment(accountId))
 
@@ -95,7 +98,7 @@ class NavHelper(val activity: AppCompatActivity, private val isMainActivity: Boo
         R.id.navigation_balance, Constants.NAV_BALANCE -> MainNavigationDirections.actionGlobalNavigationBalance()
         Constants.NAV_TRANSFER -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.P2P)
         Constants.NAV_AIRTIME -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.AIRTIME)
-        Constants.NAV_LINK_ACCOUNT -> MainNavigationDirections.actionGlobalAddChannelsFragment(true)
+        Constants.NAV_LINK_ACCOUNT -> MainNavigationDirections.actionGlobalAddChannelsFragment()
         Constants.NAV_PAYBILL -> MainNavigationDirections.actionGlobalPaybillFragment(false)
         else -> MainNavigationDirections.actionGlobalNavigationHome()
     }

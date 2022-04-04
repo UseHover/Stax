@@ -65,7 +65,7 @@ class SettingsFragment : Fragment() {
 
     private fun setUpMeta() {
         binding.settingsCard.connectAccounts.setOnClickListener {
-            NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToNavigationLinkAccount(true))
+            NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToNavigationLinkAccount())
         }
 
         channelsViewModel.accounts.observe(viewLifecycleOwner) {
