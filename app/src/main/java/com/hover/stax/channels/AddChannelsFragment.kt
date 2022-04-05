@@ -76,6 +76,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         binding.channelsList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireContext())
             setHasFixedSize(true)
+            selectAdapter.setHasStableIds(true)
             adapter = selectAdapter
             isNestedScrollingEnabled = false
         }
