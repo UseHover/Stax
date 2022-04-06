@@ -71,9 +71,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
             visibility = View.VISIBLE
             setTitle(tip.title)
 
-            setOnClickIcon {
-                showTipList()
-            }
+            setOnClickIcon { showTipList() }
         }
 
         binding.contentText.apply {
@@ -81,35 +79,37 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
             movementMethod = LinkMovementMethod.getInstance()
         }
 
-        binding.shareBtn.setOnClickListener {
-            val shareCopy = if (tip.shareCopy != "null")
-                tip.shareCopy
-            else
-                tip.snippet
+        binding.shareBtn.setOnClickListener { shareTip(tip) }
+    }
 
-            val shareableLink = if (tip.deepLink != "null")
-                tip.deepLink
-            else
-                "https://stax.me/financialTips?id=${tip.id}"
+    private fun shareTip(tip: FinancialTip) {
+        val shareCopy = if (tip.shareCopy != "null")
+            tip.shareCopy
+        else
+            tip.snippet
 
-            val shareableContent = buildString {
-                append(tip.title)
-                append("\n\n")
-                append(shareCopy)
-                append(" ${getString(R.string.stax_handle)}")
-                append("\n\n")
-                append(shareableLink)
-            }
+        val shareableLink = if (tip.deepLink != "null")
+            tip.deepLink
+        else
+            "https://stax.me/financialTips?id=${tip.id}"
 
-            val share = Intent.createChooser(Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, shareableContent)
-                type = "text/plain"
-            }, getString(R.string.share_wellness_tip))
-            startActivity(share)
-
-            logTipShare(tip)
+        val shareableContent = buildString {
+            append(tip.title)
+            append("\n\n")
+            append(shareCopy)
+            append(" ${getString(R.string.stax_handle)}")
+            append("\n\n")
+            append(shareableLink)
         }
+
+        val share = Intent.createChooser(Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, shareableContent)
+            type = "text/plain"
+        }, getString(R.string.share_wellness_tip))
+        startActivity(share)
+
+        logTipShare(tip)
     }
 
     private fun logTipShare(tip: FinancialTip) {
