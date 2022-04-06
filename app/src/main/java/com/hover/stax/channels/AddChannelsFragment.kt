@@ -73,6 +73,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
         binding.channelsList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireContext())
             setHasFixedSize(true)
+            selectAdapter.setHasStableIds(true)
             adapter = selectAdapter
             isNestedScrollingEnabled = false
         }

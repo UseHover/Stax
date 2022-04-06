@@ -10,6 +10,7 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
@@ -23,6 +24,7 @@ import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 
 class SettingsFragment : Fragment() {
@@ -165,10 +167,10 @@ class SettingsFragment : Fragment() {
     }
 
     private fun startBounties() {
-        val navDirection = if ((requireActivity() as MainActivity).isSignedIn())
-            SettingsFragmentDirections.actionNavigationSettingsToBountyListFragment()
+        val navAction = if (GoogleSignIn.getLastSignedInAccount(requireActivity()) == null)
+            R.id.action_navigation_settings_to_bountyEmailFragment
         else
-            SettingsFragmentDirections.actionNavigationSettingsToBountyEmailFragment()
+            R.id.action_navigation_settings_to_bountyListFragment
 
         NavUtil.navigate(findNavController(), navDirection)
     }
