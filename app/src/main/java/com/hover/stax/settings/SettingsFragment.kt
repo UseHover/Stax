@@ -167,10 +167,10 @@ class SettingsFragment : Fragment() {
     }
 
     private fun startBounties() {
-        val navAction = if (GoogleSignIn.getLastSignedInAccount(requireActivity()) == null)
-            R.id.action_navigation_settings_to_bountyEmailFragment
+        val navDirection = if (GoogleSignIn.getLastSignedInAccount(requireActivity()) == null)
+            SettingsFragmentDirections.actionNavigationSettingsToBountyEmailFragment()
         else
-            R.id.action_navigation_settings_to_bountyListFragment
+            SettingsFragmentDirections.actionNavigationSettingsToBountyListFragment()
 
         NavUtil.navigate(findNavController(), navDirection)
     }
