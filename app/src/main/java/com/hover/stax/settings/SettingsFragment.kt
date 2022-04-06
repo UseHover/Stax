@@ -18,7 +18,6 @@ import com.hover.stax.accounts.Account
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentSettingsBinding
 import com.hover.stax.home.MainActivity
-import com.hover.stax.home.NavigationInterface
 import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.utils.*
@@ -28,7 +27,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
 
-class SettingsFragment : Fragment(), NavigationInterface {
+class SettingsFragment : Fragment() {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
 
@@ -67,7 +66,10 @@ class SettingsFragment : Fragment(), NavigationInterface {
     }
 
     private fun setUpMeta() {
-        binding.settingsCard.connectAccounts.setOnClickListener { (activity as MainActivity).checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT) }
+        binding.settingsCard.connectAccounts.setOnClickListener {
+            NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToNavigationLinkAccount())
+        }
+
         channelsViewModel.accounts.observe(viewLifecycleOwner) {
             if (it.isNullOrEmpty()) {
                 binding.settingsCard.defaultAccountEntry.visibility = GONE
@@ -86,7 +88,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
             }
         }
 
-        selectLangBtn.setOnClickListener { findNavController().navigate(R.id.action_navigation_settings_to_languageSelectFragment) }
+        selectLangBtn.setOnClickListener { NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToLanguageSelectFragment()) }
     }
 
     private fun setupAppVersionInfo() {
@@ -115,8 +117,8 @@ class SettingsFragment : Fragment(), NavigationInterface {
             twitterContact.setOnClickListener { Utils.openUrl(getString(R.string.stax_twitter_url), requireActivity()) }
             receiveStaxUpdate.setOnClickListener { Utils.openUrl(getString(R.string.receive_stax_updates_url), requireActivity()) }
             requestFeature.setOnClickListener { Utils.openUrl(getString(R.string.stax_nolt_url), requireActivity()) }
-            contactSupport.setOnClickListener { Utils.openEmail(getString(R.string.stax_emailing_subject, Hover.getDeviceId(requireContext())), requireContext()) }
-            faq.setOnClickListener { findNavController().navigate(R.id.action_navigation_settings_to_faqFragment) }
+            contactSupport.setOnClickListener { Utils.openEmail(getString(R.string.stax_emailing_subject, Hover.getDeviceId(requireActivity())), requireActivity()) }
+            faq.setOnClickListener { NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToFaqFragment()) }
         }
     }
 
@@ -170,7 +172,7 @@ class SettingsFragment : Fragment(), NavigationInterface {
         else
             R.id.action_navigation_settings_to_bountyListFragment
 
-        findNavController().navigate(navAction)
+        NavUtil.navigate(findNavController(), navDirection)
     }
 
     private fun showLogoutConfirmDialog() {

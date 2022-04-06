@@ -15,12 +15,12 @@
 
     <application
             android:name=".ApplicationInstance"
-            android:allowBackup="false"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/Theme.App.Starting">
+
         <activity
                 android:name=".RoutingActivity"
                 android:exported="true">
@@ -50,88 +50,14 @@
                 android:exported="true"
                 android:label="@string/app_name"
                 android:theme="@style/StaxTheme">
+
+            <nav-graph android:value="@navigation/home_navigation" />
+
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_sendmoney"
-                        android:scheme="https" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_sendmoney"
-                        android:scheme="http" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_airtime"
-                        android:scheme="https" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_airtime"
-                        android:scheme="http" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_balance"
-                        android:scheme="https" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_balance"
-                        android:scheme="http" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_settings"
-                        android:scheme="https" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_settings"
-                        android:scheme="http" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_linkaccount"
-                        android:scheme="https" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_linkaccount"
-                        android:scheme="http" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_history"
-                        android:scheme="https" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_history"
-                        android:scheme="http" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_reviews"
-                        android:scheme="https" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_reviews"
-                        android:scheme="http" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_request"
-                        android:scheme="https" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_request"
-                        android:scheme="http" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_bounty"
-                        android:scheme="https" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_bounty"
-                        android:scheme="http" />
-                <data
-                        android:host="stax.me"
-                        android:pathPattern="@string/deeplink_financial_tips"
-                        android:scheme="https" />
             </intent-filter>
         </activity>
         <activity

@@ -93,12 +93,10 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
         //This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
         //https://stackoverflow.com/a/54939860/2371515
-        val channelsObserver = object : Observer<Channel?> {
-            override fun onChanged(channel: Channel?) {
-                channel?.let {
-                    requestViewModel.setActiveChannel(it)
-                    accountValue.setTitle(it.toString())
-                }
+        val channelsObserver = Observer<Channel?> { c ->
+            c?.let {
+                requestViewModel.setActiveChannel(it)
+                accountValue.setTitle(it.toString())
             }
         }
 

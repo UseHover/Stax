@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hover.stax.views.StaxCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:title="@string/nav_account_detail">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_10">
+
+        <TableRow android:layout_marginVertical="@dimen/margin_21">
+
+            <TextView
+                android:id="@+id/official_name_label"
+                android:layout_weight="1"
+                android:text="@string/official_name"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
+
+            <TextView
+                android:id="@+id/official_name"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow android:layout_marginVertical="@dimen/margin_21">
+
+            <TextView
+                android:id="@+id/shortcode_label"
+                android:layout_weight="1"
+                android:text="@string/shortcode"
+                android:textColor="@color/offWhite"
+                android:textSize="@dimen/text_16" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/shortcode_btn"
+                style="@style/StaxButtonColored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dial_default"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </TableRow>
+    </TableLayout>
+</com.hover.stax.views.StaxCardView>

@@ -1,7 +1,6 @@
 package com.hover.stax.accounts
 
 import android.content.res.ColorStateList
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,8 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
-
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -22,7 +19,6 @@ import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.futureTransactions.RequestsAdapter
 import com.hover.stax.futureTransactions.ScheduledAdapter
 import com.hover.stax.home.MainActivity
-import com.hover.stax.home.NavigationInterface
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.transactions.TransactionHistoryAdapter
@@ -34,7 +30,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListener, ScheduledAdapter.SelectListener,
-        RequestsAdapter.SelectListener, NavigationInterface {
+    RequestsAdapter.SelectListener {
 
     private val viewModel: AccountDetailViewModel by viewModel()
     private val futureViewModel: FutureViewModel by viewModel()
@@ -102,9 +98,9 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         if (newText.isNotEmpty() && comparator != null && newText != comparator)
             v.setState(null, AbstractStatefulInput.NONE)
         btn.backgroundTintList = ColorStateList.valueOf(
-                if (newText.isNotEmpty() && comparator != null && newText != comparator)
-                    ContextCompat.getColor(requireActivity(), R.color.brightBlue)
-                else ContextCompat.getColor(requireActivity(), R.color.buttonColor)
+            if (newText.isNotEmpty() && comparator != null && newText != comparator)
+                ContextCompat.getColor(requireActivity(), R.color.brightBlue)
+            else ContextCompat.getColor(requireActivity(), R.color.buttonColor)
         )
     }
 
@@ -120,8 +116,10 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         val msg = validates(v, comparison, errorMsg)
         if (msg == null)
             successFun(v.text)
-        v.setState(msg
-                ?: getString(R.string.label_saved), if (msg == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
+        v.setState(
+            msg
+                ?: getString(R.string.label_saved), if (msg == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
+        )
     }
 
     private fun validates(v: StaxTextInputLayout, comparison: String?, errorMsg: Int): String? {
@@ -133,14 +131,14 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         with(viewModel) {
             account.observe(viewLifecycleOwner) {
                 it?.let { acct ->
-                    binding.detailsCard.setTitle(acct.alias)
+                    binding.amountsCard.setTitle(acct.alias)
                     if (acct.latestBalance != null) {
                         binding.balanceCard.balanceAmount.text = acct.latestBalance
                         binding.balanceCard.balanceSubtitle.text = DateUtils.humanFriendlyDateTime(acct.latestBalanceTimestamp)
                     } else binding.balanceCard.balanceSubtitle.text = getString(R.string.refresh_balance_desc)
 
                     binding.feesDescription.text = getString(R.string.fees_label, acct.name)
-                    binding.officialName.text = if(acct.name == Constants.PLACEHOLDER) acct.alias else acct.name
+                    binding.detailsCard.officialName.text = if(acct.name == Constants.PLACEHOLDER) acct.alias else acct.name
 
                     binding.manageCard.nicknameInput.setText(acct.alias, false)
                     binding.manageCard.accountNumberInput.setText(acct.accountNo, false)
@@ -152,9 +150,9 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
             channel.observe(viewLifecycleOwner) { c ->
                 if (account.value != null && account.value!!.alias != c.name)
-                    binding.detailsCard.setSubtitle(c.name)
-                binding.shortcodeCard.dialShortcode.text = getString(R.string.dial_btn, c.rootCode)
-                binding.shortcodeCard.dialShortcode.setOnClickListener { Utils.dial(c.rootCode, requireContext()) }
+                    binding.amountsCard.setSubtitle(c.name)
+                binding.detailsCard.shortcodeBtn.text = getString(R.string.dial_btn, c.rootCode)
+                binding.detailsCard.shortcodeBtn.setOnClickListener { Utils.dial(c.rootCode, requireContext()) }
             }
 
             transactions.observe(viewLifecycleOwner) {
@@ -176,8 +174,8 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
     private fun setUpRemoveAccount(account: Account) {
         dialog = StaxDialog(requireActivity())
-                .setDialogTitle(getString(R.string.removepin_dialoghead, account.alias))
-                .setDialogMessage(R.string.removepins_dialogmes)
+                .setDialogTitle(getString(R.string.removeaccount_dialoghead, account.alias))
+                .setDialogMessage(R.string.removeaccount_msg)
                 .setPosButton(R.string.btn_removeaccount) { removeAccount(account) }
                 .setNegButton(R.string.btn_cancel, null)
                 .isDestructive
@@ -231,13 +229,15 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
     private fun onRefresh() = viewModel.account.value?.let { (activity as MainActivity).onTapRefresh(it.id) }
 
-    override fun viewRequestDetail(id: Int) =
-            findNavController().navigate(R.id.action_accountDetailsFragment_to_requestDetailsFragment, bundleOf("id" to id))
+    override fun viewRequestDetail(id: Int) {
+        NavUtil.navigate(findNavController(), AccountDetailFragmentDirections.actionAccountDetailsFragmentToRequestDetailsFragment(id))
+    }
 
-    override fun viewScheduledDetail(id: Int) =
-            findNavController().navigate(R.id.action_accountDetailsFragment_to_scheduleDetailsFragment, bundleOf("id" to id))
+    override fun viewScheduledDetail(id: Int) {
+        NavUtil.navigate(findNavController(), AccountDetailFragmentDirections.actionAccountDetailsFragmentToScheduleDetailsFragment(id))
+    }
 
-    override fun viewTransactionDetail(uuid: String?) = navigateToTransactionDetailsFragment(uuid, childFragmentManager, true)
+    override fun viewTransactionDetail(uuid: String?) = NavUtil.showTransactionDetailsFragment(uuid, childFragmentManager, true)
 
     override fun onDestroyView() {
         super.onDestroyView()
