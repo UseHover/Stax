@@ -21,7 +21,6 @@ import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransactionBinding
 import com.hover.stax.home.MainActivity
-import com.hover.stax.home.NavigationInterface
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase
 import com.hover.stax.utils.DateUtils.humanFriendlyDateTime
@@ -32,7 +31,7 @@ import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
+class TransactionDetailsFragment : DialogFragment() {
 
     private val viewModel: TransactionDetailsViewModel by viewModel()
     private var _binding: FragmentTransactionBinding? = null
@@ -201,7 +200,7 @@ class TransactionDetailsFragment : DialogFragment(), NavigationInterface {
         else {
             if (viewModel.action.value != null)
                 binding.transactionDetailsCard.setTitle(
-                        transaction.generateLongDescription(viewModel.action.value, viewModel.contact.value, requireContext())
+                    transaction.generateLongDescription(viewModel.action.value, viewModel.contact.value, requireContext())
                 )
             binding.infoCard.root.visibility = GONE
         }

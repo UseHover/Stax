@@ -24,7 +24,6 @@
     <string name="channels_json_prod" translatable="false">channels-prod.json</string>
     <string name="stax_handle" translatable="false">\@joinstax</string>
 
-
     <string name="nav_home">Home</string>
     <string name="nav_balance_and_history">Balance and history</string>
     <string name="nav_balances">Balances</string>

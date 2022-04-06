@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
-import com.hover.stax.channels.ChannelsRecyclerViewAdapter
+import com.hover.stax.channels.ChannelsAdapter
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentAccountsBinding
 import com.hover.stax.home.MainActivity
@@ -19,7 +19,7 @@ import com.hover.stax.utils.UIHelper
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AccountsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener, AccountsAdapter.SelectListener {
+class AccountsFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAdapter.SelectListener {
 
     private var _binding: FragmentAccountsBinding? = null
     private val binding get() = _binding!!
@@ -34,7 +34,7 @@ class AccountsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val selectAdapter = ChannelsRecyclerViewAdapter(ArrayList(), this)
+        val selectAdapter = ChannelsAdapter(ArrayList(), this)
 
         binding.accountsRV.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireActivity())

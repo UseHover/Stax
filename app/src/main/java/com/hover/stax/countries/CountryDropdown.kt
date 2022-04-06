@@ -56,8 +56,7 @@ class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     fun setDropdownValue(countryCode: String?) {
         countryAdapter?.let {
-            autoCompleteTextView.setText(it.getCountryString(countryCode
-                    ?: CountryAdapter.CODE_ALL_COUNTRIES))
+            autoCompleteTextView.setText(it.getCountryString(countryCode ?: CountryAdapter.CODE_ALL_COUNTRIES))
         }
     }
 

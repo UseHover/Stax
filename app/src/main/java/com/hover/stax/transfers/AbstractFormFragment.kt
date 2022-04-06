@@ -75,16 +75,9 @@ abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchLi
     }
 
     private fun setupActionDropdownObservers(viewModel: ChannelsViewModel, lifecycleOwner: LifecycleOwner) {
-        val activeChannelObserver = object : Observer<Channel?> {
-            override fun onChanged(t: Channel?) {
-                Timber.i("Got new active channel: $t ${t?.countryAlpha2}")
-            }
-        }
-        val actionsObserver = object : Observer<List<HoverAction>> {
-            override fun onChanged(t: List<HoverAction>?) {
-                Timber.i("Got new actions: %s", t?.size)
-            }
-        }
+        val activeChannelObserver = Observer<Channel?> { Timber.i("Got new active channel: $it ${it?.countryAlpha2}") }
+        val actionsObserver = Observer<List<HoverAction>> { Timber.i("Got new actions: %s", it?.size) }
+
         viewModel.activeChannel.observe(lifecycleOwner, activeChannelObserver)
         viewModel.channelActions.observe(lifecycleOwner, actionsObserver)
     }

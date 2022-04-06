@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
@@ -33,6 +34,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
     private lateinit var transferViewModel: TransferViewModel
 
+    private val args by navArgs<TransferFragmentArgs>()
+
     private lateinit var amountInput: StaxTextInputLayout
     private lateinit var recipientInstitutionSelect: ActionSelect
     private lateinit var contactInput: ContactInput
@@ -48,7 +51,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         abstractFormViewModel = getSharedViewModel<TransferViewModel>()
         transferViewModel = abstractFormViewModel as TransferViewModel
 
-        setTransactionType(requireArguments().getString(Constants.TRANSACTION_TYPE)!!)
+        setTransactionType(args.transactionType)
         _binding = FragmentTransferBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -352,6 +355,5 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     override fun nonStandardVarUpdate(key: String, value: String) {
         actionSelectViewModel.updateNonStandardVariables(key, value)
-//        nonStandardVarSummaryAdapter.updateList(this.key, this.value ?: "")
     }
 }
