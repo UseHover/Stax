@@ -72,7 +72,7 @@
 							android:contentDescription="@string/hsdk_response_ic"
 							android:gravity="center"
 							android:visibility="gone"
-							app:srcCompat="@drawable/ic_runner_logo" />
+							app:srcCompat="@drawable/hsdk_logo" />
 
 					<ImageView
 							android:id="@+id/imageReceiver"
@@ -84,7 +84,7 @@
 							android:contentDescription="@string/hsdk_response_ic"
 							android:gravity="center"
 							android:visibility="gone"
-							app:srcCompat="@drawable/ic_runner_logo" />
+							app:srcCompat="@drawable/hsdk_logo" />
 				</FrameLayout>
 
 				<TextSwitcher

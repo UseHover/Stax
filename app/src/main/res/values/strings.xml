@@ -446,11 +446,9 @@
     <string name="defaultacct_label">Default account</string>
     <string name="manage_account">Manage Account</string>
     <string name="security_head">Secure with Stax</string>
-    <string name="btn_removepins">Remove PINs</string>
-    <string name="removepins_dialoghead">Remove all PINs now</string>
-    <string name="removepin_dialoghead">Remove %1$s PIN now</string>
+    <string name="removeaccount_dialoghead">Remove %1$s now</string>
     <string name="btn_removeaccount">Remove account</string>
-    <string name="removepins_dialogmes">You can add your account to Stax again at any time.</string>
+    <string name="removeaccount_msg">You can add your account to Stax again at any time.</string>
     <string name="toast_confirm_removepin">PIN removed successfully</string>
     <string name="btn_savepin">Save PIN</string>
     <string name="btn_editpin">Edit PIN</string>

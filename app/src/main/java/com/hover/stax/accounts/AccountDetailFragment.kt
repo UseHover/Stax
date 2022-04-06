@@ -131,14 +131,14 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         with(viewModel) {
             account.observe(viewLifecycleOwner) {
                 it?.let { acct ->
-                    binding.detailsCard.setTitle(acct.alias)
+                    binding.amountsCard.setTitle(acct.alias)
                     if (acct.latestBalance != null) {
                         binding.balanceCard.balanceAmount.text = acct.latestBalance
                         binding.balanceCard.balanceSubtitle.text = DateUtils.humanFriendlyDateTime(acct.latestBalanceTimestamp)
                     } else binding.balanceCard.balanceSubtitle.text = getString(R.string.refresh_balance_desc)
 
                     binding.feesDescription.text = getString(R.string.fees_label, acct.name)
-                    binding.officialName.text = if (acct.name == Constants.PLACEHOLDER) acct.alias else acct.name
+                    binding.detailsCard.officialName.text = if(acct.name == Constants.PLACEHOLDER) acct.alias else acct.name
 
                     binding.manageCard.nicknameInput.setText(acct.alias, false)
                     binding.manageCard.accountNumberInput.setText(acct.accountNo, false)
@@ -150,9 +150,9 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
             channel.observe(viewLifecycleOwner) { c ->
                 if (account.value != null && account.value!!.alias != c.name)
-                    binding.detailsCard.setSubtitle(c.name)
-                binding.shortcodeCard.dialShortcode.text = getString(R.string.dial_btn, c.rootCode)
-                binding.shortcodeCard.dialShortcode.setOnClickListener { Utils.dial(c.rootCode, requireContext()) }
+                    binding.amountsCard.setSubtitle(c.name)
+                binding.detailsCard.shortcodeBtn.text = getString(R.string.dial_btn, c.rootCode)
+                binding.detailsCard.shortcodeBtn.setOnClickListener { Utils.dial(c.rootCode, requireContext()) }
             }
 
             transactions.observe(viewLifecycleOwner) {
@@ -174,11 +174,11 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
 
     private fun setUpRemoveAccount(account: Account) {
         dialog = StaxDialog(requireActivity())
-            .setDialogTitle(getString(R.string.removepin_dialoghead, account.alias))
-            .setDialogMessage(R.string.removepins_dialogmes)
-            .setPosButton(R.string.btn_removeaccount) { removeAccount(account) }
-            .setNegButton(R.string.btn_cancel, null)
-            .isDestructive
+                .setDialogTitle(getString(R.string.removeaccount_dialoghead, account.alias))
+                .setDialogMessage(R.string.removeaccount_msg)
+                .setPosButton(R.string.btn_removeaccount) { removeAccount(account) }
+                .setNegButton(R.string.btn_cancel, null)
+                .isDestructive
         dialog!!.showIt()
     }
 
