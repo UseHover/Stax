@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.navigation.NavDirections
 import com.hover.sdk.actions.HoverAction
+import com.hover.sdk.api.Hover
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
@@ -112,7 +113,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
             val toWhere = intent.extras!!.getInt(Constants.FRAGMENT_DIRECT, 0)
 
             if (toWhere == Constants.NAV_EMAIL_CLIENT)
-                Utils.openSupportEmailClient(this)
+                Utils.openEmail(getString(R.string.stax_emailing_subject, Hover.getDeviceId(this)), this)
             else
                 navHelper.checkPermissionsAndNavigate(toWhere)
         }

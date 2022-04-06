@@ -265,18 +265,4 @@ object Utils {
         else
             UIHelper.flashMessage(c, c.getString(R.string.enable_call_permission))
     }
-
-    fun openSupportEmailClient(activity: Activity) {
-        val intent = Intent(Intent.ACTION_VIEW)
-        val recipientEmail = activity.getString(R.string.stax_support_email)
-        val subject = activity.getString(R.string.stax_emailing_subject, Hover.getDeviceId(activity.baseContext))
-        val data = Uri.parse("mailto:$recipientEmail ?subject=$subject")
-        intent.data = data
-        try {
-            activity.startActivity(intent)
-        } catch (e: ActivityNotFoundException) {
-            Timber.e("Activity not found")
-            UIHelper.flashMessage(activity, activity.getString(R.string.email_client_not_found))
-        }
-    }
 }
