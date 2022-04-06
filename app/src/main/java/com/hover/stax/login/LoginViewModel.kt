@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
@@ -24,6 +25,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
 import java.io.IOException
+import kotlin.math.sign
 
 
 private const val EMAIL = "email"
@@ -32,10 +34,9 @@ private const val BOUNTY_EMAIL_KEY = "email_for_bounties"
 
 class LoginViewModel(val repo: DatabaseRepo, val application: Application) : ViewModel() {
 
-    private var auth: FirebaseAuth = Firebase.auth
     lateinit var signInClient: GoogleSignInClient
 
-    val user = MutableLiveData<FirebaseUser>()
+    val user = MutableLiveData<GoogleSignInAccount>()
     private var optedIn = MutableLiveData(false)
 
     var email = MediatorLiveData<String?>()
@@ -50,28 +51,17 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
         getUsername()
     }
 
-    fun signIntoGoogle(data: Intent?, inOrOut: Boolean, activity: AppCompatActivity) {
+    fun signIntoGoogle(data: Intent?, inOrOut: Boolean) {
         optedIn.value = inOrOut
         progress.value = 25
         val task = GoogleSignIn.getSignedInAccountFromIntent(data)
         try {
             val account = task.getResult(ApiException::class.java)!!
-            signIntoFirebase(account.idToken!!, activity)
+            setUser(account, account.idToken!!)
+            progress.value = 33
         } catch (e: ApiException) {
             Timber.e(e, "Google sign in failed")
             onError(application.getString(R.string.login_google_err))
-        }
-    }
-
-    private fun signIntoFirebase(idToken: String, activity: AppCompatActivity) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        auth.signInWithCredential(credential).addOnCompleteListener(activity) {
-            progress.value = 33
-            if (it.isSuccessful) {
-                auth.currentUser?.let { user -> setUser(user, idToken) }
-            } else {
-                onError(application.getString(R.string.login_google_err))
-            }
         }
     }
 
@@ -108,12 +98,12 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
         saveResponseData(json)
     }
 
-    private fun setUser(firebaseUser: FirebaseUser, idToken: String) {
-        Timber.e("setting user: %s", firebaseUser.email)
-        user.postValue(firebaseUser)
-        setEmail(firebaseUser.email)
+    private fun setUser(signInAccount: GoogleSignInAccount, idToken: String) {
+        Timber.e("setting user: %s", signInAccount.email)
+        user.postValue(signInAccount)
+        setEmail(signInAccount.email)
 
-        uploadUserToStax(firebaseUser.email, firebaseUser.displayName, idToken)
+        uploadUserToStax(signInAccount.email, signInAccount.displayName, idToken)
     }
 
     private fun saveResponseData(json: JSONObject?) {
@@ -121,7 +111,7 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
         setUsername(data?.optString("username"))
     }
 
-    fun usernameIsNotSet(): Boolean = getEmail().isNullOrEmpty()
+    fun usernameIsNotSet(): Boolean = getUsername().isNullOrEmpty()
 
     private fun setUsername(name: String?) {
         Timber.e("setting username %s", name)
@@ -156,8 +146,6 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
             AnalyticsUtil.logErrorAndReportToFirebase(LoginViewModel::class.java.simpleName, message, null)
             AnalyticsUtil.logAnalyticsEvent(message, application)
 
-            auth.signOut()
-
             resetAccountDetails()
 
             progress.postValue(-1)
@@ -171,6 +159,8 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
 
         email.value = null
         username.value = null
+
+        progress.postValue(-1)
     }
 
     private fun resetAccountDetails() {

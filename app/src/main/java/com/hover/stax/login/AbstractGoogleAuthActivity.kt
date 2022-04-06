@@ -14,18 +14,12 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
 
     private val loginViewModel: LoginViewModel by viewModel()
     private lateinit var staxGoogleLoginInterface: StaxGoogleLoginInterface
-    private var signInAccount: GoogleSignInAccount? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initGoogleAuth()
 
         setLoginObserver()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        signInAccount = GoogleSignIn.getLastSignedInAccount(this)
     }
 
     fun setGoogleLoginInterface(staxGoogleLoginInterface: StaxGoogleLoginInterface) {
@@ -62,14 +56,12 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
         if (resultCode == RESULT_OK) {
             if (requestCode == LOGIN_REQUEST) {
                 val checkBox = findViewById<MaterialCheckBox>(R.id.marketingOptIn)
-                loginViewModel.signIntoGoogle(data, checkBox?.isChecked ?: false, this)
+                loginViewModel.signIntoGoogle(data, checkBox?.isChecked ?: false)
             } else if (requestCode == LOGIN_REQUEST_OPT_IN_MARKETING) {
-                loginViewModel.signIntoGoogle(data, true, this)
+                loginViewModel.signIntoGoogle(data, true)
             }
         }
     }
-
-    fun isSignedIn(): Boolean = signInAccount != null
 
     companion object {
         const val LOGIN_REQUEST = 4000

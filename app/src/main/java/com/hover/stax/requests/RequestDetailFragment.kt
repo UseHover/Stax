@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.navArgs
 import com.hover.stax.R
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentRequestDetailBinding
@@ -23,6 +24,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class RequestDetailFragment: Fragment(), RequestSenderInterface  {
 
     private val viewModel: RequestDetailViewModel by viewModel()
+    private val args: RequestDetailFragmentArgs by navArgs()
     private var _binding: FragmentRequestDetailBinding? = null
     private var dialog: StaxDialog? = null
     private val binding get() = _binding!!
@@ -31,7 +33,7 @@ class RequestDetailFragment: Fragment(), RequestSenderInterface  {
         val data = JSONObject()
 
         try {
-            if (arguments != null) data.put("id", requireArguments().getInt("id"))
+            data.put("id", args.id)
         } catch (ignored: JSONException) {
         }
 
