@@ -2,6 +2,7 @@ package com.hover.stax.transactions
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TransactionDao {
@@ -23,6 +24,9 @@ interface TransactionDao {
 
     @Query("SELECT * FROM stax_transactions WHERE uuid = :uuid LIMIT 1")
     fun getTransaction(uuid: String?): StaxTransaction?
+
+    @Query("SELECT * FROM stax_transactions WHERE uuid = :uuid LIMIT 1")
+    fun getTransactionAsync(uuid: String): Flow<StaxTransaction>
 
     @Query("SELECT * FROM stax_transactions WHERE uuid = :uuid LIMIT 1")
     suspend fun getTransactionSuspended(uuid: String?): StaxTransaction?
