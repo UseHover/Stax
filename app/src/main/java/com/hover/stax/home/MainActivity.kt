@@ -47,7 +47,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-        navHelper = NavHelper(this, isMainActivity = true)
+        navHelper = NavHelper(this)
         setContentView(binding.root)
 
         navHelper.setUpNav()

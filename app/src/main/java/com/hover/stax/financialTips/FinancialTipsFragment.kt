@@ -6,7 +6,6 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -35,22 +34,18 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.title.text = getString(R.string.financial_wellness_tips)
+        binding.backButton.setOnClickListener { findNavController().popBackStack() }
+        startObserver()
+    }
+
+    private fun startObserver() = with(viewModel) {
         val tipId = args.tipId
 
-        binding.title.text = getString(R.string.financial_wellness_tips)
-        viewModel.tips.observe(viewLifecycleOwner) {
+        tips.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
                 showFinancialTips(it, tipId)
             }
-        }
-    }
-
-    private val backPressedCallback = object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            if (binding.financialTipsDetail.visibility == View.VISIBLE)
-                showTipList()
-            else
-                findNavController().popBackStack(R.id.navigation_home, true)
         }
     }
 
@@ -66,8 +61,6 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
 
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.visited_financial_tips), requireActivity())
         }
-
-        initBackNavigation()
     }
 
     override fun onTipSelected(tip: FinancialTip, isFromDeeplink: Boolean) {
@@ -78,7 +71,6 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
             visibility = View.VISIBLE
             setTitle(tip.title)
 
-            //ensures proper back navigation
             setOnClickIcon {
                 showTipList()
             }
@@ -150,11 +142,6 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
 
         if (!viewModel.tips.value.isNullOrEmpty())
             showFinancialTips(viewModel.tips.value!!, null)
-    }
-
-    private fun initBackNavigation() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
-        binding.backButton.setOnClickListener { FinancialTipsFragmentDirections.actionTipsFragmentToNavigationHome() }
     }
 
     override fun onDestroyView() {

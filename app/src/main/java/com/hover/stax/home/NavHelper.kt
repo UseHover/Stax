@@ -1,6 +1,5 @@
 package com.hover.stax.home
 
-import android.content.Intent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -18,9 +17,8 @@ import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.NavUtil
-import com.hover.stax.utils.Utils
 
-class NavHelper(val activity: AppCompatActivity, private val isMainActivity: Boolean) {
+class NavHelper(val activity: AppCompatActivity) {
 
     private var navController: NavController? = null
     private var appBarConfiguration: AppBarConfiguration? = null
@@ -42,8 +40,6 @@ class NavHelper(val activity: AppCompatActivity, private val isMainActivity: Boo
         setDestinationChangeListener(nav)
     }
 
-    fun handleDeeplink(intent: Intent) = getNavController().handleDeepLink(intent)
-
     fun navigateAccountDetails(accountId: Int) = NavUtil.navigate(getNavController(), HomeFragmentDirections.actionNavigationHomeToAccountDetailsFragment(accountId))
 
     fun navigateWellness(tipId: String?) = NavUtil.navigate(getNavController(), MainNavigationDirections.actionGlobalWellnessFragment(tipId))
@@ -53,15 +49,15 @@ class NavHelper(val activity: AppCompatActivity, private val isMainActivity: Boo
     private fun getNavController(): NavController = navHostFragment!!.navController
 
     private fun setNavClickListener(nav: BottomNavigationView) {
-        nav.setOnNavigationItemSelectedListener {
-            when {
-                isMainActivity -> checkPermissionsAndNavigate(getNavDirections(it.itemId))
-                it.itemId == R.id.navigation_home -> activity.onBackPressed()
-                else -> NavUtil.navigate(getNavController(), getNavDirections(it.itemId))
-            }
+        nav.setOnItemSelectedListener {
+            checkPermissionsAndNavigate(getNavDirections(it.itemId))
             true
         }
-        nav.setOnItemReselectedListener { navController?.popBackStack() }
+        nav.setOnItemReselectedListener {
+            if (getNavController().currentDestination?.id != it.itemId) {
+                checkPermissionsAndNavigate(getNavDirections(it.itemId))
+            }
+        }
     }
 
     private fun setDestinationChangeListener(nav: BottomNavigationView) = navController?.let {
@@ -75,13 +71,16 @@ class NavHelper(val activity: AppCompatActivity, private val isMainActivity: Boo
 
     fun checkPermissionsAndNavigate(toWhere: Int) = checkPermissionsAndNavigate(getNavDirections(toWhere))
 
-    fun checkPermissionsAndNavigate(navDirections: NavDirections) {
+    fun checkPermissionsAndNavigate(navDirections: NavDirections?) = navDirections?.let {
         val permissionHelper = PermissionHelper(activity)
 
+        val exemptRoutes = setOf(
+            MainNavigationDirections.actionGlobalNavigationSettings(),
+            MainNavigationDirections.actionGlobalNavigationHome(), MainNavigationDirections.actionGlobalLibraryFragment()
+        )
+
         when {
-            navDirections == MainNavigationDirections.actionGlobalNavigationSettings() ||
-                    navDirections == MainNavigationDirections.actionGlobalNavigationHome() ||
-                    permissionHelper.hasBasicPerms() -> NavUtil.navigate(getNavController(), navDirections)
+            exemptRoutes.contains(it) || permissionHelper.hasBasicPerms() -> NavUtil.navigate(getNavController(), it)
             else -> PermissionUtils.showInformativeBasicPermissionDialog(
                 0,
                 { PermissionUtils.requestPerms(Constants.PERMS_REQ_CODE, activity) },
@@ -90,7 +89,7 @@ class NavHelper(val activity: AppCompatActivity, private val isMainActivity: Boo
         }
     }
 
-    private fun getNavDirections(destId: Int): NavDirections = when (destId) {
+    private fun getNavDirections(destId: Int): NavDirections? = when (destId) {
         R.id.navigation_request, Constants.NAV_REQUEST -> MainNavigationDirections.actionGlobalNavigationRequest()
         R.id.navigation_settings, Constants.NAV_SETTINGS -> MainNavigationDirections.actionGlobalNavigationSettings()
         R.id.navigation_home, Constants.NAV_HOME -> MainNavigationDirections.actionGlobalNavigationHome()
@@ -100,6 +99,6 @@ class NavHelper(val activity: AppCompatActivity, private val isMainActivity: Boo
         Constants.NAV_AIRTIME -> MainNavigationDirections.actionGlobalTransferFragment(HoverAction.AIRTIME)
         Constants.NAV_LINK_ACCOUNT -> MainNavigationDirections.actionGlobalAddChannelsFragment()
         Constants.NAV_PAYBILL -> MainNavigationDirections.actionGlobalPaybillFragment(false)
-        else -> MainNavigationDirections.actionGlobalNavigationHome()
+        else -> null //invalid or unmapped route, return nothing
     }
 }

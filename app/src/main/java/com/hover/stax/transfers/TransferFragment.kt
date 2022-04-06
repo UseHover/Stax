@@ -51,7 +51,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         abstractFormViewModel = getSharedViewModel<TransferViewModel>()
         transferViewModel = abstractFormViewModel as TransferViewModel
 
-        //TODO update all instances of class launch
         setTransactionType(args.transactionType)
         _binding = FragmentTransferBinding.inflate(inflater, container, false)
         return binding.root
