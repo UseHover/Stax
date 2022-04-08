@@ -152,7 +152,7 @@
         <entry key="app/src/main/res/layout/transaction_card_history.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/transaction_details_info_card.xml" value="0.1" />
         <entry key="app/src/main/res/layout/transaction_details_primarystatus.xml" value="0.20643363728470113" />
-        <entry key="app/src/main/res/layout/transaction_details_secondary_status.xml" value="0.16691995947315097" />
+        <entry key="app/src/main/res/layout/transaction_details_secondary_status.xml" value="0.1" />
         <entry key="app/src/main/res/layout/transaction_details_topstatus_view.xml" value="0.35733695652173914" />
         <entry key="app/src/main/res/layout/transaction_list_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/transaction_messages_items.xml" value="0.19145299145299147" />

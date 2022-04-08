@@ -81,15 +81,9 @@ class TransactionDetailsFragment : DialogFragment(){
         startObservers()
         if (!isFullScreen) setToPopupDesign()
         binding.transactionDetailsCard.setOnClickIcon { this.dismiss() }
-        binding.primaryStatus.viewLogText.setOnClickListener {
-            showUSSDLog()
-        }
-        with(binding.infoCard.detailsStaxUuid) {
-            setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) }
-        }
-        with(binding.infoCard.detailsServiceId) {
-            setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) }
-        }
+        binding.primaryStatus.viewLogText.setOnClickListener { showUSSDLog() }
+        with(binding.infoCard.detailsStaxUuid) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
+        with(binding.infoCard.detailsServiceId) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
     }
 
     private fun showUSSDLog() {
@@ -164,6 +158,7 @@ class TransactionDetailsFragment : DialogFragment(){
                 else
                     retryTransactionClicked(transaction, button)
             }
+            else binding.secondaryStatus.transactionRetryButtonLayoutId.visibility = GONE
             updateDetails(transaction)
         }
     }
