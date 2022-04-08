@@ -215,7 +215,7 @@ public class StaxTransaction {
             else if (isRecorded())
                 return "\\u2014";
             return a;
-        } else return "0.00";
+        } else return "";
     }
 
     public String getDisplayBalance() {

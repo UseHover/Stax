@@ -84,9 +84,7 @@
             android:textSize="@dimen/text_16" />
     </TableRow>
 
-    <TableRow android:id="@+id/divide" android:layout_marginTop="@dimen/margin_26"/>
-
-    <TableRow android:id="@+id/amountRow">
+    <TableRow android:id="@+id/amountRow" android:layout_marginTop="@dimen/margin_18">
         <TextView
                 android:text="@string/transfer_amount_label"
                 android:textColor="@color/offWhite"
@@ -136,7 +134,7 @@
                 android:textSize="@dimen/text_16" />
     </TableRow>
 
-    <TableRow android:id="@+id/feeRow">
+    <TableRow android:id="@+id/feeRow" android:layout_marginTop="@dimen/margin_18">
         <TextView
             android:text="@string/transaction_cost"
             android:textColor="@color/offWhite"

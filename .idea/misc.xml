@@ -81,7 +81,7 @@
         <entry key="app/src/main/res/layout/fragment_schedule.xml" value="0.2056159420289855" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.30510752688172044" />
         <entry key="app/src/main/res/layout/fragment_signin_variant.xml" value="0.30510752688172044" />
-        <entry key="app/src/main/res/layout/fragment_transaction.xml" value="0.18019465142000954" />
+        <entry key="app/src/main/res/layout/fragment_transaction.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_transfer.xml" value="0.21" />
         <entry key="app/src/main/res/layout/fragment_wellness.xml" value="0.14492753623188406" />
         <entry key="app/src/main/res/layout/fragment_wellness_detail.xml" value="0.165" />
@@ -150,7 +150,7 @@
         <entry key="app/src/main/res/layout/summarycard_nontemplate_items.xml" value="0.42734375" />
         <entry key="app/src/main/res/layout/support_stax_layout.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/transaction_card_history.xml" value="0.19145299145299147" />
-        <entry key="app/src/main/res/layout/transaction_details_info_card.xml" value="0.19145299145299147" />
+        <entry key="app/src/main/res/layout/transaction_details_info_card.xml" value="0.1" />
         <entry key="app/src/main/res/layout/transaction_details_primarystatus.xml" value="0.20643363728470113" />
         <entry key="app/src/main/res/layout/transaction_details_secondary_status.xml" value="0.16691995947315097" />
         <entry key="app/src/main/res/layout/transaction_details_topstatus_view.xml" value="0.35733695652173914" />
