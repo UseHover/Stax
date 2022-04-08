@@ -157,13 +157,13 @@ public class StaxTransaction {
             case HoverAction.BALANCE:
                 return c.getString(R.string.descrip_balance, action.from_institution_name);
             case HoverAction.AIRTIME:
-                return c.getString(R.string.descrip_airtime_sent, amount.toString(), contact == null ? c.getString(R.string.self_choice) : contact.shortName());
+                return c.getString(R.string.descrip_airtime_sent, getDisplayAmount(), contact == null ? c.getString(R.string.self_choice) : contact.shortName());
             case HoverAction.P2P:
-                return c.getString(R.string.descrip_transfer_sent, amount.toString(), contact.shortName());
+                return c.getString(R.string.descrip_transfer_sent, getDisplayAmount(), contact.shortName());
             case HoverAction.ME2ME:
-                return c.getString(R.string.descrip_transfer_sent, amount.toString(), action.to_institution_name);
+                return c.getString(R.string.descrip_transfer_sent, getDisplayAmount(), action.to_institution_name);
             case HoverAction.C2B:
-                return c.getString(R.string.descrip_bill_paid, amount.toString(), action.to_institution_name);
+                return c.getString(R.string.descrip_bill_paid, getDisplayAmount(), action.to_institution_name);
             case HoverAction.RECEIVE:
                 return c.getString(R.string.descrip_transfer_received, contact.shortName());
             case HoverAction.FETCH_ACCOUNTS:
@@ -215,7 +215,7 @@ public class StaxTransaction {
             else if (isRecorded())
                 return "\\u2014";
             return a;
-        } else return null;
+        } else return "0.00";
     }
 
     public String getDisplayBalance() {
