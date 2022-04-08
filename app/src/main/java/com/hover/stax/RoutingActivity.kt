@@ -58,12 +58,6 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
         startBackgroundProcesses()
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        AppsFlyerLib.getInstance().start(this)
-    }
-
     private fun startBackgroundProcesses() {
         with(channelsViewModel) {
             accounts.observe(this@RoutingActivity) { hasAccounts = it.isNotEmpty() }

@@ -39,45 +39,46 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/intro" />
 
-            <com.google.android.material.checkbox.MaterialCheckBox
-                    android:id="@+id/marketingOptIn"
-                    android:layout_width="wrap_content"
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/joinMappers"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_5"
-                    android:gravity="center"
-                    android:layout_marginTop="@dimen/margin_8"
-                    android:textColor="@android:color/white"
-                    android:text="@string/marketing_email_optin"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginHorizontal="@dimen/margin_13"
+                    android:layout_marginTop="@dimen/margin_24"
+                    android:text="@string/join_mappers"
+                    android:visibility="gone"
+                    app:fontFamily="@font/brutalista_medium"
+                    app:layout_constraintBottom_toTopOf="@id/progressIndicator"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/instructions" />
 
             <LinearLayout
-                android:id="@+id/btnSignIn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_13"
-                android:layout_marginTop="@dimen/margin_13"
-                android:background="@drawable/grey_background"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="@dimen/margin_13"
-                app:layout_constraintBottom_toTopOf="@id/progressIndicator"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/marketingOptIn">
+                    android:id="@+id/btnSignIn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_13"
+                    android:layout_marginTop="@dimen/margin_24"
+                    android:background="@drawable/grey_background"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/margin_13"
+                    app:layout_constraintBottom_toTopOf="@id/progressIndicator"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/instructions">
 
                 <ImageView
-                    android:layout_width="@dimen/margin_24"
-                    android:layout_height="@dimen/margin_24"
-                    android:layout_marginEnd="@dimen/margin_24"
-                    android:background="?selectableItemBackground"
-                    android:contentDescription="@string/continue_with_google"
-                    android:src="@drawable/google_logo" />
+                        android:layout_width="@dimen/margin_24"
+                        android:layout_height="@dimen/margin_24"
+                        android:layout_marginEnd="@dimen/margin_24"
+                        android:background="?selectableItemBackground"
+                        android:contentDescription="@string/continue_with_google"
+                        android:src="@drawable/google_logo" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/continue_with_google"
-                    android:textSize="@dimen/text_16" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/continue_with_google"
+                        android:textSize="@dimen/text_16" />
             </LinearLayout>
 
             <com.google.android.material.progressindicator.LinearProgressIndicator

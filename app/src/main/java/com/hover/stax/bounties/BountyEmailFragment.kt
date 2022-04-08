@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentBountyEmailBinding
 import com.hover.stax.home.MainActivity
@@ -37,11 +38,27 @@ class BountyEmailFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnSignIn.setOnClickListener(this@BountyEmailFragment)
+        initUI()
 
         binding.progressIndicator.setVisibilityAfterHide(View.GONE)
         binding.instructions.movementMethod = LinkMovementMethod.getInstance()
         startObservers()
+    }
+
+    private fun initUI() = with(binding) {
+        if(GoogleSignIn.getLastSignedInAccount(requireActivity()) == null) {
+            joinMappers.visibility = View.GONE
+            btnSignIn.apply {
+                visibility = View.VISIBLE
+                setOnClickListener(this@BountyEmailFragment)
+            }
+        } else {
+            btnSignIn.visibility = View.GONE
+            joinMappers.apply {
+                visibility = View.VISIBLE
+                setOnClickListener(this@BountyEmailFragment)
+            }
+        }
     }
 
     private fun startObservers() {
@@ -58,13 +75,24 @@ class BountyEmailFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         if (networkMonitor.isNetworkConnected) {
-            logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext())
-            updateProgress(0)
-            (activity as MainActivity).signIn()
-            loginViewModel.postGoogleAuthNav.value = SettingsFragment.SHOW_BOUNTY_LIST
+           when(v.id){
+               R.id.btnSignIn -> startGoogleSignIn()
+               R.id.joinMappers -> joinMappers()
+           }
         } else {
             showDialog(R.string.internet_required, getString(R.string.internet_required_bounty_desc), R.string.btn_ok)
         }
+    }
+
+    private fun startGoogleSignIn(){
+        logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext())
+        updateProgress(0)
+        (activity as MainActivity).signIn()
+        loginViewModel.postGoogleAuthNav.value = SettingsFragment.SHOW_BOUNTY_LIST
+    }
+
+    private fun joinMappers() {
+        loginViewModel.joinMappers()
     }
 
     private fun updateProgress(progress: Int) = with(binding.progressIndicator) {

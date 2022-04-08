@@ -70,20 +70,21 @@ class ApplicationInstance : Application() {
             override fun onAttributionFailure(errorMessage: String?) = Timber.d("Error onAttributionFailure : $errorMessage")
         }
 
-        AppsFlyerLib.getInstance().init(getString(R.string.appsflyer_key), conversionListener, this)
+        AppsFlyerLib.getInstance().apply {
+            init(getString(R.string.appsflyer_key), conversionListener, this@ApplicationInstance)
+            start(this@ApplicationInstance)
+        }
     }
 
     companion object {
-        val txnDetailsRetryCounter: MutableMap<String, Int> by Delegates.observable(HashMap(), { _, _, _ -> })
+        val txnDetailsRetryCounter: MutableMap<String, Int> by Delegates.observable(HashMap()) { _, _, _ -> }
     }
 
-    @RequiresApi(21)
     override fun registerComponentCallbacks(callback: ComponentCallbacks?) {
         super.registerComponentCallbacks(callback)
         NetworkMonitor(this).startNetworkCallback()
     }
 
-    @RequiresApi(21)
     override fun unregisterComponentCallbacks(callback: ComponentCallbacks?) {
         super.unregisterComponentCallbacks(callback)
         NetworkMonitor(this).stopNetworkCallback()

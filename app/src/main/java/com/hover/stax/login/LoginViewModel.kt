@@ -2,7 +2,6 @@ package com.hover.stax.login
 
 import android.app.Application
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,11 +10,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.hover.sdk.api.Hover
 import com.hover.stax.R
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.utils.AnalyticsUtil
@@ -25,7 +20,6 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
 import java.io.IOException
-import kotlin.math.sign
 
 
 private const val EMAIL = "email"
@@ -46,19 +40,19 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
 
     val postGoogleAuthNav = MutableLiveData<Int>()
 
+    val loginNetworking = LoginNetworking(application) //change to di implementation
+
     init {
         getEmail()
         getUsername()
     }
 
-    fun signIntoGoogle(data: Intent?, inOrOut: Boolean) {
-        optedIn.value = inOrOut
+    fun signIntoGoogle(data: Intent?) {
         progress.value = 25
         val task = GoogleSignIn.getSignedInAccountFromIntent(data)
         try {
             val account = task.getResult(ApiException::class.java)!!
             setUser(account, account.idToken!!)
-            progress.value = 33
         } catch (e: ApiException) {
             Timber.e(e, "Google sign in failed")
             onError(application.getString(R.string.login_google_err))
@@ -71,12 +65,23 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
             progress.value = 66
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    val result = LoginNetworking(application).uploadUserToStax(email, username, optedIn.value!!, token)
+                    val userJson = JSONObject()
+                        .apply {
+                            put("email", email)
+                            put("username", username)
+                            put("device_id", Hover.getDeviceId(application))
+                            put("token", token)
+                        }
+
+                    val result = loginNetworking.uploadUserToStax(userJson)
                     Timber.e("Uploading user to stax came back: ${result.code}")
 
-                    if (result.code in 200..299) onSuccess(
-                        JSONObject(result.body!!.string())
-                    )
+                    if (result.code in 200..299) {
+                        Timber.e(result.body.toString())
+                        onSuccess(
+                            JSONObject(result.body!!.string())
+                        )
+                    }
                     else onError(application.getString(R.string.upload_user_error))
                 } catch (e: IOException) {
                     onError(application.getString(R.string.upload_user_error))
@@ -91,10 +96,44 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
         else Timber.e("No account found")
     }
 
+    fun joinMappers() {
+        progress.postValue(0)
+
+        updateUser(JSONObject().apply {
+            put("is_mapper", true)
+        })
+    }
+
+    fun optInMarketing(optIn: Boolean) {
+        progress.postValue(0)
+
+        updateUser(JSONObject().apply {
+            put("marketing_opted_in", optIn)
+        })
+    }
+
+    private fun updateUser(data: JSONObject) = viewModelScope.launch(Dispatchers.IO) {
+        email.value?.let {
+            progress.postValue(50)
+            try {
+                val result = LoginNetworking(application).updateUser(it, data)
+                Timber.e("Updating stax user: ${result.code}")
+
+                if (result.code in 200..299) {
+                    Timber.e(result.body!!.string())
+                    progress.postValue(100)
+                }
+                else onError(application.getString(R.string.upload_user_error))
+            } catch (e: IOException) {
+                onError(application.getString(R.string.upload_user_error))
+            }
+        }
+    }
+
     private fun onSuccess(json: JSONObject) {
         Timber.e(json.toString())
 
-        progress.postValue(100)
+//        progress.postValue(100)
         saveResponseData(json)
     }
 
@@ -103,6 +142,7 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
         user.postValue(signInAccount)
         setEmail(signInAccount.email)
 
+        progress.value = 33
         uploadUserToStax(signInAccount.email, signInAccount.displayName, idToken)
     }
 
