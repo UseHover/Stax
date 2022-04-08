@@ -272,6 +272,7 @@ class TransactionDetailsFragment : DialogFragment(){
                 binding.transactionDetailsCard.setTitle(viewModel.transaction.value?.generateLongDescription(viewModel.action.value, contact, requireContext()))
             binding.infoCard.detailsRecipient.setContact(contact)
         }
+        else binding.infoCard.detailsRecipient.setTitle(getString(R.string.self_choice))
     }
 
     private fun retryBountyClicked() {
