@@ -10,6 +10,7 @@
       <map>
         <entry key="../../../../layout/compose-model-1647504975633.xml" value="0.2673141891891892" />
         <entry key="../../../../layout/compose-model-1648556434513.xml" value="0.24957770270270271" />
+        <entry key="app/src/main/res/drawable/bright_blue_rounded_bg.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/button_bg_colored.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_dark.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_grey.xml" value="0.32037037037037036" />
@@ -80,7 +81,7 @@
         <entry key="app/src/main/res/layout/fragment_schedule.xml" value="0.2056159420289855" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.30510752688172044" />
         <entry key="app/src/main/res/layout/fragment_signin_variant.xml" value="0.30510752688172044" />
-        <entry key="app/src/main/res/layout/fragment_transaction.xml" value="0.1646403242147923" />
+        <entry key="app/src/main/res/layout/fragment_transaction.xml" value="0.18019465142000954" />
         <entry key="app/src/main/res/layout/fragment_transfer.xml" value="0.21" />
         <entry key="app/src/main/res/layout/fragment_wellness.xml" value="0.14492753623188406" />
         <entry key="app/src/main/res/layout/fragment_wellness_detail.xml" value="0.165" />
@@ -150,6 +151,9 @@
         <entry key="app/src/main/res/layout/support_stax_layout.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/transaction_card_history.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/transaction_details_info_card.xml" value="0.19145299145299147" />
+        <entry key="app/src/main/res/layout/transaction_details_primarystatus.xml" value="0.20643363728470113" />
+        <entry key="app/src/main/res/layout/transaction_details_secondary_status.xml" value="0.16691995947315097" />
+        <entry key="app/src/main/res/layout/transaction_details_topstatus_view.xml" value="0.35733695652173914" />
         <entry key="app/src/main/res/layout/transaction_list_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/transaction_messages_items.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/transfer_amount.xml" value="0.30510752688172044" />
@@ -158,6 +162,7 @@
         <entry key="app/src/main/res/layout/transfer_card_repeat.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/transfer_card_summary.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/transfer_note.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/ussd_log_bottomsheet.xml" value="0.1962962962962963" />
         <entry key="app/src/main/res/layout/view_bubble_message.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/menu/nav_main.xml" value="0.27870370370370373" />
       </map>

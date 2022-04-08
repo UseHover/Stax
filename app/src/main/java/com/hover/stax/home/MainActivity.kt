@@ -22,7 +22,9 @@ import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
 import com.hover.stax.settings.SettingsFragment
+import com.hover.stax.transactions.TransactionDetailsFragment
 import com.hover.stax.transactions.TransactionHistoryViewModel
+import com.hover.stax.transactions.USSDLogBottomSheetFragment
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
@@ -74,6 +76,15 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
     fun checkPermissionsAndNavigate(navDirections: NavDirections) {
         navHelper.checkPermissionsAndNavigate(navDirections)
+    }
+
+    fun showUSSDLogBottomSheet(uuid: String) {
+        USSDLogBottomSheetFragment().apply {
+            val bundle = Bundle()
+            bundle.putString(TransactionDetailsFragment.UUID, uuid)
+            arguments = bundle
+            show(supportFragmentManager, tag)
+        }
     }
 
     private fun observeForAppReview() = historyViewModel.showAppReviewLiveData().observe(this@MainActivity) {

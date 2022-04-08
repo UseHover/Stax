@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="@dimen/margin_55"
+        android:layout_height="@dimen/margin_55"
+        android:id="@+id/statusIcon"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_21"
+        android:fontFamily="@font/brutalista_medium"
+        android:gravity="center"
+        android:id="@+id/status_text"
+        android:layout_marginTop="@dimen/margin_16"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/newBalance"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:visibility="gone"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_16"
+        android:id="@+id/viewLogText"
+        android:fontFamily="@font/brutalista_medium"
+        android:textColor="@color/stax_state_blue"
+        android:textStyle="bold"
+        android:padding="@dimen/margin_16"
+        android:background="@drawable/bright_blue_rounded_bg"
+        android:text="@string/viewUSSDLog"/>
+
+</LinearLayout>

@@ -306,7 +306,7 @@
 
     <string name="descrip_transfer_received">reçu de l\'argent de %1$s</string>
 
-    <string name="descrip_bill_paid">%1$s facture payée</string>
+    <string name="descrip_bill_paid">payée %1$s à %2$s</string>
 
     <string name="descrip_recorded">Session USSD enregistrée le %1$s</string>
 

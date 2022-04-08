@@ -1,6 +1,7 @@
 package com.hover.stax.transactions
 
 import android.content.Context
+import androidx.compose.ui.text.capitalize
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.transactions.Transaction
 import com.hover.stax.R
@@ -14,7 +15,7 @@ class TransactionStatus(val transaction: StaxTransaction) {
                 if (transaction.isRecorded) R.drawable.ic_warning
                 else R.drawable.ic_info
             }
-            else -> 0
+            else -> R.drawable.ic_success
         }
     }
 
@@ -26,13 +27,31 @@ class TransactionStatus(val transaction: StaxTransaction) {
         }
     }
 
-    fun getTitle(): Int {
+    fun getTitle(c: Context): String {
         return when (transaction.status) {
-            Transaction.FAILED -> R.string.failed_cardHead
-            Transaction.PENDING -> if (transaction.isRecorded) R.string.checking_your_flow else R.string.pending_cardHead
-            else -> R.string.succeeded_cardHead
+            Transaction.FAILED -> c.getString(R.string.failed_label)
+            Transaction.PENDING -> c.getString(if (transaction.isRecorded) R.string.checking_your_flow else R.string.pending_cardHead)
+            else -> if(transaction.isBalanceType) transaction.displayBalance else c.getString(R.string.successful_label)
         }
     }
+
+    fun getReason() : String {
+        return if(transaction.isFailed) transaction.category.replace("-", "") else ""
+
+    }
+
+    fun getDisplayType(c: Context, a: HoverAction): String {
+        return when (transaction.transaction_type) {
+            HoverAction.BALANCE -> c.getString(R.string.check_balance)
+            HoverAction.AIRTIME -> c.getString(R.string.buy_airtime)
+            HoverAction.P2P -> c.getString(R.string.display_transfer_money, a.to_institution_name)
+            HoverAction.ME2ME -> c.getString(R.string.display_transfer_money, a.to_institution_name)
+            HoverAction.C2B -> c.getString(R.string.display_bill_payment)
+            HoverAction.RECEIVE -> c.getString(R.string.display_money_received)
+            else -> "Other"
+        }.capitalize()
+    }
+
 
     fun getShortStatusDetail(action: HoverAction?, c: Context): String {
         return if (transaction.isRecorded) getRecordedStatusDetail(c)

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.hover.stax.views.StaxCardView
+        android:id="@+id/messagesCard"
+        app:isFlatView="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/session_cardhead">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/convo_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_10" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/sms_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_21"
+            android:layout_marginHorizontal="@dimen/margin_10" />
+
+    </com.hover.stax.views.StaxCardView>
+</androidx.core.widget.NestedScrollView>

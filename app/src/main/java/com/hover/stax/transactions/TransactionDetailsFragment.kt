@@ -6,13 +6,13 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.DialogFragment
-import androidx.recyclerview.widget.RecyclerView
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.api.Hover
 import com.hover.sdk.transactions.Transaction
@@ -31,7 +31,7 @@ import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class TransactionDetailsFragment : DialogFragment() {
+class TransactionDetailsFragment : DialogFragment(){
 
     private val viewModel: TransactionDetailsViewModel by viewModel()
     private var _binding: FragmentTransactionBinding? = null
@@ -54,6 +54,7 @@ class TransactionDetailsFragment : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         uuid = requireArguments().getString(UUID)
+        viewModel.setTransaction(uuid!!)
 
         val data = JSONObject()
         try {
@@ -79,11 +80,20 @@ class TransactionDetailsFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         startObservers()
         if (!isFullScreen) setToPopupDesign()
-        createUSSDMessagesRecyclerView()
-        createSmsMessagesRecyclerView()
-        viewModel.setTransaction(uuid!!)
         binding.transactionDetailsCard.setOnClickIcon { this.dismiss() }
-        setupSeeMoreButton()
+        binding.primaryStatus.viewLogText.setOnClickListener {
+            showUSSDLog()
+        }
+        with(binding.infoCard.detailsStaxUuid) {
+            setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) }
+        }
+        with(binding.infoCard.detailsServiceId) {
+            setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) }
+        }
+    }
+
+    private fun showUSSDLog() {
+        (requireActivity() as MainActivity).showUSSDLogBottomSheet(uuid!!)
     }
 
     private fun startObservers() {
@@ -96,59 +106,24 @@ class TransactionDetailsFragment : DialogFragment() {
         binding.ftMainBg.setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.colorPrimary))
         binding.transactionDetailsCard.setIcon(R.drawable.ic_close_white)
         binding.transactionDetailsCard.setTitle(R.drawable.ic_close_white)
-
         binding.transactionDetailsCard.makeFlatView()
-        binding.statusCard.makeFlatView()
-        binding.messagesCard.makeFlatView()
-    }
-
-    private fun createUSSDMessagesRecyclerView() {
-        val messagesView = binding.convoRecyclerView
-        messagesView.layoutManager = UIHelper.setMainLinearManagers(requireActivity())
-        messagesView.setHasFixedSize(true)
-        viewModel.messages.observe(viewLifecycleOwner) { updateWithSessionDetails(it, messagesView) }
-    }
-
-    private fun createSmsMessagesRecyclerView() {
-        val smsView = binding.smsRecyclerView
-        smsView.layoutManager = UIHelper.setMainLinearManagers(requireActivity())
-        smsView.setHasFixedSize(true)
-        viewModel.sms.observe(viewLifecycleOwner) { updateWithSessionDetails(it, smsView) }
-    }
-
-    private fun updateWithSessionDetails(messages: List<UssdCallResponse>?, v: RecyclerView) {
-        if (messages != null) {
-            if (viewModel.transaction.value?.status == Transaction.SUCCEEDED)
-                setStatusText(viewModel.action.value, viewModel.transaction.value)
-            v.adapter = MessagesAdapter(messages)
-        }
-    }
-
-    private fun setupSeeMoreButton() {
-        val retryButton = binding.retrySubmit.btnRetry
-        val bountyButtonsLayout = binding.retrySubmit.bountyRetryButtonLayoutId
-        if (!isFullScreen) {
-            bountyButtonsLayout.visibility = View.VISIBLE
-            retryButton.setText(R.string.view_full_details)
-            retryButton.setOnClickListener { recreateFullScreen() }
-        }
     }
 
     private fun setupRetryBountyButton() {
-        val bountyButtonsLayout = binding.retrySubmit.bountyRetryButtonLayoutId
-        val retryButton = binding.retrySubmit.btnRetry
-        bountyButtonsLayout.visibility = View.VISIBLE
+        val bountyButtonsLayout = binding.secondaryStatus.transactionRetryButtonLayoutId
+        val retryButton = binding.secondaryStatus.btnRetryTransaction
+        bountyButtonsLayout.visibility = VISIBLE
         retryButton.setOnClickListener { retryBountyClicked() }
     }
 
-    private fun showButtonToClick(): Button {
-        val transactionButtonsLayout = binding.transactionRetryButtonLayoutId
-        val retryButton = binding.btnRetryTransaction
-        transactionButtonsLayout.visibility = View.VISIBLE
+    private fun showButtonToClick(): TextView {
+        val transactionButtonsLayout = binding.secondaryStatus.transactionRetryButtonLayoutId
+        val retryButton = binding.secondaryStatus.btnRetryTransaction
+        transactionButtonsLayout.visibility = VISIBLE
         return retryButton
     }
 
-    private fun retryTransactionClicked(transaction: StaxTransaction, retryButton: Button) {
+    private fun retryTransactionClicked(transaction: StaxTransaction, retryButton: TextView) {
         retryButton.setOnClickListener {
             updateRetryCounter(transaction.action_id)
             this.dismiss()
@@ -156,9 +131,9 @@ class TransactionDetailsFragment : DialogFragment() {
         }
     }
 
-    private fun setupContactSupportButton(id: String, contactSupportButton: Button) {
-        contactSupportButton.setText(R.string.email_support)
-        contactSupportButton.setOnClickListener {
+    private fun setupContactSupportButton(id: String, contactSupportTextView: TextView) {
+        contactSupportTextView.setText(R.string.email_support)
+        contactSupportTextView.setOnClickListener {
             resetTryAgainCounter(id)
             this.dismiss()
             val deviceId = Hover.getDeviceId(requireContext())
@@ -193,6 +168,9 @@ class TransactionDetailsFragment : DialogFragment() {
         }
     }
 
+    private fun shouldShowNewBalance(transaction: StaxTransaction) : Boolean {
+        return !transaction.isBalanceType && !transaction.balance.isNullOrEmpty() && transaction.isSuccessful
+    }
     @SuppressLint("SetTextI18n")
     private fun updateDetails(transaction: StaxTransaction) {
         if (isFullScreen)
@@ -202,24 +180,47 @@ class TransactionDetailsFragment : DialogFragment() {
                 binding.transactionDetailsCard.setTitle(
                     transaction.generateLongDescription(viewModel.action.value, viewModel.contact.value, requireContext())
                 )
-            binding.infoCard.root.visibility = GONE
         }
 
+        setDetailsData(transaction)
+        setVisibleDetails(transaction)
+        updateDetailsRequiringAction(viewModel.action.value, viewModel.transaction.value)
+        updateStatus(viewModel.action.value, transaction)
+    }
+    private fun setDetailsData(transaction: StaxTransaction) {
+        if(shouldShowNewBalance(transaction)) {
+            binding.primaryStatus.newBalance.apply {
+                text = getString(R.string.new_balance, transaction.displayBalance)
+                visibility = VISIBLE
+            }
+        }
         binding.infoCard.detailsRecipientLabel.setText(if (transaction.transaction_type == HoverAction.RECEIVE) R.string.sender_label else R.string.recipient_label)
         binding.infoCard.detailsAmount.text = transaction.displayAmount
         binding.infoCard.detailsDate.text = humanFriendlyDateTime(transaction.updated_at)
         binding.infoCard.detailsServiceId.text = transaction.confirm_code
         binding.infoCard.detailsStaxUuid.text = transaction.uuid
+        binding.infoCard.detailsStaxStatus.apply {
+            text = transaction.fullStatus.getTitle(requireContext())
+            setCompoundDrawablesWithIntrinsicBounds(0, 0, transaction.fullStatus.getIcon(), 0)
+        }
 
-        setVisibleDetails(transaction)
-        updateStatus(viewModel.action.value, transaction)
+        binding.infoCard.detailsStaxReason.text = transaction.fullStatus.getReason()
+        if(transaction.fee !=null && transaction.fee > 0) binding.infoCard.detailsFee.text = Utils.formatAmount(transaction.fee)
     }
 
     private fun setVisibleDetails(transaction: StaxTransaction) {
-        binding.infoCard.amountRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) GONE else View.VISIBLE
-        binding.infoCard.recipientRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) GONE else View.VISIBLE
-        binding.infoCard.recipAccountRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) GONE else View.VISIBLE
-        binding.infoCard.serviceIdRow.visibility = if (transaction.isRecorded || transaction.confirm_code.isNullOrBlank()) GONE else View.VISIBLE
+        binding.infoCard.reasonRow.visibility = if(transaction.isFailed) VISIBLE else GONE
+        binding.infoCard.amountRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) GONE else VISIBLE
+        binding.infoCard.recipientRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) GONE else VISIBLE
+        binding.infoCard.recipAccountRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) GONE else VISIBLE
+        binding.infoCard.serviceIdRow.visibility = if (transaction.isRecorded || transaction.confirm_code.isNullOrBlank()) GONE else VISIBLE
+    }
+
+    private fun updateDetailsRequiringAction(action: HoverAction?, transaction: StaxTransaction?) {
+        if(action !=null && transaction !=null) {
+            binding.infoCard.detailsStaxType.text = transaction.fullStatus.getDisplayType(requireContext(), action)
+            binding.infoCard.detailsStaxAccount.text = action.from_institution_name
+        }
     }
 
     private fun showActionDetails(action: HoverAction) {
@@ -228,21 +229,39 @@ class TransactionDetailsFragment : DialogFragment() {
         }
         binding.infoCard.detailsNetwork.text = action.from_institution_name
         updateStatus(action, viewModel.transaction.value)
+        updateDetailsRequiringAction(viewModel.action.value, viewModel.transaction.value)
     }
 
     private fun updateStatus(action: HoverAction?, transaction: StaxTransaction?) {
         if (action != null && transaction != null) {
-            binding.statusCard.updateState(transaction.fullStatus.getIcon(), transaction.fullStatus.getBackgroundColor(), transaction.fullStatus.getTitle())
-            setStatusText(action, transaction)
+            setPrimaryStatus(transaction)
+            setSecondaryStatus(action, transaction)
         }
     }
 
-    private fun setStatusText(action: HoverAction?, transaction: StaxTransaction?) {
-        if (transaction != null) {
-            binding.statusText.apply {
-                val content = transaction.fullStatus.getStatusDetail(action, viewModel.messages.value?.last(), viewModel.sms.value, requireContext())
-                text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
-                movementMethod = LinkMovementMethod.getInstance()
+    private fun setPrimaryStatus(transaction: StaxTransaction?) {
+        transaction?.let {
+            var textValue= transaction.fullStatus.getTitle(requireContext())
+            if(transaction.fullStatus.getReason().isNotEmpty()) textValue = textValue   +": "+ transaction.fullStatus.getReason()
+
+            binding.primaryStatus.statusText.text = textValue
+            binding.primaryStatus.statusIcon.setImageResource(transaction.fullStatus.getIcon())
+        }
+    }
+
+    private fun setSecondaryStatus(action: HoverAction?, transaction: StaxTransaction?) {
+        transaction?.let {
+            if(transaction.isSuccessful) binding.secondaryStatus.root.visibility = GONE
+            else {
+                binding.secondaryStatus.root.visibility = VISIBLE
+                binding.secondaryStatus.statusText.apply {
+                    val content = transaction.fullStatus.getStatusDetail(action, viewModel.messages.value?.last(), viewModel.sms.value, requireContext())
+                    text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
+                    movementMethod = LinkMovementMethod.getInstance()
+                }
+                action?.let {
+                    UIHelper.loadPicasso(getString(R.string.root_url) + action.from_institution_logo, binding.secondaryStatus.statusIcon)
+                }
             }
         }
     }
@@ -253,12 +272,6 @@ class TransactionDetailsFragment : DialogFragment() {
                 binding.transactionDetailsCard.setTitle(viewModel.transaction.value?.generateLongDescription(viewModel.action.value, contact, requireContext()))
             binding.infoCard.detailsRecipient.setContact(contact)
         }
-    }
-
-    private fun recreateFullScreen() {
-        this.dismiss()
-        val frag = newInstance(uuid!!, true)
-        frag.show(parentFragmentManager, "dialogFrag")
     }
 
     private fun retryBountyClicked() {
@@ -286,5 +299,4 @@ class TransactionDetailsFragment : DialogFragment() {
             return fragment
         }
     }
-
 }

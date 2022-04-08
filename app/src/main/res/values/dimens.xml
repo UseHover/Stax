@@ -3,6 +3,7 @@
 	<dimen name="text_21">21sp</dimen>
 	<dimen name="text_19">19sp</dimen>
 	<dimen name="text_13">13sp</dimen>
+	<dimen name="text_11">11sp</dimen>
 	<dimen name="text_15">15sp</dimen>
 	<dimen name="text_34">34sp</dimen>
 	<dimen name="text_spacing_8">8sp</dimen>
@@ -20,6 +21,7 @@
 	<dimen name="margin_24">24dp</dimen>
 	<dimen name="margin_26">26dp</dimen>
 	<dimen name="margin_34">34dp</dimen>
+	<dimen name="margin_43">43dp</dimen>
 	<dimen name="margin_55">55dp</dimen>
 	<dimen name="margin_65">65dp</dimen>
 	<dimen name="margin_89">89dp</dimen>
