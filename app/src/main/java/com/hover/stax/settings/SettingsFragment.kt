@@ -10,21 +10,18 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.hover.sdk.api.Hover
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentSettingsBinding
-import com.hover.stax.home.MainActivity
 import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
 
 class SettingsFragment : Fragment() {
@@ -62,7 +59,7 @@ class SettingsFragment : Fragment() {
 
     private fun setUpShare() {
         binding.shareCard.shareText.setOnClickListener { Utils.shareStax(requireActivity()) }
-        if (loginViewModel.usernameIsNotSet()) loginViewModel.uploadLastUser()
+        if (loginViewModel.userIsNotSet()) loginViewModel.uploadLastUser()
     }
 
     private fun setUpMeta() {
@@ -99,11 +96,11 @@ class SettingsFragment : Fragment() {
     }
 
     private fun setUpAccountCard() {
-        loginViewModel.username.observe(viewLifecycleOwner) { username ->
+        loginViewModel.staxUser.observe(viewLifecycleOwner) { staxUser ->
             with(binding.accountCard) {
-                if (!username.isNullOrEmpty()) {
+                if (staxUser != null) {
                     accountCard.visibility = VISIBLE
-                    loggedInAccount.text = getString(R.string.logged_in_as, username)
+                    loggedInAccount.text = getString(R.string.logged_in_as, staxUser.username)
                     accountCard.setOnClickListener { showLogoutConfirmDialog() }
                 } else {
                     accountCard.visibility = GONE
@@ -167,7 +164,8 @@ class SettingsFragment : Fragment() {
     }
 
     private fun startBounties() {
-        val navDirection = if (GoogleSignIn.getLastSignedInAccount(requireActivity()) == null)
+        val staxUser = loginViewModel.staxUser.value
+        val navDirection = if (staxUser == null || !staxUser.isMapper)
             SettingsFragmentDirections.actionNavigationSettingsToBountyEmailFragment()
         else
             SettingsFragmentDirections.actionNavigationSettingsToBountyListFragment()

@@ -6,8 +6,11 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface UserDao {
 
-    @get:Query("SELECT * FROM stax_users LIMIT 1")
-    val user: Flow<StaxUser>
+    @Query("SELECT * FROM stax_users LIMIT 1")
+    fun getUserAsync(): Flow<StaxUser?>
+
+    @Query("SELECT * FROM stax_users LIMIT 1")
+    fun getUser(): StaxUser?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(user: StaxUser)

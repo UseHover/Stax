@@ -6,20 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentBountyEmailBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.settings.SettingsFragment
+import com.hover.stax.user.StaxUser
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
 class BountyEmailFragment : Fragment(), View.OnClickListener {
 
@@ -38,53 +36,47 @@ class BountyEmailFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initUI()
-
         binding.progressIndicator.setVisibilityAfterHide(View.GONE)
         binding.instructions.movementMethod = LinkMovementMethod.getInstance()
         startObservers()
     }
 
-    private fun initUI() = with(binding) {
-        if(GoogleSignIn.getLastSignedInAccount(requireActivity()) == null) {
-            joinMappers.visibility = View.GONE
-            btnSignIn.apply {
-                visibility = View.VISIBLE
-                setOnClickListener(this@BountyEmailFragment)
-            }
-        } else {
+    private fun startObservers() {
+        with(loginViewModel) {
+            progress.observe(viewLifecycleOwner) { updateProgress(it) }
+            error.observe(viewLifecycleOwner) { it?.let { showError(it) } }
+            staxUser.observe(viewLifecycleOwner) { initUI(it) }
+        }
+    }
+
+    private fun initUI(staxUser: StaxUser?) = with(binding) {
+        if (staxUser != null && !staxUser.isMapper) {
             btnSignIn.visibility = View.GONE
             joinMappers.apply {
                 visibility = View.VISIBLE
                 setOnClickListener(this@BountyEmailFragment)
             }
-        }
-    }
-
-    private fun startObservers() {
-        with(loginViewModel) {
-            val emailObserver = Observer<String?> { t -> Timber.e("Got email from Google $t") }
-            val usernameObserver = Observer<String?> { t -> Timber.e("Got username : $t") }
-
-            progress.observe(viewLifecycleOwner) { updateProgress(it) }
-            error.observe(viewLifecycleOwner) { it?.let { showError(it) } }
-            email.observe(viewLifecycleOwner, emailObserver)
-            username.observe(viewLifecycleOwner, usernameObserver)
+        } else {
+            joinMappers.visibility = View.GONE
+            btnSignIn.apply {
+                visibility = View.VISIBLE
+                setOnClickListener(this@BountyEmailFragment)
+            }
         }
     }
 
     override fun onClick(v: View) {
         if (networkMonitor.isNetworkConnected) {
-           when(v.id){
-               R.id.btnSignIn -> startGoogleSignIn()
-               R.id.joinMappers -> joinMappers()
-           }
+            when (v.id) {
+                R.id.btnSignIn -> startGoogleSignIn()
+                R.id.joinMappers -> joinMappers()
+            }
         } else {
             showDialog(R.string.internet_required, getString(R.string.internet_required_bounty_desc), R.string.btn_ok)
         }
     }
 
-    private fun startGoogleSignIn(){
+    private fun startGoogleSignIn() {
         logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext())
         updateProgress(0)
         (activity as MainActivity).signIn()
@@ -92,6 +84,7 @@ class BountyEmailFragment : Fragment(), View.OnClickListener {
     }
 
     private fun joinMappers() {
+        updateProgress(0)
         loginViewModel.joinMappers()
     }
 
@@ -131,4 +124,5 @@ class BountyEmailFragment : Fragment(), View.OnClickListener {
         if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
         _binding = null
     }
+
 }

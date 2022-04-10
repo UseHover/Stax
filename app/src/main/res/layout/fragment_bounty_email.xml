@@ -48,6 +48,11 @@
                     android:text="@string/join_mappers"
                     android:visibility="gone"
                     app:fontFamily="@font/brutalista_medium"
+                    android:textSize="@dimen/text_16"
+                    android:insetBottom="0dp"
+                    android:insetTop="0dp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorPrimaryDark"
                     app:layout_constraintBottom_toTopOf="@id/progressIndicator"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/instructions" />

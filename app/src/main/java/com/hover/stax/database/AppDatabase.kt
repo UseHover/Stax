@@ -112,6 +112,7 @@ abstract class AppDatabase : RoomDatabase() {
             database.execSQL("ALTER TABLE stax_transactions ADD COLUMN balance TEXT")
             database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_accounts_name ON accounts(name)")
         }
+
         private val M35_36: Migration = Migration(35, 36) { database ->
             database.execSQL(
                 "CREATE TABLE IF NOT EXISTS paybills (name TEXT NOT NULL, business_no TEXT NOT NULL, account_no TEXT, logo INTEGER NOT NULL, " +
