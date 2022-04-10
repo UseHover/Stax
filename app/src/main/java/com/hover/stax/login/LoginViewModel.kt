@@ -26,12 +26,11 @@ private const val EMAIL = "email"
 private const val USERNAME = "username"
 private const val BOUNTY_EMAIL_KEY = "email_for_bounties"
 
-class LoginViewModel(val repo: DatabaseRepo, val application: Application) : ViewModel() {
+class LoginViewModel(val repo: DatabaseRepo, val application: Application, private val loginNetworking: LoginNetworking) : ViewModel() {
 
     lateinit var signInClient: GoogleSignInClient
 
     val user = MutableLiveData<GoogleSignInAccount>()
-    private var optedIn = MutableLiveData(false)
 
     var email = MediatorLiveData<String?>()
     var progress = MutableLiveData(-1)
@@ -39,8 +38,6 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application) : Vie
     var username = MediatorLiveData<String?>()
 
     val postGoogleAuthNav = MutableLiveData<Int>()
-
-    val loginNetworking = LoginNetworking(application) //change to di implementation
 
     init {
         getEmail()

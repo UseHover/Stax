@@ -9,6 +9,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hover.stax.database.appModule
 import com.hover.stax.database.dataModule
+import com.hover.stax.database.networkModule
 import com.hover.stax.utils.network.NetworkMonitor
 import com.yariksoffice.lingver.Lingver
 import org.koin.android.ext.koin.androidContext
@@ -43,7 +44,7 @@ class ApplicationInstance : Application() {
     private fun initDI() {
         startKoin {
             androidContext(this@ApplicationInstance)
-            modules(listOf(appModule, dataModule))
+            modules(listOf(appModule, dataModule, networkModule))
         }
     }
 

@@ -12,6 +12,7 @@ import com.hover.stax.futureTransactions.FutureViewModel
 import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.library.LibraryViewModel
+import com.hover.stax.login.LoginNetworking
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.paybill.PaybillRepo
 import com.hover.stax.paybill.PaybillViewModel
@@ -36,7 +37,7 @@ val appModule = module {
     viewModel { TransactionHistoryViewModel(get()) }
     viewModel { BannerViewModel(get(), get()) }
     viewModel { FutureViewModel(get()) }
-    viewModel { LoginViewModel(get(), get())}
+    viewModel { LoginViewModel(get(), get(), get())}
     viewModel { TransactionDetailsViewModel(get(), get()) }
     viewModel { LibraryViewModel(get(), get()) }
     viewModel { LanguageViewModel(get()) }
@@ -52,4 +53,8 @@ val dataModule = module(createdAtStart = true) {
 
     single { DatabaseRepo(get(), get()) }
     single { PaybillRepo(get()) }
+}
+
+val networkModule = module {
+    single { LoginNetworking(get()) }
 }
