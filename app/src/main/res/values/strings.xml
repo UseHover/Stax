@@ -410,6 +410,10 @@
     <string name="display_money_received">Money received</string>
     <string name="tap_to_copy">(Tap to copy)</string>
 
+    <!-- INFO SYSTEM -->
+    <string name="transaction_status_info_title">About transaction status</string>
+    <string name="transaction_status_info_content">Stax works by sending USSD messages in the background. Transaction status depends on mobile and bank availability. We do not hold money.</string>
+
 
     <!-- Canceling -->
     <string name="cancelfuture_head">Cancel future transaction</string>
