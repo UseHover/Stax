@@ -115,9 +115,9 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application, priva
                     Timber.e(response)
                     onSuccess(JSONObject(response))
                     progress.postValue(100)
-                } else onError(application.getString(R.string.upload_user_error))
+                } else onError(application.getString(R.string.upload_user_error), true)
             } catch (e: IOException) {
-                onError(application.getString(R.string.upload_user_error))
+                onError(application.getString(R.string.upload_user_error), true)
             }
         }
     }
@@ -155,17 +155,22 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application, priva
 
     fun userIsNotSet(): Boolean = staxUser.value == null
 
-    //Sign out user if any step of the login process fails. Have user restart the flow
-    private fun onError(message: String) {
+    //Sign out user if any step of the login process fails. Have user restart the flow, except for updates
+    private fun onError(message: String, isUpdate: Boolean = false) {
         Timber.e(message)
-        signInClient.signOut().addOnCompleteListener {
-            AnalyticsUtil.logErrorAndReportToFirebase(LoginViewModel::class.java.simpleName, message, null)
-            AnalyticsUtil.logAnalyticsEvent(message, application)
-
-            removeUser()
-
+        if(isUpdate){
             progress.postValue(-1)
             error.postValue(message)
+        } else {
+            signInClient.signOut().addOnCompleteListener {
+                AnalyticsUtil.logErrorAndReportToFirebase(LoginViewModel::class.java.simpleName, message, null)
+                AnalyticsUtil.logAnalyticsEvent(message, application)
+
+                removeUser()
+
+                progress.postValue(-1)
+                error.postValue(message)
+            }
         }
     }
 
