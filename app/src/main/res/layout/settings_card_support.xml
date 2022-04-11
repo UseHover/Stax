@@ -3,6 +3,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/contactCard"
         app:title="@string/contact_stax_cardhead">
 
     <LinearLayout
@@ -11,52 +12,65 @@
             android:orientation="vertical">
 
         <TextView
-            android:id="@+id/faq"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?selectableItemBackground"
-            android:padding="@dimen/margin_10"
-            android:text="@string/FAQs"
-            android:textSize="@dimen/text_16" />
+                android:id="@+id/faq"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackground"
+                android:padding="@dimen/margin_10"
+                android:text="@string/FAQs"
+                android:textSize="@dimen/text_16" />
 
         <TextView
-            android:id="@+id/requestFeature"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?selectableItemBackground"
-            android:padding="@dimen/margin_10"
-            android:text="@string/request_feature"
-            android:textSize="@dimen/text_16"
-            app:drawableEndCompat="@drawable/ic_baseline_open_in_new_24" />
+                android:id="@+id/requestFeature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackground"
+                android:padding="@dimen/margin_10"
+                android:text="@string/request_feature"
+                android:textSize="@dimen/text_16"
+                app:drawableEndCompat="@drawable/ic_baseline_open_in_new_24" />
 
         <TextView
-            android:id="@+id/twitterContact"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?selectableItemBackground"
-            android:padding="@dimen/margin_10"
-            android:text="@string/twitter"
-            android:textSize="@dimen/text_16"
-            app:drawableEndCompat="@drawable/ic_baseline_open_in_new_24" />
+                android:id="@+id/twitterContact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackground"
+                android:padding="@dimen/margin_10"
+                android:text="@string/twitter"
+                android:textSize="@dimen/text_16"
+                app:drawableEndCompat="@drawable/ic_baseline_open_in_new_24" />
 
         <TextView
-            android:id="@+id/contactSupport"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?selectableItemBackground"
-            android:padding="@dimen/margin_10"
-            android:text="@string/email_support"
-            android:textSize="@dimen/text_16"
-            app:drawableEndCompat="@drawable/email_filled_24" />
+                android:id="@+id/contactSupport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackground"
+                android:padding="@dimen/margin_10"
+                android:text="@string/email_support"
+                android:textSize="@dimen/text_16"
+                app:drawableEndCompat="@drawable/email_filled_24" />
 
-        <TextView
-            android:id="@+id/receiveStaxUpdate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?selectableItemBackground"
-            android:padding="@dimen/margin_10"
-            android:text="@string/receive_stax_updates"
-            android:textSize="@dimen/text_16"
-            app:drawableEndCompat="@drawable/email_filled_24" />
+        <RelativeLayout
+                android:id="@+id/receiveStaxUpdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackground">
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@id/marketingOptIn"
+                    android:padding="@dimen/margin_10"
+                    android:text="@string/receive_stax_updates"
+                    android:textSize="@dimen/text_16" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/marketingOptIn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="-10dp" />
+
+        </RelativeLayout>
     </LinearLayout>
 </com.hover.stax.views.StaxCardView>

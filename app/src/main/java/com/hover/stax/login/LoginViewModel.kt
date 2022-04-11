@@ -97,8 +97,6 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application, priva
     }
 
     fun optInMarketing(optIn: Boolean) {
-        progress.postValue(0)
-
         updateUser(JSONObject().apply {
             put("marketing_opted_in", optIn)
         })

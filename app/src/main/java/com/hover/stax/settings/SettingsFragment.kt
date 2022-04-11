@@ -22,6 +22,7 @@ import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 
 class SettingsFragment : Fragment() {
@@ -112,10 +113,16 @@ class SettingsFragment : Fragment() {
     private fun setUpSupport() {
         with(binding.staxSupport) {
             twitterContact.setOnClickListener { Utils.openUrl(getString(R.string.stax_twitter_url), requireActivity()) }
-            receiveStaxUpdate.setOnClickListener { Utils.openUrl(getString(R.string.receive_stax_updates_url), requireActivity()) }
             requestFeature.setOnClickListener { Utils.openUrl(getString(R.string.stax_nolt_url), requireActivity()) }
             contactSupport.setOnClickListener { Utils.openEmail(getString(R.string.stax_emailing_subject, Hover.getDeviceId(requireActivity())), requireActivity()) }
             faq.setOnClickListener { NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToFaqFragment()) }
+
+            //TODO update once we can ascertain state
+            receiveStaxUpdate.setOnClickListener {
+                marketingOptIn.isChecked = !marketingOptIn.isChecked
+                marketingOptIn(marketingOptIn.isChecked)
+            }
+            marketingOptIn.setOnCheckedChangeListener { _, isChecked -> marketingOptIn(isChecked) }
         }
     }
 
@@ -183,6 +190,18 @@ class SettingsFragment : Fragment() {
                 UIHelper.flashMessage(requireActivity(), getString(R.string.logout_out_success))
             }
         dialog!!.showIt()
+    }
+
+    private fun marketingOptIn(optedIn: Boolean) {
+        Timber.e("Opted in $optedIn")
+        binding.staxSupport.contactCard.showProgressIndicator()
+        loginViewModel.optInMarketing(optedIn)
+
+        loginViewModel.progress.observe(viewLifecycleOwner) {
+            if(it == 100) {
+                binding.staxSupport.contactCard.hideProgressIndicator()
+            }
+        }
     }
 
     companion object {
