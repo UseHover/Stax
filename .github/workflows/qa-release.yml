@@ -79,6 +79,14 @@ jobs:
           track: internal
 #          whatsNewDirectory: whatsnew/
 
+      # Start release checklist
+      - name: Start Manifestly release checklist
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: 'https://api.manifest.ly/api/v1/runs/?api_key=${{ secrets.MANIFESTLY_KEY }}'
+          method: 'POST'
+          data: '{ "checklist_id": 55793, "channel": "stax-releases", "title": "Test checklist run"}'
+
 
       # Send slack notification
       - name: Send Slack notification
