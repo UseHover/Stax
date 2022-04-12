@@ -16,20 +16,19 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
- class TransferViewModel(application: Application, repo: DatabaseRepo) : AbstractFormViewModel(application, repo) {
+class TransferViewModel(application: Application, repo: DatabaseRepo) : AbstractFormViewModel(application, repo) {
 
     val amount = MutableLiveData<String?>()
     val contact = MutableLiveData<StaxContact?>()
-    val note = MutableLiveData<String>()
+    val note = MutableLiveData<String?>()
     var request: LiveData<Request> = MutableLiveData()
 
     fun setTransactionType(transaction_type: String) {
         TransactionType.type = transaction_type
     }
 
-    fun setAmount(a: String) = amount.postValue(a)
+    fun setAmount(a: String?) = amount.postValue(a)
 
     private fun setContact(contactIds: String?) = contactIds?.let {
         viewModelScope.launch {
@@ -51,11 +50,11 @@ import timber.log.Timber
         contact.value = StaxContact()
     }
 
-    fun setRecipientSmartly(r: Request?, channel: Channel) {
-        r?.let {
+    fun setRecipientSmartly(autoFill: AutoFillTransferInfo?, channel: Channel) {
+        autoFill?.let {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    val formattedPhone = PhoneHelper.getInternationalNumber(channel.countryAlpha2, r.requester_number)
+                    val formattedPhone = PhoneHelper.getInternationalNumber(channel.countryAlpha2, autoFill.formattedContactNumber())
                     val sc = repo.getContactByPhone(formattedPhone)
                     sc?.let { contact.postValue(it) }
                 } catch (e: NumberFormatException) {
@@ -65,7 +64,7 @@ import timber.log.Timber
         }
     }
 
-    private fun setNote(n: String) = note.postValue(n)
+    private fun setNote(n: String?) = note.postValue(n)
 
     fun amountErrors(): String? {
         return if (!amount.value.isNullOrEmpty() && amount.value!!.matches("[\\d.]+".toRegex()) && !amount.value!!.matches("[0]+".toRegex())) null
@@ -90,12 +89,6 @@ import timber.log.Timber
         setAmount(s.amount)
         setContact(s.recipient_ids)
         setNote(s.note)
-    }
-
-    fun view(r: Request) {
-        setAmount(r.amount)
-        setContact(r.requestee_ids)
-        setNote(r.note)
     }
 
     fun checkSchedule() {

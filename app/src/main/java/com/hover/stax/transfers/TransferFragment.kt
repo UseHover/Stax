@@ -17,7 +17,6 @@ import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
 import com.hover.stax.home.MainActivity
-import com.hover.stax.requests.Request
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
@@ -120,7 +119,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         observeNonStandardVariables()
         with(transferViewModel) {
             contact.observe(viewLifecycleOwner) { recipientValue.setContact(it) }
-            request.observe(viewLifecycleOwner) { it?.let { load(it) } }
+            request.observe(viewLifecycleOwner) { it?.let { autoFill(it.transferInfo()) } }
         }
     }
 
@@ -135,7 +134,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         channelsViewModel.activeChannel.observe(viewLifecycleOwner) { channel ->
             channel?.let {
                 transferViewModel.request.value?.let { request ->
-                    transferViewModel.setRecipientSmartly(request, it)
+                    transferViewModel.setRecipientSmartly(request.transferInfo(), it)
                 }
                 binding.summaryCard.accountValue.setTitle(it.toString())
             }
@@ -332,17 +331,17 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun load(r: Request) {
+    private fun autoFill(transfer: AutoFillTransferInfo, isEditing: Boolean? = false) {
         channelsViewModel.activeChannel.value?.let {
-            transferViewModel.setRecipientSmartly(r, it)
+            transferViewModel.setRecipientSmartly(transfer, it)
         }
 
-        channelsViewModel.setChannelFromRequest(r)
-        amountInput.setText(r.amount)
-        contactInput.setText(r.requester_number, false)
+        channelsViewModel.setChannelFromTransferInfo(transfer)
+        amountInput.setText(transfer.amount)
+        contactInput.setText(transfer.formattedContactNumber(), false)
 
-        transferViewModel.setEditing(r.amount.isNullOrEmpty())
-        accountDropdown.setState(getString(R.string.channel_request_fieldinfo, r.requester_institution_id.toString()), AbstractStatefulInput.INFO)
+        transferViewModel.setEditing(isEditing!! && transfer.amount.isNullOrEmpty())
+        accountDropdown.setState(getString(R.string.channel_request_fieldinfo, transfer.toInstitutionId.toString()), AbstractStatefulInput.INFO)
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext())
     }
 
