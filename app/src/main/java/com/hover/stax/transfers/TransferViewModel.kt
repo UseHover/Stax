@@ -100,6 +100,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
         setAmount(s.amount)
         setContact(s.recipient_ids)
         setNote(s.note)
+        autoFillToInstitutionId.postValue(null)
     }
 
     fun view(r: Request) {
