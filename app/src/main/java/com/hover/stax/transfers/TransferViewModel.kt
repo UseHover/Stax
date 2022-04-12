@@ -16,6 +16,7 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class TransferViewModel(application: Application, repo: DatabaseRepo) : AbstractFormViewModel(application, repo) {
 
@@ -38,13 +39,16 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
         }
     }
 
-    fun autoFill(amount: String, contact: StaxContact? = null, institutionId: Int? = null) {
+    fun autoFill(amount: String, contact: StaxContact, institutionId: Int? = null) {
+        setContact(contact)
         setAmount(amount)
-        contact?.let {setContact(contact) }
         institutionId?.let { autoFillToInstitutionId.postValue(institutionId) }
     }
 
-    fun setContact(sc: StaxContact?) = sc?.let { contact.postValue(it) }
+    fun setContact(sc: StaxContact?) = sc?.let {
+        Timber.i("contact is not null when posted")
+        contact.postValue(it)
+    }
 
     fun forceUpdateContactUI() = contact.postValue(contact.value)
 
@@ -93,7 +97,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     fun view(s: Schedule) {
         schedule.postValue(s)
         setTransactionType(s.type)
-        autoFill(s.amount)
+        setAmount(s.amount)
         setContact(s.recipient_ids)
         setNote(s.note)
     }

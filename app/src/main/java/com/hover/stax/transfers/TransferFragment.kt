@@ -26,6 +26,7 @@ import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
@@ -66,6 +67,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         amountInput.setHint(getString(R.string.transfer_amount_label))
         accountDropdown.setHint(getString(R.string.account_label))
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -118,6 +120,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         observeRecentContacts()
         observeNonStandardVariables()
         observeAutoFillToInstitution()
+        observeContact()
         with(transferViewModel) {
             contact.observe(viewLifecycleOwner) { recipientValue.setContact(it) }
             request.observe(viewLifecycleOwner) {
@@ -172,7 +175,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private fun observeAutoFillToInstitution() {
         transferViewModel.autoFillToInstitutionId.observe(viewLifecycleOwner) {
             it?.let {
-                //completeAutoFilling(it)
+                completeAutoFilling(it)
             }
         }
     }
@@ -199,6 +202,12 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 updateNonStandardForEntryList(variables)
                 updateNonStandardForSummaryCard(variables)
             }
+        }
+    }
+    private fun observeContact() {
+        transferViewModel.contact.observe(viewLifecycleOwner){
+            Timber.i("contact is ${it?.shortName()} at observing level")
+            it?.let { contactInput.setText(it.shortName(), false) }
         }
     }
 
@@ -342,6 +351,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun completeAutoFilling(institutionId: Int?) {
+        amountInput.setText(transferViewModel.amount.value)
+
         channelsViewModel.setChannelFromInstitutionId(institutionId)
         transferViewModel.setEditing(transferViewModel.amount.value.isNullOrEmpty())
         accountDropdown.setState(getString(R.string.channel_request_fieldinfo, institutionId.toString()), AbstractStatefulInput.INFO)
