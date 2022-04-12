@@ -14,6 +14,7 @@ import com.hover.stax.accounts.DUMMY
 import com.hover.stax.actions.ActionSelectViewModel
 import com.hover.stax.balances.BalanceAdapter
 import com.hover.stax.balances.BalancesViewModel
+import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.ActivityMainBinding
 import com.hover.stax.financialTips.FinancialTipsFragment
 import com.hover.stax.login.LoginViewModel
@@ -85,6 +86,11 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
             arguments = bundle
             show(supportFragmentManager, tag)
         }
+    }
+
+    fun navigateTransferAutoFill(type: String, amount: String, toInstitutionId: Int, contact: StaxContact,) {
+        navHelper.navigateTransfer(type)
+        transferViewModel.autoFill(amount, contact, toInstitutionId)
     }
 
     private fun observeForAppReview() = historyViewModel.showAppReviewLiveData().observe(this@MainActivity) {

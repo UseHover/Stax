@@ -117,9 +117,13 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         observeNote()
         observeRecentContacts()
         observeNonStandardVariables()
+        observeAutoFillToInstitution()
         with(transferViewModel) {
             contact.observe(viewLifecycleOwner) { recipientValue.setContact(it) }
-            request.observe(viewLifecycleOwner) { it?.let { autoFill(it.transferInfo()) } }
+            request.observe(viewLifecycleOwner) {
+                AnalyticsUtil.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext())
+                it?.let { transferViewModel.view(it) }
+            }
         }
     }
 
@@ -134,11 +138,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         channelsViewModel.activeChannel.observe(viewLifecycleOwner) { channel ->
             channel?.let {
                 transferViewModel.request.value?.let { request ->
-                    transferViewModel.setRecipientSmartly(request.transferInfo(), it)
+                    transferViewModel.setRecipientSmartly(request.requester_number, it)
                 }
                 binding.summaryCard.accountValue.setTitle(it.toString())
             }
-
             recipientInstitutionSelect.visibility = if (channel != null) View.VISIBLE else View.GONE
         }
     }
@@ -163,6 +166,13 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         transferViewModel.amount.observe(viewLifecycleOwner) {
             it?.let {
                 binding.summaryCard.amountValue.text = Utils.formatAmount(it)
+            }
+        }
+    }
+    private fun observeAutoFillToInstitution() {
+        transferViewModel.autoFillToInstitutionId.observe(viewLifecycleOwner) {
+            it?.let {
+                //completeAutoFilling(it)
             }
         }
     }
@@ -331,24 +341,15 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun autoFill(transfer: AutoFillTransferInfo, isEditing: Boolean? = false) {
-        channelsViewModel.activeChannel.value?.let {
-            transferViewModel.setRecipientSmartly(transfer, it)
-        }
-
-        channelsViewModel.setChannelFromTransferInfo(transfer)
-        amountInput.setText(transfer.amount)
-        contactInput.setText(transfer.formattedContactNumber(), false)
-
-        transferViewModel.setEditing(isEditing!! && transfer.amount.isNullOrEmpty())
-        accountDropdown.setState(getString(R.string.channel_request_fieldinfo, transfer.toInstitutionId.toString()), AbstractStatefulInput.INFO)
-        AnalyticsUtil.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext())
+    private fun completeAutoFilling(institutionId: Int?) {
+        channelsViewModel.setChannelFromInstitutionId(institutionId)
+        transferViewModel.setEditing(transferViewModel.amount.value.isNullOrEmpty())
+        accountDropdown.setState(getString(R.string.channel_request_fieldinfo, institutionId.toString()), AbstractStatefulInput.INFO)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
-
         _binding = null
     }
 

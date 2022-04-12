@@ -240,6 +240,7 @@
         <argument
                 android:name="transactionType"
                 app:argType="string" />
+
         <deepLink
                 android:id="@+id/transferDL"
                 app:mimeType="text/plain"

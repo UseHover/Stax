@@ -13,7 +13,6 @@ import com.yariksoffice.lingver.Lingver
 import android.text.TextUtils
 import androidx.room.Entity
 import com.hover.stax.channels.Channel
-import com.hover.stax.transfers.AutoFillTransferInfo
 import com.hover.stax.utils.paymentLinkCryptography.Base64
 import com.hover.stax.utils.paymentLinkCryptography.Encryption
 import java.lang.StringBuilder
@@ -41,24 +40,21 @@ class Request {
     @ColumnInfo(name = "note")
 	var note: String? = null
 
-	@JvmField
     @ColumnInfo(name = "message")
 	var message: String? = null
 
-	@JvmField
     @ColumnInfo(name = "matched_transaction_uuid")
 	var matched_transaction_uuid: String? = null
 
-	@JvmField
     @ColumnInfo(name = "date_sent", defaultValue = "CURRENT_TIMESTAMP")
 	var date_sent: Long = 0
 
 	constructor()
-	constructor(autoFill: AutoFillTransferInfo) {
-		this.amount = autoFill.amount
-		this.note = autoFill.note
-		this.requester_number = autoFill.formattedContactNumber()
-		this.requester_institution_id = autoFill.toInstitutionId
+	constructor(amount: String?, note: String?, requester_number: String? ,  requester_institution_id:Int ) {
+		this.amount = amount
+		this.note = note
+		this.requester_number = requester_number
+		this.requester_institution_id = requester_institution_id
 		date_sent = now()
 	}
 
@@ -80,9 +76,6 @@ class Request {
 		requester_number = splitString[2]
 	}
 
-	fun transferInfo() : AutoFillTransferInfo {
-		return AutoFillTransferInfo(requester_institution_id, requester_number, note, amount)
-	}
 
 	fun hasRequesterInfo(): Boolean {
 		return requester_number != null && requester_number!!.isNotEmpty()

@@ -11,7 +11,6 @@ import com.hover.stax.contacts.StaxContact
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.transfers.AbstractFormViewModel
-import com.hover.stax.transfers.AutoFillTransferInfo
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
@@ -98,15 +97,10 @@ class NewRequestViewModel(application: Application, databaseRepo: DatabaseRepo) 
         repo.update(activeChannel.value)
         saveContacts()
 
-        val transferAutoFill = AutoFillTransferInfo()
-        transferAutoFill.amount = amount.value
-        transferAutoFill.note = note.value
-        transferAutoFill.toInstitutionId = activeChannel.value!!.institutionId
-        transferAutoFill.contactNumber = requesterNumber.value
 
 
 
-        val request = Request(transferAutoFill)
+        val request = Request(amount.value, note.value, requesterNumber.value, activeChannel.value!!.institutionId)
         formulatedRequest.value = request
     }
 

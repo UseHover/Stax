@@ -23,6 +23,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     val contact = MutableLiveData<StaxContact?>()
     val note = MutableLiveData<String?>()
     var request: LiveData<Request> = MutableLiveData()
+    var autoFillToInstitutionId : MutableLiveData<Int?> = MutableLiveData()
 
     fun setTransactionType(transaction_type: String) {
         TransactionType.type = transaction_type
@@ -35,6 +36,12 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
             val contacts = repo.getContacts(contactIds.split(",").toTypedArray())
             if (contacts.isNotEmpty()) contact.postValue(contacts.first())
         }
+    }
+
+    fun autoFill(amount: String, contact: StaxContact? = null, institutionId: Int? = null) {
+        setAmount(amount)
+        contact?.let {setContact(contact) }
+        institutionId?.let { autoFillToInstitutionId.postValue(institutionId) }
     }
 
     fun setContact(sc: StaxContact?) = sc?.let { contact.postValue(it) }
@@ -50,11 +57,11 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
         contact.value = StaxContact()
     }
 
-    fun setRecipientSmartly(autoFill: AutoFillTransferInfo?, channel: Channel) {
-        autoFill?.let {
+    fun setRecipientSmartly(contactNum: String?, channel: Channel) {
+        contactNum.let {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    val formattedPhone = PhoneHelper.getInternationalNumber(channel.countryAlpha2, autoFill.formattedContactNumber())
+                    val formattedPhone = PhoneHelper.getInternationalNumber(channel.countryAlpha2, contactNum)
                     val sc = repo.getContactByPhone(formattedPhone)
                     sc?.let { contact.postValue(it) }
                 } catch (e: NumberFormatException) {
@@ -86,9 +93,14 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     fun view(s: Schedule) {
         schedule.postValue(s)
         setTransactionType(s.type)
-        setAmount(s.amount)
+        autoFill(s.amount)
         setContact(s.recipient_ids)
         setNote(s.note)
+    }
+
+    fun view(r: Request) {
+        autoFill(r.amount!!, StaxContact(r.requester_number), r.requester_institution_id)
+        setNote(r.note)
     }
 
     fun checkSchedule() {
