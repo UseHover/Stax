@@ -97,6 +97,16 @@ public class Channel implements Comparable<Channel> {
         return sorted_list;
     }
 
+    public static List<Channel> filter(List<Channel> channels, String searchValue) {
+        List<Channel> filtered = new ArrayList<>();
+        for(Channel channel :channels) {
+            if(channel.toFilterableString().contains(searchValue)) {
+                filtered.add(channel);
+            }
+        }
+        return filtered;
+    }
+
     Channel update(JSONObject jsonObject, String rootUrl) {
         try {
             id = jsonObject.getInt("id");
@@ -125,10 +135,10 @@ public class Channel implements Comparable<Channel> {
         return name + " " + countryAlpha2;
     }
 
-    public String toFilterableString() {
+    private String toFilterableString() {
         Locale loc = new Locale("",countryAlpha2);
         String fullCountryName = loc.getDisplayCountry();
-        return name + fullCountryName;
+        return (name + fullCountryName).replace(" ", "").toLowerCase();
     }
 
     @Override

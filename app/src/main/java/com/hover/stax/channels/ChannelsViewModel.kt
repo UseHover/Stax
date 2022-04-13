@@ -21,9 +21,7 @@ import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.requests.Request
 import com.hover.stax.schedules.Schedule
-import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
-import com.hover.stax.utils.Utils
+import com.hover.stax.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -65,8 +63,8 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
             addSource(simHniList, this@ChannelsViewModel::onSimUpdate)
         }
 
-        filteredChannels.addSource(allChannels, this@ChannelsViewModel::filterSimChannels)
-        filteredChannels.addSource(simChannels, this@ChannelsViewModel::filterSimChannels)
+        filteredChannels.addSource(allChannels, this@ChannelsViewModel::filterChannels)
+        filteredChannels.addSource(simChannels, this@ChannelsViewModel::filterChannels)
 
         activeChannel.addSource(selectedChannels, this::setActiveChannelIfNull)
 
@@ -89,27 +87,21 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
         }
     }
 
-    private fun filterSimChannels(channels: List<Channel>) {
+    private fun filterChannels(channels: List<Channel>) {
         if(!channels.isNullOrEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
-                val filteredList = channels.filter { toMatchingString(it.toFilterableString()).contains(toMatchingString(filterQuery.value!!)) }
-                Timber.i("accounts matched size is: ${filteredList.size}")
-                filteredChannels.postValue(filteredList)
+                filteredChannels.postValue(Channel.filter(channels, filterQuery.value!!.toFilteringStandard()))
             }
         }
     }
 
-    private fun toMatchingString(value: String) : String {
-        return value.lowercase().replace(" ", "");
-    }
-
-    fun filterSimChannels(value: String) {
+    fun runChannelFilter(value: String) {
         filterQuery.value = value
         val listToFilter : List<Channel>? = if(!simChannels.value.isNullOrEmpty()) simChannels.value else allChannels.value
-        filterSimChannels(listToFilter!!)
+        filterChannels(listToFilter!!)
     }
     fun isInSearchMode() : Boolean {
-        return toMatchingString(filterQuery.value!!).isNotEmpty()
+        return !filterQuery.value!!.isAbsolutelyEmpty()
     }
 
     fun setType(t: String) {
@@ -189,7 +181,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
                 val hniArr = channels[i].hniList.split(",")
 
                 for (s in hniArr) {
-                    if (hniList.contains(Utils.stripHniString(s))) {
+                    if (hniList.contains(s.toHni())) {
                         if (!simChannelList.contains(channels[i]))
                             simChannelList.add(channels[i])
                     }

@@ -3,7 +3,6 @@ package com.hover.stax.channels
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -94,7 +93,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun afterTextChanged(editable: Editable) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-               channelsViewModel.filterSimChannels(charSequence.toString())
+               channelsViewModel.runChannelFilter(charSequence.toString())
             }
         }
         binding.searchInput.addTextChangedListener(searchInputWatcher)
