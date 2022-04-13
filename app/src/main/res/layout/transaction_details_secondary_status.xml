@@ -13,8 +13,8 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="@dimen/margin_55"
-            android:layout_height="@dimen/margin_55"
+            android:layout_width="@dimen/margin_43"
+            android:layout_height="@dimen/margin_43"
             android:id="@+id/status_icon" />
 
         <TextView

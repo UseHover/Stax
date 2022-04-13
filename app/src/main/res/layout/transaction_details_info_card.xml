@@ -69,7 +69,7 @@
             android:textSize="@dimen/text_16" />
     </TableRow>
 
-    <TableRow android:layout_marginTop="@dimen/margin_18" android:layout_marginBottom="@dimen/margin_13">
+    <TableRow android:layout_marginTop="@dimen/margin_18" android:layout_marginBottom="@dimen/margin_18">
 
         <TextView
             android:text="@string/type_label"
@@ -164,6 +164,7 @@
                 android:drawablePadding="@dimen/margin_3"
                 android:textAlignment="viewEnd"
                 android:textColor="@color/offWhite"
+                android:background="?selectableItemBackground"
                 android:textSize="@dimen/text_16"
                 app:drawableEndCompat="@drawable/ic_copy" />
     </TableRow>
@@ -184,6 +185,7 @@
                 android:layout_width="wrap_content"
                 android:id="@+id/details_stax_uuid"
                 android:layout_weight="1"
+                android:background="?selectableItemBackground"
                 android:textAlignment="viewEnd"
                 android:textColor="@color/offWhite"
                 android:textSize="@dimen/text_16" />

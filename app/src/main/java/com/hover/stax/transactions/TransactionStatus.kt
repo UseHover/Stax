@@ -32,6 +32,14 @@ class TransactionStatus(val transaction: StaxTransaction) {
         }
     }
 
+    fun getPlainTitle(c: Context) : String {
+        return when (transaction.status) {
+            Transaction.FAILED -> c.getString(R.string.failed_label)
+            Transaction.PENDING -> c.getString(if (transaction.isRecorded) R.string.checking_your_flow else R.string.pending_cardHead)
+            else -> c.getString(R.string.successful_label)
+        }
+    }
+
     fun getReason() : String {
         return if(transaction.isFailed) transaction.category.replace("-", "") else ""
 
