@@ -31,7 +31,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
-class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListener {
+class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
 
     private val channelsViewModel: ChannelsViewModel by viewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
@@ -39,7 +39,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     private var _binding: FragmentAddChannelsBinding? = null
     private val binding get() = _binding!!
 
-    private val selectAdapter: ChannelsRecyclerViewAdapter = ChannelsRecyclerViewAdapter(ArrayList(0), this)
+    private val selectAdapter: ChannelsAdapter = ChannelsAdapter(ArrayList(0), this)
     private var tracker: SelectionTracker<Long>? = null
 
     private var dialog: StaxDialog? = null
@@ -127,7 +127,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
         showSelected(!channels.isNullOrEmpty())
         if (!channels.isNullOrEmpty())
-            binding.selectedList.adapter = ChannelsRecyclerViewAdapter(channels, this)
+            binding.selectedList.adapter = ChannelsAdapter(channels, this)
     }
 
     private fun showSelected(visible: Boolean) {
