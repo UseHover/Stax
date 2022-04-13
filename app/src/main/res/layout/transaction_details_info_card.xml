@@ -69,7 +69,7 @@
             android:textSize="@dimen/text_16" />
     </TableRow>
 
-    <TableRow android:layout_marginTop="@dimen/margin_18">
+    <TableRow android:layout_marginTop="@dimen/margin_18" android:layout_marginBottom="@dimen/margin_13">
 
         <TextView
             android:text="@string/type_label"
