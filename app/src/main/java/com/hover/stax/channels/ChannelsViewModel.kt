@@ -88,7 +88,7 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     private fun filterChannels(channels: List<Channel>) {
         if(!channels.isNullOrEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
-                val filteredList = channels.filter { it.toString().replace(" ", "").lowercase()
+                val filteredList = channels.filter { it.toString().toFilteringStandard()
                     .contains(filterQuery.value!!.toFilteringStandard()) }
                 filteredChannels.postValue(filteredList)
             }
