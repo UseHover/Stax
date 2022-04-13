@@ -35,6 +35,7 @@ import com.squareup.picasso.Target
 import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 import java.lang.Exception
 
 
@@ -309,11 +310,6 @@ class TransactionDetailsFragment : DialogFragment(), Target{
         binding.secondaryStatus.statusIcon.setImageDrawable(d)
     }
 
-    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-        TODO("Not yet implemented")
-    }
+    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) { Timber.i("On bitmap failed") }
+    override fun onPrepareLoad(placeHolderDrawable: Drawable?) { Timber.i("On prepare load") }
 }
