@@ -203,12 +203,12 @@ class TransactionDetailsFragment : DialogFragment(), Target{
         binding.infoCard.detailsServiceId.text = transaction.confirm_code
         binding.infoCard.detailsStaxUuid.text = transaction.uuid
         binding.infoCard.detailsStaxStatus.apply {
-            text = transaction.fullStatus.getTitle(requireContext())
+            text = transaction.fullStatus.getPlainTitle(requireContext())
             setCompoundDrawablesWithIntrinsicBounds(0, 0, transaction.fullStatus.getIcon(), 0)
         }
 
         binding.infoCard.detailsStaxReason.text = transaction.fullStatus.getReason()
-        if(transaction.fee !=null && transaction.fee > 0) binding.infoCard.detailsFee.text = Utils.formatAmount(transaction.fee)
+        transaction.fee?.let{binding.infoCard.detailsFee.text = Utils.formatAmount(it)}
     }
 
     private fun setVisibleDetails(transaction: StaxTransaction) {
@@ -264,7 +264,7 @@ class TransactionDetailsFragment : DialogFragment(), Target{
                     movementMethod = LinkMovementMethod.getInstance()
                 }
                 if(transaction.isFailed) action?.let { UIHelper.loadPicasso(getString(R.string.root_url) + it.from_institution_logo, this) }
-                else UIHelper.loadPicasso(R.drawable.ic_warning, Constants.size55, this)
+                else UIHelper.loadPicasso(R.drawable.ic_warning, Constants.size43, this)
             }
         }
     }

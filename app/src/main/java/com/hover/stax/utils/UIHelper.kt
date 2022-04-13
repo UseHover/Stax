@@ -70,6 +70,10 @@ object UIHelper {
         Picasso.get().load(url).config(Bitmap.Config.RGB_565).placeholder(R.color.buttonColor).into(imageView)
     }
 
+    fun loadPicasso(url: String?, size: Int, imageView: ImageView?) {
+        Picasso.get().load(url).config(Bitmap.Config.RGB_565).resize(size, size) .placeholder(R.color.buttonColor).into(imageView)
+    }
+
     fun loadPicasso(resId: Int, size: Int, target: Target?) {
         Picasso.get()
             .load(resId)

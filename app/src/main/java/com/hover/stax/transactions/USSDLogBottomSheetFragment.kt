@@ -29,13 +29,13 @@ class USSDLogBottomSheetFragment: BottomSheetDialogFragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-
 		setCardTitle()
 		createUSSDMessagesRecyclerView()
 		createSmsMessagesRecyclerView()
 	}
 
 	private fun setCardTitle() {
+
 		viewModel.action.observe(viewLifecycleOwner){
 			if(it !=null) {
 				val type = viewModel.transaction.value!!.fullStatus.getDisplayType(requireContext(), it)
