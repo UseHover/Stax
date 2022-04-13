@@ -1,6 +1,8 @@
 package com.hover.stax.transactions
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
@@ -10,6 +12,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.os.bundleOf
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.DialogFragment
@@ -23,15 +26,19 @@ import com.hover.stax.databinding.FragmentTransactionBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase
+import com.hover.stax.utils.Constants
 import com.hover.stax.utils.DateUtils.humanFriendlyDateTime
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
+import com.squareup.picasso.Picasso
+import com.squareup.picasso.Target
 import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.lang.Exception
 
 
-class TransactionDetailsFragment : DialogFragment(){
+class TransactionDetailsFragment : DialogFragment(), Target{
 
     private val viewModel: TransactionDetailsViewModel by viewModel()
     private var _binding: FragmentTransactionBinding? = null
@@ -254,9 +261,7 @@ class TransactionDetailsFragment : DialogFragment(){
                     text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
                     movementMethod = LinkMovementMethod.getInstance()
                 }
-                action?.let {
-                    UIHelper.loadPicasso(getString(R.string.root_url) + action.from_institution_logo, binding.secondaryStatus.statusIcon)
-                }
+                action?.let { UIHelper.loadPicasso(getString(R.string.root_url) + action.from_institution_logo, this) }
             }
         }
     }
@@ -294,5 +299,19 @@ class TransactionDetailsFragment : DialogFragment(){
 
             return fragment
         }
+    }
+
+    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+        val d = RoundedBitmapDrawableFactory.create(resources, bitmap)
+        d.isCircular = true
+        binding.secondaryStatus.statusIcon.setImageDrawable(d)
+    }
+
+    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+        TODO("Not yet implemented")
     }
 }

@@ -37,7 +37,6 @@
         android:fontFamily="@font/brutalista_medium"
         android:textColor="@color/stax_state_blue"
         android:textStyle="bold"
-        android:padding="@dimen/margin_16"
         android:background="@drawable/bright_blue_rounded_bg"
         android:text="@string/viewUSSDLog"/>
 

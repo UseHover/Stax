@@ -11,10 +11,7 @@ class TransactionStatus(val transaction: StaxTransaction) {
     fun getIcon(): Int {
         return when (transaction.status) {
             Transaction.FAILED -> R.drawable.ic_info_red
-            Transaction.PENDING -> {
-                if (transaction.isRecorded) R.drawable.ic_warning
-                else R.drawable.ic_info
-            }
+            Transaction.PENDING -> R.drawable.ic_warning
             else -> R.drawable.ic_success
         }
     }
