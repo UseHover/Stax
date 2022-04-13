@@ -29,6 +29,7 @@ open class StaxDialog(var ctx: Context, var mView: View) : AlertDialog(ctx) {
 
     constructor(a: Activity) : this(a, a.layoutInflater, R.layout.stax_dialog)
     constructor(a: Activity, layoutRes: Int) : this(a, a.layoutInflater, layoutRes)
+    constructor(inflater: LayoutInflater) : this(inflater.context, inflater, R.layout.stax_dialog)
     private constructor(c: Context, inflater: LayoutInflater, layoutRes: Int) : this(c, inflater.inflate(layoutRes, null))
 
     val view get() = mView
