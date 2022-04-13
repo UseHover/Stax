@@ -279,8 +279,6 @@
 
     <string name="descrip_transfer_received">ገንዘብ ከ %1$s ተቀብሏል</string>
 
-    <string name="descrip_bill_paid">ሂሳብ %1$s ከፍሏል to %2$s</string>
-
     <string name="descrip_recorded">%1$s ላይ የ USSD ክፍለ ጊዜ ተመዝግቧል</string>
 
     <string name="fab_transfernow">አሁን ገንዘብ ይላኩ</string>
