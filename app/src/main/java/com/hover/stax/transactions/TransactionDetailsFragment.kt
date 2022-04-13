@@ -254,6 +254,7 @@ class TransactionDetailsFragment : DialogFragment(), Target{
     private fun setSecondaryStatus(action: HoverAction?, transaction: StaxTransaction?) {
         transaction?.let {
             if(transaction.isSuccessful) binding.secondaryStatus.root.visibility = GONE
+
             else {
                 binding.secondaryStatus.root.visibility = VISIBLE
                 binding.secondaryStatus.statusText.apply {
@@ -261,7 +262,8 @@ class TransactionDetailsFragment : DialogFragment(), Target{
                     text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
                     movementMethod = LinkMovementMethod.getInstance()
                 }
-                action?.let { UIHelper.loadPicasso(getString(R.string.root_url) + action.from_institution_logo, this) }
+                if(transaction.isFailed) action?.let { UIHelper.loadPicasso(getString(R.string.root_url) + it.from_institution_logo, this) }
+                else UIHelper.loadPicasso(R.drawable.ic_warning, Constants.size55, this)
             }
         }
     }
