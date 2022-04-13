@@ -3,11 +3,13 @@ package com.hover.stax.channels
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
@@ -21,6 +23,7 @@ import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
+import com.hover.stax.views.RequestServiceDialog
 
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -76,7 +79,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
             adapter = selectAdapter
             isNestedScrollingEnabled = false
         }
-        binding.emptyState.setup(requireActivity())
+        setupEmptyState()
 
         setUpMultiselect()
         setSearchInputWatcher()
@@ -86,6 +89,12 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
         channelsViewModel.simChannels.observe(viewLifecycleOwner) { if(it.isEmpty())  setError(R.string.channels_error_nosim) else Timber.i("loaded") }
         channelsViewModel.filteredChannels.observe(viewLifecycleOwner){ loadFilteredChannels(it) }
         channelsViewModel.allChannels.observe(viewLifecycleOwner) { Timber.i("Loaded all channels") }
+    }
+    private fun setupEmptyState() {
+        binding.emptyState.root.visibility = GONE
+        binding.emptyState.informUs.setOnClickListener {
+            RequestServiceDialog(requireActivity()).showIt()
+        }
     }
 
     private fun setSearchInputWatcher() {
@@ -131,7 +140,7 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
 
         if (!channels.isNullOrEmpty()) {
             updateAdapter(Channel.sort(channels, false))
-            binding.emptyState.dismiss()
+            binding.emptyState.root.visibility = GONE
             binding.channelsList.visibility = VISIBLE
             binding.errorText.visibility = GONE
         }
@@ -140,7 +149,13 @@ class AddChannelsFragment : Fragment(), ChannelsRecyclerViewAdapter.SelectListen
     }
 
     private fun showEmptyState() {
-        binding.emptyState.show(channelsViewModel.filterQuery.value!!)
+        val content = resources.getString(R.string.no_accounts_found_desc,  channelsViewModel.filterQuery.value!!)
+        binding.emptyState.noAccountFoundDesc.apply {
+            text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
+            movementMethod = LinkMovementMethod.getInstance()
+        }
+
+        binding.emptyState.root.visibility = VISIBLE
         binding.channelsList.visibility = GONE
         binding.errorText.visibility = GONE
     }

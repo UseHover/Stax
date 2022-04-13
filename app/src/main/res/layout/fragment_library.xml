@@ -32,10 +32,7 @@
                 android:id="@+id/searchInput"/>
         </com.hover.stax.views.StaxCardView>
 
-        <com.hover.stax.views.ChannelEmptyStateView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/emptyState"/>
+        <include layout="@layout/no_account_empty_state" android:id="@+id/emptyState"/>
 
         <com.hover.stax.views.StaxCardView
                 android:layout_width="match_parent"

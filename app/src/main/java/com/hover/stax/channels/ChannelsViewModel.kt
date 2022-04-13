@@ -5,8 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.text.TextUtils
-import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.*
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.messaging.FirebaseMessaging
@@ -90,7 +88,9 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     private fun filterChannels(channels: List<Channel>) {
         if(!channels.isNullOrEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
-                filteredChannels.postValue(Channel.filter(channels, filterQuery.value!!.toFilteringStandard()))
+                val filteredList = channels.filter { it.toString().replace(" ", "").lowercase()
+                    .contains(filterQuery.value!!.toFilteringStandard()) }
+                filteredChannels.postValue(filteredList)
             }
         }
     }
