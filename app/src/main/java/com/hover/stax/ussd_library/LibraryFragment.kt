@@ -82,7 +82,7 @@ class LibraryFragment : Fragment(), CountryAdapter.SelectListener {
     }
 
     private fun showList(channels: List<Channel>) {
-        binding.shortcodes.adapter = ChannelsAdapter(channels)
+        binding.shortcodes.adapter = LibraryChannelsAdapter(channels)
         binding.emptyState.root.visibility = View.GONE
         binding.shortcodesParent.visibility = VISIBLE
     }
