@@ -227,17 +227,6 @@ object Utils {
         }
     }
 
-    fun getActivity(context: Context): Activity? {
-        var context2: Context? = context
-        while (context2 is ContextWrapper) {
-            if (context2 is Activity) {
-                return context2
-            }
-            context2 = context2.baseContext
-        }
-        return null
-    }
-
     @JvmStatic
     fun dial(shortCode: String, c: Context) {
         val data = JSONObject()
