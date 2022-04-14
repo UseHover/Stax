@@ -120,7 +120,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         observeRecentContacts()
         observeNonStandardVariables()
         observeAutoFillToInstitution()
-        observeContact()
         with(transferViewModel) {
             contact.observe(viewLifecycleOwner) { recipientValue.setContact(it) }
             request.observe(viewLifecycleOwner) {
@@ -202,12 +201,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 updateNonStandardForEntryList(variables)
                 updateNonStandardForSummaryCard(variables)
             }
-        }
-    }
-    private fun observeContact() {
-        transferViewModel.contact.observe(viewLifecycleOwner){
-            Timber.i("contact is ${it?.shortName()} at observing level")
-            it?.let { contactInput.setText(it.shortName(), false) }
         }
     }
 
@@ -352,6 +345,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private fun completeAutoFilling(institutionId: Int?) {
         institutionId?.let {channelsViewModel.setChannelFromInstitutionId(institutionId)}
+        transferViewModel.contact.value?.let { contactInput.setText(it.shortName(), false) }
         amountInput.setText(transferViewModel.amount.value)
         transferViewModel.setEditing(transferViewModel.amount.value.isNullOrEmpty())
         accountDropdown.setState(getString(R.string.channel_request_fieldinfo, institutionId.toString()), AbstractStatefulInput.INFO)
