@@ -39,7 +39,20 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
         }
     }
 
-    fun autoFill(amount: String, contact: StaxContact, institutionId: Int? = null) {
+    fun autoFill(transactionUUID: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val transaction = repo.getTransaction(transactionUUID)
+            if(transaction !=null) {
+                val action = repo.getAction(transaction.action_id)
+                action?.let {
+                    val contact = repo.getContactAsync(transaction.counterparty_id)
+                    autoFill(transaction.amount.toString(), contact, action.to_institution_id )
+                }
+            }
+        }
+    }
+
+    private fun autoFill(amount: String, contact: StaxContact?, institutionId: Int? = null) {
         setContact(contact)
         setAmount(amount)
         institutionId?.let { autoFillToInstitutionId.postValue(institutionId) }

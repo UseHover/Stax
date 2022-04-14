@@ -129,7 +129,8 @@ class TransactionDetailsFragment : DialogFragment(), Target{
         retryButton.setOnClickListener {
             updateRetryCounter(transaction.action_id)
             this.dismiss()
-            (requireActivity() as MainActivity).reBuildHoverSession(transaction)
+            if(transaction.isBalanceType) (requireActivity() as MainActivity).reBuildHoverSession(transaction)
+            else (requireActivity() as MainActivity).navigateTransferAutoFill(transaction.transaction_type, transaction.uuid)
         }
     }
 
