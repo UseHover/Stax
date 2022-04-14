@@ -7,12 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
 import com.hover.stax.actions.ActionSelectViewModel
+import com.hover.stax.channels.Channel
+import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.contacts.ContactInput
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentTransferBinding
@@ -27,6 +31,7 @@ import com.hover.stax.views.Stax2LineItem
 import com.hover.stax.views.StaxTextInputLayout
 import org.koin.androidx.viewmodel.ext.android.getSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import timber.log.Timber
 
 
 class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener, NonStandardVariableAdapter.NonStandardVariableInputListener {
@@ -110,6 +115,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     override fun startObservers(root: View) {
         super.startObservers(root)
+        setupActionDropdownObservers()
         observeActionSelection()
         observeAccountList()
         observeActiveChannel()
@@ -122,6 +128,14 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             contact.observe(viewLifecycleOwner) { recipientValue.setContact(it) }
             request.observe(viewLifecycleOwner) { it?.let { load(it) } }
         }
+    }
+
+    private fun setupActionDropdownObservers() {
+        val activeChannelObserver = Observer<Channel?> { Timber.i("Got new active channel: $it ${it?.countryAlpha2}") }
+        val actionsObserver = Observer<List<HoverAction>> { Timber.i("Got new actions: %s", it?.size) }
+
+        channelsViewModel.activeChannel.observe(viewLifecycleOwner, activeChannelObserver)
+        channelsViewModel.channelActions.observe(viewLifecycleOwner, actionsObserver)
     }
 
     private fun observeActionSelection() {
