@@ -26,6 +26,7 @@ import com.hover.stax.settings.SettingsFragment
 import com.hover.stax.transactions.TransactionDetailsFragment
 import com.hover.stax.transactions.TransactionHistoryViewModel
 import com.hover.stax.transactions.USSDLogBottomSheetFragment
+import com.hover.stax.transfers.TransactionType
 import com.hover.stax.transfers.TransferViewModel
 import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
@@ -226,6 +227,15 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         Timber.e("received result. %s", data?.action)
         Timber.e("uuid? %s", data?.extras?.getString("uuid"))
 
+        if(resultCode == RESULT_OK) handlePostSDK(requestCode, resultCode, data)
+        else if(resultCode == RESULT_CANCELED && requestCode == Constants.TRANSFER_REQUEST) {
+            navHelper.navigateTransfer(TransactionType.type)
+            transferViewModel.setEditing(false)
+        }
+    }
+
+    private fun handlePostSDK(requestCode: Int, resultCode: Int, data: Intent?) {
+        transferViewModel.reset()
         when {
             requestCode == Constants.TRANSFER_REQUEST && data != null && data.action == Constants.SCHEDULED ->
                 showMessage(getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))))

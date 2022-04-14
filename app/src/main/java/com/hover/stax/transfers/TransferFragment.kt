@@ -71,7 +71,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        transferViewModel.reset()
         init(binding.root)
         startObservers(binding.root)
         startListeners()
