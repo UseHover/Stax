@@ -9,10 +9,8 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.contacts.ContactInput
