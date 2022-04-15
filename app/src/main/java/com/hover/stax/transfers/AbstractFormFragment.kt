@@ -67,19 +67,17 @@ abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchLi
         accountDropdown = root.findViewById(R.id.accountDropdown)
     }
 
+    @CallSuper
     open fun startObservers(root: View) {
         accountDropdown.setListener(channelsViewModel)
         accountDropdown.setObservers(channelsViewModel, viewLifecycleOwner)
-        setupActionDropdownObservers(channelsViewModel, viewLifecycleOwner)
+        setupActionDropdownObservers()
         abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit))
     }
 
-    private fun setupActionDropdownObservers(viewModel: ChannelsViewModel, lifecycleOwner: LifecycleOwner) {
-        val activeChannelObserver = Observer<Channel?> { Timber.i("Got new active channel: $it ${it?.countryAlpha2}") }
-        val actionsObserver = Observer<List<HoverAction>> { Timber.i("Got new actions: %s", it?.size) }
-
-        viewModel.activeChannel.observe(lifecycleOwner, activeChannelObserver)
-        viewModel.channelActions.observe(lifecycleOwner, actionsObserver)
+    private fun setupActionDropdownObservers() {
+        channelsViewModel.activeChannel.observe(viewLifecycleOwner) { Timber.e("Got new active channel ${this.javaClass.simpleName}: $it ${it?.countryAlpha2}") }
+        channelsViewModel.channelActions.observe(viewLifecycleOwner) { Timber.e("Got new actions ${this.javaClass.simpleName}: %s", it?.size) }
     }
 
     open fun showEdit(isEditing: Boolean) {

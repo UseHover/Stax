@@ -86,7 +86,7 @@
 
     <fragment
             android:id="@+id/navigation_linkAccount"
-            android:name="com.hover.stax.channels.AddChannelsFragment"
+            android:name="com.hover.stax.addChannels.AddChannelsFragment"
             android:label="@string/nav_link_account"
             tools:layout="@layout/fragment_add_channels">
         <action
@@ -248,7 +248,7 @@
     </fragment>
     <fragment
             android:id="@+id/accountsFragment"
-            android:name="com.hover.stax.accounts.AccountsFragment"
+            android:name="com.hover.stax.accounts.HomeFragment"
             android:label="AccountsFragment"
             tools:layout="@layout/fragment_accounts">
         <action

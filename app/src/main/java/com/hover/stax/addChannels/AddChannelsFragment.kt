@@ -1,4 +1,4 @@
-package com.hover.stax.channels
+package com.hover.stax.addChannels
 
 import android.os.Bundle
 import android.text.Editable
@@ -18,6 +18,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.stax.R
 import com.hover.stax.balances.BalancesViewModel
+import com.hover.stax.channels.*
 import com.hover.stax.databinding.FragmentAddChannelsBinding
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
@@ -32,7 +33,7 @@ import timber.log.Timber
 
 class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
 
-    private val channelsViewModel: ChannelsViewModel by viewModel()
+    private val channelsViewModel: AddChannelsViewModel by viewModel()
     private val balancesViewModel: BalancesViewModel by sharedViewModel()
 
     private var _binding: FragmentAddChannelsBinding? = null
@@ -42,7 +43,6 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
     private var tracker: SelectionTracker<Long>? = null
 
     private var dialog: StaxDialog? = null
-    private var forceReturn = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -136,8 +136,7 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
             binding.channelsList.visibility = VISIBLE
             binding.emptyState.root.visibility = GONE
             binding.errorText.visibility = GONE
-        } else if (channelsViewModel.isInSearchMode()) showEmptyState()
-        else setError(R.string.channels_error_nodata)
+        } else showEmptyState()
     }
 
     private fun showEmptyState() {
@@ -218,7 +217,10 @@ class AddChannelsFragment : Fragment(), ChannelsAdapter.SelectListener {
         if (!Utils.getBoolean(Constants.CHANNELS_REFRESHED, requireActivity())) {
             Timber.i("Reloading channels")
             val wm = WorkManager.getInstance(requireContext())
-            wm.beginUniqueWork(UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP, UpdateChannelsWorker.makeWork()).enqueue()
+            wm.beginUniqueWork(
+                UpdateChannelsWorker.CHANNELS_WORK_ID, ExistingWorkPolicy.KEEP,
+                UpdateChannelsWorker.makeWork()
+            ).enqueue()
 
             Utils.saveBoolean(Constants.CHANNELS_REFRESHED, true, requireActivity())
             return

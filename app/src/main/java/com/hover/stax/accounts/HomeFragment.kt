@@ -19,7 +19,7 @@ import com.hover.stax.utils.UIHelper
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AccountsFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAdapter.SelectListener {
+class HomeFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAdapter.SelectListener {
 
     private var _binding: FragmentAccountsBinding? = null
     private val binding get() = _binding!!
@@ -97,7 +97,7 @@ class AccountsFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAda
             accountsInfo.text = getString(R.string.account_select_header, viewModel.activeChannel.value?.name, getTransactionType())
             accountsRV.apply {
                 layoutManager = UIHelper.setMainLinearManagers(requireActivity())
-                adapter = AccountsAdapter(accounts, this@AccountsFragment)
+                adapter = AccountsAdapter(accounts, this@HomeFragment)
             }
         }
     }
