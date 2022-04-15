@@ -8,15 +8,14 @@ import android.net.Uri
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.google.firebase.messaging.FirebaseMessaging
-import com.hover.sdk.api.Hover
 import com.hover.stax.R
 import com.hover.stax.permissions.PermissionUtils
-import io.sentry.util.StringUtils
 import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
 import java.text.DecimalFormat
 import java.util.*
+
 
 object Utils {
     private const val SHARED_PREFS = "staxprefs"

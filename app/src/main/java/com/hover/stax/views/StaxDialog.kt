@@ -3,11 +3,15 @@ package com.hover.stax.views
 import android.app.Activity
 import android.content.Context
 import android.graphics.PorterDuff
+import android.os.Build
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
@@ -25,10 +29,18 @@ open class StaxDialog(var ctx: Context, var mView: View) : AlertDialog(ctx) {
 
     constructor(a: Activity) : this(a, a.layoutInflater, R.layout.stax_dialog)
     constructor(a: Activity, layoutRes: Int) : this(a, a.layoutInflater, layoutRes)
+    constructor(inflater: LayoutInflater) : this(inflater.context, inflater, R.layout.stax_dialog)
     private constructor(c: Context, inflater: LayoutInflater, layoutRes: Int) : this(c, inflater.inflate(layoutRes, null))
 
     val view get() = mView
 
+    fun setDialogIcon(iconRes: Int): StaxDialog {
+        if(iconRes > 0) {
+            val title : TextView = mView.findViewById(R.id.title)
+            title.setCompoundDrawablesWithIntrinsicBounds(iconRes, 0, 0, 0)
+        }
+        return this
+    }
     fun setDialogTitle(title: Int): StaxDialog {
         if (title == 0) setDialogMessage("") else setDialogTitle(ctx.getString(title))
         return this

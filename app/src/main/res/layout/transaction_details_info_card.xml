@@ -22,8 +22,10 @@
 
     <TableRow android:layout_marginTop="@dimen/margin_18">
 
-        <TextView
+        <com.hover.stax.views.StaxInfoTextView
             android:text="@string/status_label"
+            app:infoTitle="@string/transaction_status_info_title"
+            app:infoContent="@string/transaction_status_info_content"
             android:textColor="@color/offWhite"
             android:textSize="@dimen/text_16" />
 
