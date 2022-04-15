@@ -8,13 +8,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/margin_16"
+        android:paddingVertical="@dimen/margin_16"
         android:background="@drawable/grey_background"
         android:orientation="horizontal">
 
         <ImageView
             android:layout_width="@dimen/margin_43"
             android:layout_height="@dimen/margin_43"
+            android:layout_marginStart="@dimen/margin_16"
             android:id="@+id/status_icon" />
 
         <TextView

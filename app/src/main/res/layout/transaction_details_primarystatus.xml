@@ -34,11 +34,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_16"
         android:id="@+id/viewLogText"
-        android:fontFamily="@font/brutalista_medium"
-        android:textColor="@color/stax_state_blue"
-        android:textStyle="bold"
+        style="@style/StaxOutlineButton"
         android:textSize="@dimen/text_13"
-        android:background="@drawable/bright_blue_rounded_bg"
         android:text="@string/viewUSSDLog"/>
 
 </LinearLayout>

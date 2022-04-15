@@ -15,6 +15,7 @@
         android:id="@+id/closeButton"
         android:src="@drawable/ic_close_white"
         android:padding="@dimen/margin_16"
+        android:background="?selectableItemBackground"
         android:layout_gravity="end"
         />
 
