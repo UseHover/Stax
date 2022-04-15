@@ -227,16 +227,11 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         Timber.e("received result. %s", data?.action)
         Timber.e("uuid? %s", data?.extras?.getString("uuid"))
 
-        if(resultCode == RESULT_OK) handlePostSDK(requestCode, resultCode, data)
-        else if(resultCode == RESULT_CANCELED && requestCode == Constants.TRANSFER_REQUEST) {
-            navHelper.navigateTransfer(TransactionType.type)
-            transferViewModel.setEditing(false)
-        }
-    }
-
-    private fun handlePostSDK(requestCode: Int, resultCode: Int, data: Intent?) {
-        transferViewModel.reset()
         when {
+            resultCode == RESULT_CANCELED && requestCode == Constants.TRANSFER_REQUEST -> {
+                navHelper.navigateTransfer(TransactionType.type)
+                transferViewModel.setEditing(false)
+            }
             requestCode == Constants.TRANSFER_REQUEST && data != null && data.action == Constants.SCHEDULED ->
                 showMessage(getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))))
             requestCode == Constants.REQUEST_REQUEST -> if (resultCode == RESULT_OK && data != null) onRequest(data)
@@ -247,6 +242,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
                     balancesViewModel.showBalances(true)
                 }
                 showPopUpTransactionDetailsIfRequired(data)
+                transferViewModel.reset()
             }
         }
     }
