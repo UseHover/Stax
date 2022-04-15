@@ -13,7 +13,6 @@
         <entry key="app/src/main/res/drawable/button_bg_colored.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_dark.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_grey.xml" value="0.32037037037037036" />
-        <entry key="app/src/main/res/drawable/ic_baseline_open_in_new_16.xml" value="0.2465" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.2601851851851852" />
         <entry key="app/src/main/res/drawable/ic_grey_circle_small.xml" value="0.249" />
         <entry key="app/src/main/res/drawable/ic_noun_hashtag_2733013.xml" value="0.175" />
@@ -98,7 +97,7 @@
         <entry key="app/src/main/res/layout/item_sigin_viewpager.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/item_wellness_tips.xml" value="0.25" />
         <entry key="app/src/main/res/layout/library_list_item.xml" value="0.19145299145299147" />
-        <entry key="app/src/main/res/layout/no_account_empty_state.xml" value="0.2777777777777778" />
+        <entry key="app/src/main/res/layout/no_account_empty_state.xml" value="0.3319746376811594" />
         <entry key="app/src/main/res/layout/non_standard_variable_item.xml" value="0.2125" />
         <entry key="app/src/main/res/layout/onboarding_layout.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/paybill_card_details.xml" value="0.19145299145299147" />

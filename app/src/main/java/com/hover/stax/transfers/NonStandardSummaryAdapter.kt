@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.databinding.SummarycardNontemplateItemsBinding
 import com.hover.stax.utils.Utils
+import com.hover.stax.utils.splitCamelCase
 
 class NonStandardSummaryAdapter(private var items: LinkedHashMap<String, String>) : RecyclerView.Adapter<NonStandardSummaryAdapter.ViewHolder>() {
 
@@ -17,7 +18,7 @@ class NonStandardSummaryAdapter(private var items: LinkedHashMap<String, String>
 
     inner class ViewHolder(val binding: SummarycardNontemplateItemsBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bindItems(key: String, value: String) {
-            binding.itemLabel.text = Utils.splitCamelCase(key)
+            binding.itemLabel.text = key.splitCamelCase()
             binding.itemValue.text = value
         }
     }
