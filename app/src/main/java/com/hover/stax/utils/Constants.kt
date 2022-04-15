@@ -25,7 +25,6 @@ object Constants {
     const val PERMS_REQ_CODE = 700
 
     const val size55 = 55
-    const val size43 = 43
     const val size24 = 24
 
     const val TEST_MODE = "test_mode"
