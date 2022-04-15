@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        android:textColor="@color/offWhite"
+        android:textAlignment="viewEnd"
+        android:textSize="@dimen/text_16" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tap_to_copy"
+        android:textColor="@color/grey"
+        android:textAlignment="viewEnd"
+        android:gravity="end"
+        android:layout_gravity="end"
+        android:textSize="@dimen/text_11" />
+</LinearLayout>

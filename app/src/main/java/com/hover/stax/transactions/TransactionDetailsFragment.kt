@@ -90,8 +90,8 @@ class TransactionDetailsFragment : DialogFragment(), Target{
         if (!isFullScreen) setToPopupDesign()
         binding.transactionDetailsCard.setOnClickIcon { this.dismiss() }
         binding.primaryStatus.viewLogText.setOnClickListener { showUSSDLog() }
-        with(binding.infoCard.detailsStaxUuid) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
-        with(binding.infoCard.detailsServiceId) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
+        with(binding.infoCard.detailsStaxUuid.content) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
+        with(binding.infoCard.detailsServiceId.content) { setOnClickListener { Utils.copyToClipboard(this.text.toString(), requireContext()) } }
     }
 
     private fun showUSSDLog() {
@@ -200,8 +200,8 @@ class TransactionDetailsFragment : DialogFragment(), Target{
         binding.infoCard.detailsRecipientLabel.setText(if (transaction.transaction_type == HoverAction.RECEIVE) R.string.sender_label else R.string.recipient_label)
         binding.infoCard.detailsAmount.text = transaction.displayAmount
         binding.infoCard.detailsDate.text = humanFriendlyDateTime(transaction.updated_at)
-        binding.infoCard.detailsServiceId.text = transaction.confirm_code
-        binding.infoCard.detailsStaxUuid.text = transaction.uuid
+        binding.infoCard.detailsServiceId.content.text = transaction.confirm_code
+        binding.infoCard.detailsStaxUuid.content.text = transaction.uuid
         binding.infoCard.detailsStaxStatus.apply {
             text = transaction.fullStatus.getPlainTitle(requireContext())
             setCompoundDrawablesWithIntrinsicBounds(0, 0, transaction.fullStatus.getIcon(), 0)
@@ -264,7 +264,7 @@ class TransactionDetailsFragment : DialogFragment(), Target{
                     movementMethod = LinkMovementMethod.getInstance()
                 }
                 if(transaction.isFailed) action?.let { UIHelper.loadPicasso(getString(R.string.root_url) + it.from_institution_logo, this) }
-                else UIHelper.loadPicasso(R.drawable.ic_warning, Constants.size43, this)
+                else binding.secondaryStatus.statusIcon.visibility = GONE
             }
         }
     }
