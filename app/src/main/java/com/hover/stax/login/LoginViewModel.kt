@@ -144,6 +144,7 @@ class LoginViewModel(val repo: DatabaseRepo, val application: Application, priva
                     getString("username"),
                     getString("email"),
                     getBoolean("is_mapper"),
+                    getBoolean("marketing_opted_in"),
                     getInt("transaction_count"),
                     getInt("bounty_total")
                 )

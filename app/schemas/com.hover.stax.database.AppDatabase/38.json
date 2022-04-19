@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 38,
-    "identityHash": "e11fabe83f173a2a7ced4afdf9cab5be",
+    "identityHash": "3af524566d7a995159ee721fb054938e",
     "entities": [
       {
         "tableName": "channels",
@@ -741,7 +741,7 @@
       },
       {
         "tableName": "stax_users",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `username` TEXT NOT NULL, `email` TEXT NOT NULL, `isMapper` INTEGER NOT NULL DEFAULT 0, `transactionCount` INTEGER NOT NULL, `bountyTotal` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `username` TEXT NOT NULL, `email` TEXT NOT NULL, `isMapper` INTEGER NOT NULL DEFAULT 0, `marketingOptedIn` INTEGER NOT NULL DEFAULT 0, `transactionCount` INTEGER NOT NULL, `bountyTotal` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -764,6 +764,13 @@
           {
             "fieldPath": "isMapper",
             "columnName": "isMapper",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "marketingOptedIn",
+            "columnName": "marketingOptedIn",
             "affinity": "INTEGER",
             "notNull": true,
             "defaultValue": "0"
@@ -794,7 +801,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e11fabe83f173a2a7ced4afdf9cab5be')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3af524566d7a995159ee721fb054938e')"
     ]
   }
 }

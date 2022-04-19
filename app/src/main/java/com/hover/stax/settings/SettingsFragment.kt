@@ -53,7 +53,7 @@ class SettingsFragment : Fragment() {
         setUpSupport()
         setUpEnableTestMode()
         setupAppVersionInfo()
-        setUpAccountCard()
+        setUpAccountDetails()
 
         binding.bountyCard.getStartedWithBountyButton.setOnClickListener { startBounties() }
     }
@@ -96,8 +96,12 @@ class SettingsFragment : Fragment() {
         binding.staxAndDeviceInfo.text = getString(R.string.app_version_and_device_id, appVersion, versionCode, deviceId)
     }
 
-    private fun setUpAccountCard() {
+    private fun setUpAccountDetails() {
         loginViewModel.staxUser.observe(viewLifecycleOwner) { staxUser ->
+            staxUser?.let {
+                binding.staxSupport.marketingOptIn.isChecked = it.marketingOptedIn
+            }
+
             with(binding.accountCard) {
                 if (staxUser != null) {
                     accountCard.visibility = VISIBLE
@@ -117,11 +121,11 @@ class SettingsFragment : Fragment() {
             contactSupport.setOnClickListener { Utils.openEmail(getString(R.string.stax_emailing_subject, Hover.getDeviceId(requireActivity())), requireActivity()) }
             faq.setOnClickListener { NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToFaqFragment()) }
 
-            //TODO update once we can ascertain state
+            // TODO show dialog if user is not logged in
             receiveStaxUpdate.setOnClickListener {
-                marketingOptIn.isChecked = !marketingOptIn.isChecked
-                marketingOptIn(marketingOptIn.isChecked)
+                marketingOptIn()
             }
+
             marketingOptIn.setOnCheckedChangeListener { _, isChecked -> marketingOptIn(isChecked) }
         }
     }
@@ -198,7 +202,7 @@ class SettingsFragment : Fragment() {
         loginViewModel.optInMarketing(optedIn)
 
         loginViewModel.progress.observe(viewLifecycleOwner) {
-            if(it == 100) {
+            if (it == 100) {
                 binding.staxSupport.contactCard.hideProgressIndicator()
             }
         }

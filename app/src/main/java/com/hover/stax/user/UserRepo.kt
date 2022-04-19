@@ -16,7 +16,5 @@ class UserRepo(db: AppDatabase) {
             userDao.update(user)
     }
 
-    fun updateUser(user: StaxUser) = userDao.update(user)
-
     fun deleteUser(user: StaxUser) = userDao.delete(user)
 }

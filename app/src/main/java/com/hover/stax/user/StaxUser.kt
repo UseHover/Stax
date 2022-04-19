@@ -19,6 +19,9 @@ data class StaxUser(
     @ColumnInfo(defaultValue = "0")
     val isMapper: Boolean,
 
+    @ColumnInfo(defaultValue = "0")
+    val marketingOptedIn: Boolean,
+
     val transactionCount: Int,
 
     val bountyTotal: Int
