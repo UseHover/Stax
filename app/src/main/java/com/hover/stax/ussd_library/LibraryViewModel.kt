@@ -1,4 +1,4 @@
-package com.hover.stax.library
+package com.hover.stax.ussd_library
 
 import android.app.Application
 import android.content.BroadcastReceiver
@@ -13,6 +13,8 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.countries.CountryAdapter
 import com.hover.stax.database.DatabaseRepo
 import com.hover.stax.utils.Utils
+import com.hover.stax.utils.isAbsolutelyEmpty
+import com.hover.stax.utils.toFilteringStandard
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -21,9 +23,11 @@ import timber.log.Timber
 class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : ViewModel() {
 
     var allChannels: LiveData<List<Channel>> = MutableLiveData()
-    val filteredChannels = MediatorLiveData<List<Channel>>()
+    val stagedChannels = MediatorLiveData<List<Channel>>()
     var sims: MutableLiveData<List<SimInfo>> = MutableLiveData()
     var country: MediatorLiveData<String> = MediatorLiveData()
+    var filteredChannels = MediatorLiveData<List<Channel>>()
+    var filterQuery = MutableLiveData<String>();
 
     private var simReceiver: BroadcastReceiver? = null
 
@@ -39,13 +43,18 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
         country.value = null
         country.addSource(sims, this::pickFirstCountry)
 
-        filteredChannels.addSource(country, this::filterChannels)
-        filteredChannels.addSource(allChannels, this::filterChannels)
+        filterQuery.value = ""
+
+        stagedChannels.addSource(country, this::filterChannels)
+        stagedChannels.addSource(allChannels, this::filterChannels)
+
+        filteredChannels.addSource(stagedChannels, this::filter)
 
         loadSims()
         allChannels = repo.allChannels
-        filteredChannels.value = emptyList()
+        stagedChannels.value = emptyList()
     }
+
 
     private fun loadSims() {
         viewModelScope.launch {
@@ -70,17 +79,36 @@ class LibraryViewModel(val repo: DatabaseRepo, val application: Application) : V
         country.postValue(countryCode)
     }
 
-    private fun filterChannels(channels: List<Channel>?) = filterChannels(channels, country.value)
+    private fun filterChannels(channels: List<Channel>?) = filter(channels, country.value)
 
-    private fun filterChannels(countryCode: String?) = filterChannels(allChannels.value, countryCode)
+    private fun filterChannels(countryCode: String?) = filter(allChannels.value, countryCode)
 
-    private fun filterChannels(channels: List<Channel>?, countryCode: String?) = viewModelScope.launch(Dispatchers.IO) {
+    private fun filter(channels: List<Channel>?, countryCode: String?) = viewModelScope.launch(Dispatchers.IO) {
         Timber.i("Filtering channels: $countryCode")
 
         if (countryCode == null || countryCode == CountryAdapter.CODE_ALL_COUNTRIES)
-            channels?.let { filteredChannels.postValue(it) }
+            channels?.let { stagedChannels.postValue(it) }
         else
-            filteredChannels.postValue(repo.getChannelsByCountry(countryCode))
+            stagedChannels.postValue(repo.getChannelsByCountry(countryCode))
+    }
+
+    private fun filter(stagedChannels: List<Channel>) {
+        if(!stagedChannels.isNullOrEmpty()) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val filteredList = stagedChannels.filter { it.toString().toFilteringStandard()
+                    .contains(filterQuery.value!!.toFilteringStandard()) }
+                filteredChannels.postValue(filteredList)
+            }
+        }
+    }
+
+    fun isInSearchMode() : Boolean {
+        return !filterQuery.value!!.isAbsolutelyEmpty()
+    }
+
+    fun runChannelFilter(value: String) {
+        filterQuery.value = value
+        filterChannels(stagedChannels.value!!)
     }
 
     override fun onCleared() {

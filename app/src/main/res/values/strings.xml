@@ -396,7 +396,8 @@
     <string name="stax_id_label">Stax ID</string>
     <string name="session_cardhead">USSD log</string>
     <string name="session_fullDesc_cardhead">USSD log for %1$s - %2$s</string>
-    <string name="transaction_cost">Transaction cost</string>
+
+    <string name="transaction_fee">%1$s transaction fee</string>
     <string name="view_full_details">View full details</string>
     <string name="new_balance">New balance %1$s</string>
     <string name="failed_label">Failed</string>
