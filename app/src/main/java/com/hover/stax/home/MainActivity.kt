@@ -160,6 +160,10 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
                 false
             )
         }
+        else {
+            navHelper.navigateTransfer(TransactionType.type)
+            transferViewModel.setEditing(false)
+        }
     }
 
     private fun initFromIntent() {
@@ -228,10 +232,6 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         Timber.e("uuid? %s", data?.extras?.getString("uuid"))
 
         when {
-            resultCode == RESULT_CANCELED && requestCode == Constants.TRANSFER_REQUEST -> {
-                navHelper.navigateTransfer(TransactionType.type)
-                transferViewModel.setEditing(false)
-            }
             requestCode == Constants.TRANSFER_REQUEST && data != null && data.action == Constants.SCHEDULED ->
                 showMessage(getString(R.string.toast_confirm_schedule, DateUtils.humanFriendlyDate(data.getLongExtra(Schedule.DATE_KEY, 0))))
             requestCode == Constants.REQUEST_REQUEST -> if (resultCode == RESULT_OK && data != null) onRequest(data)
