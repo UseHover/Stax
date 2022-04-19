@@ -68,7 +68,8 @@
             android:textSize="@dimen/text_16" />
     </TableRow>
 
-    <TableRow android:layout_marginTop="@dimen/margin_18">
+    <TableRow android:layout_marginTop="@dimen/margin_18"
+        android:layout_marginBottom="@dimen/margin_26">
 
         <TextView
             android:text="@string/type_label"
@@ -133,8 +134,9 @@
 
     <TableRow android:id="@+id/feeRow" android:layout_marginTop="@dimen/margin_18">
         <TextView
-            android:text="@string/transaction_cost"
+            android:text="@string/transaction_fee"
             android:textColor="@color/offWhite"
+            android:id="@+id/details_fee_label"
             android:textSize="@dimen/text_16" />
 
         <TextView
@@ -159,8 +161,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_gravity="end"
-            android:gravity="end"
             layout="@layout/stax_copiable_text_layout"
             android:id="@+id/details_service_id"/>
     </TableRow>

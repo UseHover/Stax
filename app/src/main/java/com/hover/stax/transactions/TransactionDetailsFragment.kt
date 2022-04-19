@@ -206,7 +206,6 @@ class TransactionDetailsFragment : DialogFragment(), Target{
             text = transaction.fullStatus.getPlainTitle(requireContext())
             setCompoundDrawablesWithIntrinsicBounds(0, 0, transaction.fullStatus.getIcon(), 0)
         }
-
         binding.infoCard.detailsStaxReason.text = transaction.fullStatus.getReason()
         transaction.fee?.let{binding.infoCard.detailsFee.text = Utils.formatAmount(it)}
     }
@@ -217,12 +216,14 @@ class TransactionDetailsFragment : DialogFragment(), Target{
         binding.infoCard.recipientRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) GONE else VISIBLE
         binding.infoCard.recipAccountRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) GONE else VISIBLE
         binding.infoCard.serviceIdRow.visibility = if (transaction.isRecorded || transaction.confirm_code.isNullOrBlank()) GONE else VISIBLE
+        binding.infoCard.feeRow.visibility = if(transaction.fee == null) GONE else VISIBLE
     }
 
     private fun updateDetailsRequiringAction(action: HoverAction?, transaction: StaxTransaction?) {
         if(action !=null && transaction !=null) {
             binding.infoCard.detailsStaxType.text = transaction.fullStatus.getDisplayType(requireContext(), action)
             binding.infoCard.detailsStaxAccount.text = action.from_institution_name
+            binding.infoCard.detailsFeeLabel.text = getString(R.string.transaction_fee, action.from_institution_name)
         }
     }
 
