@@ -24,7 +24,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     val contact = MutableLiveData<StaxContact?>()
     val note = MutableLiveData<String?>()
     var request: LiveData<Request> = MutableLiveData()
-    var autoFillToInstitutionId : MutableLiveData<Int?> = MutableLiveData()
+    var completeAutoFilling : MutableLiveData<Pair<Int, Boolean>> = MutableLiveData()
 
     fun setTransactionType(transaction_type: String) {
         TransactionType.type = transaction_type
@@ -46,16 +46,16 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
                 val action = repo.getAction(transaction.action_id)
                 action?.let {
                     val contact = repo.getContactAsync(transaction.counterparty_id)
-                    autoFill(transaction.amount.toString(), contact, action.to_institution_id )
+                    autoFill(transaction.amount.toString(), contact, action.to_institution_id, true)
                 }
             }
         }
     }
 
-    private fun autoFill(amount: String, contact: StaxContact?, institutionId: Int? = null) {
+    private fun autoFill(amount: String, contact: StaxContact?, institutionId: Int? = null, showEditing : Boolean? = false) {
         setContact(contact)
         setAmount(amount)
-        institutionId?.let { autoFillToInstitutionId.postValue(institutionId) }
+        institutionId?.let { completeAutoFilling.postValue(Pair(first = institutionId, second = showEditing!!)) }
     }
 
     fun setContact(sc: StaxContact?) = sc?.let {
@@ -113,11 +113,10 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
         setAmount(s.amount)
         setContact(s.recipient_ids)
         setNote(s.note)
-        autoFillToInstitutionId.postValue(null)
     }
 
     fun view(r: Request) {
-        autoFill(r.amount!!, StaxContact(r.requester_number), r.requester_institution_id)
+        autoFill(r.amount!!, StaxContact(r.requester_number), r.requester_institution_id, r.amount.isNullOrEmpty())
         setNote(r.note)
     }
 

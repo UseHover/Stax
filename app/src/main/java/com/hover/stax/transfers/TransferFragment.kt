@@ -172,9 +172,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
     private fun observeAutoFillToInstitution() {
-        transferViewModel.autoFillToInstitutionId.observe(viewLifecycleOwner) {
+        transferViewModel.completeAutoFilling.observe(viewLifecycleOwner) {
             it?.let {
-                completeAutoFilling(it)
+                completeAutoFilling(it.first, it.second)
             }
         }
     }
@@ -343,11 +343,11 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun completeAutoFilling(institutionId: Int?) {
+    private fun completeAutoFilling(institutionId: Int?, showEditing: Boolean) {
         institutionId?.let {channelsViewModel.setChannelFromInstitutionId(institutionId)}
         transferViewModel.contact.value?.let { contactInput.setText(it.shortName(), false) }
         amountInput.setText(transferViewModel.amount.value)
-        transferViewModel.setEditing(transferViewModel.amount.value.isNullOrEmpty())
+        transferViewModel.setEditing(showEditing)
         accountDropdown.setState(getString(R.string.channel_request_fieldinfo, institutionId.toString()), AbstractStatefulInput.INFO)
     }
 

@@ -292,13 +292,13 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     fun isValidAccount(): Boolean = activeAccount.value!!.name != Constants.PLACEHOLDER
 
-    fun setChannelFromRequest(r: Request?) {
-        if (r != null && !selectedChannels.value.isNullOrEmpty()) {
+    fun setChannelFromInstitutionId(institutionId: Int) {
+        if (!selectedChannels.value.isNullOrEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
-                var actions = repo.getActions(getChannelIds(selectedChannels.value!!), r.requester_institution_id)
+                var actions = repo.getActions(getChannelIds(selectedChannels.value!!), institutionId)
 
                 if (actions.isEmpty() && !simChannels.value.isNullOrEmpty())
-                    actions = repo.getActions(getChannelIds(simChannels.value!!), r.requester_institution_id)
+                    actions = repo.getActions(getChannelIds(simChannels.value!!), institutionId)
 
                 if (actions.isNotEmpty())
                     channelActions.postValue(actions)
