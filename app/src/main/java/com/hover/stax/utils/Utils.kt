@@ -93,24 +93,6 @@ object Utils {
         editor.apply()
     }
 
-    fun splitCamelCase(s: String): String {
-        val camelCased : String = s.replace(String.format("%s|%s|%s",
-            "(?<=[A-Z])(?=[A-Z][a-z])",
-            "(?<=[^A-Z])(?=[A-Z])",
-            "(?<=[A-Za-z])(?=[^A-Za-z])").toRegex(), " ")
-        return capitalize(camelCased)
-    }
-
-    private fun capitalize(str: String): String {
-        return if (str.isEmpty()) { str }
-        else str.substring(0, 1).uppercase(Locale.ROOT) + str.substring(1).lowercase(Locale.ROOT)
-    }
-
-    @JvmStatic
-    fun stripHniString(hni: String): String {
-        return hni.replace("[", "").replace("]", "").replace("\"", "")
-    }
-
     @JvmStatic
     fun getPackage(c: Context): String {
         return try {

@@ -202,7 +202,7 @@
 
     <fragment
             android:id="@+id/libraryFragment"
-            android:name="com.hover.stax.library.LibraryFragment"
+            android:name="com.hover.stax.ussd_library.LibraryFragment"
             android:label="USSD Library"
             tools:layout="@layout/fragment_library">
         <deepLink
