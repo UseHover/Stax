@@ -151,7 +151,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     @SuppressLint("DefaultLocale")
     fun getFees(accountId: Int, year: Int): LiveData<Double>? {
-        return transactionDao.getTotalFees(accountId, year.toString(), Transaction.SUCCEEDED)
+        return transactionDao.getTotalFees(accountId, year.toString())
     }
 
     fun getTransaction(uuid: String?): StaxTransaction? {
