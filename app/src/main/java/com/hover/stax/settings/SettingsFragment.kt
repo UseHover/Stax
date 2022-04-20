@@ -16,6 +16,7 @@ import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.databinding.FragmentSettingsBinding
+import com.hover.stax.home.MainActivity
 import com.hover.stax.languages.LanguageViewModel
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.utils.*
@@ -26,6 +27,7 @@ import timber.log.Timber
 
 
 class SettingsFragment : Fragment() {
+
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
 
@@ -36,6 +38,8 @@ class SettingsFragment : Fragment() {
     private val loginViewModel: LoginViewModel by sharedViewModel()
 
     private var dialog: StaxDialog? = null
+
+    private var optInMarketing: Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
@@ -100,6 +104,11 @@ class SettingsFragment : Fragment() {
         loginViewModel.staxUser.observe(viewLifecycleOwner) { staxUser ->
             staxUser?.let {
                 binding.staxSupport.marketingOptIn.isChecked = it.marketingOptedIn
+
+                if(optInMarketing && !it.marketingOptedIn) {
+                    marketingOptIn(true)
+                    optInMarketing = false
+                }
             }
 
             with(binding.accountCard) {
@@ -121,12 +130,12 @@ class SettingsFragment : Fragment() {
             contactSupport.setOnClickListener { Utils.openEmail(getString(R.string.stax_emailing_subject, Hover.getDeviceId(requireActivity())), requireActivity()) }
             faq.setOnClickListener { NavUtil.navigate(findNavController(), SettingsFragmentDirections.actionNavigationSettingsToFaqFragment()) }
 
-            // TODO show dialog if user is not logged in
             receiveStaxUpdate.setOnClickListener {
-                marketingOptIn()
+                if (loginViewModel.staxUser.value == null)
+                    showLoginDialog()
+                else
+                    marketingOptIn(!marketingOptIn.isChecked)
             }
-
-            marketingOptIn.setOnCheckedChangeListener { _, isChecked -> marketingOptIn(isChecked) }
         }
     }
 
@@ -189,11 +198,31 @@ class SettingsFragment : Fragment() {
             .setDialogTitle(R.string.dialog_confirm_logout_header)
             .setDialogMessage(getString(R.string.dialog_confirm_logout_desc))
             .setNegButton(R.string.btn_cancel) { dialog?.dismiss() }
-            .setPosButton(R.string.logout) {
-                loginViewModel.silentSignOut()
-                UIHelper.flashMessage(requireActivity(), getString(R.string.logout_out_success))
+            .setPosButton(R.string.logout) { logoutUser() }
+        dialog!!.showIt()
+    }
+
+    private fun logoutUser(){
+        loginViewModel.silentSignOut()
+        binding.staxSupport.marketingOptIn.isChecked = false
+        UIHelper.flashMessage(requireActivity(), getString(R.string.logout_out_success))
+    }
+
+    private fun showLoginDialog() {
+        dialog = StaxDialog(requireActivity())
+            .setDialogTitle(R.string.login_dialog_title)
+            .setDialogMessage(getString(R.string.login_dialog_desc))
+            .setNegButton(R.string.btn_cancel) { dialog?.dismiss() }
+            .setPosButton(R.string.btn_google_signin) {
+                startGoogleLogin()
             }
         dialog!!.showIt()
+    }
+
+    private fun startGoogleLogin() {
+        binding.staxSupport.contactCard.showProgressIndicator()
+        optInMarketing = true
+        (requireActivity() as MainActivity).signIn()
     }
 
     private fun marketingOptIn(optedIn: Boolean) {
