@@ -39,7 +39,7 @@ class RequestsAdapter(private var requestList: List<Request>?,
 	}
 
 	override fun getItemCount(): Int {
-		return if (requestList != null) requestList!!.size else 0
+		return requestList?.size ?: 0
 	}
 
 	override fun getItemId(position: Int): Long {
