@@ -105,7 +105,7 @@ class SettingsFragment : Fragment() {
             staxUser?.let {
                 binding.staxSupport.marketingOptIn.isChecked = it.marketingOptedIn
 
-                if(optInMarketing && !it.marketingOptedIn) {
+                if (optInMarketing && !it.marketingOptedIn) {
                     marketingOptIn(true)
                     optInMarketing = false
                 }
@@ -202,7 +202,7 @@ class SettingsFragment : Fragment() {
         dialog!!.showIt()
     }
 
-    private fun logoutUser(){
+    private fun logoutUser() {
         loginViewModel.silentSignOut()
         binding.staxSupport.marketingOptIn.isChecked = false
         UIHelper.flashMessage(requireActivity(), getString(R.string.logout_out_success))
@@ -231,9 +231,8 @@ class SettingsFragment : Fragment() {
         loginViewModel.optInMarketing(optedIn)
 
         loginViewModel.progress.observe(viewLifecycleOwner) {
-            if (it == 100) {
+            if (it == 100)
                 binding.staxSupport.contactCard.hideProgressIndicator()
-            }
         }
     }
 
