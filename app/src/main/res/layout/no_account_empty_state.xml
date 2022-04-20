@@ -1,44 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:visibility="gone"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_accounts_found_desc"
+        android:gravity="center"
+        android:id="@+id/noAccountFoundDesc"
+        android:drawableTop="@drawable/ic_baseline_manage_search_24"
+        app:fontFamily="@font/brutalista_regular"
+        android:padding="@dimen/margin_16"
+        android:drawablePadding="@dimen/margin_16"
+        android:textColor="@color/offWhite"
+        android:layout_marginBottom="32dp"
+        android:textSize="@dimen/text_16"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_10"
+        android:id="@+id/informUs"
+        android:background="@drawable/blue_cornered_background"
+        android:layout_margin="@dimen/margin_13"
         android:orientation="vertical">
 
-    <TextView
-            android:id="@+id/noAccountFoundDesc"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_24"
-            android:drawablePadding="@dimen/margin_16"
-            android:gravity="center"
-            android:padding="@dimen/margin_16"
-            android:text="@string/no_accounts_found_desc"
-            android:textSize="@dimen/text_16"
-            app:drawableTopCompat="@drawable/ic_baseline_manage_search_24" />
-
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
             android:text="@string/cant_find_institution"
-            android:textSize="@dimen/text_16" />
-
-    <com.google.android.material.button.MaterialButton
-            android:id="@+id/informUs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/margin_13"
+            app:fontFamily="@font/brutalista_regular"
             android:gravity="center"
-            app:rippleColor="@color/brightBlue"
+            android:textColor="@color/buttonColor"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/inform_us_here"
-            android:textColor="@color/brightBluePressed"
-            app:backgroundTint="@color/offWhite"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:drawablePadding="@dimen/margin_8"
+            android:drawableEnd="@drawable/ic_baseline_open_in_new_16"
             app:fontFamily="@font/brutalista_medium"
-            app:icon="@drawable/ic_baseline_open_in_new_16"
-            app:iconGravity="textEnd"
-            app:iconPadding="@dimen/margin_13"
-            app:iconTint="@color/brightBluePressed" />
+            android:textColor="@color/brightBluePressed"
+            />
+
+    </LinearLayout>
+
 
 </LinearLayout>

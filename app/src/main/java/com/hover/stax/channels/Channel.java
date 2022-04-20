@@ -125,12 +125,6 @@ public class Channel implements Comparable<Channel> {
         return name + " " + countryAlpha2;
     }
 
-    public String toFilterableString() {
-        Locale loc = new Locale("",countryAlpha2);
-        String fullCountryName = loc.getDisplayCountry();
-        return name + fullCountryName;
-    }
-
     @Override
     public int compareTo(Channel cOther) {
         return this.toString().compareTo(cOther.toString());
