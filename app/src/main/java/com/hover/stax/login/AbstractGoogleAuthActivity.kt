@@ -97,8 +97,9 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
                     showSnackbarForCompleteUpdate()
             }
             updateManager.registerListener(installListener!!)
-        } else
-            updateManager.startUpdateFlowForResult(updateInfo, AppUpdateType.IMMEDIATE, this, UPDATE_REQUEST_CODE)
+        } 
+
+        updateManager.startUpdateFlowForResult(updateInfo, updateType, this, UPDATE_REQUEST_CODE)
     }
 
     private fun showSnackbarForCompleteUpdate() {
