@@ -13,7 +13,6 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:completionThreshold="0"
-            android:drawablePadding="@dimen/margin_13"
             android:dropDownWidth="wrap_content"
             android:dropDownHeight="wrap_content"
             android:imeOptions="actionDone"
@@ -21,7 +20,6 @@
             android:autofillHints="phone"
             android:textCursorDrawable="@null"
             android:textSize="@dimen/text_19"
-            app:endIconMode="dropdown_menu"
             app:errorTextColor="@color/stax_state_red" />
 
 </com.google.android.material.textfield.TextInputLayout>
