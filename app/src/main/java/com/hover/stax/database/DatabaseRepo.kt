@@ -10,6 +10,7 @@ import com.hover.sdk.actions.HoverActionDao
 import com.hover.sdk.database.HoverRoomDatabase
 import com.hover.sdk.sims.SimInfo
 import com.hover.sdk.sims.SimInfoDao
+import com.hover.sdk.transactions.Transaction
 import com.hover.sdk.transactions.TransactionContract
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
