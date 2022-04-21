@@ -154,6 +154,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
     private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
+            transferViewModel.reset()
             NavUtil.showTransactionDetailsFragment(
                 data.extras!!.getString("uuid")!!,
                 supportFragmentManager,
@@ -242,7 +243,6 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
                     balancesViewModel.showBalances(true)
                 }
                 showPopUpTransactionDetailsIfRequired(data)
-                transferViewModel.reset()
             }
         }
     }
