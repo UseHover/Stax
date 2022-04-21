@@ -4,11 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.checkbox.MaterialCheckBox
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.hover.stax.R
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
+
+const val DAYS_FOR_FLEXIBLE_UPDATE = 3
+const val UPDATE_REQUEST_CODE = 90
 
 abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
 
@@ -18,8 +24,26 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initGoogleAuth()
-
         setLoginObserver()
+
+        checkForUpdates()
+    }
+
+    private fun checkForUpdates() {
+        val updateManager = AppUpdateManagerFactory.create(this)
+        val updateInfoTask = updateManager.appUpdateInfo
+
+        updateInfoTask.addOnSuccessListener { updateInfo ->
+            val updateType = if ((updateInfo.clientVersionStalenessDays() ?: -1) <= DAYS_FOR_FLEXIBLE_UPDATE)
+                AppUpdateType.FLEXIBLE
+            else
+                AppUpdateType.IMMEDIATE
+
+            if (updateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && updateInfo.isUpdateTypeAllowed(updateType))
+                updateManager.startUpdateFlowForResult(updateInfo, updateType, this, UPDATE_REQUEST_CODE)
+            else
+                Timber.i("No new update available")
+        }
     }
 
     fun setGoogleLoginInterface(staxGoogleLoginInterface: StaxGoogleLoginInterface) {
