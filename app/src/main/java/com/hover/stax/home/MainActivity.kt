@@ -3,8 +3,11 @@ package com.hover.stax.home
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Observer
+import androidx.navigation.NavDirections
 import com.hover.sdk.actions.HoverAction
+import com.hover.sdk.api.Hover
 import com.hover.sdk.permissions.PermissionHelper
+import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.DUMMY
@@ -18,16 +21,10 @@ import com.hover.stax.login.StaxGoogleLoginInterface
 import com.hover.stax.notifications.PushNotificationTopicsInterface
 import com.hover.stax.schedules.Schedule
 import com.hover.stax.settings.BiometricChecker
-import com.hover.stax.settings.ReferralDialog
 import com.hover.stax.settings.SettingsFragment
 import com.hover.stax.transactions.TransactionHistoryViewModel
-import com.hover.stax.transfers.TransactionType
 import com.hover.stax.transfers.TransferViewModel
-import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
-import com.hover.stax.utils.Constants.NAV_TRANSFER
-import com.hover.stax.utils.DateUtils
-import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.*
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -44,24 +41,23 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
     private lateinit var binding: ActivityMainBinding
 
-    private lateinit var staxNavigation: StaxNavigation
+    private lateinit var navHelper: NavHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-        staxNavigation = StaxNavigation(this, isMainActivity = true)
+        navHelper = NavHelper(this)
         setContentView(binding.root)
 
-        staxNavigation.setUpNav()
+        navHelper.setUpNav()
 
         initFromIntent()
         startObservers()
         checkForRequest(intent)
         checkForFragmentDirection(intent)
-        StaxDeepLinking.navigateIfRequired(this)
         observeForAppReview()
-        setGoogleLoginInterface(this);
+        setGoogleLoginInterface(this)
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -71,16 +67,18 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
     override fun onResume() {
         super.onResume()
-        staxNavigation.setUpNav()
+        navHelper.setUpNav()
     }
 
     fun submit(account: Account) = actionSelectViewModel.activeAction.value?.let { makeHoverCall(it, account) }
 
-    fun checkPermissionsAndNavigate(destination: Int) {
-        staxNavigation.checkPermissionsAndNavigate(destination)
+    fun checkPermissionsAndNavigate(navDirections: NavDirections) {
+        navHelper.checkPermissionsAndNavigate(navDirections)
     }
 
-    private fun observeForAppReview() = historyViewModel.showAppReviewLiveData().observe(this@MainActivity) { if (it) StaxAppReview.launchStaxReview(this@MainActivity) }
+    private fun observeForAppReview() = historyViewModel.showAppReviewLiveData().observe(this@MainActivity) {
+        if (it) StaxAppReview.launchStaxReview(this@MainActivity)
+    }
 
     private fun startObservers() {
         with(balancesViewModel) {
@@ -88,11 +86,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
             //This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
             //https://stackoverflow.com/a/54939860/2371515
-            val accountsObserver = object : Observer<List<Account>> {
-                override fun onChanged(t: List<Account>?) {
-                    logResult("Observing selected channels", t?.size ?: 0)
-                }
-            }
+            val accountsObserver = Observer<List<Account>> { t -> logResult("Observing selected channels", t?.size ?: 0) }
 
             accounts.observe(this@MainActivity, accountsObserver)
             toRun.observe(this@MainActivity) { logResult("Observing action to run", it.size) }
@@ -109,7 +103,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
     private fun checkForRequest(intent: Intent) {
         if (intent.hasExtra(Constants.REQUEST_LINK)) {
-            staxNavigation.checkPermissionsAndNavigate(NAV_TRANSFER)
+            navHelper.checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalTransferFragment(HoverAction.P2P))
             createFromRequest(intent.getStringExtra(Constants.REQUEST_LINK)!!)
         }
     }
@@ -117,7 +111,11 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
     private fun checkForFragmentDirection(intent: Intent) {
         if (intent.hasExtra(Constants.FRAGMENT_DIRECT)) {
             val toWhere = intent.extras!!.getInt(Constants.FRAGMENT_DIRECT, 0)
-            staxNavigation.checkPermissionsAndNavigate(toWhere)
+
+            if (toWhere == Constants.NAV_EMAIL_CLIENT)
+                Utils.openEmail(getString(R.string.stax_emailing_subject, Hover.getDeviceId(this)), this)
+            else
+                navHelper.checkPermissionsAndNavigate(toWhere)
         }
     }
 
@@ -132,13 +130,13 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
         Timber.e("Request code is bounty")
         if (data != null) {
             val transactionUUID = data.getStringExtra("uuid")
-            if (transactionUUID != null) staxNavigation.navigateToTransactionDetailsFragment(transactionUUID, supportFragmentManager, true)
+            if (transactionUUID != null) NavUtil.showTransactionDetailsFragment(transactionUUID, supportFragmentManager, true)
         }
     }
 
     private fun showPopUpTransactionDetailsIfRequired(data: Intent?) {
         if (data != null && data.extras != null && data.extras!!.getString("uuid") != null) {
-            staxNavigation.navigateToTransactionDetailsFragment(
+            NavUtil.showTransactionDetailsFragment(
                 data.extras!!.getString("uuid")!!,
                 supportFragmentManager,
                 false
@@ -153,7 +151,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
                 intent.getBooleanExtra(Constants.REQUEST_TYPE, false)
             )
             intent.hasExtra(Constants.REQUEST_LINK) -> createFromRequest(intent.getStringExtra(Constants.REQUEST_LINK)!!)
-            intent.hasExtra(FinancialTipsFragment.TIP_ID) -> staxNavigation.navigateWellness(intent.getStringExtra(FinancialTipsFragment.TIP_ID)!!)
+            intent.hasExtra(FinancialTipsFragment.TIP_ID) -> navHelper.navigateWellness(intent.getStringExtra(FinancialTipsFragment.TIP_ID)!!)
             else -> AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, intent.action), this)
         }
     }
@@ -184,7 +182,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
     override fun onTapRefresh(accountId: Int) {
         if (accountId == DUMMY)
-            staxNavigation.checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT)
+            checkPermissionsAndNavigate(HomeFragmentDirections.actionNavigationHomeToNavigationLinkAccount())
         else {
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.refresh_balance_single), this)
             balancesViewModel.setRunning(accountId)
@@ -193,9 +191,9 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
 
     override fun onTapDetail(accountId: Int) {
         if (accountId == DUMMY)
-            staxNavigation.checkPermissionsAndNavigate(Constants.NAV_LINK_ACCOUNT)
+            checkPermissionsAndNavigate(HomeFragmentDirections.actionNavigationHomeToNavigationLinkAccount())
         else
-            staxNavigation.navigateAccountDetails(accountId)
+            navHelper.navigateAccountDetails(accountId)
     }
 
     override fun onAuthError(error: String) {
@@ -227,10 +225,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
     }
 
     override fun googleLoginSuccessful() {
-        when (loginViewModel.postGoogleAuthNav.value) {
-            SettingsFragment.SHOW_BOUNTY_LIST -> staxNavigation.navigateToBountyList()
-            SettingsFragment.SHOW_REFERRAL_DIALOG -> ReferralDialog().show(supportFragmentManager, ReferralDialog.TAG)
-        }
+        if (loginViewModel.postGoogleAuthNav.value == SettingsFragment.SHOW_BOUNTY_LIST) navHelper.navigateToBountyList()
     }
 
     override fun googleLoginFailed() {

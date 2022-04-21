@@ -6,7 +6,7 @@ import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.databinding.StaxSpinnerItemWithLogoBinding
 
-class ChannelsRecyclerViewAdapter(var channelList: List<Channel>, var selectListener: SelectListener?) : RecyclerView.Adapter<ChannelsViewHolder>() {
+class ChannelsAdapter(var channelList: List<Channel>, var selectListener: SelectListener?) : RecyclerView.Adapter<ChannelsViewHolder>() {
 
     private var selectionTracker: SelectionTracker<Long>? = null
 

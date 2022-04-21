@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
-import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDropdownLayout
 import kotlinx.coroutines.*
 
@@ -22,7 +21,6 @@ class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         countryAdapter = CountryAdapter(getCountryCodes(channels), context)
         autoCompleteTextView.apply {
             setAdapter(countryAdapter)
-            dropDownHeight = UIHelper.dpToPx(600)
             setOnItemClickListener { parent, _, position, _ -> onSelect(parent.getItemAtPosition(position) as String) }
         }
 
@@ -43,7 +41,6 @@ class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     }
 
     private fun setEmptyState() {
-        autoCompleteTextView.dropDownHeight = 0
         setState(context.getString(R.string.channels_error_nodata), ERROR)
     }
 
@@ -58,9 +55,12 @@ class CountryDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     fun setDropdownValue(countryCode: String?) {
         countryAdapter?.let {
-            autoCompleteTextView.setText(it.getCountryString(countryCode
-                    ?: CountryAdapter.CODE_ALL_COUNTRIES))
+            autoCompleteTextView.setText(
+                it.getCountryString(
+                    if (!countryCode.isNullOrEmpty()) countryCode
+                    else CountryAdapter.CODE_ALL_COUNTRIES
+                )
+            )
         }
     }
-
 }

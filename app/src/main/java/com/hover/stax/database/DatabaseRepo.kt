@@ -29,6 +29,7 @@ import com.hover.stax.transactions.TransactionDao
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils.lastMonth
 import com.hover.stax.utils.paymentLinkCryptography.Encryption
+import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
 import java.security.NoSuchAlgorithmException
 
@@ -91,7 +92,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     }
 
     // Actions
-    fun getAction(public_id: String): HoverAction {
+    fun getAction(public_id: String): HoverAction? {
         return actionDao.getAction(public_id)
     }
 
@@ -155,6 +156,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     fun getTransaction(uuid: String?): StaxTransaction? {
         return transactionDao.getTransaction(uuid)
     }
+
+    fun getTransactionAsync(uuid: String): Flow<StaxTransaction> = transactionDao.getTransactionAsync(uuid)
 
     fun insertOrUpdateTransaction(intent: Intent, action: HoverAction, contact: StaxContact, c: Context) {
         AppDatabase.databaseWriteExecutor.execute {
@@ -307,7 +310,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         AppDatabase.databaseWriteExecutor.execute { requestDao.delete(request) }
     }
 
-    val allAccountsLive: LiveData<List<Account>> = accountDao.getAllAccountsLive()
+//    val allAccountsLive: LiveData<List<Account>> = accountDao.getAllAccountsLive()
 
     fun getAllAccounts(): List<Account> = accountDao.getAllAccounts()
 
@@ -321,7 +324,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun getLiveAccount(id: Int): LiveData<Account> = accountDao.getLiveAccount(id)
 
-    suspend fun getAccounts(ids: List<Int>): List<Account> = accountDao.getAccounts(ids)
+    fun getAccounts(): Flow<List<Account>> = accountDao.getAccounts()
 
     private fun getAccount(name: String, channelId: Int): Account? = accountDao.getAccount(name, channelId)
 
@@ -348,6 +351,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     fun update(account: Account?) = account?.let { AppDatabase.databaseWriteExecutor.execute { accountDao.update(it) } }
 
     fun delete(account: Account) = AppDatabase.databaseWriteExecutor.execute { accountDao.delete(account) }
+
+    fun deleteAccount(channelId: Int, name: String) { accountDao.delete(channelId, name) }
 
     companion object {
         private val TAG = DatabaseRepo::class.java.simpleName

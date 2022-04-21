@@ -11,7 +11,7 @@ import java.util.LinkedHashMap
 
  class ActionSelectViewModel(private val application: Application) : ViewModel() {
 
-    private val filteredActions = MediatorLiveData<List<HoverAction>>()
+    val filteredActions = MediatorLiveData<List<HoverAction>>()
     val activeAction = MediatorLiveData<HoverAction>()
     val nonStandardVariables = MediatorLiveData<LinkedHashMap<String, String>>()
 
@@ -29,7 +29,7 @@ import java.util.LinkedHashMap
 
     fun setActions(actions: List<HoverAction>) = filteredActions.postValue(actions)
 
-    fun setActiveAction(action: HoverAction?) = action?.let { activeAction.postValue(action) }
+    fun setActiveAction(action: HoverAction?) = action?.let { activeAction.postValue(it) }
 
     fun errorCheck(): String? {
         return if (activeAction.value == null) application.getString(R.string.action_fielderror) else null
@@ -44,13 +44,13 @@ import java.util.LinkedHashMap
     }
 
     private fun isStandardVariable(key: String): Boolean {
-        return key in listOf(PHONE_KEY, ACCOUNT_KEY, AMOUNT_KEY, NOTE_KEY, PIN_KEY, Constants.RECIPIENT_INSTITUTION)
+        return key in listOf(PHONE_KEY, ACCOUNT_KEY, AMOUNT_KEY, NOTE_KEY, PIN_KEY, Constants.RECIPIENT_INSTITUTION, Constants.ACCOUNT_NAME)
     }
 
     fun updateNonStandardVariables(key: String, value: String) {
         var map = nonStandardVariables.value
-        if (map == null) map = linkedMapOf<String, String>()
+        if (map == null) map = linkedMapOf()
         map[key] = value
-        nonStandardVariables.postValue(map!!);
+        nonStandardVariables.postValue(map!!)
     }
 }

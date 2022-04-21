@@ -12,6 +12,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.DialogPaybillNumberBinding
+import com.hover.stax.utils.NavUtil
 import com.hover.stax.views.AbstractStatefulInput
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -27,7 +28,7 @@ class PaybillNumberDialog : DialogFragment() {
     private val viewModel: PaybillViewModel by sharedViewModel()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        _binding = DialogPaybillNumberBinding.inflate(LayoutInflater.from(requireContext()))
+        _binding = DialogPaybillNumberBinding.inflate(layoutInflater)
         dialog = StaxDialog(requireActivity(), binding.root).makeSticky().setDialogTitle(R.string.business_number_prompt).setNegButton(R.string.btn_cancel) { dismiss() }
 
         dialogView = dialog.mView
@@ -43,7 +44,7 @@ class PaybillNumberDialog : DialogFragment() {
         binding.businessNoInput.addTextChangedListener(businessNoWatcher)
         binding.doneBtn.setOnClickListener {
             if (validates())
-                findNavController().navigate(R.id.action_paybillListFragment_to_paybillFragment, bundleOf(PaybillFragment.UPDATE_BUSINESS_NO to true))
+                NavUtil.navigate(findNavController(), PaybillListFragmentDirections.actionPaybillListFragmentToPaybillFragment(true))
         }
     }
 

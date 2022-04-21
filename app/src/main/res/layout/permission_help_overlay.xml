@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_height="wrap_content"
-	android:layout_width="match_parent"
-	android:gravity="center"
-	android:padding="@dimen/hsdk__small_padding"
-	android:background="#F0F0F0">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F0F0F0"
+        android:gravity="center"
+        android:padding="@dimen/hsdk__small_padding">
 
-	<View  android:id="@+id/empty_start"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:layout_weight="1" />
+    <View
+            android:id="@+id/empty_start"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
-	<include android:id="@+id/overlay_example"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:layout_weight="5"
-		layout="@layout/permission_mock_toggle" />
+    <include
+            android:id="@+id/overlay_example"
+            layout="@layout/permission_mock_toggle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5" />
 
-	<View  android:id="@+id/empty_end"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:layout_weight="1" />
+    <View
+            android:id="@+id/empty_end"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 </LinearLayout>

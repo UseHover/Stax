@@ -10,29 +10,38 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.permissions.PermissionHelper
 import com.hover.stax.R
+import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.AccountDropdown
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
 import com.hover.stax.contacts.StaxContact
+import com.hover.stax.home.MainActivity
 import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.transfers.TransactionType.Companion.type
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
+import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxCardView
+import com.hover.stax.views.StaxDialog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
 
-abstract class AbstractFormFragment : Fragment() {
+abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchListener {
 
     lateinit var abstractFormViewModel: AbstractFormViewModel
     val channelsViewModel: ChannelsViewModel by sharedViewModel()
@@ -44,13 +53,15 @@ abstract class AbstractFormFragment : Fragment() {
     lateinit var accountDropdown: AccountDropdown
     lateinit var fab: Button
 
-    private lateinit var noWorryText: LinearLayout
+    private lateinit var noWorryText: TextView
+
+    var dialog: StaxDialog? = null
 
     @CallSuper
     open fun init(root: View) {
         editCard = root.findViewById(R.id.editCard)
         editRequestCard = root.findViewById(R.id.editRequestCard)
-        noWorryText = root.findViewById(R.id.noworry_text)
+        noWorryText = root.findViewById(R.id.noWorryText)
         summaryCard = root.findViewById(R.id.summaryCard)
         fab = root.findViewById(R.id.fab)
         accountDropdown = root.findViewById(R.id.accountDropdown)
@@ -64,16 +75,9 @@ abstract class AbstractFormFragment : Fragment() {
     }
 
     private fun setupActionDropdownObservers(viewModel: ChannelsViewModel, lifecycleOwner: LifecycleOwner) {
-        val activeChannelObserver = object : Observer<Channel> {
-            override fun onChanged(t: Channel?) {
-                Timber.i("Got new active channel: $t ${t?.countryAlpha2}")
-            }
-        }
-        val actionsObserver = object : Observer<List<HoverAction>> {
-            override fun onChanged(t: List<HoverAction>?) {
-                Timber.i("Got new actions: %s", t?.size)
-            }
-        }
+        val activeChannelObserver = Observer<Channel?> { Timber.i("Got new active channel: $it ${it?.countryAlpha2}") }
+        val actionsObserver = Observer<List<HoverAction>> { Timber.i("Got new actions: %s", it?.size) }
+
         viewModel.activeChannel.observe(lifecycleOwner, activeChannelObserver)
         viewModel.channelActions.observe(lifecycleOwner, actionsObserver)
     }
@@ -131,11 +135,32 @@ abstract class AbstractFormFragment : Fragment() {
     abstract fun onContactSelected(requestCode: Int, contact: StaxContact)
 
     @SuppressLint("ClickableViewAccessibility")
-    fun setDropdownTouchListener(action: Int) {
+    fun setDropdownTouchListener(navDirections: NavDirections) {
         accountDropdown.autoCompleteTextView.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN)
-                findNavController().navigate(action)
+                NavUtil.navigate(findNavController(), navDirections)
             true
+        }
+    }
+
+    override fun fetchAccounts(account: Account) {
+        dialog = StaxDialog(requireActivity())
+            .setDialogTitle(getString(R.string.incomplete_account_setup_header))
+            .setDialogMessage(getString(R.string.incomplete_account_setup_desc, account.alias))
+            .setPosButton(R.string.check_balance_title) { runBalanceCheck(account.channelId) }
+            .setNegButton(R.string.btn_cancel, null)
+        dialog!!.showIt()
+    }
+
+    private fun runBalanceCheck(channelId: Int) = lifecycleScope.launch(Dispatchers.IO) {
+        channelsViewModel.getChannel(channelId)?.let { channel ->
+            val action = channelsViewModel.getFetchAccountAction(channelId)
+            channelsViewModel.setActiveChannel(channel)
+
+            if (action != null)
+                (activity as? MainActivity)?.makeCall(action, channel)
+            else
+                UIHelper.flashMessage(requireActivity(), getString(R.string.action_run_error))
         }
     }
 }

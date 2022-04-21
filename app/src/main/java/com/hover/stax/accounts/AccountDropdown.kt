@@ -13,6 +13,7 @@ import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
+import com.hover.stax.utils.Constants
 import com.hover.stax.utils.Constants.size55
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxDropdownLayout
@@ -26,6 +27,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
     private var showSelected: Boolean = true
     private var helperText: String? = null
     private var highlightListener: HighlightListener? = null
+    private var accountFetchListener: AccountFetchListener? = null
 
     var highlightedAccount: Account? = null
 
@@ -52,29 +54,29 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         if (!accounts.isNullOrEmpty() /*&& !hasExistingContent()*/) {
             updateChoices(accounts)
         } else if (!hasExistingContent()) {
-            setEmptyState()
+            setState(context.getString(R.string.accounts_error_no_accounts), NONE)
         }
     }
 
-    private fun setEmptyState() {
-        autoCompleteTextView.dropDownHeight = 0
-        setState(context.getString(R.string.accounts_error_no_accounts), NONE)
-    }
-
     private fun setDropdownValue(account: Account?) {
-        highlightedAccount = account
-        autoCompleteTextView.setText(account?.alias ?: "", false)
-        account?.logoUrl?.let { UIHelper.loadPicasso(it, size55, this) }
+        account?.let {
+            autoCompleteTextView.setText(it.alias, false)
+            UIHelper.loadPicasso(it.logoUrl, size55, this)
+
+            if (account.name == Constants.PLACEHOLDER) {
+                accountFetchListener?.fetchAccounts(account)
+            } else {
+                highlightedAccount = account
+            }
+        }
     }
 
-    //TODO handle default accounts here. For now set first account as default
     private fun updateChoices(accounts: List<Account>) {
         if (highlightedAccount == null) setDropdownValue(null)
 
         val adapter = AccountDropdownAdapter(accounts, context)
         autoCompleteTextView.apply {
             setAdapter(adapter)
-            dropDownHeight = UIHelper.dpToPx(300)
             setOnItemClickListener { parent, _, position, _ -> onSelect(parent.getItemAtPosition(position) as Account) }
         }
 
@@ -122,12 +124,20 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     private fun setState(actions: List<HoverAction>, viewModel: ChannelsViewModel) {
         when {
-            viewModel.activeChannel.value != null && (actions.isNullOrEmpty()) -> setState(context.getString(R.string.no_actions_fielderror,
-                    HoverAction.getHumanFriendlyType(context, viewModel.getActionType())), ERROR)
+            viewModel.activeChannel.value != null && (actions.isNullOrEmpty()) -> setState(
+                context.getString(
+                    R.string.no_actions_fielderror,
+                    HoverAction.getHumanFriendlyType(context, viewModel.getActionType())
+                ), ERROR
+            )
 
             !actions.isNullOrEmpty() && actions.size == 1 && !actions.first().requiresRecipient() && viewModel.getActionType() != HoverAction.BALANCE ->
-                setState(context.getString(if (actions.first().transaction_type == HoverAction.AIRTIME) R.string.self_only_airtime_warning
-                else R.string.self_only_money_warning), INFO)
+                setState(
+                    context.getString(
+                        if (actions.first().transaction_type == HoverAction.AIRTIME) R.string.self_only_airtime_warning
+                        else R.string.self_only_money_warning
+                    ), INFO
+                )
 
             viewModel.activeChannel.value != null && showSelected -> setState(helperText, SUCCESS)
         }
@@ -147,7 +157,15 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         autoCompleteTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_grey_circle_small, 0, 0, 0)
     }
 
+    fun setFetchAccountListener(listener: AccountFetchListener) {
+        accountFetchListener = listener
+    }
+
     interface HighlightListener {
         fun highlightAccount(account: Account)
+    }
+
+    interface AccountFetchListener {
+        fun fetchAccounts(account: Account)
     }
 }

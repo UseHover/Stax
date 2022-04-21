@@ -11,63 +11,18 @@
 		android:orientation="vertical"
 		android:padding="@dimen/margin_13">
 
-		<LinearLayout android:id="@+id/header"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="@dimen/margin_21"
-			android:orientation="horizontal"
-			android:visibility="gone">
-
-			<TextView android:id="@+id/title"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:textSize="@dimen/text_13"
-				android:textAllCaps="true"
-				android:textAlignment="viewEnd"
-				android:fontFamily="font-bold"
-				android:textColor="@color/offWhite"/>
-		</LinearLayout>
+		<include layout="@layout/dialog_layout_header_area"/>
 
 		<TextView android:id="@+id/message"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:paddingStart="@dimen/margin_5"
 			android:textSize="@dimen/text_16"
-			android:fontFamily="font-normal"
 			android:lineSpacingExtra="@dimen/text_spacing_8"
 			tools:ignore="RtlSymmetry"
 			android:visibility="gone"/>
 
-		<RelativeLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/margin_55">
-
-			<androidx.appcompat.widget.AppCompatButton
-				android:id="@+id/neg_btn"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginEnd="@dimen/margin_21"
-				android:text="@string/btn_cancel"
-				android:layout_toStartOf="@id/divider"
-				style="@style/StaxButton"
-				android:visibility="gone"/>
-
-			<View android:id="@+id/divider"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:background="@color/transparent"
-				android:layout_toStartOf="@+id/pos_btn"/>
-
-			<androidx.appcompat.widget.AppCompatButton
-				android:id="@+id/pos_btn"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/btn_ok"
-				android:layout_alignParentEnd="true"
-				style="@style/StaxButtonColored" />
-		</RelativeLayout>
+		<include layout="@layout/dialog_layout_button_area"/>
 
 	</LinearLayout>
 </ScrollView>

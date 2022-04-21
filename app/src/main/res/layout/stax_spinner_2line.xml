@@ -15,7 +15,6 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="font-normal"
             android:textSize="@dimen/text_16" />
 
     <TextView
@@ -24,7 +23,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/title"
             android:layout_alignStart="@id/title"
-            android:fontFamily="font-normal"
             android:textAppearance="?attr/textAppearanceListItemSecondary"
             android:textColor="@color/darkGrey"
             android:textSize="@dimen/text_13"

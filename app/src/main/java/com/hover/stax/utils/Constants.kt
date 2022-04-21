@@ -22,6 +22,8 @@ object Constants {
     const val REQUEST_REQUEST = 301
     const val SMS = 303
 
+    const val PERMS_REQ_CODE = 700
+
     const val size55 = 55
 
     const val TEST_MODE = "test_mode"
@@ -39,14 +41,11 @@ object Constants {
     const val ACCOUNT_ID = "accountId"
     const val ACTION = "action"
     const val TRANSACTION_TYPE = "transaction_type"
-    const val QUESTION_TYPE = "question_type"
     const val CHANNELS_REFRESHED = "has_refreshed_channels"
-    const val FINANCIAL_TIPS = "financial_tips"
     const val COUNTRIES = "countries"
 
-    const val RECIPIENT_INSTITUTION= "recipientInstitution"
+    const val RECIPIENT_INSTITUTION = "recipientInstitution"
 
     const val VARIANT = "variant"
-
-    const val CONNECTIVITY = "android.net.conn.CONNECTIVITY_CHANGE"
+    const val PLACEHOLDER = "placeholder"
 }

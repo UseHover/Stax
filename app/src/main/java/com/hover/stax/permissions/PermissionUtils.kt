@@ -67,9 +67,9 @@ object PermissionUtils {
                     .setNegButton(R.string.btn_cancel, negListener)
                     .showIt()
         } else {
-            StaxDialog(activity, R.layout.basic_perm_dialog)
-                    .setPosButton(R.string.btn_ok, posListener)
-                    .setNegButton(R.string.btn_cancel, negListener)
+            StaxDialog(activity, R.layout.dialog_basic_perms)
+                    .setPosButton(R.string.btn_continue, posListener)
+                    .setNegButton(R.string.btn_not_now, negListener)
                     .showIt()
         }
     }

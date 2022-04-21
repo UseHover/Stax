@@ -12,7 +12,7 @@
             android:orientation="vertical">
 
         <com.hover.stax.views.StaxCardView
-                android:id="@+id/detailsCard"
+                android:id="@+id/amountsCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:showBack="true"
@@ -31,14 +31,12 @@
 
                     <TextView
                             android:layout_weight="1"
-                            android:fontFamily="font-normal"
                             android:text="@string/moneyout_label"
                             android:textColor="@color/offWhite"
                             android:textSize="@dimen/text_16" />
 
                     <TextView
                             android:id="@+id/details_money_out"
-                            android:fontFamily="font-normal"
                             android:textAlignment="viewEnd"
                             android:textColor="@color/offWhite"
                             android:textSize="@dimen/text_21"
@@ -51,14 +49,12 @@
 
                     <TextView
                             android:layout_weight="1"
-                            android:fontFamily="font-normal"
                             android:text="@string/moneyin_label"
                             android:textColor="@color/offWhite"
                             android:textSize="@dimen/text_16" />
 
                     <TextView
                             android:id="@+id/details_money_in"
-                            android:fontFamily="font-normal"
                             android:textAlignment="viewEnd"
                             android:textColor="@color/offWhite"
                             android:textSize="@dimen/text_21"
@@ -70,36 +66,15 @@
                     <TextView
                             android:id="@+id/fees_description"
                             android:layout_weight="1"
-                            android:fontFamily="font-normal"
                             android:text="@string/fees_label"
                             android:textColor="@color/offWhite"
                             android:textSize="@dimen/text_16" />
 
                     <TextView
                             android:id="@+id/details_fees"
-                            android:fontFamily="font-normal"
                             android:textAlignment="viewEnd"
                             android:textColor="@color/offWhite"
                             android:textSize="@dimen/text_21"
-                            android:textStyle="bold" />
-                </TableRow>
-
-                <TableRow android:layout_marginVertical="@dimen/margin_21">
-
-                    <TextView
-                            android:id="@+id/official_name_label"
-                            android:layout_weight="1"
-                            android:fontFamily="font-normal"
-                            android:text="@string/official_name"
-                            android:textColor="@color/offWhite"
-                            android:textSize="@dimen/text_16" />
-
-                    <TextView
-                            android:id="@+id/official_name"
-                            android:fontFamily="font-normal"
-                            android:textAlignment="viewEnd"
-                            android:textColor="@color/offWhite"
-                            android:textSize="@dimen/text_16"
                             android:textStyle="bold" />
                 </TableRow>
             </TableLayout>
@@ -107,9 +82,8 @@
         </com.hover.stax.views.StaxCardView>
 
         <include
-                android:id="@+id/shortcode_card"
-                layout="@layout/account_card_shortcode" />
-
+                android:id="@+id/details_card"
+                layout="@layout/account_card_details" />
 
         <include
                 android:id="@+id/scheduled_card"

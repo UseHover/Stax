@@ -6,10 +6,10 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentWellnessBinding
 import com.hover.stax.utils.AnalyticsUtil
@@ -21,6 +21,7 @@ import timber.log.Timber
 class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
 
     private val viewModel: FinancialTipsViewModel by viewModel()
+    private val args: FinancialTipsFragmentArgs by navArgs()
 
     private var _binding: FragmentWellnessBinding? = null
     private val binding get() = _binding!!
@@ -33,22 +34,18 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val tipId = arguments?.getString(TIP_ID)
-
         binding.title.text = getString(R.string.financial_wellness_tips)
-        viewModel.tips.observe(viewLifecycleOwner) {
+        binding.backButton.setOnClickListener { findNavController().popBackStack() }
+        startObserver()
+    }
+
+    private fun startObserver() = with(viewModel) {
+        val tipId = args.tipId
+
+        tips.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
                 showFinancialTips(it, tipId)
             }
-        }
-    }
-
-    private val backPressedCallback = object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            if (binding.financialTipsDetail.visibility == View.VISIBLE)
-                showTipList()
-            else
-                findNavController().popBackStack(R.id.navigation_home, true)
         }
     }
 
@@ -64,8 +61,6 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
 
             AnalyticsUtil.logAnalyticsEvent(getString(R.string.visited_financial_tips), requireActivity())
         }
-
-        initBackNavigation()
     }
 
     override fun onTipSelected(tip: FinancialTip, isFromDeeplink: Boolean) {
@@ -76,10 +71,7 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
             visibility = View.VISIBLE
             setTitle(tip.title)
 
-            //ensures proper back navigation
-            setOnClickIcon {
-                showTipList()
-            }
+            setOnClickIcon { showTipList() }
         }
 
         binding.contentText.apply {
@@ -87,25 +79,37 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
             movementMethod = LinkMovementMethod.getInstance()
         }
 
-        binding.shareBtn.setOnClickListener {
-            val shareableContent = buildString {
-                append(tip.title)
-                append("\n\n")
-                append(tip.snippet ?: HtmlCompat.fromHtml(tip.content, HtmlCompat.FROM_HTML_MODE_LEGACY))
-                append(getString(R.string.stax_handle))
-                append("\n\n")
-                append("https://stax.me/financialTips?id=${tip.id}")
-            }
+        binding.shareBtn.setOnClickListener { shareTip(tip) }
+    }
 
-            val share = Intent.createChooser(Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, shareableContent)
-                type = "text/plain"
-            }, getString(R.string.share_wellness_tip))
-            startActivity(share)
+    private fun shareTip(tip: FinancialTip) {
+        val shareCopy = if (tip.shareCopy != "null")
+            tip.shareCopy
+        else
+            tip.snippet
 
-            logTipShare(tip)
+        val shareableLink = if (tip.deepLink != "null")
+            tip.deepLink
+        else
+            "https://stax.me/financialTips?id=${tip.id}"
+
+        val shareableContent = buildString {
+            append(tip.title)
+            append("\n\n")
+            append(shareCopy)
+            append(" ${getString(R.string.stax_handle)}")
+            append("\n\n")
+            append(shareableLink)
         }
+
+        val share = Intent.createChooser(Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, shareableContent)
+            type = "text/plain"
+        }, getString(R.string.share_wellness_tip))
+        startActivity(share)
+
+        logTipShare(tip)
     }
 
     private fun logTipShare(tip: FinancialTip) {
@@ -143,11 +147,6 @@ class FinancialTipsFragment : Fragment(), FinancialTipsAdapter.SelectListener {
 
         if (!viewModel.tips.value.isNullOrEmpty())
             showFinancialTips(viewModel.tips.value!!, null)
-    }
-
-    private fun initBackNavigation() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
-        binding.backButton.setOnClickListener { findNavController().navigate(R.id.action_wellnessFragment_to_navigation_home) }
     }
 
     override fun onDestroyView() {

@@ -9,21 +9,20 @@ import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import com.hover.stax.MainNavigationDirections
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.accounts.DUMMY
 import com.hover.stax.databinding.FragmentBalanceBinding
-import com.hover.stax.home.HomeFragment
 import com.hover.stax.home.MainActivity
-import com.hover.stax.home.NavigationInterface
 import com.hover.stax.utils.AnalyticsUtil
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.UIHelper
+import com.hover.stax.utils.Utils
 import com.hover.stax.views.staxcardstack.StaxCardStackView
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
-class BalancesFragment : Fragment(), NavigationInterface {
+class BalancesFragment : Fragment() {
 
     private lateinit var addChannelLink: CardView
     private lateinit var balanceTitle: TextView
@@ -68,13 +67,15 @@ class BalancesFragment : Fragment(), NavigationInterface {
 
     private fun setUpLinkNewAccount() {
         addChannelLink = binding.newAccountLink
-        addChannelLink.setOnClickListener { HomeFragment.navigateTo(Constants.NAV_LINK_ACCOUNT, requireActivity()) }
+        addChannelLink.setOnClickListener {
+            (requireActivity() as MainActivity).checkPermissionsAndNavigate(MainNavigationDirections.actionGlobalAddChannelsFragment())
+        }
     }
 
     private fun initBalanceCard() {
         balanceTitle = binding.homeCardBalances.balanceHeaderTitleId.also {
             it.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                    if (balancesVisible) R.drawable.ic_visibility_on else R.drawable.ic_visibility_off, 0, 0, 0
+                if (balancesVisible) R.drawable.ic_visibility_on else R.drawable.ic_visibility_off, 0, 0, 0
             )
             it.setOnClickListener {
                 showBalanceCards(!balancesVisible)
@@ -88,9 +89,11 @@ class BalancesFragment : Fragment(), NavigationInterface {
     }
 
     private fun showBalanceCards(status: Boolean) {
+
         toggleLink(status)
+        Utils.saveBoolean(BALANCE_LABEL, status, requireContext())
         balanceTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                if (status) R.drawable.ic_visibility_on else R.drawable.ic_visibility_off, 0, 0, 0
+            if (status) R.drawable.ic_visibility_on else R.drawable.ic_visibility_off, 0, 0, 0
         )
 
         if (status) {
@@ -113,7 +116,7 @@ class BalancesFragment : Fragment(), NavigationInterface {
         balancesRecyclerView.adapter = balancesAdapter
         balancesAdapter.showBalanceAmounts(true)
 
-        showBalanceCards(accounts.all { id == DUMMY })
+        showBalanceCards(Utils.getBoolean(BALANCE_LABEL, requireContext(), true))
         updateStackCard(accounts)
 
         accountList = accounts
@@ -170,7 +173,7 @@ class BalancesFragment : Fragment(), NavigationInterface {
 
         const val STACK_OVERLAY_GAP = 10
         const val ROTATE_UPSIDE_DOWN = 180f
-
+        private const val BALANCE_LABEL: String = "showBalance"
         private var SHOW_ADD_ANOTHER_ACCOUNT = false
     }
 }

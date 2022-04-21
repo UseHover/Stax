@@ -19,14 +19,14 @@
     </style>
 
     <style name="StaxTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/brightBlue</item>
 
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
         <item name="colorOnPrimary">@color/offWhite</item>
 
         <item name="colorAccent">@color/brightBlue</item>
-        <item name="colorSecondary">@color/brightBlue</item>
+        <item name="colorSecondary">@color/colorPrimary</item>
         <item name="colorSecondaryVariant">@color/brightBlue</item>
         <item name="colorOnSecondary">@color/cardViewColor</item>
 
@@ -51,6 +51,10 @@
         <item name="android:buttonStyle">@style/StaxButton</item>
         <item name="buttonStyle">@style/StaxButton</item>
 
+        <!-- font -->
+        <item name="android:fontFamily">@font/brutalista_regular</item>
+        <item name="fontFamily">@font/brutalista_regular</item>
+
         <!-- Fab and dropdowns -->
         <item name="android:popupMenuStyle">@style/StaxPopupMenu</item>
         <item name="popupMenuStyle">@style/StaxPopupMenu</item>
@@ -62,8 +66,5 @@
         <item name="snackbarButtonStyle">@style/StaxButton</item>
         <item name="snackbarTextViewStyle">@style/StaxSnackbarText</item>
     </style>
-
-    <style name="SplashTheme" parent="StaxTheme">
-        <item name="android:windowBackground">@drawable/splash_window_background</item>
-    </style>
+    
 </resources>

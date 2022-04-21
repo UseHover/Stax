@@ -8,20 +8,19 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.common.SignInButton
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentBountyEmailBinding
 import com.hover.stax.home.MainActivity
-import com.hover.stax.home.NavigationInterface
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.settings.SettingsFragment
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
+import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
-class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListener {
+class BountyEmailFragment : Fragment(), View.OnClickListener {
 
     private var _binding: FragmentBountyEmailBinding? = null
     private val binding get() = _binding!!
@@ -38,10 +37,7 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnSignIn.apply {
-            setSize(SignInButton.SIZE_WIDE)
-            setOnClickListener(this@BountyEmailFragment)
-        }
+        binding.btnSignIn.setOnClickListener(this@BountyEmailFragment)
 
         binding.progressIndicator.setVisibilityAfterHide(View.GONE)
         binding.instructions.movementMethod = LinkMovementMethod.getInstance()
@@ -50,17 +46,8 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
 
     private fun startObservers() {
         with(loginViewModel) {
-            val emailObserver = object : Observer<String?> {
-                override fun onChanged(t: String?) {
-                    Timber.e("Got email from Google $t")
-                }
-            }
-
-            val usernameObserver = object : Observer<String?> {
-                override fun onChanged(t: String?) {
-                    Timber.e("Got username : $t")
-                }
-            }
+            val emailObserver = Observer<String?> { t -> Timber.e("Got email from Google $t") }
+            val usernameObserver = Observer<String?> { t -> Timber.e("Got username : $t") }
 
             progress.observe(viewLifecycleOwner) { updateProgress(it) }
             error.observe(viewLifecycleOwner) { it?.let { showError(it) } }
@@ -92,7 +79,7 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
         }
     }
 
-    private fun complete() = findNavController().navigate(R.id.action_bountyEmailFragment_to_bountyListFragment)
+    private fun complete() = NavUtil.navigate(findNavController(), BountyEmailFragmentDirections.actionBountyEmailFragmentToBountyListFragment())
 
     private fun showError(message: String) {
         updateProgress(-1)
@@ -101,16 +88,16 @@ class BountyEmailFragment : Fragment(), NavigationInterface, View.OnClickListene
 
     private fun showDialog(title: Int, msg: String, btn: Int) {
         dialog = StaxDialog(requireActivity())
-                .setDialogMessage(msg)
-                .setPosButton(btn, null)
-                .makeSticky()
+            .setDialogMessage(msg)
+            .setPosButton(btn, null)
+            .makeSticky()
 
         if (title != 0)
             dialog?.setDialogTitle(title)
 
         dialog!!.showIt()
     }
-    
+
     override fun onDestroyView() {
         super.onDestroyView()
         if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()

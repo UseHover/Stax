@@ -26,7 +26,7 @@ class AccountDetailViewModel(val application: Application, val repo: DatabaseRep
     init {
         account = Transformations.switchMap(id, repo::getLiveAccount)
         channel = Transformations.switchMap(account) { it?.let { repo.getLiveChannel(it.channelId) } }
-        transactions = Transformations.switchMap(account, repo::getAccountTransactions)
+        transactions = Transformations.switchMap(account) { it?.let { repo.getAccountTransactions(it) } }
         actions = Transformations.switchMap(id, repo::getChannelActions)
         spentThisMonth = Transformations.switchMap(id, this::loadSpentThisMonth)
         feesThisYear = Transformations.switchMap(id, this::loadFeesThisYear)
@@ -35,7 +35,7 @@ class AccountDetailViewModel(val application: Application, val repo: DatabaseRep
     fun setAccount(accountId: Int) = id.postValue(accountId)
 
     private fun loadSpentThisMonth(id: Int): LiveData<Double>? =
-            repo.getSpentAmount(id, calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR))
+        repo.getSpentAmount(id, calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR))
 
     private fun loadFeesThisYear(id: Int): LiveData<Double>? = repo.getFees(id, calendar.get(Calendar.YEAR))
 

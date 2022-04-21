@@ -75,7 +75,7 @@ data class Account(
     override fun toString() = buildString {
         append(alias)
 
-        if (accountNo != null) {
+        if (!accountNo.isNullOrEmpty()) {
             append(" - ")
             append(accountNo)
         }

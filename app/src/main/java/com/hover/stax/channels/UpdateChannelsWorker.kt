@@ -47,7 +47,6 @@ class UpdateChannelsWorker(context: Context, params: WorkerParameters) : Corouti
 
     private val url get() = applicationContext.getString(R.string.api_url).plus(applicationContext.getString(R.string.channels_endpoint))
 
-    @Throws(IOException::class, JSONException::class)
     private fun downloadChannels(url: String): JSONObject? {
         val request: Request = Request.Builder().url(url).build()
         val response: Response = client.newCall(request).execute()

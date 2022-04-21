@@ -35,17 +35,18 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_18"
                     android:layout_marginEnd="@dimen/margin_13"
-                    android:fontFamily="font-bold"
+                    app:fontFamily="@font/brutalista_bold"
                     android:gravity="end"
                     android:paddingHorizontal="@dimen/margin_10"
-                    android:text="@string/bal_cardhead"
+                    tools:text="@string/financial_wellness_tips"
                     android:textAlignment="viewEnd"
                     android:textAllCaps="true"
                     android:textColor="@color/offWhite"
                     android:textSize="@dimen/text_16"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/backButton"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="@id/backButton"
+                    app:layout_constraintBottom_toBottomOf="@id/backButton"/>
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/financialTips"
@@ -77,7 +78,6 @@
                         android:id="@+id/contentText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="font-normal"
                         android:textSize="@dimen/text_16" />
 
                 <Button

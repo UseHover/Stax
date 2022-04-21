@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.hover.stax.R
@@ -17,22 +18,37 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initGoogleAuth()
+
+        setLoginObserver()
     }
 
     fun setGoogleLoginInterface(staxGoogleLoginInterface: StaxGoogleLoginInterface) {
         this.staxGoogleLoginInterface = staxGoogleLoginInterface
     }
-    
+
     private fun initGoogleAuth() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.google_server_client_id))
-                .requestEmail()
-                .build()
+            .requestIdToken(getString(R.string.google_server_client_id))
+            .requestEmail()
+            .build()
         loginViewModel.signInClient = GoogleSignIn.getClient(this, gso)
     }
 
-    fun signIn(optInMarketing: Boolean? = false) = startActivityForResult(loginViewModel.signInClient.signInIntent,
-            if (optInMarketing!!) LOGIN_REQUEST_OPT_IN_MARKETING else LOGIN_REQUEST)
+    private fun setLoginObserver() = with(loginViewModel) {
+        error.observe(this@AbstractGoogleAuthActivity) {
+            it?.let { staxGoogleLoginInterface.googleLoginFailed() }
+        }
+
+        user.observe(this@AbstractGoogleAuthActivity) {
+            it?.let { staxGoogleLoginInterface.googleLoginSuccessful() }
+        }
+    }
+
+    fun signIn(optInMarketing: Boolean? = false) =
+        startActivityForResult(
+            loginViewModel.signInClient.signInIntent,
+            if (optInMarketing!!) LOGIN_REQUEST_OPT_IN_MARKETING else LOGIN_REQUEST
+        )
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -40,14 +56,10 @@ abstract class AbstractGoogleAuthActivity : AppCompatActivity() {
         if (resultCode == RESULT_OK) {
             if (requestCode == LOGIN_REQUEST) {
                 val checkBox = findViewById<MaterialCheckBox>(R.id.marketingOptIn)
-                loginViewModel.signIntoFirebaseAsync(data, checkBox?.isChecked ?: false, this)
+                loginViewModel.signIntoGoogle(data, checkBox?.isChecked ?: false)
             } else if (requestCode == LOGIN_REQUEST_OPT_IN_MARKETING) {
-                loginViewModel.signIntoFirebaseAsync(data, true, this)
+                loginViewModel.signIntoGoogle(data, true)
             }
-
-            staxGoogleLoginInterface.googleLoginSuccessful()
-        } else {
-            staxGoogleLoginInterface.googleLoginFailed()
         }
     }
 

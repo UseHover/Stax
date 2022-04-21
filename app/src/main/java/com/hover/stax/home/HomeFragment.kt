@@ -1,21 +1,21 @@
 package com.hover.stax.home
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
+import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentHomeBinding
 import com.hover.stax.financialTips.FinancialTip
-import com.hover.stax.financialTips.FinancialTipsFragment
 import com.hover.stax.financialTips.FinancialTipsViewModel
 import com.hover.stax.inapp_banner.BannerViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
+import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.Utils
 import com.hover.stax.utils.network.NetworkMonitor
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -41,8 +41,8 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupBanner()
 
-        binding.airtime.setOnClickListener { navigateTo(Constants.NAV_AIRTIME, requireActivity()) }
-        binding.transfer.setOnClickListener { navigateTo(Constants.NAV_TRANSFER, requireActivity()) }
+        binding.airtime.setOnClickListener { navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationTransfer(HoverAction.AIRTIME)) }
+        binding.transfer.setOnClickListener { navigateTo(HomeFragmentDirections.actionNavigationHomeToNavigationTransfer(HoverAction.P2P)) }
 
         NetworkMonitor.StateLiveData.get().observe(viewLifecycleOwner) {
             updateOfflineIndicator(it)
@@ -53,7 +53,7 @@ class HomeFragment : Fragment() {
 
     private fun setupBanner() {
         with(bannerViewModel) {
-            qualifiedBanner().observe(viewLifecycleOwner) { banner ->
+            qualifiedBanner.observe(viewLifecycleOwner) { banner ->
                 if (banner != null) {
                     AnalyticsUtil.logAnalyticsEvent(getString(R.string.displaying_in_app_banner, banner.id), requireContext())
                     binding.homeBanner.visibility = View.VISIBLE
@@ -79,11 +79,15 @@ class HomeFragment : Fragment() {
         binding.paybill.apply {
             if (!countries.isNullOrEmpty() && countries.any { it.contentEquals("KE", ignoreCase = true) }) {
                 visibility = View.VISIBLE
-                setOnClickListener { navigateTo(Constants.NAV_PAYBILL, requireActivity()) }
+                setOnClickListener {
+                    navigateTo(HomeFragmentDirections.actionNavigationHomeToPaybillFragment(false))
+                }
             } else
                 visibility = View.GONE
         }
     }
+
+    private fun navigateTo(navDirections: NavDirections) = (requireActivity() as MainActivity).checkPermissionsAndNavigate(navDirections)
 
     private fun updateOfflineIndicator(isConnected: Boolean) {
         binding.offlineBadge.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_internet_off, 0, 0, 0)
@@ -106,14 +110,14 @@ class HomeFragment : Fragment() {
                     tipsCard.visibility = View.VISIBLE
 
                     title.text = tip.title
-                    snippet.text = tip.snippet ?: tip.content
+                    snippet.text = tip.snippet
 
                     contentLayout.setOnClickListener {
-                        findNavController().navigate(R.id.action_navigation_home_to_wellnessFragment, bundleOf(FinancialTipsFragment.TIP_ID to tip.id))
+                        NavUtil.navigate(findNavController(), HomeFragmentDirections.actionNavigationHomeToWellnessFragment(tip.id))
                     }
 
                     readMoreLayout.setOnClickListener {
-                        findNavController().navigate(R.id.action_navigation_home_to_wellnessFragment)
+                        NavUtil.navigate(findNavController(), HomeFragmentDirections.actionNavigationHomeToWellnessFragment(null))
                     }
                 }
             } else
@@ -124,12 +128,5 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        fun navigateTo(destination: Int, activity: Activity) {
-            val a = activity as? MainActivity
-            a?.checkPermissionsAndNavigate(destination)
-        }
     }
 }
