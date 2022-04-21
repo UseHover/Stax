@@ -58,12 +58,6 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
         startBackgroundProcesses()
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        AppsFlyerLib.getInstance().start(this)
-    }
-
     private fun startBackgroundProcesses() {
         with(channelsViewModel) {
             accounts.observe(this@RoutingActivity) { hasAccounts = it.isNotEmpty() }
@@ -115,7 +109,7 @@ class RoutingActivity : AppCompatActivity(), BiometricChecker.AuthListener, Push
 
     private fun initHover() {
         Hover.initialize(this)
-        Hover.setBranding(getString(R.string.app_name), R.mipmap.stax, this)
+        Hover.setBranding(getString(R.string.app_name), R.mipmap.stax, R.drawable.ic_stax, this)
         Hover.setPermissionActivity(Constants.PERM_ACTIVITY, this)
     }
 

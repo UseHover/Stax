@@ -7,6 +7,9 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import com.google.firebase.messaging.FirebaseMessaging
 import com.hover.sdk.api.Hover
 import com.hover.stax.R
@@ -247,4 +250,13 @@ object Utils {
         else
             UIHelper.flashMessage(c, c.getString(R.string.enable_call_permission))
     }
+
+//    fun <T> LiveData<T>.observeOnce(owner: LifecycleOwner, observer: (T) -> Unit) {
+//        observe(owner, object: Observer<T> {
+//            override fun onChanged(value: T) {
+//                removeObserver(this)
+//                observer(value)
+//            }
+//        })
+//    }
 }

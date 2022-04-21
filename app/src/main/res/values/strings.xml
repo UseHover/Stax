@@ -674,6 +674,10 @@
     <string name="btn_update">Update</string>
 
     <string name="btn_not_now">Not Now</string>
+    <string name="join_mappers">Become A Mapper</string>
 
+    <!-- marketing login prompt dialog -->
+    <string name="login_dialog_title">Sign In</string>
+    <string name="login_dialog_desc">Please sign in to Stax with Google to be able to receive marketing updates.</string>
 
 </resources>

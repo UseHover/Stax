@@ -1,6 +1,7 @@
 package com.hover.stax.login
 
 import android.content.Context
+import com.google.gson.JsonObject
 import com.hover.sdk.api.Hover
 import com.hover.stax.R
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -17,38 +18,12 @@ class LoginNetworking(private val context: Context) {
 
     private val client = OkHttpClient()
 
-    fun uploadUserToStax(email: String, username: String?, optedIn: Boolean, token: String?): Response {
-        return post(context.getString(R.string.api_url) + context.getString(R.string.users_endpoint), getUserJson(email, username, optedIn, token))
+    fun uploadUserToStax(data: JSONObject): Response {
+        return post(context.getString(R.string.api_url).plus(context.getString(R.string.users_endpoint)), wrapJson(data))
     }
 
-    fun uploadReferee(email: String, referralCode: String, name: String, phone: String, token: String?): Response {
-        return put(context.getString(R.string.api_url) + context.getString(R.string.users_endpoint) + "/" + email, getReferralJson(email, referralCode, name, phone, token))
-    }
-
-    private fun getUserJson(email: String, username: String?, optedIn: Boolean, token: String?): JSONObject {
-        val userJson = JSONObject()
-            .apply {
-                put("email", email)
-                put("username", username)
-                put("device_id", Hover.getDeviceId(context))
-                put("is_mapper", true)
-                put("marketing_opted_in", optedIn)
-                put("token", token)
-            }
-
-        return wrapJson(userJson)
-    }
-
-    private fun getReferralJson(email: String, referralCode: String, name: String, phone: String, token: String?): JSONObject {
-        val userJson = JSONObject()
-            .apply {
-                put("email", email)
-                put("referee_id", referralCode)
-                put("name", name)
-                put("phone", phone)
-                put("token", token)
-            }
-        return wrapJson(userJson)
+    fun updateUser(email: String, data: JSONObject): Response {
+        return put(context.getString(R.string.api_url) + context.getString(R.string.users_endpoint) + "/" + email, wrapJson(data))
     }
 
     private fun post(url: String, json: JSONObject): Response {
