@@ -68,8 +68,10 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         handleBackPress()
     }
 
-    private fun setDefaultHelperText() = requesterNumberInput.setState(getString(R.string.account_num_desc),
-            AbstractStatefulInput.NONE)
+    private fun setDefaultHelperText() = requesterNumberInput.setState(
+        getString(R.string.account_num_desc),
+        AbstractStatefulInput.NONE
+    )
 
     override fun init(root: View) {
         amountInput = binding.editRequestCard.cardAmount.amountInput
@@ -86,22 +88,15 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         accountDropdown.setFetchAccountListener(this)
     }
 
-    override fun onResume() {
-        super.onResume()
-        channelsViewModel.loadAccounts()
-    }
-
     override fun startObservers(root: View) {
         super.startObservers(root)
 
         //This is to prevent the SAM constructor from being compiled to singleton causing breakages. See
         //https://stackoverflow.com/a/54939860/2371515
-        val channelsObserver = object : Observer<Channel?> {
-            override fun onChanged(channel: Channel?) {
-                channel?.let {
-                    requestViewModel.setActiveChannel(it)
-                    accountValue.setTitle(it.toString())
-                }
+        val channelsObserver = Observer<Channel?> { c ->
+            c?.let {
+                requestViewModel.setActiveChannel(it)
+                accountValue.setTitle(it.toString())
             }
         }
 
@@ -109,7 +104,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
             accounts.observe(viewLifecycleOwner) {
                 //no channels selected. navigate user to accounts fragment
                 if (it.isNullOrEmpty())
-                    setDropdownTouchListener(R.id.action_navigation_request_to_accountsFragment)
+                    setDropdownTouchListener(NewRequestFragmentDirections.actionNavigationRequestToAccountsFragment())
             }
             activeChannel.observe(viewLifecycleOwner, channelsObserver)
         }
@@ -160,8 +155,8 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         requesterNumberInput.addTextChangedListener(receivingAccountNumberWatcher)
         requesterNumberInput.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             if (!hasFocus) requesterNumberInput.setState(
-                    null,
-                    if (requestViewModel.requesterAcctNoError() == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.NONE
+                null,
+                if (requestViewModel.requesterAcctNoError() == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.NONE
             )
         }
         noteInput.addTextChangedListener(noteWatcher)
@@ -241,10 +236,12 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         val recipientError = requestViewModel.requesteeErrors()
         requesteeInput.setState(recipientError, if (recipientError == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR)
 
-        if (!requestViewModel.isValidAccount()) {
-            accountDropdown.setState(getString(R.string.incomplete_account_setup_header), AbstractStatefulInput.ERROR)
-            fetchAccounts(requestViewModel.activeAccount.value!!)
-            return false
+        requestViewModel.activeAccount.value?.let {
+            if (!requestViewModel.isValidAccount()) {
+                accountDropdown.setState(getString(R.string.incomplete_account_setup_header), AbstractStatefulInput.ERROR)
+                fetchAccounts(it)
+                return false
+            }
         }
 
         return accountError == null && requesterAcctNoError == null && recipientError == null
@@ -272,10 +269,10 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
 
     private fun askAreYouSure() {
         requestDialog = StaxDialog(requireActivity())
-                .setDialogTitle(R.string.reqsave_head)
-                .setDialogMessage(R.string.reqsave_msg)
-                .setPosButton(R.string.btn_save) { saveUnsent() }
-                .setNegButton(R.string.btn_dontsave) { (activity as MainActivity).cancel() }
+            .setDialogTitle(R.string.reqsave_head)
+            .setDialogMessage(R.string.reqsave_msg)
+            .setPosButton(R.string.btn_save) { saveUnsent() }
+            .setNegButton(R.string.btn_dontsave) { (activity as MainActivity).cancel() }
         requestDialog!!.showIt()
     }
 

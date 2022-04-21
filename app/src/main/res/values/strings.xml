@@ -24,7 +24,6 @@
     <string name="channels_json_prod" translatable="false">channels-prod.json</string>
     <string name="stax_handle" translatable="false">\@joinstax</string>
 
-
     <string name="nav_home">Home</string>
     <string name="nav_balance_and_history">Balance and history</string>
     <string name="nav_balances">Balances</string>
@@ -161,14 +160,32 @@
     <string name="add_an_account">Add an account</string>
     <string name="add_accounts_to_stax">Add accounts to Stax</string>
 
+    <string name="search">Search</string>
+    <string name="no_accounts_found_desc"><![CDATA[ It looks like "<b><font color="#39CBFC"> %1$s </font> </b>" has not been listed on Stax yet or its an invalid entry.<br/>Try searching for something else.]]></string>
+    <string name="cant_find_institution">Can\'t find your financial institution?</string>
+    <string name="inform_us_here">Inform us here</string>
+
+    <string name="enter_institution_name">Enter bank/mobile money name</string>
+    <string name="enter_shortcode">Enter shortcode</string>
+    <string name="inform_stax_desc">Inform Us</string>
+    <string name="enter_financial_inst_err">Enter financial institution name</string>
+    <string name="enter_shortcode_err">Enter the accurate shortcode</string>
+    <string name="thank_you">Thank you</string>
+    <string name="service_request_success_desc">Rest assured the Stax team will review and get right to adding this service soon</string>
+
     <string name="nickname">Nickname</string>
     <string name="label_saved">Saved</string>
     <string name="account_number_label">Account number</string>
     <string name="hint_enter_new_name">Enter a new name</string>
 
+
     <string name="official_name">Official name</string>
     <string name="which_account">Which account?</string>
     <string name="account_select_header">You have more than one %1$s account. Please choose which one you want to use to %2$s.</string>
+    <string name="importing_channels">Importing channels, please wait</string>
+
+    <string name="incomplete_account_setup_header">Incomplete account setup</string>
+    <string name="incomplete_account_setup_desc">Your %1$s account has not been fully set up. We need to fetch your accounts before you can proceed. Please run check balance to complete setup.</string>
 
     <!-- Permissions -->
     <string name="permissions_title">Permissions needed</string>
@@ -220,6 +237,7 @@
     <string name="invalid_entry_desc">One of your inputs was invalid, see session details below to see what went wrong. Make sure any amounts, phone numbers, or account numbers are correct. See session details below.</string>
     <string name="mmi_error_desc">Your network returned an error, please try again. If this happens a lot please contact your network provider or money service to complain.</string>
     <string name="unspecified_error_desc">Unknown error, see details below to find out what went wrong. Please try again.</string>
+    <string name="action_run_error">Error running action. Please try again.</string>
 
     <!-- SDK Overrides -->
     <string name="hsdk_overlay_msg"><![CDATA[<font color="#1E232A">Show progress updates by turning <b>switch ON</b> in the next screen.</font>]]></string>
@@ -403,7 +421,7 @@
     <string name="share_msg">Check out this app https://play.google.com/store/apps/details?id=com.hover.stax</string>
     <string name="connect_accounts">Connect your accounts</string>
 
-    <string name="login_google_err">Could not connect to Google, please make sure you are online and try again.</string>
+    <string name="login_google_err">An error occurred while signing in to Google. Please try again.</string>
     <string name="referral_text">Your code:</string>
     <string name="referral_label">Agent\'s code</string>
     <string name="privacy_policy_label">By using Stax App, you\'ve read our privacy policy and agree to the terms of service. Click to read</string>
@@ -428,11 +446,9 @@
     <string name="defaultacct_label">Default account</string>
     <string name="manage_account">Manage Account</string>
     <string name="security_head">Secure with Stax</string>
-    <string name="btn_removepins">Remove PINs</string>
-    <string name="removepins_dialoghead">Remove all PINs now</string>
-    <string name="removepin_dialoghead">Remove %1$s PIN now</string>
+    <string name="removeaccount_dialoghead">Remove %1$s now</string>
     <string name="btn_removeaccount">Remove account</string>
-    <string name="removepins_dialogmes">You can add your account to Stax again at any time.</string>
+    <string name="removeaccount_msg">You can add your account to Stax again at any time.</string>
     <string name="toast_confirm_removepin">PIN removed successfully</string>
     <string name="btn_savepin">Save PIN</string>
     <string name="btn_editpin">Edit PIN</string>
@@ -656,9 +672,7 @@
     <string name="paybill_update_msg">Are you sure you want to update %1$s?</string>
     <string name="paybill_update_success">Paybill updated successfully</string>
     <string name="btn_update">Update</string>
-    <string name="importing_channels">Importing channels, please wait</string>
-    <string name="incomplete_account_setup_header">Incomplete account setup</string>
-    <string name="incomplete_account_setup_desc">Your %1$s account has not been fully set up. We need to fetch your accounts before you can proceed. Please run check balance to complete setup.</string>
+
     <string name="btn_not_now">Not Now</string>
 
 

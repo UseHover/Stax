@@ -1,4 +1,4 @@
-package com.hover.stax.library
+package com.hover.stax.ussd_library
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,7 +8,7 @@ import com.hover.stax.channels.Channel
 import com.hover.stax.databinding.LibraryListItemBinding
 import com.hover.stax.utils.Utils
 
-class ChannelsAdapter(private val channelList: List<Channel>) : RecyclerView.Adapter<ChannelsAdapter.ViewHolder>() {
+class LibraryChannelsAdapter(private val channelList: List<Channel>) : RecyclerView.Adapter<LibraryChannelsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = LibraryListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)

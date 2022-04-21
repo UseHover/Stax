@@ -2,8 +2,44 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/mobile_navigation"
+        android:id="@+id/mainNavigation"
         app:startDestination="@+id/navigation_home">
+
+    <action
+            android:id="@+id/action_global_NavigationRequest"
+            app:destination="@id/navigation_request" />
+
+    <action
+            android:id="@+id/action_global_NavigationSettings"
+            app:destination="@id/navigation_settings" />
+
+    <action
+            android:id="@+id/action_global_LibraryFragment"
+            app:destination="@id/libraryFragment" />
+
+    <action
+            android:id="@+id/action_global_WellnessFragment"
+            app:destination="@id/tipsFragment" />
+
+    <action
+            android:id="@+id/action_global_NavigationBalance"
+            app:destination="@id/navigation_balance" />
+
+    <action
+            android:id="@+id/action_global_NavigationHome"
+            app:destination="@id/navigation_home" />
+
+    <action
+            android:id="@+id/action_global_TransferFragment"
+            app:destination="@id/navigation_transfer" />
+
+    <action
+            android:id="@+id/action_global_AddChannelsFragment"
+            app:destination="@id/navigation_linkAccount" />
+
+    <action
+            android:id="@+id/action_global_PaybillFragment"
+            app:destination="@id/paybillFragment" />
 
     <fragment
             android:id="@+id/navigation_home"
@@ -27,7 +63,7 @@
                 app:destination="@id/paybillFragment" />
         <action
                 android:id="@+id/action_navigation_home_to_wellnessFragment"
-                app:destination="@id/wellnessFragment" />
+                app:destination="@id/tipsFragment" />
 
     </fragment>
 
@@ -35,21 +71,34 @@
             android:id="@+id/navigation_balance"
             android:name="com.hover.stax.balances.BalancesFragment"
             android:label="@string/nav_balance_and_history"
-            tools:layout="@layout/fragment_balance" />
+            tools:layout="@layout/fragment_balance">
+        <deepLink
+                android:id="@+id/balanceDL"
+                app:mimeType="text/plain"
+                android:autoVerify="true"
+                app:uri="stax.me/balance" />
+        <deepLink
+                android:id="@+id/historyDL"
+                app:mimeType="text/plain"
+                android:autoVerify="true"
+                app:uri="stax.me/history" />
+    </fragment>
 
     <fragment
             android:id="@+id/navigation_linkAccount"
             android:name="com.hover.stax.channels.AddChannelsFragment"
             android:label="@string/nav_link_account"
             tools:layout="@layout/fragment_add_channels">
-        <argument
-                android:name="force_return_data"
-                app:argType="boolean" />
         <action
                 android:id="@+id/action_navigation_linkAccount_to_navigation_home"
                 app:destination="@id/navigation_home"
                 app:popUpTo="@id/navigation_home"
                 app:popUpToInclusive="true" />
+        <deepLink
+                android:id="@+id/linkAccountDL"
+                app:mimeType="text/plain"
+                android:autoVerify="true"
+                app:uri="stax.me/linkaccount" />
     </fragment>
 
     <fragment
@@ -74,7 +123,11 @@
                 app:destination="@id/navigation_linkAccount" />
         <action
                 android:id="@+id/action_navigation_settings_to_wellnessFragment"
-                app:destination="@id/wellnessFragment" />
+                app:destination="@id/tipsFragment" />
+        <deepLink
+                android:id="@+id/settingsDL"
+                app:mimeType="text/plain"
+                app:uri="stax.me/settings" />
     </fragment>
 
     <fragment
@@ -129,7 +182,7 @@
     <fragment
             android:id="@+id/accountDetailsFragment"
             android:name="com.hover.stax.accounts.AccountDetailFragment"
-            android:label="ChannelsDetailsFragment"
+            android:label="AccountDetailsFragment"
             tools:layout="@layout/fragment_account">
         <argument
                 android:name="accountId"
@@ -149,9 +202,15 @@
 
     <fragment
             android:id="@+id/libraryFragment"
-            android:name="com.hover.stax.library.LibraryFragment"
+            android:name="com.hover.stax.ussd_library.LibraryFragment"
             android:label="USSD Library"
-            tools:layout="@layout/fragment_library" />
+            tools:layout="@layout/fragment_library">
+        <deepLink
+                android:id="@+id/libDL"
+                app:mimeType="text/plain"
+                android:autoVerify="true"
+                app:uri="stax.me/lib" />
+    </fragment>
 
     <fragment
             android:id="@+id/languageSelectFragment"
@@ -178,6 +237,14 @@
                 app:destination="@id/navigation_home"
                 app:popUpTo="@id/navigation_home"
                 app:popUpToInclusive="true" />
+        <argument
+                android:name="transactionType"
+                app:argType="string" />
+        <deepLink
+                android:id="@+id/transferDL"
+                app:mimeType="text/plain"
+                android:autoVerify="true"
+                app:uri="stax.me/transfer/{transactionType}" />
     </fragment>
     <fragment
             android:id="@+id/accountsFragment"
@@ -206,10 +273,14 @@
             android:name="com.hover.stax.requests.NewRequestFragment"
             android:label="@string/nav_request"
             tools:layout="@layout/fragment_request">
-
         <action
                 android:id="@+id/action_navigation_request_to_accountsFragment"
                 app:destination="@id/accountsFragment" />
+        <deepLink
+                android:id="@+id/requestDL"
+                app:mimeType="text/plain"
+                android:autoVerify="true"
+                app:uri="stax.me/request" />
     </fragment>
 
     <fragment
@@ -243,20 +314,32 @@
                 app:popUpToInclusive="true" />
     </fragment>
     <fragment
-            android:id="@+id/wellnessFragment"
+            android:id="@+id/tipsFragment"
             android:name="com.hover.stax.financialTips.FinancialTipsFragment"
             android:label="WellnessFragment">
+        <argument
+                android:name="tipId"
+                app:argType="string"
+                app:nullable="true" />
         <action
-                android:id="@+id/action_wellnessFragment_to_navigation_home"
+                android:id="@+id/action_tipsFragment_to_navigation_home"
                 app:destination="@id/navigation_home"
                 app:popUpTo="@id/navigation_home"
                 app:popUpToInclusive="true" />
+        <deepLink
+                android:id="@+id/tipsDL"
+                app:mimeType="text/plain"
+                android:autoVerify="true"
+                app:uri="stax.me/financialTips?id={tipId}" />
     </fragment>
     <fragment
             android:id="@+id/paybillFragment"
             android:name="com.hover.stax.paybill.PaybillFragment"
             android:label="@string/cta_paybill"
             tools:layout="@layout/fragment_paybill">
+        <argument
+                android:name="updateBusiness"
+                app:argType="boolean" />
         <action
                 android:id="@+id/action_paybillFragment_to_paybillListFragment"
                 app:destination="@id/paybillListFragment" />
@@ -273,6 +356,9 @@
                 app:destination="@id/paybillFragment"
                 app:popUpTo="@id/paybillFragment"
                 app:popUpToInclusive="true" />
+        <argument
+                android:name="accountId"
+                app:argType="integer" />
     </fragment>
 
 </navigation>

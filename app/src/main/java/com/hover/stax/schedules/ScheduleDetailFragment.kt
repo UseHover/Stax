@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.hover.stax.R
@@ -26,6 +27,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class ScheduleDetailFragment : Fragment() {
 
     private val viewModel: ScheduleDetailViewModel by viewModel()
+    private val args: ScheduleDetailFragmentArgs by navArgs()
 
     private var _binding: FragmentScheduleBinding? = null
     private val binding get() = _binding!!
@@ -63,7 +65,7 @@ class ScheduleDetailFragment : Fragment() {
     private fun logAnalytics() {
         val data = JSONObject()
         try {
-            data.put("id", arguments?.getInt("id"))
+            data.put("id", args.id)
         } catch (ignored: JSONException) {
         }
 

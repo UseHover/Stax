@@ -10,14 +10,13 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.NavDeepLinkBuilder
+import com.appsflyer.AppsFlyerLib
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.hover.stax.R
-import com.hover.stax.RoutingActivity
 import com.hover.stax.financialTips.FinancialTipsFragment
 import com.hover.stax.home.MainActivity
 import com.hover.stax.utils.Constants
-import com.hover.stax.utils.DateUtils
 import timber.log.Timber
 import kotlin.random.Random
 
@@ -26,17 +25,22 @@ class MessagingService : FirebaseMessagingService() {
     override fun onNewToken(newToken: String) {
         super.onNewToken(newToken)
         Timber.i("New token received: $newToken")
-        // update token on backend if used for notifications
+        AppsFlyerLib.getInstance().updateServerUninstallToken(applicationContext, newToken)
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
         val data = message.data
-        val redirect = data["redirect"]
 
-        if (message.notification != null) {
-            showNotification(message.notification!!.title!!, message.notification!!.body!!, redirect)
-        } else {
-            showNotification(data["title"]!!, data["body"]!!, redirect)
+        if (data.containsKey("af-uinstall-tracking")) //ensures uninstall notifications remain silent
+            return
+        else {
+            val redirect = data["redirect"]
+
+            if (message.notification != null) {
+                showNotification(message.notification!!.title!!, message.notification!!.body!!, redirect)
+            } else {
+                showNotification(data["title"]!!, data["body"]!!, redirect)
+            }
         }
     }
 
@@ -78,7 +82,7 @@ class MessagingService : FirebaseMessagingService() {
 
             NavDeepLinkBuilder(this)
                 .setGraph(R.navigation.home_navigation)
-                .setDestination(R.id.wellnessFragment)
+                .setDestination(R.id.tipsFragment)
                 .setArguments(bundleOf(FinancialTipsFragment.TIP_ID to tipId))
                 .setComponentName(MainActivity::class.java)
                 .createPendingIntent()

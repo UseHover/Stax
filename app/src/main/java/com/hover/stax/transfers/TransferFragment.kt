@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.actions.ActionSelect
@@ -33,6 +34,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private val actionSelectViewModel: ActionSelectViewModel by sharedViewModel()
     private lateinit var transferViewModel: TransferViewModel
 
+    private val args by navArgs<TransferFragmentArgs>()
+
     private lateinit var amountInput: StaxTextInputLayout
     private lateinit var recipientInstitutionSelect: ActionSelect
     private lateinit var contactInput: ContactInput
@@ -48,7 +51,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         abstractFormViewModel = getSharedViewModel<TransferViewModel>()
         transferViewModel = abstractFormViewModel as TransferViewModel
 
-        setTransactionType(requireArguments().getString(Constants.TRANSACTION_TYPE)!!)
+        setTransactionType(args.transactionType)
         _binding = FragmentTransferBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -60,8 +63,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     override fun onResume() {
         super.onResume()
-
-        channelsViewModel.loadAccounts()
 
         amountInput.setHint(getString(R.string.transfer_amount_label))
         accountDropdown.setHint(getString(R.string.account_label))
@@ -155,7 +156,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     private fun observeAccountList() {
         channelsViewModel.accounts.observe(viewLifecycleOwner) {
             if (it.isEmpty())
-                setDropdownTouchListener(R.id.action_navigation_transfer_to_accountsFragment)
+                setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
         }
     }
 
@@ -207,7 +208,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             addTextChangedListener(amountWatcher)
             setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus)
-                    this.setState(null,
+                    this.setState(
+                        null,
                         if (transferViewModel.amountErrors() == null) AbstractStatefulInput.SUCCESS else AbstractStatefulInput.ERROR
                     )
                 else
@@ -278,10 +280,12 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
         val noNonStandardVarError = nonStandardVariableAdapter?.validates() ?: true
 
-        if (!channelsViewModel.isValidAccount()) {
-            accountDropdown.setState(getString(R.string.incomplete_account_setup_header), AbstractStatefulInput.ERROR)
-            fetchAccounts(channelsViewModel.activeAccount.value!!)
-            return false
+        channelsViewModel.activeAccount.value?.let {
+            if (!channelsViewModel.isValidAccount()) {
+                accountDropdown.setState(getString(R.string.incomplete_account_setup_header), AbstractStatefulInput.ERROR)
+                fetchAccounts(it)
+                return false
+            }
         }
 
         return channelError == null && actionError == null && amountError == null && recipientError == null && noNonStandardVarError
@@ -351,6 +355,5 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     override fun nonStandardVarUpdate(key: String, value: String) {
         actionSelectViewModel.updateNonStandardVariables(key, value)
-//        nonStandardVarSummaryAdapter.updateList(this.key, this.value ?: "")
     }
 }

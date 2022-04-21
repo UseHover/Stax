@@ -8,6 +8,7 @@ import com.hover.sdk.api.Hover.getSMSMessageByUUID
 import com.hover.stax.contacts.StaxContact
 import com.hover.stax.database.DatabaseRepo
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import timber.log.Timber
@@ -41,7 +42,7 @@ class TransactionDetailsViewModel(val repo: DatabaseRepo, val application: Appli
     else null
 
     fun setTransaction(uuid: String) = viewModelScope.launch(Dispatchers.IO) {
-        transaction.postValue(repo.getTransaction(uuid))
+        repo.getTransactionAsync(uuid).collect { transaction.postValue(it) }
     }
 
     private fun loadMessages(txn: StaxTransaction?) {

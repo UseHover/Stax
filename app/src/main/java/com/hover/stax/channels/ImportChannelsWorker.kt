@@ -7,6 +7,7 @@ import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.work.*
+import androidx.work.impl.utils.futures.SettableFuture
 import com.hover.stax.BuildConfig
 import com.hover.stax.R
 import com.hover.stax.database.AppDatabase
@@ -78,7 +79,7 @@ class ImportChannelsWorker(val context: Context, params: WorkerParameters) : Cor
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_stax)
             .setContentTitle(context.getString(R.string.importing_channels))
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
             .setAutoCancel(true)
 
         return builder.build()

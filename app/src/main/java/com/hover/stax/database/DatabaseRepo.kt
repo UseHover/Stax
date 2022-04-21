@@ -29,6 +29,7 @@ import com.hover.stax.transactions.TransactionDao
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.DateUtils.lastMonth
 import com.hover.stax.utils.paymentLinkCryptography.Encryption
+import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
 import java.security.NoSuchAlgorithmException
 
@@ -155,6 +156,8 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
     fun getTransaction(uuid: String?): StaxTransaction? {
         return transactionDao.getTransaction(uuid)
     }
+
+    fun getTransactionAsync(uuid: String): Flow<StaxTransaction> = transactionDao.getTransactionAsync(uuid)
 
     fun insertOrUpdateTransaction(intent: Intent, action: HoverAction, contact: StaxContact, c: Context) {
         AppDatabase.databaseWriteExecutor.execute {
@@ -307,7 +310,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
         AppDatabase.databaseWriteExecutor.execute { requestDao.delete(request) }
     }
 
-    val allAccountsLive: LiveData<List<Account>> = accountDao.getAllAccountsLive()
+//    val allAccountsLive: LiveData<List<Account>> = accountDao.getAllAccountsLive()
 
     fun getAllAccounts(): List<Account> = accountDao.getAllAccounts()
 
@@ -321,7 +324,7 @@ class DatabaseRepo(db: AppDatabase, sdkDb: HoverRoomDatabase) {
 
     fun getLiveAccount(id: Int): LiveData<Account> = accountDao.getLiveAccount(id)
 
-    fun getAccounts(): List<Account> = accountDao.getAccounts()
+    fun getAccounts(): Flow<List<Account>> = accountDao.getAccounts()
 
     private fun getAccount(name: String, channelId: Int): Account? = accountDao.getAccount(name, channelId)
 

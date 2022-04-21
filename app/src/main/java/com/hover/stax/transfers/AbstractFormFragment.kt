@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.hover.sdk.actions.HoverAction
 import com.hover.sdk.permissions.PermissionHelper
@@ -30,6 +31,7 @@ import com.hover.stax.permissions.PermissionUtils
 import com.hover.stax.transfers.TransactionType.Companion.type
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
+import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.views.StaxCardView
 import com.hover.stax.views.StaxDialog
@@ -68,24 +70,18 @@ abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchLi
     open fun startObservers(root: View) {
         accountDropdown.setListener(channelsViewModel)
         accountDropdown.setObservers(channelsViewModel, viewLifecycleOwner)
-        setupActionDropdownObservers(channelsViewModel, viewLifecycleOwner)
+        setupActionDropdownObservers()
         abstractFormViewModel.isEditing.observe(viewLifecycleOwner, Observer(this::showEdit))
     }
 
-    private fun setupActionDropdownObservers(viewModel: ChannelsViewModel, lifecycleOwner: LifecycleOwner) {
-        val activeChannelObserver = object : Observer<Channel?> {
-            override fun onChanged(t: Channel?) {
-                Timber.i("Got new active channel: $t ${t?.countryAlpha2}")
-            }
-        }
-        val actionsObserver = object : Observer<List<HoverAction>> {
-            override fun onChanged(t: List<HoverAction>?) {
-                Timber.i("Got new actions: %s", t?.size)
-            }
-        }
-        viewModel.activeChannel.observe(lifecycleOwner, activeChannelObserver)
-        viewModel.channelActions.observe(lifecycleOwner, actionsObserver)
+    private fun setupActionDropdownObservers() {
+        val activeChannelObserver = Observer<Channel?> { Timber.e("Got new active channel ${this.javaClass.simpleName}, ${it?.countryAlpha2}")}
+        val actionsObserver = Observer<List<HoverAction>> { Timber.e("Got new actions ${this.javaClass.simpleName}: %s", it?.size) }
+
+        channelsViewModel.activeChannel.observe(viewLifecycleOwner, activeChannelObserver)
+        channelsViewModel.channelActions.observe(viewLifecycleOwner, actionsObserver)
     }
+
 
     open fun showEdit(isEditing: Boolean) {
         editCard?.visibility = if (isEditing) View.VISIBLE else View.GONE
@@ -140,10 +136,10 @@ abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchLi
     abstract fun onContactSelected(requestCode: Int, contact: StaxContact)
 
     @SuppressLint("ClickableViewAccessibility")
-    fun setDropdownTouchListener(action: Int) {
+    fun setDropdownTouchListener(navDirections: NavDirections) {
         accountDropdown.autoCompleteTextView.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN)
-                findNavController().navigate(action)
+                NavUtil.navigate(findNavController(), navDirections)
             true
         }
     }
@@ -158,11 +154,14 @@ abstract class AbstractFormFragment : Fragment(), AccountDropdown.AccountFetchLi
     }
 
     private fun runBalanceCheck(channelId: Int) = lifecycleScope.launch(Dispatchers.IO) {
-        channelsViewModel.getChannel(channelId)?.let {
+        channelsViewModel.getChannel(channelId)?.let { channel ->
             val action = channelsViewModel.getFetchAccountAction(channelId)
-            channelsViewModel.setActiveChannel(it)
+            channelsViewModel.setActiveChannel(channel)
 
-            (activity as? MainActivity)?.makeCall(action!!, it)
+            if (action != null)
+                (activity as? MainActivity)?.makeCall(action, channel)
+            else
+                UIHelper.flashMessage(requireActivity(), getString(R.string.action_run_error))
         }
     }
 }

@@ -8,6 +8,7 @@ import android.net.Uri
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.google.firebase.messaging.FirebaseMessaging
+import com.hover.sdk.api.Hover
 import com.hover.stax.R
 import com.hover.stax.permissions.PermissionUtils
 import io.sentry.util.StringUtils
@@ -77,7 +78,7 @@ object Utils {
         editor.apply()
     }
 
-    fun getStringSet(key: String, context: Context): Set<String>? = getSharedPrefs(context).getStringSet(key, setOf(""))
+    fun getStringSet(key: String, context: Context): Set<String>? = getSharedPrefs(context).getStringSet(key, emptySet())
 
     fun isFirebaseTopicInDefaultState(topic: String?, c: Context): Boolean {
         return getSharedPrefs(c).getBoolean(topic, true)
@@ -87,24 +88,6 @@ object Utils {
         val editor = getSharedPrefs(c).edit()
         editor.putBoolean(topic, false)
         editor.apply()
-    }
-
-    fun splitCamelCase(s: String): String {
-        val camelCased : String = s.replace(String.format("%s|%s|%s",
-            "(?<=[A-Z])(?=[A-Z][a-z])",
-            "(?<=[^A-Z])(?=[A-Z])",
-            "(?<=[A-Za-z])(?=[^A-Za-z])").toRegex(), " ")
-        return capitalize(camelCased)
-    }
-
-    private fun capitalize(str: String): String {
-        return if (str.isEmpty()) { str }
-        else str.substring(0, 1).uppercase(Locale.ROOT) + str.substring(1).lowercase(Locale.ROOT)
-    }
-
-    @JvmStatic
-    fun stripHniString(hni: String): String {
-        return hni.replace("[", "").replace("]", "").replace("\"", "")
     }
 
     @JvmStatic
