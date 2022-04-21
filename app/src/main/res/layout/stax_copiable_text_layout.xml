@@ -11,6 +11,8 @@
         android:background="?selectableItemBackground"
         android:textColor="@color/offWhite"
         android:textAlignment="viewEnd"
+        android:gravity="end"
+        android:layout_gravity="end"
         android:textSize="@dimen/text_16" />
 
     <TextView
