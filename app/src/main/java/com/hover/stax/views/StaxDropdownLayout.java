@@ -37,7 +37,7 @@ public class StaxDropdownLayout extends AbstractStatefulInput {
         try {
             hint = a.getString(R.styleable.StaxDropdownLayout_android_hint);
             defaultText = a.getString(R.styleable.StaxDropdownLayout_android_text);
-            editable = a.getBoolean(R.styleable.StaxDropdownLayout_android_editable, false);
+            editable = a.getBoolean(R.styleable.StaxDropdownLayout_android_editable, true);
             imeOptions = a.getInt(R.styleable.StaxDropdownLayout_android_imeOptions, 0);
         } finally {
             a.recycle();
