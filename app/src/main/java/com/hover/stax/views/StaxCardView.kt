@@ -93,7 +93,7 @@ open class StaxCardView(context: Context, attrs: AttributeSet) : FrameLayout(con
     private fun fillFromAttrs() {
         if (title != null) binding.title.text = title else binding.header.visibility = GONE
         if (subtitle != null) {
-            binding.subtitle.text = title
+            binding.subtitle.text = subtitle
             binding.subtitle.visibility = VISIBLE
         }
 

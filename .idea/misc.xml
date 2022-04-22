@@ -10,10 +10,12 @@
       <map>
         <entry key="../../../../layout/compose-model-1647504975633.xml" value="0.2673141891891892" />
         <entry key="../../../../layout/compose-model-1648556434513.xml" value="0.24957770270270271" />
+        <entry key="app/src/main/res/drawable/bright_blue_rounded_bg.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/button_bg_colored.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_dark.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_grey.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.2601851851851852" />
+        <entry key="app/src/main/res/drawable/ic_copy.xml" value="0.182" />
         <entry key="app/src/main/res/drawable/ic_grey_circle_small.xml" value="0.249" />
         <entry key="app/src/main/res/drawable/ic_noun_hashtag_2733013.xml" value="0.175" />
         <entry key="app/src/main/res/drawable/ic_payment.xml" value="0.6125" />
@@ -80,7 +82,7 @@
         <entry key="app/src/main/res/layout/fragment_schedule.xml" value="0.2056159420289855" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.30510752688172044" />
         <entry key="app/src/main/res/layout/fragment_signin_variant.xml" value="0.30510752688172044" />
-        <entry key="app/src/main/res/layout/fragment_transaction.xml" value="0.1646403242147923" />
+        <entry key="app/src/main/res/layout/fragment_transaction.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_transfer.xml" value="0.21" />
         <entry key="app/src/main/res/layout/fragment_wellness.xml" value="0.14492753623188406" />
         <entry key="app/src/main/res/layout/fragment_wellness_detail.xml" value="0.165" />
@@ -97,6 +99,7 @@
         <entry key="app/src/main/res/layout/item_sigin_viewpager.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/item_wellness_tips.xml" value="0.25" />
         <entry key="app/src/main/res/layout/library_list_item.xml" value="0.19145299145299147" />
+        <entry key="app/src/main/res/layout/manage_permissions_layout.xml" value="0.3260416666666667" />
         <entry key="app/src/main/res/layout/no_account_empty_state.xml" value="0.3319746376811594" />
         <entry key="app/src/main/res/layout/non_standard_variable_item.xml" value="0.2125" />
         <entry key="app/src/main/res/layout/onboarding_layout.xml" value="0.19145299145299147" />
@@ -127,7 +130,8 @@
         <entry key="app/src/main/res/layout/settings_card_contact_us.xml" value="0.3640625" />
         <entry key="app/src/main/res/layout/settings_card_language.xml" value="0.30510752688172044" />
         <entry key="app/src/main/res/layout/settings_card_learn.xml" value="0.19145299145299147" />
-        <entry key="app/src/main/res/layout/settings_card_meta.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/settings_card_meta.xml" value="0.16666666666666666" />
+        <entry key="app/src/main/res/layout/settings_card_permissions.xml" value="0.3260416666666667" />
         <entry key="app/src/main/res/layout/settings_card_share.xml" value="0.16666666666666666" />
         <entry key="app/src/main/res/layout/settings_card_support.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/settings_card_ussd_library.xml" value="0.19145299145299147" />
@@ -136,8 +140,9 @@
         <entry key="app/src/main/res/layout/stack_balance_card.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/stax_2lineitem.xml" value="0.11956521739130435" />
         <entry key="app/src/main/res/layout/stax_card_view.xml" value="0.1646403242147923" />
+        <entry key="app/src/main/res/layout/stax_copiable_text_layout.xml" value="0.35688405797101447" />
         <entry key="app/src/main/res/layout/stax_dialog.xml" value="0.3120471014492754" />
-        <entry key="app/src/main/res/layout/stax_dropdown.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/stax_dropdown.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/stax_input.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/stax_nav_view.xml" value="0.14437689969604864" />
         <entry key="app/src/main/res/layout/stax_permission_dialog.xml" value="0.19145299145299147" />
@@ -149,7 +154,10 @@
         <entry key="app/src/main/res/layout/summarycard_nontemplate_items.xml" value="0.42734375" />
         <entry key="app/src/main/res/layout/support_stax_layout.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/transaction_card_history.xml" value="0.19145299145299147" />
-        <entry key="app/src/main/res/layout/transaction_details_info_card.xml" value="0.19145299145299147" />
+        <entry key="app/src/main/res/layout/transaction_details_info_card.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/transaction_details_primarystatus.xml" value="0.20643363728470113" />
+        <entry key="app/src/main/res/layout/transaction_details_secondary_status.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/transaction_details_topstatus_view.xml" value="0.35733695652173914" />
         <entry key="app/src/main/res/layout/transaction_list_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/transaction_messages_items.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/transfer_amount.xml" value="0.30510752688172044" />
@@ -158,6 +166,7 @@
         <entry key="app/src/main/res/layout/transfer_card_repeat.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/transfer_card_summary.xml" value="0.15602836879432624" />
         <entry key="app/src/main/res/layout/transfer_note.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/ussd_log_bottomsheet.xml" value="0.1962962962962963" />
         <entry key="app/src/main/res/layout/view_bubble_message.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/menu/nav_main.xml" value="0.27870370370370373" />
       </map>
