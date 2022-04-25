@@ -24,7 +24,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     val contact = MutableLiveData<StaxContact?>()
     val note = MutableLiveData<String?>()
     var request: LiveData<Request> = MutableLiveData()
-    var completeAutoFilling : MutableLiveData<AutofillData> = MutableLiveData()
+    var completeAutoFilling: MutableLiveData<AutofillData> = MutableLiveData()
 
     fun setTransactionType(transaction_type: String) {
         TransactionType.type = transaction_type
@@ -39,16 +39,14 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
         }
     }
 
-    fun autoFill(transactionUUID: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val transaction = repo.getTransaction(transactionUUID)
-            if(transaction !=null) {
-                val action = repo.getAction(transaction.action_id)
+    fun autoFill(transactionUUID: String) = viewModelScope.launch(Dispatchers.IO) {
+        val transaction = repo.getTransaction(transactionUUID)
+        if (transaction != null) {
+            val action = repo.getAction(transaction.action_id)
 
-                action?.let {
-                    val contact = repo.getContactAsync(transaction.counterparty_id)
-                    autoFill(transaction.amount.toString(), contact, AutofillData(action.to_institution_id, transaction.channel_id, transaction.accountId, true))
-                }
+            action?.let {
+                val contact = repo.getContactAsync(transaction.counterparty_id)
+                autoFill(transaction.amount.toString(), contact, AutofillData(action.to_institution_id, transaction.channel_id, transaction.accountId, true))
             }
         }
     }

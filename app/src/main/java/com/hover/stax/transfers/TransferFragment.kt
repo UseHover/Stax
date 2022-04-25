@@ -64,10 +64,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     override fun onPause() {
         super.onPause()
-        with(transferViewModel){
-            setEditing(true)
-            reset()
-        }
+        transferViewModel.setEditing(true)
     }
 
     override fun onResume() {
@@ -184,9 +181,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     private fun observeAutoFillToInstitution() {
         transferViewModel.completeAutoFilling.observe(viewLifecycleOwner) {
-            it?.let {
+            if (it != null && args.transactionUUID != null)
                 completeAutoFilling(it)
-            }
         }
     }
 
@@ -365,6 +361,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     override fun onDestroyView() {
         super.onDestroyView()
+
         if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
         _binding = null
     }

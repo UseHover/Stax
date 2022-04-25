@@ -94,10 +94,26 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     fun setObservers(viewModel: ChannelsViewModel, lifecycleOwner: LifecycleOwner) {
         with(viewModel) {
-            val simsObserver = Observer<List<SimInfo>> { Timber.i("Got sims ${it?.size}") }
-            val hniListObserver = Observer<List<String>> { Timber.i("Got new sim hni list $it") }
-            val selectedObserver = Observer<List<Channel>> { Timber.e("Got new selected channels ${it?.size}") }
-            val accountObserver = Observer<Account> { setDropdownValue(it) }
+            val simsObserver = object: Observer<List<SimInfo>> {
+                override fun onChanged(t: List<SimInfo>?) {
+                    Timber.i("Got sims ${t?.size}")
+                }
+            }
+            val hniListObserver = object : Observer<List<String>> {
+                override fun onChanged(t: List<String>?) {
+                    Timber.i("Got new sim hni list $t")
+                }
+            }
+            val selectedObserver = object : Observer<List<Channel>> {
+                override fun onChanged(t: List<Channel>?) {
+                    Timber.e("Got new selected channels ${t?.size}")
+                }
+            }
+            val accountObserver = object: Observer<Account> {
+                override fun onChanged(t: Account?) {
+                    setDropdownValue(t)
+                }
+            }
 
             sims.observe(lifecycleOwner, simsObserver)
             simHniList.observe(lifecycleOwner, hniListObserver)
