@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_sheet"
+    android:visibility="gone"
+    android:background="@color/black"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/margin_16"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="@dimen/margin_55"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/emoticon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:contentDescription="@string/share_desc"
+        android:src="@drawable/smileface_giphy"
+        />
+
+    <TextView
+        android:id="@+id/share_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@id/emoticon"
+        android:fontFamily="@font/brutalista_bold"
+        android:text="@string/transaction_successful"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_16"
+        android:textAlignment="viewEnd"
+        />
+
+    <TextView
+        android:id="@+id/share_subTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/share_title"
+        android:layout_toEndOf="@id/emoticon"
+        android:fontFamily="@font/brutalista_regular"
+        android:text="@string/share_desc"
+        android:textAlignment="viewEnd" />
+
+    <TextView
+        android:id="@+id/share_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/share_subTitle"
+        android:paddingStart="@dimen/margin_13"
+        android:paddingBottom="@dimen/margin_13"
+        android:paddingTop="@dimen/margin_13"
+        android:paddingEnd="0dp"
+        android:layout_toEndOf="@id/emoticon"
+        android:fontFamily="@font/brutalista_bold"
+        android:textStyle="bold"
+        android:text="@string/share"
+        android:textAlignment="viewEnd"
+        android:textColor="@color/blue_state_color" />
+</RelativeLayout>
