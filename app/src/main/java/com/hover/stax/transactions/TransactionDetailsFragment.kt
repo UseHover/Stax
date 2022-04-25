@@ -26,7 +26,6 @@ import com.hover.stax.databinding.FragmentTransactionBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.AnalyticsUtil.logErrorAndReportToFirebase
-import com.hover.stax.utils.Constants
 import com.hover.stax.utils.DateUtils.humanFriendlyDateTime
 import com.hover.stax.utils.UIHelper
 import com.hover.stax.utils.Utils
@@ -36,10 +35,9 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
-import java.lang.Exception
 
 
-class TransactionDetailsFragment : DialogFragment(), Target{
+class TransactionDetailsFragment : DialogFragment(), Target {
 
     private val viewModel: TransactionDetailsViewModel by viewModel()
     private var _binding: FragmentTransactionBinding? = null
@@ -129,7 +127,7 @@ class TransactionDetailsFragment : DialogFragment(), Target{
         retryButton.setOnClickListener {
             updateRetryCounter(transaction.action_id)
             this.dismiss()
-            if(transaction.isBalanceType) (requireActivity() as MainActivity).reBuildHoverSession(transaction)
+            if (transaction.isBalanceType) (requireActivity() as MainActivity).reBuildHoverSession(transaction)
             else (requireActivity() as MainActivity).navigateTransferAutoFill(transaction.transaction_type, transaction.uuid)
         }
     }
@@ -166,15 +164,15 @@ class TransactionDetailsFragment : DialogFragment(), Target{
                     setupContactSupportButton(transaction.action_id, button)
                 else
                     retryTransactionClicked(transaction, button)
-            }
-            else binding.secondaryStatus.transactionRetryButtonLayoutId.visibility = GONE
+            } else binding.secondaryStatus.transactionRetryButtonLayoutId.visibility = GONE
             updateDetails(transaction)
         }
     }
 
-    private fun shouldShowNewBalance(transaction: StaxTransaction) : Boolean {
+    private fun shouldShowNewBalance(transaction: StaxTransaction): Boolean {
         return !transaction.isBalanceType && !transaction.balance.isNullOrEmpty() && transaction.isSuccessful
     }
+
     @SuppressLint("SetTextI18n")
     private fun updateDetails(transaction: StaxTransaction) {
         if (isFullScreen)
@@ -191,8 +189,9 @@ class TransactionDetailsFragment : DialogFragment(), Target{
         updateDetailsRequiringAction(viewModel.action.value, viewModel.transaction.value)
         updateStatus(viewModel.action.value, transaction)
     }
+
     private fun setDetailsData(transaction: StaxTransaction) {
-        if(shouldShowNewBalance(transaction)) {
+        if (shouldShowNewBalance(transaction)) {
             binding.primaryStatus.newBalance.apply {
                 text = getString(R.string.new_balance, transaction.displayBalance)
                 visibility = VISIBLE
@@ -208,20 +207,20 @@ class TransactionDetailsFragment : DialogFragment(), Target{
             setCompoundDrawablesWithIntrinsicBounds(0, 0, transaction.fullStatus.getIcon(), 0)
         }
         binding.infoCard.detailsStaxReason.text = transaction.fullStatus.getReason()
-        transaction.fee?.let{binding.infoCard.detailsFee.text = Utils.formatAmount(it)}
+        transaction.fee?.let { binding.infoCard.detailsFee.text = Utils.formatAmount(it) }
     }
 
     private fun setVisibleDetails(transaction: StaxTransaction) {
-        binding.infoCard.reasonRow.visibility = if(transaction.isFailed) VISIBLE else GONE
+        binding.infoCard.reasonRow.visibility = if (transaction.isFailed) VISIBLE else GONE
         binding.infoCard.amountRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) GONE else VISIBLE
         binding.infoCard.recipientRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) GONE else VISIBLE
         binding.infoCard.recipAccountRow.visibility = if (transaction.isRecorded || transaction.transaction_type == HoverAction.BALANCE) GONE else VISIBLE
         binding.infoCard.serviceIdRow.visibility = if (transaction.isRecorded || transaction.confirm_code.isNullOrBlank()) GONE else VISIBLE
-        binding.infoCard.feeRow.visibility = if(transaction.fee == null) GONE else VISIBLE
+        binding.infoCard.feeRow.visibility = if (transaction.fee == null) GONE else VISIBLE
     }
 
     private fun updateDetailsRequiringAction(action: HoverAction?, transaction: StaxTransaction?) {
-        if(action !=null && transaction !=null) {
+        if (action != null && transaction != null) {
             binding.infoCard.detailsStaxType.text = transaction.fullStatus.getDisplayType(requireContext(), action)
             binding.infoCard.detailsStaxAccount.text = action.from_institution_name
             binding.infoCard.detailsFeeLabel.text = getString(R.string.transaction_fee, action.from_institution_name)
@@ -246,8 +245,8 @@ class TransactionDetailsFragment : DialogFragment(), Target{
 
     private fun setPrimaryStatus(transaction: StaxTransaction?) {
         transaction?.let {
-            var textValue= transaction.fullStatus.getTitle(requireContext())
-            if(transaction.fullStatus.getReason().isNotEmpty()) textValue = textValue   +": "+ transaction.fullStatus.getReason()
+            var textValue = transaction.fullStatus.getTitle(requireContext())
+            if (transaction.fullStatus.getReason().isNotEmpty()) textValue = textValue + ": " + transaction.fullStatus.getReason()
 
             binding.primaryStatus.statusText.text = textValue
             binding.primaryStatus.statusIcon.setImageResource(transaction.fullStatus.getIcon())
@@ -256,8 +255,7 @@ class TransactionDetailsFragment : DialogFragment(), Target{
 
     private fun setSecondaryStatus(action: HoverAction?, transaction: StaxTransaction?) {
         transaction?.let {
-            if(transaction.isSuccessful) binding.secondaryStatus.root.visibility = GONE
-
+            if (transaction.isSuccessful) binding.secondaryStatus.root.visibility = GONE
             else {
                 binding.secondaryStatus.root.visibility = VISIBLE
                 binding.secondaryStatus.statusText.apply {
@@ -265,7 +263,7 @@ class TransactionDetailsFragment : DialogFragment(), Target{
                     text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY)
                     movementMethod = LinkMovementMethod.getInstance()
                 }
-                if(transaction.isFailed) action?.let { UIHelper.loadPicasso(getString(R.string.root_url) + it.from_institution_logo, this) }
+                if (transaction.isFailed) action?.let { UIHelper.loadPicasso(getString(R.string.root_url) + it.from_institution_logo, this) }
                 else binding.secondaryStatus.statusIcon.visibility = GONE
             }
         }
@@ -276,8 +274,7 @@ class TransactionDetailsFragment : DialogFragment(), Target{
             if (!isFullScreen && viewModel.action.value != null)
                 binding.transactionDetailsCard.setTitle(viewModel.transaction.value?.generateLongDescription(viewModel.action.value, contact, requireContext()))
             binding.infoCard.detailsRecipient.setContact(contact)
-        }
-        else binding.infoCard.detailsRecipient.setTitle(getString(R.string.self_choice))
+        } else binding.infoCard.detailsRecipient.setTitle(getString(R.string.self_choice))
     }
 
     private fun retryBountyClicked() {
@@ -311,9 +308,16 @@ class TransactionDetailsFragment : DialogFragment(), Target{
             val d = RoundedBitmapDrawableFactory.create(requireContext().resources, bitmap)
             d.isCircular = true
             binding.secondaryStatus.statusIcon.setImageDrawable(d)
-        } catch (e: IllegalStateException) { Timber.e(e) }
+        } catch (e: IllegalStateException) {
+            Timber.e(e)
+        }
     }
 
-    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) { Timber.i("On bitmap failed") }
-    override fun onPrepareLoad(placeHolderDrawable: Drawable?) { Timber.i("On prepare load") }
+    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
+        Timber.i("On bitmap failed")
+    }
+
+    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+        Timber.i("On prepare load")
+    }
 }

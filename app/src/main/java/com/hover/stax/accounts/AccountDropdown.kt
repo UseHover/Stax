@@ -83,10 +83,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
         }
     }
 
-    fun setCurrentAccount() {
-        Timber.e("Setting active account from list")
-        onSelect(accountList.firstOrNull { it.isDefault })
-    }
+    fun setCurrentAccount() = onSelect(accountList.firstOrNull { it.isDefault })
 
     private fun onSelect(account: Account?) {
         setDropdownValue(account)
@@ -100,7 +97,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
             val simsObserver = Observer<List<SimInfo>> { Timber.i("Got sims ${it?.size}") }
             val hniListObserver = Observer<List<String>> { Timber.i("Got new sim hni list $it") }
             val selectedObserver = Observer<List<Channel>> { Timber.e("Got new selected channels ${it?.size}") }
-            val accountObserver = Observer<Account> { Timber.e("Active account to set $it"); setDropdownValue(it) }
+            val accountObserver = Observer<Account> { setDropdownValue(it) }
 
             sims.observe(lifecycleOwner, simsObserver)
             simHniList.observe(lifecycleOwner, hniListObserver)
@@ -109,9 +106,7 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
             selectedChannels.observe(lifecycleOwner, selectedObserver)
             activeChannel.observe(lifecycleOwner) { if (it != null && showSelected) setState(helperText, NONE); Timber.e("Setting state null") }
-            channelActions.observe(lifecycleOwner) {
-                setState(it, viewModel)
-            }
+            channelActions.observe(lifecycleOwner) { setState(it, viewModel) }
         }
     }
 

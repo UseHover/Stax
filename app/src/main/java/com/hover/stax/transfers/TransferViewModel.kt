@@ -142,6 +142,7 @@ class TransferViewModel(application: Application, repo: DatabaseRepo) : Abstract
     fun reset() {
         amount.value = null
         contact.value = null
+        completeAutoFilling.value = null
     }
 }
 

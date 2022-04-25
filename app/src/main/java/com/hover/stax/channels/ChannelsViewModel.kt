@@ -207,8 +207,6 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
     }
 
     private fun setActiveChannel(channelId: Int, accountId: Int) {
-//        if (actions.isNullOrEmpty()) return
-
         val channelAccounts = repo.getChannelAndAccounts(channelId)
         channelAccounts?.let {
             Timber.e("Active channel ${it.channel}")
@@ -295,13 +293,13 @@ class ChannelsViewModel(val application: Application, val repo: DatabaseRepo) : 
 
     fun isValidAccount(): Boolean = activeAccount.value!!.name != Constants.PLACEHOLDER
 
-    fun setChannelFromInstitutionId(institutionId: Int, channelId: Int, accountId: Int) {
+    fun setChannelFromId(channelId: Int, accountId: Int) {
         if (!selectedChannels.value.isNullOrEmpty()) {
             viewModelScope.launch(Dispatchers.IO) {
-                var actions = repo.getActions(getChannelIds(selectedChannels.value!!), institutionId)
+                var actions = repo.getActions(getChannelIds(selectedChannels.value!!), channelId)
 
                 if (actions.isEmpty() && !simChannels.value.isNullOrEmpty())
-                    actions = repo.getActions(getChannelIds(simChannels.value!!), institutionId)
+                    actions = repo.getActions(getChannelIds(simChannels.value!!), channelId)
 
                 if (actions.isNotEmpty())
                     channelActions.postValue(actions)

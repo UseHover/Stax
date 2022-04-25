@@ -64,7 +64,10 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     override fun onPause() {
         super.onPause()
-        transferViewModel.setEditing(true)
+        with(transferViewModel){
+            setEditing(true)
+            reset()
+        }
     }
 
     override fun onResume() {
@@ -130,13 +133,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 AnalyticsUtil.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext())
                 it?.let { view(it) }
             }
-
-//            account.observe(viewLifecycleOwner) {
-//                it?.let {
-//                    Timber.e("Setting active account $it")
-//                    channelsViewModel.setActiveAccount(it)
-//                }
-//            }
         }
     }
 
@@ -360,7 +356,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     private fun completeAutoFilling(data: AutofillData) {
-        data.institutionId?.let { channelsViewModel.setChannelFromInstitutionId(it, data.channelId, data.accountId) }
+        channelsViewModel.setChannelFromId(data.channelId, data.accountId)
         transferViewModel.contact.value?.let { contactInput.setText(it.shortName(), false) }
         amountInput.setText(transferViewModel.amount.value)
         transferViewModel.setEditing(data.isEditing)
