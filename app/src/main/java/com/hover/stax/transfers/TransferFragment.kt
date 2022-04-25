@@ -76,6 +76,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        transferViewModel.reset() //TODO remove if values are removed
         init(binding.root)
         startObservers(binding.root)
         startListeners()
@@ -166,8 +167,8 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             if (it.isEmpty())
                 setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
 
-            if (args.transactionUUID == null)
-                accountDropdown.setCurrentAccount()
+//            if (args.transactionUUID == null)
+//                accountDropdown.setCurrentAccount()
         }
     }
 
@@ -310,7 +311,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     override fun onContactSelected(contact: StaxContact) {
-        transferViewModel.setEditing(true)
+//        transferViewModel.setEditing(true)
         transferViewModel.setContact(contact)
         contactInput.setSelected(contact)
     }
