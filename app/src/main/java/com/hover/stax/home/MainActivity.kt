@@ -90,8 +90,7 @@ class MainActivity : AbstractRequestActivity(), BalancesViewModel.RunBalanceList
     }
 
     fun navigateTransferAutoFill(type: String, transactionUUID: String) {
-        navHelper.navigateTransfer(type)
-        transferViewModel.autoFill(transactionUUID)
+        navHelper.navigateTransfer(type, transactionUUID)
     }
 
     private fun observeForAppReview() = historyViewModel.showAppReviewLiveData().observe(this@MainActivity) {

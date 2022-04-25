@@ -52,6 +52,12 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         transferViewModel = abstractFormViewModel as TransferViewModel
 
         setTransactionType(args.transactionType)
+
+        args.transactionUUID?.let {
+            Timber.e("TxnUUID is $it. Setting autofill")
+            transferViewModel.autoFill(it)
+        }
+
         _binding = FragmentTransferBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -67,7 +73,6 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         amountInput.setHint(getString(R.string.transfer_amount_label))
         accountDropdown.setHint(getString(R.string.account_label))
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -123,8 +128,15 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             contact.observe(viewLifecycleOwner) { recipientValue.setContact(it) }
             request.observe(viewLifecycleOwner) {
                 AnalyticsUtil.logAnalyticsEvent(getString(R.string.loaded_request_link), requireContext())
-                it?.let { transferViewModel.view(it) }
+                it?.let { view(it) }
             }
+
+//            account.observe(viewLifecycleOwner) {
+//                it?.let {
+//                    Timber.e("Setting active account $it")
+//                    channelsViewModel.setActiveAccount(it)
+//                }
+//            }
         }
     }
 
@@ -160,6 +172,9 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         channelsViewModel.accounts.observe(viewLifecycleOwner) {
             if (it.isEmpty())
                 setDropdownTouchListener(TransferFragmentDirections.actionNavigationTransferToAccountsFragment())
+
+            if (args.transactionUUID == null)
+                accountDropdown.setCurrentAccount()
         }
     }
 
@@ -170,10 +185,11 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
             }
         }
     }
+
     private fun observeAutoFillToInstitution() {
         transferViewModel.completeAutoFilling.observe(viewLifecycleOwner) {
             it?.let {
-                completeAutoFilling(it.first, it.second)
+                completeAutoFilling(it)
             }
         }
     }
@@ -302,6 +318,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
     }
 
     override fun onContactSelected(requestCode: Int, contact: StaxContact) {
+        transferViewModel.setEditing(true)
         transferViewModel.setContact(contact)
         contactInput.setSelected(contact)
     }
@@ -342,12 +359,12 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         }
     }
 
-    private fun completeAutoFilling(institutionId: Int?, showEditing: Boolean) {
-        institutionId?.let {channelsViewModel.setChannelFromInstitutionId(institutionId)}
+    private fun completeAutoFilling(data: AutofillData) {
+        data.institutionId?.let { channelsViewModel.setChannelFromInstitutionId(it, data.channelId, data.accountId) }
         transferViewModel.contact.value?.let { contactInput.setText(it.shortName(), false) }
         amountInput.setText(transferViewModel.amount.value)
-        transferViewModel.setEditing(showEditing)
-        accountDropdown.setState(getString(R.string.channel_request_fieldinfo, institutionId.toString()), AbstractStatefulInput.INFO)
+        transferViewModel.setEditing(data.isEditing)
+        accountDropdown.setState(getString(R.string.channel_request_fieldinfo, data.institutionId.toString()), AbstractStatefulInput.INFO)
     }
 
     override fun onDestroyView() {
