@@ -139,7 +139,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
         fab.visibility = if (isEditing) View.VISIBLE else View.GONE
     }
 
-    override fun onContactSelected(requestCode: Int, contact: StaxContact) {
+    override fun onContactSelected(contact: StaxContact) {
         requestViewModel.addRecipient(contact)
         requesteeInput.setSelected(contact)
     }
@@ -167,7 +167,7 @@ class NewRequestFragment : AbstractFormFragment(), PushNotificationTopicsInterfa
                 requestViewModel.addRecipient(contact)
             }
             addTextChangedListener(recipientWatcher)
-            setChooseContactListener { contactPicker(Constants.GET_CONTACT, requireContext()) }
+            setChooseContactListener { contactPicker(requireActivity()) }
         }
 
         fab.setOnClickListener { fabClicked() }

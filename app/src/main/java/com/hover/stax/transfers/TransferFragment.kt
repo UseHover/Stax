@@ -243,7 +243,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
                 transferViewModel.setContact(contact)
             }
             addTextChangedListener(recipientWatcher)
-            setChooseContactListener { contactPicker(Constants.GET_CONTACT, requireContext()) }
+            setChooseContactListener { contactPicker(requireActivity()) }
         }
     }
 
@@ -309,7 +309,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         return channelError == null && actionError == null && amountError == null && recipientError == null && noNonStandardVarError
     }
 
-    override fun onContactSelected(requestCode: Int, contact: StaxContact) {
+    override fun onContactSelected(contact: StaxContact) {
         transferViewModel.setEditing(true)
         transferViewModel.setContact(contact)
         contactInput.setSelected(contact)
