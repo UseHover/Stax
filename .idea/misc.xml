@@ -13,7 +13,6 @@
         <entry key="app/src/main/res/drawable/button_bg_colored.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_dark.xml" value="0.32037037037037036" />
         <entry key="app/src/main/res/drawable/button_bg_grey.xml" value="0.32037037037037036" />
-        <entry key="app/src/main/res/drawable/ic_baseline_open_in_new_16.xml" value="0.2465" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.2601851851851852" />
         <entry key="app/src/main/res/drawable/ic_grey_circle_small.xml" value="0.249" />
         <entry key="app/src/main/res/drawable/ic_noun_hashtag_2733013.xml" value="0.175" />
@@ -98,7 +97,7 @@
         <entry key="app/src/main/res/layout/item_sigin_viewpager.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/item_wellness_tips.xml" value="0.25" />
         <entry key="app/src/main/res/layout/library_list_item.xml" value="0.19145299145299147" />
-        <entry key="app/src/main/res/layout/no_account_empty_state.xml" value="0.2777777777777778" />
+        <entry key="app/src/main/res/layout/no_account_empty_state.xml" value="0.3319746376811594" />
         <entry key="app/src/main/res/layout/non_standard_variable_item.xml" value="0.2125" />
         <entry key="app/src/main/res/layout/onboarding_layout.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/paybill_card_details.xml" value="0.19145299145299147" />
@@ -128,7 +127,7 @@
         <entry key="app/src/main/res/layout/settings_card_contact_us.xml" value="0.3640625" />
         <entry key="app/src/main/res/layout/settings_card_language.xml" value="0.30510752688172044" />
         <entry key="app/src/main/res/layout/settings_card_learn.xml" value="0.19145299145299147" />
-        <entry key="app/src/main/res/layout/settings_card_meta.xml" value="0.16666666666666666" />
+        <entry key="app/src/main/res/layout/settings_card_meta.xml" value="0.1" />
         <entry key="app/src/main/res/layout/settings_card_share.xml" value="0.16666666666666666" />
         <entry key="app/src/main/res/layout/settings_card_support.xml" value="0.19145299145299147" />
         <entry key="app/src/main/res/layout/settings_card_ussd_library.xml" value="0.19145299145299147" />
@@ -138,7 +137,7 @@
         <entry key="app/src/main/res/layout/stax_2lineitem.xml" value="0.11956521739130435" />
         <entry key="app/src/main/res/layout/stax_card_view.xml" value="0.1646403242147923" />
         <entry key="app/src/main/res/layout/stax_dialog.xml" value="0.3120471014492754" />
-        <entry key="app/src/main/res/layout/stax_dropdown.xml" value="0.13903985507246377" />
+        <entry key="app/src/main/res/layout/stax_dropdown.xml" value="0.1" />
         <entry key="app/src/main/res/layout/stax_input.xml" value="0.13903985507246377" />
         <entry key="app/src/main/res/layout/stax_nav_view.xml" value="0.14437689969604864" />
         <entry key="app/src/main/res/layout/stax_permission_dialog.xml" value="0.19145299145299147" />

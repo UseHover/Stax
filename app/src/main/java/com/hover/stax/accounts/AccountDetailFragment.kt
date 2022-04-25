@@ -63,19 +63,19 @@ class AccountDetailFragment : Fragment(), TransactionHistoryAdapter.SelectListen
         viewModel.setAccount(args.accountId)
     }
 
-    private fun setUpBalance() {
-        binding.balanceCard.root.cardElevation = 0F
-        binding.balanceCard.balanceAmount.text = " - "
-        binding.balanceCard.balanceChannelName.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
-        binding.balanceCard.balanceAmount.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
-        binding.balanceCard.balanceRefreshIcon.setOnClickListener { onRefresh() }
+    private fun setUpBalance() = with(binding.balanceCard) {
+        root.cardElevation = 0F
+        balanceAmount.text = " - "
+        balanceChannelName.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
+        balanceAmount.setTextColor(ContextCompat.getColor(requireActivity(), R.color.offWhite))
+        balanceRefreshIcon.setOnClickListener { onRefresh() }
     }
 
-    private fun setUpManage() {
-        binding.manageCard.nicknameSaveBtn.setOnClickListener { updateNickname() }
-        binding.manageCard.accountSaveBtn.setOnClickListener { updateAccountNumber() }
-        binding.manageCard.nicknameInput.addTextChangedListener(nicknameWatcher)
-        binding.manageCard.accountNumberInput.addTextChangedListener(accountWatcher)
+    private fun setUpManage() = with(binding.manageCard) {
+        nicknameSaveBtn.setOnClickListener { updateNickname() }
+        accountSaveBtn.setOnClickListener { updateAccountNumber() }
+        nicknameInput.addTextChangedListener(nicknameWatcher)
+        accountNumberInput.addTextChangedListener(accountWatcher)
     }
 
     private val nicknameWatcher: TextWatcher = object : TextWatcher {

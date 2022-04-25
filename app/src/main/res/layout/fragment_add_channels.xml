@@ -49,9 +49,7 @@
                     android:imeOptions="actionDone"
                     android:id="@+id/searchInput"/>
 
-                <include layout="@layout/no_account_empty_state"
-                    android:visibility="gone"
-                    android:id="@+id/emptyState"/>
+                <include layout="@layout/no_account_empty_state" android:id="@+id/emptyState"/>
 
                 <TextView
                     android:id="@+id/error_text"

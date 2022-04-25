@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hover.stax.R
 import com.hover.stax.databinding.InputItemBinding
 import com.hover.stax.utils.Utils
+import com.hover.stax.utils.splitCamelCase
 import com.hover.stax.views.AbstractStatefulInput
 import timber.log.Timber
 
@@ -28,7 +29,7 @@ class NonStandardVariableAdapter(private var variables: LinkedHashMap<String, St
             }
 
             input.addTextChangedListener(inputTextWatcher)
-            input.setHint(Utils.splitCamelCase(key))
+            input.setHint(key.splitCamelCase())
             input.tag = key
             input.setText(value)
         }

@@ -6,19 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.hover.stax.R
 import com.hover.stax.databinding.FragmentBountyEmailBinding
 import com.hover.stax.home.MainActivity
 import com.hover.stax.login.LoginViewModel
 import com.hover.stax.settings.SettingsFragment
+import com.hover.stax.user.StaxUser
 import com.hover.stax.utils.AnalyticsUtil.logAnalyticsEvent
 import com.hover.stax.utils.NavUtil
 import com.hover.stax.utils.network.NetworkMonitor
 import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 
 class BountyEmailFragment : Fragment(), View.OnClickListener {
 
@@ -37,8 +36,6 @@ class BountyEmailFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnSignIn.setOnClickListener(this@BountyEmailFragment)
-
         binding.progressIndicator.setVisibilityAfterHide(View.GONE)
         binding.instructions.movementMethod = LinkMovementMethod.getInstance()
         startObservers()
@@ -46,25 +43,49 @@ class BountyEmailFragment : Fragment(), View.OnClickListener {
 
     private fun startObservers() {
         with(loginViewModel) {
-            val emailObserver = Observer<String?> { t -> Timber.e("Got email from Google $t") }
-            val usernameObserver = Observer<String?> { t -> Timber.e("Got username : $t") }
-
             progress.observe(viewLifecycleOwner) { updateProgress(it) }
             error.observe(viewLifecycleOwner) { it?.let { showError(it) } }
-            email.observe(viewLifecycleOwner, emailObserver)
-            username.observe(viewLifecycleOwner, usernameObserver)
+            staxUser.observe(viewLifecycleOwner) { initUI(it) }
+        }
+    }
+
+    private fun initUI(staxUser: StaxUser?) = with(binding) {
+        if (staxUser != null && !staxUser.isMapper) {
+            btnSignIn.visibility = View.GONE
+            joinMappers.apply {
+                visibility = View.VISIBLE
+                setOnClickListener(this@BountyEmailFragment)
+            }
+        } else {
+            joinMappers.visibility = View.GONE
+            btnSignIn.apply {
+                visibility = View.VISIBLE
+                setOnClickListener(this@BountyEmailFragment)
+            }
         }
     }
 
     override fun onClick(v: View) {
         if (networkMonitor.isNetworkConnected) {
-            logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext())
-            updateProgress(0)
-            (activity as MainActivity).signIn()
-            loginViewModel.postGoogleAuthNav.value = SettingsFragment.SHOW_BOUNTY_LIST
+            when (v.id) {
+                R.id.btnSignIn -> startGoogleSignIn()
+                R.id.joinMappers -> joinMappers()
+            }
         } else {
             showDialog(R.string.internet_required, getString(R.string.internet_required_bounty_desc), R.string.btn_ok)
         }
+    }
+
+    private fun startGoogleSignIn() {
+        logAnalyticsEvent(getString(R.string.clicked_bounty_email_continue_btn), requireContext())
+        updateProgress(0)
+        (activity as MainActivity).signIn()
+        loginViewModel.postGoogleAuthNav.value = SettingsFragment.SHOW_BOUNTY_LIST
+    }
+
+    private fun joinMappers() {
+        updateProgress(0)
+        loginViewModel.joinMappers()
     }
 
     private fun updateProgress(progress: Int) = with(binding.progressIndicator) {
@@ -103,4 +124,5 @@ class BountyEmailFragment : Fragment(), View.OnClickListener {
         if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
         _binding = null
     }
+
 }

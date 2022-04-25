@@ -1,4 +1,4 @@
-package com.hover.stax.library
+package com.hover.stax.ussd_library
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
