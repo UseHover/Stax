@@ -9,7 +9,6 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.hover.sdk.actions.HoverAction
-import com.hover.sdk.sims.SimInfo
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
@@ -92,26 +91,12 @@ class AccountDropdown(context: Context, attributeSet: AttributeSet) : StaxDropdo
 
     fun setObservers(viewModel: ChannelsViewModel, lifecycleOwner: LifecycleOwner) {
         with(viewModel) {
-            val simsObserver = object : Observer<List<SimInfo>> {
-                override fun onChanged(t: List<SimInfo>?) {
-                    Timber.i("Got sims ${t?.size}")
-                }
-            }
-
-            val hniListObserver = object : Observer<List<String>> {
-                override fun onChanged(t: List<String>?) {
-                    Timber.i("Got new sim hni list $t")
-                }
-            }
-
             val selectedObserver = object : Observer<List<Channel>> {
                 override fun onChanged(t: List<Channel>?) {
                     Timber.e("Got new selected channels ${t?.size}")
                 }
             }
 
-            sims.observe(lifecycleOwner, simsObserver)
-            simHniList.observe(lifecycleOwner, hniListObserver)
             accounts.observe(lifecycleOwner) { accountUpdate(it) }
 
             selectedChannels.observe(lifecycleOwner, selectedObserver)

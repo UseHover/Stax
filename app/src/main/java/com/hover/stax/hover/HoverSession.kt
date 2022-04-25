@@ -40,7 +40,7 @@ class HoverSession private constructor(b: Builder) {
             }
 
     private fun addExtras(builder: HoverParameters.Builder, extras: JSONObject) {
-        val requiredExtras = action.requiredParams
+        val requiredExtras = action.required_params
         val keys: Iterator<*> = extras.keys()
         while (keys.hasNext()) {
             val key = keys.next() as String
@@ -49,8 +49,8 @@ class HoverSession private constructor(b: Builder) {
         }
     }
 
-    private fun parseExtra(key: String, value: String?, requiredExtras: List<String>): String? {
-        if (value == null || !requiredExtras.contains(key)) {
+    private fun parseExtra(key: String, value: String?, requiredExtras: JSONObject): String? {
+        if (value == null || !requiredExtras.has(key)) {
             return null
         }
         return if (key == HoverAction.PHONE_KEY) {

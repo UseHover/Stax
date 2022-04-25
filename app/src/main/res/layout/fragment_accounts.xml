@@ -17,7 +17,7 @@
                 android:layout_height="wrap_content">
 
             <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/accountsRV"
+                    android:id="@+id/accounts_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +40,7 @@
                     android:visibility="gone"
                     app:drawableStartCompat="@drawable/ic_error"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/accountsRV"
+                    app:layout_constraintTop_toBottomOf="@+id/accounts_list"
                     app:layout_goneMarginBottom="@dimen/margin_13" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

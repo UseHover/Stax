@@ -324,7 +324,7 @@ class TransferFragment : AbstractFormFragment(), ActionSelect.HighlightListener,
         } else {
             transferViewModel.forceUpdateContactUI()
             contactInput.setHint(
-                if (action.requiredParams.contains(HoverAction.ACCOUNT_KEY))
+                if (action.required_params.has(HoverAction.ACCOUNT_KEY))
                     getString(R.string.recipientacct_label)
                 else
                     getString(R.string.recipientphone_label)

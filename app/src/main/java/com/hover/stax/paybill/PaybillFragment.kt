@@ -20,8 +20,10 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.channels.Channel
 import com.hover.stax.channels.ChannelsViewModel
+import com.hover.stax.contacts.StaxContact
 import com.hover.stax.databinding.FragmentPaybillBinding
 import com.hover.stax.home.MainActivity
+import com.hover.stax.transfers.AbstractFormFragment
 import com.hover.stax.utils.AnalyticsUtil
 import com.hover.stax.utils.Constants
 import com.hover.stax.utils.NavUtil
@@ -31,28 +33,24 @@ import com.hover.stax.views.StaxDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 
-class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
+class PaybillFragment : AbstractFormFragment(), PaybillIconsAdapter.IconSelectListener {
 
     private var _binding: FragmentPaybillBinding? = null
     private val binding get() = _binding!!
 
-    private var dialog: StaxDialog? = null
-
-    private val channelsViewModel: ChannelsViewModel by sharedViewModel()
     private val paybillViewModel: PaybillViewModel by sharedViewModel()
 
     private val args: PaybillFragmentArgs by navArgs()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentPaybillBinding.inflate(inflater, container, false)
+        channelsViewModel.setType(HoverAction.C2B)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         AnalyticsUtil.logAnalyticsEvent(getString(R.string.visit_screen, getString(R.string.visit_paybill)), requireActivity())
-
-        channelsViewModel.setType(HoverAction.C2B)
 
         //TODO test updating of business
         if (args.updateBusiness) {
@@ -70,6 +68,10 @@ class PaybillFragment : Fragment(), PaybillIconsAdapter.IconSelectListener {
         setSaveBillCheckedChangeListener()
         setBusinessNoTouchListener()
         setContinueBtnClickListener()
+    }
+
+    override fun onContactSelected(requestCode: Int, contact: StaxContact) {
+        TODO("Not yet implemented")
     }
 
     private fun setSaveBillCheckedChangeListener() = with(binding.saveBillLayout) {

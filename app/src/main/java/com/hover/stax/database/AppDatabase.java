@@ -128,7 +128,7 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
     private static final int NUMBER_OF_THREADS = 8;
-    static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+    static public final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
     private static volatile AppDatabase INSTANCE;
 
     public static synchronized AppDatabase getInstance(Context context) {

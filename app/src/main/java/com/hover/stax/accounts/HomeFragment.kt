@@ -19,7 +19,7 @@ import com.hover.stax.utils.UIHelper
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AccountsFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAdapter.SelectListener {
+class HomeFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAdapter.SelectListener {
 
     private var _binding: FragmentAccountsBinding? = null
     private val binding get() = _binding!!
@@ -36,7 +36,7 @@ class AccountsFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAda
 
         val selectAdapter = ChannelsAdapter(ArrayList(), this)
 
-        binding.accountsRV.apply {
+        binding.accountsList.apply {
             layoutManager = UIHelper.setMainLinearManagers(requireActivity())
             adapter = selectAdapter
         }
@@ -44,8 +44,6 @@ class AccountsFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAda
         binding.accountListCard.setOnClickIcon { findNavController().popBackStack() }
 
         with(viewModel) {
-            allChannels.observe(viewLifecycleOwner) { selectAdapter.updateList(it) }
-            simChannels.observe(viewLifecycleOwner) { selectAdapter.updateList(it) }
             accounts.observe(viewLifecycleOwner) {
                 if (it.isNotEmpty())
                     showAccountsList(it)
@@ -54,18 +52,12 @@ class AccountsFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAda
     }
 
     override fun clickedChannel(channel: Channel) {
-        viewModel.setChannelsSelected(listOf(channel))
 
         lifecycleScope.launch {
-            val fetchAction = viewModel.getFetchAccountAction(channel.id)
-
-            if (fetchAction != null) {
-                viewModel.setActiveChannel(channel)
-                fetchAccounts(fetchAction, channel)
-            } else {
-                viewModel.createAccounts(listOf(channel))
-                findNavController().popBackStack()
-            }
+            viewModel.setActiveChannel(channel)
+//            fetchAccounts(fetchAction, channel)
+//
+//                findNavController().popBackStack()
         }
     }
 
@@ -95,9 +87,9 @@ class AccountsFragment : Fragment(), ChannelsAdapter.SelectListener, AccountsAda
                 setOnClickListener { this.visibility = View.GONE; binding.accountListCard.visibility = View.VISIBLE }
             }
             accountsInfo.text = getString(R.string.account_select_header, viewModel.activeChannel.value?.name, getTransactionType())
-            accountsRV.apply {
+            accountsList.apply {
                 layoutManager = UIHelper.setMainLinearManagers(requireActivity())
-                adapter = AccountsAdapter(accounts, this@AccountsFragment)
+                adapter = AccountsAdapter(accounts, this@HomeFragment)
             }
         }
     }

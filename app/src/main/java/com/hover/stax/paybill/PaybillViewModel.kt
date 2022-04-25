@@ -8,6 +8,7 @@ import com.hover.sdk.actions.HoverAction
 import com.hover.stax.R
 import com.hover.stax.accounts.Account
 import com.hover.stax.database.DatabaseRepo
+import com.hover.stax.transfers.AbstractFormViewModel
 import com.hover.stax.utils.AnalyticsUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
 
-class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, val application: Application) : ViewModel() {
+class PaybillViewModel(application: Application, repo: DatabaseRepo, val billRepo: PaybillRepo,) : AbstractFormViewModel(application, repo) {
 
     val savedPaybills = MutableLiveData<List<Paybill>>()
     val popularPaybills = MutableLiveData<List<HoverAction>>()
@@ -26,17 +27,16 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
     val nickname = MutableLiveData<String?>()
     val amount = MutableLiveData<String?>()
     val iconDrawable = MutableLiveData(0)
-    val isEditing = MutableLiveData(true)
 
     val selectedAction = MutableLiveData<HoverAction>()
 
     fun getSavedPaybills(accountId: Int) = viewModelScope.launch {
-        repo.getSavedPaybills(accountId).collect { savedPaybills.postValue(it) }
+        billRepo.getSavedPaybills(accountId).collect { savedPaybills.postValue(it) }
     }
 
     fun getPopularPaybills(accountId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        dbRepo.getAccount(accountId)?.let {
-            val actions = dbRepo.getActions(it.channelId, HoverAction.C2B).filterNot { action -> action.to_institution_id == 0 }
+        repo.getAccount(accountId)?.let {
+            val actions = repo.getActions(it.channelId, HoverAction.C2B).filterNot { action -> action.to_institution_id == 0 }
             popularPaybills.postValue(actions)
         }
     }
@@ -75,10 +75,6 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
         this.nickname.value = nickname
     }
 
-    fun setEditing(editing: Boolean) {
-        isEditing.value = editing
-    }
-
     fun savePaybill(account: Account?, recurringAmount: Boolean) = viewModelScope.launch(Dispatchers.IO) {
         val businessNo = businessNumber.value
         val accountNo = accountNumber.value
@@ -91,7 +87,7 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
             }
             if (recurringAmount) payBill.recurringAmount = amount.value!!.toInt()
 
-            repo.save(payBill)
+            billRepo.save(payBill)
 
             logPaybill(payBill)
         } else {
@@ -131,7 +127,7 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
     else null
 
     fun deletePaybill(paybill: Paybill) = viewModelScope.launch(Dispatchers.IO) {
-        repo.delete(paybill)
+        billRepo.delete(paybill)
         logPaybill(paybill, false)
     }
 
@@ -145,7 +141,7 @@ class PaybillViewModel(val repo: PaybillRepo, private val dbRepo: DatabaseRepo, 
                 recurringAmount = if (setRecurringAmount) amount.value!!.toInt() else 0
             }
 
-            repo.update(this)
+            billRepo.update(this)
         }
     }
 
